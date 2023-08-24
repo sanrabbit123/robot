@@ -467,8 +467,8 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   let factorBlockPaddingTop;
   let factorBlockPaddingBottom;
   let factorBlockSelectionSize;
-  let factorBlockSelectionSize;
   let factorBlockSelectionTop;
+  let factorBlockPaddingLeft;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -505,10 +505,10 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   mobileRightBoxLeft = 7;
 
   circleRadius = <%% 2.5, 2.5, 2, 2, 0.5 %%>;
-  circleTop = <%% 12, 12, 11, 10.5, (isIphone() ? 2.9 : 2.7) %%>;
-  circleBetween = <%% 6, 6, 5, 5, 1.3 %%>;
+  circleTop = <%% (isMac() ? 10 : 8), (isMac() ? 9 : 7), (isMac() ? 8 : 6), (isMac() ? 7 : 5), 1.8 %%>;
+  circleBetween = <%% 5, 5, 4, 4, 1 %%>;
 
-  mainSize = <%% 20, 18, 17, 16, 4 %%>;
+  mainSize = <%% 19, 17, 16, 14, 3.5 %%>;
   mainWeight = <%% 500, 500, 500, 500, 500 %%>;
   inputSize = <%% 13, 13, 12, 12, 3 %%>;
   inputWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -543,10 +543,10 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
 
   leftCheck0 = <%% 125, 112, 98, 98, 22.8 %%>;
   leftCheck1 = <%% 195, 176, 156, 152, 36.5 %%>;
-  checkboxWidth = <%% 13, 12, 9, 8, 2 %%>;
-  checkboxTop = <%% 15, 15, 15, 15, 2.5 %%>;
+  checkboxWidth = <%% 13, 12, 10, 9, 2.2 %%>;
+  checkboxTop = <%% 15, 13, 12, 11, (isIphone() ? 2.7 : 2.5) %%>;
   checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
-  checkboxWeight = <%% 200, 200, 200, 200, 200 %%>;
+  checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
   marginRatio = <%% 1.2, 1.2, 1.1, 1.1, 0.8 %%>;
 
@@ -667,7 +667,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   reviewTitleMarginTop = <%% 80, 80, 80, 80, 80 %%>;
   reviewTitleMarginBottom = <%% 32, 32, 32, 32, 32 %%>;
 
-  leftBoxWidth = <%% 398, 250, 209, 160, 0 %%>;
+  leftBoxWidth = <%% 398, 250, 209, 180, 0 %%>;
   textAreaBlockHeight = <%% 156, 136, 133, 130, 44.2 %%>;
 
   descriptionSize = <%% 15, 14, 13, 13, 3 %%>;
@@ -692,7 +692,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   agreeCircleMarginRight = <%% 5, 5, 5, 5, 1 %%>;
 
   submitTongMarginTop = <%% 20, 20, 20, 20, 6 %%>;
-  submitButtonWidth = <%% 190, 190, 170, 155, 39 %%>;
+  submitButtonWidth = <%% 190, 190, 170, 150, 38 %%>;
 
   submitButtonHeight = <%% 47, 47, 42, 38, 10 %%>;
   submitSize = <%% 20, 20, 17, 16, 4 %%>;
@@ -784,7 +784,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   careerBlockMarginLeft = <%% 64, 52, 50, 44, 5 %%>;
   careerBlockMinus = <%% 128, 112, 106, 98, 18.2 %%>;
 
-  propertyWidth = <%% 110, 110, 69, 69, 15.7 %%>;
+  propertyWidth = <%% 110, 90, 80, 69, 15 %%>;
   yearWidth = <%% 72, 72, 64, 56, 13 %%>;
   monthWidth = <%% 40, 40, 36, 32, 8 %%>;
 
@@ -795,34 +795,34 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
 
   factorVerticalBetween = <%% 8, 7, 6, 4, 1 %%>;
 
-  calendarBottom = <%% 42, 36, 32, 28, 3 %%>;
-  factorWidth = <%% 715, 700, 580, 580, 22 %%>;
+  calendarBottom = <%% 42, 36, 32, 28, 5 %%>;
+  factorWidth = <%% 715, 540, 460, 340, 50 %%>;
 
   arrowLeft = <%% 88, 77, 76, 70, 4 %%>;
   arrowTop = <%% 8, 7, 7, 6, 1 %%>;
   arrowWidth = <%% 132, 60, 52, 52, 52 %%>;
 
   factorBlockPadding = <%% 8, 7, 7, 6, 1 %%>;
-  factorBlockPaddingTop = <%% 8, 7, 7, 6, 1 %%>;
-  factorBlockPaddingBottom = <%% 8, 7, 7, 6, 1 %%>;
-  factorBlockSelectionSize = <%% 8, 7, 7, 6, 1 %%>;
-  factorBlockSelectionSize = <%% 8, 7, 7, 6, 1 %%>;
-  factorBlockSelectionTop = <%% 8, 7, 7, 6, 1 %%>;
+  factorBlockPaddingTop = <%% (isMac() ? 8 : 11), (isMac() ? 7 : 9), (isMac() ? 6 : 8), (isMac() ? 5 : 7), 1.2 %%>;
+  factorBlockPaddingBottom = <%% (isMac() ? 11 : 8), (isMac() ? 10 : 7), (isMac() ? 9 : 6), (isMac() ? 7 : 5), 1.8 %%>;
+  factorBlockSelectionSize = <%% 15, 13, 12, 11, 2.6 %%>;
+  factorBlockSelectionTop = <%% (isMac() ? 10 : 11), (isMac() ? 9 : 10), (isMac() ? 8 : 9), (isMac() ? 6 : 7), (isIphone() ? 1.9 : 1.7) %%>;
+  factorBlockPaddingLeft = <%% 16, 14, 12, 11, 2.7 %%>;
 
   contents = {
     main: [
       "공통 교육 참석 안내",
     ],
     sub: [
-      "공통 교육 참석이 가능한 일정을",
-      "선택을 통해 알려주세요! 다음 8가지의",
-      "선택지가 있으며, 만약 8개의 시간이",
-      "모두 안 된다면 문의 부탁드립니다."
+      <&& "공통 교육 참석이 가능한 일정을" | "공통 교육 참석이 가능한 일정을" | "미팅 참석이 가능한 일정을" | "미팅 참석이 가능한 일정을" | "미팅 참석이 가능한 일정을" &&>,
+      <&& "선택을 통해 알려주세요! 다음 4가지의" | "선택을 통해 알려주세요! 다음 4가지의" | "선택해 주세요! 다음 4가지의" | "선택해 주세요! 다음 4가지의" | "선택해 주세요! 다음 4가지의" &&>,
+      <&& "선택지가 있으며, 만약 4개의 시간이" | "선택지가 있으며, 만약 4개의 시간이" | "선택지가 있으며, 만약 시간이" | "선택지가 있으며, 만약 시간이" | "선택지가 있으며, 만약 시간이" &&>,
+      <&& "모두 안 된다면 문의 부탁드립니다." | "모두 안 된다면 문의 부탁드립니다." | "모두 안 된다면 문의 바랍니다." | "모두 안 된다면 문의 바랍니다." | "모두 안 된다면 문의 바랍니다." &&>,
     ]
   };
 
   selectionMatrix = [
-    new Date(2023, 11, 22, 22, 22, 0),
+    new Date(2023, 7, 22, 17, 0, 0),
     new Date(2023, 7, 24, 17, 0, 0),
     new Date(2023, 7, 29, 17, 0, 0),
     new Date(2023, 7, 31, 17, 0, 0),
@@ -835,7 +835,11 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const day = [ "일", "월", "화", "수", "목", "금", "토" ][date.getDay()];
-    return `${String(year)}년 ${String(month)}월 ${String(dateNumber)}일 ${day}요일 ${String(hours)}시 ${zeroAddition(minutes)}분`;
+    if (desktop) {
+      return `${String(year)}년 ${String(month)}월 ${String(dateNumber)}일 ${day}요일 ${String(hours)}시 ${zeroAddition(minutes)}분`;
+    } else {
+      return `${String(year).slice(2)}년 ${String(month)}월 ${String(dateNumber)}일 ${String(hours)}시 ${zeroAddition(minutes)}분`;
+    }
   }
 
   careerBlocksRender = () => {}
@@ -1046,12 +1050,16 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
             dom.setAttribute("toggle", "on");
             dom.firstChild.children[0].style.opacity = String(0);
             dom.firstChild.children[1].style.opacity = String(1);
-            dom.children[1].style.color = colorChip.green;
+            dom.children[1].style.color = colorChip.white;
+            dom.children[1].lastChild.style.color = colorChip.white;
+            dom.children[1].style.background = colorChip.softGreen;
           } else {
             dom.setAttribute("toggle", "off");
             dom.firstChild.children[0].style.opacity = String(1);
             dom.firstChild.children[1].style.opacity = String(0);
-            dom.children[1].style.color = colorChip.black;
+            dom.children[1].style.color = colorChip.deactive;
+            dom.children[1].lastChild.style.color = colorChip.deactive;
+            dom.children[1].style.background = colorChip.gray1;
           }
         }
       }
@@ -1980,7 +1988,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
     style: {
       display: "block",
       position: "relative",
-      marginBottom: String(blockMarginBottom) + ea,
+      marginBottom: String(desktop ? blockMarginBottom : 1) + ea,
     },
     children: [
       {
@@ -2011,7 +2019,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
       },
       ...(selectionMatrix.map((date) => {
         return dateToLongText(date);
-      }).map((str, index) => {
+      }).concat([ "가능한 시간 없음" ]).map((str, index) => {
         return {
           class: [ inputClassName ],
           attribute: {
@@ -2030,7 +2038,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
             cursor: "pointer",
             width: withOut((circleRadius * 2) + circleBetween + propertyWidth, ea),
             marginLeft: index === 0 ? "" : String((circleRadius * 2) + circleBetween + propertyWidth) + ea,
-            marginBottom: String(factorVerticalBetween) + ea,
+            marginBottom: String(index === selectionMatrix.length ? 0 : factorVerticalBetween) + ea,
             textAlign: "right",
           },
           children: [
@@ -2087,9 +2095,10 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
                 color: index === 0 ? colorChip.white : colorChip.deactive,
                 verticalAlign: "top",
                 cursor: "pointer",
-                padding: String(8) + ea,
-                paddingLeft: String(16) + ea,
-                paddingBottom: String(10) + ea,
+                paddingRight: String(factorBlockPadding) + ea,
+                paddingTop: String(factorBlockPaddingTop) + ea,
+                paddingLeft: String(factorBlockPaddingLeft) + ea,
+                paddingBottom: String(factorBlockPaddingBottom) + ea,
                 borderRadius: String(5) + "px",
                 background: index === 0 ? colorChip.gradientGreen : colorChip.gray1,
                 textAlign: "left",
@@ -2099,10 +2108,10 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
                 style: {
                   display: "inline-block",
                   position: "absolute",
-                  fontSize: String(16) + ea,
+                  fontSize: String(factorBlockSelectionSize) + ea,
                   fontWeight: String(800),
-                  top: String(9) + ea,
-                  right: String(16) + ea,
+                  top: String(factorBlockSelectionTop) + ea,
+                  right: String(factorBlockPaddingLeft) + ea,
                   color: index === 0 ? colorChip.white : colorChip.deactive,
                   textAlign: "right",
                 }
