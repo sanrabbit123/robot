@@ -7660,6 +7660,38 @@ ClientJs.prototype.communicationRender = function () {
           }
         }
         if (thisCase !== null) {
+          blankHref(FRONTHOST + "/curation.php?cliid=" + cliid + "&view=test");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "스타일 찾기 보내기"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid, thisCase, serid;
+        let response, project;
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            cliid = (await GeneralJs.prompt("고객 아이디를 입력하세요!")).trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase !== null) {
           if (window.confirm(thisCase.name + " 고객님께 스타일 찾기 페이지 완료 안내 알림톡을 전송합니다. 확실합니까?")) {
             await ajaxJson({
               method: "pushClient",

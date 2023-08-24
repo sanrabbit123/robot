@@ -463,6 +463,12 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   let arrowLeft;
   let arrowTop;
   let innerPaddingBottom;
+  let factorBlockPadding;
+  let factorBlockPaddingTop;
+  let factorBlockPaddingBottom;
+  let factorBlockSelectionSize;
+  let factorBlockSelectionSize;
+  let factorBlockSelectionTop;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -795,6 +801,13 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   arrowLeft = <%% 88, 77, 76, 70, 4 %%>;
   arrowTop = <%% 8, 7, 7, 6, 1 %%>;
   arrowWidth = <%% 132, 60, 52, 52, 52 %%>;
+
+  factorBlockPadding = <%% 8, 7, 7, 6, 1 %%>;
+  factorBlockPaddingTop = <%% 8, 7, 7, 6, 1 %%>;
+  factorBlockPaddingBottom = <%% 8, 7, 7, 6, 1 %%>;
+  factorBlockSelectionSize = <%% 8, 7, 7, 6, 1 %%>;
+  factorBlockSelectionSize = <%% 8, 7, 7, 6, 1 %%>;
+  factorBlockSelectionTop = <%% 8, 7, 7, 6, 1 %%>;
 
   contents = {
     main: [
@@ -2074,12 +2087,25 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
                 color: index === 0 ? colorChip.white : colorChip.deactive,
                 verticalAlign: "top",
                 cursor: "pointer",
-                padding: String(6) + ea,
-                paddingLeft: String(14) + ea,
+                padding: String(8) + ea,
+                paddingLeft: String(16) + ea,
                 paddingBottom: String(10) + ea,
                 borderRadius: String(5) + "px",
                 background: index === 0 ? colorChip.gradientGreen : colorChip.gray1,
                 textAlign: "left",
+              },
+              child: {
+                text: "선택 " + String(index + 1),
+                style: {
+                  display: "inline-block",
+                  position: "absolute",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(800),
+                  top: String(9) + ea,
+                  right: String(16) + ea,
+                  color: index === 0 ? colorChip.white : colorChip.deactive,
+                  textAlign: "right",
+                }
               }
             },
           ]
