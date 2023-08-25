@@ -182,20 +182,70 @@ DevContext.prototype.launching = async function () {
 
 
     
-    
+
+    /*
+
+    // ads anti-ads ratio
+
+    const clients = (await back.getClientsByQuery({}, { selfMongo: this.MONGOC })).toNormal();
+
+    const selfMongo = this.MONGOLOGC;
+    await selfMongo.connect();
+    const collection = "dailyClients";
+    const sheetsId = "1qI_JUsHP6Wor1xieJDbR67q9xrTuSvG8XIxXXuauzY8";
+    let rows;
+    let targets;
+    let startDate, endDate;
+    let matrix;
+    let thisClient;
+    let standardNumber;
+
+    rows = await back.mongoRead(collection, {}, { selfMongo });
 
 
 
+    for (let i = 1; i < 9; i++) {
+      standardNumber = i;
+
+      startDate = new Date(2023, standardNumber - 1, 1);
+      endDate = new Date(2023, standardNumber, 1);
+      targets = [];
+      for (let row of rows) {
+        if (startDate.valueOf() <= row.date.from.valueOf() && row.date.from.valueOf() < endDate.valueOf()) {
+          targets.push(equalJson(JSON.stringify(row)));
+        }
+      }
+  
+      matrix = [];
+      matrix.push([
+        "아이디",
+        "성함",
+        "문의일",
+        "광고 여부",
+        "상태",
+      ]);
+  
+      for (let row of targets) {
+        for (let obj of row.data.detail) {
+          thisClient = clients.find((c) => { return c.cliid === obj.cliid });
+          thisRequest = thisClient.requests[0];
+          matrix.push([
+            obj.cliid,
+            thisClient.name,
+            dateToString(thisRequest.request.timeline, true),
+            (obj.users.map((o) => { return o.source }).map((o) => { return o.campaign }).flat().filter((str) => { return !/^link/.test(str) }).length > 0) ? "광고" : "비광고",
+            thisRequest.analytics.response.status,
+          ])
+        }
+      }
+  
+      await sheets.update_value_inPython(sheetsId, dateToString(new Date(2023, standardNumber - 1, 1)).split("-").slice(0, 2).join("-"), matrix);
+    }
+    console.log(matrix);
+    await selfMongo.close();
 
 
-
-
-
-
-
-    
-
-
+    */
 
 
     
