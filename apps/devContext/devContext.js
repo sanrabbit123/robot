@@ -6533,8 +6533,8 @@ DevContext.prototype.launching = async function () {
 
 
     // // send sms
-    // const name = "배창규";
-    // const amount = 922;
+    // const name = "지순정";
+    // const amount = 1846000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
