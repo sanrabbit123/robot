@@ -4998,19 +4998,7 @@ DesignerJs.prototype.aspirantCommonMeetingSetting = async function (aspid) {
 
 
 
-
-    
-
-
-
-
     console.log(aspirant);
-
-
-
-
-
-
 
 
 
