@@ -53,7 +53,6 @@ const SecondGhost = function (mother = null, back = null, address = null) {
       "C04DN6KMHBR": "702_mail",
       "C01E32KPH0Q": "수다방",
       "C01EBS9E5BK": "시공",
-      "C023VF8HB8S": "cx",
       "C02FBSYM40G": "file",
       "C02KKLHUVBJ": "call",
       "C04H4LBJZ3R": "emergency_alarm",
