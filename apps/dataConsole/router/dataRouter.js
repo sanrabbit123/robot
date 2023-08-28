@@ -7533,7 +7533,7 @@ DataRouter.prototype.rou_post_salesClient = function () {
 
           for (let client of targetClients) {
             await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name, host: instance.address.frontinfo.host, cliid: client.cliid });
-            await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#cx", voice: false });
+            await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#400_customer", voice: false });
           }
 
           for (let history of targetHistories) {
@@ -7581,7 +7581,7 @@ DataRouter.prototype.rou_post_salesClient = function () {
   
               for (let client of targetClients) {
                 await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name, host: instance.address.frontinfo.host, cliid: client.cliid });
-                await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#cx", voice: false });
+                await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#400_customer", voice: false });
               }
   
               for (let history of targetHistories) {

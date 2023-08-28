@@ -3672,7 +3672,7 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
                           thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: MONGOC });
 
                           text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!";
-                          await messageSend({ text, channel: "#cx", voice: true });
+                          await messageSend({ text, channel: "#400_customer", voice: true });
 
                         }
                         await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
