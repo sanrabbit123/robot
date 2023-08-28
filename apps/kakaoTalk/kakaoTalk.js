@@ -21,6 +21,7 @@ const KakaoTalk = function () {
     test: address.testinfo.ip.outer,
     second: address.secondinfo.ip.outer,
     member: address.memberinfo.ip.outer,
+    home: address.homeinfo.ip.outer,
   };
   this.ipRegExp = {
     office: new RegExp(this.ip.office, 'gi'),
@@ -30,6 +31,7 @@ const KakaoTalk = function () {
     test: new RegExp(this.ip.test, 'gi'),
     second: new RegExp(this.ip.second, 'gi'),
     member: new RegExp(this.ip.member, 'gi'),
+    home: new RegExp(this.ip.home, 'gi'),
   };
   this.token = {
     office: "b264d72b44dde4663f7a3b6b7e56cd335134bbd62a36c8038f761e11d4b241fdc647a40ac7e658bb63d81efe72c98eefafa6adc423ba5bfa44b2e30ca039f3f1TKi0eIQUIc4hQqCusGbRL+RzNnEAUgUqq4ci5UXFOuLuUipVERMC0jgxPv/cZ3bJkRsv/h331DrNt4PTJckrng==",
@@ -38,6 +40,7 @@ const KakaoTalk = function () {
     test: "68067cb29c9b306d635c436cde293bb9d456daa539213f8a58e0363f207d09a0831c5fabcf250c89adef2285e1ffbd178e2b7db835656084daa8f6c33a51c8c4I4JcqB91inpHwvJrvzr1gXjr/pAXpWLK4r4gjjrGesm8QLFpOMTuj69QsvnCiED/2rbS2BKlDqbSB2G4VYZ+Yw==",
     second: "8600dc4becb7a31393122f598929b096a82b01b002bc03b20e65f40b3c0af9a002fc8e418c427189b9a2f293e780013ac83f3afe7cfef22d46cf72480552c39aY9ZevsXneQzBp1ofHzqdcqntz4upIdotk/thtbhNCWV6bbrtVIJVv1cjnm6lNMqHGhaEFD3+I0bFfZ6kNLsVyA==",
     member: "b264d72b44dde4663f7a3b6b7e56cd335134bbd62a36c8038f761e11d4b241fdc647a40ac7e658bb63d81efe72c98eefafa6adc423ba5bfa44b2e30ca039f3f1TKi0eIQUIc4hQqCusGbRL+RzNnEAUgUqq4ci5UXFOuLuUipVERMC0jgxPv/cZ3bJkRsv/h331DrNt4PTJckrng==",
+    home: "2d1767c90dfe8cf798a7f2f1685ee9fc935e2097c0e30109dc23e4e4b952c22273f1dc2f452632c5e79001d622ef38f8d79f6143be0e3cb9c689cd1d72de06e2bLlRGTT+s2NPHBTb7e58CK9BgK42hoFP0kZnTk4ao+Owx8yu1mWXCBiNvb8PdM1ue0pEQhrgk1CQ9VZ+ZoLUuQ==",
   };
   this.authObj = {};
   this.message = {};
@@ -79,6 +82,8 @@ KakaoTalk.prototype.setAuth = async function () {
       this.authObj.token = this.token.second;
     } else if (this.ipRegExp.member.test(data.trim())) {
       this.authObj.token = this.token.member;
+    } else if (this.ipRegExp.home.test(data.trim())) {
+      this.authObj.token = this.token.home;
     }
 
     return true;

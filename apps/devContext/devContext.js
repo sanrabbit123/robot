@@ -6430,9 +6430,6 @@ DevContext.prototype.launching = async function () {
     // const kakao = new KakaoTalk();
     // await kakao.sendTalk("curationComplete", "배창규", "010-2747-3403", {
     //   client: "배창규",
-    //   host: instance.address.frontinfo.host,
-    //   path: "curation",
-    //   cliid: "c1801_aa01s",
     // });
 
 
@@ -6440,9 +6437,15 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "정현주",
-    //     designer: "박정훈",
-    //     link: "https://drive.google.com/drive/folders/1qFK5sY8QiCzapD2foAnaZM0RB8curvG-",
+    //     client: "김원희",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/1MRCn3z-8Zuzt8LHz3A0D0pJ-Xl4JXElI",
+    //     pay: true
+    //   },
+    //   {
+    //     client: "하슬기",
+    //     designer: "서해인",
+    //     link: "https://drive.google.com/drive/folders/1IULucgoIJKUlaTRdQIiZ_SzHu8APTjLJ",
     //     pay: true
     //   },
     // ]);
