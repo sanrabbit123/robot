@@ -2633,14 +2633,12 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
+    const thisBody = equalJson(req.body);
     try {
-      const thisBody = equalJson(req.body);
       const members = instance.members;
       let text;
       let thisChannel;
       
-      console.log(thisBody);
-
       if (typeof thisBody.event === "object") {
         if (thisBody.event.type === "message") {
 
@@ -2718,7 +2716,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
         res.send(JSON.stringify({ challenge: thisBody.challenge }));
       }
     } catch (e) {
-      logger.error("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + e.message + "\n\n" + JSON.stringify(thisBody, null, 2)).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
