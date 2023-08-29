@@ -3924,6 +3924,21 @@ DesignerJs.prototype.aspirantBase = async function () {
                 }
               }
             },
+            {
+              title: designer + " 실장님께 공통교육 안내",
+              func: (aspid) => {
+                return async function (e) {
+                  try {
+                    instance.aspirantCommonMeetingSetting(aspid).catch((err) => {
+                      console.log(err);
+                    });
+                    removeByClass(aspirantSubMenuEventFactorClassName);
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
           ];
           const thisBox = this.getBoundingClientRect();
           const { x, y } = e;
@@ -5087,6 +5102,7 @@ DesignerJs.prototype.aspirantCommonMeetingSetting = async function (aspid) {
                 removeTargets[z].remove();
               } catch {}
             }
+            window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
           }, 500);
 
         }
@@ -5529,6 +5545,24 @@ DesignerJs.prototype.communicationRender = function () {
       try {
         const sendFunc = instance.aspirantSendNotice("fail", aspid);
         await sendFunc();
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "공통교육 안내"; },
+    function () {
+      return document.querySelector('.' + whiteBaseClassName) !== null;
+    },
+    async function (e) {
+      const aspid = document.querySelector('.' + whiteBaseClassName).getAttribute("aspid");
+      try {
+        instance.aspirantCommonMeetingSetting(aspid).catch((err) => {
+          console.log(err);
+        });
       } catch (e) {
         console.log(e);
         window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;

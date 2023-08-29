@@ -2584,6 +2584,10 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
           ], { selfMongo: selfLocalMongo });
         }
 
+        await back.updateAspirant([
+          { aspid: aspid },
+          { "meeting.common.status": "미팅 조율" }
+        ], { selfMongo });
         await kakao.sendTalk("aspirantRequestCommon", aspirant.designer, aspirant.phone, { client: aspirant.designer, host: address.frontinfo.host, path: "aspcommon", aspid: aspid });
         await messageSend({
           text: aspirant.designer + " 실장님께 프로필 공통 교육 안내 및 선택 알림톡을 전송하였습니다!",
