@@ -2519,6 +2519,38 @@ SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
+  const instance = this;
+  const back = this.back;
+  const kakao = this.kakao;
+  const { equalJson, messageSend, uniqueValue } = this.mother;
+  let obj = {};
+  obj.link = [ "/noticeAspirantCommon" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { aspid, value } = equalJson(req.body);
+      
+
+      console.log(aspid, value);
+      
+
+
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_noticeAspirantCommon): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_voice = function () {
   const instance = this;
   const address = this.address;
