@@ -4707,7 +4707,7 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
                   } else {
                     window.alert("전송이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
                   }
-                  selfHref(FRONTHOST);
+                  selfHref(FRONTHOST + "/aspinformation.php?aspid=" + aspid);
                 }).catch((err) => {
                   window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
                   window.location.reload();

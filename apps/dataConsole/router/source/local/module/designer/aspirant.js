@@ -513,7 +513,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
       },
       {
         title: "공통 교육일",
-        width: 100,
+        width: 200,
         name: "commonMeetingDate",
         type: "date",
         update: async (aspid, value) => {
@@ -748,7 +748,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "commonMeeting",
         },
         {
-          value: dateToString(aspirant.meeting.common.date),
+          value: dateToString(aspirant.meeting.common.date, true),
           name: "commonMeetingDate",
         },
         {
@@ -5304,84 +5304,6 @@ DesignerJs.prototype.aspirantCommonMeetingSetting = async function (aspid) {
       },
       child: {
         text: "클릭하여 두 번째 날짜를 선택...",
-        style: {
-          position: "relative",
-          fontSize: String(size1) + ea,
-          fontWeight: String(400),
-          color: colorChip.deactive,
-          top: String(wordingVisual) + ea,
-        }
-      }
-    });
-
-    thirdButton = createNode({
-      mother: whiteTong,
-      class: [ commonMeetingDateValueAsideClassName ],
-      attribute: {
-        aspid: aspid,
-        toggle: "off",
-        value: String(2),
-        index: String(2),
-      },
-      event: {
-        click: dateSelectEvent(2),
-        contextmenu: dateSelectEvent(2),
-      },
-      style: {
-        display: "flex",
-        flexDirection: "column",
-        position: "relative",
-        left: String(0) + ea,
-        width: withOut(0, ea),
-        height: String(inputBoxHeight) + ea,
-        borderRadius: String(5) + "px",
-        background: colorChip.gray1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: String(buttonBetween) + ea,
-        border: "1px dashed " + colorChip.gray4,
-      },
-      child: {
-        text: "클릭하여 세 번째 날짜를 선택...",
-        style: {
-          position: "relative",
-          fontSize: String(size1) + ea,
-          fontWeight: String(400),
-          color: colorChip.deactive,
-          top: String(wordingVisual) + ea,
-        }
-      }
-    });
-
-    fourthButton = createNode({
-      mother: whiteTong,
-      class: [ commonMeetingDateValueAsideClassName ],
-      attribute: {
-        aspid: aspid,
-        toggle: "off",
-        value: String(3),
-        index: String(3),
-      },
-      event: {
-        click: dateSelectEvent(3),
-        contextmenu: dateSelectEvent(3),
-      },
-      style: {
-        display: "flex",
-        flexDirection: "column",
-        position: "relative",
-        left: String(0) + ea,
-        width: withOut(0, ea),
-        height: String(inputBoxHeight) + ea,
-        borderRadius: String(5) + "px",
-        background: colorChip.gray1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: String(buttonBetween) + ea,
-        border: "1px dashed " + colorChip.gray4,
-      },
-      child: {
-        text: "클릭하여 네 번째 날짜를 선택...",
         style: {
           position: "relative",
           fontSize: String(size1) + ea,
