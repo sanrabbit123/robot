@@ -2191,7 +2191,7 @@ AspirantCommonJs.prototype.finalSubmit = function () {
       let thisDate;
       if (/없음/gi.test(targetValue)) {
 
-        await ajaxJson({ mode: "reject", aspid: this.aspid }, SECONDHOST + "/noticeAspirantCommon", { equal: true });
+        await ajaxJson({ mode: "reject", aspid: instance.aspid }, SECONDHOST + "/noticeAspirantCommon", { equal: true });
 
         window.alert("공통 교육 일자 불가능 표현이 완료되었습니다! 감사합니다.");
         selfHref(FRONTHOST);
@@ -2208,7 +2208,7 @@ AspirantCommonJs.prototype.finalSubmit = function () {
 
         thisDate = new Date(year, month - 1, date, hour, minutes);
 
-        await ajaxJson({ mode: "confirm", aspid: this.aspid, value: thisDate.valueOf() }, SECONDHOST + "/noticeAspirantCommon", { equal: true });
+        await ajaxJson({ mode: "confirm", aspid: instance.aspid, value: thisDate.valueOf() }, SECONDHOST + "/noticeAspirantCommon", { equal: true });
 
         window.alert("공통 교육 일자가 선택되었습니다! 감사합니다.");
         selfHref(FRONTHOST);

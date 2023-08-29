@@ -2613,7 +2613,7 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
 
         await back.updateAspirant([
           { aspid: aspid },
-          { "meeting.common.date": thisDate }
+          { "meeting.common.date": thisDate, "meeting.common.status": "참석 확정" }
         ], { selfMongo });
         await messageSend({
           text: aspirant.designer + " 실장님이 공통 교육 일자를 선택하셨습니다! => " + dateToString(thisDate, true),
