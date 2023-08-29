@@ -2524,7 +2524,7 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
   const back = this.back;
   const kakao = this.kakao;
   const address = this.address;
-  const { equalJson, messageSend, uniqueValue } = this.mother;
+  const { equalJson, messageSend, uniqueValue, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/noticeAspirantCommon" ];
   obj.func = async function (req, res, logger) {
@@ -2605,6 +2605,33 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
         } else {
           res.send(JSON.stringify({ message: "ok", data: rows[0] }));
         }
+
+      } else if (mode === "confirm") {
+
+        const { value } = equalJson(req.body);
+        const thisDate = new Date(Number(value));
+
+        await back.updateAspirant([
+          { aspid: aspid },
+          { "meeting.common.date": thisDate }
+        ], { selfMongo });
+        await messageSend({
+          text: aspirant.designer + " 실장님이 공통 교육 일자를 선택하셨습니다! => " + dateToString(thisDate, true),
+          channel,
+          voice: true,
+        });
+
+        res.send(JSON.stringify({ message: "done" }));
+
+      } else if (mode === "reject") {
+
+        await messageSend({
+          text: aspirant.designer + " 실장님이 공통 교육이 가능한 일자가 없다고 하셨습니다! <@UM1S7H3GQ>",
+          channel,
+          voice: true,
+        });
+
+        res.send(JSON.stringify({ message: "done" }));
 
       } else {
         throw new Error("invalid mode");
