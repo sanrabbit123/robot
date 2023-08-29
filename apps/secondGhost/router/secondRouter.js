@@ -2539,7 +2539,7 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
       const selfLocalMongo = instance.mongolocal;
       const collection = "noticeAspirantCommon";
       const idKeywords = "noticeAspirantCommonSend_";
-      const { aspid, value, mode } = equalJson(req.body);
+      const { aspid, mode } = equalJson(req.body);
       const aspirant = await back.getAspirantById(aspid, { selfMongo });
       const channel = "#301_apply";
       let json;
@@ -2548,7 +2548,7 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
       let createBoo;
 
       if (mode === "send") {
-
+        const { value } = equalJson(req.body);
         rows = await back.mongoRead(collection, { "aspirant.aspid": aspid }, { selfMongo: selfLocalMongo });
         if (rows.length === 0) {
           json = {
@@ -2595,9 +2595,20 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
           voice: true,
         });
 
-      }
+        res.send(JSON.stringify({ message: "done" }));
 
-      res.send(JSON.stringify({ message: "done" }));
+      } else if (mode === "get") {
+
+        rows = await back.mongoRead(collection, { "aspirant.aspid": aspid }, { selfMongo: selfLocalMongo });
+        if (rows.length === 0) {
+          res.send(JSON.stringify({ message: "ok", data: null }))
+        } else {
+          res.send(JSON.stringify({ message: "ok", data: rows[0] }));
+        }
+
+      } else {
+        throw new Error("invalid mode");
+      }
 
     } catch (e) {
       logger.error("Second Ghost 서버 문제 생김 (rou_post_noticeAspirantCommon): " + e.message).catch((e) => { console.log(e); });

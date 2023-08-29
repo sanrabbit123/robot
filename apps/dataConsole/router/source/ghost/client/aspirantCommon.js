@@ -2410,6 +2410,9 @@ AspirantCommonJs.prototype.launching = async function (loading) {
       this.aspirant = this.aspirants[0];
     }
 
+    this.dateValueRaw = await ajaxJson({ mode: "get", aspid: this.aspid }, SECONDHOST + "/noticeAspirantCommon", { equal: true });
+    console.log(this.dateValueRaw);
+
     await this.mother.ghostClientLaunching({
       mode: "front",
       name: "aspirantCommon",
