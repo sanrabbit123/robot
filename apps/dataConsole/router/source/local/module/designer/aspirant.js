@@ -5076,7 +5076,19 @@ DesignerJs.prototype.aspirantCommonMeetingSetting = async function (aspid) {
           await ajaxJson({
             aspid: aspid,
             value: resutObj,
+            mode: "send",
           }, SECONDHOST + "/noticeAspirantCommon");
+
+          setQueue(() => {
+            window.alert("공통 교육 선택 알림톡을 전송하였습니다!");
+            const removeTargets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+            for (let z = 0; z < removeTargets.length; z++) {
+              try {
+                removeTargets[z].remove();
+              } catch {}
+            }
+          }, 500);
+
         }
       } catch (e) {
         console.log(e);

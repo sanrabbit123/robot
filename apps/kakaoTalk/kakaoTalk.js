@@ -3582,6 +3582,49 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       },
     },
+    "aspirantRequestCommon": {
+      "name": "파트너십 공통 교육 안내",
+      "id": "TO_6667",
+      "needs": [
+        "client",
+        "host",
+        "path",
+        "aspid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"aspid\", to: obj.aspid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{client}님! 홈리에종 공통 교육 일정에 대해서 안내드립니다.\n\n아래 페이지를 통해 공통 교육 가능 일정을 확인하실 수 있으며, 제시된 공통 교육 일자 중 참석이 가능한 일자를 선택 후, 하단 버튼을 눌러주시면 됩니다!\n\n페이지에서 공통 교육 일정을 확인 및 선택 부탁드리고, 만약 모두 시간이 안 되신다면 홈리에종 채널에 별도로 문의 부탁드리겠습니다.\n\n감사합니다 :)\n\n*공통 교육 일정 선택\nhttps://#{host}/#{path}.php?aspid=#{aspid}",
+        "templtName": "파트너십 공통 교육 안내",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-08-24 17:28:55",
+        "templtCode": "TO_6667",
+        "comments": [
+          {
+            "cdate": "2023-08-25 16:19:04",
+            "name": "검수자",
+            "id": "2797874",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2023-08-25 16:19:04",
+            "status": "APR"
+          }
+        ]
+      },
+    },
     "noticeDesignerChecklist": {
       "name": "디자이너 요청 전송 체크리스트",
       "id": "TO_1919",

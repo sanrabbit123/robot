@@ -2199,7 +2199,7 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
       const channel = "#300_designer";
       const idWords = "noticeDesignerConsoleSend_";
       const voice = true;
-      const fairy = true;
+      const fairy = false;
       const { mode } = equalJson(req.body);
       let logDefaultObj;
       let thisJson;
@@ -2523,6 +2523,7 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
   const instance = this;
   const back = this.back;
   const kakao = this.kakao;
+  const address = this.address;
   const { equalJson, messageSend, uniqueValue } = this.mother;
   let obj = {};
   obj.link = [ "/noticeAspirantCommon" ];
@@ -2534,12 +2535,63 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const { aspid, value } = equalJson(req.body);
-      
+      const selfMongo = instance.mongo;
+      const selfLocalMongo = instance.mongolocal;
+      const collection = "noticeAspirantCommon";
+      const idKeywords = "noticeAspirantCommonSend_";
+      const { aspid, value, mode } = equalJson(req.body);
+      const aspirant = await back.getAspirantById(aspid, { selfMongo });
+      const channel = "#301_apply";
+      let json;
+      let rows;
+      let thisId, thisHistory;
+      let createBoo;
 
-      console.log(aspid, value);
-      
+      if (mode === "send") {
 
+        rows = await back.mongoRead(collection, { "aspirant.aspid": aspid }, { selfMongo: selfLocalMongo });
+        if (rows.length === 0) {
+          json = {
+            id: idKeywords + uniqueValue("hex"),
+            type: "common",
+            date: new Date(),
+            aspirant: {
+              aspid: aspid,
+              designer: aspirant.designer,
+            },
+            history: []
+          };
+          createBoo = true;
+        } else {
+          json = equalJson(JSON.stringify(rows[0]));
+          createBoo = false;
+        }
+  
+        json.history.unshift({
+          date: new Date(),
+          value: value,
+        });
+
+        thisId = json.id;
+        thisHistory = equalJson(JSON.stringify(json.history));
+
+        if (createBoo) {
+          await back.mongoCreate(collection, json, { selfMongo: selfLocalMongo });
+        } else {
+          await back.mongoUpdate(collection, [
+            { id: thisId },
+            { date: new Date(), history: thisHistory },
+          ], { selfMongo: selfLocalMongo });
+        }
+
+        await kakao.sendTalk("aspirantRequestCommon", aspirant.designer, aspirant.phone, { client: aspirant.designer, host: address.frontinfo.host, path: "common", aspid: aspid });
+        await messageSend({
+          text: aspirant.designer + " 실장님께 프로필 공통 교육 안내 및 선택 알림톡을 전송하였습니다!",
+          channel,
+          voice: true,
+        });
+
+      }
 
       res.send(JSON.stringify({ message: "done" }));
 
