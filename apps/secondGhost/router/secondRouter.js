@@ -2671,42 +2671,6 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
             }
           }
 
-          if (userDictionary[thisBody.event.user] !== undefined) {
-            if (channelDictionary[thisBody.event.channel] !== undefined) {
-              text = `(${channelDictionary[thisBody.event.channel]}) ${userDictionary[thisBody.event.user]} : ${thisBody.event.text}`;
-              thisChannel = "general";
-              if (/notice/gi.test(channelDictionary[thisBody.event.channel])) {
-                thisChannel = "notice";
-              } else if (/operation/gi.test(channelDictionary[thisBody.event.channel])) {
-                thisChannel = "operation";
-              } else if (/request/gi.test(channelDictionary[thisBody.event.channel])) {
-                thisChannel = "request";
-              } else if (/plan/gi.test(channelDictionary[thisBody.event.channel])) {
-                thisChannel = "plan";
-              }
-              ajaxJson({ chat_id: telegram.chat[thisChannel], text }, telegram.url(telegram.token)).catch((err) => {
-                logger.error("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + err.message).catch((e) => { console.log(e); });
-              });
-            } else {
-              if (members.map((member) => { return member.slack.fairy }).includes(thisBody.event.channel)) {
-                requestSystem("https://" + address.secondinfo.host + ":3000/fairyAi", {
-                  id: members.find((obj) => { return obj.slack.id === thisBody.event.user }).id,
-                  text: thisBody.event.text,
-                }, {
-                  headers: {
-                    "Content-Type": "application/json"
-                  }
-                }).catch((err) => {
-                  console.log(err);
-                });
-              }
-              text = `(unknown) ${userDictionary[thisBody.event.user]} : ${thisBody.event.text}`;
-              thisChannel = "plan";
-              ajaxJson({ chat_id: telegram.chat[thisChannel], text }, telegram.url(telegram.token)).catch((err) => {
-                logger.error("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + err.message).catch((e) => { console.log(e); });
-              });
-            }
-          }
         } else if (thisBody.event.type === "app_home_opened") {
           console.log(thisBody.event.user)
         }
