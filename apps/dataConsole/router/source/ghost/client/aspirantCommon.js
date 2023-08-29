@@ -2206,6 +2206,10 @@ AspirantCommonJs.prototype.finalSubmit = function () {
         hour = Number(stringArr.find((str) => { return /시$/gi.test(str) }).replace(/[^0-9]/gi, ''));
         minutes = Number(stringArr.find((str) => { return /분$/gi.test(str) }).replace(/[^0-9]/gi, ''));
 
+        if (year < 1000) {
+          year = year + 2000;
+        }
+
         thisDate = new Date(year, month - 1, date, hour, minutes);
 
         await ajaxJson({ mode: "confirm", aspid: instance.aspid, value: thisDate.valueOf() }, SECONDHOST + "/noticeAspirantCommon", { equal: true });
