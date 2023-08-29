@@ -2542,6 +2542,7 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
       const { aspid, mode } = equalJson(req.body);
       const aspirant = await back.getAspirantById(aspid, { selfMongo });
       const channel = "#301_apply";
+      const masterId = "UM1S7H3GQ";
       let json;
       let rows;
       let thisId, thisHistory;
@@ -2616,7 +2617,7 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
           { "meeting.common.date": thisDate, "meeting.common.status": "참석 확정" }
         ], { selfMongo });
         await messageSend({
-          text: aspirant.designer + " 실장님이 공통 교육 일자를 선택하셨습니다! => " + dateToString(thisDate, true),
+          text: aspirant.designer + " 실장님이 공통 교육 일자를 선택하셨습니다! => " + dateToString(thisDate, true) + " <@" + masterId + ">",
           channel,
           voice: true,
         });
@@ -2626,7 +2627,7 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
       } else if (mode === "reject") {
 
         await messageSend({
-          text: aspirant.designer + " 실장님이 공통 교육이 가능한 일자가 없다고 하셨습니다! <@UM1S7H3GQ>",
+          text: aspirant.designer + " 실장님이 공통 교육이 가능한 일자가 없다고 하셨습니다! <@" + masterId + ">",
           channel,
           voice: true,
         });
