@@ -329,6 +329,16 @@ Robot.prototype.basicConnect = async function () {
   }
 }
 
+Robot.prototype.photoConnect = async function () {
+  try {
+    const PhotoConsole = require(process.cwd() + "/apps/photoConsole/photoConsole.js");
+    const app = new PhotoConsole();
+    await app.photoConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.consoleSource = function () {
   const AiConsole = require(process.cwd() + "/apps/contentsMaker/aiConsole.js");
   let cobot = new AiConsole();
@@ -1133,7 +1143,7 @@ const MENU = {
   },
   aliveTest: async function () {
     try {
-      await robot.aliveTest();
+      robot.aliveTest();
     } catch (e) {
       console.log(e);
     }
@@ -1189,7 +1199,7 @@ const MENU = {
   },
   diskTest: async function () {
     try {
-      await robot.diskTest();
+      robot.diskTest();
     } catch (e) {
       console.log(e);
     }
@@ -1239,6 +1249,13 @@ const MENU = {
   basic: async function () {
     try {
       await robot.basicConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  photo: async function () {
+    try {
+      await robot.photoConnect();
     } catch (e) {
       console.log(e);
     }
