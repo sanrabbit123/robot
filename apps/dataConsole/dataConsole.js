@@ -158,7 +158,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       svgTongItemsString = null;
 
       execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/exec.js` ]);
-      execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
+      execString = execString.replace(/\/<%name%>\//g, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
       fileString = await fileSystem(`readString`, [ `${this.dir}/router/source/local/${i}` ]);
 
       if (await fileSystem(`exist`, [ `${this.dir}/router/source/class/${i}` ])) {
@@ -390,7 +390,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
 
       execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/middleExec.js` ]);
-      execString = execString.replace(/\/<%name%>\//, (name.slice(0, 1).toUpperCase() + name.slice(1)));
+      execString = execString.replace(/\/<%name%>\//g, (name.slice(0, 1).toUpperCase() + name.slice(1)));
 
       fileString = fileString.slice([ ...fileString.matchAll(/%\/%\/g/g) ][0].index + String("%/%/g").length + 1);
 

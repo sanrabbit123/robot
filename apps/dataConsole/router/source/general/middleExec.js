@@ -1,4 +1,5 @@
 const app = new /<%name%>/Js();
+const appName = "/<%name%>/";
 
 document.getElementById("totalcontents").style.height = String(window.innerHeight) + "px";
 
@@ -12,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
 document.addEventListener("error", function (e) {
   window.localStorage.clear();
   GeneralJs.ajaxJson({
-    message: "middleExec : " + e.message,
+    message: "middleExec : " + e.message + " (" + appName + ")",
     channel: "#error_log"
   }, "/sendSlack").catch((err) => { console.log(err); });
   window.location.href = "https://home-liaison.com";
@@ -20,7 +21,7 @@ document.addEventListener("error", function (e) {
 
 document.addEventListener("error", function (e) {
   GeneralJs.ajaxJson({
-    message: "middleExec : " + e.message,
+    message: "middleExec : " + e.message + " (" + appName + ")",
     channel: "#error_log"
   }, "/sendSlack").catch((err) => { console.log(err); });
   window.location.href = "https://home-liaison.com";
