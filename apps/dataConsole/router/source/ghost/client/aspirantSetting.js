@@ -455,7 +455,32 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
   let deleteValueCareer;
   let nameDom, phoneDom, longDom;
   let exampleTong;
+  let exampleDescriptionTong;
   let pictureNumber;
+  let settingTongPaddingTop;
+  let settingTongPaddingLeft;
+  let settingTongImageBetween;
+  let settingTongImageHeight;
+  let settingSetDescriptionContents;
+  let thisTitle, thisDescription;
+  let descriptionBlock;
+  let descriptionBlockMarginBottom;
+  let descriptionBlockSize;
+  let descriptionBlockWeight;
+  let descriptionBlockBoldWeight;
+  let descriptionBlockNumberWidth;
+  let descriptionBlockTitleWidth;
+  let descriptionBlockPaddingLeft;
+  let descriptionBlockPaddingTop;
+  let garoExampleTong;
+  let garoExampleDescriptionTong;
+  let seroExampleTong;
+  let seroExampleDescriptionTong;
+  let secondLeftBox, secondRightBox;
+  let middleBarHeight, middleBarMarginBottom;
+  let settingGaroDescriptionContents;
+  let settingSeroDescriptionContents;
+  let contents2;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -780,25 +805,104 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
 
   textareaVisualTop = <%% 38, 35, 34, 32, 8 %%>;
 
-  pictureNumber = 25;
+  pictureNumber = 22;
+
+  settingTongPaddingTop = <%% 13, 13, 13, 13, 13 %%>;
+  settingTongPaddingLeft = <%% 12, 12, 12, 12, 12 %%>;
+  settingTongImageBetween = <%% 7, 7, 7, 7, 7 %%>;
+  settingTongImageHeight = <%% 167, 167, 167, 167, 167 %%>;
+
+  descriptionBlockMarginBottom = <%% 5, 5, 5, 5, 5 %%>;
+
+  descriptionBlockSize = <%% 14, 14, 14, 14, 14 %%>;
+  descriptionBlockWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionBlockBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  descriptionBlockNumberWidth = <%% 18, 18, 18, 18, 18 %%>;
+  descriptionBlockTitleWidth = <%% 160, 160, 160, 160, 160 %%>;
+
+  descriptionBlockPaddingLeft = <%% 20, 20, 20, 20, 20 %%>;
+  descriptionBlockPaddingTop = <%% 18, 18, 18, 18, 18 %%>;
+
+  middleBarHeight = <%% 50, 50, 50, 50, 50 %%>;
+  middleBarMarginBottom = <%% 50, 50, 50, 50, 50 %%>;
 
   contents = {
     main: [
-      "추가 포트폴리오 전송",
+      "세트 포트폴리오 전송",
     ],
     sub: [
-      <&& "추가 포트폴리오를 요청드립니다." | "추가 포트폴리오를 요청드립니다." | "추가 포트폴리오를 요청드립니다." | "포트폴리오를 요청드립니다." | "추가 포트폴리오를 요청드립니다." &&>,
-      <&& "포트폴리오는 주거 인테리어 위주의" | "포트폴리오는 주거 인테리어 위주의" | "포트폴리오는 주거 인테리어의" | "주로 주거 인테리어의" | "포트폴리오는 주거 인테리어의" &&>,
-      <&& "스타일링 능력을 최대한 보여줄 수 있는" | "스타일링 능력을 최대한 보여줄 수 있는" | "스타일링을 최대한 보여줄 수 있는" | "스타일링을 보여줄 수 있는" | "스타일링을 최대한 보여줄 수 있는" &&>,
-      <&& "자료로 부탁드리겠습니다!" | "자료로 부탁드리겠습니다!" | "자료로 부탁드리겠습니다!" | "자료로 부탁드리겠습니다!" | "자료로 부탁드리겠습니다!" &&>,
+      "웹 포트폴리오에 올릴 수 있는",
+      "세트 사진을 요청드립니다.",
+      "세트 사진은 다음 예시와 같이",
+      "여러 조건을 만족해야만 합니다.",
     ]
   };
 
-  careerBlocksRender = () => {}
-  plusValueCareer = () => {}
-  plusBlockEvent = () => {}
-  updateValueCareer = () => {}
-  deleteValueCareer = () => {}
+  contents2 = {
+    main: [
+      "세트 포트폴리오 전송",
+    ],
+    sub: [
+      "다음 포트폴리오 전송칸을 통해",
+      "세트 포트폴리오를 전송해 주세요!",
+      "jpg, png 등의 낱개 이미지 파일",
+      "또는 zip파일로 올려주시면 됩니다.",
+    ]
+  };
+
+  settingSetDescriptionContents = [
+    {
+      title: "세트의 구성",
+      description: "공간별로 스타일링 잘 보여줄 수 있는 사진의 나열",
+    },
+    {
+      title: "사진의 개수",
+      description: "공간별 사진 가로 기준 1장 이상, 세로 기준 2장 이상",
+    },
+    {
+      title: "사진의 비율",
+      description: "사진의 비율은 A4와 동일 비율인 1:1.414, 가로 또는 세로",
+    },
+    {
+      title: "세로 사진",
+      description: "세로형 사진은 반드시 짝수로 존재하여 짝을 이뤄야 함",
+    },
+    {
+      title: "전체적인 톤",
+      description: "밝고 화사한 공간 사진, 사실적인 톤의 사진",
+    }
+  ];
+
+  settingGaroDescriptionContents = [
+    {
+      title: "가로 비율",
+      description: "사진의 비율은 A4와 동일 비율인 1:1.414",
+    },
+    {
+      title: "최소 사이즈",
+      description: "세로가 (짧은 쪽) 최소 1200픽셀 이상",
+    },
+    {
+      title: "사진 개수",
+      description: "공간당 최소 1장 이상, 광각컷(18mm 이하) 1장 이상 필수",
+    },
+  ];
+
+  settingSeroDescriptionContents = [
+    {
+      title: "세로 비율",
+      description: "사진의 비율은 A4와 동일 비율인 1:1.414",
+    },
+    {
+      title: "최소 사이즈",
+      description: "가로가 (짧은 쪽) 최소 1200픽셀 이상",
+    },
+    {
+      title: "사진 개수",
+      description: "반드시 짝수로 있어야 함 (0장, 2장, 4장, 6장...)",
+    },
+  ];
 
   barClickEvent = (arr) => {
     const valuesArr = equalJson(JSON.stringify(arr));
@@ -1349,6 +1453,8 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
     }
   });
 
+  // example
+
   leftBox = createNode({
     mother: contentsArea,
     style: {
@@ -1402,15 +1508,12 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
     }
   });
 
-
-  // new description
+  // description - set
   exampleTong = createNode({
     mother: rightBox,
     style: {
       display: "block",
       position: "relative",
-      marginBottom: String(blockMarginBottom) + ea,
-      height: String(textAreaBlockHeight) + ea,
     },
     children: [
       {
@@ -1427,7 +1530,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
         }
       },
       {
-        text: "사진 예시",
+        text: "세트 예시",
         style: {
           display: "inline-block",
           position: "relative",
@@ -1444,33 +1547,615 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
           display: "inline-block",
           position: "relative",
           top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
-          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth, ea) : withOut(0, ea),
-          height: String(grayBigHeight) + ea,
+          padding: String(settingTongPaddingLeft) + ea,
+          paddingTop: String(settingTongPaddingTop) + ea,
+          paddingBottom: String(settingTongPaddingTop - settingTongImageBetween) + ea,
+          paddingRight: String(settingTongPaddingLeft - settingTongImageBetween) + ea,
+          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingLeft * 2) - settingTongImageBetween, ea) : withOut(0, ea),
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
+          borderBottomRightRadius: String(0)  + "px",
+          borderBottomLeftRadius: String(0)  + "px",
           cursor: "pointer",
+          textAlign: "center",
         },
       },
     ]
   }).lastChild;
-
   for (let i = 0; i < pictureNumber; i++) {
+    createNode({
+      mother: exampleTong,
+      mode: "img",
+      attribute: { src: AspirantSettingJs.binaryPath + "/set/t" + String(i + 1) + ".jpg" },
+      style: {
+        display: "inline-block",
+        position: "relative",
+        height: String(settingTongImageHeight) + ea,
+        borderRadius: String(3) + "px",
+        marginRight: String(settingTongImageBetween) + ea,
+        marginBottom: String(settingTongImageBetween) + ea,
+      }
+    });
+  }
+  exampleDescriptionTong = createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: "transparent",
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+          width: String(titleWidth) + ea,
+        }
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
+          padding: String(settingTongPaddingTop) + ea,
+          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingTop * 2), ea) : withOut(0, ea),
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+          borderTopRightRadius: String(0)  + "px",
+          borderTopLeftRadius: String(0)  + "px",
+          paddingTop: String(0) + ea,
+          cursor: "pointer",
+          textAlign: "center",
+        },
+        child: {
+          style: {
+            display: "block",
+            width: withOut(descriptionBlockPaddingLeft * 2, ea),
+            background: colorChip.white,
+            borderRadius: String(3) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.gray4,
+            padding: String(descriptionBlockPaddingLeft) + ea,
+            paddingTop: String(descriptionBlockPaddingTop) + ea,
+            paddingBottom: String(descriptionBlockPaddingLeft - descriptionBlockMarginBottom) + ea,
+          }
+        }
+      },
+    ]
+  }).lastChild.lastChild;
+  for (let i = 0; i < settingSetDescriptionContents.length; i++) {
 
-    
+    thisTitle = settingSetDescriptionContents[i].title;
+    thisDescription = settingSetDescriptionContents[i].description;
+
+    descriptionBlock = createNode({
+      mother: exampleDescriptionTong,
+      style: {
+        display: "block",
+        position: "relative",
+        textAlign: "left",
+        marginBottom: String(descriptionBlockMarginBottom) + ea,
+      }
+    });
+
+    createNode({
+      mother: descriptionBlock,
+      text: String(i + 1),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        color: colorChip.green,
+        fontSize: String(descriptionBlockSize) + ea,
+        fontWeight: String(descriptionBlockWeight),
+        width: String(descriptionBlockNumberWidth) + ea,
+      }
+    });
+
+    createNode({
+      mother: descriptionBlock,
+      text: thisTitle,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        color: colorChip.block,
+        fontSize: String(descriptionBlockSize) + ea,
+        fontWeight: String(descriptionBlockBoldWeight),
+        width: String(descriptionBlockTitleWidth) + ea,
+      }
+    });
+
+    createNode({
+      mother: descriptionBlock,
+      text: thisDescription,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        color: colorChip.block,
+        fontSize: String(descriptionBlockSize) + ea,
+        fontWeight: String(descriptionBlockWeight),
+      }
+    });
+
+  }
+  
+  // description - garo
+  garoExampleTong = createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: colorChip.green,
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "가로 사진",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+          width: String(titleWidth) + ea,
+        }
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
+          padding: String(settingTongPaddingLeft) + ea,
+          paddingTop: String(settingTongPaddingTop) + ea,
+          paddingBottom: String(settingTongPaddingTop - settingTongImageBetween) + ea,
+          paddingRight: String(settingTongPaddingLeft - settingTongImageBetween) + ea,
+          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingLeft * 2) - settingTongImageBetween, ea) : withOut(0, ea),
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+          borderBottomRightRadius: String(0)  + "px",
+          borderBottomLeftRadius: String(0)  + "px",
+          cursor: "pointer",
+          textAlign: "center",
+        },
+      },
+    ]
+  }).lastChild;
+  createNode({
+    mother: garoExampleTong,
+    mode: "img",
+    attribute: { src: AspirantSettingJs.binaryPath + "/set/t" + String(3) + ".jpg" },
+    style: {
+      display: "inline-block",
+      position: "relative",
+      height: String(516) + ea,
+      borderRadius: String(3) + "px",
+      marginRight: String(settingTongImageBetween) + ea,
+      marginBottom: String(settingTongImageBetween) + ea,
+    }
+  });
+  garoExampleDescriptionTong = createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: "transparent",
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+          width: String(titleWidth) + ea,
+        }
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
+          padding: String(settingTongPaddingTop) + ea,
+          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingTop * 2), ea) : withOut(0, ea),
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+          borderTopRightRadius: String(0)  + "px",
+          borderTopLeftRadius: String(0)  + "px",
+          paddingTop: String(0) + ea,
+          cursor: "pointer",
+          textAlign: "center",
+        },
+        child: {
+          style: {
+            display: "block",
+            width: withOut(descriptionBlockPaddingLeft * 2, ea),
+            background: colorChip.white,
+            borderRadius: String(3) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.gray4,
+            padding: String(descriptionBlockPaddingLeft) + ea,
+            paddingTop: String(descriptionBlockPaddingTop) + ea,
+            paddingBottom: String(descriptionBlockPaddingLeft - descriptionBlockMarginBottom) + ea,
+          }
+        }
+      },
+    ]
+  }).lastChild.lastChild;
+  for (let i = 0; i < settingGaroDescriptionContents.length; i++) {
+
+    thisTitle = settingGaroDescriptionContents[i].title;
+    thisDescription = settingGaroDescriptionContents[i].description;
+
+    descriptionBlock = createNode({
+      mother: garoExampleDescriptionTong,
+      style: {
+        display: "block",
+        position: "relative",
+        textAlign: "left",
+        marginBottom: String(descriptionBlockMarginBottom) + ea,
+      }
+    });
+
+    createNode({
+      mother: descriptionBlock,
+      text: String(i + 1),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        color: colorChip.green,
+        fontSize: String(descriptionBlockSize) + ea,
+        fontWeight: String(descriptionBlockWeight),
+        width: String(descriptionBlockNumberWidth) + ea,
+      }
+    });
+
+    createNode({
+      mother: descriptionBlock,
+      text: thisTitle,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        color: colorChip.block,
+        fontSize: String(descriptionBlockSize) + ea,
+        fontWeight: String(descriptionBlockBoldWeight),
+        width: String(descriptionBlockTitleWidth) + ea,
+      }
+    });
+
+    createNode({
+      mother: descriptionBlock,
+      text: thisDescription,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        color: colorChip.block,
+        fontSize: String(descriptionBlockSize) + ea,
+        fontWeight: String(descriptionBlockWeight),
+      }
+    });
 
   }
 
-  
+  // description - sero
+  seroExampleTong = createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: colorChip.green,
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "세로 사진",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+          width: String(titleWidth) + ea,
+        }
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
+          padding: String(settingTongPaddingLeft) + ea,
+          paddingTop: String(settingTongPaddingTop) + ea,
+          paddingBottom: String(settingTongPaddingTop - settingTongImageBetween) + ea,
+          paddingRight: String(settingTongPaddingLeft - settingTongImageBetween) + ea,
+          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingLeft * 2) - settingTongImageBetween, ea) : withOut(0, ea),
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+          borderBottomRightRadius: String(0)  + "px",
+          borderBottomLeftRadius: String(0)  + "px",
+          cursor: "pointer",
+          textAlign: "center",
+        },
+      },
+    ]
+  }).lastChild;
+  createNode({
+    mother: seroExampleTong,
+    mode: "img",
+    attribute: { src: AspirantSettingJs.binaryPath + "/set/t" + String(6) + ".jpg" },
+    style: {
+      display: "inline-block",
+      position: "relative",
+      height: String(511) + ea,
+      borderRadius: String(3) + "px",
+      marginRight: String(settingTongImageBetween) + ea,
+      marginBottom: String(settingTongImageBetween) + ea,
+    }
+  });
+  createNode({
+    mother: seroExampleTong,
+    mode: "img",
+    attribute: { src: AspirantSettingJs.binaryPath + "/set/t" + String(7) + ".jpg" },
+    style: {
+      display: "inline-block",
+      position: "relative",
+      height: String(511) + ea,
+      borderRadius: String(3) + "px",
+      marginRight: String(settingTongImageBetween) + ea,
+      marginBottom: String(settingTongImageBetween) + ea,
+    }
+  });
+  seroExampleDescriptionTong = createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: "transparent",
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+          width: String(titleWidth) + ea,
+        }
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
+          padding: String(settingTongPaddingTop) + ea,
+          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingTop * 2), ea) : withOut(0, ea),
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+          borderTopRightRadius: String(0)  + "px",
+          borderTopLeftRadius: String(0)  + "px",
+          paddingTop: String(0) + ea,
+          cursor: "pointer",
+          textAlign: "center",
+        },
+        child: {
+          style: {
+            display: "block",
+            width: withOut(descriptionBlockPaddingLeft * 2, ea),
+            background: colorChip.white,
+            borderRadius: String(3) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.gray4,
+            padding: String(descriptionBlockPaddingLeft) + ea,
+            paddingTop: String(descriptionBlockPaddingTop) + ea,
+            paddingBottom: String(descriptionBlockPaddingLeft - descriptionBlockMarginBottom) + ea,
+          }
+        }
+      },
+    ]
+  }).lastChild.lastChild;
+  for (let i = 0; i < settingSeroDescriptionContents.length; i++) {
 
-  
+    thisTitle = settingSeroDescriptionContents[i].title;
+    thisDescription = settingSeroDescriptionContents[i].description;
+
+    descriptionBlock = createNode({
+      mother: seroExampleDescriptionTong,
+      style: {
+        display: "block",
+        position: "relative",
+        textAlign: "left",
+        marginBottom: String(descriptionBlockMarginBottom) + ea,
+      }
+    });
+
+    createNode({
+      mother: descriptionBlock,
+      text: String(i + 1),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        color: colorChip.green,
+        fontSize: String(descriptionBlockSize) + ea,
+        fontWeight: String(descriptionBlockWeight),
+        width: String(descriptionBlockNumberWidth) + ea,
+      }
+    });
+
+    createNode({
+      mother: descriptionBlock,
+      text: thisTitle,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        color: colorChip.block,
+        fontSize: String(descriptionBlockSize) + ea,
+        fontWeight: String(descriptionBlockBoldWeight),
+        width: String(descriptionBlockTitleWidth) + ea,
+      }
+    });
+
+    createNode({
+      mother: descriptionBlock,
+      text: thisDescription,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        color: colorChip.block,
+        fontSize: String(descriptionBlockSize) + ea,
+        fontWeight: String(descriptionBlockWeight),
+      }
+    });
+
+  }
+
+  // bar
+
+  secondLeftBox = createNode({
+    mother: contentsArea,
+    style: {
+      display: "block",
+      position: "relative",
+      marginLeft: String(innerPadding) + ea,
+      width: withOut(innerPadding * 2, ea),
+      verticalAlign: "top",
+      borderBottom: "1px dashed " + colorChip.gray3,
+      height: String(middleBarHeight) + ea,
+      marginBottom: String(middleBarMarginBottom) + ea,
+    }
+  });
 
 
+  // portfolio
 
+  secondLeftBox = createNode({
+    mother: contentsArea,
+    style: {
+      display: desktop ? "inline-block" : "none",
+      position: "relative",
+      marginLeft: String(innerPadding) + ea,
+      width: String(leftBoxWidth) + ea,
+      verticalAlign: "top",
+    }
+  });
 
+  createNode({
+    mother: secondLeftBox,
+    mode: "svg",
+    source: svgMaker.doubleQuote(colorChip.green),
+    style: {
+      display: "block",
+      position: "relative",
+      height: String(quoteHeight) + ea,
+      marginLeft: String(quoteLeft) + ea,
+    }
+  });
+
+  createNode({
+    mother: secondLeftBox,
+    text: contents2.sub.join("\n"),
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(descriptionWeight),
+      color: colorChip.black,
+      lineHeight: String(descriptionLineHeight),
+      marginTop: String(descriptionMarginTop) + ea,
+    },
+    bold: {
+      fontWeight: String(descriptionBoldWeight),
+      color: colorChip.black,
+    }
+  })
+
+  secondRightBox = createNode({
+    mother: contentsArea,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: withOut(leftBoxWidth + (innerPadding * 2), ea),
+      verticalAlign: "top",
+      marginLeft: desktop ? "" : String(innerPadding) + ea,
+      paddingTop: desktop ? "" : String(1) + ea,
+    }
+  });
 
   // 23
   portfolioBlock = createNode({
-    mother: rightBox,
+    mother: secondRightBox,
     style: {
       display: "block",
       position: "relative",
@@ -1605,7 +2290,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
 
   if (mobile) {
     createNode({
-      mother: rightBox,
+      mother: secondRightBox,
       style: {
         display: "block",
         position: "relative",
@@ -1617,7 +2302,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
 
   // 25
   longDom = createNode({
-    mother: rightBox,
+    mother: secondRightBox,
     style: {
       display: "block",
       position: "relative",
