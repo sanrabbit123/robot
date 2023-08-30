@@ -1375,7 +1375,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                     event: {
                       click: function (e) {
                         const desid = this.getAttribute("desid");
-                        blankHref(FRONTHOST + "/designer/dashboard.php?desid=" + desid);
+                        blankHref(FRONTHOST + "/designer/dashboard.php?desid=" + desid + "&view=test");
                       }
                     },
                     text: "디자이너 콘솔",
