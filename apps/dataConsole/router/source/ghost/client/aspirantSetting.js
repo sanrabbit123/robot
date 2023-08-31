@@ -489,6 +489,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
   let denyTong;
   let submitTongBetween;
   let garoImageHeight, seroImageHeight;
+  let descriptionBoxVisualPaddingTop;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -839,6 +840,8 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
 
   submitTongBetween = <%% 8, 8, 8, 8, 1 %%>;
 
+  descriptionBoxVisualPaddingTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
   if (generalMode) {
 
     contents = {
@@ -957,7 +960,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
       },
       {
         title: "사진 개수",
-        description: "합쳐서 총 최소 6장 이상, 광각컷(18mm 이하) 1장 이상 필수",
+        description: "합쳐서 총 최소 6장 이상, 광각컷(18mm 이하) 1장 이상",
       },
     ];
   
@@ -1721,7 +1724,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
               borderRadius: String(3) + "px",
               boxShadow: "0px 3px 15px -9px " + colorChip.gray4,
               padding: String(descriptionBlockPaddingLeft) + ea,
-              paddingTop: String(descriptionBlockPaddingTop) + ea,
+              paddingTop: String(descriptionBlockPaddingTop + descriptionBoxVisualPaddingTop) + ea,
               paddingBottom: String(descriptionBlockPaddingLeft - descriptionBlockMarginBottom + (mobile ? 0.4 : 0)) + ea,
             }
           }
@@ -1910,7 +1913,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
             borderRadius: String(3) + "px",
             boxShadow: "0px 3px 15px -9px " + colorChip.gray4,
             padding: String(descriptionBlockPaddingLeft) + ea,
-            paddingTop: String(descriptionBlockPaddingTop) + ea,
+            paddingTop: String(descriptionBlockPaddingTop + descriptionBoxVisualPaddingTop) + ea,
             paddingBottom: String(descriptionBlockPaddingLeft - descriptionBlockMarginBottom + (mobile ? 0.4 : 0)) + ea,
           }
         }
@@ -2111,7 +2114,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
             borderRadius: String(3) + "px",
             boxShadow: "0px 3px 15px -9px " + colorChip.gray4,
             padding: String(descriptionBlockPaddingLeft) + ea,
-            paddingTop: String(descriptionBlockPaddingTop) + ea,
+            paddingTop: String(descriptionBlockPaddingTop + descriptionBoxVisualPaddingTop) + ea,
             paddingBottom: String(descriptionBlockPaddingLeft - descriptionBlockMarginBottom + (mobile ? 0.4 : 0)) + ea,
           }
         }
