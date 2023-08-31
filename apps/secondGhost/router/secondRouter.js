@@ -3745,6 +3745,7 @@ SecondRouter.prototype.rou_post_timeAspirantCommon = function () {
             date: { $lte: toDate }
           },
         ] })
+        console.log(value);
         console.log(fromDate);
         console.log(toDate);
 
