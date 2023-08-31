@@ -3641,6 +3641,105 @@ SecondRouter.prototype.rou_post_designerChecklistLog = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_timeAspirantCommon = function () {
+  const instance = this;
+  const { equalJson, uniqueValue, ipParsing, messageSend, dateToString } = this.mother;
+  const back = this.back;
+  let obj;
+  obj = {};
+  obj.link = [ "/timeAspirantCommon" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid mode");
+      }
+      const { mode } = equalJson(req.body);
+      const selfMongo = instance.mongo;
+      const selfLocalMongo = instance.mongolocal;
+      const emptyDate = new Date(2000, 0, 1);
+      const emptyDateValue = emptyDate.valueOf();
+      const idKeywords = "commonMeeting_";
+      const collection = "timeAspirantCommon";
+      const monthAgo = new Date();
+      const agoStandard = 12;
+      monthAgo.setMonth(monthAgo.getMonth() - agoStandard);
+      const whereQuery = { "submit.partnership.date": { $gte: monthAgo } };
+      const aspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo });
+      let timeSet;
+      let year, month, date;
+      let fromDate, toDate;
+      let timeTong;
+      let dateString;
+      let rows;
+      let thisKey;
+
+      if (mode === "update") {
+        timeSet = [];
+        for (let aspirant of aspirants) {
+          if (aspirant.meeting.common.date.valueOf() >= emptyDateValue) {
+            if (!/드랍/gi.test(aspirant.meeting.status)) {
+              timeSet.push(String(aspirant.meeting.common.date.valueOf()));
+            }
+          }
+        }
+        timeSet = [ ...new Set(timeSet) ].map((str) => { return new Date(Number(str)) });
+        timeTong = timeSet.map((date) => {
+          return { date, targets: [] }
+        });
+        for (let dateObject of timeSet) {
+          year = dateObject.getFullYear();
+          month = dateObject.getMonth();
+          date = dateObject.getDate();
+          fromDate = new Date(year, month, date, dateObject.getHours(), dateObject.getMinutes(), 0);
+          toDate = new Date(year, month, date, dateObject.getHours(), dateObject.getMinutes(), 0);
+          fromDate.setHours(fromDate.getHours() - 1);
+          toDate.setHours(toDate.getHours() + 1);
+          for (let aspirant of aspirants) {
+            if (aspirant.meeting.common.date.valueOf() >= emptyDateValue) {
+              if (!/드랍/gi.test(aspirant.meeting.status)) {
+                if (fromDate.valueOf() <= aspirant.meeting.common.date.valueOf() && toDate.valueOf() >= aspirant.meeting.common.date.valueOf()) {
+                  timeTong.find(({ date }) => { return date.valueOf() === dateObject.valueOf() }).targets.push({
+                    aspid: aspirant.aspid,
+                    date: aspirant.meeting.common.date
+                  })
+                }
+              }
+            }
+          }
+        }
+        for (let obj of timeTong) {
+          dateString = dateToString(obj.date, true);
+          dateString = dateString.replace(/[ \-\:]/gi, '');
+          obj.id = idKeywords + dateString;
+          obj.log = new Date();
+          thisKey = obj.id;
+          rows = await back.mongoRead(collection, { id: thisKey }, { selfMongo: selfLocalMongo });
+          if (rows.length !== 0) {
+            await back.mongoDelete(collection, { id: thisKey }, { selfMongo: selfLocalMongo });
+          }
+          await back.mongoCreate(collection, equalJson(JSON.stringify(obj)), { selfMongo: selfLocalMongo });
+        }
+
+        res.send(JSON.stringify({ message: "done" }));
+      } else {
+        throw new Error("invalid mode");
+      }
+
+    } catch (e) {
+      console.log(e);
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_timeAspirantCommon): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 SecondRouter.prototype.setMembers = async function () {
