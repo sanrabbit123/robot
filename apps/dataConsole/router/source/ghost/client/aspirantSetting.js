@@ -510,7 +510,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
   quoteTop = <%% 8, 8, 8, 8, -0.6 %%>;
   quoteHeight = <%% 12, 11, 10, 9, 2.5 %%>;
   quoteMarginBottom = <%% (isMac() ? 7 : 8), (isMac() ? 7 : 8), (isMac() ? 7 : 8), (isMac() ? 6 : 7), 7 %%>;
-  quoteLeft = <%% 2, 2, 2, 2, 1.6 %%>;
+  quoteLeft = <%% 2, 2, 2, 2, 0.4 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
   initWordingSize = <%% 15.5, 15, 14.5, 13.5, 3.5 %%>;
@@ -545,7 +545,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
   grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
 
   moduleHeight = grayTop + grayHeight;
-  blockMarginBottom = <%% 12, 12, 9, 9, 2 %%>;
+  blockMarginBottom = <%% 12, 12, 9, 9, 7 %%>;
 
   leftGrayType0 = <%% 127, 111, 106, 98, 18 %%>;
   leftGrayType1 = <%% 418, 361, 318, 96, 22.8 %%>;
@@ -690,10 +690,10 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
   leftBoxWidth = <%% 398, 250, 209, 160, 0 %%>;
   textAreaBlockHeight = <%% 156, 136, 133, 130, 44.2 %%>;
 
-  descriptionSize = <%% 15, 14, 13, 13, 3 %%>;
+  descriptionSize = <%% 15, 14, 13, 13, 3.2 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.66 %%>;
-  descriptionMarginTop = <%% 10, 10, 8, 6, 10 %%>;
+  descriptionMarginTop = <%% 10, 10, 8, 6, 1 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   policyAreaMarginTop = <%% 15, 15, 12, 10, 2 %%>;
@@ -815,29 +815,29 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
 
   pictureNumber = 22;
 
-  settingTongPaddingTop = <%% 13, 13, 11, 7, 1 %%>;
-  settingTongPaddingLeft = <%% 12, 12, 10, 6, 1 %%>;
-  settingTongImageBetween = <%% 7, 6, 5, 3, 1 %%>;
-  settingTongImageHeight = <%% 167, 128, 108, 84.5, 140 %%>;
-  garoImageHeight = <%% 516, 398, 335, 261, 39 %%>;
-  seroImageHeight = <%% 511, 394, 332, 259, 39 %%>;
+  settingTongPaddingTop = <%% 13, 13, 11, 7, 2 %%>;
+  settingTongPaddingLeft = <%% 12, 12, 10, 6, 2 %%>;
+  settingTongImageBetween = <%% 7, 6, 5, 3, 0.5 %%>;
+  settingTongImageHeight = <%% 167, 128, 108, 84.5, 16.6 %%>;
+  garoImageHeight = <%% 516, 398, 335, 261, 50.7 %%>;
+  seroImageHeight = <%% 511, 394, 332, 259, 50 %%>;
 
-  descriptionBlockMarginBottom = <%% 5, 5, 5, 3, 5 %%>;
+  descriptionBlockMarginBottom = <%% 5, 5, 5, 3, 2.2 %%>;
 
-  descriptionBlockSize = <%% 14, 14, 12, 11, 14 %%>;
+  descriptionBlockSize = <%% 14, 14, 12, 11, 3 %%>;
   descriptionBlockWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBlockBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  descriptionBlockNumberWidth = <%% 18, 18, 18, 12, 18 %%>;
-  descriptionBlockTitleWidth = <%% 160, 154, 124, 84, 16 %%>;
+  descriptionBlockNumberWidth = <%% 18, 18, 18, 12, 3 %%>;
+  descriptionBlockTitleWidth = <%% 160, 154, 124, 78, 20 %%>;
 
-  descriptionBlockPaddingLeft = <%% 20, 20, 20, 14, 20 %%>;
-  descriptionBlockPaddingTop = <%% 18, 18, 18, 12, 18 %%>;
+  descriptionBlockPaddingLeft = <%% 20, 20, 20, 14, 3.5 %%>;
+  descriptionBlockPaddingTop = <%% 18, 18, 18, 12, 3.5 %%>;
 
-  middleBarHeight = <%% 50, 50, 50, 50, 50 %%>;
-  middleBarMarginBottom = <%% 50, 50, 50, 50, 50 %%>;
+  middleBarHeight = <%% 50, 50, 50, 50, 5 %%>;
+  middleBarMarginBottom = <%% 50, 50, 50, 50, 6 %%>;
 
-  submitTongBetween = <%% 8, 8, 8, 8, 8 %%>;
+  submitTongBetween = <%% 8, 8, 8, 8, 1 %%>;
 
   if (generalMode) {
 
@@ -876,7 +876,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
       },
       {
         title: "사진의 비율",
-        description: "사진의 비율은 A4와 동일 비율인 1:1.414, 가로 또는 세로",
+        description: "사진 비율은 A4와 동일 비율인 1:1.414, 가로 또는 세로",
       },
       {
         title: "세로 사진",
@@ -899,7 +899,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
       },
       {
         title: "사진 개수",
-        description: "공간당 최소 1장 이상, 광각컷(18mm 이하) 1장 이상 필수",
+        description: "공간당 최소 1장 이상, 광각컷(18mm 이하) 1장 이상",
       },
     ];
   
@@ -925,10 +925,10 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
         "추천서 사진 전송",
       ],
       sub: [
-        "현재 1세트 포트폴리오가 없다면",
-        "추천서 제작을 위한 이미지가 필요합니다.",
-        "추천서 사진 이미지는 다음 예시와 같이",
-        "여러 조건을 만족해야만 합니다.",
+        <&& "현재 1세트 포트폴리오가 없다면" | "현재 1세트 포트폴리오가 없다면" | "현재 1세트 포트폴리오가 없다면" | "1세트 포트폴리오가 없다면" | "현재 1세트 포트폴리오가 없다면" &&>,
+        <&& "추천서 제작을 위한 이미지가 필요합니다." | "추천서 제작을 위한 이미지가 필요합니다." | "추천서를 위한 사진이 필요합니다." | "추천서 사진이 필요합니다." | "추천서 제작을 위한 이미지가 필요합니다." &&>,
+        <&& "추천서 사진 이미지는 다음 예시와 같이" | "추천서 사진 이미지는 다음 예시와 같이" | "사진 이미지는 다음 예시와 같이" | "이미지는 다음 예시와 같이" | "추천서 사진 이미지는 다음 예시와 같이" &&>,
+        <&& "여러 조건을 만족해야만 합니다." | "여러 조건을 만족해야만 합니다." | "여러 조건을 만족해야만 합니다." | "조건을 만족해야만 합니다." | "여러 조건을 만족해야만 합니다." &&>,
       ]
     };
   
@@ -937,10 +937,10 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
         "추천서 사진 전송",
       ],
       sub: [
-        "다음 포트폴리오 전송칸을 통해",
-        "1세트 포트폴리오를 전송해 주세요!",
-        "가로, 세로 합쳐 최소 8장의 사진을",
-        "낱개 이미지 파일로 올려주시면 됩니다.",
+        <&& "다음 포트폴리오 전송칸을 통해" | "다음 포트폴리오 전송칸을 통해" | "다음 포트폴리오 전송칸을 통해" | "다음 사진 전송칸을 통해" | "다음 포트폴리오 전송칸을 통해" &&>,
+        <&& "추천서 사진을 전송해 주세요!" | "추천서 사진을 전송해 주세요!" | "추천서 사진을 전송해 주세요!" | "이미지를 전송해 주세요!" | "추천서 사진을 전송해 주세요!" &&>,
+        <&& "가로, 세로 합쳐 최소 8장의 사진을" | "가로, 세로 합쳐 최소 8장의 사진을" | "가로, 세로 합쳐 최소 8장의 사진을" | "모두 합쳐 8장의 사진을" | "가로, 세로 합쳐 최소 8장의 사진을" &&>,
+        <&& "낱개 이미지 파일로 올려주시면 됩니다." | "낱개 이미지 파일로 올려주시면 됩니다." | "이미지 파일로 올려주시면 됩니다." | "낱개로 올려주시면 됩니다." | "낱개 이미지 파일로 올려주시면 됩니다." &&>,
       ]
     };
 
@@ -1542,11 +1542,13 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
   leftBox = createNode({
     mother: contentsArea,
     style: {
-      display: desktop ? "inline-block" : "none",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
       marginLeft: String(innerPadding) + ea,
-      width: String(leftBoxWidth) + ea,
+      width: desktop ? String(leftBoxWidth) + ea : withOut((innerPadding * 2), ea),
       verticalAlign: "top",
+      paddingTop: desktop ? "" : String(1) + ea,
+      marginBottom: desktop ? "" : String(4) + ea,
     }
   });
 
@@ -1564,7 +1566,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
 
   createNode({
     mother: leftBox,
-    text: contents.sub.join("\n"),
+    text: contents.sub.join(desktop ? "\n" : " "),
     style: {
       display: "block",
       position: "relative",
@@ -1636,7 +1638,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
             paddingTop: String(settingTongPaddingTop) + ea,
             paddingBottom: String(settingTongPaddingTop - settingTongImageBetween) + ea,
             paddingRight: String(settingTongPaddingLeft - settingTongImageBetween) + ea,
-            width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingLeft * 2) - settingTongImageBetween, ea) : withOut(0, ea),
+            width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingLeft * 2) - settingTongImageBetween, ea) : withOut((settingTongPaddingLeft * 2) - settingTongImageBetween, ea),
             background: colorChip.gray1,
             borderRadius: String(3) + "px",
             borderBottomRightRadius: String(0)  + "px",
@@ -1672,7 +1674,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
       children: [
         {
           style: {
-            display: "inline-block",
+            display: mobile ? "none" : "inline-block",
             position: "relative",
             width: String(circleRadius * 2) + ea,
             height: String(circleRadius * 2) + ea,
@@ -1686,7 +1688,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
         {
           text: "",
           style: {
-            display: "inline-block",
+            display: mobile ? "none" : "inline-block",
             position: "relative",
             top: String(mainTop) + ea,
             fontSize: String(mainSize) + ea,
@@ -1702,7 +1704,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
             position: "relative",
             top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
             padding: String(settingTongPaddingTop) + ea,
-            width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingTop * 2), ea) : withOut(0, ea),
+            width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingTop * 2), ea) : withOut(settingTongPaddingTop * 2, ea),
             background: colorChip.gray1,
             borderRadius: String(3) + "px",
             borderTopRightRadius: String(0)  + "px",
@@ -1720,7 +1722,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
               boxShadow: "0px 3px 15px -9px " + colorChip.gray4,
               padding: String(descriptionBlockPaddingLeft) + ea,
               paddingTop: String(descriptionBlockPaddingTop) + ea,
-              paddingBottom: String(descriptionBlockPaddingLeft - descriptionBlockMarginBottom) + ea,
+              paddingBottom: String(descriptionBlockPaddingLeft - descriptionBlockMarginBottom + (mobile ? 0.4 : 0)) + ea,
             }
           }
         },
@@ -1771,11 +1773,13 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
         mother: descriptionBlock,
         text: thisDescription,
         style: {
-          display: "inline-block",
+          display: mobile ? "block" : "inline-block",
           position: "relative",
           color: colorChip.block,
           fontSize: String(descriptionBlockSize) + ea,
           fontWeight: String(descriptionBlockWeight),
+          paddingLeft: mobile ? String(descriptionBlockNumberWidth) + ea : "",
+          marginTop: mobile ? String(0.8) + ea : "",
         }
       });
   
@@ -1825,7 +1829,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
           paddingTop: String(settingTongPaddingTop) + ea,
           paddingBottom: String(settingTongPaddingTop - settingTongImageBetween) + ea,
           paddingRight: String(settingTongPaddingLeft - settingTongImageBetween) + ea,
-          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingLeft * 2) - settingTongImageBetween, ea) : withOut(0, ea),
+          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingLeft * 2) - settingTongImageBetween, ea) : withOut((settingTongPaddingLeft * 2) - settingTongImageBetween, ea),
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
           borderBottomRightRadius: String(0)  + "px",
@@ -1859,7 +1863,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
     children: [
       {
         style: {
-          display: "inline-block",
+          display: mobile ? "none" : "inline-block",
           position: "relative",
           width: String(circleRadius * 2) + ea,
           height: String(circleRadius * 2) + ea,
@@ -1873,7 +1877,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
       {
         text: "",
         style: {
-          display: "inline-block",
+          display: mobile ? "none" : "inline-block",
           position: "relative",
           top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
@@ -1889,7 +1893,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
           position: "relative",
           top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
           padding: String(settingTongPaddingTop) + ea,
-          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingTop * 2), ea) : withOut(0, ea),
+          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingTop * 2), ea) : withOut((settingTongPaddingTop * 2), ea),
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
           borderTopRightRadius: String(0)  + "px",
@@ -1907,7 +1911,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
             boxShadow: "0px 3px 15px -9px " + colorChip.gray4,
             padding: String(descriptionBlockPaddingLeft) + ea,
             paddingTop: String(descriptionBlockPaddingTop) + ea,
-            paddingBottom: String(descriptionBlockPaddingLeft - descriptionBlockMarginBottom) + ea,
+            paddingBottom: String(descriptionBlockPaddingLeft - descriptionBlockMarginBottom + (mobile ? 0.4 : 0)) + ea,
           }
         }
       },
@@ -1958,11 +1962,13 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
       mother: descriptionBlock,
       text: thisDescription,
       style: {
-        display: "inline-block",
+        display: mobile ? "block" : "inline-block",
         position: "relative",
         color: colorChip.block,
         fontSize: String(descriptionBlockSize) + ea,
         fontWeight: String(descriptionBlockWeight),
+        paddingLeft: mobile ? String(descriptionBlockNumberWidth) + ea : "",
+        marginTop: mobile ? String(0.8) + ea : "",
       }
     });
 
@@ -2011,7 +2017,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
           paddingTop: String(settingTongPaddingTop) + ea,
           paddingBottom: String(settingTongPaddingTop - settingTongImageBetween) + ea,
           paddingRight: String(settingTongPaddingLeft - settingTongImageBetween) + ea,
-          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingLeft * 2) - settingTongImageBetween, ea) : withOut(0, ea),
+          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingLeft * 2) - settingTongImageBetween, ea) : withOut((settingTongPaddingLeft * 2) - settingTongImageBetween, ea),
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
           borderBottomRightRadius: String(0)  + "px",
@@ -2058,7 +2064,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
     children: [
       {
         style: {
-          display: "inline-block",
+          display: mobile ? "none" : "inline-block",
           position: "relative",
           width: String(circleRadius * 2) + ea,
           height: String(circleRadius * 2) + ea,
@@ -2072,7 +2078,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
       {
         text: "",
         style: {
-          display: "inline-block",
+          display: mobile ? "none" : "inline-block",
           position: "relative",
           top: String(mainTop) + ea,
           fontSize: String(mainSize) + ea,
@@ -2088,7 +2094,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
           position: "relative",
           top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
           padding: String(settingTongPaddingTop) + ea,
-          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingTop * 2), ea) : withOut(0, ea),
+          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingTop * 2), ea) : withOut(settingTongPaddingTop * 2, ea),
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
           borderTopRightRadius: String(0)  + "px",
@@ -2106,7 +2112,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
             boxShadow: "0px 3px 15px -9px " + colorChip.gray4,
             padding: String(descriptionBlockPaddingLeft) + ea,
             paddingTop: String(descriptionBlockPaddingTop) + ea,
-            paddingBottom: String(descriptionBlockPaddingLeft - descriptionBlockMarginBottom) + ea,
+            paddingBottom: String(descriptionBlockPaddingLeft - descriptionBlockMarginBottom + (mobile ? 0.4 : 0)) + ea,
           }
         }
       },
@@ -2157,11 +2163,13 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
       mother: descriptionBlock,
       text: thisDescription,
       style: {
-        display: "inline-block",
+        display: mobile ? "block" : "inline-block",
         position: "relative",
         color: colorChip.block,
         fontSize: String(descriptionBlockSize) + ea,
         fontWeight: String(descriptionBlockWeight),
+        paddingLeft: mobile ? String(descriptionBlockNumberWidth) + ea : "",
+        marginTop: mobile ? String(0.8) + ea : "",
       }
     });
 
@@ -2189,11 +2197,13 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
   secondLeftBox = createNode({
     mother: contentsArea,
     style: {
-      display: desktop ? "inline-block" : "none",
+      display: desktop ? "inline-block" : "block",
       position: "relative",
       marginLeft: String(innerPadding) + ea,
-      width: String(leftBoxWidth) + ea,
+      width: desktop ? String(leftBoxWidth) + ea : withOut((innerPadding * 2), ea),
       verticalAlign: "top",
+      paddingTop: desktop ? "" : String(1) + ea,
+      marginBottom: desktop ? "" : String(4) + ea,
     }
   });
 
@@ -2211,7 +2221,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
 
   createNode({
     mother: secondLeftBox,
-    text: contents2.sub.join("\n"),
+    text: contents2.sub.join(desktop ? "\n" : " "),
     style: {
       display: "block",
       position: "relative",
@@ -2245,7 +2255,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
     style: {
       display: "block",
       position: "relative",
-      marginBottom: String(blockMarginBottom) + ea,
+      marginBottom: String(desktop ? blockMarginBottom : (generalMode ? 5 : 3)) + ea,
       height: String(textAreaBlockHeight) + ea,
     },
     children: [
@@ -2375,24 +2385,13 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
   });
 
   if (generalMode) {
-    if (mobile) {
-      createNode({
-        mother: secondRightBox,
-        style: {
-          display: "block",
-          position: "relative",
-          marginBottom: String(blockMarginBottom) + ea,
-          height: String(0.6) + ea,
-        }
-      });
-    }
     // 25
     longDom = createNode({
       mother: secondRightBox,
       style: {
         display: "block",
         position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
+        marginBottom: desktop ? String(blockMarginBottom) + ea : String(1) + ea,
       },
       children: [
         {
