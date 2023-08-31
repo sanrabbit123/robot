@@ -3731,23 +3731,11 @@ SecondRouter.prototype.rou_post_timeAspirantCommon = function () {
       } else if (mode === "get") {
 
         const { value } = equalJson(req.body);
-        const fromDate = new Date(value);
-        const toDate = new Date(value);
+        const fromDate = new Date(Number(value));
+        const toDate = new Date(Number(value));
 
         fromDate.setHours(fromDate.getHours() - 1);
         toDate.setHours(toDate.getHours() + 1);
-
-        console.log({ $and: [
-          {
-            date: { $gte: fromDate }
-          },
-          {
-            date: { $lte: toDate }
-          },
-        ] })
-        console.log(value);
-        console.log(fromDate);
-        console.log(toDate);
 
         rows = await back.mongoRead(collection, { $and: [
           {
