@@ -2186,10 +2186,12 @@ AspirantCommonJs.prototype.finalSubmit = function () {
     try {
       const targets = [ ...document.querySelectorAll('.' + inputClassName) ];
       const targetValue = targets.find((dom) => { return dom.getAttribute("toggle") === "on" }).getAttribute("value");
+      const peopleLimit = 6;
       let stringArr;
       let year, month, date, hour, minutes;
       let thisDate;
       let rows;
+      let alreadyLength;
       if (/없음/gi.test(targetValue)) {
 
         await ajaxJson({ mode: "reject", aspid: instance.aspid }, SECONDHOST + "/noticeAspirantCommon", { equal: true });
@@ -2213,18 +2215,21 @@ AspirantCommonJs.prototype.finalSubmit = function () {
 
         thisDate = new Date(year, month - 1, date, hour, minutes);
 
-        console.log(thisDate);
         rows = await ajaxJson({ mode: "get", value: thisDate.valueOf() }, SECONDHOST + "/timeAspirantCommon", { equal: true });
+        if (rows.data.length > 0) {
+          alreadyLength = rows.data[0].targets.length
+        } else {
+          alreadyLength = 0;
+        }
 
-        console.log(rows);
-
-
-
-
-
-        // await ajaxJson({ mode: "confirm", aspid: instance.aspid, value: thisDate.valueOf() }, SECONDHOST + "/noticeAspirantCommon", { equal: true });
-        // window.alert("공통 교육 일자가 선택되었습니다! 감사합니다.");
-        // selfHref(FRONTHOST);
+        if (alreadyLength >= peopleLimit) {
+          window.alert("현재 해당 날짜는 인원이 가득 찼습니다! 다른 날짜를 선택해주세요.");
+        } else {
+          await ajaxJson({ mode: "confirm", aspid: instance.aspid, value: thisDate.valueOf() }, SECONDHOST + "/noticeAspirantCommon", { equal: true });
+          await ajaxJson({ mode: "update" }, SECONDHOST + "/timeAspirantCommon", { equal: true });
+          window.alert("공통 교육 일자가 선택되었습니다! 감사합니다.");
+          selfHref(FRONTHOST);
+        }
 
       }
     } catch (e) {
