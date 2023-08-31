@@ -46,7 +46,8 @@ AspirantSettingJs.binaryPath = FRONTHOST + "/middle/aspsetting";
 AspirantSettingJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media } = this;
+  const { ea, media, mode } = this;
+  const generalMode = mode === "general";
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -129,8 +130,8 @@ AspirantSettingJs.prototype.insertInitBox = function () {
   tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "세트 포트폴리오 전송";
-  subTitleContents = "업로드 가능한 포트폴리오를 요청드립니다!";  
+  titleWording = generalMode ? "세트 포트폴리오 전송" : "추천서 사진 전송";
+  subTitleContents = generalMode ? "업로드 가능한 포트폴리오를 요청드립니다!" : "추천 가능한 사진을 요청드립니다!";
 
   mobileBlockTop = 4.5;
 
@@ -226,7 +227,8 @@ AspirantSettingJs.prototype.insertInitBox = function () {
 AspirantSettingJs.prototype.insertAspirantBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson, cleanChildren } = GeneralJs;
-  const { ea, media, standardWidth, portfolioMode, aspirant } = this;
+  const { ea, media, standardWidth, portfolioMode, aspirant, mode } = this;
+  const generalMode = mode === "general";
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -481,6 +483,12 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
   let settingGaroDescriptionContents;
   let settingSeroDescriptionContents;
   let contents2;
+  let garoRepresentativePhotoNumber;
+  let seroRepresentativePhotoNumber0;
+  let seroRepresentativePhotoNumber1;
+  let denyTong;
+  let submitTongBetween;
+  let garoImageHeight, seroImageHeight;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -807,102 +815,178 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
 
   pictureNumber = 22;
 
-  settingTongPaddingTop = <%% 13, 13, 13, 13, 13 %%>;
-  settingTongPaddingLeft = <%% 12, 12, 12, 12, 12 %%>;
-  settingTongImageBetween = <%% 7, 7, 7, 7, 7 %%>;
-  settingTongImageHeight = <%% 167, 167, 167, 167, 167 %%>;
+  settingTongPaddingTop = <%% 13, 13, 11, 7, 1 %%>;
+  settingTongPaddingLeft = <%% 12, 12, 10, 6, 1 %%>;
+  settingTongImageBetween = <%% 7, 6, 5, 3, 1 %%>;
+  settingTongImageHeight = <%% 167, 128, 108, 84.5, 140 %%>;
+  garoImageHeight = <%% 516, 398, 335, 261, 39 %%>;
+  seroImageHeight = <%% 511, 394, 332, 259, 39 %%>;
 
-  descriptionBlockMarginBottom = <%% 5, 5, 5, 5, 5 %%>;
+  descriptionBlockMarginBottom = <%% 5, 5, 5, 3, 5 %%>;
 
-  descriptionBlockSize = <%% 14, 14, 14, 14, 14 %%>;
+  descriptionBlockSize = <%% 14, 14, 12, 11, 14 %%>;
   descriptionBlockWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBlockBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  descriptionBlockNumberWidth = <%% 18, 18, 18, 18, 18 %%>;
-  descriptionBlockTitleWidth = <%% 160, 160, 160, 160, 160 %%>;
+  descriptionBlockNumberWidth = <%% 18, 18, 18, 12, 18 %%>;
+  descriptionBlockTitleWidth = <%% 160, 154, 124, 84, 16 %%>;
 
-  descriptionBlockPaddingLeft = <%% 20, 20, 20, 20, 20 %%>;
-  descriptionBlockPaddingTop = <%% 18, 18, 18, 18, 18 %%>;
+  descriptionBlockPaddingLeft = <%% 20, 20, 20, 14, 20 %%>;
+  descriptionBlockPaddingTop = <%% 18, 18, 18, 12, 18 %%>;
 
   middleBarHeight = <%% 50, 50, 50, 50, 50 %%>;
   middleBarMarginBottom = <%% 50, 50, 50, 50, 50 %%>;
 
-  contents = {
-    main: [
-      "세트 포트폴리오 전송",
-    ],
-    sub: [
-      "웹 포트폴리오에 올릴 수 있는",
-      "세트 사진을 요청드립니다.",
-      "세트 사진은 다음 예시와 같이",
-      "여러 조건을 만족해야만 합니다.",
-    ]
-  };
+  submitTongBetween = <%% 8, 8, 8, 8, 8 %%>;
 
-  contents2 = {
-    main: [
-      "세트 포트폴리오 전송",
-    ],
-    sub: [
-      "다음 포트폴리오 전송칸을 통해",
-      "세트 포트폴리오를 전송해 주세요!",
-      "jpg, png 등의 낱개 이미지 파일",
-      "또는 zip파일로 올려주시면 됩니다.",
-    ]
-  };
+  if (generalMode) {
 
-  settingSetDescriptionContents = [
-    {
-      title: "세트의 구성",
-      description: "공간별로 스타일링 잘 보여줄 수 있는 사진의 나열",
-    },
-    {
-      title: "사진의 개수",
-      description: "공간별 사진 가로 기준 1장 이상, 세로 기준 2장 이상",
-    },
-    {
-      title: "사진의 비율",
-      description: "사진의 비율은 A4와 동일 비율인 1:1.414, 가로 또는 세로",
-    },
-    {
-      title: "세로 사진",
-      description: "세로형 사진은 반드시 짝수로 존재하여 짝을 이뤄야 함",
-    },
-    {
-      title: "전체적인 톤",
-      description: "밝고 화사한 공간 사진, 사실적인 톤의 사진",
-    }
-  ];
+    contents = {
+      main: [
+        "세트 포트폴리오 전송",
+      ],
+      sub: [
+        <&& "개별 디자이너 페이지 제작을 위해서는" | "개별 디자이너 페이지 제작을 위해서는" | "디자이너 페이지 제작을 위해서는" | "디자이너 등록을 위해서는" | "개별 디자이너 페이지 제작을 위해서는" &&>,
+        <&& "같은 집의 1세트 포트폴리오가 필요합니다." | "같은 집의 1세트 포트폴리오가 필요합니다." | "세트 포트폴리오가 필요합니다." | "하나의 세트가 필요합니다." | "같은 집의 1세트 포트폴리오가 필요합니다." &&>,
+        <&& "세트 포트폴리오는 다음 예시와 같이" | "세트 포트폴리오는 다음 예시와 같이" | "포트폴리오는 다음 예시와 같이" | "사진은 다음 예시와 같이" | "세트 포트폴리오는 다음 예시와 같이" &&>,
+        <&& "여러 조건을 만족해야만 합니다." | "여러 조건을 만족해야만 합니다." | "여러 조건을 만족해야만 합니다." | "조건을 만족해야만 합니다." | "여러 조건을 만족해야만 합니다." &&>,
+      ]
+    };
+  
+    contents2 = {
+      main: [
+        "세트 포트폴리오 전송",
+      ],
+      sub: [
+        <&& "다음 포트폴리오 전송칸을 통해" | "다음 포트폴리오 전송칸을 통해" | "다음 포트폴리오 전송칸을 통해" | "다음 사진 전송칸을 통해" | "다음 포트폴리오 전송칸을 통해" &&>,
+        <&& "1세트 포트폴리오를 전송해 주세요!" | "1세트 포트폴리오를 전송해 주세요!" | "포트폴리오를 전송해 주세요!" | "이미지를 전송해 주세요!" | "1세트 포트폴리오를 전송해 주세요!" &&>,
+        <&& "jpg, png 등의 낱개 이미지 파일" | "jpg, png 등의 낱개 이미지 파일" | "jpg 등의 낱개 이미지 또는" | "낱개 이미지 또는 압축" | "jpg, png 등의 낱개 이미지 파일" &&>,
+        <&& "또는 zip 파일로 올려주시면 됩니다." | "또는 zip 파일로 올려주시면 됩니다." | "zip 파일로 올려주시면 됩니다." | "파일로 올려주시면 됩니다." | "또는 zip파일로 올려주시면 됩니다." &&>,
+      ]
+    };
 
-  settingGaroDescriptionContents = [
-    {
-      title: "가로 비율",
-      description: "사진의 비율은 A4와 동일 비율인 1:1.414",
-    },
-    {
-      title: "최소 사이즈",
-      description: "세로가 (짧은 쪽) 최소 1200픽셀 이상",
-    },
-    {
-      title: "사진 개수",
-      description: "공간당 최소 1장 이상, 광각컷(18mm 이하) 1장 이상 필수",
-    },
-  ];
+    settingSetDescriptionContents = [
+      {
+        title: "세트의 구성",
+        description: "공간별로 스타일링 잘 보여줄 수 있는 사진의 나열",
+      },
+      {
+        title: "사진의 개수",
+        description: "공간별 사진 가로 기준 1장 이상, 세로 기준 2장 이상",
+      },
+      {
+        title: "사진의 비율",
+        description: "사진의 비율은 A4와 동일 비율인 1:1.414, 가로 또는 세로",
+      },
+      {
+        title: "세로 사진",
+        description: "세로형 사진은 반드시 짝수로 존재하여 짝을 이뤄야 함",
+      },
+      {
+        title: "전체적인 톤",
+        description: "밝고 화사한 공간 사진, 사실적인 톤의 사진",
+      }
+    ];
+  
+    settingGaroDescriptionContents = [
+      {
+        title: "가로 비율",
+        description: "사진의 비율은 A4와 동일 비율인 1:1.414",
+      },
+      {
+        title: "최소 사이즈",
+        description: "세로가 (짧은 쪽) 최소 1200픽셀 이상",
+      },
+      {
+        title: "사진 개수",
+        description: "공간당 최소 1장 이상, 광각컷(18mm 이하) 1장 이상 필수",
+      },
+    ];
+  
+    settingSeroDescriptionContents = [
+      {
+        title: "세로 비율",
+        description: "사진의 비율은 A4와 동일 비율인 1:1.414",
+      },
+      {
+        title: "최소 사이즈",
+        description: "가로가 (짧은 쪽) 최소 1200픽셀 이상",
+      },
+      {
+        title: "사진 개수",
+        description: "반드시 짝수로 있어야 함 (0장, 2장, 4장, 6장...)",
+      },
+    ];
 
-  settingSeroDescriptionContents = [
-    {
-      title: "세로 비율",
-      description: "사진의 비율은 A4와 동일 비율인 1:1.414",
-    },
-    {
-      title: "최소 사이즈",
-      description: "가로가 (짧은 쪽) 최소 1200픽셀 이상",
-    },
-    {
-      title: "사진 개수",
-      description: "반드시 짝수로 있어야 함 (0장, 2장, 4장, 6장...)",
-    },
-  ];
+  } else {
+
+    contents = {
+      main: [
+        "추천서 사진 전송",
+      ],
+      sub: [
+        "현재 1세트 포트폴리오가 없다면",
+        "추천서 제작을 위한 이미지가 필요합니다.",
+        "추천서 사진 이미지는 다음 예시와 같이",
+        "여러 조건을 만족해야만 합니다.",
+      ]
+    };
+  
+    contents2 = {
+      main: [
+        "추천서 사진 전송",
+      ],
+      sub: [
+        "다음 포트폴리오 전송칸을 통해",
+        "1세트 포트폴리오를 전송해 주세요!",
+        "가로, 세로 합쳐 최소 8장의 사진을",
+        "낱개 이미지 파일로 올려주시면 됩니다.",
+      ]
+    };
+
+    settingSetDescriptionContents = [];
+  
+    settingGaroDescriptionContents = [
+      {
+        title: "가로 비율",
+        description: "사진의 비율은 A4와 동일 비율인 1:1.414",
+      },
+      {
+        title: "최소 사이즈",
+        description: "세로가 (짧은 쪽) 최소 1200픽셀 이상",
+      },
+      {
+        title: "사진 개수",
+        description: "합쳐서 총 최소 6장 이상, 광각컷(18mm 이하) 1장 이상 필수",
+      },
+    ];
+  
+    settingSeroDescriptionContents = [
+      {
+        title: "세로 비율",
+        description: "사진의 비율은 A4와 동일 비율인 1:1.414",
+      },
+      {
+        title: "최소 사이즈",
+        description: "가로가 (짧은 쪽) 최소 1200픽셀 이상",
+      },
+      {
+        title: "사진 개수",
+        description: "합쳐서 총 최소 2장 이상",
+      },
+    ];
+
+  }
+
+  if (generalMode) {
+    garoRepresentativePhotoNumber = 3;
+    seroRepresentativePhotoNumber0 = 6;
+    seroRepresentativePhotoNumber1 = 7;
+  } else {
+    garoRepresentativePhotoNumber = 23;
+    seroRepresentativePhotoNumber0 = 24;
+    seroRepresentativePhotoNumber1 = 25;
+  }
 
   barClickEvent = (arr) => {
     const valuesArr = equalJson(JSON.stringify(arr));
@@ -1509,191 +1593,193 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
   });
 
   // description - set
-  exampleTong = createNode({
-    mother: rightBox,
-    style: {
-      display: "block",
-      position: "relative",
-    },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(circleRadius * 2) + ea,
-          height: String(circleRadius * 2) + ea,
-          marginRight: String(circleBetween) + ea,
-          borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
-          top: String(circleTop) + ea,
-          verticalAlign: "top",
-        }
-      },
-      {
-        text: "세트 예시",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(mainTop) + ea,
-          fontSize: String(mainSize) + ea,
-          fontWeight: String(mainWeight),
-          color: colorChip.black,
-          verticalAlign: "top",
-          width: String(titleWidth) + ea,
-        }
-      },
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
-          padding: String(settingTongPaddingLeft) + ea,
-          paddingTop: String(settingTongPaddingTop) + ea,
-          paddingBottom: String(settingTongPaddingTop - settingTongImageBetween) + ea,
-          paddingRight: String(settingTongPaddingLeft - settingTongImageBetween) + ea,
-          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingLeft * 2) - settingTongImageBetween, ea) : withOut(0, ea),
-          background: colorChip.gray1,
-          borderRadius: String(3) + "px",
-          borderBottomRightRadius: String(0)  + "px",
-          borderBottomLeftRadius: String(0)  + "px",
-          cursor: "pointer",
-          textAlign: "center",
-        },
-      },
-    ]
-  }).lastChild;
-  for (let i = 0; i < pictureNumber; i++) {
-    createNode({
-      mother: exampleTong,
-      mode: "img",
-      attribute: { src: AspirantSettingJs.binaryPath + "/set/t" + String(i + 1) + ".jpg" },
-      style: {
-        display: "inline-block",
-        position: "relative",
-        height: String(settingTongImageHeight) + ea,
-        borderRadius: String(3) + "px",
-        marginRight: String(settingTongImageBetween) + ea,
-        marginBottom: String(settingTongImageBetween) + ea,
-      }
-    });
-  }
-  exampleDescriptionTong = createNode({
-    mother: rightBox,
-    style: {
-      display: "block",
-      position: "relative",
-      marginBottom: String(blockMarginBottom) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(circleRadius * 2) + ea,
-          height: String(circleRadius * 2) + ea,
-          marginRight: String(circleBetween) + ea,
-          borderRadius: String(circleRadius) + ea,
-          background: "transparent",
-          top: String(circleTop) + ea,
-          verticalAlign: "top",
-        }
-      },
-      {
-        text: "",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(mainTop) + ea,
-          fontSize: String(mainSize) + ea,
-          fontWeight: String(mainWeight),
-          color: colorChip.black,
-          verticalAlign: "top",
-          width: String(titleWidth) + ea,
-        }
-      },
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
-          padding: String(settingTongPaddingTop) + ea,
-          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingTop * 2), ea) : withOut(0, ea),
-          background: colorChip.gray1,
-          borderRadius: String(3) + "px",
-          borderTopRightRadius: String(0)  + "px",
-          borderTopLeftRadius: String(0)  + "px",
-          paddingTop: String(0) + ea,
-          cursor: "pointer",
-          textAlign: "center",
-        },
-        child: {
-          style: {
-            display: "block",
-            width: withOut(descriptionBlockPaddingLeft * 2, ea),
-            background: colorChip.white,
-            borderRadius: String(3) + "px",
-            boxShadow: "0px 3px 15px -9px " + colorChip.gray4,
-            padding: String(descriptionBlockPaddingLeft) + ea,
-            paddingTop: String(descriptionBlockPaddingTop) + ea,
-            paddingBottom: String(descriptionBlockPaddingLeft - descriptionBlockMarginBottom) + ea,
-          }
-        }
-      },
-    ]
-  }).lastChild.lastChild;
-  for (let i = 0; i < settingSetDescriptionContents.length; i++) {
-
-    thisTitle = settingSetDescriptionContents[i].title;
-    thisDescription = settingSetDescriptionContents[i].description;
-
-    descriptionBlock = createNode({
-      mother: exampleDescriptionTong,
+  if (generalMode) {
+    exampleTong = createNode({
+      mother: rightBox,
       style: {
         display: "block",
         position: "relative",
-        textAlign: "left",
-        marginBottom: String(descriptionBlockMarginBottom) + ea,
-      }
-    });
-
-    createNode({
-      mother: descriptionBlock,
-      text: String(i + 1),
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "세트 예시",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+            width: String(titleWidth) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
+            padding: String(settingTongPaddingLeft) + ea,
+            paddingTop: String(settingTongPaddingTop) + ea,
+            paddingBottom: String(settingTongPaddingTop - settingTongImageBetween) + ea,
+            paddingRight: String(settingTongPaddingLeft - settingTongImageBetween) + ea,
+            width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingLeft * 2) - settingTongImageBetween, ea) : withOut(0, ea),
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+            borderBottomRightRadius: String(0)  + "px",
+            borderBottomLeftRadius: String(0)  + "px",
+            cursor: "pointer",
+            textAlign: "center",
+          },
+        },
+      ]
+    }).lastChild;
+    for (let i = 0; i < pictureNumber; i++) {
+      createNode({
+        mother: exampleTong,
+        mode: "img",
+        attribute: { src: AspirantSettingJs.binaryPath + "/set/t" + String(i + 1) + ".jpg" },
+        style: {
+          display: "inline-block",
+          position: "relative",
+          height: String(settingTongImageHeight) + ea,
+          borderRadius: String(3) + "px",
+          marginRight: String(settingTongImageBetween) + ea,
+          marginBottom: String(settingTongImageBetween) + ea,
+        }
+      });
+    }
+    exampleDescriptionTong = createNode({
+      mother: rightBox,
       style: {
-        display: "inline-block",
+        display: "block",
         position: "relative",
-        color: colorChip.green,
-        fontSize: String(descriptionBlockSize) + ea,
-        fontWeight: String(descriptionBlockWeight),
-        width: String(descriptionBlockNumberWidth) + ea,
-      }
-    });
-
-    createNode({
-      mother: descriptionBlock,
-      text: thisTitle,
-      style: {
-        display: "inline-block",
-        position: "relative",
-        color: colorChip.block,
-        fontSize: String(descriptionBlockSize) + ea,
-        fontWeight: String(descriptionBlockBoldWeight),
-        width: String(descriptionBlockTitleWidth) + ea,
-      }
-    });
-
-    createNode({
-      mother: descriptionBlock,
-      text: thisDescription,
-      style: {
-        display: "inline-block",
-        position: "relative",
-        color: colorChip.block,
-        fontSize: String(descriptionBlockSize) + ea,
-        fontWeight: String(descriptionBlockWeight),
-      }
-    });
-
+        marginBottom: String(blockMarginBottom) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: "transparent",
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+            width: String(titleWidth) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
+            padding: String(settingTongPaddingTop) + ea,
+            width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth + (settingTongPaddingTop * 2), ea) : withOut(0, ea),
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+            borderTopRightRadius: String(0)  + "px",
+            borderTopLeftRadius: String(0)  + "px",
+            paddingTop: String(0) + ea,
+            cursor: "pointer",
+            textAlign: "center",
+          },
+          child: {
+            style: {
+              display: "block",
+              width: withOut(descriptionBlockPaddingLeft * 2, ea),
+              background: colorChip.white,
+              borderRadius: String(3) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.gray4,
+              padding: String(descriptionBlockPaddingLeft) + ea,
+              paddingTop: String(descriptionBlockPaddingTop) + ea,
+              paddingBottom: String(descriptionBlockPaddingLeft - descriptionBlockMarginBottom) + ea,
+            }
+          }
+        },
+      ]
+    }).lastChild.lastChild;
+    for (let i = 0; i < settingSetDescriptionContents.length; i++) {
+  
+      thisTitle = settingSetDescriptionContents[i].title;
+      thisDescription = settingSetDescriptionContents[i].description;
+  
+      descriptionBlock = createNode({
+        mother: exampleDescriptionTong,
+        style: {
+          display: "block",
+          position: "relative",
+          textAlign: "left",
+          marginBottom: String(descriptionBlockMarginBottom) + ea,
+        }
+      });
+  
+      createNode({
+        mother: descriptionBlock,
+        text: String(i + 1),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          color: colorChip.green,
+          fontSize: String(descriptionBlockSize) + ea,
+          fontWeight: String(descriptionBlockWeight),
+          width: String(descriptionBlockNumberWidth) + ea,
+        }
+      });
+  
+      createNode({
+        mother: descriptionBlock,
+        text: thisTitle,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          color: colorChip.block,
+          fontSize: String(descriptionBlockSize) + ea,
+          fontWeight: String(descriptionBlockBoldWeight),
+          width: String(descriptionBlockTitleWidth) + ea,
+        }
+      });
+  
+      createNode({
+        mother: descriptionBlock,
+        text: thisDescription,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          color: colorChip.block,
+          fontSize: String(descriptionBlockSize) + ea,
+          fontWeight: String(descriptionBlockWeight),
+        }
+      });
+  
+    }
   }
   
   // description - garo
@@ -1753,11 +1839,11 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
   createNode({
     mother: garoExampleTong,
     mode: "img",
-    attribute: { src: AspirantSettingJs.binaryPath + "/set/t" + String(3) + ".jpg" },
+    attribute: { src: AspirantSettingJs.binaryPath + "/set/t" + String(garoRepresentativePhotoNumber) + ".jpg" },
     style: {
       display: "inline-block",
       position: "relative",
-      height: String(516) + ea,
+      height: String(garoImageHeight) + ea,
       borderRadius: String(3) + "px",
       marginRight: String(settingTongImageBetween) + ea,
       marginBottom: String(settingTongImageBetween) + ea,
@@ -1939,11 +2025,11 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
   createNode({
     mother: seroExampleTong,
     mode: "img",
-    attribute: { src: AspirantSettingJs.binaryPath + "/set/t" + String(6) + ".jpg" },
+    attribute: { src: AspirantSettingJs.binaryPath + "/set/t" + String(seroRepresentativePhotoNumber0) + ".jpg" },
     style: {
       display: "inline-block",
       position: "relative",
-      height: String(511) + ea,
+      height: String(seroImageHeight) + ea,
       borderRadius: String(3) + "px",
       marginRight: String(settingTongImageBetween) + ea,
       marginBottom: String(settingTongImageBetween) + ea,
@@ -1952,11 +2038,11 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
   createNode({
     mother: seroExampleTong,
     mode: "img",
-    attribute: { src: AspirantSettingJs.binaryPath + "/set/t" + String(7) + ".jpg" },
+    attribute: { src: AspirantSettingJs.binaryPath + "/set/t" + String(seroRepresentativePhotoNumber1) + ".jpg" },
     style: {
       display: "inline-block",
       position: "relative",
-      height: String(511) + ea,
+      height: String(seroImageHeight) + ea,
       borderRadius: String(3) + "px",
       marginRight: String(settingTongImageBetween) + ea,
       marginBottom: String(settingTongImageBetween) + ea,
@@ -2288,90 +2374,91 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
     ]
   });
 
-  if (mobile) {
-    createNode({
+  if (generalMode) {
+    if (mobile) {
+      createNode({
+        mother: secondRightBox,
+        style: {
+          display: "block",
+          position: "relative",
+          marginBottom: String(blockMarginBottom) + ea,
+          height: String(0.6) + ea,
+        }
+      });
+    }
+    // 25
+    longDom = createNode({
       mother: secondRightBox,
       style: {
         display: "block",
         position: "relative",
         marginBottom: String(blockMarginBottom) + ea,
-        height: String(0.6) + ea,
-      }
-    });
-  }
-
-  // 25
-  longDom = createNode({
-    mother: secondRightBox,
-    style: {
-      display: "block",
-      position: "relative",
-      marginBottom: String(blockMarginBottom) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(circleRadius * 2) + ea,
-          height: String(circleRadius * 2) + ea,
-          marginRight: String(circleBetween) + ea,
-          borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
-          top: String(circleTop) + ea,
-          verticalAlign: "top",
-        }
       },
-      {
-        text: "공간 설명",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(mainTop) + ea,
-          fontSize: String(mainSize) + ea,
-          fontWeight: String(mainWeight),
-          color: colorChip.black,
-          verticalAlign: "top",
-        }
-      },
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          marginTop: String(desktop ? 12 : mobileGrayTextAreaTop) + ea,
-          left: String(0) + ea,
-          width: withOut(0, ea),
-          height: String((grayBigHeight * 2)) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(3) + "px",
-        }
-      },
-      {
-        mode: "textarea",
-        class: [ inputClassName ],
-        attribute: {
-          property: "etc",
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
         },
-        style: {
-          position: "absolute",
-          top: String(textareaVisualTop + textareaTop) + ea,
-          left: String(0 + textareaLeft) + ea,
-          width: withOut(textareaLeft * 2, ea),
-          height: String((grayBigHeight * 2) - (textareaTop * 1)) + ea,
-          fontSize: String(grayLineBlockFontSize) + ea,
-          fontWeight: String(grayLineBlockFontWeight),
-          border: String(0),
-          background: "transparent",
-          outline: String(0),
-          overflow: "scroll",
-          lineHeight: String(1.6),
-          color: colorChip.black,
+        {
+          text: "공간 설명",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            marginTop: String(desktop ? 12 : mobileGrayTextAreaTop) + ea,
+            left: String(0) + ea,
+            width: withOut(0, ea),
+            height: String((grayBigHeight * 2)) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        },
+        {
+          mode: "textarea",
+          class: [ inputClassName ],
+          attribute: {
+            property: "etc",
+          },
+          style: {
+            position: "absolute",
+            top: String(textareaVisualTop + textareaTop) + ea,
+            left: String(0 + textareaLeft) + ea,
+            width: withOut(textareaLeft * 2, ea),
+            height: String((grayBigHeight * 2) - (textareaTop * 1)) + ea,
+            fontSize: String(grayLineBlockFontSize) + ea,
+            fontWeight: String(grayLineBlockFontWeight),
+            border: String(0),
+            background: "transparent",
+            outline: String(0),
+            overflow: "scroll",
+            lineHeight: String(1.6),
+            color: colorChip.black,
+          }
         }
-      }
-    ]
-  });
-  longDom.querySelector("." + inputClassName).insertAdjacentHTML("beforeend", aspirant.information.career.about);
-  longDom.querySelector("." + inputClassName).value = aspirant.information.career.about;
+      ]
+    });
+    longDom.querySelector("." + inputClassName).insertAdjacentHTML("beforeend", aspirant.information.career.about);
+    longDom.querySelector("." + inputClassName).value = aspirant.information.career.about;
+  }
 
   this.fileInput = portfolioBlock.querySelector("input");
 
@@ -2379,7 +2466,10 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
   policyArea = createNode({
     mother: mainBlock,
     style: {
-      display: "block",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
       position: "relative",
       width: String(100) + '%',
       marginTop: String(policyAreaMarginTop) + ea,
@@ -2391,47 +2481,135 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
     }
   });
 
-  submitTong = createNode({
-    mother: policyArea,
-    style: {
-      display: "block",
-      position: "relative",
-      textAlign: "center",
-    },
-    children: [
-      {
-        class: [ "submitButtonClassName" ],
-        event: {
-          click: instance.finalSubmit()
-        },
-        style: {
-          display: "inline-flex",
-          width: String(submitButtonWidth) + ea,
-          height: String(submitButtonHeight) + ea,
-          background: colorChip.gradientGreen,
-          borderRadius: String(5) + "px",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          cursor: "pointer",
-        },
-        children: [
-          {
-            text: "포트폴리오 전송하기",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(submitSize) + ea,
-              fontWeight: String(submitWeight),
-              color: colorChip.white,
-              lineHeight: String(submitLineHeight),
-              top: String(submitTextTop) + ea,
+  if (generalMode) {
+    submitTong = createNode({
+      mother: policyArea,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        textAlign: "center",
+        marginRight: String(submitTongBetween) + ea,
+      },
+      children: [
+        {
+          class: [ "submitButtonClassName" ],
+          event: {
+            click: instance.finalSubmit()
+          },
+          style: {
+            display: "inline-flex",
+            width: String(submitButtonWidth) + ea,
+            height: String(submitButtonHeight) + ea,
+            background: colorChip.gradientGreen,
+            borderRadius: String(5) + "px",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              text: generalMode ? "포트폴리오 전송하기" : "추천서 사진 전송하기",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(submitSize) + ea,
+                fontWeight: String(submitWeight),
+                color: colorChip.white,
+                lineHeight: String(submitLineHeight),
+                top: String(submitTextTop) + ea,
+              }
             }
-          }
-        ]
-      }
-    ]
-  });
+          ]
+        }
+      ]
+    });
+
+    denyTong = createNode({
+      mother: policyArea,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        textAlign: "center",
+      },
+      children: [
+        {
+          event: {
+            click: function (e) {
+              window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + "aspid=" + instance.aspid + "&mode=proposal";
+            }
+          },
+          style: {
+            display: "inline-flex",
+            width: String(submitButtonWidth) + ea,
+            height: String(submitButtonHeight) + ea,
+            background: colorChip.gradientGreen,
+            borderRadius: String(5) + "px",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              text: "세트 포트폴리오 없음",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(submitSize) + ea,
+                fontWeight: String(submitWeight),
+                color: colorChip.white,
+                lineHeight: String(submitLineHeight),
+                top: String(submitTextTop) + ea,
+              }
+            }
+          ]
+        }
+      ]
+    });
+  } else {
+    submitTong = createNode({
+      mother: policyArea,
+      style: {
+        display: "block",
+        position: "relative",
+        textAlign: "center",
+      },
+      children: [
+        {
+          class: [ "submitButtonClassName" ],
+          event: {
+            click: instance.finalSubmit()
+          },
+          style: {
+            display: "inline-flex",
+            width: String(submitButtonWidth) + ea,
+            height: String(submitButtonHeight) + ea,
+            background: colorChip.gradientGreen,
+            borderRadius: String(5) + "px",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              text: generalMode ? "포트폴리오 전송하기" : "추천서 사진 전송하기",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(submitSize) + ea,
+                fontWeight: String(submitWeight),
+                color: colorChip.white,
+                lineHeight: String(submitLineHeight),
+                top: String(submitTextTop) + ea,
+              }
+            }
+          ]
+        }
+      ]
+    });
+  }
 
 }
 
@@ -2647,6 +2825,7 @@ AspirantSettingJs.prototype.launching = async function (loading) {
 
     const { returnGet, ajaxJson } = GeneralJs;
     const getObj = returnGet();
+    const mode = (getObj.mode === undefined) ? "general" : getObj.mode;
 
     this.inputClassName = "consultingInput";
     if (typeof getObj.aspid !== "string") {
@@ -2662,6 +2841,7 @@ AspirantSettingJs.prototype.launching = async function (loading) {
       this.aspirants = await ajaxJson({ whereQuery: { aspid: this.aspid } }, SECONDHOST + "/getAspirants", { equal: true });
       this.aspirant = this.aspirants[0];
     }
+    this.mode = mode;
 
     await this.mother.ghostClientLaunching({
       mode: "front",
