@@ -45,7 +45,7 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
     this.address.officeinfo.ghost.host,
     "home-liaison.servehttp.com",
     "localhost:3000",
-    "192.168.0.90:3000",
+    "172.30.1.90:3000",
     "172.30.1.37:3000",
   ];
 
