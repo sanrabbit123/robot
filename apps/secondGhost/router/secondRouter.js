@@ -3745,6 +3745,8 @@ SecondRouter.prototype.rou_post_timeAspirantCommon = function () {
             date: { $lte: toDate }
           },
         ] })
+        console.log(fromDate);
+        console.log(toDate);
 
         rows = await back.mongoRead(collection, { $and: [
           {
