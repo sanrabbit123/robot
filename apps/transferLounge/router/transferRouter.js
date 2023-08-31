@@ -130,7 +130,7 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         const { proid, desid, client, name, type } = fields;
         try {
@@ -281,7 +281,7 @@ TransferRouter.prototype.rou_post_representativeFileBinary = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         const { desid, name, type } = fields;
         try {
@@ -491,7 +491,7 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           let filesKeys = Object.keys(files);
@@ -576,7 +576,7 @@ TransferRouter.prototype.rou_post_aspirantBinary = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           let filesKeys = Object.keys(files);
@@ -660,7 +660,7 @@ TransferRouter.prototype.rou_post_aspirantDocuments = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           let filesKeys = Object.keys(files);
@@ -1413,7 +1413,7 @@ TransferRouter.prototype.rou_post_generalFileUpload = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (err) {
@@ -1492,7 +1492,7 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (!err) {
@@ -1624,7 +1624,7 @@ TransferRouter.prototype.rou_post_userBinary = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (!err) {
@@ -1721,7 +1721,7 @@ TransferRouter.prototype.rou_post_userConfirm = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (!err) {
@@ -1945,7 +1945,7 @@ TransferRouter.prototype.rou_post_excelToMatrix = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (!err) {
@@ -2046,7 +2046,7 @@ TransferRouter.prototype.rou_post_imageAnalytics = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (err) {
@@ -2110,7 +2110,7 @@ TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (err) {
@@ -2348,7 +2348,7 @@ TransferRouter.prototype.rou_post_designerWorksPhoto = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (err) {

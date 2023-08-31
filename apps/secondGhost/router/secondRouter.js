@@ -3727,6 +3727,28 @@ SecondRouter.prototype.rou_post_timeAspirantCommon = function () {
         }
 
         res.send(JSON.stringify({ message: "done" }));
+
+      } else if (mode === "get") {
+
+        const { value } = equalJson(req.body);
+        const targetDate = new Date(value);
+        const fromDate = new Date(value);
+        const toDate = new Date(value);
+
+        fromDate.setHours(fromDate.getHours() - 1);
+        toDate.setHours(toDate.getHours() + 1);
+
+        rows = await back.mongoRead(collection, { $and: [
+          {
+            date: { $gte: fromDate }
+          },
+          {
+            date: { $lte: toDate }
+          },
+        ] }, { selfMongo: selfLocalMongo });
+
+        res.send(JSON.stringify({ data: rows }));
+        
       } else {
         throw new Error("invalid mode");
       }

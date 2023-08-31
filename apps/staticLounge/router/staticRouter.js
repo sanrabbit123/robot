@@ -1301,7 +1301,7 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (10000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (err) {
