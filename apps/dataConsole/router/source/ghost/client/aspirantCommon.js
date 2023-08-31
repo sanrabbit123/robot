@@ -2213,19 +2213,18 @@ AspirantCommonJs.prototype.finalSubmit = function () {
 
         thisDate = new Date(year, month - 1, date, hour, minutes);
 
-        
+        console.log(thisDate);
         rows = await ajaxJson({ mode: "get", value: thisDate.valueOf() }, SECONDHOST + "/timeAspirantCommon", { equal: true });
 
         console.log(rows);
-        
+
 
 
 
 
         // await ajaxJson({ mode: "confirm", aspid: instance.aspid, value: thisDate.valueOf() }, SECONDHOST + "/noticeAspirantCommon", { equal: true });
-
-        window.alert("공통 교육 일자가 선택되었습니다! 감사합니다.");
-        selfHref(FRONTHOST);
+        // window.alert("공통 교육 일자가 선택되었습니다! 감사합니다.");
+        // selfHref(FRONTHOST);
 
       }
     } catch (e) {
