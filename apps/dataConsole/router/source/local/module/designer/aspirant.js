@@ -1750,6 +1750,13 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     let documentsFactorTongMarginBottom;
     let documentsTitleSize, documentsTitleTextTop, documentsTitleLeft, documentsTitleWeight;
     let documentsTitle;
+    let linkTargetRawString;
+    let uploadDate;
+    let dateCaseTong;
+    let imageTimeTong;
+    let imageNodes;
+    let portfolioTongNum;
+    let thisNodesTargets;
 
     blockHeight = 32;
     titleWidth = 180;
@@ -2976,6 +2983,8 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
           }
         }
       })
+    } else {
+      downloadButton = null;
     }
 
     imageTong = createNode({
@@ -3008,11 +3017,22 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
 
     num = 0;
     idList = [];
+    dateCaseTong = [];
+    imageNodes = [];
     for (let link of imageTargets) {
       targetNumberArr = imageTongChildren.map((dom, index) => { return { height: dom.getBoundingClientRect().height, index } });
       targetNumberArr.sort((a, b) => { return a.height - b.height });
       targetNumber = targetNumberArr[0].index;
       thisId = aspid + "_" + "portfolio" + "_" + uniqueValue("hex");
+
+      linkTargetRawString = link.split("/")[link.split("/").findIndex((str) => { return str === "aspirant" }) + 1].split("_")[0];
+      linkTargetRawString = linkTargetRawString.replace(/[^0-9]/gi, '');
+      uploadDate = new Date(
+        Number("20" + linkTargetRawString.slice(0, 2)),
+        Number(linkTargetRawString.slice(2, 4)) - 1,
+        Number(linkTargetRawString.slice(4, 6)),
+        Number(linkTargetRawString.slice(6, 8)),
+      );
 
       imageNode = createNode({
         id: thisId,
@@ -3021,9 +3041,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
         attribute: {
           src: link,
           gs: "null",
-        },
-        event: {
-          click: bigPhotoEvent,
+          date: dateToString(uploadDate, true),
         },
         style: {
           display: "inline-block",
@@ -3036,6 +3054,8 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
       });
 
       idList.push(thisId);
+      dateCaseTong.push(dateToString(uploadDate, true));
+      imageNodes.push(imageNode);
 
       num++;
     }
@@ -3057,6 +3077,93 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
             dom.setAttribute("ratio", String(height / width));
           });
         }
+
+        setQueue(() => {
+          dateCaseTong = [ ...new Set(dateCaseTong) ];
+          dateCaseTong.sort((a, b) => { return stringToDate(a).valueOf() - stringToDate(b).valueOf() });
+
+          portfolioTongNum = 0;
+          for (let dateString of dateCaseTong) {
+
+            imageTimeTong = createNode({
+              mother: imageTong,
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                position: "relative",
+                marginRight: String(imageInnerBetween) + ea,
+                width: withOut(imageInnerBetween + (imageInnerBetween * 2), ea),
+                "min-height": String(documentsFactorHeight) + ea,
+                marginTop: String(portfolioTongNum === 0 ? 24 : 48) + ea,
+                padding: String(imageInnerBetween) + ea,
+                paddingBottom: String(0),
+                background: colorChip.gray3,
+                borderRadius: String(5) + "px",
+              },
+              child: {
+                text: (portfolioTongNum === 0 ? "최초" : "추가") + " 포트폴리오 / 전송일 : " + dateString,
+                style: {
+                  display: "inline-block",
+                  position: "absolute",
+                  top: String(documentsTitleTextTop) + ea,
+                  left: String(documentsTitleLeft) + ea,
+                  fontSize: String(documentsTitleSize) + ea,
+                  fontWeight: String(documentsTitleWeight),
+                  color: portfolioTongNum === 0 ? colorChip.black : colorChip.green,
+                }
+              }
+            });
+
+            imageTongChildren = [];
+            for (let num of variableArray(imagesNumber)) {
+              imageTongChildren.push(createNode({
+                mother: imageTimeTong,
+                style: {
+                  display: "inline-block",
+                  verticalAlign: "top",
+                  position: "relative",
+                  marginRight: String(num === imagesNumber - 1 ? 0 : imageInnerBetween) + ea,
+                  width: "calc(calc(calc(100% - " + String(imageInnerBetween * (imagesNumber - 1)) + ea + ") - " + String(0) + ea + ") / " + String(imagesNumber) + ")",
+                  borderRadius: String(5) + "px",
+                }
+              }))
+            }
+
+            thisNodesTargets = imageNodes.filter((dom) => {
+              return dom.getAttribute("date") === dateString;
+            });
+
+            for (let node of thisNodesTargets) {
+              targetNumberArr = imageTongChildren.map((dom, index) => { return { height: dom.getBoundingClientRect().height, index } });
+              targetNumberArr.sort((a, b) => { return a.height - b.height });
+              targetNumber = targetNumberArr[0].index;
+              node.style.width = withOut(0, ea);
+              imageTongChildren[targetNumber].appendChild(node);
+              node.style.cursor = "pointer";
+              node.addEventListener("click", bigPhotoEvent);
+            }
+
+            portfolioTongNum++;
+          }
+
+          if (downloadButton !== null) {
+            createNode({
+              mother: downloadButton,
+              text: "포트폴리오 전송 횟수 : " + String(dateCaseTong.length) + "회 / 추가 포트폴리오 " + (dateCaseTong.length < 2 ? "전송 안 함" : "전송함"),
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(5) + ea,
+                right: String(buttonWidth + 12) + ea,
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+                color: colorChip.black,
+              }
+            });
+          }
+
+        }, 100);
+
       } catch (e) {
         console.log(e);
       }
