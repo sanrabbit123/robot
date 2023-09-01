@@ -5495,7 +5495,7 @@ DesignerJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
-    () => { return "공통교육 안내"; },
+    () => { return "공통교육 선택 요청"; },
     function () {
       return document.querySelector('.' + whiteBaseClassName) !== null;
     },
@@ -5505,6 +5505,29 @@ DesignerJs.prototype.communicationRender = function () {
         instance.aspirantCommonMeetingSetting(aspid).catch((err) => {
           console.log(err);
         });
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "공통교육 시간과 장소 안내"; },
+    function () {
+      return document.querySelector('.' + whiteBaseClassName) !== null;
+    },
+    async function (e) {
+      const aspid = document.querySelector('.' + whiteBaseClassName).getAttribute("aspid");
+      try {
+        const aspirant = instance.aspirants.find((a) => { return a.aspid === aspid });
+        const emptyDate = new Date(2000, 0, 1);
+        if (aspirant.meeting.common.date.valueOf() < emptyDate.valueOf()) {
+          window.alert("공통 교육 날짜 선택이 선행되어야 합니다!");
+        } else {
+          await ajaxJson({ aspid, mode: "guide" }, SECONDHOST + "/noticeAspirantCommon", { equal: true });
+          window.alert("공통 교육 시간과 장소를 안내하였습니다!");
+        }
       } catch (e) {
         console.log(e);
         window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
