@@ -1769,7 +1769,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
 
     buttonWidth = 150;
     buttonHeight = 30;
-    buttonTextTop = -1;
+    buttonTextTop = isMac() ? -1 : 1;
     buttonSize = 13;
     buttonWeight = 700;
 
@@ -1813,7 +1813,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     documentsFactorTongMarginTop = 4;
     documentsFactorTongMarginBottom = 14;
     documentsTitleSize = 15;
-    documentsTitleTextTop = isMac() ? -27 : -29;
+    documentsTitleTextTop = isMac() ? -27 : -26;
     documentsTitleLeft = 1;
     documentsTitleWeight = 700;
 
@@ -3153,7 +3153,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
               style: {
                 display: "inline-block",
                 position: "absolute",
-                top: String(5) + ea,
+                top: String(isMac() ? 5 : 7) + ea,
                 right: String(buttonWidth + 12) + ea,
                 fontSize: String(buttonSize) + ea,
                 fontWeight: String(buttonWeight),
