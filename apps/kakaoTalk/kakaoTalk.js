@@ -3625,6 +3625,48 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       },
     },
+    "aspirantRequestCommonConfirm": {
+      "name": "파트너십 공통 교육 안내 확정",
+      "id": "TO_7656",
+      "needs": [
+        "client",
+        "date",
+        "address"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"date\", to: obj.date },\n          { from: \"address\", to: obj.address }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{client}님! 홈리에종 공통 교육 시간과 장소에 대해 안내드립니다.\n\n시간: #{date}\n장소: #{address}\n주차: 2시간은 무료, 이후 10분당 1500원\n\n프로세스 및 내용 상세 설명, Q&A, 팀 소개 등이 진행 예정이니 미리 도착하셔서 준비해주세요!\n\n감사합니다 :)",
+        "templtName": "파트너십 공통 교육 안내 확정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-08-31 16:47:36",
+        "templtCode": "TO_7656",
+        "comments": [
+          {
+            "cdate": "2023-09-01 10:23:16",
+            "name": "검수자",
+            "id": "2811104",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2023-09-01 10:23:16",
+            "status": "APR"
+          }
+        ]
+      },
+    },
     "noticeDesignerChecklist": {
       "name": "디자이너 요청 전송 체크리스트",
       "id": "TO_1919",

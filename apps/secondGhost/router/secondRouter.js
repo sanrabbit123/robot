@@ -2543,6 +2543,7 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
       const aspirant = await back.getAspirantById(aspid, { selfMongo });
       const channel = "#301_apply";
       const masterId = "UM1S7H3GQ";
+      const addressConst = "서울 성동구 성수일로 10 서울숲ITCT지식산업센터 605호";
       let json;
       let rows;
       let thisId, thisHistory;
@@ -2618,6 +2619,17 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
         ], { selfMongo });
         await messageSend({
           text: aspirant.designer + " 실장님이 공통 교육 일자를 선택하셨습니다! => " + dateToString(thisDate, true) + " <@" + masterId + ">",
+          channel,
+          voice: true,
+        });
+
+        await kakao.sendTalk("aspirantRequestCommonConfirm", aspirant.designer, aspirant.phone, {
+          client: aspirant.designer,
+          date: `${String(thisDate.getFullYear())}년 ${String(thisDate.getMonth() + 1)}월 ${String(thisDate.getDate())}일 ${String(thisDate.getHours())}시 ${String(thisDate.getMinutes())}분`,
+          address: addressConst,
+        });
+        await messageSend({
+          text: aspirant.designer + " 실장님께 공통 교육 일자와 장소를 안내하였습니다!",
           channel,
           voice: true,
         });
