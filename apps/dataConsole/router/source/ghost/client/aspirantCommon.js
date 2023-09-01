@@ -2227,8 +2227,10 @@ AspirantCommonJs.prototype.finalSubmit = function () {
         } else {
           await ajaxJson({ mode: "confirm", aspid: instance.aspid, value: thisDate.valueOf() }, SECONDHOST + "/noticeAspirantCommon", { equal: true });
           await ajaxJson({ mode: "update" }, SECONDHOST + "/timeAspirantCommon", { equal: true });
-          window.alert("공통 교육 일자가 선택되었습니다! 감사합니다.");
-          selfHref(FRONTHOST);
+          window.alert("공통 교육 일자가 선택되었습니다! 감사합니다. 관련 안내가 알림톡을 통해 갈 예정입니다. 홈페이지로 되돌아 갑니다.");
+          setQueue(() => {
+            selfHref(FRONTHOST);
+          }, 500);
         }
 
       }
