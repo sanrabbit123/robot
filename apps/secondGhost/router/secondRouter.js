@@ -2636,6 +2636,22 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
 
         res.send(JSON.stringify({ message: "done" }));
 
+      } else if (mode === "guide") {
+
+        const thisDate = aspirant.meeting.common.date;
+        await kakao.sendTalk("aspirantRequestCommonConfirm", aspirant.designer, aspirant.phone, {
+          client: aspirant.designer,
+          date: `${String(thisDate.getFullYear())}년 ${String(thisDate.getMonth() + 1)}월 ${String(thisDate.getDate())}일 ${String(thisDate.getHours())}시 ${String(thisDate.getMinutes())}분`,
+          address: addressConst,
+        });
+        await messageSend({
+          text: aspirant.designer + " 실장님께 공통 교육 일자와 장소를 안내하였습니다!",
+          channel,
+          voice: true,
+        });
+
+        res.send(JSON.stringify({ message: "done" }));
+
       } else if (mode === "reject") {
 
         await messageSend({
