@@ -3925,13 +3925,33 @@ DesignerJs.prototype.aspirantBase = async function () {
               }
             },
             {
-              title: designer + " 실장님께 공통교육 안내",
+              title: designer + " 실장님께 공통교육 날짜 선택 요청하기",
               func: (aspid) => {
                 return async function (e) {
                   try {
                     instance.aspirantCommonMeetingSetting(aspid).catch((err) => {
                       console.log(err);
                     });
+                    removeByClass(aspirantSubMenuEventFactorClassName);
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: designer + " 실장님께 공통교육 시간 및 장소 안내",
+              func: (aspid) => {
+                return async function (e) {
+                  try {
+                    const aspirant = instance.aspirants.find((a) => { return a.aspid === aspid });
+                    const emptyDate = new Date(2000, 0, 1);
+                    if (aspirant.meeting.common.date.valueOf() < emptyDate.valueOf()) {
+                      window.alert("공통 교육 날짜 선택이 선행되어야 합니다!");
+                    } else {
+                      await ajaxJson({ aspid, mode: "guide" }, SECONDHOST + "/noticeAspirantCommon", { equal: true });
+                      window.alert("공통 교육 시간과 장소를 안내하였습니다!");
+                    }
                     removeByClass(aspirantSubMenuEventFactorClassName);
                   } catch (e) {
                     console.log(e);
