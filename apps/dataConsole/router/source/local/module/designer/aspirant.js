@@ -20,6 +20,8 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
     let thisDocumentsSend;
     let thisPortfolioSend;
     let targetMembers;
+    let thisSendRows3;
+    let thisSettingSend;
 
     targetMembers = GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name });
 
@@ -639,6 +641,12 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         thisPortfolioSend = thisSendRows2[0].history[0];
       }
 
+      thisSendRows3 = noticeSendRows.filter((o) => { return o.type === "setting" }).filter((o) => { return o.aspirant.aspid === aspirant.aspid });
+      thisSettingSend = new Date(1800, 0, 1);
+      if (thisSendRows3.length > 0 && thisSendRows3[0].history.length > 0) {
+        thisSettingSend = thisSendRows3[0].history[0];
+      }
+
       standards.values[aspirant.aspid] = [
         {
           value: aspirant.aspid,
@@ -716,7 +724,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "commonMeetingDate",
         },
         {
-          value: dateToString(aspirant.response.portfolio.plus.photo),
+          value: thisSendRows3,
           name: "portfolioSet",
         },
         {
@@ -4030,6 +4038,19 @@ DesignerJs.prototype.aspirantBase = async function () {
                 }
               }
             },
+            {
+              title: designer + " 실장님께 세트 포트폴리오 요청하기",
+              func: (aspid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.aspirantSendNotice("setting", aspid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
           ];
           const thisBox = this.getBoundingClientRect();
           const { x, y } = e;
@@ -5091,6 +5112,38 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
         return null;
       }
     }
+  } else if (method === "setting") {
+    return async function () {
+      try {
+        const aspirant = aspirants.find((d) => { return d.aspid === aspid });
+        let whereQuery, updateQuery;
+        if (aspirant === undefined) {
+          throw new Error("invalid aspid");
+        }
+
+        if (window.confirm(aspirant.designer + " 실장님께 세트 포트폴리오 요청 알림톡을 전송할까요?")) {
+
+          const response = await ajaxJson({
+            mode: "send",
+            aspid: aspirant.aspid,
+            designer: aspirant.designer,
+            phone: aspirant.phone,
+            type: "setting",
+          }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
+          if (response.message === "success") {
+            window.alert("전송에 성공하였습니다!");
+          } else {
+            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+          }
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
+        }
+        
+      } catch (e) {
+        window.alert(e.message);
+        console.log(e);
+        return null;
+      }
+    }
   }
 }
 
@@ -5599,6 +5652,23 @@ DesignerJs.prototype.communicationRender = function () {
           await ajaxJson({ aspid, mode: "guide" }, SECONDHOST + "/noticeAspirantCommon", { equal: true });
           window.alert("공통 교육 시간과 장소를 안내하였습니다!");
         }
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "세트 포트폴리오 요청하기"; },
+    function () {
+      return document.querySelector('.' + whiteBaseClassName) !== null;
+    },
+    async function (e) {
+      const aspid = document.querySelector('.' + whiteBaseClassName).getAttribute("aspid");
+      try {
+        const sendFunc = instance.aspirantSendNotice("setting", aspid);
+        await sendFunc();
       } catch (e) {
         console.log(e);
         window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;

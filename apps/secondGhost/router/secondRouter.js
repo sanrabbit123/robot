@@ -2491,6 +2491,18 @@ SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
 
           res.send(JSON.stringify({ message: "success" }));
 
+        } else if (type === "setting") {
+
+          // await kakao.sendTalk("aspirantRequestSetting", designer, phone, { client: designer, host: address.frontinfo.host, path: "aspsetting", aspid });
+          await messageSend({
+            text: designer + " 실장님께 세팅 포트폴리오 요청 알림톡을 전송하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
+
+          res.send(JSON.stringify({ message: "success" }));
+
         } else {
           throw new Error("invalid type");
         }
