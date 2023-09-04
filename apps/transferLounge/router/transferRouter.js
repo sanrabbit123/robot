@@ -597,7 +597,9 @@ TransferRouter.prototype.rou_post_aspirantBinary = function () {
 
             if (!(await fileSystem(`exist`, [ aspirantFolder ]))) {
               await shellExec(`mkdir`, [ aspirantFolder ]);
-              for (let i = 0; i < list.length; i++) {
+            }
+            for (let i = 0; i < list.length; i++) {
+              if (!(await fileSystem(`exist`, [ `${aspirantFolder}/${list[i]}` ]))) {
                 await shellExec(`mkdir`, [ `${aspirantFolder}/${list[i]}` ]);
               }
             }
@@ -636,6 +638,93 @@ TransferRouter.prototype.rou_post_aspirantBinary = function () {
     } catch (e) {
       console.log(e);
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_aspirantBinary 3): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_aspirantSettingBinary = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, todayMaker, messageSend } = this.mother;
+  const { aspirantConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/aspirantSettingBinary" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        try {
+          let filesKeys = Object.keys(files);
+          if (!err && filesKeys.length > 0) {
+            const { mode, name, aspid } = fields;
+            const aspirantFolderName = ("date" + todayMaker("total")) + '_' + name + '_' + aspid;
+            const uploadMap = {
+              upload0: "setting",
+              upload1: "proposal",
+            };
+            let list, aspirantFolder;
+
+            aspirantFolder = `${aspirantConst}/${aspirantFolderName}`;
+
+            list = [];
+            for (let i = 0; i < filesKeys.length; i++) {
+              list.push(uploadMap[filesKeys[i]]);
+            }
+
+            if (!(await fileSystem(`exist`, [ aspirantFolder ]))) {
+              await shellExec(`mkdir`, [ aspirantFolder ]);
+            }
+            for (let i = 0; i < list.length; i++) {
+              if (!(await fileSystem(`exist`, [ `${aspirantFolder}/${list[i]}` ]))) {
+                await shellExec(`mkdir`, [ `${aspirantFolder}/${list[i]}` ]);
+              }
+            }
+
+            for (let i = 0; i < list.length; i++) {
+              if (Array.isArray(files[filesKeys[i]])) {
+                for (let j of files[filesKeys[i]]) {
+                  await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(aspirantFolder + '/' + list[i] + '/' + j.originalFilename)};`);
+                  if (/\.pdf$/.test(j.originalFilename)) {
+                    await instance.imageReader.pdfToJpg(aspirantFolder + '/' + list[i] + '/' + j.originalFilename, true);
+                  }
+                }
+              } else {
+                await shellExec(`mv ${shellLink(files[filesKeys[i]].filepath)} ${shellLink(aspirantFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename)};`);
+                if (/\.pdf$/.test(files[filesKeys[i]].originalFilename)) {
+                  await instance.imageReader.pdfToJpg(aspirantFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename, true);
+                }
+              }
+            }
+
+            await messageSend({ text: name + "님의 " + (mode === "general" ? "1세트 포트폴리오" : "추천서용 사진") + " 파일 전송을 완료하였습니다!", channel: "#301_apply" });
+            res.send(JSON.stringify({ message: "done" }));
+
+          } else {
+            logger.error("Transfer lounge 서버 문제 생김 (rou_post_aspirantSettingBinary 1)").catch((e) => { console.log(e); });
+            console.log(err);
+            res.send(JSON.stringify({ message: "error" }));
+          }
+        } catch (e) {
+          console.log(e);
+          logger.error("Transfer lounge 서버 문제 생김 (rou_post_aspirantSettingBinary 2): " + e.message).catch((e) => { console.log(e); });
+          res.send(JSON.stringify({ message: "error : " + e.message }));
+        }
+      });
+
+    } catch (e) {
+      console.log(e);
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_aspirantSettingBinary 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -853,13 +942,17 @@ TransferRouter.prototype.rou_post_aspirantPortfolio = function () {
       totalImages = [];
       for (let folder of targetFolders) {
         try {
-          targetImages = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return str !== ".DS_Store" }).map((str) => { return `${folder}/${str}`; }).map((path) => {
-            const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
-            return targetPath;
-          }).map((path) => {
-            return linkToString("https://" + address.transinfo.host + path);
-          });
-          totalImages = totalImages.concat(equalJson(JSON.stringify(targetImages)));
+          if (await fileSystem(`exist`, [ folder ])) {
+            targetImages = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return str !== ".DS_Store" }).map((str) => { return `${folder}/${str}`; }).map((path) => {
+              const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
+              return targetPath;
+            }).map((path) => {
+              return linkToString("https://" + address.transinfo.host + path);
+            });
+            totalImages = totalImages.concat(equalJson(JSON.stringify(targetImages)));
+          } else {
+            totalImages = totalImages.concat([]);
+          }
         } catch (e) {
           totalImages = totalImages.concat([]);
         }

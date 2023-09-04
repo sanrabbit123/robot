@@ -863,8 +863,8 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
       sub: [
         <&& "다음 포트폴리오 전송칸을 통해" | "다음 포트폴리오 전송칸을 통해" | "다음 포트폴리오 전송칸을 통해" | "다음 사진 전송칸을 통해" | "다음 포트폴리오 전송칸을 통해" &&>,
         <&& "1세트 포트폴리오를 전송해 주세요!" | "1세트 포트폴리오를 전송해 주세요!" | "포트폴리오를 전송해 주세요!" | "이미지를 전송해 주세요!" | "1세트 포트폴리오를 전송해 주세요!" &&>,
-        <&& "jpg, png 등의 낱개 이미지 파일" | "jpg, png 등의 낱개 이미지 파일" | "jpg 등의 낱개 이미지 또는" | "낱개 이미지 또는 압축" | "jpg, png 등의 낱개 이미지 파일" &&>,
-        <&& "또는 zip 파일로 올려주시면 됩니다." | "또는 zip 파일로 올려주시면 됩니다." | "zip 파일로 올려주시면 됩니다." | "파일로 올려주시면 됩니다." | "또는 zip파일로 올려주시면 됩니다." &&>,
+        <&& "jpg 등의 낱개 이미지 파일이 아닌" | "jpg 등의 낱개 이미지 파일이 아닌" | "jpg 등의 낱개 이미지 파일이 아닌" | "낱개 이미지 파일이 아닌" | "jpg 등의 낱개 이미지 파일이 아닌" &&>,
+        <&& "zip 파일로 올려주셔야 합니다." | "zip 파일로 올려주셔야 합니다." | "zip 파일로 올려주셔야 합니다." | "zip 파일로 올려야 합니다." | "zip 파일로 올려주셔야 합니다." &&>,
       ]
     };
 
@@ -2299,11 +2299,20 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
           drop: function (e) {
             e.preventDefault();
             e.stopPropagation();
-            if ([ ...e.dataTransfer.files ].map((file) => { return file.type }).filter((str) => { return !/^image/.test(str) }).filter((str) => { return !/pdf/.test(str) }).length > 0) {
-              window.alert("이미지 또는 pdf 파일로만 올려주세요!");
+            if (generalMode) {
+              if ([ ...e.dataTransfer.files ].map((file) => { return file.type }).filter((str) => { return !/zip/.test(str) }).length > 0) {
+                window.alert("zip 파일로만 올려주세요!");
+              } else {
+                this.querySelector("input").files = e.dataTransfer.files;
+                fileChangeEvent.call(this.querySelector("input"), e);
+              }
             } else {
-              this.querySelector("input").files = e.dataTransfer.files;
-              fileChangeEvent.call(this.querySelector("input"), e);
+              if ([ ...e.dataTransfer.files ].map((file) => { return file.type }).filter((str) => { return !/^image/.test(str) }).filter((str) => { return !/pdf/.test(str) }).length > 0) {
+                window.alert("이미지 또는 pdf 파일로만 올려주세요!");
+              } else {
+                this.querySelector("input").files = e.dataTransfer.files;
+                fileChangeEvent.call(this.querySelector("input"), e);
+              }
             }
           }
         },
@@ -2369,7 +2378,7 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
             attribute: {
               type: "file",
               name: "upload",
-              accept: "image/*,  application/pdf",
+              accept: generalMode ? "application/zip" : "image/*,  application/pdf",
               multiple: "true",
               cancel: JSON.stringify([]),
               property: "portfolio",
@@ -2387,8 +2396,8 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
     ]
   });
 
+  // 25
   if (generalMode) {
-    // 25
     longDom = createNode({
       mother: secondRightBox,
       style: {
@@ -2458,8 +2467,6 @@ AspirantSettingJs.prototype.insertAspirantBox = function () {
         }
       ]
     });
-    longDom.querySelector("." + inputClassName).insertAdjacentHTML("beforeend", aspirant.information.career.about);
-    longDom.querySelector("." + inputClassName).value = aspirant.information.career.about;
   }
 
   this.fileInput = portfolioBlock.querySelector("input");
@@ -2639,178 +2646,39 @@ AspirantSettingJs.prototype.finalSubmit = function () {
       let thisName;
       let grayLoading;
 
-      if (document.querySelector('.' + agreeTargetClassName).getAttribute("toggle") === "off") {
-        window.alert("개인정보 취급 방침에 동의해주세요!");
+      if (instance.fileInput.files.length === 0) {
+        window.alert("포트폴리오를 반드시 제출하셔야 합니다!");
       } else {
-        if (instance.fileInput.files.length === 0) {
-          window.alert("포트폴리오를 반드시 제출하셔야 합니다!");
-        } else {
 
-          visualSpecific = 150;
+        await homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "aspirantSettingSend",
+          data: {
+            aspid: instance.aspid,
+            date: dateToString(new Date(), true),
+          },
+        });
 
-          properties = [];
-          for (let dom of targets) {
-            properties.push(dom.getAttribute(property));
+        grayLoading = instance.mother.whiteProgressLoading();
+        formData = new FormData();
+        formData.enctype = "multipart/form-data";
+        formData.append("aspid", instance.aspid);
+        formData.append("mode", instance.mode);
+        formData.append("name", instance.aspirant.designer);
+        cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
+        for (let i = 0; i < instance.fileInput.files.length; i++) {
+          if (!cancelPhoto.includes(i)) {
+            formData.append((instance.mode === "general" ? "upload0" : "upload1"), instance.fileInput.files[i]);
           }
-          properties = [ ...new Set(properties) ];
-  
-          map = [];
-          boo = true;
-          for (let p of properties) {
-            tempObj = {};
-            tempObj.property = p;
-  
-            firstDom = findByAttribute(targets, property, p);
-            nodeName = firstDom.nodeName;
-            if (/INPUT/gi.test(nodeName) || /TEXTAREA/gi.test(nodeName)) {
-              try {
-  
-                if (p === "name") {
-                  firstDom.value = firstDom.value.replace(/[^a-zA-Z가-힣]/gi, '');
-                  if (firstDom.value.trim() === '') {
-                    throw new Error("성함을 입력해주세요!");
-                  }
-                  name = firstDom.value.trim();
-                } else if (p === "phone") {
-                  firstDom.value = firstDom.value.replace(/[^0-9\-]/gi, '');
-                  if (firstDom.value.trim() === '') {
-                    throw new Error("연락처를 입력해주세요!");
-                  }
-                  phone = firstDom.value.trim();
-                } else if (p === "etc") {
-                  firstDom.value = firstDom.value.trim().replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
-                  if (firstDom.value.trim() === '') {
-                    throw new Error("자기 소개를 적어주세요!");
-                  }
-                }
-  
-                tempObj.value = firstDom.value.replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
-  
-              } catch (e) {
-                window.alert(e.message);
-                boo = false;
-                scrollTo(window, firstDom, visualSpecific);
-                if (firstDom.previousElementSibling === null) {
-                  firstDom.parentElement.style.boxSizing = "border-box";
-                  firstDom.parentElement.style.border = "1px solid " + colorChip.green;
-                } else {
-                  firstDom.previousElementSibling.style.boxSizing = "border-box";
-                  firstDom.previousElementSibling.style.border = "1px solid " + colorChip.green;
-                }
-                if (typeof firstDom.focus === "function") {
-                  firstDom.focus();
-                }
-                break;
-              }
-            } else if (/DIV/gi.test(nodeName)) {
-  
-              tempTargets = [];
-              for (let dom of targets) {
-                if (dom.getAttribute(property) === p) {
-                  tempTargets.push(dom);
-                }
-              }
-  
-              onValue = '';
-              for (let dom of tempTargets) {
-                if (dom.getAttribute("toggle") === "on") {
-                  onValue = dom.textContent.trim();
-                  break;
-                }
-              }
-              tempObj.value = onValue;
-  
-            } else if (/ASIDE/gi.test(nodeName)) {
-  
-              tempObj.value = firstDom.getAttribute("value");
-  
-            } else if (/ARTICLE/gi.test(nodeName)) {
-              try {
-                if (p === "careerdetail") {
-                  if (equalJson(firstDom.getAttribute("block")).length === 0) {
-                    throw new Error("경력 사항을 적어주세요!");
-                  }
-                } else if (p === "schooldetail") {
-                  if (equalJson(firstDom.getAttribute("block")).length === 0) {
-                    throw new Error("학력 사항을 적어주세요!");
-                  }
-                }
-                tempObj.value = JSON.stringify(equalJson(firstDom.getAttribute("block")));
-              } catch (e) {
-                window.alert(e.message);
-                boo = false;
-                scrollTo(window, firstDom, visualSpecific);
-                break;
-              }
-            }
-  
-            map.push(tempObj)
-          }
-  
-          if (typeof instance.clientSessionId === "string") {
-            map.push({
-              property: "sessionId",
-              value: instance.clientSessionId,
-            });
-          } else {
-            if (typeof window.homeliaisonSessionId === "string") {
-              map.push({
-                property: "sessionId",
-                value: window.homeliaisonSessionId,
-              });
-            } else {
-              window.location.href = FRONTHOST + "/sessionClear.php";
-            }
-          }
-    
-          if (boo) {
-            instance.mother.certificationBox(name, phone, async function (back, box) {
-              try {
-                const { aspid } = await ajaxJson({ map, mode: "portfolio" }, BACKHOST + "/aspirantSubmit");
-                if (typeof aspid !== "string") {
-                  window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
-                  window.location.reload();
-                }
-                homeliaisonAnalytics({
-                  page: instance.pageName,
-                  standard: instance.firstPageViewTime,
-                  action: "aspirantSettingSend",
-                  data: {
-                    aspid,
-                    date: dateToString(new Date(), true),
-                  },
-                }).then(() => {
-                  document.body.removeChild(box);
-                  document.body.removeChild(back);
-                  grayLoading = instance.mother.whiteProgressLoading();
-                  formData = new FormData();
-                  formData.enctype = "multipart/form-data";
-                  formData.append("name", name);
-                  formData.append("aspid", aspid);
-                  cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
-                  for (let i = 0; i < instance.fileInput.files.length; i++) {
-                    if (!cancelPhoto.includes(i)) {
-                      formData.append("upload0", instance.fileInput.files[i]);
-                    }
-                  }
-                  return ajaxForm(formData, BRIDGEHOST + "/aspirantBinary", grayLoading.progress.firstChild);
-                }).then(() => {
-                  grayLoading.remove();
-                  GeneralJs.scrollTo(window, 0);
-                  window.alert("전송이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
-                  selfHref(FRONTHOST);
-                }).catch((err) => {
-                  window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
-                  window.location.reload();
-                });
-
-              } catch (e) {
-                await ajaxJson({ message: "front aspirantSubmit.certificationBox : " + e.message }, BACKHOST + "/errorLog");
-              }
-            });
-          }
-
         }
+        await ajaxForm(formData, BRIDGEHOST + "/aspirantSettingBinary", grayLoading.progress.firstChild);
+        
+        grayLoading.remove();
+        GeneralJs.scrollTo(window, 0);
+        window.alert("전송이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
+        selfHref(FRONTHOST);
+
       }
 
     } catch (e) {
