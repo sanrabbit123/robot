@@ -667,7 +667,7 @@ TransferRouter.prototype.rou_post_aspirantSettingBinary = function () {
         try {
           let filesKeys = Object.keys(files);
           if (!err && filesKeys.length > 0) {
-            const { mode, name, aspid } = fields;
+            const { mode, name, aspid, description } = fields;
             const aspirantFolderName = ("date" + todayMaker("total")) + '_' + name + '_' + aspid;
             const uploadMap = {
               upload0: "setting",
@@ -689,6 +689,7 @@ TransferRouter.prototype.rou_post_aspirantSettingBinary = function () {
               if (!(await fileSystem(`exist`, [ `${aspirantFolder}/${list[i]}` ]))) {
                 await shellExec(`mkdir`, [ `${aspirantFolder}/${list[i]}` ]);
               }
+              await fileSystem(`write`, [ `${aspirantFolder}/${list[i]}/description.txt`, description ]);
             }
 
             for (let i = 0; i < list.length; i++) {

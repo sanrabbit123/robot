@@ -2645,10 +2645,18 @@ AspirantSettingJs.prototype.finalSubmit = function () {
       let cancelPhoto;
       let thisName;
       let grayLoading;
+      let description;
 
       if (instance.fileInput.files.length === 0) {
         window.alert("포트폴리오를 반드시 제출하셔야 합니다!");
       } else {
+
+        description = '';
+        try {
+          description = targets[0].value.trim().replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
+        } catch (e) {
+          description = '';
+        }
 
         await homeliaisonAnalytics({
           page: instance.pageName,
@@ -2666,6 +2674,7 @@ AspirantSettingJs.prototype.finalSubmit = function () {
         formData.append("aspid", instance.aspid);
         formData.append("mode", instance.mode);
         formData.append("name", instance.aspirant.designer);
+        formData.append("description", description);
         cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
         for (let i = 0; i < instance.fileInput.files.length; i++) {
           if (!cancelPhoto.includes(i)) {
