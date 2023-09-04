@@ -2652,9 +2652,13 @@ AspirantSettingJs.prototype.finalSubmit = function () {
       } else {
 
         description = '';
-        try {
-          description = targets[0].value.trim().replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
-        } catch (e) {
+        if (targets.length > 0) {
+          try {
+            description = targets[0].value.trim().replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
+          } catch (e) {
+            description = '';
+          }
+        } else {
           description = '';
         }
 
