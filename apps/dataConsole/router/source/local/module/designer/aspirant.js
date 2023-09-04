@@ -724,7 +724,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "commonMeetingDate",
         },
         {
-          value: thisSendRows3,
+          value: dateToString(thisSettingSend),
           name: "portfolioSet",
         },
         {
@@ -5551,7 +5551,7 @@ DesignerJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
-    () => { return "추가 포트폴리오 요청하기"; },
+    () => { return "추가 포트폴리오 요청"; },
     function () {
       return document.querySelector('.' + whiteBaseClassName) !== null;
     },
@@ -5568,7 +5568,7 @@ DesignerJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
-    () => { return "등록 서류 요청하기"; },
+    () => { return "등록 서류 요청"; },
     function () {
       return document.querySelector('.' + whiteBaseClassName) !== null;
     },
@@ -5619,7 +5619,7 @@ DesignerJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
-    () => { return "공통교육 선택 요청"; },
+    () => { return "공통 교육 선택"; },
     function () {
       return document.querySelector('.' + whiteBaseClassName) !== null;
     },
@@ -5637,7 +5637,7 @@ DesignerJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
-    () => { return "공통교육 시간과 장소 안내"; },
+    () => { return "공통 교육 시간 장소 안내"; },
     function () {
       return document.querySelector('.' + whiteBaseClassName) !== null;
     },
@@ -5660,7 +5660,7 @@ DesignerJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
-    () => { return "세트 포트폴리오 요청하기"; },
+    () => { return "세트 포트폴리오 요청"; },
     function () {
       return document.querySelector('.' + whiteBaseClassName) !== null;
     },

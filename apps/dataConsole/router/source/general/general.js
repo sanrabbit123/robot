@@ -4973,7 +4973,7 @@ GeneralJs.prototype.communicationBox = function () {
     block.firstChild.style.width = String(100) + '%';
     block.firstChild.style.textAlign = "center";
 
-    return { width: renderWidth, margin: innerMargin / 2, height: height };
+    return { width: renderWidth, margin: innerMargin / 2, height: height, block: block };
   }
 
   talkIcon.addEventListener("click", function (e) {
@@ -4999,6 +4999,7 @@ GeneralJs.prototype.communicationBox = function () {
     let widthArr;
     let lastBlocksNumber;
     let refreshHeight;
+    let itemArr;
 
     cancelWidth = 98.5;
     cancelHeight = 98;
@@ -5120,6 +5121,7 @@ GeneralJs.prototype.communicationBox = function () {
     } else {
 
       widthArr = [];
+      itemArr = [];
 
       num = 0;
       for (let arr of communication) {
@@ -5138,6 +5140,8 @@ GeneralJs.prototype.communicationBox = function () {
           if (num % 3 === 2) {
             widthArr.push(tempArr);
           }
+          tempObj.block.setAttribute("margin", String(blockMargin));
+          itemArr.push(tempObj.block);
           num++;
         }
       }
@@ -5152,17 +5156,13 @@ GeneralJs.prototype.communicationBox = function () {
 
       widthArr.sort((a, b) => { return b.sum() - a.sum() });
       whiteBox.style.width = String(widthArr[0].sum() - widthArr[0].margin + (innerMargin * 2)) + ea;
+      whiteBox.children[1].style.paddingRight = String(innerMargin - widthArr[0].margin) + ea;
+      whiteBox.children[1].style.width = withOut(innerMargin + innerMargin - widthArr[0].margin, ea);
+      whiteBox.children[1].style.paddingBottom = String(innerMargin - widthArr[0].margin) + ea;
+      whiteBox.children[1].style.height = withOut(innerMargin + innerMargin - widthArr[0].margin, ea);
+
       refreshHeight = (widthArr.length * widthArr[0].height) + ((widthArr.length - 1) * widthArr[0].margin) + (innerMargin * 2);
       whiteBox.style.height = String(refreshHeight) + ea;
-      lastBlocksNumber = widthArr[widthArr.length - 1].length;
-      for (let i = whiteBox.lastChild.firstChild.children.length - 1; i > whiteBox.lastChild.firstChild.children.length - 1 - lastBlocksNumber; i--) {
-        whiteBox.lastChild.firstChild.children[i].style.marginBottom = String(0) + ea;
-      }
-      for (let i = 0; i < whiteBox.lastChild.firstChild.children.length; i++) {
-        if (i % 3 === 2 || i === whiteBox.lastChild.firstChild.children.length - 1) {
-          whiteBox.lastChild.firstChild.children[i].style.marginRight = String(0) + ea;
-        }
-      }
 
     }
 
