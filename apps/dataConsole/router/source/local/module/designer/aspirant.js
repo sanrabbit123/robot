@@ -537,49 +537,13 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         },
       },
       {
-        title: "준비된 세트",
+        title: "세트 포폴 요청",
         width: 100,
         name: "portfolioSet",
-        type: "string",
-        menu: [
-          {
-            value: "전체 보기",
-            functionName: "filterEvent_$all",
-            columnOnly: true,
-          }
-        ].concat([
-          "있음",
-          "없음",
-        ].map((str) => {
-          return {
-            value: str,
-            functionName: "filterEvent_" + str,
-          }
-        })),
-        menuWidth: 80,
-        update: async (aspid, value, menu) => {
-          try {
-            const instance = this;
-            const { ajaxJson } = GeneralJs;
-            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
-            const finalValue = /있음/gi.test(value);
-            let whereQuery, updateQuery;
-
-            whereQuery = { aspid };
-            updateQuery = {};
-            updateQuery["response.portfolio.ready.set"] = finalValue;
-
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.ready.set = finalValue;
-            await instance.aspirantColorSync();
-
-          } catch (e) {
-            console.log(e);
-          }
-        },
+        type: "date",
       },
       {
-        title: "세트 촬영",
+        title: "세트 포폴 수신",
         width: 100,
         name: "portfolioSetPhoto",
         type: "date",
@@ -752,7 +716,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "commonMeetingDate",
         },
         {
-          value: aspirant.response.portfolio.ready.set ? "있음" : "없음",
+          value: dateToString(aspirant.response.portfolio.plus.photo),
           name: "portfolioSet",
         },
         {
@@ -5644,6 +5608,66 @@ DesignerJs.prototype.communicationRender = function () {
 
 }
 
+DesignerJs.prototype.aspirantExtractEvent = async function () {
+  const instance = this;
+  const { ajaxJson, blankHref } = GeneralJs;
+  try {
+    const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
+    this.mother.belowButtons.sub.extractIcon.addEventListener("click", async function (e) {
+      try {
+        const today = new Date();
+        const data = await instance.aspirantDataRender(false);
+        let thisName;
+        let thisObject;
+        let matrix;
+        let tempArr;
+        let thisDesigner;
+  
+        matrix = [];
+        tempArr = [
+          "아이디",
+          "이름",
+        ];
+        for (let obj of data.columns) {
+          tempArr.push(obj.title);
+        }
+        matrix.push(tempArr);
+  
+        for (let aspid in data.values) {
+  
+          thisDesigner = instance.aspirants.find((d) => { return d.aspid === aspid });
+  
+          tempArr = [];
+          tempArr.push(aspid);
+          tempArr.push(thisDesigner.designer);
+  
+          for (let obj of data.columns) {
+            thisObject = data.values[aspid].find((o) => { return o.name === obj.name });
+            tempArr.push(thisObject.value);
+          }
+          matrix.push(tempArr);
+        }
+  
+        instance.mother.greenAlert("시트 추출이 완료되면 자동으로 열립니다!");
+        ajaxJson({
+          values: matrix,
+          newMake: true,
+          parentId: parentId,
+          sheetName: "fromDB_aspirant_" + String(today.getFullYear()) + instance.mother.todayMaker()
+        }, BACKHOST + "/sendSheets", { equal: true }).then((result) => {
+          blankHref(result.link);
+        }).catch((err) => {
+          console.log(err);
+        })
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.aspirantView = async function () {
   const instance = this;
   try {
@@ -5661,7 +5685,7 @@ DesignerJs.prototype.aspirantView = async function () {
     GeneralJs.stacks.members = this.members;
 
     this.aspirants = aspirants;
-    this.normalMatrix = null;
+    this.aspirantMatrix = null;
     this.valueTargetClassName = "valueTargetClassName";
     this.valueCaseClassName = "valueCaseClassName";
     this.standardCaseClassName = "standardCaseClassName";
@@ -5677,6 +5701,7 @@ DesignerJs.prototype.aspirantView = async function () {
 
     await this.aspirantBase();
     await this.aspirantSearchEvent();
+    await this.aspirantExtractEvent();
     this.communicationRender();
 
     loading.parentNode.removeChild(loading);

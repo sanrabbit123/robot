@@ -812,16 +812,28 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           thisValueTemp = filteredProjectsContract.filter((p) => { return /^대/.test(p.process.status) }).length;
           thisTarget.textContent = String(thisValueTemp);
           thisTarget.style.color = colorChip.black;
+          instance.normalMatrix[designer.desid].push({
+            name: "processPending",
+            value: String(thisValueTemp),
+          });
 
           thisTarget = findByAttribute(thisValueDoms, "name", "processDoing");
           thisValueTemp = filteredProjectsContract.filter((p) => { return /^진/.test(p.process.status) }).length;
           thisTarget.textContent = String(thisValueTemp);
           thisTarget.style.color = colorChip.black;
+          instance.normalMatrix[designer.desid].push({
+            name: "processDoing",
+            value: String(thisValueTemp),
+          });
 
           thisTarget = findByAttribute(thisValueDoms, "name", "checklistDone");
           thisValueTemp = (completeAnalyticsRows[designer.desid]?.aboutUpdateComplete === 1) ? "완료" : "미완료";
           thisTarget.textContent = String(thisValueTemp);
           thisTarget.style.color = colorChip.black;
+          instance.normalMatrix[designer.desid].push({
+            name: "checklistDone",
+            value: String(thisValueTemp),
+          });
 
           thisTarget = findByAttribute(thisValueDoms, "name", "proposalNumber");
           thisTarget.textContent = String(filteredProjectsProposal.length);
@@ -2871,6 +2883,8 @@ DesignerJs.prototype.normalExtractEvent = async function () {
               }
             }
           }
+
+          console.log(data);
 
           matrix = [];
           tempArr = [
