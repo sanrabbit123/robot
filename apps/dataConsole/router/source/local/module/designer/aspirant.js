@@ -3154,6 +3154,7 @@ DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
     const settingPopupClassName = "settingPopupClassName";
     const settingPopupWhiteContentsClassName = "settingPopupWhiteContentsClassName";
     const zIndex = 6;
+    const keyKeyword = "imageKey_";
     let cancelBack;
     let whiteBase;
     let whiteWidth, whiteHeight;
@@ -3169,9 +3170,33 @@ DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
     let titleAreaHeight;
     let settingList;
     let setting, proposal;
+    let imageTargets;
+    let linkTargetRawString;
+    let uploadDate;
+    let keySet;
+    let scrollBox;
+    let contentsBox;
+    let titleString;
+    let num;
+    let thisTargets;
+    let thisGrayBox;
+    let linkArr;
+    let fileName;
+    let whiteBlock;
+    let downloadCircleWidth;
+    let downloadCirclePadding;
+    let downloadIconWidth;
+    let downloadIconTop;
+    let titleBox;
+    let downloadButton;
+    let buttonWidth;
+    let buttonHeight;
+    let buttonTextTop;
+    let buttonSize;
+    let buttonWeight;
 
     whiteWidth = 800;
-    whiteHeight = 600;
+    whiteHeight = 480;
 
     innerMargin = 24;
     innerMarginTop = 20;
@@ -3187,8 +3212,55 @@ DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
 
     titleAreaHeight = 33;
 
+    downloadCircleWidth = 21;
+    downloadCirclePadding = 16;
+    downloadIconWidth = 9;
+    downloadIconTop = 1;
+    
+    buttonWidth = 120;
+    buttonHeight = 24;
+    buttonTextTop = isMac() ? -1 : 1;
+    buttonSize = 11;
+    buttonWeight = 700;
+
     settingList = await ajaxJson({ aspid }, BRIDGEHOST + "/aspirantSettingList", { equal: true });
     ({ setting, proposal } = settingList);
+
+    imageTargets = setting.map((str) => { return stringToLink(str) });
+    imageTargets = imageTargets.map((link) => {
+      linkArr = link.split("/");
+      fileName = linkArr[linkArr.length - 1];
+      fileName = fileName.split(".").map((str) => { return window.decodeURIComponent(str) }).join(".");
+      linkTargetRawString = linkArr[linkArr.findIndex((str) => { return str === "aspirant" }) + 1].split("_")[0];
+      linkTargetRawString = linkTargetRawString.replace(/[^0-9]/gi, '');
+      uploadDate = new Date(
+        Number("20" + linkTargetRawString.slice(0, 2)),
+        Number(linkTargetRawString.slice(2, 4)) - 1,
+        Number(linkTargetRawString.slice(4, 6)),
+        Number(linkTargetRawString.slice(6, 8)),
+        Number(linkTargetRawString.slice(8, 10)),
+      );
+      return {
+        key: keyKeyword + linkTargetRawString,
+        link,
+        date: uploadDate,
+        name: fileName,
+        exe: fileName.split(".")[fileName.split(".").length - 1],
+      };
+    });
+    keySet = [ ...new Set(imageTargets.map(({ key }) => { return key })) ];
+    keySet.sort((a, b) => { return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, '')) });
+    keySet = keySet.map((key) => {
+      linkTargetRawString = key.replace(/[^0-9]/gi, '');
+      uploadDate = new Date(
+        Number("20" + linkTargetRawString.slice(0, 2)),
+        Number(linkTargetRawString.slice(2, 4)) - 1,
+        Number(linkTargetRawString.slice(4, 6)),
+        Number(linkTargetRawString.slice(6, 8)),
+        Number(linkTargetRawString.slice(8, 10)),
+      );
+      return { key, date: uploadDate };
+    })
 
     cancelBack = createNode({
       mother: totalContents,
@@ -3231,7 +3303,7 @@ DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
       },
     });
     
-    createNode({
+    titleBox = createNode({
       mother: whiteBase,
       style: {
         display: "block",
@@ -3250,7 +3322,190 @@ DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
           color: colorChip.black,
         }
       }
-    })
+    });
+
+    downloadButton = createNode({
+      mother: titleBox,
+      style: {
+        display: "inline-flex",
+        position: "absolute",
+        top: String(1) + ea,
+        right: String(0) + ea,
+        width: String(buttonWidth) + ea,
+        height: String(buttonHeight) + ea,
+        justifyContent: "end",
+        alignItems: "center",
+        cursor: "pointer",
+      },
+      child: {
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(buttonWidth) + ea,
+          height: String(buttonHeight) + ea,
+          background: colorChip.green,
+          borderRadius: String(5) + "px",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        child: {
+          text: "모든 파일 일괄 다운로드",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(buttonTextTop) + ea,
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(buttonWeight),
+            color: colorChip.white,
+          }
+        }
+      }
+    });
+
+    scrollBox = createNode({
+      mother: whiteBase,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: withOut(titleAreaHeight, ea),
+        overflow: "scroll",
+      }
+    });
+
+    contentsBox = createNode({
+      mother: scrollBox,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: "auto",
+      }
+    });
+
+    num = 1;
+    for (let { key, date } of keySet) {
+
+      titleString = "세트 포트폴리오 " + String(num) + " <b%- " + dateToString(date, true) + "%b>";
+      thisTargets = imageTargets.filter((obj) => {
+        return obj.key === key;
+      });
+
+      createNode({
+        mother: contentsBox,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(24) + ea,
+          marginTop: String(16) + ea,
+        },
+        child: {
+          text: titleString,
+          style: {
+            position: "relative",
+            top: String(fontTextTop) + ea,
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+          },
+          bold: {
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.deactive,
+          }
+        }
+      });
+
+      thisGrayBox = createNode({
+        mother: contentsBox,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(8 * 2, ea),
+          padding: String(8) + ea,
+          paddingBottom: String(8 - 4) + ea,
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+        }
+      });
+
+      for (let obj of thisTargets) {
+
+        whiteBlock = createNode({
+          mother: thisGrayBox,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(12, ea),
+            height: String(36) + ea,
+            background: colorChip.white,
+            borderRadius: String(3) + "px",
+            marginBottom: String(4) + ea,
+            alignItems: "start",
+            justifyContent: "center",
+            flexDirection: "column",
+            paddingLeft: String(12) + ea,
+          },
+          child: {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(80) + '%',
+              height: withOut(0, ea),
+              alignItems: "start",
+              justifyContent: "center",
+              flexDirection: "column",
+              overflow: "hidden",
+            },
+            child: {
+              text: obj.name,
+              style: {
+                position: "relative",
+                width: String(8000) + ea,
+                top: String(-1) + ea,
+                fontSize: String(13) + ea,
+                fontWeight: String(fontWeight),
+                color: colorChip.black,
+              }
+            }
+          }
+        })
+
+        createNode({
+          mother: whiteBlock,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: String(downloadCircleWidth) + ea,
+            height: String(downloadCircleWidth) + ea,
+            position: "absolute",
+            top: String(8) + ea,
+            right: String(10) + ea,
+            borderRadius: String(downloadCircleWidth) + ea,
+            background: colorChip.gradientGray,
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnExtract(colorChip.white),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(downloadIconTop) + ea,
+                width: String(downloadIconWidth) + ea,
+                transform: "rotate(180deg)",
+              }
+            }
+          ]
+        });
+
+      }
+
+      num++;
+    }
 
   } catch (e) {
     console.log(e);
