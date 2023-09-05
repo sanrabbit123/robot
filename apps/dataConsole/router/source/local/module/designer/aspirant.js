@@ -3146,6 +3146,112 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
   }
 }
 
+DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
+  const instance = this;
+  const { ea, totalContents, grayBarWidth, belowHeight } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink, variableArray, downloadFile, uniqueValue, sleep, equalJson, hexaJson } = GeneralJs;
+  try {
+    const settingPopupClassName = "settingPopupClassName";
+    const settingPopupWhiteContentsClassName = "settingPopupWhiteContentsClassName";
+    const zIndex = 6;
+    let cancelBack;
+    let whiteBase;
+    let whiteWidth, whiteHeight;
+    let innerMargin;
+    let titleTextTop;
+    let titleSize;
+    let titleWeight;
+    let fontTextTop;
+    let fontSize;
+    let fontBetween;
+    let fontWeight;
+    let innerMarginTop;
+    let titleAreaHeight;
+
+    whiteWidth = 800;
+    whiteHeight = 600;
+
+    innerMargin = 24;
+    innerMarginTop = 20;
+
+    titleTextTop = isMac() ? 2 : 2;
+    titleSize = 17;
+    titleWeight = 800;
+
+    fontTextTop = isMac() ? 1 : 0;
+    fontSize = 14;
+    fontBetween = 8;
+    fontWeight = 400;
+
+    titleAreaHeight = 33;
+
+    cancelBack = createNode({
+      mother: totalContents,
+      attribute: {
+        aspid: aspid
+      },
+      class: [ "justfadein", settingPopupClassName ],
+      event: (e) => { removeByClass(settingPopupClassName) },
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(grayBarWidth) + ea,
+        width: withOut(grayBarWidth, ea),
+        height: withOut(belowHeight, ea),
+        background: colorChip.black,
+        zIndex: String(zIndex),
+      }
+    });
+
+    whiteBase = createNode({
+      mother: totalContents,
+      attribute: {
+        aspid: aspid
+      },
+      class: [ settingPopupWhiteContentsClassName, settingPopupClassName ],
+      style: {
+        position: "fixed",
+        width: String(whiteWidth - innerMargin - innerMargin) + ea,
+        height: String(whiteHeight - innerMargin - innerMarginTop) + ea,
+        top: "calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 2) - " + String(whiteHeight / 2) + ea + ")",
+        left: "calc(calc(calc(calc(100% - " + String(grayBarWidth) + ea + ") / 2) - " + String(whiteWidth / 2) + ea + ") + " + String(grayBarWidth) + ea + ")",
+        background: colorChip.white,
+        zIndex: String(zIndex),
+        borderRadius: String(5) + "px",
+        animation: "fadeuplite 0.3s ease forwards",
+        boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+        overflow: "hidden",
+        padding: String(innerMargin) + ea,
+        paddingTop: String(innerMarginTop) + ea,
+      },
+    });
+    
+    createNode({
+      mother: whiteBase,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(titleAreaHeight) + ea,
+        borderBottom: "1px solid " + colorChip.gray3,
+      },
+      child: {
+        text: "전송된 세트 포트폴리오",
+        style: {
+          position: "relative",
+          top: String(fontTextTop) + ea,
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+        }
+      }
+    })
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
@@ -3154,6 +3260,7 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
   return async function (e) {
     try {
       const zIndex = 4;
+      const blank = "&nbsp;/&nbsp;";
       const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
       let cancelBack, whitePrompt;
       let titleWhite;
@@ -3333,6 +3440,125 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
                   color: colorChip.green,
                   cursor: "pointer",
                 }
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "absolute",
+                  bottom: String(0),
+                  right: String(0),
+                  flexDirection: "row",
+                  alignItems: "end",
+                  justifyContent: "end",
+                },
+                children: [
+                  {
+                    class: [ titleButtonsClassName ],
+                    text: "세트 포트폴리오",
+                    attribute: {
+                      aspid: aspid,
+                    },
+                    event: {
+                      click: async function (e) {
+                        try {
+                          const aspid = this.getAttribute("aspid");
+                          await instance.aspirantSettingPortfolioView(aspid);
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    },
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.black,
+                      cursor: "pointer",
+                    }
+                  },
+                  {
+                    text: blank,
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.gray3,
+                    }
+                  },
+                  {
+                    class: [ titleButtonsClassName ],
+                    attribute: {
+                      aspid: aspid,
+                    },
+                    event: {
+                      click: async function (e) {
+                        try {
+                          const aspid = this.getAttribute("aspid");
+
+                          console.log(aspid);
+
+
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    },
+                    text: "추천서용 사진",
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.black,
+                      cursor: "pointer",
+                    }
+                  },
+                  {
+                    text: blank,
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.gray3,
+                    }
+                  },
+                  {
+                    class: [ titleButtonsClassName ],
+                    attribute: {
+                      aspid: aspid,
+                    },
+                    event: {
+                      click: async function (e) {
+                        try {
+                          const aspid = this.getAttribute("aspid");
+
+                          console.log(aspid);
+
+
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    },
+                    text: "파트너십 계약서",
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.black,
+                      cursor: "pointer",
+                    }
+                  },
+                ]
               },
             ]
           }
@@ -5765,7 +5991,7 @@ DesignerJs.prototype.aspirantView = async function () {
     this.whiteCardClassName = "whiteCardClassName";
     this.whiteBaseClassName = "whiteBaseClassName";
     this.processDetailEventClassName = "processDetailEventClassName";
-    this.whiteCardMode = "checklist";
+    this.whiteCardMode = "aspirant";
     this.asyncProcessText = "로드중..";
     this.noticeSendRows = noticeSendRows;
 

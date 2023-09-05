@@ -734,6 +734,83 @@ TransferRouter.prototype.rou_post_aspirantSettingBinary = function () {
   return obj;
 }
 
+TransferRouter.prototype.rou_post_aspirantSettingList = function () {
+  const instance = this;
+  const address = this.address;
+  const { fileSystem, shellExec, shellLink, equalJson, linkToString } = this.mother;
+  const { aspirantConst, staticConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/aspirantSettingList" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.aspid === undefined) {
+        throw new Error("invalid post");
+      }
+      const { aspid } = equalJson(req.body);
+      const folderList = await fileSystem(`readDir`, [ aspirantConst ]);
+      const target0Folders = folderList.filter((str) => { return (new RegExp(aspid, "g").test(str)) });
+      const targetFolders = target0Folders.map((str) => { return `${aspirantConst}/${str}` });
+      let tempArr, tempArr2;
+      let settingList;      
+      let proposalList;
+      let tempSettingList;
+      let tempProposalList;
+
+      settingList = [];
+      proposalList = [];
+
+      for (let folder of targetFolders) {
+        tempArr = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return str !== ".DS_Store" });
+
+        tempSettingList = [];
+        tempProposalList = [];
+
+        if (tempArr.includes("setting")) {
+          tempArr2 = (await fileSystem(`readDir`, [ folder + "/setting" ])).filter((str) => { return str !== ".DS_Store" })
+          tempSettingList = tempArr2.map((str) => { return `${folder}/setting/${str}`; }).map((path) => {
+            const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
+            return targetPath;
+          }).map((path) => {
+            return linkToString("https://" + address.transinfo.host + path);
+          });
+        }
+        if (tempArr.includes("proposal")) {
+          tempArr2 = (await fileSystem(`readDir`, [ folder + "/proposal" ])).filter((str) => { return str !== ".DS_Store" })
+          tempProposalList = tempArr2.map((str) => { return `${folder}/proposal/${str}`; }).map((path) => {
+            const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
+            return targetPath;
+          }).map((path) => {
+            return linkToString("https://" + address.transinfo.host + path);
+          });
+        }
+
+        settingList = settingList.concat(tempSettingList);
+        proposalList = proposalList.concat(tempProposalList);
+      }
+
+      res.send(JSON.stringify({
+        setting: settingList,
+        proposal: proposalList,
+      }));
+
+    } catch (e) {
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_aspirantSettingList): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 TransferRouter.prototype.rou_post_aspirantDocuments = function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, todayMaker, messageSend } = this.mother;
