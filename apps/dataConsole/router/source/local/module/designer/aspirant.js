@@ -3545,6 +3545,405 @@ DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
   }
 }
 
+DesignerJs.prototype.aspirantProposalPortfolioView = async function (aspid) {
+  const instance = this;
+  const { ea, totalContents, grayBarWidth, belowHeight } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink, linkToString, variableArray, downloadFile, uniqueValue, sleep, equalJson, hexaJson } = GeneralJs;
+  try {
+    const proposalPopupClassName = "proposalPopupClassName";
+    const proposalPopupWhiteContentsClassName = "proposalPopupWhiteContentsClassName";
+    const zIndex = 6;
+    const keyKeyword = "imageKey_";
+    let cancelBack;
+    let whiteBase;
+    let whiteWidth, whiteHeight;
+    let innerMargin;
+    let titleTextTop;
+    let titleSize;
+    let titleWeight;
+    let fontTextTop;
+    let fontSize;
+    let fontBetween;
+    let fontWeight;
+    let innerMarginTop;
+    let titleAreaHeight;
+    let settingList;
+    let setting, proposal;
+    let imageTargets;
+    let linkTargetRawString;
+    let uploadDate;
+    let keySet;
+    let scrollBox;
+    let contentsBox;
+    let titleString;
+    let num;
+    let thisTargets;
+    let thisGrayBox;
+    let linkArr;
+    let fileName;
+    let whiteBlock;
+    let downloadCircleWidth;
+    let downloadCirclePadding;
+    let downloadIconWidth;
+    let downloadIconTop;
+    let titleBox;
+    let downloadButton;
+    let buttonWidth;
+    let buttonHeight;
+    let buttonTextTop;
+    let buttonSize;
+    let buttonWeight;
+
+    whiteWidth = 800;
+    whiteHeight = 480;
+
+    innerMargin = 24;
+    innerMarginTop = 20;
+
+    titleTextTop = isMac() ? 2 : 2;
+    titleSize = 17;
+    titleWeight = 800;
+
+    fontTextTop = isMac() ? 1 : 0;
+    fontSize = 14;
+    fontBetween = 8;
+    fontWeight = 400;
+
+    titleAreaHeight = 33;
+
+    downloadCircleWidth = 21;
+    downloadCirclePadding = 16;
+    downloadIconWidth = 9;
+    downloadIconTop = 1;
+    
+    buttonWidth = 120;
+    buttonHeight = 24;
+    buttonTextTop = isMac() ? -1 : 1;
+    buttonSize = 11;
+    buttonWeight = 700;
+
+    settingList = await ajaxJson({ aspid }, BRIDGEHOST + "/aspirantSettingList", { equal: true });
+    ({ setting, proposal } = settingList);
+
+    imageTargets = proposal.map((str) => { return stringToLink(str) });
+    imageTargets = imageTargets.map((link) => {
+      linkArr = link.split("/");
+      fileName = linkArr[linkArr.length - 1];
+      fileName = fileName.split(".").map((str) => { return window.decodeURIComponent(str) }).join(".");
+      linkTargetRawString = linkArr[linkArr.findIndex((str) => { return str === "aspirant" }) + 1].split("_")[0];
+      linkTargetRawString = linkTargetRawString.replace(/[^0-9]/gi, '');
+      uploadDate = new Date(
+        Number("20" + linkTargetRawString.slice(0, 2)),
+        Number(linkTargetRawString.slice(2, 4)) - 1,
+        Number(linkTargetRawString.slice(4, 6)),
+        Number(linkTargetRawString.slice(6, 8)),
+        Number(linkTargetRawString.slice(8, 10)),
+      );
+      return {
+        key: keyKeyword + linkTargetRawString,
+        link,
+        date: uploadDate,
+        name: fileName,
+        exe: fileName.split(".")[fileName.split(".").length - 1],
+      };
+    });
+    keySet = [ ...new Set(imageTargets.map(({ key }) => { return key })) ];
+    keySet.sort((a, b) => { return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, '')) });
+    keySet = keySet.map((key) => {
+      linkTargetRawString = key.replace(/[^0-9]/gi, '');
+      uploadDate = new Date(
+        Number("20" + linkTargetRawString.slice(0, 2)),
+        Number(linkTargetRawString.slice(2, 4)) - 1,
+        Number(linkTargetRawString.slice(4, 6)),
+        Number(linkTargetRawString.slice(6, 8)),
+        Number(linkTargetRawString.slice(8, 10)),
+      );
+      return { key, date: uploadDate };
+    })
+
+    cancelBack = createNode({
+      mother: totalContents,
+      attribute: {
+        aspid: aspid
+      },
+      class: [ "justfadein", proposalPopupClassName ],
+      event: (e) => { removeByClass(proposalPopupClassName) },
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(grayBarWidth) + ea,
+        width: withOut(grayBarWidth, ea),
+        height: withOut(belowHeight, ea),
+        background: colorChip.black,
+        zIndex: String(zIndex),
+      }
+    });
+
+    whiteBase = createNode({
+      mother: totalContents,
+      attribute: {
+        aspid: aspid
+      },
+      class: [ proposalPopupWhiteContentsClassName, proposalPopupClassName ],
+      style: {
+        position: "fixed",
+        width: String(whiteWidth - innerMargin - innerMargin) + ea,
+        height: String(whiteHeight - innerMargin - innerMarginTop) + ea,
+        top: "calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 2) - " + String(whiteHeight / 2) + ea + ")",
+        left: "calc(calc(calc(calc(100% - " + String(grayBarWidth) + ea + ") / 2) - " + String(whiteWidth / 2) + ea + ") + " + String(grayBarWidth) + ea + ")",
+        background: colorChip.white,
+        zIndex: String(zIndex),
+        borderRadius: String(5) + "px",
+        animation: "fadeuplite 0.3s ease forwards",
+        boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+        overflow: "hidden",
+        padding: String(innerMargin) + ea,
+        paddingTop: String(innerMarginTop) + ea,
+      },
+    });
+    
+    titleBox = createNode({
+      mother: whiteBase,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(titleAreaHeight) + ea,
+        borderBottom: "1px solid " + colorChip.gray3,
+      },
+      child: {
+        text: "전송된 추천서용 사진",
+        style: {
+          position: "relative",
+          top: String(fontTextTop) + ea,
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+        }
+      }
+    });
+
+    downloadButton = createNode({
+      mother: titleBox,
+      attribute: {
+        aspid
+      },
+      event: {
+        click: async function (e) {
+          try {
+            const aspid = this.getAttribute("aspid");
+            const loading = instance.mother.whiteProgressLoading(null, true);
+            const response = await ajaxJson({ aspid, mode: "create" }, BRIDGEHOST + "/aspirantProposalDownload", { equal: true });
+            loading.remove();
+            const loading2 = instance.mother.whiteProgressLoading();
+            await downloadFile(stringToLink(response.link), aspid + "_proposal" + ".zip", loading2.progress.firstChild);
+            loading2.remove();
+            const fileName = stringToLink(response.link).split("/")[stringToLink(response.link).split("/").length - 1];
+            await ajaxJson({ aspid, mode: "delete", file: fileName }, BRIDGEHOST + "/aspirantProposalDownload", { equal: true });
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      style: {
+        display: "inline-flex",
+        position: "absolute",
+        top: String(1) + ea,
+        right: String(0) + ea,
+        width: String(buttonWidth) + ea,
+        height: String(buttonHeight) + ea,
+        justifyContent: "end",
+        alignItems: "center",
+        cursor: "pointer",
+      },
+      child: {
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(buttonWidth) + ea,
+          height: String(buttonHeight) + ea,
+          background: colorChip.green,
+          borderRadius: String(5) + "px",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        child: {
+          text: "모든 파일 일괄 다운로드",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(buttonTextTop) + ea,
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(buttonWeight),
+            color: colorChip.white,
+          }
+        }
+      }
+    });
+
+    scrollBox = createNode({
+      mother: whiteBase,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: withOut(titleAreaHeight, ea),
+        overflow: "scroll",
+      }
+    });
+
+    contentsBox = createNode({
+      mother: scrollBox,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: "auto",
+      }
+    });
+
+    num = 1;
+    for (let { key, date } of keySet) {
+
+      titleString = "추천서용 사진 " + String(num) + " <b%- " + dateToString(date, true) + "%b>";
+      thisTargets = imageTargets.filter((obj) => {
+        return obj.key === key;
+      });
+
+      createNode({
+        mother: contentsBox,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(24) + ea,
+          marginTop: String(16) + ea,
+        },
+        child: {
+          text: titleString,
+          style: {
+            position: "relative",
+            top: String(fontTextTop) + ea,
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+          },
+          bold: {
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.deactive,
+          }
+        }
+      });
+
+      thisGrayBox = createNode({
+        mother: contentsBox,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(8 * 2, ea),
+          padding: String(8) + ea,
+          paddingBottom: String(8 - 4) + ea,
+          background: colorChip.gray1,
+          borderRadius: String(3) + "px",
+        }
+      });
+
+      for (let obj of thisTargets) {
+
+        whiteBlock = createNode({
+          mother: thisGrayBox,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(12, ea),
+            height: String(36) + ea,
+            background: colorChip.white,
+            borderRadius: String(3) + "px",
+            marginBottom: String(4) + ea,
+            alignItems: "start",
+            justifyContent: "center",
+            flexDirection: "column",
+            paddingLeft: String(12) + ea,
+          },
+          child: {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(80) + '%',
+              height: withOut(0, ea),
+              alignItems: "start",
+              justifyContent: "center",
+              flexDirection: "column",
+              overflow: "hidden",
+            },
+            child: {
+              text: obj.name,
+              style: {
+                position: "relative",
+                width: String(8000) + ea,
+                top: String(-1) + ea,
+                fontSize: String(13) + ea,
+                fontWeight: String(fontWeight),
+                color: colorChip.black,
+              }
+            }
+          }
+        })
+
+        createNode({
+          mother: whiteBlock,
+          attribute: {
+            link: obj.link,
+          },
+          event: {
+            click: async function (e) {
+              try {
+                const link = this.getAttribute("link");
+                await downloadFile(link);
+                await instance.mother.greenAlert("다운로드가 완료되었습니다!");
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          },
+          style: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: String(downloadCircleWidth) + ea,
+            height: String(downloadCircleWidth) + ea,
+            position: "absolute",
+            top: String(8) + ea,
+            right: String(10) + ea,
+            borderRadius: String(downloadCircleWidth) + ea,
+            background: colorChip.gradientGray,
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnExtract(colorChip.white),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(downloadIconTop) + ea,
+                width: String(downloadIconWidth) + ea,
+                transform: "rotate(180deg)",
+              }
+            }
+          ]
+        });
+      }
+
+      num++;
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
@@ -3791,10 +4190,7 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
                       click: async function (e) {
                         try {
                           const aspid = this.getAttribute("aspid");
-
-                          console.log(aspid);
-
-
+                          await instance.aspirantProposalPortfolioView(aspid);
                         } catch (e) {
                           console.log(e);
                         }
