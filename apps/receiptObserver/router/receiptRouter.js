@@ -755,6 +755,265 @@ ReceiptRouter.prototype.rou_post_createConstructContract = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_createPartnershipContract = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const kakao = this.kakao;
+  const address = this.address;
+  const { requestSystem, messageSend, dateToString, serviceParsing, autoComma } = this.mother;
+  let obj = {};
+  obj.link = "/createPartnershipContract";
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.aspid === undefined) {
+        throw new Error("invaild post");
+      }
+      const { aspid } = req.body;
+      const rows = await back.mongoRead("partnershipForm", { aspid }, { selfMongo: instance.mongolocal });
+      if (rows.length === 0) {
+        const selfMongo = instance.mongo;
+        const { officeinfo: { widsign: { id, key, endPoint } } } = address;
+        const title = "2023디자이너파트너십계약서_000디자이너_YYMMDD";
+        const aspirant = await back.getAspirantById(proid, { selfMongo });
+        const today = new Date();
+        const nextYear = new Date();
+        nextYear.setFullYear(nextYear.getFullYear() + 1);
+        nextYear.setDate(nextYear.getDate() - 1);
+        let url, requestNumber, proposalDate;
+        let widsignRes, token, target, targetFormId, safeNum;
+        let titleName, titleAddress, formTitle;
+        let tempArr;
+        let map;
+        let data;
+        let todayYear, todayMonth ,todayDate;
+
+        todayYear = String(today.getFullYear());
+        todayMonth = String(today.getMonth() + 1);
+        todayDate = String(today.getDate());
+
+        widsignRes = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+
+        if (widsignRes.data.result_code !== 200) {
+          throw new Error("access token error");
+        } else {
+          token = widsignRes.data.access_token;
+          num = 1;
+          safeNum = 0;
+          do {
+            widsignRes = await requestSystem(endPoint + "/v2/form", { page: num, page_size: 30, title }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+            target = widsignRes.data.result.filter((obj) => { return obj.title === title });
+            num++;
+            safeNum++;
+            if (safeNum > 1000) {
+              throw new Error("title name error");
+            }
+          } while (target.length === 0);
+
+          [ { id: targetFormId } ] = target;
+
+          titleName = aspirant.designer;
+          titleAddress = aspirant.address;
+
+          tempArr = dateToString(today).split('-');
+          formTitle = "2023디자이너파트너십계약서_" + titleName + "디자이너_";
+          formTitle = formTitle + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
+
+          map = [
+            { id: "6441eeed39f14f6a53000001", value: aspirant.designer },
+            { id: "6441ef0e39f14f6a53000002", value: dateToString(today) + " ~ " + dateToString(nextYear) },
+            { id: "6441ef2c39f14f6a53000003", value: aspirant.designer },
+            { id: "6441ef3f39f14f6a53000004", value: /프리/gi.test(aspirant.information.company.classification) ? "" : aspirant.information.company.businessNumber },
+            { id: "6441ef4239f14f6a53000005", value: dateToString(aspirant.birth) },
+            { id: "6441ef4b39f14f6a53000006", value: dateToString(today) },
+            { id: "6441f02f39f14f6a53000009", value: titleAddress },
+            { id: "6441f03e39f14f6a5300000a", value: /프리/gi.test(aspirant.information.company.classification) ? aspirant.designer : aspirant.information.company.name },
+            { id: "6441f04b39f14f6a5300000b", value: /프리/gi.test(aspirant.information.company.classification) ? aspirant.designer : aspirant.information.company.representative },
+          ];
+
+          data = {
+            form_id: targetFormId,
+            title: formTitle,
+            send_type: "SAMETIME",
+            auth_phone: "N",
+            mail_title: "안녕하세요, " + aspirant.designer + " 디자이너님! 홈리에종입니다. 디자이너 파트너십 계약서 보내드립니다.",
+            receiver_list: [
+              {
+                name: aspirant.designer,
+                email: aspirant.email,
+                mobile: aspirant.phone.replace(/\-/gi, '')
+              }
+            ],
+            items: map
+          }
+
+          widsignRes = await requestSystem(endPoint + "/v2/form/send", data, { headers: { "x-api-key": key, "x-access-token": token, "Content-Type": "application/json" } });
+
+          await bill.createBill("partnershipForm", [ {
+            name: widsignRes.data.result[0].doc_name,
+            id: widsignRes.data.result[0].receiver_meta_id,
+            time: new Date(),
+            aspid: aspid,
+          } ], { selfMongo: instance.mongolocal });
+
+          messageSend({ text: aspirant.designer + " 파트너십 계약서를 작성하고 알림톡을 전송했어요!", channel: "#301_apply", voice: true }).catch((err) => {
+            console.log(err);
+          });
+
+        }
+
+        res.send(JSON.stringify({ message: "OK" }));
+      } else {
+        await messageSend({ text: "신청자 " + aspid + "의 파트너십 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#301_apply", voice: true });
+        res.send(JSON.stringify({ message: "ERROR" }));
+      }
+    } catch (e) {
+      console.log(e);
+      logger.error("Python 서버 문제 생김 (rou_post_createPartnershipContract): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "ERROR" }));
+    }
+  }
+  return obj;
+}
+
+ReceiptRouter.prototype.rou_post_createDesignerContract = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const kakao = this.kakao;
+  const address = this.address;
+  const { requestSystem, messageSend, dateToString, serviceParsing, autoComma } = this.mother;
+  let obj = {};
+  obj.link = "/createDesignerContract";
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.aspid === undefined) {
+        throw new Error("invaild post");
+      }
+      const { aspid } = req.body;
+      const rows = await back.mongoRead("designerForm", { aspid }, { selfMongo: instance.mongolocal });
+      if (rows.length === 0) {
+        const selfMongo = instance.mongo;
+        const { officeinfo: { widsign: { id, key, endPoint } } } = address;
+        const title = "2023디자인서비스제휴계약서_000디자이너_YYMMDD";
+        const aspirant = await back.getAspirantById(proid, { selfMongo });
+        const today = new Date();
+        const nextYear = new Date();
+        nextYear.setFullYear(nextYear.getFullYear() + 1);
+        nextYear.setDate(nextYear.getDate() - 1);
+        let url, requestNumber, proposalDate;
+        let widsignRes, token, target, targetFormId, safeNum;
+        let titleName, titleAddress, formTitle;
+        let tempArr;
+        let map;
+        let data;
+        let todayYear, todayMonth ,todayDate;
+        let percentage;
+
+        todayYear = String(today.getFullYear());
+        todayMonth = String(today.getMonth() + 1);
+        todayDate = String(today.getDate());
+
+        percentage = 30;
+
+        widsignRes = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+
+        if (widsignRes.data.result_code !== 200) {
+          throw new Error("access token error");
+        } else {
+          token = widsignRes.data.access_token;
+          num = 1;
+          safeNum = 0;
+          do {
+            widsignRes = await requestSystem(endPoint + "/v2/form", { page: num, page_size: 30, title }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+            target = widsignRes.data.result.filter((obj) => { return obj.title === title });
+            num++;
+            safeNum++;
+            if (safeNum > 1000) {
+              throw new Error("title name error");
+            }
+          } while (target.length === 0);
+
+          [ { id: targetFormId } ] = target;
+
+          titleName = aspirant.designer;
+          titleAddress = aspirant.address;
+
+          tempArr = dateToString(today).split('-');
+          formTitle = "2023디자인서비스제휴계약서_" + titleName + "디자이너_";
+          formTitle = formTitle + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
+
+          map = [
+            { id: "6440dafad4a1496b82000005", value: aspirant.designer },
+            { id: "6440db17d4a1496b82000006", value: todayYear },
+            { id: "6440db23d4a1496b82000007", value: todayMonth },
+            { id: "6440db3dd4a1496b82000009", value: todayDate },
+            { id: "6440db8fd4a1496b8200000a", value: String(percentage) },
+            { id: "6440dbc3d4a1496b8200000b", value: aspirant.information.account.to },
+            { id: "6440dbe4d4a1496b8200000d", value: aspirant.information.account.bank },
+            { id: "6440dc17d4a1496b8200000e", value: aspirant.information.account.number },
+            { id: "6440dddad4a1496b82000011", value: titleAddress },
+            { id: "6440ddebd4a1496b82000012", value: /프리/gi.test(aspirant.information.company.classification) ? aspirant.designer : aspirant.information.company.name },
+            { id: "6440ddfbd4a1496b82000013", value: /프리/gi.test(aspirant.information.company.classification) ? aspirant.designer : aspirant.information.company.representative },
+          ];
+
+          data = {
+            form_id: targetFormId,
+            title: formTitle,
+            send_type: "SAMETIME",
+            auth_phone: "N",
+            mail_title: "안녕하세요, " + aspirant.designer + " 디자이너님! 홈리에종입니다. 디자이너 서비스 제휴 계약서 보내드립니다.",
+            receiver_list: [
+              {
+                name: aspirant.designer,
+                email: aspirant.email,
+                mobile: aspirant.phone.replace(/\-/gi, '')
+              }
+            ],
+            items: map
+          }
+
+          widsignRes = await requestSystem(endPoint + "/v2/form/send", data, { headers: { "x-api-key": key, "x-access-token": token, "Content-Type": "application/json" } });
+
+          await bill.createBill("designerForm", [ {
+            name: widsignRes.data.result[0].doc_name,
+            id: widsignRes.data.result[0].receiver_meta_id,
+            time: new Date(),
+            aspid: aspid,
+          } ], { selfMongo: instance.mongolocal });
+
+          messageSend({ text: aspirant.designer + " 서비스 제휴 계약서를 작성하고 알림톡을 전송했어요!", channel: "#301_apply", voice: true }).catch((err) => {
+            console.log(err);
+          });
+
+        }
+
+        res.send(JSON.stringify({ message: "OK" }));
+      } else {
+        await messageSend({ text: "신청자 " + aspid + "의 서비스 제휴 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#301_apply", voice: true });
+        res.send(JSON.stringify({ message: "ERROR" }));
+      }
+    } catch (e) {
+      console.log(e);
+      logger.error("Python 서버 문제 생김 (rou_post_createDesignerContract): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "ERROR" }));
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.rou_post_receiveConstructContract = function () {
   const instance = this;
   const back = this.back;
