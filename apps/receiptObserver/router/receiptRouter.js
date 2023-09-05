@@ -829,14 +829,14 @@ ReceiptRouter.prototype.rou_post_createPartnershipContract = function () {
             { id: "6441eeed39f14f6a53000001", value: aspirant.designer },
             { id: "6441ef0e39f14f6a53000002", value: dateToString(today) + " ~ " + dateToString(nextYear) },
             { id: "6441ef2c39f14f6a53000003", value: aspirant.designer },
-            { id: "6441ef3f39f14f6a53000004", value: /프리/gi.test(aspirant.information.company.classification) ? "" : aspirant.information.company.businessNumber },
-            { id: "6441ef4239f14f6a53000005", value: dateToString(aspirant.birth) },
-            { id: "6441ef4b39f14f6a53000006", value: dateToString(today) },
+            { id: "6441ef4239f14f6a53000005", value: /프리/gi.test(aspirant.information.company.classification) ? "-" : aspirant.information.company.businessNumber },
+            { id: "6441ef4b39f14f6a53000006", value: dateToString(aspirant.birth) },
+            { id: "6441ef3f39f14f6a53000004", value: dateToString(today) },
             { id: "6441f02f39f14f6a53000009", value: titleAddress },
             { id: "6441f03e39f14f6a5300000a", value: /프리/gi.test(aspirant.information.company.classification) ? aspirant.designer : aspirant.information.company.name },
             { id: "6441f04b39f14f6a5300000b", value: /프리/gi.test(aspirant.information.company.classification) ? aspirant.designer : aspirant.information.company.representative },
           ];
-
+          
           data = {
             form_id: targetFormId,
             title: formTitle,
