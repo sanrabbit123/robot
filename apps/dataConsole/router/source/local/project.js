@@ -7737,7 +7737,7 @@ ProjectJs.prototype.communicationRender = function () {
         }
         const project = (await GeneralJs.ajaxJson({ noFlat: true, where: { proid } }, "/getProjects", { equal: true }))[0];
         const client = (await GeneralJs.ajaxJson({ noFlat: true, where: { cliid: project.cliid } }, "/getClients", { equal: true }))[0];
-        if (window.confirm(client.name + "고객님에게 스타일링 계약서를 전송합니다! 확실하십니까?")) {
+        if (window.confirm(client.name + " 고객님에게 스타일링 계약서를 전송합니다! 확실하십니까?")) {
           let contractName, contractAddress;
           let rawValue;
 

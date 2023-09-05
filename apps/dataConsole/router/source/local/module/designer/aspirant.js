@@ -5016,6 +5016,27 @@ DesignerJs.prototype.aspirantBase = async function () {
                 }
               }
             },
+            {
+              title: designer + " 실장님께 계약서 보내기",
+              func: (aspid) => {
+                return async function (e) {
+                  const aspirant = instance.aspirants.find((a) => { return a.aspid === aspid });
+                  try {
+                    if (window.confirm(aspirant.designer + " 디자이너님에게 디자이너 파트너십 계약서와 서비스 제휴 계약서를 전송합니다! 확실하십니까?")) {
+                      const response0 = await ajaxJson({ aspid }, PYTHONHOST + "/createPartnershipContract");
+                      const response1 = await ajaxJson({ aspid }, PYTHONHOST + "/createDesignerContract");
+                      if (response0.message === "OK" && response1.message === "OK") {
+                        window.alert(`계약서 알림톡 요청을 완료하였습니다!`);
+                      } else {
+                        window.alert(`오류가 발생하였습니다! 다시 시도해주세요!`);
+                      }
+                    }
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
           ];
           const thisBox = this.getBoundingClientRect();
           const { x, y } = e;
@@ -6634,6 +6655,31 @@ DesignerJs.prototype.communicationRender = function () {
       try {
         const sendFunc = instance.aspirantSendNotice("setting", aspid);
         await sendFunc();
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "계약서 발송"; },
+    function () {
+      return document.querySelector('.' + whiteBaseClassName) !== null;
+    },
+    async function (e) {
+      const aspid = document.querySelector('.' + whiteBaseClassName).getAttribute("aspid");
+      const aspirant = instance.aspirants.find((a) => { return a.aspid === aspid });
+      try {
+        if (window.confirm(aspirant.designer + " 디자이너님에게 디자이너 파트너십 계약서와 서비스 제휴 계약서를 전송합니다! 확실하십니까?")) {
+          const response0 = await ajaxJson({ aspid }, PYTHONHOST + "/createPartnershipContract");
+          const response1 = await ajaxJson({ aspid }, PYTHONHOST + "/createDesignerContract");
+          if (response0.message === "OK" && response1.message === "OK") {
+            window.alert(`계약서 알림톡 요청을 완료하였습니다!`);
+          } else {
+            window.alert(`오류가 발생하였습니다! 다시 시도해주세요!`);
+          }
+        }
       } catch (e) {
         console.log(e);
         window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
