@@ -3749,7 +3749,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
       let homepage;
       let sns;
       let sessionId;
-      let updateQuery;
+      let whereQuery, updateQuery;
       let aspid;
       let message;
       let rows;
@@ -3970,6 +3970,25 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         }).catch((err) => {
           console.log(err);
         });
+
+        res.send(JSON.stringify({ aspid }));
+
+      } else if (mode === "setting") {
+
+        const { name, aspid, type } = map;
+
+        whereQuery = { aspid };
+        updateQuery = {};
+        updateQuery["response.portfolio.plus.photo"] = new Date();
+
+        await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
+
+        // await kakao.sendTalk("aspirantPortfolio", name, phone, {
+        //   client: name,
+        //   host: address.frontinfo.host,
+        //   path: "aspsetting",
+        //   aspid: aspid,
+        // });
 
         res.send(JSON.stringify({ aspid }));
 

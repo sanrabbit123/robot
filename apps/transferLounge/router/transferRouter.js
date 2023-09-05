@@ -646,7 +646,8 @@ TransferRouter.prototype.rou_post_aspirantBinary = function () {
 
 TransferRouter.prototype.rou_post_aspirantSettingBinary = function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, todayMaker, messageSend } = this.mother;
+  const address = this.address;
+  const { fileSystem, shellExec, shellLink, todayMaker, messageSend, requestSystem } = this.mother;
   const { aspirantConst } = this;
   let obj;
   obj = {};
@@ -708,6 +709,7 @@ TransferRouter.prototype.rou_post_aspirantSettingBinary = function () {
               }
             }
 
+            await requestSystem("https://" + address.backinfo.host + ":3000/aspirantSubmit", { mode: "setting", map: { aspid, name, type: mode } }, { headers: { "Content-Type": "application/json" } });
             await messageSend({ text: name + "님의 " + (mode === "general" ? "1세트 포트폴리오" : "추천서용 사진") + " 파일 전송을 완료하였습니다!", channel: "#301_apply" });
             res.send(JSON.stringify({ message: "done" }));
 
