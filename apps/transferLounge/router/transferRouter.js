@@ -1084,8 +1084,12 @@ TransferRouter.prototype.rou_post_aspirantPortfolioDownload = function () {
 
         totalImages = [];
         for (let folder of targetFolders) {
-          targetImages = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return str !== ".DS_Store" }).map((str) => { return `${folder}/${str}`; });
-          totalImages = totalImages.concat(equalJson(JSON.stringify(targetImages)));
+          if (await fileSystem(`exist`, [ folder ])) {
+            targetImages = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return str !== ".DS_Store" }).map((str) => { return `${folder}/${str}`; });
+            totalImages = totalImages.concat(equalJson(JSON.stringify(targetImages)));
+          } else {
+            totalImages = totalImages.concat([]);
+          }
         }
   
         if (await fileSystem(`exist`, [ `${tempConst}/${tempFolderName}` ])) {
@@ -1119,6 +1123,87 @@ TransferRouter.prototype.rou_post_aspirantPortfolioDownload = function () {
 
     } catch (e) {
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_aspirantPortfolioDownload): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_aspirantSettingDownload = function () {
+  const instance = this;
+  const address = this.address;
+  const { fileSystem, shellExec, shellLink, equalJson, linkToString, uniqueValue } = this.mother;
+  const { aspirantConst, staticConst, tempConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/aspirantSettingDownload" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.aspid === undefined) {
+        throw new Error("invalid post");
+      }
+      const { aspid, mode } = equalJson(req.body);
+      const folderList = await fileSystem(`readDir`, [ aspirantConst ]);
+      const uploadMapConst = "setting";
+      const targetFolders = folderList.filter((str) => { return (new RegExp(aspid, "g").test(str)) }).map((str) => { return `${aspirantConst}/${str}/${uploadMapConst}` });
+      const tempFolderName = "aspirant_" + aspid + "_" + uniqueValue("hex");
+      let targetImages;
+      let totalImages;
+      let commands;
+      let path;
+
+      if (mode === "create") {
+
+        totalImages = [];
+        for (let folder of targetFolders) {
+          if (await fileSystem(`exist`, [ folder ])) {
+            targetImages = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return str !== ".DS_Store" }).map((str) => { return `${folder}/${str}`; });
+            totalImages = totalImages.concat(equalJson(JSON.stringify(targetImages)));
+          } else {
+            totalImages = totalImages.concat([]);
+          }
+        }
+  
+        if (await fileSystem(`exist`, [ `${tempConst}/${tempFolderName}` ])) {
+          await shellExec(`rm`, [ `-rf`, `${tempConst}/${tempFolderName}` ]);
+        }
+        await shellExec(`mkdir`, [ `${tempConst}/${tempFolderName}` ]);
+  
+        for (let path of totalImages) {
+          await shellExec(`cp`, [ path, `${tempConst}/${tempFolderName}/` ]);
+        }
+  
+        commands = "";
+        commands += `cd ${shellLink(tempConst)}/${tempFolderName};`;
+        commands += `zip ${shellLink(tempConst)}/${tempFolderName}.zip ./*;`;  
+        await shellExec(commands);
+  
+        path = String(`${tempConst}/${tempFolderName}.zip`).replace(new RegExp("^" + staticConst, "g"), "");
+        await shellExec(`rm`, [ `-rf`, `${tempConst}/${tempFolderName}` ]);
+
+        res.send(JSON.stringify({ link: linkToString("https://" + address.transinfo.host + path) }));
+
+      } else if (mode === "delete") {
+
+        const { file } = equalJson(req.body);
+        await shellExec(`rm`, [ `-rf`, `${tempConst}/${file}` ]);
+        res.send(JSON.stringify({ message: "done" }));
+
+      } else {
+        throw new Error("invalid mode");
+      }
+
+    } catch (e) {
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_aspirantSettingDownload): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

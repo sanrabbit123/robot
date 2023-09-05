@@ -3149,7 +3149,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
 DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink, variableArray, downloadFile, uniqueValue, sleep, equalJson, hexaJson } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink, linkToString, variableArray, downloadFile, uniqueValue, sleep, equalJson, hexaJson } = GeneralJs;
   try {
     const settingPopupClassName = "settingPopupClassName";
     const settingPopupWhiteContentsClassName = "settingPopupWhiteContentsClassName";
@@ -3326,6 +3326,26 @@ DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
 
     downloadButton = createNode({
       mother: titleBox,
+      attribute: {
+        aspid
+      },
+      event: {
+        click: async function (e) {
+          try {
+            const aspid = this.getAttribute("aspid");
+            const loading = instance.mother.whiteProgressLoading(null, true);
+            // const response = await ajaxJson({ aspid, mode: "create" }, BRIDGEHOST + "/aspirantPortfolioDownload", { equal: true });
+            // loading.remove();
+            // const loading2 = instance.mother.whiteProgressLoading();
+            // await downloadFile(stringToLink(response.link), aspid + "_portfolio" + ".zip", loading2.progress.firstChild);
+            // loading2.remove();
+            // const fileName = stringToLink(response.link).split("/")[stringToLink(response.link).split("/").length - 1];
+            // await ajaxJson({ aspid, mode: "delete", file: fileName }, BRIDGEHOST + "/aspirantPortfolioDownload", { equal: true });
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
       style: {
         display: "inline-flex",
         position: "absolute",
@@ -3474,6 +3494,20 @@ DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
 
         createNode({
           mother: whiteBlock,
+          attribute: {
+            link: obj.link,
+          },
+          event: {
+            click: async function (e) {
+              try {
+                const link = this.getAttribute("link");
+                await downloadFile(link);
+                await instance.mother.greenAlert("다운로드가 완료되었습니다!");
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          },
           style: {
             display: "flex",
             justifyContent: "center",
@@ -3501,7 +3535,6 @@ DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
             }
           ]
         });
-
       }
 
       num++;
