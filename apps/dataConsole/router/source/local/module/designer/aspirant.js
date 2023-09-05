@@ -3324,220 +3324,245 @@ DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
       }
     });
 
-    downloadButton = createNode({
-      mother: titleBox,
-      attribute: {
-        aspid
-      },
-      event: {
-        click: async function (e) {
-          try {
-            const aspid = this.getAttribute("aspid");
-            const loading = instance.mother.whiteProgressLoading(null, true);
-            const response = await ajaxJson({ aspid, mode: "create" }, BRIDGEHOST + "/aspirantSettingDownload", { equal: true });
-            loading.remove();
-            const loading2 = instance.mother.whiteProgressLoading();
-            await downloadFile(stringToLink(response.link), aspid + "_setting" + ".zip", loading2.progress.firstChild);
-            loading2.remove();
-            const fileName = stringToLink(response.link).split("/")[stringToLink(response.link).split("/").length - 1];
-            await ajaxJson({ aspid, mode: "delete", file: fileName }, BRIDGEHOST + "/aspirantSettingDownload", { equal: true });
-          } catch (e) {
-            console.log(e);
+    if (keySet.length > 0) {
+      downloadButton = createNode({
+        mother: titleBox,
+        attribute: {
+          aspid
+        },
+        event: {
+          click: async function (e) {
+            try {
+              const aspid = this.getAttribute("aspid");
+              const loading = instance.mother.whiteProgressLoading(null, true);
+              const response = await ajaxJson({ aspid, mode: "create" }, BRIDGEHOST + "/aspirantSettingDownload", { equal: true });
+              loading.remove();
+              const loading2 = instance.mother.whiteProgressLoading();
+              await downloadFile(stringToLink(response.link), aspid + "_setting" + ".zip", loading2.progress.firstChild);
+              loading2.remove();
+              const fileName = stringToLink(response.link).split("/")[stringToLink(response.link).split("/").length - 1];
+              await ajaxJson({ aspid, mode: "delete", file: fileName }, BRIDGEHOST + "/aspirantSettingDownload", { equal: true });
+            } catch (e) {
+              console.log(e);
+            }
           }
-        }
-      },
-      style: {
-        display: "inline-flex",
-        position: "absolute",
-        top: String(1) + ea,
-        right: String(0) + ea,
-        width: String(buttonWidth) + ea,
-        height: String(buttonHeight) + ea,
-        justifyContent: "end",
-        alignItems: "center",
-        cursor: "pointer",
-      },
-      child: {
+        },
         style: {
           display: "inline-flex",
-          position: "relative",
+          position: "absolute",
+          top: String(1) + ea,
+          right: String(0) + ea,
           width: String(buttonWidth) + ea,
           height: String(buttonHeight) + ea,
-          background: colorChip.green,
-          borderRadius: String(5) + "px",
-          justifyContent: "center",
+          justifyContent: "end",
           alignItems: "center",
+          cursor: "pointer",
         },
         child: {
-          text: "모든 파일 일괄 다운로드",
           style: {
-            display: "inline-block",
+            display: "inline-flex",
             position: "relative",
-            top: String(buttonTextTop) + ea,
-            fontSize: String(buttonSize) + ea,
-            fontWeight: String(buttonWeight),
-            color: colorChip.white,
+            width: String(buttonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            background: colorChip.green,
+            borderRadius: String(5) + "px",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            text: "모든 파일 일괄 다운로드",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(buttonTextTop) + ea,
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorChip.white,
+            }
           }
         }
-      }
-    });
-
-    scrollBox = createNode({
-      mother: whiteBase,
-      style: {
-        display: "block",
-        position: "relative",
-        width: withOut(0, ea),
-        height: withOut(titleAreaHeight, ea),
-        overflow: "scroll",
-      }
-    });
-
-    contentsBox = createNode({
-      mother: scrollBox,
-      style: {
-        display: "block",
-        position: "relative",
-        width: withOut(0, ea),
-        height: "auto",
-      }
-    });
-
-    num = 1;
-    for (let { key, date } of keySet) {
-
-      titleString = "세트 포트폴리오 " + String(num) + " <b%- " + dateToString(date, true) + "%b>";
-      thisTargets = imageTargets.filter((obj) => {
-        return obj.key === key;
       });
-
-      createNode({
-        mother: contentsBox,
+  
+      scrollBox = createNode({
+        mother: whiteBase,
         style: {
           display: "block",
           position: "relative",
           width: withOut(0, ea),
-          height: String(24) + ea,
-          marginTop: String(16) + ea,
+          height: withOut(titleAreaHeight, ea),
+          overflow: "scroll",
+        }
+      });
+  
+      contentsBox = createNode({
+        mother: scrollBox,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          height: "auto",
+        }
+      });
+  
+      num = 1;
+      for (let { key, date } of keySet) {
+  
+        titleString = "세트 포트폴리오 " + String(num) + " <b%- " + dateToString(date, true) + "%b>";
+        thisTargets = imageTargets.filter((obj) => {
+          return obj.key === key;
+        });
+  
+        createNode({
+          mother: contentsBox,
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            height: String(24) + ea,
+            marginTop: String(16) + ea,
+          },
+          child: {
+            text: titleString,
+            style: {
+              position: "relative",
+              top: String(fontTextTop) + ea,
+              fontSize: String(fontSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.black,
+            },
+            bold: {
+              fontSize: String(fontSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.deactive,
+            }
+          }
+        });
+  
+        thisGrayBox = createNode({
+          mother: contentsBox,
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(8 * 2, ea),
+            padding: String(8) + ea,
+            paddingBottom: String(8 - 4) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        });
+  
+        for (let obj of thisTargets) {
+  
+          whiteBlock = createNode({
+            mother: thisGrayBox,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(12, ea),
+              height: String(36) + ea,
+              background: colorChip.white,
+              borderRadius: String(3) + "px",
+              marginBottom: String(4) + ea,
+              alignItems: "start",
+              justifyContent: "center",
+              flexDirection: "column",
+              paddingLeft: String(12) + ea,
+            },
+            child: {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(80) + '%',
+                height: withOut(0, ea),
+                alignItems: "start",
+                justifyContent: "center",
+                flexDirection: "column",
+                overflow: "hidden",
+              },
+              child: {
+                text: obj.name,
+                style: {
+                  position: "relative",
+                  width: String(8000) + ea,
+                  top: String(-1) + ea,
+                  fontSize: String(13) + ea,
+                  fontWeight: String(fontWeight),
+                  color: colorChip.black,
+                }
+              }
+            }
+          })
+  
+          createNode({
+            mother: whiteBlock,
+            attribute: {
+              link: obj.link,
+            },
+            event: {
+              click: async function (e) {
+                try {
+                  const link = this.getAttribute("link");
+                  await downloadFile(link);
+                  await instance.mother.greenAlert("다운로드가 완료되었습니다!");
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
+            style: {
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: String(downloadCircleWidth) + ea,
+              height: String(downloadCircleWidth) + ea,
+              position: "absolute",
+              top: String(8) + ea,
+              right: String(10) + ea,
+              borderRadius: String(downloadCircleWidth) + ea,
+              background: colorChip.gradientGray,
+              cursor: "pointer",
+            },
+            children: [
+              {
+                mode: "svg",
+                source: instance.mother.returnExtract(colorChip.white),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(downloadIconTop) + ea,
+                  width: String(downloadIconWidth) + ea,
+                  transform: "rotate(180deg)",
+                }
+              }
+            ]
+          });
+        }
+  
+        num++;
+      }
+    } else {
+      scrollBox = createNode({
+        mother: whiteBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: withOut(titleAreaHeight, ea),
+          justifyContent: "center",
+          alignItems: "center",
         },
         child: {
-          text: titleString,
+          text: "세트 포트폴리오 전송 기록 없음",
           style: {
+            display: "inline-block",
             position: "relative",
-            top: String(fontTextTop) + ea,
-            fontSize: String(fontSize) + ea,
-            fontWeight: String(700),
-            color: colorChip.black,
-          },
-          bold: {
-            fontSize: String(fontSize) + ea,
-            fontWeight: String(400),
+            top: String(isMac() ? -1 : 1) + ea,
+            fontSize: String(24) + ea,
+            fontWeight: String(200),
             color: colorChip.deactive,
           }
         }
       });
-
-      thisGrayBox = createNode({
-        mother: contentsBox,
-        style: {
-          display: "block",
-          position: "relative",
-          width: withOut(8 * 2, ea),
-          padding: String(8) + ea,
-          paddingBottom: String(8 - 4) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(3) + "px",
-        }
-      });
-
-      for (let obj of thisTargets) {
-
-        whiteBlock = createNode({
-          mother: thisGrayBox,
-          style: {
-            display: "flex",
-            position: "relative",
-            width: withOut(12, ea),
-            height: String(36) + ea,
-            background: colorChip.white,
-            borderRadius: String(3) + "px",
-            marginBottom: String(4) + ea,
-            alignItems: "start",
-            justifyContent: "center",
-            flexDirection: "column",
-            paddingLeft: String(12) + ea,
-          },
-          child: {
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              width: String(80) + '%',
-              height: withOut(0, ea),
-              alignItems: "start",
-              justifyContent: "center",
-              flexDirection: "column",
-              overflow: "hidden",
-            },
-            child: {
-              text: obj.name,
-              style: {
-                position: "relative",
-                width: String(8000) + ea,
-                top: String(-1) + ea,
-                fontSize: String(13) + ea,
-                fontWeight: String(fontWeight),
-                color: colorChip.black,
-              }
-            }
-          }
-        })
-
-        createNode({
-          mother: whiteBlock,
-          attribute: {
-            link: obj.link,
-          },
-          event: {
-            click: async function (e) {
-              try {
-                const link = this.getAttribute("link");
-                await downloadFile(link);
-                await instance.mother.greenAlert("다운로드가 완료되었습니다!");
-              } catch (e) {
-                console.log(e);
-              }
-            }
-          },
-          style: {
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: String(downloadCircleWidth) + ea,
-            height: String(downloadCircleWidth) + ea,
-            position: "absolute",
-            top: String(8) + ea,
-            right: String(10) + ea,
-            borderRadius: String(downloadCircleWidth) + ea,
-            background: colorChip.gradientGray,
-            cursor: "pointer",
-          },
-          children: [
-            {
-              mode: "svg",
-              source: instance.mother.returnExtract(colorChip.white),
-              style: {
-                display: "inline-block",
-                position: "relative",
-                top: String(downloadIconTop) + ea,
-                width: String(downloadIconWidth) + ea,
-                transform: "rotate(180deg)",
-              }
-            }
-          ]
-        });
-      }
-
-      num++;
     }
 
   } catch (e) {
@@ -3723,220 +3748,245 @@ DesignerJs.prototype.aspirantProposalPortfolioView = async function (aspid) {
       }
     });
 
-    downloadButton = createNode({
-      mother: titleBox,
-      attribute: {
-        aspid
-      },
-      event: {
-        click: async function (e) {
-          try {
-            const aspid = this.getAttribute("aspid");
-            const loading = instance.mother.whiteProgressLoading(null, true);
-            const response = await ajaxJson({ aspid, mode: "create" }, BRIDGEHOST + "/aspirantProposalDownload", { equal: true });
-            loading.remove();
-            const loading2 = instance.mother.whiteProgressLoading();
-            await downloadFile(stringToLink(response.link), aspid + "_proposal" + ".zip", loading2.progress.firstChild);
-            loading2.remove();
-            const fileName = stringToLink(response.link).split("/")[stringToLink(response.link).split("/").length - 1];
-            await ajaxJson({ aspid, mode: "delete", file: fileName }, BRIDGEHOST + "/aspirantProposalDownload", { equal: true });
-          } catch (e) {
-            console.log(e);
+    if (keySet.length > 0) {
+      downloadButton = createNode({
+        mother: titleBox,
+        attribute: {
+          aspid
+        },
+        event: {
+          click: async function (e) {
+            try {
+              const aspid = this.getAttribute("aspid");
+              const loading = instance.mother.whiteProgressLoading(null, true);
+              const response = await ajaxJson({ aspid, mode: "create" }, BRIDGEHOST + "/aspirantProposalDownload", { equal: true });
+              loading.remove();
+              const loading2 = instance.mother.whiteProgressLoading();
+              await downloadFile(stringToLink(response.link), aspid + "_proposal" + ".zip", loading2.progress.firstChild);
+              loading2.remove();
+              const fileName = stringToLink(response.link).split("/")[stringToLink(response.link).split("/").length - 1];
+              await ajaxJson({ aspid, mode: "delete", file: fileName }, BRIDGEHOST + "/aspirantProposalDownload", { equal: true });
+            } catch (e) {
+              console.log(e);
+            }
           }
-        }
-      },
-      style: {
-        display: "inline-flex",
-        position: "absolute",
-        top: String(1) + ea,
-        right: String(0) + ea,
-        width: String(buttonWidth) + ea,
-        height: String(buttonHeight) + ea,
-        justifyContent: "end",
-        alignItems: "center",
-        cursor: "pointer",
-      },
-      child: {
+        },
         style: {
           display: "inline-flex",
-          position: "relative",
+          position: "absolute",
+          top: String(1) + ea,
+          right: String(0) + ea,
           width: String(buttonWidth) + ea,
           height: String(buttonHeight) + ea,
-          background: colorChip.green,
-          borderRadius: String(5) + "px",
-          justifyContent: "center",
+          justifyContent: "end",
           alignItems: "center",
+          cursor: "pointer",
         },
         child: {
-          text: "모든 파일 일괄 다운로드",
           style: {
-            display: "inline-block",
+            display: "inline-flex",
             position: "relative",
-            top: String(buttonTextTop) + ea,
-            fontSize: String(buttonSize) + ea,
-            fontWeight: String(buttonWeight),
-            color: colorChip.white,
+            width: String(buttonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            background: colorChip.green,
+            borderRadius: String(5) + "px",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            text: "모든 파일 일괄 다운로드",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(buttonTextTop) + ea,
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorChip.white,
+            }
           }
         }
-      }
-    });
-
-    scrollBox = createNode({
-      mother: whiteBase,
-      style: {
-        display: "block",
-        position: "relative",
-        width: withOut(0, ea),
-        height: withOut(titleAreaHeight, ea),
-        overflow: "scroll",
-      }
-    });
-
-    contentsBox = createNode({
-      mother: scrollBox,
-      style: {
-        display: "block",
-        position: "relative",
-        width: withOut(0, ea),
-        height: "auto",
-      }
-    });
-
-    num = 1;
-    for (let { key, date } of keySet) {
-
-      titleString = "추천서용 사진 " + String(num) + " <b%- " + dateToString(date, true) + "%b>";
-      thisTargets = imageTargets.filter((obj) => {
-        return obj.key === key;
       });
-
-      createNode({
-        mother: contentsBox,
+  
+      scrollBox = createNode({
+        mother: whiteBase,
         style: {
           display: "block",
           position: "relative",
           width: withOut(0, ea),
-          height: String(24) + ea,
-          marginTop: String(16) + ea,
+          height: withOut(titleAreaHeight, ea),
+          overflow: "scroll",
+        }
+      });
+  
+      contentsBox = createNode({
+        mother: scrollBox,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          height: "auto",
+        }
+      });
+  
+      num = 1;
+      for (let { key, date } of keySet) {
+  
+        titleString = "추천서용 사진 " + String(num) + " <b%- " + dateToString(date, true) + "%b>";
+        thisTargets = imageTargets.filter((obj) => {
+          return obj.key === key;
+        });
+  
+        createNode({
+          mother: contentsBox,
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            height: String(24) + ea,
+            marginTop: String(16) + ea,
+          },
+          child: {
+            text: titleString,
+            style: {
+              position: "relative",
+              top: String(fontTextTop) + ea,
+              fontSize: String(fontSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.black,
+            },
+            bold: {
+              fontSize: String(fontSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.deactive,
+            }
+          }
+        });
+  
+        thisGrayBox = createNode({
+          mother: contentsBox,
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(8 * 2, ea),
+            padding: String(8) + ea,
+            paddingBottom: String(8 - 4) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        });
+  
+        for (let obj of thisTargets) {
+  
+          whiteBlock = createNode({
+            mother: thisGrayBox,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(12, ea),
+              height: String(36) + ea,
+              background: colorChip.white,
+              borderRadius: String(3) + "px",
+              marginBottom: String(4) + ea,
+              alignItems: "start",
+              justifyContent: "center",
+              flexDirection: "column",
+              paddingLeft: String(12) + ea,
+            },
+            child: {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(80) + '%',
+                height: withOut(0, ea),
+                alignItems: "start",
+                justifyContent: "center",
+                flexDirection: "column",
+                overflow: "hidden",
+              },
+              child: {
+                text: obj.name,
+                style: {
+                  position: "relative",
+                  width: String(8000) + ea,
+                  top: String(-1) + ea,
+                  fontSize: String(13) + ea,
+                  fontWeight: String(fontWeight),
+                  color: colorChip.black,
+                }
+              }
+            }
+          })
+  
+          createNode({
+            mother: whiteBlock,
+            attribute: {
+              link: obj.link,
+            },
+            event: {
+              click: async function (e) {
+                try {
+                  const link = this.getAttribute("link");
+                  await downloadFile(link);
+                  await instance.mother.greenAlert("다운로드가 완료되었습니다!");
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
+            style: {
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: String(downloadCircleWidth) + ea,
+              height: String(downloadCircleWidth) + ea,
+              position: "absolute",
+              top: String(8) + ea,
+              right: String(10) + ea,
+              borderRadius: String(downloadCircleWidth) + ea,
+              background: colorChip.gradientGray,
+              cursor: "pointer",
+            },
+            children: [
+              {
+                mode: "svg",
+                source: instance.mother.returnExtract(colorChip.white),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(downloadIconTop) + ea,
+                  width: String(downloadIconWidth) + ea,
+                  transform: "rotate(180deg)",
+                }
+              }
+            ]
+          });
+        }
+  
+        num++;
+      }
+    } else {
+      scrollBox = createNode({
+        mother: whiteBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: withOut(titleAreaHeight, ea),
+          justifyContent: "center",
+          alignItems: "center",
         },
         child: {
-          text: titleString,
+          text: "추천서 사진 전송 기록 없음",
           style: {
+            display: "inline-block",
             position: "relative",
-            top: String(fontTextTop) + ea,
-            fontSize: String(fontSize) + ea,
-            fontWeight: String(700),
-            color: colorChip.black,
-          },
-          bold: {
-            fontSize: String(fontSize) + ea,
-            fontWeight: String(400),
+            top: String(isMac() ? -1 : 1) + ea,
+            fontSize: String(24) + ea,
+            fontWeight: String(200),
             color: colorChip.deactive,
           }
         }
       });
-
-      thisGrayBox = createNode({
-        mother: contentsBox,
-        style: {
-          display: "block",
-          position: "relative",
-          width: withOut(8 * 2, ea),
-          padding: String(8) + ea,
-          paddingBottom: String(8 - 4) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(3) + "px",
-        }
-      });
-
-      for (let obj of thisTargets) {
-
-        whiteBlock = createNode({
-          mother: thisGrayBox,
-          style: {
-            display: "flex",
-            position: "relative",
-            width: withOut(12, ea),
-            height: String(36) + ea,
-            background: colorChip.white,
-            borderRadius: String(3) + "px",
-            marginBottom: String(4) + ea,
-            alignItems: "start",
-            justifyContent: "center",
-            flexDirection: "column",
-            paddingLeft: String(12) + ea,
-          },
-          child: {
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              width: String(80) + '%',
-              height: withOut(0, ea),
-              alignItems: "start",
-              justifyContent: "center",
-              flexDirection: "column",
-              overflow: "hidden",
-            },
-            child: {
-              text: obj.name,
-              style: {
-                position: "relative",
-                width: String(8000) + ea,
-                top: String(-1) + ea,
-                fontSize: String(13) + ea,
-                fontWeight: String(fontWeight),
-                color: colorChip.black,
-              }
-            }
-          }
-        })
-
-        createNode({
-          mother: whiteBlock,
-          attribute: {
-            link: obj.link,
-          },
-          event: {
-            click: async function (e) {
-              try {
-                const link = this.getAttribute("link");
-                await downloadFile(link);
-                await instance.mother.greenAlert("다운로드가 완료되었습니다!");
-              } catch (e) {
-                console.log(e);
-              }
-            }
-          },
-          style: {
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: String(downloadCircleWidth) + ea,
-            height: String(downloadCircleWidth) + ea,
-            position: "absolute",
-            top: String(8) + ea,
-            right: String(10) + ea,
-            borderRadius: String(downloadCircleWidth) + ea,
-            background: colorChip.gradientGray,
-            cursor: "pointer",
-          },
-          children: [
-            {
-              mode: "svg",
-              source: instance.mother.returnExtract(colorChip.white),
-              style: {
-                display: "inline-block",
-                position: "relative",
-                top: String(downloadIconTop) + ea,
-                width: String(downloadIconWidth) + ea,
-                transform: "rotate(180deg)",
-              }
-            }
-          ]
-        });
-      }
-
-      num++;
     }
 
   } catch (e) {
