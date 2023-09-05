@@ -781,7 +781,7 @@ ReceiptRouter.prototype.rou_post_createPartnershipContract = function () {
         const selfMongo = instance.mongo;
         const { officeinfo: { widsign: { id, key, endPoint } } } = address;
         const title = "2023디자이너파트너십계약서_000디자이너_YYMMDD";
-        const aspirant = await back.getAspirantById(proid, { selfMongo });
+        const aspirant = await back.getAspirantById(aspid, { selfMongo });
         const today = new Date();
         const nextYear = new Date();
         nextYear.setFullYear(nextYear.getFullYear() + 1);
@@ -908,7 +908,7 @@ ReceiptRouter.prototype.rou_post_createDesignerContract = function () {
         const selfMongo = instance.mongo;
         const { officeinfo: { widsign: { id, key, endPoint } } } = address;
         const title = "2023디자인서비스제휴계약서_000디자이너_YYMMDD";
-        const aspirant = await back.getAspirantById(proid, { selfMongo });
+        const aspirant = await back.getAspirantById(aspid, { selfMongo });
         const today = new Date();
         const nextYear = new Date();
         nextYear.setFullYear(nextYear.getFullYear() + 1);

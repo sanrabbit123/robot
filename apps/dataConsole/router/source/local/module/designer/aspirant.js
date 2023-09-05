@@ -4257,46 +4257,6 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
                       cursor: "pointer",
                     }
                   },
-                  {
-                    text: blank,
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: colorChip.gray3,
-                    }
-                  },
-                  {
-                    class: [ titleButtonsClassName ],
-                    attribute: {
-                      aspid: aspid,
-                    },
-                    event: {
-                      click: async function (e) {
-                        try {
-                          const aspid = this.getAttribute("aspid");
-
-                          console.log(aspid);
-
-
-                        } catch (e) {
-                          console.log(e);
-                        }
-                      }
-                    },
-                    text: "파트너십 계약서",
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: colorChip.black,
-                      cursor: "pointer",
-                    }
-                  },
                 ]
               },
             ]
