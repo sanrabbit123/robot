@@ -3334,13 +3334,13 @@ DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
           try {
             const aspid = this.getAttribute("aspid");
             const loading = instance.mother.whiteProgressLoading(null, true);
-            // const response = await ajaxJson({ aspid, mode: "create" }, BRIDGEHOST + "/aspirantPortfolioDownload", { equal: true });
-            // loading.remove();
-            // const loading2 = instance.mother.whiteProgressLoading();
-            // await downloadFile(stringToLink(response.link), aspid + "_portfolio" + ".zip", loading2.progress.firstChild);
-            // loading2.remove();
-            // const fileName = stringToLink(response.link).split("/")[stringToLink(response.link).split("/").length - 1];
-            // await ajaxJson({ aspid, mode: "delete", file: fileName }, BRIDGEHOST + "/aspirantPortfolioDownload", { equal: true });
+            const response = await ajaxJson({ aspid, mode: "create" }, BRIDGEHOST + "/aspirantSettingDownload", { equal: true });
+            loading.remove();
+            const loading2 = instance.mother.whiteProgressLoading();
+            await downloadFile(stringToLink(response.link), aspid + "_setting" + ".zip", loading2.progress.firstChild);
+            loading2.remove();
+            const fileName = stringToLink(response.link).split("/")[stringToLink(response.link).split("/").length - 1];
+            await ajaxJson({ aspid, mode: "delete", file: fileName }, BRIDGEHOST + "/aspirantSettingDownload", { equal: true });
           } catch (e) {
             console.log(e);
           }

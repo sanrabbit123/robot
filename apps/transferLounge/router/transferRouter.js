@@ -647,7 +647,7 @@ TransferRouter.prototype.rou_post_aspirantBinary = function () {
 TransferRouter.prototype.rou_post_aspirantSettingBinary = function () {
   const instance = this;
   const address = this.address;
-  const { fileSystem, shellExec, shellLink, todayMaker, messageSend, requestSystem } = this.mother;
+  const { fileSystem, shellExec, shellLink, todayMaker, messageSend, requestSystem, uniqueValue } = this.mother;
   const { aspirantConst } = this;
   let obj;
   obj = {};
@@ -690,7 +690,7 @@ TransferRouter.prototype.rou_post_aspirantSettingBinary = function () {
               if (!(await fileSystem(`exist`, [ `${aspirantFolder}/${list[i]}` ]))) {
                 await shellExec(`mkdir`, [ `${aspirantFolder}/${list[i]}` ]);
               }
-              await fileSystem(`write`, [ `${aspirantFolder}/${list[i]}/description.txt`, description ]);
+              await fileSystem(`write`, [ `${aspirantFolder}/${list[i]}/description_${String(uniqueValue("hex"))}.txt`, description ]);
             }
 
             for (let i = 0; i < list.length; i++) {
