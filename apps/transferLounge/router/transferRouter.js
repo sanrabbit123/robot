@@ -668,7 +668,7 @@ TransferRouter.prototype.rou_post_aspirantSettingBinary = function () {
         try {
           let filesKeys = Object.keys(files);
           if (!err && filesKeys.length > 0) {
-            const { mode, name, aspid, description } = fields;
+            const { mode, name, aspid, phone, description } = fields;
             const aspirantFolderName = ("date" + todayMaker("total")) + '_' + name + '_' + aspid;
             const uploadMap = {
               upload0: "setting",
@@ -709,7 +709,7 @@ TransferRouter.prototype.rou_post_aspirantSettingBinary = function () {
               }
             }
 
-            await requestSystem("https://" + address.backinfo.host + ":3000/aspirantSubmit", { mode: "setting", map: { aspid, name, type: mode } }, { headers: { "Content-Type": "application/json" } });
+            await requestSystem("https://" + address.backinfo.host + ":3000/aspirantSubmit", { mode: "setting", map: { aspid, name, phone, type: mode } }, { headers: { "Content-Type": "application/json" } });
             await messageSend({ text: name + "님의 " + (mode === "general" ? "1세트 포트폴리오" : "추천서용 사진") + " 파일 전송을 완료하였습니다!", channel: "#301_apply" });
             res.send(JSON.stringify({ message: "done" }));
 

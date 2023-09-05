@@ -3167,6 +3167,8 @@ DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
     let fontWeight;
     let innerMarginTop;
     let titleAreaHeight;
+    let settingList;
+    let setting, proposal;
 
     whiteWidth = 800;
     whiteHeight = 600;
@@ -3184,6 +3186,9 @@ DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
     fontWeight = 400;
 
     titleAreaHeight = 33;
+
+    settingList = await ajaxJson({ aspid }, BRIDGEHOST + "/aspirantSettingList", { equal: true });
+    ({ setting, proposal } = settingList);
 
     cancelBack = createNode({
       mother: totalContents,

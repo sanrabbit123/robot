@@ -3667,6 +3667,92 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       },
     },
+    "aspirantRequestSetting": {
+      "name": "파트너십 세트 포트폴리오 요청",
+      "id": "TO_8039",
+      "needs": [
+        "client",
+        "host",
+        "path",
+        "aspid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"aspid\", to: obj.aspid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님!\n홈리에종에서 디자이너님을 추천드리고, 연결해 드리기 위해 세트 포트폴리오 업로드를 요청드립니다! \n\n세트 포트폴리오는 주거 인테리어에 홈스타일링까지 완료된 포트폴리오로 부탁드리며, 한 집의 모든 공간을 보여주고 있어야 합니다. 기타 자세한 조건과 설명은 아래 페이지를 통해 확인해 주세요!\n\n만약 세트 포트폴리오가 없다면, 페이지 하단에 있는 '세트 포트폴리오 없음' 버튼을 눌러 추천서용 사진 전송을 부탁드릴게요! 감사합니다 :)\n\n*세트 포트폴리오 전송\nhttps://#{host}/#{path}.php?aspid=#{aspid}",
+        "templtName": "파트너십 세트 포트폴리오 요청",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-09-04 16:54:03",
+        "templtCode": "TO_8039",
+        "comments": [
+          {
+            "cdate": "2023-09-05 10:30:06",
+            "name": "검수자",
+            "id": "2816618",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2023-09-05 10:30:06",
+            "status": "APR"
+          }
+        ]
+      }
+    },
+    "aspirantSettingConfirm": {
+      "name": "파트너십 세트 포트폴리오 접수 완료",
+      "id": "TO_8040",
+      "needs": [
+        "client",
+        "host",
+        "path",
+        "aspid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"aspid\", to: obj.aspid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{client}님! 보내주신 세트 포트폴리오는 접수 완료되었습니다 :)\n\n또 추가적인 세트 포트폴리오 또는 제안서용 사진 발송이 필요하시다면, 아래 링크를 통해 보내주세요! 최대한 많이 보내주시면 모두 검토 후, 확인 연락드리겠습니다!\n\n*세트 포트폴리오 전송\nhttps://#{host}/#{path}.php?aspid=#{aspid}",
+        "templtName": "파트너십 세트 포트폴리오 접수 완료",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-09-04 16:55:15",
+        "templtCode": "TO_8040",
+        "comments": [
+          {
+            "cdate": "2023-09-05 10:34:09",
+            "name": "검수자",
+            "id": "2816635",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-09-05 10:34:09",
+            "status": "APR"
+          }
+        ]
+      },
+    },
     "noticeDesignerChecklist": {
       "name": "디자이너 요청 전송 체크리스트",
       "id": "TO_1919",

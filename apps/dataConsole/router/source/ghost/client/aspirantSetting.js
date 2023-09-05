@@ -2678,6 +2678,7 @@ AspirantSettingJs.prototype.finalSubmit = function () {
         formData.append("aspid", instance.aspid);
         formData.append("mode", instance.mode);
         formData.append("name", instance.aspirant.designer);
+        formData.append("phone", instance.aspirant.phone);
         formData.append("description", description);
         cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
         for (let i = 0; i < instance.fileInput.files.length; i++) {

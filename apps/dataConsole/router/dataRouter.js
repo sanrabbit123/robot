@@ -3975,20 +3975,19 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
 
       } else if (mode === "setting") {
 
-        const { name, aspid, type } = map;
+        const { name, aspid, type, phone } = map;
 
         whereQuery = { aspid };
         updateQuery = {};
         updateQuery["response.portfolio.plus.photo"] = new Date();
 
         await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
-
-        // await kakao.sendTalk("aspirantPortfolio", name, phone, {
-        //   client: name,
-        //   host: address.frontinfo.host,
-        //   path: "aspsetting",
-        //   aspid: aspid,
-        // });
+        await kakao.sendTalk("aspirantSettingConfirm", name, phone, {
+          client: name,
+          host: address.frontinfo.host,
+          path: "aspsetting",
+          aspid: aspid,
+        });
 
         res.send(JSON.stringify({ aspid }));
 
