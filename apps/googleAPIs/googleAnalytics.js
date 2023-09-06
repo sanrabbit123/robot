@@ -948,7 +948,7 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
   const back = this.back;
   const address = this.address;
   const unknownKeyword = this.unknownKeyword;
-  const { equalJson } = this.mother;
+  const { equalJson, emergencyAlarm } = this.mother;
   const collection = this.clientAnalyticsCollection;
   const querystring = require("querystring");
   let storeSuccess;
@@ -1151,6 +1151,7 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
 
     return clientObject;
   } catch (e) {
+    await emergencyAlarm("GoogleAnalytics.clientMetric error : " + e.message);
     console.log(e);
     return storeSuccess;
   }
