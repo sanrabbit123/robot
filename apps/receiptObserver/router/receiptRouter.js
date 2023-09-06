@@ -3999,6 +3999,7 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
                           } else if (/designer/gi.test(collection)) {
                             await back.updateAspirant([ { aspid: f.aspid }, { "contract.designer.id": target.id, "contract.designer.date": new Date() } ], { selfMongo: MONGOC });
                           }
+                          await back.updateAspirant([ { aspid: f.aspid }, { "meeting.status": "계약 완료" } ], { selfMongo: MONGOC });
   
                         }
                       }

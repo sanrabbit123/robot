@@ -570,6 +570,56 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         },
       },
       {
+        title: "계약서 서명 1",
+        width: 100,
+        name: "partnershipContractConfirm",
+        type: "date",
+        update: async (aspid, value) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["contract.partnership.date"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).contract.partnership.date = finalValue;
+            await instance.aspirantColorSync();
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      },
+      {
+        title: "계약서 서명 2",
+        width: 100,
+        name: "designerContractConfirm",
+        type: "date",
+        update: async (aspid, value) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["contract.designer.date"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).contract.designer.date = finalValue;
+            await instance.aspirantColorSync();
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      },
+      {
         title: "주소",
         width: 400,
         name: "address",
@@ -730,6 +780,14 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         {
           value: dateToString(aspirant.response.portfolio.plus.photo),
           name: "portfolioSetPhoto",
+        },
+        {
+          value: dateToString(aspirant.contract.partnership.date),
+          name: "partnershipContractConfirm",
+        },
+        {
+          value: dateToString(aspirant.contract.designer.date),
+          name: "designerContractConfirm",
         },
         {
           value: aspirant.address,
@@ -4982,7 +5040,15 @@ DesignerJs.prototype.aspirantBase = async function () {
                 return async function (e) {
                   const aspirant = instance.aspirants.find((a) => { return a.aspid === aspid });
                   try {
+                    let whereQuery, updateQuery;
                     if (window.confirm(aspirant.designer + " 디자이너님에게 디자이너 파트너십 계약서와 서비스 제휴 계약서를 전송합니다! 확실하십니까?")) {
+
+                      whereQuery = {};
+                      whereQuery["aspid"] = aspid;
+                      updateQuery = {};
+                      updateQuery["meeting.status"] = "계약 요청";
+                      await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+
                       const response0 = await ajaxJson({ aspid }, PYTHONHOST + "/createPartnershipContract");
                       const response1 = await ajaxJson({ aspid }, PYTHONHOST + "/createDesignerContract");
                       if (response0.message === "OK" && response1.message === "OK") {
@@ -6631,7 +6697,15 @@ DesignerJs.prototype.communicationRender = function () {
       const aspid = document.querySelector('.' + whiteBaseClassName).getAttribute("aspid");
       const aspirant = instance.aspirants.find((a) => { return a.aspid === aspid });
       try {
+        let whereQuery, updateQuery;
         if (window.confirm(aspirant.designer + " 디자이너님에게 디자이너 파트너십 계약서와 서비스 제휴 계약서를 전송합니다! 확실하십니까?")) {
+
+          whereQuery = {};
+          whereQuery["aspid"] = aspid;
+          updateQuery = {};
+          updateQuery["meeting.status"] = "계약 요청";
+          await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+
           const response0 = await ajaxJson({ aspid }, PYTHONHOST + "/createPartnershipContract");
           const response1 = await ajaxJson({ aspid }, PYTHONHOST + "/createDesignerContract");
           if (response0.message === "OK" && response1.message === "OK") {
