@@ -3821,7 +3821,7 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
   const { requestSystem, equalJson, stringToDate, messageLog, messageSend } = this.mother;
   const address = this.address;
   const { officeinfo: { widsign: { id, key, endPoint } } } = address;
-  const collections = [ "stylingForm", "constructForm" ];
+  const collections = [ "stylingForm", "constructForm", "partnershipForm", "designerForm" ];
   const back = this.back;
   const formSync = async (MONGOC, MONGOPYTHONC) => {
     try {
@@ -3893,63 +3893,124 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
           }
           token = widsignResponse.data.access_token;
 
-          whereQuery = { $or: finalForms.map((obj) => { return { name: obj.name } }) };
-          dbForms = await back.mongoRead(collection, whereQuery, { selfMongo });
-          for (let f of dbForms) {
-            whereQuery = { proid: f.proid };
-            updateQuery = {};
-
-            target = null;
-            for (let i of finalForms) {
-              if (i.name === f.name) {
-                target = i;
+          if (/styling/gi.test(collection) || /construct/gi.test(collection)) {
+            whereQuery = { $or: finalForms.map((obj) => { return { name: obj.name } }) };
+            dbForms = await back.mongoRead(collection, whereQuery, { selfMongo });
+            for (let f of dbForms) {
+              whereQuery = { proid: f.proid };
+              updateQuery = {};
+  
+              target = null;
+              for (let i of finalForms) {
+                if (i.name === f.name) {
+                  target = i;
+                }
               }
-            }
-
-            if (target !== null) {
-              widsignResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-              if (typeof widsignResponse.data === "object") {
-                if (widsignResponse.data.result !== undefined) {
-                  if (widsignResponse.data.result.receiver_list.length > 0) {
-                    updateQuery["id"] = target.id;
-                    updateQuery["date"] = target.date;
-                    updateQuery["confirm"] = target.confirm;
-                    updateQuery["form"] = target.form;
-                    updateQuery["detail"] = widsignResponse.data.result.receiver_list[0];
-                    widsignResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-                    if (typeof widsignResponse.data === "object") {
-                      if (Array.isArray(widsignResponse.data.result)) {
-                        updateQuery["history"] = widsignResponse.data.result.map((obj) => {
-                          obj.date = stringToDate(obj.created_date);
-                          delete obj.created_date;
-                          return obj;
-                        });
-                        if (f.confirm !== true && target.confirm === true) {
-
-                          thisProject = await back.getProjectById(f.proid, { selfMongo: MONGOC });
-                          thisClient = await back.getClientById(f.client.cliid, { selfMongo: MONGOC });
-                          thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: MONGOC });
-
-                          text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!";
-                          await messageSend({ text, channel: "#400_customer", voice: true });
-
+  
+              if (target !== null) {
+                widsignResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                if (typeof widsignResponse.data === "object") {
+                  if (widsignResponse.data.result !== undefined) {
+                    if (widsignResponse.data.result.receiver_list.length > 0) {
+                      updateQuery["id"] = target.id;
+                      updateQuery["date"] = target.date;
+                      updateQuery["confirm"] = target.confirm;
+                      updateQuery["form"] = target.form;
+                      updateQuery["detail"] = widsignResponse.data.result.receiver_list[0];
+                      widsignResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                      if (typeof widsignResponse.data === "object") {
+                        if (Array.isArray(widsignResponse.data.result)) {
+                          updateQuery["history"] = widsignResponse.data.result.map((obj) => {
+                            obj.date = stringToDate(obj.created_date);
+                            delete obj.created_date;
+                            return obj;
+                          });
+                          if (f.confirm !== true && target.confirm === true) {
+  
+                            thisProject = await back.getProjectById(f.proid, { selfMongo: MONGOC });
+                            thisClient = await back.getClientById(f.client.cliid, { selfMongo: MONGOC });
+                            thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: MONGOC });
+  
+                            text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!";
+                            await messageSend({ text, channel: "#400_customer", voice: true });
+  
+                          }
+                          await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+  
+                          if (/styling/gi.test(collection)) {
+                            await back.updateProject([ { proid: f.proid }, { "process.contract.form.id": target.id } ], { selfMongo: MONGOC });
+                          } else if (/construct/gi.test(collection)) {
+                            await back.updateProject([ { proid: f.proid }, { "process.design.construct.contract.form.id": target.id } ], { selfMongo: MONGOC });
+                          }
+  
                         }
-                        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-
-                        if (/styling/gi.test(collection)) {
-                          await back.updateProject([ { proid: f.proid }, { "process.contract.form.id": target.id } ], { selfMongo: MONGOC });
-                        } else if (/construct/gi.test(collection)) {
-                          await back.updateProject([ { proid: f.proid }, { "process.design.construct.contract.form.id": target.id } ], { selfMongo: MONGOC });
-                        }
-
                       }
                     }
                   }
                 }
               }
+  
+            }
+          } else {
+
+            whereQuery = { $or: finalForms.map((obj) => { return { name: obj.name } }) };
+            dbForms = await back.mongoRead(collection, whereQuery, { selfMongo });
+            for (let f of dbForms) {
+              whereQuery = { aspid: f.aspid };
+              updateQuery = {};
+  
+              target = null;
+              for (let i of finalForms) {
+                if (i.name === f.name) {
+                  target = i;
+                }
+              }
+  
+              if (target !== null) {
+                widsignResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                if (typeof widsignResponse.data === "object") {
+                  if (widsignResponse.data.result !== undefined) {
+                    if (widsignResponse.data.result.receiver_list.length > 0) {
+                      updateQuery["id"] = target.id;
+                      updateQuery["date"] = target.date;
+                      updateQuery["confirm"] = target.confirm;
+                      updateQuery["form"] = target.form;
+                      updateQuery["detail"] = widsignResponse.data.result.receiver_list[0];
+                      widsignResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                      if (typeof widsignResponse.data === "object") {
+                        if (Array.isArray(widsignResponse.data.result)) {
+                          updateQuery["history"] = widsignResponse.data.result.map((obj) => {
+                            obj.date = stringToDate(obj.created_date);
+                            delete obj.created_date;
+                            return obj;
+                          });
+                          if (f.confirm !== true && target.confirm === true) {
+  
+                            thisDesigner = await back.getAspirantById(f.aspid, { selfMongo: MONGOC });
+  
+                            text = thisDesigner.designer + " 디자이너님이 계약서에 서명을 완료하셨습니다!";
+                            await messageSend({ text, channel: "#301_apply", voice: true });
+  
+                          }
+                          await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+  
+                          if (/partnership/gi.test(collection)) {
+                            await back.updateAspirant([ { aspid: f.aspid }, { "contract.partnership.id": target.id, "contract.partnership.date": new Date() } ], { selfMongo: MONGOC });
+                          } else if (/designer/gi.test(collection)) {
+                            await back.updateAspirant([ { aspid: f.aspid }, { "contract.designer.id": target.id, "contract.designer.date": new Date() } ], { selfMongo: MONGOC });
+                          }
+  
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+  
             }
 
           }
+
         }
 
       }

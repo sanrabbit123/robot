@@ -8,6 +8,42 @@ const AspirantInformation = require(PROJECT_DIR + "/aspirantInformation/aspirant
 const AspirantResponse = require(PROJECT_DIR + "/aspirantResponse/aspirantResponse.js");
 const { DateParse } = require(GENERAL_DIR + "/generator.js");
 
+const AspirantContractPartnership = function (json) {
+  this.date = new DateParse(json.date);
+  this.id = json.id;
+}
+
+AspirantContractPartnership.prototype.toNormal = function () {
+  let obj = {};
+  obj.date = this.date.toNormal();
+  obj.id = this.id;
+  return obj;
+}
+
+const AspirantContractDesigner = function (json) {
+  this.date = new DateParse(json.date);
+  this.id = json.id;
+}
+
+AspirantContractDesigner.prototype.toNormal = function () {
+  let obj = {};
+  obj.date = this.date.toNormal();
+  obj.id = this.id;
+  return obj;
+}
+
+const AspirantContract = function (json) {
+  this.partnership = new AspirantContractPartnership(json.partnership);
+  this.designer = new AspirantContractDesigner(json.designer);
+}
+
+AspirantContract.prototype.toNormal = function () {
+  let obj = {};
+  obj.partnership = this.partnership.toNormal();
+  obj.designer = this.designer.toNormal();
+  return obj;
+}
+
 const Aspirant = function (json) {
   this.aspid = json.aspid;
   this.designer = json.designer;
@@ -22,6 +58,7 @@ const Aspirant = function (json) {
   this.submit = new AspirantSubmit(json.submit);
   this.information = new AspirantInformation(json.information);
   this.response = new AspirantResponse(json.response);
+  this.contract = new AspirantContract(json.contract);
 }
 
 Aspirant.prototype.toNormal = function () {
@@ -39,6 +76,7 @@ Aspirant.prototype.toNormal = function () {
   obj.submit = this.submit.toNormal();
   obj.information = this.information.toNormal();
   obj.response = this.response.toNormal();
+  obj.contract = this.contract.toNormal();
   return obj;
 }
 
@@ -86,6 +124,5 @@ Aspirant.prototype.meetingAlarm = function () {
     return obj;
   }
 }
-
 
 module.exports = Aspirant;

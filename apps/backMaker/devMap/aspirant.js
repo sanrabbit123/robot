@@ -112,6 +112,16 @@ module.exports = {
               photo: new Date(1800, 0, 1),
             }
           },
+        },
+        contract: {
+          partnership: {
+            date: new Date(1800, 0, 1),
+            id: "",
+          },
+          designer: {
+            date: new Date(1800, 0, 1),
+            id: "",
+          },
         }
       }
     };

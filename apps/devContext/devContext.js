@@ -156,6 +156,33 @@ DevContext.prototype.launching = async function () {
 
     // 3 delete cron
     
+    const selfMongo = this.MONGOC;
+    const aspirants = await selfMongo.db("miro81").collection("aspirant").find({}).toArray();
+    let whereQuery, updateQuery;
+
+    for (let aspirant of aspirants) {
+      whereQuery = {};
+      whereQuery["aspid"] = aspirant.aspid;
+
+      updateQuery = {};
+      updateQuery["contract"] = {
+        partnership: {
+          date: new Date(1800, 0, 1),
+          id: "",
+        },
+        designer: {
+          date: new Date(1800, 0, 1),
+          id: "",
+        },
+      }
+
+      await selfMongo.db("miro81").collection("aspirant").updateOne(whereQuery, { $set: updateQuery });
+      console.log(whereQuery, updateQuery);
+    }
+
+
+
+    
 
 
 
@@ -6548,8 +6575,8 @@ DevContext.prototype.launching = async function () {
 
 
     // // send sms
-    // const name = "이슬아";
-    // const amount = 1678710;
+    // const name = "박정아";
+    // const amount = 13461600;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
