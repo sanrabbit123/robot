@@ -863,7 +863,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
         },
         custom,
       }).catch((err) => {
-        console.log(err);
+        logger.error("Log console 서버 문제 생김 (rou_post_getAnalytics): " + err.message).catch((e) => { console.log(e); });
       });
 
       res.send(JSON.stringify({ message: "done" }));

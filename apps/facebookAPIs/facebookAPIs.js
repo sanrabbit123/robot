@@ -201,7 +201,7 @@ FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7
 
 FacebookAPIs.prototype.conversionEvent = async function (obj) {
   const instance = this;
-  const { requestSystem } = this.mother;
+  const { requestSystem, emergencyAlarm } = this.mother;
   const { facebookToken, pixelId, appVersion } = this;
   try {
     const url = `https://graph.facebook.com/${appVersion}/${pixelId}/events?access_token=${facebookToken}`;
@@ -229,6 +229,7 @@ FacebookAPIs.prototype.conversionEvent = async function (obj) {
     return { message: "success" };
 
   } catch (e) {
+    await emergencyAlarm("FacebookAPIs.conversionEvent error : " + e.message);
     console.log(e);
     return null;
   }
