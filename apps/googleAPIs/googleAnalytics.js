@@ -1079,8 +1079,11 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
     clientObject.history.detail = clientObject.history.detail.concat(historyAdd);
     clientObject.history.detail.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
     clientObject.history.length = clientObject.history.detail.length;
-    clientObject.history.during = clientObject.history.detail[clientObject.history.detail.length - 1].date.valueOf() - clientObject.history.detail[0].date.valueOf();
-
+    if (clientObject.history.length > 0) {
+      clientObject.history.during = clientObject.history.detail[clientObject.history.length - 1].date.valueOf() - clientObject.history.detail[0].date.valueOf();
+    } else {
+      clientObject.history.during = 0;
+    }
     clientObject.source.referrer = [ ...new Set(clientObject.source.referrer) ].filter((str) => {
       return !(new RegExp(address.frontinfo.host, "g")).test(str);
     }).filter((str) => {
