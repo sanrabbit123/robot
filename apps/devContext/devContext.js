@@ -6456,9 +6456,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "장미옥",
-    //     designer: "김은정",
-    //     link: "https://drive.google.com/drive/folders/1Oc6l3YsJWLYQ6AN0eg_1PwJpShxEUZEK",
+    //     client: null,
+    //     designer: "윤지숙",
+    //     link: "https://drive.google.com/drive/folders/17ce-FHs79D5_fSYCfjVfC-N8FKdnirXc",
     //     pay: true
     //   },
     // ]);
@@ -6519,25 +6519,25 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "김보하", "2023-05-22" ],
+    //   [ "윤지숙", "2023-08-30" ],
     // ]);
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2306_aa02s" ]);
+    // await work.newDesignerToFront([ "d2309_aa01s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2307_aa02s", [
+    // await this.setProposalSettingForDesigner("d2309_aa01s", [
+    //   { porlid: "a105", index: 2 },
+    //   { porlid: "a105", index: 5 },
+    //   { porlid: "ghost", index: 3 },
     //   { porlid: "ghost", index: 5 },
-    //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 1 },
-    //   { porlid: "ghost", index: 6 },
-    //   { porlid: "ghost", index: 11 },
+    //   { porlid: "ghost", index: 7 },
     // ], [
-    //   "모던하고 세련된 스타일을 구하사며, 컬러를 잘 사용한 디자인에 능합니다.",
-    //   "고객님 생활과 동선에 초점을 두고 디자인을 진행하며 아이디어가 뛰어납니다.",
-    //   "하얗기만 한 디자인이 아닌, 강약과 포인트가 살아 있는 디자인을 구사합니다.",
+    //   "유행하는 스타일이 아닌 유니크하고 빈티지한 느낌으로 인테리어를 구사합니다.",
+    //   "옷처럼 편안하고 느낌 있는 공간을 연출해 드릴 수 있는 디자이너입니다.",
+    //   "10년 이상의 경력을 바탕으로 고객님과의 프로젝트를 편안하게 이끌어 드립니다.",
     // ]);
 
     // send mail
@@ -6548,7 +6548,6 @@ DevContext.prototype.launching = async function () {
     //   subject: "안녕하세요!",
     //   contents: "안녕하세요.",
     // }));
-
 
     // // send sms
     // const name = "박정아";
