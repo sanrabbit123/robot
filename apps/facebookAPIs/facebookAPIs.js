@@ -27,7 +27,7 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
   const instance = this;
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
-  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog } = this.mother;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm } = this.mother;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   try {
     const campaignCollection = "dailyCampaign";
@@ -120,7 +120,7 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
     }
 
   } catch (e) {
-    await errorLog("FacebookAPIs.dailyCampaign error : " + e.message);
+    await emergencyAlarm("FacebookAPIs.dailyCampaign error : " + e.message);
     console.log(e);
   }
 }

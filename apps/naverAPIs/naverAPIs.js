@@ -37,7 +37,7 @@ NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
   const instance = this;
   const back = this.back;
   const { naverToken, naverSecret, naverId, naverUrl } = this;
-  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog } = this.mother;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm } = this.mother;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   try {
     const campaignCollection = "dailyCampaign";
@@ -154,7 +154,7 @@ NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
 
 
   } catch (e) {
-    await errorLog("NaverAPIs.dailyCampaign error : " + e.message);
+    await emergencyAlarm("NaverAPIs.dailyCampaign error : " + e.message);
     console.log(e);
   }
 }
