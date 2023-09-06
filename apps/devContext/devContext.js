@@ -156,32 +156,8 @@ DevContext.prototype.launching = async function () {
 
     // 3 delete cron
     
-    // const selfMongo = this.MONGOC;
-    // const aspirants = await selfMongo.db("miro81").collection("aspirant").find({}).toArray();
-    // let whereQuery, updateQuery;
 
-    // for (let aspirant of aspirants) {
-    //   whereQuery = {};
-    //   whereQuery["aspid"] = aspirant.aspid;
-
-    //   updateQuery = {};
-    //   updateQuery["contract"] = {
-    //     partnership: {
-    //       date: new Date(1800, 0, 1),
-    //       id: "",
-    //     },
-    //     designer: {
-    //       date: new Date(1800, 0, 1),
-    //       id: "",
-    //     },
-    //   }
-
-    //   await selfMongo.db("miro81").collection("aspirant").updateOne(whereQuery, { $set: updateQuery });
-    //   console.log(whereQuery, updateQuery);
-    // }
-
-
-
+    
     
 
 
