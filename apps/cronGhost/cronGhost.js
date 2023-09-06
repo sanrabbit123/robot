@@ -20,9 +20,16 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
   const back = this.back;
   const collection = "aliveLog";
   const selfMongo = MONGOC;
+  const bar = "================================================";
+  const bar2 = "====================================================================";
   let res, targets, targetNumber, successNum, failNum, message;
   let instances;
   let thisObj;
+  let diskMongoMessage;
+  let thisDisk, thisMongo;
+  let tempMessage;
+  let percentage;
+  let tong;
   try {
 
     targets = [
@@ -41,6 +48,8 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
     message = '';
 
     instances = await aws.getInstancesStatus();
+    diskMongoMessage = '';
+    tong = [];
 
     for (let { name, protocol, host, port } of targets) {
 
@@ -52,8 +61,34 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
       }
       try {
         res = await requestSystem(protocol + "//" + host + ':' + String(port) + controlPath);
+        ({ disk: thisDisk, mongo: thisMongo } = res.data);
+        thisMongo = (thisMongo === true || thisMongo === undefined) ? true : false;
+        tempMessage = '';
+        tempMessage += host;
+        tempMessage += " => ";
+
+        percentage = thisDisk[1] / thisDisk[0];
+        percentage = Math.floor(percentage * 10000) / 100;
+
+        tempMessage += String(percentage) + '%';
+        tempMessage += " used / ";
+        if (thisMongo) {
+          tempMessage += "mongo alive";
+        } else {
+          tempMessage += "mongo death";
+        }
+        tong.push({
+          message: tempMessage,
+          percentage,
+          mongo: thisMongo,
+        });
       } catch {
         res = null;
+        tong.push({
+          message: host + " => " + "death",
+          percentage: 0,
+          mongo: false,
+        });
       }
 
       if (typeof res === "object" && res !== null) {
@@ -70,8 +105,18 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
                 thisObj.utilization.disk.available = res.data.disk[2];
               }
               if (successNum === targetNumber) {
-                message = "server all alive";
+                message = "server all alive" + " " + bar;
+                diskMongoMessage = tong.map(({ message }) => { return message }).join("\n");
+                message = message + "\n\n" + diskMongoMessage + "\n\n" + bar2;
                 await aliveLog(message);
+                if (tong.some((o) => { return !o.mongo })) {
+                  await emergencyAlarm("something mongo death => \n");
+                  await emergencyAlarm(JSON.stringify(tong, null, 2));
+                }
+                if (tong.some((o) => { return o.percentage > 90 })) {
+                  await emergencyAlarm("something disk full => \n");
+                  await emergencyAlarm(JSON.stringify(tong, null, 2));
+                }
               } else if (successNum + failNum === targetNumber) {
                 message += "\n======================================";
                 message += "\nsomething death";
