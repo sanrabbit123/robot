@@ -2581,21 +2581,21 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
           createBoo = false;
         }
   
-        json.history.unshift({
-          date: new Date(),
-          value: value,
-        });
-
-        thisId = json.id;
-        thisHistory = equalJson(JSON.stringify(json.history));
-
-        if (createBoo) {
-          await back.mongoCreate(collection, json, { selfMongo: selfLocalMongo });
-        } else {
-          await back.mongoUpdate(collection, [
-            { id: thisId },
-            { date: new Date(), history: thisHistory },
-          ], { selfMongo: selfLocalMongo });
+        if (value !== "default") {
+          json.history.unshift({
+            date: new Date(),
+            value: value,
+          });
+          thisId = json.id;
+          thisHistory = equalJson(JSON.stringify(json.history));
+          if (createBoo) {
+            await back.mongoCreate(collection, json, { selfMongo: selfLocalMongo });
+          } else {
+            await back.mongoUpdate(collection, [
+              { id: thisId },
+              { date: new Date(), history: thisHistory },
+            ], { selfMongo: selfLocalMongo });
+          }
         }
 
         await back.updateAspirant([
@@ -2608,6 +2608,44 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
           channel,
           voice: true,
         });
+
+        res.send(JSON.stringify({ message: "done" }));
+
+      } else if (mode === "store") {
+
+        const { value } = equalJson(req.body);
+        rows = await back.mongoRead(collection, { "aspirant.aspid": aspid }, { selfMongo: selfLocalMongo });
+        if (rows.length === 0) {
+          json = {
+            id: idKeywords + uniqueValue("hex"),
+            type: "common",
+            date: new Date(),
+            aspirant: {
+              aspid: aspid,
+              designer: aspirant.designer,
+            },
+            history: []
+          };
+          createBoo = true;
+        } else {
+          json = equalJson(JSON.stringify(rows[0]));
+          createBoo = false;
+        }
+  
+        json.history.unshift({
+          date: new Date(),
+          value: value,
+        });
+        thisId = json.id;
+        thisHistory = equalJson(JSON.stringify(json.history));
+        if (createBoo) {
+          await back.mongoCreate(collection, json, { selfMongo: selfLocalMongo });
+        } else {
+          await back.mongoUpdate(collection, [
+            { id: thisId },
+            { date: new Date(), history: thisHistory },
+          ], { selfMongo: selfLocalMongo });
+        }
 
         res.send(JSON.stringify({ message: "done" }));
 

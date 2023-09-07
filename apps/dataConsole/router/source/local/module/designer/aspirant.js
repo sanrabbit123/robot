@@ -4939,8 +4939,10 @@ DesignerJs.prototype.aspirantBase = async function () {
               func: (aspid) => {
                 return async function (e) {
                   try {
-                    const sendFunc = instance.aspirantSendNotice("documents", aspid);
-                    await sendFunc();
+                    instance.aspirantSendDocumentsAndMeetingSetting(aspid).catch((err) => {
+                      console.log(err);
+                    });
+                    removeByClass(aspirantSubMenuEventFactorClassName);
                   } catch (e) {
                     console.log(e);
                   }
@@ -5943,29 +5945,26 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
           throw new Error("invalid aspid");
         }
 
-        if (window.confirm(aspirant.designer + " 실장님께 등록 서류 업로드 알림톡을 전송할까요?")) {
+        whereQuery = {};
+        whereQuery["aspid"] = aspid;
+        updateQuery = {};
+        updateQuery["meeting.status"] = "등록 요청";
+        await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
 
-          whereQuery = {};
-          whereQuery["aspid"] = aspid;
-          updateQuery = {};
-          updateQuery["meeting.status"] = "등록 요청";
-          await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-
-          const response = await ajaxJson({
-            mode: "send",
-            aspid: aspirant.aspid,
-            designer: aspirant.designer,
-            phone: aspirant.phone,
-            type: "documents",
-          }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
-          if (response.message === "success") {
-            window.alert("전송에 성공하였습니다!");
-          } else {
-            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
-          }
-          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
+        const response = await ajaxJson({
+          mode: "send",
+          aspid: aspirant.aspid,
+          designer: aspirant.designer,
+          phone: aspirant.phone,
+          type: "documents",
+        }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
+        if (response.message === "success") {
+          window.alert("전송에 성공하였습니다!");
+        } else {
+          window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
         }
-        
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
+
       } catch (e) {
         window.alert(e.message);
         console.log(e);
@@ -6475,6 +6474,312 @@ DesignerJs.prototype.aspirantCommonMeetingSetting = async function (aspid) {
   }
 }
 
+DesignerJs.prototype.aspirantSendDocumentsAndMeetingSetting = async function (aspid) {
+  const instance = this;
+  const { ea, totalContents, aspirants, media } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, equalJson, setQueue, hexaJson } = GeneralJs;
+  const promptAsideClassName = "promptAsideAspirantClassName";
+  const commonMeetingDateValueAsideClassName = "commonMeetingDateValueAsideClassName";
+  const mobile = media[4];
+  const desktop = !mobile;
+  try {
+    const zIndex = 899;
+    const aspirant = aspirants.find((a) => { return a.aspid === aspid });
+    let whiteTongBase;
+    let greenBarHeight;
+    let whiteTong;
+    let whiteWidth;
+    let whiteHeight;
+    let paddingTop;
+    let paddingLeft;
+    let paddingBottom;
+    let size0;
+    let size1;
+    let inputSize;
+    let buttonSize;
+    let marginLeft;
+    let bottomVisual;
+    let inputBoxHeight;
+    let inputIndent;
+    let inputBottomVisual;
+    let lineHeight;
+    let wordingVisual;
+    let textTop;
+    let buttonBetween;
+    let buttonsBaseTongMarginTop;
+    let buttonPaddingLeft;
+    let grayBoxMarginTop;
+    let extractArrowWidth;
+    let extractArrowMargin;
+    let buttonsBaseTong;
+    let firstButton, secondButton, thirdButton, fourthButton;
+    let visualTop;
+    let dateSelectEvent;
+    let finalSendEvent;
+
+    whiteWidth = 320;
+    whiteHeight = 150;
+    paddingTop = 17;
+    paddingLeft = 23;
+    paddingBottom = 62;
+    size0 = 14;
+    size1 = 15;
+    inputSize = 13;
+    buttonSize = 12;
+    marginLeft = 18;
+    bottomVisual = 7;
+    inputBoxHeight = 42;
+    inputIndent = 9;
+    inputBottomVisual = 0;
+    lineHeight = 1.5;
+    wordingVisual = GeneralJs.isMac() ? 0 : 2;
+    textTop = GeneralJs.isMac() ? -1 : 1;
+    buttonBetween = 4;
+    buttonsBaseTongMarginTop = 10;
+    buttonPaddingLeft = 10;
+    grayBoxMarginTop = 12;
+    extractArrowWidth = 14;
+    extractArrowMargin = 4;
+    visualTop = -12;
+
+    greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
+    if (Number.isNaN(greenBarHeight)) {
+      greenBarHeight = 0;
+    }
+
+    finalSendEvent = async function (aspid) {
+      try {
+        const targets = [ ...document.querySelectorAll('.' + commonMeetingDateValueAsideClassName) ];
+        if (targets.every((dom) => { return dom.getAttribute("toggle") === "on" })) {
+          targets.sort((a, b) => {
+            return Number(a.getAttribute("index")) - Number(b.getAttribute("index"));
+          });
+          const resutObj = targets.map((dom) => {
+            return new Date(Number(dom.getAttribute("value")))
+          }).map((dateValue) => {
+            return dateValue.valueOf();
+          });
+          await ajaxJson({
+            aspid: aspid,
+            value: resutObj,
+            mode: "store",
+          }, SECONDHOST + "/noticeAspirantCommon");
+          const sendFunc = instance.aspirantSendNotice("documents", aspid);
+          sendFunc().catch((err) => { console.log(err) });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    dateSelectEvent = (index) => {
+      return async function (e) {
+        e.preventDefault();
+        try {
+          const thisDate = await GeneralJs.promptDate("가능한 교육 날짜를 선택해주세요!");
+          const aspid = this.getAttribute("aspid");
+          if (thisDate !== null) {
+            const value = dateToString(thisDate);
+            const [ yearString, monthString, dateString ] = value.split("-");
+            const year = Number(yearString);
+            const month = Number(monthString);
+            const date = Number(dateString);
+            const hourString = await GeneralJs.promptButtons("공통 교육 시간을 알려주세요!", [
+              "10시",
+              "11시",
+              "14시",
+              "15시",
+              "16시",
+              "17시",
+            ]);
+            if (hourString !== null) {
+              const hour = Number(hourString.replace(/[^0-9]/gi, ''));
+              const finalValue = new Date(year, month - 1, date, hour);
+              const finalString = `${String(year)}년 ${String(month)}월 ${String(date)}일 ${String(hour)}시`;
+              this.firstChild.firstChild.textContent = finalString;
+              this.style.background = colorChip.softGreen;
+              this.style.border = "1px solid " + colorChip.green;
+              this.firstChild.style.color = colorChip.white;
+              this.setAttribute("toggle", "on");
+              this.setAttribute("value", String(finalValue.valueOf()));
+
+              await finalSendEvent(aspid);
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    whiteTongBase = createNode({
+      mode: "aside",
+      mother: document.body,
+      class: [ promptAsideClassName ],
+      event: {
+        contextmenu: (e) => { e.stopPropagation(); },
+        dblclick: (e) => { e.stopPropagation(); },
+        drop: (e) => { e.stopPropagation(); },
+        keyup: (e) => { e.stopPropagation(); },
+        keydown: (e) => { e.stopPropagation(); },
+        keypress: (e) => { e.stopPropagation(); },
+        click: (e) => {
+          e.stopPropagation();
+          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+          for (let z = 0; z < targets.length; z++) {
+            try {
+              targets[z].remove();
+            } catch {}
+          }
+        }
+      },
+      style: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "fixed",
+        top: String(0) + "vh",
+        left: String(1) + "vw",
+        width: String(98) + "vw",
+        height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
+        background: "transparent",
+        zIndex: String(zIndex)
+      }
+    });
+  
+    whiteTong = createNode({
+      mother: whiteTongBase,
+      event: {
+        click: (e) => { e.stopPropagation(); },
+      },
+      style: {
+        display: "block",
+        position: "relative",
+        top: String(visualTop) + ea,
+        width: String(whiteWidth - (paddingLeft * 2)) + ea,
+        paddingTop: String(paddingTop) + ea,
+        paddingBottom: String(paddingLeft) + ea,
+        paddingLeft: String(paddingLeft) + ea,
+        paddingRight: String(paddingLeft) + ea,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        background: colorChip.white,
+        animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
+      }
+    });
+
+    createNode({
+      mother: whiteTong,
+      text: "Q",
+      style: {
+        fontSize: String(size0) + ea,
+        fontWeight: String(400),
+        color: colorChip.green,
+        fontFamily: "graphik",
+        position: "absolute",
+        top: String(paddingTop) + ea,
+        left: String(paddingLeft) + ea,
+        lineHeight: String(lineHeight),
+      }
+    });
+  
+    createNode({
+      mother: whiteTong,
+      text: "공통 교육일이 가능한 날짜를 골라주세요!",
+      style: {
+        position: "relative",
+        marginLeft: String(marginLeft) + ea,
+        fontSize: String(size1) + ea,
+        fontWeight: String(500),
+        color: colorChip.black,
+        lineHeight: String(lineHeight),
+        top: String(wordingVisual) + ea,
+      }
+    });
+  
+    firstButton = createNode({
+      mother: whiteTong,
+      class: [ commonMeetingDateValueAsideClassName ],
+      attribute: {
+        aspid: aspid,
+        toggle: "off",
+        value: String(0),
+        index: String(0),
+      },
+      event: {
+        click: dateSelectEvent(0),
+        contextmenu: dateSelectEvent(0),
+      },
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        left: String(0) + ea,
+        width: withOut(0, ea),
+        height: String(inputBoxHeight) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.gray1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: String(grayBoxMarginTop) + ea,
+        border: "1px dashed " + colorChip.gray4,
+      },
+      child: {
+        text: "클릭하여 첫 번째 날짜를 선택...",
+        style: {
+          position: "relative",
+          fontSize: String(size1) + ea,
+          fontWeight: String(400),
+          color: colorChip.deactive,
+          top: String(wordingVisual) + ea,
+        }
+      }
+    });
+
+    secondButton = createNode({
+      mother: whiteTong,
+      class: [ commonMeetingDateValueAsideClassName ],
+      attribute: {
+        aspid: aspid,
+        toggle: "off",
+        value: String(1),
+        index: String(1),
+      },
+      event: {
+        click: dateSelectEvent(1),
+        contextmenu: dateSelectEvent(1),
+      },
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        left: String(0) + ea,
+        width: withOut(0, ea),
+        height: String(inputBoxHeight) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.gray1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: String(buttonBetween) + ea,
+        border: "1px dashed " + colorChip.gray4,
+      },
+      child: {
+        text: "클릭하여 두 번째 날짜를 선택...",
+        style: {
+          position: "relative",
+          fontSize: String(size1) + ea,
+          fontWeight: String(400),
+          color: colorChip.deactive,
+          top: String(wordingVisual) + ea,
+        }
+      }
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.communicationRender = function () {
   const instance = this;
   const { communication } = this.mother;
@@ -6587,8 +6892,9 @@ DesignerJs.prototype.communicationRender = function () {
     async function (e) {
       const aspid = document.querySelector('.' + whiteBaseClassName).getAttribute("aspid");
       try {
-        const sendFunc = instance.aspirantSendNotice("documents", aspid);
-        await sendFunc();
+        instance.aspirantSendDocumentsAndMeetingSetting(aspid).catch((err) => {
+          console.log(err);
+        });
       } catch (e) {
         console.log(e);
         window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;

@@ -3224,6 +3224,31 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
   const address = this.address;
   const kakao = this.kakao;
   const { equalJson, stringToDate, messageSend, messageLog, requestSystem, dateToString, sleep } = this.mother;
+  const paidCompleteFunc = async (aspirant, logger) => {
+    try {
+      await sleep(2000);
+      await requestSystem("https://" + address.secondinfo.host + ":3000/noticeAspirantConsole", {
+        mode: "send",
+        aspid: aspirant.aspid,
+        designer: aspirant.designer,
+        phone: aspirant.phone,
+        type: "setting",
+      }, {
+        headers: { "Content-Type": "application/json" },
+      });
+      await sleep(500);
+      await requestSystem("https://" + address.secondinfo.host + ":3000/noticeAspirantCommon", {
+        aspid: aspirant.aspid,
+        value: "default",
+        mode: "send",
+      }, {
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (e) {
+      await logger.error("Console 서버 문제 생김 (rou_post_aspirantPayment.paidCompleteFunc): " + e.message);
+      console.log(e);
+    }
+  }
   let obj = {};
   obj.link = [ "/aspirantPayment" ];
   obj.func = async function (req, res, logger) {
@@ -3241,6 +3266,9 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
       const { aspid, mode, status } = equalJson(req.body);
       const [ aspirant ] = await back.getAspirantsByQuery({ aspid }, { selfMongo });
       let whereQuery, updateQuery;
+      let paidComplete;
+
+      paidComplete = false;
 
       if (mode === "card") {
         whereQuery = { aspid };
@@ -3253,6 +3281,7 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
         await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
         await messageSend({ text: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 카드 결제하셨습니다!", channel: "#301_apply", voice: true });
         await kakao.sendTalk("aspirantPaymentComplete", aspirant.designer, aspirant.phone, { client: aspirant.designer });
+        paidComplete = true;
 
       } else if (mode === "vbank") {
         if (status === "ready") {
@@ -3266,6 +3295,7 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
             to: data.vbank_holder,
             amount: (data.paid_amount === undefined || Number.isNaN(Number(data.paid_amount))) ? data.amount : data.paid_amount,
           });
+          paidComplete = false;
 
         } else if (status === "paid") {
 
@@ -3279,10 +3309,17 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
           await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
           await messageSend({ text: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 무통장 입금하셨습니다!", channel: "#301_apply", voice: true });
           await kakao.sendTalk("aspirantPaymentComplete", aspirant.designer, aspirant.phone, { client: aspirant.designer });
-  
+          paidComplete = true;
+
         }
       } else {
         throw new Error("invalid mode");
+      }
+
+      if (paidComplete) {
+        paidCompleteFunc(aspirant, logger).catch((err) => {
+          logger.error("Console 서버 문제 생김 (rou_post_aspirantPayment): " + err.message).catch((err) => { console.log(err) });
+        });
       }
 
       res.send(JSON.stringify({ message: "done" }));
@@ -6257,7 +6294,7 @@ DataRouter.prototype.rou_post_pushClient = function () {
     });
     try {
       pushClientFunc(instance.mongo, logger).catch((err) => {
-        logger.error("Console 서버 문제 생김 (rou_post_pushClient): " + e.message).catch((err) => { console.log(err) });
+        logger.error("Console 서버 문제 생김 (rou_post_pushClient): " + err.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
