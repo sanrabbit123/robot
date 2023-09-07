@@ -2938,7 +2938,6 @@ SecondRouter.prototype.rou_post_designerCareerSync = function () {
         }
       }
 
-
       return true;
     } catch (e) {
       logger.error("Second Ghost 서버 문제 생김 (rou_post_designerCareerSync): " + e.message).catch((e) => { console.log(e); });
