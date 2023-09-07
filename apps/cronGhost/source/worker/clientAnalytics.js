@@ -11,12 +11,12 @@ const hourId = [];
 
 const worker = async function (package) {
   const { mother, address, back, mongo, mongolocal } = package;
-  const { requestSystem, messageLog, errorLog } = mother;
+  const { requestSystem, messageLog, errorLog, emergencyAlarm } = mother;
   try {
     await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/storeClientAnalytics", { data: null }, { headers: { "Content-Type": "application/json" } });
     return true;
   } catch (e) {
-    await errorLog("client analytics error : " + e.message);
+    await emergencyAlarm("client analytics error : " + e.message);
     return false;
   }
 }

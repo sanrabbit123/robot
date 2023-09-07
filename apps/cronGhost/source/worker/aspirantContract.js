@@ -1,5 +1,5 @@
 const dayId = [
-  "d151",
+  "d131",
 ];
 
 const hourId = [];
@@ -8,10 +8,10 @@ const worker = async function (package) {
   const { mother, address, back, mongo, mongolocal } = package;
   const { requestSystem, errorLog, emergencyAlarm } = mother;
   try {
-    await requestSystem("https://" + address.backinfo.host + ":3000/timeDeltaAlarm", { data: null }, { headers: { "Content-Type": "application/json" } });
+    await requestSystem("https://" + address.secondinfo.host + ":3000/noticeAspirantContractYesterday", { data: null }, { headers: { "Content-Type": "application/json" } });
     return true;
   } catch (e) {
-    await emergencyAlarm("first meeting alarm error : " + e.message);
+    await emergencyAlarm("aspirant contract error : " + e.message);
     return false;
   }
 }

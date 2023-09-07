@@ -27,10 +27,9 @@ const NaverAPIs = function (mother = null, back = null, address = null) {
   this.naverMapSearch = "/" + this.naverMapVersion + "/api/search";
 
   this.naverLandUrl = "https://new.land.naver.com";
-  this.naverLandAuthorizationKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlJFQUxFU1RBVEUiLCJpYXQiOjE2ODc3NzAzNzgsImV4cCI6MTY4Nzc4MTE3OH0.JpP5_LSy9qBTrGtO_uCaH7-vMcR_F7OEqCzzNySAfxw";
+  this.naverLandAuthorizationKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlJFQUxFU1RBVEUiLCJpYXQiOjE2OTQwNTg5MTUsImV4cCI6MTY5NDA2OTcxNX0.I6HBJO77xIkg_4M9nnTmu-kIYbV8y4bjswqpbNC2LfQ";
 
   this.complexIdKeyword = "land_complex_";
-
 }
 
 NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
@@ -461,7 +460,7 @@ NaverAPIs.prototype.mapVersionCheck = async function () {
 
 NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) {
   const instance = this;
-  const { equalJson, requestSystem } = this.mother;
+  const { equalJson, requestSystem, emergencyAlarm } = this.mother;
   const { chrome, naverMapUrl, naverMapSearch } = this;
   const querystring = require("querystring");
   try {
@@ -576,6 +575,7 @@ NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) 
       list: resultList,
     }
   } catch (e) {
+    await emergencyAlarm("NaverAPIs.mapSearch error : " + e.message);
     console.log(e);
     return null;
   }
@@ -814,7 +814,7 @@ NaverAPIs.prototype.complexSearch = async function (query, complexIdMode = false
 
 NaverAPIs.prototype.complexModeling = async function (complexId, naverMapResult = null) {
   const instance = this;
-  const { equalJson, requestSystem, dateToString, stringToDate, zeroAddition } = this.mother;
+  const { equalJson, requestSystem, dateToString, stringToDate, zeroAddition, emergencyAlarm } = this.mother;
   const { chrome, naverMapUrl, naverMapSearch, naverLandUrl, naverLandAuthorizationKey, complexIdKeyword } = this;
   try {
     let resultObj;
@@ -886,6 +886,7 @@ NaverAPIs.prototype.complexModeling = async function (complexId, naverMapResult 
     return resultObj;
 
   } catch (e) {
+    await emergencyAlarm("NaverAPIs.complexModeling error : " + e.message);
     console.log(e);
     return null;
   }

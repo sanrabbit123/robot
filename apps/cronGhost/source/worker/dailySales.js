@@ -6,12 +6,12 @@ const hourId = [];
 
 const worker = async function (package) {
   const { mother, address, back, mongo, mongolocal } = package;
-  const { requestSystem, errorLog } = mother;
+  const { requestSystem, errorLog, emergencyAlarm } = mother;
   try {
     await requestSystem("https://" + address.backinfo.host + ":3000/dailySales", { data: null }, { headers: { "Content-Type": "application/json" } });
     return true;
   } catch (e) {
-    await errorLog("calendar sync error : " + e.message);
+    await emergencyAlarm("calendar sync error : " + e.message);
     return false;
   }
 }

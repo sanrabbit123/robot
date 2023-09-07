@@ -6,7 +6,7 @@ const hourId = [];
 
 const worker = async function (package) {
   const { mother, address, back, mongo, mongolocal } = package;
-  const { requestSystem, messageLog, errorLog } = mother;
+  const { requestSystem, messageLog, errorLog, emergencyAlarm } = mother;
   try {
     const today = new Date();
     if (today.getDay() === 6) {
@@ -15,7 +15,7 @@ const worker = async function (package) {
     }
     return true;
   } catch (e) {
-    await errorLog("weekly calculation error : " + e.message);
+    await emergencyAlarm("weekly calculation error : " + e.message);
     return false;
   }
 }
