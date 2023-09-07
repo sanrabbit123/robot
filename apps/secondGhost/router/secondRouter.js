@@ -2892,6 +2892,84 @@ SecondRouter.prototype.rou_post_noticeAspirantOnBoarding = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_designerCareerSync = function () {
+  const instance = this;
+  const back = this.back;
+  const kakao = this.kakao;
+  const address = this.address;
+  const { equalJson, messageSend, uniqueValue, dateToString, sleep, requestSystem, emergencyAlarm } = this.mother;
+  const designerCareerSyncFunc = async (selfMongo, logger) => {
+    try {
+      const designers = await back.getDesignersByQuery({}, { selfMongo });
+      const futureDate = new Date(3000, 0, 1);
+      const futureDateValue = futureDate.valueOf();
+      const now = new Date();
+      const nowValue = now.valueOf();
+      let whereQuery, updateQuery;
+      let targetArr;
+      let rawNumbers;
+      let workingDay;
+      let totalYears;
+      let totalLeftDays;
+      let totalMonth;
+
+      for (let designer of designers) {
+        if (designer.information.business.career.detail.length > 0) {
+          targetArr = designer.information.business.career.detail.toNormal().filter((o) => { return !/기타 업무/gi.test(o.tag) });
+          rawNumbers = targetArr.map((o) => {
+            const { start, end } = o.date;
+            let thisValue;
+            if (end.valueOf() > futureDateValue){ 
+              thisValue = nowValue - start.valueOf()
+            } else {
+              thisValue = end.valueOf() - start.valueOf()
+            }
+            return thisValue;
+          }).reduce((acc, curr) => { return acc + curr }, 0);
+          workingDay = Math.floor((((rawNumbers / 1000) / 60) / 60) / 24);
+          totalYears = Math.floor(workingDay / 365);
+          totalLeftDays = (workingDay % 365);
+          totalMonth = Math.floor(totalLeftDays / 30);
+          whereQuery = { desid: designer.desid };
+          updateQuery = {};
+          updateQuery["information.business.career.relatedY"] = totalYears;
+          updateQuery["information.business.career.relatedM"] = totalMonth;
+          await back.updateDesigner([ whereQuery, updateQuery ], { selfMongo });
+        }
+      }
+
+
+      return true;
+    } catch (e) {
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_designerCareerSync): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      return false;
+    }
+  }
+  let obj = {};
+  obj.link = [ "/designerCareerSync" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      designerCareerSyncFunc(selfMongo, logger).catch((err) => {
+        logger.error("Second Ghost 서버 문제 생김 (rou_post_designerCareerSync): " + err.message).catch((e) => { console.log(e); });
+        console.log(err);
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_designerCareerSync): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_voice = function () {
   const instance = this;
   const address = this.address;
