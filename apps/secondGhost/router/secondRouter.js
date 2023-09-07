@@ -2768,15 +2768,17 @@ SecondRouter.prototype.rou_post_noticeAspirantContractYesterday = function () {
       }
 
       for (let aspirant of targets) {
-        whereQuery = {};
-        whereQuery["aspid"] = aspirant.aspid;
-        updateQuery = {};
-        updateQuery["meeting.status"] = "계약 요청";
-        await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
-        await sleep(500);
-        await requestSystem("https://" + address.pythoninfo.host + ":3000/createPartnershipContract", { aspid: aspirant.aspid }, { headers: { "Content-Type": "application/json" } });
-        await sleep(500);
-        await requestSystem("https://" + address.pythoninfo.host + ":3000/createDesignerContract", { aspid: aspirant.aspid }, { headers: { "Content-Type": "application/json" } });
+        if (/드랍/gi.test(aspirant.meeting.status)) {
+          whereQuery = {};
+          whereQuery["aspid"] = aspirant.aspid;
+          updateQuery = {};
+          updateQuery["meeting.status"] = "계약 요청";
+          await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
+          await sleep(500);
+          await requestSystem("https://" + address.pythoninfo.host + ":3000/createPartnershipContract", { aspid: aspirant.aspid }, { headers: { "Content-Type": "application/json" } });
+          await sleep(500);
+          await requestSystem("https://" + address.pythoninfo.host + ":3000/createDesignerContract", { aspid: aspirant.aspid }, { headers: { "Content-Type": "application/json" } });
+        }
       }
 
       return true;
@@ -2804,6 +2806,86 @@ SecondRouter.prototype.rou_post_noticeAspirantContractYesterday = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       logger.error("Second Ghost 서버 문제 생김 (rou_post_noticeAspirantContractYesterday): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+SecondRouter.prototype.rou_post_noticeAspirantOnBoarding = function () {
+  const instance = this;
+  const back = this.back;
+  const kakao = this.kakao;
+  const address = this.address;
+  const { equalJson, messageSend, uniqueValue, dateToString, sleep, requestSystem, emergencyAlarm } = this.mother;
+  const requestAspirantBoarding = async (selfMongo, logger) => {
+    try {
+      const agoStandard = 12;
+      const sixMonthAgo = new Date();
+      sixMonthAgo.setMonth(sixMonthAgo.getMonth() - agoStandard);
+      const aspirants = await back.getAspirantsByQuery({
+        "submit.partnership.date": {
+          $gte: sixMonthAgo,
+        }
+      }, { selfMongo: selfMongo });
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const now = new Date();
+      const emptyDate = new Date(2000, 0, 1);
+      const emptyDateValue = emptyDate.valueOf();
+      let targets;
+      let tempArr;
+      let thisYear, thisMonth, thisDate;
+      let year, month, date;
+      let whereQuery, updateQuery;
+
+      targets = [];
+      for (let aspirant of aspirants) {
+        if (aspirant.meeting.common.date.valueOf() > emptyDateValue) {
+          if (aspirant.meeting.common.date.valueOf() <= now.valueOf()) {
+            if (aspirant.submit.registration.date.valueOf() > emptyDateValue) {
+              if (aspirant.response.portfolio.plus.photo.valueOf() > emptyDateValue) {
+                if (/계약 완료/gi.test(aspirant.meeting.status)) {
+                  targets.push(aspirant.toNormal());
+                }        
+              }
+            }
+          }
+        }
+      }
+
+      await emergencyAlarm("aspirant onboarding => " + "\n" + JSON.stringify(targets.map((a) => {
+        return {
+          aspid: a.aspid,
+          name: a.designer,
+        }
+      })));
+
+      return true;
+    } catch (e) {
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_noticeAspirantOnBoarding): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      return false;
+    }
+  }
+  let obj = {};
+  obj.link = [ "/noticeAspirantOnBoarding" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      requestAspirantBoarding(selfMongo, logger).catch((err) => {
+        logger.error("Second Ghost 서버 문제 생김 (rou_post_noticeAspirantOnBoarding): " + err.message).catch((e) => { console.log(e); });
+        console.log(err);
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_noticeAspirantOnBoarding): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }

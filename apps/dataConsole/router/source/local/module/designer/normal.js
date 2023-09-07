@@ -138,26 +138,26 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         name: "careerSchoolNoticeSend",
         type: "date",
       },
-      {
-        title: "체크리스트",
-        width: 100,
-        name: "checklistDone",
-        type: "string",
-        menu: [
-          {
-            value: "전체 보기",
-            functionName: "filterEvent_$all",
-          },
-          {
-            value: "완료",
-            functionName: "filterEvent_완료",
-          },
-          {
-            value: "미완료",
-            functionName: "filterEvent_미완료",
-          },
-        ],
-      },
+      // {
+      //   title: "체크리스트",
+      //   width: 100,
+      //   name: "checklistDone",
+      //   type: "string",
+      //   menu: [
+      //     {
+      //       value: "전체 보기",
+      //       functionName: "filterEvent_$all",
+      //     },
+      //     {
+      //       value: "완료",
+      //       functionName: "filterEvent_완료",
+      //     },
+      //     {
+      //       value: "미완료",
+      //       functionName: "filterEvent_미완료",
+      //     },
+      //   ],
+      // },
       {
         title: "프로필 사진",
         width: 100,
@@ -646,10 +646,10 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           value: filteredCareerSendRows.length > 0 ? dateToString(filteredCareerSendRows[0].date) : "-",
           name: "careerSchoolNoticeSend",
         },
-        {
-          value: asyncProcessText,
-          name: "checklistDone",
-        },
+        // {
+        //   value: asyncProcessText,
+        //   name: "checklistDone",
+        // },
         {
           value: profileListSet.includes(designer.desid) ? "올림" : "안올림",
           name: "profilePhotoDone",
@@ -826,14 +826,14 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
             value: String(thisValueTemp),
           });
 
-          thisTarget = findByAttribute(thisValueDoms, "name", "checklistDone");
-          thisValueTemp = (completeAnalyticsRows[designer.desid]?.aboutUpdateComplete === 1) ? "완료" : "미완료";
-          thisTarget.textContent = String(thisValueTemp);
-          thisTarget.style.color = colorChip.black;
-          instance.normalMatrix[designer.desid].push({
-            name: "checklistDone",
-            value: String(thisValueTemp),
-          });
+          // thisTarget = findByAttribute(thisValueDoms, "name", "checklistDone");
+          // thisValueTemp = (completeAnalyticsRows[designer.desid]?.aboutUpdateComplete === 1) ? "완료" : "미완료";
+          // thisTarget.textContent = String(thisValueTemp);
+          // thisTarget.style.color = colorChip.black;
+          // instance.normalMatrix[designer.desid].push({
+          //   name: "checklistDone",
+          //   value: String(thisValueTemp),
+          // });
 
           thisTarget = findByAttribute(thisValueDoms, "name", "proposalNumber");
           thisTarget.textContent = String(filteredProjectsProposal.length);

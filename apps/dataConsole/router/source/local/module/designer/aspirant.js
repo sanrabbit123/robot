@@ -139,6 +139,10 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             color: colorChip.green,
           },
           {
+            value: "온보딩 완료",
+            color: colorChip.green,
+          },
+          {
             value: "드랍",
             color: colorChip.deactive,
           },
@@ -159,6 +163,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           "등록 완료",
           "계약 요청",
           "계약 완료",
+          "온보딩 완료",
           "드랍",
         ].map((str) => {
           return {
@@ -1045,6 +1050,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
           "등록 완료",
           "계약 요청",
           "계약 완료",
+          "온보딩 완료",
           "드랍",
         ],
         title: "상태",
@@ -1057,6 +1063,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
           "등록 완료",
           "계약 요청",
           "계약 완료",
+          "온보딩 완료",
           "드랍",
         ].map((str) => {
           return str === aspirant.meeting.status ? 1 : 0;
