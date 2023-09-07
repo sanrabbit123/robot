@@ -3984,23 +3984,18 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
                             delete obj.created_date;
                             return obj;
                           });
+                          await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
                           if (f.confirm !== true && target.confirm === true) {
-  
                             thisDesigner = await back.getAspirantById(f.aspid, { selfMongo: MONGOC });
-  
                             text = thisDesigner.designer + " 디자이너님이 계약서에 서명을 완료하셨습니다!";
                             await messageSend({ text, channel: "#301_apply", voice: true });
-  
+                            if (/partnership/gi.test(collection)) {
+                              await back.updateAspirant([ { aspid: f.aspid }, { "contract.partnership.id": target.id, "contract.partnership.date": new Date() } ], { selfMongo: MONGOC });
+                            } else if (/designer/gi.test(collection)) {
+                              await back.updateAspirant([ { aspid: f.aspid }, { "contract.designer.id": target.id, "contract.designer.date": new Date() } ], { selfMongo: MONGOC });
+                            }
+                            await back.updateAspirant([ { aspid: f.aspid }, { "meeting.status": "계약 완료" } ], { selfMongo: MONGOC });
                           }
-                          await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-  
-                          if (/partnership/gi.test(collection)) {
-                            await back.updateAspirant([ { aspid: f.aspid }, { "contract.partnership.id": target.id, "contract.partnership.date": new Date() } ], { selfMongo: MONGOC });
-                          } else if (/designer/gi.test(collection)) {
-                            await back.updateAspirant([ { aspid: f.aspid }, { "contract.designer.id": target.id, "contract.designer.date": new Date() } ], { selfMongo: MONGOC });
-                          }
-                          await back.updateAspirant([ { aspid: f.aspid }, { "meeting.status": "계약 완료" } ], { selfMongo: MONGOC });
-  
                         }
                       }
                     }
