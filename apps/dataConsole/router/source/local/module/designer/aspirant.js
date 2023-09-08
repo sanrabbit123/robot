@@ -1724,7 +1724,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     const menuValuePromptClassName = "menuValuePromptClassName";
     const valueTargetClassName = "valueTargetClassName";
     const longEmptyText = "메모를 클릭하여 입력해주세요.";
-    const maxColumnsNumber = 9;
+    const maxColumnsNumber = 10;
     let name;
     let type;
     let title;

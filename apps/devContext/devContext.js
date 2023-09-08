@@ -6525,7 +6525,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "윤지숙", "2023-08-30" ],
+    //   [ "김유나", "2023-07-14" ],
     // ]);
 
 
@@ -6534,16 +6534,16 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2309_aa01s", [
-    //   { porlid: "a105", index: 2 },
-    //   { porlid: "a105", index: 5 },
-    //   { porlid: "ghost", index: 3 },
-    //   { porlid: "ghost", index: 5 },
-    //   { porlid: "ghost", index: 7 },
+    // await this.setProposalSettingForDesigner("d2309_aa02s", [
+    //   { porlid: "ghost", index: 11 },
+    //   { porlid: "ghost", index: 1 },
+    //   { porlid: "ghost", index: 23 },
+    //   { porlid: "ghost", index: 27 },
+    //   { porlid: "ghost", index: 32 },
     // ], [
-    //   "유행하는 스타일이 아닌 유니크하고 빈티지한 느낌으로 인테리어를 구사합니다.",
-    //   "옷처럼 편안하고 느낌 있는 공간을 연출해 드릴 수 있는 디자이너입니다.",
-    //   "10년 이상의 경력을 바탕으로 고객님과의 프로젝트를 편안하게 이끌어 드립니다.",
+    //   "깔끔하고 모던한 스타일로 군더더기 없는 집을 만들어 드립니다.",
+    //   "트렌드보다는 집이 주는 아늑함과 편안함, 그 이상의 가치를 스타일링합니다.",
+    //   "고급스러운 공간 연출에 능하며 집을 가치 있는 공간으로 만들어 드립니다.",
     // ]);
 
     // send mail
