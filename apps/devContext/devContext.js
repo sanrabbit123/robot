@@ -144,6 +144,7 @@ DevContext.prototype.launching = async function () {
 
     
 
+
     
     // 0 parsing analytics
 
@@ -6462,9 +6463,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "윤지숙",
-    //     link: "https://drive.google.com/drive/folders/17ce-FHs79D5_fSYCfjVfC-N8FKdnirXc",
+    //     client: "박소담",
+    //     designer: "김우현",
+    //     link: "https://drive.google.com/drive/folders/1UILWAO8yJakpsjiPPYo8rd3Pj6Ad-jnn",
     //     pay: true
     //   },
     // ]);

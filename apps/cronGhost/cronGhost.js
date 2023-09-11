@@ -10,7 +10,7 @@ const CronGhost = function () {
   this.aws = new AwsAPIs();
 }
 
-CronGhost.prototype.aliveTest = async function (MONGOC) {
+CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) {
   const instance = this;
   const address = this.address;
   const { requestSystem, messageLog, errorLog, emergencyAlarm, aliveLog } = this.mother;
@@ -22,6 +22,7 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
   const selfMongo = MONGOC;
   const bar = "================================================";
   const bar2 = "====================================================================";
+  const timeoutConst = 1000;
   let res, targets, targetNumber, successNum, failNum, message;
   let instances;
   let thisObj;
@@ -30,7 +31,14 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
   let tempMessage;
   let percentage;
   let tong;
+  let timeoutId;
   try {
+
+    timeoutId = setTimeout(() => {
+      emergencyAlarm("alive test error : " + JSON.stringify(new Date())).catch((err) => {
+        console.log(err);
+      })
+    }, initialTimeout + timeoutConst);
 
     targets = [
       { name: "coreDB", protocol: "http:", host: address.mongoinfo.host, port: generalPort, },
@@ -137,6 +145,10 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
         }
       }
 
+    }
+
+    if (!/death/gi.test(message)) {
+      clearTimeout(timeoutId);
     }
 
     for (let json of instances) {
@@ -435,7 +447,7 @@ CronGhost.prototype.cronServer = async function () {
       setInterval(intervalFunc, interval);
       setInterval(intervalFunc0, 2 * 60 * 60 * 1000);
       setInterval(intervalFunc1, 1 * 30 * 60 * 1000);
-      setInterval(intervalFunc2, 1 * 5 * 60 * 1000);
+      setInterval(intervalFunc2, 1 * 1 * 60 * 1000);
       setInterval(intervalFunc3, 1 * 3 * 60 * 1000)
     }, startTime);
 
