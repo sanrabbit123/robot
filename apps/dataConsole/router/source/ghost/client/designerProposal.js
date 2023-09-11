@@ -4177,9 +4177,9 @@ DesignerProposalJs.prototype.launching = async function (loading) {
 
     // TEST Center ==================================================================================================
     if (proid === "p1801_aa01s") {
-      // for (let d of designers) {
-      //   d.end = false;
-      // }
+      for (let d of designers) {
+        d.end = false;
+      }
     }
     // TEST Center ==================================================================================================
 
