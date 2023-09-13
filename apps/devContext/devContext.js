@@ -159,37 +159,10 @@ DevContext.prototype.launching = async function () {
       
 
 
-    // const sessionConst = "PHPSESSID";
-    // const sessionValue = "91d0ccfb8f0630ab23ac54b77be9109e";
-    // const session = sessionConst + "=" + sessionValue;
-    // const url = "https://" + "centrex.uplus.co.kr" + "/premium/backoffice/main.su.html";
-    // const successKeyPoint = [
-    //   ".onButton",
-    //   "libgoff3",
-    //   "MM_swapImgRestore",
-    //   "MM_swapImage",
-    //   "MM_preloadImages",
-    //   "MM_findObj",
-    //   "lgdacom_high.css",
-    //   "info_box_bottom.gif",
-    //   "btn_03_04",
-    //   "popup_custom_coloring.html",
-    //   "number_manage_list",
-    //   "OVKEY",
-    //   "popup_call.html",
-    //   "popup_conference.html",
-    // ];
 
-    // const res = await requestSystem(url, {}, { method: "get", headers: { Cookie: session } });
+
 
     
-    // console.log(successKeyPoint.map((str) => { return new RegExp(str, "g"); }).every((re) => { return re.test(res.data) }));
-
-
-    // const generalPort = 3000;
-    // const res = await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/centrexSession", { data: null }, { headers: { "Content-Type": "application/json" } });
-    // console.log(res);
-
 
 
 
