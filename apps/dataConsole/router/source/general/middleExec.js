@@ -18,11 +18,3 @@ document.addEventListener("error", function (e) {
   }, "/sendSlack").catch((err) => { console.log(err); });
   window.location.href = "https://home-liaison.com";
 });
-
-document.addEventListener("error", function (e) {
-  GeneralJs.ajaxJson({
-    message: "middleExec : " + e.message + " (" + appName + ")",
-    channel: "#error_log"
-  }, "/sendSlack").catch((err) => { console.log(err); });
-  window.location.href = "https://home-liaison.com";
-});
