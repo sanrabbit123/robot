@@ -2274,6 +2274,7 @@ StaticRouter.prototype.rou_post_printText = function () {
         }).then(() => {
           return shellExec("rm", [ "-rf", targetFile ]);
         }).catch((err) => {
+          logger.error("Static lounge 서버 문제 생김 (rou_post_printText): " + err.message).catch((e) => { console.log(e); });
           console.log(err);
         });
       });
