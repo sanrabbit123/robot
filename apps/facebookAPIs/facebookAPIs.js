@@ -13,6 +13,7 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
   }
   this.dir = process.cwd() + "/apps/facebookAPIs";
 
+  this.facebookUrl = "https://graph.facebook.com";
   this.facebookAppId = "4385911554783319";
   this.facebookAppSecret = "5c9ad0873f5983081b8ad1ba1855806e";
   this.facebookToken = "EAAZBU9pw9OFcBO8B96qa8pdw3EglZC0gHeZBZCRmQp1wCzEZBEPVN2K5ELKC8I2ty4M6nWzapTHOlbsb1u8l1kj7DnpDAOvJSSwy1pvZCDEXrIJBYwsHuHzlAbzrCz0z29RrZABkpLbnSkBrb9s12xWL9BigW7jzyutrnHtq5hVzVyjnLTH87ycKPcAwxzBFMfFvzbslq0R00ipYo7y";
@@ -20,7 +21,7 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
   this.instagramId = "17841405547472752";
   this.facebookAdId = "505249990112820";
   this.pixelId = "814052605684956";
-  this.appVersion = "v16.0";
+  this.appVersion = "v18.0";
 }
 
 FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
@@ -125,12 +126,83 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
   }
 }
 
+FacebookAPIs.prototype.instagramList = async function () {
+  const instance = this;
+  const back = this.back;
+  const { facebookUrl: url, facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
+  const { sleep, dateToString, stringToDate, sha256Hmac, fileSystem, requestSystem, errorLog, zeroAddition, linkToString } = this.mother;
+  try {
+    const keyToken = "_instagram";
+    let res;
+    let mediaId;
+    let metric;
+    let resultTong;
+    let thisObj;
+    
+    mediaId = [];
+
+    res = await requestSystem(url + "/" + appVersion + "/" + instagramId + "/media", {
+      access_token: facebookToken
+    }, { method: "get" });
+    for (let { id } of res.data.data) {
+      mediaId.push(id);
+    }
+
+    while (res.data.paging !== undefined && typeof res.data.paging.next === "string") {
+      res = await requestSystem(res.data.paging.next);
+      for (let { id } of res.data.data) {
+        mediaId.push(id);
+      }
+    }
+
+    resultTong = [];
+
+    for (let thisId of mediaId) {
+      try {
+        thisObj = { id: thisId };
+
+        res = await requestSystem(url + "/" + appVersion + "/" + thisId, {
+          access_token: facebookToken,
+          fields: "media_type,media_url,timestamp,like_count",
+        }, { method: "get" });
+  
+        thisObj.date = {
+          create: new Date(res.data.timestamp),
+          update: new Date(),
+        }
+        thisObj.type = {
+          name: "media",
+          detail: res.data.media_type
+        }
+        thisObj.url = res.data.media_url;
+        thisObj.key = dateToString(thisObj.date.create).replace(/[^0-9]/gi, '') + "_" + thisId + keyToken;
+  
+        thisObj.value = {};
+        thisObj.value.interactions = res.data.like_count;
+  
+        res = await requestSystem(url + "/" + appVersion + "/" + thisId + "/insights", {
+          access_token: facebookToken,
+          metric: "reach",
+        }, { method: "get" });
+  
+        thisObj.value.reach = res.data.data.find((o) => { return o.name === "reach" }).values.reduce((acc, curr) => { return acc + curr.value }, 0)
+        resultTong.push(thisObj);
+      } catch {}
+    }
+
+    await fileSystem(`writeJson`, [ `${process.cwd()}/temp/instaResult.json`, resultTong ])
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7) {
   const instance = this;
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
-  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog } = this.mother;
-  const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, zeroAddition } = this.mother;
   try {
     const channelCollection = "dailyChannel";
     let res;

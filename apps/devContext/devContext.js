@@ -92,7 +92,7 @@ DevContext.prototype.launching = async function () {
 
     // await this.MONGOLOGC.connect();
     // const report = new LogReport(this.MONGOLOGC);
-    // await report.unknownCampaign(2023, 8, 11443183 - 10849210);
+    // await report.unknownCampaign(2023, 8, 770000);
     // await this.MONGOLOGC.close();
 
     // =======================================================================================================================================================
@@ -159,10 +159,23 @@ DevContext.prototype.launching = async function () {
       
 
 
+    // const meta = new FacebookAPIs();
+    // await meta.instagramList();
 
     
     
 
+
+
+
+
+
+
+
+
+    
+
+    
 
 
 
