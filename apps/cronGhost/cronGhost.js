@@ -22,7 +22,7 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
   const selfMongo = MONGOC;
   const bar = "================================================";
   const bar2 = "====================================================================";
-  const timeoutConst = 1000;
+  const timeoutConst = 20 * 1000;
   let res, targets, targetNumber, successNum, failNum, message;
   let instances;
   let thisObj;
