@@ -142,40 +142,197 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-
-
-    
-    // 0 parsing analytics
-
-
-    // 1 receive history
-    
-
-    // 2 ip search
-
-
-    // 3 delete cron
-      
 
 
     // const meta = new FacebookAPIs();
     // await meta.instagramList();
 
+
+
+
+
+
+
+
+
+
+
+
+
     
+
+
+
+
+
+    /*
     
+    await this.MONGOCONSOLEC.connect();
 
-
-
-
-
-
-
-
-
+    const returnHolidayArr = async () => {
+      try {
+        const endPoint0 = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo";
+        const endPoint1 = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo";
+        const key = "7VuaiHtcKan1rHFT1huoXCufMJYJnmRl0Y5j5E5dyNnrDu2+bNqF2CzcA6M9RZ6n7GTO9xV74nwHxkNv9bkn/Q==";
+        const thisYear = (new Date()).getFullYear();
+        const nextYear = thisYear + 1;
+        let res;
+        let holidayArr;
     
-
+        holidayArr = [];
     
+        res = await requestSystem(endPoint0, {
+          solYear: thisYear,
+          ServiceKey: key,
+          _type: "json",
+          numOfRows: 300,
+        }, { method: "get" });
+        for (let { isHoliday, locdate } of res.data.response.body.items.item) {
+          if (/Y/gi.test(isHoliday)) {
+            holidayArr.push(locdate);
+          }
+        }
+        
+        res = await requestSystem(endPoint1, {
+          solYear: thisYear,
+          ServiceKey: key,
+          _type: "json",
+          numOfRows: 300,
+        }, { method: "get" });
+        for (let { isHoliday, locdate } of res.data.response.body.items.item) {
+          if (/Y/gi.test(isHoliday)) {
+            holidayArr.push(locdate);
+          }
+        }
+    
+        res = await requestSystem(endPoint0, {
+          solYear: nextYear,
+          ServiceKey: key,
+          _type: "json",
+          numOfRows: 300,
+        }, { method: "get" });
+        for (let { isHoliday, locdate } of res.data.response.body.items.item) {
+          if (/Y/gi.test(isHoliday)) {
+            holidayArr.push(locdate);
+          }
+        }
+        
+        res = await requestSystem(endPoint1, {
+          solYear: nextYear,
+          ServiceKey: key,
+          _type: "json",
+          numOfRows: 300,
+        }, { method: "get" });
+        for (let { isHoliday, locdate } of res.data.response.body.items.item) {
+          if (/Y/gi.test(isHoliday)) {
+            holidayArr.push(locdate);
+          }
+        }
+    
+        holidayArr = [ ...new Set(holidayArr.map((num) => { return String(num) })) ].map((str) => { return Number(str) });
+        holidayArr.sort((a, b) => { return a - b });
+        holidayArr = holidayArr.map((num) => { return String(num).slice(0, 4) + "-" + String(num).slice(4, 6) + "-" + String(num).slice(6, 8) })
+    
+        return holidayArr;
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
+    }
+    const selfMongo = this.MONGOC;
+    const selfConsoleMongo = this.MONGOCONSOLEC;
+    const collection = "foreContents";
+    const targetDayNumbers = [ 3, 5 ];
+    const exceptionPids = [
+      "p99",
+      "p100",
+      "p104",
+      "p111",
+      "p128",
+      "p145",
+      "p233",
+      "p241",
+      "p280",
+    ];
+    const safeNum = 10000;
+    const holidayArr = await returnHolidayArr();
+    let contentsArr;
+    let contentsArrPid;
+    let foreContentsArr;
+    let foreContentsArrPid;
+    let pidArr;
+    let resultTong;
+    let contentsArrResult, foreContentsResult;
+    let thisObj;
+    let projects;
+    let proid;
+    let runner;
+    let number;
+    let thisDayNumber;
+    let thisDate;
+    let thisDateString;
+
+    contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
+    contentsArr = contentsArr.toNormal();
+    contentsArrPid = contentsArr.map(({ contents: { portfolio: { pid } } }) => { return pid });
+
+    foreContentsArr = await back.mongoRead(collection, {}, { selfMongo: selfConsoleMongo });
+    foreContentsArrPid = foreContentsArr.map(({ pid }) => { return pid });
+
+    pidArr = contentsArrPid.concat(foreContentsArrPid);
+    pidArr = [ ...new Set(pidArr) ].filter((id) => { return /^p/gi.test(id) });
+    pidArr.sort((a, b) => { return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, '')) });
+
+    resultTong = [];
+    for (let pid of pidArr) {
+      if (!exceptionPids.includes(pid)) {
+        thisObj = { pid, proid: "" };
+        contentsArrResult = contentsArr.findIndex((obj) => { return obj.contents.portfolio.pid === pid });
+        foreContentsResult = foreContentsArr.findIndex((obj) => { return obj.pid === pid });
+        if (contentsArrResult === -1) {
+          foreContentsResult = foreContentsArr.find((obj) => { return obj.pid === pid });
+          if (foreContentsResult !== undefined) {
+            thisObj.proid = foreContentsResult.proid;
+            resultTong.push(equalJson(JSON.stringify(thisObj)));
+          }
+        }
+      }
+    }
+
+    projects = (await back.getProjectsByQuery({ $or: resultTong.map(({ proid }) => { return { proid } }) }, { selfMongo })).toNormal();
+    for (let obj of resultTong) {
+      proid = obj.proid;
+      obj.project = projects.find((p) => { return p.proid === proid });
+      obj.foreCast = null;
+    }
+
+    runner = new Date();
+
+    number = 0;
+    while (true) {
+      thisDayNumber = runner.getDay();
+      if (targetDayNumbers.includes(thisDayNumber)) {
+        if (!holidayArr.includes(dateToString(runner))) {
+          thisDateString = dateToString(runner, true);
+          thisDate = stringToDate(thisDateString);
+          console.log(thisDate);
+        }
+      }
+      runner.setDate(runner.getDate() + 1);
+      number++;
+      if (number > safeNum) {
+        break;
+      }
+    }
+        
+    await this.MONGOCONSOLEC.close();
+
+    */
+
+
+
+
+
 
 
 
@@ -6479,9 +6636,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "윤소라",
-    //     designer: "김윤진",
-    //     link: "https://drive.google.com/drive/folders/1DZP3ZzirIq6vwZlmu8YBUqSBKz24ewvh",
+    //     client: "안은영",
+    //     designer: "김지혜",
+    //     link: "https://drive.google.com/drive/folders/1rM2yvjm3ccfawmpAwTAWLYXTJfwQ3fB9",
     //     pay: true
     //   },
     // ]);
