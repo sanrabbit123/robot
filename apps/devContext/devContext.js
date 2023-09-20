@@ -149,83 +149,43 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
     /*
     
     await this.MONGOCONSOLEC.connect();
-
     const returnHolidayArr = async () => {
       try {
         const endPoint0 = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo";
         const endPoint1 = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo";
         const key = "7VuaiHtcKan1rHFT1huoXCufMJYJnmRl0Y5j5E5dyNnrDu2+bNqF2CzcA6M9RZ6n7GTO9xV74nwHxkNv9bkn/Q==";
-        const thisYear = (new Date()).getFullYear();
-        const nextYear = thisYear + 1;
+        const totalRange = 3;
         let res;
         let holidayArr;
-    
+        let thisYear;
+
+        thisYear = (new Date()).getFullYear();
         holidayArr = [];
-    
-        res = await requestSystem(endPoint0, {
-          solYear: thisYear,
-          ServiceKey: key,
-          _type: "json",
-          numOfRows: 300,
-        }, { method: "get" });
-        for (let { isHoliday, locdate } of res.data.response.body.items.item) {
-          if (/Y/gi.test(isHoliday)) {
-            holidayArr.push(locdate);
-          }
-        }
-        
-        res = await requestSystem(endPoint1, {
-          solYear: thisYear,
-          ServiceKey: key,
-          _type: "json",
-          numOfRows: 300,
-        }, { method: "get" });
-        for (let { isHoliday, locdate } of res.data.response.body.items.item) {
-          if (/Y/gi.test(isHoliday)) {
-            holidayArr.push(locdate);
-          }
-        }
-    
-        res = await requestSystem(endPoint0, {
-          solYear: nextYear,
-          ServiceKey: key,
-          _type: "json",
-          numOfRows: 300,
-        }, { method: "get" });
-        for (let { isHoliday, locdate } of res.data.response.body.items.item) {
-          if (/Y/gi.test(isHoliday)) {
-            holidayArr.push(locdate);
-          }
-        }
-        
-        res = await requestSystem(endPoint1, {
-          solYear: nextYear,
-          ServiceKey: key,
-          _type: "json",
-          numOfRows: 300,
-        }, { method: "get" });
-        for (let { isHoliday, locdate } of res.data.response.body.items.item) {
-          if (/Y/gi.test(isHoliday)) {
-            holidayArr.push(locdate);
+        for (let i = 0; i < totalRange; i++) {
+          res = await requestSystem(endPoint0, {
+            solYear: (thisYear + i),
+            ServiceKey: key,
+            _type: "json",
+            numOfRows: 300,
+          }, { method: "get" });
+          for (let { isHoliday, locdate } of res.data.response.body.items.item) {
+            if (/Y/gi.test(isHoliday)) {
+              holidayArr.push(locdate);
+            }
+          }    
+          res = await requestSystem(endPoint1, {
+            solYear: (thisYear + i),
+            ServiceKey: key,
+            _type: "json",
+            numOfRows: 300,
+          }, { method: "get" });
+          for (let { isHoliday, locdate } of res.data.response.body.items.item) {
+            if (/Y/gi.test(isHoliday)) {
+              holidayArr.push(locdate);
+            }
           }
         }
     
@@ -234,6 +194,27 @@ DevContext.prototype.launching = async function () {
         holidayArr = holidayArr.map((num) => { return String(num).slice(0, 4) + "-" + String(num).slice(4, 6) + "-" + String(num).slice(6, 8) })
     
         return holidayArr;
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
+    }
+    const returnGoogleCalendarArr = async () => {
+      try {
+        const calendar = new GoogleCalendar();
+        const factors = await calendar.listEvents("homeliaisonContents");
+        const targets = factors.filter((o) => { return /Web\([^\)]+\)/gi.test(o.title) });
+        let realTargets;
+        let thisId;
+        realTargets = [];
+        for (let obj of targets) {
+          thisId = /Web\(([^\)]+)\)/gi.exec(obj.title)[1];
+          realTargets.push({
+            pid: thisId,
+            date: stringToDate(dateToString(obj.date.start))
+          });
+        }
+        return realTargets;
       } catch (e) {
         console.log(e);
         return null;
@@ -254,8 +235,9 @@ DevContext.prototype.launching = async function () {
       "p241",
       "p280",
     ];
-    const safeNum = 10000;
+    const safeNum = 1000;
     const holidayArr = await returnHolidayArr();
+    const alreadyArr = await returnGoogleCalendarArr();
     let contentsArr;
     let contentsArrPid;
     let foreContentsArr;
@@ -269,8 +251,15 @@ DevContext.prototype.launching = async function () {
     let runner;
     let number;
     let thisDayNumber;
-    let thisDate;
     let thisDateString;
+    let index;
+
+    if (!Array.isArray(holidayArr)) {
+      throw new Error("request fail");
+    }
+    if (!Array.isArray(alreadyArr)) {
+      throw new Error("request fail");
+    }
 
     contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
     contentsArr = contentsArr.toNormal();
@@ -306,16 +295,25 @@ DevContext.prototype.launching = async function () {
       obj.foreCast = null;
     }
 
-    runner = new Date();
+    resultTong = resultTong.filter((o) => {
+      return !alreadyArr.map(({ pid }) => { return pid }).includes(o.pid);
+    })
 
+    runner = new Date();
     number = 0;
+    index = 0;
     while (true) {
       thisDayNumber = runner.getDay();
       if (targetDayNumbers.includes(thisDayNumber)) {
         if (!holidayArr.includes(dateToString(runner))) {
-          thisDateString = dateToString(runner, true);
-          thisDate = stringToDate(thisDateString);
-          console.log(thisDate);
+          if (!alreadyArr.map(({ date }) => { return dateToString(date) }).includes(dateToString(runner))) {
+            thisDateString = dateToString(runner, true);
+            if (resultTong[index] === undefined) {
+              break;
+            }
+            resultTong[index].foreCast = stringToDate(thisDateString);
+            index = index + 1;
+          }
         }
       }
       runner.setDate(runner.getDate() + 1);
@@ -324,22 +322,17 @@ DevContext.prototype.launching = async function () {
         break;
       }
     }
-        
+
+    console.log(resultTong);
     await this.MONGOCONSOLEC.close();
-
     */
+    
 
 
 
 
 
-
-
-
-
-
-
-
+    
     
 
     // const { officeinfo: { widsign: { id, key, endPoint } } } = address;
