@@ -8108,7 +8108,7 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
                 } else {
                   for (let { original, type, hex, exe } of instance.itemList) {
                     loading = instance.mother.whiteProgressLoading();
-                    parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true });
+                    parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, SECONDHOST + "/homeliaisonCrypto", { equal: true });
                     await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe, loading.progress.firstChild);
                     await homeliaisonAnalytics({
                       page: instance.pageName,
@@ -8256,7 +8256,7 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
                     hex = obj.hex;
                     fileName = obj.fileName;
 
-                    ({ string } = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                    ({ string } = await ajaxJson({ mode: "decrypto", hash: hex }, SECONDHOST + "/homeliaisonCrypto", { equal: true }));
                     if (instance.isEmptyString(string)) {
                       string = '';
                     }
@@ -8268,7 +8268,7 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
                     }
 
                     newString = newString.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
-                    ({ hash } = await ajaxJson({ mode: "crypto", string: newString }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                    ({ hash } = await ajaxJson({ mode: "crypto", string: newString }, SECONDHOST + "/homeliaisonCrypto", { equal: true }));
 
                     desid = obj.desid;
                     updateMap.push({ desid, fileName, hash });
@@ -8831,7 +8831,7 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
           motherMatrix[motherNumber] = motherMatrix[motherNumber] + 1;
         }
     
-        ajaxJson({ mode: "decrypto", targets: fileItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
+        ajaxJson({ mode: "decrypto", targets: fileItemList }, SECONDHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
           for (let { string, target } of targets) {
             target = document.querySelector('#' + target);
             if (string.trim() !== "" && target !== null) {
@@ -8910,7 +8910,7 @@ DesignerAboutJs.prototype.uploadFiles = function (fileKind) {
 
                     loading = instance.mother.whiteProgressLoading();
 
-                    ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                    ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, SECONDHOST + "/homeliaisonCrypto", { equal: true }));
                     formData.append("name", hash);
   
                     await instance.sendChecklistLog({
@@ -9032,7 +9032,7 @@ DesignerAboutJs.prototype.dropFiles = function (fileKind) {
   
                 loading = instance.mother.whiteProgressLoading();
   
-                ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, SECONDHOST + "/homeliaisonCrypto", { equal: true }));
                 formData.append("name", hash);
   
                 await instance.sendChecklistLog({

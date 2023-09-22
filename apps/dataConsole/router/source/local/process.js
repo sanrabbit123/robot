@@ -7814,7 +7814,7 @@ ProcessJs.prototype.uploadFiles = function (project, thisStatusNumber, photoBoo)
                     if (!instance.nowUploading) {
                       loading = instance.asyncLoadingBlock();
   
-                      ({ hash } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                      ({ hash } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, SECONDHOST + "/homeliaisonCrypto", { equal: true }));
                       formData.append("name", hash);
     
                       res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
@@ -7924,7 +7924,7 @@ ProcessJs.prototype.uploadFiles = function (project, thisStatusNumber, photoBoo)
   
                       loading = instance.asyncLoadingBlock();
   
-                      ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                      ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, SECONDHOST + "/homeliaisonCrypto", { equal: true }));
                       formData.append("name", hash);
     
                       res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
@@ -8050,7 +8050,7 @@ ProcessJs.prototype.dropFiles = function (project, thisStatusNumber, photoBoo) {
   
                   loading = instance.asyncLoadingBlock();
   
-                  ({ hash } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                  ({ hash } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, SECONDHOST + "/homeliaisonCrypto", { equal: true }));
                   formData.append("name", hash);
     
                   res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
@@ -8165,7 +8165,7 @@ ProcessJs.prototype.dropFiles = function (project, thisStatusNumber, photoBoo) {
     
                   loading = instance.asyncLoadingBlock();
     
-                  ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                  ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, SECONDHOST + "/homeliaisonCrypto", { equal: true }));
                   formData.append("name", hash);
     
                   res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
@@ -8940,7 +8940,7 @@ ProcessJs.prototype.setPanBlocks = async function (project) {
                       if (type === "photo") {
                         await downloadFile(original, null, loading.progress.firstChild);
                       } else {
-                        parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true });
+                        parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, SECONDHOST + "/homeliaisonCrypto", { equal: true });
                         await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe, loading.progress.firstChild);
                       }
                       loading.remove();
@@ -9165,7 +9165,7 @@ ProcessJs.prototype.setPanBlocks = async function (project) {
                     fileName = obj.fileName;
                     mode = obj.mode;
 
-                    ({ string } = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                    ({ string } = await ajaxJson({ mode: "decrypto", hash: hex }, SECONDHOST + "/homeliaisonCrypto", { equal: true }));
                     if (instance.isEmptyString(string)) {
                       string = '';
                     }
@@ -9177,7 +9177,7 @@ ProcessJs.prototype.setPanBlocks = async function (project) {
                     }
 
                     newString = newString.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
-                    ({ hash } = await ajaxJson({ mode: "crypto", string: newString }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                    ({ hash } = await ajaxJson({ mode: "crypto", string: newString }, SECONDHOST + "/homeliaisonCrypto", { equal: true }));
 
                     if (mode === "designer") {
                       desid = obj.desid;
@@ -9828,7 +9828,7 @@ ProcessJs.prototype.setPanBlocks = async function (project) {
       motherMatrix[motherNumber] = motherMatrix[motherNumber] + 1;
     }
 
-    ajaxJson({ mode: "decrypto", targets: fileItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
+    ajaxJson({ mode: "decrypto", targets: fileItemList }, SECONDHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
       for (let { string, target } of targets) {
         target = document.querySelector('#' + target);
         if (string.trim() !== "" && target !== null) {
@@ -9840,7 +9840,7 @@ ProcessJs.prototype.setPanBlocks = async function (project) {
       console.log(err);
     });
 
-    ajaxJson({ mode: "decrypto", targets: photoItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
+    ajaxJson({ mode: "decrypto", targets: photoItemList }, SECONDHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
       for (let { string, target } of targets) {
         target = document.querySelector('#' + target);
         if (target !== null) {

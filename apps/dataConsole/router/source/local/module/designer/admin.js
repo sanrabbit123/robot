@@ -691,7 +691,7 @@ DesignerJs.prototype.adminProjectsView = async function (desid, base) {
 
                   targetArea.setAttribute("load", "true");
 
-                  targets = await ajaxJson({ mode: "decrypto", targets: fileItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true });
+                  targets = await ajaxJson({ mode: "decrypto", targets: fileItemList }, SECONDHOST + "/homeliaisonCrypto", { equal: true });
                   for (let { string, target } of targets) {
                     target = targetArea.querySelector('#' + target);
                     if (string.trim() !== "") {
@@ -700,7 +700,7 @@ DesignerJs.prototype.adminProjectsView = async function (desid, base) {
                     }
                   }
 
-                  targets = await ajaxJson({ mode: "decrypto", targets: photoItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true });
+                  targets = await ajaxJson({ mode: "decrypto", targets: photoItemList }, SECONDHOST + "/homeliaisonCrypto", { equal: true });
                   for (let { string, target } of targets) {
                     target = targetArea.querySelector('#' + target);
                     target.style.height = target.getAttribute("height");
