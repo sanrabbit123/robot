@@ -142,7 +142,42 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // back console, log console 무조건 성공 시작 해결
+
+
+
+
+
+
+
+    // everyday server restart
+
+    // systemctl restart mongod;
+    // pm2 kill;pm2 start ./.office.config.js;
+
+    // 1 5 * * * systemctl restart mongod;
+    // 2 5 * * * pm2 kill;pm2 start ./.back.config.js;
     
+    // systemctl restart mongod;
+    // pm2 kill;pm2 start ./.log.config.js;
+    
+    // systemctl restart mongod;
+    // pm2 kill;pm2 start ./.second.config.js;
+    
+    // systemctl restart mongod;
+    // pm2 kill;pm2 start ./.trans.config.js;
+    
+    // systemctl restart mongod;
+    // pm2 kill;pm2 start ./.python.config.js;
+    
+    // systemctl restart mongod;
+    // pm2 kill;pm2 start ./.office.config.js;
+    
+    
+
+    
+
+
 
     // const meta = new FacebookAPIs();
     // await meta.instagramList();
