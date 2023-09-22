@@ -142,7 +142,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    
 
     // const meta = new FacebookAPIs();
     // await meta.instagramList();
@@ -6624,14 +6624,13 @@ DevContext.prototype.launching = async function () {
     //   client: "배창규",
     // });
 
-
     // raw photo to raw portfolio
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "안은영",
-    //     designer: "김지혜",
-    //     link: "https://drive.google.com/drive/folders/1rM2yvjm3ccfawmpAwTAWLYXTJfwQ3fB9",
+    //     client: "남기은",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/1Myv0asa2W0G-CSPWlww_w0LW0qOYymgM",
     //     pay: true
     //   },
     // ]);
@@ -6649,11 +6648,11 @@ DevContext.prototype.launching = async function () {
     // let project;
     
     
-    // clientName = "김지혜";
-    // designerName = "김지은";
+    // clientName = "남기은";
+    // designerName = "이정아";
     
-    // shareGoogleIdClient = "1lrB_asEhlaifVcUDcUqGiax0w-IEXz3M";
-    // shareGoogleIdDesigner = "1OAS6ODa3GbMPOChBYoQo8DIpkXBQRjzg";
+    // shareGoogleIdClient = "1yIUnSe9ehyHgEae8wKlBG7wpxAtxDPvf";
+    // shareGoogleIdDesigner = "1P3l1MOOj4l7OCcWYt1vPAB50zjUoDocX";
 
     // projects = await back.getProjectsByNames([ clientName, designerName ]);
     // if (projects.length > 0) {
@@ -6692,7 +6691,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "김유나", "2023-07-14" ],
+    //   [ "이정옥", "2023-07-20" ],
     // ]);
 
 
