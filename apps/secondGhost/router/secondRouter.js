@@ -285,7 +285,9 @@ SecondRouter.prototype.rou_post_messageLog = function () {
         thisChannel = "general";
       }
 
-      await instance.telegramSend(telegram.bot[thisChannel], `(${channel}) ${slackText}`, logger);
+      instance.telegramSend(telegram.bot[thisChannel], `(${channel}) ${slackText}`, logger).catch((err) => {
+        logger.error("Second Ghost 서버 문제 생김 (rou_post_messageLog): " + err.message).catch((e) => { console.log(e); });
+      });
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {

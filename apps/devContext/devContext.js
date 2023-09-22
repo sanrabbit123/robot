@@ -147,6 +147,13 @@ DevContext.prototype.launching = async function () {
     // const meta = new FacebookAPIs();
     // await meta.instagramList();
 
+    // const cron = new CronGhost();
+
+    // console.log(await cron.aliveTest(this.MONGOLOCALC));
+
+
+    const url = "https://" + address.secondinfo.host + ":3000/messageLog"
+    console.log(await requestSystem(url, { text: "안녕", channel: "#alive_log", collection: "errorLog" }, { headers: { "Content-Type": "application/json" } }))
 
 
     /*
