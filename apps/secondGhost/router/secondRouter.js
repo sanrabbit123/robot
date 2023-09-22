@@ -289,7 +289,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
         logger.error("Second Ghost 서버 문제 생김 (rou_post_messageLog): " + err.message).catch((e) => { console.log(e); });
       });
 
-      res.send(JSON.stringify({ message: "done" }));
+      res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       logger.error("Second Ghost 서버 문제 생김 (rou_post_messageLog): " + JSON.stringify(req.body) + " " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
