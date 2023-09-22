@@ -4086,6 +4086,103 @@ SecondRouter.prototype.rou_post_timeAspirantCommon = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_homeliaisonCrypto = function () {
+  const instance = this;
+  const { equalJson, cryptoString, decryptoHash } = this.mother;
+  const back = this.back;
+  let obj = {};
+  obj.link = [ "/homeliaisonCrypto" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invaild post");
+      }
+      const { mode } = req.body;
+      const password = "homeliaison";
+      let result;
+      let resultObj;
+      let targets;
+
+      if (req.body.targets !== undefined && Array.isArray(equalJson(req.body.targets))) {
+
+        ({ targets } = equalJson(req.body));
+        resultObj = [];
+
+        if (mode === "crypto") {
+          if (!targets.every((obj) => { return (typeof obj === "object" && obj !== null && obj.string !== undefined && obj.target !== undefined) })) {
+            throw new Error("invaild post");
+          }
+          for (let { string, target } of targets) {
+            resultObj.push({
+              hash: await cryptoString(password, string),
+              target
+            });
+          }
+        } else {
+          if (!targets.every((obj) => { return (typeof obj === "object" && obj !== null && obj.hash !== undefined && obj.target !== undefined) })) {
+            throw new Error("invaild post");
+          }
+          for (let { hash, target } of targets) {
+            if (hash.replace(/[0-9a-f]/g, '') !== "") {
+              resultObj.push({
+                string: hash,
+                target
+              });
+            } else {
+              resultObj.push({
+                string: await decryptoHash(password, hash),
+                target
+              });
+            }
+          }
+        }
+
+      } else {
+
+        resultObj = {};
+
+        if (mode === "crypto" || mode === "cryptoString") {
+          if (req.body.string === undefined) {
+            throw new Error("invaild post");
+          }
+          result = await cryptoString(password, req.body.string);
+          resultObj = { hash: result };
+        } else if (mode === "decrypto" || mode === "decryptoHash") {
+          if (req.body.hash === undefined) {
+            throw new Error("invaild post");
+          }
+          if (req.body.hash.replace(/[0-9a-f]/g, '') !== "") {
+            result = req.body.hash;
+          } else {
+            result = await decryptoHash(password, req.body.hash);
+          }
+          resultObj = { string: result };
+        } else {
+          throw new Error("invaild mode");
+        }
+
+        if (typeof req.body.target === "string") {
+          resultObj.target = req.body.target;
+        }
+
+      }
+
+      res.send(JSON.stringify(resultObj));
+
+    } catch (e) {
+      await logger.error("Second Ghost 서버 문제 생김 (rou_post_homeliaisonCrypto): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 SecondRouter.prototype.setMembers = async function () {

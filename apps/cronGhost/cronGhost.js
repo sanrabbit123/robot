@@ -118,17 +118,17 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
                 message = message + "\n\n" + diskMongoMessage + "\n\n" + bar2;
                 await aliveLog(message);
                 if (tong.some((o) => { return !o.mongo })) {
-                  // await emergencyAlarm("something mongo death => \n");
-                  // await emergencyAlarm(JSON.stringify(tong, null, 2));
+                  await emergencyAlarm("something mongo death => \n");
+                  await emergencyAlarm(JSON.stringify(tong, null, 2));
                 }
                 if (tong.some((o) => { return o.percentage > 90 })) {
-                  // await emergencyAlarm("something disk full => \n");
-                  // await emergencyAlarm(JSON.stringify(tong, null, 2));
+                  await emergencyAlarm("something disk full => \n");
+                  await emergencyAlarm(JSON.stringify(tong, null, 2));
                 }
               } else if (successNum + failNum === targetNumber) {
                 message += "\n======================================";
                 message += "\nsomething death";
-                // await emergencyAlarm(message);
+                await emergencyAlarm(message);
               }
             }
           }
