@@ -850,7 +850,7 @@ DataConsole.prototype.readGhostPatch = async function () {
 
 DataConsole.prototype.connect = async function () {
   const instance = this;
-  const { fileSystem, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog, expressLog, dateToString, aliveLog, cronLog, emergencyAlarm, alertLog } = this.mother;
+  const { fileSystem, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog, expressLog, dateToString, aliveLog, cronLog, emergencyAlarm, alertLog, shellExec, shellLink } = this.mother;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -863,6 +863,7 @@ DataConsole.prototype.connect = async function () {
   const allLogKeyword = "allExpressLog";
   const logKeyword = "expressLog";
   const logFolder = process.env.HOME + "/server/log";
+  const topFolder = process.env.HOME + "/server/top";
   const thisLogFile = `${logFolder}/${logKeyword}_${(new Date()).valueOf()}.log`;
   const serverName = "back";
 
@@ -1112,6 +1113,15 @@ DataConsole.prototype.connect = async function () {
     }).catch((err) => {
       console.log(err);
     });
+
+    //set top log
+    setTimeout(() => {
+      setInterval(() => {
+        shellExec(`top -n 1 -b > ${shellLink(`${topFolder}/top.out`)}`).catch((err) => {
+          console.log(err);
+        });
+      }, 3 * 1000);
+    }, 1000);
 
     //server on
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
