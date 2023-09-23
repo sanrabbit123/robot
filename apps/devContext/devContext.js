@@ -145,9 +145,9 @@ DevContext.prototype.launching = async function () {
     // back console, log console 무조건 성공 시작 해결
 
 
-    await findCode("/designerLevelMatrixSync")
 
 
+    
 
 
     // everyday server restart

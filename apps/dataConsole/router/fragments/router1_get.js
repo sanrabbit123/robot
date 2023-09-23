@@ -524,7 +524,6 @@ DataRouter.prototype.rou_get_Patch = function () {
   return obj;
 }
 
-
 DataRouter.prototype.rou_get_ServerSent = function () {
   const instance = this;
   const back = this.back;
