@@ -145,9 +145,8 @@ DevContext.prototype.launching = async function () {
     // const meta = new FacebookAPIs();
     // await meta.instagramList();
     
-    const reflection = new MongoReflection();
-    await reflection.mongoMigration("local", "backinfo");
 
+    
 
     
     /*
