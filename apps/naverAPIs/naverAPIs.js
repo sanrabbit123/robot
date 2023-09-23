@@ -32,7 +32,7 @@ const NaverAPIs = function (mother = null, back = null, address = null) {
   this.complexIdKeyword = "land_complex_";
 }
 
-NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
+NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, logger = null) {
   const instance = this;
   const back = this.back;
   const { naverToken, naverSecret, naverId, naverUrl } = this;
@@ -151,6 +151,9 @@ NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
       }
     }
 
+    if (logger !== null) {
+      logger.cron("naver daily campaign done : " + dateToString(new Date())).catch((err) => { console.log(err); });
+    }
 
   } catch (e) {
     await emergencyAlarm("NaverAPIs.dailyCampaign error : " + e.message);

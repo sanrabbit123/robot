@@ -14,11 +14,10 @@ const GoogleYoutube = function (mother = null, back = null, address = null) {
   this.dir = process.cwd() + "/apps/googleAPIs";
 }
 
-GoogleYoutube.prototype.dailyYoutube = async function (selfMongo, dayNumber = 7) {
+GoogleYoutube.prototype.dailyYoutube = async function (selfMongo, dayNumber = 7, logger = null) {
   const instance = this;
   const back = this.back;
-  const { sleep, dateToString, stringToDate, requestSystem, pythonExecute } = this.mother;
-  const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
+  const { sleep, dateToString, stringToDate, requestSystem, pythonExecute, zeroAddition, emergencyAlarm } = this.mother;
   try {
     const channelCollection = "dailyChannel";
     let startDate;
@@ -73,7 +72,12 @@ GoogleYoutube.prototype.dailyYoutube = async function (selfMongo, dayNumber = 7)
       await sleep(500);
     }
 
+    if (logger !== null) {
+      logger.cron("google daily youtube done : " + dateToString(new Date())).catch((err) => { console.log(err); });
+    }
+
   } catch (e) {
+    emergencyAlarm("GoogleYoutube.dailyYoutube error : " + e.message).catch((err) => { console.log(err); });
     console.log(e);
   }
 }

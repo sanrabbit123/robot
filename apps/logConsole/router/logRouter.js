@@ -82,78 +82,6 @@ LogRouter.prototype.dailyAnalytics = async function () {
   }
 }
 
-LogRouter.prototype.dailyCampaign = async function (selfMongo) {
-  const instance = this;
-  try {
-    const dayNumber = 3;
-
-    await instance.facebook.dailyCampaign(selfMongo, dayNumber);
-    await instance.naver.dailyCampaign(selfMongo, dayNumber);
-    await instance.google.dailyCampaign(selfMongo, dayNumber);
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-LogRouter.prototype.dailyAspirantCampaign = async function (selfMongo) {
-  const instance = this;
-  const { equalJson } = this.mother;
-  const back = this.back;
-  const address = this.address;
-  try {
-    const fromCollection = "dailyCampaign";
-    const toCollection = "dailyAspirantCampaign";
-    let rows;
-    let targets;
-    let tempRows;
-    let json;
-
-    rows = await back.mongoRead(fromCollection, {}, { selfMongo });
-    
-    targets = [];
-    for (let row of rows) {
-      if (/디자이너/gi.test(row.information.name)) {
-        if (/모객/gi.test(row.information.name) || /모집/gi.test(row.information.name) || /신청/gi.test(row.information.name) || /채용/gi.test(row.information.name) || /전환/gi.test(row.information.name) || /캠패인/gi.test(row.information.name)) {
-          targets.push(row);
-        }
-      }
-    }
-
-    for (let row of targets) {
-      json = equalJson(JSON.stringify(row));
-      tempRows = await back.mongoRead(toCollection, { key: row.key }, { selfMongo });
-      if (tempRows.length !== 0) {
-        await back.mongoDelete(toCollection, { key: row.key }, { selfMongo });
-      }
-      await back.mongoCreate(toCollection, json, { selfMongo });
-      tempRows = await back.mongoRead(fromCollection, { key: row.key }, { selfMongo });
-      if (tempRows.length !== 0) {
-        await back.mongoDelete(fromCollection, { key: row.key }, { selfMongo });
-      }
-    }
-
-    return true;
-
-  } catch (e) {
-    console.log(e);
-    return false;
-  }
-}
-
-LogRouter.prototype.dailyChannel = async function (selfMongo) {
-  const instance = this;
-  try {
-    const dayNumber = 3;
-
-    await instance.facebook.dailyInstagram(selfMongo, dayNumber);
-    await instance.youtube.dailyYoutube(selfMongo, dayNumber);
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 //GET ---------------------------------------------------------------------------------------------
 
 LogRouter.prototype.rou_get_Root = function () {
@@ -196,14 +124,8 @@ LogRouter.prototype.rou_get_First = function () {
       } else if (req.params.id === "disk") {
 
         const disk = await diskReading();
-        instance.dailyCampaign(instance.mongo).then(() => {
-          return instance.dailyAspirantCampaign(instance.mongo);
-        }).then(() => {
-          return instance.dailyChannel(instance.mongo);
-        }).then(() => {
-          return instance.dailyAnalytics();
-        }).then(() => {
-          return logger.cron("front reflection, daily campaign, daily channel done");
+        instance.dailyAnalytics().then(() => {
+          return logger.cron("front reflection, daily campaign, daily channel request done");
         }).catch((err) => {
           logger.error("log disk cron error : " + err.message).catch((e) => { console.log(e); });
           console.log(err);

@@ -18,6 +18,9 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
   const NaverAPIs = require(`${process.cwd()}/apps/naverAPIs/naverAPIs.js`);
   const LocalDevices = require(`${process.cwd()}/apps/localDevices/localDevices.js`);
   const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
+  const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);
+  const GoogleAds = require(`${process.cwd()}/apps/googleAPIs/googleAds.js`);
+  const GoogleYoutube = require(`${process.cwd()}/apps/googleAPIs/googleYoutube.js`);
 
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -47,6 +50,9 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
   this.devices = new LocalDevices();
   this.report = new LogReport(MONGOLOGC);
   this.naver = new NaverAPIs();
+  this.facebook = new FacebookAPIs();
+  this.google = new GoogleAds();
+  this.youtube = new GoogleYoutube();
 
   this.staticConst = process.env.HOME + "/samba";
   this.sambaToken = "__samba__";
@@ -2545,9 +2551,15 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
     try {
       const { date } = equalJson(req.body);
       const selfMongo = instance.mongolog;
+      const dayNumber = 3;
       let dateArr;
       let collection;
       let anaid, ancid, key, rows;
+      let fromCollection;
+      let toCollection;
+      let targets;
+      let tempRows;
+      let json;
 
       if (typeof date !== "string") {
         throw new Error("invaild post");
@@ -2561,6 +2573,40 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
       (async () => {
         try {
           let result;
+
+          // daily campaign
+          await instance.facebook.dailyCampaign(selfMongo, dayNumber, logger);
+          await instance.naver.dailyCampaign(selfMongo, dayNumber, logger);
+          await instance.google.dailyCampaign(selfMongo, dayNumber, logger);
+      
+          // daily aspirant campaign
+          fromCollection = "dailyCampaign";
+          toCollection = "dailyAspirantCampaign";
+          rows = await back.mongoRead(fromCollection, {}, { selfMongo });
+          targets = [];
+          for (let row of rows) {
+            if (/디자이너/gi.test(row.information.name)) {
+              if (/모객/gi.test(row.information.name) || /모집/gi.test(row.information.name) || /신청/gi.test(row.information.name) || /채용/gi.test(row.information.name) || /전환/gi.test(row.information.name) || /캠패인/gi.test(row.information.name)) {
+                targets.push(row);
+              }
+            }
+          }
+          for (let row of targets) {
+            json = equalJson(JSON.stringify(row));
+            tempRows = await back.mongoRead(toCollection, { key: row.key }, { selfMongo });
+            if (tempRows.length !== 0) {
+              await back.mongoDelete(toCollection, { key: row.key }, { selfMongo });
+            }
+            await back.mongoCreate(toCollection, json, { selfMongo });
+            tempRows = await back.mongoRead(fromCollection, { key: row.key }, { selfMongo });
+            if (tempRows.length !== 0) {
+              await back.mongoDelete(fromCollection, { key: row.key }, { selfMongo });
+            }
+          }
+
+          // daily channel
+          await instance.facebook.dailyInstagram(selfMongo, dayNumber, logger);
+          await instance.youtube.dailyYoutube(selfMongo, dayNumber, logger);
 
           // daily analytics
           collection = "dailyAnalytics";

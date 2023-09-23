@@ -24,7 +24,7 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
   this.appVersion = "v18.0";
 }
 
-FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
+FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, logger = null) {
   const instance = this;
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
@@ -120,8 +120,12 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
 
     }
 
+    if (logger !== null) {
+      logger.cron("facebook daily campaign done : " + dateToString(new Date())).catch((err) => { console.log(err); });
+    }
+
   } catch (e) {
-    await emergencyAlarm("FacebookAPIs.dailyCampaign error : " + e.message);
+    emergencyAlarm("FacebookAPIs.dailyCampaign error : " + e.message).catch((err) => { console.log(err); });
     console.log(e);
   }
 }
@@ -198,7 +202,7 @@ FacebookAPIs.prototype.instagramList = async function () {
   }
 }
 
-FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7) {
+FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7, logger = null) {
   const instance = this;
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
@@ -263,6 +267,10 @@ FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7
       }
       await back.mongoCreate(channelCollection, json, { selfMongo });
       console.log(json);
+    }
+
+    if (logger !== null) {
+      logger.cron("facebook daily instagram done : " + dateToString(new Date())).catch((err) => { console.log(err); });
     }
 
   } catch (e) {

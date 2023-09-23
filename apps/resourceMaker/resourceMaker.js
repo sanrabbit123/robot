@@ -847,7 +847,7 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
 ResourceMaker.prototype.launching = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, mongo, mongoinfo, shellExec, shellLink, headRequest, binaryRequest, ghostFileUpload } = this.mother;
+  const { fileSystem, mongo, mongoinfo, shellExec, shellLink, headRequest, binaryRequest, ghostFileUpload, requestSystem } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
   const sizeMatrix = [
@@ -1026,6 +1026,8 @@ ResourceMaker.prototype.launching = async function () {
 
       await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
       await back.mongoDelete("foreContents", { pid: this.p_id }, { console: true });
+
+      await requestSystem("https://" + instance.address.testinfo.host + ":" + String(3000) + "/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
     }
 
     await shellExec(`rm -rf ${shellLink(process.env.HOME)}/${tempFolderName}`);

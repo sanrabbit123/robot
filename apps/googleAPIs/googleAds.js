@@ -14,10 +14,10 @@ const GoogleAds = function (mother = null, back = null, address = null) {
   this.dir = process.cwd() + "/apps/googleAPIs";
 }
 
-GoogleAds.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
+GoogleAds.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, logger = null) {
   const instance = this;
   const back = this.back;
-  const { sleep, dateToString, stringToDate, requestSystem, pythonExecute } = this.mother;
+  const { sleep, dateToString, stringToDate, requestSystem, pythonExecute, emergencyAlarm } = this.mother;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   try {
     const campaignCollection = "dailyCampaign";
@@ -107,8 +107,12 @@ GoogleAds.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
 
     }
 
+    if (logger !== null) {
+      logger.cron("google daily campaign done : " + dateToString(new Date())).catch((err) => { console.log(err); });
+    }
 
   } catch (e) {
+    emergencyAlarm("GoogleAds.dailyCampaign error : " + e.message).catch((err) => { console.log(err); });
     console.log(e);
   }
 }
