@@ -513,7 +513,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
           //   window.location.href = window.location.protocol + "//" + window.location.host + "/builder?mode=estimation&buiid=" + thisBuiid;
           // }
           //
-          // newInvoice = await ajaxJson({ buiid: thisBuiid, proid: project.proid }, "/pythonPass_invoiceCreate", { equal: true });
+          // newInvoice = await ajaxJson({ buiid: thisBuiid, proid: project.proid }, PYTHONHOST + "/invoiceCreate", { equal: true });
 
           tempArr = value.split('-');
 

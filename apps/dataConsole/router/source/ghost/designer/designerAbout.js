@@ -2497,7 +2497,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
               instance.designer.analytics.construct.level = targetIndex;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-              await ajaxJson({ data: null }, BACKHOST + "/designerLevelMatrixSync");
+              await ajaxJson({ data: null }, SECONDHOST + "/designerLevelMatrixSync");
               
               if (!entireMode) {
                 await homeliaisonAnalytics({

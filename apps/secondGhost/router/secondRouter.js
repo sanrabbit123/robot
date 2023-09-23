@@ -4183,6 +4183,82 @@ SecondRouter.prototype.rou_post_homeliaisonCrypto = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_designerLevelMatrixSync = function () {
+  const instance = this;
+  const work = this.work;
+  const { equalJson, messageSend, dateToString, stringToDate, sleep } = this.mother;
+  const designerLevelMatrixSync = async function (selfMongo) {
+    try {
+      const db = "miro81";
+      const collection = "designer";
+      const designers = await selfMongo.db(db).collection(collection).find({}).toArray();
+      let whereQuery, updateQuery;
+      let copiedMatrix;
+  
+      for (let designer of designers) {
+        whereQuery = { desid: designer.desid };
+        updateQuery = {};
+  
+        copiedMatrix = equalJson(JSON.stringify(designer.analytics.project.matrix));
+        if (designer.analytics.construct.level === 0) {
+          copiedMatrix[0] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+          copiedMatrix[1] = [ 0, 0, 0 ];
+          copiedMatrix[2] = [ 0, 0, 0 ];
+          copiedMatrix[3] = [ 0, 0, 0 ];
+        } else if (designer.analytics.construct.level === 1) {
+          copiedMatrix[0] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+          copiedMatrix[1] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+          copiedMatrix[2] = [ 0, 0, 0 ];
+          copiedMatrix[3] = [ 0, 0, 0 ];
+        } else if (designer.analytics.construct.level === 2) {
+          copiedMatrix[0] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+          copiedMatrix[1] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+          copiedMatrix[2] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+          copiedMatrix[3] = [ 0, 0, 0 ];
+        } else if (designer.analytics.construct.level === 3) {
+          copiedMatrix[0] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+          copiedMatrix[1] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+          copiedMatrix[2] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+          copiedMatrix[3] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+        }
+  
+        updateQuery["analytics.project.matrix"] = equalJson(JSON.stringify(copiedMatrix));
+        await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+        console.log(whereQuery, updateQuery);
+      }
+  
+      return true;
+  
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  }
+  let obj = {};
+  obj.link = [ "/designerLevelMatrixSync" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      const result = await designerLevelMatrixSync(selfMongo);
+      if (!result) {
+        throw new Error("designer level matrix sync fail");
+      }
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      await logger.error("Second Ghost 서버 문제 생김 (rou_post_designerLevelMatrixSync): " + e.message);
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 SecondRouter.prototype.setMembers = async function () {

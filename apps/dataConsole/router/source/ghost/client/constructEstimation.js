@@ -766,7 +766,7 @@ ConstructEstimationJs.prototype.launching = async function (loading) {
 
     invoiceList = await ajaxJson({
       whereQuery: { "links.proid": proid, "links.buiid": buiid }
-    }, "/pythonPass_invoiceRead", { equal: true });
+    }, PYTHONHOST + "/invoiceRead", { equal: true });
     if (invoiceList.length === 0) {
       window.alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;

@@ -245,7 +245,7 @@ BuilderJs.prototype.listDetailLaunching = function (buiid) {
       collection: "constructInvoice",
       db: "python",
       whereQuery: { "links.buiid": buiid }
-    }, "/pythonPass_generalMongo", { equal: true });
+    }, PYTHONHOST + "/generalMongo", { equal: true });
 
   }).then((invoiceList) => {
 
@@ -2353,7 +2353,7 @@ BuilderJs.prototype.saveState = async function (unshiftMode = false) {
         collection: "constructInvoice",
         db: "python",
         whereQuery, updateQuery
-      }, "/pythonPass_generalMongo");
+      }, PYTHONHOST + "/generalMongo");
     }
   } catch (e) {
     window.location.reload();
@@ -2432,7 +2432,7 @@ BuilderJs.prototype.fileAddition = async function (file, eventDom, event) {
       sheetsName: "내역서",
     }, "https://" + FILEHOST + "/publicSector/excel", { equal: true });
 
-    res2 = await ajaxJson({ matrix: res }, "/pythonPass_invoiceRequest", { equal: true });
+    res2 = await ajaxJson({ matrix: res }, PYTHONHOST + "/invoiceRequest", { equal: true });
 
     loading.remove();
 
@@ -2688,8 +2688,8 @@ BuilderJs.prototype.estimationView = async function () {
     this.baseMaker();
     this.listDetailLaunching(buiid);
 
-    itemDummy = await ajaxJson({ collection: "constructInvoice", subject: "items" }, "/pythonPass_returnDummy", { equal: true });
-    detailDummy = await ajaxJson({ collection: "constructInvoice", subject: "detail" }, "/pythonPass_returnDummy", { equal: true });
+    itemDummy = await ajaxJson({ collection: "constructInvoice", subject: "items" }, PYTHONHOST + "/returnDummy", { equal: true });
+    detailDummy = await ajaxJson({ collection: "constructInvoice", subject: "detail" }, PYTHONHOST + "/returnDummy", { equal: true });
     this.dummy = {
       item: itemDummy,
       detail: detailDummy

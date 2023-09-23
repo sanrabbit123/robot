@@ -5058,7 +5058,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   
                                             updateQuery["responses." + String(responsesIndex) + ".pay"] = [ { amount, date, oid: "" } ];
                                             updateQuery["responses." + String(responsesIndex) + ".proofs"] = [ { date, method, proof, to } ];
-                                            await ajaxJson({ mode: "update", whereQuery, updateQuery }, "/pythonPass_generalBill");
+                                            await ajaxJson({ mode: "update", whereQuery, updateQuery }, PYTHONHOST + "/generalBill");
   
                                             if (responseName === "디자인비 선금" || responseName === "디자인비 잔금") {
                                               whereQuery = { proid };

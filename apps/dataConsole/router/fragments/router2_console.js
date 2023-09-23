@@ -4705,39 +4705,6 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_pythonPass = function () {
-  const instance = this;
-  const back = this.back;
-  const address = this.address;
-  const { requestSystem, equalJson } = this.mother;
-  let obj = {};
-  obj.link = [ "/pythonPass_ghostClientBill", "/pythonPass_generalBill", "/pythonPass_invoiceRead", "/pythonPass_invoiceCreate", "/pythonPass_generalMongo", "/pythonPass_returnDummy", "/pythonPass_invoiceRequest" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      const url = req.url.replace(/^\//gi, '');
-      if (url.split('_').length < 2) {
-        res.send(JSON.stringify({ message: "OK" }));
-      } else {
-        const path = url.split('_')[1].trim();
-        let targetUrl, pythonResponse;
-        targetUrl = "https://" + address["pythoninfo"].host + ":3000/" + path;
-        pythonResponse = await requestSystem(targetUrl, equalJson(req.body), { headers: { "Content-Type": "application/json" } });
-        res.send(JSON.stringify(pythonResponse.data));
-      }
-    } catch (e) {
-      logger.error("Console 서버 문제 생김 (rou_post_pythonPass): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
 DataRouter.prototype.rou_post_callTo = function () {
   const instance = this;
   const back = this.back;
@@ -5534,38 +5501,6 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_mysqlQuery = function () {
-  const instance = this;
-  const address = this.address;
-  const { equalJson, requestSystem } = this.mother;
-  let obj = {};
-  obj.link = [ "/mysqlQuery" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (typeof req.body.query !== "string") {
-        throw new Error("invaild post");
-      }
-      const port = 3000;
-      const query = req.body.query.replace(/__equal__/gi, '=');
-      const response = await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(port) + "/mysqlQuery", { query }, { headers: { "Content-Type": "application/json" } });
-      if (typeof response.data !== "object") {
-        throw new Error("request error");
-      }
-      res.send(JSON.stringify(response.data));
-    } catch (e) {
-      await logger.error("Console 서버 문제 생김 (rou_post_mysqlQuery): " + e.message);
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
 DataRouter.prototype.rou_post_generalImpPayment = function () {
   const instance = this;
   const back = this.back;
@@ -5817,103 +5752,6 @@ DataRouter.prototype.rou_post_designerFeeTable = function () {
       res.send(json);
     } catch (e) {
       await logger.error("Console 서버 문제 생김 (rou_post_designerFeeTable): " + e.message);
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
-  const instance = this;
-  const { equalJson, cryptoString, decryptoHash } = this.mother;
-  const back = this.back;
-  let obj = {};
-  obj.link = [ "/homeliaisonCrypto" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (req.body.mode === undefined) {
-        throw new Error("invaild post");
-      }
-      const { mode } = req.body;
-      const password = "homeliaison";
-      let result;
-      let resultObj;
-      let targets;
-
-      if (req.body.targets !== undefined && Array.isArray(equalJson(req.body.targets))) {
-
-        ({ targets } = equalJson(req.body));
-        resultObj = [];
-
-        if (mode === "crypto") {
-          if (!targets.every((obj) => { return (typeof obj === "object" && obj !== null && obj.string !== undefined && obj.target !== undefined) })) {
-            throw new Error("invaild post");
-          }
-          for (let { string, target } of targets) {
-            resultObj.push({
-              hash: await cryptoString(password, string),
-              target
-            });
-          }
-        } else {
-          if (!targets.every((obj) => { return (typeof obj === "object" && obj !== null && obj.hash !== undefined && obj.target !== undefined) })) {
-            throw new Error("invaild post");
-          }
-          for (let { hash, target } of targets) {
-            if (hash.replace(/[0-9a-f]/g, '') !== "") {
-              resultObj.push({
-                string: hash,
-                target
-              });
-            } else {
-              resultObj.push({
-                string: await decryptoHash(password, hash),
-                target
-              });
-            }
-          }
-        }
-
-      } else {
-
-        resultObj = {};
-
-        if (mode === "crypto" || mode === "cryptoString") {
-          if (req.body.string === undefined) {
-            throw new Error("invaild post");
-          }
-          result = await cryptoString(password, req.body.string);
-          resultObj = { hash: result };
-        } else if (mode === "decrypto" || mode === "decryptoHash") {
-          if (req.body.hash === undefined) {
-            throw new Error("invaild post");
-          }
-          if (req.body.hash.replace(/[0-9a-f]/g, '') !== "") {
-            result = req.body.hash;
-          } else {
-            result = await decryptoHash(password, req.body.hash);
-          }
-          resultObj = { string: result };
-        } else {
-          throw new Error("invaild mode");
-        }
-
-        if (typeof req.body.target === "string") {
-          resultObj.target = req.body.target;
-        }
-
-      }
-
-      res.send(JSON.stringify(resultObj));
-
-    } catch (e) {
-      await logger.error("Console 서버 문제 생김 (rou_post_homeliaisonCrypto): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -7488,35 +7326,6 @@ DataRouter.prototype.rou_post_proposalGeneration = function () {
 
     } catch (e) {
       await logger.error("Console 서버 문제 생김 (rou_post_proposalGeneration): " + e.message);
-      console.log(e);
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_designerLevelMatrixSync = function () {
-  const instance = this;
-  const work = this.work;
-  const { equalJson, messageSend, dateToString, stringToDate, sleep } = this.mother;
-  let obj = {};
-  obj.link = [ "/designerLevelMatrixSync" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      const selfMongo = instance.mongo;
-      const result = await work.designerLevelMatrixSync(selfMongo);
-      if (!result) {
-        throw new Error("designer level matrix sync fail");
-      }
-      res.send(JSON.stringify({ message: "done" }));
-    } catch (e) {
-      await logger.error("Console 서버 문제 생김 (rou_post_designerLevelMatrixSync): " + e.message);
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
