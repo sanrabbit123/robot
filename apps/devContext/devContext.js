@@ -152,6 +152,8 @@ DevContext.prototype.launching = async function () {
     /*
     
     await this.MONGOCONSOLEC.connect();
+
+
     const returnHolidayArr = async () => {
       try {
         const endPoint0 = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo";
@@ -254,6 +256,9 @@ DevContext.prototype.launching = async function () {
     let thisDateString;
     let index;
 
+    console.log(holidayArr);
+
+
     if (!Array.isArray(holidayArr)) {
       throw new Error("request fail");
     }
@@ -324,7 +329,11 @@ DevContext.prototype.launching = async function () {
     }
 
     console.log(resultTong);
+
+
     await this.MONGOCONSOLEC.close();
+
+
     */
     
 
