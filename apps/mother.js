@@ -10,6 +10,7 @@ const Mother = function () {
   this.mongolocalinfo = "mongodb://" + infoObj.mongoinfo.user + ':' + infoObj.mongoinfo.password + '@' + "127.0.0.1" + ':' + String(infoObj.mongoinfo.port) + "/admin";
   this.mongotestinfo = "mongodb://" + infoObj.testinfo.user + ':' + infoObj.testinfo.password + '@' + infoObj.testinfo.host + ':' + String(infoObj.testinfo.port) + "/admin";
   this.mongosecondinfo = "mongodb://" + infoObj.secondinfo.user + ':' + infoObj.secondinfo.password + '@' + infoObj.secondinfo.host + ':' + String(infoObj.secondinfo.port) + "/admin";
+  this.mongocontentsinfo = "mongodb://" + infoObj.contentsinfo.user + ':' + infoObj.contentsinfo.password + '@' + infoObj.contentsinfo.host + ':' + String(infoObj.contentsinfo.port) + "/admin";
 
   this.mongo = require("mongodb").MongoClient;
 
