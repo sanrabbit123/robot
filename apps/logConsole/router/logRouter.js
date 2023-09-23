@@ -176,8 +176,6 @@ LogRouter.prototype.rou_get_Root = function () {
 LogRouter.prototype.rou_get_First = function () {
   const instance = this;
   const { diskReading, aliveMongo } = this.mother;
-  const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
-  const reflection = new MongoReflection();
   let obj = {};
   obj.link = "/:id";
   obj.func = async function (req, res, logger) {
@@ -198,9 +196,7 @@ LogRouter.prototype.rou_get_First = function () {
       } else if (req.params.id === "disk") {
 
         const disk = await diskReading();
-        reflection.frontReflection().then(() => {
-          return instance.dailyCampaign(instance.mongo);
-        }).then(() => {
+        instance.dailyCampaign(instance.mongo).then(() => {
           return instance.dailyAspirantCampaign(instance.mongo);
         }).then(() => {
           return instance.dailyChannel(instance.mongo);
@@ -329,6 +325,33 @@ LogRouter.prototype.rou_post_receiveLog = function () {
 
     } catch (e) {
       logger.error("Log Console 서버 문제 생김 (rou_post_receiveLog): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+LogRouter.prototype.rou_post_frontReflection = function () {
+  const instance = this;
+  const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
+  const reflection = new MongoReflection();
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/frontReflection" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      reflection.frontReflection().catch((err) => {
+        logger.error("Log Console 서버 문제 생김 (rou_post_frontReflection): " + err.message).catch((e) => { console.log(e); });
+      })
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      logger.error("Log Console 서버 문제 생김 (rou_post_frontReflection): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
