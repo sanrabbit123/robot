@@ -148,9 +148,11 @@ DevContext.prototype.launching = async function () {
     // const meta = new FacebookAPIs();
     // await meta.instagramList();
     
-    
 
-    
+
+    const res = await requestSystem("https://" + address.contentsinfo.host + ":3000/storeHoliday", { data: null }, { headers: { "Content-Type": "application/json" } });
+
+    console.log(res);
     
 
 

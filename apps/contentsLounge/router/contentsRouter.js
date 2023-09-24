@@ -108,7 +108,55 @@ ContentsRouter.prototype.rou_get_First = function () {
 
 ContentsRouter.prototype.rou_post_storeHoliday = function () {
   const instance = this;
-  const { fileSystem, equalJson } = this.mother;
+  const back = this.back;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  const returnHolidayArr = async () => {
+    try {
+      const endPoint0 = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo";
+      const endPoint1 = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo";
+      const key = "7VuaiHtcKan1rHFT1huoXCufMJYJnmRl0Y5j5E5dyNnrDu2+bNqF2CzcA6M9RZ6n7GTO9xV74nwHxkNv9bkn/Q==";
+      const totalRange = 5;
+      let result;
+      let holidayArr;
+      let thisYear;
+
+      thisYear = (new Date()).getFullYear();
+      holidayArr = [];
+
+      for (let i = 0; i < totalRange; i++) {
+        result = await requestSystem(endPoint0, {
+          solYear: (thisYear + i),
+          ServiceKey: key,
+          _type: "json",
+          numOfRows: 300,
+        }, { method: "get" });
+        for (let { isHoliday, locdate } of result.data.response.body.items.item) {
+          if (/Y/gi.test(isHoliday)) {
+            holidayArr.push(locdate);
+          }
+        }    
+        result = await requestSystem(endPoint1, {
+          solYear: (thisYear + i),
+          ServiceKey: key,
+          _type: "json",
+          numOfRows: 300,
+        }, { method: "get" });
+        for (let { isHoliday, locdate } of result.data.response.body.items.item) {
+          if (/Y/gi.test(isHoliday)) {
+            holidayArr.push(locdate);
+          }
+        }
+      }
+
+      holidayArr = [ ...new Set(holidayArr.map((num) => { return String(num) })) ].map((str) => { return Number(str) });
+      holidayArr.sort((a, b) => { return a - b });
+      holidayArr = holidayArr.map((num) => { return String(num).slice(0, 4) + "-" + String(num).slice(4, 6) + "-" + String(num).slice(6, 8) })
+
+      return holidayArr;
+    } catch (e) {
+      return null;
+    }
+  }
   let obj;
   obj = {};
   obj.link = [ "/storeHoliday" ];
@@ -120,13 +168,60 @@ ContentsRouter.prototype.rou_post_storeHoliday = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      
-      
+      const selfMongo = instance.mongolocal;
+      const collection = "holidayList";
+      const keyConst = "holiday_";
 
+      (async () => {
+        try {
+          let resultHolidayArr;
+          let safeNum;
+          let resultJson;
+          let key;
+          let thisDateString;
+          let thisDateStringArr;
+          let rows;
 
+          resultHolidayArr = await returnHolidayArr();
+          safeNum = 0;
+          while (!Array.isArray(resultHolidayArr)) {
+            if (safeNum > 100) {
+              break;
+            }
+            await sleep(3000);
+            resultHolidayArr = await returnHolidayArr();
+            safeNum++;
+          }
 
+          thisDateString = dateToString(dateToString);
+          thisDateStringArr = thisDateString.split("-");
 
-      res.send(JSON.stringify({ message: "done" }));
+          key = keyConst + thisDateStringArr[0] + thisDateStringArr[1];
+
+          resultJson = {
+            key,
+            date: new Date(),
+            data: resultHolidayArr,
+          };
+
+          rows = await back.mongoRead(collection, { key }, { selfMongo });
+          if (rows.length !== 0) {
+            await back.mongoDelete(collection, { key }, { selfMongo });
+          }
+          await back.mongoCreate(collection, resultJson, { selfMongo });
+
+          return true;
+        } catch (e) {
+          console.log(e);
+          logger.error("Contents lounge 서버 문제 생김 (rou_post_storeHoliday): " + e.message).catch((e) => { console.log(e); });
+          return false;
+        }
+      })().catch((err) => {
+        console.log(err);
+        logger.error("Contents lounge 서버 문제 생김 (rou_post_storeHoliday): " + err.message).catch((e) => { console.log(e); });
+      });
+
+      res.send({ message: "will do" });
     } catch (e) {
       logger.error("Contents lounge 서버 문제 생김 (rou_post_storeHoliday): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
