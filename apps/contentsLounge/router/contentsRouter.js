@@ -230,6 +230,46 @@ ContentsRouter.prototype.rou_post_storeHoliday = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_getHoliday = function () {
+  const instance = this;
+  const back = this.back;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/getHoliday" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolocal;
+      const collection = "holidayList";
+      let rows;
+      let oneYearsAgo;
+
+      oneYearsAgo = new Date();
+      oneYearsAgo.setFullYear(oneYearsAgo.getFullYear() - 1);
+
+      rows = await back.mongoRead(collection, { date: { $gte: oneYearsAgo } }, { selfMongo });
+      rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+
+      if (rows.length > 0) {
+        res.send(JSON.stringify({ holiday: rows[0].data }));
+      } else {
+        res.send(JSON.stringify({ holiday: [] }));
+      }
+
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_getHoliday): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 ContentsRouter.prototype.rou_post_generalFileUpload = function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink } = this.mother;
