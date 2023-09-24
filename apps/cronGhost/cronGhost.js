@@ -47,6 +47,7 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
       { name: "logConsole", protocol: "https:", host: address.testinfo.host, port: generalPort, },
       { name: "secondGhost", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
       { name: "transferLounge", protocol: "https:", host: address.transinfo.host, port: generalPort, },
+      { name: "contentsLounge", protocol: "https:", host: address.contentsinfo.host, port: generalPort, },
       { name: "staticLounge", protocol: "https:", host: address.officeinfo.ghost.host, port: generalPort, },
     ];
 
@@ -62,6 +63,8 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
     for (let { name, protocol, host, port } of targets) {
 
       thisObj = instances.find((obj) => { return obj.name === name; });
+
+      console.log(thisObj);
 
       boo = false;
       if (thisObj !== undefined) {

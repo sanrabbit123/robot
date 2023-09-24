@@ -155,6 +155,7 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
       secondGhost: { info: "secondinfo", key: "se0000" },
       pythonCloud: { info: "pythoninfo", key: "py0000" },
       transferLounge: { info: "transinfo", key: "tr0000" },
+      contentsLounge: { info: "contentsinfo", key: "ct0000" },
     };
     const idKeyword = "alive_";
     const region = "ap-northeast-2";

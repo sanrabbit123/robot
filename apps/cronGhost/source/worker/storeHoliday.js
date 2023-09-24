@@ -1,5 +1,5 @@
 const dayId = [
-  "d043",
+  "d045",
 ];
 
 const hourId = [];
@@ -8,10 +8,10 @@ const worker = async function (package) {
   const { mother, address, back, mongo, mongolocal } = package;
   const { requestSystem, messageLog, errorLog, emergencyAlarm } = mother;
   try {
-    await requestSystem("https://" + address.testinfo.host + ":" + String(3000) + "/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
+    await requestSystem("https://" + address.contentsinfo.host + ":" + String(3000) + "/storeHoliday", { data: null }, { headers: { "Content-Type": "application/json" } });
     return true;
   } catch (e) {
-    await emergencyAlarm("front reflection error : " + e.message);
+    await emergencyAlarm("store holiday error : " + e.message);
     return false;
   }
 }
