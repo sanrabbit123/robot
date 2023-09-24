@@ -115,7 +115,7 @@ ContentsRouter.prototype.rou_post_storeHoliday = function () {
       const endPoint0 = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo";
       const endPoint1 = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo";
       const key = "7VuaiHtcKan1rHFT1huoXCufMJYJnmRl0Y5j5E5dyNnrDu2+bNqF2CzcA6M9RZ6n7GTO9xV74nwHxkNv9bkn/Q==";
-      const totalRange = 5;
+      const totalRange = 3;
       let result;
       let holidayArr;
       let thisYear;
@@ -146,9 +146,6 @@ ContentsRouter.prototype.rou_post_storeHoliday = function () {
             holidayArr.push(locdate);
           }
         }
-
-        console.log(holidayArr);
-
       }
 
       holidayArr = [ ...new Set(holidayArr.map((num) => { return String(num) })) ].map((str) => { return Number(str) });
@@ -187,12 +184,16 @@ ContentsRouter.prototype.rou_post_storeHoliday = function () {
 
           resultHolidayArr = await returnHolidayArr();
           safeNum = 0;
+
+          console.log(resultHolidayArr);
+
           while (!Array.isArray(resultHolidayArr)) {
             if (safeNum > 100) {
               break;
             }
-            await sleep(3000);
+            await sleep(1000);
             resultHolidayArr = await returnHolidayArr();
+            console.log(safeNum);
             safeNum++;
           }
 
