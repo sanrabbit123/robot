@@ -150,13 +150,6 @@ DevContext.prototype.launching = async function () {
     
 
 
-
-    
-
-
-    
-
-
     
     
     /*
@@ -165,14 +158,13 @@ DevContext.prototype.launching = async function () {
 
     const returnGoogleCalendarArr = async () => {
       try {
-        const calendar = new GoogleCalendar();
-        const factors = await calendar.listEvents("homeliaisonContents");
-        const targets = factors.filter((o) => { return /Web\([^\)]+\)/gi.test(o.title) });
+        const res = await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsCalendar", { mode: "get" }, { headers: { "Content-Type": "application/json" } });
+        const targets = equalJson(JSON.stringify(res.data));
         let realTargets;
         let thisId;
         realTargets = [];
         for (let obj of targets) {
-          thisId = /Web\(([^\)]+)\)/gi.exec(obj.title)[1];
+          thisId = obj.pid;
           realTargets.push({
             pid: thisId,
             date: stringToDate(dateToString(obj.date.start))
