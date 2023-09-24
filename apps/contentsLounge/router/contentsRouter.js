@@ -134,7 +134,7 @@ ContentsRouter.prototype.rou_post_storeHoliday = function () {
           if (/Y/gi.test(isHoliday)) {
             holidayArr.push(locdate);
           }
-        }    
+        }
         result = await requestSystem(endPoint1, {
           solYear: (thisYear + i),
           ServiceKey: key,
@@ -146,6 +146,9 @@ ContentsRouter.prototype.rou_post_storeHoliday = function () {
             holidayArr.push(locdate);
           }
         }
+
+        console.log(holidayArr);
+
       }
 
       holidayArr = [ ...new Set(holidayArr.map((num) => { return String(num) })) ].map((str) => { return Number(str) });
