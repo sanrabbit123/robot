@@ -1045,6 +1045,8 @@ DataConsole.prototype.connect = async function () {
               instance.address.officeinfo.ghost.host + ":3000",
               instance.address.transinfo.host,
               instance.address.transinfo.host + ":3000",
+              instance.address.contentsinfo.host,
+              instance.address.contentsinfo.host + ":3000",
               "localhost:3000",
               "localhost:8080",
               "stdpay.inicis.com",
@@ -1055,6 +1057,7 @@ DataConsole.prototype.connect = async function () {
               "fcmobile.inicis.com",
               "172.30.1.90:3000",
               "172.30.1.37:3000",
+              "192.168.0.90:3000",
             ];
             __wallLogicBoo = false;
             __originTarget = req.headers["origin"] || "invaild";

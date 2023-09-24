@@ -22,12 +22,12 @@ ContentsLounge.prototype.contentsConnect = async function () {
   const express = require("express");
   const app = express();
   const useragent = require("express-useragent");
-  const staticFolder = process.env.HOME + "/samba";
+  const staticFolder = process.env.HOME + "/static";
   const fs = require("fs");
   const logKeyword = "expressLog";
   const logFolder = process.env.HOME + "/server/log";
   const thisLogFile = `${logFolder}/${logKeyword}_${(new Date()).valueOf()}.log`;
-  const serverName = "static";
+  const serverName = "contents";
 
   app.use(useragent.express());
   app.use(express.json({ limit : "50mb" }));
@@ -46,7 +46,7 @@ ContentsLounge.prototype.contentsConnect = async function () {
   
   try {
     console.log(``);
-    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching static lounge ==============`);
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching contents lounge ==============`);
     console.log(``);
 
     //set mongo connetion
@@ -67,7 +67,7 @@ ContentsLounge.prototype.contentsConnect = async function () {
     let certDir, keyDir, caDir;
 
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + this.address.officeinfo.ghost.host;
+    pemsLink = process.cwd() + "/pems/" + this.address.contentsinfo.host;
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
@@ -92,8 +92,8 @@ ContentsLounge.prototype.contentsConnect = async function () {
     pems.allowHTTP1 = true;
 
     //set router
-    const StaticRouter = require(`${this.dir}/router/staticRouter.js`);
-    const router = new StaticRouter(MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC);
+    const ContentsRouter = require(`${this.dir}/router/contentsRouter.js`);
+    const router = new ContentsRouter(MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC);
     await router.setMembers();
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);

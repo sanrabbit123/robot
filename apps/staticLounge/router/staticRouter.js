@@ -83,10 +83,13 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
     this.address.backinfo.host,
     this.address.pythoninfo.host,
     this.address.testinfo.host,
+    this.address.contentsinfo.host,
     this.address.officeinfo.ghost.host,
     "home-liaison.servehttp.com",
     "localhost:3000",
     "172.30.1.90:3000",
+    "172.30.1.37:3000",
+    "192.168.0.90:3000",
   ];
 }
 

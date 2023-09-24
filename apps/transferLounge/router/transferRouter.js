@@ -42,11 +42,13 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
     this.address.backinfo.host,
     this.address.pythoninfo.host,
     this.address.testinfo.host,
+    this.address.contentsinfo.host,
     this.address.officeinfo.ghost.host,
     "home-liaison.servehttp.com",
     "localhost:3000",
     "172.30.1.90:3000",
     "172.30.1.37:3000",
+    "192.168.0.90:3000",
   ];
 
 }
@@ -1757,7 +1759,6 @@ TransferRouter.prototype.rou_post_generalFileUpload = function () {
         try {
           if (err) {
             throw new Error(err);
-            return;
           } else {
             const toArr = JSON.parse(fields.toArr).map((path) => { return hangul.fixString(path); });
             let filesKey, fromArr, num;

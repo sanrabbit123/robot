@@ -299,6 +299,16 @@ Robot.prototype.transferConnect = async function () {
   }
 }
 
+Robot.prototype.contentsConnect = async function () {
+  try {
+    const ContentsLounge = require(process.cwd() + "/apps/contentsLounge/contentsLounge.js");
+    const app = new ContentsLounge();
+    await app.contentsConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.staticConnect = async function () {
   try {
     const StaticLounge = require(process.cwd() + "/apps/staticLounge/staticLounge.js");
@@ -1256,6 +1266,13 @@ const MENU = {
   photo: async function () {
     try {
       await robot.photoConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  contents: async function () {
+    try {
+      await robot.contentsConnect();
     } catch (e) {
       console.log(e);
     }
