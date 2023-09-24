@@ -184,20 +184,16 @@ ContentsRouter.prototype.rou_post_storeHoliday = function () {
 
           resultHolidayArr = await returnHolidayArr();
           safeNum = 0;
-
-          console.log(resultHolidayArr);
-
           while (!Array.isArray(resultHolidayArr)) {
             if (safeNum > 100) {
               break;
             }
             await sleep(1000);
             resultHolidayArr = await returnHolidayArr();
-            console.log(safeNum);
             safeNum++;
           }
 
-          thisDateString = dateToString(dateToString);
+          thisDateString = dateToString(new Date());
           thisDateStringArr = thisDateString.split("-");
 
           key = keyConst + thisDateStringArr[0] + thisDateStringArr[1];
