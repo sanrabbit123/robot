@@ -72,7 +72,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
-  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition, linkToString, stringToLink, aliveLog, cronLog, alertLog, homeliaisonAnalytics, aliveMongo } = this.mother;
+  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition, linkToString, stringToLink, aliveLog, cronLog, alertLog, homeliaisonAnalytics, aliveMongo, getHoliday } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -150,8 +150,10 @@ DevContext.prototype.launching = async function () {
     
 
 
-    // const res = await requestSystem("https://" + address.contentsinfo.host + ":3000/storeHoliday", { data: null }, { headers: { "Content-Type": "application/json" } });
-    // console.log(res);
+
+    
+
+
     
 
 
@@ -161,54 +163,6 @@ DevContext.prototype.launching = async function () {
     
     await this.MONGOCONSOLEC.connect();
 
-
-    const returnHolidayArr = async () => {
-      try {
-        const endPoint0 = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo";
-        const endPoint1 = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo";
-        const key = "7VuaiHtcKan1rHFT1huoXCufMJYJnmRl0Y5j5E5dyNnrDu2+bNqF2CzcA6M9RZ6n7GTO9xV74nwHxkNv9bkn/Q==";
-        const totalRange = 3;
-        let res;
-        let holidayArr;
-        let thisYear;
-
-        thisYear = (new Date()).getFullYear();
-        holidayArr = [];
-        for (let i = 0; i < totalRange; i++) {
-          res = await requestSystem(endPoint0, {
-            solYear: (thisYear + i),
-            ServiceKey: key,
-            _type: "json",
-            numOfRows: 300,
-          }, { method: "get" });
-          for (let { isHoliday, locdate } of res.data.response.body.items.item) {
-            if (/Y/gi.test(isHoliday)) {
-              holidayArr.push(locdate);
-            }
-          }    
-          res = await requestSystem(endPoint1, {
-            solYear: (thisYear + i),
-            ServiceKey: key,
-            _type: "json",
-            numOfRows: 300,
-          }, { method: "get" });
-          for (let { isHoliday, locdate } of res.data.response.body.items.item) {
-            if (/Y/gi.test(isHoliday)) {
-              holidayArr.push(locdate);
-            }
-          }
-        }
-    
-        holidayArr = [ ...new Set(holidayArr.map((num) => { return String(num) })) ].map((str) => { return Number(str) });
-        holidayArr.sort((a, b) => { return a - b });
-        holidayArr = holidayArr.map((num) => { return String(num).slice(0, 4) + "-" + String(num).slice(4, 6) + "-" + String(num).slice(6, 8) })
-    
-        return holidayArr;
-      } catch (e) {
-        console.log(e);
-        return null;
-      }
-    }
     const returnGoogleCalendarArr = async () => {
       try {
         const calendar = new GoogleCalendar();
@@ -246,7 +200,7 @@ DevContext.prototype.launching = async function () {
       "p280",
     ];
     const safeNum = 1000;
-    const holidayArr = await returnHolidayArr();
+    const holidayArr = await getHoliday(true);
     const alreadyArr = await returnGoogleCalendarArr();
     let contentsArr;
     let contentsArrPid;
@@ -264,12 +218,6 @@ DevContext.prototype.launching = async function () {
     let thisDateString;
     let index;
 
-    console.log(holidayArr);
-
-
-    if (!Array.isArray(holidayArr)) {
-      throw new Error("request fail");
-    }
     if (!Array.isArray(alreadyArr)) {
       throw new Error("request fail");
     }
@@ -336,13 +284,13 @@ DevContext.prototype.launching = async function () {
       }
     }
 
-    console.log(resultTong);
+    // console.log(resultTong);
 
 
     await this.MONGOCONSOLEC.close();
 
-
     */
+
     
 
 

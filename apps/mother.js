@@ -3946,6 +3946,34 @@ Mother.prototype.messageLog = function (text) {
   });
 }
 
+Mother.prototype.getHoliday = function (stringMode = false) {
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const targetUrl = "https://" + ADDRESS.contentsinfo.host + ":3000/getHoliday";
+  const axios = require("axios");
+  return new Promise((resolve, reject) => {
+    axios.post(targetUrl, { data: null }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      if (res.status !== 200) {
+        reject(res);
+      } else {
+        const result = res.data.holiday;
+        if (stringMode) {
+          resolve(result);
+        } else {
+          resolve(result.map((str) => {
+            const arr = str.split("-");
+            const year = Number(arr[0]);
+            const month = Number(arr[1]);
+            const date = Number(arr[2]);
+            return new Date(year, month - 1, date, 9, 0, 0);
+          }));
+        }
+      }
+    }).catch((err) => {
+      reject(err);
+    });
+  });
+}
+
 Mother.prototype.uniqueValue = function (type = "number") {
   if (type === "number") {
     return Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000)));

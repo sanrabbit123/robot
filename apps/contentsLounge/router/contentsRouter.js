@@ -221,7 +221,7 @@ ContentsRouter.prototype.rou_post_storeHoliday = function () {
         logger.error("Contents lounge 서버 문제 생김 (rou_post_storeHoliday): " + err.message).catch((e) => { console.log(e); });
       });
 
-      res.send({ message: "will do" });
+      res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       logger.error("Contents lounge 서버 문제 생김 (rou_post_storeHoliday): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -264,6 +264,54 @@ ContentsRouter.prototype.rou_post_getHoliday = function () {
 
     } catch (e) {
       logger.error("Contents lounge 서버 문제 생김 (rou_post_getHoliday): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+ContentsRouter.prototype.rou_post_contentsCalendar = function () {
+  const instance = this;
+  const calendar = this.calendar;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/contentsCalendar" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invaild post");
+      }
+      const { mode } = equalJson(req.body);
+      const calendarName = "homeliaisonContents";
+      const factors = await calendar.listEvents(calendarName);
+      const targets = factors.filter((o) => { return /(Web|Blog|Instagram|Youtube)\([^\)]+\)/gi.test(o.title) });
+      let thisId;
+      let thisType;
+      let tempArr;
+
+      for (let obj of targets) {
+        tempArr = /(Web|Blog|Instagram|Youtube)\(([^\)]+)\)/gi.exec(obj.title);
+        thisType = tempArr[1].toLowerCase();
+        thisId = tempArr[2];
+        obj.type = thisType;
+        obj.pid = thisId;
+      }
+
+      if (mode === "get") {
+        res.send(JSON.stringify(targets));
+      } else {
+        throw new Error("invaild mode");
+      }
+
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_contentsCalendar): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
