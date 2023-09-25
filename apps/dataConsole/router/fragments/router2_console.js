@@ -3368,6 +3368,7 @@ DataRouter.prototype.rou_post_getDesignerGhost = function () {
       let result, final, tempArr, tempObj;
       let contentsResponse;
 
+      
       contentsResponse = await requestSystem("https://" + address.contentsinfo.host + ":3000/foreContents", { mode: "get", desid }, { headers: { "Content-Type": "application/json" } });
       if (!Array.isArray(contentsResponse.data)) {
         result = [];
