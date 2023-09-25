@@ -362,6 +362,8 @@ ContentsRouter.prototype.rou_post_contentsCalendar = function () {
               obj.desid = thisDesid;
             }
 
+            res.send(JSON.stringify(targets));
+
           } else {
             res.send(JSON.stringify(targets));
           }
