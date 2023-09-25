@@ -2076,13 +2076,27 @@ DataRouter.prototype.rou_post_sendSlack = function () {
       }
       const { message, channel } = req.body;
       let text;
+      let voiceBoo;
 
       text = message.replace(/__equal__/g, '=').replace(/__amper__/g, '&').replace(/__query__/g, '?').replace(/__plus__/g, '+');
+      if (req.body.voice !== undefined) {
+        if (req.body.voice === null) {
+          voiceBoo = false;
+        } else if (req.body.voice === "false") {
+          voiceBoo = false;
+        } else if (req.body.voice === false) {
+          voiceBoo = false;
+        } else {
+          voiceBoo = true;
+        }
+      } else {
+        voiceBoo = false;
+      }
 
       if (channel === "#error_log") {
         await logger.error(text);
       } else {
-        await messageSend({ text, channel, voice: (req.body.voice !== undefined ? true : false), target: (req.body.target !== undefined ? equalJson(req.body).target : null), fairy: false });
+        await messageSend({ text, channel, voice: voiceBoo, target: (req.body.target !== undefined ? equalJson(req.body).target : null), fairy: false });
       }
 
       res.send(JSON.stringify({ message: "success" }));
