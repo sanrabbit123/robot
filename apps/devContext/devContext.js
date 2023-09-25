@@ -154,80 +154,18 @@ DevContext.prototype.launching = async function () {
     
 
 
-    const ContentsCalculator = require(`${process.cwd() + "/apps/contentsLounge"}/router/contentsCalculator.js`);
-    const contents = new ContentsCalculator();
-    const forecastSchedule = await contents.settingWebSchedule(this.MONGOC, { error: () => {} });
-
 
     
-
+    
     
 
-
-
-
-
-
-
-
-
-    
-
-
-
-    
-
-
+  
 
     
 
 
 
 
-
-    
-    
-
-    // const { officeinfo: { widsign: { id, key, endPoint } } } = address;
-    // let widsignRes;
-    // let token;
-    // let num;
-    // let title;
-    // let targetFormId;
-    // let target;
-    // let safeNum;
-
-    // widsignRes = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
-    // token = widsignRes.data.access_token;
-
-    // num = 1;
-    // title = "2023디자인서비스제휴계약서_000디자이너_YYMMDD";
-
-    // num = 1;
-    // safeNum = 0;
-    // do {
-    //   widsignRes = await requestSystem(endPoint + "/v2/form", { page: num, page_size: 30, title }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-    //   target = widsignRes.data.result.filter((obj) => { return obj.title === title });
-    //   num++;
-    //   safeNum++;
-    //   if (safeNum > 1000) {
-    //     throw new Error("title name error");
-    //   }
-    // } while (target.length === 0);
-
-    // [ { id: targetFormId } ] = target;
-
-
-    // widsignRes = await requestSystem(endPoint + "/v2/form/detail", { form_id: targetFormId }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-
-    // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/partnership2.json`, widsignRes.data ]);
-
-
-    // console.log(widsignRes.data);
-
-
-
-    
 
     
 

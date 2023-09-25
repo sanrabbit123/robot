@@ -126,6 +126,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
         client = clientCase.client;
         requestNumber = 0;
+
         if ([ "부재중 알림 발송", "상세 설문 대기" ].includes(client.requests[requestNumber].analytics.response.action.value)) {
           action = "부재중 제안 발송";
         } else {
@@ -157,6 +158,9 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
             if (typeof service === "object") {
               if (Array.isArray(service.xValue)) {
                 updateQuery["service.xValue"] = (service.xValue.length === 0 ? "B" : service.xValue[0].xValue);
+                if (client.requests[requestNumber].analytics.response.service !== null && typeof client.requests[requestNumber].analytics.response.service.xValue === "string") {
+                  updateQuery["service.xValue"] = client.requests[requestNumber].analytics.response.service.xValue;
+                }
               } else {
                 updateQuery["service.xValue"] = "B";
               }

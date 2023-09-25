@@ -631,6 +631,7 @@ PortfolioFilter.prototype.additionalRepair = async function (pid, tNumber) {
 PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const instance = this;
   const back = this.back;
+  const address = this.address;
   const { fileSystem, shellExec, shellLink, consoleQ, appleScript, sleep, messageSend, requestSystem, ghostFileUpload, mongo, mongocontentsinfo } = this.mother;
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
@@ -663,9 +664,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       throw new Error(errorMessage);
     }
     arr = new RawArray(arr);
-
     await selfMongo.connect();
-
     let folderPath;
     let designers, consoleInput, targetDesigner, googleFolderName;
     let adobe, tempAppList;
@@ -914,14 +913,17 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           await messageSend({ text: `${targetDesigner.designer} 디자이너님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
         }
 
+        console.log(`${designer}D raw to raw done`);
+
       }
 
     }
 
-    await selfMongo.close();
-
+    await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsSchedule", { data: null }, { headers: { "Content-Type": "application/json" } });
+    
   } catch (e) {
     console.log(e);
+  } finally {
     await selfMongo.close();
   }
 }

@@ -212,6 +212,7 @@ ContentsCalculator.prototype.settingWebSchedule = async function (selfMongo, log
       if (result === null) {
         throw new Error("make schedule fail");
       }
+      await sleep(1000);
     }
 
     await logger.log("setting web schedule success : " + JSON.stringify(new Date()));
