@@ -74,6 +74,7 @@ const SecondGhost = function (mother = null, back = null, address = null) {
       alive: "-965706823",
       error: "-952575178",
       cron: "-977560893",
+      checklist: "-4085471967",
       general: "-771644766",
       emergency: "-754872890",
       consulting: "-856907489",

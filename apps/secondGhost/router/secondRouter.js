@@ -259,7 +259,6 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       }
 
       if (req.body.voice === true || req.body.voice === "true") {
-        // requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.wss) + "/textToVoice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
         requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/textToVoice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
       }
 
@@ -271,6 +270,8 @@ SecondRouter.prototype.rou_post_messageLog = function () {
         thisChannel = "cron";
       } else if (/alert_log/gi.test(channel)) {
         thisChannel = "error";
+      } else if (/checklist_log/gi.test(channel)) {
+        thisChannel = "checklist";
       } else if (/consulting/gi.test(channel)) {
         thisChannel = "consulting";
       } else if (/operation/gi.test(channel)) {
