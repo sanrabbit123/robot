@@ -160,12 +160,6 @@ DevContext.prototype.launching = async function () {
 
 
     
-    const responseResult = await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsSchedule", { data: null }, { headers: { "Content-Type": "application/json" } });
-    console.log(responseResult);
-    
-
-
-
 
 
 
