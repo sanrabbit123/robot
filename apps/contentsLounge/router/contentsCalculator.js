@@ -15,7 +15,7 @@ const ContentsCalculator = function () {
   this.sheets = new GoogleSheet();
   this.calendar = new GoogleCalendar();
 
-  this.calendarName = "homeliaisonContents"
+  this.calendarName = "homeliaisonContents";
 }
 
 ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, logger) {

@@ -275,6 +275,7 @@ ContentsRouter.prototype.rou_post_getHoliday = function () {
 
 ContentsRouter.prototype.rou_post_contentsCalendar = function () {
   const instance = this;
+  const back = this.back;
   const calendar = this.calendar;
   const { calendarName } = this;
   const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
@@ -293,11 +294,21 @@ ContentsRouter.prototype.rou_post_contentsCalendar = function () {
         throw new Error("invaild post");
       }
       const { mode } = equalJson(req.body);
+      const selfCoreMongo = instance.mongo;
+      const selfLocalMongo = instance.mongolocal;
+      const collection = "foreContents";
       const factors = await calendar.listEvents(calendarName);
       const targets = factors.filter((o) => { return /(Web|Blog|Instagram|Youtube)\([^\)]+\)/gi.test(o.title) });
       let thisId;
       let thisType;
       let tempArr;
+      let contentsArr, projects;
+      let proidArr;
+      let whereQuery;
+      let foreContents;
+      let thisObj;
+      let thisProid, thisCliid, thisDesid;
+      let thisProject;
 
       for (let obj of targets) {
         tempArr = /(Web|Blog|Instagram|Youtube)\(([^\)]+)\)/gi.exec(obj.title);
@@ -308,7 +319,55 @@ ContentsRouter.prototype.rou_post_contentsCalendar = function () {
       }
 
       if (mode === "get") {
-        res.send(JSON.stringify(targets));
+        if (req.body.detailMode === "true" || req.body.detailMode === true) {
+          if (targets.length > 0) {
+            
+            whereQuery = {};
+            whereQuery["$or"] = targets.map((o) => { return o.pid }).map((pid) => { return { "contents.portfolio.pid": pid } });
+            contentsArr = await back.getContentsArrByQuery(whereQuery, { selfMongo: selfCoreMongo });
+            foreContents = await back.mongoRead(collection, {}, { selfMongo: selfLocalMongo });
+
+            proidArr = contentsArr.toNormal().map((c) => { return c.proid });
+            proidArr = proidArr.concat(foreContents.filter((o) => { return !o.exception }).map((o) => { return o.proid }));
+            proidArr = [ ...new Set(proidArr) ];
+            proidArr = proidArr.map((p) => { return p.trim(); }).filter((p) => { return p !== "" });
+
+            if (proidArr.length > 0) {
+              projects = (await back.getProjectsByQuery({ $or: proidArr.map((proid) => { return { proid } }) }, { selfMongo: selfCoreMongo })).toNormal();
+            } else {
+              projects = [];
+            }
+
+            for (let obj of targets) {
+              thisObj = contentsArr.toNormal().find((c) => { return c.contents.portfolio.pid === obj.pid });
+              if (thisObj === undefined) {
+                thisObj = foreContents.find((c) => { return c.pid === obj.pid });
+                thisProid = thisObj.proid;
+              } else {
+                thisProid = thisObj.proid;
+              }
+
+              if (thisProid !== undefined && thisProid !== null && thisProid !== "") {
+                thisProject = projects.find((p) => { return p.proid === thisProid });
+                thisCliid = thisProject.cliid;
+                thisDesid = thisProject.desid;
+              } else {
+                thisProid = "";
+                thisCliid = "";
+                thisDesid = "";
+              }
+
+              obj.proid = thisProid;
+              obj.cliid = thisCliid;
+              obj.desid = thisDesid;
+            }
+
+          } else {
+            res.send(JSON.stringify(targets));
+          }
+        } else {
+          res.send(JSON.stringify(targets));
+        }
       } else {
         throw new Error("invaild mode");
       }
