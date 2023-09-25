@@ -7,6 +7,7 @@ const ContentsRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) 
   const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
+  const ContentsCalculator = require(`${process.cwd() + "/apps/contentsLounge"}/router/contentsCalculator.js`);
 
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -25,8 +26,10 @@ const ContentsRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) 
   this.docs = new GoogleDocs();
   this.sheets = new GoogleSheet();
   this.calendar = new GoogleCalendar();
+  this.calcaulator = new ContentsCalculator();
 
   this.staticConst = process.env.HOME + "/static";
+  this.calendarName = "homeliaisonContents"
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -273,6 +276,7 @@ ContentsRouter.prototype.rou_post_getHoliday = function () {
 ContentsRouter.prototype.rou_post_contentsCalendar = function () {
   const instance = this;
   const calendar = this.calendar;
+  const { calendarName } = this;
   const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
   let obj;
   obj = {};
@@ -289,7 +293,6 @@ ContentsRouter.prototype.rou_post_contentsCalendar = function () {
         throw new Error("invaild post");
       }
       const { mode } = equalJson(req.body);
-      const calendarName = "homeliaisonContents";
       const factors = await calendar.listEvents(calendarName);
       const targets = factors.filter((o) => { return /(Web|Blog|Instagram|Youtube)\([^\)]+\)/gi.test(o.title) });
       let thisId;
@@ -450,6 +453,43 @@ ContentsRouter.prototype.rou_post_generalFileUpload = function () {
       });
     } catch (e) {
       logger.error("Contents lounge 서버 문제 생김 (rou_post_generalFileUpload): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+ContentsRouter.prototype.rou_post_contentsSchedule = function () {
+  const instance = this;
+  const calcaulator = this.calcaulator;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/contentsSchedule" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfCoreMongo = instance.mongo;
+
+      calcaulator.settingWebSchedule(selfCoreMongo, logger).then((resultMessage) => {
+        if (resultMessage.message !== "done") {
+          throw new Error("setting web schedule fail");
+        }
+        
+
+      }).catch((err) => {
+        logger.error("Contents lounge 서버 문제 생김 (rou_post_contentsSchedule): " + err.message).catch((e) => { console.log(e); });
+        console.log(err);
+      });
+
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_contentsSchedule): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

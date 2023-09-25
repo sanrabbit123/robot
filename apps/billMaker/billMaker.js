@@ -5619,7 +5619,6 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
         [ calculate, commission ] = BillMaker.designerCalculation(refreshTotalAmountRaw, classification, project.process.calculation.percentage, client, { toArray: true });
         refreshTotalAmount = Math.floor(calculate / 10) * 10;
 
-
         projectWhereQuery = { proid };
         projectUpdateQuery = {};
 

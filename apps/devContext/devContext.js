@@ -149,143 +149,35 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
     // const meta = new FacebookAPIs();
     // await meta.instagramList();
     
 
 
+    const ContentsCalculator = require(`${process.cwd() + "/apps/contentsLounge"}/router/contentsCalculator.js`);
+    const contents = new ContentsCalculator();
+    const forecastSchedule = await contents.settingWebSchedule(this.MONGOC, { error: () => {} });
+
 
     
 
     
+
+
+
+
+
+
+
+
+
     
-    /*
+
+
+
     
-    const returnGoogleCalendarArr = async () => {
-      try {
-        const res = await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsCalendar", { mode: "get" }, { headers: { "Content-Type": "application/json" } });
-        const targets = equalJson(JSON.stringify(res.data));
-        let realTargets;
-        let thisId;
-        realTargets = [];
-        for (let obj of targets) {
-          thisId = obj.pid;
-          realTargets.push({
-            pid: thisId,
-            date: stringToDate(dateToString(obj.date.start))
-          });
-        }
-        return realTargets;
-      } catch (e) {
-        console.log(e);
-        return null;
-      }
-    }
-    const selfMongo = this.MONGOC;
-    const targetDayNumbers = [ 3, 5 ];
-    const safeNum = 1000;
-    const holidayArr = await getHoliday(true);
-    const alreadyArr = await returnGoogleCalendarArr();
-    let contentsArr;
-    let contentsArrPid;
-    let foreContentsArr;
-    let foreContentsArrPid;
-    let pidArr;
-    let resultTong;
-    let contentsArrResult, foreContentsResult;
-    let thisObj;
-    let projects;
-    let proid;
-    let runner;
-    let number;
-    let thisDayNumber;
-    let thisDateString;
-    let index;
-    let exceptionPids;
 
-    if (!Array.isArray(alreadyArr)) {
-      throw new Error("request fail");
-    }
 
-    contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
-    contentsArr = contentsArr.toNormal();
-    contentsArrPid = contentsArr.map(({ contents: { portfolio: { pid } } }) => { return pid });
-
-    foreContentsArr = (await requestSystem("https://" + address.contentsinfo.host + ":3000/foreContents", { mode: "get" }, { headers: { "Content-Type": "application/json" } })).data;
-    foreContentsArrPid = foreContentsArr.map(({ pid }) => { return pid });
-
-    exceptionPids = [
-      "p99",
-      "p100",
-      "p104",
-      "p111",
-      "p128",
-      "p145",
-      "p233",
-      "p241",
-      "p280",
-    ]
-
-    pidArr = contentsArrPid.concat(foreContentsArrPid);
-    pidArr = [ ...new Set(pidArr) ].filter((id) => { return /^p/gi.test(id) });
-    pidArr.sort((a, b) => { return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, '')) });
-
-    resultTong = [];
-    for (let pid of pidArr) {
-      if (!exceptionPids.includes(pid)) {
-        thisObj = { pid, proid: "" };
-        contentsArrResult = contentsArr.findIndex((obj) => { return obj.contents.portfolio.pid === pid });
-        foreContentsResult = foreContentsArr.findIndex((obj) => { return obj.pid === pid });
-        if (contentsArrResult === -1) {
-          foreContentsResult = foreContentsArr.find((obj) => { return obj.pid === pid });
-          if (foreContentsResult !== undefined) {
-            thisObj.proid = foreContentsResult.proid;
-            resultTong.push(equalJson(JSON.stringify(thisObj)));
-          }
-        }
-      }
-    }
-
-    projects = (await back.getProjectsByQuery({ $or: resultTong.map(({ proid }) => { return { proid } }) }, { selfMongo })).toNormal();
-    for (let obj of resultTong) {
-      proid = obj.proid;
-      obj.project = projects.find((p) => { return p.proid === proid });
-      obj.foreCast = null;
-    }
-
-    resultTong = resultTong.filter((o) => {
-      return !alreadyArr.map(({ pid }) => { return pid }).includes(o.pid);
-    })
-
-    runner = new Date();
-    number = 0;
-    index = 0;
-    while (true) {
-      thisDayNumber = runner.getDay();
-      if (targetDayNumbers.includes(thisDayNumber)) {
-        if (!holidayArr.includes(dateToString(runner))) {
-          if (!alreadyArr.map(({ date }) => { return dateToString(date) }).includes(dateToString(runner))) {
-            thisDateString = dateToString(runner, true);
-            if (resultTong[index] === undefined) {
-              break;
-            }
-            resultTong[index].foreCast = stringToDate(thisDateString);
-            index = index + 1;
-          }
-        }
-      }
-      runner.setDate(runner.getDate() + 1);
-      number++;
-      if (number > safeNum) {
-        break;
-      }
-    }
-
-    console.log(resultTong);
-
-    */
 
     
 

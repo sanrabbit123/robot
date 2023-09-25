@@ -107,16 +107,9 @@ GoogleCalendar.prototype.findCalendarId = function (button) {
   return dictionary[button];
 }
 
-GoogleCalendar.prototype.makeSchedule = async function (to, title, description, start, end = null) {
+GoogleCalendar.prototype.makeSchedule = async function (to, title, description, start, end = null, allDay = false) {
   const instance = this;
-  const { pythonExecute, errorLog } = this.mother;
-  const zeroAddition = function (num) {
-    if (num < 10) {
-      return `0${String(num)}`;
-    } else {
-      return String(num);
-    }
-  }
+  const { pythonExecute, errorLog, zeroAddition, dateToString } = this.mother;
   try {
     let eventObj, runEvent;
     let finalStart, finalEnd;
@@ -157,26 +150,50 @@ GoogleCalendar.prototype.makeSchedule = async function (to, title, description, 
       finalEnd = JSON.stringify(end).slice(1, -1);
     }
 
-    eventObj = {
-      summary: title,
-      description: description,
-      start: {
-        dateTime: finalStart,
-        timeZone: 'Asia/Seoul',
-      },
-      end: {
-        dateTime: finalEnd,
-        timeZone: 'Asia/Seoul',
-      },
-      recurrence: [],
-      attendees: [],
-      reminders: {
-        useDefault: false,
-        overrides: [],
-      },
-    };
+    if (!allDay) {
+      eventObj = {
+        summary: title,
+        description: description,
+        start: {
+          dateTime: finalStart,
+          timeZone: 'Asia/Seoul',
+        },
+        end: {
+          dateTime: finalEnd,
+          timeZone: 'Asia/Seoul',
+        },
+        recurrence: [],
+        attendees: [],
+        reminders: {
+          useDefault: false,
+          overrides: [],
+        },
+      };
+    } else {
+      eventObj = {
+        summary: title,
+        description: description,
+        start: {
+          date: dateToString(new Date(finalStart)),
+          timeZone: 'Asia/Seoul',
+        },
+        end: {
+          date: dateToString(new Date(finalEnd)),
+          timeZone: 'Asia/Seoul',
+        },
+        recurrence: [],
+        attendees: [],
+        reminders: {
+          useDefault: false,
+          overrides: [],
+        },
+      };
+    }
 
     res = await pythonExecute(this.pythonApp, [ "calendar", "makeSchedule" ], { targetId: this.findCalendarId(to), body: eventObj });
+    if (typeof res !== "object") {
+      throw new Error(res);
+    }
     return {
       calendarId: instance.findCalendarId(to),
       id: res.id,
@@ -185,6 +202,7 @@ GoogleCalendar.prototype.makeSchedule = async function (to, title, description, 
 
   } catch (e) {
     console.log(e);
+    return null;
   }
 }
 
