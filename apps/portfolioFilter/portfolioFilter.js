@@ -832,6 +832,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
             }
           ]);
           await back.mongoUpdate(collection, [ { pid: nextPid }, { proid: project.proid } ], { selfMongo });
+          await back.mongoUpdate(collection, [ { pid: nextPid }, { exception: false } ], { selfMongo });
           clientObj = await back.getClientById(project.cliid);
           designerObj = await back.getDesignerById(project.desid);
 

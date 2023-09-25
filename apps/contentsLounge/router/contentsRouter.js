@@ -350,6 +350,17 @@ ContentsRouter.prototype.rou_post_foreContents = function () {
           rows = await back.mongoRead(collection, { desid }, { selfMongo });
         }
         res.send(JSON.stringify(rows));
+
+      } else if (mode === "exceptionControl") {
+
+        if (req.body.pid === undefined || req.body.control === undefined) {
+          throw new Error("invalid post");
+        }
+        const { pid, control } = equalJson(req.body);
+        await back.mongoUpdate(collection, [ { pid }, { exception: (control === "register") } ], { selfMongo });
+
+        res.send(JSON.stringify({ message: "done" }));
+
       } else {
         throw new Error("invaild mode");
       }
