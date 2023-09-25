@@ -3349,6 +3349,8 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
 DataRouter.prototype.rou_post_getDesignerGhost = function () {
   const instance = this;
   const back = this.back;
+  const address = this.address;
+  const { equalJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/getDesignerGhost";
   obj.func = async function (req, res, logger) {
@@ -3364,8 +3366,14 @@ DataRouter.prototype.rou_post_getDesignerGhost = function () {
       }
       const { desid } = req.body;
       let result, final, tempArr, tempObj;
+      let contentsResponse;
 
-      result = await back.mongoRead("foreContents", { desid }, { selfMongo: instance.mongolocal });
+      contentsResponse = await requestSystem("https://" + address.contentsinfo.host + ":3000/foreContents", { mode: "get", desid }, { headers: { "Content-Type": "application/json" } });
+      if (!Array.isArray(contentsResponse.data)) {
+        result = [];
+      } else {
+        result = contentsResponse.data;
+      }
 
       final = [];
       for (let { forecast } of result) {

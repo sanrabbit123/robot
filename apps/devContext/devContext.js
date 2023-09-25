@@ -179,11 +179,10 @@ DevContext.prototype.launching = async function () {
     // await this.MONGOCONTENTSC.close();
 
 
-    await findCode("foreContents")
-
 
     
 
+    
     
     /*
     

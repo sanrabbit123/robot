@@ -4446,7 +4446,7 @@ DesignerJs.prototype.contentsView = async function () {
       [ { noFlat: true, whereQuery: { $or: cliidArr } }, BACKHOST + "/getClients" ],
       [ { noFlat: true, whereQuery: { $or: proidArr_raw } }, BACKHOST + "/getContents" ],
       [ { idArr: proidArr, method: "project", property: "photo", }, BACKHOST + "/getHistoryProperty" ],
-      [ { mode: "read", collection: "foreContents", db: "console", whereQuery: {}, }, BACKHOST + "/generalMongo" ]
+      [ { mode: "get" }, CONTENTSHOST + "/foreContents" ]
     ]);
 
     designers = new SearchArray(matrix[0]);
@@ -4454,9 +4454,6 @@ DesignerJs.prototype.contentsView = async function () {
     contents = new SearchArray(matrix[2]);
     projectHistory = matrix[3];
     this.foreContents = matrix[4];
-
-    console.log(CONTENTSHOST);
-    console.log(this.foreContents)
 
     for (let p of projects) {
       p.designer = designers.search("desid", p.desid).designer;
