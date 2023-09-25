@@ -361,6 +361,16 @@ ContentsRouter.prototype.rou_post_foreContents = function () {
 
         res.send(JSON.stringify({ message: "done" }));
 
+      } else if (mode === "exceptionList") {
+
+        rows = await back.mongoRead(collection, {}, { selfMongo });
+        rows = rows.filter((o) => { return o.exception === true });
+        if (req.body.type === "string") {
+          res.send(JSON.stringify(rows.map((o) => { return o.pid })));
+        } else {
+          res.send(JSON.stringify(rows));
+        }
+
       } else {
         throw new Error("invaild mode");
       }

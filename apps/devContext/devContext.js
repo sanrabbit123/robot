@@ -86,8 +86,6 @@ DevContext.prototype.launching = async function () {
     const human = new HumanPacket();
 
 
-    
-    
     // monthly must ==========================================================================================================================================
     // =======================================================================================================================================================
 
@@ -143,6 +141,14 @@ DevContext.prototype.launching = async function () {
     // }));
     // =======================================================================================================================================================
 
+    // exception pid
+    // await this.exceptionPid();
+    // =======================================================================================================================================================
+
+
+
+
+
 
 
     // const meta = new FacebookAPIs();
@@ -150,27 +156,9 @@ DevContext.prototype.launching = async function () {
     
 
 
-    const exceptionPids = [
-      "p99",
-      "p100",
-      "p104",
-      "p111",
-      "p128",
-      "p145",
-      "p233",
-      "p241",
-      "p280",
-    ]
-
-    for (let pid of exceptionPids) {
-      console.log(await requestSystem("https://" + address.contentsinfo.host + ":3000/foreContents", {
-        mode: "exceptionControl",
-        pid,
-        control: "register",
-      }, { headers: { "Content-Type": "application/json" } }));
-    }
 
     
+
     
     
     /*
@@ -6764,6 +6752,34 @@ DevContext.prototype.launching = async function () {
     await this.MONGOLOCALC.close();
     // await rethink.close();
     console.log(`error`);
+  }
+}
+
+DevContext.prototype.exceptionPid = async function () {
+  const instance = this;
+  const address = this.address;
+  const { requestSystem } = this.mother;
+  try {
+    const exceptionPids = [
+      "p99",
+      "p100",
+      "p104",
+      "p111",
+      "p128",
+      "p145",
+      "p233",
+      "p241",
+      "p280",
+    ]
+    for (let pid of exceptionPids) {
+      console.log(await requestSystem("https://" + address.contentsinfo.host + ":3000/foreContents", {
+        mode: "exceptionControl",
+        pid,
+        control: "register",
+      }, { headers: { "Content-Type": "application/json" } }));
+    }
+  } catch (e) {
+    console.log(e);
   }
 }
 
