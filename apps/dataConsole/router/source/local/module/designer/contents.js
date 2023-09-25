@@ -4455,6 +4455,9 @@ DesignerJs.prototype.contentsView = async function () {
     projectHistory = matrix[3];
     this.foreContents = matrix[4];
 
+    console.log(CONTENTSHOST);
+    console.log(this.foreContents)
+
     for (let p of projects) {
       p.designer = designers.search("desid", p.desid).designer;
       client = clients.search("cliid", p.cliid);

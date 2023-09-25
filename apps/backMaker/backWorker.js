@@ -243,6 +243,13 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
       updateQuery["information.business.businessInfo.businessNumber"] = "";
     }
 
+    //setting
+    updateQuery["setting.description"] = [
+      " ",
+      " ",
+      " "
+    ];
+
     return updateQuery;
   }
   try {

@@ -318,6 +318,50 @@ ContentsRouter.prototype.rou_post_contentsCalendar = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_foreContents = function () {
+  const instance = this;
+  const back = this.back;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/foreContents" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invaild post");
+      }
+      const { mode } = equalJson(req.body);
+      const selfMongo = instance.mongolocal;
+      const collection = "foreContents";
+      let rows;
+      let desid;
+
+      if (mode === "get") {
+        if (req.body.desid === undefined) {
+          rows = await back.mongoRead(collection, {}, { selfMongo });
+        } else {
+          desid = req.body.desid;
+          rows = await back.mongoRead(collection, { desid }, { selfMongo });
+        }
+        res.send(JSON.stringify(rows));
+      } else {
+        throw new Error("invaild mode");
+      }
+
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_foreContents): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 ContentsRouter.prototype.rou_post_generalFileUpload = function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink } = this.mother;

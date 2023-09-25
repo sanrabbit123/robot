@@ -150,9 +150,39 @@ DevContext.prototype.launching = async function () {
     
 
 
+    // await this.MONGOCONSOLEC.connect();
+    // await this.MONGOCONTENTSC.connect();
+
+    // const db = "miro81";
+    // const collection = "foreContents";
+    // const fromMongo = this.MONGOCONSOLEC;
+    // const toMongo = this.MONGOCONTENTSC;
+    // let rows;
+    // let thisPid;
+    // let tempRows;
+
+    // rows = await fromMongo.db(db).collection(collection).find({}).toArray();
+    // for (let obj of rows) {
+    //   delete obj._id;
+
+    //   thisPid = obj.pid;
+
+    //   tempRows = await back.mongoRead(collection, { pid: thisPid }, { selfMongo: toMongo });
+    //   if (tempRows.length !== 0) {
+    //     await back.mongoDelete(collection, { pid: thisPid }, { selfMongo: toMongo });
+    //   }
+    //   await back.mongoCreate(collection, obj, { selfMongo: toMongo });
+    //   console.log(obj);
+    // }
+
+    // await this.MONGOCONSOLEC.close();
+    // await this.MONGOCONTENTSC.close();
 
 
+    await findCode("foreContents")
 
+
+    
 
     
     /*
@@ -279,7 +309,7 @@ DevContext.prototype.launching = async function () {
       }
     }
 
-    // console.log(resultTong);
+    console.log(resultTong);
 
 
     await this.MONGOCONSOLEC.close();
@@ -6588,9 +6618,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "남기은",
+    //     client: "박수연",
     //     designer: "이정아",
-    //     link: "https://drive.google.com/drive/folders/1Myv0asa2W0G-CSPWlww_w0LW0qOYymgM",
+    //     link: "https://drive.google.com/drive/folders/1qEaYrp8db3_EhYXGQ_-Z8DAE95Bv8GJu",
     //     pay: true
     //   },
     // ]);

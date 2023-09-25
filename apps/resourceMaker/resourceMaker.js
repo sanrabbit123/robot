@@ -847,8 +847,9 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
 ResourceMaker.prototype.launching = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, mongo, mongoinfo, shellExec, shellLink, headRequest, binaryRequest, ghostFileUpload, requestSystem } = this.mother;
+  const { fileSystem, mongo, mongoinfo, mongocontentsinfo, shellExec, shellLink, headRequest, binaryRequest, ghostFileUpload, requestSystem } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const MONGOCONTENTSC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
   const sizeMatrix = [
     [ 1200, 848 ],
@@ -883,6 +884,9 @@ ResourceMaker.prototype.launching = async function () {
     let outputMobildFolder, outputMobildFolderList;
     let fromArr, toArr;
     let thisService;
+
+    await MONGOC.connect();
+    await MONGOCONTENTSC.connect();
 
     //mkdir temp directory
     tempFolderName = "tempResourcMakerFolder";
@@ -968,7 +972,6 @@ ResourceMaker.prototype.launching = async function () {
     }
 
     //rendering resource and write file
-    await MONGOC.connect();
     temp = await MONGOC.db(`miro81`).collection(`contents`).find({}).project({ conid: 1 }).sort({ conid: -1 }).limit(1).toArray();
     await this.portfolio_modeling(temp, proid, cliid, thisService);
     await fileSystem("write", [ `${process.cwd()}/temp/${this.p_id}.js`, JSON.stringify(this.final, null, 2) ]);
@@ -1025,8 +1028,7 @@ ResourceMaker.prototype.launching = async function () {
       await ghostFileUpload(fromArr, toArr);
 
       await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
-      await back.mongoDelete("foreContents", { pid: this.p_id }, { console: true });
-
+      await back.mongoDelete("foreContents", { pid: this.p_id }, { selfMongo: MONGOCONTENTSC });
       await requestSystem("https://" + instance.address.testinfo.host + ":" + String(3000) + "/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
     }
 
@@ -1035,7 +1037,8 @@ ResourceMaker.prototype.launching = async function () {
   } catch (e) {
     console.log(e);
   } finally {
-    MONGOC.close();
+    await MONGOC.close();
+    await MONGOCONTENTSC.close();
   }
 }
 

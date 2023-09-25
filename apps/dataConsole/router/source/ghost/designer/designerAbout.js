@@ -7364,7 +7364,7 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
         const zIndex = 4;
         const i = index;
         const designer = instance.designer;
-        const original = designer.setting.description[i];
+        const original = designer.setting.description[i] === undefined ? " " : designer.setting.description[i];
         const desid = instance.designer.desid;
         let cancelBack;
         let updateInput;
@@ -7602,7 +7602,7 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
               overflow: "scroll",
             },
             child: {
-              text: designer.setting.description[i],
+              text: designer.setting.description[i] === undefined ? " " : designer.setting.description[i],
               style: {
                 position: "relative",
                 top: String(factorDescriptionTextTop) + ea,

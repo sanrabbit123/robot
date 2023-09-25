@@ -631,7 +631,7 @@ PortfolioFilter.prototype.additionalRepair = async function (pid, tNumber) {
 PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shellExec, shellLink, consoleQ, appleScript, sleep, messageSend, requestSystem, ghostFileUpload } = this.mother;
+  const { fileSystem, shellExec, shellLink, consoleQ, appleScript, sleep, messageSend, requestSystem, ghostFileUpload, mongo, mongocontentsinfo } = this.mother;
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
   const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
@@ -656,11 +656,15 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
   const kakaoInstance = new KakaoTalk();
   const drive = new GoogleDrive();
+  const collection = "foreContents";
+  const selfMongo = new mongo(mongocontentsinfo, { useUnifiedTopology: true });
   try {
     if (!Array.isArray(arr)) {
       throw new Error(errorMessage);
     }
     arr = new RawArray(arr);
+
+    await selfMongo.connect();
 
     let folderPath;
     let designers, consoleInput, targetDesigner, googleFolderName;
@@ -734,7 +738,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       if (client !== null) {
 
         nextPid = null;
-        foreRows = await back.mongoRead("foreContents", finalObj, { console: true });
+        foreRows = await back.mongoRead(collection, finalObj, { selfMongo });
         foreRows.sort((a, b) => {
           return Number(b.pid.replace(/[^0-9]/gi, '')) - Number(a.pid.replace(/[^0-9]/gi, ''));
         });
@@ -779,7 +783,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           obj.file = foreCastContant + "/" + obj.file.split("/").slice(-2).join("/");
         }
         finalObj = { pid: nextPid, desid: targetDesigner.desid, client, forecast };
-        await back.mongoCreate("foreContents", finalObj, { console: true });
+        await back.mongoCreate(collection, finalObj, { selfMongo });
 
         folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
         folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
@@ -827,7 +831,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
               "contents.share.designer.photo": new Date(),
             }
           ]);
-          await back.mongoUpdate("foreContents", [ { pid: nextPid }, { proid: project.proid } ], { console: true });
+          await back.mongoUpdate(collection, [ { pid: nextPid }, { proid: project.proid } ], { selfMongo });
           clientObj = await back.getClientById(project.cliid);
           designerObj = await back.getDesignerById(project.desid);
 
@@ -913,8 +917,11 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
     }
 
+    await selfMongo.close();
+
   } catch (e) {
     console.log(e);
+    await selfMongo.close();
   }
 }
 
