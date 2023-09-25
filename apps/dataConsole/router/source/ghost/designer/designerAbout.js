@@ -7416,7 +7416,11 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
                 const finalValue = this.value;
                 const desid = this.getAttribute("desid");
                 let whereQuery, updateQuery;
-                self.firstChild.firstChild.firstChild.textContent = finalValue;
+                if (self.firstChild.firstChild.firstChild === null) {
+                  self.firstChild.firstChild.textContent = finalValue;
+                } else {
+                  self.firstChild.firstChild.firstChild.textContent = finalValue;
+                }
                 instance.designer.setting.description[index] = finalValue;
                 whereQuery = { desid };
                 updateQuery = {};
