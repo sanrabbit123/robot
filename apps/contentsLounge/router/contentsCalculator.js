@@ -225,4 +225,31 @@ ContentsCalculator.prototype.settingWebSchedule = async function (selfMongo, log
   }
 }
 
+ContentsCalculator.prototype.syncWebSchedule = async function (selfMongo, logger) {
+  const instance = this;
+  const address = this.address;
+  const back = this.back;
+  const { requestSystem, equalJson, dateToString, stringToDate, sleep } = this.mother;
+  try {
+    const responseResult = await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsCalendar", { mode: "get", detailMode: true }, { headers: { "Content-Type": "application/json" } });
+    const calendarTargets = equalJson(JSON.stringify(responseResult.data));
+    let whereQuery, updateQuery;
+
+    for (let { date, proid } of calendarTargets) {
+      whereQuery = { proid };
+      updateQuery = {};
+      updateQuery["contents.sns.portfolio.long"] = new Date(JSON.stringify(date.start).slice(1, -1));
+      updateQuery["contents.sns.interview.long"] = new Date(JSON.stringify(date.start).slice(1, -1));
+      await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
+    }
+
+    await logger.log("sync web schedule success : " + JSON.stringify(new Date()));
+    return { message: "done" };
+  } catch (e) {
+    logger.error("Contents calculator 문제 생김 (syncWebSchedule): " + e.message).catch((e) => { console.log(e); });
+    console.log(e);
+    return null;
+  }
+}
+
 module.exports = ContentsCalculator;

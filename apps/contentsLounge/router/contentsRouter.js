@@ -321,7 +321,6 @@ ContentsRouter.prototype.rou_post_contentsCalendar = function () {
       if (mode === "get") {
         if (req.body.detailMode === "true" || req.body.detailMode === true) {
           if (targets.length > 0) {
-            
             whereQuery = {};
             whereQuery["$or"] = targets.map((o) => { return o.pid }).map((pid) => { return { "contents.portfolio.pid": pid } });
             contentsArr = await back.getContentsArrByQuery(whereQuery, { selfMongo: selfCoreMongo });
@@ -346,7 +345,6 @@ ContentsRouter.prototype.rou_post_contentsCalendar = function () {
               } else {
                 thisProid = thisObj.proid;
               }
-
               if (thisProid !== undefined && thisProid !== null && thisProid !== "") {
                 thisProject = projects.find((p) => { return p.proid === thisProid });
                 thisCliid = thisProject.cliid;
@@ -356,14 +354,11 @@ ContentsRouter.prototype.rou_post_contentsCalendar = function () {
                 thisCliid = "";
                 thisDesid = "";
               }
-
               obj.proid = thisProid;
               obj.cliid = thisCliid;
               obj.desid = thisDesid;
             }
-
             res.send(JSON.stringify(targets));
-
           } else {
             res.send(JSON.stringify(targets));
           }
@@ -536,18 +531,22 @@ ContentsRouter.prototype.rou_post_contentsSchedule = function () {
     });
     try {
       const selfCoreMongo = instance.mongo;
-
+      const timeConst = 10 * 1000;
       calcaulator.settingWebSchedule(selfCoreMongo, logger).then((resultMessage) => {
         if (resultMessage.message !== "done") {
           throw new Error("setting web schedule fail");
         }
-        
-
+        return sleep(timeConst);
+      }).then(() => {
+        return calcaulator.syncWebSchedule(selfCoreMongo, logger);
+      }).then((resultMessage) => {
+        if (resultMessage.message !== "done") {
+          throw new Error("sync web schedule fail");
+        }
       }).catch((err) => {
         logger.error("Contents lounge 서버 문제 생김 (rou_post_contentsSchedule): " + err.message).catch((e) => { console.log(e); });
         console.log(err);
       });
-
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       logger.error("Contents lounge 서버 문제 생김 (rou_post_contentsSchedule): " + e.message).catch((e) => { console.log(e); });
