@@ -153,52 +153,7 @@ DevContext.prototype.launching = async function () {
     // await meta.instagramList();
     
 
-    // const tempFolder = process.cwd() + "/temp";
-    // const target0 = tempFolder + "/target0.jpg";
 
-    // const image = new ImageReader();
-    // await image.toOfficialImage(target0, 780);
-
-
-
-    
-    
-
-    /*
-    const bar = "=========================================================================================";
-
-    const tempFolder = process.cwd() + "/temp";
-    const targetImage = tempFolder + "/convertResult_DB4E1695695170931A37DEE4FCA810FFEC5144FD.jpg";
-    const cropMiddleConst = "middleResult_";
-    const exe = "jpg";
-    const whiteStandard = 200;
-    let cropMatrix;
-    let cropPositionWidth, cropPositionHeight;
-    let cropPositionY;
-    let cropMiddleTarget;
-    let cropJson;
-
-    cropMiddleTarget = tempFolder + "/" + cropMiddleConst + uniqueValue("hex") + "." + exe;
-
-    `composite -geometry +0+0 water_white_garo.png convertResult_DB4E1695695170931A37DEE4FCA810FFEC5144FD.jpg output.jpg`
-
-    // garo
-
-    cropPositionWidth = 280;
-    cropPositionHeight = 120;
-    cropPositionY = 660;
-    cropMatrix = String(cropPositionWidth) + "x" + String(cropPositionHeight) + "+" + String(0) + "+" + String(cropPositionY);
-
-    await shellExec(`convert ${shellLink(targetImage)} -crop ${cropMatrix} ${shellLink(cropMiddleTarget)}`);
-
-    cropJson = await image.readImage(cropMiddleTarget);
-
-    console.log(cropJson.imageStatistics.Overall.mean)
-
-    await shellExec(`rm -rf ${shellLink(cropMiddleTarget)}`);
-
-    // sero
-    */
 
 
 
