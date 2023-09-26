@@ -13,11 +13,170 @@ const ImageReader = function (mother = null, back = null, address = null) {
   }
   this.dir = process.cwd() + "/apps/imageReader";
   this.tempDir = process.cwd() + "/temp";
+  this.sourceDir = this.dir + "/source";
+  this.waterDir = this.sourceDir + "/water";
   this.officialSize = {
     s780: [ 780, 1103 ],
+    s1000: [ 1000, 1415 ],
     s1500: [ 1060, 1500 ],
     s3508: [ 2480, 3508 ],
   };
+}
+
+ImageReader.prototype.convertImage = async function (obj) {
+  const instance = this;
+  const { shellExec, shellLink, fileSystem } = this.mother;
+  try {
+    let targetImage;
+    let targetWidth;
+    let targetHeight;
+    let qualityConst;
+    let middleTarget;
+    let thisDir;
+    let thisDirContents;
+    let thisFileName;
+    let thisFileExe;
+    let mode;
+    let cropMatrix;
+    let moveX;
+    let moveY;
+    let inputDir;
+    let inputFileName;
+    let inputFileExe;
+    let inputDirContents;
+
+    mode = obj.mode || "resize";
+
+    targetImage = obj.input;
+    targetWidth = obj.width;
+    targetHeight = obj.height;
+    qualityConst = obj.quality;
+    middleTarget = obj.output;
+
+    inputDir = targetImage.split("/").slice(0, -1).join("/");
+    inputFileName = targetImage.split("/")[targetImage.split("/").length - 1];
+    inputFileExe = inputFileName.split(".")[inputFileName.split(".").length - 1];
+    inputFileName = inputFileName.split(".").slice(0, -1).join(".");
+
+    thisDir = middleTarget.split("/").slice(0, -1).join("/");
+    thisFileName = middleTarget.split("/")[middleTarget.split("/").length - 1];
+    thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
+    thisFileName = thisFileName.split(".").slice(0, -1).join(".");
+
+    await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, targetImage ]);
+    if (!(await fileSystem(`exist`, [ targetImage ]))) {
+      inputDirContents = await fileSystem(`readFolder`, [ inputDir ]);
+      inputDirContents = inputDirContents.filter((str) => { return (new RegExp(inputFileName + "-[0-9]+." + inputFileExe, "g")).test(str) });
+      if (inputDirContents.length === 0) {
+        throw new Error("converting fail");
+      } else {
+        await shellExec(`mv ${shellLink(inputDir + "/" + inputDirContents[0])} ${shellLink(inputDir + "/" + inputFileName + "." + inputFileExe)}`)
+        for (let str of inputDirContents) {
+          await shellExec(`rm -rf ${shellLink(inputDir + "/" + str)}`);
+        }
+      }
+    }
+
+    if (mode === "resize") {
+      await shellExec(`convert ${shellLink(targetImage)} -resize ${String(targetWidth)}x${String(targetHeight)}! -quality ${String(qualityConst)} ${shellLink(middleTarget)}`);
+    } else if (mode === "crop") {
+      moveX = obj.x;
+      moveY = obj.y;
+      cropMatrix = String(targetWidth) + "x" + String(targetHeight) + "+" + String(moveX) + "+" + String(moveY);
+      await shellExec(`convert ${shellLink(targetImage)} -crop ${cropMatrix} -quality ${String(qualityConst)} ${shellLink(middleTarget)}`);
+    } else {
+      throw new Error("invalid mode");
+    }
+
+    if (!(await fileSystem(`exist`, [ middleTarget ]))) {
+      thisDirContents = await fileSystem(`readFolder`, [ thisDir ]);
+      thisDirContents = thisDirContents.filter((str) => { return (new RegExp(thisFileName + "-[0-9]+." + thisFileExe, "g")).test(str) });
+      if (thisDirContents.length === 0) {
+        throw new Error("converting fail");
+      } else {
+        await shellExec(`mv ${shellLink(thisDir + "/" + thisDirContents[0])} ${shellLink(thisDir + "/" + thisFileName + "." + thisFileExe)}`)
+        for (let str of thisDirContents) {
+          await shellExec(`rm -rf ${shellLink(thisDir + "/" + str)}`);
+        }
+      }
+    }
+
+    await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, middleTarget ]);
+    if (!(await fileSystem(`exist`, [ middleTarget ]))) {
+      thisDirContents = await fileSystem(`readFolder`, [ thisDir ]);
+      thisDirContents = thisDirContents.filter((str) => { return (new RegExp(thisFileName + "-[0-9]+." + thisFileExe, "g")).test(str) });
+      if (thisDirContents.length === 0) {
+        throw new Error("mogrify fail");
+      } else {
+        await shellExec(`mv ${shellLink(thisDir + "/" + thisDirContents[0])} ${shellLink(thisDir + "/" + thisFileName + "." + thisFileExe)}`)
+        for (let str of thisDirContents) {
+          await shellExec(`rm -rf ${shellLink(thisDir + "/" + str)}`);
+        }
+      }
+    }
+
+    return { message: "done" };
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+ImageReader.prototype.compositeImage = async function (obj) {
+  const instance = this;
+  const { shellExec, shellLink, fileSystem } = this.mother;
+  try {
+    let upLayer, downLayer;
+    let resultTarget;
+    let thisDir;
+    let thisFileName;
+    let thisFileExe;
+    let thisDirContents;
+
+    upLayer = obj.up;
+    downLayer = obj.down;
+    resultTarget = obj.output;
+
+    thisDir = resultTarget.split("/").slice(0, -1).join("/");
+    thisFileName = resultTarget.split("/")[resultTarget.split("/").length - 1];
+    thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
+    thisFileName = thisFileName.split(".").slice(0, -1).join(".");
+
+    await shellExec(`composite -geometry +0+0 ${shellLink(upLayer)} ${shellLink(downLayer)} ${shellLink(resultTarget)}`);
+    if (!(await fileSystem(`exist`, [ resultTarget ]))) {
+      thisDirContents = await fileSystem(`readFolder`, [ thisDir ]);
+      thisDirContents = thisDirContents.filter((str) => { return (new RegExp(thisFileName + "-[0-9]+." + thisFileExe, "g")).test(str) });
+      if (thisDirContents.length === 0) {
+        throw new Error("converting fail");
+      } else {
+        await shellExec(`mv ${shellLink(thisDir + "/" + thisDirContents[0])} ${shellLink(thisDir + "/" + thisFileName + "." + thisFileExe)}`)
+        for (let str of thisDirContents) {
+          await shellExec(`rm -rf ${shellLink(thisDir + "/" + str)}`);
+        }
+      }
+    }
+
+    await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, resultTarget ]);
+    if (!(await fileSystem(`exist`, [ resultTarget ]))) {
+      thisDirContents = await fileSystem(`readFolder`, [ thisDir ]);
+      thisDirContents = thisDirContents.filter((str) => { return (new RegExp(thisFileName + "-[0-9]+." + thisFileExe, "g")).test(str) });
+      if (thisDirContents.length === 0) {
+        throw new Error("converting fail");
+      } else {
+        await shellExec(`mv ${shellLink(thisDir + "/" + thisDirContents[0])} ${shellLink(thisDir + "/" + thisFileName + "." + thisFileExe)}`)
+        for (let str of thisDirContents) {
+          await shellExec(`rm -rf ${shellLink(thisDir + "/" + str)}`);
+        }
+      }
+    }
+
+    return { message: "done" };
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
 }
 
 ImageReader.prototype.pdfToJpg = function (filePath, removeMode = false) {
@@ -70,37 +229,9 @@ ImageReader.prototype.pdfToJpg = function (filePath, removeMode = false) {
   });
 }
 
-ImageReader.prototype.imageToJpg = async function (filePath, saveOriginal = false) {
-  const instance = this;
-  const { shellExec, fileSystem, shellLink } = this.mother;
-  try {
-    if (typeof filePath !== "string") {
-      throw new Error("invaild input");
-    }
-    if (!/^\//.test(filePath)) {
-      throw new Error("must be absolute path");
-    }
-
-    const fileName = filePath.split('/')[filePath.split('/').length - 1];
-    const fileDir = filePath.split('/').slice(0, -1).join('/');
-    const filePureName = fileName.split('.').slice(0, -1).join('.');
-    const resultJpg = `${fileDir}/${filePureName}.jpg`;
-
-    await shellExec(`convert ${shellLink(filePath)} -quality 100 ${shellLink(resultJpg)}`);
-    if (!saveOriginal) {
-      await shellExec(`rm`, [ `-rf`, filePath ]);
-    }
-
-    return await this.readImage(resultJpg);
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 ImageReader.prototype.readImage = async function (filePath, toJson = false) {
   const instance = this;
-  const { shellExec, uniqueValue, fileSystem } = this.mother;
+  const { shellExec, shellLink, uniqueValue, fileSystem } = this.mother;
   try {
     if (typeof filePath !== "string") {
       throw new Error("invaild input");
@@ -111,11 +242,40 @@ ImageReader.prototype.readImage = async function (filePath, toJson = false) {
     const fileName = filePath.split('/')[filePath.split('/').length - 1];
     const fileDir = filePath.split('/').slice(0, -1).join('/');
     const filePureName = fileName.split('.').slice(0, -1).join('.');
+    const fileExe = fileName.split('.')[fileName.split('.').length - 1];
 
     const tempDir = process.cwd() + "/temp";
     const tempJson = tempDir + "/" + uniqueValue("hex") + ".json";
+    let thisDirContents;
+
+    await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, filePath ]);
+    if (!(await fileSystem(`exist`, [ filePath ]))) {
+      thisDirContents = await fileSystem(`readFolder`, [ fileDir ]);
+      thisDirContents = thisDirContents.filter((str) => { return (new RegExp(filePureName + "-[0-9]+." + fileExe, "g")).test(str) });
+      if (thisDirContents.length === 0) {
+        throw new Error("mogrify fail");
+      } else {
+        await shellExec(`mv ${shellLink(fileDir + "/" + thisDirContents[0])} ${shellLink(filePath)}`)
+        for (let str of thisDirContents) {
+          await shellExec(`rm -rf ${shellLink(fileDir + "/" + str)}`);
+        }
+      }
+    }
 
     await shellExec(`convert`, [ filePath, tempJson ]);
+    if (!(await fileSystem(`exist`, [ filePath ]))) {
+      thisDirContents = await fileSystem(`readFolder`, [ fileDir ]);
+      thisDirContents = thisDirContents.filter((str) => { return (new RegExp(filePureName + "-[0-9]+." + fileExe, "g")).test(str) });
+      if (thisDirContents.length === 0) {
+        throw new Error("mogrify fail");
+      } else {
+        await shellExec(`mv ${shellLink(fileDir + "/" + thisDirContents[0])} ${shellLink(filePath)}`)
+        for (let str of thisDirContents) {
+          await shellExec(`rm -rf ${shellLink(fileDir + "/" + str)}`);
+        }
+      }
+    }
+
     const [ { image } ] = await fileSystem(`readJson`, [ tempJson ]);
     delete image.version;
     image.name = image.baseName;
@@ -135,7 +295,7 @@ ImageReader.prototype.readImage = async function (filePath, toJson = false) {
 
 ImageReader.prototype.resizeImage = async function (filePath, width = 1500, height = "auto", original = false) {
   const instance = this;
-  const { shellExec, uniqueValue, fileSystem } = this.mother;
+  const { shellExec, shellLink, uniqueValue, fileSystem } = this.mother;
   try {
     if (typeof filePath !== "string") {
       throw new Error("invaild input");
@@ -153,9 +313,24 @@ ImageReader.prototype.resizeImage = async function (filePath, width = 1500, heig
     const fileDir = filePath.split('/').slice(0, -1).join('/');
     const filePureName = fileName.split('.').slice(0, -1).join('.');
     const fileExe = fileName.split('.')[fileName.split('.').length - 1];
-
     const tempDir = process.cwd() + "/temp";
-    const tempResult = tempDir + "/" + filePureName + "_" + uniqueValue("hex") + "." + fileExe;
+    const tempResultPureName = filePureName + "_" + uniqueValue("hex");
+    const tempResult = tempDir + "/" + tempResultPureName + "." + fileExe;
+    let thisDirContents, inputDirContents;
+
+    await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, filePath ]);
+    if (!(await fileSystem(`exist`, [ filePath ]))) {
+      inputDirContents = await fileSystem(`readFolder`, [ fileDir ]);
+      inputDirContents = inputDirContents.filter((str) => { return (new RegExp(filePureName + "-[0-9]+." + fileExe, "g")).test(str) });
+      if (inputDirContents.length === 0) {
+        throw new Error("mogrify fail");
+      } else {
+        await shellExec(`mv ${shellLink(fileDir + "/" + inputDirContents[0])} ${shellLink(fileDir + "/" + filePureName + "." + fileExe)}`)
+        for (let str of inputDirContents) {
+          await shellExec(`rm -rf ${shellLink(fileDir + "/" + str)}`);
+        }
+      }
+    }
 
     if (typeof width === "number" && height === "auto") {
       await shellExec(`convert`, [ filePath, "-resize", String(width) + "x", tempResult ]);
@@ -166,7 +341,34 @@ ImageReader.prototype.resizeImage = async function (filePath, width = 1500, heig
     } else {
       throw new Error("invalid input");
     }
-    
+
+    if (!(await fileSystem(`exist`, [ tempResult ]))) {
+      thisDirContents = await fileSystem(`readFolder`, [ tempDir ]);
+      thisDirContents = thisDirContents.filter((str) => { return (new RegExp(tempResultPureName + "-[0-9]+." + fileExe, "g")).test(str) });
+      if (thisDirContents.length === 0) {
+        throw new Error("converting fail");
+      } else {
+        await shellExec(`mv ${shellLink(tempDir + "/" + thisDirContents[0])} ${shellLink(tempResult)}`)
+        for (let str of thisDirContents) {
+          await shellExec(`rm -rf ${shellLink(tempDir + "/" + str)}`);
+        }
+      }
+    }
+
+    await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, tempResult ]);
+    if (!(await fileSystem(`exist`, [ tempResult ]))) {
+      thisDirContents = await fileSystem(`readFolder`, [ tempDir ]);
+      thisDirContents = thisDirContents.filter((str) => { return (new RegExp(tempResultPureName + "-[0-9]+." + fileExe, "g")).test(str) });
+      if (thisDirContents.length === 0) {
+        throw new Error("mogrify fail");
+      } else {
+        await shellExec(`mv ${shellLink(tempDir + "/" + thisDirContents[0])} ${shellLink(tempResult)}`)
+        for (let str of thisDirContents) {
+          await shellExec(`rm -rf ${shellLink(tempDir + "/" + str)}`);
+        }
+      }
+    }
+
     if (original) {
       await shellExec(`mv`, [ filePath, fileDir + "/" + filePureName + "_original" + "." + fileExe ]);
     } else {
@@ -183,7 +385,7 @@ ImageReader.prototype.resizeImage = async function (filePath, width = 1500, heig
 
 ImageReader.prototype.recursivePdfConvert = async function (folderPath) {
   const instance = this;
-  const { shellExec } = this.mother;
+  const { shellExec, shellLink } = this.mother;
   try {
     if (typeof folderPath !== "string") {
       throw new Error("invaild input");
@@ -233,6 +435,8 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
     let moveX, moveY;
     let typeKeywords;
     let resultTarget;
+    let resultObj;
+    let tempObj;
 
     typeKeywords = typeConst + String(type);
     if (size[typeKeywords] === undefined) {
@@ -268,7 +472,14 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
         targetHeight = Math.round(sampleHeight1);
       }
 
-      await shellExec(`convert ${shellLink(targetImage)} -resize ${String(targetWidth)}x${String(targetHeight)}! -quality ${String(qualityConst)} ${shellLink(middleTarget)}`);
+      await this.convertImage({
+        input: targetImage,
+        width: targetWidth,
+        height: targetHeight,
+        quality: qualityConst,
+        output: middleTarget,
+        mode: "resize",
+      });
 
       middleInfo = await this.readImage(middleTarget);
       middleWidth = middleInfo.geometry.width;
@@ -276,9 +487,17 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
 
       moveX = Math.floor((middleWidth - size[typeKeywords][1]) / 2);
       moveY = Math.floor((middleHeight - size[typeKeywords][0]) / 2);
-      cropMatrix = String(size[typeKeywords][1]) + "x" + String(size[typeKeywords][0]) + "+" + String(moveX) + "+" + String(moveY);
 
-      await shellExec(`convert ${shellLink(middleTarget)} -crop ${cropMatrix} -quality ${String(qualityConst)} ${shellLink(resultTarget)}`);
+      await this.convertImage({
+        input: middleTarget,
+        width: size[typeKeywords][1],
+        height: size[typeKeywords][0],
+        x: moveX,
+        y: moveY,
+        quality: qualityConst,
+        output: resultTarget,
+        mode: "crop",
+      });
 
     } else if (gs === "sero") {
 
@@ -299,7 +518,14 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
         targetHeight = Math.round(sampleHeight1);
       }
 
-      await shellExec(`convert ${shellLink(targetImage)} -resize ${String(targetWidth)}x${String(targetHeight)}! -quality ${String(qualityConst)} ${shellLink(middleTarget)}`);
+      await this.convertImage({
+        input: targetImage,
+        width: targetWidth,
+        height: targetHeight,
+        quality: qualityConst,
+        output: middleTarget,
+        mode: "resize",
+      });
 
       middleInfo = await this.readImage(middleTarget);
       middleWidth = middleInfo.geometry.width;
@@ -307,19 +533,56 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
 
       moveX = Math.floor((middleWidth - size[typeKeywords][0]) / 2);
       moveY = Math.floor((middleHeight - size[typeKeywords][1]) / 2);
-      cropMatrix = String(size[typeKeywords][0]) + "x" + String(size[typeKeywords][1]) + "+" + String(moveX) + "+" + String(moveY);
 
-      await shellExec(`convert ${shellLink(middleTarget)} -crop ${cropMatrix} -quality ${String(qualityConst)} ${shellLink(resultTarget)}`);
+      await this.convertImage({
+        input: middleTarget,
+        width: size[typeKeywords][0],
+        height: size[typeKeywords][1],
+        x: moveX,
+        y: moveY,
+        quality: qualityConst,
+        output: resultTarget,
+        mode: "crop",
+      });
 
     }
 
     await shellExec(`rm`, [ `-rf`, middleTarget ]);
 
-    return {
+    resultObj = {
       original: targetImage,
       output: resultTarget,
     };
 
+    if (water && (type === 780 || type === "780")) {
+      tempObj = await this.setWatermark(resultObj.output);
+      await shellExec(`rm`, [ `-rf`, resultTarget ]);
+      console.log("converting success => " + tempObj.output);
+      return {
+        original: targetImage,
+        output: tempObj.output,
+      };
+    } else {
+      console.log("converting success => " + resultObj.output);
+      return resultObj;
+    }
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+ImageReader.prototype.overOfficialImage = async function (targetImage, type = 3508, water = false) {
+  const instance = this;
+  const { tempDir: tempFolder, officialSize: size } = this;
+  const { shellExec, shellLink, fileSystem, uniqueValue } = this.mother;
+  try {
+    let tempObj;
+    tempObj = await this.toOfficialImage(targetImage, type, water);
+    await shellExec(`rm`, [ `-rf`, targetImage ]);
+    await shellExec(`mv ${shellLink(tempObj.output)} ${shellLink(targetImage)}`);
+    return { message: "done" };
   } catch (e) {
     console.log(e);
     return null;
@@ -328,7 +591,102 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
 
 ImageReader.prototype.setWatermark = async function (targetImage) {
   const instance = this;
+  const { tempDir: tempFolder, officialSize: size, waterDir } = this;
+  const { shellExec, shellLink, uniqueValue, fileSystem, equalJson } = this.mother;
+  const cropMiddleConst = "middleResult_";
+  const resultConst = "compositeResult_";
+  const exe = "jpg";
+  const sizeStandard = "s780";
+  const whiteStandard = 180;
+  const qualityConst = 100;
   try {
+    let cropMatrix;
+    let cropPositionWidth, cropPositionHeight;
+    let cropPositionY;
+    let cropMiddleTarget;
+    let cropJson;
+    let imageJson;
+    let width, height;
+    let value;
+    let waterMarkTarget;
+    let gs;
+    let resultTarget;
+
+    resultTarget = tempFolder + "/" + resultConst + uniqueValue("hex") + "." + exe;
+
+    imageJson = await this.readImage(targetImage);
+    width = imageJson.geometry.width;
+    height = imageJson.geometry.height;
+
+    if (width > height) {
+      gs = "garo";
+    } else {
+      gs = "sero";
+    }
+
+    cropPositionWidth = 280;
+    cropPositionHeight = 140;
+    cropMiddleTarget = tempFolder + "/" + cropMiddleConst + uniqueValue("hex") + "." + exe;
+
+    if (gs === "garo") {
+      if (!(height === size[sizeStandard][0] && width === size[sizeStandard][1])) {
+        throw new Error("invalid size 0");
+      }
+      cropPositionY = 640;
+      cropMatrix = String(cropPositionWidth) + "x" + String(cropPositionHeight) + "+" + String(0) + "+" + String(cropPositionY);
+      await this.convertImage({
+        input: targetImage,
+        width: cropPositionWidth,
+        height: cropPositionHeight,
+        x: 0,
+        y: cropPositionY,
+        quality: qualityConst,
+        output: cropMiddleTarget,
+        mode: "crop",
+      });
+      cropJson = await this.readImage(cropMiddleTarget);
+      value = cropJson.imageStatistics.Overall.mean;
+    } else {
+      if (!(width === size[sizeStandard][0] && height === size[sizeStandard][1])) {
+        throw new Error("invalid size 1");
+      }
+      cropPositionY = 963;
+      cropMatrix = String(cropPositionWidth) + "x" + String(cropPositionHeight) + "+" + String(0) + "+" + String(cropPositionY);
+      await this.convertImage({
+        input: targetImage,
+        width: cropPositionWidth,
+        height: cropPositionHeight,
+        x: 0,
+        y: cropPositionY,
+        quality: qualityConst,
+        output: cropMiddleTarget,
+        mode: "crop",
+      });
+      cropJson = await this.readImage(cropMiddleTarget);
+      value = cropJson.imageStatistics.Overall.mean;
+    }
+
+    await shellExec(`rm -rf ${shellLink(cropMiddleTarget)}`);
+
+    waterMarkTarget = "water_";
+    if (value > whiteStandard) {
+      waterMarkTarget += "black_";
+    } else {
+      waterMarkTarget += "white_";
+    }
+    waterMarkTarget += gs + ".png";
+    waterMarkTarget = waterDir + "/" + waterMarkTarget;
+
+    await this.compositeImage({
+      up: waterMarkTarget,
+      down: targetImage,
+      output: resultTarget
+    });
+
+    return {
+      original: targetImage,
+      output: resultTarget,
+    };
 
   } catch (e) {
     console.log(e);

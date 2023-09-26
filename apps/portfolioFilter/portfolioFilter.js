@@ -1,6 +1,7 @@
 const PortfolioFilter = function (clientName = "", apartName = "", designer = "", pid = "g0") {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  const ImageReader = require(`${process.cwd()}/apps/imageReader/imageReader.js`);
   const apart = function (str) {
     let arr = str.split(' ');
     let new_string = '';
@@ -10,14 +11,14 @@ const PortfolioFilter = function (clientName = "", apartName = "", designer = ""
     new_string += "홈스타일링_";
     return new_string;
   }
-
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = `${process.cwd()}/apps/portfolioFilter`;
+  this.image = new ImageReader(this.mother, this.back, this.address);
   this.generator = {
     factory: require(this.dir + "/factory/generator.js"),
-  }
+  };
   this.clientName = clientName;
   this.designer = designer;
   this.apartName = apart(apartName);
@@ -151,6 +152,7 @@ PortfolioFilter.prototype.just_filter = function (str) {
 
 PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
   const instance = this;
+  const image = this.image;
   const { fileSystem, shellExec, shellLink, todayMaker } = this.mother;
   let options = {
     home_dir: this.options.home_dir,
@@ -165,6 +167,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     let new_photo_name, new_photo_name_list;
     let photo_sizes;
     let resultFolder;
+    let tempObj;
 
     file_list = (await fileSystem(`readDir`, [ this.options.photo_dir ])).filter((str) => { return str !== ".DS_Store" });
     if (file_list.length === 0) {
@@ -185,9 +188,6 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     }
     console.log(rawFix_file_list);
 
-    await fileSystem(`write`, [ `${this.options.home_dir}/script/raw.js`, this.generator.factory.rawFilter(rawFix_file_list, options) ]);
-    await shellExec(`osascript ${this.options.home_dir}/factory/applescript/raw.scpt`);
-
     photo_sizes = liteMode ? [ "780", "1500" ] : [ "780", "3508" ];
 
     resultFolderBoo = await fileSystem(`readDir`, [ this.options.result_dir ]);
@@ -207,14 +207,12 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     for (let i of photo_sizes) {
       new_photo_name_list = [];
       await shellExec(`mkdir ${shellLink(resultFolder)}/${i}`);
-      for (let photo of file_list) {
-        new_photo_name = this.image_filter(photo, i);
-        await shellExec(`cp ${shellLink(this.options.photo_dir)}/${photo} ${shellLink(resultFolder)}/${i}/${new_photo_name}`);
+      for (let targetImage of rawFix_file_list) {
+        new_photo_name = this.image_filter(targetImage, i);
+        tempObj = await image.toOfficialImage(targetImage, Number(i), (Number(i) === 780));
+        await shellExec(`mv ${shellLink(tempObj.output)} ${shellLink(resultFolder)}/${i}/${new_photo_name}`);
         new_photo_name_list.push(`${resultFolder}/${i}/${new_photo_name}`);
       }
-      options.size = i;
-      await fileSystem(`write`, [ `${this.options.home_dir}/script/to_portfolio.js`, this.generator.factory.to_portfolio(new_photo_name_list, options) ]);
-      await shellExec(`osascript ${this.options.home_dir}/factory/applescript/to_portfolio.scpt`);
     }
 
     if (!liteMode) {
@@ -632,7 +630,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { fileSystem, shellExec, shellLink, consoleQ, appleScript, sleep, messageSend, requestSystem, ghostFileUpload, mongo, mongocontentsinfo } = this.mother;
+  const image = this.image;
+  const { fileSystem, shellExec, shellLink, consoleQ, sleep, messageSend, requestSystem, ghostFileUpload, mongo, mongocontentsinfo } = this.mother;
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
   const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
@@ -659,6 +658,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const drive = new GoogleDrive();
   const collection = "foreContents";
   const selfMongo = new mongo(mongocontentsinfo, { useUnifiedTopology: true });
+  const garoseroParser = new GaroseroParser();
   try {
     if (!Array.isArray(arr)) {
       throw new Error(errorMessage);
@@ -667,9 +667,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     await selfMongo.connect();
     let folderPath;
     let designers, consoleInput, targetDesigner, googleFolderName;
-    let adobe, tempAppList;
     let folderPathList_raw, folderPathList;
-    let forecast, garoseroParser;
+    let forecast;
     let finalObj;
     let foreRows;
     let nextPid;
@@ -681,42 +680,10 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     let clientObj, designerObj;
     let zipLinks;
     let consoleQInput;
-    let photoshopScript;
     let contentsRows;
     let fromArr, toArr;
     let allContentsArr;
     let allProjects, allClients;
-
-    tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
-    adobe = null;
-    for (let i of tempAppList) {
-      if (/Photoshop/gi.test(i)) {
-        adobe = i;
-      }
-    }
-    if (adobe === null) {
-      throw new Error("There is no photoshop");
-    }
-    photoshopScript = function (argv, app) {
-      let text = '';
-      text += 'tell application "' + app + '"\n';
-      text += '\tactivate\n';
-      text += '\topen file "' + argv + '"\n';
-      text += '\tset docheight to height of document 1\n';
-      text += '\tset docWidth to width of document 1\n';
-      text += '\tif docheight < docWidth then\n';
-      text += '\t\tdo action "fore_garo" from "to_portfolio"\n';
-      text += '\t\tclose document 1\n';
-      text += '\t\treturn "g"\n';
-      text += '\telse\n';
-      text += '\t\tdo action "fore_sero" from "to_portfolio"\n';
-      text += '\t\tclose document 1\n';
-      text += '\t\treturn "s"\n';
-      text += '\tend if\n';
-      text += 'end tell';
-      return text;
-    }
-    garoseroParser = new GaroseroParser();
 
     await this.static_setting();
 
@@ -748,6 +715,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         if (nextPid === null) {
           throw new Error("invaild pid");
         }
+
         note = new AppleNotes({ folder: "portfolio", subject: nextPid + "(발행대기)" });
         await note.createNote(`${designer} 실장님 ${client} 고객님`);
 
@@ -761,10 +729,12 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         this.pid = nextPid;
         this.apartName = "";
         totalMakeResult = await this.total_make(true);
+        console.log(totalMakeResult);
+
         googleFolderName = totalMakeResult.folderName;
 
-        folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
-        folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
+        folderPathList = await fileSystem(`readFolder`, [ folderPath ]);
+
         fromArr = [];
         toArr = [];
         for (let f of folderPathList) {
@@ -775,7 +745,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         console.log(`original copy done`);
 
         for (let item of folderPathList) {
-          await appleScript(`compress_${item.replace(/\./g, '')}`, photoshopScript(shellLink(`${folderPath}/${item}`), adobe), null, false);
+          await image.overOfficialImage(`${folderPath}/${item}`, 1000, false);
         }
         forecast = await garoseroParser.queryDirectory(folderPath);
         for (let obj of forecast) {
@@ -784,8 +754,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         finalObj = { pid: nextPid, desid: targetDesigner.desid, client, forecast };
         await back.mongoCreate(collection, finalObj, { selfMongo });
 
-        folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
-        folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
+        folderPathList = await fileSystem(`readFolder`, [ folderPath ]);
         fromArr = [];
         toArr = [];
         for (let f of folderPathList) {
@@ -909,7 +878,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         consoleQInput = await consoleQ(`Is it OK? (press "OK")\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);
         if (/OK/gi.test(consoleQInput.trim())) {
-          // await kakaoInstance.sendTalk("photoShareAKeywordDesigner", targetDesigner.designer, targetDesigner.information.phone, { designer: targetDesigner.designer, file: shareGoogleIdDesigner });
+          await kakaoInstance.sendTalk("photoShareAKeywordDesigner", targetDesigner.designer, targetDesigner.information.phone, { designer: targetDesigner.designer, file: shareGoogleIdDesigner });
           await messageSend({ text: `${targetDesigner.designer} 디자이너님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
         }
 
