@@ -153,11 +153,12 @@ DevContext.prototype.launching = async function () {
     // await meta.instagramList();
     
 
-
-
-
-
-
+    // const tempFolder = process.cwd() + "/temp";
+    // const target0 = tempFolder + "/target0.jpg";
+    // const target1 = tempFolder + "/target1.jpg";
+    // const target2 = tempFolder + "/target2.jpg";
+    // const image = new ImageReader();
+    // await image.createOfficialCanvas(1500);
 
 
 

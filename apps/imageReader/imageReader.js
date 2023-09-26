@@ -693,4 +693,42 @@ ImageReader.prototype.setWatermark = async function (targetImage) {
   }
 }
 
+ImageReader.prototype.createOfficialCanvas = async function (type = 3508, gs = "garo", exe = "png") {
+  const instance = this;
+  const { tempDir: tempFolder, officialSize: size } = this;
+  const { shellExec, shellLink, fileSystem, uniqueValue } = this.mother;
+  const typeConst = "s";
+  const resultConst = "createResult_";
+  try {
+    let typeKeywords;
+    let width, height;
+
+    typeKeywords = typeConst + String(type);
+    if (size[typeKeywords] === undefined) {
+      throw new Error("invalid type");
+    }
+
+    if (gs === "garo") {
+      width = size[typeKeywords][1];
+      height = size[typeKeywords][0];
+    } else {
+      width = size[typeKeywords][0];
+      height = size[typeKeywords][1];
+    }
+
+    resultTarget = tempFolder + "/" + resultConst + uniqueValue("hex") + "." + exe;
+
+    await shellExec(`convert -size ${String(width)}x${String(height)} xc:rgba\\(255,255,255,1\\) ${shellLink(resultTarget)}`);
+    await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, resultTarget ]);
+
+    return {
+      output: resultTarget,
+    };
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 module.exports = ImageReader;
