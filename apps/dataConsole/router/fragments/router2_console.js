@@ -5729,33 +5729,6 @@ DataRouter.prototype.rou_post_userSubmit = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_requestScript = function () {
-  const instance = this;
-  const { requestSystem } = this.mother;
-  let obj = {};
-  obj.link = [ "/requestScript" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (req.body.url === undefined) {
-        throw new Error("invaild post");
-      }
-      const responses = await requestSystem(global.decodeURIComponent(req.body.url));
-      res.send(JSON.stringify({ data: responses.data }));
-    } catch (e) {
-      console.log(req);
-      await logger.error("Console 서버 문제 생김 (rou_post_requestScript): " + e.message + " / " + global.decodeURIComponent(req.body.url));
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
 DataRouter.prototype.rou_post_designerFeeTable = function () {
   const instance = this;
   const work = this.work;

@@ -153,6 +153,35 @@ DevContext.prototype.launching = async function () {
     // await meta.instagramList();
     
 
+    // const tempFolder = process.cwd() + "/temp";
+    // const target0 = tempFolder + "/target0.jpg";
+
+    // const image = new ImageReader();
+    // await image.toOfficialImage(target0, 780);
+
+    const tempFolder = process.cwd() + "/temp";
+    const targetImage = tempFolder + "/convertResult_DB4E1695695170931A37DEE4FCA810FFEC5144FD.jpg";
+    let cropMatrix;
+    let cropPositionWidth, cropPositionHeight;
+    let cropPositionY;
+    let cropMiddleTarget;
+
+    cropMiddleTarget = tempFolder + "/" + middleConst + uniqueValue("hex") + "." + exe;
+
+    `composite -geometry +0+0 water_white_garo.png convertResult_DB4E1695695170931A37DEE4FCA810FFEC5144FD.jpg output.jpg`
+
+    // garo
+
+    cropPositionWidth = 280;
+    cropPositionHeight = 120;
+    cropPositionY = 660;
+    cropMatrix = String(cropPositionWidth) + "x" + String(cropPositionHeight) + "+" + String(0) + "+" + String(cropPositionY);
+
+    await shellExec(`convert ${shellLink(targetImage)} -crop ${cropMatrix} ${shellLink(resultTarget)}`);
+
+
+    // sero
+
 
 
 
@@ -160,6 +189,9 @@ DevContext.prototype.launching = async function () {
 
 
     
+
+    
+
 
 
 

@@ -12,6 +12,12 @@ const ImageReader = function (mother = null, back = null, address = null) {
     this.address = ADDRESS;
   }
   this.dir = process.cwd() + "/apps/imageReader";
+  this.tempDir = process.cwd() + "/temp";
+  this.officialSize = {
+    s780: [ 780, 1103 ],
+    s1500: [ 1060, 1500 ],
+    s3508: [ 2480, 3508 ],
+  };
 }
 
 ImageReader.prototype.pdfToJpg = function (filePath, removeMode = false) {
@@ -198,6 +204,131 @@ ImageReader.prototype.recursivePdfConvert = async function (folderPath) {
     }
 
     return targets;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508, water = false) {
+  const instance = this;
+  const { tempDir: tempFolder, officialSize: size } = this;
+  const middleConst = "tempResult_";
+  const resultConst = "convertResult_";
+  const typeConst = "s";
+  const exe = "jpg";
+  const qualityConst = 100;
+  const { shellExec, shellLink, fileSystem, uniqueValue } = this.mother;
+  try {
+    let targetInfo;
+    let gs;
+    let width, height;
+    let sampleWidth0, sampleHeight0;
+    let sampleWidth1, sampleHeight1;
+    let targetWidth, targetHeight;
+    let middleTarget;
+    let middleInfo;
+    let middleWidth, middleHeight;
+    let cropMatrix;
+    let moveX, moveY;
+    let typeKeywords;
+    let resultTarget;
+
+    typeKeywords = typeConst + String(type);
+    if (size[typeKeywords] === undefined) {
+      throw new Error("invalid type");
+    }
+
+    middleTarget = tempFolder + "/" + middleConst + uniqueValue("hex") + "." + exe;
+    resultTarget = tempFolder + "/" + resultConst + uniqueValue("hex") + "." + exe;
+    targetInfo = await this.readImage(targetImage);
+
+    if (targetInfo.geometry.width >= targetInfo.geometry.height) {
+      gs = "garo";
+    } else if (targetInfo.geometry.width < targetInfo.geometry.height) {
+      gs = "sero";
+    }
+
+    if (gs === "garo") {
+
+      width = targetInfo.geometry.width;
+      height = targetInfo.geometry.height;
+
+      sampleWidth0 = width * (size[typeKeywords][1] / width);
+      sampleHeight0 = height * (size[typeKeywords][1] / width);
+
+      sampleWidth1 = width * (size[typeKeywords][0] / height);
+      sampleHeight1 = height * (size[typeKeywords][0] / height);
+
+      if (Math.floor(sampleHeight0) >= size[typeKeywords][0]) {
+        targetWidth = Math.round(sampleWidth0);
+        targetHeight = Math.round(sampleHeight0);
+      } else {
+        targetWidth = Math.round(sampleWidth1);
+        targetHeight = Math.round(sampleHeight1);
+      }
+
+      await shellExec(`convert ${shellLink(targetImage)} -resize ${String(targetWidth)}x${String(targetHeight)}! -quality ${String(qualityConst)} ${shellLink(middleTarget)}`);
+
+      middleInfo = await this.readImage(middleTarget);
+      middleWidth = middleInfo.geometry.width;
+      middleHeight = middleInfo.geometry.height;
+
+      moveX = Math.floor((middleWidth - size[typeKeywords][1]) / 2);
+      moveY = Math.floor((middleHeight - size[typeKeywords][0]) / 2);
+      cropMatrix = String(size[typeKeywords][1]) + "x" + String(size[typeKeywords][0]) + "+" + String(moveX) + "+" + String(moveY);
+
+      await shellExec(`convert ${shellLink(middleTarget)} -crop ${cropMatrix} -quality ${String(qualityConst)} ${shellLink(resultTarget)}`);
+
+    } else if (gs === "sero") {
+
+      width = targetInfo.geometry.width;
+      height = targetInfo.geometry.height;
+
+      sampleWidth0 = width * (size[typeKeywords][0] / width);
+      sampleHeight0 = height * (size[typeKeywords][0] / width);
+
+      sampleWidth1 = width * (size[typeKeywords][1] / height);
+      sampleHeight1 = height * (size[typeKeywords][1] / height);
+
+      if (Math.floor(sampleWidth0) >= size[typeKeywords][0]) {
+        targetWidth = Math.round(sampleWidth0);
+        targetHeight = Math.round(sampleHeight0);
+      } else {
+        targetWidth = Math.round(sampleWidth1);
+        targetHeight = Math.round(sampleHeight1);
+      }
+
+      await shellExec(`convert ${shellLink(targetImage)} -resize ${String(targetWidth)}x${String(targetHeight)}! -quality ${String(qualityConst)} ${shellLink(middleTarget)}`);
+
+      middleInfo = await this.readImage(middleTarget);
+      middleWidth = middleInfo.geometry.width;
+      middleHeight = middleInfo.geometry.height;
+
+      moveX = Math.floor((middleWidth - size[typeKeywords][0]) / 2);
+      moveY = Math.floor((middleHeight - size[typeKeywords][1]) / 2);
+      cropMatrix = String(size[typeKeywords][0]) + "x" + String(size[typeKeywords][1]) + "+" + String(moveX) + "+" + String(moveY);
+
+      await shellExec(`convert ${shellLink(middleTarget)} -crop ${cropMatrix} -quality ${String(qualityConst)} ${shellLink(resultTarget)}`);
+
+    }
+
+    await shellExec(`rm`, [ `-rf`, middleTarget ]);
+
+    return {
+      original: targetImage,
+      output: resultTarget,
+    };
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+ImageReader.prototype.setWatermark = async function (targetImage) {
+  const instance = this;
+  try {
 
   } catch (e) {
     console.log(e);
