@@ -254,7 +254,7 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteM
     fileList_780_raw = await fileSystem(`readDir`, [ `${resultFolder}/780` ]);
     if (!liteMode) {
       fileList_original_raw = await fileSystem(`readDir`, [ `${resultFolder}/3508` ]);
-      fileList_png_raw = await fileSystem(`readDir`, [ resultFolderParent ]);
+      fileList_png_raw = await fileSystem(`readDir`, [ resultFolder ]);
     } else {
       fileList_1500_raw = await fileSystem(`readDir`, [ `${resultFolder}/1500` ]);
     }

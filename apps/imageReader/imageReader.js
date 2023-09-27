@@ -469,11 +469,11 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
       sampleHeight1 = height * (size[typeKeywords][0] / height);
 
       if (Math.floor(sampleHeight0) >= size[typeKeywords][0]) {
-        targetWidth = Math.round(sampleWidth0);
-        targetHeight = Math.round(sampleHeight0);
+        targetWidth = Math.ceil(sampleWidth0);
+        targetHeight = Math.ceil(sampleHeight0);
       } else {
-        targetWidth = Math.round(sampleWidth1);
-        targetHeight = Math.round(sampleHeight1);
+        targetWidth = Math.ceil(sampleWidth1);
+        targetHeight = Math.ceil(sampleHeight1);
       }
 
       await this.convertImage({
@@ -515,11 +515,11 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
       sampleHeight1 = height * (size[typeKeywords][1] / height);
 
       if (Math.floor(sampleWidth0) >= size[typeKeywords][0]) {
-        targetWidth = Math.round(sampleWidth0);
-        targetHeight = Math.round(sampleHeight0);
+        targetWidth = Math.ceil(sampleWidth0);
+        targetHeight = Math.ceil(sampleHeight0);
       } else {
-        targetWidth = Math.round(sampleWidth1);
-        targetHeight = Math.round(sampleHeight1);
+        targetWidth = Math.ceil(sampleWidth1);
+        targetHeight = Math.ceil(sampleHeight1);
       }
 
       await this.convertImage({
