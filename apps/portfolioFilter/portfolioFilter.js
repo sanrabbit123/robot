@@ -168,6 +168,8 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     let photo_sizes;
     let resultFolder;
     let tempObj;
+    let pngResultFolder;
+    let pngImageList;
 
     file_list = (await fileSystem(`readDir`, [ this.options.photo_dir ])).filter((str) => { return str !== ".DS_Store" });
     if (file_list.length === 0) {
@@ -188,7 +190,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     }
     console.log(rawFix_file_list);
 
-    photo_sizes = liteMode ? [ "780", "1500" ] : [ "780", "3508" ];
+    photo_sizes = liteMode ? [ "780", "1500" ] : [ "780", "1500", "3508" ];
 
     resultFolderBoo = await fileSystem(`readDir`, [ this.options.result_dir ]);
     for (let i of resultFolderBoo) {
@@ -216,14 +218,19 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     }
 
     if (!liteMode) {
-      await fileSystem(`write`, [ `${this.options.home_dir}/script/to_png.js`, this.generator.factory.to_png({}, options) ]);
-      await shellExec(`osascript ${this.options.home_dir}/factory/applescript/to_png.scpt`);
+      pngResultFolder = (await image.officialPng(this.apartName, resultFolder + "/1500")).output;
+      pngImageList = await fileSystem(`readFolder`, [ pngResultFolder ]);
+      for (let pngImage of pngImageList) {
+        await shellExec(`mv ${shellLink(pngResultFolder) + "/" + pngImage} ${shellLink(resultFolder).replace(/\/$/i, '')}/;`);
+      }
+      await shellExec(`rm -rf ${shellLink(pngResultFolder)};`);
     }
 
     return resultFolder;
 
   } catch (e) {
     console.log(e);
+    return null;
   }
 }
 

@@ -16,6 +16,7 @@ const ImageReader = function (mother = null, back = null, address = null) {
   this.sourceDir = this.dir + "/source";
   this.waterDir = this.sourceDir + "/water";
   this.officialSize = {
+    s749: [ 749, 1060 ],
     s780: [ 780, 1103 ],
     s1000: [ 1000, 1415 ],
     s1500: [ 1060, 1500 ],
@@ -133,17 +134,20 @@ ImageReader.prototype.compositeImage = async function (obj) {
     let thisFileName;
     let thisFileExe;
     let thisDirContents;
+    let moveX, moveY;
 
     upLayer = obj.up;
     downLayer = obj.down;
     resultTarget = obj.output;
+    moveX = (typeof obj.x === "number" ? obj.x : 0);
+    moveY = (typeof obj.y === "number" ? obj.y : 0);
 
     thisDir = resultTarget.split("/").slice(0, -1).join("/");
     thisFileName = resultTarget.split("/")[resultTarget.split("/").length - 1];
     thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
     thisFileName = thisFileName.split(".").slice(0, -1).join(".");
 
-    await shellExec(`composite -geometry +0+0 ${shellLink(upLayer)} ${shellLink(downLayer)} ${shellLink(resultTarget)}`);
+    await shellExec(`composite -geometry +${String(moveX)}+${String(moveY)} ${shellLink(upLayer)} ${shellLink(downLayer)} ${shellLink(resultTarget)}`);
     if (!(await fileSystem(`exist`, [ resultTarget ]))) {
       thisDirContents = await fileSystem(`readFolder`, [ thisDir ]);
       thisDirContents = thisDirContents.filter((str) => { return (new RegExp(thisFileName + "-[0-9]+." + thisFileExe, "g")).test(str) });
@@ -680,7 +684,9 @@ ImageReader.prototype.setWatermark = async function (targetImage) {
     await this.compositeImage({
       up: waterMarkTarget,
       down: targetImage,
-      output: resultTarget
+      output: resultTarget,
+      x: 0,
+      y: 0,
     });
 
     return {
@@ -718,11 +724,161 @@ ImageReader.prototype.createOfficialCanvas = async function (type = 3508, gs = "
 
     resultTarget = tempFolder + "/" + resultConst + uniqueValue("hex") + "." + exe;
 
-    await shellExec(`convert -size ${String(width)}x${String(height)} xc:rgba\\(255,255,255,1\\) ${shellLink(resultTarget)}`);
+    await shellExec(`convert -size ${String(width)}x${String(height)} xc:rgba\\(254,255,255,1\\) ${shellLink(resultTarget)}`);
     await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, resultTarget ]);
 
     return {
       output: resultTarget,
+    };
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+ImageReader.prototype.twoVerticalImages = async function (arr) {
+  const instance = this;
+  const { tempDir: tempFolder, officialSize: size } = this;
+  const { shellExec, shellLink, fileSystem, uniqueValue } = this.mother;
+  const verticalMiddleConst = "verticalMiddle_";
+  const verticalResultConst = "verticalResult_";
+  const exe = "png";
+  try {
+    const [ target0, target1 ] = arr;
+    let baseCanvas;
+    let middleTarget, resultTarget;
+    let target0Converting;
+    let target1Converting;
+    let officialType0, officialType1;
+
+    officialType0 = 1500;
+    officialType1 = 749;
+
+    middleTarget = tempFolder + "/" + verticalMiddleConst + uniqueValue("hex") + "." + exe;
+    resultTarget = tempFolder + "/" + verticalResultConst + uniqueValue("hex") + "." + exe;
+
+    target0Converting = (await this.toOfficialImage(target0, officialType1, false)).output;
+    target1Converting = (await this.toOfficialImage(target1, officialType1, false)).output;
+    baseCanvas = (await this.createOfficialCanvas(officialType0)).output;
+
+    await this.compositeImage({
+      up: target0Converting,
+      down: baseCanvas,
+      output: middleTarget,
+      x: 0,
+      y: 0,
+    });
+
+    await this.compositeImage({
+      up: target1Converting,
+      down: middleTarget,
+      output: resultTarget,
+      x: officialType0 - officialType1,
+      y: 0,
+    });
+
+    await shellExec(`rm`, [ `-rf`, target0Converting ]);
+    await shellExec(`rm`, [ `-rf`, target1Converting ]);
+    await shellExec(`rm`, [ `-rf`, middleTarget ]);
+    await shellExec(`rm`, [ `-rf`, baseCanvas ]);
+
+    return {
+      output: resultTarget,
+    };
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+ImageReader.prototype.officialPng = async function (apartName, targetFolder) {
+  const instance = this;
+  const { tempDir: tempFolder, officialSize: size } = this;
+  const { shellExec, shellLink, fileSystem, uniqueValue, dateToString, equalJson } = this.mother;
+  const exe = "png";
+  const keywords = "홈스타일링";
+  try {
+    let targetList;
+    let targetListDetail;
+    let targetListDetail_filtered;
+    let thisJson;
+    let tempObj;
+    let newFileName;
+    let num;
+    let tempResult;
+    let resultFolder;
+
+    resultFolder = tempFolder + "/" + "result_" + uniqueValue("hex");
+    await shellExec(`mkdir ${shellLink(resultFolder)}`);
+
+    targetList = await fileSystem(`readFolder`, [ targetFolder ]);
+    targetList.sort((a, b) => { return Number(a.split("_")[2]) - Number(b.split("_")[2]); });
+
+    targetListDetail = [];
+    for (let fileName of targetList) {
+      tempObj = {};
+      thisJson = await this.readImage(targetFolder + "/" + fileName);
+      tempObj.fileName = fileName;
+      tempObj.absolute = targetFolder + "/" + fileName;
+      tempObj.gs = (thisJson.geometry.width >= thisJson.geometry.height ? "garo" : "sero");
+      tempObj.width = thisJson.geometry.width;
+      tempObj.height = thisJson.geometry.height;
+      targetListDetail.push(tempObj);
+    }
+
+    targetListDetail_filtered = [];
+    for (let obj of targetListDetail) {
+      if (obj.gs === "garo") {
+        targetListDetail_filtered.push({
+          fileName: obj.fileName,
+          absolute: obj.absolute,
+          gs: obj.gs,
+          width: obj.width,
+          height: obj.height,
+        });
+      } else {
+        if (Array.isArray(tempObj.fileName)) {
+          tempObj.fileName.push(obj.fileName);
+          tempObj.absolute.push(obj.absolute);
+          if (tempObj.fileName.length >= 2) {
+            targetListDetail_filtered.push(equalJson(JSON.stringify(tempObj)));
+            tempObj = {};
+          }
+        } else {
+          tempObj = {};
+          tempObj.fileName = [];
+          tempObj.absolute = [];
+          tempObj.gs = obj.gs;
+          tempObj.width = obj.width;
+          tempObj.height = obj.height;
+          tempObj.fileName.push(obj.fileName);
+          tempObj.absolute.push(obj.absolute);
+        }
+      }
+    }
+
+    num = 0;
+    for (let { absolute, gs } of targetListDetail_filtered) {
+      newFileName = apartName + "_" + keywords + "_" + String(num + 1) + "_" + dateToString(new Date()).replace(/\-/gi, '') + "." + exe;
+      if (gs === "garo") {
+        await this.convertImage({
+          input: absolute,
+          width: this.officialSize.s1500[1],
+          height: this.officialSize.s1500[0],
+          quality: 100,
+          output: resultFolder + "/" + newFileName,
+        });
+      } else {
+        tempResult = (await this.twoVerticalImages(absolute)).output;
+        await shellExec(`mv ${shellLink(tempResult)} ${shellLink(resultFolder + "/" + newFileName)}`);
+      }
+      num++;
+    }
+
+    return {
+      output: resultFolder
     };
 
   } catch (e) {
