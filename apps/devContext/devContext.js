@@ -158,6 +158,7 @@ DevContext.prototype.launching = async function () {
 
 
 
+
     
 
     /*
@@ -225,7 +226,11 @@ DevContext.prototype.launching = async function () {
     */
 
 
-    
+
+
+
+
+
     
     
 
@@ -6410,9 +6415,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "권정수",
-    //     designer: "정다연",
-    //     link: "https://drive.google.com/drive/folders/1Zkmtj6NWbV1rfeQqVNGEtra3YMaUYPxX",
+    //     client: null,
+    //     designer: "송수현",
+    //     link: "https://drive.google.com/drive/folders/1OK2Z-HXzM96-5AW67uK3ZZA_5EjANmwV",
     //     pay: true
     //   },
     // ]);
@@ -6477,21 +6482,23 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2309_aa01s" ]);
+    // await work.newDesignerToFront([ "d2309_aa06s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2309_aa02s", [
-    //   { porlid: "ghost", index: 11 },
-    //   { porlid: "ghost", index: 1 },
-    //   { porlid: "ghost", index: 23 },
-    //   { porlid: "ghost", index: 27 },
-    //   { porlid: "ghost", index: 32 },
+    // await this.setProposalSettingForDesigner("d2309_aa06s", [
+    //   { porlid: "a107", index: 15 },
+    //   { porlid: "a107", index: 21 },
+    //   { porlid: "a107", index: 3 },
+    //   { porlid: "a107", index: 17 },
+    //   { porlid: "a107", index: 22 },
+    //   { porlid: "a107", index: 25 },
     // ], [
-    //   "깔끔하고 모던한 스타일로 군더더기 없는 집을 만들어 드립니다.",
-    //   "트렌드보다는 집이 주는 아늑함과 편안함, 그 이상의 가치를 스타일링합니다.",
-    //   "고급스러운 공간 연출에 능하며 집을 가치 있는 공간으로 만들어 드립니다.",
+    //   "깔끔하고 모던한 베이스에 감성적인 스타일링으로 분위기 있는 공간을 만들어 드립니다.",
+    //   "공간과 구조에 대한 이해도가 높아 높은 퀄리티의 현장 결과를 낼 수 있습니다.",
+    //   "고객님의 라이프 스타일과 취향을 최대한 반영해 고객님께서 만족하실만한 집을 만들어 드립니다.",
     // ]);
+
 
     // send mail
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
@@ -6502,9 +6509,10 @@ DevContext.prototype.launching = async function () {
     //   contents: "안녕하세요.",
     // }));
 
+    
     // // send sms
-    // const name = "지순정";
-    // const amount = 1697000;
+    // const name = "서운아";
+    // const amount = 2413000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
@@ -7795,8 +7803,8 @@ DevContext.prototype.setProposalSettingForDesigner = async function (desid, file
     if (!Array.isArray(files)) {
       throw new Error("files must be array");
     }
-    if (files.length !== 6 && files.length !== 5 && files.length !== 7) {
-      throw new Error("files must be 5 or 6 of 7 array");
+    if (files.length !== 6 && files.length !== 5 && files.length !== 7 && files.length !== 8) {
+      throw new Error("files must be 5 - 8 array");
     }
     for (let i = 0; i < files.length; i++) {
       if (files[i].porlid === undefined || files[i].index === undefined) {
@@ -7955,6 +7963,67 @@ DevContext.prototype.setProposalSettingForDesigner = async function (desid, file
               "unionPo" : "right",
               "imgSrc" : filesArr[6],
               "styleText" : "top: 67%; left: 84%; width: 16%; height: 33%; background-image: url(\"" + filesArr[6] + "\");"
+          }
+        ], description };
+
+      } else if (mode === 8) {
+
+        resultArr = { name: "기본 세팅", photo: [
+          {
+              "position" : "0",
+              "sgTrue" : "g",
+              "unionPo" : "union",
+              "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"" + filesArr[0] + "\");",
+              "imgSrc" : filesArr[0]
+          },
+          {
+              "position" : "1",
+              "sgTrue" : "s",
+              "unionPo" : "right",
+              "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"" + filesArr[1] + "\");",
+              "imgSrc" : filesArr[1]
+          },
+          {
+              "position" : "2",
+              "sgTrue" : "s",
+              "unionPo" : "left",
+              "imgSrc" : filesArr[2],
+              "styleText" : "top: 67%; left: 0%; width: 16%; height: 33%; background-image: url(\"" + filesArr[2] + "\");"
+          },
+          {
+              "position" : "3",
+              "sgTrue" : "s",
+              "unionPo" : "right",
+              "imgSrc" : filesArr[3],
+              "styleText" : "top: 67%; left: 16.8%; width: 16%; height: 33%; background-image: url(\"" + filesArr[3] + "\");"
+          },
+          {
+              "position" : "4",
+              "sgTrue" : "s",
+              "unionPo" : "left",
+              "imgSrc" : filesArr[4],
+              "styleText" : "top: 67%; left: 33.5%; width: 16%; height: 33%; background-image: url(\"" + filesArr[4] + "\");"
+          },
+          {
+              "position" : "5",
+              "sgTrue" : "s",
+              "unionPo" : "right",
+              "imgSrc" : filesArr[5],
+              "styleText" : "top: 67%; left: 50.3%; width: 16.2%; height: 33%; background-image: url(\"" + filesArr[5] + "\");"
+          },
+          {
+              "position" : "6",
+              "sgTrue" : "s",
+              "unionPo" : "left",
+              "imgSrc" : filesArr[6],
+              "styleText" : "top: 67%; left: 67.2%; width: 16%; height: 33%; background-image: url(\"" + filesArr[6] + "\");"
+          },
+          {
+              "position" : "7",
+              "sgTrue" : "s",
+              "unionPo" : "right",
+              "imgSrc" : filesArr[7],
+              "styleText" : "top: 67%; left: 84%; width: 16%; height: 33%; background-image: url(\"" + filesArr[7] + "\");"
           }
         ], description };
 

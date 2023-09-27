@@ -273,7 +273,7 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteM
       }
       for (let i of fileList_png_raw) {
         if (/\.png$/g.test(i)) {
-          fileList_png.push(resultFolderParent + "/" + i);
+          fileList_png.push(resultFolder + "/" + i);
           console.log(i);
         }
       }
