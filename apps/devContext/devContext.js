@@ -153,10 +153,9 @@ DevContext.prototype.launching = async function () {
     // await meta.instagramList();
     
 
-    
-
-    
-
+    // const clients = await back.getClientsByQuery({}, { withTools: true });
+    // console.log(clients.dimensionSqueeze().model.getCreateSql());
+    // console.log(clients.dimensionSqueeze().data.getInsertSql());
 
 
 
