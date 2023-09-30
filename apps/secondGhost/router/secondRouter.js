@@ -2783,6 +2783,18 @@ SecondRouter.prototype.rou_post_noticeAspirantContractYesterday = function () {
           await requestSystem("https://" + address.pythoninfo.host + ":3000/createPartnershipContract", { aspid: aspirant.aspid }, { headers: { "Content-Type": "application/json" } });
           await sleep(500);
           await requestSystem("https://" + address.pythoninfo.host + ":3000/createDesignerContract", { aspid: aspirant.aspid }, { headers: { "Content-Type": "application/json" } });
+          if (aspirant.response.portfolio.plus.photo.valueOf() < emptyDateValue) {
+            await sleep(500);
+            await requestSystem("https://" + address.secondinfo.host + ":3000/noticeAspirantConsole", {
+              mode: "send",
+              aspid: aspirant.aspid,
+              designer: aspirant.designer,
+              phone: aspirant.phone,
+              type: "setting",
+            }, {
+              headers: { "Content-Type": "application/json" },
+            });
+          }
         }
       }
 
