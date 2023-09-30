@@ -2773,7 +2773,7 @@ SecondRouter.prototype.rou_post_noticeAspirantContractYesterday = function () {
       }
 
       for (let aspirant of targets) {
-        if (/드랍/gi.test(aspirant.meeting.status)) {
+        if (!/드랍/gi.test(aspirant.meeting.status)) {
           whereQuery = {};
           whereQuery["aspid"] = aspirant.aspid;
           updateQuery = {};
