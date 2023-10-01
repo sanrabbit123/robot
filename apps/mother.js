@@ -2349,7 +2349,7 @@ Mother.prototype.decryptoHash = function (password, hash, option = { algorithm: 
   }
 }
 
-Mother.prototype.mysqlQuery = function (query, option = { local: false, front: true }) {
+Mother.prototype.mysqlQuery = function (query, option = { local: false, front: true, center: false }) {
   const mysql = require("mysql2");
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   let mysqlStandard;
@@ -2360,6 +2360,9 @@ Mother.prototype.mysqlQuery = function (query, option = { local: false, front: t
     host = "127.0.0.1";
   } else if (option.front === true) {
     host = ADDRESS["frontinfo"]["host"];
+  } else if (option.center === true) {
+    mysqlStandard = ADDRESS["mysqlinfo"];
+    host = mysqlStandard.host;
   } else {
     mysqlStandard = option;
     host = mysqlStandard.host;
@@ -2377,20 +2380,23 @@ Mother.prototype.mysqlQuery = function (query, option = { local: false, front: t
     return new Promise(function (resolve, reject) {
       Promise.all(promiseList).then((values) => {
         tong = values;
+        tong.message = "done";
         connection.end();
         resolve(tong);
       }).catch(function (err) {
+        connection.end();
         reject(err);
       });
     });
   } else {
     return new Promise(function (resolve, reject) {
-      connection.promise().query(query).then(function (response) {
+      connection.promise().query(query).then((response) => {
         tong = response;
       }).then(function () {
         connection.end();
         if (Array.isArray(tong)) {
           if (tong.length > 0) {
+            tong[0].message = "done";
             resolve(tong[0]);
           } else {
             resolve({ message: "done" });
@@ -2399,6 +2405,7 @@ Mother.prototype.mysqlQuery = function (query, option = { local: false, front: t
           resolve({ message: "done" });
         }
       }).catch(function (err) {
+        connection.end();
         reject(err);
       });
     });

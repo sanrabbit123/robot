@@ -2037,9 +2037,7 @@ StaticRouter.prototype.rou_post_dataReflection = function () {
         throw new Error("post ban");
       }
 
-      reflection.coreReflection().then(() => {
-        return reflection.mysqlReflection();
-      }).catch((err) => {
+      reflection.coreReflection().catch((err) => {
         console.log(err);
       })
     
@@ -5398,6 +5396,159 @@ StaticRouter.prototype.rou_post_refreshDesignerCareer = function () {
 
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_refreshDesignerCareer): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_mysqlReflection = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, dateToString, stringToDate, requestSystem, mysqlQuery, sleep } = this.mother;
+  const intoMysql = async (thisSqueeze) => {
+    let tableReady;
+    let boo;
+    let safeNum;
+    let injectionValues;
+    let injectionBoo;
+    let retryBoo;
+    try {
+
+      tableReady = async (model) => {
+        let res;
+        try {
+          res = await mysqlQuery(model.getDropSql(), { center: true });
+          if (res.message === "done") {
+            res = await mysqlQuery(model.getCreateSql(), { center: true });
+            if (res.message !== "done") {
+              throw new Error("create fail");
+            }
+          } else {
+            throw new Error("drop fail");
+          }
+          return true;
+        } catch (e) {
+          if (e.message === "create fail") {
+            console.log(e);
+            return false;
+          } else {
+            try {
+              res = await mysqlQuery(model.getCreateSql(), { center: true });
+              if (res.message !== "done") {
+                throw new Error("create fail");
+              }
+              return true;
+            } catch (e) {
+              console.log(e);
+              return false;
+            }
+          }
+        }
+      }
+      injectionValues = async (data) => {
+        let queryList;
+        let queryResult;  
+        try {
+          queryList = data.getInsertSql();
+          queryResult = await mysqlQuery(queryList, { center: true });
+          if (queryResult.message !== "done") {
+            throw new Error("insert fail");
+          }
+          return true;
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+  
+      boo = await tableReady(thisSqueeze.model);
+      safeNum = 0;
+      while (!boo) {
+        if (safeNum > 10) {
+          break;
+        }
+        await sleep(3000);
+        boo = await tableReady(thisSqueeze.model);
+        safeNum++;
+      }
+  
+      if (boo) {
+        injectionBoo = await injectionValues(thisSqueeze.data);
+        if (!injectionBoo) {
+          await sleep(3000);
+          retryBoo = await intoMysql(thisSqueeze);
+          if (retryBoo) {
+            return true;
+          } else {
+            throw new Error("retry fail");
+          }
+        }
+      }
+
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  }
+  let obj;
+  obj = {};
+  obj.link = [ "/mysqlReflection" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      
+      (async () => {
+        try {
+          let clients, designers, projects, aspirants;
+          let resultBoo;
+
+          clients = await back.getClientsByQuery({}, { withTools: true, selfMongo });
+          resultBoo = await intoMysql(clients.dimensionSqueeze());
+          if (!resultBoo) {
+            throw new Error("clients mysql reflection fail");
+          }
+          
+          designers = await back.getDesignersByQuery({}, { withTools: true, selfMongo });
+          resultBoo = await intoMysql(designers.dimensionSqueeze());
+          if (!resultBoo) {
+            throw new Error("designers mysql reflection fail");
+          }
+
+          projects = await back.getProjectsByQuery({}, { withTools: true, selfMongo });
+          resultBoo = await intoMysql(projects.dimensionSqueeze());
+          if (!resultBoo) {
+            throw new Error("projects mysql reflection fail");
+          }
+
+          aspirants = await back.getAspirantsByQuery({}, { withTools: true, selfMongo });
+          resultBoo = await intoMysql(aspirants.dimensionSqueeze());
+          if (!resultBoo) {
+            throw new Error("aspirants mysql reflection fail");
+          }
+
+          await logger.cron("core db mysql reflection success : " + JSON.stringify(new Date()));
+
+          return true;
+        } catch (e) {
+          logger.error("Static lounge 서버 문제 생김 (rou_post_mysqlReflection): " + e.message).catch((e) => { console.log(e); });
+          return false;
+        }
+      })().catch((err) => {
+        logger.error("Static lounge 서버 문제 생김 (rou_post_mysqlReflection): " + err.message).catch((e) => { console.log(e); }); 
+        console.log(err);
+      });
+
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_mysqlReflection): " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
