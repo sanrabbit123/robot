@@ -153,7 +153,7 @@ DevContext.prototype.launching = async function () {
     // await meta.instagramList();
     
 
-
+    console.log(await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/mysqlReflection", { data: null }, { headers: { "Content-Type": "application/json" } }));
     
 
     
