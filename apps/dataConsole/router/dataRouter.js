@@ -8837,7 +8837,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
       DataRouter.timeouts["styleCuration_pageInitComplete_" + cliid] = setTimeout(async () => {
         try {
           const client = await back.getClientById(cliid, { selfMongo: instance.mongo });
-          if (client.requests[0].analytics.response.status.value === "응대중") {
+          if (client.requests[0].analytics.response.status.value === "응대중" && client.requests[0].analytics.response.action.value === "1차 응대 예정") {
             await kakao.sendTalk("pushClient", client.name, client.phone, {
               client: client.name,
               host: address.frontinfo.host,
@@ -8849,7 +8849,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
         } catch (e) {
           await logger.error("독촉하는 과정중 오류남 : " + e.message);
         }
-      }, 20 * 60 * 1000);
+      }, 30 * 60 * 1000);
 
       res.send(JSON.stringify({ message: "done" }));
 
