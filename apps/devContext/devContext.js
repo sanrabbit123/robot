@@ -154,16 +154,58 @@ DevContext.prototype.launching = async function () {
     
 
 
+
+
+
+    // await this.MONGOCONSOLEC.connect();
+
+    // const selfCoreMongo = this.MONGOC;
+    // const selfMongo = this.MONGOCONSOLEC;
+    // const collection = "realtimeDesigner";
+    // let rows;
+    // let designers;
+    // let matrix;
+    // let thisStart, thisEnd;
+    // let thisArr;
+    // let possibleArr;
+    // let possibleNumbersArr;
+    // let possibleNumber;
+    
+    // designers = await back.getDesignersByQuery({}, { selfMongo: selfCoreMongo });
+    // rows = await back.mongoRead(collection, {}, { selfMongo });
+
+    // ({ matrix } = getDateMatrix(2024, 1).sundayConvert());
+
+    // for (let arr of matrix) {
+
+    //   thisArr = arr.filter((o) => { return o !== null });
+    //   thisStart = thisArr[0].dateObject;
+    //   thisEnd = thisArr[thisArr.length - 1].dateObject;
+
+
+    //   for (let row of rows) {
+    //     possibleArr = row.possible.filter((o) => {
+    //       return (o.start.valueOf() >= thisStart.valueOf()) && (o.end.valueOf() <= thisEnd.valueOf())
+    //     });
+    //     possibleNumbersArr = possibleArr.map((a) => { return a.matrix.reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0) });
+    //     possibleNumber = 0;
+    //     if (possibleNumbersArr.length > 0) {
+    //       possibleNumber = possibleNumbersArr.reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0);
+    //     }
+    //     console.log(row.desid, thisStart, thisEnd, possibleNumber);
+    //   }
+    // }
+
+    // await this.MONGOCONSOLEC.close();
+
     
 
-    
-
-
-
-
 
 
     
+
+
+
 
     /*
 
