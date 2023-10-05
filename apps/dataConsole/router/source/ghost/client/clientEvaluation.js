@@ -2604,9 +2604,6 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     }
   });
 
-
-  
-
   // policy and submit
   policyArea = createNode({
     mother: mainBlock,
