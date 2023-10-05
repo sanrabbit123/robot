@@ -859,6 +859,7 @@ DataConsole.prototype.connect = async function () {
   const { fileSystem, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog, expressLog, dateToString, aliveLog, cronLog, emergencyAlarm, alertLog, shellExec, shellLink } = this.mother;
   const PORT = 3000;
   const https = require("https");
+  const os = require("os");
   const express = require("express");
   const app = express();
   const multer = require("multer");
@@ -1124,13 +1125,15 @@ DataConsole.prototype.connect = async function () {
     });
 
     //set top log
-    setTimeout(() => {
-      setInterval(() => {
-        shellExec(`top -n 1 -b > ${shellLink(`${topFolder}/top.out`)}`).catch((err) => {
-          console.log(err);
-        });
-      }, 3 * 1000);
-    }, 1000);
+    if (!/Darwin/gi.test(os.type())) {
+      setTimeout(() => {
+        setInterval(() => {
+          shellExec(`top -n 1 -b > ${shellLink(`${topFolder}/top.out`)}`).catch((err) => {
+            console.log(err);
+          });
+        }, 3 * 1000);
+      }, 1000);
+    }
 
     //server on
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });

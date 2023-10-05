@@ -6932,7 +6932,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "이지연", "2023-09-12" ],
+    //   [ "김은경", "2023-09-13" ],
     // ]);
 
 
