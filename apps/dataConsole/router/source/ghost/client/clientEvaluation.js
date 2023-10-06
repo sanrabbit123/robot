@@ -450,7 +450,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
 
   grayTop = <%% 0, 0, 0, 0, 0 %%>;
   grayInputTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.2 %%>;
-  grayHeight = <%% 32, 32, 28, 25, 7 %%>;
+  grayHeight = <%% 32, 32, 28, 26, 7 %%>;
   grayBigHeight = <%% 156, 137, 136, 135, 38 %%>;
   grayTextAreaTop = <%% 3, 3, 3, 3, 1.3 %%>;
   grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
@@ -662,7 +662,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   defaultRatio = 0.5;
 
   grayBarUpDownMarginRatio = <%% 1.8, 1.8, 1.8, 1.8, 1.8 %%>;
-  barFactorTongVisualTop = <%% 0, 2, 1, 1, 0 %%>;
+  barFactorTongVisualTop = <%% 1, 2, 1, 1, 0 %%>;
 
   contents = {
     main: [
