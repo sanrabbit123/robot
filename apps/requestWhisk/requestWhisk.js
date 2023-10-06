@@ -81,18 +81,31 @@ RequestWhisk.prototype.requestBeating = async function () {
   const app = express();
   const port = 53001;
   const centrexUrl = "https://centrex.uplus.co.kr/premium/backoffice/main.su.html";
+  const position = {
+    x: 90,
+    y: 78,
+  };
   try {
 
     this.chromeOpen(centrexUrl).then(() => {
+      return sleep(3000);
+    }).then(() => {
       bot.keyTap("enter");
       return sleep(500);
     }).then(() => {
       bot.keyTap("f12");
       return sleep(500);
     }).then(() => {
-
-
-
+      setTimeout(() => {
+        setInterval(() => {
+          bot.moveMouse(position.x, position.y);
+          sleep(500).then(() => {
+            bot.mouseClick();
+          }).catch((err) => {
+            console.log(err);
+          });
+        }, 3000);
+      }, 10 * 1000);
     }).catch((err) => {
       console.log(err);
     });
