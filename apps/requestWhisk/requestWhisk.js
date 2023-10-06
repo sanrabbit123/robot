@@ -73,26 +73,29 @@ RequestWhisk.prototype.chromeOpen = function (url) {
 
 RequestWhisk.prototype.requestBeating = async function () {
   const instance = this;
-  const mother = this.mother;
   const back = this.back;
-  const { fileSystem, shell, shellLink } = mother;
+  const { bot } = this;
+  const { fileSystem, shellExec, shellLink, sleep } = this.mother;
   const http = require("http");
   const express = require("express");
   const app = express();
   const port = 53001;
+  const centrexUrl = "https://centrex.uplus.co.kr/premium/backoffice/main.su.html";
   try {
 
-    
+    this.chromeOpen(centrexUrl).then(() => {
+      bot.keyTap("Enter");
+      return sleep(500);
+    }).then(() => {
+      bot.keyTap("f12");
+      return sleep(500);
+    }).then(() => {
 
-    
-    this.chromeOpen("https://centrex.uplus.co.kr/premium/backoffice/main.su.html").catch((err) => {
+      
+
+    }).catch((err) => {
       console.log(err);
-    })
-
-
-
-
-    
+    });
 
     http.createServer(app).listen(port, () => {
       console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(port)}`);
