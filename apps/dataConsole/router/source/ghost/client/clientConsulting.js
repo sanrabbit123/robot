@@ -394,6 +394,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   let furnitureValues;
   let defaultRatio;
   let barClickEvent;
+  let barFactorTongVisualTop;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -644,6 +645,8 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   barFactorA2Left = <%% 518, 397, 341, 252, 49.4 %%>;
 
   barFactorB0Left = <%% 332, 250, 211, 153, 28.6 %%>;
+
+  barFactorTongVisualTop = <%% 0, 1, 0, 0, 0 %%>;
 
   mobileGrayTextAreaTop = 7.8;
 
@@ -2282,7 +2285,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         style: {
           display: "inline-flex",
           position: "absolute",
-          top: String(0) + ea,
+          top: String(barFactorTongVisualTop) + ea,
           left: String(leftGrayType2) + ea,
           width: withOut(leftGrayType2, ea),
           height: "auto",
@@ -2497,7 +2500,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         style: {
           display: "inline-flex",
           position: "absolute",
-          top: String(0) + ea,
+          top: String(barFactorTongVisualTop) + ea,
           left: String(leftGrayType2) + ea,
           width: withOut(leftGrayType2, ea),
           height: "auto",
