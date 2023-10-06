@@ -82,30 +82,46 @@ RequestWhisk.prototype.requestBeating = async function () {
   const port = 53001;
   const centrexUrl = "https://centrex.uplus.co.kr/premium/backoffice/main.su.html";
   const position = {
+    chrome: {
+      x: 25,
+      y: 1056,
+    },
     x: 90,
     y: 78,
   };
+  const interval = 10 * 1000;
+  const startTime = 10 * 1000;
   try {
 
     this.chromeOpen(centrexUrl).then(() => {
-      return sleep(3000);
+      return sleep(5000);
     }).then(() => {
       bot.keyTap("enter");
-      return sleep(500);
+      return sleep(1000);
     }).then(() => {
       bot.keyTap("f12");
-      return sleep(500);
+      return sleep(1000);
     }).then(() => {
       setTimeout(() => {
         setInterval(() => {
-          bot.moveMouse(position.x, position.y);
-          sleep(500).then(() => {
+          bot.moveMouse(position.chrome.x, position.chrome.y);
+          sleep(1000).then(() => {
             bot.mouseClick();
+            sleep(1000).then(() => {
+              bot.moveMouse(position.x, position.y);
+              sleep(1000).then(() => {
+                bot.mouseClick();
+              }).catch((err) => {
+                console.log(err);
+              });
+            }).catch((err) => {
+              console.log(err);
+            });
           }).catch((err) => {
             console.log(err);
           });
-        }, 3000);
-      }, 10 * 1000);
+        }, interval);
+      }, startTime);
     }).catch((err) => {
       console.log(err);
     });
