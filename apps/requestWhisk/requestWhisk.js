@@ -85,7 +85,7 @@ RequestWhisk.prototype.requestBeating = async function () {
     
 
     
-    this.chromeOpen("https://" + this.address.pythoninfo.host + ":3000/bluePrint").catch((err) => {
+    this.chromeOpen("https://centrex.uplus.co.kr/premium/backoffice/main.su.html").catch((err) => {
       console.log(err);
     })
 
