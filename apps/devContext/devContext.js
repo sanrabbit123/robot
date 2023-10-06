@@ -147,9 +147,16 @@ DevContext.prototype.launching = async function () {
 
 
     
+    // let res;
 
 
-    
+    // res = await requestSystem("http://127.0.0.1:5000/post/3", { data: 1234 }, { headers: { "Content-Type": "x-www-form-urlencoded" } });
+    // console.log(res);
+    // res = await requestSystem("http://127.0.0.1:5000/post/3", { data: 1234 }, { headers: { "Content-Type": "application/json" } });
+    // console.log(res);
+    // res = await requestSystem("http://127.0.0.1:5000/post/3", { data: 1234 });
+    // console.log(res);
+
 
 
     
