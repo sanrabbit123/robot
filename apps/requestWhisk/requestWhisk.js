@@ -84,14 +84,14 @@ RequestWhisk.prototype.requestBeating = async function () {
   try {
 
     this.chromeOpen(centrexUrl).then(() => {
-      bot.keyTap("Enter");
+      bot.keyTap("enter");
       return sleep(500);
     }).then(() => {
       bot.keyTap("f12");
       return sleep(500);
     }).then(() => {
 
-      
+
 
     }).catch((err) => {
       console.log(err);
