@@ -148,8 +148,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
+    
 
     /*
 
@@ -6932,26 +6931,26 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "김은경", "2023-09-13" ],
+    //   [ "이지원", "2023-07-20" ],
     // ]);
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2309_aa06s" ]);
+    // await work.newDesignerToFront([ "d2310_aa02s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2309_aa07s", [
-    //   { porlid: "ghost", index: 6 },
-    //   { porlid: "ghost", index: 5 },
-    //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 12 },
-    //   { porlid: "ghost", index: 1 },
-    //   { porlid: "ghost", index: 11 },
+    // await this.setProposalSettingForDesigner("d2310_aa02s", [
+    //   { porlid: "a108", index: 2 },
+    //   { porlid: "a108", index: 4 },
+    //   { porlid: "a108", index: 3 },
+    //   { porlid: "a108", index: 12 },
+    //   { porlid: "a108", index: 14 },
+    //   { porlid: "a108", index: 15 },
     // ], [
-    //   "디자인을 사전에 잘 보여드릴 수 있는 페이퍼 워크 작업 능력이 있습니다.",
-    //   "세세한 내용까지 꼼꼼히 챙길 수 있는 능력이 있고, 그만큼 경력이 있어 믿을 수 있습니다.",
-    //   "원활한 소통 능력이 뛰어나, 진행하는 동안 내내 안정적인 프로세스를 제공해드릴 수 있습니다.",
+    //   "유행하는 디자인을 따라가기 보다는, 오래 보아도 아름다운 디자인을 구사합니다.",
+    //   "집은 소중한 일상을 가장 많이 보내는 곳임을 이해하고, 그 가치에 맞게 디자인을 진행합니다.",
+    //   "감각적이고 따뜻한 스타일을 구현하는 데 능하며, 내추럴 디자인에 강합니다.",
     // ]);
 
 

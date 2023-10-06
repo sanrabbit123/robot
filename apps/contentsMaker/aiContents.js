@@ -677,9 +677,10 @@ AiContents.prototype.to_google = async function (pid) {
       reviewId = null;
     }
 
+    channel = "#502_sns_contents";
+
     if (reviewId !== null && client !== null) {
 
-      channel = "#502_sns_contents";
       await messageSend({ text: `${client.name} 고객님, ${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
       await messageSend({ text: `${client.name} 고객님의 고객 인터뷰 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(reviewId)}`, channel });
       await messageSend({ text: `${client.name} 고객님 세팅 사진 원본 link : ${photoLink}`, channel });
@@ -708,15 +709,38 @@ AiContents.prototype.to_google = async function (pid) {
       }
 
     } else {
+      if (client === null) {
 
-      channel = "#502_sns_contents";
-      await messageSend({ text: `${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
-      await messageSend({ text: `${designer.designer} 디자이너 포트폴리오 사진 원본 link : ${photoLink}`, channel });
+        await messageSend({ text: `${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
+        await messageSend({ text: `${designer.designer} 디자이너 포트폴리오 사진 원본 link : ${photoLink}`, channel });
+  
+        channel = "#200_web";
+        await messageSend({ text: `${designer.designer} 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
+  
+        if (proid !== '') {
+          await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, {
+            client: client.name,
+            designer: designer.designer,
+            host: instance.address.frontinfo.host,
+            pid,
+            proid,
+          });
+          await messageSend({ text: `${designer.designer} 디자이너님에게 컨텐츠 공유 링크를 보냈어요.`, channel: "#502_sns_contents", voice: true });
+  
+          project = await back.getProjectById(proid, { selfMongo });
+          if (project !== null) {
+            await back.updateProject([ { proid }, { "contents.share.designer.contents": new Date() } ]);
+          }
+        }
 
-      channel = "#200_web";
-      await messageSend({ text: `${designer.designer} 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
+      } else {
 
-      if (proid !== '') {
+        await messageSend({ text: `${client.name} 고객님, ${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
+        await messageSend({ text: `${client.name} 고객님 세팅 사진 원본 link : ${photoLink}`, channel });
+  
+        channel = "#200_web";
+        await messageSend({ text: `${client.name} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
+  
         await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, {
           client: client.name,
           designer: designer.designer,
@@ -724,14 +748,13 @@ AiContents.prototype.to_google = async function (pid) {
           pid,
           proid,
         });
-        await messageSend({ text: `${designer.designer} 디자이너님에게 컨텐츠 공유 링크를 보냈어요.`, channel: "#502_sns_contents", voice: true });
-
+  
         project = await back.getProjectById(proid, { selfMongo });
         if (project !== null) {
-          await back.updateProject([ { proid }, { "contents.share.designer.contents": new Date() } ]);
+          await back.updateProject([ { proid }, { "contents.share.client.contents": new Date(),  "contents.share.designer.contents": new Date() } ]);
         }
-      }
 
+      }
     }
 
     await selfMongo.close();
