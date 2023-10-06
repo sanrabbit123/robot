@@ -146,17 +146,13 @@ DevContext.prototype.launching = async function () {
     // await this.exceptionPid();
     // =======================================================================================================================================================
 
-
-    
-    const whisk = new RequestWhisk();
-
-    
-    await whisk.requestBeating();
-    
+    // const whisk = new RequestWhisk();
+    // await whisk.requestBeating();
+    // =======================================================================================================================================================
 
 
 
-    
+
 
 
 
