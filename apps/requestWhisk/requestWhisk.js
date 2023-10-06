@@ -3,98 +3,75 @@ const RequestWhisk = function () {
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = process.cwd() + "/apps/requestWhisk";
-  this.list = [];
+
+  const { exec } = require(`child_process`);
+  const os = require(`os`);
+  const thisOs = os.type();
+  if (/Linux/gi.test(thisOs)) {
+    this.bot = require(`${process.cwd()}/apps/graphicBot/os/linux/build/Release/robotjs.node`);
+    this.os = "linux";
+    this.staticHomeFolder = "/";
+  } else if (/Darwin/gi.test(thisOs)) {
+    this.bot = require(`${process.cwd()}/apps/graphicBot/os/mac/build/Release/robotjs.node`);
+    this.os = "mac";
+    this.staticHomeFolder = "/Users/graphic/Sites";
+  } else if (/Windows/gi.test(thisOs)) {
+    this.bot = require(`${process.cwd()}/apps/graphicBot/os/windows/build/Release/robotjs.node`);
+    this.os = "windows";
+    this.staticHomeFolder = "/";
+  } else {
+    throw new Error("unknown os");
+  }
+  this.screenSize = this.bot.getScreenSize();
+  this.exec = exec;
 }
 
-RequestWhisk.prototype.scriptReady = async function (method, url, data, headers) {
-  if (typeof method === "object") {
-    if (method.method === undefined || method.url === undefined || method.data === undefined || method.headers === undefined) {
-      throw new Error("invaild object input => must be { method, url, data, headers, interval }");
-    } else {
-      url = method.url;
-      data = method.data;
-      headers = method.headers;
-      method = method.method;
-    }
-  }
-  if (method !== "get" && method !== "post") {
-    throw new Error("method must be 'get' or 'post'");
-  }
-  if (typeof url !== "string" || typeof data !== "object" || typeof headers !== "object") {
-    throw new Error("url must be string, data must be json, headers must be object");
-  }
-  if (method === "post" && typeof data !== "object") {
-    throw new Error("data must be json");
-  }
-  if (!/^htt/.test(url)) {
-    throw new Error("invaild url");
-  }
+RequestWhisk.prototype.chromeOpen = function (url) {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
-  try {
-    const modulePath = process.cwd() + "/python_modules";
-    let pythonArr, pythonScript;
+  const { exec, os } = this;
+  const { sleep } = this.mother;
 
-    pythonScript = "";
+  if (os === "linux") {
+    return new Promise(function (resolve, reject) {
+      exec(`killall chrome`, (error, stdout, stderr) => {
+        exec(`google-chrome ${url} --start-maximized`);
+        setTimeout(function () {
+          resolve(stdout);
+        }, 10000);
+      });
+    });
 
-    pythonArr = [
-      `import sys`,
-      `sys.path.append("${modulePath.replace(/"/g, "'")}")`,
-      `import aiohttp`,
-      `import asyncio`,
-      ``,
-    ];
-    pythonScript += pythonArr.join('\n');
+  } else if (os === "windows") {
+    const path = require("path");
+    const { sep, normalize } = path;
+    const { exec, execFile } = require("child_process");
+    const chrome = "C:/Program Files/Google/Chrome/Application/chrome.exe";
+    return new Promise(function(resolve, reject) {
+      exec(`taskkill /IM "chrome.exe" /F`, function (error, stdout, stderr) {
+        execFile(normalize(chrome), [ "--start-maximized", url ], function (error, stdout, stderr) {
+          setTimeout(function () {
+            resolve(stdout);
+          }, 3000);
+        });
+      });
+    });
 
-    if (method === "get") {
+  } else if (os === "mac") {
+    return new Promise(function (resolve, reject) {
+      exec(`killall 'Google Chrome'`, (error, stdout, stderr) => {
+        exec(`/Applications/'Google Chrome.app'/Contents/MacOS/'Google Chrome' --start-maximized ${url}`);
+        setTimeout(function () {
+          resolve(stdout);
+        }, 30000);
+      });
+    });
 
-      pythonArr = [
-        `async def main():`,
-        `    async with aiohttp.ClientSession() as session:`,
-        `        async with session.get('${url.replace(/\'/g, '"')}') as response:`,
-        `            resText = await response.text()`,
-        `            print(resText)`,
-        ``,
-      ];
-      pythonScript += pythonArr.join('\n');
-
-    } else {
-
-      headers["Content-Type"] = "application/json";
-      pythonArr = [
-        `async def main():`,
-        `    async with aiohttp.ClientSession() as session:`,
-        `        async with session.post('${url.replace(/\'/g, '"')}', json=${JSON.stringify(data)}, headers=${JSON.stringify(headers)}) as response:`,
-        `            resText = await response.text()`,
-        `            print(resText)`,
-        ``,
-      ];
-      pythonScript += pythonArr.join('\n');
-
-    }
-
-    pythonArr = [
-      `try:`,
-      `    asyncio.run(main())`,
-      `except (KeyboardInterrupt, SystemExit):`,
-      `    pass`,
-    ];
-    pythonScript += pythonArr.join('\n');
-
-    await fileSystem(`write`, [ `${this.dir}/requestWhisk.py`, pythonScript ]);
-
-    return `${this.dir}/requestWhisk.py`;
-
-  } catch (e) {
-    console.log(e);
   }
 }
 
-RequestWhisk.prototype.requestBeating = async function (requestNumber = 0) {
-  if (typeof requestNumber !== "number") {
-    throw new Error("input must be number");
-  }
+RequestWhisk.prototype.requestBeating = async function () {
   const instance = this;
   const mother = this.mother;
   const back = this.back;
@@ -102,37 +79,24 @@ RequestWhisk.prototype.requestBeating = async function (requestNumber = 0) {
   const http = require("http");
   const express = require("express");
   const app = express();
-  const { spawn } = require("child_process");
+  const port = 53001;
   try {
-    let requestScript, targetList, requestOpt;
 
-    targetList = await fileSystem(`readDir`, [ `${this.dir}/list` ]);
-    targetList = targetList.filter((a) => { return a !== `.DS_Store`; });
-    targetList.sort((a, b) => { return Number(a.split('_')[0]) - Number(b.split('_')[0]); });
+    
 
-    this.list = [];
-    for (let i of targetList) {
-      this.list.push(require(`${this.dir}/list/${i}`));
-    }
+    
+    this.chromeOpen("https://" + this.address.pythoninfo.host + ":3000/bluePrint").catch((err) => {
+      console.log(err);
+    })
 
-    requestOpt = this.list[requestNumber];
-    if (requestOpt.method === undefined || requestOpt.url === undefined || requestOpt.data === undefined || requestOpt.headers === undefined || requestOpt.interval === undefined || requestOpt.callback === undefined || requestOpt.port === undefined) {
-      throw new Error("invaild request object");
-    }
-    requestScript = await this.scriptReady(requestOpt);
-    setInterval(async function () {
-      shell.exec(`python3 ${shellLink(requestScript)}`, { async: true }, async function (code, stdout, stderr) {
-        try {
-          await requestOpt.callback(mother, back, stdout.replace(/^\n/, '').replace(/\n$/, '').trim());
-        } catch (e) {
-          console.log(e);
-        }
-      });
-    }, requestOpt.interval);
 
-    console.log(`\x1b[33m%s\x1b[0m`, `Request running`);
 
-    http.createServer(app).listen(requestOpt.port, () => {});
+
+    
+
+    http.createServer(app).listen(port, () => {
+      console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(port)}`);
+    });
 
   } catch (e) {
     console.log(e);

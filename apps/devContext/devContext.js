@@ -53,6 +53,7 @@ const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`
 const MicrosoftAPIs = require(`${process.cwd()}/apps/microsoftAPIs/microsoftAPIs.js`);
 const OpenAiAPIs = require(`${process.cwd()}/apps/openAiAPIs/openAiAPIs.js`);
 const LocalDevices = require(`${process.cwd()}/apps/localDevices/localDevices.js`);
+const RequestWhisk = require(`${process.cwd()}/apps/requestWhisk/requestWhisk.js`);
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -147,19 +148,17 @@ DevContext.prototype.launching = async function () {
 
 
     
-    // let res;
+    const whisk = new RequestWhisk();
 
-
-    // res = await requestSystem("http://127.0.0.1:5000/post/3", { data: 1234 }, { headers: { "Content-Type": "x-www-form-urlencoded" } });
-    // console.log(res);
-    // res = await requestSystem("http://127.0.0.1:5000/post/3", { data: 1234 }, { headers: { "Content-Type": "application/json" } });
-    // console.log(res);
-    // res = await requestSystem("http://127.0.0.1:5000/post/3", { data: 1234 });
-    // console.log(res);
+    
+    await whisk.requestBeating();
+    
 
 
 
     
+
+
 
     /*
 
