@@ -400,6 +400,12 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   let selectionFactorVisualMarginRatio;
   let grayBarUpDownMarginRatio;
   let barFactorTongVisualTop;
+  let mobileQuestionWordingPaddingTop;
+  let mobileQuestionWordingPaddingBottom;
+  let mobileSelectionFactorWidth0;
+  let mobileSelectionFactorMarginBottom;
+  let mobileModuleBlockHeight;
+  let descriptionBox;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -456,7 +462,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
 
   moduleHeight = grayTop + grayHeight;
-  blockMarginBottom = <%% 12, 4, 3, 2, 2 %%>;
+  blockMarginBottom = <%% 12, 4, 3, 2, 5 %%>;
 
   leftGrayType0 = <%% 101, 90, 78, 78, 18 %%>;
   leftGrayType1 = <%% 418, 361, 318, 96, 22.8 %%>;
@@ -476,7 +482,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   leftCheck0 = <%% 125, 112, 98, 98, 22.8 %%>;
   leftCheck1 = <%% 195, 176, 156, 152, 36.5 %%>;
   checkboxWidth = <%% 9, 9, 9, 8, 2 %%>;
-  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 10 : 10), (isMac() ? 9 : 9), (isMac() ? 9 : 9), (isIphone() ? 2.5 : 2.5) %%>;
+  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 10 : 10), (isMac() ? 9 : 9), (isMac() ? 9 : 9), (isIphone() ? 2.3 : 2.3) %%>;
   checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
   checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
@@ -661,8 +667,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
 
   defaultRatio = 0.5;
 
-  grayBarUpDownMarginRatio = <%% 1.8, 1.8, 1.8, 1.8, 1.8 %%>;
+  grayBarUpDownMarginRatio = <%% 1.8, 1.8, 1.8, 1.8, 1.2 %%>;
   barFactorTongVisualTop = <%% 1, 2, 1, 1, 0 %%>;
+
+  mobileQuestionWordingPaddingTop = 0.6;
+  mobileQuestionWordingPaddingBottom = 1.6;
+  mobileSelectionFactorWidth0 = 27;
+  mobileSelectionFactorMarginBottom = 1;
+  mobileModuleBlockHeight = 20;
 
   contents = {
     main: [
@@ -675,6 +687,13 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       <&& "홈리에종 서비스 개선에 사용됩니다!" | "홈리에종 서비스 개선에 사용됩니다!" | "서비스 개선에 사용됩니다!" | "서비스 개선에 사용됩니다!" | "서비스 개선에 사용됩니다!" &&>,
     ]
   };
+
+  if (mobile) {
+    contents.sub = [
+      "홈리에종의 경험에 대해서 <b%고객님의 평가%b>를 남겨주세요.",
+      "작성해주신 평가 내용은 서비스 개선에 사용됩니다!"
+    ]
+  }
 
   budgetValues = [
     { title: (desktop ? "1,000만원 이하" : "1천만원 이하"), value: "1,000만원", },
@@ -1300,13 +1319,64 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     }
   });
 
+  if (mobile) {
+    descriptionBox = createNode({
+      mother: mainBlock,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: String(100) + '%',
+        marginTop: String(contentsAreaMarginTop) + ea,
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        paddingTop: String(7) + ea,
+        paddingBottom: String(7) + ea,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+      }
+    });
+
+    createNode({
+      mother: descriptionBox,
+      mode: "svg",
+      source: svgMaker.doubleQuote(colorChip.green),
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(quoteHeight) + ea,
+        marginLeft: String(quoteLeft) + ea,
+      }
+    });
+  
+    createNode({
+      mother: descriptionBox,
+      text: contents.sub.join("\n"),
+      style: {
+        display: "block",
+        position: "relative",
+        fontSize: String(3.2) + ea,
+        fontWeight: String(descriptionWeight),
+        color: colorChip.black,
+        lineHeight: String(1.5),
+        marginTop: String(1.8) + ea,
+        textAlign: "center",
+      },
+      bold: {
+        fontWeight: String(descriptionBoldWeight),
+        color: colorChip.black,
+      }
+    });
+  }
+
   contentsArea = createNode({
     mother: mainBlock,
     style: {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      marginTop: String(contentsAreaMarginTop) + ea,
+      marginTop: String(desktop ?contentsAreaMarginTop : policyAreaMarginTop) + ea,
       background: colorChip.white,
       borderRadius: String(5) + "px",
       boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
@@ -1354,7 +1424,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       fontWeight: String(descriptionBoldWeight),
       color: colorChip.black,
     }
-  })
+  });
 
   rightBox = createNode({
     mother: contentsArea,
@@ -1375,7 +1445,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight * 3) + ea,
+      height: desktop ? String(moduleHeight * 3) + ea : "",
     },
     children: [
       {
@@ -1405,11 +1475,13 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       },
       {
         style: {
-          display: "inline-flex",
-          position: "absolute",
-          top: String(barFactorTongVisualTop) + ea,
-          left: String(leftGrayType2) + ea,
-          width: withOut(leftGrayType2, ea),
+          display: desktop ? "inline-flex" : "flex",
+          position: desktop ? "absolute" : "relative",
+          top: desktop ? String(barFactorTongVisualTop) + ea : "",
+          left: desktop ? String(leftGrayType2) + ea : "",
+          paddingLeft: desktop ? "" : String((circleRadius * 2) + circleBetween) + ea,
+          width: desktop ? withOut(leftGrayType2, ea) : withOut((circleRadius * 2) + circleBetween, ea),
+          paddingTop: desktop ? "" : String(mobileQuestionWordingPaddingTop) + ea,
           height: "auto",
           flexDirection: "column",
           justifyContent: "start",
@@ -1428,6 +1500,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               lineHeight: String(barDescriptionLingHeight),
               color: colorChip.black,
               top: String(barDescriptionTextTop) + ea,
+              paddingBottom: desktop ? "" : String(mobileQuestionWordingPaddingBottom) + ea,
             },
             bold: {
               fontSize: String(descriptionSize) + ea,
@@ -1456,7 +1529,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
                 },
                 children: [
                   {
@@ -1509,7 +1582,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
                 },
                 children: [
                   {
@@ -1629,7 +1702,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight * 3) + ea,
+      height: desktop ? String(moduleHeight * 3) + ea : "",
     },
     children: [
       {
@@ -1659,11 +1732,13 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       },
       {
         style: {
-          display: "inline-flex",
-          position: "absolute",
-          top: String(barFactorTongVisualTop) + ea,
-          left: String(leftGrayType2) + ea,
-          width: withOut(leftGrayType2, ea),
+          display: desktop ? "inline-flex" : "flex",
+          position: desktop ? "absolute" : "relative",
+          top: desktop ? String(barFactorTongVisualTop) + ea : "",
+          left: desktop ? String(leftGrayType2) + ea : "",
+          paddingLeft: desktop ? "" : String((circleRadius * 2) + circleBetween) + ea,
+          width: desktop ? withOut(leftGrayType2, ea) : withOut((circleRadius * 2) + circleBetween, ea),
+          paddingTop: desktop ? "" : String(mobileQuestionWordingPaddingTop) + ea,
           height: "auto",
           flexDirection: "column",
           justifyContent: "start",
@@ -1682,6 +1757,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               lineHeight: String(barDescriptionLingHeight),
               color: colorChip.black,
               top: String(barDescriptionTextTop) + ea,
+              paddingBottom: desktop ? "" : String(mobileQuestionWordingPaddingBottom) + ea,
             },
             bold: {
               fontSize: String(descriptionSize) + ea,
@@ -1710,7 +1786,8 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
+                  marginBottom: desktop ? "" : String(mobileSelectionFactorMarginBottom) + ea,
                 },
                 children: [
                   {
@@ -1763,7 +1840,8 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
+                  marginBottom: desktop ? "" : String(mobileSelectionFactorMarginBottom) + ea,
                 },
                 children: [
                   {
@@ -1816,7 +1894,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
                 },
                 children: [
                   {
@@ -1869,7 +1947,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
                 },
                 children: [
                   {
@@ -1989,7 +2067,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight * 3) + ea,
+      height: String(desktop ? moduleHeight * 3 : mobileModuleBlockHeight) + ea,
     },
     children: [
       {
@@ -2032,7 +2110,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
         children: [
           {
             text: [
-              "인테리어에 사용한 <b%전체 비용은 어느 정도%b>이신가요?",
+              desktop ? "인테리어에 사용한 <b%전체 비용은 어느 정도%b>이신가요?" : "인테리어에 <b%어느 정도의 비용을%b> 쓰셨나요?",
               desktop ? "<u%* 스타일링, 시공을 모두 포함하는 비용 / 가전 비용은 제외%u>" : "<u%* 스타일링, 시공 모두 포함 비용 / 가전 제외%u>"
             ].join("\n"),
             style: {
@@ -2192,7 +2270,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight * marginRatio * barFactorVisualMarginRatio) + ea,
+      height: String(desktop ? moduleHeight * marginRatio * barFactorVisualMarginRatio : moduleHeight * marginRatio * selectionFactorVisualMarginRatio) + ea,
     }
   });
   // 4
@@ -2245,8 +2323,8 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
         children: [
           {
             text: [
-              "<b%스타일링에만 사용한 비용%b>은 어느 정도이신가요?",
-              desktop ? "<u%* 가구, 소품과 같은 스타일링(퍼니싱)에만 사용하신 비용%u>" : "<u%* 가구, 소품과 같은 스타일링(퍼니싱)에만 사용하신 비용%u>"
+              desktop ? "<b%스타일링에만 사용한 비용%b>은 어느 정도이신가요?" : "스타일링에만 <b%어느 정도의 비용을%b> 쓰셨나요?",
+              desktop ? "<u%* 가구, 소품과 같은 스타일링(퍼니싱)에만 사용하신 비용%u>" : "<u%* 가구, 소품과 같은 스타일링에만 사용하신 비용%u>"
             ].join("\n"),
             style: {
               display: "block",
@@ -2405,7 +2483,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight * marginRatio * barFactorVisualMarginRatio) + ea,
+      height: String(desktop ? moduleHeight * marginRatio * barFactorVisualMarginRatio : moduleHeight * marginRatio * selectionFactorVisualMarginRatio) + ea,
     }
   });
   // 5
@@ -2627,7 +2705,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight * 3) + ea,
+      height: desktop ? String(moduleHeight * 3) + ea : "",
     },
     children: [
       {
@@ -2657,11 +2735,13 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       },
       {
         style: {
-          display: "inline-flex",
-          position: "absolute",
-          top: String(barFactorTongVisualTop) + ea,
-          left: String(leftGrayType2) + ea,
-          width: withOut(leftGrayType2, ea),
+          display: desktop ? "inline-flex" : "flex",
+          position: desktop ? "absolute" : "relative",
+          top: desktop ? String(barFactorTongVisualTop) + ea : "",
+          left: desktop ? String(leftGrayType2) + ea : "",
+          paddingLeft: desktop ? "" : String((circleRadius * 2) + circleBetween) + ea,
+          width: desktop ? withOut(leftGrayType2, ea) : withOut((circleRadius * 2) + circleBetween, ea),
+          paddingTop: desktop ? "" : String(mobileQuestionWordingPaddingTop) + ea,
           height: "auto",
           flexDirection: "column",
           justifyContent: "start",
@@ -2670,7 +2750,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
         children: [
           {
             text: [
-              "디자이너가 제안한 <b%제품 리스트에 대한 만족도%b>는 어느 정도이신가요?",
+              desktop ? "디자이너가 제안한 <b%제품 리스트에 대한 만족도%b>는 어느 정도이신가요?" : "제안받은 <b%제품 리스트에 대한 만족도%b>는 어느 정도이신가요?",
             ].join("\n"),
             style: {
               display: "block",
@@ -2680,6 +2760,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               lineHeight: String(barDescriptionLingHeight),
               color: colorChip.black,
               top: String(barDescriptionTextTop) + ea,
+              paddingBottom: desktop ? "" : String(mobileQuestionWordingPaddingBottom) + ea,
             },
             bold: {
               fontSize: String(descriptionSize) + ea,
@@ -2708,7 +2789,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
                 },
                 children: [
                   {
@@ -2761,7 +2842,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
                 },
                 children: [
                   {
@@ -2881,7 +2962,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight * 3) + ea,
+      height: desktop ? String(moduleHeight * 3) + ea : "",
     },
     children: [
       {
@@ -2911,11 +2992,13 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       },
       {
         style: {
-          display: "inline-flex",
-          position: "absolute",
-          top: String(barFactorTongVisualTop) + ea,
-          left: String(leftGrayType2) + ea,
-          width: withOut(leftGrayType2, ea),
+          display: desktop ? "inline-flex" : "flex",
+          position: desktop ? "absolute" : "relative",
+          top: desktop ? String(barFactorTongVisualTop) + ea : "",
+          left: desktop ? String(leftGrayType2) + ea : "",
+          paddingLeft: desktop ? "" : String((circleRadius * 2) + circleBetween) + ea,
+          width: desktop ? withOut(leftGrayType2, ea) : withOut((circleRadius * 2) + circleBetween, ea),
+          paddingTop: desktop ? "" : String(mobileQuestionWordingPaddingTop) + ea,
           height: "auto",
           flexDirection: "column",
           justifyContent: "start",
@@ -2924,7 +3007,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
         children: [
           {
             text: [
-              "제품을 구입하고 <b%배송부터 세팅까지 하는데 어느 정도의 시간%b>이 걸리셨나요?",
+              desktop ? "제품을 구입하고 <b%배송부터 세팅까지 하는데 어느 정도의 시간%b>이 걸리셨나요?" : "제품 <b%구입부터 세팅까지 하는데 어느 정도의 시간%b>이 걸리셨나요?",
             ].join("\n"),
             style: {
               display: "block",
@@ -2934,6 +3017,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               lineHeight: String(barDescriptionLingHeight),
               color: colorChip.black,
               top: String(barDescriptionTextTop) + ea,
+              paddingBottom: desktop ? "" : String(mobileQuestionWordingPaddingBottom) + ea,
             },
             bold: {
               fontSize: String(descriptionSize) + ea,
@@ -2962,7 +3046,8 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
+                  marginBottom: desktop ? "" : String(mobileSelectionFactorMarginBottom) + ea,
                 },
                 children: [
                   {
@@ -3015,7 +3100,8 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
+                  marginBottom: desktop ? "" : String(mobileSelectionFactorMarginBottom) + ea,
                 },
                 children: [
                   {
@@ -3068,7 +3154,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
                 },
                 children: [
                   {
@@ -3121,7 +3207,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
                 },
                 children: [
                   {
@@ -3284,8 +3370,8 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
         children: [
           {
             text: [
-              "디자이너가 제안한 제품을 구입하신 정도와 그렇지 않은 정도를 알려주세요!",
-              desktop ? "<u%* 제품 리스트 그대로 구입하셨는지, 아니면 자체적으로 찾아 구입하셨는지%u>" : "<u%* 제품 리스트 그대로 구입하셨는지, 아니면 자체적으로 찾아 구입하셨는지%u>",
+              desktop ?"디자이너가 제안한 제품을 구입하신 정도와 그렇지 않은 정도를 알려주세요!" : "제안받은 제품을 구입하신 정도를 알려주세요!",
+              desktop ? "<u%* 제품 리스트 그대로 구입하셨는지, 아니면 자체적으로 찾아 구입하셨는지%u>" : "<u%* 제품 리스트 그대로 구입 VS 자체적으로 찾아 구입%u>",
             ].join("\n"),
             style: {
               display: "block",
@@ -3453,7 +3539,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight * 3) + ea,
+      height: desktop ? String(moduleHeight * 3) + ea : "",
     },
     children: [
       {
@@ -3483,11 +3569,13 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       },
       {
         style: {
-          display: "inline-flex",
-          position: "absolute",
-          top: String(barFactorTongVisualTop) + ea,
-          left: String(leftGrayType2) + ea,
-          width: withOut(leftGrayType2, ea),
+          display: desktop ? "inline-flex" : "flex",
+          position: desktop ? "absolute" : "relative",
+          top: desktop ? String(barFactorTongVisualTop) + ea : "",
+          left: desktop ? String(leftGrayType2) + ea : "",
+          paddingLeft: desktop ? "" : String((circleRadius * 2) + circleBetween) + ea,
+          width: desktop ? withOut(leftGrayType2, ea) : withOut((circleRadius * 2) + circleBetween, ea),
+          paddingTop: desktop ? "" : String(mobileQuestionWordingPaddingTop) + ea,
           height: "auto",
           flexDirection: "column",
           justifyContent: "start",
@@ -3506,6 +3594,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               lineHeight: String(barDescriptionLingHeight),
               color: colorChip.black,
               top: String(barDescriptionTextTop) + ea,
+              paddingBottom: desktop ? "" : String(mobileQuestionWordingPaddingBottom) + ea,
             },
             bold: {
               fontSize: String(descriptionSize) + ea,
@@ -3534,7 +3623,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
                 },
                 children: [
                   {
@@ -3587,7 +3676,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
                 },
                 children: [
                   {
@@ -3707,7 +3796,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight * 3) + ea,
+      height: desktop ? String(moduleHeight * 3) + ea : "",
     },
     children: [
       {
@@ -3737,11 +3826,13 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       },
       {
         style: {
-          display: "inline-flex",
-          position: "absolute",
-          top: String(barFactorTongVisualTop) + ea,
-          left: String(leftGrayType2) + ea,
-          width: withOut(leftGrayType2, ea),
+          display: desktop ? "inline-flex" : "flex",
+          position: desktop ? "absolute" : "relative",
+          top: desktop ? String(barFactorTongVisualTop) + ea : "",
+          left: desktop ? String(leftGrayType2) + ea : "",
+          paddingLeft: desktop ? "" : String((circleRadius * 2) + circleBetween) + ea,
+          width: desktop ? withOut(leftGrayType2, ea) : withOut((circleRadius * 2) + circleBetween, ea),
+          paddingTop: desktop ? "" : String(mobileQuestionWordingPaddingTop) + ea,
           height: "auto",
           flexDirection: "column",
           justifyContent: "start",
@@ -3750,7 +3841,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
         children: [
           {
             text: [
-              "디자이너는 고객님 요청과 수정에 대해 <b%적절한 피드백을 제공%b>하였나요?",
+              desktop ? "디자이너는 고객님 요청과 수정에 대해 <b%적절한 피드백을 제공%b>하였나요?" : "디자이너는 요청과 수정에 대해 <b%피드백을 잘 제공%b>하였나요?",
             ].join("\n"),
             style: {
               display: "block",
@@ -3760,6 +3851,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               lineHeight: String(barDescriptionLingHeight),
               color: colorChip.black,
               top: String(barDescriptionTextTop) + ea,
+              paddingBottom: desktop ? "" : String(mobileQuestionWordingPaddingBottom) + ea,
             },
             bold: {
               fontSize: String(descriptionSize) + ea,
@@ -3788,7 +3880,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
                 },
                 children: [
                   {
@@ -3841,7 +3933,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
                 },
                 children: [
                   {
@@ -3961,7 +4053,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight * 3) + ea,
+      height: desktop ? String(moduleHeight * 3) + ea : "",
     },
     children: [
       {
@@ -3991,11 +4083,13 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       },
       {
         style: {
-          display: "inline-flex",
-          position: "absolute",
-          top: String(barFactorTongVisualTop) + ea,
-          left: String(leftGrayType2) + ea,
-          width: withOut(leftGrayType2, ea),
+          display: desktop ? "inline-flex" : "flex",
+          position: desktop ? "absolute" : "relative",
+          top: desktop ? String(barFactorTongVisualTop) + ea : "",
+          left: desktop ? String(leftGrayType2) + ea : "",
+          paddingLeft: desktop ? "" : String((circleRadius * 2) + circleBetween) + ea,
+          width: desktop ? withOut(leftGrayType2, ea) : withOut((circleRadius * 2) + circleBetween, ea),
+          paddingTop: desktop ? "" : String(mobileQuestionWordingPaddingTop) + ea,
           height: "auto",
           flexDirection: "column",
           justifyContent: "start",
@@ -4004,7 +4098,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
         children: [
           {
             text: [
-              "디자이너의 <b%일정 운영과 예산 운영%b>에 대한 만족도는 어느 정도이신가요?",
+              desktop ?"디자이너의 <b%일정 운영과 예산 운영%b>에 대한 만족도는 어느 정도이신가요?" : "디자이너의 <b%일정과 예산 운영%b>에 대한 만족도를 알려주세요!",
             ].join("\n"),
             style: {
               display: "block",
@@ -4014,6 +4108,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               lineHeight: String(barDescriptionLingHeight),
               color: colorChip.black,
               top: String(barDescriptionTextTop) + ea,
+              paddingBottom: desktop ? "" : String(mobileQuestionWordingPaddingBottom) + ea,
             },
             bold: {
               fontSize: String(descriptionSize) + ea,
@@ -4042,7 +4137,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
                 },
                 children: [
                   {
@@ -4095,7 +4190,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   height: String(100) + '%',
                   verticalAlign: "top",
                   cursor: "pointer",
-                  width: String(selectionFactorWidth) + ea,
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
                 },
                 children: [
                   {
