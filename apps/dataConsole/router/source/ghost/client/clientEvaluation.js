@@ -1359,7 +1359,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
         fontSize: String(3.2) + ea,
         fontWeight: String(descriptionWeight),
         color: colorChip.black,
-        lineHeight: String(1.5),
+        lineHeight: String(1.6),
         marginTop: String(1.8) + ea,
         textAlign: "center",
       },
