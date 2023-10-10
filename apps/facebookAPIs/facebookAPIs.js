@@ -28,8 +28,7 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3,
   const instance = this;
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
-  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm } = this.mother;
-  const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition } = this.mother;
   try {
     const campaignCollection = "dailyCampaign";
     let tempRows;
@@ -130,75 +129,258 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3,
   }
 }
 
-FacebookAPIs.prototype.instagramList = async function () {
+FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, logger = null) {
   const instance = this;
   const back = this.back;
-  const { facebookUrl: url, facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
-  const { sleep, dateToString, stringToDate, sha256Hmac, fileSystem, requestSystem, errorLog, zeroAddition, linkToString } = this.mother;
+  const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition } = this.mother;
   try {
-    const keyToken = "_instagram";
+    const collection = "metaComplex";
+    const idKeyword = 'f';
+    const metaKeyword = 'f';
+    const metaKeyKeyword = "meta";
+    let tempRows;
     let res;
-    let mediaId;
-    let metric;
-    let resultTong;
-    let thisObj;
-    
-    mediaId = [];
+    let json;
+    let from, to;
+    let startDate;
+    let num;
+    let key;
+    let now;
+    let campaignId;
+    let adsetId;
+    let targetObj;
 
-    res = await requestSystem(url + "/" + appVersion + "/" + instagramId + "/media", {
-      access_token: facebookToken
-    }, { method: "get" });
-    for (let { id } of res.data.data) {
-      mediaId.push(id);
+    now = new Date();
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    for (let i = 0; i < dayNumber; i++) {
+      startDate.setDate(startDate.getDate() - 1);
     }
 
-    while (res.data.paging !== undefined && typeof res.data.paging.next === "string") {
-      res = await requestSystem(res.data.paging.next);
-      for (let { id } of res.data.data) {
-        mediaId.push(id);
+    for (let i = 0; i < dayNumber; i++) {
+
+      await sleep(500);
+      if (i === 0) {
+        from = new Date(JSON.stringify(startDate).slice(1, -1));
+        to = new Date(JSON.stringify(startDate).slice(1, -1));
+        to.setDate(to.getDate() + 1);
+      } else {
+        from.setDate(from.getDate() + 1);
+        to.setDate(to.getDate() + 1);
       }
-    }
 
-    resultTong = [];
+      key = dateToString(from).replace(/\-/gi, '') + "_" + metaKeyKeyword;
+      json = {
+        camid: idKeyword + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + metaKeyword + 'a' + zeroAddition(from.getDate()) + 's',
+        key,
+        date: { from, to },
+        advertisement: {
+          value: {
+            charge: 0,
+            performance: {
+              reach: 0,
+              impressions: 0,
+              clicks: 0,
+            },
+            length: {
+              campaign: 0,
+              adset: 0,
+              ad: 0,
+            }
+          },
+          campaign: [],
+        },
+        instagram: {
+          profile: {
+            views: 0,
+            followers: 0,
+          },
+          performance: {
+            impressions: 0,
+            clicks: 0,
+          }
+        }
+      };
 
-    for (let thisId of mediaId) {
+      // campaign
+      res = await requestSystem("https://graph.facebook.com/" + appVersion + "/act_" + facebookAdId + "/insights", {
+        level: "campaign",
+        fields: [
+          "account_id",
+          "campaign_id",
+          "campaign_name",
+          "reach",
+          "impressions",
+          "spend",
+          "clicks",
+          "date_start",
+          "date_stop",
+        ].join(","),
+        time_range: JSON.stringify({
+          since: dateToString(from),
+          until: dateToString(from),
+        }),
+        access_token: facebookToken
+      }, { method: "get" });
+      for (let obj of res.data.data) {
+
+        json.advertisement.campaign.unshift({
+          value: {
+            charge: Number(obj.spend),
+            performance: {
+              reach: Number(obj.reach),
+              impressions: Number(obj.impressions),
+              clicks: Number(obj.clicks),
+            },
+          },
+          information: {
+            id: obj.campaign_id,
+            account: obj.account_id,
+            name: obj.campaign_name,
+          },
+          children: [],
+        });
+
+        await sleep(500);
+        campaignId = obj.campaign_id;
+        res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + campaignId + "/insights", {
+          level: "adset",
+          fields: [
+            "adset_id",
+            "adset_name",
+            "reach",
+            "impressions",
+            "spend",
+            "clicks",
+            "date_start",
+            "date_stop",
+          ].join(","),
+          time_range: JSON.stringify({
+            since: dateToString(from),
+            until: dateToString(from),
+          }),
+          access_token: facebookToken
+        }, { method: "get" });
+
+        for (let obj2 of res.data.data) {
+
+          json.advertisement.campaign[0].children.unshift({
+            value: {
+              charge: Number(obj2.spend),
+              performance: {
+                reach: Number(obj2.reach),
+                impressions: Number(obj2.impressions),
+                clicks: Number(obj2.clicks),
+              },
+            },
+            information: {
+              id: obj2.adset_id,
+              campaign: obj.campaign_id,
+              name: obj2.adset_name,
+            },
+            children: [],
+          })
+
+          await sleep(500);
+          adsetId = obj2.adset_id;
+          res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + adsetId + "/insights", {
+            level: "ad",
+            fields: [
+              "adset_id",
+              "adset_name",
+              "ad_id",
+              "ad_name",
+              "reach",
+              "impressions",
+              "spend",
+              "clicks",
+              "date_start",
+              "date_stop",
+            ].join(","),
+            time_range: JSON.stringify({
+              since: dateToString(from),
+              until: dateToString(from),
+            }),
+            access_token: facebookToken
+          }, { method: "get" });
+
+          for (let obj3 of res.data.data) {
+
+            json.advertisement.campaign[0].children[0].children.unshift({
+              value: {
+                charge: Number(obj3.spend),
+                performance: {
+                  reach: Number(obj3.reach),
+                  impressions: Number(obj3.impressions),
+                  clicks: Number(obj3.clicks),
+                },
+              },
+              information: {
+                id: obj3.ad_id,
+                adset: obj3.adset_id,
+                name: obj3.ad_name,
+              },
+            })
+
+          }
+        }
+      }
+      if (json.advertisement.campaign.length > 0) {
+        json.advertisement.value.charge = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
+        json.advertisement.value.performance.reach = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.reach }, 0);
+        json.advertisement.value.performance.impressions = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0);
+        json.advertisement.value.performance.clicks = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0);
+        json.advertisement.value.length.campaign = json.advertisement.campaign.length;
+        json.advertisement.value.length.adset = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.children.length }, 0);
+        json.advertisement.value.length.ad = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.children.reduce((a, c) => { return a + c.children.length }, 0) }, 0);
+      }
+
+      // instagram
+      res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + instagramId + "/insights", {
+        metric: "impressions,profile_views,follower_count,website_clicks",
+        period: "day",
+        since: dateToString(from),
+        access_token: facebookToken
+      }, { method: "get" });
+      [ impressions, profile, follower, website ] = res.data.data;
       try {
-        thisObj = { id: thisId };
+        json.instagram.performance.impressions = impressions.values.find((o) => { return o.end_time.slice(0, 10) === dateToString(from) }).value;
+      } catch {
+        json.instagram.performance.impressions = 0;
+      }
+      try {
+        json.instagram.profile.views = profile.values.find((o) => { return o.end_time.slice(0, 10) === dateToString(from) }).value;
+      } catch {
+        json.instagram.profile.views = 0;
+      }
+      try {
+        json.instagram.profile.followers = follower.values.find((o) => { return o.end_time.slice(0, 10) === dateToString(from) }).value;
+      } catch {
+        json.instagram.profile.followers = 0;
+      }
+      try {
+        json.instagram.performance.clicks = website.values.find((o) => { return o.end_time.slice(0, 10) === dateToString(from) }).value;
+      } catch {
+        json.instagram.performance.clicks = 0;
+      }  
 
-        res = await requestSystem(url + "/" + appVersion + "/" + thisId, {
-          access_token: facebookToken,
-          fields: "media_type,media_url,timestamp,like_count",
-        }, { method: "get" });
-  
-        thisObj.date = {
-          create: new Date(res.data.timestamp),
-          update: new Date(),
-        }
-        thisObj.type = {
-          name: "media",
-          detail: res.data.media_type
-        }
-        thisObj.url = res.data.media_url;
-        thisObj.key = dateToString(thisObj.date.create).replace(/[^0-9]/gi, '') + "_" + thisId + keyToken;
-  
-        thisObj.value = {};
-        thisObj.value.interactions = res.data.like_count;
-  
-        res = await requestSystem(url + "/" + appVersion + "/" + thisId + "/insights", {
-          access_token: facebookToken,
-          metric: "reach",
-        }, { method: "get" });
-  
-        thisObj.value.reach = res.data.data.find((o) => { return o.name === "reach" }).values.reduce((acc, curr) => { return acc + curr.value }, 0)
-        resultTong.push(thisObj);
-      } catch {}
+      // store
+      tempRows = await back.mongoRead(collection, { key }, { selfMongo });
+      if (tempRows.length !== 0) {
+        await back.mongoDelete(collection, { key }, { selfMongo });
+      }
+      await back.mongoCreate(collection, json, { selfMongo });
+      console.log(json);
+
     }
 
-    await fileSystem(`writeJson`, [ `${process.cwd()}/temp/instaResult.json`, resultTong ])
+    if (logger !== null) {
+      logger.cron("meta complex store done : " + dateToString(new Date())).catch((err) => { console.log(err); });
+    }
 
   } catch (e) {
+    emergencyAlarm("FacebookAPIs.metaComplex error : " + e.message).catch((err) => { console.log(err); });
     console.log(e);
-    return null;
   }
 }
 

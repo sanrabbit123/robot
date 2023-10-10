@@ -1,13 +1,20 @@
 const ContentsRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+
   const ImageReader = require(process.cwd() + "/apps/imageReader/imageReader.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
+
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
   const ContentsCalculator = require(`${process.cwd() + "/apps/contentsLounge"}/router/contentsCalculator.js`);
+
+  const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);
+  const NaverAPIs = require(`${process.cwd()}/apps/naverAPIs/naverAPIs.js`);
+  const GoogleAds = require(`${process.cwd()}/apps/googleAPIs/googleAds.js`);
+  const GoogleYoutube = require(`${process.cwd()}/apps/googleAPIs/googleYoutube.js`);
 
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -27,6 +34,11 @@ const ContentsRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) 
   this.sheets = new GoogleSheet();
   this.calendar = new GoogleCalendar();
   this.calcaulator = new ContentsCalculator();
+
+  this.facebook = new FacebookAPIs();
+  this.naver = new NaverAPIs();
+  this.google = new GoogleAds();
+  this.youtube = new GoogleYoutube();
 
   this.staticConst = process.env.HOME + "/static";
   this.calendarName = "homeliaisonContents"
@@ -550,6 +562,36 @@ ContentsRouter.prototype.rou_post_contentsSchedule = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       logger.error("Contents lounge 서버 문제 생김 (rou_post_contentsSchedule): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+ContentsRouter.prototype.rou_post_metaComplex = function () {
+  const instance = this;
+  const meta = this.facebook;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/metaComplex" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolocal;
+      const defaultDay = 3;
+      const dayConst = req.body.day === undefined ? defaultDay : (Number.isNaN(Number(req.body.day)) ? defaultDay : Number(req.body.day));
+      meta.metaComplex(selfMongo, dayConst, logger).catch((err) => {
+        logger.error("Contents lounge 서버 문제 생김 (rou_post_metaComplex): " + err.message).catch((e) => { console.log(e); });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_metaComplex): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
