@@ -931,9 +931,10 @@ GoogleAnalytics.prototype.clientsMetric = async function (clientsArr, selfCoreMo
         }
       }
       clientsObjectArr.push(clientResult);
-      if (!fast) {
-        await sleep(500);
-      }
+      // if (!fast) {
+      //   await sleep(500);
+      // }
+      await sleep(2000);
     }
 
     return clientsObjectArr;
