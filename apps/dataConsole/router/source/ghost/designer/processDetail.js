@@ -2607,6 +2607,19 @@ ProcessDetailJs.prototype.insertControlBox = function () {
         if (link.trim() === '') {
           window.alert("원본 파일이 없습니다!");
         } else {
+          homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "downloadRawPhotoDesigner",
+            data: {
+              cliid: instance.project.cliid,
+              proid: instance.project.proid,
+              desid: instance.designer.desid,
+              date: new Date(),
+            },
+          }).catch((err) => {
+            console.log(err);
+          });
           loading = instance.mother.whiteProgressLoading();
           await downloadFile(link, null, loading.progress.firstChild);
           loading.remove();
@@ -8587,6 +8600,19 @@ ProcessDetailJs.prototype.returnButtonList = function () {
           if (link.trim() === '') {
             window.alert("원본 파일이 없습니다!");
           } else {
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "downloadRawPhotoDesigner",
+              data: {
+                cliid: instance.project.cliid,
+                proid: instance.project.proid,
+                desid: instance.designer.desid,
+                date: new Date(),
+              },
+            }).catch((err) => {
+              console.log(err);
+            });
             loading = instance.mother.whiteProgressLoading();
             await downloadFile(link, null, loading.progress.firstChild);
             loading.remove();
@@ -17275,6 +17301,19 @@ ProcessDetailJs.prototype.launching = async function (loading) {
           if (mobile) {
             window.alert("해당 사진 파일은 압축 형태이기 때문에 (zip 파일), 모바일에서 다운로드 할 경우 확인이 어려울 수 있습니다! PC에서 다운로드 해주세요!");
           }
+          homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "downloadRawPhotoDesigner",
+            data: {
+              cliid: instance.project.cliid,
+              proid: instance.project.proid,
+              desid: instance.designer.desid,
+              date: new Date(),
+            },
+          }).catch((err) => {
+            console.log(err);
+          });
           const loading = instance.mother.whiteProgressLoading();
           instance.mother.greenAlert("다운로드를 진행합니다!").catch((err) => { console.log(err); });
           await GeneralJs.downloadFile(this.contentsRawInfo.raw.link, null, loading.progress.firstChild);

@@ -725,6 +725,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       ratio = Math.round((thisLength / box.width) * 1000000) / 1000000;
 
       bar.style.width = String(ratio * 100) + '%';
+      this.setAttribute("click", "true");
       this.setAttribute("ratio", String(ratio));
       this.setAttribute("value", valuesArr[Math.round((valuesArr.length - 1) * ratio)].value);
     }
@@ -1191,6 +1192,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       const toggle = this.getAttribute("toggle");
       const targetsAll = [ ...document.querySelectorAll("." + inputClassName) ];
       const targets = targetsAll.filter((dom) => { return dom.getAttribute("property") === property });
+      this.parentElement.setAttribute("click", "true");
       if (toggle === "off") {
         for (let dom of targets) {
           if (dom === this) {
@@ -1511,6 +1513,9 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             },
           },
           {
+            attribute: {
+              click: "false",
+            },
             style: {
               display: "block",
               position: "relative",
@@ -1521,7 +1526,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               {
                 class: [ inputClassName ],
                 attribute: {
-                  toggle: "on",
+                  toggle: "off",
                   property: "constructamount",
                 },
                 event: {
@@ -1547,7 +1552,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(checkboxTop) + ea,
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(0),
+                      opacity: String(1),
                     }
                   },
                   {
@@ -1560,7 +1565,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       left: String(0),
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(1),
+                      opacity: String(0),
                     }
                   },
                   {
@@ -1572,7 +1577,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(mainTop) + ea,
                       fontSize: String(mainSize) + ea,
                       fontWeight: String(checkboxWeight),
-                      color: colorChip.green,
+                      color: colorChip.black,
                       verticalAlign: "top",
                       cursor: "pointer",
                     }
@@ -1792,6 +1797,9 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             },
           },
           {
+            attribute: {
+              click: "false",
+            },
             style: {
               display: "block",
               position: "relative",
@@ -1802,7 +1810,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               {
                 class: [ inputClassName ],
                 attribute: {
-                  toggle: "on",
+                  toggle: "off",
                   property: "constructperiod",
                 },
                 event: {
@@ -1829,7 +1837,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(checkboxTop) + ea,
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(0),
+                      opacity: String(1),
                     }
                   },
                   {
@@ -1842,7 +1850,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       left: String(0),
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(1),
+                      opacity: String(0),
                     }
                   },
                   {
@@ -1854,7 +1862,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(mainTop) + ea,
                       fontSize: String(mainSize) + ea,
                       fontWeight: String(checkboxWeight),
-                      color: colorChip.green,
+                      color: colorChip.black,
                       verticalAlign: "top",
                       cursor: "pointer",
                     }
@@ -2201,6 +2209,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               ratio: String(defaultRatio),
               value: budgetValues[Math.round((budgetValues.length - 1) * defaultRatio)].value,
               property: "totalamount",
+              click: "false",
             },
             event: {
               click: barClickEvent(budgetValues),
@@ -2414,6 +2423,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               ratio: String(defaultRatio),
               value: budgetValues[Math.round((budgetValues.length - 1) * defaultRatio)].value,
               property: "stylingamount",
+              click: "false",
             },
             event: {
               click: barClickEvent(budgetValues),
@@ -2627,6 +2637,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               ratio: String(defaultRatio),
               value: furnitureValues[Math.round((furnitureValues.length - 1) * defaultRatio)].value,
               property: "furniture",
+              click: "false",
             },
             event: {
               click: barClickEvent(furnitureValues),
@@ -2835,6 +2846,9 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             },
           },
           {
+            attribute: {
+              click: "false",
+            },
             style: {
               display: "block",
               position: "relative",
@@ -2906,7 +2920,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               {
                 class: [ inputClassName ],
                 attribute: {
-                  toggle: "on",
+                  toggle: "off",
                   property: "productlist",
                 },
                 event: {
@@ -2932,7 +2946,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(checkboxTop) + ea,
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(0),
+                      opacity: String(1),
                     }
                   },
                   {
@@ -2945,7 +2959,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       left: String(0),
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(1),
+                      opacity: String(0),
                     }
                   },
                   {
@@ -2957,7 +2971,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(mainTop) + ea,
                       fontSize: String(mainSize) + ea,
                       fontWeight: String(checkboxWeight),
-                      color: colorChip.green,
+                      color: colorChip.black,
                       verticalAlign: "top",
                       cursor: "pointer",
                     }
@@ -3116,6 +3130,9 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             },
           },
           {
+            attribute: {
+              click: "false",
+            },
             style: {
               display: "block",
               position: "relative",
@@ -3126,7 +3143,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               {
                 class: [ inputClassName ],
                 attribute: {
-                  toggle: "on",
+                  toggle: "off",
                   property: "settingperiod",
                 },
                 event: {
@@ -3153,7 +3170,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(checkboxTop) + ea,
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(0),
+                      opacity: String(1),
                     }
                   },
                   {
@@ -3166,7 +3183,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       left: String(0),
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(1),
+                      opacity: String(0),
                     }
                   },
                   {
@@ -3178,7 +3195,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(mainTop) + ea,
                       fontSize: String(mainSize) + ea,
                       fontWeight: String(checkboxWeight),
-                      color: colorChip.green,
+                      color: colorChip.black,
                       verticalAlign: "top",
                       cursor: "pointer",
                     }
@@ -3495,7 +3512,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
         children: [
           {
             text: [
-              desktop ?"디자이너가 제안한 제품을 구입하신 정도와 그렇지 않은 정도를 알려주세요!" : "제안받은 제품을 구입하신 정도를 알려주세요!",
+              desktop ? "디자이너가 제안한 제품을 구입하신 정도와 그렇지 않은 정도를 알려주세요!" : "제안받은 제품을 구입하신 정도를 알려주세요!",
               desktop ? "<u%* 제품 리스트 그대로 구입하셨는지, 아니면 자체적으로 찾아 구입하셨는지%u>" : "<u%* 제품 리스트 그대로 구입 VS 자체적으로 찾아 구입%u>",
             ].join("\n"),
             style: {
@@ -3525,6 +3542,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               ratio: String(defaultRatio),
               value: furnitureValues[Math.round((furnitureValues.length - 1) * defaultRatio)].value,
               property: "compliance_ratio",
+              click: "false",
             },
             event: {
               click: barClickEvent(furnitureValues),
@@ -3733,6 +3751,9 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             },
           },
           {
+            attribute: {
+              click: "false",
+            },
             style: {
               display: "block",
               position: "relative",
@@ -4014,6 +4035,9 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             },
           },
           {
+            attribute: {
+              click: "false",
+            },
             style: {
               display: "block",
               position: "relative",
@@ -4295,6 +4319,9 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             },
           },
           {
+            attribute: {
+              click: "false",
+            },
             style: {
               display: "block",
               position: "relative",
@@ -4662,13 +4689,29 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
 
 ClientEvaluationJs.prototype.finalSubmit = function () {
   const instance = this;
+  const { ea, media, contentsRawInfo: { raw } } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
   const inputClassName = "inputClassName";
   const agreeTargetClassName = "agreeTargetClassName";
-  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue } = GeneralJs;
+  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue, downloadFile } = GeneralJs;
   return async function (e) {
     try {
       const property = "property";
       const targets = [ ...document.querySelectorAll('.' + inputClassName) ];
+      const valueDictionary = {
+        constructamount: "시공 정도",
+        constructperiod: "시공 기간",
+        totalamount: "전체 비용 정도",
+        stylingamount: "스타일링 비용 정도",
+        furniture: "가구 구매 정도",
+        productlist: "제품 제안",
+        settingperiod: "세팅 기간",
+        compliance_ratio: "구입 정도",
+        designsatisfaction: "디자인 만족도",
+        feedbacksatisfaction: "피드백 만족도",
+        operationsatisfaction: "운영 만족도",
+      };
       let properties;
       let map;
       let tempObj;
@@ -4679,6 +4722,7 @@ ClientEvaluationJs.prototype.finalSubmit = function () {
       let tempTargets;
       let onValue;
       let boo;
+      let thisName;
 
       if (document.querySelector('.' + agreeTargetClassName).getAttribute("toggle") === "off") {
         window.alert("개인정보 취급 방침에 동의해주세요!");
@@ -4702,56 +4746,7 @@ ClientEvaluationJs.prototype.finalSubmit = function () {
           nodeName = firstDom.nodeName;
           if (/INPUT/gi.test(nodeName) || /TEXTAREA/gi.test(nodeName)) {
             try {
-
-              if (p === "name") {
-                firstDom.value = firstDom.value.replace(/[^a-zA-Z가-힣]/gi, '');
-                if (firstDom.value.trim() === '') {
-                  throw new Error("성함을 입력해주세요!");
-                }
-                name = firstDom.value.trim();
-              } else if (p === "phone") {
-                firstDom.value = firstDom.value.replace(/[^0-9\-]/gi, '');
-                if (firstDom.value.trim() === '') {
-                  throw new Error("연락처를 입력해주세요!");
-                }
-                phone = firstDom.value.trim();
-              } else if (p === "address0") {
-                firstDom.value = firstDom.value.trim();
-                if (firstDom.value.trim() === '') {
-                  throw new Error("주소를 검색하여 입력해주세요!");
-                }
-              } else if (p === "address1") {
-                firstDom.value = firstDom.value.trim();
-                if (firstDom.value.trim() === '') {
-                  throw new Error("상세 주소를 적어주세요!");
-                }
-              } else if (p === "email") {
-                firstDom.value = firstDom.value.trim();
-                if (firstDom.value.trim() === '') {
-                  throw new Error("이메일 주소를 적어주세요!");
-                }
-              } else if (p === "pyeong") {
-                firstDom.value = firstDom.value.replace(/[^0-9\.]/gi, '');
-                if (firstDom.value.trim() === '' || Number.isNaN(Number(firstDom.value.trim())) || Number(firstDom.value.trim()) === 0) {
-                  throw new Error("분양 평수를 알려주세요!");
-                }
-              } else if (p === "movein") {
-                firstDom.value = firstDom.value.replace(/[^0-9\-]/gi, '').trim();
-                if (!/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(firstDom.value.trim())) {
-                  throw new Error("입주 예정일을 알려주세요! (정해지지 않았을 경우, 예상되는 날짜를 찍어주세요!)");
-                }
-              } else if (p === "etc") {
-                firstDom.value = firstDom.value.trim().replace(/[\=\+\&\>\<\/\\\{\}\[\]\`\-]/gi, '');
-                if (firstDom.value.trim() === '') {
-                  throw new Error("예시를 보시고 요청사항을 최대한 자세하게 적어주세요!");
-                }
-                if (firstDom.value.length < 3) {
-                  throw new Error("예시를 보시고 요청사항을 최대한 자세하게 적어주세요!");
-                }
-              }
-
               tempObj.value = firstDom.value.replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
-
             } catch (e) {
               window.alert(e.message);
               boo = false;
@@ -4763,27 +4758,47 @@ ClientEvaluationJs.prototype.finalSubmit = function () {
               break;
             }
           } else if (/DIV/gi.test(nodeName)) {
-
-            tempTargets = [];
-            for (let dom of targets) {
-              if (dom.getAttribute(property) === p) {
-                tempTargets.push(dom);
+            try {
+              tempTargets = [];
+              for (let dom of targets) {
+                if (dom.getAttribute(property) === p) {
+                  tempTargets.push(dom);
+                }
               }
-            }
-
-            onValue = '';
-            for (let dom of tempTargets) {
-              if (dom.getAttribute("toggle") === "on") {
-                onValue = dom.textContent.trim();
-                break;
+  
+              onValue = '';
+              for (let dom of tempTargets) {
+                if (dom.getAttribute("toggle") === "on") {
+                  onValue = dom.textContent.trim();
+                  break;
+                }
               }
+              if (onValue === '') {
+                throw new Error(valueDictionary[p] !== undefined ? valueDictionary[p] + " 선택란을 체크해주세요!" : "선택하지 않은 체크란을 모두 선택해주세요!");
+              }
+              tempObj.value = onValue;
+            } catch (e) {
+              window.alert(e.message);
+              boo = false;
+              scrollTo(window, firstDom, visualSpecific);
+              break;
             }
-            tempObj.value = onValue;
-
           } else if (/ASIDE/gi.test(nodeName)) {
-
-            tempObj.value = firstDom.getAttribute("value");
-
+            try {
+              if (firstDom.getAttribute("click") !== "true") {
+                throw new Error(valueDictionary[p] !== undefined ? valueDictionary[p] + " 바를 선택해주세요!" : "선택하지 않은 바를 모두 선택해주세요!");
+              }
+              if (/_ratio$/gi.test(p)) {
+                tempObj.value = Number(firstDom.getAttribute("ratio"));
+              } else {
+                tempObj.value = firstDom.getAttribute("value");
+              }
+            } catch (e) {
+              window.alert(e.message);
+              boo = false;
+              scrollTo(window, firstDom, visualSpecific);
+              break;
+            }
           }
 
           map.push(tempObj)
@@ -4806,34 +4821,41 @@ ClientEvaluationJs.prototype.finalSubmit = function () {
         }
 
         if (boo) {
-          instance.mother.certificationBox(name, phone, async function (back, box) {
-            try {
-              const { cliid } = await ajaxJson({ map }, BACKHOST + "/clientSubmit");
-              window.gtag("event", "conversion", {
-                "send_to": window.gadsConverting,
-                "value": 1.0,
-                "currency": 'KRW'
-              });
-              homeliaisonAnalytics({
-                page: instance.pageName,
-                standard: instance.firstPageViewTime,
-                action: "login",
-                data: {
-                  cliid,
-                  date: dateToString(new Date(), true),
-                },
-              }).then(() => {
-                document.body.removeChild(box);
-                document.body.removeChild(back);
-                selfHref(FRONTHOST + "/curation.php?cliid=" + cliid);
-              }).catch((err) => {
-                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
-                window.location.reload();
-              });
-            } catch (e) {
-              await ajaxJson({ message: "front clientEvaluation.certificationBox : " + e.message }, BACKHOST + "/errorLog");
-            }
+
+          await ajaxJson({ cliid: instance.project.cliid, proid: instance.project.proid, map }, CONTENTSHOST + "/evaluationSubmit");
+          await homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "evaluationSubmit",
+            data: {
+              cliid: instance.project.cliid,
+              proid: instance.project.proid,
+              date: dateToString(new Date(), true),
+            },
           });
+          if (raw.exist) {
+            if (mobile) {
+              window.alert("해당 사진 파일은 압축 형태이기 때문에 (zip 파일), 모바일에서 다운로드 할 경우 확인이 어려울 수 있습니다! PC에서 다운로드 해주세요!");
+            }
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "downloadRawPhotoClient",
+              data: {
+                cliid: instance.project.cliid,
+                proid: instance.project.proid,
+                date: new Date(),
+              },
+            }).catch((err) => {
+              console.log(err);
+            });
+            const loading = instance.mother.whiteProgressLoading();
+            instance.mother.greenAlert("다운로드를 진행합니다!").catch((err) => { console.log(err); });
+            await downloadFile(raw.link, null, loading.progress.firstChild);
+            loading.remove();
+          }
+          window.alert("평가 제출이 완료되었습니다! 감사합니다 :)");
+          selfHref(FRONTHOST);
         }
 
       }
@@ -5092,8 +5114,31 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
 
     const { returnGet, ajaxJson } = GeneralJs;
     const getObj = returnGet();
+    let proid, projects, project;
+
+    if (getObj.proid === undefined) {
+      window.alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+      throw new Error("page ban");
+    }
+
+    proid = getObj.proid;
+    projects = await ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects", { equal: true });
+    if (projects.length === 0) {
+      window.alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+      throw new Error("page ban");
+    }
+    [ project ] = projects;
+    if (!/^d/.test(project.desid)) {
+      window.alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+      throw new Error("page ban");
+    }
+    this.project = project;
 
     this.inputClassName = "consultingInput";
+    this.contentsRawInfo = await ajaxJson({ mode: "search", proid }, SECONDHOST + "/rawImageParsing", { equal: true });
 
     await this.mother.ghostClientLaunching({
       mode: "front",
