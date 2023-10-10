@@ -1194,9 +1194,6 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       if (toggle === "off") {
         for (let dom of targets) {
           if (dom === this) {
-            if (/거주중/gi.test(dom.children[2].textContent)) {
-              livingAlertEvent(dom);
-            }
             dom.setAttribute("toggle", "on");
             dom.children[0].style.opacity = String(0);
             dom.children[1].style.opacity = String(1);
@@ -1522,6 +1519,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             },
             children: [
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "on",
+                  property: "constructamount",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -1575,6 +1580,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                 ]
               },
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "constructamount",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -1628,6 +1641,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                 ]
               },
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "constructamount",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -1779,6 +1800,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             },
             children: [
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "on",
+                  property: "constructperiod",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -1833,6 +1862,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                 ]
               },
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "constructperiod",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -1887,6 +1924,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                 ]
               },
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "constructperiod",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -1940,6 +1985,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                 ]
               },
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "constructperiod",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -1993,6 +2046,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                 ]
               },
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "constructperiod",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -2139,7 +2200,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             attribute: {
               ratio: String(defaultRatio),
               value: budgetValues[Math.round((budgetValues.length - 1) * defaultRatio)].value,
-              property: "budget",
+              property: "totalamount",
             },
             event: {
               click: barClickEvent(budgetValues),
@@ -2352,7 +2413,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             attribute: {
               ratio: String(defaultRatio),
               value: budgetValues[Math.round((budgetValues.length - 1) * defaultRatio)].value,
-              property: "budget",
+              property: "stylingamount",
             },
             event: {
               click: barClickEvent(budgetValues),
@@ -2782,6 +2843,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             },
             children: [
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "productlist",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -2802,7 +2871,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(checkboxTop) + ea,
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(0),
+                      opacity: String(1),
                     }
                   },
                   {
@@ -2815,64 +2884,11 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       left: String(0),
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(1),
+                      opacity: String(0),
                     }
                   },
                   {
                     text: "불만족",
-                    style: {
-                      display: "inline-block",
-                      position: "relative",
-                      marginLeft: String(checkboxBetween) + ea,
-                      top: String(mainTop) + ea,
-                      fontSize: String(mainSize) + ea,
-                      fontWeight: String(checkboxWeight),
-                      color: colorChip.green,
-                      verticalAlign: "top",
-                      cursor: "pointer",
-                    }
-                  },
-                ]
-              },
-              {
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  top: String(0),
-                  height: String(100) + '%',
-                  verticalAlign: "top",
-                  cursor: "pointer",
-                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
-                },
-                children: [
-                  {
-                    mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.gray3),
-                    style: {
-                      display: "inline-block",
-                      position: "relative",
-                      width: String(checkboxWidth) + ea,
-                      top: String(checkboxTop) + ea,
-                      verticalAlign: "top",
-                      cursor: "pointer",
-                      opacity: String(1),
-                    }
-                  },
-                  {
-                    mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
-                    style: {
-                      position: "absolute",
-                      width: String(checkboxWidth) + ea,
-                      top: String(checkboxTop) + ea,
-                      left: String(0),
-                      verticalAlign: "top",
-                      cursor: "pointer",
-                      opacity: String(0),
-                    }
-                  },
-                  {
-                    text: "보통",
                     style: {
                       display: "inline-block",
                       position: "relative",
@@ -2888,6 +2904,75 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                 ]
               },
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "on",
+                  property: "productlist",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(0),
+                  height: String(100) + '%',
+                  verticalAlign: "top",
+                  cursor: "pointer",
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: instance.mother.returnCheckBox(colorChip.gray3),
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      width: String(checkboxWidth) + ea,
+                      top: String(checkboxTop) + ea,
+                      verticalAlign: "top",
+                      cursor: "pointer",
+                      opacity: String(0),
+                    }
+                  },
+                  {
+                    mode: "svg",
+                    source: instance.mother.returnCheckBox(colorChip.green),
+                    style: {
+                      position: "absolute",
+                      width: String(checkboxWidth) + ea,
+                      top: String(checkboxTop) + ea,
+                      left: String(0),
+                      verticalAlign: "top",
+                      cursor: "pointer",
+                      opacity: String(1),
+                    }
+                  },
+                  {
+                    text: "보통",
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      marginLeft: String(checkboxBetween) + ea,
+                      top: String(mainTop) + ea,
+                      fontSize: String(mainSize) + ea,
+                      fontWeight: String(checkboxWeight),
+                      color: colorChip.green,
+                      verticalAlign: "top",
+                      cursor: "pointer",
+                    }
+                  },
+                ]
+              },
+              {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "productlist",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -3039,6 +3124,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             },
             children: [
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "on",
+                  property: "settingperiod",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -3093,6 +3186,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                 ]
               },
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "settingperiod",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -3147,6 +3248,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                 ]
               },
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "settingperiod",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -3200,6 +3309,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                 ]
               },
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "settingperiod",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -3253,6 +3370,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                 ]
               },
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "settingperiod",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -3399,7 +3524,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             attribute: {
               ratio: String(defaultRatio),
               value: furnitureValues[Math.round((furnitureValues.length - 1) * defaultRatio)].value,
-              property: "furniture",
+              property: "compliance_ratio",
             },
             event: {
               click: barClickEvent(furnitureValues),
@@ -3616,6 +3741,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             },
             children: [
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "designsatisfaction",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -3636,7 +3769,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(checkboxTop) + ea,
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(0),
+                      opacity: String(1),
                     }
                   },
                   {
@@ -3649,64 +3782,11 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       left: String(0),
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(1),
+                      opacity: String(0),
                     }
                   },
                   {
                     text: "불만족",
-                    style: {
-                      display: "inline-block",
-                      position: "relative",
-                      marginLeft: String(checkboxBetween) + ea,
-                      top: String(mainTop) + ea,
-                      fontSize: String(mainSize) + ea,
-                      fontWeight: String(checkboxWeight),
-                      color: colorChip.green,
-                      verticalAlign: "top",
-                      cursor: "pointer",
-                    }
-                  },
-                ]
-              },
-              {
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  top: String(0),
-                  height: String(100) + '%',
-                  verticalAlign: "top",
-                  cursor: "pointer",
-                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
-                },
-                children: [
-                  {
-                    mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.gray3),
-                    style: {
-                      display: "inline-block",
-                      position: "relative",
-                      width: String(checkboxWidth) + ea,
-                      top: String(checkboxTop) + ea,
-                      verticalAlign: "top",
-                      cursor: "pointer",
-                      opacity: String(1),
-                    }
-                  },
-                  {
-                    mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
-                    style: {
-                      position: "absolute",
-                      width: String(checkboxWidth) + ea,
-                      top: String(checkboxTop) + ea,
-                      left: String(0),
-                      verticalAlign: "top",
-                      cursor: "pointer",
-                      opacity: String(0),
-                    }
-                  },
-                  {
-                    text: "보통",
                     style: {
                       display: "inline-block",
                       position: "relative",
@@ -3722,6 +3802,75 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                 ]
               },
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "on",
+                  property: "designsatisfaction",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(0),
+                  height: String(100) + '%',
+                  verticalAlign: "top",
+                  cursor: "pointer",
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: instance.mother.returnCheckBox(colorChip.gray3),
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      width: String(checkboxWidth) + ea,
+                      top: String(checkboxTop) + ea,
+                      verticalAlign: "top",
+                      cursor: "pointer",
+                      opacity: String(0),
+                    }
+                  },
+                  {
+                    mode: "svg",
+                    source: instance.mother.returnCheckBox(colorChip.green),
+                    style: {
+                      position: "absolute",
+                      width: String(checkboxWidth) + ea,
+                      top: String(checkboxTop) + ea,
+                      left: String(0),
+                      verticalAlign: "top",
+                      cursor: "pointer",
+                      opacity: String(1),
+                    }
+                  },
+                  {
+                    text: "보통",
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      marginLeft: String(checkboxBetween) + ea,
+                      top: String(mainTop) + ea,
+                      fontSize: String(mainSize) + ea,
+                      fontWeight: String(checkboxWeight),
+                      color: colorChip.green,
+                      verticalAlign: "top",
+                      cursor: "pointer",
+                    }
+                  },
+                ]
+              },
+              {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "designsatisfaction",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -3873,6 +4022,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             },
             children: [
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "feedbacksatisfaction",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -3893,7 +4050,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(checkboxTop) + ea,
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(0),
+                      opacity: String(1),
                     }
                   },
                   {
@@ -3906,64 +4063,11 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       left: String(0),
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(1),
+                      opacity: String(0),
                     }
                   },
                   {
                     text: "불만족",
-                    style: {
-                      display: "inline-block",
-                      position: "relative",
-                      marginLeft: String(checkboxBetween) + ea,
-                      top: String(mainTop) + ea,
-                      fontSize: String(mainSize) + ea,
-                      fontWeight: String(checkboxWeight),
-                      color: colorChip.green,
-                      verticalAlign: "top",
-                      cursor: "pointer",
-                    }
-                  },
-                ]
-              },
-              {
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  top: String(0),
-                  height: String(100) + '%',
-                  verticalAlign: "top",
-                  cursor: "pointer",
-                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
-                },
-                children: [
-                  {
-                    mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.gray3),
-                    style: {
-                      display: "inline-block",
-                      position: "relative",
-                      width: String(checkboxWidth) + ea,
-                      top: String(checkboxTop) + ea,
-                      verticalAlign: "top",
-                      cursor: "pointer",
-                      opacity: String(1),
-                    }
-                  },
-                  {
-                    mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
-                    style: {
-                      position: "absolute",
-                      width: String(checkboxWidth) + ea,
-                      top: String(checkboxTop) + ea,
-                      left: String(0),
-                      verticalAlign: "top",
-                      cursor: "pointer",
-                      opacity: String(0),
-                    }
-                  },
-                  {
-                    text: "보통",
                     style: {
                       display: "inline-block",
                       position: "relative",
@@ -3979,6 +4083,75 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                 ]
               },
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "on",
+                  property: "feedbacksatisfaction",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(0),
+                  height: String(100) + '%',
+                  verticalAlign: "top",
+                  cursor: "pointer",
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: instance.mother.returnCheckBox(colorChip.gray3),
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      width: String(checkboxWidth) + ea,
+                      top: String(checkboxTop) + ea,
+                      verticalAlign: "top",
+                      cursor: "pointer",
+                      opacity: String(0),
+                    }
+                  },
+                  {
+                    mode: "svg",
+                    source: instance.mother.returnCheckBox(colorChip.green),
+                    style: {
+                      position: "absolute",
+                      width: String(checkboxWidth) + ea,
+                      top: String(checkboxTop) + ea,
+                      left: String(0),
+                      verticalAlign: "top",
+                      cursor: "pointer",
+                      opacity: String(1),
+                    }
+                  },
+                  {
+                    text: "보통",
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      marginLeft: String(checkboxBetween) + ea,
+                      top: String(mainTop) + ea,
+                      fontSize: String(mainSize) + ea,
+                      fontWeight: String(checkboxWeight),
+                      color: colorChip.green,
+                      verticalAlign: "top",
+                      cursor: "pointer",
+                    }
+                  },
+                ]
+              },
+              {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "feedbacksatisfaction",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -4098,7 +4271,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
         children: [
           {
             text: [
-              desktop ?"디자이너의 <b%일정 운영과 예산 운영%b>에 대한 만족도는 어느 정도이신가요?" : "디자이너의 <b%일정과 예산 운영%b>에 대한 만족도를 알려주세요!",
+              desktop ? "디자이너의 <b%일정 운영과 예산 운영%b>에 대한 만족도는 어느 정도이신가요?" : "디자이너의 <b%일정과 예산 운영%b>에 대한 만족도를 알려주세요!",
             ].join("\n"),
             style: {
               display: "block",
@@ -4130,6 +4303,14 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             },
             children: [
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "operationsatisfaction",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -4150,7 +4331,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(checkboxTop) + ea,
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(0),
+                      opacity: String(1),
                     }
                   },
                   {
@@ -4163,64 +4344,11 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       left: String(0),
                       verticalAlign: "top",
                       cursor: "pointer",
-                      opacity: String(1),
+                      opacity: String(0),
                     }
                   },
                   {
                     text: "불만족",
-                    style: {
-                      display: "inline-block",
-                      position: "relative",
-                      marginLeft: String(checkboxBetween) + ea,
-                      top: String(mainTop) + ea,
-                      fontSize: String(mainSize) + ea,
-                      fontWeight: String(checkboxWeight),
-                      color: colorChip.green,
-                      verticalAlign: "top",
-                      cursor: "pointer",
-                    }
-                  },
-                ]
-              },
-              {
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  top: String(0),
-                  height: String(100) + '%',
-                  verticalAlign: "top",
-                  cursor: "pointer",
-                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
-                },
-                children: [
-                  {
-                    mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.gray3),
-                    style: {
-                      display: "inline-block",
-                      position: "relative",
-                      width: String(checkboxWidth) + ea,
-                      top: String(checkboxTop) + ea,
-                      verticalAlign: "top",
-                      cursor: "pointer",
-                      opacity: String(1),
-                    }
-                  },
-                  {
-                    mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
-                    style: {
-                      position: "absolute",
-                      width: String(checkboxWidth) + ea,
-                      top: String(checkboxTop) + ea,
-                      left: String(0),
-                      verticalAlign: "top",
-                      cursor: "pointer",
-                      opacity: String(0),
-                    }
-                  },
-                  {
-                    text: "보통",
                     style: {
                       display: "inline-block",
                       position: "relative",
@@ -4236,6 +4364,75 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                 ]
               },
               {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "on",
+                  property: "operationsatisfaction",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(0),
+                  height: String(100) + '%',
+                  verticalAlign: "top",
+                  cursor: "pointer",
+                  width: String(desktop ? selectionFactorWidth : mobileSelectionFactorWidth0) + ea,
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: instance.mother.returnCheckBox(colorChip.gray3),
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      width: String(checkboxWidth) + ea,
+                      top: String(checkboxTop) + ea,
+                      verticalAlign: "top",
+                      cursor: "pointer",
+                      opacity: String(0),
+                    }
+                  },
+                  {
+                    mode: "svg",
+                    source: instance.mother.returnCheckBox(colorChip.green),
+                    style: {
+                      position: "absolute",
+                      width: String(checkboxWidth) + ea,
+                      top: String(checkboxTop) + ea,
+                      left: String(0),
+                      verticalAlign: "top",
+                      cursor: "pointer",
+                      opacity: String(1),
+                    }
+                  },
+                  {
+                    text: "보통",
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      marginLeft: String(checkboxBetween) + ea,
+                      top: String(mainTop) + ea,
+                      fontSize: String(mainSize) + ea,
+                      fontWeight: String(checkboxWeight),
+                      color: colorChip.green,
+                      verticalAlign: "top",
+                      cursor: "pointer",
+                    }
+                  },
+                ]
+              },
+              {
+                class: [ inputClassName ],
+                attribute: {
+                  toggle: "off",
+                  property: "operationsatisfaction",
+                },
+                event: {
+                  click: checkboxClickEvent0
+                },
                 style: {
                   display: "inline-block",
                   position: "relative",
