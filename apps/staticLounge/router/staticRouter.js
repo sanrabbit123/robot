@@ -2667,6 +2667,10 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
           await sleep(1000);
           await requestSystem("https://" + address.officeinfo.ghost.host + "/analyticsMonthly", { date: new Date() }, { headers: { "Content-Type": "application/json" } });
   
+          // meta complex
+          await sleep(1000);
+          await requestSystem("https://" + address.contentsinfo.host + ":3000/metaComplex", { day: 5 }, { headers: { "Content-Type": "application/json" } });
+
           return true;
         } catch (e) {
           console.log(e);
