@@ -482,7 +482,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   leftCheck0 = <%% 125, 112, 98, 98, 22.8 %%>;
   leftCheck1 = <%% 195, 176, 156, 152, 36.5 %%>;
   checkboxWidth = <%% 9, 9, 9, 8, 2 %%>;
-  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 10 : 10), (isMac() ? 9 : 9), (isMac() ? 9 : 9), (isIphone() ? 2.3 : 2.3) %%>;
+  checkboxTop = <%% (isMac() ? 9 : 9), (isMac() ? 9 : 8), (isMac() ? 9 : 8), (isMac() ? 9 : 8), (isIphone() ? 2.5 : 2.3) %%>;
   checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
   checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
@@ -634,7 +634,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   submitSize = <%% 20, 20, 18, 16, 4 %%>;
   submitWeight = <%% 400, 400, 400, 400, 400 %%>;
   submitLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-  submitTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+  submitTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
   barDescriptionLingHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>
   barDescriptionTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 2 : 4), (isMac() ? 1 : 3), (isIphone() ? 0.8 : 0.6) %%>;
