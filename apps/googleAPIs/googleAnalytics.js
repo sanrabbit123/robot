@@ -297,7 +297,7 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
   const back = this.back;
   const address = this.address;
   const { collection, unknownKeyword } = this;
-  const { dateToString, stringToDate, ipParsing, requestSystem } = this.mother;
+  const { dateToString, stringToDate, ipParsing, requestSystem, sleep } = this.mother;
   const querystring = require("querystring");
   try {
     let rows;
@@ -315,6 +315,7 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
     let thisMedium;
     let finalObj;
     let num;
+    let rowsMother;
 
     rows = await back.mongoRead(collection, { "data.cliid": cliid }, { selfMongo });
     rows = rows.filter((obj) => {
@@ -343,11 +344,16 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
       users: [],
     };
 
+    await sleep(1000);
+    if (sessionIds.length > 0) {
+      rowsMother = await back.mongoRead(collection, { $or: sessionIds.map((id) => { return { id } }) }, { selfMongo });
+    } else {
+      rowsMother = [];
+    }
+
     for (let id of sessionIds) {
 
-      whereQuery = { id };
-      rows = await back.mongoRead(collection, whereQuery, { selfMongo });
-
+      rows = rowsMother.filter((o) => { return o.id === id });
       if (rows.length > 0) {
 
         rows.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
@@ -923,7 +929,7 @@ GoogleAnalytics.prototype.clientsMetric = async function (clientsArr, selfCoreMo
     for (let client of clientsArr) {
       clientResult = await this.clientMetric(client, contentsArr, historiesArr, selfMongo, store);
       while (typeof clientResult !== "object" || clientResult === null) {
-        await sleep(1000);
+        await sleep(2000);
         if (!clientResult) {
           clientResult = await this.clientMetric(client, contentsArr, historiesArr, selfMongo, store);
         } else {
@@ -934,7 +940,7 @@ GoogleAnalytics.prototype.clientsMetric = async function (clientsArr, selfCoreMo
       // if (!fast) {
       //   await sleep(500);
       // }
-      await sleep(2000);
+      await sleep(1000);
     }
 
     return clientsObjectArr;
@@ -949,7 +955,7 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
   const back = this.back;
   const address = this.address;
   const unknownKeyword = this.unknownKeyword;
-  const { equalJson, emergencyAlarm } = this.mother;
+  const { equalJson, emergencyAlarm, sleep } = this.mother;
   const collection = this.clientAnalyticsCollection;
   const querystring = require("querystring");
   let storeSuccess;
@@ -981,6 +987,7 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
 
     cliid = thisClient.cliid;
 
+    await sleep(500);
     sessionResult = await this.getSessionObjectByCliid(cliid, selfMongo);
     if (sessionResult === null) {
       throw new Error("session parsing error");
@@ -1141,10 +1148,12 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
     clientObject.contents.designers.length = clientObject.contents.designers.desid.length;
 
     if (store) {
+      await sleep(500);
       rows = await back.mongoPick(collection, [ { cliid }, { cliid: 1 } ], { selfMongo });
       if (rows.length !== 0) {
         await back.mongoDelete(collection, { cliid }, { selfMongo });
       }
+      await sleep(500);
       await back.mongoCreate(collection, clientObject, { selfMongo });
       console.log("mongo store success : " + cliid);
       storeSuccess = true;
