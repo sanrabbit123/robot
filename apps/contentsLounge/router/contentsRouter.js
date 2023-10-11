@@ -598,6 +598,197 @@ ContentsRouter.prototype.rou_post_metaComplex = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_evaluationSubmit = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, messageSend, dateToString, stringToDate, sleep } = this.mother;
+  let obj = {};
+  obj.link = [ "/evaluationSubmit" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.cliid === undefined || req.body.proid === undefined || req.body.desid === undefined || req.body.map === undefined) {
+        throw new Error("invalid post");
+      }
+      const { cliid, proid, desid, map } = equalJson(req.body);
+      const selfMongo = instance.mongolocal;
+      const collection = "clientEvaluation";
+      let constructAmount;
+      let constructPeriod;
+      let totalAmount;
+      let stylingAmount;
+      let furniture;
+      let productList;
+      let settingPeriod;
+      let compliance;
+      let designSatisfaction;
+      let feedbackSatisfaction;
+      let operationSatisfaction;
+      let json;
+      let rows;
+
+      constructAmount = map.find((o) => { return o.property === "constructamount" }) === undefined ? "" : map.find((o) => { return o.property === "constructamount" }).value;
+      constructPeriod = map.find((o) => { return o.property === "constructperiod" }) === undefined ? "" : map.find((o) => { return o.property === "constructperiod" }).value;
+      totalAmount = map.find((o) => { return o.property === "totalamount" }) === undefined ? "" : map.find((o) => { return o.property === "totalamount" }).value;
+      stylingAmount = map.find((o) => { return o.property === "stylingamount" }) === undefined ? "" : map.find((o) => { return o.property === "stylingamount" }).value;
+      furniture = map.find((o) => { return o.property === "furniture" }) === undefined ? "" : map.find((o) => { return o.property === "furniture" }).value;
+      productList = map.find((o) => { return o.property === "productlist" }) === undefined ? "" : map.find((o) => { return o.property === "productlist" }).value;
+      settingPeriod = map.find((o) => { return o.property === "settingperiod" }) === undefined ? "" : map.find((o) => { return o.property === "settingperiod" }).value;
+      compliance = map.find((o) => { return o.property === "compliance_ratio" }) === undefined ? 1 : map.find((o) => { return o.property === "compliance_ratio" }).value;
+      designSatisfaction = map.find((o) => { return o.property === "designsatisfaction" }) === undefined ? "" : map.find((o) => { return o.property === "designsatisfaction" }).value;
+      feedbackSatisfaction = map.find((o) => { return o.property === "feedbacksatisfaction" }) === undefined ? "" : map.find((o) => { return o.property === "feedbacksatisfaction" }).value;
+      operationSatisfaction = map.find((o) => { return o.property === "operationsatisfaction" }) === undefined ? "" : map.find((o) => { return o.property === "operationsatisfaction" }).value;
+
+      json = {
+        proid,
+        desid,
+        cliid,
+        date: new Date(),
+        construct: {
+          level: 0,
+          period: 0,
+        },
+        spend: {
+          total: 0,
+          construct: 0,
+          styling: 0,
+        },
+        purchase: {
+          list: 0,
+          furniture: 0,
+          period: 0,
+          compliance: 0,
+        },
+        satisfaction: {
+          design: 0,
+          feedback: 0,
+          operation: 0,
+        }
+      };
+
+      if (/시공 없음/gi.test(constructAmount)) {
+        json.construct.level = 0;
+      } else if (/부분 시공/gi.test(constructAmount)) {
+        json.construct.level = 1;
+      } else if (/전체 시공/gi.test(constructAmount)) {
+        json.construct.level = 2;
+      } else {
+        json.construct.level = 0;
+      }
+
+      if (/시공 없음/gi.test(constructPeriod)) {
+        json.construct.period = 0;
+      } else if (/2주 이하/gi.test(constructPeriod)) {
+        json.construct.period = 14;
+      } else if (/4주 이상/gi.test(constructPeriod)) {
+        json.construct.period = 30;
+      } else if (/[0-9]/gi.test(constructPeriod)) {
+        json.construct.period = Math.ceil(constructPeriod.split("~").map((str) => { return Number(str.replace(/[^0-9]/gi, '')) * 7 }).reduce((acc, curr) => { return acc + curr }, 0) / 2);
+      } else {
+        json.construct.period = 0;
+      }
+
+      if (/1억/gi.test(totalAmount)) {
+        json.spend.total = 100000000;
+      } else if (/만원/gi.test(totalAmount)) {
+        json.spend.total = Number(totalAmount.replace(/[^0-9]/gi, '')) * 10000;
+      } else {
+        json.spend.total = 0;
+      }
+
+      if (/1억/gi.test(stylingAmount)) {
+        json.spend.styling = 100000000;
+      } else if (/만원/gi.test(stylingAmount)) {
+        json.spend.styling = Number(stylingAmount.replace(/[^0-9]/gi, '')) * 10000;
+      } else {
+        json.spend.styling = 0;
+      }
+
+      json.spend.construct = json.spend.total - json.spend.styling;
+
+      if (/불만족/gi.test(productList)) {
+        json.purchase.list = 0;
+      } else if (/보통/gi.test(productList)) {
+        json.purchase.list = 1;
+      } else if (/만족/gi.test(productList)) {
+        json.purchase.list = 2;
+      } else {
+        json.purchase.list = 1;
+      }
+
+      if (/재배치/gi.test(furniture)) {
+        json.purchase.furniture = 0;
+      } else if (/일부/gi.test(furniture)) {
+        json.purchase.furniture = 1;
+      } else {
+        json.purchase.furniture = 2;
+      }
+
+      if (/구매 없음/gi.test(settingPeriod)) {
+        json.purchase.period = 0;
+      } else if (/2주 이하/gi.test(settingPeriod)) {
+        json.purchase.period = 14;
+      } else if (/4주 이상/gi.test(settingPeriod)) {
+        json.purchase.period = 30;
+      } else if (/[0-9]/gi.test(constructPeriod)) {
+        json.purchase.period = Math.ceil(settingPeriod.split("~").map((str) => { return Number(str.replace(/[^0-9]/gi, '')) * 7 }).reduce((acc, curr) => { return acc + curr }, 0) / 2);
+      } else {
+        json.purchase.period = 0;
+      }
+
+      json.purchase.compliance = compliance;
+
+      if (/불만족/gi.test(designSatisfaction)) {
+        json.satisfaction.design = 0;
+      } else if (/보통/gi.test(designSatisfaction)) {
+        json.satisfaction.design = 1;
+      } else if (/만족/gi.test(designSatisfaction)) {
+        json.satisfaction.design = 2;
+      } else {
+        json.satisfaction.design = 1;
+      }
+
+      if (/불만족/gi.test(feedbackSatisfaction)) {
+        json.satisfaction.feedback = 0;
+      } else if (/보통/gi.test(feedbackSatisfaction)) {
+        json.satisfaction.feedback = 1;
+      } else if (/만족/gi.test(feedbackSatisfaction)) {
+        json.satisfaction.feedback = 2;
+      } else {
+        json.satisfaction.feedback = 1;
+      }
+
+      if (/불만족/gi.test(operationSatisfaction)) {
+        json.satisfaction.operation = 0;
+      } else if (/보통/gi.test(operationSatisfaction)) {
+        json.satisfaction.operation = 1;
+      } else if (/만족/gi.test(operationSatisfaction)) {
+        json.satisfaction.operation = 2;
+      } else {
+        json.satisfaction.operation = 1;
+      }
+
+      rows = await back.mongoRead(collection, { proid }, { selfMongo });
+      if (rows.length > 0) {
+        await back.mongoDelete(collection, { proid }, { selfMongo });
+      }
+      await back.mongoCreate(collection, json, { selfMongo });
+
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_evaluationSubmit): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 ContentsRouter.prototype.setMembers = async function () {

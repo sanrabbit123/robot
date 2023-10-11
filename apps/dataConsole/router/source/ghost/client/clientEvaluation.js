@@ -3187,7 +3187,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                     }
                   },
                   {
-                    text: "시공 없음",
+                    text: "구매 없음",
                     style: {
                       display: "inline-block",
                       position: "relative",
@@ -4822,7 +4822,7 @@ ClientEvaluationJs.prototype.finalSubmit = function () {
 
         if (boo) {
 
-          await ajaxJson({ cliid: instance.project.cliid, proid: instance.project.proid, map }, CONTENTSHOST + "/evaluationSubmit");
+          await ajaxJson({ cliid: instance.project.cliid, proid: instance.project.proid, desid: instance.project.desid, map }, CONTENTSHOST + "/evaluationSubmit");
           await homeliaisonAnalytics({
             page: instance.pageName,
             standard: instance.firstPageViewTime,
