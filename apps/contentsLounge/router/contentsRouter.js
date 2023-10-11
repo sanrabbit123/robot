@@ -836,6 +836,70 @@ ContentsRouter.prototype.rou_post_evaluationList = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_evaluationNotice = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, messageSend, dateToString, stringToDate, sleep } = this.mother;
+  let obj = {};
+  obj.link = [ "/evaluationNotice" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.proid === undefined || req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const { proid, mode } = equalJson(req.body);
+      const selfMongo = instance.mongolocal;
+      const collection = "evaluationNotice";
+      let json;
+      let rows;
+      let targetJson;
+      let thisJson;
+
+      if (mode === "send") {
+
+        const { cliid, desid } = equalJson(req.body);
+
+        json = {
+          proid,
+          desid,
+          cliid,
+          date: new Date(),
+          history: [
+            (new Date()),
+          ]
+        };
+  
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        if (rows.length > 0) {
+          [ targetJson ] = rows;
+          delete targetJson._id;
+          thisJson = equalJson(JSON.stringify(targetJson));
+          thisJson.date = new Date();
+          thisJson.history.unshift(new Date());
+          await back.mongoDelete(collection, { proid }, { selfMongo });
+          await back.mongoCreate(collection, thisJson, { selfMongo });
+        } else {
+          await back.mongoCreate(collection, json, { selfMongo });
+        }
+        res.send(JSON.stringify({ message: "done" }));
+
+      } else {
+        throw new Error("invalid mode");
+      }
+
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_evaluationNotice): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
 
 //ROUTING ----------------------------------------------------------------------
 

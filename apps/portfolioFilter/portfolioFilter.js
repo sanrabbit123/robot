@@ -808,23 +808,17 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           ]);
           await back.mongoUpdate(collection, [ { pid: nextPid }, { proid: project.proid } ], { selfMongo });
           await back.mongoUpdate(collection, [ { pid: nextPid }, { exception: false } ], { selfMongo });
+
           clientObj = await back.getClientById(project.cliid);
           designerObj = await back.getDesignerById(project.desid);
-
-          zipLinks = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } })).data;
-          shareLinkClient = zipLinks.client;
-          shareLinkDeginer = zipLinks.designer;
-          if (shareLinkClient !== null) {
-            shareGoogleIdClient = drive.parsingId(shareLinkClient);
-          }
-          shareGoogleIdDesigner = drive.parsingId(shareLinkDeginer);
   
           await shellExec(`rm -rf ${shellLink(folderPath)};`);
 
           if (clientObj !== null && designerObj !== null) {
-            consoleQInput = await consoleQ(`Is it OK? (press "OK")\nclient : https://drive.google.com/file/d/${shareGoogleIdClient}/view?usp=sharing\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);
+            consoleQInput = await consoleQ(`Is it OK? (press "OK")`);
             if (/OK/gi.test(consoleQInput.trim())) {
-              await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, file: shareGoogleIdClient });
+              await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid: clientObj.cliid, desid: designerObj.desid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
+              await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, host: instance.address.frontinfo.host, path: "evaluation", proid: project.proid });
               await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, host: instance.address.frontinfo.host, proid: project.proid });
               await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
             }
