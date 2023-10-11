@@ -2434,7 +2434,11 @@ DataRouter.prototype.rou_post_getMembers = function () {
         if (targetMember === undefined || targetMember === null) {
           res.send(JSON.stringify({ result: null }));
         } else {
-          res.send(JSON.stringify({ result: targetMember }));
+          if (targetMember.alive) {
+            res.send(JSON.stringify({ result: null }));
+          } else {
+            res.send(JSON.stringify({ result: targetMember }));
+          }
         }
 
       } else if (req.body.type === "this") {
