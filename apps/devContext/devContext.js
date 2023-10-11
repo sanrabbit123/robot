@@ -6951,17 +6951,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2310_aa02s", [
-    //   { porlid: "a108", index: 2 },
-    //   { porlid: "a108", index: 4 },
-    //   { porlid: "a108", index: 3 },
-    //   { porlid: "a108", index: 12 },
-    //   { porlid: "a108", index: 14 },
-    //   { porlid: "a108", index: 15 },
+    // await this.setProposalSettingForDesigner("d2310_aa03s", [
+    //   { porlid: "ghost", index: 2 },
+    //   { porlid: "ghost", index: 4 },
+    //   { porlid: "ghost", index: 7 },
+    //   { porlid: "ghost", index: 8 },
+    //   { porlid: "ghost", index: 1 },
+    //   { porlid: "ghost", index: 3 },
     // ], [
-    //   "유행하는 디자인을 따라가기 보다는, 오래 보아도 아름다운 디자인을 구사합니다.",
-    //   "집은 소중한 일상을 가장 많이 보내는 곳임을 이해하고, 그 가치에 맞게 디자인을 진행합니다.",
-    //   "감각적이고 따뜻한 스타일을 구현하는 데 능하며, 내추럴 디자인에 강합니다.",
+    //   "내추럴하고 편안한 스타일로 친근한 공간 분위기를 내는데 탁월합니다.",
+    //   "고객님 라이프 스타일과 니즈에 맞게 기능 중심적으로 스타일링을 진행합니다.",
+    //   "기존 공간에 있던 요소들의 재사용을 하는 데 탁월하여 예산을 세이브해 드립니다.",
     // ]);
 
 
