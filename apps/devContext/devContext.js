@@ -157,11 +157,22 @@ DevContext.prototype.launching = async function () {
     const threeMonthAgo = new Date();
     threeMonthAgo.setMonth(threeMonthAgo.getMonth() - agoConst);
     let response;
+    let targetList;
+    let targetProid;
+    let evaluationList;
 
     response = await requestSystem("https://" + address.contentsinfo.host + ":3000/evaluationNotice", { mode: "list", from: threeMonthAgo }, { headers: { "Content-Type": "application/json" } });
+    targetList = equalJson(JSON.stringify(response.data.data));
+    targetProid = targetList.map((o) => { return o.proid });
 
-    console.log(equalJson(JSON.stringify(response.data)));
+    evaluationList = [];
+    if (targetProid.length > 0) {
+      response = await requestSystem("https://" + address.contentsinfo.host + ":3000/evaluationList", { mode: "list", whereQuery: { $or: targetProid.map((proid) => { return { proid } }) } }, { headers: { "Content-Type": "application/json" } });
+      evaluationList = equalJson(JSON.stringify(response.data.data));
 
+      console.log(evaluationList);
+
+    }
 
 
 

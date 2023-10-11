@@ -804,28 +804,49 @@ ContentsRouter.prototype.rou_post_evaluationList = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.proid === undefined) {
-        throw new Error("invalid post");
-      }
-      const { proid } = equalJson(req.body);
       const selfMongo = instance.mongolocal;
       const collection = "clientEvaluation";
+      const mode = (req.body.mode === undefined ? "pick" : req.body.mode);
       let rows;
       let targetJson;
-      
-      rows = await back.mongoRead(collection, { proid }, { selfMongo });
-      if (rows.length > 0) {
-        rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-        targetJson = equalJson(JSON.stringify(rows[0]));
-        res.send(JSON.stringify({
-          exist: true,
-          data: targetJson,
-        }));
+
+      if (mode === "pick") {
+
+        if (req.body.proid === undefined) {
+          throw new Error("invalid post");
+        }
+        const { proid } = equalJson(req.body);
+        
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        if (rows.length > 0) {
+          rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+          targetJson = equalJson(JSON.stringify(rows[0]));
+          res.send(JSON.stringify({
+            exist: true,
+            data: targetJson,
+          }));
+        } else {
+          res.send(JSON.stringify({
+            exist: false,
+            data: null,
+          }));
+        }
+
+      } else if (mode === "list") {
+
+        if (req.body.whereQuery === undefined) {
+          throw new Error("invalid post");
+        }
+        const { whereQuery } = equalJson(req.body);
+        rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        targetJson = equalJson(JSON.stringify(rows));
+        for (let obj of targetJson) {
+          delete obj._id;
+        }
+        res.send(JSON.stringify({ data: targetJson }));
+
       } else {
-        res.send(JSON.stringify({
-          exist: false,
-          data: null,
-        }));
+        throw new Error("invalid mode");
       }
 
     } catch (e) {
