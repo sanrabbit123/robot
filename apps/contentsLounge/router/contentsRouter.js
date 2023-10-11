@@ -571,6 +571,7 @@ ContentsRouter.prototype.rou_post_contentsSchedule = function () {
 ContentsRouter.prototype.rou_post_metaComplex = function () {
   const instance = this;
   const meta = this.facebook;
+  const naver = this.naver;
   const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
   let obj;
   obj = {};
@@ -586,7 +587,9 @@ ContentsRouter.prototype.rou_post_metaComplex = function () {
       const selfMongo = instance.mongolocal;
       const defaultDay = 3;
       const dayConst = req.body.day === undefined ? defaultDay : (Number.isNaN(Number(req.body.day)) ? defaultDay : Number(req.body.day));
-      meta.metaComplex(selfMongo, dayConst, logger).catch((err) => {
+      meta.metaComplex(selfMongo, dayConst, logger).then(() => {
+        return naver.naverComplex(selfMongo, dayConst, logger);
+      }).catch((err) => {
         logger.error("Contents lounge 서버 문제 생김 (rou_post_metaComplex): " + err.message).catch((e) => { console.log(e); });
       });
       res.send(JSON.stringify({ message: "will do" }));

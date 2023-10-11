@@ -36,8 +36,7 @@ NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, lo
   const instance = this;
   const back = this.back;
   const { naverToken, naverSecret, naverId, naverUrl } = this;
-  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm } = this.mother;
-  const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition } = this.mother;
   try {
     const campaignCollection = "dailyCampaign";
     let tempRows;
@@ -48,6 +47,7 @@ NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, lo
     let num, num2;
     let key;
     let now;
+    let thisNowDate;
 
     now = new Date();
     startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -56,19 +56,20 @@ NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, lo
     }
 
     url = "/ncc/campaigns";
+    thisNowDate = new Date();
     res = await requestSystem(naverUrl + url, {
       recordSize: 200,
       timeRange: JSON.stringify({
         since: dateToString(startDate),
-        until: dateToString(new Date()),
+        until: dateToString(now),
       }),
     }, {
       method: "get",
       headers: {
-        "X-Timestamp": String(now.valueOf()),
+        "X-Timestamp": String(thisNowDate.valueOf()),
         "X-API-KEY": naverToken,
         "X-Customer": naverId,
-        "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
+        "X-Signature": sha256Hmac(naverSecret, String(thisNowDate.valueOf()) + ".GET." + url)
       }
     });
 
@@ -92,6 +93,7 @@ NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, lo
         await sleep(100);
 
         try {
+          thisNowDate = new Date();
           res2 = await requestSystem(naverUrl + url, {
             id: nccCampaignId,
             fields: JSON.stringify([ "impCnt", "clkCnt", "salesAmt", "ccnt" ]),
@@ -102,10 +104,10 @@ NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, lo
           }, {
             method: "get",
             headers: {
-              "X-Timestamp": String(now.valueOf()),
+              "X-Timestamp": String(thisNowDate.valueOf()),
               "X-API-KEY": naverToken,
               "X-Customer": naverId,
-              "X-Signature": sha256Hmac(naverSecret, String(now.valueOf()) + ".GET." + url)
+              "X-Signature": sha256Hmac(naverSecret, String(thisNowDate.valueOf()) + ".GET." + url)
             }
           });
           if (!(res2.data.data[0].impCnt === 0 && res2.data.data[0].clkCnt === 0 && res2.data.data[0].salesAmt === 0)) {
@@ -157,6 +159,165 @@ NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, lo
 
   } catch (e) {
     await emergencyAlarm("NaverAPIs.dailyCampaign error : " + e.message);
+    console.log(e);
+  }
+}
+
+NaverAPIs.prototype.naverComplex = async function (selfMongo, dayNumber = 3, logger = null) {
+  const instance = this;
+  const back = this.back;
+  const { naverToken, naverSecret, naverId, naverUrl } = this;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, fileSystem } = this.mother;
+  try {
+    const collection = "naverComplex";
+    const idKeyword = 'f';
+    const naverKeyword = 'n';
+    const naverKeyKeyword = "naver";
+    let tempRows;
+    let res, res2, url;
+    let json;
+    let from, to;
+    let startDate;
+    let num, num2;
+    let key;
+    let now;
+    let resultObject;
+    let thisNowDate;
+
+    now = new Date();
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    for (let i = 0; i < dayNumber; i++) {
+      startDate.setDate(startDate.getDate() - 1);
+    }
+
+    url = "/ncc/campaigns";
+    thisNowDate = new Date();
+    res = await requestSystem(naverUrl + url, {
+      recordSize: 200,
+      timeRange: JSON.stringify({
+        since: dateToString(startDate),
+        until: dateToString(now),
+      }),
+    }, {
+      method: "get",
+      headers: {
+        "X-Timestamp": String(thisNowDate.valueOf()),
+        "X-API-KEY": naverToken,
+        "X-Customer": naverId,
+        "X-Signature": sha256Hmac(naverSecret, String(thisNowDate.valueOf()) + ".GET." + url)
+      }
+    });
+    
+    for (let i = 0; i < dayNumber; i++) {
+
+      await sleep(1000);
+      if (i === 0) {
+        from = new Date(JSON.stringify(startDate).slice(1, -1));
+        to = new Date(JSON.stringify(startDate).slice(1, -1));
+        to.setDate(to.getDate() + 1);
+      } else {
+        from.setDate(from.getDate() + 1);
+        to.setDate(to.getDate() + 1);
+      }
+
+      key = dateToString(from).replace(/\-/gi, '') + "_" + naverKeyKeyword;
+      resultObject = {
+        camid: idKeyword + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + naverKeyword + 'a' + zeroAddition(from.getDate()) + 's',
+        key,
+        date: { from, to },
+        advertisement: {
+          value: {
+            charge: 0,
+            performance: {
+              impressions: 0,
+              clicks: 0,
+            },
+            length: {
+              web: 0,
+              power: 0,
+              contents: 0,
+              brand: 0,
+              place: 0,
+              etc: 0,
+            }
+          },
+          campaign: [],
+        },
+      }
+
+      url = "/stats";
+      num2 = 0;
+      for (let { nccCampaignId, customerId, name, campaignTp } of res.data) {
+        await sleep(100);
+        try {
+          thisNowDate = new Date();
+          res2 = await requestSystem(naverUrl + url, {
+            id: nccCampaignId,
+            fields: JSON.stringify([ "impCnt", "clkCnt", "salesAmt", "ccnt", "avgRnk" ]),
+            timeRange: JSON.stringify({
+              since: dateToString(from),
+              until: dateToString(from),
+            }),
+          }, {
+            method: "get",
+            headers: {
+              "X-Timestamp": String(thisNowDate.valueOf()),
+              "X-API-KEY": naverToken,
+              "X-Customer": naverId,
+              "X-Signature": sha256Hmac(naverSecret, String(thisNowDate.valueOf()) + ".GET." + url)
+            }
+          });
+          if (!(res2.data.data[0].impCnt === 0 && res2.data.data[0].clkCnt === 0 && res2.data.data[0].salesAmt === 0)) {
+            resultObject.advertisement.campaign.push({
+              value: {
+                charge: Number(res2.data.data[0].salesAmt),
+                performance: {
+                  impressions: Number(res2.data.data[0].impCnt),
+                  clicks: Number(res2.data.data[0].clkCnt),
+                  rank: Number(res2.data.data[0].avgRnk),
+                },
+              },
+              information: {
+                id: nccCampaignId,
+                type: campaignTp,
+                name: name,
+              }
+            });
+            num2++
+          }
+        } catch (e) {
+          await errorLog("NaverAPIs.naverComplex error : " + "too much requests");
+          console.log("there is nothing")
+        }
+      }
+
+      resultObject.advertisement.value.charge = resultObject.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.charge; }, 0);
+      resultObject.advertisement.value.performance.impressions = resultObject.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.impressions; }, 0);
+      resultObject.advertisement.value.performance.clicks = resultObject.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.clicks; }, 0);
+
+      resultObject.advertisement.value.length.web = resultObject.advertisement.campaign.filter((o) => { return /WEB_SITE/gi.test(o.information.type) }).length;
+      resultObject.advertisement.value.length.power = resultObject.advertisement.campaign.filter((o) => { return /POWER/gi.test(o.information.type) && !/POWER_CONTENTS/gi.test(o.information.type) }).length;
+      resultObject.advertisement.value.length.contents = resultObject.advertisement.campaign.filter((o) => { return /POWER_CONTENTS/gi.test(o.information.type) }).length;
+      resultObject.advertisement.value.length.brand = resultObject.advertisement.campaign.filter((o) => { return /BRAND_SEARCH/gi.test(o.information.type) }).length;
+      resultObject.advertisement.value.length.place = resultObject.advertisement.campaign.filter((o) => { return /PLACE/gi.test(o.information.type) }).length;
+      resultObject.advertisement.value.length.etc = resultObject.advertisement.campaign.length - (resultObject.advertisement.value.length.web + resultObject.advertisement.value.length.power + resultObject.advertisement.value.length.contents + resultObject.advertisement.value.length.brand + resultObject.advertisement.value.length.place);
+
+      // store
+      tempRows = await back.mongoRead(collection, { key }, { selfMongo });
+      if (tempRows.length !== 0) {
+        await back.mongoDelete(collection, { key }, { selfMongo });
+      }
+      await back.mongoCreate(collection, resultObject, { selfMongo });
+      console.log(resultObject);
+
+    }
+
+    if (logger !== null) {
+      logger.cron("naver complex store done : " + dateToString(new Date())).catch((err) => { console.log(err); });
+    }
+
+  } catch (e) {
+    emergencyAlarm("NaverAPIs.naverComplex error : " + e.message).catch((err) => { console.log(err); });
     console.log(e);
   }
 }
