@@ -897,7 +897,11 @@ ContentsRouter.prototype.rou_post_evaluationNotice = function () {
         }
         const { from } = equalJson(req.body);
         rows = await back.mongoRead(collection, { date: { $gte: from } }, { selfMongo });
-        res.send(JSON.stringify({ data: rows }));
+        targetJson = equalJson(JSON.stringify(rows));
+        for (let obj of targetJson) {
+          delete obj._id;
+        }
+        res.send(JSON.stringify({ data: targetJson }));
 
       } else {
         throw new Error("invalid mode");

@@ -153,9 +153,14 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const res = await requestSystem("https://" + address.contentsinfo.host + ":3000/evaluationNotice", { mode: "list", from: new Date(2023, 9, 1) }, { headers: { "Content-Type": "application/json" } });
+    const agoConst = 3;
+    const threeMonthAgo = new Date();
+    threeMonthAgo.setMonth(threeMonthAgo.getMonth() - agoConst);
+    let response;
 
-    console.log(res.data);
+    response = await requestSystem("https://" + address.contentsinfo.host + ":3000/evaluationNotice", { mode: "list", from: threeMonthAgo }, { headers: { "Content-Type": "application/json" } });
+
+    console.log(equalJson(JSON.stringify(response.data)));
 
 
 
