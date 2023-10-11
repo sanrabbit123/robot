@@ -779,6 +779,7 @@ ContentsRouter.prototype.rou_post_evaluationSubmit = function () {
       }
       await back.mongoCreate(collection, json, { selfMongo });
 
+      logger.alert("evaluationSubmit success => " + proid + ", " + cliid + ", " + desid).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
