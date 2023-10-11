@@ -6593,7 +6593,7 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
   const back = this.back;
   const kakao = this.kakao;
   const address = this.address;
-  const { messageSend, dateToString, stringToDate, sleep } = this.mother;
+  const { messageSend, dateToString, stringToDate, sleep, requestSystem, equalJson } = this.mother;
   const firstMeetingAlarmFunc = async (MONGOC, logger) => {
     try {
       const selfMongo = MONGOC;
@@ -6878,6 +6878,58 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
       await logger.error("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
     }
   }
+  const evaluationAlarmFunc = async (MONGOC, logger) => {
+    try {
+      const selfMongo = MONGOC;
+      const fiveDatesAgo = new Date();
+      fiveDatesAgo.setDate(fiveDatesAgo.getDate() - 5);
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const agoConst = 3;
+      const threeMonthAgo = new Date();
+      threeMonthAgo.setMonth(threeMonthAgo.getMonth() - agoConst);
+      let response;
+      let targetList;
+      let targetProid;
+      let evaluationList;
+      let targetEvaluation;
+      let proid, desid, cliid;
+      let thisDate;
+      let thisClient;
+
+      response = await requestSystem("https://" + address.contentsinfo.host + ":3000/evaluationNotice", { mode: "list", from: threeMonthAgo }, { headers: { "Content-Type": "application/json" } });
+      targetList = equalJson(JSON.stringify(response.data.data));
+      targetProid = targetList.map((o) => { return o.proid });
+  
+      evaluationList = [];
+      if (targetProid.length > 0) {
+        response = await requestSystem("https://" + address.contentsinfo.host + ":3000/evaluationList", { mode: "list", whereQuery: { $or: targetProid.map((proid) => { return { proid } }) } }, { headers: { "Content-Type": "application/json" } });
+        evaluationList = equalJson(JSON.stringify(response.data.data));
+      }
+
+      for (let obj of targetList) {
+        targetEvaluation = evaluationList.find((o) => { return o.proid === obj.proid }) === undefined ? null : evaluationList.find((o) => { return o.proid === obj.proid });
+        if (targetEvaluation === null) {
+          proid = obj.proid;
+          desid = obj.desid;
+          cliid = obj.cliid;
+          thisDate = new Date(JSON.stringify(obj.date).slice(1, -1));
+          if (thisDate.valueOf() < yesterday.valueOf() && fiveDatesAgo.valueOf() < thisDate.valueOf()) {
+            thisClient = await back.getClientById(cliid, { selfMongo });
+            logger.alert("evaluation alarm => " + proid + " / " + cliid).catch((err) => { console.log(err) });
+            await requestSystem("https://" + address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid, desid, proid }, { headers: { "Content-Type": "application/json" } });
+            await kakao.sendTalk("photoShareClient", thisClient.name, thisClient.phone, { client: thisClient.name, host: address.frontinfo.host, path: "evaluation", proid });
+            await sleep(500);
+          }
+        }
+      }
+
+      await logger.cron("evaluation alarm done");
+
+    } catch (e) {
+      await logger.error("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
+    }
+  }
   let obj = {};
   obj.link = [ "/timeDeltaAlarm" ];
   obj.func = async function (req, res, logger) {
@@ -6894,6 +6946,8 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
       //   return photoDesignerAlarmFunc(instance.mongo, logger);
       // }).then(() => {
         return contractStartAlarmFunc(instance.mongo, logger);
+      }).then(() => {
+        return evaluationAlarmFunc(instance.mongo, logger);
       }).then(() => {
         return logger.cron("time delta alarm done : " + JSON.stringify(new Date()));
       }).catch((err) => {
