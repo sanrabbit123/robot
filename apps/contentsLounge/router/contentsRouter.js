@@ -850,10 +850,10 @@ ContentsRouter.prototype.rou_post_evaluationNotice = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.proid === undefined || req.body.mode === undefined) {
+      if (req.body.mode === undefined) {
         throw new Error("invalid post");
       }
-      const { proid, mode } = equalJson(req.body);
+      const { mode } = equalJson(req.body);
       const selfMongo = instance.mongolocal;
       const collection = "evaluationNotice";
       let json;
@@ -863,7 +863,7 @@ ContentsRouter.prototype.rou_post_evaluationNotice = function () {
 
       if (mode === "send") {
 
-        if (req.body.cliid === undefined || req.body.desid === undefined) {
+        if (req.body.proid === undefined || req.body.cliid === undefined || req.body.desid === undefined) {
           throw new Error("invalid post");
         }
         const { cliid, desid } = equalJson(req.body);

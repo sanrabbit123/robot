@@ -153,9 +153,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-    
-    
+    const res = await requestSystem("https://" + address.contentsinfo.host + ":3000/evaluationNotice", { mode: "list", from: new Date(2023, 9, 1) }, { headers: { "Content-Type": "application/json" } });
+
+    console.log(res.data);
 
 
 
