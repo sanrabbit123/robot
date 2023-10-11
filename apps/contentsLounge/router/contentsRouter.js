@@ -863,8 +863,10 @@ ContentsRouter.prototype.rou_post_evaluationNotice = function () {
 
       if (mode === "send") {
 
+        if (req.body.cliid === undefined || req.body.desid === undefined) {
+          throw new Error("invalid post");
+        }
         const { cliid, desid } = equalJson(req.body);
-
         json = {
           proid,
           desid,
@@ -874,7 +876,6 @@ ContentsRouter.prototype.rou_post_evaluationNotice = function () {
             (new Date()),
           ]
         };
-  
         rows = await back.mongoRead(collection, { proid }, { selfMongo });
         if (rows.length > 0) {
           [ targetJson ] = rows;
@@ -888,6 +889,15 @@ ContentsRouter.prototype.rou_post_evaluationNotice = function () {
           await back.mongoCreate(collection, json, { selfMongo });
         }
         res.send(JSON.stringify({ message: "done" }));
+
+      } else if (mode === "list") {
+
+        if (req.body.from === undefined) {
+          throw new Error("invalid post");
+        }
+        const { from } = equalJson(req.body);
+        rows = await back.mongoRead(collection, { date: { $gte: from } }, { selfMongo });
+        res.send(JSON.stringify({ data: rows }));
 
       } else {
         throw new Error("invalid mode");
