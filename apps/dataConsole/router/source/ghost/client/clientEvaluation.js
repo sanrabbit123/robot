@@ -406,6 +406,8 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   let mobileSelectionFactorMarginBottom;
   let mobileModuleBlockHeight;
   let descriptionBox;
+  let domList;
+  let questionLength;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -676,6 +678,15 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   mobileSelectionFactorMarginBottom = 1;
   mobileModuleBlockHeight = 20;
 
+  questionLength = 11;
+  domList = [];
+  for (let i = 0; i < questionLength; i++) {
+    domList.push({
+      dom: null,
+      type: "selection"
+    });
+  }
+  
   contents = {
     main: [
       "홈리에종 서비스 평가",
@@ -1438,7 +1449,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   });
   
   // 1
-  createNode({
+  domList[0].dom = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -1722,7 +1733,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     }
   });
   // 2
-  createNode({
+  domList[1].dom = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -2130,7 +2141,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     }
   });
   // 3
-  createNode({
+  domList[2].dom = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -2333,6 +2344,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       },
     ]
   });
+  domList[2].type = "bar";
   // margin
   createNode({
     mother: rightBox,
@@ -2344,7 +2356,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     }
   });
   // 4
-  createNode({
+  domList[3].dom = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -2547,6 +2559,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       },
     ]
   });
+  domList[3].type = "bar";
   // margin
   createNode({
     mother: rightBox,
@@ -2558,7 +2571,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     }
   });
   // 5
-  createNode({
+  domList[4].dom = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -2739,6 +2752,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       },
     ]
   });
+  domList[4].type = "bar";
 
   // bar up margin
   createNode({
@@ -2771,7 +2785,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   });
 
   // 6
-  createNode({
+  domList[5].dom = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -3055,7 +3069,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     }
   });
   // 7
-  createNode({
+  domList[6].dom = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -3463,7 +3477,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     }
   });
   // 8
-  createNode({
+  domList[7].dom = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -3644,6 +3658,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       },
     ]
   });
+  domList[7].type = "bar";
 
   // bar up margin
   createNode({
@@ -3676,7 +3691,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   });
 
   // 9
-  createNode({
+  domList[8].dom = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -3960,7 +3975,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     }
   });
   // 10
-  createNode({
+  domList[9].dom = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -4244,7 +4259,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     }
   });
   // 11
-  createNode({
+  domList[10].dom = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -4518,6 +4533,8 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     ]
   });
 
+  this.domList = domList;
+
   // policy and submit
   policyArea = createNode({
     mother: mainBlock,
@@ -4656,7 +4673,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
         },
         children: [
           {
-            text: "평가 제출하기",
+            text: !instance.evaluationRows.exist ? "평가 제출하기" : "사진 다운로드",
             style: {
               display: "inline-block",
               position: "relative",
@@ -5107,6 +5124,138 @@ ClientEvaluationJs.prototype.insertPannelBox = function () {
 
 }
 
+ClientEvaluationJs.prototype.preselectionEvaluation = function (data) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson } = GeneralJs;
+  const { ea, media, standardWidth, domList } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const inputClassName = "inputClassName";
+  let num;
+  let target;
+  let targets;
+  let targetIndex;
+  let clickEvent;
+  let rectBox;
+  let ratio;
+  if (data !== undefined && data !== null && domList.length > 0) {
+    num = 0;
+    for (let { dom, type } of domList) {
+      if (num === 0) {
+        targets = [ ...dom.querySelectorAll("." + inputClassName) ];
+        targets[data.construct.level].click();
+      } else if (num === 1) {
+        targets = [ ...dom.querySelectorAll("." + inputClassName) ];
+        if (data.construct.period < 14) {
+          targetIndex = 0;
+        } else if (data.construct.period === 14) {
+          targetIndex = 1;
+        } else if (data.construct.period < 21) {
+          targetIndex = 2;
+        } else if (data.construct.period < 28) {
+          targetIndex = 3;
+        } else {
+          targetIndex = 4;
+        }
+        targets[targetIndex].click();
+      } else if (num === 2) {
+        target = dom.querySelector("aside");
+        rectBox = target.getBoundingClientRect();
+        clickEvent = new Event("click", { bubbles: true });
+        if (data.spend.total <= 10000000) {
+          clickEvent.x = rectBox.x;
+        } else if (data.spend.total === 20000000) {
+          clickEvent.x = ((rectBox.width / 8) * 1) + rectBox.x;
+        } else if (data.spend.total === 30000000) {
+          clickEvent.x = ((rectBox.width / 8) * 2) + rectBox.x;
+        } else if (data.spend.total === 40000000) {
+          clickEvent.x = ((rectBox.width / 8) * 3) + rectBox.x;
+        } else if (data.spend.total === 50000000) {
+          clickEvent.x = ((rectBox.width / 8) * 4) + rectBox.x;
+        } else if (data.spend.total === 60000000) {
+          clickEvent.x = ((rectBox.width / 8) * 5) + rectBox.x;
+        } else if (data.spend.total === 70000000) {
+          clickEvent.x = ((rectBox.width / 8) * 6) + rectBox.x;
+        } else if (data.spend.total === 80000000) {
+          clickEvent.x = ((rectBox.width / 8) * 7) + rectBox.x;
+        } else if (data.spend.total > 80000000) {
+          clickEvent.x = rectBox.width + rectBox.x;
+        }
+        target.dispatchEvent(clickEvent);
+      } else if (num === 3) {
+        target = dom.querySelector("aside");
+        rectBox = target.getBoundingClientRect();
+        clickEvent = new Event("click", { bubbles: true });
+        if (data.spend.styling <= 10000000) {
+          clickEvent.x = rectBox.x;
+        } else if (data.spend.styling === 20000000) {
+          clickEvent.x = ((rectBox.width / 8) * 1) + rectBox.x;
+        } else if (data.spend.styling === 30000000) {
+          clickEvent.x = ((rectBox.width / 8) * 2) + rectBox.x;
+        } else if (data.spend.styling === 40000000) {
+          clickEvent.x = ((rectBox.width / 8) * 3) + rectBox.x;
+        } else if (data.spend.styling === 50000000) {
+          clickEvent.x = ((rectBox.width / 8) * 4) + rectBox.x;
+        } else if (data.spend.styling === 60000000) {
+          clickEvent.x = ((rectBox.width / 8) * 5) + rectBox.x;
+        } else if (data.spend.styling === 70000000) {
+          clickEvent.x = ((rectBox.width / 8) * 6) + rectBox.x;
+        } else if (data.spend.styling === 80000000) {
+          clickEvent.x = ((rectBox.width / 8) * 7) + rectBox.x;
+        } else if (data.spend.styling > 80000000) {
+          clickEvent.x = rectBox.width + rectBox.x;
+        }
+        target.dispatchEvent(clickEvent);
+      } else if (num === 4) {
+        target = dom.querySelector("aside");
+        rectBox = target.getBoundingClientRect();
+        clickEvent = new Event("click", { bubbles: true });
+        if (data.purchase.furniture === 0) {
+          clickEvent.x = rectBox.x;
+        } else if (data.purchase.furniture === 1) {
+          clickEvent.x = ((rectBox.width / 2) * 1) + rectBox.x;
+        } else if (data.purchase.furniture === 2) {
+          clickEvent.x = ((rectBox.width / 2) * 2) + rectBox.x;
+        }
+        target.dispatchEvent(clickEvent);
+      } else if (num === 5) {
+        targets = [ ...dom.querySelectorAll("." + inputClassName) ];
+        targets[data.purchase.list].click();
+      } else if (num === 6) {
+        targets = [ ...dom.querySelectorAll("." + inputClassName) ];
+        if (data.purchase.period < 14) {
+          targetIndex = 0;
+        } else if (data.purchase.period === 14) {
+          targetIndex = 1;
+        } else if (data.purchase.period < 21) {
+          targetIndex = 2;
+        } else if (data.purchase.period < 28) {
+          targetIndex = 3;
+        } else {
+          targetIndex = 4;
+        }
+        targets[targetIndex].click();
+      } else if (num === 7) {
+        target = dom.querySelector("aside");
+        rectBox = target.getBoundingClientRect();
+        clickEvent = new Event("click", { bubbles: true });
+        clickEvent.x = (rectBox.width * data.purchase.compliance) + rectBox.x;
+        target.dispatchEvent(clickEvent);
+      } else if (num === 8) {
+        targets = [ ...dom.querySelectorAll("." + inputClassName) ];
+        targets[data.satisfaction.design].click();
+      } else if (num === 9) {
+        targets = [ ...dom.querySelectorAll("." + inputClassName) ];
+        targets[data.satisfaction.feedback].click();
+      } else if (num === 10) {
+        targets = [ ...dom.querySelectorAll("." + inputClassName) ];
+        targets[data.satisfaction.operation].click();
+      }
+      num++;
+    }
+  }
+}
+
 ClientEvaluationJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -5115,6 +5264,7 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
     const { returnGet, ajaxJson } = GeneralJs;
     const getObj = returnGet();
     let proid, projects, project;
+    let evaluationRows;
 
     if (getObj.proid === undefined) {
       window.alert("잘못된 접근입니다!");
@@ -5137,8 +5287,13 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
     }
     this.project = project;
 
+    evaluationRows = await ajaxJson({ proid: instance.project.proid }, CONTENTSHOST + "/evaluationList", { equal: true });
+    this.evaluationRows = evaluationRows;
+
     this.inputClassName = "consultingInput";
     this.contentsRawInfo = await ajaxJson({ mode: "search", proid }, SECONDHOST + "/rawImageParsing", { equal: true });
+
+    this.domList = [];
 
     await this.mother.ghostClientLaunching({
       mode: "front",
@@ -5155,6 +5310,9 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertEvaluationBox();
+          if (instance.evaluationRows.exist) {
+            instance.preselectionEvaluation(instance.evaluationRows.data);
+          }
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ClientEvaluationJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
