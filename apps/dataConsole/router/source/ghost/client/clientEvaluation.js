@@ -42,7 +42,7 @@ const ClientEvaluationJs = function () {
   this.mother = new GeneralJs();
 }
 
-ClientEvaluationJs.binaryPath = "/middle/evaluation";
+ClientEvaluationJs.binaryPath = FRONTHOST + "/middle/evaluation";
 
 ClientEvaluationJs.prototype.insertInitBox = function () {
   const instance = this;
