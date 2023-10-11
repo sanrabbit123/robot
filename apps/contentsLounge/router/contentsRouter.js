@@ -789,6 +789,53 @@ ContentsRouter.prototype.rou_post_evaluationSubmit = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_evaluationList = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, messageSend, dateToString, stringToDate, sleep } = this.mother;
+  let obj = {};
+  obj.link = [ "/evaluationList" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.proid === undefined) {
+        throw new Error("invalid post");
+      }
+      const { proid } = equalJson(req.body);
+      const selfMongo = instance.mongolocal;
+      const collection = "clientEvaluation";
+      let rows;
+      let targetJson;
+      
+      rows = await back.mongoRead(collection, { proid }, { selfMongo });
+      if (rows.length > 0) {
+        rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        targetJson = equalJson(JSON.stringify(rows[0]));
+        res.send(JSON.stringify({
+          exist: true,
+          data: targetJson,
+        }));
+      } else {
+        res.send(JSON.stringify({
+          exist: false,
+          data: null,
+        }));
+      }
+
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_evaluationList): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+
 //ROUTING ----------------------------------------------------------------------
 
 ContentsRouter.prototype.setMembers = async function () {
