@@ -154,22 +154,11 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-    // const token = "xoxp-717757271335-704486967090-4566130160163-fd2a2cc412e2a509a43635fb8f6c65e2";
-    // const endPoint = "https://slack.com/api";
-    // const res = await requestSystem(endPoint + "/chat.postMessage", {
-    //   channel: "#error_log",
-    //   text: "얌마",
-    // }, {
-    //   headers: {
-    //     "Authorization": "Bearer " + token,
-    //     "Content-Type": "application/x-www-form-urlencoded",
-    //   }
-    // });
-    // console.log(res);
-
+    
 
     
+
+
 
 
 

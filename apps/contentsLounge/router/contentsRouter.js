@@ -939,6 +939,65 @@ ContentsRouter.prototype.rou_post_evaluationNotice = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_getAllContents = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, messageSend, sleep } = this.mother;
+  let obj = {};
+  obj.link = [ "/getAllContents" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const { mode } = equalJson(req.body);
+      const selfMongo = instance.mongo;
+      const selfLocalMongo = instance.mongolocal;
+      const collection = "foreContents";
+      let contentsArr, projects, clients, designers;
+      let whereQuery0, whereQuery1;
+      let resultObj;
+      let foreContents;
+      let proidArr;
+
+      if (mode === "all") {
+        contentsArr = (await back.getContentsArrByQuery({}, { selfMongo })).toNormal();
+        designers = (await back.getDesignersByQuery({}, { selfMongo })).toNormal();
+        foreContents = await back.mongoRead(collection, {}, { selfMongo: selfLocalMongo });
+  
+        proidArr = contentsArr.filter((c) => { return c.proid !== "" }).map((obj) => { return obj.proid });
+        proidArr = proidArr.concat(foreContents.map((o) => { return o.proid }));
+        proidArr = [ ...new Set(proidArr) ];
+  
+        whereQuery0 = {};
+        whereQuery0["$or"] = proidArr.map((proid) => { return { proid } });
+        projects = (await back.getProjectsByQuery(whereQuery0, { selfMongo })).toNormal();
+  
+        whereQuery1 = {};
+        whereQuery1["$or"] = projects.map((obj) => { return { cliid: obj.cliid } });
+        clients = (await back.getClientsByQuery(whereQuery1, { selfMongo })).toNormal();
+  
+        resultObj = { contentsArr, foreContents, projects, clients, designers };
+  
+        res.send(JSON.stringify(resultObj));
+      } else {
+        throw new Error("invalid mode");
+      }
+
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_getAllContents): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 ContentsRouter.prototype.setMembers = async function () {
