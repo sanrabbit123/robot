@@ -33,6 +33,24 @@ FileJs.staticSvg = {
   odpptx: `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 16.933 16.933" style="enable-background:new 0 0 16.933 16.933;" xml:space="preserve"><path style="fill:#CA4827;" d="M9.7891,0.975H4.1669c-0.5285,0-0.9918,0.4627-0.9918,0.9923v12.5663 c0,0.5291,0.4627,0.9923,0.9923,0.9923h8.5981c0.5291,0,0.9923-0.4627,0.9923-0.9923V4.9432l-2.3147-1.6535L9.7891,0.975z"/><path style="fill:#ED9265;" d="M9.7891,0.975v2.9764c0,0.5291,0.4627,0.9918,0.9918,0.9918h2.9764L9.7891,0.975z"/><circle style="fill-rule:evenodd;clip-rule:evenodd;fill:#992017;" cx="8.4659" cy="9.6499" r="2.7339"/><path style="fill:#FFFFFF;" d="M7.2818,8.0572v3.353h0.8843v-1.0346C9.3774,10.378,9.993,10.2203,9.993,9.225 c0-1.1015-0.6023-1.1716-1.8268-1.1677L7.2818,8.0572z M8.4877,8.7651c0.2937,0.0068,0.6856,0.0884,0.6856,0.4725 c0,0.6145-1.0031,0.4538-1.0031,0.4538V8.7832c0,0,0.1411-0.0221,0.3174-0.018L8.4877,8.7651z"/></svg>`,
 };
 
+FileJs.imageTarget = [
+  "jpg",
+  "png",
+  "gif",
+  "psd",
+  "iff",
+  "pcx",
+  "raw",
+  "tga",
+  "psb",
+  "jpeg",
+  "jpf",
+  "jps",
+  "bmp",
+  "heic",
+  "jfif",
+];
+
 FileJs.prototype.staticSvg = FileJs.staticSvg;
 
 FileJs.prototype.absoluteParsing = function (str) {
@@ -312,6 +330,167 @@ FileJs.prototype.scheduleViewing = function () {
           borderRadius: String(3) + "px",
         }
       });
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+FileJs.prototype.imagePreviewBox = function () {
+  const instance = this;
+  const { ea, totalContents, grayBarWidth, belowHeight, searchModeButtonsClassName, thisMember, memberTongClassName, intervalDelta } = this;
+  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref, linkToString, stringToLink, equalJson, cleanChildren } = GeneralJs;
+  const fileBaseClassName = "fileBase";
+  const contextmenuClassName = "contextmenuFactor";
+  const tempInputClassName = "tempInputClassName";
+  const searchInputClassName = "searchInputClassName";
+  const memberContextmenuPopupClassName = "memberContextmenuPopupClassName";
+  return async function (e) {
+    const previewClassName = "previewWhiteBase";
+    const fileServerAddress = S3HOST;
+    const base = document.querySelector('.' + fileBaseClassName);
+    const targets = document.querySelectorAll('.' + contextmenuClassName);
+    let images, tong;
+    let previewMargin;
+    let num;
+    let imageMargin;
+    let columnsLength;
+    try {
+      imageMargin = 3;
+      columnsLength = 5;
+      previewMargin = 12;
+
+      images = [];
+      for (let dom of instance.blocks) {
+        if (instance.imageTarget.includes(dom.getAttribute("kind"))) {
+          images.push({ image: dom.getAttribute("absolute"), name: dom.getAttribute("name") });
+        }
+      }
+
+      images = images.map((obj) => {
+        obj.image = instance.absoluteParsing(obj.image);
+        return obj;
+      });
+
+      for (let dom of targets) {
+        dom.parentNode.removeChild(dom);
+      }
+
+      createNode({
+        mother: base,
+        class: [ previewClassName ],
+        events: [
+          {
+            type: [ "mouseup", "mousedown", "mousemove" ],
+            event: (e) => { e.stopPropagation(); }
+          },
+          {
+            type: [ "contextmenu" ],
+            event: (e) => { e.stopPropagation(); e.preventDefault(); }
+          },
+          {
+            type: "click",
+            event: function (e) {
+              e.stopPropagation();
+              const targets = document.querySelectorAll('.' + previewClassName);
+              for (let dom of targets) {
+                dom.parentNode.removeChild(dom);
+              }
+            }
+          }
+        ],
+        style: {
+          position: "fixed",
+          top: String(0) + ea,
+          left: String(0) + ea,
+          width: String(100) + '%',
+          height: String(100) + '%',
+          cursor: "pointer",
+          background: colorChip.gray3,
+          zIndex: String(2),
+          animation: "justfadein 0.3s ease forwards",
+        }
+      });
+
+      tong = createNode({
+        mother: base,
+        class: [ previewClassName ],
+        events: [
+          {
+            type: [ "mouseup", "mousedown", "mousemove" ],
+            event: (e) => { e.stopPropagation(); }
+          },
+          {
+            type: [ "contextmenu", "click" ],
+            event: (e) => { e.stopPropagation(); e.preventDefault(); }
+          },
+        ],
+        style: {
+          position: "absolute",
+          top: String(previewMargin) + ea,
+          left: String(previewMargin) + ea,
+          width: withOut(previewMargin * 2, ea),
+          height: withOut(previewMargin * 2, ea),
+          background: colorChip.white,
+          borderRadius: String(3) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          zIndex: String(2),
+          animation: "fadeuphard 0.3s ease forwards",
+        },
+        children: [
+          {
+            style: {
+              position: "relative",
+              top: String(previewMargin) + ea,
+              marginLeft: String(previewMargin) + ea,
+              width: withOut(previewMargin * 2, ea),
+              height: withOut(previewMargin, ea),
+              overflow: "scroll",
+            },
+            children: [
+              {
+                style: {
+                  position: "relative",
+                  width: String(100) + '%',
+                  height: "auto",
+                }
+              }
+            ]
+          }
+        ]
+      }).firstChild.firstChild;
+
+      num = 0;
+      for (let { image, name } of images) {
+        createNode({
+          mother: tong,
+          mode: "img",
+          attribute: [
+            { src: image },
+            { index: String(num) },
+            { length: String(images.length) }
+          ],
+          style: {
+            position: "relative",
+            display: "inline-block",
+            width: "calc(calc(100% - " + String(imageMargin * (columnsLength - 1)) + ea + ") / " + String(columnsLength) + ")",
+            height: "auto",
+            marginRight: String(num % columnsLength === columnsLength - 1 ? 0 : imageMargin) + ea,
+            marginBottom: String(imageMargin) + ea,
+            borderRadius: String(3) + "px",
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          events: [
+            {
+              type: "click",
+              event: instance.imageViewing(images, true),
+            }
+          ]
+        });
+        num++;
+      }
 
     } catch (e) {
       console.log(e);
@@ -600,156 +779,7 @@ FileJs.prototype.baseMaker = function () {
     },
     {
       text: "미리보기",
-      event: async function (e) {
-        const previewClassName = "previewWhiteBase";
-        const fileServerAddress = S3HOST;
-        const base = document.querySelector('.' + fileBaseClassName);
-        const targets = document.querySelectorAll('.' + contextmenuClassName);
-        let images, tong;
-        let previewMargin;
-        let num;
-        let imageMargin;
-        let columnsLength;
-        try {
-          imageMargin = 3;
-          columnsLength = 5;
-          previewMargin = 28;
-
-          images = [];
-          for (let dom of instance.blocks) {
-            if (/png/gi.test(dom.getAttribute("kind")) || /jpg/gi.test(dom.getAttribute("kind"))) {
-              images.push({ image: dom.getAttribute("absolute"), name: dom.getAttribute("name") });
-            }
-          }
-
-          images = images.map((obj) => {
-            obj.image = instance.absoluteParsing(obj.image);
-            return obj;
-          });
-
-          for (let dom of targets) {
-            dom.parentNode.removeChild(dom);
-          }
-
-          createNode({
-            mother: base,
-            class: [ previewClassName ],
-            events: [
-              {
-                type: [ "mouseup", "mousedown", "mousemove" ],
-                event: (e) => { e.stopPropagation(); }
-              },
-              {
-                type: [ "contextmenu" ],
-                event: (e) => { e.stopPropagation(); e.preventDefault(); }
-              },
-              {
-                type: "click",
-                event: function (e) {
-                  e.stopPropagation();
-                  const targets = document.querySelectorAll('.' + previewClassName);
-                  for (let dom of targets) {
-                    dom.parentNode.removeChild(dom);
-                  }
-                }
-              }
-            ],
-            style: {
-              position: "fixed",
-              top: String(0) + ea,
-              left: String(0) + ea,
-              width: String(100) + '%',
-              height: String(100) + '%',
-              cursor: "pointer",
-              background: colorChip.gray3,
-              zIndex: String(2),
-              animation: "justfadein 0.3s ease forwards",
-            }
-          });
-
-          tong = createNode({
-            mother: base,
-            class: [ previewClassName ],
-            events: [
-              {
-                type: [ "mouseup", "mousedown", "mousemove" ],
-                event: (e) => { e.stopPropagation(); }
-              },
-              {
-                type: [ "contextmenu", "click" ],
-                event: (e) => { e.stopPropagation(); e.preventDefault(); }
-              },
-            ],
-            style: {
-              position: "absolute",
-              top: String(previewMargin) + ea,
-              left: String(previewMargin) + ea,
-              width: withOut(previewMargin * 2, ea),
-              height: withOut(previewMargin * 2, ea),
-              background: colorChip.white,
-              borderRadius: String(3) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              zIndex: String(2),
-              animation: "fadeuphard 0.3s ease forwards",
-            },
-            children: [
-              {
-                style: {
-                  position: "relative",
-                  top: String(previewMargin) + ea,
-                  marginLeft: String(previewMargin) + ea,
-                  width: withOut(previewMargin * 2, ea),
-                  height: withOut(previewMargin, ea),
-                  overflow: "scroll",
-                },
-                children: [
-                  {
-                    style: {
-                      position: "relative",
-                      width: String(100) + '%',
-                      height: "auto",
-                    }
-                  }
-                ]
-              }
-            ]
-          }).firstChild.firstChild;
-
-          num = 0;
-          for (let { image, name } of images) {
-            createNode({
-              mother: tong,
-              mode: "img",
-              attribute: [
-                { src: image },
-                { index: String(num) },
-                { length: String(images.length) }
-              ],
-              style: {
-                position: "relative",
-                display: "inline-block",
-                width: "calc(calc(100% - " + String(imageMargin * (columnsLength - 1)) + ea + ") / " + String(columnsLength) + ")",
-                height: "auto",
-                marginRight: String(num % columnsLength === columnsLength - 1 ? 0 : imageMargin) + ea,
-                marginBottom: String(imageMargin) + ea,
-                borderRadius: String(3) + "px",
-                verticalAlign: "top",
-                cursor: "pointer",
-              },
-              events: [
-                {
-                  type: "click",
-                  event: instance.imageViewing(images, true),
-                }
-              ]
-            });
-            num++;
-          }
-
-        } catch (e) {
-          console.log(e);
-        }
-      },
+      event: instance.imagePreviewBox(),
       visible: async function (e) {
         try {
           let imageBoo
@@ -3043,6 +3073,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
   const instance = this;
   const { ea, motherTong: { mother, files }, latestPathLocalSaveHomeLiaisonKeyName } = this;
   const { createNode, colorChip, withOut, ajaxJson, cleanChildren, isMac, blankHref } = GeneralJs;
+  const fileBaseClassName = "fileBase";
   try {
     let thisFolderFiles;
     let width;
@@ -3055,6 +3086,8 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
     let boxNumber;
     let loading;
     let loadingWidth, loadingHeight;
+    let thisFolderTypes;
+    let imageBoo;
 
     if (searchMode === "none") {
       this.path = path;
@@ -3458,6 +3491,15 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
       num++;
     }
 
+    thisFolderTypes = thisFolderFiles.filter((o) => { return !o.directory }).map((o) => { return o.kind });
+    imageBoo = false;
+    if (thisFolderTypes.length > 0) {
+      imageBoo = thisFolderTypes.every((str) => { return instance.imageTarget.includes(str) });
+    }
+    if (imageBoo) {
+      instance.imagePreviewBox().call(document.querySelector('.' + fileBaseClassName), new Event("click", { bubbles: true }));
+    }
+  
   } catch (e) {
     console.log(e);
   }
@@ -3502,7 +3544,7 @@ FileJs.prototype.fileSearchEvent = function () {
 FileJs.prototype.launching = async function () {
   const instance = this;
   const { ea } = this;
-  const { returnGet, ajaxJson, withOut, setQueue } = GeneralJs;
+  const { returnGet, ajaxJson, withOut, setQueue, equalJson } = GeneralJs;
   try {
     const getObj = returnGet();
     const entireMode = (getObj.dataonly === "true" && getObj.entire === "true");
@@ -3621,6 +3663,7 @@ FileJs.prototype.launching = async function () {
     this.memberTongClassName = "memberTongClassName";
     this.rootWording = "root";
     this.intervalDelta = 180;
+    this.imageTarget = equalJson(JSON.stringify(FileJs.imageTarget)).concat(FileJs.imageTarget.map((str) => { return str.toUpperCase(); }));
 
     this.baseMaker();
     this.fileLoad(this.path);
