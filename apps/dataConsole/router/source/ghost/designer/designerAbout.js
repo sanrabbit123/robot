@@ -9130,7 +9130,7 @@ DesignerAboutJs.prototype.isEmptyString = function (string) {
 
 DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBox, x, lastBoo) {
   const instance = this;
-  const { ea, baseTong, media, designer, totalContents } = this;
+  const { ea, baseTong, media, designer, totalContents, entireMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -9186,6 +9186,8 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   let greenNoticeIndent;
   let mobileTendencyFactorBetween;
   let factorVisualBetween;
+
+  console.log(entireMode);
 
   blockHeight = <%% 22, 21, 21, 19, (isIphone() ? 5.2 : 4.9) %%>;
   blockMarginBottom = <%% 16, 15, 15, 12, 2.5 %%>;

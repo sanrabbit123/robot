@@ -80,97 +80,129 @@ GeneralJs.idOrderDecode = function (number) {
   return result;
 }
 
-GeneralJs.vaildValue = function (column, value, pastValue) {
-  let map;
-  let filteredValue;
-  let finalValue, valueTemp;
-  let tempBoo, tempFunction;
-
-  if (window.location.pathname === "/client") {
-    map = DataPatch.clientMap();
-  } else if (window.location.pathname === "/designer") {
-    map = DataPatch.designerMap();
-  } else if (window.location.pathname === "/project") {
-    map = DataPatch.projectMap();
-  } else if (window.location.pathname === "/contents") {
-    map = DataPatch.contentsMap();
+GeneralJs.nonCxBan = async function () {
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
+  try {
+    if (GeneralJs.stacks["homeliaisonMember"] === undefined) {
+      throw new Error("member stacks error : " + JSON.stringify(cookies));
+    }
+    if (!GeneralJs.stacks["homeliaisonMember"].roles.includes("CX")){
+      window.alert("CX 팀원 외에는 업데이트를 실행할 수 없습니다!");
+      throw new Error("member roles error : " + JSON.stringify(cookies));
+    }
+    return true;
+  } catch (e) {
+    GeneralJs.ajax("message=update ban : " + e.message + "&channel=#error_log", "/sendSlack", function () {});
+    window.location.href = FRONTHOST;
+    return false;
   }
+}
 
-  switch (map[column].type) {
-    case "string":
-      finalValue = String(value).replace(/[\&\=]/g, '').trim();
-      break;
-    case "number":
-      if (typeof value !== "number") {
-        if (Number.isNaN(Number(value.replace(/[^0-9\.\-]/g, '')))) {
-          finalValue = Number(pastValue.replace(/[^0-9\.\-]/g, ''));
-        } else {
-          finalValue = Number(value.replace(/[^0-9\.\-]/g, ''));
-        }
-      } else {
-        finalValue = value;
-      }
-      break;
-    case "date":
-      if (value === "-" || value === "") {
-        filteredValue = "-";
-        finalValue = "-";
-      } else if (/예정/g.test(value)) {
-        finalValue = "예정";
-      } else {
-        filteredValue = DataPatch.toolsDateFilter(value);
-        if (map[column].detailDate === undefined) {
-          if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(filteredValue)) {
-            finalValue = filteredValue;
+GeneralJs.vaildValue = function (column, value, pastValue) {
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
+  try {
+    let map;
+    let filteredValue;
+    let finalValue, valueTemp;
+    let tempBoo, tempFunction;
+  
+    if (GeneralJs.stacks["homeliaisonMember"] === undefined) {
+      throw new Error("member stacks error : " + JSON.stringify(cookies));
+    }
+    if (!GeneralJs.stacks["homeliaisonMember"].roles.includes("CX")){
+      window.alert("CX 팀원 외에는 업데이트를 실행할 수 없습니다!");
+      throw new Error("member roles error : " + JSON.stringify(cookies));
+    }
+  
+    if (window.location.pathname === "/client") {
+      map = DataPatch.clientMap();
+    } else if (window.location.pathname === "/designer") {
+      map = DataPatch.designerMap();
+    } else if (window.location.pathname === "/project") {
+      map = DataPatch.projectMap();
+    } else if (window.location.pathname === "/contents") {
+      map = DataPatch.contentsMap();
+    }
+  
+    switch (map[column].type) {
+      case "string":
+        finalValue = String(value).replace(/[\&\=]/g, '').trim();
+        break;
+      case "number":
+        if (typeof value !== "number") {
+          if (Number.isNaN(Number(value.replace(/[^0-9\.\-]/g, '')))) {
+            finalValue = Number(pastValue.replace(/[^0-9\.\-]/g, ''));
           } else {
-            finalValue = pastValue;
+            finalValue = Number(value.replace(/[^0-9\.\-]/g, ''));
           }
-        } else {
-          if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/g.test(filteredValue)) {
-            finalValue = filteredValue + " " + (pastValue.split(' '))[1];
-          } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]/g.test(filteredValue)) {
-            finalValue = filteredValue;
-          } else {
-            finalValue = pastValue;
-          }
-        }
-      }
-      break;
-    case "boolean":
-      finalValue = value;
-      break;
-    case "array":
-      finalValue = value;
-      break;
-    case "object":
-      tempFunction = new Function("value", "pastValue", "vaildMode", map[column].objectFunction);
-      tempBoo = tempFunction(value, pastValue, true);
-      if (tempBoo.boo) {
-        if (tempBoo.value !== null) {
-          finalValue = tempBoo.value;
         } else {
           finalValue = value;
         }
-      } else {
-        finalValue = pastValue;
-      }
-      break;
-    case "null":
-      finalValue = pastValue;
-    case "constant":
-      finalValue = pastValue;
-    case "link":
-      if (/[\=\&]/g.test(value)) {
-        finalValue = window.encodeURIComponent(value);
-      } else {
+        break;
+      case "date":
+        if (value === "-" || value === "") {
+          filteredValue = "-";
+          finalValue = "-";
+        } else if (/예정/g.test(value)) {
+          finalValue = "예정";
+        } else {
+          filteredValue = DataPatch.toolsDateFilter(value);
+          if (map[column].detailDate === undefined) {
+            if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g.test(filteredValue)) {
+              finalValue = filteredValue;
+            } else {
+              finalValue = pastValue;
+            }
+          } else {
+            if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/g.test(filteredValue)) {
+              finalValue = filteredValue + " " + (pastValue.split(' '))[1];
+            } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]/g.test(filteredValue)) {
+              finalValue = filteredValue;
+            } else {
+              finalValue = pastValue;
+            }
+          }
+        }
+        break;
+      case "boolean":
         finalValue = value;
-      }
-      break;
-    default:
-      throw new Error("invaild type");
+        break;
+      case "array":
+        finalValue = value;
+        break;
+      case "object":
+        tempFunction = new Function("value", "pastValue", "vaildMode", map[column].objectFunction);
+        tempBoo = tempFunction(value, pastValue, true);
+        if (tempBoo.boo) {
+          if (tempBoo.value !== null) {
+            finalValue = tempBoo.value;
+          } else {
+            finalValue = value;
+          }
+        } else {
+          finalValue = pastValue;
+        }
+        break;
+      case "null":
+        finalValue = pastValue;
+      case "constant":
+        finalValue = pastValue;
+      case "link":
+        if (/[\=\&]/g.test(value)) {
+          finalValue = window.encodeURIComponent(value);
+        } else {
+          finalValue = value;
+        }
+        break;
+      default:
+        throw new Error("invaild type");
+    }
+  
+    return finalValue;
+  } catch (e) {
+    GeneralJs.ajax("message=update ban : " + e.message + "&channel=#error_log", "/sendSlack", function () {});
+    window.location.href = FRONTHOST;
   }
-
-  return finalValue;
 }
 
 GeneralJs.updateValue = async function (dataObj) {
@@ -191,10 +223,14 @@ GeneralJs.updateValue = async function (dataObj) {
     } else {
       //set user
       dataObj.user = "unknown" + "__split__" + "unknown@unknown";
-      //contents lock
-      if (window.location.pathname === "/contents") {
-        dataObj.value = dataObj.pastValue;
-      }
+    }
+
+    if (GeneralJs.stacks["homeliaisonMember"] === undefined) {
+      throw new Error("member stacks error : " + JSON.stringify(cookies));
+    }
+    if (!GeneralJs.stacks["homeliaisonMember"].roles.includes("CX")){
+      window.alert("CX 팀원 외에는 업데이트를 실행할 수 없습니다!");
+      throw new Error("member roles error : " + JSON.stringify(cookies));
     }
 
     GeneralJs.updateHistoryTong.unshift(dataObj);
@@ -240,8 +276,8 @@ GeneralJs.updateValue = async function (dataObj) {
     return response.message;
 
   } catch (e) {
-    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
-    console.log(e);
+    GeneralJs.ajax("message=update ban : " + e.message + "&channel=#error_log", "/sendSlack", function () {});
+    window.location.href = FRONTHOST;
   }
 }
 
@@ -3239,6 +3275,8 @@ GeneralJs.prototype.loginBox = async function () {
 
 
     storage = window.localStorage.getItem("GoogleClientProfile");
+    storageCookie = null;
+
     if (storage === null) {
       memberBoo = false;
       thisMember = null;
@@ -3261,7 +3299,10 @@ GeneralJs.prototype.loginBox = async function () {
 
     if (memberBoo) {
 
-      this.member = thisMember;
+      tempObj = JSON.parse(await GeneralJs.ajaxPromise("type=boo&value=" + storageCookie.homeliaisonConsoleLoginedEmail, "/getMembers"));
+      thisMember = tempObj.result;
+      this.member = GeneralJs.equalJson(JSON.stringify(thisMember));
+      GeneralJs.stacks["homeliaisonMember"] = GeneralJs.equalJson(JSON.stringify(thisMember));
 
     } else {
 
@@ -3308,7 +3349,8 @@ GeneralJs.prototype.loginBox = async function () {
       tempObj = JSON.parse(await GeneralJs.ajaxPromise("type=boo&value=" + email, "/getMembers"));
       if (tempObj.result !== null) {
         thisMember = tempObj.result;
-        this.member = thisMember;
+        this.member = GeneralJs.equalJson(JSON.stringify(thisMember));
+        GeneralJs.stacks["homeliaisonMember"] = GeneralJs.equalJson(JSON.stringify(thisMember));
         loginBox.style.animation = "justfadeoutoriginal 0.2s ease forwards";
         GeneralJs.timeouts["login"] = setTimeout(() => {
           document.body.removeChild(loginBox);

@@ -91,8 +91,10 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             updateQuery = {};
             updateQuery["response.manager"] = finalValue;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.manager = finalValue;
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).response.manager = finalValue;  
+            }
             await instance.aspirantColorSync();
 
           } catch (e) {
@@ -183,8 +185,10 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             updateQuery = {};
             updateQuery["meeting.status"] = value;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.status = value;
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.status = value;  
+            }
             await instance.aspirantColorSync();
 
           } catch (e) {
@@ -209,8 +213,10 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             updateQuery = {};
             updateQuery["response.date"] = finalValue;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.date = finalValue;
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).response.date = finalValue;  
+            }
             await instance.aspirantColorSync();
           } catch (e) {
             console.log(e);
@@ -293,18 +299,20 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             updateQuery["meeting.status"] = chainValue;
             updateQuery["response.manager"] = chainManager;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            if (chainMessage !== "") {
-              await ajaxJson({ message: chainMessage, channel: "#301_apply", voice: false }, "/sendSlack");
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              if (chainMessage !== "") {
+                await ajaxJson({ message: chainMessage, channel: "#301_apply", voice: false }, "/sendSlack");
+              }
+              instance.aspirants.find((a) => { return a.aspid === aspid }).response.first.status = finalValue;
+              instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.status = chainValue;
+              instance.aspirants.find((a) => { return a.aspid === aspid }).response.manager = chainManager;
+  
+              findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "status").querySelector('.' + valueTargetClassName).textContent = chainValue;
+              findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "manager").querySelector('.' + valueTargetClassName).textContent = chainManager;
+  
+              await instance.aspirantColorSync();
             }
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.first.status = finalValue;
-            instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.status = chainValue;
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.manager = chainManager;
-
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "status").querySelector('.' + valueTargetClassName).textContent = chainValue;
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "manager").querySelector('.' + valueTargetClassName).textContent = chainManager;
-
-            await instance.aspirantColorSync();
 
           } catch (e) {
             console.log(e);
@@ -354,9 +362,11 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             updateQuery = {};
             updateQuery["response.portfolio.summary"] = finalValue;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.summary = finalValue;
-            await instance.aspirantColorSync();
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.summary = finalValue;
+              await instance.aspirantColorSync();
+            }
 
           } catch (e) {
             console.log(e);
@@ -381,9 +391,11 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             updateQuery = {};
             updateQuery["meeting.memo"] = finalValue;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.memo = finalValue;
-            await instance.aspirantColorSync();
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.memo = finalValue;
+              await instance.aspirantColorSync();
+            }
           } catch (e) {
             console.log(e);
           }
@@ -425,9 +437,11 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             updateQuery = {};
             updateQuery["response.outreason"] = finalValue;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.outreason = finalValue;
-            await instance.aspirantColorSync();
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).response.outreason = finalValue;
+              await instance.aspirantColorSync();
+            }
 
           } catch (e) {
             console.log(e);
@@ -499,9 +513,11 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             updateQuery = {};
             updateQuery["meeting.common.status"] = finalValue;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.common.status = finalValue;
-            await instance.aspirantColorSync();
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.common.status = finalValue;
+              await instance.aspirantColorSync();
+            }
 
           } catch (e) {
             console.log(e);
@@ -535,9 +551,12 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             updateQuery = {};
             updateQuery["meeting.common.date"] = finalValue;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.common.date = finalValue;
-            await instance.aspirantColorSync();
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.common.date = finalValue;
+              await instance.aspirantColorSync();
+            }
+
           } catch (e) {
             console.log(e);
           }
@@ -566,9 +585,12 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             updateQuery = {};
             updateQuery["response.portfolio.plus.photo"] = finalValue;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.plus.photo = finalValue;
-            await instance.aspirantColorSync();
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.plus.photo = finalValue;
+              await instance.aspirantColorSync();
+            }
+
           } catch (e) {
             console.log(e);
           }
@@ -591,9 +613,12 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             updateQuery = {};
             updateQuery["contract.partnership.date"] = finalValue;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).contract.partnership.date = finalValue;
-            await instance.aspirantColorSync();
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).contract.partnership.date = finalValue;
+              await instance.aspirantColorSync();
+            }
+
           } catch (e) {
             console.log(e);
           }
@@ -616,9 +641,12 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             updateQuery = {};
             updateQuery["contract.designer.date"] = finalValue;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).contract.designer.date = finalValue;
-            await instance.aspirantColorSync();
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).contract.designer.date = finalValue;
+              await instance.aspirantColorSync();
+            }
+
           } catch (e) {
             console.log(e);
           }
@@ -976,9 +1004,11 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
               return newValue[index] === 1;
             });
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((d) => { return d.aspid === aspid }).gender = updateQuery["gender"];
-            await instance.aspirantColorSync();
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((d) => { return d.aspid === aspid }).gender = updateQuery["gender"];
+              await instance.aspirantColorSync();
+            }
 
           } catch (e) {
             console.log(e);
@@ -1010,11 +1040,14 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
             updateQuery = {};
             updateQuery["birth"] = birthDate;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).birth = birthDate;
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "birth").querySelector('.' + valueTargetClassName).textContent = dateToString(birthDate);
-            targetDom.textContent = dateToString(birthDate) + " (" + String((new Date()).getFullYear() - birthDate.getFullYear()) + "세)",
-            await instance.aspirantColorSync();
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).birth = birthDate;
+              findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "birth").querySelector('.' + valueTargetClassName).textContent = dateToString(birthDate);
+              targetDom.textContent = dateToString(birthDate) + " (" + String((new Date()).getFullYear() - birthDate.getFullYear()) + "세)",
+              await instance.aspirantColorSync();
+            }
+
           } catch (e) {
             console.log(e);
           }
@@ -1082,10 +1115,12 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
               return newValue[index] === 1;
             });
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((d) => { return d.aspid === aspid }).meeting.status = updateQuery["meeting.status"];
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "status").querySelector('.' + valueTargetClassName).textContent = updateQuery["meeting.status"];
-            await instance.aspirantColorSync();
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((d) => { return d.aspid === aspid }).meeting.status = updateQuery["meeting.status"];
+              findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "status").querySelector('.' + valueTargetClassName).textContent = updateQuery["meeting.status"];
+              await instance.aspirantColorSync();
+            }
 
           } catch (e) {
             console.log(e);
@@ -1167,9 +1202,11 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
             updateQuery["meeting.status"] = chainValue;
             updateQuery["response.manager"] = chainManager;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            if (chainMessage !== "") {
-              await ajaxJson({ message: chainMessage, channel: "#301_apply", voice: false }, "/sendSlack");
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              if (chainMessage !== "") {
+                await ajaxJson({ message: chainMessage, channel: "#301_apply", voice: false }, "/sendSlack");
+              }
             }
 
             selfHref(window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid);
@@ -1229,10 +1266,12 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
               textValue = updateQuery["response.portfolio.summary"];
             }
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((d) => { return d.aspid === aspid }).response.portfolio.summary = updateQuery["response.portfolio.summary"];
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "portfolioCharacter").querySelector('.' + valueTargetClassName).textContent = textValue;
-            await instance.aspirantColorSync();
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((d) => { return d.aspid === aspid }).response.portfolio.summary = updateQuery["response.portfolio.summary"];
+              findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "portfolioCharacter").querySelector('.' + valueTargetClassName).textContent = textValue;
+              await instance.aspirantColorSync();
+            }
 
           } catch (e) {
             console.log(e);
@@ -1281,10 +1320,12 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
               textValue = updateQuery["response.outreason"];
             }
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((d) => { return d.aspid === aspid }).response.outreason = updateQuery["response.outreason"];
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "outreason").querySelector('.' + valueTargetClassName).textContent = textValue;
-            await instance.aspirantColorSync();
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((d) => { return d.aspid === aspid }).response.outreason = updateQuery["response.outreason"];
+              findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "outreason").querySelector('.' + valueTargetClassName).textContent = textValue;
+              await instance.aspirantColorSync();
+            }
 
           } catch (e) {
             console.log(e);
@@ -1309,9 +1350,11 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
             updateQuery = {};
             updateQuery["meeting.memo"] = newValue.trim();
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((d) => { return d.aspid === aspid }).meeting.memo = updateQuery["meeting.memo"];
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "memo").querySelector('.' + valueTargetClassName).textContent = updateQuery["meeting.memo"];
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((d) => { return d.aspid === aspid }).meeting.memo = updateQuery["meeting.memo"];
+              findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "memo").querySelector('.' + valueTargetClassName).textContent = updateQuery["meeting.memo"];
+            }
             
             await instance.aspirantColorSync();
 
@@ -1345,9 +1388,11 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
             updateQuery = {};
             updateQuery["response.date"] = finalValue;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.date = finalValue;
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "responseDate").querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).response.date = finalValue;
+              findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "responseDate").querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);  
+            }
 
             await instance.aspirantColorSync();
 
@@ -1535,9 +1580,11 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
               textValue = "없음"
             }
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((d) => { return d.aspid === aspid }).response.portfolio.ready.set = updateQuery["response.portfolio.ready.set"];
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "portfolioSet").querySelector('.' + valueTargetClassName).textContent = textValue;
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((d) => { return d.aspid === aspid }).response.portfolio.ready.set = updateQuery["response.portfolio.ready.set"];
+              findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "portfolioSet").querySelector('.' + valueTargetClassName).textContent = textValue;  
+            }
 
             await instance.aspirantColorSync();
 
@@ -1565,9 +1612,11 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
             updateQuery = {};
             updateQuery["response.portfolio.plus.photo"] = finalValue;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.plus.photo = finalValue;
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "portfolioSetPhoto").querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.plus.photo = finalValue;
+              findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "portfolioSetPhoto").querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);  
+            }
             await instance.aspirantColorSync();
 
           } catch (e) {
@@ -1621,9 +1670,11 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
               textValue = updateQuery["meeting.common.status"];
             }
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((d) => { return d.aspid === aspid }).meeting.common.status = updateQuery["meeting.common.status"];
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "commonMeeting").querySelector('.' + valueTargetClassName).textContent = textValue;
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((d) => { return d.aspid === aspid }).meeting.common.status = updateQuery["meeting.common.status"];
+              findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "commonMeeting").querySelector('.' + valueTargetClassName).textContent = textValue;  
+            }
             await instance.aspirantColorSync();
 
           } catch (e) {
@@ -1650,9 +1701,11 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
             updateQuery = {};
             updateQuery["meeting.common.date"] = finalValue;
 
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.common.date = finalValue;
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "commonMeetingDate").querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);
+            if (await GeneralJs.nonCxBan()) {
+              await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+              instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.common.date = finalValue;
+              findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "commonMeetingDate").querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);  
+            }
             await instance.aspirantColorSync();
 
           } catch (e) {
@@ -4437,8 +4490,10 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
                           updateQuery = {};
                           updateQuery["response.long"] = this.value;
 
-                          await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-                          instance.aspirants.find((a) => { return a.aspid === aspid }).response.long = this.value;
+                          if (await GeneralJs.nonCxBan()) {
+                            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+                            instance.aspirants.find((a) => { return a.aspid === aspid }).response.long = this.value;  
+                          }
 
                         } catch (e) {
                           console.log(e);
@@ -4919,7 +4974,9 @@ DesignerJs.prototype.aspirantBase = async function () {
                     updateQuery = {};
                     updateQuery["response.date"] = new Date();
 
-                    await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+                    if (await GeneralJs.nonCxBan()) {
+                      await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+                    }
 
                     window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
                   } catch (e) {
@@ -5056,14 +5113,15 @@ DesignerJs.prototype.aspirantBase = async function () {
                       whereQuery["aspid"] = aspid;
                       updateQuery = {};
                       updateQuery["meeting.status"] = "계약 요청";
-                      await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-
-                      const response0 = await ajaxJson({ aspid }, PYTHONHOST + "/createPartnershipContract");
-                      const response1 = await ajaxJson({ aspid }, PYTHONHOST + "/createDesignerContract");
-                      if (response0.message === "OK" && response1.message === "OK") {
-                        window.alert(`계약서 알림톡 요청을 완료하였습니다!`);
-                      } else {
-                        window.alert(`오류가 발생하였습니다! 다시 시도해주세요!`);
+                      if (await GeneralJs.nonCxBan()) {
+                        await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+                        const response0 = await ajaxJson({ aspid }, PYTHONHOST + "/createPartnershipContract");
+                        const response1 = await ajaxJson({ aspid }, PYTHONHOST + "/createDesignerContract");
+                        if (response0.message === "OK" && response1.message === "OK") {
+                          window.alert(`계약서 알림톡 요청을 완료하였습니다!`);
+                        } else {
+                          window.alert(`오류가 발생하였습니다! 다시 시도해주세요!`);
+                        }
                       }
                     }
                   } catch (e) {
@@ -5956,22 +6014,24 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
         whereQuery["aspid"] = aspid;
         updateQuery = {};
         updateQuery["meeting.status"] = "등록 요청";
-        await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+        if (await GeneralJs.nonCxBan()) {
+          await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
 
-        const response = await ajaxJson({
-          mode: "send",
-          aspid: aspirant.aspid,
-          designer: aspirant.designer,
-          phone: aspirant.phone,
-          type: "documents",
-        }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
-        if (response.message === "success") {
-          window.alert("전송에 성공하였습니다!");
-        } else {
-          window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+          const response = await ajaxJson({
+            mode: "send",
+            aspid: aspirant.aspid,
+            designer: aspirant.designer,
+            phone: aspirant.phone,
+            type: "documents",
+          }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
+          if (response.message === "success") {
+            window.alert("전송에 성공하였습니다!");
+          } else {
+            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+          }
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
+  
         }
-        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
-
       } catch (e) {
         window.alert(e.message);
         console.log(e);
@@ -5993,21 +6053,24 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
           whereQuery["aspid"] = aspid;
           updateQuery = {};
           updateQuery["meeting.status"] = "등록 요청";
-          await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+          if (await GeneralJs.nonCxBan()) {
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
 
-          const response = await ajaxJson({
-            mode: "send",
-            aspid: aspirant.aspid,
-            designer: aspirant.designer,
-            phone: aspirant.phone,
-            type: "payment",
-          }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
-          if (response.message === "success") {
-            window.alert("전송에 성공하였습니다!");
-          } else {
-            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+            const response = await ajaxJson({
+              mode: "send",
+              aspid: aspirant.aspid,
+              designer: aspirant.designer,
+              phone: aspirant.phone,
+              type: "payment",
+            }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
+            if (response.message === "success") {
+              window.alert("전송에 성공하였습니다!");
+            } else {
+              window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+            }
+            window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
+  
           }
-          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
         }
         
       } catch (e) {
@@ -6031,21 +6094,24 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
           whereQuery["aspid"] = aspid;
           updateQuery = {};
           updateQuery["meeting.status"] = "추가 요청";
-          await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+          if (await GeneralJs.nonCxBan()) {
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
 
-          const response = await ajaxJson({
-            mode: "send",
-            aspid: aspirant.aspid,
-            designer: aspirant.designer,
-            phone: aspirant.phone,
-            type: "plus",
-          }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
-          if (response.message === "success") {
-            window.alert("전송에 성공하였습니다!");
-          } else {
-            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+            const response = await ajaxJson({
+              mode: "send",
+              aspid: aspirant.aspid,
+              designer: aspirant.designer,
+              phone: aspirant.phone,
+              type: "plus",
+            }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
+            if (response.message === "success") {
+              window.alert("전송에 성공하였습니다!");
+            } else {
+              window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+            }
+            window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
+  
           }
-          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
         }
         
       } catch (e) {
@@ -6088,7 +6154,9 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
           updateQuery["meeting.status"] = "드랍";
           updateQuery["response.manager"] = hlBot;
 
-          await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+          if (await GeneralJs.nonCxBan()) {
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+          }
 
           window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
         }
@@ -6864,7 +6932,9 @@ DesignerJs.prototype.communicationRender = function () {
         updateQuery = {};
         updateQuery["response.date"] = new Date();
 
-        await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+        if (await GeneralJs.nonCxBan()) {
+          await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+        }
 
         window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
       } catch (e) {
@@ -7017,15 +7087,19 @@ DesignerJs.prototype.communicationRender = function () {
           whereQuery["aspid"] = aspid;
           updateQuery = {};
           updateQuery["meeting.status"] = "계약 요청";
-          await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
 
-          const response0 = await ajaxJson({ aspid }, PYTHONHOST + "/createPartnershipContract");
-          const response1 = await ajaxJson({ aspid }, PYTHONHOST + "/createDesignerContract");
-          if (response0.message === "OK" && response1.message === "OK") {
-            window.alert(`계약서 알림톡 요청을 완료하였습니다!`);
-          } else {
-            window.alert(`오류가 발생하였습니다! 다시 시도해주세요!`);
+          if (await GeneralJs.nonCxBan()) {
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+
+            const response0 = await ajaxJson({ aspid }, PYTHONHOST + "/createPartnershipContract");
+            const response1 = await ajaxJson({ aspid }, PYTHONHOST + "/createDesignerContract");
+            if (response0.message === "OK" && response1.message === "OK") {
+              window.alert(`계약서 알림톡 요청을 완료하였습니다!`);
+            } else {
+              window.alert(`오류가 발생하였습니다! 다시 시도해주세요!`);
+            }
           }
+
         }
       } catch (e) {
         console.log(e);

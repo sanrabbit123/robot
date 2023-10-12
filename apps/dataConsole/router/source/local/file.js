@@ -823,14 +823,16 @@ FileJs.prototype.baseMaker = function () {
           let files;
           let absolute;
           let directory;
-          if (selected.length > 0) {
-            files = [];
-            for (let dom of selected) {
-              absolute = dom.getAttribute("absolute");
-              directory = (dom.getAttribute("directory") === "true");
-              files.push({ absolute, type: (directory ? "folder" : "file") });
+          if (instance.mother.member.level >= 9) {
+            if (selected.length > 0) {
+              files = [];
+              for (let dom of selected) {
+                absolute = dom.getAttribute("absolute");
+                directory = (dom.getAttribute("directory") === "true");
+                files.push({ absolute, type: (directory ? "folder" : "file") });
+              }
+              await ajaxJson({ files }, S3HOST + ":3000/deleteFile");
             }
-            await ajaxJson({ files }, S3HOST + ":3000/deleteFile");
           }
           for (let dom of targets) {
             dom.parentNode.removeChild(dom);

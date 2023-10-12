@@ -54,7 +54,7 @@ ContentsJs.prototype.spreadContents = function (search = null) {
   const { ea, totalContents, scrollTong } = this;
   const { contentsArr, designers, clients } = this;
   const { createNode, withOut, colorChip, cleanChildren } = GeneralJs;
-  const photoChar = 't';
+  const photoChar = "mobile/mot";
   let boxMargin;
   let boxNumber, boxWidth;
   let num;
@@ -67,14 +67,14 @@ ContentsJs.prototype.spreadContents = function (search = null) {
 
   tongPaddingLeft = 30;
 
-  boxMargin = 10;
-  boxWidth = 250;
-  pidFontSize = 15;
+  boxMargin = 4;
+  boxWidth = 160;
+  pidFontSize = 13;
   pidFontWeight = 400;
   pidTextTop = -4;
-  pidPaddingLeft = 13;
-  pidPaddingTop = 9;
-  pidPaddingBottom = 6;
+  pidPaddingLeft = 12;
+  pidPaddingTop = 8;
+  pidPaddingBottom = 4;
 
   boxNumber = Math.floor((window.innerWidth - (tongPaddingLeft * 2) + boxMargin) / (boxMargin + boxWidth));
   boxWidth = (window.innerWidth - (tongPaddingLeft * 2) + boxMargin - (boxNumber * boxMargin)) / boxNumber;
@@ -85,7 +85,7 @@ ContentsJs.prototype.spreadContents = function (search = null) {
     contentsTong = [];
     for (let contents of contentsArr) {
       designer = designers.search("desid", contents.desid);
-      client = designers.search("cliid", contents.cliid);
+      client = clients.search("cliid", contents.cliid);
 
       boo = false;
       if (contents.contents.portfolio.detailInfo.tag.some((str) => { return (new RegExp(search, "gi")).test(str) })) {
@@ -127,7 +127,7 @@ ContentsJs.prototype.spreadContents = function (search = null) {
       style: {
         display: "inline-block",
         width: String(boxWidth) + ea,
-        background: instance.contentsStatus.map((o) => { return o.conid }).includes(contents.conid) ? colorChip.gradientGreen : colorChip.gray1,
+        background: colorChip.gray1,
         marginRight: String(num % boxNumber === boxNumber - 1 ? 0 : boxMargin) + ea,
         marginBottom: String(boxMargin) + ea,
         cursor: "pointer",
@@ -143,7 +143,7 @@ ContentsJs.prototype.spreadContents = function (search = null) {
             fontFamily: "graphik",
             fontSize: String(pidFontSize) + ea,
             fontWeight: String(pidFontWeight),
-            color: instance.contentsStatus.map((o) => { return o.conid }).includes(contents.conid) ? colorChip.white : colorChip.deactive,
+            color: colorChip.black,
             top: String(pidTextTop) + ea,
             transition: "all 0.5s ease",
             paddingLeft: String(pidPaddingLeft) + ea,
@@ -1012,24 +1012,18 @@ ContentsJs.prototype.launching = async function () {
 
     const allContents = await ajaxJson({ mode: "all" }, CONTENTSHOST + "/getAllContents", { equal: true });
 
-    console.log(allContents);
-
-    const contentsArr = await ajaxJson({ noFlat: true, whereQuery: {} }, "/getContents", { equal: true });
-    const projects = await ajaxJson({ noFlat: true, whereQuery: { $or: contentsArr.map((obj) => { return { proid: obj.proid } }) } }, "/getProjects", { equal: true });
-    const clients = await ajaxJson({ noFlat: true, whereQuery: { $or: projects.map((obj) => { return { cliid: obj.cliid } }) } }, "/getClients", { equal: true });
-    const designers = await ajaxJson({ noFlat: true, whereQuery: { $or: contentsArr.map((obj) => { return { desid: obj.desid } }) } }, "/getDesigners", { equal: true });
-
     this.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus", { equal: true });
-    this.contentsArr = new SearchArray(contentsArr);
-    this.clients = new SearchArray(clients);
-    this.projects = new SearchArray(projects);
-    this.designers = new SearchArray(designers);
+    this.contentsArr = new SearchArray(allContents.contentsArr);
+    this.foreContents = new SearchArray(allContents.foreContents);
+    this.clients = new SearchArray(allContents.clients);
+    this.projects = new SearchArray(allContents.projects);
+    this.designers = new SearchArray(allContents.designers);
     this.whitePopupClassName = "whitePopupClassName";
 
     loading.parentElement.removeChild(loading);
 
     this.baseMaker();
-
+    
     window.addEventListener("resize", (e) => {
       window.location.reload();
     });
