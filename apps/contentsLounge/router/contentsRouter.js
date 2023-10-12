@@ -890,7 +890,7 @@ ContentsRouter.prototype.rou_post_evaluationNotice = function () {
         if (req.body.proid === undefined || req.body.cliid === undefined || req.body.desid === undefined) {
           throw new Error("invalid post");
         }
-        const { cliid, desid } = equalJson(req.body);
+        const { cliid, desid, proid } = equalJson(req.body);
         json = {
           proid,
           desid,

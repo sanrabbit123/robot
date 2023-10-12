@@ -153,7 +153,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+    await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid: "c2305_aa46s", desid: "d1907_aa02s", proid: "p2305_aa37s" }, { headers: { "Content-Type": "application/json" } });
+
 
     
 
@@ -6877,9 +6878,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "고하정",
-    //     designer: "이정아",
-    //     link: "https://drive.google.com/drive/folders/1eIBSBz37hORXqvJSCOp1V4IJjOfPO71S",
+    //     client: "조성은",
+    //     designer: "김지혜",
+    //     link: "https://drive.google.com/drive/folders/15Eupjk-A7xPec9m-Yx21_-YWbfCGlBxL",
     //     pay: true
     //   },
     // ]);
