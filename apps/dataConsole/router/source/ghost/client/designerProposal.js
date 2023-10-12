@@ -928,7 +928,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
         justifyContent: "center",
         alignItems: "center",
         height: String(4) + ea,
-        marginBottom: String(2) + ea,
+        marginBottom: String(1.6) + ea,
       },
       children: [
         {
