@@ -153,10 +153,24 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid: "c2305_aa46s", desid: "d1907_aa02s", proid: "p2305_aa37s" }, { headers: { "Content-Type": "application/json" } });
+
+
+    // const token = "xoxp-717757271335-704486967090-4566130160163-fd2a2cc412e2a509a43635fb8f6c65e2";
+    // const endPoint = "https://slack.com/api";
+    // const res = await requestSystem(endPoint + "/chat.postMessage", {
+    //   channel: "#error_log",
+    //   text: "얌마",
+    // }, {
+    //   headers: {
+    //     "Authorization": "Bearer " + token,
+    //     "Content-Type": "application/x-www-form-urlencoded",
+    //   }
+    // });
+    // console.log(res);
 
 
     
+
 
 
     /*
@@ -6949,17 +6963,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2310_aa03s", [
+    // await this.setProposalSettingForDesigner("d2310_aa01s", [
     //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 4 },
-    //   { porlid: "ghost", index: 7 },
-    //   { porlid: "ghost", index: 8 },
-    //   { porlid: "ghost", index: 1 },
-    //   { porlid: "ghost", index: 3 },
+    //   { porlid: "ghost", index: 13 },
+    //   { porlid: "ghost", index: 5 },
+    //   { porlid: "ghost", index: 10 },
+    //   { porlid: "ghost", index: 9 },
+    //   { porlid: "ghost", index: 12 },
     // ], [
-    //   "내추럴하고 편안한 스타일로 친근한 공간 분위기를 내는데 탁월합니다.",
-    //   "고객님 라이프 스타일과 니즈에 맞게 기능 중심적으로 스타일링을 진행합니다.",
-    //   "기존 공간에 있던 요소들의 재사용을 하는 데 탁월하여 예산을 세이브해 드립니다.",
+    //   "모던하고 깔끔한 공간 연출에 늫하며, 편안한 분위기를 만들어 드립니다.",
+    //   "소통 능력이 탁월하고, 의사 소통이 빠르고 원활해 안정적인 운영이 가능합니다.",
+    //   "공간의 포인트를 잘 살려내거나 만드는 것에 뛰어나 공간을 생기 있게 만들어 냅니다.",
     // ]);
 
 
@@ -6974,8 +6988,8 @@ DevContext.prototype.launching = async function () {
 
     
     // // send sms
-    // const name = "서운아";
-    // const amount = 2413000;
+    // const name = "이슬아";
+    // const amount = 11819000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,

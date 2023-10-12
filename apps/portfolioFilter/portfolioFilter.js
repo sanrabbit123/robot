@@ -812,6 +812,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           clientObj = await back.getClientById(project.cliid);
           designerObj = await back.getDesignerById(project.desid);
   
+          await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
+
           await shellExec(`rm -rf ${shellLink(folderPath)};`);
 
           if (clientObj !== null && designerObj !== null) {

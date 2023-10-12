@@ -244,19 +244,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
 
       }
 
-      if (!fairyMode) {
-        instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
-      } else {
-        requestSystem(instance.slack_info.endPoint + "/chat.postMessage", {
-          channel: Object.keys(instance.slack_info.channelDictionary)[Object.keys(instance.slack_info.channelDictionary).findIndex((str) => { return ('#' + instance.slack_info.channelDictionary[str]) === (channel === "silent" ? "#error_log" : channel) })],
-          text: slackText,
-        }, {
-          headers: {
-            "Authorization": "Bearer " + instance.slack_fairyToken,
-            "Content-Type": "application/x-www-form-urlencoded",
-          }
-        }).catch((err) => { console.log(err); });
-      }
+      instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
 
       if (req.body.voice === true || req.body.voice === "true") {
         requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/textToVoice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
