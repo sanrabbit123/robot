@@ -703,16 +703,18 @@ KakaoTalk.prototype.templateTong = function (target) {
       }
     },
     "photoShareClient": {
-      "name": "사진 공유 고객",
-      "id": "TF_1248",
+      "name": "사진 공유 고객 수정",
+      "id": "TP_2963",
       "needs": [
         "client",
-        "file"
+        "host",
+        "path",
+        "proid"
       ],
-      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"file\", to: obj.file }\n        ];\n      }",
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"proid\", to: obj.proid }\n        ];\n      }",
       "raw": {
-        "templtContent": "#{client} 고객님 안녕하세요 :) 촬영한 사진이 나와서 연락드려요!\n\n#{client}님만의 매력과 취향이 묻어나는 아름다운 집이네요 :) #{client}님의 소중한 집을 꾸미는 일에 저희 홈리에종과 함께 해주셔서 감사했습니다! 편안하고 아름다운 집에서 늘 행복한 일상을 이어나가시기를 바랄게요!\n\n고객 후기 콘텐츠는 순차 발행 중이라 나오면 추후에 링크 보내드리겠습니다!\n\n사진 공유 : https://drive.google.com/file/d/#{file}/view?usp=sharing",
-        "templtName": "사진 공유 고객",
+        "templtContent": "#{client} 고객님 안녕하세요, 홈리에종입니다 :) 촬영한 사진이 나와서 연락드려요!\n\n#{client}님의 소중한 집을 꾸미는 일에 저희 홈리에종과 함께 해주셔서 감사했습니다! 마지막으로 홈리에종과 디자이너에 대한 경험을 아래 서비스 평가 페이지를 통해 리뷰 부탁드리겠습니다. \n\n솔직한 평가를 남겨주시고, 하단 '평가 제출하기'를 클릭하시면 고객님 현장을 촬영한 사진을 다운로드하실 수 있습니다.\n\n편안하고 아름다운 집에서 늘 행복한 일상을 이어나가시기를 바랄게요!\n\n감사합니다 :)\n\n* 서비스 평가 및 사진 다운로드\nhttps://#{host}/#{path}.php?proid=#{proid}",
+        "templtName": "사진 공유 고객 수정",
         "templateType": "BA",
         "templateEmType": "NONE",
         "templateExtra": "",
@@ -724,20 +726,20 @@ KakaoTalk.prototype.templateTong = function (target) {
         "block": "N",
         "dormant": "N",
         "securityFlag": "N",
-        "status": "A",
+        "status": "R",
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
         "buttons": [],
-        "cdate": "2021-07-13 15:52:04",
-        "templtCode": "TF_1248",
+        "cdate": "2023-10-11 09:34:14",
+        "templtCode": "TP_2963",
         "comments": [
           {
-            "cdate": "2021-07-13 16:46:18",
+            "cdate": "2023-10-11 14:33:24",
             "name": "검수자",
-            "id": "1440268",
+            "id": "2875359",
             "userName": "검수자",
             "commentContent": "",
-            "createdAt": "2021-07-13 16:46:18",
+            "createdAt": "2023-10-11 14:33:24",
             "status": "APR"
           }
         ]
