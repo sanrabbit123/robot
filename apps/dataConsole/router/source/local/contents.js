@@ -1012,6 +1012,7 @@ ContentsJs.prototype.launching = async function () {
 
     const allContents = await ajaxJson({ mode: "all" }, CONTENTSHOST + "/getAllContents", { equal: true });
 
+    this.member = this.mother.member;
     this.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus", { equal: true });
     this.contentsArr = new SearchArray(allContents.contentsArr);
     this.foreContents = new SearchArray(allContents.foreContents);
@@ -1024,6 +1025,8 @@ ContentsJs.prototype.launching = async function () {
 
     this.baseMaker();
     
+    console.log(this.member);
+
     window.addEventListener("resize", (e) => {
       window.location.reload();
     });
