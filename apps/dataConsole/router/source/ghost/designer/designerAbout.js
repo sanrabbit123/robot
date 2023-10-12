@@ -9186,8 +9186,18 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   let greenNoticeIndent;
   let mobileTendencyFactorBetween;
   let factorVisualBetween;
+  let updateConfirm;
 
-  console.log(entireMode);
+  if (entireMode) {
+    if (instance.isCxMember) {
+      updateConfirm = true;
+    } else {
+      updateConfirm = false;
+    }
+  } else {
+    updateConfirm = true;
+  }
+  this.updateConfirm = updateConfirm;
 
   blockHeight = <%% 22, 21, 21, 19, (isIphone() ? 5.2 : 4.9) %%>;
   blockMarginBottom = <%% 16, 15, 15, 12, 2.5 %%>;
@@ -9302,15 +9312,17 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
           valueMatrix.push(tempArr);
         }
   
-        if (mode === "create") {
-          await instance.contents[x].contents[z].plusValue(valueMatrix, instance.designer, this.parentElement.nextElementSibling);
-        } else {
-          await instance.contents[x].contents[z].updateValue({
-            mode: "update",
-            index,
-            value: valueMatrix,
-            tong: this.parentElement.parentElement.parentElement,
-          }, instance.designer);
+        if (instance.updateConfirm) {
+          if (mode === "create") {
+            await instance.contents[x].contents[z].plusValue(valueMatrix, instance.designer, this.parentElement.nextElementSibling);
+          } else {
+            await instance.contents[x].contents[z].updateValue({
+              mode: "update",
+              index,
+              value: valueMatrix,
+              tong: this.parentElement.parentElement.parentElement,
+            }, instance.designer);
+          }
         }
       } catch (e) {
         window.alert("입력을 취소하셨습니다! 처음부터 다시 진행해주세요!");
@@ -9402,15 +9414,17 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
               event: {
                 click: async function (e) {
                   try {
-                    if (window.confirm("해당 경력을 삭제하시겠습니까?")) {
-                      const index = Number(this.getAttribute("index"));
-                      const x = Number(this.getAttribute("x"));
-                      const z = Number(this.getAttribute("z"));
-                      await instance.contents[x].contents[z].updateValue({
-                        mode: "delete",
-                        index,
-                        tong: tong,
-                      }, instance.designer);  
+                    if (instance.updateConfirm) {
+                      if (window.confirm("해당 경력을 삭제하시겠습니까?")) {
+                        const index = Number(this.getAttribute("index"));
+                        const x = Number(this.getAttribute("x"));
+                        const z = Number(this.getAttribute("z"));
+                        await instance.contents[x].contents[z].updateValue({
+                          mode: "delete",
+                          index,
+                          tong: tong,
+                        }, instance.designer);  
+                      }
                     }
                   } catch (e) {
                     console.log(e);
@@ -9638,13 +9652,15 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
 
             saveEvent = async (raw) => {
               try {
-                const text = await instance.contents[x].contents[z].updateValue(raw, instance.designer);
-                [ ...self.childNodes ].filter((dom) => { return dom.nodeType === 3 }).forEach((t) => { self.removeChild(t) });
-                self.insertAdjacentHTML("beforeend", text);
-                self.setAttribute("value", text);
-                if (typeof instance.contents[x].contents[z].visualNotice === "function") {
-                  const thisBox = getRealBox(self, withOut(firstWidth + circleBoxWidth, ea));
-                  self.nextElementSibling.style.left = "calc(" + String(firstWidth + circleBoxWidth + noticeBetween) + ea + " + " + String(thisBox.width) + "px" + ")";
+                if (instance.updateConfirm) {
+                  const text = await instance.contents[x].contents[z].updateValue(raw, instance.designer);
+                  [ ...self.childNodes ].filter((dom) => { return dom.nodeType === 3 }).forEach((t) => { self.removeChild(t) });
+                  self.insertAdjacentHTML("beforeend", text);
+                  self.setAttribute("value", text);
+                  if (typeof instance.contents[x].contents[z].visualNotice === "function") {
+                    const thisBox = getRealBox(self, withOut(firstWidth + circleBoxWidth, ea));
+                    self.nextElementSibling.style.left = "calc(" + String(firstWidth + circleBoxWidth + noticeBetween) + ea + " + " + String(thisBox.width) + "px" + ")";
+                  }
                 }
               } catch (e) {
                 console.log(e);
@@ -9662,8 +9678,12 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
                   e.stopPropagation();
                   try {
                     if (whiteInput.value.trim() !== instance.contents[x].contents[z].renderValue(self.getAttribute("value"))) {
-                      if (window.confirm("수정하시겠습니까?")) {
-                        await saveEvent(whiteInput.value.trim());
+                      if (updateConfirm) {
+                        if (window.confirm("수정하시겠습니까?")) {
+                          await saveEvent(whiteInput.value.trim());
+                        }
+                      } else {
+                        window.alert("CX 팀원과 디자이너만이 수정할 수 있습니다!");
                       }
                     }
                     const removeTargets = document.querySelectorAll('.' + removePopupTargetClassName);
@@ -9707,8 +9727,12 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
                     if (e.key === "Enter" || e.key === "Tab") {
                       e.preventDefault();
                       if (this.value.trim() !== instance.contents[x].contents[z].renderValue(self.getAttribute("value"))) {
-                        if (window.confirm("수정하시겠습니까?")) {
-                          await saveEvent(this.value.trim());
+                        if (updateConfirm) {
+                          if (window.confirm("수정하시겠습니까?")) {
+                            await saveEvent(this.value.trim());
+                          }
+                        } else {
+                          window.alert("CX 팀원과 디자이너만이 수정할 수 있습니다!");
                         }
                       }
                       const removeTargets = document.querySelectorAll('.' + removePopupTargetClassName);
@@ -9805,86 +9829,92 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
             selectstart: (e) => { e.preventDefault(); },
             click: function (e) {
               e.stopPropagation();
-              if (window.confirm("수정하시겠습니까?")) {
-                const self = this;
-                const toggle = this.getAttribute("toggle");
-                const x = Number(this.getAttribute("x"));
-                const z = Number(this.getAttribute("z"));
-                const index = Number(this.getAttribute("index"));
-                let targets;
-                let finalTargets;
-                let finalNumbers;
-                let targetIndex;
-                
-                if (toggle === "on") {
-                  if (instance.contents[x].contents[z].range === true) {
-                    targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-                    targetIndex = targets.findIndex((d) => { return d === self });
-                    for (let s = 0; s < targets.length; s++) {
-                      if (s <= targetIndex) {
-                        targets[s].style.color = colorChip.green;
-                        targets[s].setAttribute("toggle", "on");
-                      } else {
-                        targets[s].style.color = colorChip.deactive;
-                        targets[s].setAttribute("toggle", "off");
+              if (updateConfirm) {
+                if (window.confirm("수정하시겠습니까?")) {
+                  const self = this;
+                  const toggle = this.getAttribute("toggle");
+                  const x = Number(this.getAttribute("x"));
+                  const z = Number(this.getAttribute("z"));
+                  const index = Number(this.getAttribute("index"));
+                  let targets;
+                  let finalTargets;
+                  let finalNumbers;
+                  let targetIndex;
+                  
+                  if (toggle === "on") {
+                    if (instance.contents[x].contents[z].range === true) {
+                      targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+                      targetIndex = targets.findIndex((d) => { return d === self });
+                      for (let s = 0; s < targets.length; s++) {
+                        if (s <= targetIndex) {
+                          targets[s].style.color = colorChip.green;
+                          targets[s].setAttribute("toggle", "on");
+                        } else {
+                          targets[s].style.color = colorChip.deactive;
+                          targets[s].setAttribute("toggle", "off");
+                        }
+                      }
+                    } else {
+                      if (instance.contents[x].contents[z].multiple) {
+                        self.style.color = colorChip.deactive;
+                        self.setAttribute("toggle", "off");
                       }
                     }
                   } else {
-                    if (instance.contents[x].contents[z].multiple) {
-                      self.style.color = colorChip.deactive;
-                      self.setAttribute("toggle", "off");
+                    if (instance.contents[x].contents[z].range === true) {
+                      targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+                      targetIndex = targets.findIndex((d) => { return d === self });
+                      for (let s = 0; s < targets.length; s++) {
+                        if (s <= targetIndex) {
+                          targets[s].style.color = colorChip.green;
+                          targets[s].setAttribute("toggle", "on");
+                        } else {
+                          targets[s].style.color = colorChip.deactive;
+                          targets[s].setAttribute("toggle", "off");
+                        }
+                      }
+                    } else {
+                      if (instance.contents[x].contents[z].multiple) {
+                        self.style.color = colorChip.green;
+                      } else {
+                        targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+                        for (let dom of targets) {
+                          if (dom === self) {
+                            dom.style.color = colorChip.green;
+                          } else {
+                            dom.style.color = colorChip.deactive;
+                            dom.setAttribute("toggle", "off");
+                          }
+                        }
+                      }
+                      self.setAttribute("toggle", "on");
+                      if (typeof instance.contents[x].contents[z].fourStepValue === "function") {
+                        for (let i of variableArray(4)) {
+                          if (i === index) {
+                            if (document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)) !== null) {
+                              document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)).style.background = colorChip.green;
+                            }
+                          } else {
+                            if (document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)) !== null) {
+                              document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)).style.background = colorChip.gray4;
+                            }
+                          }
+                        }
+                      }
                     }
                   }
-                } else {
-                  if (instance.contents[x].contents[z].range === true) {
-                    targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-                    targetIndex = targets.findIndex((d) => { return d === self });
-                    for (let s = 0; s < targets.length; s++) {
-                      if (s <= targetIndex) {
-                        targets[s].style.color = colorChip.green;
-                        targets[s].setAttribute("toggle", "on");
-                      } else {
-                        targets[s].style.color = colorChip.deactive;
-                        targets[s].setAttribute("toggle", "off");
-                      }
-                    }
-                  } else {
-                    if (instance.contents[x].contents[z].multiple) {
-                      self.style.color = colorChip.green;
-                    } else {
-                      targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-                      for (let dom of targets) {
-                        if (dom === self) {
-                          dom.style.color = colorChip.green;
-                        } else {
-                          dom.style.color = colorChip.deactive;
-                          dom.setAttribute("toggle", "off");
-                        }
-                      }
-                    }
-                    self.setAttribute("toggle", "on");
-                    if (typeof instance.contents[x].contents[z].fourStepValue === "function") {
-                      for (let i of variableArray(4)) {
-                        if (i === index) {
-                          if (document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)) !== null) {
-                            document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)).style.background = colorChip.green;
-                          }
-                        } else {
-                          if (document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)) !== null) {
-                            document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)).style.background = colorChip.gray4;
-                          }
-                        }
-                      }
-                    }
+                  
+                  finalTargets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+                  finalNumbers = finalTargets.map((dom) => { return dom.getAttribute("toggle") === "on" ? 1 : 0 });
+                  
+                  if (instance.updateConfirm) {
+                    instance.contents[x].contents[z].updateValue(finalNumbers, instance.contents[x].contents[z].returnValue(instance.designer), instance.designer).catch((err) => {
+                      console.log(err);
+                    });
                   }
                 }
-                
-                finalTargets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-                finalNumbers = finalTargets.map((dom) => { return dom.getAttribute("toggle") === "on" ? 1 : 0 });
-                
-                instance.contents[x].contents[z].updateValue(finalNumbers, instance.contents[x].contents[z].returnValue(instance.designer), instance.designer).catch((err) => {
-                  console.log(err);
-                });
+              } else {
+                window.alert("CX 팀원과 디자이너만이 수정할 수 있습니다!");
               }
             }
           },
@@ -10093,7 +10123,9 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
                     targets[a].style.background = colorChip.gray1;
                   }
                 }
-                instance.contents[x].contents[z].updateValue(i + 1, instance.contents[x].contents[z].returnValue(instance.designer).__order__[y], instance.designer).catch((err) => { console.log(err); });
+                if (instance.updateConfirm) {
+                  instance.contents[x].contents[z].updateValue(i + 1, instance.contents[x].contents[z].returnValue(instance.designer).__order__[y], instance.designer).catch((err) => { console.log(err); });
+                }
               }
             },
             style: {
@@ -11368,6 +11400,17 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     this.entireMode = entireMode;
     this.normalMode = normalMode;
     this.adminMode = adminMode;
+
+    if (entireMode) {
+      if (getObj.cx === "true") {
+        this.isCxMember = true;
+      } else {
+        this.isCxMember = false;
+      }
+    } else {
+      this.isCxMember = false;
+    }
+    this.updateConfirm = true;
 
     this.nowUploading = false;
     this.targetKeywords = "/photo/designer/representative";

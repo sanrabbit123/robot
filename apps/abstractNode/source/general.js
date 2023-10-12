@@ -9001,3 +9001,25 @@ GeneralJs.getRealBox = function (dom, original = "attribute") {
   }
   return box;
 };
+
+GeneralJs.nonCxBan = async function (booMode = false) {
+  const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
+  try {
+    if (GeneralJs.stacks["homeliaisonMember"] === undefined) {
+      throw new Error("member stacks error : " + JSON.stringify(cookies));
+    }
+    if (!GeneralJs.stacks["homeliaisonMember"].roles.includes("CX")){
+      if (!booMode) {
+        window.alert("CX 팀원 외에는 업데이트를 실행할 수 없습니다!");
+      }
+      throw new Error("member roles error : " + JSON.stringify(cookies));
+    }
+    return true;
+  } catch (e) {
+    if (!booMode) {
+      GeneralJs.ajax("message=update ban : " + e.message + "&channel=#error_log", "/sendSlack", function () {});
+      window.location.href = FRONTHOST;
+    }
+    return false;
+  }
+}

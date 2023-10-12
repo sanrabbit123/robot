@@ -1007,13 +1007,15 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
       let whiteMaker;
       let iframeMaker;
       let linkDictionary;
+      let isCxMember;
 
+      isCxMember = await GeneralJs.nonCxBan(true);
       linkDictionary = {
-        checklist: BACKHOST + "/middle/designerAbout?desid=" + designer.desid + "&entire=true&normal=true",
-        process: BACKHOST + "/middle/designerBoard?desid=" + designer.desid + "&entire=true&normal=true",
-        possible: BACKHOST + "/middle/designerPossible?desid=" + designer.desid + "&entire=true&normal=true",
-        portfolio: BACKHOST + "/designer?mode=general&desid=" + designer.desid + "&dataonly=true&entire=true&normal=true",
-        report: BACKHOST + "/middle/designerReport?desid=" + designer.desid + "&entire=true&normal=true",
+        checklist: BACKHOST + "/middle/designerAbout?desid=" + designer.desid + "&entire=true&normal=true&cx=" + (isCxMember ? "true" : "false"),
+        process: BACKHOST + "/middle/designerBoard?desid=" + designer.desid + "&entire=true&normal=true&cx=" + (isCxMember ? "true" : "false"),
+        possible: BACKHOST + "/middle/designerPossible?desid=" + designer.desid + "&entire=true&normal=true&cx=" + (isCxMember ? "true" : "false"),
+        portfolio: BACKHOST + "/designer?mode=general&desid=" + designer.desid + "&dataonly=true&entire=true&normal=true&cx=" + (isCxMember ? "true" : "false"),
+        report: BACKHOST + "/middle/designerReport?desid=" + designer.desid + "&entire=true&normal=true&cx=" + (isCxMember ? "true" : "false"),
       }
 
       margin = 30;
