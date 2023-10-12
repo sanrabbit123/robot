@@ -441,7 +441,7 @@ DesignerProposalJs.prototype.proposalMapGenerator = function (designer) {
   const desktop = !mobile;
   const today = new Date();
   const { information: { business: { career: { startY, startM, relatedY, relatedM } } }, analytics } = designer;
-  const { construct: { case: constructCase }, styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { curtain, bedding } }, purchase: { setting: { install, storage } }, project: { time: { first }, matrix } } = analytics;
+  const { construct: { case: constructCase }, styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { level: fabricLevel, curtain, bedding } }, purchase: { setting: { install, storage } }, project: { time: { first }, matrix, cad: cadBoo, collage: collageBoo, modeling: modelingBoo } } = analytics;
   const service = [
     "홈퍼니싱",
     "홈스타일링",
@@ -500,12 +500,16 @@ DesignerProposalJs.prototype.proposalMapGenerator = function (designer) {
     standard: null,
     value: `${String(relatedY)}년 ${String(relatedM)}개월`
   });
-  map.set("matrix", {
-    name: "활동 범위",
-    type: "checkbox",
-    standard: service,
-    value: matrixTong
-  });
+
+  if (desktop) {
+    map.set("matrix", {
+      name: "활동 범위",
+      type: "checkbox",
+      standard: service,
+      value: matrixTong
+    });
+  }
+
   map.set("method", {
     name: "제안 방식",
     type: "radio",
@@ -522,7 +526,7 @@ DesignerProposalJs.prototype.proposalMapGenerator = function (designer) {
       "가능",
       "불가능"
     ],
-    value: (builtin ? "가능" : "불가능")
+    value: (builtin !== 0 ? "가능" : "불가능")
   });
   map.set("furniture", {
     name: "디자인 가구 제작",
@@ -531,38 +535,55 @@ DesignerProposalJs.prototype.proposalMapGenerator = function (designer) {
       "가능",
       "불가능"
     ],
-    value: (design ? "가능" : "불가능")
+    value: (design !== 0 ? "가능" : "불가능")
   });
-  map.set("construct", {
-    name: "시공 가능",
-    type: "checkbox",
-    standard: constructMethod,
-    value: constructTong
+  map.set("fabricLevel", {
+    name: "패브릭 제작",
+    type: "radio",
+    standard: [
+      "가능",
+      "불가능"
+    ],
+    value: (fabricLevel !== 0 ? "가능" : "불가능")
   });
+
   map.set("first", {
     name: "1차 제안 시간",
     type: "string",
     standard: null,
     value: String(Math.floor(first / 7)) + "주 이내",
   });
-  map.set("curtain", {
-    name: "커튼 패브릭",
-    type: "checkbox",
+
+  map.set("cadBoo", {
+    name: "CAD 도면",
+    type: "radio",
     standard: [
-      "기성",
-      "제작"
+      "가능",
+      "불가능"
     ],
-    value: curtain.map((i) => { return ((/업체/gi.test(i) || /기성/gi.test(i)) ? "기성" : "제작"); }),
+    value: (cadBoo ? "가능" : "불가능")
   });
-  map.set("bedding", {
-    name: "베딩 패브릭",
-    type: "checkbox",
+
+  map.set("modelingBoo", {
+    name: "3D",
+    type: "radio",
     standard: [
-      "기성",
-      "제작"
+      "가능",
+      "불가능"
     ],
-    value: bedding.map((i) => { return ((/업체/gi.test(i) || /기성/gi.test(i)) ? "기성" : "제작"); }),
+    value: (modelingBoo !== 0 ? "가능" : "불가능")
   });
+
+  map.set("collageBoo", {
+    name: "콜라주",
+    type: "radio",
+    standard: [
+      "가능",
+      "불가능"
+    ],
+    value: (collageBoo ? "가능" : "불가능")
+  });
+
   map.set("styleTendency", {
     name: "스타일 경향성",
     type: "tendency",
@@ -826,7 +847,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
-  initWordingSize = <%% 15.5, 15.5, 15.5, 13.5, 3.5 %%>;
+  initWordingSize = <%% 15.5, 15.5, 14.5, 13.5, 3.3 %%>;
   initWordingWordSpacing = <%% -1, -1, -1, -1, -1 %%>;
   initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
 
@@ -836,10 +857,10 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
   infoBoxMarginTop = <%% 36, 36, 32, 20, 4.8 %%>;
   infoBoxMarginBottom = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), 2 %%>;
 
-  factorSize = <%% 19, 19, 18, 16, 4 %%>;
+  factorSize = <%% 19, 19, 18, 16, 3.4 %%>;
 
   mobileRatio = 75;
-  mobileSecondMarginTop = 3;
+  mobileSecondMarginTop = 2;
 
   if (media[0]) {
     factors = [
@@ -860,10 +881,13 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
   }
 
   initWording0 = "안녕하세요, " + this.client.name + "님! 고객님께" + (desktop ? " " : "\n") + "<b%" + serviceParsing(this.project.service) + " 서비스와 그에 맞는 디자이너%b>를 제안드립니다.";
-  if (media[0] || media[1]) {
-    initWording1 = "선택된 디자이너는 고객님의 가용 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.";
+  if (mobile) {
+    initWording0 = "안녕하세요, " + this.client.name + "님! 고객님께" + (desktop ? " " : "\n") + "<b%" + serviceParsing(this.project.service) + " 서비스%b>를 제안드립니다.";
+  }
+  if (media[0] || media[1] || media[2] || media[3]) {
+    initWording1 = "선택된 디자이너는 고객님의 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.";
   } else {
-    initWording1 = "선택된 디자이너는 고객님의 예산을 현장에 맞게 분배하여 스타일링을 진행합니다.";
+    initWording1 = "선택된 디자이너는 고객님의 예산을 현장에 맞게\n분배하여 스타일링을 진행합니다.";
   }
 
   whiteBlock = createNode({
@@ -894,6 +918,31 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
     }
   });
 
+  if (mobile) {
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        textAlign: "center",
+        justifyContent: "center",
+        alignItems: "center",
+        height: String(4) + ea,
+        marginBottom: String(2) + ea,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: svgMaker.serifAsterisk(colorChip.green),
+          style: {
+            display: "inline-block",
+            width: String(2.6) + ea,
+          }
+        }
+      ]
+    });
+  }
+
   createNode({
     mother: rightBox,
     text: desktop ? initWording0 + "\n" + initWording1 : initWording0,
@@ -904,7 +953,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
       fontWeight: String(400),
       color: colorChip.black,
       wordSpacing: String(initWordingWordSpacing) + "px",
-      lineHeight: String(1.7),
+      lineHeight: String(1.5),
       textAlign: "center",
     },
     bold: {
@@ -925,7 +974,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
         fontWeight: String(400),
         color: colorChip.black,
         wordSpacing: String(initWordingWordSpacing) + "px",
-        lineHeight: String(1.7),
+        lineHeight: String(1.5),
         textAlign: "center",
         marginTop: String(mobileSecondMarginTop) + ea,
       },
@@ -962,11 +1011,49 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
     }
   });
 
-  num = 0;
-  for (let { title, value } of factors) {
+
+  if (!mobile) {
+    num = 0;
+    for (let { title, value } of factors) {
+      createNode({
+        mother: infoBox,
+        text: title + ":" + blank + "<b%" + value + "%b>",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(factorSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(factorSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.green,
+        }
+      });
+  
+      if (num !== factors.length - 1) {
+        createNode({
+          mother: infoBox,
+          text: desktop ? blank + blank + "|" + blank + blank : "",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(factorSize) + ea,
+            fontWeight: String(200),
+            color: colorChip.gray4,
+            height: desktop ? "" : String(1.4) + ea,
+          }
+        });
+      }
+  
+      num++;
+    }
+  } else {
+
     createNode({
       mother: infoBox,
-      text: title + ":" + blank + "<b%" + value + "%b>",
+      text: "예상 기간" + ":" + blank + "<b%" + factors[0].value + " ~ " + factors[1].value + "%b>",
       style: {
         display: "inline-block",
         position: "relative",
@@ -981,23 +1068,8 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
       }
     });
 
-    if (num !== factors.length - 1) {
-      createNode({
-        mother: infoBox,
-        text: desktop ? blank + blank + "|" + blank + blank : "",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(factorSize) + ea,
-          fontWeight: String(200),
-          color: colorChip.gray4,
-          height: desktop ? "" : String(1.4) + ea,
-        }
-      });
-    }
-
-    num++;
   }
+
 
 }
 
@@ -1094,7 +1166,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   descriptionPaddingLeft = <%% 28, 38, 38, 32, 7 %%>;
   descriptionPaddingRight = <%% 20, 20, 20, 20, 5 %%>;
   descriptionMargin = <%% 10, 6, 6, 6, 1 %%>;
-  descriptionSize = <%% 14.5, 14.5, 14.5, 13.5, 3.4 %%>;
+  descriptionSize = <%% 14.5, 14.5, 14.5, 13.5, 3.2 %%>;
 
   descriptionTitleTop = <%% -30, -30, -30, -30, 4 %%>;
   descriptionTitleLeft = <%% 1, 1, 1, 1, this.subBoxMargin.left %%>;
@@ -1102,7 +1174,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
 
   pointRadius = <%% 2, 2, 2, 2, 0.6 %%>;
   pointLeftIndent = <%% 5, 5, 5, 5, 1.2 %%>;
-  pointTop = <%% 9, 9 + (GeneralJs.isMac() ? 0 : -0.5), 9 + (GeneralJs.isMac() ? 0 : -0.5), 8.5 + (GeneralJs.isMac() ? 0 : -1.5), 2.1 %%>;
+  pointTop = <%% 9, 9 + (GeneralJs.isMac() ? 0 : -0.5), 9 + (GeneralJs.isMac() ? 0 : -0.5), 8.5 + (GeneralJs.isMac() ? 0 : -1.5), 1.9 %%>;
 
   indexFont = <%% 19, 19, 19, 19, 3 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
@@ -1448,7 +1520,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
       top: String(descriptionTitleTop) + ea,
       left: String(descriptionTitleLeft) + ea,
       fontSize: String(descriptionTitleSize) + ea,
-      fontWeight: String(600),
+      fontWeight: String(800),
       wordSpacing: String(wordSpacing) + "px",
     };
     for (let i in style) {
@@ -1463,7 +1535,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
       style = {
         position: "relative",
         fontSize: String(descriptionSize) + ea,
-        lineHeight: String(1.6),
+        lineHeight: desktop ? String(1.6) : String(1.5),
         wordSpacing: String(-1) + "px",
         left: String(descriptionPaddingLeft) + ea,
         width: "calc(100% - " + String(descriptionPaddingLeft + descriptionPaddingRight) + ea + ")",
@@ -1518,7 +1590,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
     left: String(desktop ? 0 : this.subBoxMargin.left) + ea,
     top: String(descriptionTitleTop) + ea,
     fontSize: String(descriptionTitleSize) + ea,
-    fontWeight: String(600),
+    fontWeight: String(800),
   };
   for (let i in style) {
     analyticsBoxTitle.style[i] = style[i];
@@ -1552,7 +1624,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
     left: String(desktop ? 0 : this.subBoxMargin.left) + ea,
     top: String(descriptionTitleTop) + ea,
     fontSize: String(descriptionTitleSize) + ea,
-    fontWeight: String(600),
+    fontWeight: String(800),
   };
   for (let i in style) {
     portfolioBoxTitle.style[i] = style[i];
@@ -1644,6 +1716,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   const mobile = media[4];
   const desktop = !mobile;
   const { top, bottom, left } = this.subBoxMargin;
+  const { createNode, withOut, colorChip } = GeneralJs;
   const thisDesigner = this.designers.pick(desid);
   const map = this.proposalMapGenerator(thisDesigner);
   let propertyBox;
@@ -1678,7 +1751,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   leftIndent = <%% 20, 6, 6, 6, 0 %%>;
   width1 = <%% 360, 320, 390, 340, 60 %%>;
   width0 = (!media[2] && !media[3]) ? ((width1 * 2) + leftIndent) : (media[2] ? 715 : 622);
-  height = <%% 26, 24, 19, 16, 4.8 %%>;
+  height = <%% 24, 19, 17, 15, 5.4 %%>;
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
 
   margin = <%% 12, 12, 12, 12, 1 %%>;
@@ -1689,10 +1762,10 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   pointIntendValue = <%% 4, 4, 4, 4, 4 %%>;
 
   checkBoxRadius = <%% 4, 4, 4, 4, 1.05 %%>;
-  checkBoxRadiusTop = <%% (GeneralJs.isMac() ? 6 : 5.5), (GeneralJs.isMac() ? 4.5 : 5), 5, (GeneralJs.isMac() ? 4.5 : 3), 1.2 %%>;
+  checkBoxRadiusTop = <%% (GeneralJs.isMac() ? 6.5 : 5), (GeneralJs.isMac() ? 6 : 5), (GeneralJs.isMac() ? 5.5 : 5), (GeneralJs.isMac() ? 5 : 3), 1.2 %%>;
   checkBoxRadiusIntend = <%% 5, 5, 5, 5, 1 %%>;
 
-  titleSize = <%% 16, 14, 15, 13.5, 3.3 %%>;
+  titleSize = <%% 16, 14, 15, 13.5, 3.5 %%>;
   titleIndent = <%% 4, 3, 4, 4, 0 %%>;
   titleTop = 0;
 
@@ -1706,7 +1779,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   valueDomValueMargin = <%% 10, 10, 10, 60, 0 %%>;
 
   tendencyVisualLeft = <%% 60, 52, 30, 10, 10 %%>;
-  tendencyTop = <%% 33, 33, 33, 33, 6.5 %%>;
+  tendencyTop = <%% 33, 33, 33, 33, 7 %%>;
   tendencyMargin = <%% 3, 3, 3, 3, 0.5 %%>;
 
   heightException = 0;
@@ -1775,24 +1848,24 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
     }
 
     //property title
-    titleDom = GeneralJs.nodes.div.cloneNode(true);
-    titleDom.textContent = map[i].name;
-    style = {
-      position: "absolute",
-      fontSize: String(titleSize) + ea,
-      fontWeight: String(500),
-      wordSpacing: String(wordSpacing) + "px",
-      left: String((pointRadius * 2) + titleIndent) + ea,
-      top: String(desktop ? 0 : 0) + ea,
-    };
-    if (desktop) {
-      style.top = GeneralJs.isMac() ? String(0) + ea : String(2) + ea;
-    }
-
-    for (let j in style) {
-      titleDom.style[j] = style[j];
-    }
-    propertyBox.appendChild(titleDom);
+    createNode({
+      mother: propertyBox,
+      text: desktop ? map[i].name : "<b%>%b> " + map[i].name,
+      style: {
+        position: "absolute",
+        fontSize: String(titleSize) + ea,
+        fontWeight: String(400),
+        wordSpacing: String(wordSpacing) + "px",
+        left: String((pointRadius * 2) + titleIndent) + ea,
+        top: desktop ? (GeneralJs.isMac() ? String(0) + ea : String(2) + ea) : String(desktop ? 0 : 0) + ea,
+        color: colorChip.black,
+      },
+      bold: {
+        fontSize: String(titleSize) + ea,
+        fontWeight: String(200),
+        color: colorChip.green,
+      }
+    })
 
     //value
     if (map[i].type === "string") {
