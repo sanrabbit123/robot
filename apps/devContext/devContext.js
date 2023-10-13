@@ -152,13 +152,7 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-
-
     
-    const crypto = require('crypto');
-    const hashPassword = crypto.createHash('sha512').update("Vndkwp941(").digest('hex');
-
-    console.log(hashPassword);
 
 
     /*
