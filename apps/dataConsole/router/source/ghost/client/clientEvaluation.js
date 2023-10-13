@@ -4838,41 +4838,53 @@ ClientEvaluationJs.prototype.finalSubmit = function () {
         }
 
         if (boo) {
+          instance.mother.certificationBox(instance.client.name, instance.client.phone, async function (back, box) {
+            try {
+              await ajaxJson({ cliid: instance.project.cliid, proid: instance.project.proid, desid: instance.project.desid, map }, CONTENTSHOST + "/evaluationSubmit");
+              await homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "evaluationSubmit",
+                data: {
+                  cliid: instance.project.cliid,
+                  proid: instance.project.proid,
+                  date: dateToString(new Date(), true),
+                },
+              });
+              document.body.removeChild(box);
+              document.body.removeChild(back);  
+              if (raw.exist) {
+                await homeliaisonAnalytics({
+                  page: instance.pageName,
+                  standard: instance.firstPageViewTime,
+                  action: "downloadRawPhotoClient",
+                  data: {
+                    cliid: instance.project.cliid,
+                    proid: instance.project.proid,
+                    date: new Date(),
+                  },
+                });
+                const loading = instance.mother.whiteProgressLoading();
+                instance.mother.greenAlert("다운로드를 진행합니다!").catch((err) => { console.log(err); });
+                await downloadFile(raw.link, null, loading.progress.firstChild);
+                loading.remove();
 
-          await ajaxJson({ cliid: instance.project.cliid, proid: instance.project.proid, desid: instance.project.desid, map }, CONTENTSHOST + "/evaluationSubmit");
-          await homeliaisonAnalytics({
-            page: instance.pageName,
-            standard: instance.firstPageViewTime,
-            action: "evaluationSubmit",
-            data: {
-              cliid: instance.project.cliid,
-              proid: instance.project.proid,
-              date: dateToString(new Date(), true),
-            },
-          });
-          if (raw.exist) {
-            if (mobile) {
-              window.alert("해당 사진 파일은 압축 형태이기 때문에 (zip 파일), 모바일에서 다운로드 할 경우 확인이 어려울 수 있습니다! PC에서 다운로드 해주세요!");
+                setTimeout(() => {
+                  window.alert("평가가 완료되었습니다! 감사합니다 :)");
+                  selfHref(FRONTHOST);
+                }, 3000);
+
+              } else {
+                window.alert("평가가 완료되었습니다! 감사합니다 :)");
+                selfHref(FRONTHOST);
+              }
+
+            } catch (e) {
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              await ajaxJson({ message: "front clientEvaluation.certificationBox : " + e.message }, BACKHOST + "/errorLog");
+              window.location.reload();
             }
-            homeliaisonAnalytics({
-              page: instance.pageName,
-              standard: instance.firstPageViewTime,
-              action: "downloadRawPhotoClient",
-              data: {
-                cliid: instance.project.cliid,
-                proid: instance.project.proid,
-                date: new Date(),
-              },
-            }).catch((err) => {
-              console.log(err);
-            });
-            const loading = instance.mother.whiteProgressLoading();
-            instance.mother.greenAlert("다운로드를 진행합니다!").catch((err) => { console.log(err); });
-            await downloadFile(raw.link, null, loading.progress.firstChild);
-            loading.remove();
-          }
-          window.alert("평가 제출이 완료되었습니다! 감사합니다 :)");
-          selfHref(FRONTHOST);
+          });
         }
 
       }
@@ -4882,246 +4894,6 @@ ClientEvaluationJs.prototype.finalSubmit = function () {
       window.location.reload();
     }
   }
-}
-
-ClientEvaluationJs.prototype.insertPannelBox = function () {
-  const instance = this;
-  const { ea, baseTong, media } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone } = GeneralJs;
-  let whiteBlock;
-  let style;
-  let blockHeight, blockMarginBottom;
-  let designerButtonTong;
-  let designerButtonBar;
-  let designerButtonBarHead;
-  let designerButton;
-  let designerButtonText;
-  let buttonHeight, buttonWidth;
-  let buttonMargin;
-  let buttonTextTop, buttonTextSize;
-  let headWidth, headVisual;
-  let informationArea;
-  let wordSpacing;
-  let finalBottom;
-  let grayTong, grayTextScroll, grayTextTong;
-  let grayHeight, grayTop, grayTextTop, grayTextLeft, grayTextSize;
-  let buttonOff, buttonOn;
-  let buttonTongHeight, grayButtonHeight;
-  let margin, paddingTop;
-
-  margin = <%% 52, 52, 44, 36, 4.7 %%>;
-  paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
-
-  blockHeight = <%% 820, 820, 820, 820, 820 %%>;
-  blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
-
-  buttonHeight = <%% 47, 48, 48, 40, 8.4 %%>;
-  buttonWidth = <%% 156, 156, 156, 126, 28 %%>;
-  buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
-
-  buttonTextTop = <%% 8, 8, 8, 8, (isIphone() ? 1.1 : 1.3) %%>;
-  buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
-
-  if (desktop) {
-    buttonTextTop = buttonTextTop + (isMac() ? 0 : 1);
-  }
-
-  headWidth = <%% 10, 10, 10, 10, 2 %%>;
-  headVisual = <%% 11, 11, 11, 11, 11 %%>;
-
-  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
-
-  finalBottom = <%% paddingTop + 6, paddingTop + 6, paddingTop + 6, paddingTop + 6, 8 %%>;
-
-  grayHeight = <%% 180, 180, 180, 180, 42 %%>;
-  grayTop = <%% 5, 5, 5, 5, 0 %%>;
-  grayTextTop = <%% 22, 22, 20, 20, 3 %%>;
-  grayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
-  grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
-
-  buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
-  grayButtonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
-
-  buttonOn = {};
-
-  whiteBlock = createNode({
-    mother: this.baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 3) + "px",
-      paddingTop: String(paddingTop) + ea,
-      paddingLeft: String(margin) + ea,
-      paddingRight: String(margin) + ea,
-      width: withOut(margin * 2, ea),
-      height: String(blockHeight) + ea,
-      background: colorChip.white,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-      marginBottom: String(blockMarginBottom) + ea,
-    }
-  });
-
-  [ grayTong, grayTextScroll, grayTextTong ] = createNodes([
-    {
-      mother: whiteBlock,
-      style: {
-        position: "relative",
-        left: String(0) + ea,
-        width: withOut(0 * 2, ea),
-        marginTop: String(grayTop) + ea,
-        marginBottom: String(desktop ? 15 : 2.5) + ea,
-        height: String(grayHeight) + ea,
-        background: colorChip.gray1,
-        borderRadius: String(3) + "px",
-      }
-    },
-    {
-      mother: -1,
-      style: {
-        position: "absolute",
-        top: String(grayTextTop) + ea,
-        left: String(grayTextLeft) + ea,
-        width: withOut(grayTextLeft * 2, ea),
-        height: withOut(grayTextTop * 2, ea),
-        overflow: "scroll",
-      }
-    },
-    {
-      mother: -1,
-      style: {
-        position: "absolute",
-        top: String(0) + ea,
-        left: String(0) + ea,
-        width: String(100) + '%',
-        height: "auto",
-        fontSize: String(grayTextSize) + ea,
-        fontWeight: String(300),
-        lineHeight: String(1.6),
-      }
-    },
-  ]);
-
-  [ buttonTong ] = createNodes([
-    {
-      mother: whiteBlock,
-      attribute: [
-        { toggle: "on" }
-      ],
-      events: [
-        {
-          type: "click",
-          event: function (e) {
-            if (buttonOn.style !== undefined) {
-              if (this.getAttribute("toggle") === "on") {
-                buttonOn.style.opacity = String(0);
-                this.setAttribute("toggle", "off");
-              } else {
-                buttonOn.style.opacity = String(1);
-                this.setAttribute("toggle", "on");
-              }
-            }
-          }
-        }
-      ],
-      style: {
-        position: "relative",
-        left: String(0) + ea,
-        width: withOut(0 * 2, ea),
-        height: String(buttonTongHeight) + ea,
-        cursor: "pointer",
-      }
-    },
-  ]);
-
-  ajaxJson({}, BACKHOST + "/designerProposal_policy").then(function (res) {
-    const { policy, button } = res;
-    let bTags;
-
-    grayTextTong.insertAdjacentHTML("beforeend", policy);
-    bTags = grayTextTong.querySelectorAll("b");
-    for (let b of bTags) {
-      b.style.color = colorChip.black;
-      b.style.fontWeight = String(600);
-    }
-
-    [ buttonOff, buttonOn ] = createNodes([
-      {
-        mother: buttonTong,
-        mode: "svg",
-        source: button.off,
-        style: {
-          position: "absolute",
-          height: String(grayButtonHeight) + ea,
-          right: String(0) + ea,
-          top: String(0) + ea,
-        }
-      },
-      {
-        mother: buttonTong,
-        mode: "svg",
-        source: button.on,
-        style: {
-          position: "absolute",
-          height: String(grayButtonHeight) + ea,
-          right: String(0) + ea,
-          top: String(0) + ea,
-          background: colorChip.white,
-        }
-      },
-    ]);
-
-  }).catch(function (err) {
-    throw new Error(err);
-  });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      position: "relative",
-      height: String(buttonHeight) + ea,
-      textAlign: "center",
-      marginTop: desktop ? "" : String(3) + ea,
-    },
-    children: [
-      {
-        class: [ "submitButtonClassName" ],
-        events: [
-          {
-            type: "click",
-            event: instance.finalSubmit(),
-          }
-        ],
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(buttonWidth) + ea,
-          height: String(100) + '%',
-          background: colorChip.gradientGreen,
-          borderRadius: String(5) + "px",
-          cursor: "pointer",
-        },
-        children: [
-          {
-            text: "상담 신청하기",
-            style: {
-              position: "absolute",
-              top: String(buttonTextTop) + ea,
-              fontSize: String(buttonTextSize) + ea,
-              fontWeight: String(400),
-              color: colorChip.white,
-              width: String(100) + '%',
-              textAlign: "center",
-            }
-          }
-        ]
-      }
-    ]
-  });
-
-  whiteBlock.style.paddingBottom = String(finalBottom) + ea;
-  whiteBlock.style.height = "";
-
 }
 
 ClientEvaluationJs.prototype.preselectionEvaluation = function (data) {
@@ -5265,6 +5037,7 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     let proid, projects, project;
     let evaluationRows;
+    let cliid, clients, client;
 
     if (getObj.proid === undefined) {
       window.alert("잘못된 접근입니다!");
@@ -5286,6 +5059,16 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
       throw new Error("page ban");
     }
     this.project = project;
+
+    cliid = project.cliid;
+    clients = await ajaxJson({ whereQuery: { cliid } }, SECONDHOST + "/getClients", { equal: true });
+    if (clients.length === 0) {
+      window.alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+      throw new Error("page ban");
+    }
+    [ client ] = clients;
+    this.client = client;
 
     evaluationRows = await ajaxJson({ proid: instance.project.proid }, CONTENTSHOST + "/evaluationList", { equal: true });
     this.evaluationRows = evaluationRows;

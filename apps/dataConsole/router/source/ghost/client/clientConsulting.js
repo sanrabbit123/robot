@@ -3086,6 +3086,8 @@ ClientConsultingJs.prototype.finalSubmit = function () {
               });
             } catch (e) {
               await ajaxJson({ message: "front clientConsulting.certificationBox : " + e.message }, BACKHOST + "/errorLog");
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
             }
           });
         }

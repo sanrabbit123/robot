@@ -32,7 +32,7 @@ HumanPacket.prototype.sendSms = async function (obj) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { autoHypenPhone, requestSystem, errorLog, sleep } = this.mother;
+  const { autoHypenPhone, requestSystem, errorLog, sleep, emergencyAlarm } = this.mother;
   const url = "https://centrex.uplus.co.kr/RestApi/smssend";
   const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
   try {
@@ -53,12 +53,18 @@ HumanPacket.prototype.sendSms = async function (obj) {
       safeNum++;
     } while (res["SVC_RT"] !== "0000" && safeNum < 5);
 
+    if (res["SVC_RT"] !== "0000") {
+      throw new Error("sms send fail : " + res["DATAS"]);
+    }
+
     errorLog("sms remain num : " + res["DATAS"]["RESTCOUNT"]).catch((err) => { console.log(err); });
     finalResult = (res["SVC_RT"] === "0000");
 
     return finalResult;
   } catch (e) {
+    emergencyAlarm("sms error : " + e.message).catch((err) => { console.log(err); });
     console.log(e);
+    return false;
   }
 }
 
