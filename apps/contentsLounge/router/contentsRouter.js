@@ -970,7 +970,10 @@ ContentsRouter.prototype.rou_post_getAllContents = function () {
         contentsArr = (await back.getContentsArrByQuery({}, { selfMongo })).toNormal();
         designers = (await back.getDesignersByQuery({}, { selfMongo })).toNormal();
         foreContents = await back.mongoRead(collection, {}, { selfMongo: selfLocalMongo });
-  
+        foreContents.sort((a, b) => {
+          return Number(b.replace(/[^0-9]/gi, '')) - Number(a.replace(/[^0-9]/gi, ''));
+        })
+
         proidArr = contentsArr.filter((c) => { return c.proid !== "" }).map((obj) => { return obj.proid });
         proidArr = proidArr.concat(foreContents.map((o) => { return o.proid }));
         proidArr = [ ...new Set(proidArr) ];

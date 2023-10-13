@@ -9,164 +9,591 @@ const ContentsJs = function () {
   this.ea = "px";
 }
 
-ContentsJs.prototype.baseMaker = function () {
+ContentsJs.prototype.baseMaker = async function () {
   const instance = this;
   const { ea, totalContents, belowHeight } = this;
   const { contentsArr } = this;
   const { createNode, withOut, colorChip } = GeneralJs;
   const photoChar = 't';
-  let totalMother;
-  let scrollTong;
-  let tongPaddingLeft;
+  try {
+    let totalMother;
+    let scrollTong;
+    let tongPaddingLeft;
+    let areaInnerPadding;
+    let contentsTitle;
+    let contentsBox;
+    let startTop;
+    let titleBoxHeight, contentsBoxHeight;
+    let titleSize;
+    let belowArea;
+    let controlPannelWidth;
+    let belowAreaBetween;
+    let belowAreaBetweenGaro;
+    let belowAreaHeight;
+    let belowAreaLeft, belowAreaRight;
+    let belowContentsBox, belowScrollTong;
+    let belowMiddle;
+    let belowMiddleContentsBox;
+    let belowMiddleScrollTong;
+    let belowRightContentsBox;
+    let belowRightScrollTong;
 
-  tongPaddingLeft = 30;
+    areaInnerPadding = 16;
+    tongPaddingLeft = 30;
+    startTop = 16;
 
-  totalMother = createNode({
-    mother: totalContents,
-    class: [ "totalMother" ],
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      height: withOut(belowHeight, ea),
-    }
-  });
+    titleBoxHeight = 36;
+    contentsBoxHeight = ((window.innerHeight - belowHeight) / 2) - startTop - titleBoxHeight;
+    titleSize = 15;
 
-  this.totalMother = totalMother;
+    belowAreaBetween = 16;
+    belowAreaBetweenGaro = 10;
 
-  scrollTong = createNode({
-    mother: totalMother,
-    style: {
-      width: withOut(tongPaddingLeft * 2, ea),
-      height: "auto",
-      position: "relative",
-      padding: String(tongPaddingLeft) + ea,
-    }
-  });
+    controlPannelWidth = 300;
 
-  this.scrollTong = scrollTong;
-  this.spreadContents();
+    belowAreaHeight = ((window.innerHeight - belowHeight) - (startTop + titleBoxHeight + contentsBoxHeight + belowAreaBetweenGaro)) - tongPaddingLeft;
+  
+    this.belowAreaBetween = belowAreaBetween;
+    this.controlPannelWidth = controlPannelWidth;
 
+    totalMother = createNode({
+      mother: totalContents,
+      class: [ "totalMother" ],
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+        paddingTop: String(startTop) + ea,
+        height: withOut(belowHeight + startTop, ea),
+      }
+    });
+  
+    this.totalMother = totalMother;
+  
+    // main
+    contentsTitle = createNode({
+      mother: totalMother,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(tongPaddingLeft * 2, ea),
+        height: String(titleBoxHeight) + ea,
+        marginLeft: String(tongPaddingLeft) + ea,
+        justifyContent: "start",
+        alignItems: "center",
+      },
+      child: {
+        text: "<b%>&nbsp;&nbsp;%b>발행된 컨텐츠",
+        style: {
+          display: "block",
+          position: "relative",  
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.green,
+        }
+      }
+    });
+    contentsBox = createNode({
+      mother: totalMother,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(tongPaddingLeft * 2, ea),
+        height: String(contentsBoxHeight) + ea,
+        marginLeft: String(tongPaddingLeft) + ea,
+        border: "1px solid " + colorChip.gray3,
+        overflow: "scroll",
+        borderRadius: String(5) + "px",
+        marginBottom: String(belowAreaBetweenGaro) + ea,
+      }
+    });
+    scrollTong = createNode({
+      mother: contentsBox,
+      style: {
+        width: withOut(areaInnerPadding * 2, ea),
+        marginLeft: String(areaInnerPadding) + ea,
+        paddingTop: String(areaInnerPadding) + ea,
+        paddingBottom: String(areaInnerPadding * 6) + ea,
+        height: "auto",
+        position: "relative",
+      }
+    });
+    belowArea = createNode({
+      mother: totalMother,
+      style: {
+        display: "flex",
+        flexDirection: "row",
+        width: withOut(tongPaddingLeft * 2, ea),
+        marginLeft: String(tongPaddingLeft) + ea,
+        height: String(belowAreaHeight) + ea,
+      }
+    });
+
+    // forecast
+    belowAreaLeft = createNode({
+      mother: belowArea,
+      style: {
+        display: "inline-flex",
+        flexDirection: "column",
+        position: "relative",
+        width: withOut((controlPannelWidth + belowAreaBetween) * 2, ea),
+        height: withOut(0, ea),
+        marginRight: String(belowAreaBetween) + ea,
+      }
+    });
+    createNode({
+      mother: belowAreaLeft,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(titleBoxHeight) + ea,
+        justifyContent: "start",
+        alignItems: "center",
+      },
+      child: {
+        text: "<b%>&nbsp;&nbsp;%b>발행 예정 컨텐츠",
+        style: {
+          display: "block",
+          position: "relative",  
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.green,
+        }
+      }
+    });
+    belowContentsBox = createNode({
+      mother: belowAreaLeft,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: withOut(titleBoxHeight, ea),
+        border: "1px solid " + colorChip.gray3,
+        overflow: "scroll",
+        borderRadius: String(5) + "px",
+      }
+    });
+    belowScrollTong = createNode({
+      mother: belowContentsBox,
+      style: {
+        width: withOut(areaInnerPadding * 2, ea),
+        marginLeft: String(areaInnerPadding) + ea,
+        paddingTop: String(areaInnerPadding) + ea,
+        paddingBottom: String(areaInnerPadding * 6) + ea,
+        height: "auto",
+        position: "relative",
+      }
+    });
+
+    // etc
+    belowMiddle = createNode({
+      mother: belowArea,
+      style: {
+        display: "inline-flex",
+        flexDirection: "column",
+        position: "relative",
+        width: String(controlPannelWidth) + ea,
+        height: withOut(0, ea),
+        marginRight: String(belowAreaBetween) + ea,
+      }
+    });
+    createNode({
+      mother: belowMiddle,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(titleBoxHeight) + ea,
+        justifyContent: "start",
+        alignItems: "center",
+      },
+      child: {
+        text: "<b%>&nbsp;&nbsp;%b>기타 사진",
+        style: {
+          display: "block",
+          position: "relative",  
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.green,
+        }
+      }
+    });
+    belowMiddleContentsBox = createNode({
+      mother: belowMiddle,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: withOut(titleBoxHeight, ea),
+        border: "1px solid " + colorChip.gray3,
+        overflow: "scroll",
+        borderRadius: String(5) + "px",
+      }
+    });
+    belowMiddleScrollTong = createNode({
+      mother: belowMiddleContentsBox,
+      style: {
+        width: withOut(areaInnerPadding * 2, ea),
+        marginLeft: String(areaInnerPadding) + ea,
+        paddingTop: String(areaInnerPadding) + ea,
+        paddingBottom: String(areaInnerPadding * 6) + ea,
+        height: "auto",
+        position: "relative",
+      }
+    });
+
+    // designers
+    belowAreaRight = createNode({
+      mother: belowArea,
+      style: {
+        display: "inline-flex",
+        flexDirection: "column",
+        position: "relative",
+        width: String(controlPannelWidth) + ea,
+        height: withOut(0, ea),
+      }
+    });
+    createNode({
+      mother: belowAreaRight,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(titleBoxHeight) + ea,
+        justifyContent: "start",
+        alignItems: "center",
+      },
+      child: {
+        text: "<b%>&nbsp;&nbsp;%b>디자이너",
+        style: {
+          display: "block",
+          position: "relative",  
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
+        },
+        bold: {
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.green,
+        }
+      }
+    });
+    belowRightContentsBox = createNode({
+      mother: belowAreaRight,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: withOut(titleBoxHeight, ea),
+        border: "1px solid " + colorChip.gray3,
+        overflow: "scroll",
+        borderRadius: String(5) + "px",
+      }
+    });
+    belowRightScrollTong = createNode({
+      mother: belowRightContentsBox,
+      style: {
+        width: withOut(areaInnerPadding * 2, ea),
+        marginLeft: String(areaInnerPadding) + ea,
+        paddingTop: String(areaInnerPadding) + ea,
+        paddingBottom: String(areaInnerPadding * 6) + ea,
+        height: "auto",
+        position: "relative",
+      }
+    });
+
+    this.scrollTong = scrollTong;
+    this.belowScrollTong = belowScrollTong;
+    this.belowMiddleScrollTong = belowMiddleScrollTong;
+    this.belowRightScrollTong = belowRightScrollTong;
+
+    await this.spreadContents();
+    await this.spreadForeContents();
+    await this.spreadEtcContents();
+    await this.spreadDesigners();
+    
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-ContentsJs.prototype.spreadContents = function (search = null) {
+ContentsJs.prototype.spreadContents = async function (search = null) {
   const instance = this;
   const { ea, totalContents, scrollTong } = this;
   const { contentsArr, designers, clients } = this;
-  const { createNode, withOut, colorChip, cleanChildren } = GeneralJs;
+  const { createNode, withOut, colorChip, cleanChildren, isMac } = GeneralJs;
   const photoChar = "mobile/mot";
-  let boxMargin;
-  let boxNumber, boxWidth;
-  let num;
-  let pidFontSize, pidFontWeight, pidTextTop;
-  let pidPaddingLeft, pidPaddingTop, pidPaddingBottom;
-  let tongPaddingLeft;
-  let contentsTong;
-  let designer, client;
-  let boo;
-
-  tongPaddingLeft = 30;
-
-  boxMargin = 4;
-  boxWidth = 160;
-  pidFontSize = 13;
-  pidFontWeight = 400;
-  pidTextTop = -4;
-  pidPaddingLeft = 12;
-  pidPaddingTop = 8;
-  pidPaddingBottom = 4;
-
-  boxNumber = Math.floor((window.innerWidth - (tongPaddingLeft * 2) + boxMargin) / (boxMargin + boxWidth));
-  boxWidth = (window.innerWidth - (tongPaddingLeft * 2) + boxMargin - (boxNumber * boxMargin)) / boxNumber;
-
-  cleanChildren(scrollTong);
-
-  if (typeof search === "string") {
-    contentsTong = [];
-    for (let contents of contentsArr) {
-      designer = designers.search("desid", contents.desid);
-      client = clients.search("cliid", contents.cliid);
-
-      boo = false;
-      if (contents.contents.portfolio.detailInfo.tag.some((str) => { return (new RegExp(search, "gi")).test(str) })) {
-        boo = true;
-      }
-      if ((new RegExp(search, "gi")).test(designer.designer)) {
-        boo = true;
-      }
-      if (client !== null) {
-        if ((new RegExp(search, "gi")).test(client.name)) {
+  try {
+    let boxMargin;
+    let boxNumber, boxWidth;
+    let num;
+    let pidFontSize, pidFontWeight, pidTextTop;
+    let pidPaddingLeft, pidPaddingTop, pidPaddingBottom;
+    let tongPaddingLeft;
+    let contentsTong;
+    let designer, client;
+    let boo;
+    let areaInnerPadding;
+    let thisClient, thisDesigner;
+  
+    areaInnerPadding = 16;
+    tongPaddingLeft = 30;
+  
+    boxMargin = 4;
+    boxWidth = 160;
+    pidFontSize = 12;
+    pidFontWeight = 800;
+    pidTextTop = -3;
+    pidPaddingLeft = 12;
+    pidPaddingTop = 8;
+    pidPaddingBottom = 4;
+  
+    boxNumber = Math.floor((window.innerWidth - ((tongPaddingLeft * 2) + (areaInnerPadding * 2)) + boxMargin) / (boxMargin + boxWidth));
+    boxWidth = (window.innerWidth - ((tongPaddingLeft * 2) + (areaInnerPadding * 2)) + boxMargin - (boxNumber * boxMargin)) / boxNumber;
+  
+    cleanChildren(scrollTong);
+  
+    if (typeof search === "string") {
+      contentsTong = [];
+      for (let contents of contentsArr) {
+        designer = designers.search("desid", contents.desid);
+        client = clients.search("cliid", contents.cliid);
+  
+        boo = false;
+        if (contents.contents.portfolio.detailInfo.tag.some((str) => { return (new RegExp(search, "gi")).test(str) })) {
           boo = true;
         }
-      }
-
-      if (boo) {
-        contentsTong.push(contents);
-      }
-    }
-
-  } else {
-    contentsTong = contentsArr.toNormal();
-  }
-
-  num = 0;
-  this.conidTong = [];
-  this.contentsTong = contentsTong;
-  for (let contents of contentsTong) {
-    createNode({
-      mother: scrollTong,
-      attribute: {
-        conid: contents.conid,
-        proid: contents.proid,
-        desid: contents.desid,
-        cliid: contents.cliid,
-      },
-      event: {
-        click: this.whitePopupEvent(contents.conid),
-      },
-      style: {
-        display: "inline-block",
-        width: String(boxWidth) + ea,
-        background: colorChip.gray1,
-        marginRight: String(num % boxNumber === boxNumber - 1 ? 0 : boxMargin) + ea,
-        marginBottom: String(boxMargin) + ea,
-        cursor: "pointer",
-        borderRadius: String(5) + "px",
-        verticalAlign: "top",
-        overflow: "hidden",
-      },
-      children: [
-        {
-          text: contents.contents.portfolio.pid,
-          style: {
-            position: "relative",
-            fontFamily: "graphik",
-            fontSize: String(pidFontSize) + ea,
-            fontWeight: String(pidFontWeight),
-            color: colorChip.black,
-            top: String(pidTextTop) + ea,
-            transition: "all 0.5s ease",
-            paddingLeft: String(pidPaddingLeft) + ea,
-            paddingTop: String(pidPaddingTop) + ea,
-            paddingBottom: String(pidPaddingBottom) + ea
-          }
-        },
-        {
-          mode: "img",
-          attribute: {
-            src: `${S3HOST}/corePortfolio/listImage/${contents.contents.portfolio.pid}/${photoChar + String(contents.contents.portfolio.detailInfo.photodae[1]) + contents.contents.portfolio.pid + ".jpg"}`,
-          },
-          style: {
-            position: "relative",
-            width: String(100) + '%',
+        if ((new RegExp(search, "gi")).test(designer.designer)) {
+          boo = true;
+        }
+        if (client !== null) {
+          if ((new RegExp(search, "gi")).test(client.name)) {
+            boo = true;
           }
         }
-      ]
-    });
-    num++;
-    this.conidTong.push(contents.conid);
-  }
+  
+        if (boo) {
+          contentsTong.push(contents);
+        }
+      }
+  
+    } else {
+      contentsTong = contentsArr.toNormal();
+    }
+  
+    num = 0;
+    this.conidTong = [];
+    this.contentsTong = contentsTong;
+    for (let contents of contentsTong) {
 
+      thisClient = clients.search("cliid", contents.cliid);
+      thisDesigner = designers.search("desid", contents.desid);
+
+      createNode({
+        mother: scrollTong,
+        attribute: {
+          conid: contents.conid,
+          proid: contents.proid,
+          desid: contents.desid,
+          cliid: contents.cliid,
+        },
+        event: {
+          click: this.whitePopupEvent(contents.conid),
+        },
+        style: {
+          display: "inline-block",
+          width: String(boxWidth) + ea,
+          background: colorChip.gray1,
+          marginRight: String(num % boxNumber === boxNumber - 1 ? 0 : boxMargin) + ea,
+          marginBottom: String(boxMargin) + ea,
+          cursor: "pointer",
+          borderRadius: String(5) + "px",
+          verticalAlign: "top",
+          overflow: "hidden",
+        },
+        children: [
+          {
+            text: "<b%" + contents.contents.portfolio.pid + " :%b> " + (thisClient === null ? "개인 <u%/%u> " : thisClient.name + " C <u%/%u> ") + thisDesigner.designer + " D",
+            style: {
+              position: "relative",
+              fontSize: String(pidFontSize) + ea,
+              fontWeight: String(pidFontWeight),
+              color: colorChip.black,
+              top: String(pidTextTop) + ea,
+              transition: "all 0.5s ease",
+              paddingLeft: String(pidPaddingLeft) + ea,
+              paddingTop: String(pidPaddingTop) + ea,
+              paddingBottom: String(pidPaddingBottom) + ea
+            },
+            bold: {
+              fontSize: String(pidFontSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.green,
+            },
+            under: {
+              fontSize: String(pidFontSize) + ea,
+              fontWeight: String(200),
+              color: colorChip.deactive,
+            }
+          },
+          {
+            mode: "img",
+            attribute: {
+              src: `${S3HOST}/corePortfolio/listImage/${contents.contents.portfolio.pid}/${photoChar + String(contents.contents.portfolio.detailInfo.photodae[1]) + contents.contents.portfolio.pid + ".jpg"}`,
+            },
+            style: {
+              position: "relative",
+              width: String(100) + '%',
+            }
+          }
+        ]
+      });
+      num++;
+      this.conidTong.push(contents.conid);
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ContentsJs.prototype.spreadForeContents = async function (search = null) {
+  const instance = this;
+  const { ea, totalContents, belowScrollTong } = this;
+  const { foreContents, designers, clients, projects, belowAreaBetween, controlPannelWidth } = this;
+  const { createNode, withOut, colorChip, cleanChildren } = GeneralJs;
+  try {
+    let boxMargin;
+    let boxNumber, boxWidth;
+    let num;
+    let pidFontSize, pidFontWeight, pidTextTop;
+    let pidPaddingLeft, pidPaddingTop, pidPaddingBottom;
+    let tongPaddingLeft;
+    let contentsTong;
+    let designer, client;
+    let boo;
+    let areaInnerPadding;
+    let thisClient, thisProject, thisDesigner;
+
+    areaInnerPadding = 16;
+    tongPaddingLeft = 30;
+  
+    boxMargin = 4;
+    boxWidth = 160;
+    pidFontSize = 12;
+    pidFontWeight = 800;
+    pidTextTop = -3;
+    pidPaddingLeft = 12;
+    pidPaddingTop = 8;
+    pidPaddingBottom = 4;
+
+    boxNumber = Math.floor((window.innerWidth - ((tongPaddingLeft * 2) + (areaInnerPadding * 2)) - ((controlPannelWidth + belowAreaBetween) * 2) + boxMargin) / (boxMargin + boxWidth));
+    boxWidth = (window.innerWidth - ((tongPaddingLeft * 2) + (areaInnerPadding * 2)) - ((controlPannelWidth + belowAreaBetween) * 2) + boxMargin - (boxNumber * boxMargin)) / boxNumber;
+  
+    cleanChildren(belowScrollTong);
+  
+    if (typeof search === "string") {
+
+      // dev
+
+    } else {
+      contentsTong = foreContents.toNormal();
+    }
+  
+    num = 0;
+    this.conidTong = [];
+    this.contentsTong = contentsTong;
+    for (let contents of contentsTong) {
+
+      thisProject = projects.search("proid", contents.proid);
+      thisClient = clients.search("cliid", thisProject.cliid);
+      thisDesigner = designers.search("desid", contents.desid);
+
+      createNode({
+        mother: belowScrollTong,
+        attribute: {
+          proid: contents.proid,
+          desid: contents.desid,
+        },
+        style: {
+          display: "inline-block",
+          width: String(boxWidth) + ea,
+          background: colorChip.gray1,
+          marginRight: String(num % boxNumber === boxNumber - 1 ? 0 : boxMargin) + ea,
+          marginBottom: String(boxMargin) + ea,
+          cursor: "pointer",
+          borderRadius: String(5) + "px",
+          verticalAlign: "top",
+          overflow: "hidden",
+        },
+        children: [
+          {
+            text: "<b%" + contents.pid + " :%b> " + (thisClient === null ? "개인 <u%/%u> " : thisClient.name + " C <u%/%u> ") + thisDesigner.designer + " D",
+            style: {
+              position: "relative",
+              fontSize: String(pidFontSize) + ea,
+              fontWeight: String(pidFontWeight),
+              color: colorChip.black,
+              top: String(pidTextTop) + ea,
+              transition: "all 0.5s ease",
+              paddingLeft: String(pidPaddingLeft) + ea,
+              paddingTop: String(pidPaddingTop) + ea,
+              paddingBottom: String(pidPaddingBottom) + ea
+            },
+            bold: {
+              fontSize: String(pidFontSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.green,
+            },
+            under: {
+              fontSize: String(pidFontSize) + ea,
+              fontWeight: String(200),
+              color: colorChip.deactive,
+            }
+          },
+          {
+            mode: "img",
+            attribute: {
+              src: S3HOST + contents.forecast.filter((o) => { return o.gs === 'g' })[0].file,
+            },
+            style: {
+              position: "relative",
+              width: String(100) + '%',
+            }
+          }
+        ]
+      });
+      num++;
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ContentsJs.prototype.spreadEtcContents = async function (search = null) {
+  
+}
+
+ContentsJs.prototype.spreadDesigners = async function () {
+  
 }
 
 ContentsJs.prototype.whitePopupEvent = function (conid) {
@@ -493,7 +920,7 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
             instance.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus", { equal: true });
 
             fireEvent(cancelBack, "click");
-            instance.spreadContents(null);
+            await instance.spreadContents(null);
 
           } catch (e) {
             console.log(e);
@@ -997,6 +1424,7 @@ ContentsJs.prototype.launching = async function () {
         for (let i of this) {
           if (i[target] === value) {
             obj = i;
+            break;
           }
         }
         return obj;
@@ -1021,22 +1449,31 @@ ContentsJs.prototype.launching = async function () {
     this.designers = new SearchArray(allContents.designers);
     this.whitePopupClassName = "whitePopupClassName";
 
+    this.belowAreaBetween = 0;
+    this.controlPannelWidth = 0;
+    this.scrollTong = null;
+    this.belowScrollTong = null;
+    this.belowMiddleScrollTong = null;
+    this.belowRightScrollTong = null;
+
     loading.parentElement.removeChild(loading);
 
-    this.baseMaker();
+    await this.baseMaker();
     
-    console.log(this.member);
-
     window.addEventListener("resize", (e) => {
       window.location.reload();
     });
-    this.searchInput.addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        if (this.value.trim() === '') {
-          instance.spreadContents();
-        } else {
-          instance.spreadContents(this.value.trim());
+    this.searchInput.addEventListener("keypress", async function (e) {
+      try {
+        if (e.key === "Enter") {
+          if (this.value.trim() === '') {
+            await instance.spreadContents();
+          } else {
+            await instance.spreadContents(this.value.trim());
+          }
         }
+      } catch (e) {
+        console.log(e);
       }
     });
     window.addEventListener("keydown", function (e) {
