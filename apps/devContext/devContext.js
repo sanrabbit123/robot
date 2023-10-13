@@ -6880,9 +6880,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "공세미",
-    //     link: "https://drive.google.com/drive/folders/1nRR9zY6lHB7Lrn27CHIzC7lCHKenRpK2",
+    //     client: "고성숙",
+    //     designer: "박미연",
+    //     link: "https://drive.google.com/drive/folders/1mlsfudodWjNzIsdNA4098N8TGi6BsclK",
     //     pay: true
     //   },
     // ]);
