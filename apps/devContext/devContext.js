@@ -6880,9 +6880,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "조성은",
-    //     designer: "김지혜",
-    //     link: "https://drive.google.com/drive/folders/15Eupjk-A7xPec9m-Yx21_-YWbfCGlBxL",
+    //     client: null,
+    //     designer: "전진화",
+    //     link: "https://drive.google.com/drive/folders/1oL9VQr5O3-NsO7MI682lZhFxyYq9rmU5",
     //     pay: true
     //   },
     // ]);
@@ -6947,21 +6947,21 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2310_aa02s" ]);
+    // await work.newDesignerToFront([ "d2105_aa03s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2310_aa01s", [
-    //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 13 },
-    //   { porlid: "ghost", index: 5 },
-    //   { porlid: "ghost", index: 10 },
-    //   { porlid: "ghost", index: 9 },
-    //   { porlid: "ghost", index: 12 },
+    // await this.setProposalSettingForDesigner("d2105_aa03s", [
+    //   { porlid: "a109", index: 5 },
+    //   { porlid: "a109", index: 6 },
+    //   { porlid: "a109", index: 15 },
+    //   { porlid: "a109", index: 10 },
+    //   { porlid: "a109", index: 1 },
+    //   { porlid: "a109", index: 2 },
     // ], [
-    //   "모던하고 깔끔한 공간 연출에 늫하며, 편안한 분위기를 만들어 드립니다.",
-    //   "소통 능력이 탁월하고, 의사 소통이 빠르고 원활해 안정적인 운영이 가능합니다.",
-    //   "공간의 포인트를 잘 살려내거나 만드는 것에 뛰어나 공간을 생기 있게 만들어 냅니다.",
+    //   "고객님의 취향을 최근 트렌드에 맞춘 형태로 해석하여 스타일링을 진행합니다.",
+    //   "전형적인 스타일을 넘어, 화려한 호텔 분위기 연출에 능합니다.",
+    //   "심플 모던 스타일을 좋아하지만, 고객님이 선호하는 스타일에 맞추어 제안드립니다.",
     // ]);
 
 
