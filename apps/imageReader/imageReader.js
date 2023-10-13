@@ -462,11 +462,11 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
       width = targetInfo.geometry.width;
       height = targetInfo.geometry.height;
 
-      sampleWidth0 = width * (size[typeKeywords][1] / width);
-      sampleHeight0 = height * (size[typeKeywords][1] / width);
+      sampleWidth0 = Math.ceil(width * (size[typeKeywords][1] / width));
+      sampleHeight0 = Math.ceil(height * (size[typeKeywords][1] / width));
 
-      sampleWidth1 = width * (size[typeKeywords][0] / height);
-      sampleHeight1 = height * (size[typeKeywords][0] / height);
+      sampleWidth1 = Math.ceil(width * (size[typeKeywords][0] / height));
+      sampleHeight1 = Math.ceil(height * (size[typeKeywords][0] / height));
 
       if (Math.floor(sampleHeight0) >= size[typeKeywords][0]) {
         targetWidth = Math.ceil(sampleWidth0);
@@ -508,11 +508,11 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
       width = targetInfo.geometry.width;
       height = targetInfo.geometry.height;
 
-      sampleWidth0 = width * (size[typeKeywords][0] / width);
-      sampleHeight0 = height * (size[typeKeywords][0] / width);
+      sampleWidth0 = Math.ceil(width * (size[typeKeywords][0] / width));
+      sampleHeight0 = Math.ceil(height * (size[typeKeywords][0] / width));
 
-      sampleWidth1 = width * (size[typeKeywords][1] / height);
-      sampleHeight1 = height * (size[typeKeywords][1] / height);
+      sampleWidth1 = Math.ceil(width * (size[typeKeywords][1] / height));
+      sampleHeight1 = Math.ceil(height * (size[typeKeywords][1] / height));
 
       if (Math.floor(sampleWidth0) >= size[typeKeywords][0]) {
         targetWidth = Math.ceil(sampleWidth0);
@@ -652,7 +652,7 @@ ImageReader.prototype.setWatermark = async function (targetImage) {
       value = cropJson.imageStatistics.Overall.mean;
     } else {
       if (!(width === size[sizeStandard][0] && height === size[sizeStandard][1])) {
-        throw new Error("invalid size 1");
+        throw new Error("invalid size 1 => " + String(width) + " / " + String(height));
       }
       cropPositionY = 963;
       cropMatrix = String(cropPositionWidth) + "x" + String(cropPositionHeight) + "+" + String(0) + "+" + String(cropPositionY);

@@ -6881,8 +6881,8 @@ DevContext.prototype.launching = async function () {
     // await filter.rawToRaw([
     //   {
     //     client: null,
-    //     designer: "전진화",
-    //     link: "https://drive.google.com/drive/folders/1oL9VQr5O3-NsO7MI682lZhFxyYq9rmU5",
+    //     designer: "공세미",
+    //     link: "https://drive.google.com/drive/folders/1nRR9zY6lHB7Lrn27CHIzC7lCHKenRpK2",
     //     pay: true
     //   },
     // ]);
@@ -6947,7 +6947,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2105_aa03s" ]);
+    // await work.newDesignerToFront([ "d2309_aa03s" ]);
 
 
     // new designer set proposal setting
