@@ -2,12 +2,14 @@ from __future__ import print_function
 import pickle
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
+from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from json import dumps
 from os import path as osPath
 import io
+import socket
 
 class GoogleDrive:
 
@@ -41,10 +43,14 @@ class GoogleDrive:
 
 
     def fileUpload(self, folder_id, file):
-        fileArr = file.split("/")
-        file_metadata = { 'name': fileArr[fileArr.__len__() - 1], 'parents': [ folder_id ] }
-        media = MediaFileUpload(file)
-        result = self.app.files().create(body=file_metadata, media_body=media, fields='id').execute()
+        try:
+            socket.setdefaulttimeout(600)
+            fileArr = file.split("/")
+            file_metadata = { 'name': fileArr[fileArr.__len__() - 1], 'parents': [ folder_id ] }
+            media = MediaFileUpload(file)
+            result = self.app.files().create(body=file_metadata, media_body=media, fields='id').execute()
+        except HttpError as error:
+            print(F'An error occurred: {error}')
         return dumps({ "id": result.get('id') })
 
 
