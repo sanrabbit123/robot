@@ -356,10 +356,18 @@ FileJs.prototype.imagePreviewBox = function () {
     let num;
     let imageMargin;
     let columnsLength;
+    let fileBaseTop;
+    let fileBaseLeft;
+    let imageTongList;
+    let targetTong;
     try {
+
       imageMargin = 3;
       columnsLength = 5;
       previewMargin = 12;
+
+      fileBaseTop = 64;
+      fileBaseLeft = 30;
 
       images = [];
       for (let dom of instance.blocks) {
@@ -427,11 +435,11 @@ FileJs.prototype.imagePreviewBox = function () {
           },
         ],
         style: {
-          position: "absolute",
-          top: String(previewMargin) + ea,
-          left: String(previewMargin) + ea,
-          width: withOut(previewMargin * 2, ea),
-          height: withOut(previewMargin * 2, ea),
+          position: "fixed",
+          top: String(fileBaseTop + previewMargin) + ea,
+          left: String(fileBaseLeft + previewMargin) + ea,
+          width: withOut((fileBaseLeft + previewMargin) * 2, ea),
+          height: withOut(((previewMargin) * 2) + belowHeight + fileBaseTop + fileBaseLeft, ea),
           background: colorChip.white,
           borderRadius: String(3) + "px",
           boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
@@ -461,10 +469,34 @@ FileJs.prototype.imagePreviewBox = function () {
         ]
       }).firstChild.firstChild;
 
+      imageTongList = [];
+      for (let i = 0; i < columnsLength; i++) {
+        imageTongList.push(createNode({
+          mother: tong,
+          style: {
+            position: "relative",
+            display: "inline-block",
+            width: "calc(calc(100% - " + String(imageMargin * (columnsLength - 1)) + ea + ") / " + String(columnsLength) + ")",
+            marginRight: String(i % columnsLength === columnsLength - 1 ? 0 : imageMargin) + ea,
+            marginBottom: String(imageMargin) + ea,
+            borderRadius: String(3) + "px",
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+        }));
+      }
+
+
       num = 0;
       for (let { image, name } of images) {
+
+        imageTongList.sort((a, b) => {
+          return a.getBoundingClientRect().height - b.getBoundingClientRect().height;
+        });
+        targetTong = imageTongList[0];
+
         createNode({
-          mother: tong,
+          mother: targetTong,
           mode: "img",
           attribute: [
             { src: image },
@@ -474,9 +506,8 @@ FileJs.prototype.imagePreviewBox = function () {
           style: {
             position: "relative",
             display: "inline-block",
-            width: "calc(calc(100% - " + String(imageMargin * (columnsLength - 1)) + ea + ") / " + String(columnsLength) + ")",
+            width: withOut(0, ea),
             height: "auto",
-            marginRight: String(num % columnsLength === columnsLength - 1 ? 0 : imageMargin) + ea,
             marginBottom: String(imageMargin) + ea,
             borderRadius: String(3) + "px",
             verticalAlign: "top",
@@ -3072,8 +3103,9 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
   }
   const instance = this;
   const { ea, motherTong: { mother, files }, latestPathLocalSaveHomeLiaisonKeyName } = this;
-  const { createNode, colorChip, withOut, ajaxJson, cleanChildren, isMac, blankHref } = GeneralJs;
+  const { createNode, colorChip, withOut, ajaxJson, cleanChildren, isMac, blankHref, returnGet } = GeneralJs;
   const fileBaseClassName = "fileBase";
+  const getObj = returnGet();
   try {
     let thisFolderFiles;
     let width;
@@ -3496,7 +3528,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
     if (thisFolderTypes.length > 0) {
       imageBoo = thisFolderTypes.every((str) => { return instance.imageTarget.includes(str) });
     }
-    if (imageBoo) {
+    if (imageBoo && getObj.preview === "true") {
       instance.imagePreviewBox().call(document.querySelector('.' + fileBaseClassName), new Event("click", { bubbles: true }));
     }
   

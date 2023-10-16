@@ -1859,7 +1859,7 @@ ContentsJs.prototype.launching = async function () {
           } else {
             thisValue = this.value.trim();
             targetDom = instance.designersTong.find((dom) => {
-              return ((new RegExp(thisValue, "gi")).test(dom.getAttribute("designer")) || (new RegExp(thisValue, "gi")).test(dom.getAttribute("desid")))
+              return ((new RegExp(thisValue, "gi")).test(dom.getAttribute("designer")) || (new RegExp(thisValue, "gi")).test(dom.getAttribute("desid")));
             });
             if (targetDom !== undefined) {
               targetDom.click();
