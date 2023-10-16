@@ -3,6 +3,65 @@ const GoogleDrive = function () {
   this.mother = new Mother();
   this.dir = process.cwd() + "/apps/googleAPIs";
   this.pythonApp = this.dir + "/python/app.py";
+  this.tokenDir = this.dir + "/python/google/tokens";
+}
+
+GoogleDrive.prototype.getClient_inNode = async function () {
+  const instance = this;
+  const { authenticate } = require("@google-cloud/local-auth");
+  const { google } = require("googleapis");
+  const { fileSystem } = this.mother;
+  const { tokenDir } = this;
+  try {
+    const credentials = `${tokenDir}/client_secrets.json`;
+    const driveToken = `${tokenDir}/driveToken.json`;
+    const scopes = [ "https://www.googleapis.com/auth/drive" ];
+    const loadSavedCredentialsIfExist = async function () {
+      try {
+        const credentials = await fileSystem(`readJson`, [ driveToken ]);
+        return google.auth.fromJSON(credentials);
+      } catch (err) {
+        return null;
+      }
+    }
+    const saveCredentials = async function (client) {
+      try {
+        const keys = await fileSystem(`readJson`, [ credentials ]);
+        const key = keys.installed || keys.web;
+        await fileSystem(`writeJson`, [ driveToken, {
+          type: "authorized_user",
+          client_id: key.client_id,
+          client_secret: key.client_secret,
+          refresh_token: client.credentials.refresh_token,
+        } ]);
+      } catch (e) {
+        return null;
+      }
+    }
+    const authorize = async function () {
+      let client;
+      client = await loadSavedCredentialsIfExist();
+      if (client) {
+        return client;
+      }
+      client = await authenticate({
+        scopes,
+        keyfilePath: credentials,
+      });
+      if (client.credentials) {
+        await saveCredentials(client);
+      }
+      return client;
+    }
+
+    const authClient = await authorize();
+    const drive = google.drive({version: 'v3', auth: authClient});
+
+    return drive;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
 }
 
 GoogleDrive.prototype.get_file_inPython = async function (file_id, target_folder) {
@@ -166,9 +225,50 @@ GoogleDrive.prototype.upload_inPython = async function (folder_id, file) {
     if (typeof result === "object" && result.id !== undefined) {
       return result.id;
     } else {
-      console.log(result);
+      throw new Error(result);
+    }
+  } catch (e) {
+    console.log(e);
+    try {
+      const id = await this.upload_inNode(folder_id, file);
+      if (typeof id !== "string") {
+        throw new Error("upload fail");
+      }
+      return id;
+    } catch (e) {
+      console.log(e);
       return null;
     }
+  }
+}
+
+GoogleDrive.prototype.upload_inNode = async function (folder_id, file) {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  try {
+    const drive = await this.getClient_inNode();
+    let fileArr;
+    let metaData;
+    let fileStream;
+    let media;
+
+    fileArr = file.split("/");
+    metaData = {
+      name: fileArr[fileArr.length - 1],
+      fields: folder_id
+    };
+
+    fileStream = await fileSystem(`readStream`, [ file ]);
+    media = { body: fileStream };
+
+    const result = await drive.files.create({
+      requestBody: metaData,
+      media,
+    });
+
+    console.log(result);
+    return result.data.id;
+
   } catch (e) {
     console.log(e);
     return null;

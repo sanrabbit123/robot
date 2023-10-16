@@ -9,7 +9,6 @@ from google.auth.transport.requests import Request
 from json import dumps
 from os import path as osPath
 import io
-import socket
 
 class GoogleDrive:
 
@@ -44,7 +43,6 @@ class GoogleDrive:
 
     def fileUpload(self, folder_id, file):
         try:
-            socket.setdefaulttimeout(600)
             fileArr = file.split("/")
             file_metadata = { 'name': fileArr[fileArr.__len__() - 1], 'parents': [ folder_id ] }
             media = MediaFileUpload(file)

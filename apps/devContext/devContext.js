@@ -152,8 +152,25 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-
+    const drive = new GoogleDrive();
+    const targetFolderId = "1rSIKIL-jjmXU-D2Zdmf9ElXFmH2Htycl";
+    const tempFolderName = "temp";
+    let zipIdDesigner;
+    let zipLinkDesigner;
+    let zipIdClient;
+    let zipLinkClient;
     
+
+    zipIdDesigner = await drive.upload_inNode(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + "HL_이주영_디자이너님_김정미_고객님_231016.zip")}`);
+    zipLinkDesigner = await drive.read_webView_inPython(zipIdDesigner);
+
+    console.log(zipIdDesigner, zipLinkDesigner)
+
+    // zipIdClient = await drive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + "HL_김정미_고객님_이주영_디자이너님_231016.zip")}`);
+    // zipLinkClient = await drive.read_webView_inPython(zipIdClient);
+
+    // console.log(zipIdClient, zipLinkClient)
+
 
 
 
