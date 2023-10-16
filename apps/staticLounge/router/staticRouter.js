@@ -1522,6 +1522,7 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
       if (zipIdDesigner !== null) {
         zipLinkDesigner = await drive.read_webView_inPython(zipIdDesigner);
       } else {
+        logger.error("Static lounge 서버 문제 생김 (rou_post_zipPhoto): " + "upload fail => " + shareDesignerName).catch((e) => { console.log(e); });
         zipLinkDesigner = null;
       }
 
