@@ -593,7 +593,24 @@ ContentsJs.prototype.spreadEtcContents = async function (search = null) {
 }
 
 ContentsJs.prototype.spreadDesigners = async function () {
-  
+  const instance = this;
+  const { ea, totalContents, belowRightScrollTong } = this;
+  const { foreContents, designers, clients, projects, belowAreaBetween, controlPannelWidth } = this;
+  const { createNode, withOut, colorChip, cleanChildren } = GeneralJs;
+  try {
+
+
+
+    console.log(designers);
+    console.log(belowRightScrollTong);
+
+
+
+
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 ContentsJs.prototype.whitePopupEvent = function (conid) {

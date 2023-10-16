@@ -152,7 +152,29 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
+    const drive = new GoogleDrive();
+    const targetFolderId = "1rSIKIL-jjmXU-D2Zdmf9ElXFmH2Htycl";
+    const tempFolderName = "temp";
+    let zipIdDesigner;
+    let zipLinkDesigner;
+    let zipIdClient;
+    let zipLinkClient;
     
+
+    zipIdDesigner = await drive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + "HL_이주영_디자이너님_김정미_고객님_231016.zip")}`);
+    zipLinkDesigner = await drive.read_webView_inPython(zipIdDesigner);
+
+    console.log(zipIdDesigner, zipLinkDesigner)
+
+    zipIdClient = await drive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + "HL_김정미_고객님_이주영_디자이너님_231016.zip")}`);
+    zipLinkClient = await drive.read_webView_inPython(zipIdClient);
+
+    console.log(zipIdClient, zipLinkClient)
+
+
+
+    
+
 
 
     /*
@@ -6874,9 +6896,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "고성숙",
-    //     designer: "박미연",
-    //     link: "https://drive.google.com/drive/folders/1mlsfudodWjNzIsdNA4098N8TGi6BsclK",
+    //     client: "김정미",
+    //     designer: "이주영",
+    //     link: "https://drive.google.com/drive/folders/10CRPxuO5Y1firrBST2EKItLX8bSTTNho",
     //     pay: true
     //   },
     // ]);

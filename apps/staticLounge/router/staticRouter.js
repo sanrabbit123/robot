@@ -1464,7 +1464,6 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
       const c3508 = pid;
       const splitToken = "__split__";
       const targetDir = staticConst + homeliaisonOfficeConst + "/" + designerPhotoConst;
-
       const list = await fileSystem(`readDir`, [ targetDir ]);
       const homeFolder = await fileSystem(`readDir`, [ process.env.HOME ]);
       const tempFolderName = "temp";

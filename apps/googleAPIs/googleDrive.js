@@ -166,6 +166,7 @@ GoogleDrive.prototype.upload_inPython = async function (folder_id, file) {
     if (typeof result === "object" && result.id !== undefined) {
       return result.id;
     } else {
+      console.log(result);
       return null;
     }
   } catch (e) {
