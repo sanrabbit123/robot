@@ -360,6 +360,8 @@ FileJs.prototype.imagePreviewBox = function () {
     let fileBaseLeft;
     let imageTongList;
     let targetTong;
+    let tongPaddingBottom;
+    let imagesDomList, imageDom;
     try {
 
       imageMargin = 3;
@@ -368,6 +370,8 @@ FileJs.prototype.imagePreviewBox = function () {
 
       fileBaseTop = 64;
       fileBaseLeft = 30;
+
+      tongPaddingBottom = 200;
 
       images = [];
       for (let dom of instance.blocks) {
@@ -482,20 +486,19 @@ FileJs.prototype.imagePreviewBox = function () {
             borderRadius: String(3) + "px",
             verticalAlign: "top",
             cursor: "pointer",
+            paddingBottom: String(tongPaddingBottom) + ea,
           },
         }));
       }
 
-
       num = 0;
+      imagesDomList = [];
       for (let { image, name } of images) {
-
         imageTongList.sort((a, b) => {
           return a.getBoundingClientRect().height - b.getBoundingClientRect().height;
         });
         targetTong = imageTongList[0];
-
-        createNode({
+        imageDom = createNode({
           mother: targetTong,
           mode: "img",
           attribute: [
@@ -520,7 +523,16 @@ FileJs.prototype.imagePreviewBox = function () {
             }
           ]
         });
+        imagesDomList.push(imageDom);
         num++;
+      }
+
+      for (let dom of imagesDomList) {
+        imageTongList.sort((a, b) => {
+          return a.getBoundingClientRect().height - b.getBoundingClientRect().height;
+        });
+        targetTong = imageTongList[0];
+        targetTong.appendChild(dom);
       }
 
     } catch (e) {
