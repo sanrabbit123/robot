@@ -54,11 +54,48 @@ FileJs.imageTarget = [
 FileJs.prototype.staticSvg = FileJs.staticSvg;
 
 FileJs.prototype.absoluteParsing = function (str) {
+  const instance = this;
+
   if (typeof str !== "string") {
     throw new Error("invaild input");
   }
-  const instance = this;
+  if (/corePortfolio\/listImage/g.test(str)) {
+    if (/\/t/g.test(str)) {
+      str = str.replace(/corePortfolio\/listImage\/([ap][0-9]+)\/t/, (match, pid) => {
+        return `corePortfolio/listImage/${pid}/mobile/mot`;
+      })
+    }
+  }
+  if (/corePortfolio\/original/g.test(str)) {
+    if (/\/i/g.test(str)) {
+      str = str.replace(/corePortfolio\/original\/([ap][0-9]+)\/i/, (match, pid) => {
+        return `corePortfolio/listImage/${pid}/mobile/mot`;
+      })
+    }
+  }
+
   str = str.split("/").map((s) => { return window.encodeURIComponent(s) }).join("/").replace(new RegExp("^" + instance.rootToken), S3HOST);
+  return str;
+}
+
+FileJs.prototype.imageAbsoluteFilter = function (str) {
+  const instance = this;
+  let thisPid;
+  let thisFileName;
+  let thisPortfolio;
+  let execObject;
+  if (typeof str !== "string") {
+    throw new Error("invaild input");
+  }
+  if (/corePortfolio\/forecast/g.test(str)) {
+    execObject = /corePortfolio\/forecast\/([ap][0-9]+)\/([a-zA-Z0-9]+\.[a-zA-Z]+)/.exec(str);
+    thisPid = execObject[1];
+    thisFileName = execObject[2];
+    thisPortfolio = instance.portfolioList.find(({ fileName }) => {
+      return (new RegExp("^" + thisPid, "gi")).test(fileName);
+    });
+    str = thisPortfolio.absolute + "/" + thisPid + "/" + thisFileName;
+  }
   return str;
 }
 
@@ -70,6 +107,7 @@ FileJs.prototype.imageViewing = function (images, convertMode = true) {
   const zIndex = 3;
   return async function (e) {
     e.stopPropagation();
+    e.preventDefault();
     try {
       let img, height, imgBox;
       let title, titleSize, bottom;
@@ -340,12 +378,14 @@ FileJs.prototype.scheduleViewing = function () {
 FileJs.prototype.imagePreviewBox = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight, searchModeButtonsClassName, thisMember, memberTongClassName, intervalDelta } = this;
-  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref, linkToString, stringToLink, equalJson, cleanChildren } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref, linkToString, stringToLink, equalJson, cleanChildren, svgMaker } = GeneralJs;
   const fileBaseClassName = "fileBase";
   const contextmenuClassName = "contextmenuFactor";
   const tempInputClassName = "tempInputClassName";
   const searchInputClassName = "searchInputClassName";
   const memberContextmenuPopupClassName = "memberContextmenuPopupClassName";
+  const imageSelectGreenClassName = "imageSelectGreenClassName";
+  const subMenuWhiteTongClassName = "subMenuWhiteTongClassName";
   return async function (e) {
     const previewClassName = "previewWhiteBase";
     const fileServerAddress = S3HOST;
@@ -362,32 +402,137 @@ FileJs.prototype.imagePreviewBox = function () {
     let targetTong;
     let tongPaddingBottom;
     let imagesDomList, imageDom;
+    let subMenuWidth;
+    let subMenuHeight;
+    let subMenuSize;
+    let subMenuWeight;
+    let subMenuTextTop;
+    let subMenuBetween;
+    let subMenuTongInnerMargin;
+    let subMenuContents;
+    let subMenuPosition;
+    let setSubMenu;
+    let subMenuTong;
+    let portfolioList;
     try {
 
       imageMargin = 3;
       columnsLength = 5;
       previewMargin = 12;
+      subMenuPosition = previewMargin * 2;
 
       fileBaseTop = 64;
       fileBaseLeft = 30;
 
       tongPaddingBottom = 200;
 
+      subMenuWidth = 140;
+      subMenuHeight = 30;
+      subMenuSize = 13;
+      subMenuWeight = 700;
+      subMenuTextTop = isMac() ? -1 : 1;
+      subMenuBetween = 2;
+
+      subMenuTongInnerMargin = 8;
+
+      instance.imageSelected = [];
+      instance.thisImages = [];
+
+      setSubMenu = () => {}
+
+      subMenuContents = [
+        {
+          title: "선택 이미지 다운로드",
+          event: () => {
+            return async function (e) {
+              try {
+                const active = (this.getAttribute("active") === "true");
+                let files;
+                let response;
+                let loading;
+                let absolute;
+                if (active) {
+                  if (instance.imageSelected.length > 0) {
+
+                    loading = instance.mother.whiteProgressLoading();
+
+                    files = [];
+                    for (let dom of instance.imageSelected) {
+                      absolute = dom.getAttribute("absolute");
+                      files.push({ absolute, type: "file" });
+                    }
+
+                    response = await ajaxJson({ files }, S3HOST + ":3000/filesToZip");
+                    await downloadFile(instance.absoluteParsing(response.link), null, loading.progress.firstChild);
+
+                    loading.remove();
+
+                  }
+                  instance.imagePreviewBox().call(document.querySelector('.' + fileBaseClassName), new Event("click", { bubbles: true }));
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          },
+          deactive: () => { return instance.imageSelected.length === 0 },
+        },
+        {
+          title: "전체 이미지 다운로드",
+          event: () => {
+            return async function (e) {
+              try {
+                const active = (this.getAttribute("active") === "true");
+                let files;
+                let response;
+                let loading;
+                let absolute;
+                if (active) {
+                  if (instance.thisImages.length > 0) {
+
+                    loading = instance.mother.whiteProgressLoading();
+
+                    files = [];
+                    for (let dom of instance.thisImages) {
+                      absolute = dom.getAttribute("absolute");
+                      files.push({ absolute, type: "file" });
+                    }
+
+                    response = await ajaxJson({ files }, S3HOST + ":3000/filesToZip");
+                    await downloadFile(instance.absoluteParsing(response.link), null, loading.progress.firstChild);
+
+                    loading.remove();
+
+                  }
+                  instance.imagePreviewBox().call(document.querySelector('.' + fileBaseClassName), new Event("click", { bubbles: true }));
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          },
+          deactive: () => { return false },
+        },
+      ]
+
       images = [];
       for (let dom of instance.blocks) {
         if (instance.imageTarget.includes(dom.getAttribute("kind"))) {
-          images.push({ image: dom.getAttribute("absolute"), name: dom.getAttribute("name") });
+          images.push({ image: dom.getAttribute("absolute"), absolute: dom.getAttribute("absolute"), name: dom.getAttribute("name") });
         }
       }
 
       images = images.map((obj) => {
         obj.image = instance.absoluteParsing(obj.image);
+        obj.absolute = instance.imageAbsoluteFilter(obj.absolute);
         return obj;
       });
 
       for (let dom of targets) {
         dom.parentNode.removeChild(dom);
       }
+
+      removeByClass(previewClassName);
 
       createNode({
         mother: base,
@@ -405,10 +550,7 @@ FileJs.prototype.imagePreviewBox = function () {
             type: "click",
             event: function (e) {
               e.stopPropagation();
-              const targets = document.querySelectorAll('.' + previewClassName);
-              for (let dom of targets) {
-                dom.parentNode.removeChild(dom);
-              }
+              removeByClass(previewClassName);
             }
           }
         ],
@@ -493,48 +635,185 @@ FileJs.prototype.imagePreviewBox = function () {
 
       num = 0;
       imagesDomList = [];
-      for (let { image, name } of images) {
+
+      for (let { image, absolute, name } of images) {
         imageTongList.sort((a, b) => {
           return a.getBoundingClientRect().height - b.getBoundingClientRect().height;
         });
         targetTong = imageTongList[0];
         imageDom = createNode({
           mother: targetTong,
-          mode: "img",
-          attribute: [
-            { src: image },
-            { index: String(num) },
-            { length: String(images.length) }
-          ],
+          attribute: {
+            src: image,
+            index: String(num),
+            length: String(images.length),
+            toggle: "off",
+            absolute: absolute,
+          },
+          event: {
+            contextmenu: instance.imageViewing(images, true),
+            click: async function (e) {
+              try {
+                const toggle = this.getAttribute("toggle");
+                let arr;
+
+                if (toggle === "off") {
+                  this.querySelectorAll("." + imageSelectGreenClassName)[0].style.opacity = String(1);
+                  this.querySelectorAll("." + imageSelectGreenClassName)[1].style.opacity = String(1);
+                  this.setAttribute("toggle", "on");
+                  instance.imageSelected.push(this);
+                } else {
+                  this.querySelectorAll("." + imageSelectGreenClassName)[0].style.opacity = String(0);
+                  this.querySelectorAll("." + imageSelectGreenClassName)[1].style.opacity = String(0);
+                  this.setAttribute("toggle", "off");
+                  arr = [];
+                  for (let d of instance.imageSelected) {
+                    if (d !== this) {
+                      arr.push(d);
+                    }
+                  }
+                  instance.imageSelected = arr;
+                }
+
+                setSubMenu();
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          },
           style: {
             position: "relative",
-            display: "inline-block",
+            display: "inline-flex",
             width: withOut(0, ea),
-            height: "auto",
             marginBottom: String(imageMargin) + ea,
             borderRadius: String(3) + "px",
             verticalAlign: "top",
             cursor: "pointer",
+            overflow: "hidden",
           },
-          events: [
-            {
-              type: "click",
-              event: instance.imageViewing(images, true),
+          child: {
+            mode: "img",
+            attribute: {
+              src: image,
+            },
+            style: {
+              position: "relative",
+              display: "block",
+              width: withOut(0, ea),
+              height: "auto",
+            },
+            next: {
+              class: [ imageSelectGreenClassName ],
+              style: {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "absolute",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                left: String(0),
+                background: colorChip.gradientGreen,
+                opacity: String(0),
+                "mix-blend-mode": "multiply",
+              },
+              next: {
+                class: [ imageSelectGreenClassName ],
+                style: {
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  position: "absolute",
+                  width: withOut(0, ea),
+                  height: withOut(0, ea),
+                  top: String(0),
+                  left: String(0),
+                  opacity: String(0),
+                },
+                child: {
+                  mode: "svg",
+                  source: svgMaker.checkCircle(colorChip.white),
+                  style: {
+                    position: "relative",
+                    width: String(50) + ea,
+                    opacity: String(0.8),
+                  }
+                }
+              }
             }
-          ]
+          },
         });
         imagesDomList.push(imageDom);
+        instance.thisImages.push(imageDom);
         num++;
       }
-
-      for (let dom of imagesDomList) {
-        imageTongList.sort((a, b) => {
-          return a.getBoundingClientRect().height - b.getBoundingClientRect().height;
-        });
-        targetTong = imageTongList[0];
-        targetTong.appendChild(dom);
+      for (let i = 0; i < 2; i++) {
+        for (let dom of imagesDomList) {
+          imageTongList.sort((a, b) => {
+            return a.getBoundingClientRect().height - b.getBoundingClientRect().height;
+          });
+          targetTong = imageTongList[0];
+          targetTong.appendChild(dom);
+        }
       }
 
+      subMenuTong = createNode({
+        mother: tong.parentElement,
+        class: [ subMenuWhiteTongClassName ],
+        style: {
+          position: "fixed",
+          bottom: String(subMenuPosition) + ea,
+          right: String(subMenuPosition) + ea,
+          width: String(subMenuWidth) + ea,
+          padding: String(subMenuTongInnerMargin) + ea,
+          background: colorChip.white,
+          borderRadius: String(3) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          zIndex: String(3),
+          animation: "fadeuphard 0.3s ease forwards",
+        },
+      });
+
+      setSubMenu = () => {
+        cleanChildren(subMenuTong);
+        createNodes(subMenuContents.map(({ title, event, deactive }, index) => {
+          return {
+            mother: subMenuTong,
+            event: {
+              click: event(),
+            },
+            attribute: {
+              active: deactive() ? "false" : "true",
+            },
+            style: {
+              display: "flex",
+              position: "relative",
+              width: String(subMenuWidth) + ea,
+              height: String(subMenuHeight) + ea,
+              background: deactive() ? colorChip.deactive : colorChip.green,
+              borderRadius: String(3) + "px",
+              marginBottom: String(index === subMenuContents.length - 1 ? 0 : subMenuBetween) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            },
+            child: {
+              text: title,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(subMenuSize) + ea,
+                fontWeight: String(subMenuWeight),
+                color: colorChip.white,
+                top: String(subMenuTextTop) + ea,
+              }
+            }
+          }
+        }));
+      }
+
+      setSubMenu();
+      
     } catch (e) {
       console.log(e);
     }
@@ -564,7 +843,7 @@ FileJs.prototype.baseMaker = function () {
             await ajaxJson({ path: instance.path + "/" + folderName.replace(/\/\?\!\@\#\$\%\^\&\*\(\)\[\]\{\}\<\>\;\'\"\,\~\\\|\=\+\-\./gi, '').replace(/ /g, "_").replace(/\n/g, "_").replace(/\t/g, "_") }, S3HOST + ":3000/makeFolder");
           }
           removeByClass(contextmenuClassName);
-          instance.fileLoad(instance.path);
+          instance.fileLoad(instance.path).catch((err) => { console.log(err) });
         } catch (e) {
           console.log(e);
         }
@@ -628,7 +907,7 @@ FileJs.prototype.baseMaker = function () {
                   }
   
                   removeByClass(tempInputClassName);
-                  instance.fileLoad(instance.path);
+                  instance.fileLoad(instance.path).catch((err) => { console.log(err) });
 
                 } catch (e) {
                   console.log(e);
@@ -872,7 +1151,7 @@ FileJs.prototype.baseMaker = function () {
           }
 
           removeByClass(contextmenuClassName);
-          instance.fileLoad(instance.path);
+          instance.fileLoad(instance.path).catch((err) => { console.log(err); });
 
         } catch (e) {
           console.log(e);
@@ -910,7 +1189,7 @@ FileJs.prototype.baseMaker = function () {
           for (let dom of targets) {
             dom.parentNode.removeChild(dom);
           }
-          instance.fileLoad(instance.path);
+          instance.fileLoad(instance.path).catch((err) => { console.log(err); });
         } catch (e) {
           console.log(e);
         }
@@ -958,7 +1237,7 @@ FileJs.prototype.baseMaker = function () {
             loading.remove();
 
             removeByClass(contextmenuClassName);
-            instance.fileLoad(instance.path);
+            instance.fileLoad(instance.path).catch((err) => { console.log(err); });
           } else {
             removeByClass(contextmenuClassName);
           }
@@ -1012,7 +1291,7 @@ FileJs.prototype.baseMaker = function () {
             loading.remove();
 
             removeByClass(contextmenuClassName);
-            instance.fileLoad(instance.path);
+            instance.fileLoad(instance.path).catch((err) => { console.log(err); });
           } else {
             removeByClass(contextmenuClassName);
           }
@@ -1066,7 +1345,7 @@ FileJs.prototype.baseMaker = function () {
             loading.remove();
 
             removeByClass(contextmenuClassName);
-            instance.fileLoad(instance.path);
+            instance.fileLoad(instance.path).catch((err) => { console.log(err); });
           } else {
             removeByClass(contextmenuClassName);
           }
@@ -1121,7 +1400,7 @@ FileJs.prototype.baseMaker = function () {
             loading.remove();
 
             removeByClass(contextmenuClassName);
-            instance.fileLoad(instance.path);
+            instance.fileLoad(instance.path).catch((err) => { console.log(err); });
           } else {
             removeByClass(contextmenuClassName);
           }
@@ -1175,7 +1454,7 @@ FileJs.prototype.baseMaker = function () {
             loading.remove();
 
             removeByClass(contextmenuClassName);
-            instance.fileLoad(instance.path);
+            instance.fileLoad(instance.path).catch((err) => { console.log(err); });
           } else {
             removeByClass(contextmenuClassName);
           }
@@ -1229,7 +1508,7 @@ FileJs.prototype.baseMaker = function () {
             loading.remove();
 
             removeByClass(contextmenuClassName);
-            instance.fileLoad(instance.path);
+            instance.fileLoad(instance.path).catch((err) => { console.log(err); });
           } else {
             removeByClass(contextmenuClassName);
           }
@@ -1283,7 +1562,7 @@ FileJs.prototype.baseMaker = function () {
             loading.remove();
 
             removeByClass(contextmenuClassName);
-            instance.fileLoad(instance.path);
+            instance.fileLoad(instance.path).catch((err) => { console.log(err); });
           } else {
             removeByClass(contextmenuClassName);
           }
@@ -1338,7 +1617,7 @@ FileJs.prototype.baseMaker = function () {
             loading.remove();
 
             removeByClass(contextmenuClassName);
-            instance.fileLoad(instance.path);
+            instance.fileLoad(instance.path).catch((err) => { console.log(err); });
           } else {
             removeByClass(contextmenuClassName);
           }
@@ -1392,7 +1671,7 @@ FileJs.prototype.baseMaker = function () {
             loading.remove();
 
             removeByClass(contextmenuClassName);
-            instance.fileLoad(instance.path);
+            instance.fileLoad(instance.path).catch((err) => { console.log(err); });
           } else {
             removeByClass(contextmenuClassName);
           }
@@ -1447,7 +1726,7 @@ FileJs.prototype.baseMaker = function () {
             loading.remove();
 
             removeByClass(contextmenuClassName);
-            instance.fileLoad(instance.path);
+            instance.fileLoad(instance.path).catch((err) => { console.log(err); });
           } else {
             removeByClass(contextmenuClassName);
           }
@@ -1501,7 +1780,7 @@ FileJs.prototype.baseMaker = function () {
             loading.remove();
 
             removeByClass(contextmenuClassName);
-            instance.fileLoad(instance.path);
+            instance.fileLoad(instance.path).catch((err) => { console.log(err); });
           } else {
             removeByClass(contextmenuClassName);
           }
@@ -1615,7 +1894,7 @@ FileJs.prototype.baseMaker = function () {
             await sleep(500);
           }
           removeByClass(contextmenuClassName);
-          instance.fileLoad(instance.path);
+          instance.fileLoad(instance.path).catch((err) => { console.log(err); });
         } catch (e) {
           console.log(e);
         }
@@ -1656,7 +1935,7 @@ FileJs.prototype.baseMaker = function () {
             loading.remove();
           }
           removeByClass(contextmenuClassName);
-          instance.fileLoad(instance.path);
+          instance.fileLoad(instance.path).catch((err) => { console.log(err); });
         } catch (e) {
           console.log(e);
         }
@@ -1763,38 +2042,47 @@ FileJs.prototype.baseMaker = function () {
 
   starContents = [
     {
+      name: "document",
       title: "# 홈리에종",
       absolute: "__samba__/drive/# 홈리에종",
     },
     {
+      name: "home",
       title: "홈리에종 파일 서버",
       absolute: "__samba__/drive/HomeLiaisonServer",
     },
     {
+      name: "project",
       title: "진행중 프로젝트",
       absolute: "__samba__/drive/# 홈리에종/200_development/201_진행중_project",
     },
     {
+      name: "temp",
       title: "임시 공유",
       absolute: "__samba__/drive/HomeLiaisonServer/일시적_공유",
     },
     {
+      name: "client",
       title: "고객 파일",
       absolute: "__samba__/drive/HomeLiaisonServer/고객/401_고객응대",
     },
     {
+      name: "designer",
       title: "디자이너 파일",
       absolute: "__samba__/drive/HomeLiaisonServer/디자이너/partnership",
     },
     {
+      name: "portfolio",
       title: "포트폴리오 사진",
       absolute: "__samba__/drive/HomeLiaisonServer/사진_등록_포트폴리오",
     },
     {
+      name: "member",
       title: thisMember.name,
       absolute: "__samba__/drive/members/" + thisMember.id + "_" + thisMember.name,
     },
   ]
+  this.starContents = starContents;
 
   calculationEvent = function (e) {
     e.stopPropagation();
@@ -1975,9 +2263,9 @@ FileJs.prototype.baseMaker = function () {
       const mode = buttons.find((dom) => { return dom.getAttribute("toggle") === "on" }).getAttribute("value");
       const value = this.value.trim();
       if (value === '') {
-        instance.fileLoad(instance.path);
+        instance.fileLoad(instance.path).catch((err) => { console.log(err); });
       } else {
-        instance.fileLoad(this.value.trim(), mode);
+        instance.fileLoad(this.value.trim(), mode).catch((err) => { console.log(err); });
       }
     }
   }
@@ -2022,19 +2310,19 @@ FileJs.prototype.baseMaker = function () {
         token = pathArr.shift();
         if (!/__photo__/g.test(token) && !/__designer__/g.test(token)) {
           if (targetIndex === null) {
-            instance.fileLoad(token + "/");
+            instance.fileLoad(token + "/").catch((err) => { console.log(err); });
           } else {
-            instance.fileLoad(token + "/" + pathArr.slice(0, targetIndex + 1).join("/"));
+            instance.fileLoad(token + "/" + pathArr.slice(0, targetIndex + 1).join("/")).catch((err) => { console.log(err); });
           }
         } else {
           if (targetIndex === null) {
-            instance.fileLoad("/");
+            instance.fileLoad("/").catch((err) => { console.log(err); });
           } else {
-            instance.fileLoad(token + "/" + pathArr.slice(0, targetIndex).join("/"));
+            instance.fileLoad(token + "/" + pathArr.slice(0, targetIndex).join("/")).catch((err) => { console.log(err); });
           }
         }
       } else {
-        instance.fileLoad("/");
+        instance.fileLoad("/").catch((err) => { console.log(err); });
       }
     }
   }
@@ -2125,7 +2413,7 @@ FileJs.prototype.baseMaker = function () {
 
           if (moveSuccess && Array.isArray(fromItems)) {  
             await ajaxJson({ fromItems, toFolder: thisPath }, S3HOST + ":3000/moveFiles");
-            instance.fileLoad(instance.path);
+            instance.fileLoad(instance.path).catch((err) => { console.log(err); });
           }
 
         }
@@ -2495,7 +2783,7 @@ FileJs.prototype.baseMaker = function () {
                   },
                   event: {
                     click: function (e) {
-                      instance.fileLoad(this.getAttribute("absolute"));
+                      instance.fileLoad(this.getAttribute("absolute")).catch((err) => { console.log(err); });
                     },
                     dragenter: function (e) {
                       e.preventDefault();
@@ -2768,7 +3056,7 @@ FileJs.prototype.baseMaker = function () {
                     ajaxForm(formData, S3HOST + ":3000" + "/generalFileUpload", loading.progress.firstChild).then(() => {
                       loading.remove();
                       removeByClass(tempInputClassName);
-                      instance.fileLoad(instance.path);
+                      instance.fileLoad(instance.path).catch((err) => { console.log(err); });
                     }).catch((e) => {
                       console.log(e);
                     });
@@ -2878,7 +3166,7 @@ FileJs.prototype.baseMaker = function () {
           },
           event: {
             click: function (e) {
-              instance.fileLoad(this.getAttribute("absolute"));
+              instance.fileLoad(this.getAttribute("absolute")).catch((err) => { console.log(err); });
             },
             contextmenu: memberContextmenu(),
             dragenter: function (e) {
@@ -3093,7 +3381,7 @@ FileJs.prototype.pathReload = function (searchResult = false) {
 
             if (moveSuccess && Array.isArray(fromItems)) {  
               await ajaxJson({ fromItems, toFolder: thisPath }, S3HOST + ":3000/moveFiles");
-              instance.fileLoad(instance.path);
+              instance.fileLoad(instance.path).catch((err) => { console.log(err); });
             }
 
           }
@@ -3463,7 +3751,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
                 if (moveSuccess && Array.isArray(fromItems) && toFolder !== "") {  
                   if (!fromItems.includes(toFolder)) {
                     await ajaxJson({ fromItems, toFolder }, S3HOST + ":3000/moveFiles");
-                    instance.fileLoad(instance.path);
+                    instance.fileLoad(instance.path).catch((err) => { console.log(err); })
                   }
                 }
               } catch (e) {
@@ -3559,9 +3847,9 @@ FileJs.prototype.fromParentSearch = function () {
         if (data.mode === "search" && typeof data.value === "string") {
           const value = data.value;
           if (value === '') {
-            instance.fileLoad(instance.path, "none");
+            instance.fileLoad(instance.path, "none").catch((err) => { console.log(err); });
           } else {
-            instance.fileLoad(value, "entire");
+            instance.fileLoad(value, "entire").catch((err) => { console.log(err); });
           }
         }
       }
@@ -3698,6 +3986,9 @@ FileJs.prototype.launching = async function () {
     this.pageHistory = [];
     this.current = [];
     this.selected = [];
+    this.imageSelected = [];
+    this.thisImages = [];
+    this.starContents = [];
     this.dragArea = null;
     this.pastX = null;
     this.pastY = null;
@@ -3710,7 +4001,8 @@ FileJs.prototype.launching = async function () {
     this.imageTarget = equalJson(JSON.stringify(FileJs.imageTarget)).concat(FileJs.imageTarget.map((str) => { return str.toUpperCase(); }));
 
     this.baseMaker();
-    this.fileLoad(this.path);
+    this.portfolioList = await ajaxJson({ path: instance.starContents.find((o) => { return o.name === "portfolio" }).absolute }, S3HOST + ":3000" + "/listFiles");
+    await this.fileLoad(this.path);
     this.fromParentSearch();
     if (!entireMode) {
       this.fileSearchEvent();
@@ -3719,7 +4011,7 @@ FileJs.prototype.launching = async function () {
     window.addEventListener("popstate", (e) => {
       e.preventDefault();
       if (instance.pageHistory.length > 1) {
-        instance.fileLoad(instance.pageHistory[1].path);
+        instance.fileLoad(instance.pageHistory[1].path).catch((err) => { console.log(err); });
         instance.pageHistory.shift();
         instance.pageHistory.shift();
       }
