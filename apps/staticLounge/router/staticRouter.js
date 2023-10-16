@@ -1474,6 +1474,7 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
       let zipIdClient, zipIdDesigner;
       let zipLinkClient, zipLinkDesigner;
       let commands;
+      let safeNum0, safeNum1;
 
       if (!homeFolder.includes(tempFolderName)) {
         await shellExec(`mkdir`, [ `${process.env.HOME}/${tempFolderName}` ]);
@@ -1508,23 +1509,40 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
 
       await shellExec(commands);
 
+      safeNum0 = 0;
       do {
         zipIdDesigner = await drive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)}`);
         await sleep(500);
-      } while (zipIdDesigner === null);
+        safeNum0++;
+        if (safeNum0 >= 10) {
+          break;
+        }
+      } while (zipIdDesigner === null && safeNum0 < 10);
       await sleep(500);
-      zipLinkDesigner = await drive.read_webView_inPython(zipIdDesigner);
+      if (zipIdDesigner !== null) {
+        zipLinkDesigner = await drive.read_webView_inPython(zipIdDesigner);
+      } else {
+        zipLinkDesigner = null;
+      }
 
       if (tempArr.length === 3) {
         zipLinkClient = null;
       } else {
-
+        safeNum1 = 0;
         do {
           zipIdClient = await drive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareClientName)}`);
           await sleep(500);
-        } while (zipIdClient === null);
+          safeNum1++;
+          if (safeNum1 >= 10) {
+            break;
+          }
+        } while (zipIdClient === null && safeNum1 < 10);
         await sleep(500);
-        zipLinkClient = await drive.read_webView_inPython(zipIdClient);
+        if (zipIdClient !== null) {
+          zipLinkClient = await drive.read_webView_inPython(zipIdClient);
+        } else {
+          zipLinkClient = null;
+        }
       }
 
       await shellExec([
