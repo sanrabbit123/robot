@@ -377,7 +377,6 @@ ContentsJs.prototype.spreadContents = async function (search = null, designerOnl
       for (let contents of contentsArr) {
         designer = designers.search("desid", contents.desid);
         client = clients.search("cliid", contents.cliid);
-  
         boo = false;
         if ((new RegExp(search, "gi")).test(designer.designer)) {
           boo = true;
@@ -387,7 +386,6 @@ ContentsJs.prototype.spreadContents = async function (search = null, designerOnl
             boo = true;
           }
         }
-  
         if (boo) {
           contentsTong.push(contents);
         }
@@ -473,7 +471,7 @@ ContentsJs.prototype.spreadContents = async function (search = null, designerOnl
   }
 }
 
-ContentsJs.prototype.spreadForeContents = async function (search = null) {
+ContentsJs.prototype.spreadForeContents = async function (search = null, designerOnly = false) {
   const instance = this;
   const { ea, totalContents, belowScrollTong } = this;
   const { foreContents, designers, clients, projects, belowAreaBetween, controlPannelWidth } = this;
@@ -509,19 +507,29 @@ ContentsJs.prototype.spreadForeContents = async function (search = null) {
     cleanChildren(belowScrollTong);
   
     if (typeof search === "string") {
-
-      // dev ==============================================================================================================================================
-      // dev ==============================================================================================================================================
-      // dev ==============================================================================================================================================
-      // dev ==============================================================================================================================================
+      contentsTong = [];
+      for (let contents of foreContents) {
+        designer = designers.search("desid", contents.desid);
+        client = contents.client;
+        boo = false;
+        if ((new RegExp(search, "gi")).test(designer.designer)) {
+          boo = true;
+        }
+        if (client !== "" && !designerOnly) {
+          if ((new RegExp(search, "gi")).test(client.name)) {
+            boo = true;
+          }
+        }
+        if (boo) {
+          contentsTong.push(contents);
+        }
+      }
 
     } else {
       contentsTong = foreContents.toNormal();
     }
   
     num = 0;
-    this.conidTong = [];
-    this.contentsTong = contentsTong;
     for (let contents of contentsTong) {
 
       thisProject = projects.search("proid", contents.proid);
@@ -590,14 +598,66 @@ ContentsJs.prototype.spreadForeContents = async function (search = null) {
   }
 }
 
-ContentsJs.prototype.spreadEtcContents = async function (search = null) {
-  
+ContentsJs.prototype.spreadEtcContents = async function (desid = null) {
+  const instance = this;
+  const { ea, totalContents, belowMiddleScrollTong } = this;
+  const { designers } = this;
+  const { createNode, withOut, colorChip, cleanChildren, ajaxJson } = GeneralJs;
+  try {
+    let thisDesigner;
+    let boxMargin;
+    let boxWidth;
+
+    boxMargin = 4;
+    boxWidth = 208;
+
+    cleanChildren(belowMiddleScrollTong);
+
+    if (desid !== null) {
+
+      thisDesigner = designers.search("desid", desid);
+      for (let { link, sgTrue } of thisDesigner.setting.ghost) {
+        createNode({
+          mother: belowMiddleScrollTong,
+          attribute: {
+            desid: thisDesigner.desid,
+          },
+          style: {
+            display: "inline-block",
+            width: String(boxWidth) + ea,
+            background: colorChip.gray1,
+            marginRight: String(0) + ea,
+            marginBottom: String(boxMargin) + ea,
+            cursor: "pointer",
+            borderRadius: String(5) + "px",
+            verticalAlign: "top",
+            overflow: "hidden",
+          },
+          children: [
+            {
+              mode: "img",
+              attribute: {
+                src: S3HOST + link,
+              },
+              style: {
+                position: "relative",
+                width: String(100) + '%',
+              }
+            }
+          ]
+        });
+      }
+
+    }
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 ContentsJs.prototype.spreadDesigners = async function () {
   const instance = this;
   const { ea, totalContents, belowRightScrollTong } = this;
-  const { foreContents, designers, clients, projects, belowAreaBetween, controlPannelWidth } = this;
+  const { contentsArr, foreContents, designers, clients, projects, belowAreaBetween, controlPannelWidth } = this;
   const { createNode, withOut, colorChip, cleanChildren, svgMaker } = GeneralJs;
   const designerBasicBlockClassName = "designerBasicBlockClassName";
   const designerCheckClassName = "designerCheckClassName";
@@ -685,8 +745,12 @@ ContentsJs.prototype.spreadDesigners = async function () {
             }
             if (designer !== null) {
               await instance.spreadContents(designer.designer, true);
+              await instance.spreadForeContents(designer.designer, true);
+              await instance.spreadEtcContents(designer.desid);
             } else {
-
+              await instance.spreadContents(null, false);
+              await instance.spreadForeContents(null, false);
+              await instance.spreadEtcContents(null);
             }
           } else {
             for (let dom of targets) {
@@ -697,6 +761,9 @@ ContentsJs.prototype.spreadDesigners = async function () {
               dom.querySelector('.' + designerStatusClassName).style.color = JSON.parse(dom.getAttribute("color")).original.status;
               dom.setAttribute("toggle", "off");
             }
+            await instance.spreadContents(null, false);
+            await instance.spreadForeContents(null, false);
+            await instance.spreadEtcContents(null);
           }
         } catch (e) {
           console.log(e);
@@ -706,6 +773,10 @@ ContentsJs.prototype.spreadDesigners = async function () {
     }
 
     targetDesigners = designers.toNormal();
+    for (let designer of targetDesigners) {
+      designer.contentsLength = contentsArr.toNormal().filter((c) => { return c.desid === designer.desid }).length + foreContents.toNormal().filter((c) => { return c.desid === designer.desid }).length;
+    }
+    targetDesigners.sort((a, b) => { return b.contentsLength - a.contentsLength });
     targetDesigners.unshift({
       designer: "전체",
       desid: "d0000_aa00s",
@@ -745,6 +816,7 @@ ContentsJs.prototype.spreadDesigners = async function () {
         mother: belowRightScrollTong,
         attribute: {
           desid: designer.desid,
+          designer: designer.designer,
           color: JSON.stringify({
             original: {
               name: nameColor,
@@ -897,9 +969,9 @@ ContentsJs.prototype.spreadDesigners = async function () {
         }
       });
 
-    }
+      this.designersTong.push(basicBlock);
 
-    console.log(designers);
+    }
 
   } catch (e) {
     console.log(e);
@@ -1766,6 +1838,9 @@ ContentsJs.prototype.launching = async function () {
     this.belowMiddleScrollTong = null;
     this.belowRightScrollTong = null;
 
+    this.contentsTong = [];
+    this.designersTong = [];
+
     loading.parentElement.removeChild(loading);
 
     await this.baseMaker();
@@ -1775,11 +1850,20 @@ ContentsJs.prototype.launching = async function () {
     });
     this.searchInput.addEventListener("keypress", async function (e) {
       try {
+        let thisValue;
+        let targetDom;
         if (e.key === "Enter") {
           if (this.value.trim() === '') {
-            await instance.spreadContents();
+            thisValue = this.value.trim();
+            instance.designersTong[0].click();
           } else {
-            await instance.spreadContents(this.value.trim());
+            thisValue = this.value.trim();
+            targetDom = instance.designersTong.find((dom) => {
+              return ((new RegExp(thisValue, "gi")).test(dom.getAttribute("designer")) || (new RegExp(thisValue, "gi")).test(dom.getAttribute("desid")))
+            });
+            if (targetDom !== undefined) {
+              targetDom.click();
+            }
           }
         }
       } catch (e) {
