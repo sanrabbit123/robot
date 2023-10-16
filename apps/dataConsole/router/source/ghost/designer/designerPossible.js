@@ -1346,6 +1346,11 @@ DesignerPossibleJs.prototype.launching = async function (loading) {
 
     loading.parentNode.removeChild(loading);
 
+    if (!entireMode) {
+      window.alert("디자이너 일정 체크는 홈리에종 카카오 채널을 통해 진행해주세요!");
+      window.location.href = FRONTHOST + "/designer/dashboard.php?desid=" + desid;  
+    }
+
   } catch (err) {
     console.log(err);
     await GeneralJs.ajaxJson({ message: "DesignerPossibleJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");

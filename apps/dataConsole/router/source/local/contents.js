@@ -37,8 +37,10 @@ ContentsJs.prototype.baseMaker = async function () {
     let belowMiddleScrollTong;
     let belowRightContentsBox;
     let belowRightScrollTong;
+    let areaInnerPaddingRight;
 
     areaInnerPadding = 16;
+    areaInnerPaddingRight = 12;
     tongPaddingLeft = 30;
     startTop = 16;
 
@@ -49,7 +51,7 @@ ContentsJs.prototype.baseMaker = async function () {
     belowAreaBetween = 16;
     belowAreaBetweenGaro = 10;
 
-    controlPannelWidth = 300;
+    controlPannelWidth = 240;
 
     belowAreaHeight = ((window.innerHeight - belowHeight) - (startTop + titleBoxHeight + contentsBoxHeight + belowAreaBetweenGaro)) - tongPaddingLeft;
   
@@ -312,7 +314,7 @@ ContentsJs.prototype.baseMaker = async function () {
       style: {
         width: withOut(areaInnerPadding * 2, ea),
         marginLeft: String(areaInnerPadding) + ea,
-        paddingTop: String(areaInnerPadding) + ea,
+        paddingTop: String(areaInnerPaddingRight) + ea,
         paddingBottom: String(areaInnerPadding * 6) + ea,
         height: "auto",
         position: "relative",
@@ -334,7 +336,7 @@ ContentsJs.prototype.baseMaker = async function () {
   }
 }
 
-ContentsJs.prototype.spreadContents = async function (search = null) {
+ContentsJs.prototype.spreadContents = async function (search = null, designerOnly = false) {
   const instance = this;
   const { ea, totalContents, scrollTong } = this;
   const { contentsArr, designers, clients } = this;
@@ -377,13 +379,10 @@ ContentsJs.prototype.spreadContents = async function (search = null) {
         client = clients.search("cliid", contents.cliid);
   
         boo = false;
-        if (contents.contents.portfolio.detailInfo.tag.some((str) => { return (new RegExp(search, "gi")).test(str) })) {
-          boo = true;
-        }
         if ((new RegExp(search, "gi")).test(designer.designer)) {
           boo = true;
         }
-        if (client !== null) {
+        if (client !== null && !designerOnly) {
           if ((new RegExp(search, "gi")).test(client.name)) {
             boo = true;
           }
@@ -511,7 +510,10 @@ ContentsJs.prototype.spreadForeContents = async function (search = null) {
   
     if (typeof search === "string") {
 
-      // dev
+      // dev ==============================================================================================================================================
+      // dev ==============================================================================================================================================
+      // dev ==============================================================================================================================================
+      // dev ==============================================================================================================================================
 
     } else {
       contentsTong = foreContents.toNormal();
@@ -596,17 +598,308 @@ ContentsJs.prototype.spreadDesigners = async function () {
   const instance = this;
   const { ea, totalContents, belowRightScrollTong } = this;
   const { foreContents, designers, clients, projects, belowAreaBetween, controlPannelWidth } = this;
-  const { createNode, withOut, colorChip, cleanChildren } = GeneralJs;
+  const { createNode, withOut, colorChip, cleanChildren, svgMaker } = GeneralJs;
+  const designerBasicBlockClassName = "designerBasicBlockClassName";
+  const designerCheckClassName = "designerCheckClassName";
+  const designerNameClassName = "designerNameClassName";
+  const designerIdClassName = "designerIdClassName";
+  const designerStatusClassName = "designerStatusClassName";
   try {
+    let basicBlockHeight;
+    let blockMarginBottom;
+    let fontSize;
+    let basicBlock;
+    let fontWeight;
+    let subSize;
+    let subWeight;
+    let nameTextTop, desidTextTop;
+    let checkAreaWidth, nameAreaWidth, idAreaWidth;
+    let checkboxWidth;
+    let nameColor, idColor, statusColor;
+    let checkboxColor;
+    let nameDeactiveColor;
+    let idDeactiveColor;
+    let statusDeactiveColor;
+    let checkboxDeactiveColor;
+    let nameActiveColor;
+    let idActiveColor;
+    let statusActiveColor;
+    let checkboxActiveColor;
+    let targetDesigners;
+    let designerSelectionEvent;
 
+    basicBlockHeight = 24;
+    blockMarginBottom = 2;
 
+    fontSize = 13;
+    fontWeight = 800;
+
+    subSize = 12;
+    subWeight = 300;
+
+    nameTextTop = 0;
+    desidTextTop = 1;
+
+    checkAreaWidth = 14;
+    nameAreaWidth = 40;
+    idAreaWidth = 80;
+
+    checkboxWidth = 8;
+
+    nameActiveColor = colorChip.green;
+    idActiveColor = colorChip.green;
+    statusActiveColor = colorChip.black;
+    checkboxActiveColor = colorChip.gray3;
+
+    nameDeactiveColor = colorChip.deactive;
+    idDeactiveColor = colorChip.gray3;
+    statusDeactiveColor = colorChip.deactive;
+    checkboxDeactiveColor = colorChip.gray2;
+
+    designerSelectionEvent = () => {
+      return async function (e) {
+        const self = this;
+        const desid = this.getAttribute("desid");
+        const designer = instance.designers.search("desid", desid);
+        const { deactive, active } = JSON.parse(this.getAttribute("color"));
+        const toggle = this.getAttribute("toggle");
+        try {
+          const targets = document.querySelectorAll('.' + designerBasicBlockClassName);
+          if (toggle === "off") {
+            for (let dom of targets) {
+              if (dom === self) {
+                dom.querySelector('.' + designerCheckClassName).querySelector(".checkbox").style.opacity = String(1);
+                dom.querySelector('.' + designerCheckClassName).querySelector(".uncheckbox").style.opacity = String(0);
+                dom.querySelector('.' + designerNameClassName).style.color = active.name;
+                dom.querySelector('.' + designerIdClassName).style.color = active.id;
+                dom.querySelector('.' + designerStatusClassName).style.color = active.status;
+                dom.setAttribute("toggle", "on");
+              } else {
+                dom.querySelector('.' + designerCheckClassName).querySelector(".checkbox").style.opacity = String(0);
+                dom.querySelector('.' + designerCheckClassName).querySelector(".uncheckbox").style.opacity = String(1);
+                dom.querySelector('.' + designerNameClassName).style.color = deactive.name;
+                dom.querySelector('.' + designerIdClassName).style.color = deactive.id;
+                dom.querySelector('.' + designerStatusClassName).style.color = deactive.status;
+                dom.setAttribute("toggle", "off");
+              }
+            }
+            if (designer !== null) {
+              await instance.spreadContents(designer.designer, true);
+            } else {
+
+            }
+          } else {
+            for (let dom of targets) {
+              dom.querySelector('.' + designerCheckClassName).querySelector(".checkbox").style.opacity = String(0);
+              dom.querySelector('.' + designerCheckClassName).querySelector(".uncheckbox").style.opacity = String(1);
+              dom.querySelector('.' + designerNameClassName).style.color = JSON.parse(dom.getAttribute("color")).original.name;
+              dom.querySelector('.' + designerIdClassName).style.color = JSON.parse(dom.getAttribute("color")).original.id;
+              dom.querySelector('.' + designerStatusClassName).style.color = JSON.parse(dom.getAttribute("color")).original.status;
+              dom.setAttribute("toggle", "off");
+            }
+          }
+        } catch (e) {
+          console.log(e);
+          window.location.reload();
+        }
+      }
+    }
+
+    targetDesigners = designers.toNormal();
+    targetDesigners.unshift({
+      designer: "전체",
+      desid: "d0000_aa00s",
+      information: {
+        contract: {
+          status: "협약 완료",
+        }
+      },
+      entire: true
+    });
+
+    for (let designer of targetDesigners) {
+
+      if (/협약 완료/gi.test(designer.information.contract.status)) {
+        nameColor = colorChip.black;
+        idColor = colorChip.green;
+        statusColor = colorChip.black;
+        checkboxColor = colorChip.gray3;
+      } else if (/협약 휴직/gi.test(designer.information.contract.status)) {
+        nameColor = colorChip.liteBlack;
+        idColor = colorChip.softGreen;
+        statusColor = colorChip.liteBlack;
+        checkboxColor = colorChip.gray3;
+      } else if (/협약 해지/gi.test(designer.information.contract.status)) {
+        nameColor = colorChip.deactive;
+        idColor = colorChip.gray3;
+        statusColor = colorChip.deactive;
+        checkboxColor = colorChip.gray2;
+      } else {
+        nameColor = colorChip.deactive;
+        idColor = colorChip.gray3;
+        statusColor = colorChip.deactive;
+        checkboxColor = colorChip.gray2;
+      }
+
+      basicBlock = createNode({
+        mother: belowRightScrollTong,
+        attribute: {
+          desid: designer.desid,
+          color: JSON.stringify({
+            original: {
+              name: nameColor,
+              id: idColor,
+              status: statusColor,
+              checkbox: checkboxColor,
+            },
+            deactive: {
+              name: nameDeactiveColor,
+              id: idDeactiveColor,
+              status: statusDeactiveColor,
+              checkbox: checkboxDeactiveColor,
+            },
+            active: {
+              name: nameActiveColor,
+              id: idActiveColor,
+              status: statusActiveColor,
+              checkbox: checkboxActiveColor,
+            }
+          }),
+          toggle: "off",
+        },
+        class: [ designerBasicBlockClassName ],
+        event: {
+          click: designerSelectionEvent(),
+        },
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(basicBlockHeight) + ea,
+          marginBottom: String(blockMarginBottom) + ea,
+          cursor: "pointer",
+        }
+      });
+
+      createNode({
+        mother: basicBlock,
+        attribute: {
+          desid: designer.desid,
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(checkAreaWidth) + ea,
+          height: withOut(0, ea),
+          overflow: "hidden",
+          justifyContent: "start",
+          alignItems: "center",
+        },
+        child: {
+          mode: "svg",
+          source: svgMaker.checkBox(checkboxColor),
+          class: [ designerCheckClassName ],
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(checkboxWidth) + ea,
+            top: String(0) + ea,
+          }
+        }
+      });
+
+      createNode({
+        mother: basicBlock,
+        attribute: {
+          desid: designer.desid,
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(nameAreaWidth) + ea,
+          height: withOut(0, ea),
+          overflow: "hidden",
+          justifyContent: "start",
+          alignItems: "center",
+        },
+        child: {
+          class: [ designerNameClassName ],
+          text: designer.designer,
+          style: {
+            position: "relative",
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(fontWeight),
+            color: nameColor,
+            top: String(nameTextTop) + ea,
+          }
+        }
+      });
+
+      createNode({
+        mother: basicBlock,
+        attribute: {
+          desid: designer.desid,
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(idAreaWidth) + ea,
+          height: withOut(0, ea),
+          overflow: "hidden",
+          justifyContent: "start",
+          alignItems: "center",
+        },
+        child: {
+          class: [ designerIdClassName ],
+          text: designer.entire === true ? "" : designer.desid,
+          style: {
+            position: "relative",
+            fontSize: String(subSize) + ea,
+            fontWeight: String(subWeight),
+            color: idColor,
+            top: String(desidTextTop) + ea,
+          }
+        }
+      });
+
+      createNode({
+        mother: basicBlock,
+        attribute: {
+          desid: designer.desid,
+        },
+        style: {
+          display: "inline-flex",
+          position: "absolute",
+          width: String(100) + ea,
+          height: withOut(0, ea),
+          overflow: "hidden",
+          justifyContent: "end",
+          alignItems: "center",
+          right: String(0),
+          top: String(0),
+        },
+        child: {
+          class: [ designerStatusClassName ],
+          text: designer.entire === true ? "" : "<b%--->%b>&nbsp;&nbsp;" + designer.information.contract.status,
+          style: {
+            position: "relative",
+            fontSize: String(subSize) + ea,
+            fontWeight: String(fontWeight),
+            color: statusColor,
+            top: String(desidTextTop) + ea,
+          },
+          bold: {
+            fontSize: String(subSize) + ea,
+            fontWeight: String(200),
+            color: colorChip.deactive,
+          }
+        }
+      });
+
+    }
 
     console.log(designers);
-    console.log(belowRightScrollTong);
-
-
-
-
 
   } catch (e) {
     console.log(e);

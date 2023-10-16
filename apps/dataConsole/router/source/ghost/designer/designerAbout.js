@@ -11456,8 +11456,8 @@ DesignerAboutJs.prototype.launching = async function (loading) {
             instance.insertThreeStrongBox();
             instance.contentsCenter();
             await instance.insertRepresentativeBox();
-            instance.insertPossibleNoticeBox();
-            instance.calendarChain();
+            // instance.insertPossibleNoticeBox();
+            // instance.calendarChain();
           } catch (e) {
             await GeneralJs.ajaxJson({ message: "DesignerAboutJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
           }
