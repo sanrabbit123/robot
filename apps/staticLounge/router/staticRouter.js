@@ -3864,6 +3864,8 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
       let targets;
       let finalTargets;
       let delta;
+      let targetClients2;
+      let threeMonthAgo;
       
       if (!fastMode) {
 
@@ -3871,6 +3873,9 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
         agoDate = new Date();
         agoDate.setDate(agoDate.getDate() - delta);
     
+        threeMonthAgo = new Date();
+        threeMonthAgo.setMonth(threeMonthAgo.getMonth() - 3);
+
         targetClients = (await back.getClientsByQuery({
           $and: [
             {
@@ -3878,6 +3883,29 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
                 $elemMatch: {
                   "request.timeline": {
                     $gte: fromDate,
+                  }
+                }
+              }
+            },
+            {
+              "requests": {
+                $elemMatch: {
+                  "analytics.response.status": {
+                    $regex: "^[응장]"
+                  }
+                }
+              }
+            }
+          ]
+        }, { selfMongo: selfCoreMongo })).toNormal();
+
+        targetClients2 = (await back.getClientsByQuery({
+          $and: [
+            {
+              "requests": {
+                $elemMatch: {
+                  "request.timeline": {
+                    $gte: threeMonthAgo,
                   }
                 }
               }
@@ -3905,6 +3933,7 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
         }, { selfMongo: selfCoreMongo })).toNormal();
         
         targets = targetClients.concat(agoClients);
+        targets = targets.concat(targetClients2);
         finalTargets = [];
         for (let client of targets) {
           if (!finalTargets.map((c) => { return c.cliid }).includes(client.cliid)) {
@@ -3975,6 +4004,40 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_fixClientAnalytics = function () {
+  const instance = this;
+  const { equalJson, requestSystem } = this.mother;
+  const analytics = this.analytics;
+  let obj;
+  obj = {};
+  obj.link = [ "/fixClientAnalytics" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfLogMongo = instance.mongolog;
+      analytics.fixClientMetric(selfLogMongo).then((result) => {
+        if (result.message === "done") {
+          logger.cron("client analytics fix done : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+        } else {
+          logger.error("client analytics fix fail : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+        }
+      }).catch((err) => {
+        logger.error("Static lounge 서버 문제 생김 (rou_post_fixClientAnalytics): " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_fixClientAnalytics): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_getClientAnalytics = function () {
   const instance = this;
   const { equalJson, requestSystem } = this.mother;
@@ -4016,7 +4079,7 @@ StaticRouter.prototype.rou_post_getClientAnalytics = function () {
           rows = await back.mongoRead(collection, { cliid }, { selfMongo: instance.mongolog });
         }
         if (rows.length > 0) {
-          res.send(JSON.stringify({ data: rows[0] }));
+          res.send(JSON.stringify({ data: rows[rows.length - 1] }));
         } else {
           res.send(JSON.stringify({ data: null }));
         }

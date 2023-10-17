@@ -29,6 +29,830 @@ const MprJs = function () {
   this.designers = [];
 }
 
+MprJs.prototype.mainDataRender = async function () {
+  const instance = this;
+  const { ea, totalContents, asyncProcessText } = this;
+  const { createNode, colorChip, withOut, dateToString, ajaxJson, autoComma, findByAttribute } = GeneralJs;
+  try {
+    let columns;
+    let values;
+    let standards;
+
+    standards = {
+      columns: [
+        {
+          title: "아이디",
+          width: 96,
+          name: "cliid",
+          type: "string",
+        },
+        {
+          title: "성함",
+          width: 60,
+          name: "name",
+          type: "string",
+        },
+      ],
+      values: {},
+    }
+
+    columns = [
+      {
+        title: "응대 상태",
+        width: 100,
+        name: "status",
+        colorStandard: true,
+        colorMap: [
+          {
+            value: "응대중",
+            color: colorChip.black,
+          },
+          {
+            value: "장기",
+            color: colorChip.black,
+          },
+          {
+            value: "드랍",
+            color: colorChip.deactive,
+          },
+          {
+            value: "진행",
+            color: colorChip.green,
+          },
+        ],
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          }
+        ].concat([
+          "응대중",
+          "장기",
+          "드랍",
+          "진행",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        }))
+      },
+      {
+        title: "주소",
+        width: 600,
+        name: "address",
+        type: "string",
+      },
+    ];
+
+    values = {};
+
+    for (let { client } of instance.clients) {
+
+      standards.values[client.cliid] = [
+        {
+          value: client.cliid,
+          name: "cliid",
+        },
+        {
+          value: client.name,
+          name: "name",
+        },
+      ];
+
+      values[client.cliid] = [
+        {
+          value: client.requests[0].analytics.response.status,
+          name: "status",
+        },
+        {
+          value: client.requests[0].request.space.address,
+          name: "address",
+        },
+      ];
+
+    }
+
+    return { standards, columns, values };
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+MprJs.prototype.coreColorSync = async function () {
+  const instance = this;
+  const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText } = this;
+  const { createNode, colorChip, withOut, dateToString, ajaxJson, autoComma, findByAttribute } = GeneralJs;
+  try {
+    let columns;
+    let colorStandard;
+    let standardDoms, valueDoms;
+    let thisValue;
+    let thisColor;
+    let thisTargets;
+
+    ({ columns } = await this.mainDataRender());
+
+    colorStandard = columns.find((obj) => { return obj.colorStandard === true });
+
+    standardDoms = [ ...document.querySelectorAll('.' + standardCaseClassName) ];
+    valueDoms = [ ...document.querySelectorAll('.' + valueCaseClassName) ];
+
+    for (let i = 0; i < standardDoms.length; i++) {
+      thisValue = findByAttribute([ ...valueDoms[i].querySelectorAll('.' + valueTargetClassName) ], "name", colorStandard.name).textContent.trim();
+      if (colorStandard.colorMap.find((o) => { return o.value === thisValue }) === undefined) {
+        throw new Error("invalid value color match");
+      }
+      thisColor = colorStandard.colorMap.find((o) => { return o.value === thisValue }).color;
+      thisTargets = [ ...standardDoms[i].querySelectorAll('.' + valueTargetClassName) ].concat([ ...valueDoms[i].querySelectorAll('.' + valueTargetClassName) ]);
+      for (let dom of thisTargets) {
+        dom.style.color = (new RegExp(asyncProcessText, "gi")).test(dom.textContent) ? colorChip.gray3 : thisColor;
+        dom.setAttribute("color", (new RegExp(asyncProcessText, "gi")).test(dom.textContent) ? colorChip.gray3 : thisColor);
+      }
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+MprJs.prototype.mprBase = async function () {
+  const instance = this;
+  const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
+  const moveTargetClassName = "moveTarget";
+  const menuPromptClassName = "menuPromptClassName";
+  const importantCircleClassName = "importantCircleClassName";
+  try {
+    let totalMother;
+    let grayArea, whiteArea;
+    let totalPaddingTop;
+    let columnAreaHeight;
+    let fontSize, fontWeight;
+    let idWidth, nameWidth;
+    let idNameAreaPaddingTop;
+    let idNameArea;
+    let idNameHeight;
+    let idNamePaddingBottom;
+    let maxWidth;
+    let valueColumnsAreaPaddingLeft;
+    let valueArea;
+    let valueWeight;
+    let thisTong;
+    let columns;
+    let values;
+    let valueMaxWidth;
+    let thisTargets;
+    let hoverEvent, hoverOutEvent;
+    let standards;
+    let menuPromptWidth, menuPromptHeight;
+    let menuVisual;
+    let menuBetween;
+    let menuTextTop, menuSize, menuWeight;
+    let columnsMenuEvent;
+    let menuEventTong;
+    let coreContentsLoad;
+    let circleRight, circleTop;
+  
+    totalPaddingTop = 38;
+    columnAreaHeight = 32;
+  
+    fontSize = 14;
+    fontWeight = 600;
+    valueWeight = 500;
+  
+    idWidth = 96;
+    nameWidth = 60;
+  
+    idNameAreaPaddingTop = 17;
+    idNameHeight = 36;
+  
+    idNamePaddingBottom = 400;
+    maxWidth = 8000;
+    valueMaxWidth = 1000;
+  
+    valueColumnsAreaPaddingLeft = 20;
+
+    menuPromptWidth = 90;
+    menuPromptHeight = 32;
+    menuVisual = 4;
+    menuBetween = 3;
+
+    menuTextTop = isMac() ? -1 : 1,
+    menuSize = 13;
+    menuWeight = 600;
+
+    circleRight = 2.5;
+    circleTop = isMac() ? 3 : 1;
+
+    ({ standards, columns, values } = await this.mainDataRender());
+  
+    hoverEvent = () => {
+      return function (e) {
+        const cliid = this.getAttribute("cliid");
+        const opposite = findByAttribute(document.querySelectorAll('.' + standardCaseClassName), "cliid", cliid);
+        thisTargets = [ ...this.querySelectorAll('.' + valueTargetClassName) ].concat([ ...opposite.querySelectorAll('.' + valueTargetClassName) ]);
+        for (let dom of thisTargets) {
+          dom.style.color = colorChip.green;
+        }
+      }
+    }
+
+    hoverOutEvent = () => {
+      return function (e) {
+        const cliid = this.getAttribute("cliid");
+        const opposite = findByAttribute(document.querySelectorAll('.' + standardCaseClassName), "cliid", cliid);
+        thisTargets = [ ...this.querySelectorAll('.' + valueTargetClassName) ].concat([ ...opposite.querySelectorAll('.' + valueTargetClassName) ]);
+        for (let dom of thisTargets) {
+          dom.style.color = dom.getAttribute("color") !== null ? dom.getAttribute("color") : colorChip.black;
+        }
+      }
+    }
+
+    menuEventTong = {
+      sortEvent: (thisType, name, index) => {
+        return async function (e) {
+          try {
+            const idNameArea = document.querySelector('.' + idNameAreaClassName);
+            const valueArea = document.querySelector('.' + valueAreaClassName);
+            const idNameDoms = Array.from(document.querySelectorAll('.' + standardCaseClassName));
+            const valueDoms = Array.from(document.querySelectorAll('.' + valueCaseClassName));
+            const type = columns[index].type;
+            let domMatrix;
+            let thisDesid;
+            let thisValueDom;
+  
+            domMatrix = [];
+            for (let i = 0; i < idNameDoms.length; i++) {
+              thisDesid = idNameDoms[i].getAttribute("cliid");
+              thisValueDom = findByAttribute(valueDoms, "cliid", thisDesid);
+              domMatrix.push([
+                idNameDoms[i],
+                thisValueDom
+              ]);
+            }
+  
+            domMatrix.sort((a, b) => {
+              let aValue, bValue;
+              let aSortValue, bSortValue;
+              let tempArr;
+  
+              aValue = findByAttribute([ ...a[1].querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent;
+              bValue = findByAttribute([ ...b[1].querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent;
+              
+              if (type === "string") {
+                aSortValue = aValue !== '' ? aValue.charCodeAt(0) : 0;
+                bSortValue = bValue !== '' ? bValue.charCodeAt(0) : 0;
+              } else if (type === "number") {
+                aValue = aValue.replace(/[^0-9]/gi, '')
+                bValue = bValue.replace(/[^0-9]/gi, '')
+                aSortValue = aValue !== '' ? Number(aValue) : 0;
+                bSortValue = bValue !== '' ? Number(bValue) : 0;
+              } else if (type === "percentage") {
+                aValue = aValue.replace(/[^0-9\.]/gi, '')
+                bValue = bValue.replace(/[^0-9\.]/gi, '')
+                aSortValue = aValue !== '' ? Number(aValue) : 0;
+                bSortValue = bValue !== '' ? Number(bValue) : 0;
+              } else if (type === "date") {
+                aSortValue = aValue !== '' ? stringToDate(aValue) : stringToDate("1800-01-01");
+                bSortValue = bValue !== '' ? stringToDate(bValue) : stringToDate("1800-01-01");
+                aSortValue = aSortValue.valueOf();
+                bSortValue = bSortValue.valueOf();
+              } else if (type === "during") {
+  
+                if (/년/gi.test(aValue)) {
+                  tempArr = aValue.split('년');
+                  if (tempArr.length > 1) {
+                    aSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) + Number(tempArr[1].replace(/[^0-9]/gi, ''));
+                  } else {
+                    aSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12);
+                  }
+                } else {
+                  aSortValue = Number(aValue.replace(/[^0-9]/gi, ''));
+                }
+  
+                if (/년/gi.test(bValue)) {
+                  tempArr = bValue.split('년');
+                  if (tempArr.length > 1) {
+                    bSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) + Number(tempArr[1].replace(/[^0-9]/gi, ''));
+                  } else {
+                    bSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12);
+                  }
+                } else {
+                  bSortValue = Number(bValue.replace(/[^0-9]/gi, ''));
+                }
+  
+              } else {
+                aSortValue = aValue !== '' ? aValue.charCodeAt(0) : 0;
+                bSortValue = bValue !== '' ? bValue.charCodeAt(0) : 0;
+              }
+              
+              if (thisType === "down") {
+                return bSortValue - aSortValue;
+              } else {
+                return aSortValue - bSortValue;
+              }
+            });
+  
+            for (let [ standard, value ] of domMatrix) {
+              idNameArea.appendChild(standard);
+              valueArea.appendChild(value);
+            }
+  
+            removeByClass(menuPromptClassName);
+  
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      filterEvent: (thisValue, name, index) => {
+        return async function (e) {
+          try {
+            const idNameArea = document.querySelector('.' + idNameAreaClassName);
+            const valueArea = document.querySelector('.' + valueAreaClassName);
+            const idNameDoms = Array.from(document.querySelectorAll('.' + standardCaseClassName));
+            const valueDoms = Array.from(document.querySelectorAll('.' + valueCaseClassName));
+            const last = "lastfilter";
+            const type = columns[index].type;
+            let domMatrix;
+            let thisDesid;
+            let thisValueDom;
+  
+            domMatrix = [];
+            for (let i = 0; i < idNameDoms.length; i++) {
+              thisDesid = idNameDoms[i].getAttribute("cliid");
+              thisValueDom = findByAttribute(valueDoms, "cliid", thisDesid);
+              domMatrix.push([
+                idNameDoms[i],
+                thisValueDom
+              ]);
+            }
+
+            if (thisValue === "$all") {
+              for (let [ standard, value ] of domMatrix) {
+                standard.style.display = "flex";
+                value.style.display = "flex";
+                standard.setAttribute(last, "none");
+                value.setAttribute(last, "none");
+              }
+            } else {
+              for (let [ standard, value ] of domMatrix) {
+                if (standard.getAttribute(last) === name) {
+                  if (findByAttribute([ ...value.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent.trim() === thisValue) {
+                    standard.style.display = "flex";
+                    value.style.display = "flex";
+                  } else {
+                    standard.style.display = "none";
+                    value.style.display = "none";
+                  }
+                } else {
+                  if (findByAttribute([ ...value.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent.trim() === thisValue) {
+                    if (standard.style.display !== "none") {
+                      standard.style.display = "flex";
+                      value.style.display = "flex";
+                    }
+                  } else {
+                    standard.style.display = "none";
+                    value.style.display = "none";
+                  }
+                }
+                standard.setAttribute(last, name);
+                value.setAttribute(last, name);
+              }
+            }
+
+            removeByClass(menuPromptClassName);
+  
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+    }
+
+    columnsMenuEvent = (index) => {
+      return async function (e) {
+        try {
+          e.preventDefault();
+          const name = this.getAttribute("name");
+          const index = Number(this.getAttribute("index"));
+          const thisObject = columns[index];
+          const zIndex = 4;
+          let cancelBack, blackPrompt;
+          let thisMenu;
+
+          thisMenu = [
+            {
+              value: "내림차순",
+              functionName: "sortEvent_down",
+            },
+            {
+              value: "오름차순",
+              functionName: "sortEvent_up",
+            },
+          ];
+
+          if (Array.isArray(thisObject.menu)) {
+            thisMenu = thisMenu.concat(thisObject.menu);
+          }
+
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ menuPromptClassName ],
+            event: (e) => { removeByClass(menuPromptClassName) },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: "transparent",
+              zIndex: String(zIndex),
+            }
+          });
+
+          blackPrompt = createNode({
+            mother: totalContents,
+            class: [ menuPromptClassName ],
+            style: {
+              position: "fixed",
+              top: String(e.y + menuVisual) + "px",
+              left: String(e.x + menuVisual) + "px",
+              width: String(menuPromptWidth) + ea,
+              background: colorChip.white,
+              animation: "fadeuplite 0.3s ease forwards",
+              zIndex: String(zIndex),
+            },
+            children: thisMenu.map(({ value, functionName }) => {
+              const functionOrderArr = functionName.split("_");
+              const [ thisFunctionName ] = functionOrderArr;
+              let thisArguments;
+              if (functionOrderArr.length > 1) {
+                thisArguments = functionOrderArr.slice(1).concat([ name, index ]);
+              } else {
+                thisArguments = [ name, index ];
+              }
+              return {
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                  click: menuEventTong[thisFunctionName](...thisArguments),
+                },
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(menuPromptWidth) + ea,
+                  height: String(menuPromptHeight) + ea,
+                  borderRadius: String(5) + "px",
+                  background: colorChip.gradientGray,
+                  marginBottom: String(menuBetween) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  cursor: "pointer",
+                },
+                child: {
+                  text: value,
+                  event: {
+                    selectstart: (e) => { e.preventDefault() },
+                  },
+                  style: {
+                    position: "relative",
+                    top: String(menuTextTop) + ea,
+                    fontSize: String(menuSize) + ea,
+                    fontWeight: String(menuWeight),
+                    color: colorChip.white,
+                  }
+                }
+              }
+            })
+          })
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    totalMother = createNode({
+      mother: totalContents,
+      class: [ "totalMother" ],
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: withOut(this.belowHeight, ea),
+      }
+    });
+    this.totalMother = totalMother;
+
+    coreContentsLoad = async (reload = false) => {
+      try {
+
+        if (reload) {
+          ({ standards, columns, values } = await instance.mainDataRender());
+        }
+
+        cleanChildren(totalMother);
+
+        createNode({
+          mother: totalMother,
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String(this.grayBarWidth) + ea,
+            height: withOut(0, ea),
+            background: colorChip.gray0,
+          }
+        });
+        createNode({
+          mother: totalMother,
+          style: {
+            display: "block",
+            position: "relative",
+            paddingTop: String(totalPaddingTop) + ea,
+            height: String(columnAreaHeight) + ea,
+            borderBottom: "1px dashed " + colorChip.gray3,
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                flexDirection: "row",
+                position: "relative",
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "start",
+                verticalAlign: "top",
+                width: String(this.grayBarWidth) + ea,
+              },
+              children: standards.columns.map(({ title, width }) => {
+                return {
+                  style: {
+                    display: "inline-flex",
+                    flexDirection: "row",
+                    position: "relative",
+                    justifyContent: "center",
+                    alignItems: "start",
+                    width: String(width) + ea,
+                    cursor: "pointer",
+                  },
+                  child: {
+                    text: title,
+                    style: {
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.green,
+                    }
+                  }
+                }
+              })
+            },
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                height: withOut(0, ea),
+                verticalAlign: "top",
+                width: withOut(this.grayBarWidth, ea),
+                overflow: "hidden",
+              },
+              child: {
+                class: [ moveTargetClassName ],
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(maxWidth) + ea,
+                  height: withOut(0, ea),
+                  flexDirection: "row",
+                  alignItems: "start",
+                  justifyContent: "start",
+                  paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
+                },
+                children: columns.map(({ title, width, name }, index) => {
+                  return {
+                    attribute: {
+                      name: name,
+                      index: String(index),
+                    },
+                    event: {
+                      selectstart: (e) => { e.preventDefault() },
+                      click: columnsMenuEvent(index),
+                      contextmenu: columnsMenuEvent(index),
+                    },
+                    style: {
+                      display: "inline-flex",
+                      flexDirection: "row",
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "start",
+                      width: String(width) + ea,
+                      cursor: "pointer",
+                    },
+                    child: {
+                      style: {
+                        display: "inline-block",
+                        width: String(90) + '%',
+                        position: "relative",
+                        overflow: "hidden",
+                        textAlign: "center",
+                      },
+                      child: {
+                        style: {
+                          display: "flex",
+                          width: String(valueMaxWidth) + ea,
+                          position: "relative",
+                          left: withOut(50, valueMaxWidth / 2, ea),
+                          textAlign: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        },
+                        child: {
+                          text: title,
+                          style: {
+                            fontSize: String(fontSize) + ea,
+                            fontWeight: String(fontWeight),
+                            color: colorChip.green,
+                          }
+                        }
+                      }
+                    }
+                  }
+                })
+              }
+            }
+          ]
+        });
+      
+        [ idNameArea, valueArea ] = createNode({
+          mother: totalMother,
+          style: {
+            display: "block",
+            position: "relative",
+            paddingTop: String(idNameAreaPaddingTop) + ea,
+            height: withOut(totalPaddingTop + columnAreaHeight + idNameAreaPaddingTop, ea),
+            width: withOut(0, ea),
+            overflow: "scroll",
+          },
+          children: [
+            {
+              class: [ idNameAreaClassName ],
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                flexDirection: "column",
+                position: "relative",
+                width: String(this.grayBarWidth) + ea,
+                paddingBottom: String(idNamePaddingBottom) + ea,
+              }
+            },
+            {
+              class: [ valueAreaClassName ],
+              style: {
+                display: "inline-block",
+                position: "relative",
+                verticalAlign: "top",
+                width: withOut(this.grayBarWidth, ea),
+                overflow: "hidden",
+              },
+            }
+          ]
+        }).children;
+      
+        for (let { client } of instance.clients) {
+      
+          createNode({
+            mother: idNameArea,
+            attribute: { cliid: client.cliid, lastfilter: "none" },
+            event: {
+              // click: instance.whiteCardView(client.cliid),
+            },
+            class: [ standardCaseClassName ],
+            style: {
+              display: "flex",
+              flexDirection: "row",
+              position: "relative",
+              height: String(idNameHeight) + ea,
+              justifyContent: "center",
+              alignItems: "start",
+              cursor: "pointer",
+            },
+            children: standards.values[client.cliid].map(({ value, name }, index) => {
+              return {
+                style: {
+                  display: "inline-flex",
+                  flexDirection: "row",
+                  position: "relative",
+                  justifyContent: "center",
+                  alignItems: "start",
+                  width: String(standards.columns[index].width) + ea,
+                },
+                child: {
+                  class: [ valueTargetClassName ],
+                  attribute: { name },
+                  text: value,
+                  style: {
+                    position: "relative",
+                    transition: "all 0.3s ease",
+                    fontSize: String(fontSize) + ea,
+                    fontWeight: String(fontWeight),
+                    color: colorChip.black,
+                  },
+                }
+              }
+            })
+          });
+      
+          thisTong = createNode({
+            mother: valueArea,
+            attribute: { cliid: client.cliid, lastfilter: "none" },
+            class: [ moveTargetClassName, valueCaseClassName, client.cliid ],
+            event: {
+              mouseenter: hoverEvent(),
+              mouseleave: hoverOutEvent(),
+            },
+            style: {
+              display: "flex",
+              position: "relative",
+              width: String(maxWidth) + ea,
+              height: String(idNameHeight) + ea,
+              flexDirection: "row",
+              alignItems: "start",
+              justifyContent: "start",
+              paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
+              cursor: "pointer",
+            }
+          })
+    
+          for (let i = 0; i < columns.length; i++) {
+            createNode({
+              mother: thisTong,
+              style: {
+                display: "inline-flex",
+                flexDirection: "row",
+                position: "relative",
+                justifyContent: "center",
+                alignItems: "start",
+                width: String(columns[i].width) + ea,
+              },
+              child: {
+                style: {
+                  display: "inline-block",
+                  width: String(90) + '%',
+                  position: "relative",
+                  overflow: "hidden",
+                  textAlign: "center",
+                },
+                child: {
+                  style: {
+                    display: "flex",
+                    width: String(valueMaxWidth) + ea,
+                    position: "relative",
+                    left: withOut(50, valueMaxWidth / 2, ea),
+                    textAlign: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                  child: {
+                    attribute: {
+                      cliid: client.cliid,
+                      name: values[client.cliid][i].name,
+                    },
+                    class: [ valueTargetClassName ],
+                    text: String(values[client.cliid][i].value),
+                    style: {
+                      position: "relative",
+                      transition: "all 0.1s ease",
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(valueWeight),
+                      color: (new RegExp(asyncProcessText, "gi")).test(values[client.cliid][i].value) ? colorChip.gray3 : colorChip.black,
+                    }
+                  }
+                }
+              }
+            });
+          }
+      
+        }
+    
+        await this.coreColorSync();
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    await coreContentsLoad(false);
+    this.coreContentsLoad = coreContentsLoad;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 MprJs.prototype.reportWhite = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight, entireMode } = this;
@@ -2508,6 +3332,7 @@ MprJs.prototype.launching = async function () {
   try {
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true" && getObj.dataonly === "true");
+    const defaultMonth = 6;
     let loading;
     let members;
     let ago;
@@ -2529,7 +3354,7 @@ MprJs.prototype.launching = async function () {
 
     loading = await this.mother.loadingRun();
     ago = new Date();
-    ago.setMonth(ago.getMonth() - 12);
+    ago.setMonth(ago.getMonth() - defaultMonth);
 
     clients = await ajaxJson({ mode: "get", whereQuery: {
       "client.requests": {
@@ -2559,7 +3384,7 @@ MprJs.prototype.launching = async function () {
     this.entireMode = entireMode;
 
 
-    // await this.mprBase();
+    await this.mprBase();
     // await (this.reportWhite())();
 
     loading.parentNode.removeChild(loading);

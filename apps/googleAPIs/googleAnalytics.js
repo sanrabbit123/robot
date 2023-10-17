@@ -972,6 +972,7 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
     let historyAdd;
     let rows;
     let cliid;
+    let deleteLength;
 
     if (typeof selfCoreMongo !== "object" || selfCoreMongo === null) {
       throw new Error("invalid input 2");
@@ -987,7 +988,7 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
 
     cliid = thisClient.cliid;
 
-    await sleep(500);
+    await sleep(1000);
     sessionResult = await this.getSessionObjectByCliid(cliid, selfMongo);
     if (sessionResult === null) {
       throw new Error("session parsing error");
@@ -1151,7 +1152,11 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
       await sleep(500);
       rows = await back.mongoPick(collection, [ { cliid }, { cliid: 1 } ], { selfMongo });
       if (rows.length !== 0) {
-        await back.mongoDelete(collection, { cliid }, { selfMongo });
+        deleteLength = Number(rows.length);
+        for (let i = 0; i < deleteLength; i++) {
+          await back.mongoDelete(collection, { cliid }, { selfMongo });
+          await sleep(500);
+        }
       }
       await sleep(500);
       await back.mongoCreate(collection, clientObject, { selfMongo });
@@ -1164,6 +1169,61 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
     await emergencyAlarm("GoogleAnalytics.clientMetric error : " + e.message);
     console.log(e);
     return storeSuccess;
+  }
+}
+
+GoogleAnalytics.prototype.fixClientMetric = async function (selfLogMongo, monthDelta = 3) {
+  const instance = this;
+  const mongoDB = require("mongodb");
+  const db = "miro81";
+  const collection = "clientAnalytics";
+  const { sleep, equalJson, emergencyAlarm, errorLog } = this.mother;
+  const back = this.back;
+  try {
+    let rows;
+    let cliidArr;
+    let tempRows;
+    let targetRows;
+    let threeMonthAgo;
+
+    if (typeof monthDelta !== "number") {
+      monthDelta = 3;
+    }
+
+    threeMonthAgo = new Date();
+    threeMonthAgo.setMonth(threeMonthAgo.getMonth() - monthDelta);
+
+    rows = await back.mongoRead(collection, {
+      "client.requests": {
+        $elemMatch: {
+          "request.timeline": {
+            $gte: threeMonthAgo,
+          }
+        }
+      }
+    }, { selfMongo: selfLogMongo });
+
+    cliidArr = rows.map((o) => { return o.client.cliid });
+    cliidArr = [ ...new Set(cliidArr) ];
+
+    for (let cliid of cliidArr) {
+      await sleep(500);
+      tempRows = rows.filter((r) => { return r.cliid === cliid });
+      if (tempRows.length !== 1) {
+        targetRows = equalJson(JSON.stringify(tempRows)).slice(0, -1);
+        for (let r of targetRows) {
+          await selfLogMongo.db(db).collection(collection).deleteOne({ _id: new mongoDB.ObjectID(r._id) });
+          console.log("delete success => ", cliid, r._id);
+          await sleep(500);
+        }
+      }
+    }
+
+    return { message: "done" };
+
+  } catch (e) {
+    console.log(e);
+    return { message: "fail" };
   }
 }
 
