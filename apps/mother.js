@@ -2172,7 +2172,7 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
     return finalResult;
   } catch (e) {
     console.log(e);
-    return { error: e.message };
+    return [];
   }
 }
 

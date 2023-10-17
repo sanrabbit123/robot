@@ -468,7 +468,7 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
       sampleWidth1 = Math.ceil(width * (size[typeKeywords][0] / height));
       sampleHeight1 = Math.ceil(height * (size[typeKeywords][0] / height));
 
-      if (Math.floor(sampleHeight0) >= size[typeKeywords][0]) {
+      if (Math.floor(sampleHeight0) >= size[typeKeywords][0] && Math.floor(sampleWidth0) >= size[typeKeywords][1]) {
         targetWidth = Math.ceil(sampleWidth0);
         targetHeight = Math.ceil(sampleHeight0);
       } else {
@@ -514,7 +514,7 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
       sampleWidth1 = Math.ceil(width * (size[typeKeywords][1] / height));
       sampleHeight1 = Math.ceil(height * (size[typeKeywords][1] / height));
 
-      if (Math.floor(sampleWidth0) >= size[typeKeywords][0]) {
+      if (Math.floor(sampleWidth0) >= size[typeKeywords][0] && Math.floor(sampleHeight0) >= size[typeKeywords][1]) {
         targetWidth = Math.ceil(sampleWidth0);
         targetHeight = Math.ceil(sampleHeight0);
       } else {

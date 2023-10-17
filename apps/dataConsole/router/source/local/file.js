@@ -3887,6 +3887,7 @@ FileJs.prototype.launching = async function () {
     let loadingIconWidth;
     let designers;
     let targetDesigner;
+    let response;
 
     loadingIconWidth = 50;
     loadingIconVisualTop = -34;
@@ -3975,6 +3976,11 @@ FileJs.prototype.launching = async function () {
         loading.parentElement.removeChild(loading);
       }
     }
+    if (typeof getObj.pid === "string" && /[ap][0-9]+/gi.test(getObj.pid)) {
+      response = await ajaxJson({ path: rootToken + "/corePortfolio/original/" + getObj.pid }, S3HOST + ":3000/listFiles", { equal: true });
+      console.log(response);
+    }
+
     this.startPoint = startPoint;
     this.rootToken = rootToken;
 

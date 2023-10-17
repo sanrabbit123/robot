@@ -181,7 +181,6 @@ StaticRouter.prototype.rou_post_listFiles = function () {
         throw new Error("invaild post");
       }
       let target;
-      let result;
       let list;
 
       target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
@@ -195,7 +194,7 @@ StaticRouter.prototype.rou_post_listFiles = function () {
       target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
       list = await leafParsing(target);
       if (!Array.isArray(list)) {
-        throw new Error(list);
+        throw new Error("leaf parsing fail");
       }
 
       list = list.map((i) => {
