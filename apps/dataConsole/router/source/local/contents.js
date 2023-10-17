@@ -13,7 +13,7 @@ ContentsJs.prototype.baseMaker = async function () {
   const instance = this;
   const { ea, totalContents, belowHeight } = this;
   const { contentsArr } = this;
-  const { createNode, withOut, colorChip } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac } = GeneralJs;
   const photoChar = 't';
   try {
     let totalMother;
@@ -38,6 +38,7 @@ ContentsJs.prototype.baseMaker = async function () {
     let belowRightContentsBox;
     let belowRightScrollTong;
     let areaInnerPaddingRight;
+    let titleTextTop;
 
     areaInnerPadding = 16;
     areaInnerPaddingRight = 12;
@@ -52,6 +53,8 @@ ContentsJs.prototype.baseMaker = async function () {
     belowAreaBetweenGaro = 10;
 
     controlPannelWidth = 240;
+
+    titleTextTop = isMac() ? 0 : 2;
 
     belowAreaHeight = ((window.innerHeight - belowHeight) - (startTop + titleBoxHeight + contentsBoxHeight + belowAreaBetweenGaro)) - tongPaddingLeft;
   
@@ -92,6 +95,7 @@ ContentsJs.prototype.baseMaker = async function () {
           fontSize: String(titleSize) + ea,
           fontWeight: String(800),
           color: colorChip.black,
+          top: String(titleTextTop) + ea,
         },
         bold: {
           fontSize: String(titleSize) + ea,
@@ -166,6 +170,7 @@ ContentsJs.prototype.baseMaker = async function () {
           fontSize: String(titleSize) + ea,
           fontWeight: String(800),
           color: colorChip.black,
+          top: String(titleTextTop) + ea,
         },
         bold: {
           fontSize: String(titleSize) + ea,
@@ -228,6 +233,7 @@ ContentsJs.prototype.baseMaker = async function () {
           fontSize: String(titleSize) + ea,
           fontWeight: String(800),
           color: colorChip.black,
+          top: String(titleTextTop) + ea,
         },
         bold: {
           fontSize: String(titleSize) + ea,
@@ -289,6 +295,7 @@ ContentsJs.prototype.baseMaker = async function () {
           fontSize: String(titleSize) + ea,
           fontWeight: String(800),
           color: colorChip.black,
+          top: String(titleTextTop) + ea,
         },
         bold: {
           fontSize: String(titleSize) + ea,
@@ -362,7 +369,7 @@ ContentsJs.prototype.spreadContents = async function (search = null, designerOnl
     boxWidth = 160;
     pidFontSize = 12;
     pidFontWeight = 800;
-    pidTextTop = -3;
+    pidTextTop = isMac() ? -3 : -1;
     pidPaddingLeft = 12;
     pidPaddingTop = 8;
     pidPaddingBottom = 4;
@@ -476,7 +483,7 @@ ContentsJs.prototype.spreadForeContents = async function (search = null, designe
   const instance = this;
   const { ea, totalContents, belowScrollTong } = this;
   const { foreContents, designers, clients, projects, belowAreaBetween, controlPannelWidth } = this;
-  const { createNode, withOut, colorChip, cleanChildren, selfHref } = GeneralJs;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref, isMac } = GeneralJs;
   try {
     let boxMargin;
     let boxNumber, boxWidth;
@@ -497,7 +504,7 @@ ContentsJs.prototype.spreadForeContents = async function (search = null, designe
     boxWidth = 160;
     pidFontSize = 12;
     pidFontWeight = 800;
-    pidTextTop = -3;
+    pidTextTop = isMac() ? -3 : -1;
     pidPaddingLeft = 12;
     pidPaddingTop = 8;
     pidPaddingBottom = 4;
@@ -666,7 +673,7 @@ ContentsJs.prototype.spreadDesigners = async function () {
   const instance = this;
   const { ea, totalContents, belowRightScrollTong } = this;
   const { contentsArr, foreContents, designers, clients, projects, belowAreaBetween, controlPannelWidth } = this;
-  const { createNode, withOut, colorChip, cleanChildren, svgMaker } = GeneralJs;
+  const { createNode, withOut, colorChip, cleanChildren, svgMaker, isMac } = GeneralJs;
   const designerBasicBlockClassName = "designerBasicBlockClassName";
   const designerCheckClassName = "designerCheckClassName";
   const designerNameClassName = "designerNameClassName";
@@ -695,6 +702,7 @@ ContentsJs.prototype.spreadDesigners = async function () {
     let checkboxActiveColor;
     let targetDesigners;
     let designerSelectionEvent;
+    let checkboxTop;
 
     basicBlockHeight = 24;
     blockMarginBottom = 2;
@@ -713,6 +721,7 @@ ContentsJs.prototype.spreadDesigners = async function () {
     idAreaWidth = 80;
 
     checkboxWidth = 8;
+    checkboxTop = isMac() ? 0 : -2;
 
     nameActiveColor = colorChip.green;
     idActiveColor = colorChip.green;
@@ -884,7 +893,7 @@ ContentsJs.prototype.spreadDesigners = async function () {
             display: "inline-block",
             position: "relative",
             width: String(checkboxWidth) + ea,
-            top: String(0) + ea,
+            top: String(checkboxTop) + ea,
           }
         }
       });
