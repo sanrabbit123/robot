@@ -377,7 +377,7 @@ FileJs.prototype.scheduleViewing = function () {
 
 FileJs.prototype.imagePreviewBox = function () {
   const instance = this;
-  const { ea, totalContents, grayBarWidth, belowHeight, searchModeButtonsClassName, thisMember, memberTongClassName, intervalDelta } = this;
+  const { ea, totalContents, grayBarWidth, belowHeight, searchModeButtonsClassName, thisMember, memberTongClassName, intervalDelta, previewOnlyMode } = this;
   const { createNode, createNodes, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref, linkToString, stringToLink, equalJson, cleanChildren, svgMaker } = GeneralJs;
   const fileBaseClassName = "fileBase";
   const contextmenuClassName = "contextmenuFactor";
@@ -582,15 +582,15 @@ FileJs.prototype.imagePreviewBox = function () {
         ],
         style: {
           position: "fixed",
-          top: String(fileBaseTop + previewMargin) + ea,
-          left: String(fileBaseLeft + previewMargin) + ea,
-          width: withOut((fileBaseLeft + previewMargin) * 2, ea),
-          height: withOut(((previewMargin) * 2) + belowHeight + fileBaseTop + fileBaseLeft, ea),
+          top: !previewOnlyMode ? String(fileBaseTop + previewMargin) + ea : String(0) + ea,
+          left: !previewOnlyMode ? String(fileBaseLeft + previewMargin) + ea : String(0) + ea,
+          width: !previewOnlyMode ? withOut((fileBaseLeft + previewMargin) * 2, ea) : withOut(0, ea),
+          height: !previewOnlyMode ? withOut(((previewMargin) * 2) + belowHeight + fileBaseTop + fileBaseLeft, ea) : withOut(0, ea),
           background: colorChip.white,
           borderRadius: String(3) + "px",
           boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
           zIndex: String(2),
-          animation: "fadeuphard 0.3s ease forwards",
+          animation: !previewOnlyMode ? "fadeuphard 0.3s ease forwards" : "",
         },
         children: [
           {
@@ -1177,13 +1177,15 @@ FileJs.prototype.baseMaker = function () {
           let directory;
           if (instance.mother.member.level >= 9) {
             if (selected.length > 0) {
-              files = [];
-              for (let dom of selected) {
-                absolute = dom.getAttribute("absolute");
-                directory = (dom.getAttribute("directory") === "true");
-                files.push({ absolute, type: (directory ? "folder" : "file") });
+              if (window.confirm("해당 파일들을 삭제합니다. 확실합니까?")) {
+                files = [];
+                for (let dom of selected) {
+                  absolute = dom.getAttribute("absolute");
+                  directory = (dom.getAttribute("directory") === "true");
+                  files.push({ absolute, type: (directory ? "folder" : "file") });
+                }
+                await ajaxJson({ files }, S3HOST + ":3000/deleteFile");
               }
-              await ajaxJson({ files }, S3HOST + ":3000/deleteFile");
             }
           }
           for (let dom of targets) {
@@ -3880,6 +3882,7 @@ FileJs.prototype.launching = async function () {
   try {
     const getObj = returnGet();
     const entireMode = (getObj.dataonly === "true" && getObj.entire === "true");
+    const previewOnlyMode = (entireMode && getObj.previewonly === "true");
     let startPoint;
     let rootToken;
     let pathResponse;
@@ -3889,6 +3892,7 @@ FileJs.prototype.launching = async function () {
     let targetDesigner;
     let response;
     let pidPath;
+    let ghostDesidPath;
 
     loadingIconWidth = 50;
     loadingIconVisualTop = -34;
@@ -3901,6 +3905,9 @@ FileJs.prototype.launching = async function () {
       this.belowHeight = this.mother.belowHeight = 0;
       this.grayBarWidth = this.mother.grayBarWidth = 0;
     }
+
+    this.entireMode = entireMode;
+    this.previewOnlyMode = previewOnlyMode;
 
     this.members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
     this.thisMember = this.members.find((obj) => { return obj.email.includes(JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail) });
@@ -3986,6 +3993,16 @@ FileJs.prototype.launching = async function () {
       }
       if (Array.isArray(response) && response.length > 0) {
         this.path = pidPath;
+      }
+    }
+    if (typeof getObj.ghostdesid === "string") {
+      ghostDesidPath = rootToken + "/rawDesigner/ghost/" + getObj.ghostdesid;
+
+      console.log(ghostDesidPath);
+
+      response = await ajaxJson({ path: ghostDesidPath }, S3HOST + ":3000/listFiles", { equal: true });
+      if (Array.isArray(response) && response.length > 0) {
+        this.path = ghostDesidPath;
       }
     }
 

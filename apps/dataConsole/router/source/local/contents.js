@@ -412,7 +412,8 @@ ContentsJs.prototype.spreadContents = async function (search = null, designerOnl
           cliid: contents.cliid,
         },
         event: {
-          click: this.whitePopupEvent(contents.conid),
+          contextmenu: this.whitePopupEvent(contents.conid),
+          click: this.whiteIframeEvent(contents.contents.portfolio.pid),
         },
         style: {
           display: "inline-block",
@@ -475,7 +476,7 @@ ContentsJs.prototype.spreadForeContents = async function (search = null, designe
   const instance = this;
   const { ea, totalContents, belowScrollTong } = this;
   const { foreContents, designers, clients, projects, belowAreaBetween, controlPannelWidth } = this;
-  const { createNode, withOut, colorChip, cleanChildren } = GeneralJs;
+  const { createNode, withOut, colorChip, cleanChildren, selfHref } = GeneralJs;
   try {
     let boxMargin;
     let boxNumber, boxWidth;
@@ -541,6 +542,10 @@ ContentsJs.prototype.spreadForeContents = async function (search = null, designe
         attribute: {
           proid: contents.proid,
           desid: contents.desid,
+          pid: contents.pid,
+        },
+        event: {
+          click: instance.whiteIframeEvent(contents.pid),
         },
         style: {
           display: "inline-block",
@@ -622,6 +627,9 @@ ContentsJs.prototype.spreadEtcContents = async function (desid = null) {
           attribute: {
             desid: thisDesigner.desid,
           },
+          event: {
+            click: this.whiteIframeEvent(thisDesigner.desid),
+          },
           style: {
             display: "inline-block",
             width: String(boxWidth) + ea,
@@ -692,7 +700,7 @@ ContentsJs.prototype.spreadDesigners = async function () {
     blockMarginBottom = 2;
 
     fontSize = 13;
-    fontWeight = 800;
+    fontWeight = 700;
 
     subSize = 12;
     subWeight = 300;
@@ -1087,6 +1095,8 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
     return values;
   }
   return function (e) {
+    e.stopPropagation();
+    e.preventDefault();
     const contents = contentsArr.search("conid", conid);
     const { cliid, proid, desid } = contents;
     const { photos, contents: { portfolio: { pid, detailInfo: { tag, tendency } } } } = contents;
@@ -1785,6 +1795,93 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
   }
 }
 
+ContentsJs.prototype.whiteIframeEvent = function (pid) {
+  const instance = this;
+  const { ea, totalMother, belowHeight, contentsArr, clients, designers, projects, whiteIframeClassName } = this;
+  const { createNode, withOut, colorChip, ajaxJson, setQueue, serviceParsing, cleanChildren, isMac, fireEvent } = GeneralJs;
+  return function (e) {
+
+    e.stopPropagation();
+    e.preventDefault();
+
+    let cancelBack, whiteBoard;
+    let cancelEvent;
+    let margin;
+    let zIndex;
+    let innerMargin;
+    let iframeLink;
+
+    margin = 30;
+    zIndex = 2;
+    innerMargin = 40;
+
+    if (/^[ap][0-9]+$/gi.test(pid)) {
+      iframeLink = "/file?pid=" + pid + "&preview=true&previewonly=true&dataonly=true&entire=true";
+    } else {
+      iframeLink = "/file?ghostdesid=" + pid + "&preview=true&previewonly=true&dataonly=true&entire=true";
+    }
+
+    cancelEvent = function (e) {
+      totalMother.removeChild(totalMother.lastChild);
+      totalMother.removeChild(totalMother.lastChild);
+    }
+
+    instance.cancelEvent = cancelEvent;
+
+    cancelBack = createNode({
+      mother: totalMother,
+      event: {
+        click: cancelEvent
+      },
+      style: {
+        position: "fixed",
+        background: colorChip.black,
+        opacity: String(0),
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: withOut(belowHeight, ea),
+        animation: "justfadein 0.3s ease forwards",
+        zIndex: String(zIndex),
+      }
+    });
+
+    whiteBoard = createNode({
+      mother: totalMother,
+      class: [ whiteIframeClassName ],
+      style: {
+        position: "fixed",
+        background: colorChip.white,
+        borderRadius: String(5) + ea,
+        top: String(margin) + ea,
+        left: String(margin) + ea,
+        width: withOut(margin * 2, ea),
+        height: withOut(margin * 2 + belowHeight, ea),
+        boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+        animation: "fadeuphard 0.3s ease forwards",
+        zIndex: String(zIndex),
+        overflow: "hidden",
+      },
+      child: {
+        mode: "iframe",
+        attribute: {
+          src: iframeLink,
+        },
+        style: {
+          position: "absolute",
+          display: "block",
+          top: String(0),
+          left: String(0),
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          border: String(0),
+        }
+      }
+    });
+
+  }
+}
+
 ContentsJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, setQueue } = GeneralJs;
@@ -1830,6 +1927,7 @@ ContentsJs.prototype.launching = async function () {
     this.projects = new SearchArray(allContents.projects);
     this.designers = new SearchArray(allContents.designers);
     this.whitePopupClassName = "whitePopupClassName";
+    this.whiteIframeClassName = "whiteIframeClassName";
 
     this.belowAreaBetween = 0;
     this.controlPannelWidth = 0;
