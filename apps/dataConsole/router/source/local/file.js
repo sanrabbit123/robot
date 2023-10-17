@@ -1475,6 +1475,7 @@ FileJs.prototype.baseMaker = function () {
         }
       }
     },
+    /*
     {
       text: "슬라이드 만들기",
       event: async function (e) {
@@ -1583,7 +1584,6 @@ FileJs.prototype.baseMaker = function () {
         }
       }
     },
-    /*
     {
       text: "노션 만들기",
       event: async function (e) {
@@ -1692,7 +1692,6 @@ FileJs.prototype.baseMaker = function () {
         }
       }
     },
-    */
     {
       text: "다이어그램 만들기",
       event: async function (e) {
@@ -1747,6 +1746,7 @@ FileJs.prototype.baseMaker = function () {
         }
       }
     },
+    */
     {
       text: "링크 파일 만들기",
       event: async function (e) {
@@ -1840,41 +1840,41 @@ FileJs.prototype.baseMaker = function () {
         }
       }
     },
-    {
-      text: "모듈 링크 복사",
-      event: async function (e) {
-        try {
-          const loading = instance.mother.grayLoading();
-          let targetPath;
-          if (instance.selected.length === 0) {
-            targetPath = instance.path;
-          } else {
-            targetPath = instance.selected[0].getAttribute("absolute");
-          }
-          loading.remove();
-          await window.navigator.clipboard.writeText(window.location.protocol + "//" + window.location.host + "/file?dataonly=true&entire=true&direct=" + window.encodeURIComponent(targetPath));
-          instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
-          removeByClass(contextmenuClassName);
-        } catch (e) {
-          console.log(e);
-        }
-      },
-      visible: async function (e) {
-        try {
-          if (instance.selected.length === 0) {
-            return true;
-          } else {
-            if (instance.selected.length > 1) {
-              return false;
-            }
-            return (instance.selected[0].getAttribute("kind") === "folder");
-          }
-        } catch (e) {
-          console.log(e);
-          return false;
-        }
-      }
-    },
+    // {
+    //   text: "모듈 링크 복사",
+    //   event: async function (e) {
+    //     try {
+    //       const loading = instance.mother.grayLoading();
+    //       let targetPath;
+    //       if (instance.selected.length === 0) {
+    //         targetPath = instance.path;
+    //       } else {
+    //         targetPath = instance.selected[0].getAttribute("absolute");
+    //       }
+    //       loading.remove();
+    //       await window.navigator.clipboard.writeText(window.location.protocol + "//" + window.location.host + "/file?dataonly=true&entire=true&direct=" + window.encodeURIComponent(targetPath));
+    //       instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
+    //       removeByClass(contextmenuClassName);
+    //     } catch (e) {
+    //       console.log(e);
+    //     }
+    //   },
+    //   visible: async function (e) {
+    //     try {
+    //       if (instance.selected.length === 0) {
+    //         return true;
+    //       } else {
+    //         if (instance.selected.length > 1) {
+    //           return false;
+    //         }
+    //         return (instance.selected[0].getAttribute("kind") === "folder");
+    //       }
+    //     } catch (e) {
+    //       console.log(e);
+    //       return false;
+    //     }
+    //   }
+    // },
     {
       text: "드라이브 열기",
       event: async function (e) {
@@ -3888,6 +3888,7 @@ FileJs.prototype.launching = async function () {
     let designers;
     let targetDesigner;
     let response;
+    let pidPath;
 
     loadingIconWidth = 50;
     loadingIconVisualTop = -34;
@@ -3977,8 +3978,15 @@ FileJs.prototype.launching = async function () {
       }
     }
     if (typeof getObj.pid === "string" && /[ap][0-9]+/gi.test(getObj.pid)) {
-      response = await ajaxJson({ path: rootToken + "/corePortfolio/original/" + getObj.pid }, S3HOST + ":3000/listFiles", { equal: true });
-      console.log(response);
+      pidPath = rootToken + "/corePortfolio/original/" + getObj.pid;
+      response = await ajaxJson({ path: pidPath }, S3HOST + ":3000/listFiles", { equal: true });
+      if (!Array.isArray(response) || response.length === 0) {
+        pidPath = rootToken + "/corePortfolio/forecast/" + getObj.pid;
+        response = await ajaxJson({ path: pidPath }, S3HOST + ":3000/listFiles", { equal: true });
+      }
+      if (Array.isArray(response) && response.length > 0) {
+        this.path = pidPath;
+      }
     }
 
     this.startPoint = startPoint;
