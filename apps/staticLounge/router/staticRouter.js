@@ -194,7 +194,7 @@ StaticRouter.prototype.rou_post_listFiles = function () {
       target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
       list = await leafParsing(target);
       if (!Array.isArray(list)) {
-        throw new Error("leaf parsing fail");
+        list = [];
       }
 
       list = list.map((i) => {
