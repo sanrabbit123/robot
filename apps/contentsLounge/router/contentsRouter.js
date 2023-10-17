@@ -1017,6 +1017,7 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
         throw new Error("invalid post");
       }
       const selfMongo = instance.mongolog;
+      const selfCoreMongo = instance.mongo;
       const { mode } = equalJson(req.body);
       const collection = "clientAnalytics";
       let rows;
@@ -1027,7 +1028,7 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
         if (req.body.whereQuery === undefined || req.body.projectQuery === undefined) {
           throw new Error("invalid post");
         }
-        const { whereQuery, projectQuery } = equalJson(req.body);
+        let { whereQuery, projectQuery } = equalJson(req.body);
         if (typeof whereQuery !== "object" || whereQuery === null) {
           throw new Error("invalid where query");
         }
@@ -1039,9 +1040,11 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
         if (projectKeys.length === 0) {
           rows = await back.mongoRead(collection, whereQuery, { selfMongo });
         } else {
+          projectQuery.client = 1;
+          projectQuery.cliid = 1;
           rows = await back.mongoPick(collection, [ whereQuery, projectQuery ], { selfMongo });
         }
-  
+        
         rows.sort((a, b) => { return b.client.requests[0].request.timeline.valueOf() - a.client.requests[0].request.timeline.valueOf() });
 
         res.send(JSON.stringify(rows));
