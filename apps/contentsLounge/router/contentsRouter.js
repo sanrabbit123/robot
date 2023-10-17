@@ -999,6 +999,66 @@ ContentsRouter.prototype.rou_post_getAllContents = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_clientAnalytics = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/clientAnalytics" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongolog;
+      const { mode } = equalJson(req.body);
+      const collection = "clientAnalytics";
+      let rows;
+      let projectKeys;
+
+      if (mode === "get") {
+
+        if (req.body.whereQuery === undefined || req.body.projectQuery === undefined) {
+          throw new Error("invalid post");
+        }
+        const { whereQuery, projectQuery } = equalJson(req.body);
+        if (typeof whereQuery !== "object" || whereQuery === null) {
+          throw new Error("invalid where query");
+        }
+        if (typeof projectQuery !== "object" || projectQuery === null) {
+          throw new Error("invalid project query");
+        }
+
+        projectKeys = Object.keys(projectQuery);
+        if (projectKeys.length === 0) {
+          rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        } else {
+          rows = await back.mongoPick(collection, [ whereQuery, projectQuery ], { selfMongo });
+        }
+  
+        rows.sort((a, b) => { return b.client.requests[0].request.timeline.valueOf() - a.client.requests[0].request.timeline.valueOf() });
+
+        res.send(JSON.stringify(rows));
+
+      } else {
+        throw new Error("invalid mode");
+      }
+
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_clientAnalytics): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 ContentsRouter.prototype.setMembers = async function () {

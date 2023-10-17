@@ -1015,6 +1015,8 @@ GeneralJs.prototype.returnTitleArr = function (color, height = 23) {
     1.5304667090305726,
     1.6419896914495518,
     1.4650343118329119,
+    1.6419896914495518,
+    1.4650343118329119,
   ];
 
   arr = [
@@ -1024,6 +1026,8 @@ GeneralJs.prototype.returnTitleArr = function (color, height = 23) {
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.889 80.293"><path d="M0 4.687h24.369c26.14 0 39.053 14.163 39.053 36.449V41.969c0 22.286-13.018 37.179-39.156 37.179H0V4.687zM23.744 66.025c14.997 0 22.078-8.436 22.078-23.848V41.344c0-15.309-6.561-23.535-22.286-23.535h-6.665v48.217H23.744z" fill="${color}"/><path d="M68.318 52.592v-0.833c0-17.184 12.185-28.327 28.015-28.327 14.059 0 26.556 8.228 26.556 27.702v4.165H83.628c0.416 9.061 5.311 14.268 13.538 14.268 6.978 0 10.414-3.021 11.352-7.603h14.268c-1.771 11.769-11.144 18.329-26.036 18.329C80.295 80.293 68.318 69.983 68.318 52.592zM108.205 46.03c-0.521-8.227-4.687-12.185-11.872-12.185 -6.77 0-11.352 4.479-12.497 12.185H108.205z" fill="${color}"/></svg>`,
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 131.843 80.293"><path d="M0 42.386v-0.833C0 18.954 15.829 3.541 36.97 3.541c17.912 0 31.242 8.748 33.013 27.077H52.695c-1.25-8.956-6.249-13.747-15.621-13.747 -11.769 0-19.267 9.165-19.267 24.577V42.281c0 15.413 7.082 24.369 19.37 24.369 9.269 0 15.726-4.686 17.079-14.267h16.559c-1.874 18.433-15.101 27.91-33.429 27.91C13.018 80.293 0 65.297 0 42.386z" fill="${color}"/><path d="M74.462 52.487v-0.833c0-17.079 12.393-28.222 28.742-28.222 16.351 0 28.639 10.935 28.639 27.91v0.833c0 17.184-12.393 28.118-28.742 28.118C86.854 80.293 74.462 69.462 74.462 52.487zM116.534 52.279v-0.729c0-10.414-4.895-16.663-13.33-16.663 -8.331 0-13.33 6.041-13.33 16.455v0.833c0 10.414 4.791 16.663 13.33 16.663C111.64 68.837 116.534 62.589 116.534 52.279z" fill="${color}"/></svg>`,
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 117.632 80.293"><path fill="${color}" d="M0,4.687h24.369c26.14,0,39.053,14.163,39.053,36.449v0.833c0,22.286-13.018,37.179-39.156,37.179H0V4.687z M23.744,66.025 c14.997,0,22.078-8.436,22.078-23.848v-0.833c0-15.309-6.561-23.535-22.286-23.535h-6.665v48.217L23.744,66.025L23.744,66.025z"/><path fill="${color}" d="M68.318,64.006c0-12.692,11.652-17.478,28.298-17.478h6.139v-2.185c0-6.45-1.977-9.987-8.844-9.987 c-5.93,0-8.635,3.017-9.259,7.698H70.398c0.937-12.9,11.133-18.622,24.449-18.622s22.784,5.41,22.784,20.183v35.477h-14.67v-6.555 c-3.121,4.369-7.907,7.699-16.438,7.699C76.641,80.236,68.318,75.451,68.318,64.006z M102.755,60.053v-4.577h-5.826 c-8.739,0-13.837,1.872-13.837,7.698c0,3.953,2.393,6.555,7.907,6.555C97.657,69.729,102.755,66.087,102.755,60.053z"/></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 123.2188 80.293"><path d="M0,4.5593h22.2144l17.3354,46.1938L56.6777,4.5593h21.7988v74.2212H61.7642V26.6701L41.2104,78.7805H35.709 L15.0518,26.6701v52.1104H0V4.5593z" fill="${color}"/><path d="M90.624,24.4899h15.0518v10.3809c3.4258-7.2666,8.7197-11.1074,17.543-11.2109v14.0137 c-11.1074-0.104-17.543,3.5298-17.543,13.9097v27.1973H90.624V24.4899z" fill="${color}"/></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112.0726 80.293"><path d="M0.0657,4.5593h25.6396c18.0625,0,28.3389,7.9932,28.3389,23.668v0.415c0,15.6743-10.8994,23.1489-27.8198,23.1489h-9.4463 v26.9893H0.0657V4.5593z M25.2903,40.0612c8.2007,0,12.5605-3.9448,12.5605-11.3149v-0.4155 c0-7.8892-4.5674-11.0034-12.5605-11.0034h-8.5122v22.7339H25.2903z" fill="${color}"/><path d="M61.1038-0.1116h15.0518v33.2178c2.6992-5.3979,8.6162-9.8618,17.6475-9.8618c10.6914,0,18.2695,6.436,18.2695,20.9688 v34.5674H97.0208V46.3928c0-7.3696-2.9072-10.8994-9.5508-10.8994c-6.4355,0-11.3145,3.9448-11.3145,11.9375v31.3496H61.1038 V-0.1116z" fill="${color}"/></svg>`,
   ];
 
   return { heightRatio: ratio, svg: arr };
@@ -2305,30 +2309,38 @@ GeneralJs.prototype.greenBar = function () {
     "/designer",
     "/designer?mode=contents",
     "/process",
+    "/mpr",
+    "/contents",
   ];
   naviIconsContextLinks = [
     "/client",
     "/process",
     "/builder?mode=construct",
     "/builder",
-    "/contents",
+    "/designer?mode=contents",
     "/calculation",
+    "/mpr",
+    "/contents",
   ];
   naviIconsLeftException = [
     0,
     2,
     -2.5,
     -1.5,
-    2,
-    3,
+    0,
+    1,
+    1.5,
+    2.5,
   ];
   naviIconsMap = [
     [ "client" ],
     [ "proposal" ],
     [ "project" ],
     [ "designer" ],
+    [ "designercontents" ],
+    [ "process", "calculation" ],
+    [ "mpr" ],
     [ "contents" ],
-    [ "process", "calculation" ]
   ];
   opacityMap = {
     construct: "project",
@@ -2354,7 +2366,7 @@ GeneralJs.prototype.greenBar = function () {
 
     opacityStandard = thisPathName;
     if (/mode/gi.test(window.location.search) && window.location.search.split("&").map((str) => { return str.split("=") }).flat().map((str) => { return str.replace(/[\&\=\?]/gi, '') }).some((key) => { return Object.keys(opacityMap).includes(key) })) {
-      opacityStandard = opacityMap[window.location.search.split("&").map((str) => { return str.split("=") }).flat().map((str) => { return str.replace(/[\&\=\?]/gi, '') }).find((key) => { return Object.keys(opacityMap).includes(key) })];
+      opacityStandard = thisPathName + opacityMap[window.location.search.split("&").map((str) => { return str.split("=") }).flat().map((str) => { return str.replace(/[\&\=\?]/gi, '') }).find((key) => { return Object.keys(opacityMap).includes(key) })];
     }
     if (naviIconsMap[i].includes(opacityStandard)) {
       svg_icon.style.opacity = String(0.5);
@@ -2381,7 +2393,7 @@ GeneralJs.prototype.greenBar = function () {
     width: String(25) + ea,
     height: String(23) + ea,
     top: String(top - 1) + ea,
-    left: String(iconRight + 46) + ea,
+    left: String(iconRight + 87) + ea,
   };
   for (let i in additionalStyle) {
     svg_icon.style[i] = additionalStyle[i];
@@ -2400,7 +2412,7 @@ GeneralJs.prototype.greenBar = function () {
     width: String(25) + ea,
     height: String(24) + ea,
     top: String(belowTop - 2) + ea,
-    left: String(iconRight + 46) + ea,
+    left: String(iconRight + 87) + ea,
   };
   for (let i in additionalStyle) {
     svg_icon.style[i] = additionalStyle[i];
@@ -2419,7 +2431,7 @@ GeneralJs.prototype.greenBar = function () {
     width: String(25) + ea,
     height: String(23) + ea,
     top: String(top - 1) + ea,
-    left: String(iconRight + 82) + ea,
+    left: String(iconRight + 124) + ea,
   };
   for (let i in additionalStyle) {
     svg_icon.style[i] = additionalStyle[i];
@@ -2447,7 +2459,7 @@ GeneralJs.prototype.greenBar = function () {
     width: String(26) + ea,
     height: String(26) + ea,
     top: String(belowTop - 2.5) + ea,
-    left: String(iconRight + 81) + ea,
+    left: String(iconRight + 123) + ea,
   };
   for (let i in additionalStyle) {
     svg_icon.style[i] = additionalStyle[i];

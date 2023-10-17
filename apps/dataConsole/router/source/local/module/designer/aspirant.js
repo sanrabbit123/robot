@@ -7178,9 +7178,12 @@ DesignerJs.prototype.aspirantView = async function () {
     let loading;
     let aspirants;
     let noticeSendRows;
+    let ago;
 
     loading = await this.mother.loadingRun();
-    aspirants = await ajaxJson({ noFlat: true, whereQuery: {} }, BACKHOST + "/getAspirants", { equal: true });
+    ago = new Date();
+    ago.setMonth(ago.getMonth() - 12);
+    aspirants = await ajaxJson({ noFlat: true, whereQuery: { "submit.partnership.date": { $gte: ago } } }, BACKHOST + "/getAspirants", { equal: true });
     noticeSendRows = await ajaxJson({ mode: "get" }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
 
     this.members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });

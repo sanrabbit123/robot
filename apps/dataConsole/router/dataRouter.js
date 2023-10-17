@@ -431,6 +431,8 @@ DataRouter.prototype.rou_get_First = function () {
             target = "message";
           } else if (/^use/i.test(req.params.id)) {
             target = "user";
+          } else if (/^mpr/i.test(req.params.id)) {
+            target = "mpr";
           } else if (/^ana/i.test(req.params.id)) {
             target = "analytics";
           } else if (/^ca/i.test(req.params.id)) {

@@ -7742,7 +7742,7 @@ ProjectJs.prototype.communicationRender = function () {
           let rawValue;
 
           do {
-            rawValue = await GeneralJs.prompt("계약시 별도의 이름이 있습니까? 없을 시, '없음'");
+            rawValue = await GeneralJs.prompt("계약시 별도 이름이 있습니까? 없으면, '없음'");
           } while (rawValue === null)
 
           contractName = rawValue.trim();
@@ -7755,7 +7755,7 @@ ProjectJs.prototype.communicationRender = function () {
           contractName = contractName.replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '');
 
           do {
-            rawValue = await GeneralJs.prompt("계약시 별도의 주소가 있습니까? 없을 시, '없음'");
+            rawValue = await GeneralJs.prompt("계약시 별도 주소가 있습니까? 없으면, '없음'");
           } while (rawValue === null)
 
           contractAddress = rawValue.trim();
