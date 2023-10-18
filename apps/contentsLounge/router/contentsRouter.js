@@ -1093,8 +1093,6 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
           }
         }
 
-        console.log(cliidArr);
-
         if (cliidArr.length > 0) {
           projects2 = await back.mongoPick("project", [
             {
@@ -1130,6 +1128,7 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
               tempObj.client.requests = [
                 equalJson(JSON.stringify(obj.client.requests[i]))
               ];
+              tempObj.requestNumber = i;
               projectArr = projects.filter((p) => { return p.cliid === obj.cliid });
               projectArr.sort((a, b) => { return a.proposal.date.valueOf() - b.proposal.date.valueOf() });
               thisProject = null;
