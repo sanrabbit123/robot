@@ -1071,30 +1071,9 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
           }
         }
 
-        projects = await back.mongoPick("project", [
-          {
-            "proposal.date": { $gte: startRequestTimeline }
-          },
-          {
-            proid: 1,
-            cliid: 1,
-            desid: 1,
-            service: 1,
-            "proposal.date": 1,
-            "process.status": 1,
-            "process.contract": 1,
-          }
-        ], { selfMongo: selfCoreMongo });
-        cliidArr_raw = [ ...new Set(rows.map((o) => { return o.cliid })) ];
-        cliidArr = [];
-        for (let cliid of cliidArr_raw) {
-          if (!projects.map((p) => { return p.cliid }).includes(cliid)) {
-            cliidArr.push(cliid);
-          }
-        }
-
+        cliidArr = [ ...new Set(rows.map((o) => { return o.cliid })) ];
         if (cliidArr.length > 0) {
-          projects2 = await back.mongoPick("project", [
+          projects = await back.mongoPick("project", [
             {
               $or: cliidArr.map((cliid) => { return { cliid } })
             },
@@ -1108,14 +1087,9 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
               "process.contract": 1,
             }
           ], { selfMongo: selfCoreMongo });
-
-          console.log(projects2)
-
-
         } else {
-          projects2 = [];
+          projects = [];
         }
-        projects = projects.concat(projects2);
 
         projects.sort((a, b) => { return a.proposal.date.valueOf() - b.proposal.date.valueOf() });
         rows.sort((a, b) => {
