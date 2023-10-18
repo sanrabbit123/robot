@@ -1147,7 +1147,7 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
                   }
                 }
               }
-              tempObj.project = thisProject;
+              tempObj.project = equalJson(JSON.stringify(thisProject));
 
               finalRows.push(equalJson(JSON.stringify(tempObj)));
             }

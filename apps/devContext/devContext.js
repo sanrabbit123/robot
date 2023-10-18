@@ -153,15 +153,26 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const selfMongo = this.MONGOC;
+    const cliid = "c1908_aa09s";
+    const client = await back.getClientById(cliid, { selfMongo });
+    const projects = (await back.getProjectsByQuery({ cliid }, { selfMongo })).toNormal();
+    let thisProject;
+
+    projects.sort((a, b) => { return a.proposal.date.valueOf() - b.proposal.date.valueOf() });
+
+    for (let i = 0; i < client.requests.length; i++) {
+      thisProject = null;
+      for (let p of projects) {
+        if (client.requests[i].request.timeline.valueOf() <= p.proposal.date.valueOf()) {
+          thisProject = equalJson(JSON.stringify(p));
+          break;
+        }
+      }
+      console.log(thisProject);
+    }
 
 
-    
-
-    
-
-
-
-    
 
 
     /*
