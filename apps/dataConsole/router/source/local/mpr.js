@@ -274,8 +274,10 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
   const { ea, totalContents, grayBarWidth, belowHeight, valueTargetClassName } = this;
   const { createNode, withOut, colorChip, dateToString, ajaxJson, findByAttribute, stringToDate, selfHref } = GeneralJs;
   try {
-    const { client, project: projectRaw, sessions, source } = instance.clients.find((c) => { return c.cliid === cliid && c.requestNumber === requestNumber });
+    const { client, project: projectRaw } = instance.clients.find((c) => { return c.cliid === cliid && c.requestNumber === requestNumber });
     const { request, analytics } = client.requests[0];
+    const clientAnalytics = (await ajaxJson({ mode: "pick", cliid }, CONTENTSHOST + "/clientAnalytics", { equal: true })).data;
+    const { contents, history, sessions, source } = clientAnalytics;
     let dataMatrix;
     let designer;
     let proid, desid, project;
@@ -344,12 +346,12 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
         title: "",
         value: "",
       },
-      // {
-      //   name: "source",
-      //   type: "string",
-      //   title: "소스",
-      //   value: client.name,
-      // },
+      {
+        name: "source",
+        type: "string",
+        title: "소스",
+        value: source.mother.length === 0 ? '-' : source.mother.join(", "),
+      },
     ];
 
     return dataMatrix;
