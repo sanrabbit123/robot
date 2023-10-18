@@ -1040,6 +1040,9 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
           throw new Error("invalid post");
         }
         const { standardDate } = equalJson(req.body);
+
+        console.log(standardDate)
+
         rows = await back.mongoPick(collection, [ {
           "client.requests": {
             $elemMatch: {
@@ -1134,6 +1137,10 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
             finalRows.push(equalJson(JSON.stringify(tempObj)));
           }
         }
+
+        finalRows.sort((a, b) => {
+          return b.client.requests[0].request.timeline.valueOf() - a.client.requests[0].request.timeline.valueOf();
+        })
 
         res.send(JSON.stringify(finalRows));
 

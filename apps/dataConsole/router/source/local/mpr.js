@@ -3355,19 +3355,8 @@ MprJs.prototype.launching = async function () {
     loading = await this.mother.loadingRun();
     ago = new Date();
     ago.setMonth(ago.getMonth() - defaultMonth);
-
     clients = await ajaxJson({
       mode: "get",
-      whereQuery: {
-        "client.requests": {
-          $elemMatch: {
-            "request.timeline": { $gte: ago }
-          }
-        }
-      },
-      projectQuery: {
-        "client": 1,
-      },
       standardDate: ago,
     }, CONTENTSHOST + "/clientAnalytics", { equal: true });
 
