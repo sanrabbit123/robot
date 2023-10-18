@@ -1106,7 +1106,7 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
             projectArr.sort((a, b) => { return a.proposal.date.valueOf() - b.proposal.date.valueOf() });
             thisProject = null;
             for (let p of projectArr) {
-              if (obj.client.requests[i].timeline.valueOf() <= p.proposal.date.valueOf()) {
+              if (obj.client.requests[i].request.timeline.valueOf() <= p.proposal.date.valueOf()) {
                 thisProject = equalJson(JSON.stringify(p));
                 break;
               }
