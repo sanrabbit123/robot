@@ -1113,6 +1113,7 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
         }
         projects = projects.concat(projects2);
 
+        projects.sort((a, b) => { return a.proposal.date.valueOf() - b.proposal.date.valueOf() });
         rows.sort((a, b) => {
           return b.client.requests[0].request.timeline.valueOf() - a.client.requests[0].request.timeline.valueOf();
         });
