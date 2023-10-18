@@ -1301,6 +1301,7 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
                   style: {
                     position: "relative",
                     display: "inline-block",
+                    top: String(textTop) + ea,
                     fontSize: String(historyFontSize) + ea,
                     fontWeight: String(400),
                     color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.shadowWhite,
@@ -1354,6 +1355,7 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
                   style: {
                     position: "relative",
                     display: "inline-block",
+                    top: String(textTop) + ea,
                     fontSize: String(historyFontSize) + ea,
                     fontWeight: String(700),
                     color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.black,
@@ -1407,6 +1409,7 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
                   style: {
                     position: "relative",
                     display: "inline-block",
+                    top: String(textTop) + ea,
                     fontSize: String(historyFontSize) + ea,
                     fontWeight: String(400),
                     color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.black,
@@ -1459,6 +1462,7 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
                   style: {
                     position: "relative",
                     display: "inline-block",
+                    top: String(textTop) + ea,
                     fontSize: String(historyFontSize) + ea,
                     fontWeight: String(400),
                     color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.black,
