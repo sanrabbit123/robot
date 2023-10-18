@@ -1195,9 +1195,295 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
       project,
       naverComplex
     } = dataSet;
+    const eventDictionary = {
+      pageInit: { title: "페이지 진입", mode: "white" },
+      viewToggle: { title: "사진 전환", mode: "white" },
+      popupOpen: { title: "팝업 열어보기", mode: "white" },
+      login: { title: "상담 문의 완료", mode: "green" },
+      styleCheck: { title: "스타일체크 완료", mode: "white" },
+      submitForm: { title: "상세 큐레이션 완료", mode: "white" },
+      sendLowLowPush: { title: "하하 전송", mode: "white" },
+      sendFinalPush: { title: "서비스 소개 전송", mode: "white" },
+      sendDesignerProposal: { title: "추천서 전송", mode: "green" },
+      sendPureOutOfClient: { title: "부재중 알림", mode: "white" },
+      callInSuccess: { title: "수신 통화 성공", mode: "white" },
+      callInFail: { title: "수신 통화 실패", mode: "white" },
+      callOutSuccess: { title: "발신 통화 성공", mode: "white" },
+      callOutFail: { title: "발신 통화 실패", mode: "white" },
+      searchKeyword: { title: "키워드 검색", mode: "white" },
+      clickKeyword: { title: "키워드 클릭", mode: "white" },
+      designerSelect: { title: "디자이너 선택", mode: "green" }
+    };
+    const { history } = clientAnalytics;
+    let targetDetail;
+    let scrollTong;
+    let historyFontSize;
+    let historyPaddingTop;
+    let historyPaddingBottom;
+    let historyPaddingLeft;
+    let historyBlockMargin;
+    let timeWidth;
+    let eventWidth;
+    let pageNameWidth;
+    let blockHeight;
+    let textTop;
+    let leftPadding;
+    let maxWidth;
 
-    console.log(tong, dataSet);
+    targetDetail = history.detail.filter((obj) => {
+      return obj.event !== "scrollStop" && obj.event !== "contentsView" && obj.event !== "readTimer" && obj.event !== "addressClick" && obj.event !== "inputBlur" && obj.event !== "photoBigView";
+    });
 
+    historyFontSize = 11;
+    historyPaddingTop = (isMac() ? 5 : 6)
+    historyPaddingBottom = (isMac() ? 7 : 6);
+    historyPaddingLeft = 12;
+    historyBlockMargin = 3;
+
+    timeWidth = 100;
+    eventWidth = 90;
+    pageNameWidth = 70;
+    blockHeight = 26;
+    textTop = isMac() ? -1 : 1;
+    leftPadding = 4;
+    maxWidth = 1000;
+
+    scrollTong = tong;
+
+    num = 0;
+    for (let block of targetDetail) {
+      createNode({
+        mother: scrollTong,
+        style: {
+          position: "relative",
+          display: "block",
+          width: String(100) + '%',
+          height: "auto",
+          marginBottom: String(historyBlockMargin) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              background: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.green : colorChip.gray2,
+              height: String(blockHeight) + ea,
+              width: String(timeWidth) + ea,
+              marginRight: String(historyBlockMargin) + ea,
+              borderRadius: String(3) + "px",
+              textAlign: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(leftPadding * 2, ea),
+                height: withOut(0, ea),
+                overflow: "scroll",
+                textAlign: "center",
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(maxWidth) + ea,
+                  height: withOut(0, ea),
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: dateToString(block.date, true).slice(2, -3),
+                  style: {
+                    position: "relative",
+                    display: "inline-block",
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(400),
+                    color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.shadowWhite,
+                    textAlign: "center",
+                  },
+                  bold: {
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.green,
+                  }
+                }
+              }
+            },
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              background: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.green : colorChip.gray0,
+              height: String(blockHeight) + ea,
+              width: String(eventWidth) + ea,
+              marginRight: String(historyBlockMargin) + ea,
+              borderRadius: String(3) + "px",
+              textAlign: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(leftPadding * 2, ea),
+                height: withOut(0, ea),
+                overflow: "scroll",
+                textAlign: "center",
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(maxWidth) + ea,
+                  height: withOut(0, ea),
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: eventDictionary[block.event.split("_")[0]]?.title || block.event,
+                  style: {
+                    position: "relative",
+                    display: "inline-block",
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(700),
+                    color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.black,
+                    textAlign: "center",
+                  },
+                  bold: {
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(700),
+                    color: colorChip.green,
+                  }
+                }
+              }
+            },
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              background: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.green : colorChip.gray0,
+              height: String(blockHeight) + ea,
+              width: String(pageNameWidth) + ea,
+              marginRight: String(historyBlockMargin) + ea,
+              borderRadius: String(3) + "px",
+              textAlign: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(leftPadding * 2, ea),
+                height: withOut(0, ea),
+                overflow: "scroll",
+                textAlign: "center",
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(maxWidth) + ea,
+                  height: withOut(0, ea),
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: (/\/([a-zA-Z]+\.php)/gi.exec(block.path) || [ "", "(not set)" ])[1].replace(/\.php$/gi, ''),
+                  style: {
+                    position: "relative",
+                    display: "inline-block",
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(400),
+                    color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.black,
+                    textAlign: "center",
+                  },
+                  bold: {
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.green,
+                  }
+                }
+              }
+            },
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              background: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.green : colorChip.gray0,
+              height: String(blockHeight) + ea,
+              width: withOut(timeWidth + eventWidth + pageNameWidth + (historyBlockMargin * 3), ea),
+              borderRadius: String(3) + "px",
+              textAlign: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(leftPadding * 2, ea),
+                height: withOut(0, ea),
+                overflow: "scroll",
+                textAlign: "center",
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(maxWidth) + ea,
+                  height: withOut(0, ea),
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: block.title.replace(/\| 홈리에종$/gi, '').trim(),
+                  style: {
+                    position: "relative",
+                    display: "inline-block",
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(400),
+                    color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.black,
+                    textAlign: "center",
+                  },
+                  bold: {
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.green,
+                  }
+                }
+              }
+            },
+          },
+        ]
+      });
+      scrollTong.style.height = "auto";
+      num++;
+    }
+
+
+    console.log(history);
+
+
+    
 
   } catch (e) {
     console.log(e);
@@ -4732,8 +5018,6 @@ MprJs.prototype.launching = async function () {
     this.whiteCardMode = "client";
     this.asyncProcessText = "로드중..";
     this.entireMode = entireMode;
-
-    console.log(clients);
 
     await this.mprBase();
     // await (this.reportWhite())();
