@@ -154,125 +154,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-    /*
-
-    await this.MONGOCONSOLEC.connect();
-
-    const selfMongo = this.MONGOC;
-    const selfConsoleMongo = this.MONGOCONSOLEC;
-
-    const targetClients = await back.getClientsByQuery({
-      requests: {
-        $elemMatch: {
-          "analytics.response.status": {
-            $regex: "^[응]"
-          }
-        }
-      }
-    }, { selfMongo });
-    const now = new Date();
-    const ago = new Date();
-    const delta = 14;
-    const emptyDate = new Date(2000, 0, 1);
-    const emptyDateValue = emptyDate.valueOf();
-    let thisHistories;
-    let historyWhereQuery;
-    let resultArr;
-    let hahaTargetClients;
-    let thisHistory;
-    let hahaList;
-    let index;
-    let proposals;
-    let totalProposals;
-    let boo;
-    let whereQuery, updateQuery;
-
-    ago.setDate(ago.getDate() - delta);
-
-    if (targetClients.length > 0) {
-
-      historyWhereQuery = {};
-      historyWhereQuery["$or"] = targetClients.map((c) => { return c.cliid }).map((cliid) => { return { cliid } });
-      thisHistories = await back.mongoPick("clientHistory", [ historyWhereQuery, {
-        cliid: 1,
-        manager: 1,
-        "curation.analytics.send": 1,
-        "curation.service.serid": 1,
-        "curation.construct.items": 1,
-      } ], { selfMongo: selfConsoleMongo });
-
-      resultArr = [];
-      for (let { manager, cliid, curation: { analytics: { send } } } of thisHistories) {
-        resultArr.push({
-          cliid,
-          manager,
-          haha: send.filter((obj) => { return obj.page === "lowLowPush" }),
-        })
-      }
-
-      hahaTargetClients = targetClients.toNormal().filter((client) => { return resultArr.filter((o) => { return o.haha.length > 0 }).map((c) => { return c.cliid }).includes(client.cliid) });
-
-      for (let client of hahaTargetClients) {
-        thisHistory = resultArr.find((c) => { return c.cliid === client.cliid });
-        thisHistory.haha.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-        client.haha = equalJson(JSON.stringify(thisHistory.haha));
-        client.manager = thisHistory.manager;
-      }
-      
-      if (hahaTargetClients.length > 0) {
-        totalProposals = await back.getProjectsByQuery({ $or: hahaTargetClients.map((c) => { return { cliid: c.cliid } }) }, { selfMongo });
-
-        for (let client of hahaTargetClients) {
-          index = 0;
-          for (let { request, analytics } of client.requests) {
-            hahaList = client.haha.filter((o) => { return o.date.valueOf() >= request.timeline.valueOf() });
-            if (hahaList.length > 0) {
-              if (client.requests[index - 1] !== undefined) {
-                hahaList = hahaList.filter((o) => { return o.date.valueOf() <= client.requests[index - 1].request.timeline.valueOf() });
-              }
-              if (hahaList.length > 0) {
-                if (hahaList[0].date.valueOf() <= ago.valueOf()) {
-                  proposals = totalProposals.toNormal().filter((p) => { return p.cliid === client.cliid });
-                  if (client.requests[index - 1] !== undefined) {
-                    proposals = proposals.filter((p) => { return p.proposal.date.valueOf() >= request.timeline.valueOf() && p.proposal.date.valueOf() < client.requests[index - 1].request.timeline.valueOf() });
-                  } else {
-                    proposals = proposals.filter((p) => { return p.proposal.date.valueOf() >= request.timeline.valueOf() });
-                  }
-
-                  boo = false;
-                  if (proposals.length === 0) {
-                    boo = true;
-                  } else {
-                    proposals = proposals.filter((p) => { return p.process.contract.first.date.valueOf() > emptyDateValue && !/드랍/gi.test(p.process.status) })
-                    boo = (proposals.length === 0);
-                  }
-
-                  if (boo) {
-                    whereQuery = {};
-                    updateQuery = {};
-                    whereQuery.cliid = client.cliid;
-                    updateQuery["requests." + String(index) + ".analytics.response.status"] = "드랍";
-                    console.log(whereQuery, updateQuery);
-                  }
-                
-                }
-              }
-            }
-            index++;
-          }
-        }
-      }
-
-    }
-
-
-
-    await this.MONGOCONSOLEC.close();
-    
-    */
 
     
 
+    
+
+    // await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/hahaDropClients", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
 
     
 

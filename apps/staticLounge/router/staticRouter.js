@@ -5745,7 +5745,7 @@ StaticRouter.prototype.rou_post_hahaDropClients = function () {
                       updateQuery = {};
                       whereQuery.cliid = client.cliid;
                       updateQuery["requests." + String(index) + ".analytics.response.status"] = "드랍";
-                      console.log(whereQuery, updateQuery);
+                      await back.updateClient([ whereQuery, updateQuery ], { selfMongo });
                     }
                   
                   }
@@ -5757,6 +5757,8 @@ StaticRouter.prototype.rou_post_hahaDropClients = function () {
         }
   
       }
+
+      await logger.cron("haha drop clints success : " + JSON.stringify(new Date()));
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
