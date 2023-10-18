@@ -16,6 +16,7 @@ const HumanPacket = function () {
   this.sender = {
     sms: "0220392252",
   };
+  this.senderkey = "dd2f3f0b034a044b16531e5171cbcc764fb716eb";
   this.webmailHostConst = "webmail";
   this.webmailPort = 110;
   this.webmailSmtpHost = "smtp.cafe24.com";
@@ -33,6 +34,7 @@ HumanPacket.prototype.sendSms = async function (obj) {
   }
   const instance = this;
   const { autoHypenPhone, requestSystem, errorLog, sleep, emergencyAlarm } = this.mother;
+  const { url: { sms }, user, apiKey, sender, senderkey } = this;
   const url = "https://centrex.uplus.co.kr/RestApi/smssend";
   const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
   try {
@@ -47,18 +49,34 @@ HumanPacket.prototype.sendSms = async function (obj) {
     destnumber = obj.to.replace(/[^0-9]/gi, '');
     smsmsg = "[제목없음]\n\n" + (/^\[홈리에종\]/i.test(obj.body.trim()) ? obj.body.trim() : "[홈리에종] " + obj.body.trim());
 
-    safeNum = 0;
-    do {
-      res = ((await requestSystem(url + "?id=" + id + "&pass=" + pass + "&destnumber=" + destnumber + "&smsmsg=" + global.encodeURIComponent(smsmsg), { id, pass, destnumber, smsmsg }, { headers: { "Content-Type": "application/json" } })).data);
-      safeNum++;
-    } while (res["SVC_RT"] !== "0000" && safeNum < 5);
+    try {
+      res = await requestSystem(sms, {
+        key: apiKey.sms,
+        user_id: user.sms,
+        sender: sender.sms,
+        receiver: destnumber,
+        msg: smsmsg
+      });
 
-    if (res["SVC_RT"] !== "0000") {
-      throw new Error("sms send fail : " + res["DATAS"]);
+      if (typeof res.data === "object" && res.data !== null && res.data.message === "success") {
+        finalResult = true;
+      } else {
+        throw new Error("aligo fail");
+      }
+    } catch (e) {
+      console.log(e);
+      safeNum = 0;
+      do {
+        res = ((await requestSystem(url + "?id=" + id + "&pass=" + pass + "&destnumber=" + destnumber + "&smsmsg=" + global.encodeURIComponent(smsmsg), { id, pass, destnumber, smsmsg }, { headers: { "Content-Type": "application/json" } })).data);
+        safeNum++;
+      } while (res["SVC_RT"] !== "0000" && safeNum < 5);
+  
+      if (res["SVC_RT"] !== "0000") {
+        throw new Error("sms send fail : " + res["DATAS"]);
+      }
+      errorLog("sms remain num : " + res["DATAS"]["RESTCOUNT"]).catch((err) => { console.log(err); });
+      finalResult = (res["SVC_RT"] === "0000");
     }
-
-    errorLog("sms remain num : " + res["DATAS"]["RESTCOUNT"]).catch((err) => { console.log(err); });
-    finalResult = (res["SVC_RT"] === "0000");
 
     return finalResult;
   } catch (e) {

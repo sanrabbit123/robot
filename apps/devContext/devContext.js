@@ -6950,7 +6950,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "이지원", "2023-07-20" ],
+    //   [ "김희연", "2023-09-13" ],
     // ]);
 
 
@@ -6984,8 +6984,8 @@ DevContext.prototype.launching = async function () {
 
     
     // // send sms
-    // const name = "이슬아";
-    // const amount = 7879000;
+    // const name = "서운아";
+    // const amount = 3390000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
