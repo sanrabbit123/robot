@@ -274,24 +274,28 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
   const { ea, totalContents, grayBarWidth, belowHeight, valueTargetClassName } = this;
   const { createNode, withOut, colorChip, dateToString, ajaxJson, findByAttribute, stringToDate, selfHref } = GeneralJs;
   try {
-
-    console.log(cliid, requestNumber);
-
-    const { client, project: { proid, desid }, sessions, source } = instance.clients.find((c) => { return c.cliid === cliid && c.requestNumber === requestNumber });
-    const [ project ] = await ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects", { equal: true });
+    const { client, project: projectRaw, sessions, source } = instance.clients.find((c) => { return c.cliid === cliid && c.requestNumber === requestNumber });
+    const { request, analytics } = client.requests[0];
     let dataMatrix;
     let designer;
+    let proid, desid, project;
 
-    if (desid !== "") {
-      [ designer ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
+    if (projectRaw !== null) {
+      proid = projectRaw.proid;
+      desid = projectRaw.desid;
+      [ project ] = await ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects", { equal: true });
+      if (desid !== "") {
+        [ designer ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
+      } else {
+        designer = null;
+      }
     } else {
+      proid = "";
+      desid = "";
       designer = null;
+      project = null;
     }
     
-    console.log(project, designer);
-
-
-
     dataMatrix = [
       {
         name: "name",
@@ -317,6 +321,35 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
         title: "신청일",
         value: dateToString(client.requests[0].request.timeline, true),
       },
+      {
+        name: "status",
+        type: "select",
+        title: "응대 상태",
+        columns: [
+          "응대중",
+          "장기",
+          "드랍",
+          "진행",
+        ],
+        value: [
+          "응대중",
+          "장기",
+          "드랍",
+          "진행",
+        ].map((str) => { return str === analytics.response.status ? 1 : 0 })
+      },
+      {
+        name: "margin",
+        type: "margin",
+        title: "",
+        value: "",
+      },
+      // {
+      //   name: "source",
+      //   type: "string",
+      //   title: "소스",
+      //   value: client.name,
+      // },
     ];
 
     return dataMatrix;

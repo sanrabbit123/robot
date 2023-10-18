@@ -1135,6 +1135,26 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
 
         res.send(JSON.stringify(finalRows));
 
+      } else if (mode === "pick") {
+
+        if (req.body.cliid === undefined) {
+          throw new Error("invalid post");
+        }
+        const { cliid } = equalJson(req.body);
+        
+        if (req.body.projectQuery !== undefined) {
+          const { projectQuery } = equalJson(req.body);
+          rows = await back.mongoPick(collection, [ { cliid }, projectQuery ], { selfMongo });
+        } else {
+          rows = await back.mongoRead(collection, { cliid }, { selfMongo });
+        }
+
+        if (rows.length > 0) {
+          res.send(JSON.stringify({ data: rows[rows.length - 1] }));
+        } else {
+          res.send(JSON.stringify({ data: null }));
+        }
+
       } else {
         throw new Error("invalid mode");
       }
