@@ -1092,6 +1092,9 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
             cliidArr.push(cliid);
           }
         }
+
+        console.log(cliidArr);
+
         if (cliidArr.length > 0) {
           projects2 = await back.mongoPick("project", [
             {

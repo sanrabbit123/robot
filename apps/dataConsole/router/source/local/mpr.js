@@ -99,6 +99,54 @@ MprJs.prototype.mainDataRender = async function () {
         }))
       },
       {
+        title: "문의일",
+        width: 100,
+        name: "timeline",
+        type: "date",
+      },
+      {
+        title: "문의 시간",
+        width: 100,
+        name: "timelineDetail",
+        type: "string",
+      },
+      {
+        title: "소스",
+        width: 150,
+        name: "source",
+        type: "string",
+      },
+      {
+        title: "미디움",
+        width: 150,
+        name: "medium",
+        type: "string",
+      },
+      {
+        title: "캠페인",
+        width: 150,
+        name: "campaign",
+        type: "string",
+      },
+      {
+        title: "디바이스",
+        width: 150,
+        name: "device",
+        type: "string",
+      },
+      {
+        title: "평수",
+        width: 100,
+        name: "pyeong",
+        type: "string",
+      },
+      {
+        title: "거주중 여부",
+        width: 100,
+        name: "living",
+        type: "string",
+      },
+      {
         title: "주소",
         width: 600,
         name: "address",
@@ -108,7 +156,7 @@ MprJs.prototype.mainDataRender = async function () {
 
     values = {};
 
-    for (let { client } of instance.clients) {
+    for (let { client, project, sessions, source } of instance.clients) {
 
       standards.values[client.cliid] = [
         {
@@ -125,6 +173,38 @@ MprJs.prototype.mainDataRender = async function () {
         {
           value: client.requests[0].analytics.response.status,
           name: "status",
+        },
+        {
+          value: dateToString(client.requests[0].request.timeline),
+          name: "timeline",
+        },
+        {
+          value: dateToString(client.requests[0].request.timeline, true).split(" ")[1],
+          name: "timelineDetail",
+        },
+        {
+          value: source.mother.length === 0 ? '-' : source.mother.join(", "),
+          name: "source",
+        },
+        {
+          value: source.medium.length === 0 ? '-' : source.medium.join(", "),
+          name: "medium",
+        },
+        {
+          value: source.campaign.length === 0 ? '-' : source.campaign.join(", "),
+          name: "campaign",
+        },
+        {
+          value: sessions.device.length === 0 ? '-' : Array.from(new Set(sessions.device.map((o) => { return o.kinds }))).join(", "),
+          name: "device",
+        },
+        {
+          value: client.requests[0].request.space.pyeong,
+          name: "pyeong",
+        },
+        {
+          value: client.requests[0].request.space.resident.living ? "거주중" : "이사",
+          name: "living",
         },
         {
           value: client.requests[0].request.space.address,
