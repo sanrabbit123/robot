@@ -1002,7 +1002,7 @@ ContentsRouter.prototype.rou_post_getAllContents = function () {
 ContentsRouter.prototype.rou_post_clientAnalytics = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson } = this.mother;
+  const { equalJson, sleep } = this.mother;
   let obj = {};
   obj.link = [ "/clientAnalytics" ];
   obj.func = async function (req, res, logger) {
@@ -1022,6 +1022,10 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
       const collection = "clientAnalytics";
       let rows;
       let projectKeys;
+      let startRequestTimeline;
+      let coreWhereQuery;
+      let coreRows;
+      let thisClient;
 
       if (mode === "get") {
 
@@ -1046,6 +1050,25 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
         }
         
         rows.sort((a, b) => { return b.client.requests[0].request.timeline.valueOf() - a.client.requests[0].request.timeline.valueOf() });
+        startRequestTimeline = new Date(JSON.stringify(rows[rows.length - 1].client.requests[0].request.timeline).slice(1, -1));
+        startRequestTimeline.setDate(startRequestTimeline.getDate() - 1);
+        coreWhereQuery = {
+          requests: {
+            $elemMatch: {
+              "request.timeline": { $gte: startRequestTimeline }
+            }
+          }
+        };
+        coreRows = (await back.getClientsByQuery(coreWhereQuery, { selfMongo: selfCoreMongo })).toNormal();
+        for (let obj of rows) {
+          thisClient = coreRows.find((c) => { return c.cliid === obj.cliid }) === undefined ? null : coreRows.find((c) => { return c.cliid === obj.cliid });
+          if (thisClient !== null) {
+            obj.client = equalJson(JSON.stringify(thisClient));
+          } else {
+            obj.client = (await back.getClientById(obj.cliid, { selfMongo: selfCoreMongo })).toNormal();
+            await sleep(500);
+          }
+        }
 
         res.send(JSON.stringify(rows));
 
