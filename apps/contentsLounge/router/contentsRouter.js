@@ -1148,6 +1148,11 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
                   }
                 }
               }
+              if (obj.cliid === "c1908_aa09s") {
+                console.log(thisProject);
+              }
+
+
               tempObj.project = equalJson(JSON.stringify(thisProject));
 
               finalRows.push(equalJson(JSON.stringify(tempObj)));
