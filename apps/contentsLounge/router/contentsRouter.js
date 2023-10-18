@@ -1036,28 +1036,22 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
 
       if (mode === "get") {
 
-        if (req.body.whereQuery === undefined || req.body.projectQuery === undefined) {
+        if (req.body.standardDate === undefined) {
           throw new Error("invalid post");
         }
-        let { whereQuery, projectQuery } = equalJson(req.body);
-        if (typeof whereQuery !== "object" || whereQuery === null) {
-          throw new Error("invalid where query");
-        }
-        if (typeof projectQuery !== "object" || projectQuery === null) {
-          throw new Error("invalid project query");
-        }
-
-        projectKeys = Object.keys(projectQuery);
-        if (projectKeys.length === 0) {
-          rows = await back.mongoRead(collection, whereQuery, { selfMongo });
-        } else {
-          projectQuery.client = 1;
-          projectQuery.cliid = 1;
-          rows = await back.mongoPick(collection, [ whereQuery, projectQuery ], { selfMongo });
-        }
-        
-        rows.sort((a, b) => { return b.client.requests[0].request.timeline.valueOf() - a.client.requests[0].request.timeline.valueOf() });
-        startRequestTimeline = new Date(JSON.stringify(rows[rows.length - 1].client.requests[0].request.timeline).slice(1, -1));
+        const { standardDate } = equalJson(req.body);
+        rows = await back.mongoPick(collection, [ {
+          "client.requests": {
+            $elemMatch: {
+              "request.timeline": { $gte: standardDate }
+            }
+          }
+        }, {
+          cliid: 1,
+          sessions: 1,
+          source: 1,
+        } ], { selfMongo });
+        startRequestTimeline = new Date(JSON.stringify(standardDate).slice(1, -1));
         startRequestTimeline.setDate(startRequestTimeline.getDate() - 3);
         coreWhereQuery = {
           requests: {
@@ -1073,7 +1067,6 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
             obj.client = equalJson(JSON.stringify(thisClient));
           } else {
             obj.client = (await back.getClientById(obj.cliid, { selfMongo: selfCoreMongo })).toNormal();
-            await sleep(500);
           }
         }
 

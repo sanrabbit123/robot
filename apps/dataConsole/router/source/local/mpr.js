@@ -3356,15 +3356,20 @@ MprJs.prototype.launching = async function () {
     ago = new Date();
     ago.setMonth(ago.getMonth() - defaultMonth);
 
-    clients = await ajaxJson({ mode: "get", whereQuery: {
-      "client.requests": {
-        $elemMatch: {
-          "request.timeline": { $gte: ago }
+    clients = await ajaxJson({
+      mode: "get",
+      whereQuery: {
+        "client.requests": {
+          $elemMatch: {
+            "request.timeline": { $gte: ago }
+          }
         }
-      }
-    }, projectQuery: {
-      "client": 1,
-    } }, CONTENTSHOST + "/clientAnalytics", { equal: true });
+      },
+      projectQuery: {
+        "client": 1,
+      },
+      standardDate: ago,
+    }, CONTENTSHOST + "/clientAnalytics", { equal: true });
 
     members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
 
