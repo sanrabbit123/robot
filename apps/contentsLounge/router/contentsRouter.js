@@ -1075,7 +1075,7 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
 
         finalRows = [];
         for (let obj of rows) {
-          for (let i = 0; i < obj.cilent.requests.length; i++) {
+          for (let i = 0; i < obj.client.requests.length; i++) {
             copiedObj = equalJson(JSON.stringify(obj));
             tempObj = { ...copiedObj };
             tempObj.cliid = obj.cliid;
