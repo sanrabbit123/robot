@@ -175,6 +175,9 @@ DataRouter.prototype.rou_post_getDocuments = function () {
           for (let obj of data) {
             thisHistory = resultArr.find((o) => { return o.cliid === obj.standard.cliid });
             thisHistory.proposal.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+            thisHistory.about.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+            thisHistory.pure.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+            thisHistory.haha.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
 
             if (thisHistory.proposal.length > 0) {
               proposalSend = dateToString(thisHistory.proposal[0].date);

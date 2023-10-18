@@ -3383,7 +3383,6 @@ MprJs.prototype.launching = async function () {
     this.asyncProcessText = "로드중..";
     this.entireMode = entireMode;
 
-
     await this.mprBase();
     // await (this.reportWhite())();
 
