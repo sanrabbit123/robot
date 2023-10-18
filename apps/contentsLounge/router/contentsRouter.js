@@ -1020,6 +1020,7 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
       const selfCoreMongo = instance.mongo;
       const { mode } = equalJson(req.body);
       const collection = "clientAnalytics";
+      const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
       let rows;
       let projectKeys;
       let startRequestTimeline;
@@ -1135,7 +1136,17 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
                   break;
                 }
               }
+              if (thisProject !== null) {
+                if (thisProject.process.contract.first.date.valueOf() > emptyDateValue) {
+                  if (!/드랍/gi.test(thisProject.process.status)) {
+                    tempObj.client.requests[0].analytics.response.status = "진행";
+                  } else {
+                    tempObj.client.requests[0].analytics.response.status = "드랍";
+                  }
+                }
+              }
               tempObj.project = thisProject;
+
               finalRows.push(equalJson(JSON.stringify(tempObj)));
             }
           }

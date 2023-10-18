@@ -73,7 +73,7 @@ MprJs.prototype.mainDataRender = async function () {
           },
           {
             value: "드랍",
-            color: colorChip.deactive,
+            color: colorChip.black,
           },
           {
             value: "진행",
