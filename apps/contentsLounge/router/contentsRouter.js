@@ -1117,25 +1117,27 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
 
         finalRows = [];
         for (let obj of rows) {
-          for (let i = 0; i < obj.client.requests.length; i++) {
-            copiedObj = equalJson(JSON.stringify(obj));
-            tempObj = { ...copiedObj };
-            tempObj.cliid = obj.cliid;
-            tempObj.client = equalJson(JSON.stringify(obj.client));
-            tempObj.client.requests = [
-              equalJson(JSON.stringify(obj.client.requests[i]))
-            ];
-            projectArr = projects.filter((p) => { return p.cliid === obj.cliid });
-            projectArr.sort((a, b) => { return a.proposal.date.valueOf() - b.proposal.date.valueOf() });
-            thisProject = null;
-            for (let p of projectArr) {
-              if (obj.client.requests[i].request.timeline.valueOf() <= p.proposal.date.valueOf()) {
-                thisProject = equalJson(JSON.stringify(p));
-                break;
+          if (obj.cliid !== "c1801_aa01s") {
+            for (let i = 0; i < obj.client.requests.length; i++) {
+              copiedObj = equalJson(JSON.stringify(obj));
+              tempObj = { ...copiedObj };
+              tempObj.cliid = obj.cliid;
+              tempObj.client = equalJson(JSON.stringify(obj.client));
+              tempObj.client.requests = [
+                equalJson(JSON.stringify(obj.client.requests[i]))
+              ];
+              projectArr = projects.filter((p) => { return p.cliid === obj.cliid });
+              projectArr.sort((a, b) => { return a.proposal.date.valueOf() - b.proposal.date.valueOf() });
+              thisProject = null;
+              for (let p of projectArr) {
+                if (obj.client.requests[i].request.timeline.valueOf() <= p.proposal.date.valueOf()) {
+                  thisProject = equalJson(JSON.stringify(p));
+                  break;
+                }
               }
+              tempObj.project = thisProject;
+              finalRows.push(equalJson(JSON.stringify(tempObj)));
             }
-            tempObj.project = thisProject;
-            finalRows.push(equalJson(JSON.stringify(tempObj)));
           }
         }
 
