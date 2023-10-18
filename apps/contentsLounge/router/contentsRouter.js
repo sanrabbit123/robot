@@ -1029,6 +1029,10 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
       let finalRows;
       let tempObj;
       let copiedObj;
+      let projects, projects2;
+      let cliidArr_raw, cliidArr;
+      let thisProject;
+      let projectArr;
 
       if (mode === "get") {
 
@@ -1054,7 +1058,7 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
         
         rows.sort((a, b) => { return b.client.requests[0].request.timeline.valueOf() - a.client.requests[0].request.timeline.valueOf() });
         startRequestTimeline = new Date(JSON.stringify(rows[rows.length - 1].client.requests[0].request.timeline).slice(1, -1));
-        startRequestTimeline.setDate(startRequestTimeline.getDate() - 1);
+        startRequestTimeline.setDate(startRequestTimeline.getDate() - 3);
         coreWhereQuery = {
           requests: {
             $elemMatch: {
@@ -1073,6 +1077,21 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
           }
         }
 
+        projects = (await back.getProjectsByQuery({ "proposal.date": { $gte: startRequestTimeline } }, { selfMongo: selfCoreMongo })).toNormal();
+        cliidArr_raw = [ ...new Set(rows.map((o) => { return o.cliid })) ];
+        cliidArr = [];
+        for (let cliid of cliidArr_raw) {
+          if (!projects.map((p) => { return p.cliid }).includes(cliid)) {
+            cliidArr.push(cliid);
+          }
+        }
+        if (cliidArr.length > 0) {
+          projects2 = (await back.getProjectsByQuery({ $or: cliidArr.map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo })).toNormal();
+        } else {
+          projects2 = [];
+        }
+        projects = projects.concat(projects2);
+
         finalRows = [];
         for (let obj of rows) {
           for (let i = 0; i < obj.client.requests.length; i++) {
@@ -1083,6 +1102,16 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
             tempObj.client.requests = [
               equalJson(JSON.stringify(obj.client.requests[i]))
             ];
+            projectArr = projects.filter((p) => { return p.cliid === obj.cliid });
+            projectArr.sort((a, b) => { return a.proposal.date.valueOf() - b.proposal.date.valueOf() });
+            thisProject = null;
+            for (let p of projectArr) {
+              if (obj.client.requests[i].timeline.valueOf() <= p.proposal.date.valueOf()) {
+                thisProject = equalJson(JSON.stringify(p));
+                break;
+              }
+            }
+            tempObj.project = thisProject;
             finalRows.push(equalJson(JSON.stringify(tempObj)));
           }
         }
