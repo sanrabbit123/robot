@@ -1077,7 +1077,20 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
           }
         }
 
-        projects = (await back.getProjectsByQuery({ "proposal.date": { $gte: startRequestTimeline } }, { selfMongo: selfCoreMongo })).toNormal();
+        projects = await back.mongoPick("project", [
+          {
+            "proposal.date": { $gte: startRequestTimeline }
+          },
+          {
+            proid: 1,
+            cliid: 1,
+            desid: 1,
+            service: 1,
+            "proposal.date": 1,
+            "process.status": 1,
+            "process.contract": 1,
+          }
+        ], { selfMongo: selfCoreMongo });
         cliidArr_raw = [ ...new Set(rows.map((o) => { return o.cliid })) ];
         cliidArr = [];
         for (let cliid of cliidArr_raw) {
@@ -1086,7 +1099,20 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
           }
         }
         if (cliidArr.length > 0) {
-          projects2 = (await back.getProjectsByQuery({ $or: cliidArr.map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo })).toNormal();
+          projects2 = await back.mongoPick("project", [
+            {
+              $or: cliidArr.map((cliid) => { return { cliid } })
+            },
+            {
+              proid: 1,
+              cliid: 1,
+              desid: 1,
+              service: 1,
+              "proposal.date": 1,
+              "process.status": 1,
+              "process.contract": 1,
+            }
+          ], { selfMongo: selfCoreMongo });
         } else {
           projects2 = [];
         }

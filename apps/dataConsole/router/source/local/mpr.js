@@ -3332,7 +3332,7 @@ MprJs.prototype.launching = async function () {
   try {
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true" && getObj.dataonly === "true");
-    const defaultMonth = 6;
+    const defaultMonth = 3;
     let loading;
     let members;
     let ago;
@@ -3382,6 +3382,8 @@ MprJs.prototype.launching = async function () {
     this.whiteCardMode = "aspirant";
     this.asyncProcessText = "로드중..";
     this.entireMode = entireMode;
+
+    console.log(clients);
 
     await this.mprBase();
     // await (this.reportWhite())();
