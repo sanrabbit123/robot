@@ -1149,7 +1149,8 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
                 }
               }
               if (obj.cliid === "c1908_aa09s") {
-                console.log(thisProject);
+
+                console.log(obj.client.requests[i].request.timeline, projectArr);
               }
 
 
