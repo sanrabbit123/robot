@@ -1026,6 +1026,9 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
       let coreWhereQuery;
       let coreRows;
       let thisClient;
+      let finalRows;
+      let tempObj;
+      let copiedObj;
 
       if (mode === "get") {
 
@@ -1070,7 +1073,21 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
           }
         }
 
-        res.send(JSON.stringify(rows));
+        finalRows = [];
+        for (let obj of rows) {
+          for (let i = 0; i < obj.cilent.requests.length; i++) {
+            copiedObj = equalJson(JSON.stringify(obj));
+            tempObj = { ...copiedObj };
+            tempObj.cliid = obj.cliid;
+            tempObj.client = equalJson(JSON.stringify(obj.client));
+            tempObj.client.requests = [
+              equalJson(JSON.stringify(obj.client.requests[i]))
+            ];
+            finalRows.push(equalJson(JSON.stringify(tempObj)));
+          }
+        }
+
+        res.send(JSON.stringify(finalRows));
 
       } else {
         throw new Error("invalid mode");
