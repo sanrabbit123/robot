@@ -1108,6 +1108,10 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
               "process.contract": 1,
             }
           ], { selfMongo: selfCoreMongo });
+
+          console.log(projects2)
+
+
         } else {
           projects2 = [];
         }
@@ -1148,12 +1152,6 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
                   }
                 }
               }
-              if (obj.cliid === "c1908_aa09s") {
-
-                console.log(obj.client.requests[i].request.timeline, projectArr);
-              }
-
-
               tempObj.project = equalJson(JSON.stringify(thisProject));
 
               finalRows.push(equalJson(JSON.stringify(tempObj)));
