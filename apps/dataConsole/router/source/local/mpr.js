@@ -3332,7 +3332,7 @@ MprJs.prototype.launching = async function () {
   try {
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true" && getObj.dataonly === "true");
-    const defaultMonth = 3;
+    const defaultMonth = 2;
     let loading;
     let members;
     let ago;
