@@ -1154,8 +1154,11 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
           finalRows = finalRows.filter((o) => {
             return o.client.requests[0].request.timeline.valueOf() >= startDate.valueOf() && o.client.requests[0].request.timeline.valueOf() <= endDate.valueOf();
           });
+          finalRows.sort((a, b) => {
+            return b.client.requests[0].request.timeline.valueOf() - a.client.requests[0].request.timeline.valueOf();
+          });
         }
-        
+
         res.send(JSON.stringify(finalRows));
 
       } else if (mode === "pick") {
