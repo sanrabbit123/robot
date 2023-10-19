@@ -1150,6 +1150,12 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
           }
         }
 
+        if (req.body.initRequest !== true && req.body.initRequest !== "true") {
+          finalRows = finalRows.filter((o) => {
+            return o.client.requests[0].request.timeline.valueOf() >= startDate.valueOf() && o.client.requests[0].request.timeline.valueOf() <= endDate.valueOf();
+          });
+        }
+        
         res.send(JSON.stringify(finalRows));
 
       } else if (mode === "pick") {

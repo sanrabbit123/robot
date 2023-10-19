@@ -5379,6 +5379,7 @@ MprJs.prototype.launching = async function () {
     clients = await ajaxJson({
       mode: "get",
       standardDate: ago,
+      initRequest: true,
     }, CONTENTSHOST + "/clientAnalytics", { equal: true });
 
     members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
