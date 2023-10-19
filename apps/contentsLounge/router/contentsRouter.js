@@ -1036,6 +1036,7 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
       let projectArr;
       let startDate, endDate;
       let endDateCopied;
+      let startDateCopied;
 
       if (mode === "get") {
 
@@ -1049,27 +1050,19 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
           endDate = new Date();
         }
 
+        startDateCopied = new Date(JSON.stringify(startDate).slice(1, -1));
+        startDate = new Date(startDateCopied.getFullYear(), startDateCopied.getMonth(), startDateCopied.getDate(), 0, 0, 0);
+
         endDateCopied = new Date(JSON.stringify(endDate).slice(1, -1));
         endDate = new Date(endDateCopied.getFullYear(), endDateCopied.getMonth(), endDateCopied.getDate(), 0, 0, 0);
         endDate.setDate(endDate.getDate() + 1);
 
         rows = await back.mongoPick(collection, [ {
-          $and: [
-            {
-              "client.requests": {
-                $elemMatch: {
-                  "request.timeline": { $gte: startDate }
-                }
-              }
-            },
-            {
-              "client.requests": {
-                $elemMatch: {
-                  "request.timeline": { $lt: endDate }
-                }
-              }
-            },
-          ]
+          "client.requests": {
+            $elemMatch: {
+              "request.timeline": { $gte: startDate, $lt: endDate }
+            }
+          }
         }, {
           cliid: 1,
           sessions: 1,
@@ -1079,22 +1072,11 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
         startRequestTimeline = new Date(JSON.stringify(startDate).slice(1, -1));
         startRequestTimeline.setDate(startRequestTimeline.getDate() - 3);
         coreWhereQuery = {
-          $and: [
-            {
-              requests: {
-                $elemMatch: {
-                  "request.timeline": { $gte: startRequestTimeline }
-                }
-              }
-            },
-            {
-              requests: {
-                $elemMatch: {
-                  "request.timeline": { $lt: endDate }
-                }
-              }
-            },
-          ]
+          requests: {
+            $elemMatch: {
+              "request.timeline": { $gte: startRequestTimeline, $lt: endDate }
+            }
+          }
         };
         coreRows = (await back.getClientsByQuery(coreWhereQuery, { selfMongo: selfCoreMongo })).toNormal();
         for (let obj of rows) {

@@ -2366,7 +2366,8 @@ MprJs.prototype.mprBase = async function () {
       
         }
     
-        await this.coreColorSync();
+        await instance.coreColorSync();
+        await instance.mprPannel();
 
       } catch (e) {
         console.log(e);
@@ -5183,12 +5184,21 @@ MprJs.prototype.mprPannel = async function () {
           return async function (e) {
             try {
               let startDate, endDate;
+              let loading;
 
               startDate = await GeneralJs.promptDate("기간의 시작일을 알려주세요!");
               endDate = await GeneralJs.promptDate("기간의 종료일을 알려주세요!");
+              
+              cleanChildren(totalMother);
 
-              console.log(startDate, endDate);
-
+              loading = await instance.mother.loadingRun();
+              instance.clients = await ajaxJson({
+                mode: "get",
+                startDate,
+                endDate,
+              }, CONTENTSHOST + "/clientAnalytics", { equal: true });
+              await instance.coreContentsLoad(true);
+              loading.parentNode.removeChild(loading);
 
             } catch (e) {
               console.log(e);
@@ -5390,7 +5400,6 @@ MprJs.prototype.launching = async function () {
     this.menuEventTong = null;
 
     await this.mprBase();
-    await this.mprPannel();
     // await (this.reportWhite())();
 
     loading.parentNode.removeChild(loading);
