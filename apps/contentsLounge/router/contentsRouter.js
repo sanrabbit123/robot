@@ -1035,6 +1035,7 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
       let thisProject;
       let projectArr;
       let startDate, endDate;
+      let endDateCopied;
 
       if (mode === "get") {
 
@@ -1048,14 +1049,27 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
           endDate = new Date();
         }
 
-        console.log(startDate, endDate)
+        endDateCopied = new Date(JSON.stringify(endDate).slice(1, -1));
+        endDate = new Date(endDateCopied.getFullYear(), endDateCopied.getMonth(), endDateCopied.getDate(), 0, 0, 0);
+        endDate.setDate(endDate.getDate() + 1);
 
         rows = await back.mongoPick(collection, [ {
-          "client.requests": {
-            $elemMatch: {
-              "request.timeline": { $gte: startDate }
-            }
-          }
+          $and: [
+            {
+              "client.requests": {
+                $elemMatch: {
+                  "request.timeline": { $gte: startDate }
+                }
+              }
+            },
+            {
+              "client.requests": {
+                $elemMatch: {
+                  "request.timeline": { $lt: endDate }
+                }
+              }
+            },
+          ]
         }, {
           cliid: 1,
           sessions: 1,
@@ -1065,11 +1079,22 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
         startRequestTimeline = new Date(JSON.stringify(startDate).slice(1, -1));
         startRequestTimeline.setDate(startRequestTimeline.getDate() - 3);
         coreWhereQuery = {
-          requests: {
-            $elemMatch: {
-              "request.timeline": { $gte: startRequestTimeline }
-            }
-          }
+          $and: [
+            {
+              requests: {
+                $elemMatch: {
+                  "request.timeline": { $gte: startRequestTimeline }
+                }
+              }
+            },
+            {
+              requests: {
+                $elemMatch: {
+                  "request.timeline": { $lt: endDate }
+                }
+              }
+            },
+          ]
         };
         coreRows = (await back.getClientsByQuery(coreWhereQuery, { selfMongo: selfCoreMongo })).toNormal();
         for (let obj of rows) {
