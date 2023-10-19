@@ -93,7 +93,7 @@ MprJs.prototype.mainDataRender = async function () {
             value: str,
             functionName: "filterEvent_" + str,
           }
-        }))
+        })),
       },
       {
         title: "문의일",
@@ -142,12 +142,40 @@ MprJs.prototype.mainDataRender = async function () {
         width: 100,
         name: "living",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          }
+        ].concat([
+          "거주중",
+          "이사",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        })),
       },
       {
         title: "계약 형태",
         width: 100,
         name: "contract",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          }
+        ].concat([
+          "전월세",
+          "자가",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        })),
       },
       {
         title: "입주 예정일",
@@ -166,6 +194,17 @@ MprJs.prototype.mainDataRender = async function () {
         width: 120,
         name: "service",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          }
+        ].concat(serviceParsing().name.map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        })),
       },
       {
         title: "예산",
@@ -271,7 +310,7 @@ MprJs.prototype.mainDataRender = async function () {
 MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight, valueTargetClassName } = this;
-  const { createNode, withOut, colorChip, dateToString, ajaxJson, findByAttribute, stringToDate, selfHref, serviceParsing, equalJson } = GeneralJs;
+  const { createNode, withOut, colorChip, dateToString, ajaxJson, findByAttribute, stringToDate, selfHref, serviceParsing, equalJson, autoComma } = GeneralJs;
   try {
     const { client, project: projectRaw } = instance.clients.find((c) => { return c.cliid === cliid && c.requestNumber === requestNumber });
     const { request, analytics } = client.requests[0];
@@ -287,6 +326,13 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
     let progressBoo;
     let proposalBoo;
     let proposalDetail;
+    let index;
+    let thisDesigner;
+    let tempObj;
+    let tempString;
+    let index2;
+    let proposalHistory;
+    let proposalSend;
 
     if (projectRaw !== null) {
       proid = projectRaw.proid;
@@ -297,6 +343,9 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
           designer = instance.designers.find((d) => { return d.desid === desid });
         } else {
           [ designer ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
+        }
+        if (designer === undefined) {
+          designer = null;
         }
       } else {
         designer = null;
@@ -314,9 +363,20 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
       if (Array.isArray(project.proposal.detail)) {
         proposalBoo = true;
         proposalDetail = equalJson(JSON.stringify(project.proposal.detail));
+        proposalHistory = clientHistory.curation.analytics.send.filter((o) => { return o.page === "designerProposal" });
+        proposalHistory.sort((a, b) => {
+          return a.date.valueOf() - b.date.valueOf();
+        });
+        if (proposalHistory.length > 0) {
+          proposalSend = new Date(JSON.stringify(proposalHistory[0].date).slice(1, -1));
+        } else {
+          proposalSend = new Date(JSON.stringify(project.proposal.date).slice(1, -1));
+        }
       }
       if (!/드랍/gi.test(project.process.status) && project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
-        progressBoo = true;
+        if (designer !== null) {
+          progressBoo = true;
+        }
       }
     }
     
@@ -344,7 +404,7 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
       {
         name: "timeline",
         type: "date",
-        title: "신청일",
+        title: "문의일",
         value: dateToString(client.requests[0].request.timeline, true),
       },
       {
@@ -530,22 +590,54 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
 
     // proposal
     if (proposalBoo) {
-
       if (instance.designers === null) {
         instance.designers = await ajaxJson({ whereQuery: {} }, SECONDHOST + "/getDesigners", { equal: true });
       }
-
-      console.log(proposalDetail);
-
       dataMatrix = dataMatrix.concat([
+        {
+          name: "proposalDate",
+          type: "date",
+          title: "추천일",
+          value: dateToString(proposalSend, true),
+        },
         {
           name: "proposalLength",
           type: "string",
           title: "추천 디자이너 수",
           value: String(proposalDetail.length),
         },
-
-        
+      ]);
+      tempObj = {
+        name: "proposalDesigner",
+        type: "array",
+        title: "추천 내역",
+        value: []
+      };
+      index = 0;
+      for (let { desid, fee } of proposalDetail) {
+        thisDesigner = instance.designers.find((d) => { return d.desid === desid });
+        tempString = "";
+        tempString += thisDesigner.designer + " (" + thisDesigner.desid + ")";
+        tempString += "&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;";
+        index2 = 0;
+        for (let { amount, method } of fee) {
+          if (index2 !== 0) {
+            tempString += "&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;";
+          }
+          if (/offline/gi.test(method)) {
+            tempString += "오프라인";
+          } else {
+            tempString += "온라인";
+          }
+          tempString += " ";
+          tempString += autoComma(amount) + "원";
+          index2++;
+        }
+        tempObj.value.push(tempString);
+        index++;
+      }
+      dataMatrix.push(tempObj);
+      dataMatrix = dataMatrix.concat([
         {
           name: "margin",
           type: "margin",
@@ -557,7 +649,44 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
 
     // project
     if (progressBoo) {
-
+      dataMatrix = dataMatrix.concat([
+        {
+          name: "timeline2",
+          type: "date",
+          title: "문의일",
+          value: dateToString(client.requests[0].request.timeline, true),
+        },
+        {
+          name: "contractDate",
+          type: "date",
+          title: "계약일",
+          value: dateToString(project.process.contract.first.date, true),
+        },
+        {
+          name: "selectedDesigner",
+          type: "string",
+          title: "선택된 디자이너",
+          value: designer.designer + " (" + designer.desid + ")",
+        },
+        {
+          name: "selectedService",
+          type: "string",
+          title: "진행 서비스",
+          value: serviceParsing(project.service),
+        },
+        {
+          name: "designFee",
+          type: "string",
+          title: "디자인 비용",
+          value: autoComma(project.process.contract.remain.calculation.amount.supply) + "원",
+        },
+        {
+          name: "margin",
+          type: "margin",
+          title: "",
+          value: "",
+        },
+      ]);
     }
 
     // contents
@@ -1062,7 +1191,7 @@ MprJs.prototype.clientWhiteContents = async function (tong, cliid, requestNumber
                   display: "inline-block",
                   position: "relative",
                   width: withOut(titleWidth, ea),
-                  overflow: "hidden",
+                  overflow: "scroll",
                 },
                 child: {
                   style: {
@@ -1113,7 +1242,7 @@ MprJs.prototype.clientWhiteContents = async function (tong, cliid, requestNumber
                   display: "inline-block",
                   position: "relative",
                   width: withOut(titleWidth, ea),
-                  overflow: "hidden",
+                  overflow: "scroll",
                 },
                 child: {
                   style: {
@@ -1164,7 +1293,7 @@ MprJs.prototype.clientWhiteContents = async function (tong, cliid, requestNumber
                   display: "inline-block",
                   position: "relative",
                   width: withOut(titleWidth, ea),
-                  overflow: "hidden",
+                  overflow: "scroll",
                 },
                 child: {
                   style: {
@@ -1633,7 +1762,7 @@ MprJs.prototype.mprBase = async function () {
   
     valueColumnsAreaPaddingLeft = 20;
 
-    menuPromptWidth = 90;
+    menuPromptWidth = 110;
     menuPromptHeight = 32;
     menuVisual = 4;
     menuBetween = 3;
@@ -1679,13 +1808,13 @@ MprJs.prototype.mprBase = async function () {
             const valueDoms = Array.from(document.querySelectorAll('.' + valueCaseClassName));
             const type = columns[index].type;
             let domMatrix;
-            let thisDesid;
+            let thisKey;
             let thisValueDom;
   
             domMatrix = [];
             for (let i = 0; i < idNameDoms.length; i++) {
-              thisDesid = idNameDoms[i].getAttribute("cliid");
-              thisValueDom = findByAttribute(valueDoms, "cliid", thisDesid);
+              thisKey = idNameDoms[i].getAttribute("key");
+              thisValueDom = findByAttribute(valueDoms, "key", thisKey);
               domMatrix.push([
                 idNameDoms[i],
                 thisValueDom
@@ -1776,13 +1905,13 @@ MprJs.prototype.mprBase = async function () {
             const last = "lastfilter";
             const type = columns[index].type;
             let domMatrix;
-            let thisDesid;
+            let thisKey;
             let thisValueDom;
   
             domMatrix = [];
             for (let i = 0; i < idNameDoms.length; i++) {
-              thisDesid = idNameDoms[i].getAttribute("cliid");
-              thisValueDom = findByAttribute(valueDoms, "cliid", thisDesid);
+              thisKey = idNameDoms[i].getAttribute("key");
+              thisValueDom = findByAttribute(valueDoms, "key", thisKey);
               domMatrix.push([
                 idNameDoms[i],
                 thisValueDom
@@ -2124,7 +2253,7 @@ MprJs.prototype.mprBase = async function () {
       
           createNode({
             mother: idNameArea,
-            attribute: { cliid: client.cliid, request: String(requestNumber), lastfilter: "none" },
+            attribute: { cliid: client.cliid, request: String(requestNumber), key: client.cliid + "_" + String(requestNumber), lastfilter: "none" },
             event: {
               click: instance.clientWhiteCard(client.cliid, requestNumber),
             },
@@ -2166,7 +2295,7 @@ MprJs.prototype.mprBase = async function () {
       
           thisTong = createNode({
             mother: valueArea,
-            attribute: { cliid: client.cliid, lastfilter: "none" },
+            attribute: { cliid: client.cliid, lastfilter: "none", key: client.cliid + "_" + String(requestNumber) },
             class: [ moveTargetClassName, valueCaseClassName, client.cliid ],
             event: {
               mouseenter: hoverEvent(),
@@ -5017,6 +5146,121 @@ MprJs.prototype.clientWhiteCard = function (cliid, requestNumber) {
   }
 }
 
+MprJs.prototype.mprPannel = async function () {
+  const instance = this;
+  const { ea, totalContents, belowHeight, totalMother } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
+  try {
+    const zIndex = 4;
+    let pannelBase;
+    let pannelOuterMargin;
+    let pannelInnerPadding;
+    let pannelMenu;
+    let menuPromptWidth;
+    let menuPromptHeight;
+    let menuTextTop;
+    let menuBetween;
+    let menuSize;
+    let menuWeight;
+    let pannelTong;
+
+    pannelOuterMargin = 40;
+    pannelInnerPadding = 6;
+
+    menuPromptWidth = 110;
+    menuPromptHeight = 32;
+    menuTextTop = isMac() ? -1 : 1,
+    menuBetween = 3;
+    menuSize = 13;
+    menuWeight = 700;
+
+    pannelMenu = [
+      {
+        title: "기간 설정",
+      },
+      {
+        title: "계약자만 보기",
+      },
+      {
+        title: "광고 현황",
+      },
+      {
+        title: "프론트 현황",
+      },
+      {
+        title: "컨텐츠 현황",
+      },
+      {
+        title: "그래프 보기",
+      },
+    ];
+
+    pannelBase = createNode({
+      mother: totalMother,
+      style: {
+        display: "flex",
+        position: "absolute",
+        bottom: String(pannelOuterMargin) + ea,
+        right: String(pannelOuterMargin) + ea,
+        background: colorChip.white,
+        zIndex: String(zIndex),
+        borderRadius: String(5) + "px",
+        animation: "fadeuplite 0.3s ease forwards",
+        boxShadow: "0 3px 15px -9px " + colorChip.shadow,
+        padding: String(pannelInnerPadding) + ea,
+        flexDirection: "column",
+      },
+      child: {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(menuPromptWidth) + ea,
+          flexDirection: "column",
+        }
+      }
+    });
+    pannelTong = pannelBase.firstChild;
+
+    for (let { title } of pannelMenu) {
+      createNode({
+        mother: pannelTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(menuPromptWidth) + ea,
+          height: String(menuPromptHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          marginBottom: String(menuBetween) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        child: {
+          text: title,
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
+          style: {
+            position: "relative",
+            top: String(menuTextTop) + ea,
+            fontSize: String(menuSize) + ea,
+            fontWeight: String(menuWeight),
+            color: colorChip.white,
+          }
+        }
+      })
+    }
+
+
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 MprJs.prototype.launching = async function () {
   const instance = this;
   const { returnGet, ajaxJson } = GeneralJs;
@@ -5069,6 +5313,7 @@ MprJs.prototype.launching = async function () {
     this.entireMode = entireMode;
 
     await this.mprBase();
+    await this.mprPannel();
     // await (this.reportWhite())();
 
     loading.parentNode.removeChild(loading);
