@@ -5187,7 +5187,7 @@ MprJs.prototype.mprPannel = async function () {
               let loading;
 
               startDate = await GeneralJs.promptDate("기간의 시작일을 알려주세요!");
-              endDate = await GeneralJs.promptDate("기간의 종료일을 알려주세요!");
+              endDate = await GeneralJs.promptDate("기간의 종료일을 알려주세요!", false, "", startDate);
               
               cleanChildren(totalMother);
 

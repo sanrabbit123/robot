@@ -668,7 +668,7 @@ ReceiptRouter.prototype.rou_post_createConstructContract = function () {
                   { id: "651e7414fbcd2144a51009c6", value: summary.date.end === '' ? '-' : summary.date.end.split('-')[0] },
                   { id: "651e7414fbcd2144a51009c8", value: summary.date.end === '' ? '-' : summary.date.end.split('-')[1] },
                   { id: "651e7414fbcd2144a51009ca", value: summary.date.end === '' ? '-' : summary.date.end.split('-')[2] },
-                  { id: "651e7414fbcd2144a51009cb", value: summary.hangul === '' ? '-' : summary.hangul },
+                  { id: "651e7414fbcd2144a51009cb", value: summary.hangul === '' ? '-' : summary.hangul.replace(/원$/, '') },
                   { id: "651e7414fbcd2144a51009cc", value: autoComma(summary.total) === '' ? '-' : autoComma(summary.total) },
                   { id: "651e7414fbcd2144a51009cd", value: String(summary.first.percentage) + '%' },
                   { id: "651e7414fbcd2144a51009d1", value: autoComma(summary.first.amount) === '' ? '-' : autoComma(summary.first.amount) },

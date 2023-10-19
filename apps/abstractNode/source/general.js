@@ -6090,7 +6090,7 @@ GeneralJs.promptButtons = function (message, buttons) {
   });
 }
 
-GeneralJs.promptDate = function (message, progressPossible = false, progressName = "") {
+GeneralJs.promptDate = function (message, progressPossible = false, progressName = "", standardDate = null) {
   const { createNode, colorChip, withOut, setQueue } = GeneralJs;
   const ea = "px";
   const promptAsideClassName = "promptAsideClassName";
@@ -6155,6 +6155,10 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
   buttonHeight = 20;
   buttonPadding = 7;
   buttonWidth = 49;
+
+  if (standardDate === null || standardDate === undefined) {
+    standardDate = new Date();
+  }
 
   greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
   if (Number.isNaN(greenBarHeight)) {
@@ -6324,7 +6328,7 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
       resolve(null);
     });
 
-    GeneralJs.generalCalendar(buttonsBaseTong, new Date(), function (e) {
+    GeneralJs.generalCalendar(buttonsBaseTong, standardDate, function (e) {
       const value = this.getAttribute("buttonValue");
       const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
       for (let z = 0; z < targets.length; z++) {
