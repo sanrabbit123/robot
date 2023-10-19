@@ -1959,6 +1959,7 @@ MprJs.prototype.mprBase = async function () {
         }
       },
     }
+    this.menuEventTong = menuEventTong;
 
     columnsMenuEvent = (index) => {
       return async function (e) {
@@ -5150,6 +5151,7 @@ MprJs.prototype.mprPannel = async function () {
   const instance = this;
   const { ea, totalContents, belowHeight, totalMother } = this;
   const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
+  const titleStringClassName = "titleStringClassName";
   try {
     const zIndex = 4;
     let pannelBase;
@@ -5177,21 +5179,86 @@ MprJs.prototype.mprPannel = async function () {
     pannelMenu = [
       {
         title: "기간 설정",
+        event: () => {
+          return async function (e) {
+            try {
+
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
       },
       {
         title: "계약자만 보기",
+        event: () => {
+          return async function (e) {
+            try {
+              const thisTitle = this.querySelector('.' + titleStringClassName).textContent;
+              const thisValue = /계약자/gi.test(thisTitle) ? "진행" : "$all";
+              const name = "status";
+              const index = 0;
+              let filterFunc;
+              filterFunc = instance.menuEventTong.filterEvent(thisValue, name, index);
+              await filterFunc(e);
+              if (/계약자/gi.test(thisTitle)) {
+                this.querySelector('.' + titleStringClassName).textContent = "전체 보기";
+              } else {
+                this.querySelector('.' + titleStringClassName).textContent = "계약자만 보기";
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
       },
       {
         title: "광고 현황",
+        event: () => {
+          return async function (e) {
+            try {
+
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
       },
       {
         title: "프론트 현황",
+        event: () => {
+          return async function (e) {
+            try {
+
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
       },
       {
         title: "컨텐츠 현황",
+        event: () => {
+          return async function (e) {
+            try {
+
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
       },
       {
         title: "그래프 보기",
+        event: () => {
+          return async function (e) {
+            try {
+
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
       },
     ];
 
@@ -5221,9 +5288,12 @@ MprJs.prototype.mprPannel = async function () {
     });
     pannelTong = pannelBase.firstChild;
 
-    for (let { title } of pannelMenu) {
+    for (let obj of pannelMenu) {
       createNode({
         mother: pannelTong,
+        event: {
+          click: obj.event(),
+        },
         style: {
           display: "flex",
           position: "relative",
@@ -5238,7 +5308,8 @@ MprJs.prototype.mprPannel = async function () {
           cursor: "pointer",
         },
         child: {
-          text: title,
+          class: [ titleStringClassName ],
+          text: obj.title,
           event: {
             selectstart: (e) => { e.preventDefault() },
           },
@@ -5252,9 +5323,6 @@ MprJs.prototype.mprPannel = async function () {
         }
       })
     }
-
-
-
 
   } catch (e) {
     console.log(e);
@@ -5311,6 +5379,7 @@ MprJs.prototype.launching = async function () {
     this.whiteCardMode = "client";
     this.asyncProcessText = "로드중..";
     this.entireMode = entireMode;
+    this.menuEventTong = null;
 
     await this.mprBase();
     await this.mprPannel();
