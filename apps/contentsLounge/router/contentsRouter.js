@@ -650,6 +650,9 @@ ContentsRouter.prototype.rou_post_getAdsComplex = function () {
       for (let collection of collectionList) {
         rows = await back.mongoRead(collection, whereQuery, { selfMongo });
         resultObj[collection.replace(/Complex/g, '')] = equalJson(JSON.stringify(rows));
+        resultObj[collection.replace(/Complex/g, '')].sort((a, b) => {
+          return b.date.from.valueOf() - a.date.from.valueOf();
+        });
       }
 
       res.send(JSON.stringify(resultObj));

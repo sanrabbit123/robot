@@ -5298,10 +5298,10 @@ MprJs.prototype.adsWhiteCard = function () {
 
         ajaxJson({
           startDate: new Date(2023, 8, 1),
-          endDate: new Date(2023, 9, 1),
+          endDate: new Date(2023, 8, 30),
         }, CONTENTSHOST + "/getAdsComplex", { equal: true }).then((result) => {
 
-          
+
 
           console.log(result);
 
