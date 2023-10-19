@@ -626,8 +626,13 @@ SecondRouter.prototype.rou_post_getDocuments = function () {
       if (typeof whereQuery !== "object" || whereQuery === null) {
         throw new Error("invaild query object");
       }
-      if (Object.keys(whereQuery).length === 0) {
-        throw new Error("query ban");
+
+      if (req.url === "/getClients" || req.url === "/getProjects") {
+        if (Object.keys(whereQuery).length === 0) {
+          if (req.body.allMode === undefined) {
+            throw new Error("query ban");
+          }
+        }
       }
 
       if (req.url === "/getClients") {

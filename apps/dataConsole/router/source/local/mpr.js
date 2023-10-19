@@ -24,7 +24,6 @@ const MprJs = function () {
   this.whiteSse = null;
   this.ea = <%% "px", "px", "px", "px", "vw" %%>;
   this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
-  this.designers = [];
 }
 
 MprJs.prototype.mainDataRender = async function () {
@@ -272,7 +271,7 @@ MprJs.prototype.mainDataRender = async function () {
 MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight, valueTargetClassName } = this;
-  const { createNode, withOut, colorChip, dateToString, ajaxJson, findByAttribute, stringToDate, selfHref, serviceParsing } = GeneralJs;
+  const { createNode, withOut, colorChip, dateToString, ajaxJson, findByAttribute, stringToDate, selfHref, serviceParsing, equalJson } = GeneralJs;
   try {
     const { client, project: projectRaw } = instance.clients.find((c) => { return c.cliid === cliid && c.requestNumber === requestNumber });
     const { request, analytics } = client.requests[0];
@@ -285,13 +284,20 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
     let naverComplex;
     let contentsView;
     let dataSet;
+    let progressBoo;
+    let proposalBoo;
+    let proposalDetail;
 
     if (projectRaw !== null) {
       proid = projectRaw.proid;
       desid = projectRaw.desid;
       [ project ] = await ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects", { equal: true });
       if (desid !== "") {
-        [ designer ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
+        if (instance.designers !== null) {
+          designer = instance.designers.find((d) => { return d.desid === desid });
+        } else {
+          [ designer ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
+        }
       } else {
         designer = null;
       }
@@ -300,6 +306,18 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
       desid = "";
       designer = null;
       project = null;
+    }
+
+    proposalBoo = false;
+    progressBoo = false;
+    if (project !== null) {
+      if (Array.isArray(project.proposal.detail)) {
+        proposalBoo = true;
+        proposalDetail = equalJson(JSON.stringify(project.proposal.detail));
+      }
+      if (!/드랍/gi.test(project.process.status) && project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
+        progressBoo = true;
+      }
     }
     
     contentsView = contents.view.portfolio.concat(contents.view.review);
@@ -510,6 +528,39 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
       naverComplex = null;
     }
 
+    // proposal
+    if (proposalBoo) {
+
+      if (instance.designers === null) {
+        instance.designers = await ajaxJson({ whereQuery: {} }, SECONDHOST + "/getDesigners", { equal: true });
+      }
+
+      console.log(proposalDetail);
+
+      dataMatrix = dataMatrix.concat([
+        {
+          name: "proposalLength",
+          type: "string",
+          title: "추천 디자이너 수",
+          value: String(proposalDetail.length),
+        },
+
+        
+        {
+          name: "margin",
+          type: "margin",
+          title: "",
+          value: "",
+        },
+      ]);
+    }
+
+    // project
+    if (progressBoo) {
+
+    }
+
+    // contents
     dataMatrix = dataMatrix.concat([
       {
         name: "viewContents",
@@ -1482,12 +1533,6 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
       scrollTong.style.height = "auto";
       num++;
     }
-
-
-    console.log(history);
-
-
-    
 
   } catch (e) {
     console.log(e);
@@ -5027,6 +5072,13 @@ MprJs.prototype.launching = async function () {
     // await (this.reportWhite())();
 
     loading.parentNode.removeChild(loading);
+
+    this.designers = null;
+    ajaxJson({ whereQuery: {} }, SECONDHOST + "/getDesigners", { equal: true }).then((rows) => {
+      instance.designers = rows;
+    }).catch((err) => {
+      console.log(err);
+    });
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
