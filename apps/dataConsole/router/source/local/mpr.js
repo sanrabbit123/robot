@@ -1356,6 +1356,81 @@ MprJs.prototype.clientWhiteContents = async function (tong, cliid, requestNumber
   }
 }
 
+MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDate) {
+  const instance = this;
+  const { ea, totalContents, grayBarWidth, belowHeight } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink, variableArray, downloadFile, uniqueValue, sleep, equalJson, hexaJson } = GeneralJs;
+  try {
+    const keyTargets = [
+      "meta",
+      "naver",
+    ];
+    const keyword = "t";
+    let targetData;
+    let startDateCopied;
+    let endDateCopied;
+    let start, end;
+    let timeMatrix;
+    let thisKey;
+    let dateDelta;
+    let thisDate;
+    let thisKeyNumbers;
+    let advertisement;
+    let targetTong;
+    let thisKeyNumbersArr;
+
+    startDateCopied = new Date(JSON.stringify(startDate).slice(1, -1));
+    start = new Date(startDateCopied.getFullYear(), startDateCopied.getMonth(), startDateCopied.getDate(), 0, 0, 0);
+
+    endDateCopied = new Date(JSON.stringify(endDate).slice(1, -1));
+    end = new Date(endDateCopied.getFullYear(), endDateCopied.getMonth(), endDateCopied.getDate(), 0, 0, 0);
+    end.setDate(end.getDate() + 1);
+
+    timeMatrix = [];
+    dateDelta = Math.floor(((((end.valueOf() - start.valueOf()) / 1000) / 60) / 60) / 24);
+    for (let i = 0; i < dateDelta; i++) {
+      thisDate = new Date(JSON.stringify(start).slice(1, -1));
+      thisDate.setDate(thisDate.getDate() + i);
+      thisKeyNumbers = dateToString(thisDate).replace(/[^0-9]/gi, '');
+      thisKey = keyword + thisKeyNumbers;
+      timeMatrix.push({
+        key: thisKey,
+        keyNumber: thisKeyNumbers,
+        date: new Date(JSON.stringify(thisDate).slice(1, -1)),
+        data: [],
+      });
+    }
+
+    timeMatrix.sort((a, b) => {
+      return b.date.valueOf() - a.date.valueOf();
+    });
+
+    cleanChildren(tong);
+
+    for (let key of keyTargets) {
+      targetData = equalJson(JSON.stringify(data[key]));
+      for (let obj of targetData) {
+        advertisement = obj.advertisement;
+        thisKeyNumbersArr = obj.key.split("_");
+        targetTong = timeMatrix.find((o) => {
+          return o.keyNumber === thisKeyNumbersArr[0];
+        });
+        for (let campaign of advertisement.campaign) {
+          campaign.key = obj.key;
+          campaign.kinds = key;
+          targetTong.data.push(campaign);
+        }
+      }
+    }
+
+    console.log(timeMatrix);
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
@@ -5166,7 +5241,7 @@ MprJs.prototype.adsWhiteCard = function () {
       let titleTextTop, titleSize;
       let titleWeight;
       let fontTextTop, fontSize, fontBetween, fontWeight;
-      let whiteMaker;
+      let adsWhiteMaker;
       let innerMarginTop;
       let basePaddingTop;
 
@@ -5186,7 +5261,7 @@ MprJs.prototype.adsWhiteCard = function () {
       fontBetween = 8;
       fontWeight = 400;
 
-      whiteMaker = (reload = false) => {
+      adsWhiteMaker = (reload = false, startDate = null, endDate = null) => {
 
         if (!reload) {
           cancelBack = createNode({
@@ -5203,7 +5278,13 @@ MprJs.prototype.adsWhiteCard = function () {
             }
           });
         } 
-  
+        if (startDate === null) {
+          startDate = new Date(2023, 8, 1, 0, 0, 0);
+        }
+        if (endDate === null) {
+          endDate = new Date(2023, 8, 30, 0, 0, 0);
+        }
+
         whitePrompt = createNode({
           mother: totalContents,
           class: [ whiteCardClassName, whiteBaseClassName ],
@@ -5296,26 +5377,18 @@ MprJs.prototype.adsWhiteCard = function () {
           }
         });
 
-        ajaxJson({
-          startDate: new Date(2023, 8, 1),
-          endDate: new Date(2023, 8, 30),
-        }, CONTENTSHOST + "/getAdsComplex", { equal: true }).then((result) => {
-
-
-
-          console.log(result);
-
-
+        ajaxJson({ startDate, endDate }, CONTENTSHOST + "/getAdsComplex", { equal: true }).then((result) => {
+          return instance.adsWhiteContents(whitePrompt.children[0].firstChild, result, startDate, endDate);
         }).catch((err) => {
           console.log(err);
         });
         
       }
 
-      instance.whiteMaker = whiteMaker;
+      instance.adsWhiteMaker = adsWhiteMaker;
 
       if (document.querySelector('.' + whiteCardClassName) === null) {
-        whiteMaker(false);
+        adsWhiteMaker(false);
       } else {
         const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
         if (w0 !== undefined) {
@@ -5332,7 +5405,7 @@ MprJs.prototype.adsWhiteCard = function () {
             w1.remove();
           }
           setQueue(() => {
-            whiteMaker(true);
+            adsWhiteMaker(true);
           })
         }, 350);
       }
