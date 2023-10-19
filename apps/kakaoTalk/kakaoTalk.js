@@ -1014,19 +1014,19 @@ KakaoTalk.prototype.templateTong = function (target) {
       }
     },
     "curationComplete": {
-      "name": "큐레이션 완료 최종 수정",
-      "id": "TL_5994",
+      "name": "큐레이션 완료 진짜 진짜 최종 수정",
+      "id": "TP_4240",
       "needs": [
         "client"
       ],
       "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n        ];\n      }",
       "raw": {
-        "templtContent": "안녕하세요, #{client}님!\n작성하신 내용은 모두 전달되었습니다.\n\n고객님의 요청 사항을 토대로 더 상세한 상담을 위해, 영업일 기준 3-4일 안에 전화드리겠습니다 :)\n\n감사합니다!",
-        "templtName": "큐레이션 완료 최종 수정",
-        "templateType": "BA",
+        "templtContent": "안녕하세요, #{client}님!\n작성하신 내용은 모두 전달되었습니다.\n\n고객님의 요청 사항을 토대로 더 상세한 상담을 위해, 영업일 기준 2일 안에 전화드리겠습니다 :)\n\n더 정확하고 빠른 응대를 위해, 홈리에종 카카오 채널에 통화 가능한 시간을 남겨주세요!\n\n홈리에종의 영업시간은 다음과 같습니다.\n\n* 홈리에종 영업시간\n- 평일 오전 9:30 ~ 오후 6:30\n- 점심시간 : 오후 12:30 ~ 오후 1:30\n\n감사합니다!",
+        "templtName": "큐레이션 완료 진짜 진짜 최종 수정",
+        "templateType": "AD",
         "templateEmType": "NONE",
         "templateExtra": "",
-        "templateAdvert": "",
+        "templateAdvert": "채널 추가하고 이 채널의 광고와 마케팅 메시지를 카카오톡으로 받기",
         "templtTitle": "",
         "templtSubtitle": "",
         "templtImageName": "",
@@ -1037,17 +1037,28 @@ KakaoTalk.prototype.templateTong = function (target) {
         "status": "R",
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
-        "buttons": [],
-        "cdate": "2023-01-27 12:31:25",
-        "templtCode": "TL_5994",
+        "buttons": [
+          {
+            "ordering": "1",
+            "name": "채널 추가",
+            "linkType": "AC",
+            "linkTypeName": "채널 추가",
+            "linkMo": "",
+            "linkPc": "",
+            "linkIos": "",
+            "linkAnd": ""
+          }
+        ],
+        "cdate": "2023-10-18 09:28:53",
+        "templtCode": "TP_4240",
         "comments": [
           {
-            "cdate": "2023-01-27 14:41:05",
+            "cdate": "2023-10-18 14:40:16",
             "name": "검수자",
-            "id": "2367698",
+            "id": "2889686",
             "userName": "검수자",
             "commentContent": "",
-            "createdAt": "2023-01-27 14:41:05",
+            "createdAt": "2023-10-18 14:40:16",
             "status": "APR"
           }
         ]
