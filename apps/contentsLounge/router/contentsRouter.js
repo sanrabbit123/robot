@@ -1048,6 +1048,8 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
           endDate = new Date();
         }
 
+        console.log(startDate, endDate)
+
         rows = await back.mongoPick(collection, [ {
           "client.requests": {
             $elemMatch: {
