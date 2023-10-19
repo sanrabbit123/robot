@@ -1034,17 +1034,24 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
       let cliidArr_raw, cliidArr;
       let thisProject;
       let projectArr;
+      let startDate, endDate;
 
       if (mode === "get") {
 
         if (req.body.standardDate === undefined) {
-          throw new Error("invalid post");
+          if (req.body.startDate === undefined || req.body.endDate === undefined) {
+            throw new Error("invalid post");
+          }
+          ({ startDate, endDate } = equalJson(req.body));
+        } else {
+          ({ standardDate: startDate } = equalJson(req.body));
+          endDate = new Date();
         }
-        const { standardDate } = equalJson(req.body);
+
         rows = await back.mongoPick(collection, [ {
           "client.requests": {
             $elemMatch: {
-              "request.timeline": { $gte: standardDate }
+              "request.timeline": { $gte: startDate }
             }
           }
         }, {
@@ -1052,7 +1059,8 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
           sessions: 1,
           source: 1,
         } ], { selfMongo });
-        startRequestTimeline = new Date(JSON.stringify(standardDate).slice(1, -1));
+        
+        startRequestTimeline = new Date(JSON.stringify(startDate).slice(1, -1));
         startRequestTimeline.setDate(startRequestTimeline.getDate() - 3);
         coreWhereQuery = {
           requests: {

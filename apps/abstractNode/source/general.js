@@ -6152,7 +6152,7 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
   buttonBetween = 4;
   buttonTop = 20;
   buttonRight = 21;
-  buttonHeight = 21;
+  buttonHeight = 20;
   buttonPadding = 7;
   buttonWidth = 49;
 

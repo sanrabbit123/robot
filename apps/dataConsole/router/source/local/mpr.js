@@ -5182,6 +5182,13 @@ MprJs.prototype.mprPannel = async function () {
         event: () => {
           return async function (e) {
             try {
+              let startDate, endDate;
+
+              startDate = await GeneralJs.promptDate("기간의 시작일을 알려주세요!");
+              endDate = await GeneralJs.promptDate("기간의 종료일을 알려주세요!");
+
+              console.log(startDate, endDate);
+
 
             } catch (e) {
               console.log(e);
@@ -5340,6 +5347,7 @@ MprJs.prototype.launching = async function () {
     let members;
     let ago;
     let clients;
+    let now;
 
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
