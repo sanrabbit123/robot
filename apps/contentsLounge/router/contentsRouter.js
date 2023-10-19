@@ -601,6 +601,66 @@ ContentsRouter.prototype.rou_post_metaComplex = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_getAdsComplex = function () {
+  const instance = this;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  const back = this.back;
+  let obj;
+  obj = {};
+  obj.link = [ "/getAdsComplex" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.startDate === undefined || req.body.endDate === undefined) {
+        throw new Error("invalid post");
+      }
+      const { startDate, endDate } = equalJson(req.body);
+      const selfMongo = instance.mongolocal;
+      const collectionList = [
+        "metaComplex",
+        "naverComplex",
+      ];
+      let resultObj;
+      let startDateCopied;
+      let endDateCopied;
+      let start, end;
+      let rows;
+      let whereQuery;
+
+      resultObj = {};
+
+      startDateCopied = new Date(JSON.stringify(startDate).slice(1, -1));
+      start = new Date(startDateCopied.getFullYear(), startDateCopied.getMonth(), startDateCopied.getDate(), 0, 0, 0);
+
+      endDateCopied = new Date(JSON.stringify(endDate).slice(1, -1));
+      end = new Date(endDateCopied.getFullYear(), endDateCopied.getMonth(), endDateCopied.getDate(), 0, 0, 0);
+      end.setDate(end.getDate() + 1);
+
+      whereQuery = {};
+      whereQuery["date.from"] = {
+        $gte: start,
+        $lt: end,
+      }
+
+      for (let collection of collectionList) {
+        rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        resultObj[collection.replace(/Complex/g, '')] = equalJson(JSON.stringify(rows));
+      }
+
+      res.send(JSON.stringify(resultObj));
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_getAdsComplex): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 ContentsRouter.prototype.rou_post_evaluationSubmit = function () {
   const instance = this;
   const back = this.back;

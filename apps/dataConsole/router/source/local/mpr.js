@@ -5148,13 +5148,208 @@ MprJs.prototype.clientWhiteCard = function (cliid, requestNumber) {
   }
 }
 
+MprJs.prototype.adsWhiteCard = function () {
+  const instance = this;
+  const { ea, totalContents, grayBarWidth, belowHeight } = this;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson } = GeneralJs;
+  return async function (e) {
+    try {
+      const zIndex = 4;
+      const blank = "&nbsp;/&nbsp;";
+      let cancelBack, whitePrompt;
+      let titleWhite;
+      let margin;
+      let titleHeight;
+      let innerMargin;
+      let overlap;
+      let titleTextTop, titleSize;
+      let titleWeight;
+      let fontTextTop, fontSize, fontBetween, fontWeight;
+      let whiteMaker;
+      let innerMarginTop;
+      let basePaddingTop;
+
+      margin = 30;
+      titleHeight = 50;
+      innerMargin = 24;
+      innerMarginTop = 20;
+      overlap = 12;
+      basePaddingTop = 12;
+
+      titleTextTop = isMac() ? 2 : 2;
+      titleSize = 21;
+      titleWeight = 800;
+
+      fontTextTop = isMac() ? 1 : 0;
+      fontSize = 14;
+      fontBetween = 8;
+      fontWeight = 400;
+
+      whiteMaker = (reload = false) => {
+
+        if (!reload) {
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ "justfadein", whiteCardClassName ],
+            event: (e) => { removeByClass(whiteCardClassName) },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(grayBarWidth) + ea,
+              width: withOut(grayBarWidth, ea),
+              height: withOut(belowHeight, ea),
+              background: colorChip.black,
+            }
+          });
+        } 
+  
+        whitePrompt = createNode({
+          mother: totalContents,
+          class: [ whiteCardClassName, whiteBaseClassName ],
+          style: {
+            position: "fixed",
+            top: String(0 + margin + titleHeight) + ea,
+            left: String(grayBarWidth + margin) + ea,
+            width: withOut((margin * 2) + grayBarWidth + (innerMargin * 2), ea),
+            height: withOut(0 + (margin * 2) + titleHeight + belowHeight + (innerMargin + basePaddingTop), ea),
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderBottomLeftRadius: String(5) + "px",
+            borderBottomRightRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+            overflow: "hidden",
+            padding: String(innerMargin) + ea,
+            paddingTop: String(basePaddingTop) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                overflow: "scroll",
+                border: "1px solid " + colorChip.gray3,
+                borderTopLeftRadius: String(5) + "px",
+                borderBottomLeftRadius: String(5) + "px",
+                boxSizing: "border-box",
+                padding: String(innerMargin) + ea,
+                paddingTop: String(innerMarginTop) + ea,
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  flexDirection: "column",
+                }
+              }
+            }
+          ]
+        });
+  
+        titleWhite = createNode({
+          mother: totalContents,
+          class: [ whiteCardClassName ],
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            position: "fixed",
+            top: String(0 + margin) + ea,
+            left: String(grayBarWidth + margin) + ea,
+            width: withOut((margin * 2) + grayBarWidth, ea),
+            height: String(titleHeight) + ea,
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderTopLeftRadius: String(5) + "px",
+            borderTopRightRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            overflow: "hidden",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "end",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "row",
+              alignItems: "end",
+              justifyContent: "start",
+              width: withOut(innerMargin * 2, ea),
+            },
+            children: [
+              {
+                text: "광고 현황",
+                style: {
+                  position: "relative",
+                  top: String(titleTextTop) + ea,
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(titleWeight),
+                  color: colorChip.black,
+                  cursor: "pointer",
+                }
+              },
+            ]
+          }
+        });
+
+        ajaxJson({
+          startDate: new Date(2023, 8, 1),
+          endDate: new Date(2023, 9, 1),
+        }, CONTENTSHOST + "/getAdsComplex", { equal: true }).then((result) => {
+
+          
+
+          console.log(result);
+
+
+        }).catch((err) => {
+          console.log(err);
+        });
+        
+      }
+
+      instance.whiteMaker = whiteMaker;
+
+      if (document.querySelector('.' + whiteCardClassName) === null) {
+        whiteMaker(false);
+      } else {
+        const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+        if (w0 !== undefined) {
+          w0.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        if (w1 !== undefined) {
+          w1.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        setQueue(() => {
+          if (w0 !== undefined) {
+            w0.remove();
+          }
+          if (w1 !== undefined) {
+            w1.remove();
+          }
+          setQueue(() => {
+            whiteMaker(true);
+          })
+        }, 350);
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 MprJs.prototype.mprPannel = async function () {
   const instance = this;
   const { ea, totalContents, belowHeight, totalMother } = this;
   const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
   const titleStringClassName = "titleStringClassName";
   try {
-    const zIndex = 4;
+    const zIndex = 2;
     let pannelBase;
     let pannelOuterMargin;
     let pannelInnerPadding;
@@ -5202,6 +5397,8 @@ MprJs.prototype.mprPannel = async function () {
 
             } catch (e) {
               console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
             }
           }
         },
@@ -5225,6 +5422,8 @@ MprJs.prototype.mprPannel = async function () {
               }
             } catch (e) {
               console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
             }
           }
         },
@@ -5234,9 +5433,12 @@ MprJs.prototype.mprPannel = async function () {
         event: () => {
           return async function (e) {
             try {
-
+              const adsFunc = instance.adsWhiteCard();
+              await adsFunc();
             } catch (e) {
               console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
             }
           }
         },
