@@ -6871,6 +6871,7 @@ DevContext.prototype.launching = async function () {
     //   client: "배창규",
     // });
 
+
     // raw photo to raw portfolio
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
@@ -6881,6 +6882,7 @@ DevContext.prototype.launching = async function () {
     //     pay: true
     //   },
     // ]);
+
 
     // when rawtoraw fail
 
@@ -6937,7 +6939,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "김희연", "2023-09-13" ],
+    //   [ "장지숙", "2023-10-18" ],
     // ]);
 
 

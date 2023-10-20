@@ -299,6 +299,9 @@ Filter.pastToNew = function (str) {
     case "de102":
       return "d2310_aa04s";
       break;
+    case "de103":
+      return "d2310_aa05s";
+      break;
   }
 }
 
@@ -597,6 +600,9 @@ Filter.newToPast = function (str) {
       break;
     case "d2310_aa04s":
       return "de102";
+      break;
+    case "d2310_aa05s":
+      return "de103";
       break;
     case "d2207_aa01s":
       return "de084";

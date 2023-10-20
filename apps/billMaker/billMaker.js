@@ -4991,7 +4991,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
   const address = this.address;
   const back = this.back;
   const crypto = require("crypto");
-  const { mongo, mongopythoninfo, mongoinfo, cryptoString, requestSystem, ipCheck, equalJson, errorLog } = this.mother;
+  const { mongo, mongopythoninfo, mongoinfo, cryptoString, requestSystem, ipCheck, equalJson, errorLog, emergencyAlarm } = this.mother;
   const dateToTimestamp = (date) => {
     const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
     return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}${zeroAddition(date.getHours())}${zeroAddition(date.getMinutes())}${zeroAddition(date.getSeconds())}`;
@@ -5331,7 +5331,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     } else {
       resultObj = null;
       console.log("error : " + JSON.stringify(res.data, null, 2));
-      await errorLog("error : " + JSON.stringify(res.data, null, 2));
+      await emergencyAlarm("error : " + JSON.stringify(res.data, null, 2));
     }
 
     if (!selfBoo) {

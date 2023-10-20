@@ -1366,6 +1366,8 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
       "naver",
     ];
     const keyword = "t";
+    const blank = "&nbsp;&nbsp;";
+    const slash = "&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;";
     let targetData;
     let startDateCopied;
     let endDateCopied;
@@ -1381,17 +1383,51 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
     let baseBlock;
     let campaignTong;
     let campaignBaseBlock;
-    let num, num2, num3, num0;
+    let num, num2, num3, num0, num4, num5;
     let adSetTong;
     let adSetBaseBlock;
     let adTong, adBaseBlock;
     let blockWidth;
     let timeWidth;
     let typeWidth;
+    let textTop;
+    let timeSize, timeWeight;
+    let blockHeight;
+    let textSize, kindsWeight, textWeight;
+    let valueWeight;
+    let performanceTong;
+    let naverTargets;
+    let newDataArray;
+    let naverCampaignTong;
+    let summaryTong;
+    let newDataArrayCopied;
+    let totalCampaignTong;
+    let linePadding;
+    let metaTargets;
+    let metaCampaignTong;
+    let realCampaignTong;
+    let thisCharge;
+    let thisImpressions;
+    let thisClicks;
 
-    timeWidth = 140;
+    timeWidth = 150;
     typeWidth = 80;
-    blockWidth = 125;
+    blockWidth = window.innerWidth / 12;
+
+    console.log(blockWidth)
+
+    blockHeight = 44;
+
+    textTop = isMac() ? -1 : 1;
+    timeSize = 15;
+    timeWeight = 700;
+
+    textSize = 14;
+    kindsWeight = 700;
+    textWeight = 400;
+    valueWeight = 600;
+
+    linePadding = 18;
 
     startDateCopied = new Date(JSON.stringify(startDate).slice(1, -1));
     start = new Date(startDateCopied.getFullYear(), startDateCopied.getMonth(), startDateCopied.getDate(), 0, 0, 0);
@@ -1414,11 +1450,6 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
         data: [],
       });
     }
-
-    timeMatrix.sort((a, b) => {
-      return b.date.valueOf() - a.date.valueOf();
-    });
-
     for (let key of keyTargets) {
       targetData = equalJson(JSON.stringify(data[key]));
       for (let obj of targetData) {
@@ -1434,12 +1465,65 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
         }
       }
     }
+    for (let obj of timeMatrix) {
+      naverTargets = obj.data.filter((o) => { return o.kinds === "naver" });
+      metaTargets = obj.data.filter((o) => { return o.kinds === "meta" });
+      newDataArray = obj.data.filter((o) => { return o.kinds !== "naver" && o.kinds !== "meta" });
 
+      thisCharge = metaTargets.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
+      thisImpressions = metaTargets.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0);
+      thisClicks = metaTargets.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0);
+      if (!(thisCharge === 0 && thisImpressions === 0 && thisClicks === 0)) {
+        newDataArray.push({
+          kinds: "meta",
+          value: {
+            charge: thisCharge,
+            performance: {
+              impressions: thisImpressions,
+              clicks: thisClicks,
+            }
+          },
+          children: equalJson(JSON.stringify(metaTargets)),
+        });
+      }
+
+      thisCharge = naverTargets.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
+      thisImpressions = naverTargets.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0);
+      thisClicks = naverTargets.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0);
+      if (!(thisCharge === 0 && thisImpressions === 0 && thisClicks === 0)) {
+        newDataArray.push({
+          kinds: "naver",
+          value: {
+            charge: thisCharge,
+            performance: {
+              impressions: thisImpressions,
+              clicks: thisClicks,
+            }
+          },
+          children: equalJson(JSON.stringify(naverTargets)),
+        });
+      }
+
+      newDataArrayCopied = equalJson(JSON.stringify(newDataArray));
+      newDataArray.push({
+        kinds: "total",
+        value: {
+          charge: newDataArrayCopied.reduce((acc, curr) => { return acc + curr.value.charge }, 0),
+          performance: {
+            impressions: newDataArrayCopied.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0),
+            clicks: newDataArrayCopied.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0),
+          }
+        },
+      });
+      obj.data = newDataArray;
+    }
+    timeMatrix.sort((a, b) => {
+      return b.date.valueOf() - a.date.valueOf();
+    });
     cleanChildren(tong);
 
     num0 = 0;
     for (let obj of timeMatrix) {
-      
       baseBlock = createNode({
         mother: tong,
         style: {
@@ -1448,6 +1532,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
           width: withOut(0, ea),
           borderBottom: num0 !== timeMatrix.length - 1 ? "1px solid " + colorChip.gray3 : "",
           flexDirection: "row",
+          background: (num0 % 2 === 0) ? colorChip.white : colorChip.gray0,
         }
       });
       createNode({
@@ -1467,9 +1552,9 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
           style: {
             display: "inline-flex",
             position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(15) + ea,
-            fontWeight: String(700),
+            top: String(textTop) + ea,
+            fontSize: String(timeSize) + ea,
+            fontWeight: String(timeWeight),
             color: colorChip.black,
           }
         }
@@ -1483,7 +1568,6 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
           flexDirection: "column",
         },
       });
-
       num = 0;
       for (let campaign of obj.data) {
         campaignBaseBlock = createNode({
@@ -1493,7 +1577,6 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
             position: "relative",
             flexDirection: "row",
             width: withOut(0, ea),
-            height: campaign.kinds === "meta" ? "" : String(45) + ea,
             boxSizing: "border-box",
             borderBottom: num !== obj.data.length - 1 ? "1px solid " + colorChip.gray3 : "",
           },
@@ -1505,7 +1588,6 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
             verticalAlign: "top",
             position: "relative",
             width: String(typeWidth) + ea,
-            height: campaign.kinds === "meta" ? "" : withOut(0, ea),
             justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
@@ -1517,70 +1599,42 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
             style: {
               display: "inline-flex",
               position: "relative",
-              top: String(-1) + ea,
-              fontSize: String(14) + ea,
-              fontWeight: String(700),
+              top: String(textTop) + ea,
+              fontSize: String(textSize) + ea,
+              fontWeight: String(kindsWeight),
               color: colorChip.black,
             }
           }
         });
-        createNode({
-          mother: campaignBaseBlock,
-          style: {
-            display: "inline-flex",
-            verticalAlign: "top",
-            position: "relative",
-            width: String(blockWidth * 2) + ea,
-            height: campaign.kinds === "meta" ? "" : withOut(0, ea),
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            borderRight: "1px solid " + colorChip.gray3,
-            boxSizing: "border-box",       
-          },
-          child: {
-            text: campaign.information.name,
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              top: String(-1) + ea,
-              fontSize: String(14) + ea,
-              fontWeight: String(400),
-              color: colorChip.black,
-            }
-          }
-        });
-        
-        if (campaign.kinds === "meta") {
 
-          adSetTong = createNode({
+        if (campaign.kinds === "meta") {
+          metaCampaignTong = createNode({
             mother: campaignBaseBlock,
             style: {
               display: "inline-block",
               verticalAlign: "top",
               position: "relative",
-              width: withOut(typeWidth + (blockWidth * 2), ea),
-              height: withOut(0, ea),
-              boxSizing: "border-box",
+              width: String((blockWidth * 8) + 1) + ea,
+              borderRight: "1px solid " + colorChip.gray3,
+              boxSizing: "border-box",       
             },
           });
 
-          num2 = 0;
-          for (let adset of campaign.children) {
-
-            adSetBaseBlock = createNode({
-              mother: adSetTong,
+          num5 = 0;
+          for (let realCampaign of campaign.children) {
+            realCampaignTong = createNode({
+              mother: metaCampaignTong,
               style: {
                 display: "flex",
+                verticalAlign: "top",
                 position: "relative",
                 width: withOut(0, ea),
-                boxSizing: "border-box",
+                borderBottom: num5 !== campaign.children.length - 1 ? "1px solid " + colorChip.gray3 : "",
                 flexDirection: "row",
-                borderBottom: num2 !== campaign.children.length - 1 ? "1px solid " + colorChip.gray3 : "",
-              },
+              }
             });
             createNode({
-              mother: adSetBaseBlock,
+              mother: realCampaignTong,
               style: {
                 display: "inline-flex",
                 verticalAlign: "top",
@@ -1590,54 +1644,50 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
                 alignItems: "center",
                 textAlign: "center",
                 borderRight: "1px solid " + colorChip.gray3,
-                boxSizing: "border-box",       
+                boxSizing: "border-box",
               },
               child: {
-                text: adset.information.name,
+                text: realCampaign.information.name,
                 style: {
                   display: "inline-flex",
                   position: "relative",
-                  top: String(-1) + ea,
-                  fontSize: String(14) + ea,
-                  fontWeight: String(400),
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
                   color: colorChip.black,
                 }
               }
             });
-
-            adTong = createNode({
-              mother: adSetBaseBlock,
+            adSetTong = createNode({
+              mother: realCampaignTong,
               style: {
                 display: "inline-block",
                 verticalAlign: "top",
                 position: "relative",
-                width: withOut(blockWidth * 2, ea),
-                boxSizing: "border-box",
+                width: String(blockWidth * 6) + ea,
               },
             });
-
-            num3 = 0;
-            for (let ad of adset.children) {
+            num2 = 0;
+            for (let adset of realCampaign.children) {
   
-              adBaseBlock = createNode({
-                mother: adTong,
+              adSetBaseBlock = createNode({
+                mother: adSetTong,
                 style: {
-                  display: "block",
+                  display: "flex",
                   position: "relative",
                   width: withOut(0, ea),
-                  height: String(45) + ea,
                   boxSizing: "border-box",
-                  borderBottom: num3 !== adset.children.length - 1 ? "1px solid " + colorChip.gray3 : "",
+                  flexDirection: "row",
+                  borderBottom: num2 !== realCampaign.children.length - 1 ? "1px solid " + colorChip.gray3 : "",
                 },
               });
               createNode({
-                mother: adBaseBlock,
+                mother: adSetBaseBlock,
                 style: {
                   display: "inline-flex",
                   verticalAlign: "top",
                   position: "relative",
-                  width: String(blockWidth) + ea,
-                  height: withOut(0, ea),
+                  width: String(blockWidth * 2) + ea,
                   justifyContent: "center",
                   alignItems: "center",
                   textAlign: "center",
@@ -1645,128 +1695,548 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
                   boxSizing: "border-box",       
                 },
                 child: {
-                  text: ad.information.name,
+                  text: adset.information.name,
                   style: {
                     display: "inline-flex",
                     position: "relative",
-                    top: String(-1) + ea,
-                    fontSize: String(14) + ea,
-                    fontWeight: String(400),
+                    top: String(textTop) + ea,
+                    fontSize: String(textSize) + ea,
+                    fontWeight: String(textWeight),
                     color: colorChip.black,
                   }
                 }
               });
-    
-              createNode({
-                mother: adBaseBlock,
+              adTong = createNode({
+                mother: adSetBaseBlock,
                 style: {
-                  display: "inline-flex",
+                  display: "inline-block",
                   verticalAlign: "top",
                   position: "relative",
-                  width: String(blockWidth) + ea,
-                  height: withOut(0, ea),
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
+                  width: withOut(blockWidth * 2, ea),
                   boxSizing: "border-box",
-                  borderRight: "1px dashed " + colorChip.gray3,
                 },
-                child: {
-                  text: "비용:&nbsp;&nbsp;<b%" + autoComma(ad.value.charge) + "원" + "%b>",
+              });
+  
+              num3 = 0;
+              for (let ad of adset.children) {
+                adBaseBlock = createNode({
+                  mother: adTong,
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    width: withOut(0, ea),
+                    height: String(blockHeight) + ea,
+                    boxSizing: "border-box",
+                    borderBottom: num3 !== adset.children.length - 1 ? "1px solid " + colorChip.gray3 : "",
+                  },
+                });
+                createNode({
+                  mother: adBaseBlock,
                   style: {
                     display: "inline-flex",
+                    verticalAlign: "top",
                     position: "relative",
-                    top: String(-1) + ea,
-                    fontSize: String(14) + ea,
-                    fontWeight: String(400),
-                    color: colorChip.deactive,
+                    width: String(blockWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    borderRight: "1px solid " + colorChip.gray3,
+                    boxSizing: "border-box",       
                   },
-                  bold: {
-                    fontSize: String(14) + ea,
-                    fontWeight: String(600),
-                    color: colorChip.green,
+                  child: {
+                    text: ad.information.name,
+                    style: {
+                      display: "inline-flex",
+                      position: "relative",
+                      top: String(textTop) + ea,
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.black,
+                    }
                   }
-                }
-              });
-
-              createNode({
-                mother: adBaseBlock,
-                style: {
-                  display: "inline-flex",
-                  verticalAlign: "top",
-                  position: "relative",
-                  width: String(blockWidth) + ea,
-                  height: withOut(0, ea),
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  boxSizing: "border-box",
-                  borderRight: "1px dashed " + colorChip.gray3,
-                },
-                child: {
-                  text: "노출:&nbsp;&nbsp;<b%" + String(ad.value.performance.impressions) + "%b>",
+                });
+                createNode({
+                  mother: adBaseBlock,
                   style: {
                     display: "inline-flex",
+                    verticalAlign: "top",
                     position: "relative",
-                    top: String(-1) + ea,
-                    fontSize: String(14) + ea,
-                    fontWeight: String(400),
-                    color: colorChip.deactive,
+                    width: String(blockWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    boxSizing: "border-box",
+                    borderRight: "1px dashed " + colorChip.gray3,
                   },
-                  bold: {
-                    fontSize: String(14) + ea,
-                    fontWeight: String(600),
-                    color: colorChip.green,
+                  child: {
+                    text: "비용:" + blank + "<b%" + autoComma(ad.value.charge) + "원" + "%b>",
+                    style: {
+                      display: "inline-flex",
+                      position: "relative",
+                      top: String(textTop) + ea,
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.deactive,
+                    },
+                    bold: {
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(valueWeight),
+                      color: colorChip.green,
+                    }
                   }
-                }
-              });
-
-              createNode({
-                mother: adBaseBlock,
-                style: {
-                  display: "inline-flex",
-                  verticalAlign: "top",
-                  position: "relative",
-                  width: String(blockWidth) + ea,
-                  height: withOut(0, ea),
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  boxSizing: "border-box",
-                  borderRight: "1px dashed " + colorChip.gray3,
-                },
-                child: {
-                  text: "클릭:&nbsp;&nbsp;<b%" + String(ad.value.performance.clicks) + "%b>",
+                });
+                createNode({
+                  mother: adBaseBlock,
                   style: {
                     display: "inline-flex",
+                    verticalAlign: "top",
                     position: "relative",
-                    top: String(-1) + ea,
-                    fontSize: String(14) + ea,
-                    fontWeight: String(400),
-                    color: colorChip.deactive,
+                    width: String(blockWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    boxSizing: "border-box",
+                    borderRight: "1px dashed " + colorChip.gray3,
                   },
-                  bold: {
-                    fontSize: String(14) + ea,
-                    fontWeight: String(600),
-                    color: colorChip.green,
+                  child: {
+                    text: "노출:" + blank + "<b%" + String(ad.value.performance.impressions) + "%b>",
+                    style: {
+                      display: "inline-flex",
+                      position: "relative",
+                      top: String(textTop) + ea,
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.deactive,
+                    },
+                    bold: {
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(valueWeight),
+                      color: colorChip.green,
+                    }
                   }
-                }
-              });
-
-              num3++;
+                });
+                createNode({
+                  mother: adBaseBlock,
+                  style: {
+                    display: "inline-flex",
+                    verticalAlign: "top",
+                    position: "relative",
+                    width: String(blockWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    boxSizing: "border-box",
+                  },
+                  child: {
+                    text: "클릭:" + blank + "<b%" + String(ad.value.performance.clicks) + "%b>",
+                    style: {
+                      display: "inline-flex",
+                      position: "relative",
+                      top: String(textTop) + ea,
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.deactive,
+                    },
+                    bold: {
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(valueWeight),
+                      color: colorChip.green,
+                    }
+                  }
+                });
+                num3++;
+              }
+              
+              num2++;
             }
-            
-
-            num2++;
+            num5++;
           }
 
         } else if (campaign.kinds === "naver") {
+          naverCampaignTong = createNode({
+            mother: campaignBaseBlock,
+            style: {
+              display: "inline-block",
+              verticalAlign: "top",
+              position: "relative",
+              width: String((blockWidth * 8) + 1) + ea,
+              borderRight: "1px solid " + colorChip.gray3,
+              boxSizing: "border-box",       
+            },
+          });
+          num4 = 0;
+          for (let naverCampaign of campaign.children) {
+            performanceTong = createNode({
+              mother: naverCampaignTong,
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                position: "relative",
+                width: withOut(0, ea),
+                height: String(blockHeight) + ea,
+                boxSizing: "border-box",
+                borderBottom: num4 !== campaign.children.length - 1 ? "1px solid " + colorChip.gray3 : "",
+              },
+            });
+            createNode({
+              mother: performanceTong,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth * 2) + ea,
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                boxSizing: "border-box",
+                borderRight: "1px solid " + colorChip.gray3,
+              },
+              child: {
+                text: naverCampaign.information.name,
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.black,
+                }
+              }
+            });
+            createNode({
+              mother: performanceTong,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth * 3) + ea,
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                boxSizing: "border-box",
+                borderRight: "1px solid " + colorChip.gray3,
+              },
+              child: {
+                text: "타입:" + blank + "<b%" + naverCampaign.information.type + "%b>",
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.deactive,
+                },
+                bold: {
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.black,
+                }
+              }
+            });
+            createNode({
+              mother: performanceTong,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth) + ea,
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                boxSizing: "border-box",
+                borderRight: "1px dashed " + colorChip.gray3,
+              },
+              child: {
+                text: "비용:" + blank + "<b%" + autoComma(naverCampaign.value.charge) + "원" + "%b>",
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.deactive,
+                },
+                bold: {
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: colorChip.green,
+                }
+              }
+            });
+            createNode({
+              mother: performanceTong,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth) + ea,
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                boxSizing: "border-box",
+                borderRight: "1px dashed " + colorChip.gray3,
+              },
+              child: {
+                text: "노출:" + blank + ";<b%" + String(naverCampaign.value.performance.impressions) + "%b>",
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.deactive,
+                },
+                bold: {
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: colorChip.green,
+                }
+              }
+            });
+            createNode({
+              mother: performanceTong,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth) + ea,
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                boxSizing: "border-box",
+              },
+              child: {
+                text: "클릭:" + blank + "<b%" + String(naverCampaign.value.performance.clicks) + "%b>",
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.deactive,
+                },
+                bold: {
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: colorChip.green,
+                }
+              }
+            });
+            num4++;
+          }
+        } else if (campaign.kinds === "total") {
+          totalCampaignTong = createNode({
+            mother: campaignBaseBlock,
+            style: {
+              display: "inline-block",
+              verticalAlign: "top",
+              position: "relative",
+              width: String((blockWidth * 8) + 1) + ea,
+              height: String(blockHeight) + ea,
+              borderRight: "1px solid " + colorChip.gray3,
+              boxSizing: "border-box",       
+            },
+          });
 
+          createNode({
+            mother: totalCampaignTong,
+            style: {
+              display: "inline-flex",
+              verticalAlign: "top",
+              position: "relative",
+              width: String(blockWidth * 5) + ea,
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              boxSizing: "border-box",
+              borderRight: "1px solid " + colorChip.gray3,
+            },
+            child: {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: withOut(linePadding * 2, ea),
+                height: String(0),
+                borderBottom: "1px dashed " + colorChip.gray3,
+              }
+            }
+          });
+          createNode({
+            mother: totalCampaignTong,
+            style: {
+              display: "inline-flex",
+              verticalAlign: "top",
+              position: "relative",
+              width: String(blockWidth) + ea,
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              boxSizing: "border-box",
+              borderRight: "1px dashed " + colorChip.gray3,
+            },
+            child: {
+              text: "비용:" + blank + "<b%" + autoComma(campaign.value.charge) + "원" + "%b>",
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                top: String(textTop) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.deactive,
+              },
+              bold: {
+                fontSize: String(textSize) + ea,
+                fontWeight: String(valueWeight),
+                color: colorChip.black,
+              }
+            }
+          });
+          createNode({
+            mother: totalCampaignTong,
+            style: {
+              display: "inline-flex",
+              verticalAlign: "top",
+              position: "relative",
+              width: String(blockWidth) + ea,
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              boxSizing: "border-box",
+              borderRight: "1px dashed " + colorChip.gray3,
+            },
+            child: {
+              text: "노출:" + blank + ";<b%" + String(campaign.value.performance.impressions) + "%b>",
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                top: String(textTop) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.deactive,
+              },
+              bold: {
+                fontSize: String(textSize) + ea,
+                fontWeight: String(valueWeight),
+                color: colorChip.black,
+              }
+            }
+          });
+          createNode({
+            mother: totalCampaignTong,
+            style: {
+              display: "inline-flex",
+              verticalAlign: "top",
+              position: "relative",
+              width: String(blockWidth) + ea,
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              boxSizing: "border-box",
+            },
+            child: {
+              text: "클릭:" + blank + "<b%" + String(campaign.value.performance.clicks) + "%b>",
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                top: String(textTop) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.deactive,
+              },
+              bold: {
+                fontSize: String(textSize) + ea,
+                fontWeight: String(valueWeight),
+                color: colorChip.black,
+              }
+            }
+          });
+
+          createNode({
+            mother: campaignBaseBlock,
+            style: {
+              display: "inline-flex",
+              verticalAlign: "top",
+              position: "relative",
+              width: withOut(typeWidth + (blockWidth * 8) + 1, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",       
+              flexDirection: "column",
+            },
+            child: {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: withOut(linePadding * 2, ea),
+                height: String(0),
+                borderBottom: "1px dashed " + colorChip.gray3,
+              }
+            }
+          });
+
+        }
+
+        if (campaign.kinds !== "total") {
+          summaryTong = createNode({
+            mother: campaignBaseBlock,
+            style: {
+              display: "inline-flex",
+              verticalAlign: "top",
+              position: "relative",
+              width: withOut(typeWidth + (blockWidth * 8) + 1, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",       
+              flexDirection: "column",
+            },
+            child: {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                textAlign: "center",       
+              },
+              child: {
+                text: "<b%" + campaign.kinds + "%b>" + "\n" + "비용:" + blank + "<b%" + autoComma(campaign.value.charge) + "원" + "%b>" + "\n" + "노출:" + blank + "<b%" + String(campaign.value.performance.impressions) + "%b>" + slash + "클릭:" + blank + "<b%" + String(campaign.value.performance.clicks) + "%b>",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  textAlign: "center",
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.deactive,
+                  lineHeight: String(1.6),
+                },
+                bold: {
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: colorChip.black,
+                },
+                under: {
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: colorChip.deactive,
+                }
+              }
+            }
+          });
         }
         
         num++;
       }
-
       num0++;
     }
 
@@ -5279,7 +5749,7 @@ MprJs.prototype.clientWhiteCard = function (cliid, requestNumber) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
   const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, hasQuery, removeQuery, appendQuery } = GeneralJs;
   return async function (e) {
     try {
       const zIndex = 4;
@@ -5305,7 +5775,7 @@ MprJs.prototype.clientWhiteCard = function (cliid, requestNumber) {
       overlap = 12;
       basePaddingTop = 12;
 
-      titleTextTop = isMac() ? 2 : 2;
+      titleTextTop = isMac() ? 2 : 0;
       titleSize = 21;
       titleWeight = 800;
 
@@ -5341,6 +5811,7 @@ MprJs.prototype.clientWhiteCard = function (cliid, requestNumber) {
           attribute: {
             cliid: cliid,
             request: String(requestNumber),
+            key: cliid + "_" + String(requestNumber),
           },
           class: [ whiteCardClassName, whiteBaseClassName ],
           style: {
@@ -5532,6 +6003,11 @@ MprJs.prototype.clientWhiteCard = function (cliid, requestNumber) {
           }
         });
 
+        if (hasQuery("whitekey")) {
+          removeQuery("whitekey");
+        }
+        appendQuery({ whitekey: cliid + "_" + String(requestNumber) });
+
         instance.clientWhiteContents(whitePrompt.children[0].firstChild, cliid, requestNumber).then((dataSet) => {
           return instance.clientWhiteHistory(whitePrompt.children[1].firstChild, dataSet);
         }).catch((err) => { console.log(err); });
@@ -5572,7 +6048,7 @@ MprJs.prototype.adsWhiteCard = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
   const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, hasQuery, removeQuery, appendQuery } = GeneralJs;
   return async function (e) {
     try {
       const zIndex = 4;
@@ -5589,6 +6065,7 @@ MprJs.prototype.adsWhiteCard = function () {
       let adsWhiteMaker;
       let innerMarginTop;
       let basePaddingTop;
+      let today;
 
       margin = 30;
       titleHeight = 50;
@@ -5597,7 +6074,7 @@ MprJs.prototype.adsWhiteCard = function () {
       overlap = 12;
       basePaddingTop = 12;
 
-      titleTextTop = isMac() ? 2 : 2;
+      titleTextTop = isMac() ? 2 : 0;
       titleSize = 21;
       titleWeight = 800;
 
@@ -5616,28 +6093,35 @@ MprJs.prototype.adsWhiteCard = function () {
             style: {
               position: "fixed",
               top: String(0),
-              left: String(grayBarWidth) + ea,
-              width: withOut(grayBarWidth, ea),
+              left: String(0) + ea,
+              width: withOut(0, ea),
               height: withOut(belowHeight, ea),
               background: colorChip.black,
             }
           });
         } 
         if (startDate === null) {
-          startDate = new Date(2023, 8, 1, 0, 0, 0);
+          today = new Date();
+          today.setDate(today.getDate() - 31);
+          startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
         }
         if (endDate === null) {
-          endDate = new Date(2023, 8, 30, 0, 0, 0);
+          today = new Date();
+          today.setDate(today.getDate() - 1);
+          endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
         }
 
         whitePrompt = createNode({
           mother: totalContents,
           class: [ whiteCardClassName, whiteBaseClassName ],
+          attribute: {
+            key: "ads",
+          },
           style: {
             position: "fixed",
             top: String(0 + margin + titleHeight) + ea,
-            left: String(grayBarWidth + margin) + ea,
-            width: withOut((margin * 2) + grayBarWidth + (innerMargin * 2), ea),
+            left: String(margin) + ea,
+            width: withOut((margin * 2) + (innerMargin * 2), ea),
             height: withOut(0 + (margin * 2) + titleHeight + belowHeight + (innerMargin + basePaddingTop), ea),
             background: colorChip.white,
             zIndex: String(zIndex),
@@ -5658,8 +6142,7 @@ MprJs.prototype.adsWhiteCard = function () {
                 height: withOut(0, ea),
                 overflow: "scroll",
                 border: "1px solid " + colorChip.gray3,
-                borderTopLeftRadius: String(5) + "px",
-                borderBottomLeftRadius: String(5) + "px",
+                borderRadius: String(5) + "px",
                 boxSizing: "border-box",
               },
               child: {
@@ -5682,8 +6165,8 @@ MprJs.prototype.adsWhiteCard = function () {
             flexDirection: "column",
             position: "fixed",
             top: String(0 + margin) + ea,
-            left: String(grayBarWidth + margin) + ea,
-            width: withOut((margin * 2) + grayBarWidth, ea),
+            left: String(margin) + ea,
+            width: withOut((margin * 2), ea),
             height: String(titleHeight) + ea,
             background: colorChip.white,
             zIndex: String(zIndex),
@@ -5708,6 +6191,7 @@ MprJs.prototype.adsWhiteCard = function () {
               {
                 text: "광고 현황",
                 style: {
+                  display: "inline-block",
                   position: "relative",
                   top: String(titleTextTop) + ea,
                   fontSize: String(titleSize) + ea,
@@ -5716,9 +6200,56 @@ MprJs.prototype.adsWhiteCard = function () {
                   cursor: "pointer",
                 }
               },
+              {
+                event: {
+                  click: async function (e) {
+                    try {
+                      const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+                      let startDate, endDate;
+        
+                      startDate = await GeneralJs.promptDate("기간의 시작일을 알려주세요!");
+                      if (startDate !== null) {
+                        endDate = await GeneralJs.promptDate("기간의 종료일을 알려주세요!", false, "", startDate);
+                        if (endDate !== null) {
+                          if (w0 !== undefined) {
+                            w0.remove();
+                          }
+                          if (w1 !== undefined) {
+                            w1.remove();
+                          }
+                          setQueue(() => {
+                            adsWhiteMaker(true, startDate, endDate);
+                          });
+                        }
+                      }
+
+                    } catch (e) {
+                      console.log(e);
+                      window.alert("오류가 발생했습니다! 다시 시도해주세요!");
+                      window.location.reload();
+                    }
+                  }
+                },
+                text: dateToString(startDate).slice(2) + " ~ " + dateToString(endDate).slice(2),
+                style: {
+                  display: "inline-block",
+                  position: "absolute",
+                  top: String(titleTextTop) + ea,
+                  right: String(0),
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.black,
+                  cursor: "pointer",
+                }
+              },
             ]
           }
         });
+
+        if (hasQuery("whitekey")) {
+          removeQuery("whitekey");
+        }
+        appendQuery({ whitekey: "ads" });
 
         ajaxJson({ startDate, endDate }, CONTENTSHOST + "/getAdsComplex", { equal: true }).then((result) => {
           return instance.adsWhiteContents(whitePrompt.children[0].firstChild, result, startDate, endDate);
@@ -5749,6 +6280,1127 @@ MprJs.prototype.adsWhiteCard = function () {
           }
           setQueue(() => {
             adsWhiteMaker(true);
+          })
+        }, 350);
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+MprJs.prototype.frontWhiteCard = function () {
+  const instance = this;
+  const { ea, totalContents, grayBarWidth, belowHeight, entireMode } = this;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, autoComma, zeroAddition, chartJsPatch, serviceParsing, hasQuery, removeQuery, appendQuery } = GeneralJs;
+  const vaildValue = function (target) {
+    const today = new Date();
+    let valueArr0, valueArr1, valueArr2;
+    target.style.color = GeneralJs.colorChip.black;
+    if (!/[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.test(target.value)) {
+      valueArr0 = target.value.split(" ~ ");
+      valueArr1 = valueArr0[0].split("-");
+      if (valueArr0[1] !== undefined) {
+        valueArr2 = valueArr0[1].split("-");
+        if (valueArr1.length === 3 && valueArr2.length === 3) {
+          target.value = String(valueArr1[0]) + '-' + zeroAddition(valueArr1[1]) + '-' + zeroAddition(valueArr1[2]) + ' ~ ' + String(valueArr2[0]) + '-' + zeroAddition(valueArr2[1]) + '-' + zeroAddition(valueArr2[2]);
+        } else {
+          target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+        }
+      } else {
+        target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+      }
+    }
+    target.value = (/[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.exec(target.value))[0];
+
+    valueArr0 = target.value.split(" ~ ");
+    valueArr1 = valueArr0[0].split("-");
+    valueArr2 = valueArr0[1].split("-");
+    if ((Number(valueArr1[0]) * 12) + Number(valueArr1[1].replace(/^0/, '')) > (Number(valueArr2[0]) * 12) + Number(valueArr2[1].replace(/^0/, ''))) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+    if (Number(valueArr1[1].replace(/^0/, '')) > 12 || Number(valueArr1[1].replace(/^0/, '')) < 1) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+    if (Number(valueArr2[1].replace(/^0/, '')) > 12 || Number(valueArr2[1].replace(/^0/, '')) < 1) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+    if (Number(valueArr1[0]) < 19) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+
+    GeneralJs.stacks.reportBoxStartDayInputValue = target.value;
+  }
+  return async function (e) {
+    try {
+      const zIndex = 4;
+      let cancelBack, whitePrompt;
+      let margin;
+      let titleHeight;
+      let innerMargin;
+      let overlap;
+      let titleTextTop, titleSize;
+      let titleWeight;
+      let fontTextTop, fontSize, fontBetween, fontWeight;
+      let whiteReportMaker;
+      let scrollBox;
+      let titleArea;
+      let today;
+      let ago;
+      let agoDate;
+      let loading;
+      let loadingWidth;
+      let startPaddingTop;
+      let inputWidth, inputSize, inputWeight;
+      let subTodaySize, subTodayWeight;
+      let dataLoad;
+      let fromDate, toDate;
+      let chartBetween;
+      let chartHeight;
+      let style;
+      let todayRange;
+      let todayString;
+      let dateInput;
+      let inputBottom;
+      let middleTitleHeight;
+      let previousToDate;
+      let innerMarginTop;
+      let basePaddingTop;
+      let mainTitleSize;
+
+      toDate = new Date();
+      toDate.setDate(toDate.getDate() - 1);
+      previousToDate = new Date();
+      previousToDate.setDate(previousToDate.getDate() - 1);
+      ago = 21;
+      fromDate = new Date();
+      fromDate.setDate(fromDate.getDate() - ago);
+
+      margin = entireMode ? 0 : 30;
+      titleHeight = 50;
+      innerMargin = 24;
+      innerMarginTop = 20;
+      overlap = 12;
+      basePaddingTop = 12;
+
+      titleTextTop = isMac() ? 2 : 0;
+      mainTitleSize = 21;
+      titleSize = 18;
+      titleWeight = 800;
+      middleTitleHeight = 36;
+
+      fontTextTop = isMac() ? 1 : 0;
+      fontSize = 14;
+      fontBetween = 8;
+      fontWeight = 400;
+
+      loadingWidth = 48;
+
+      inputWidth = 500;
+      inputSize = 29;
+      inputWeight = 200;
+
+      subTodaySize = 15;
+      subTodayWeight = 500;
+
+      chartBetween = 40;
+      chartHeight = 480;
+
+      startPaddingTop = 40;
+      inputBottom = 8;
+
+      dataLoad = () => {};
+
+      whiteReportMaker = (fromDate, toDate, reload = false) => {
+
+        if (!reload) {
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ "justfadein", whiteCardClassName ],
+            event: (e) => { removeByClass(whiteCardClassName) },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0) + ea,
+              width: withOut(0, ea),
+              height: withOut(belowHeight, ea),
+              background: colorChip.black,
+            }
+          });
+        } 
+  
+        whitePrompt = createNode({
+          mother: totalContents,
+          class: [ whiteCardClassName, whiteBaseClassName ],
+          attribute: {
+            key: "front",
+          },
+          style: {
+            position: "fixed",
+            top: String(0 + margin + titleHeight) + ea,
+            left: String(margin) + ea,
+            width: withOut((margin * 2) + (innerMargin * 2), ea),
+            height: withOut(0 + (margin * 2) + titleHeight + belowHeight + (innerMargin + basePaddingTop), ea),
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderBottomLeftRadius: String(5) + "px",
+            borderBottomRightRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+            overflow: "hidden",
+            padding: String(innerMargin) + ea,
+            paddingTop: String(basePaddingTop) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                overflow: "scroll",
+                border: "1px solid " + colorChip.gray3,
+                borderRadius: String(5) + "px",
+                boxSizing: "border-box",
+                padding: String(innerMargin) + ea,
+                paddingTop: String(innerMarginTop) + ea,
+              },
+              child: {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0, ea),
+                }
+              }
+            }
+          ]
+        });
+
+        titleWhite = createNode({
+          mother: totalContents,
+          class: [ whiteCardClassName ],
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            position: "fixed",
+            top: String(0 + margin) + ea,
+            left: String(margin) + ea,
+            width: withOut((margin * 2), ea),
+            height: String(titleHeight) + ea,
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderTopLeftRadius: String(5) + "px",
+            borderTopRightRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            overflow: "hidden",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "end",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "row",
+              alignItems: "end",
+              justifyContent: "start",
+              width: withOut(innerMargin * 2, ea),
+            },
+            children: [
+              {
+                text: "프론트 웹 현황",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(titleTextTop) + ea,
+                  fontSize: String(mainTitleSize) + ea,
+                  fontWeight: String(titleWeight),
+                  color: colorChip.black,
+                  cursor: "pointer",
+                }
+              },
+              {
+                event: {
+                  click: async function (e) {
+                    try {
+                      const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+                      let startDate, endDate;
+        
+                      startDate = await GeneralJs.promptDate("기간의 시작일을 알려주세요!");
+                      if (startDate !== null) {
+                        endDate = await GeneralJs.promptDate("기간의 종료일을 알려주세요!", false, "", startDate);
+                        if (endDate !== null) {
+                          if (w0 !== undefined) {
+                            w0.remove();
+                          }
+                          if (w1 !== undefined) {
+                            w1.remove();
+                          }
+                          setQueue(() => {
+                            whiteReportMaker(startDate, endDate, true);
+                          });
+                        }
+                      }
+
+                    } catch (e) {
+                      console.log(e);
+                      window.alert("오류가 발생했습니다! 다시 시도해주세요!");
+                      window.location.reload();
+                    }
+                  }
+                },
+                text: dateToString(fromDate).slice(2) + " ~ " + dateToString(toDate).slice(2),
+                style: {
+                  display: "inline-block",
+                  position: "absolute",
+                  top: String(titleTextTop) + ea,
+                  right: String(0),
+                  fontSize: String(mainTitleSize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.black,
+                  cursor: "pointer",
+                }
+              },
+            ]
+          }
+        });
+
+        loading = instance.mother.returnLoadingIcon();
+        style = {
+          position: "absolute",
+          width: String(loadingWidth) + ea,
+          height: String(loadingWidth) + ea,
+          top: withOut(50, loadingWidth / 2, ea),
+          left: withOut(50, loadingWidth / 2, ea),
+        }
+        for (let i in style) {
+          loading.style[i] = style[i];
+        }
+        whitePrompt.children[0].appendChild(loading);
+        scrollBox = whitePrompt.children[0].firstChild;
+
+        dataLoad = (loading) => {
+          return (result) => {
+
+            loading.remove();
+            cleanChildren(scrollBox);
+
+            [
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  verticalAlign: "top",
+                },
+              },
+              {
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                  marginRight: String(chartBetween) + ea,
+                  marginBottom: String(chartBetween) + ea,
+                  verticalAlign: "top",
+                },
+                child: {
+                  mode: "canvas",
+                  style: {
+                    display: "block",
+                    position: "relative",      
+                  },
+                  previous: {
+                    text: "페이지뷰, 유저수, 전환수",
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      justifyContent: "center",
+                      alignItems: "start",
+                      height: String(middleTitleHeight) + ea,
+                    }
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                  marginBottom: String(chartBetween) + ea,
+                  verticalAlign: "top",
+                },
+                child: {
+                  mode: "canvas",
+                  style: {
+                    display: "block",
+                    position: "relative",      
+                  },
+                  previous: {
+                    text: "유저수, 전환수, 문의수",
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      justifyContent: "center",
+                      alignItems: "start",
+                      height: String(middleTitleHeight) + ea,
+                    }
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                  marginRight: String(chartBetween) + ea,
+                  marginBottom: String(chartBetween) + ea,
+                  verticalAlign: "top",
+                },
+                child: {
+                  mode: "canvas",
+                  style: {
+                    display: "block",
+                    position: "relative",      
+                  },
+                  previous: {
+                    text: "유저수 - 오가닉 / 광고 / SNS / 다이렉트",
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      justifyContent: "center",
+                      alignItems: "start",
+                      height: String(middleTitleHeight) + ea,
+                    }
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                  marginBottom: String(chartBetween) + ea,
+                  verticalAlign: "top",
+                },
+                child: {
+                  mode: "canvas",
+                  style: {
+                    display: "block",
+                    position: "relative",      
+                  },
+                  previous: {
+                    text: "유저수 - 네이버 유입 / 메타 유입 / 구글 유입",
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      justifyContent: "center",
+                      alignItems: "start",
+                      height: String(middleTitleHeight) + ea,
+                    }
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                  marginRight: String(chartBetween) + ea,
+                  marginBottom: String(chartBetween) + ea,
+                  verticalAlign: "top",
+                },
+                child: {
+                  mode: "canvas",
+                  style: {
+                    display: "block",
+                    position: "relative",      
+                  },
+                  previous: {
+                    text: "전환수 - 오가닉 / 광고 / SNS / 다이렉트",
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      justifyContent: "center",
+                      alignItems: "start",
+                      height: String(middleTitleHeight) + ea,
+                    }
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                  marginBottom: String(chartBetween) + ea,
+                  verticalAlign: "top",
+                },
+                child: {
+                  mode: "canvas",
+                  style: {
+                    display: "block",
+                    position: "relative",      
+                  },
+                  previous: {
+                    text: "페이지뷰 기기 비율 - 모바일 / 데스트탑 / 태블릿",
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      justifyContent: "center",
+                      alignItems: "start",
+                      height: String(middleTitleHeight) + ea,
+                    }
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                  marginRight: String(chartBetween) + ea,
+                  marginBottom: String(chartBetween) + ea,
+                  verticalAlign: "top",
+                },
+                child: {
+                  mode: "canvas",
+                  style: {
+                    display: "block",
+                    position: "relative",      
+                  },
+                  previous: {
+                    text: "문의수, 추천수, 계약수",
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      justifyContent: "center",
+                      alignItems: "start",
+                      height: String(middleTitleHeight) + ea,
+                    }
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                  marginBottom: String(chartBetween) + ea,
+                  verticalAlign: "top",
+                },
+                child: {
+                  mode: "canvas",
+                  style: {
+                    display: "block",
+                    position: "relative",      
+                  },
+                  previous: {
+                    text: "유저수 / 20, 문의수, 계약수",
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      justifyContent: "center",
+                      alignItems: "start",
+                      height: String(middleTitleHeight) + ea,
+                    }
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                  marginRight: String(chartBetween) + ea,
+                  marginBottom: String(chartBetween) + ea,
+                  verticalAlign: "top",
+                },
+                child: {
+                  mode: "canvas",
+                  style: {
+                    display: "block",
+                    position: "relative",      
+                  },
+                  previous: {
+                    text: "광고 비용 - 네이버 / 메타 / 구글",
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      justifyContent: "center",
+                      alignItems: "start",
+                      height: String(middleTitleHeight) + ea,
+                    }
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                  marginBottom: String(chartBetween) + ea,
+                  verticalAlign: "top",
+                },
+                child: {
+                  mode: "canvas",
+                  style: {
+                    display: "block",
+                    position: "relative",      
+                  },
+                  previous: {
+                    text: "광고 클릭 - 네이버 / 메타 / 구글",
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      justifyContent: "center",
+                      alignItems: "start",
+                      height: String(middleTitleHeight) + ea,
+                    }
+                  }
+                }
+              },
+            ].forEach((obj) => {
+              obj.mother = scrollBox;
+              createNode(obj);
+            });
+
+            const [ rows, charge, basic ] = result;
+
+            rows.sort((a, b) => { return a.date.from.valueOf() - b.date.from.valueOf() });
+            charge.sort((a, b) => { return a.date.from.valueOf() - b.date.from.valueOf() });
+            basic.sort((a, b) => { return a.fromDate.valueOf() - b.fromDate.valueOf() });
+
+
+            console.log(rows, charge, basic)
+
+
+
+            const type = "line";
+            const labels = rows.map((o) => { return dateToString(o.date.from).slice(5) });
+            const fill = false;
+            const tension = 0.3;
+            const borderJoinStyle = "round";
+            const complexBoxesLength = 1;
+            let naverAds, metaAds, googleAds;
+    
+            // 1
+            new window.Chart(scrollBox.children[complexBoxesLength + 0].querySelector("canvas"), {
+              type,
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Users",
+                    data: rows.map((o) => { return o.data.users.total }),
+                    borderColor: colorChip.red,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Views",
+                    data: rows.map((o) => { return o.data.views.total }),
+                    borderColor: colorChip.yellow,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Conversion",
+                    data: rows.map((o) => { return o.data.conversion.consultingPage.total + o.data.conversion.popupOpen.total }),
+                    borderColor: colorChip.purple,
+                    fill, tension, borderJoinStyle,
+                  },
+                ]
+              },
+            });
+  
+            // 2
+            new window.Chart(scrollBox.children[complexBoxesLength + 1].querySelector("canvas"), {
+              type,
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Users",
+                    data: rows.map((o) => { return o.data.users.total }),
+                    borderColor: colorChip.red,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Conversion",
+                    data: rows.map((o) => { return o.data.conversion.consultingPage.total + o.data.conversion.popupOpen.total }),
+                    borderColor: colorChip.purple,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Clients",
+                    data: basic.map((o) => { return o.client }),
+                    borderColor: colorChip.green,
+                    fill, tension, borderJoinStyle,
+                  },
+                ]
+              },
+            });
+  
+            // 3
+            new window.Chart(scrollBox.children[complexBoxesLength + 2].querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Organic",
+                    data: rows.map((o) => { return o.data.users.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    borderColor: colorChip.red,
+                    backgroundColor: colorChip.red,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Ads",
+                    data: rows.map((o) => { return o.data.users.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    borderColor: colorChip.yellow,
+                    backgroundColor: colorChip.yellow,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Sns",
+                    data: rows.map((o) => { return o.data.users.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    borderColor: colorChip.purple,
+                    backgroundColor: colorChip.purple,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Direct",
+                    data: rows.map((o) => { return o.data.users.total - (o.data.users.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (o.data.users.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
+                    borderColor: colorChip.gray3,
+                    backgroundColor: colorChip.gray3,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                scales: {
+                  x: {
+                    stacked: true,
+                  },
+                  y: {
+                    beginAtZero: true,
+                    stacked: true,
+                  }
+                }
+              }
+            });
+  
+            // 4
+            new window.Chart(scrollBox.children[complexBoxesLength + 3].querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Naver",
+                    data: rows.map((o) => { return o.data.users.detail.source.cases.filter((c) => { return /naver/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    borderColor: colorChip.softGreen,
+                    backgroundColor: colorChip.softGreen,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Meta",
+                    data: rows.map((o) => { return o.data.users.detail.source.cases.filter((c) => { return /instagram/gi.test(c.case) || /facebook/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    borderColor: colorChip.purple,
+                    backgroundColor: colorChip.purple,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Google",
+                    data: rows.map((o) => { return o.data.users.detail.source.cases.filter((c) => { return /google/gi.test(c.case) || /youtube/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    borderColor: colorChip.gray3,
+                    backgroundColor: colorChip.gray3,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                  }
+                }
+              }
+            });
+  
+            // 5
+            new window.Chart(scrollBox.children[complexBoxesLength + 4].querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Organic",
+                    data: rows.map((o) => { return (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
+                    borderColor: colorChip.red,
+                    backgroundColor: colorChip.red,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Ads",
+                    data: rows.map((o) => { return (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
+                    borderColor: colorChip.yellow,
+                    backgroundColor: colorChip.yellow,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Sns",
+                    data: rows.map((o) => { return (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
+                    borderColor: colorChip.purple,
+                    backgroundColor: colorChip.purple,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Direct",
+                    data: rows.map((o) => { return (o.data.conversion.consultingPage.total + o.data.conversion.popupOpen.total) - (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
+                    borderColor: colorChip.gray3,
+                    backgroundColor: colorChip.gray3,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                scales: {
+                  x: {
+                    stacked: true,
+                  },
+                  y: {
+                    beginAtZero: true,
+                    stacked: true,
+                  }
+                }
+              }
+            });
+  
+            // 6
+            new window.Chart(scrollBox.children[complexBoxesLength + 5].querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Mobile",
+                    data: rows.map((o) => { return o.data.views.detail.deviceCategory.cases.filter((c) => { return c.case === "mobile" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    borderColor: colorChip.purple,
+                    backgroundColor: colorChip.purple,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Desktop",
+                    data: rows.map((o) => { return o.data.views.detail.deviceCategory.cases.filter((c) => { return c.case === "desktop" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    borderColor: colorChip.black,
+                    backgroundColor: colorChip.black,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Tablet",
+                    data: rows.map((o) => { return o.data.views.detail.deviceCategory.cases.filter((c) => { return c.case === "tablet" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    borderColor: colorChip.gray3,
+                    backgroundColor: colorChip.gray3,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                scales: {
+                  x: {
+                    stacked: true,
+                  },
+                  y: {
+                    beginAtZero: true,
+                    stacked: true,
+                  }
+                }
+              }
+            });
+  
+            // 7
+            new window.Chart(scrollBox.children[complexBoxesLength + 6].querySelector("canvas"), {
+              type,
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Clients",
+                    data: basic.map((o) => { return o.client }),
+                    borderColor: colorChip.green,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Recommend",
+                    data: basic.map((o) => { return o.recommend }),
+                    borderColor: colorChip.black,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Contracts",
+                    data: basic.map((o) => { return o.contract }),
+                    borderColor: colorChip.yellow,
+                    fill, tension, borderJoinStyle,
+                  },
+                ]
+              },
+            });
+  
+            // 8
+            new window.Chart(scrollBox.children[complexBoxesLength + 7].querySelector("canvas"), {
+              type,
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Users / 20",
+                    data: rows.map((o) => { return o.data.users.total / 20 }),
+                    borderColor: colorChip.red,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Clients",
+                    data: basic.map((o) => { return o.client }),
+                    borderColor: colorChip.green,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Contracts",
+                    data: basic.map((o) => { return o.contract }),
+                    borderColor: colorChip.yellow,
+                    fill, tension, borderJoinStyle,
+                  },
+                ]
+              },
+            });
+  
+            // 9
+            naverAds = [];
+            metaAds = [];
+            googleAds = [];
+            for (let { date: { from, to } } of rows) {
+              naverAds.push(charge.filter((o) => {
+                return /naver/gi.test(o.information.mother);
+              }).filter((o) => {
+                return o.date.from.valueOf() >= from.valueOf() && o.date.to.valueOf() <= to.valueOf();
+              }).reduce((acc, curr) => {
+                return {
+                  charge: acc.charge + curr.value.charge,
+                  clicks: acc.clicks + curr.value.performance.clicks,
+                  impressions: acc.impressions + curr.value.performance.impressions,
+                }
+              }, {
+                charge: 0,
+                clicks: 0,
+                impressions: 0
+              }));
+  
+              metaAds.push(charge.filter((o) => {
+                return /facebook/gi.test(o.information.mother) || /instagram/gi.test(o.information.mother) || /meta/gi.test(o.information.mother);
+              }).filter((o) => {
+                return o.date.from.valueOf() >= from.valueOf() && o.date.to.valueOf() <= to.valueOf();
+              }).reduce((acc, curr) => {
+                return {
+                  charge: acc.charge + curr.value.charge,
+                  clicks: acc.clicks + curr.value.performance.clicks,
+                  impressions: acc.impressions + curr.value.performance.impressions,
+                }
+              }, {
+                charge: 0,
+                clicks: 0,
+                impressions: 0
+              }));
+  
+              googleAds.push(charge.filter((o) => {
+                return /google/gi.test(o.information.mother);
+              }).filter((o) => {
+                return o.date.from.valueOf() >= from.valueOf() && o.date.to.valueOf() <= to.valueOf();
+              }).reduce((acc, curr) => {
+                return {
+                  charge: acc.charge + curr.value.charge,
+                  clicks: acc.clicks + curr.value.performance.clicks,
+                  impressions: acc.impressions + curr.value.performance.impressions,
+                }
+              }, {
+                charge: 0,
+                clicks: 0,
+                impressions: 0
+              }));
+  
+            }
+            new window.Chart(scrollBox.children[complexBoxesLength + 8].querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Naver",
+                    data: naverAds.map((o) => { return o.charge }),
+                    borderColor: colorChip.softGreen,
+                    backgroundColor: colorChip.softGreen,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Meta",
+                    data: metaAds.map((o) => { return o.charge }),
+                    borderColor: colorChip.purple,
+                    backgroundColor: colorChip.purple,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Google",
+                    data: googleAds.map((o) => { return o.charge }),
+                    borderColor: colorChip.gray3,
+                    backgroundColor: colorChip.gray3,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                  }
+                }
+              }
+            });
+  
+            // 10
+            new window.Chart(scrollBox.children[complexBoxesLength + 9].querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Naver",
+                    data: naverAds.map((o) => { return o.clicks }),
+                    borderColor: colorChip.softGreen,
+                    backgroundColor: colorChip.softGreen,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Meta",
+                    data: metaAds.map((o) => { return o.clicks }),
+                    borderColor: colorChip.purple,
+                    backgroundColor: colorChip.purple,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Google",
+                    data: googleAds.map((o) => { return o.clicks }),
+                    borderColor: colorChip.gray3,
+                    backgroundColor: colorChip.gray3,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                  }
+                }
+              }
+            });
+
+          }
+        }
+
+        chartJsPatch([
+          { data: { mode: "daily", fromDate, toDate }, url: LOGHOST + "/extractAnalytics" },
+          { data: { mode: "charge", fromDate, toDate }, url: LOGHOST + "/extractAnalytics" },
+          { data: { mode: "basic", fromDate, toDate }, url: BACKHOST + "/extractAnalytics" },
+        ]).then(dataLoad(loading)).catch((err) => {
+          console.log(err);
+        });
+
+        if (hasQuery("whitekey")) {
+          removeQuery("whitekey");
+        }
+        appendQuery({ whitekey: "front" });
+
+      }
+
+      if (document.querySelector('.' + whiteCardClassName) === null) {
+        whiteReportMaker(fromDate, toDate, false);
+      } else {
+        const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+        if (w0 !== undefined) {
+          w0.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        if (w1 !== undefined) {
+          w1.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        setQueue(() => {
+          if (w0 !== undefined) {
+            w0.remove();
+          }
+          if (w1 !== undefined) {
+            w1.remove();
+          }
+          setQueue(() => {
+            whiteReportMaker(fromDate, toDate, true);
           })
         }, 350);
       }
@@ -5798,18 +7450,20 @@ MprJs.prototype.mprPannel = async function () {
               let loading;
 
               startDate = await GeneralJs.promptDate("기간의 시작일을 알려주세요!");
-              endDate = await GeneralJs.promptDate("기간의 종료일을 알려주세요!", false, "", startDate);
-              
-              cleanChildren(totalMother);
-
-              loading = await instance.mother.loadingRun();
-              instance.clients = await ajaxJson({
-                mode: "get",
-                startDate,
-                endDate,
-              }, CONTENTSHOST + "/clientAnalytics", { equal: true });
-              await instance.coreContentsLoad(true);
-              loading.parentNode.removeChild(loading);
+              if (startDate !== null) {
+                endDate = await GeneralJs.promptDate("기간의 종료일을 알려주세요!", false, "", startDate);
+                if (endDate !== null) {
+                  cleanChildren(totalMother);
+                  loading = await instance.mother.loadingRun();
+                  instance.clients = await ajaxJson({
+                    mode: "get",
+                    startDate,
+                    endDate,
+                  }, CONTENTSHOST + "/clientAnalytics", { equal: true });
+                  await instance.coreContentsLoad(true);
+                  loading.parentNode.removeChild(loading);
+                }
+              }
 
             } catch (e) {
               console.log(e);
@@ -5864,21 +7518,12 @@ MprJs.prototype.mprPannel = async function () {
         event: () => {
           return async function (e) {
             try {
-
+              const frontFunc = instance.frontWhiteCard();
+              await frontFunc();
             } catch (e) {
               console.log(e);
-            }
-          }
-        },
-      },
-      {
-        title: "컨텐츠 현황",
-        event: () => {
-          return async function (e) {
-            try {
-
-            } catch (e) {
-              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
             }
           }
         },
@@ -5964,6 +7609,45 @@ MprJs.prototype.mprPannel = async function () {
   }
 }
 
+MprJs.prototype.whiteResize = function () {
+  const instance = this;
+  const { whiteCardClassName } = this;
+  this.resizeStack = 0;
+  this.resizeFrom = 0;
+  this.resizePopup = 0;
+  const resizeDebounceEvent = function () {
+    let timeout;
+    const reEvent = function () {
+      if (Array.from(document.querySelectorAll('.' + whiteCardClassName)).length !== 0) {
+        if (Array.from(document.querySelectorAll('.' + whiteCardClassName))[1].getAttribute("key") !== null) {
+          window.location.search = "whitekey=" + Array.from(document.querySelectorAll('.' + whiteCardClassName))[1].getAttribute("key");
+        } else {
+          window.location.reload();
+        }
+      }
+      instance.resizeStack = 0;
+    }
+    let immediate = null;
+    return function (e) {
+      if (instance.resizeStack === 0) {
+        instance.resizeStack = 1;
+        instance.resizeFrom = window.innerWidth;
+      }
+      let context = this;
+      let args = arguments;
+      function later() {
+        timeout = null;
+        if (!immediate) { reEvent.apply(context, args); };
+      }
+      let callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, 250);
+      if (callNow) { reEvent.apply(context, args); };
+    }
+  }
+  window.addEventListener('resize', resizeDebounceEvent());
+}
+
 MprJs.prototype.launching = async function () {
   const instance = this;
   const { returnGet, ajaxJson } = GeneralJs;
@@ -5976,6 +7660,7 @@ MprJs.prototype.launching = async function () {
     let ago;
     let clients;
     let now;
+    let execFunc;
 
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
@@ -6019,7 +7704,20 @@ MprJs.prototype.launching = async function () {
     this.menuEventTong = null;
 
     await this.mprBase();
-    // await (this.reportWhite())();
+    this.whiteResize();
+
+    if (getObj.whitekey !== undefined) {
+      if (getObj.whitekey === "ads") {
+        execFunc = this.adsWhiteCard();
+        await execFunc(new Event("click", { bubbles: true }));
+      } else if (getObj.whitekey === "front") {
+        execFunc = this.frontWhiteCard();
+        await execFunc(new Event("click", { bubbles: true }));
+      } else {
+        execFunc = this.clientWhiteCard(getObj.whitekey.split("_").slice(0, -1).join("_"), Number(getObj.whitekey.split("_").slice(-1).join("_")));
+        await execFunc(new Event("click", { bubbles: true }));
+      }
+    }
 
     loading.parentNode.removeChild(loading);
 

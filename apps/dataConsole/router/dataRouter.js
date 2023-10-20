@@ -6284,6 +6284,7 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
       try {
         url = global.decodeURI(req.body.url);
       } catch (e) {
+        await logger.error("Console 서버 문제 생김 (rou_post_getOpenGraph): " + e.message + "\n" + JSON.stringify(req.body, null, 2));
         url = "";
       }
       urlArr = url.split("");
