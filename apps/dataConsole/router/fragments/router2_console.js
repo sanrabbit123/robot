@@ -5445,7 +5445,11 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
       };
 
-      url = global.decodeURI(req.body.url);
+      try {
+        url = global.decodeURI(req.body.url);
+      } catch (e) {
+        url = "";
+      }
       urlArr = url.split("");
       urlArr = urlArr.map((char) => {
         if (/[가-힣]/i.test(char)) {
