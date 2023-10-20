@@ -7,7 +7,6 @@ const MprJs = function () {
   this.module.marginBottom = 18;
   this.module.initialLine = 14;
   this.module.initialMargin = 14;
-
   this.grayBarWidth = null;
   this.belowHeight = null;
   this.whiteBox = null;
@@ -6066,6 +6065,7 @@ MprJs.prototype.adsWhiteCard = function () {
       let innerMarginTop;
       let basePaddingTop;
       let today;
+      let loading;
 
       margin = 30;
       titleHeight = 50;
@@ -6082,6 +6082,8 @@ MprJs.prototype.adsWhiteCard = function () {
       fontSize = 14;
       fontBetween = 8;
       fontWeight = 400;
+
+      loadingWidth = 48;
 
       adsWhiteMaker = (reload = false, startDate = null, endDate = null) => {
 
@@ -6251,7 +6253,21 @@ MprJs.prototype.adsWhiteCard = function () {
         }
         appendQuery({ whitekey: "ads" });
 
+        loading = instance.mother.returnLoadingIcon();
+        style = {
+          position: "absolute",
+          width: String(loadingWidth) + ea,
+          height: String(loadingWidth) + ea,
+          top: withOut(50, loadingWidth / 2, ea),
+          left: withOut(50, loadingWidth / 2, ea),
+        }
+        for (let i in style) {
+          loading.style[i] = style[i];
+        }
+        whitePrompt.children[0].appendChild(loading);
+
         ajaxJson({ startDate, endDate }, CONTENTSHOST + "/getAdsComplex", { equal: true }).then((result) => {
+          loading.remove();
           return instance.adsWhiteContents(whitePrompt.children[0].firstChild, result, startDate, endDate);
         }).catch((err) => {
           console.log(err);
@@ -6369,6 +6385,29 @@ MprJs.prototype.frontWhiteCard = function () {
       let innerMarginTop;
       let basePaddingTop;
       let mainTitleSize;
+      let timeDelta;
+      let thisDate;
+      let timeMatrix;
+      let thisRow, thisCharge, thisBasic;
+      let thisRows, thisCharges, thisBasics;
+      let tableMatrix;
+      let columnsLength;
+      let tableTong;
+      let rows;
+      let charge;
+      let basic;
+      let type;
+      let labels;
+      let fill;
+      let tension;
+      let borderJoinStyle;
+      let complexBoxesLength;
+      let naverAds, metaAds, googleAds;
+      let naverAd, metaAd, googleAd;
+      let caseTong;
+      let maxWidth;
+      let tableBlockHeight;
+      let tableSize, tableTextTop;
 
       toDate = new Date();
       toDate.setDate(toDate.getDate() - 1);
@@ -6411,9 +6450,19 @@ MprJs.prototype.frontWhiteCard = function () {
       startPaddingTop = 40;
       inputBottom = 8;
 
+      maxWidth = 1000;
+
+      tableBlockHeight = 30;
+      tableSize = 12;
+      tableTextTop = isMac() ? -1 : 1;
+
       dataLoad = () => {};
 
       whiteReportMaker = (fromDate, toDate, reload = false) => {
+
+        fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate(), 0, 0, 0);
+        toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate(), 0, 0, 0);
+        timeDelta = Math.floor(((((toDate.valueOf() - fromDate.valueOf()) / 1000) / 60) / 60) / 24);
 
         if (!reload) {
           cancelBack = createNode({
@@ -6594,7 +6643,20 @@ MprJs.prototype.frontWhiteCard = function () {
                   position: "relative",
                   width: withOut(0, ea),
                   verticalAlign: "top",
+                  marginBottom: String(chartBetween) + ea,
                 },
+                child: {
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: withOut(0, ea),
+                    border: "1px solid " + colorChip.gray3,
+                    borderRadius: String(5) + "px",
+                    boxSizing: "border-box",
+                    flexDirection: "column",
+                    overflow: "hidden",
+                  },
+                }
               },
               {
                 style: {
@@ -6906,25 +6968,235 @@ MprJs.prototype.frontWhiteCard = function () {
               createNode(obj);
             });
 
-            const [ rows, charge, basic ] = result;
+            tableTong = scrollBox.firstChild.firstChild;
+
+            [ rows, charge, basic ] = result;
+            type = "line";
+            labels = rows.map((o) => { return dateToString(o.date.from).slice(5) });
+            fill = false;
+            tension = 0.3;
+            borderJoinStyle = "round";
+            complexBoxesLength = 1;
 
             rows.sort((a, b) => { return a.date.from.valueOf() - b.date.from.valueOf() });
             charge.sort((a, b) => { return a.date.from.valueOf() - b.date.from.valueOf() });
             basic.sort((a, b) => { return a.fromDate.valueOf() - b.fromDate.valueOf() });
 
+            naverAds = [];
+            metaAds = [];
+            googleAds = [];
+            for (let { date: { from, to } } of rows) {
+              naverAds.push(charge.filter((o) => {
+                return /naver/gi.test(o.information.mother);
+              }).filter((o) => {
+                return o.date.from.valueOf() >= from.valueOf() && o.date.to.valueOf() <= to.valueOf();
+              }).reduce((acc, curr) => {
+                return {
+                  charge: acc.charge + curr.value.charge,
+                  clicks: acc.clicks + curr.value.performance.clicks,
+                  impressions: acc.impressions + curr.value.performance.impressions,
+                  date: { from, to },
+                }
+              }, {
+                charge: 0,
+                clicks: 0,
+                impressions: 0,
+                date: { from, to },
+              }));
+  
+              metaAds.push(charge.filter((o) => {
+                return /facebook/gi.test(o.information.mother) || /instagram/gi.test(o.information.mother) || /meta/gi.test(o.information.mother);
+              }).filter((o) => {
+                return o.date.from.valueOf() >= from.valueOf() && o.date.to.valueOf() <= to.valueOf();
+              }).reduce((acc, curr) => {
+                return {
+                  charge: acc.charge + curr.value.charge,
+                  clicks: acc.clicks + curr.value.performance.clicks,
+                  impressions: acc.impressions + curr.value.performance.impressions,
+                  date: { from, to },
+                }
+              }, {
+                charge: 0,
+                clicks: 0,
+                impressions: 0,
+                date: { from, to },
+              }));
+  
+              googleAds.push(charge.filter((o) => {
+                return /google/gi.test(o.information.mother);
+              }).filter((o) => {
+                return o.date.from.valueOf() >= from.valueOf() && o.date.to.valueOf() <= to.valueOf();
+              }).reduce((acc, curr) => {
+                return {
+                  charge: acc.charge + curr.value.charge,
+                  clicks: acc.clicks + curr.value.performance.clicks,
+                  impressions: acc.impressions + curr.value.performance.impressions,
+                  date: { from, to },
+                }
+              }, {
+                charge: 0,
+                clicks: 0,
+                impressions: 0,
+                date: { from, to },
+              }));
+  
+            }
 
-            console.log(rows, charge, basic)
+            timeMatrix = [];
+            for (let i = 0; i < timeDelta + 1; i++) {
+              thisDate = new Date(JSON.stringify(fromDate).slice(1, -1));
+              thisDate.setDate(thisDate.getDate() + i);
 
+              thisRows = rows.filter((o) => { return dateToString(o.date.from) === dateToString(thisDate) })
+              thisCharges = charge.filter((o) => { return dateToString(o.date.from) === dateToString(thisDate) })
+              thisBasics = basic.filter((o) => { return dateToString(o.fromDate) === dateToString(thisDate) })
 
+              if (thisRows.length === 1 && thisBasics.length === 1) {
+                [ thisRow ] = thisRows;
+                [ thisBasic ] = thisBasics;
+                [ naverAd ] = naverAds.filter((o) => { return dateToString(o.date.from) === dateToString(thisDate) });
+                [ metaAd ] = metaAds.filter((o) => { return dateToString(o.date.from) === dateToString(thisDate) });
+                [ googleAd ] = googleAds.filter((o) => { return dateToString(o.date.from) === dateToString(thisDate) });
 
-            const type = "line";
-            const labels = rows.map((o) => { return dateToString(o.date.from).slice(5) });
-            const fill = false;
-            const tension = 0.3;
-            const borderJoinStyle = "round";
-            const complexBoxesLength = 1;
-            let naverAds, metaAds, googleAds;
-    
+                timeMatrix.push({
+                  date: new Date(JSON.stringify(thisDate).slice(1, -1)),
+                  users: thisRow.data.users.total,
+                  views: thisRow.data.views.total,
+                  consultingPage: thisRow.data.conversion.consultingPage.total,
+                  popupOpen: thisRow.data.conversion.popupOpen.total,
+                  converting: thisRow.data.conversion.consultingPage.total + thisRow.data.conversion.popupOpen.total,
+                  clients: thisBasic.client,
+                  recommend: thisBasic.recommend,
+                  contract: thisBasic.contract,
+                  organic: thisRow.data.users.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0),
+                  ads: thisRow.data.users.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+                  sns: thisRow.data.users.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+                  direct: thisRow.data.users.total - (thisRow.data.users.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (thisRow.data.users.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
+                  naver: thisRow.data.users.detail.source.cases.filter((c) => { return /naver/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+                  meta: thisRow.data.users.detail.source.cases.filter((c) => { return /instagram/gi.test(c.case) || /facebook/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+                  google: thisRow.data.users.detail.source.cases.filter((c) => { return /google/gi.test(c.case) || /youtube/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+                  consultingOrganic: (thisRow.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + thisRow.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
+                  consultingAds: (thisRow.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + thisRow.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)),
+                  consultingSns: (thisRow.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + thisRow.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)),
+                  consultingDirect: (thisRow.data.conversion.consultingPage.total + thisRow.data.conversion.popupOpen.total) - (thisRow.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + thisRow.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (thisRow.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + thisRow.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
+                  chargeNaver: naverAd.charge,
+                  chargeMeta: metaAd.charge,
+                  chargeGoogle: googleAd.charge,
+                  impressionsNaver: naverAd.impressions,
+                  impressionsMeta: metaAd.impressions,
+                  impressionsGoogle: googleAd.impressions,
+                  clicksNaver: naverAd.clicks,
+                  clicksMeta: metaAd.clicks,
+                  clicksGoogle: googleAd.clicks,
+                });
+              }
+            }
+
+            timeMatrix.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+
+            tableMatrix = [
+              [
+                "기준일",
+                "유저수",
+                "페이지뷰",
+                "컨설팅 페이지",
+                "팝업 오픈",
+                "전환수",
+                "문의수",
+                "추천수",
+                "계약수",
+                "오가닉 유저수",
+                "광고 유저수",
+                "SNS 유저수",
+                "다이렉트 유저수",
+                "네이버 유입",
+                "메타 유입",
+                "구글 유입",
+                "오가닉 전환수",
+                "광고 전환수",
+                "SNS 전환수",
+                "다이렉트 전환수",
+              ]
+            ]
+            columnsLength = tableMatrix[0].length;
+            for (let obj of timeMatrix) {
+              tableMatrix.push([
+                dateToString(obj.date).slice(2),
+                obj.users,
+                obj.views,
+                obj.consultingPage,
+                obj.popupOpen,
+                obj.converting,
+                obj.clients,
+                obj.recommend,
+                obj.contract,
+                obj.organic,
+                obj.ads,
+                obj.sns,
+                obj.direct,
+                obj.naver,
+                obj.meta,
+                obj.google,
+                obj.consultingOrganic,
+                obj.consultingAds,
+                obj.consultingSns,
+                obj.consultingDirect,
+              ])
+            }
+
+            for (let i = 0; i < tableMatrix.length; i++) {
+              caseTong = createNode({
+                mother: tableTong,
+                style: {
+                  display: "flex",
+                  height: String(tableBlockHeight) + ea,
+                  width: withOut(0, ea),
+                  position: "relative",
+                  flexDirection: "row",
+                  borderBottom: i !== tableMatrix.length - 1 ? "1px solid " + colorChip.gray3 : "",
+                  background: i === 0 ? colorChip.gray0 : colorChip.white,
+                }
+              });
+              for (let j = 0; j < tableMatrix[i].length; j++) {
+                createNode({
+                  mother: caseTong,
+                  style: {
+                    display: "inline-block",
+                    width: "calc(100% / " + String(columnsLength) + ")",
+                    height: withOut(0, ea),
+                    position: "relative",
+                    textAlign: "center",
+                    borderRight: j !== tableMatrix[i].length - 1 ? "1px solid " + colorChip.gray3 : "",
+                    boxSizing: "border-box",
+                    overflow: "scroll",
+                  },
+                  child: {
+                    style: {
+                      display: "inline-flex",
+                      width: String(maxWidth) + ea,
+                      marginLeft: withOut(50, (maxWidth / 2), ea),
+                      height: withOut(0, ea),
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textAlign: "center",
+                    },
+                    child: {
+                      text: String(tableMatrix[i][j]),
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        fontSize: String(tableSize) + ea,
+                        fontWeight: String(i === 0 ? 700 : 500),
+                        color: colorChip.black,
+                        top: String(tableTextTop) + ea,
+                      }
+                    }
+                  },
+                })
+              }
+            }
+            
             // 1
             new window.Chart(scrollBox.children[complexBoxesLength + 0].querySelector("canvas"), {
               type,
@@ -7230,59 +7502,6 @@ MprJs.prototype.frontWhiteCard = function () {
             });
   
             // 9
-            naverAds = [];
-            metaAds = [];
-            googleAds = [];
-            for (let { date: { from, to } } of rows) {
-              naverAds.push(charge.filter((o) => {
-                return /naver/gi.test(o.information.mother);
-              }).filter((o) => {
-                return o.date.from.valueOf() >= from.valueOf() && o.date.to.valueOf() <= to.valueOf();
-              }).reduce((acc, curr) => {
-                return {
-                  charge: acc.charge + curr.value.charge,
-                  clicks: acc.clicks + curr.value.performance.clicks,
-                  impressions: acc.impressions + curr.value.performance.impressions,
-                }
-              }, {
-                charge: 0,
-                clicks: 0,
-                impressions: 0
-              }));
-  
-              metaAds.push(charge.filter((o) => {
-                return /facebook/gi.test(o.information.mother) || /instagram/gi.test(o.information.mother) || /meta/gi.test(o.information.mother);
-              }).filter((o) => {
-                return o.date.from.valueOf() >= from.valueOf() && o.date.to.valueOf() <= to.valueOf();
-              }).reduce((acc, curr) => {
-                return {
-                  charge: acc.charge + curr.value.charge,
-                  clicks: acc.clicks + curr.value.performance.clicks,
-                  impressions: acc.impressions + curr.value.performance.impressions,
-                }
-              }, {
-                charge: 0,
-                clicks: 0,
-                impressions: 0
-              }));
-  
-              googleAds.push(charge.filter((o) => {
-                return /google/gi.test(o.information.mother);
-              }).filter((o) => {
-                return o.date.from.valueOf() >= from.valueOf() && o.date.to.valueOf() <= to.valueOf();
-              }).reduce((acc, curr) => {
-                return {
-                  charge: acc.charge + curr.value.charge,
-                  clicks: acc.clicks + curr.value.performance.clicks,
-                  impressions: acc.impressions + curr.value.performance.impressions,
-                }
-              }, {
-                charge: 0,
-                clicks: 0,
-                impressions: 0
-              }));
-  
-            }
             new window.Chart(scrollBox.children[complexBoxesLength + 8].querySelector("canvas"), {
               type: "bar",
               data: {
