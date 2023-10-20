@@ -33,6 +33,16 @@ MprJs.prototype.mainDataRender = async function () {
     let columns;
     let values;
     let standards;
+    let sourceArr;
+    let motherArr, mediumArr, campaignArr, deviceArr;
+    let sessionsArr;
+
+    sourceArr = instance.clients.map((c) => { return c.source });
+    sessionsArr = instance.clients.map((c) => { return c.sessions });
+    motherArr = Array.from(new Set(sourceArr.map((o) => { return o.mother }).flat()));
+    mediumArr = Array.from(new Set(sourceArr.map((o) => { return o.medium }).flat()));
+    campaignArr = Array.from(new Set(sourceArr.map((o) => { return o.campaign }).flat()));
+    deviceArr = Array.from(new Set(sessionsArr.map((o) => { return o.device.map((o2) => { return o2.kinds }) }).flat()));
 
     standards = {
       columns: [
@@ -111,6 +121,17 @@ MprJs.prototype.mainDataRender = async function () {
         width: 150,
         name: "source",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "includesEvent_$all",
+          }
+        ].concat(motherArr.map((str) => {
+          return {
+            value: str,
+            functionName: "includesEvent_" + str,
+          }
+        })),
       },
       {
         title: "미디움",
@@ -2826,6 +2847,69 @@ MprJs.prototype.mprBase = async function () {
                   }
                 } else {
                   if (findByAttribute([ ...value.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent.trim() === thisValue) {
+                    if (standard.style.display !== "none") {
+                      standard.style.display = "flex";
+                      value.style.display = "flex";
+                    }
+                  } else {
+                    standard.style.display = "none";
+                    value.style.display = "none";
+                  }
+                }
+                standard.setAttribute(last, name);
+                value.setAttribute(last, name);
+              }
+            }
+
+            removeByClass(menuPromptClassName);
+  
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      includesEvent: (thisValue, name, index) => {
+        return async function (e) {
+          try {
+            const idNameArea = document.querySelector('.' + idNameAreaClassName);
+            const valueArea = document.querySelector('.' + valueAreaClassName);
+            const idNameDoms = Array.from(document.querySelectorAll('.' + standardCaseClassName));
+            const valueDoms = Array.from(document.querySelectorAll('.' + valueCaseClassName));
+            const last = "lastfilter";
+            const type = columns[index].type;
+            let domMatrix;
+            let thisKey;
+            let thisValueDom;
+  
+            domMatrix = [];
+            for (let i = 0; i < idNameDoms.length; i++) {
+              thisKey = idNameDoms[i].getAttribute("key");
+              thisValueDom = findByAttribute(valueDoms, "key", thisKey);
+              domMatrix.push([
+                idNameDoms[i],
+                thisValueDom
+              ]);
+            }
+
+            if (thisValue === "$all") {
+              for (let [ standard, value ] of domMatrix) {
+                standard.style.display = "flex";
+                value.style.display = "flex";
+                standard.setAttribute(last, "none");
+                value.setAttribute(last, "none");
+              }
+            } else {
+              for (let [ standard, value ] of domMatrix) {
+                if (standard.getAttribute(last) === name) {
+                  if ((new RegExp(thisValue, "gi")).test(findByAttribute([ ...value.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent.trim())) {
+                    standard.style.display = "flex";
+                    value.style.display = "flex";
+                  } else {
+                    standard.style.display = "none";
+                    value.style.display = "none";
+                  }
+                } else {
+                  if ((new RegExp(thisValue, "gi")).test(findByAttribute([ ...value.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent.trim())) {
                     if (standard.style.display !== "none") {
                       standard.style.display = "flex";
                       value.style.display = "flex";
