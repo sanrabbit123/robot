@@ -5524,7 +5524,8 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
       res.send(JSON.stringify(result));
     } catch (e) {
       console.log(e);
-      await logger.error("Console 서버 문제 생김 (rou_post_getOpenGraph): " + e.message);
+      console.log(req);
+      await logger.error("Console 서버 문제 생김 (rou_post_getOpenGraph): " + e.message + "\n" + JSON.stringify(req.body, null, 2));
       res.send(JSON.stringify({ message: "error" }));
     }
   }

@@ -1378,6 +1378,13 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
     let advertisement;
     let targetTong;
     let thisKeyNumbersArr;
+    let baseBlock;
+    let campaignTong;
+    let campaignBaseBlock;
+    let num, num2, num3;
+    let adSetTong;
+    let adSetBaseBlock;
+    let adTong, adBaseBlock;
 
     startDateCopied = new Date(JSON.stringify(startDate).slice(1, -1));
     start = new Date(startDateCopied.getFullYear(), startDateCopied.getMonth(), startDateCopied.getDate(), 0, 0, 0);
@@ -1405,8 +1412,6 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
       return b.date.valueOf() - a.date.valueOf();
     });
 
-    cleanChildren(tong);
-
     for (let key of keyTargets) {
       targetData = equalJson(JSON.stringify(data[key]));
       for (let obj of targetData) {
@@ -1423,7 +1428,190 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
       }
     }
 
-    console.log(timeMatrix);
+    cleanChildren(tong);
+
+    for (let obj of timeMatrix) {
+      
+      baseBlock = createNode({
+        mother: tong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          borderBottom: "1px solid " + colorChip.gray3,
+          flexDirection: "row",
+        }
+      });
+      createNode({
+        mother: baseBlock,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(140) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          borderRight: "1px solid " + colorChip.gray3,
+          boxSizing: "border-box",       
+        },
+        child: {
+          text: dateToString(obj.date),
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            top: String(-1) + ea,
+            fontSize: String(15) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+          }
+        }
+      });
+      campaignTong = createNode({
+        mother: baseBlock,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: withOut(140, ea),
+          flexDirection: "column",
+        },
+      });
+
+      num = 0;
+      for (let campaign of obj.data) {
+
+        campaignBaseBlock = createNode({
+          mother: campaignTong,
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "row",
+            width: withOut(0, ea),
+            height: campaign.kinds === "meta" ? "" : String(45) + ea,
+            boxSizing: "border-box",
+            borderBottom: num !== obj.data.length - 1 ? "1px solid " + colorChip.gray3 : "",
+          },
+        });
+        createNode({
+          mother: campaignBaseBlock,
+          style: {
+            display: "inline-flex",
+            verticalAlign: "top",
+            position: "relative",
+            width: String(80) + ea,
+            height: campaign.kinds === "meta" ? "" : withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            borderRight: "1px solid " + colorChip.gray3,
+            boxSizing: "border-box",       
+          },
+          child: {
+            text: campaign.kinds,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              top: String(-1) + ea,
+              fontSize: String(14) + ea,
+              fontWeight: String(700),
+              color: colorChip.black,
+            }
+          }
+        });
+        createNode({
+          mother: campaignBaseBlock,
+          style: {
+            display: "inline-flex",
+            verticalAlign: "top",
+            position: "relative",
+            width: String(250) + ea,
+            height: campaign.kinds === "meta" ? "" : withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            borderRight: "1px solid " + colorChip.gray3,
+            boxSizing: "border-box",       
+          },
+          child: {
+            text: campaign.information.name,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              top: String(-1) + ea,
+              fontSize: String(14) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+            }
+          }
+        });
+        
+        if (campaign.kinds === "meta") {
+
+          adSetTong = createNode({
+            mother: campaignBaseBlock,
+            style: {
+              display: "inline-block",
+              verticalAlign: "top",
+              position: "relative",
+              width: withOut(80 + 250, ea),
+              height: withOut(0, ea),
+              boxSizing: "border-box",
+            },
+          });
+
+          num2 = 0;
+          for (let adset of campaign.children) {
+
+            adSetBaseBlock = createNode({
+              mother: adSetTong,
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                height: String(45) + ea,
+                boxSizing: "border-box",
+                borderBottom: num2 !== campaign.children.length - 1 ? "1px solid " + colorChip.gray3 : "",
+              },
+            });
+            createNode({
+              mother: adSetBaseBlock,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(250) + ea,
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                borderRight: "1px solid " + colorChip.gray3,
+                boxSizing: "border-box",       
+              },
+              child: {
+                text: adset.information.name,
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  top: String(-1) + ea,
+                  fontSize: String(14) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,
+                }
+              }
+            });
+
+            console.log(adset);
+
+            num2++;
+          }
+
+        } else if (campaign.kinds === "naver") {
+
+        }
+        
+        num++;
+      }
+
+    }
 
   } catch (e) {
     console.log(e);
@@ -5316,8 +5504,6 @@ MprJs.prototype.adsWhiteCard = function () {
                 borderTopLeftRadius: String(5) + "px",
                 borderBottomLeftRadius: String(5) + "px",
                 boxSizing: "border-box",
-                padding: String(innerMargin) + ea,
-                paddingTop: String(innerMarginTop) + ea,
               },
               child: {
                 style: {
