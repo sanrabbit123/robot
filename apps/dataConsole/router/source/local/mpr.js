@@ -7714,6 +7714,1790 @@ MprJs.prototype.frontWhiteCard = function () {
   }
 }
 
+MprJs.prototype.statisticsWhiteCard = function () {
+  const instance = this;
+  const { ea, totalContents, grayBarWidth, belowHeight, entireMode } = this;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, autoComma, zeroAddition, chartJsPatch, serviceParsing, hasQuery, removeQuery, appendQuery } = GeneralJs;
+  const vaildValue = function (target) {
+    const today = new Date();
+    let valueArr0, valueArr1, valueArr2;
+    target.style.color = GeneralJs.colorChip.black;
+    if (!/[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.test(target.value)) {
+      valueArr0 = target.value.split(" ~ ");
+      valueArr1 = valueArr0[0].split("-");
+      if (valueArr0[1] !== undefined) {
+        valueArr2 = valueArr0[1].split("-");
+        if (valueArr1.length === 3 && valueArr2.length === 3) {
+          target.value = String(valueArr1[0]) + '-' + zeroAddition(valueArr1[1]) + '-' + zeroAddition(valueArr1[2]) + ' ~ ' + String(valueArr2[0]) + '-' + zeroAddition(valueArr2[1]) + '-' + zeroAddition(valueArr2[2]);
+        } else {
+          target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+        }
+      } else {
+        target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+      }
+    }
+    target.value = (/[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.exec(target.value))[0];
+
+    valueArr0 = target.value.split(" ~ ");
+    valueArr1 = valueArr0[0].split("-");
+    valueArr2 = valueArr0[1].split("-");
+    if ((Number(valueArr1[0]) * 12) + Number(valueArr1[1].replace(/^0/, '')) > (Number(valueArr2[0]) * 12) + Number(valueArr2[1].replace(/^0/, ''))) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+    if (Number(valueArr1[1].replace(/^0/, '')) > 12 || Number(valueArr1[1].replace(/^0/, '')) < 1) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+    if (Number(valueArr2[1].replace(/^0/, '')) > 12 || Number(valueArr2[1].replace(/^0/, '')) < 1) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+    if (Number(valueArr1[0]) < 19) {
+      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
+    }
+
+    GeneralJs.stacks.reportBoxStartDayInputValue = target.value;
+  }
+  return async function (e) {
+    try {
+      const zIndex = 4;
+      let cancelBack, whitePrompt;
+      let margin;
+      let titleHeight;
+      let innerMargin;
+      let overlap;
+      let titleTextTop, titleSize;
+      let titleWeight;
+      let fontTextTop, fontSize, fontBetween, fontWeight;
+      let whiteReportMaker;
+      let scrollBox;
+      let titleArea;
+      let today;
+      let ago;
+      let agoDate;
+      let loading;
+      let loadingWidth;
+      let startPaddingTop;
+      let inputWidth, inputSize, inputWeight;
+      let subTodaySize, subTodayWeight;
+      let dataLoad;
+      let fromDate, toDate;
+      let chartBetween;
+      let chartHeight;
+      let style;
+      let todayRange;
+      let todayString;
+      let dateInput;
+      let inputBottom;
+      let middleTitleHeight;
+      let previousToDate;
+      let innerMarginTop;
+      let basePaddingTop;
+      let mainTitleSize;
+      let maxWidth;
+      let timeDelta;
+      let titleWhite;
+      let propertySize;
+      let complexMother;
+      let contractBlockMother;
+      let detailValueInjection;
+      let totalWidth;
+      let initPaddingTop;
+      let detailTitleBlockHeight;
+      let detailTitleBlockMarginTop;
+      let complexBoxesLength;
+      let visualDivide;
+      let visualDivideBlock;
+      let visualDivideFinal;
+      let detailBlockWidth;
+      let detailNormalWidth;
+      let detailServiceWidth;
+      let detailDoubleBlockWidth;
+      let nameBlockWidth;
+      let barWidth;
+      let contentsLongWidth;
+      let detailBlockHeight;
+      let detailBlockSize;
+      let contractDetailBlockMarginBottom;
+      let contractDetailFinalMargin;
+      let num;
+
+      toDate = new Date();
+      toDate.setDate(toDate.getDate() - 1);
+      previousToDate = new Date();
+      previousToDate.setDate(previousToDate.getDate() - 1);
+      ago = 21;
+      fromDate = new Date();
+      fromDate.setDate(fromDate.getDate() - ago);
+
+      margin = entireMode ? 0 : 30;
+      titleHeight = 50;
+      innerMargin = 24;
+      innerMarginTop = 20;
+      overlap = 12;
+      basePaddingTop = 12;
+
+      titleTextTop = isMac() ? 2 : 0;
+      mainTitleSize = 21;
+      titleSize = 18;
+      titleWeight = 800;
+      middleTitleHeight = 22;
+
+      propertySize = 16;
+
+      fontTextTop = isMac() ? 1 : 0;
+      fontSize = 14;
+      fontBetween = 8;
+      fontWeight = 400;
+
+      loadingWidth = 48;
+
+      inputWidth = 500;
+      inputSize = 29;
+      inputWeight = 200;
+
+      subTodaySize = 15;
+      subTodayWeight = 500;
+
+      chartBetween = 40;
+      chartHeight = 480;
+
+      startPaddingTop = 40;
+      inputBottom = 8;
+
+      maxWidth = 1000;
+
+      initPaddingTop = 2;
+
+      detailTitleBlockHeight = 32;
+      detailTitleBlockMarginTop = 28;
+
+      complexBoxesLength = 1;
+      visualDivide = 3;
+      visualDivideBlock = 4;
+      visualDivideFinal = 1;
+      detailBlockWidth = 60;
+      detailNormalWidth = 120;
+      detailServiceWidth = 162;
+      detailDoubleBlockWidth = 220;
+      nameBlockWidth = 200;
+      barWidth = 38;
+      contentsLongWidth = 3000;
+      detailBlockHeight = 24;
+      detailBlockSize = 14;
+
+      contractDetailBlockMarginBottom = 4;
+
+      contractDetailFinalMargin = 40;
+
+      dataLoad = () => {};
+
+      whiteReportMaker = (fromDate, toDate, reload = false) => {
+
+        fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate(), 0, 0, 0);
+        toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate(), 0, 0, 0);
+        timeDelta = Math.floor(((((toDate.valueOf() - fromDate.valueOf()) / 1000) / 60) / 60) / 24);
+
+        if (!reload) {
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ "justfadein", whiteCardClassName ],
+            event: (e) => { removeByClass(whiteCardClassName) },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0) + ea,
+              width: withOut(0, ea),
+              height: withOut(belowHeight, ea),
+              background: colorChip.black,
+            }
+          });
+        } 
+  
+        whitePrompt = createNode({
+          mother: totalContents,
+          class: [ whiteCardClassName, whiteBaseClassName ],
+          attribute: {
+            key: "front",
+          },
+          style: {
+            position: "fixed",
+            top: String(0 + margin + titleHeight) + ea,
+            left: String(margin) + ea,
+            width: withOut((margin * 2) + (innerMargin * 2), ea),
+            height: withOut(0 + (margin * 2) + titleHeight + belowHeight + (innerMargin + basePaddingTop), ea),
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderBottomLeftRadius: String(5) + "px",
+            borderBottomRightRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+            overflow: "hidden",
+            padding: String(innerMargin) + ea,
+            paddingTop: String(basePaddingTop) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                overflow: "scroll",
+                border: "1px solid " + colorChip.gray3,
+                borderRadius: String(5) + "px",
+                boxSizing: "border-box",
+                padding: String(innerMargin) + ea,
+                paddingTop: String(innerMarginTop) + ea,
+              },
+              child: {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0, ea),
+                }
+              }
+            }
+          ]
+        });
+
+        titleWhite = createNode({
+          mother: totalContents,
+          class: [ whiteCardClassName ],
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            position: "fixed",
+            top: String(0 + margin) + ea,
+            left: String(margin) + ea,
+            width: withOut((margin * 2), ea),
+            height: String(titleHeight) + ea,
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderTopLeftRadius: String(5) + "px",
+            borderTopRightRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            overflow: "hidden",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "end",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "row",
+              alignItems: "end",
+              justifyContent: "start",
+              width: withOut(innerMargin * 2, ea),
+            },
+            children: [
+              {
+                text: "고객 현황",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(titleTextTop) + ea,
+                  fontSize: String(mainTitleSize) + ea,
+                  fontWeight: String(titleWeight),
+                  color: colorChip.black,
+                  cursor: "pointer",
+                }
+              },
+              {
+                event: {
+                  click: async function (e) {
+                    try {
+                      const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+                      let startDate, endDate;
+        
+                      startDate = await GeneralJs.promptDate("기간의 시작일을 알려주세요!");
+                      if (startDate !== null) {
+                        endDate = await GeneralJs.promptDate("기간의 종료일을 알려주세요!", false, "", startDate);
+                        if (endDate !== null) {
+                          if (w0 !== undefined) {
+                            w0.remove();
+                          }
+                          if (w1 !== undefined) {
+                            w1.remove();
+                          }
+                          setQueue(() => {
+                            whiteReportMaker(startDate, endDate, true);
+                          });
+                        }
+                      }
+
+                    } catch (e) {
+                      console.log(e);
+                      window.alert("오류가 발생했습니다! 다시 시도해주세요!");
+                      window.location.reload();
+                    }
+                  }
+                },
+                text: dateToString(fromDate).slice(2) + " ~ " + dateToString(toDate).slice(2),
+                style: {
+                  display: "inline-block",
+                  position: "absolute",
+                  top: String(titleTextTop) + ea,
+                  right: String(0),
+                  fontSize: String(mainTitleSize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.black,
+                  cursor: "pointer",
+                }
+              },
+            ]
+          }
+        });
+
+        loading = instance.mother.returnLoadingIcon();
+        style = {
+          position: "absolute",
+          width: String(loadingWidth) + ea,
+          height: String(loadingWidth) + ea,
+          top: withOut(50, loadingWidth / 2, ea),
+          left: withOut(50, loadingWidth / 2, ea),
+        }
+        for (let i in style) {
+          loading.style[i] = style[i];
+        }
+        whitePrompt.children[0].appendChild(loading);
+        scrollBox = whitePrompt.children[0].firstChild;
+
+        dataLoad = (loading) => {
+          return (result) => {
+
+            loading.remove();
+            cleanChildren(scrollBox);
+
+            [
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  verticalAlign: "top",
+                  paddingTop: String(initPaddingTop) + ea,
+                },
+              },
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  verticalAlign: "top",
+                  marginBottom: String(chartBetween) + ea,
+                },
+              },
+            ].forEach((obj) => {
+              obj.mother = scrollBox;
+              createNode(obj);
+            });
+
+            const [ rows, charge, basic, complex ] = result;
+            const { contractDetail } = complex;
+
+            rows.sort((a, b) => { return a.date.from.valueOf() - b.date.from.valueOf() });
+            charge.sort((a, b) => { return a.date.from.valueOf() - b.date.from.valueOf() });
+            basic.sort((a, b) => { return a.fromDate.valueOf() - b.fromDate.valueOf() });
+    
+            // 0 - complex report
+            complexMother = scrollBox.children[0];
+
+            // 0 - 1
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10)",
+                marginBottom: String(chartBetween / visualDivide) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: "문의수",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.black,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10) + " + String(chartBetween) + ea + ")",
+                marginRight: String(chartBetween) + ea,
+                marginBottom: String(chartBetween / visualDivide) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: String(complex.clients),
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.green,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10)",
+                marginBottom: String(chartBetween / visualDivide) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: "추천수",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.black,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10) + " + String(chartBetween) + ea + ")",
+                marginRight: String(chartBetween) + ea,
+                marginBottom: String(chartBetween / visualDivide) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: String(complex.proposal),
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.green,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10)",
+                marginBottom: String(chartBetween / visualDivide) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: "계약수",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.black,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10) + " + String(chartBetween) + ea + ")",
+                marginRight: String(chartBetween) + ea,
+                marginBottom: String(chartBetween / visualDivide) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: String(complex.contracts),
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.green,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10)",
+                marginBottom: String(chartBetween / visualDivide) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: "계약 성공",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.black,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10) + " + String(chartBetween) + ea + ")",
+                marginRight: String(chartBetween) + ea,
+                marginBottom: String(chartBetween / visualDivide) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: String(complex.contractsSuccess),
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.green,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10)",
+                marginBottom: String(chartBetween / visualDivide) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: "계약 금액",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.black,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10) + " + String(chartBetween) + ea + ")",
+                marginBottom: String(chartBetween / visualDivide) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: autoComma(complex.contractsSupply) + "원",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.green,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+
+            // 0 - 2
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10)",
+                marginBottom: String(detailTitleBlockMarginTop) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: "광고 노출",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.black,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10) + " + String(chartBetween) + ea + ")",
+                marginRight: String(chartBetween) + ea,
+                marginBottom: String(detailTitleBlockMarginTop) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: String(complex.impressions),
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.green,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10)",
+                marginBottom: String(detailTitleBlockMarginTop) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: "광고 클릭",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.black,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10) + " + String(chartBetween) + ea + ")",
+                marginRight: String(chartBetween) + ea,
+                marginBottom: String(detailTitleBlockMarginTop) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: String(complex.clicks),
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.green,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10)",
+                marginBottom: String(detailTitleBlockMarginTop) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: "MAU",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.black,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10) + " + String(chartBetween) + ea + ")",
+                marginRight: String(chartBetween) + ea,
+                marginBottom: String(detailTitleBlockMarginTop) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: String(complex.mau),
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.green,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10)",
+                marginBottom: String(detailTitleBlockMarginTop) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: "페이지뷰",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.black,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10) + " + String(chartBetween) + ea + ")",
+                marginRight: String(chartBetween) + ea,
+                marginBottom: String(detailTitleBlockMarginTop) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: String(complex.pageViews),
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.green,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10)",
+                marginBottom: String(detailTitleBlockMarginTop) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: "광고 비용",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.black,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(calc(100% - " + String(chartBetween * (10 - 1)) + ea + ") / 10) + " + String(chartBetween) + ea + ")",
+                marginBottom: String(detailTitleBlockMarginTop) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                text: autoComma(complex.charge) + "원",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.green,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+
+            // contracts detail    
+            createNode({
+              mother: complexMother,
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                marginBottom: String(chartBetween / visualDivide) + ea,
+                verticalAlign: "top",
+                borderBottom: "1px solid " + colorChip.gray3,
+              },
+              child: {
+                text: "계약자 상세 (" + String(contractDetail.length) + "명)",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(propertySize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.black,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(detailTitleBlockHeight) + ea,
+                }
+              }
+            });
+            detailValueInjection = (contractBlockMother, value, width) => {
+              createNode({
+                mother: contractBlockMother,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: typeof width === "number" ? String(width) + ea : width,
+                  height: String(detailBlockHeight) + ea,
+                  overflow: "scroll",
+                },
+                child: {
+                  text: value,
+                  style: {
+                    position: "relative",
+                    fontSize: String(detailBlockSize) + ea,
+                    fontWeight: String(300),
+                    color: colorChip.green,
+                    top: String(titleTextTop) + ea,
+                    width: String(contentsLongWidth) + ea,
+                  }
+                }
+              });
+              if (typeof width === "number") {
+                createNode({
+                  mother: contractBlockMother,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(barWidth) + ea,
+                    height: String(detailBlockHeight) + ea,
+                    overflow: "scroll",
+                  },
+                  child: {
+                    text: "|",
+                    style: {
+                      position: "relative",
+                      fontSize: String(detailBlockSize) + ea,
+                      fontWeight: String(200),
+                      color: colorChip.gray3,
+                      top: String(titleTextTop) + ea,
+                      width: String(contentsLongWidth) + ea,
+                    }
+                  }
+                });
+              }
+              return width + barWidth;
+            }
+
+            if (contractDetail.length > 0) {
+              num = 0;
+              for (let contractClient of contractDetail) {
+                // mother
+                contractBlockMother = createNode({
+                  mother: complexMother,
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    width: withOut(0, ea),
+                    marginBottom: String(num === contractDetail.length - 1 ? contractDetailFinalMargin : contractDetailBlockMarginBottom) + ea,
+                    verticalAlign: "top",
+                  },
+                });
+                // name
+                createNode({
+                  mother: contractBlockMother,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(nameBlockWidth) + ea,
+                    height: String(detailBlockHeight) + ea,
+                    overflow: "scroll",
+                  },
+                  child: {
+                    text: contractClient.name + "(" + contractClient.cliid + ")",
+                    style: {
+                      position: "relative",
+                      fontSize: String(detailBlockSize) + ea,
+                      fontWeight: String(600),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      width: String(contentsLongWidth) + ea,
+                    }
+                  }
+                });
+                // values
+                totalWidth = nameBlockWidth;
+                totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.region, detailBlockWidth);
+                totalWidth += detailValueInjection(contractBlockMother, (contractClient.summary.naverObject === null ? "알 수 없음" : contractClient.summary.naverObject.name), detailDoubleBlockWidth);
+                totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.howLong, detailNormalWidth);
+                totalWidth += detailValueInjection(contractBlockMother, String(contractClient.summary.pyeong) + "평", detailBlockWidth);
+                totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.living, detailBlockWidth);
+                totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.contract, detailBlockWidth);
+                totalWidth += detailValueInjection(contractBlockMother, contractClient.budget.replace(/ 이상/gi, ""), detailNormalWidth);
+                totalWidth += detailValueInjection(contractBlockMother, serviceParsing(contractClient.thisProject.service).replace(/[a-zA-Z]/gi, '').trim(), detailServiceWidth);
+                totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.ad.replace(/ 유입/gi, ""), detailBlockWidth);
+                detailValueInjection(contractBlockMother, contractClient.family, withOut(totalWidth, ea));
+  
+                num++;
+              }
+            } else {
+              createNode({
+                mother: complexMother,
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  marginBottom: String(contractDetailFinalMargin) + ea,
+                  verticalAlign: "top",
+                },
+              });
+            }
+
+            // 0 - 12
+
+            new window.Chart((createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                marginRight: String(chartBetween) + ea,
+                marginBottom: String(chartBetween) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                mode: "canvas",
+                style: {
+                  display: "block",
+                  position: "relative",      
+                },
+                previous: {
+                  text: "지역별 문의자, 계약자",
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    top: String(titleTextTop) + ea,
+                    justifyContent: "center",
+                    alignItems: "start",
+                    height: String(middleTitleHeight) + ea,
+                  }
+                }
+              }
+            })).querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels: complex.graph.region.map((o) => { return o.case }),
+                datasets: [
+                  {
+                    axis: 'y',
+                    label: "문의자",
+                    data: complex.graph.region.map((o) => { return o.value }),
+                    borderColor: colorChip.red,
+                    backgroundColor: colorChip.red,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    axis: 'y',
+                    label: "계약자",
+                    data: complex.graph.region.map((o) => { return o.contract }),
+                    borderColor: colorChip.yellow,
+                    backgroundColor: colorChip.yellow,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                indexAxis: 'y',
+              }
+            });
+            new window.Chart((createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                marginBottom: String(chartBetween) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                mode: "canvas",
+                style: {
+                  display: "block",
+                  position: "relative",      
+                },
+                previous: {
+                  text: "준공년차 문의수, 계약수",
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    top: String(titleTextTop) + ea,
+                    justifyContent: "center",
+                    alignItems: "start",
+                    height: String(middleTitleHeight) + ea,
+                  }
+                }
+              }
+            })).querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels: complex.graph.old.map((o) => { return o.case }),
+                datasets: [
+                  {
+                    axis: 'y',
+                    label: "문의자",
+                    data: complex.graph.old.map((o) => { return o.value }),
+                    borderColor: colorChip.green,
+                    backgroundColor: colorChip.green,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    axis: 'y',
+                    label: "계약자",
+                    data: complex.graph.old.map((o) => { return o.contract }),
+                    borderColor: colorChip.yellow,
+                    backgroundColor: colorChip.yellow,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                indexAxis: 'y',
+              }
+            });
+            new window.Chart((createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                marginRight: String(chartBetween) + ea,
+                marginBottom: String(chartBetween) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                mode: "canvas",
+                style: {
+                  display: "block",
+                  position: "relative",      
+                },
+                previous: {
+                  text: "평형별 문의자, 계약자",
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    top: String(titleTextTop) + ea,
+                    justifyContent: "center",
+                    alignItems: "start",
+                    height: String(middleTitleHeight) + ea,
+                  }
+                }
+              }
+            })).querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels: complex.graph.pyeong.map((o) => { return o.case }),
+                datasets: [
+                  {
+                    axis: 'y',
+                    label: "문의자",
+                    data: complex.graph.pyeong.map((o) => { return o.value }),
+                    borderColor: colorChip.purple,
+                    backgroundColor: colorChip.purple,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    axis: 'y',
+                    label: "계약자",
+                    data: complex.graph.pyeong.map((o) => { return o.contract }),
+                    borderColor: colorChip.black,
+                    backgroundColor: colorChip.black,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                indexAxis: 'y',
+              }
+            });
+            new window.Chart((createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                marginBottom: String(chartBetween) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                mode: "canvas",
+                style: {
+                  display: "block",
+                  position: "relative",      
+                },
+                previous: {
+                  text: "방 개수별 문의자, 계약자",
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    top: String(titleTextTop) + ea,
+                    justifyContent: "center",
+                    alignItems: "start",
+                    height: String(middleTitleHeight) + ea,
+                  }
+                }
+              }
+            })).querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels: complex.graph.room.map((o) => { return o.case }),
+                datasets: [
+                  {
+                    axis: 'y',
+                    label: "문의자",
+                    data: complex.graph.room.map((o) => { return o.value }),
+                    borderColor: colorChip.gray4,
+                    backgroundColor: colorChip.gray4,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    axis: 'y',
+                    label: "계약자",
+                    data: complex.graph.room.map((o) => { return o.contract }),
+                    borderColor: colorChip.red,
+                    backgroundColor: colorChip.red,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                indexAxis: 'y',
+              }
+            });
+            new window.Chart((createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                marginRight: String(chartBetween) + ea,
+                marginBottom: String(chartBetween) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                mode: "canvas",
+                style: {
+                  display: "block",
+                  position: "relative",      
+                },
+                previous: {
+                  text: "예산별 문의자, 계약자",
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    top: String(titleTextTop) + ea,
+                    justifyContent: "center",
+                    alignItems: "start",
+                    height: String(middleTitleHeight) + ea,
+                  }
+                }
+              }
+            })).querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels: complex.graph.budget.map((o) => { return o.case }),
+                datasets: [
+                  {
+                    axis: 'y',
+                    label: "문의자",
+                    data: complex.graph.budget.map((o) => { return o.value }),
+                    borderColor: colorChip.red,
+                    backgroundColor: colorChip.red,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    axis: 'y',
+                    label: "계약자",
+                    data: complex.graph.budget.map((o) => { return o.contract }),
+                    borderColor: colorChip.yellow,
+                    backgroundColor: colorChip.yellow,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                indexAxis: 'y',
+              }
+            });
+            new window.Chart((createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                marginBottom: String(chartBetween) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                mode: "canvas",
+                style: {
+                  display: "block",
+                  position: "relative",      
+                },
+                previous: {
+                  text: "계약 형태별 문의수, 계약수",
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    top: String(titleTextTop) + ea,
+                    justifyContent: "center",
+                    alignItems: "start",
+                    height: String(middleTitleHeight) + ea,
+                  }
+                }
+              }
+            })).querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels: complex.graph.contract.map((o) => { return o.case }),
+                datasets: [
+                  {
+                    axis: 'y',
+                    label: "문의자",
+                    data: complex.graph.contract.map((o) => { return o.value }),
+                    borderColor: colorChip.green,
+                    backgroundColor: colorChip.green,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    axis: 'y',
+                    label: "계약자",
+                    data: complex.graph.contract.map((o) => { return o.contract }),
+                    borderColor: colorChip.yellow,
+                    backgroundColor: colorChip.yellow,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                indexAxis: 'y',
+              }
+            });
+            new window.Chart((createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                marginRight: String(chartBetween) + ea,
+                marginBottom: String(chartBetween) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                mode: "canvas",
+                style: {
+                  display: "block",
+                  position: "relative",      
+                },
+                previous: {
+                  text: "소스별 문의자, 계약자",
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    top: String(titleTextTop) + ea,
+                    justifyContent: "center",
+                    alignItems: "start",
+                    height: String(middleTitleHeight) + ea,
+                  }
+                }
+              }
+            })).querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels: complex.graph.source.map((o) => { return o.case }),
+                datasets: [
+                  {
+                    axis: 'y',
+                    label: "문의자",
+                    data: complex.graph.source.map((o) => { return o.value }),
+                    borderColor: colorChip.purple,
+                    backgroundColor: colorChip.purple,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    axis: 'y',
+                    label: "계약자",
+                    data: complex.graph.source.map((o) => { return o.contract }),
+                    borderColor: colorChip.black,
+                    backgroundColor: colorChip.black,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                indexAxis: 'y',
+              }
+            });
+            new window.Chart((createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                marginBottom: String(chartBetween) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                mode: "canvas",
+                style: {
+                  display: "block",
+                  position: "relative",      
+                },
+                previous: {
+                  text: "광고 여부 문의자, 계약자",
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    top: String(titleTextTop) + ea,
+                    justifyContent: "center",
+                    alignItems: "start",
+                    height: String(middleTitleHeight) + ea,
+                  }
+                }
+              }
+            })).querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels: complex.graph.ad.map((o) => { return o.case }),
+                datasets: [
+                  {
+                    axis: 'y',
+                    label: "문의자",
+                    data: complex.graph.ad.map((o) => { return o.value }),
+                    borderColor: colorChip.gray4,
+                    backgroundColor: colorChip.gray4,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    axis: 'y',
+                    label: "계약자",
+                    data: complex.graph.ad.map((o) => { return o.contract }),
+                    borderColor: colorChip.red,
+                    backgroundColor: colorChip.red,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                indexAxis: 'y',
+              }
+            });
+            new window.Chart((createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                marginRight: String(chartBetween) + ea,
+                marginBottom: String(chartBetween) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                mode: "canvas",
+                style: {
+                  display: "block",
+                  position: "relative",      
+                },
+                previous: {
+                  text: "디바이스별 문의자, 계약자",
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    top: String(titleTextTop) + ea,
+                    justifyContent: "center",
+                    alignItems: "start",
+                    height: String(middleTitleHeight) + ea,
+                  }
+                }
+              }
+            })).querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels: complex.graph.device.map((o) => { return o.case }),
+                datasets: [
+                  {
+                    axis: 'y',
+                    label: "문의자",
+                    data: complex.graph.device.map((o) => { return o.value }),
+                    borderColor: colorChip.red,
+                    backgroundColor: colorChip.red,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    axis: 'y',
+                    label: "계약자",
+                    data: complex.graph.device.map((o) => { return o.contract }),
+                    borderColor: colorChip.yellow,
+                    backgroundColor: colorChip.yellow,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                indexAxis: 'y',
+              }
+            });
+            new window.Chart((createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                marginBottom: String(chartBetween) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                mode: "canvas",
+                style: {
+                  display: "block",
+                  position: "relative",      
+                },
+                previous: {
+                  text: "거주중별 문의수, 계약수",
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    top: String(titleTextTop) + ea,
+                    justifyContent: "center",
+                    alignItems: "start",
+                    height: String(middleTitleHeight) + ea,
+                  }
+                }
+              }
+            })).querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels: complex.graph.living.map((o) => { return o.case }),
+                datasets: [
+                  {
+                    axis: 'y',
+                    label: "문의자",
+                    data: complex.graph.living.map((o) => { return o.value }),
+                    borderColor: colorChip.green,
+                    backgroundColor: colorChip.green,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    axis: 'y',
+                    label: "계약자",
+                    data: complex.graph.living.map((o) => { return o.contract }),
+                    borderColor: colorChip.yellow,
+                    backgroundColor: colorChip.yellow,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                indexAxis: 'y',
+              }
+            });
+            new window.Chart((createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                marginRight: String(chartBetween) + ea,
+                marginBottom: String(chartBetween) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                mode: "canvas",
+                style: {
+                  display: "block",
+                  position: "relative",      
+                },
+                previous: {
+                  text: "층별 문의자, 계약자",
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    top: String(titleTextTop) + ea,
+                    justifyContent: "center",
+                    alignItems: "start",
+                    height: String(middleTitleHeight) + ea,
+                  }
+                }
+              }
+            })).querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels: complex.graph.floor.map((o) => { return o.case }),
+                datasets: [
+                  {
+                    axis: 'y',
+                    label: "문의자",
+                    data: complex.graph.floor.map((o) => { return o.value }),
+                    borderColor: colorChip.purple,
+                    backgroundColor: colorChip.purple,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    axis: 'y',
+                    label: "계약자",
+                    data: complex.graph.floor.map((o) => { return o.contract }),
+                    borderColor: colorChip.black,
+                    backgroundColor: colorChip.black,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                indexAxis: 'y',
+              }
+            });
+            new window.Chart((createNode({
+              mother: complexMother,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                marginBottom: String(chartBetween) + ea,
+                verticalAlign: "top",
+              },
+              child: {
+                mode: "canvas",
+                style: {
+                  display: "block",
+                  position: "relative",      
+                },
+                previous: {
+                  text: "세대 규모별 문의자, 계약자",
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    top: String(titleTextTop) + ea,
+                    justifyContent: "center",
+                    alignItems: "start",
+                    height: String(middleTitleHeight) + ea,
+                  }
+                }
+              }
+            })).querySelector("canvas"), {
+              type: "bar",
+              data: {
+                labels: complex.graph.household.map((o) => { return o.case }),
+                datasets: [
+                  {
+                    axis: 'y',
+                    label: "문의자",
+                    data: complex.graph.household.map((o) => { return o.value }),
+                    borderColor: colorChip.gray4,
+                    backgroundColor: colorChip.gray4,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    axis: 'y',
+                    label: "계약자",
+                    data: complex.graph.household.map((o) => { return o.contract }),
+                    borderColor: colorChip.red,
+                    backgroundColor: colorChip.red,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                ]
+              },
+              options: {
+                indexAxis: 'y',
+              }
+            });
+
+          }
+        }
+
+        chartJsPatch([
+          { data: { mode: "daily", fromDate, toDate: previousToDate }, url: LOGHOST + "/extractAnalytics" },
+          { data: { mode: "charge", fromDate, toDate: previousToDate }, url: LOGHOST + "/extractAnalytics" },
+          { data: { mode: "basic", fromDate, toDate: previousToDate }, url: BACKHOST + "/extractAnalytics" },
+          { data: { fromDate, toDate }, url: S3HOST + ":3000/complexReport" },
+        ]).then(dataLoad(loading)).catch((err) => {
+          console.log(err);
+        });
+
+        if (hasQuery("whitekey")) {
+          removeQuery("whitekey");
+        }
+        appendQuery({ whitekey: "statistics" });
+
+      }
+
+      if (document.querySelector('.' + whiteCardClassName) === null) {
+        whiteReportMaker(fromDate, toDate, false);
+      } else {
+        const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+        if (w0 !== undefined) {
+          w0.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        if (w1 !== undefined) {
+          w1.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        setQueue(() => {
+          if (w0 !== undefined) {
+            w0.remove();
+          }
+          if (w1 !== undefined) {
+            w1.remove();
+          }
+          setQueue(() => {
+            whiteReportMaker(fromDate, toDate, true);
+          })
+        }, 350);
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 MprJs.prototype.mprPannel = async function () {
   const instance = this;
   const { ea, totalContents, belowHeight, totalMother } = this;
@@ -7807,7 +9591,7 @@ MprJs.prototype.mprPannel = async function () {
           return async function (e) {
             try {
               const adsFunc = instance.adsWhiteCard();
-              await adsFunc();
+              await adsFunc(e);
             } catch (e) {
               console.log(e);
               window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
@@ -7822,7 +9606,7 @@ MprJs.prototype.mprPannel = async function () {
           return async function (e) {
             try {
               const frontFunc = instance.frontWhiteCard();
-              await frontFunc();
+              await frontFunc(e);
             } catch (e) {
               console.log(e);
               window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
@@ -7832,13 +9616,16 @@ MprJs.prototype.mprPannel = async function () {
         },
       },
       {
-        title: "그래프 보기",
+        title: "고객 현황",
         event: () => {
           return async function (e) {
             try {
-
+              const statisticsFunc = instance.statisticsWhiteCard();
+              await statisticsFunc(e);
             } catch (e) {
               console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
             }
           }
         },
@@ -8015,6 +9802,9 @@ MprJs.prototype.launching = async function () {
         await execFunc(new Event("click", { bubbles: true }));
       } else if (getObj.whitekey === "front") {
         execFunc = this.frontWhiteCard();
+        await execFunc(new Event("click", { bubbles: true }));
+      } else if (getObj.whitekey === "statistics") {
+        execFunc = this.statisticsWhiteCard();
         await execFunc(new Event("click", { bubbles: true }));
       } else {
         execFunc = this.clientWhiteCard(getObj.whitekey.split("_").slice(0, -1).join("_"), Number(getObj.whitekey.split("_").slice(-1).join("_")));
