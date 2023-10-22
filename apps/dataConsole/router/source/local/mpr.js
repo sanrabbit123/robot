@@ -3444,12 +3444,12 @@ MprJs.prototype.reportWhite = function () {
       innerMargin = 36;
       overlap = 12;
 
-      titleTextTop = isMac() ? 2 : 0;
+      titleTextTop = isMac() ? 2 : 5;
       titleSize = 18;
       titleWeight = 800;
       middleTitleHeight = 32;
 
-      fontTextTop = isMac() ? 1 : 0;
+      fontTextTop = isMac() ? 1 : 3;
       fontSize = 14;
       fontBetween = 8;
       fontWeight = 400;
@@ -5858,11 +5858,11 @@ MprJs.prototype.clientWhiteCard = function (cliid, requestNumber) {
       overlap = 12;
       basePaddingTop = 12;
 
-      titleTextTop = isMac() ? 2 : 0;
+      titleTextTop = isMac() ? 2 : 5;
       titleSize = 21;
       titleWeight = 800;
 
-      fontTextTop = isMac() ? 1 : 0;
+      fontTextTop = isMac() ? 1 : 3;
       fontSize = 14;
       fontBetween = 8;
       fontWeight = 400;
@@ -6158,11 +6158,11 @@ MprJs.prototype.adsWhiteCard = function () {
       overlap = 12;
       basePaddingTop = 12;
 
-      titleTextTop = isMac() ? 2 : 0;
+      titleTextTop = isMac() ? 2 : 5;
       titleSize = 21;
       titleWeight = 800;
 
-      fontTextTop = isMac() ? 1 : 0;
+      fontTextTop = isMac() ? 1 : 3;
       fontSize = 14;
       fontBetween = 8;
       fontWeight = 400;
@@ -6508,13 +6508,13 @@ MprJs.prototype.frontWhiteCard = function () {
       overlap = 12;
       basePaddingTop = 12;
 
-      titleTextTop = isMac() ? 2 : 0;
+      titleTextTop = isMac() ? 2 : 5;
       mainTitleSize = 21;
       titleSize = 18;
       titleWeight = 800;
       middleTitleHeight = 36;
 
-      fontTextTop = isMac() ? 1 : 0;
+      fontTextTop = isMac() ? 1 : 3;
       fontSize = 14;
       fontBetween = 8;
       fontWeight = 400;
@@ -7836,7 +7836,7 @@ MprJs.prototype.statisticsWhiteCard = function () {
       overlap = 12;
       basePaddingTop = 12;
 
-      titleTextTop = isMac() ? 2 : 0;
+      titleTextTop = isMac() ? 2 : 5;
       mainTitleSize = 21;
       titleSize = 18;
       titleWeight = 800;
@@ -7844,7 +7844,7 @@ MprJs.prototype.statisticsWhiteCard = function () {
 
       propertySize = 16;
 
-      fontTextTop = isMac() ? 1 : 0;
+      fontTextTop = isMac() ? 1 : 3;
       fontSize = 14;
       fontBetween = 8;
       fontWeight = 400;

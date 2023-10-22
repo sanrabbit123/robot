@@ -3319,11 +3319,11 @@ DesignerJs.prototype.aspirantSettingPortfolioView = async function (aspid) {
     innerMargin = 24;
     innerMarginTop = 20;
 
-    titleTextTop = isMac() ? 2 : 2;
+    titleTextTop = isMac() ? 2 : 5;
     titleSize = 17;
     titleWeight = 800;
 
-    fontTextTop = isMac() ? 1 : 0;
+    fontTextTop = isMac() ? 1 : 3;
     fontSize = 14;
     fontBetween = 8;
     fontWeight = 400;
@@ -3743,11 +3743,11 @@ DesignerJs.prototype.aspirantProposalPortfolioView = async function (aspid) {
     innerMargin = 24;
     innerMarginTop = 20;
 
-    titleTextTop = isMac() ? 2 : 2;
+    titleTextTop = isMac() ? 2 : 5;
     titleSize = 17;
     titleWeight = 800;
 
-    fontTextTop = isMac() ? 1 : 0;
+    fontTextTop = isMac() ? 1 : 3;
     fontSize = 14;
     fontBetween = 8;
     fontWeight = 400;
@@ -4142,11 +4142,11 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
       overlap = 12;
       basePaddingTop = 12;
 
-      titleTextTop = isMac() ? 2 : 2;
+      titleTextTop = isMac() ? 2 : 5;
       titleSize = 21;
       titleWeight = 800;
 
-      fontTextTop = isMac() ? 1 : 0;
+      fontTextTop = isMac() ? 1 : 3;
       fontSize = 14;
       fontBetween = 8;
       fontWeight = 400;
