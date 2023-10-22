@@ -1100,6 +1100,7 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
       let startDate, endDate;
       let endDateCopied;
       let startDateCopied;
+      let whereQuery;
 
       if (mode === "get") {
 
@@ -1243,6 +1244,97 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
         } else {
           res.send(JSON.stringify({ data: null }));
         }
+
+      } else if (mode === "query") {
+
+        if (req.body.whereQuery === undefined || req.body.coreWhereQuery === undefined) {
+          throw new Error("invalid post");
+        }
+        ({ whereQuery, coreWhereQuery } = equalJson(req.body));
+
+        rows = await back.mongoPick(collection, [ whereQuery, {
+          cliid: 1,
+          sessions: 1,
+          source: 1,
+        } ], { selfMongo });
+        
+        coreRows = (await back.getClientsByQuery(coreWhereQuery, { selfMongo: selfCoreMongo })).toNormal();
+        for (let obj of rows) {
+          thisClient = coreRows.find((c) => { return c.cliid === obj.cliid }) === undefined ? null : coreRows.find((c) => { return c.cliid === obj.cliid });
+          if (thisClient !== null) {
+            obj.client = equalJson(JSON.stringify(thisClient));
+          } else {
+            obj.client = (await back.getClientById(obj.cliid, { selfMongo: selfCoreMongo })).toNormal();
+          }
+        }
+
+        cliidArr = [ ...new Set(rows.map((o) => { return o.cliid })) ];
+        if (cliidArr.length > 0) {
+          projects = await back.mongoPick("project", [
+            {
+              $or: cliidArr.map((cliid) => { return { cliid } })
+            },
+            {
+              proid: 1,
+              cliid: 1,
+              desid: 1,
+              service: 1,
+              "proposal.date": 1,
+              "process.status": 1,
+              "process.contract": 1,
+            }
+          ], { selfMongo: selfCoreMongo });
+        } else {
+          projects = [];
+        }
+
+        projects.sort((a, b) => { return a.proposal.date.valueOf() - b.proposal.date.valueOf() });
+        rows.sort((a, b) => {
+          return b.client.requests[0].request.timeline.valueOf() - a.client.requests[0].request.timeline.valueOf();
+        });
+
+        finalRows = [];
+        for (let obj of rows) {
+          if (obj.cliid !== "c1801_aa01s") {
+            for (let i = 0; i < obj.client.requests.length; i++) {
+              copiedObj = equalJson(JSON.stringify(obj));
+              tempObj = { ...copiedObj };
+              tempObj.cliid = obj.cliid;
+              tempObj.client = equalJson(JSON.stringify(obj.client));
+              tempObj.client.requests = [
+                equalJson(JSON.stringify(obj.client.requests[i]))
+              ];
+              tempObj.requestNumber = i;
+              projectArr = projects.filter((p) => { return p.cliid === obj.cliid });
+              projectArr.sort((a, b) => { return a.proposal.date.valueOf() - b.proposal.date.valueOf() });
+              thisProject = null;
+              for (let p of projectArr) {
+                if (obj.client.requests[i].request.timeline.valueOf() <= p.proposal.date.valueOf()) {
+                  thisProject = equalJson(JSON.stringify(p));
+                  break;
+                }
+              }
+              if (thisProject !== null) {
+                if (thisProject.process.contract.first.date.valueOf() > emptyDateValue) {
+                  if (!/드랍/gi.test(thisProject.process.status)) {
+                    tempObj.client.requests[0].analytics.response.status = "진행";
+                  } else {
+                    tempObj.client.requests[0].analytics.response.status = "드랍";
+                  }
+                }
+              }
+              tempObj.project = equalJson(JSON.stringify(thisProject));
+
+              finalRows.push(equalJson(JSON.stringify(tempObj)));
+            }
+          }
+        }
+
+        finalRows.sort((a, b) => {
+          return b.client.requests[0].request.timeline.valueOf() - a.client.requests[0].request.timeline.valueOf();
+        });
+
+        res.send(JSON.stringify(finalRows));
 
       } else {
         throw new Error("invalid mode");

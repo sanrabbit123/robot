@@ -138,18 +138,51 @@ MprJs.prototype.mainDataRender = async function () {
         width: 150,
         name: "medium",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "includesEvent_$all",
+          }
+        ].concat(mediumArr.map((str) => {
+          return {
+            value: str,
+            functionName: "includesEvent_" + str,
+          }
+        })),
       },
       {
         title: "캠페인",
         width: 150,
         name: "campaign",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "includesEvent_$all",
+          }
+        ].concat(campaignArr.map((str) => {
+          return {
+            value: str,
+            functionName: "includesEvent_" + str,
+          }
+        })),
       },
       {
         title: "디바이스",
         width: 150,
         name: "device",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "includesEvent_$all",
+          }
+        ].concat(deviceArr.map((str) => {
+          return {
+            value: str,
+            functionName: "includesEvent_" + str,
+          }
+        })),
       },
       {
         title: "평수",
@@ -2942,6 +2975,7 @@ MprJs.prototype.mprBase = async function () {
           const index = Number(this.getAttribute("index"));
           const thisObject = columns[index];
           const zIndex = 4;
+          const maxLnegth = 20;
           let cancelBack, blackPrompt;
           let thisMenu;
 
@@ -2975,61 +3009,125 @@ MprJs.prototype.mprBase = async function () {
             }
           });
 
-          blackPrompt = createNode({
-            mother: totalContents,
-            class: [ menuPromptClassName ],
-            style: {
-              position: "fixed",
-              top: String(e.y + menuVisual) + "px",
-              left: String(e.x + menuVisual) + "px",
-              width: String(menuPromptWidth) + ea,
-              background: colorChip.white,
-              animation: "fadeuplite 0.3s ease forwards",
-              zIndex: String(zIndex),
-            },
-            children: thisMenu.map(({ value, functionName }) => {
-              const functionOrderArr = functionName.split("_");
-              const [ thisFunctionName ] = functionOrderArr;
-              let thisArguments;
-              if (functionOrderArr.length > 1) {
-                thisArguments = functionOrderArr.slice(1).concat([ name, index ]);
-              } else {
-                thisArguments = [ name, index ];
-              }
-              return {
-                event: {
-                  selectstart: (e) => { e.preventDefault() },
-                  click: menuEventTong[thisFunctionName](...thisArguments),
-                },
-                style: {
-                  display: "flex",
-                  position: "relative",
-                  width: String(menuPromptWidth) + ea,
-                  height: String(menuPromptHeight) + ea,
-                  borderRadius: String(5) + "px",
-                  background: colorChip.gradientGray,
-                  marginBottom: String(menuBetween) + ea,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  cursor: "pointer",
-                },
-                child: {
-                  text: value,
+          if (thisMenu.length >= maxLnegth) {
+
+            blackPrompt = createNode({
+              mother: totalContents,
+              class: [ menuPromptClassName ],
+              style: {
+                position: "fixed",
+                top: String(e.y + menuVisual) + "px",
+                left: String(e.x + menuVisual) + "px",
+                width: String(menuPromptWidth) + ea,
+                background: colorChip.white,
+                animation: "fadeuplite 0.3s ease forwards",
+                zIndex: String(zIndex),
+                height: String((menuPromptHeight + menuBetween) * maxLnegth) + ea,
+                overflow: "scroll",
+              },
+              children: thisMenu.map(({ value, functionName }) => {
+                const functionOrderArr = functionName.split("_");
+                const [ thisFunctionName ] = functionOrderArr;
+                let thisArguments;
+                if (functionOrderArr.length > 1) {
+                  thisArguments = functionOrderArr.slice(1).concat([ name, index ]);
+                } else {
+                  thisArguments = [ name, index ];
+                }
+                return {
                   event: {
                     selectstart: (e) => { e.preventDefault() },
+                    click: menuEventTong[thisFunctionName](...thisArguments),
                   },
                   style: {
+                    display: "flex",
                     position: "relative",
-                    top: String(menuTextTop) + ea,
-                    fontSize: String(menuSize) + ea,
-                    fontWeight: String(menuWeight),
-                    color: colorChip.white,
+                    width: String(menuPromptWidth) + ea,
+                    height: String(menuPromptHeight) + ea,
+                    borderRadius: String(5) + "px",
+                    background: colorChip.gradientGray,
+                    marginBottom: String(menuBetween) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    cursor: "pointer",
+                  },
+                  child: {
+                    text: value,
+                    event: {
+                      selectstart: (e) => { e.preventDefault() },
+                    },
+                    style: {
+                      position: "relative",
+                      top: String(menuTextTop) + ea,
+                      fontSize: String(menuSize) + ea,
+                      fontWeight: String(menuWeight),
+                      color: colorChip.white,
+                    }
                   }
                 }
-              }
-            })
-          })
+              })
+            });
+
+          } else {
+
+            blackPrompt = createNode({
+              mother: totalContents,
+              class: [ menuPromptClassName ],
+              style: {
+                position: "fixed",
+                top: String(e.y + menuVisual) + "px",
+                left: String(e.x + menuVisual) + "px",
+                width: String(menuPromptWidth) + ea,
+                background: colorChip.white,
+                animation: "fadeuplite 0.3s ease forwards",
+                zIndex: String(zIndex),
+              },
+              children: thisMenu.map(({ value, functionName }) => {
+                const functionOrderArr = functionName.split("_");
+                const [ thisFunctionName ] = functionOrderArr;
+                let thisArguments;
+                if (functionOrderArr.length > 1) {
+                  thisArguments = functionOrderArr.slice(1).concat([ name, index ]);
+                } else {
+                  thisArguments = [ name, index ];
+                }
+                return {
+                  event: {
+                    selectstart: (e) => { e.preventDefault() },
+                    click: menuEventTong[thisFunctionName](...thisArguments),
+                  },
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: String(menuPromptWidth) + ea,
+                    height: String(menuPromptHeight) + ea,
+                    borderRadius: String(5) + "px",
+                    background: colorChip.gradientGray,
+                    marginBottom: String(menuBetween) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    cursor: "pointer",
+                  },
+                  child: {
+                    text: value,
+                    event: {
+                      selectstart: (e) => { e.preventDefault() },
+                    },
+                    style: {
+                      position: "relative",
+                      top: String(menuTextTop) + ea,
+                      fontSize: String(menuSize) + ea,
+                      fontWeight: String(menuWeight),
+                      color: colorChip.white,
+                    }
+                  }
+                }
+              })
+            });
+
+          }
 
         } catch (e) {
           console.log(e);
@@ -9738,6 +9836,82 @@ MprJs.prototype.whiteResize = function () {
   window.addEventListener('resize', resizeDebounceEvent());
 }
 
+MprJs.prototype.mprSearchEvent = async function () {
+  const instance = this;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName, totalMother } = this;
+  const { ajaxJson, setQueue, cleanChildren } = GeneralJs;
+  try {
+    this.searchInput.addEventListener("keypress", async function (e) {
+      try {
+        if (e.key === "Enter") {
+          if (instance.totalFather !== null) {
+            instance.totalFather.classList.remove("fadein");
+            instance.totalFather.classList.add("fadeout");
+            instance.totalMother.classList.remove("justfadeoutoriginal");
+            instance.totalMother.classList.add("justfadeinoriginal");
+            setQueue(() => {
+              instance.totalFather.remove();
+              instance.totalFather = null;
+            }, 501);
+          }
+          if (document.querySelector('.' + whiteBaseClassName) !== null) {
+            const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+            cancelBack.style.animation = "justfadeout 0.3s ease forwards";
+            if (w0 !== undefined) {
+              w0.style.animation = "fadedownlite 0.3s ease forwards";
+            }
+            if (w1 !== undefined) {
+              w1.style.animation = "fadedownlite 0.3s ease forwards";
+            }
+            setQueue(() => {
+              cancelBack.click();
+            }, 350);
+          }
+
+          const value = this.value.trim().replace(/\&\=\+\\\//gi, '');
+          let whereQuery, loading, coreWhereQuery;
+          if (value === '') {
+            whereQuery = {};
+          } else {
+            whereQuery = {
+              "client.name": { $regex: value }
+            };
+            coreWhereQuery = {
+              "name": { $regex: value }
+            };
+          }
+
+          cleanChildren(totalMother);
+          loading = await instance.mother.loadingRun();
+          instance.clients = await ajaxJson({
+            mode: "query",
+            whereQuery,
+            coreWhereQuery,
+          }, CONTENTSHOST + "/clientAnalytics", { equal: true });
+          await instance.coreContentsLoad(true);
+          loading.parentNode.removeChild(loading);
+          
+          // setQueue(async () => {
+          //   try {
+          //     if (instance.aspirants.length === 1) {
+          //       const tempFunc = instance.aspirantWhiteCard(instance.aspirants[0].aspid);
+          //       await tempFunc({});
+          //     }
+          //   } catch (e) {
+          //     console.log(e);
+          //   }
+          // }, 350);
+
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 MprJs.prototype.launching = async function () {
   const instance = this;
   const { returnGet, ajaxJson } = GeneralJs;
@@ -9794,6 +9968,7 @@ MprJs.prototype.launching = async function () {
     this.menuEventTong = null;
 
     await this.mprBase();
+    await this.mprSearchEvent();
     this.whiteResize();
 
     if (getObj.whitekey !== undefined) {
