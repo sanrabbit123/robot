@@ -341,12 +341,10 @@ ContentsCalculator.prototype.storeContentsView = async function (selfMongo, self
           time: equalJson(JSON.stringify(timeMap)),
         }
       };
-
-      console.log(jsonModel);
   
       finalJson.contents.push(equalJson(JSON.stringify(jsonModel)));
 
-      await sleep(1000);
+      await sleep(1500);
     }
     
     finalRows = await back.mongoRead(collection, { key }, { selfMongo: selfLocalMongo });
