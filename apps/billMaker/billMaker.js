@@ -1204,9 +1204,9 @@ BillMaker.prototype.getBillsByQuery = async function (whereQuery, option = { sel
     }
 
     if (option.limit !== undefined) {
-      tong = await MONGOC.db(`admin`).collection(`generalBill`).find(whereQuery).sort(sortQuery).limit(Number(option.limit)).toArray();
+      tong = await MONGOC.db(`miro81`).collection(`generalBill`).find(whereQuery).sort(sortQuery).limit(Number(option.limit)).toArray();
     } else {
-      tong = await MONGOC.db(`admin`).collection(`generalBill`).find(whereQuery).sort(sortQuery).toArray();
+      tong = await MONGOC.db(`miro81`).collection(`generalBill`).find(whereQuery).sort(sortQuery).toArray();
     }
 
     if (!selfBoo) {
