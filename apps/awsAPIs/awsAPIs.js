@@ -277,7 +277,6 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
         ],
       }));
       obj.utilization.cpu.maximum = data.MetricDataResults[0]["Values"][0] / 100;
-
   
       data = await watch.send(new GetMetricDataCommand({
         StartTime: ago,
