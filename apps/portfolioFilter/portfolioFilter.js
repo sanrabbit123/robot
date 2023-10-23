@@ -864,7 +864,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           throw new Error("invaild pid");
         }
         note = new AppleNotes({ folder: "portfolio", subject: nextPid + "(발행대기)" });
-        await note.createNote(`${designer} 실장님`);
+        await note.createNote(`${targetDesigner.designer} 실장님`);
 
         folderPath = await drive.get_folder_inPython(link, nextPid, true);
 
@@ -872,7 +872,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         await shellExec(`cp -r ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
 
         this.clientName = "없음";
-        this.designer = designer;
+        this.designer = targetDesigner.designer;
         this.pid = nextPid;
         this.apartName = "";
         totalMakeResult = await this.total_make(true);

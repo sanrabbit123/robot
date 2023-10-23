@@ -6893,9 +6893,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "오윤경",
-    //     designer: "김우현",
-    //     link: "https://drive.google.com/drive/folders/1kL6VAKINH8NJJ3mN3iydPFwXQ4r_4NU8",
+    //     client: null,
+    //     designer: "이지연",
+    //     link: "https://drive.google.com/drive/folders/1wZ6Dsn3vxChA8aRyIIgZm-5TL1QHxWP2",
     //     pay: true
     //   },
     // ]);
@@ -6961,21 +6961,21 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2309_aa03s" ]);
+    // await work.newDesignerToFront([ "d2309_aa07s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2105_aa03s", [
-    //   { porlid: "a109", index: 5 },
-    //   { porlid: "a109", index: 6 },
-    //   { porlid: "a109", index: 15 },
-    //   { porlid: "a109", index: 10 },
-    //   { porlid: "a109", index: 1 },
-    //   { porlid: "a109", index: 2 },
+    // await this.setProposalSettingForDesigner("d2309_aa07s", [
+    //   { porlid: "a112", index: 1 },
+    //   { porlid: "a112", index: 9 },
+    //   { porlid: "a112", index: 10 },
+    //   { porlid: "a112", index: 7 },
+    //   { porlid: "a112", index: 11 },
+    //   { porlid: "a112", index: 12 },
     // ], [
-    //   "고객님의 취향을 최근 트렌드에 맞춘 형태로 해석하여 스타일링을 진행합니다.",
-    //   "전형적인 스타일을 넘어, 화려한 호텔 분위기 연출에 능합니다.",
-    //   "심플 모던 스타일을 좋아하지만, 고객님이 선호하는 스타일에 맞추어 제안드립니다.",
+    //   "디자인을 사전에 잘 보여드릴 수 있는 페이퍼 워크 작업 능력이 있습니다.",
+    //   "세세한 내용까지 꼼꼼히 챙길 수 있는 능력이 있고, 그만큼 경력이 있어 믿을 수 있습니다.",
+    //   "원활한 소통 능력이 뛰어나, 진행하는 동안 내내 안정적인 프로세스를 제공해드릴 수 있습니다.",
     // ]);
 
 
