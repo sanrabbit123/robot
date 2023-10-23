@@ -1851,16 +1851,21 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
 
     if (/홈리에종 계약금/gi.test(data.goodName.trim()) || /홈리에종 잔금/gi.test(data.goodName.trim())) {
       projectQuery = {};
-      if (proposal.fee.length === 1) {
-        pureDesignFee = Math.round(proposal.fee[0].amount);
-        discount = proposal.fee[0].discount;
-      } else {
-        for (let obj of proposal.fee) {
-          if (obj.method === thisBill.links.method) {
-            pureDesignFee = Math.round(obj.amount);
-            discount = obj.discount;
+      if (proposal !== undefined && proposal !== null) {
+        if (proposal.fee.length === 1) {
+          pureDesignFee = Math.round(proposal.fee[0].amount);
+          discount = proposal.fee[0].discount;
+        } else {
+          for (let obj of proposal.fee) {
+            if (obj.method === thisBill.links.method) {
+              pureDesignFee = Math.round(obj.amount);
+              discount = obj.discount;
+            }
           }
         }
+      } else {
+        pureDesignFee = 0;
+        discount = 0;
       }
 
       if (/계약금/gi.test(data.goodName.trim())) {

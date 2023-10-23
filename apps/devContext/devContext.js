@@ -153,8 +153,32 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+    // const { officeinfo: { widsign: { id, key, endPoint } } } = address;
+    // let widsignResponse, token;
+
+
+    // widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+    // if (widsignResponse.data.result_code !== 200) {
+    //   throw new Error("access token error");
+    // }
+    // token = widsignResponse.data.access_token;
+
+    // widsignResponse = await requestSystem(endPoint + "/v2/service/credit", {}, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+
+    // console.log(widsignResponse)
     
 
+
+
+
+    
+
+
+
+    
 
     /*
 
@@ -6876,9 +6900,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이주윤",
-    //     designer: "김보하",
-    //     link: "https://drive.google.com/drive/folders/1nU50gsoIppdExMUZ6Vk14EklcMhIKZu2",
+    //     client: null,
+    //     designer: "전진화",
+    //     link: "https://drive.google.com/drive/folders/11dVpysqGW1asT6X-sIqBaGgRiWoa3hk9",
     //     pay: true
     //   },
     // ]);
