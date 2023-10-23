@@ -54,6 +54,7 @@ const MicrosoftAPIs = require(`${process.cwd()}/apps/microsoftAPIs/microsoftAPIs
 const OpenAiAPIs = require(`${process.cwd()}/apps/openAiAPIs/openAiAPIs.js`);
 const LocalDevices = require(`${process.cwd()}/apps/localDevices/localDevices.js`);
 const RequestWhisk = require(`${process.cwd()}/apps/requestWhisk/requestWhisk.js`);
+const ContentsCalculator = require(`${process.cwd()}/apps/contentsLounge/router/contentsCalculator.js`);
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -153,23 +154,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-    // const { officeinfo: { widsign: { id, key, endPoint } } } = address;
-    // let widsignResponse, token;
-
-
-    // widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
-    // if (widsignResponse.data.result_code !== 200) {
-    //   throw new Error("access token error");
-    // }
-    // token = widsignResponse.data.access_token;
-
-    // widsignResponse = await requestSystem(endPoint + "/v2/service/credit", {}, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-
-    // console.log(widsignResponse)
     
+
+
+    
+
+
 
 
     

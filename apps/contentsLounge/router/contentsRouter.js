@@ -1444,6 +1444,40 @@ ContentsRouter.prototype.rou_post_shareGoogleId = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_storeContentsView = function () {
+  const instance = this;
+  const calcaulator = this.calcaulator;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/storeContentsView" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      calcaulator.storeContentsView(instance.mongolog, instance.mongo, instance.mongolocal, logger).then((resultMessage) => {
+        if (resultMessage.message !== "done") {
+          throw new Error("store web contents view fail");
+        }
+        return sleep(500);
+      }).catch((err) => {
+        logger.error("Contents lounge 서버 문제 생김 (rou_post_storeContentsView): " + err.message).catch((e) => { console.log(e); });
+        console.log(err);
+      });
+
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_storeContentsView): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 ContentsRouter.prototype.setMembers = async function () {
