@@ -1398,6 +1398,17 @@ ContentsRouter.prototype.rou_post_shareGoogleId = function () {
 
         resultObj = { message: "done" };
 
+      } else if (mode === "get") {
+
+        const { proid } = equalJson(req.body);
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        if (rows.length > 0) {
+          rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+          resultObj = { data: rows[0] };
+        } else {
+          resultObj = { data: null };
+        }
+
       } else {
         throw new Error("invalid post");
       }

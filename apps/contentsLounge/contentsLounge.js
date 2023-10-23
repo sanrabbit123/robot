@@ -62,6 +62,10 @@ ContentsLounge.prototype.contentsConnect = async function () {
     await MONGOCONSOLEC.connect();
     await MONGOLOGC.connect();
 
+    //set kakao
+    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+    const kakaoInstance = new KakaoTalk();
+
     //set pem key
     let pems, pemsLink;
     let certDir, keyDir, caDir;
