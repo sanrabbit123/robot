@@ -6900,12 +6900,51 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "전진화",
-    //     link: "https://drive.google.com/drive/folders/11dVpysqGW1asT6X-sIqBaGgRiWoa3hk9",
+    //     client: "오윤경",
+    //     designer: "김우현",
+    //     link: "https://drive.google.com/drive/folders/1kL6VAKINH8NJJ3mN3iydPFwXQ4r_4NU8",
     //     pay: true
     //   },
     // ]);
+
+    // const proid = "p2305_ab52s";
+    // const project = await back.getProjectById(proid, { selfMongo: this.MONGOC });
+    // const nextPid = "p338";
+
+    // const clientObj = await back.getClientById(project.cliid);
+    // const designerObj = await back.getDesignerById(project.desid);
+
+    // const zipPhotoRes = await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
+
+
+    // console.log(zipPhotoRes);
+
+    // const zipIdDesigner = zipPhotoRes.data.googleId.designer;
+    // const zipIdClient = zipPhotoRes.data.googleId.client;
+
+    // await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/shareGoogleId", {
+    //   mode: "store",
+    //   proid: project.proid,
+    //   cliid: project.cliid,
+    //   desid: project.desid,
+    //   pid: nextPid,
+    //   zipIdDesigner,
+    //   zipIdClient,
+    // }, {
+    //   headers: { "Content-Type": "application/json" }
+    // });
+
+    // await shellExec(`rm -rf ${shellLink(folderPath)};`);
+
+    // if (clientObj !== null && designerObj !== null) {
+    //   consoleQInput = await consoleQ(`Is it OK? (press "OK")`);
+    //   if (/OK/gi.test(consoleQInput.trim())) {
+    //     await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid: clientObj.cliid, desid: designerObj.desid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
+    //     await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, host: instance.address.frontinfo.host, path: "evaluation", proid: project.proid });
+    //     await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, host: instance.address.frontinfo.host, proid: project.proid });
+    //     await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
+    //   }
+    // }
 
 
     // when rawtoraw fail
