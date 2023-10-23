@@ -97,7 +97,7 @@ ContentsLounge.prototype.contentsConnect = async function () {
 
     //set router
     const ContentsRouter = require(`${this.dir}/router/contentsRouter.js`);
-    const router = new ContentsRouter(MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC);
+    const router = new ContentsRouter(MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, kakaoInstance);
     await router.setMembers();
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);

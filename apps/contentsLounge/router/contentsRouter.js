@@ -1,4 +1,4 @@
-const ContentsRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
+const ContentsRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, kakaoInstance) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
 
@@ -25,6 +25,7 @@ const ContentsRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) 
   this.mongoconsole = MONGOCONSOLEC;
   this.mongolog = MONGOLOGC;
   this.members = {};
+  this.kakao = kakaoInstance;
 
   this.formidable = require("formidable");
   this.imageReader = new ImageReader(this.mother, this.back, this.address);
@@ -1400,14 +1401,22 @@ ContentsRouter.prototype.rou_post_shareGoogleId = function () {
 
       } else if (mode === "get") {
 
-        const { proid } = equalJson(req.body);
-        rows = await back.mongoRead(collection, { proid }, { selfMongo });
-        if (rows.length > 0) {
-          rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-          resultObj = { data: rows[0] };
-        } else {
-          resultObj = { data: null };
-        }
+        // const { proid } = equalJson(req.body);
+        // rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        // if (rows.length > 0) {
+        //   rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        //   resultObj = { data: rows[0] };
+        // } else {
+        //   resultObj = { data: null };
+        // }
+
+        instance.kakao.sendTalk("remainPaymentAndChannel", "배창규", "010-2747-3403", {
+          client: "배창규",
+          designer: "박혜연",
+          emoji: "(방긋)",
+        }).catch((err) => {
+          console.log(err);
+        });
 
       } else {
         throw new Error("invalid post");
