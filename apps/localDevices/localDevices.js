@@ -338,4 +338,110 @@ LocalDevices.prototype.getDevicesFlow = async function (members) {
   }
 }
 
+LocalDevices.prototype.parsingNmon = async function (targetNmon) {
+  const instance = this;
+  const { fileSystem, dateToString, sleep, equalJson } = this.mother;
+  try {
+    const targetContents = await fileSystem(`readString`, [ targetNmon ]);
+    const splitKey = "ZZZZ";
+    const monthIndex = {
+      jan: 1,
+      feb: 2,
+      mar: 3,
+      apr: 4,
+      may: 5,
+      jun: 6,
+      jul: 7,
+      aug: 8,
+      sep: 9,
+      oct: 10,
+      nov: 11,
+      dec: 12,
+    };
+    let rawStringArr;
+    let timeStringRaw;
+    let timeString, dateString;
+    let timeArr, dateArr;
+    let thisDate;
+    let cpuAllIndex;
+    let cpuArr, cpuAllString;
+    let contentsArr;
+    let cpuUsageArr, cpuAllUsage;
+    let memoryArr;
+    let memoryTotal, memoryFree, memoryUsage;
+    let topArr;
+    let processArr;
+    let thisJson;
+    let resultArr;
+    let netArr;
+    let networkIn;
+    let networkOut;
+
+    rawStringArr = targetContents.split(splitKey).slice(1).map((str) => { return str.trim(); }).map((str) => { return str.split("\n").filter((s) => { return s.trim() !== '' }) });
+
+    resultArr = [];
+    for (let arr of rawStringArr) {
+      timeStringRaw = arr[0].split(",").slice(2).join(",");
+
+      timeString = timeStringRaw.split(",")[0];
+      dateString = timeStringRaw.split(",")[1];
+      timeArr = timeString.split(":");
+      dateArr = dateString.split("-");
+
+      thisDate = new Date(Number(dateArr[2]), monthIndex[dateArr[1].toLowerCase()] - 1, Number(dateArr[0]), Number(timeArr[0]), Number(timeArr[1]), Number(timeArr[2]));
+
+      contentsArr = arr.slice(1);
+      cpuAllIndex = contentsArr.findIndex((str) => { return /^CPU_ALL/gi.test(str) });
+      cpuArr = contentsArr.slice(0, cpuAllIndex);
+      cpuAllString = contentsArr[cpuAllIndex];
+
+      cpuUsageArr = cpuArr.map((s) => { return Number(s.split(",").map((t) => { return t.trim() })[2]) });
+      cpuAllUsage = Number(cpuAllString.split(",").map((t) => { return t.trim() })[2]);
+
+      memoryArr = contentsArr.slice(cpuAllIndex + 1).find((str) => { return /^MEM/gi.test(str) }).split(",");
+      memoryTotal = Number(memoryArr[2]);
+      memoryFree = Number(memoryArr[6]);
+      memoryUsage = memoryTotal - memoryFree;
+      
+      topArr = contentsArr.filter((str) => { return /^TOP/gi.test(str) }).map((str) => { return str.split(",") });
+      processArr = topArr.map((arr) => {
+        return {
+          name: arr[arr.length - 3],
+          usage: Number(arr[3]),
+        }
+      });
+
+      netArr = contentsArr.find((str) => { return /^NET/gi.test(str) }).split(",");
+      networkIn = Number(netArr[3]) * 1024;
+      networkOut = Number(netArr[5]) * 1024;
+
+      thisJson = {
+        date: thisDate,
+        cpu: {
+          all: cpuAllUsage,
+          length: cpuUsageArr.length,
+          detail: cpuUsageArr,
+        },
+        network: {
+          in: networkIn,
+          out: networkOut,
+        },
+        memory: {
+          total: memoryTotal,
+          usage: memoryUsage,
+          free: memoryFree,
+        },
+        process: processArr,
+      };
+
+      resultArr.push(thisJson);
+    }
+
+    return resultArr;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+}
+
 module.exports = LocalDevices;

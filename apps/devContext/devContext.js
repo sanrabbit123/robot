@@ -154,10 +154,14 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    const targetFileName = "nmonTarget.nmon";
+    const targetNmon = `${process.cwd()}/temp/${targetFileName}`;
+    const device = new LocalDevices();
 
     
-    
+
+    console.log(await device.parsingNmon(targetNmon));
+
 
 
 
