@@ -1526,6 +1526,7 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
       }
 
       if (tempArr.length === 3) {
+        zipIdClient = null;
         zipLinkClient = null;
       } else {
         safeNum1 = 0;
@@ -1541,6 +1542,7 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
         if (zipIdClient !== null) {
           zipLinkClient = await drive.read_webView_inPython(zipIdClient);
         } else {
+          zipIdClient = null;
           zipLinkClient = null;
         }
       }
@@ -1550,7 +1552,10 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
         [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareDesignerName}` ] ],
       ]);
 
-      res.send(JSON.stringify({ designer: zipLinkDesigner, client: zipLinkClient }));
+      res.send(JSON.stringify({ designer: zipLinkDesigner, client: zipLinkClient, googleId: {
+        designer: zipIdDesigner,
+        client: zipIdClient,
+      } }));
 
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_zipPhoto): " + e.message).catch((e) => { console.log(e); });

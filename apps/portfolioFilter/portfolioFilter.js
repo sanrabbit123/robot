@@ -691,6 +691,9 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     let fromArr, toArr;
     let allContentsArr;
     let allProjects, allClients;
+    let zipPhotoRes;
+    let zipIdDesigner;
+    let zipIdClient;
 
     await this.static_setting();
 
@@ -812,7 +815,21 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           clientObj = await back.getClientById(project.cliid);
           designerObj = await back.getDesignerById(project.desid);
   
-          await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
+          zipPhotoRes = await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
+          zipIdDesigner = zipPhotoRes.data.googleId.designer;
+          zipIdClient = zipPhotoRes.data.googleId.client;
+
+          await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/shareGoogleId", {
+            mode: "store",
+            proid: project.proid,
+            cliid: project.cliid,
+            desid: project.desid,
+            pid: nextPid,
+            zipIdDesigner,
+            zipIdClient,
+          }, {
+            headers: { "Content-Type": "application/json" }
+          });
 
           await shellExec(`rm -rf ${shellLink(folderPath)};`);
 

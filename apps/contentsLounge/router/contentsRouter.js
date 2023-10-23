@@ -1349,6 +1349,70 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_shareGoogleId = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, sleep } = this.mother;
+  let obj = {};
+  obj.link = [ "/shareGoogleId" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongolocal;
+      const collection = "shareGoogleId";
+      const { mode } = equalJson(req.body);
+      let json;
+      let rows;
+      let resultObj;
+
+      if (mode === "store") {
+        const { proid, cliid, desid, pid, zipIdDesigner, zipIdClient } = equalJson(req.body);
+
+        json = {
+          proid,
+          cliid,
+          desid,
+          pid,
+          date: new Date(),
+          google: {
+            designer: zipIdDesigner,
+            client: zipIdClient,
+            original: zipIdDesigner,
+            watermark: zipIdClient,
+          }
+        };
+
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        if (rows.length > 0) {
+          await back.mongoDelete(collection, { proid }, { selfMongo });
+        }
+        await back.mongoCreate(collection, json, { selfMongo });
+
+        resultObj = { message: "done" };
+
+      } else {
+        throw new Error("invalid post");
+      }
+
+      res.send(JSON.stringify(resultObj));
+
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_shareGoogleId): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 ContentsRouter.prototype.setMembers = async function () {
