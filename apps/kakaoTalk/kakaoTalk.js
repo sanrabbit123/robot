@@ -4073,6 +4073,47 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       }
     },
+    "evaluationSubmit": {
+      "name": "평가 완료 고객",
+      "id": "TP_3977",
+      "needs": [
+        "client",
+        "file"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"file\", to: obj.file }\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{client} 고객님 안녕하세요! 평가를 남겨주셔서 감사합니다 :)\n\n고객님 현장의 원본 사진을 구글 드라이브 링크로도 공유드리고, 고객 후기 콘텐츠는 순차 발행 중이라 나오면 추후에 링크 보내드리겠습니다!\n\n편안하고 아름다운 집에서 늘 행복한 일상을 이어나가시기를 바랄게요!\n\n감사합니다 :)\n\n* 사진 공유 : https://drive.google.com/file/d/#{file}/view?usp=sharing",
+        "templtName": "평가 완료 고객",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-10-17 10:11:59",
+        "templtCode": "TP_3977",
+        "comments": [
+          {
+            "cdate": "2023-10-17 14:45:15",
+            "name": "검수자",
+            "id": "2886937",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-10-17 14:45:15",
+            "status": "APR"
+          }
+        ]
+      }
+    },
   };
   if (target === "$all") {
     return tong;

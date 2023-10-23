@@ -668,6 +668,7 @@ ContentsRouter.prototype.rou_post_getAdsComplex = function () {
 ContentsRouter.prototype.rou_post_evaluationSubmit = function () {
   const instance = this;
   const back = this.back;
+  const kakao = this.kakao;
   const { equalJson, messageSend, dateToString, stringToDate, sleep } = this.mother;
   let obj = {};
   obj.link = [ "/evaluationSubmit" ];
@@ -684,7 +685,9 @@ ContentsRouter.prototype.rou_post_evaluationSubmit = function () {
       }
       const { cliid, proid, desid, map } = equalJson(req.body);
       const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
       const collection = "clientEvaluation";
+      const googleCollection = "shareGoogleId";
       let constructAmount;
       let constructPeriod;
       let totalAmount;
@@ -698,6 +701,8 @@ ContentsRouter.prototype.rou_post_evaluationSubmit = function () {
       let operationSatisfaction;
       let json;
       let rows;
+      let googleRows;
+      let thisClient;
 
       constructAmount = map.find((o) => { return o.property === "constructamount" }) === undefined ? "" : map.find((o) => { return o.property === "constructamount" }).value;
       constructPeriod = map.find((o) => { return o.property === "constructperiod" }) === undefined ? "" : map.find((o) => { return o.property === "constructperiod" }).value;
@@ -845,6 +850,20 @@ ContentsRouter.prototype.rou_post_evaluationSubmit = function () {
         await back.mongoDelete(collection, { proid }, { selfMongo });
       }
       await back.mongoCreate(collection, json, { selfMongo });
+
+      googleRows = await back.mongoRead(googleCollection, { proid }, { selfMongo });
+      if (googleRows.length > 0) {
+        googleRows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        thisClient = await back.getClientById(cliid, { selfMongo: selfCoreMongo });
+        if (thisClient !== null) {
+          kakao.sendTalk("evaluationSubmit", thisClient.name, thisClient.phone, {
+            client: thisClient.name,
+            file: googleRows[0].google.original,
+          }).catch((err) => {
+            console.log(err);
+          });
+        }
+      }
 
       logger.alert("evaluationSubmit success => " + proid + ", " + cliid + ", " + desid).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "done" }));
@@ -1401,22 +1420,14 @@ ContentsRouter.prototype.rou_post_shareGoogleId = function () {
 
       } else if (mode === "get") {
 
-        // const { proid } = equalJson(req.body);
-        // rows = await back.mongoRead(collection, { proid }, { selfMongo });
-        // if (rows.length > 0) {
-        //   rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-        //   resultObj = { data: rows[0] };
-        // } else {
-        //   resultObj = { data: null };
-        // }
-
-        instance.kakao.sendTalk("remainPaymentAndChannel", "배창규", "010-2747-3403", {
-          client: "배창규",
-          designer: "박혜연",
-          emoji: "(방긋)",
-        }).catch((err) => {
-          console.log(err);
-        });
+        const { proid } = equalJson(req.body);
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        if (rows.length > 0) {
+          rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+          resultObj = { data: rows[0] };
+        } else {
+          resultObj = { data: null };
+        }
 
       } else {
         throw new Error("invalid post");
