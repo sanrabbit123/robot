@@ -1552,10 +1552,14 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
         [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareDesignerName}` ] ],
       ]);
 
-      res.send(JSON.stringify({ designer: zipLinkDesigner, client: zipLinkClient, googleId: {
-        designer: zipIdDesigner,
-        client: zipIdClient,
-      } }));
+      res.send(JSON.stringify({
+        designer: zipLinkDesigner,
+        client: zipLinkClient,
+        googleId: {
+          designer: zipIdDesigner,
+          client: zipIdClient,
+        }
+      }));
 
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_zipPhoto): " + e.message).catch((e) => { console.log(e); });

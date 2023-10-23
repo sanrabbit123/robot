@@ -1204,9 +1204,9 @@ BillMaker.prototype.getBillsByQuery = async function (whereQuery, option = { sel
     }
 
     if (option.limit !== undefined) {
-      tong = await MONGOC.db(`miro81`).collection(`generalBill`).find(whereQuery).sort(sortQuery).limit(Number(option.limit)).toArray();
+      tong = await MONGOC.db(`admin`).collection(`generalBill`).find(whereQuery).sort(sortQuery).limit(Number(option.limit)).toArray();
     } else {
-      tong = await MONGOC.db(`miro81`).collection(`generalBill`).find(whereQuery).sort(sortQuery).toArray();
+      tong = await MONGOC.db(`admin`).collection(`generalBill`).find(whereQuery).sort(sortQuery).toArray();
     }
 
     if (!selfBoo) {
@@ -1404,14 +1404,7 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
 
       for (let { method, partial, amount, distance } of fee) {
 
-        temp = await this.getBillsByQuery({
-          $and: [
-            { "links.proid": project.proid },
-            { "links.cliid": client.cliid },
-            { "links.desid": desid },
-            { "links.method": method },
-          ]
-        }, { selfMongo: MONGOC });
+        temp = await this.getBillsByQuery({ "links.proid": project.proid, "links.desid": desid, "links.method": method }, { selfMongo: MONGOC });
         if (temp.length === 0) {
           bilid = await this.createBill({}, { selfMongo: MONGOC });
           updateMode = false;

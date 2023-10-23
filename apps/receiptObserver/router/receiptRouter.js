@@ -1848,6 +1848,7 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
     let thisProposal;
     let thisMethod;
     let thisFeeObject;
+    let billsDuplication;
 
     if (/홈리에종 계약금/gi.test(data.goodName.trim()) || /홈리에종 잔금/gi.test(data.goodName.trim())) {
       projectQuery = {};
@@ -1869,6 +1870,18 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
       }
 
       if (/계약금/gi.test(data.goodName.trim())) {
+
+        billsDuplication = await bill.getBillsByQuery({ "links.proid": proid, "links.desid": desid, "links.method": thisBill.links.method }, { selfMongo: instance.mongolocal });
+        if (billsDuplication.length > 1) {
+          for (let b of billsDuplication) {
+            if (b.bilid !== thisBill.bilid) {
+              if (typeof b.bilid === "string") {
+                await bill.deleteBill(b.bilid, { selfMongo: instance.mongolocal });
+              }
+            }
+          }
+        }
+
         projectQuery["process.contract.first.date"] = new Date();
         projectQuery["process.contract.first.calculation.amount"] = amount;
         projectQuery["process.contract.first.calculation.info.method"] = proofs.method;
