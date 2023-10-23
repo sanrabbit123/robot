@@ -87,6 +87,8 @@ KakaoTalk.prototype.setAuth = async function () {
       this.authObj.token = this.token.member;
     } else if (this.ipRegExp.home.test(data.trim())) {
       this.authObj.token = this.token.home;
+    } else if (this.ipRegExp.contents.test(data.trim())) {
+      this.authObj.token = this.token.contents;
     }
 
     return true;
