@@ -1478,6 +1478,51 @@ ContentsRouter.prototype.rou_post_storeContentsView = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_getContentsView = function () {
+  const instance = this;
+  const back = this.back;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/getContentsView" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const { mode } = equalJson(req.body);
+      const selfMongo = instance.mongolocal;
+      const collection = "contentsView";
+      let rows;
+      let data;
+      rows = await back.mongoPick(collection, [ {}, { key: 1, date: 1 } ], { selfMongo });
+      rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+
+      if (mode === "pick" || mode === "get") {
+        if (rows.length > 0) {
+          [ data ] = await back.mongoRead(collection, { key: rows[0].key }, { selfMongo });
+          res.send(JSON.stringify({ data, date: data.date }));
+        } else {
+          res.send(JSON.stringify({ data: null }));
+        }
+      } else {
+        throw new Error("invalid mode");
+      }
+
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_getContentsView): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 ContentsRouter.prototype.setMembers = async function () {

@@ -154,13 +154,10 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const targetFileName = "nmonTarget.nmon";
-    const targetNmon = `${process.cwd()}/temp/${targetFileName}`;
-    const device = new LocalDevices();
 
     
 
-    console.log(await device.parsingNmon(targetNmon));
+    
 
 
 
@@ -6887,9 +6884,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "이지연",
-    //     link: "https://drive.google.com/drive/folders/1wZ6Dsn3vxChA8aRyIIgZm-5TL1QHxWP2",
+    //     client: "오선아",
+    //     designer: "김윤진",
+    //     link: "https://drive.google.com/drive/folders/1HC-FAikKSOuynBqAB7xkipshKFqjTwVu",
     //     pay: true
     //   },
     // ]);
