@@ -4422,7 +4422,7 @@ StaticRouter.prototype.rou_post_printComplex = function () {
       }).then(() => {
         if (mode === "general") {
           // return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
-          return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+          // return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
         } else if (mode === "update") {
           if (naverId !== "") {
             logger.log("Static lounge 네이버 부동산 아이디 찾고 업데이트 성공함 : " + cliid + " / " + naverId).catch((err) => {
