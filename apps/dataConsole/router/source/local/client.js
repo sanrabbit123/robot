@@ -4814,6 +4814,8 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
     scrollBox.setAttribute("contract_number", String(totalSummary.contract));
     scrollBox.setAttribute("process_number", String(totalSummary.process));
   
+    /*
+
     // graph start
     await chartJsPatch();
 
@@ -5115,6 +5117,8 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
     });
     scrollBox.appendChild(graphDiv3);
 
+    */
+
     return scrollBox;
   } catch (e) {
     console.log(e);
@@ -5124,7 +5128,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
 
 ClientJs.prototype.reportContents = async function (data, mother, loadingIcon) {
   const instance = this;
-  const { zeroAddition, createNode, colorChip } = GeneralJs;
+  const { zeroAddition, createNode, colorChip, returnGet } = GeneralJs;
   const vaildValue = function (target) {
     const today = new Date();
     let valueArr0, valueArr1, valueArr2;
@@ -5175,10 +5179,12 @@ ClientJs.prototype.reportContents = async function (data, mother, loadingIcon) {
   let ea = "px";
   let motherWidth = Number(mother.style.width.replace((new RegExp(ea + '$')), ''));
   try {
+    const getObj = returnGet();
     const scrollBox = await this.reportScrollBox(data, motherWidth);
     const today = new Date();
     let todayString;
     let top, height, margin;
+    let totalBoxString;
   
     totalBox = {};
   
@@ -5259,9 +5265,16 @@ ClientJs.prototype.reportContents = async function (data, mother, loadingIcon) {
     div_clone.appendChild(input_clone);
   
     //total box
+
+    if (getObj.frommpr !== "true") {
+      totalBoxString = `문의 <b style="color:${colorChip.green}">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;추천 <b style="color:${colorChip.green}">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;열람 <b style="color:${colorChip.green}">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:${colorChip.green}">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:${colorChip.green}">${scrollBox.getAttribute("process_number")}</b>명` + "&nbsp;&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;&nbsp;" + "<b%분석 리포트%b>" + "&nbsp;&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;&nbsp;" + "<b%담당자 리포트%b>";
+    } else {
+      totalBoxString = `문의 <b style="color:${colorChip.green}">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;추천 <b style="color:${colorChip.green}">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;열람 <b style="color:${colorChip.green}">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:${colorChip.green}">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:${colorChip.green}">${scrollBox.getAttribute("process_number")}</b>명`;
+    }
+
     totalBox = createNode({
       mother: div_clone,
-      text: `문의 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;추천 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;열람 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("process_number")}</b>명` + "&nbsp;&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;&nbsp;" + "<b%분석 리포트%b>" + "&nbsp;&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;&nbsp;" + "<b%담당자 리포트%b>",
+      text: totalBoxString,
       event: {
         click: function (e) {
           let eventFunction;
@@ -7614,6 +7627,8 @@ ClientJs.prototype.launching = async function () {
         }
       }
     }
+
+
 
     // proposal view return event
     window.addEventListener('message', function (e) {

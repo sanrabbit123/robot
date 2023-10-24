@@ -1930,6 +1930,7 @@ ContentsJs.prototype.launching = async function () {
 
     this.member = this.mother.member;
     this.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus", { equal: true });
+    this.contentsView = await ajaxJson({ mode: "pick" }, CONTENTSHOST + "/getContentsView", { equal: true });
     this.contentsArr = new SearchArray(allContents.contentsArr);
     this.foreContents = new SearchArray(allContents.foreContents);
     this.clients = new SearchArray(allContents.clients);

@@ -671,6 +671,8 @@ FrontIndexJs.prototype.insertBlackBox = function () {
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const bannerClassName = "bannerClassName";
   let mainTong;
   let blockTong;
@@ -717,7 +719,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
     class: [ bannerClassName ],
     event: {
       click: (e) => {
-        selfHref(FRONTHOST + "/styleparts.php?mode=inner");
+        selfHref(FRONTHOST + "/consulting.php");
       }
     },
     style: {
@@ -733,7 +735,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
   createNode({
     mother: blockTong,
-    text: (desktop ? "홈리에종 X 아파트멘터리, 스타일파츠 프로젝트" : "홈리에종 X 아파트멘터리, 스타일파츠"),
+    text: (big ? "홈리에종에서 디자이너와 1:1 상담을 받아보세요!" : "디자이너와 1:1 상담을 받아보세요!"),
     style: {
       top: (isMac() || mobile) ? String(0) : String(3) + ea,
       fontSize: String(titleSize) + ea,
@@ -746,7 +748,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
   createNode({
     mother: blockTong,
-    text: "style parts",
+    text: "consulting",
     style: {
       top: (isMac() || mobile) ? String(0) : String(3) + ea,
       fontSize: String(subTitleSize) + ea,
@@ -761,11 +763,11 @@ FrontIndexJs.prototype.insertBlackBox = function () {
   createNode({
     mother: blockTong,
     class: [ "consultingButton" ],
-    // event: {
-    //   click: (e) => {
-    //     selfHref(FRONTHOST + "/miniAbout.php");
-    //   }
-    // },
+    event: {
+      click: (e) => {
+        selfHref(FRONTHOST + "/consulting.php");
+      }
+    },
     style: {
       display: "flex",
       position: "absolute",
@@ -783,7 +785,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
     },
     children: [
       {
-        text: "스타일 파츠",
+        text: "상담 신청하기",
         style: {
           position: "relative",
           display: "inline-block",
