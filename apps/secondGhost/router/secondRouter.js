@@ -1,4 +1,4 @@
-const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairyToken, telegram, kakao, human) {
+const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairyToken, slack_fairyId, telegram, kakao, human) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
@@ -22,6 +22,7 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
   this.slack_user = slack_user;
   this.slack_info = slack_info;
   this.slack_fairyToken = slack_fairyToken;
+  this.slack_fairyId = slack_fairyId;
 
   this.kakao = kakao;
   this.human = human;
@@ -3082,7 +3083,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
   const instance = this;
   const address = this.address;
   const { openAi } = this;
-  const { slack_info: { userDictionary, channelDictionary }, telegram } = this;
+  const { slack_info: { userDictionary, channelDictionary }, slack_fairyId, telegram } = this;
   const { messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/slackEvents" ];
@@ -3103,7 +3104,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
         if (thisBody.event.type === "message") {
 
           if (typeof thisBody.event.text === "string") {
-            if (/^요정[아]?/i.test(thisBody.event.text.trim())) {
+            if (/^요정[아]?/i.test(thisBody.event.text.trim()) || (new RegExp(slack_fairyId, "gi")).test(thisBody.event.text.trim())) {
               if (/온라인/gi.test(thisBody.event.text.trim()) || /실시간/gi.test(thisBody.event.text.trim()) || /현재/gi.test(thisBody.event.text.trim())) {
                 if (/웹/gi.test(thisBody.event.text.trim()) || /홈페이지/gi.test(thisBody.event.text.trim()) || /홈리에종/gi.test(thisBody.event.text.trim())) {
                   requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/realtimeMessage", { channel: thisBody.event.channel }, {
