@@ -3489,8 +3489,7 @@ ContentsJs.prototype.launching = async function () {
         await this.baseMaker();
       }
     } else {
-      await this.contentsBase();
-      // await this.baseMaker();
+      await this.baseMaker();
     }
 
     /*
