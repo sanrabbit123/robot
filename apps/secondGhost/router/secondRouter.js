@@ -3100,6 +3100,8 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       let text;
       let thisChannel;
     
+      console.log(thisBody);
+
       if (typeof thisBody.event === "object") {
         if (thisBody.event.type === "message") {
           if (typeof thisBody.event.text === "string") {
