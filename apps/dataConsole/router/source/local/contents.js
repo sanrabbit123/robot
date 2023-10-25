@@ -4185,6 +4185,138 @@ ContentsJs.prototype.contentsPannel = async function () {
   }
 }
 
+ContentsJs.prototype.contentsSearchEvent = async function () {
+  const instance = this;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName, totalMother } = this;
+  const { ajaxJson, setQueue, cleanChildren } = GeneralJs;
+  try {
+    this.searchInput.addEventListener("keypress", async function (e) {
+      try {
+        if (e.key === "Enter") {
+          if (instance.totalFather !== null) {
+            instance.totalFather.classList.remove("fadein");
+            instance.totalFather.classList.add("fadeout");
+            instance.totalMother.classList.remove("justfadeoutoriginal");
+            instance.totalMother.classList.add("justfadeinoriginal");
+            setQueue(() => {
+              instance.totalFather.remove();
+              instance.totalFather = null;
+            }, 501);
+          }
+          if (document.querySelector('.' + whiteBaseClassName) !== null) {
+            const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+            cancelBack.style.animation = "justfadeout 0.3s ease forwards";
+            if (w0 !== undefined) {
+              w0.style.animation = "fadedownlite 0.3s ease forwards";
+            }
+            if (w1 !== undefined) {
+              w1.style.animation = "fadedownlite 0.3s ease forwards";
+            }
+            setQueue(() => {
+              cancelBack.click();
+            }, 350);
+          }
+
+          const value = this.value.trim().replace(/\&\=\+\\\//gi, '');
+          let whereQuery, loading, coreWhereQuery, ago;
+          let allContents;
+          if (value === '') {
+
+            cleanChildren(totalMother);
+            loading = await instance.mother.loadingRun();
+            allContents = await ajaxJson({ mode: "all", init: true }, CONTENTSHOST + "/getAllContents", { equal: true });
+            instance.contentsCalendar = [];
+            instance.contentsArr = new SearchArray(allContents.contentsArr);
+            instance.foreContents = new SearchArray(allContents.foreContents);
+            instance.clients = new SearchArray(allContents.clients);
+            instance.projects = new SearchArray(allContents.projects);
+            instance.designers = new SearchArray(allContents.designers);
+            instance.belowAreaBetween = 0;
+            instance.controlPannelWidth = 0;
+            instance.scrollTong = null;
+            instance.belowScrollTong = null;
+            instance.belowMiddleScrollTong = null;
+            instance.belowRightScrollTong = null;
+            instance.contentsTong = [];
+            instance.designersTong = [];
+            instance.mode = "data";
+            await instance.coreContentsLoad(true);
+            loading.parentNode.removeChild(loading);
+
+          } else {
+
+            cleanChildren(totalMother);
+            loading = await instance.mother.loadingRun();
+            allContents = await ajaxJson({ mode: "search", value }, CONTENTSHOST + "/getAllContents", { equal: true });
+            instance.contentsCalendar = [];
+            instance.contentsArr = new SearchArray(allContents.contentsArr);
+            instance.foreContents = new SearchArray(allContents.foreContents);
+            instance.clients = new SearchArray(allContents.clients);
+            instance.projects = new SearchArray(allContents.projects);
+            instance.designers = new SearchArray(allContents.designers);
+            instance.belowAreaBetween = 0;
+            instance.controlPannelWidth = 0;
+            instance.scrollTong = null;
+            instance.belowScrollTong = null;
+            instance.belowMiddleScrollTong = null;
+            instance.belowRightScrollTong = null;
+            instance.contentsTong = [];
+            instance.designersTong = [];
+            instance.mode = "data";
+            await instance.coreContentsLoad(true);
+            loading.parentNode.removeChild(loading);
+            
+          }
+          
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ContentsJs.prototype.contentsWhiteResize = async function () {
+  const instance = this;
+  const { whiteCardClassName } = this;
+  try {
+    this.resizeStack = 0;
+    this.resizeFrom = 0;
+    this.resizePopup = 0;
+    const resizeDebounceEvent = function () {
+      let timeout;
+      const reEvent = function () {
+        if (Array.from(document.querySelectorAll('.' + whiteCardClassName)).length !== 0) {
+          window.location.reload();
+        }
+        instance.resizeStack = 0;
+      }
+      let immediate = null;
+      return function (e) {
+        if (instance.resizeStack === 0) {
+          instance.resizeStack = 1;
+          instance.resizeFrom = window.innerWidth;
+        }
+        let context = this;
+        let args = arguments;
+        function later() {
+          timeout = null;
+          if (!immediate) { reEvent.apply(context, args); };
+        }
+        let callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, 250);
+        if (callNow) { reEvent.apply(context, args); };
+      }
+    }
+    window.addEventListener("resize", resizeDebounceEvent());
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 ContentsJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, setQueue, returnGet } = GeneralJs;
@@ -4268,60 +4400,8 @@ ContentsJs.prototype.launching = async function () {
       await this.contentsBase();
     }
 
-    /*
-
-    window.addEventListener("resize", (e) => {
-      window.location.reload();
-    });
-    this.searchInput.addEventListener("keypress", async function (e) {
-      try {
-        let thisValue;
-        let targetDom;
-        if (e.key === "Enter") {
-          if (this.value.trim() === '') {
-            thisValue = this.value.trim();
-            instance.designersTong[0].click();
-          } else {
-            thisValue = this.value.trim();
-            targetDom = instance.designersTong.find((dom) => {
-              return ((new RegExp(thisValue, "gi")).test(dom.getAttribute("designer")) || (new RegExp(thisValue, "gi")).test(dom.getAttribute("desid")));
-            });
-            if (targetDom !== undefined) {
-              targetDom.click();
-            }
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    });
-    window.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-        if (document.querySelector('.' + instance.whitePopupClassName) !== null) {
-          if (Array.isArray(instance.conidTong)) {
-            let func, next;
-            if (e.key === "ArrowRight") {
-              next = instance.conidTong[instance.conidTong.findIndex((c) => { return c === document.querySelector('.' + instance.whitePopupClassName).getAttribute("conid") }) + 1];
-              if (next === undefined) {
-                next = instance.conidTong[0];
-              }
-            } else {
-              next = instance.conidTong[instance.conidTong.findIndex((c) => { return c === document.querySelector('.' + instance.whitePopupClassName).getAttribute("conid") }) - 1];
-              if (next === undefined) {
-                next = instance.conidTong[instance.conidTong.length - 1];
-              }
-            }
-            setQueue(() => {
-              func = instance.whitePopupEvent(next);
-              func.call(window, e);
-            });
-            instance.cancelEvent.call(window, e);
-          }
-        }
-      }
-    });
-
-    */
+    await this.contentsSearchEvent();
+    await this.contentsWhiteResize();
 
   } catch (e) {
     console.log(e);
