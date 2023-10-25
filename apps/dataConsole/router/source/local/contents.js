@@ -2129,52 +2129,64 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
         })),
       },
       {
+        title: "순서 지표 1",
+        width: 90,
+        name: "key9",
+        type: "number",
+      },
+      {
+        title: "순서 지표 2",
+        width: 90,
+        name: "key8",
+        type: "number",
+      },
+      {
         title: "조회수",
         width: 80,
         name: "view",
-        type: "string",
+        type: "number",
       },
       {
         title: "포트폴리오",
         width: 80,
         name: "portfolio",
-        type: "string",
+        type: "number",
       },
       {
         title: "고객 후기",
         width: 80,
         name: "review",
-        type: "string",
+        type: "number",
       },
       {
         title: "모바일",
         width: 80,
         name: "mobile",
-        type: "string",
+        type: "number",
       },
       {
         title: "데스크탑",
         width: 80,
         name: "desktop",
-        type: "string",
+        type: "number",
       },
       {
         title: "태블릿",
         width: 80,
         name: "tablet",
-        type: "string",
+        type: "number",
       },
       {
         title: "사진 개수",
         width: 80,
         name: "photoLength",
-        type: "string",
+        type: "number",
       },
       {
         title: "공간 개수",
         width: 80,
         name: "spaceLength",
-        type: "string",
+        type: "number",
       },
       {
         title: "지역",
@@ -2255,7 +2267,7 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
         },
         {
           value: thisClient === null ? "개인" : "홈리에종",
-          name: "status",
+          name: "type",
         },
         {
           value: thisProject === null ? "-" : dateToString(thisProject.contents.photo.date),
@@ -2284,6 +2296,14 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
         {
           value: thisProject === null ? "홈스타일링" : serviceParsing(thisProject.service).split(" ").slice(1, -1).join(" "),
           name: "service",
+        },
+        {
+          value: "-",
+          name: "key9",
+        },
+        {
+          value: "-",
+          name: "key8",
         },
         {
           value: "-",
@@ -2391,7 +2411,7 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
         },
         {
           value: thisClient === null ? "개인" : "홈리에종",
-          name: "status",
+          name: "type",
         },
         {
           value: thisProject === null ? "-" : dateToString(thisProject.contents.photo.date),
@@ -2420,6 +2440,14 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
         {
           value: thisProject === null ? "홈스타일링" : serviceParsing(thisProject.service).split(" ").slice(1, -1).join(" "),
           name: "service",
+        },
+        {
+          value: contents.contents.portfolio.detailInfo.sort.key9,
+          name: "key9",
+        },
+        {
+          value: contents.contents.portfolio.detailInfo.sort.key8,
+          name: "key8",
         },
         {
           value: thisView === null ? "-" : String(thisView.data.view.total),
@@ -4245,26 +4273,83 @@ ContentsJs.prototype.contentsSearchEvent = async function () {
 
           } else {
 
-            cleanChildren(totalMother);
-            loading = await instance.mother.loadingRun();
-            allContents = await ajaxJson({ mode: "search", value }, CONTENTSHOST + "/getAllContents", { equal: true });
-            instance.contentsCalendar = [];
-            instance.contentsArr = new SearchArray(allContents.contentsArr);
-            instance.foreContents = new SearchArray(allContents.foreContents);
-            instance.clients = new SearchArray(allContents.clients);
-            instance.projects = new SearchArray(allContents.projects);
-            instance.designers = new SearchArray(allContents.designers);
-            instance.belowAreaBetween = 0;
-            instance.controlPannelWidth = 0;
-            instance.scrollTong = null;
-            instance.belowScrollTong = null;
-            instance.belowMiddleScrollTong = null;
-            instance.belowRightScrollTong = null;
-            instance.contentsTong = [];
-            instance.designersTong = [];
-            instance.mode = "data";
-            await instance.coreContentsLoad(true);
-            loading.parentNode.removeChild(loading);
+            if (value === "예정") {
+
+              cleanChildren(totalMother);
+              loading = await instance.mother.loadingRun();
+              whereQuery = {
+                "contents.portfolio.date": { $gte: new Date() }
+              };
+
+              allContents = await ajaxJson({ mode: "all", whereQuery }, CONTENTSHOST + "/getAllContents", { equal: true });
+              instance.contentsArr = new SearchArray(allContents.contentsArr);
+              instance.foreContents = new SearchArray(allContents.foreContents);
+              instance.clients = new SearchArray(allContents.clients);
+              instance.projects = new SearchArray(allContents.projects);
+              instance.designers = new SearchArray(allContents.designers);
+
+              await instance.coreContentsLoad(true);
+              loading.parentNode.removeChild(loading);
+
+            } else if (value === "발행") {
+
+              cleanChildren(totalMother);
+              loading = await instance.mother.loadingRun();
+              whereQuery = {};
+              allContents = await ajaxJson({ mode: "all", nonFore: true, whereQuery }, CONTENTSHOST + "/getAllContents", { equal: true });
+              instance.contentsArr = new SearchArray(allContents.contentsArr);
+              instance.foreContents = new SearchArray(allContents.foreContents);
+              instance.clients = new SearchArray(allContents.clients);
+              instance.projects = new SearchArray(allContents.projects);
+              instance.designers = new SearchArray(allContents.designers);
+
+              await instance.coreContentsLoad(true);
+              loading.parentNode.removeChild(loading);
+
+            } else if (value === "홈리에종" || value === "개인") {
+
+              cleanChildren(totalMother);
+              loading = await instance.mother.loadingRun();
+              whereQuery = {};
+              allContents = await ajaxJson({ mode: "all", nonFore: true, whereQuery }, CONTENTSHOST + "/getAllContents", { equal: true });
+              if (value === "홈리에종") {
+                instance.contentsArr = new SearchArray(allContents.contentsArr.filter((c) => { return /^p/i.test(c.contents.portfolio.pid) }));
+                instance.foreContents = new SearchArray([]);
+              } else {
+                instance.contentsArr = new SearchArray(allContents.contentsArr.filter((c) => { return /^a/i.test(c.contents.portfolio.pid) }));
+                instance.foreContents = new SearchArray([]);
+              }
+              instance.clients = new SearchArray(allContents.clients);
+              instance.projects = new SearchArray(allContents.projects);
+              instance.designers = new SearchArray(allContents.designers);
+
+              await instance.coreContentsLoad(true);
+              loading.parentNode.removeChild(loading);
+
+            } else {
+
+              cleanChildren(totalMother);
+              loading = await instance.mother.loadingRun();
+              allContents = await ajaxJson({ mode: "search", value }, CONTENTSHOST + "/getAllContents", { equal: true });
+              instance.contentsCalendar = [];
+              instance.contentsArr = new SearchArray(allContents.contentsArr);
+              instance.foreContents = new SearchArray(allContents.foreContents);
+              instance.clients = new SearchArray(allContents.clients);
+              instance.projects = new SearchArray(allContents.projects);
+              instance.designers = new SearchArray(allContents.designers);
+              instance.belowAreaBetween = 0;
+              instance.controlPannelWidth = 0;
+              instance.scrollTong = null;
+              instance.belowScrollTong = null;
+              instance.belowMiddleScrollTong = null;
+              instance.belowRightScrollTong = null;
+              instance.contentsTong = [];
+              instance.designersTong = [];
+              instance.mode = "data";
+              await instance.coreContentsLoad(true);
+              loading.parentNode.removeChild(loading);
+
+            }
             
           }
           
@@ -4312,6 +4397,98 @@ ContentsJs.prototype.contentsWhiteResize = async function () {
       }
     }
     window.addEventListener("resize", resizeDebounceEvent());
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ContentsJs.prototype.contentsExtractEvent = async function () {
+  const instance = this;
+  const { asyncProcessText } = this;
+  const { ajaxJson, blankHref, returnGet, equalJson, dateToString } = GeneralJs;
+  try {
+    const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
+
+    this.mother.belowButtons.sub.extractIcon.addEventListener("click", async function (e) {
+      try {
+        const today = new Date();
+        const getObj = returnGet();
+        let thisObject;
+        let matrix;
+        let tempArr;
+        let data;
+        let thisForeContents;
+  
+        data = await instance.mainDataRender(false);
+        matrix = [];
+        tempArr = [
+          "아이디",
+        ];
+        for (let obj of data.columns) {
+          tempArr.push(obj.title);
+        }
+        matrix.push(tempArr);
+        
+        instance.mother.greenAlert("시트 추출이 완료되면 자동으로 열립니다!");
+
+        ajaxJson({ mode: "get" }, CONTENTSHOST + "/contentsCalendar", { equal: true }).then((contentsCalendar) => {
+          let thisCalendar, thisValueDoms;
+          let thisTarget;
+          instance.contentsCalendar = contentsCalendar;
+
+          for (let pid in data.values) {
+            tempArr = [];
+            tempArr.push(pid);
+            thisForeContents = instance.foreContents.find((o) => { return o.pid === pid });
+            if (thisForeContents === undefined) {
+              for (let obj of data.columns) {
+                thisObject = data.values[pid].find((o) => { return o.name === obj.name });
+                tempArr.push(thisObject.value);
+              }
+              matrix.push(tempArr);
+            } else {
+              thisCalendar = instance.contentsCalendar.find((o) => { return o.pid === thisForeContents.pid });
+              if (thisCalendar === undefined) {
+                for (let obj of data.columns) {
+                  thisObject = data.values[pid].find((o) => { return o.name === obj.name });
+                  if (thisObject.value === asyncProcessText) {
+                    tempArr.push("-");
+                  } else {
+                    tempArr.push(thisObject.value);
+                  }
+                }
+                matrix.push(tempArr);
+              } else {
+                for (let obj of data.columns) {
+                  thisObject = data.values[pid].find((o) => { return o.name === obj.name });
+                  if (thisObject.value === asyncProcessText) {
+                    tempArr.push(dateToString(thisCalendar.date.start));
+                  } else {
+                    tempArr.push(thisObject.value);
+                  }
+                }
+                matrix.push(tempArr);
+              }
+            }
+          }
+
+          return ajaxJson({
+            values: matrix,
+            newMake: true,
+            parentId: parentId,
+            sheetName: "fromDB_hlContents_" + String(today.getFullYear()) + instance.mother.todayMaker()
+          }, BACKHOST + "/sendSheets", { equal: true });
+
+        }).then((result) => {
+          blankHref(result.link);
+        }).catch((err) => {
+          console.log(err);
+        });
+
+      } catch (e) {
+        console.log(e);
+      }
+    });
   } catch (e) {
     console.log(e);
   }
@@ -4401,6 +4578,7 @@ ContentsJs.prototype.launching = async function () {
     }
 
     await this.contentsSearchEvent();
+    await this.contentsExtractEvent();
     await this.contentsWhiteResize();
 
   } catch (e) {
