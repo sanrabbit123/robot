@@ -364,6 +364,8 @@ ContentsJs.prototype.baseMaker = async function () {
     await this.spreadEtcContents();
     await this.spreadDesigners();
     
+    await this.contentsPannel();
+    
   } catch (e) {
     console.log(e);
   }
@@ -2465,10 +2467,14 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
           if (thisCalendar === undefined) {
             thisCalendar = null;
           }
-          thisValueDoms = [ ...document.querySelector('.' + fore.pid).querySelectorAll('.' + valueTargetClassName) ];
-          thisTarget = findByAttribute(thisValueDoms, "name", "forecast");
-          thisTarget.textContent = thisCalendar === null ? "-" : dateToString(thisCalendar.date.start);
-          thisTarget.style.color = colorChip.black;
+          if (document.querySelector('.' + fore.pid) !== null) {
+            thisValueDoms = [ ...document.querySelector('.' + fore.pid).querySelectorAll('.' + valueTargetClassName) ];
+            thisTarget = findByAttribute(thisValueDoms, "name", "forecast");
+            if (thisTarget !== null) {
+              thisTarget.textContent = thisCalendar === null ? "-" : dateToString(thisCalendar.date.start);
+              thisTarget.style.color = colorChip.black;
+            }
+          }
         }
         return instance.coreColorSync();
       }).catch((err) => { console.log(err); });
@@ -3437,6 +3443,196 @@ ContentsJs.prototype.contentsBase = async function () {
   }
 }
 
+ContentsJs.prototype.etcWhiteCard = function () {
+  const instance = this;
+  const { ea, totalContents, grayBarWidth, belowHeight } = this;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, hasQuery, removeQuery, appendQuery } = GeneralJs;
+  return async function (e) {
+    try {
+      const zIndex = 4;
+      const blank = "&nbsp;/&nbsp;";
+      let cancelBack, whitePrompt;
+      let titleWhite;
+      let margin;
+      let titleHeight;
+      let innerMargin;
+      let overlap;
+      let titleTextTop, titleSize;
+      let titleWeight;
+      let fontTextTop, fontSize, fontBetween, fontWeight;
+      let etcWhiteMaker;
+      let innerMarginTop;
+      let basePaddingTop;
+      let today;
+      let loading;
+
+      margin = 30;
+      titleHeight = 50;
+      innerMargin = 24;
+      innerMarginTop = 20;
+      overlap = 12;
+      basePaddingTop = 12;
+
+      titleTextTop = isMac() ? 2 : 5;
+      titleSize = 21;
+      titleWeight = 800;
+
+      fontTextTop = isMac() ? 1 : 3;
+      fontSize = 14;
+      fontBetween = 8;
+      fontWeight = 400;
+
+      loadingWidth = 48;
+
+      etcWhiteMaker = (reload = false) => {
+
+        if (!reload) {
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ "justfadein", whiteCardClassName ],
+            event: (e) => { removeByClass(whiteCardClassName) },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0) + ea,
+              width: withOut(0, ea),
+              height: withOut(belowHeight, ea),
+              background: colorChip.black,
+            }
+          });
+        } 
+
+        whitePrompt = createNode({
+          mother: totalContents,
+          class: [ whiteCardClassName, whiteBaseClassName ],
+          style: {
+            position: "fixed",
+            top: String(0 + margin + titleHeight) + ea,
+            left: String(margin) + ea,
+            width: withOut((margin * 2) + (innerMargin * 2), ea),
+            height: withOut(0 + (margin * 2) + titleHeight + belowHeight + (innerMargin + basePaddingTop), ea),
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderBottomLeftRadius: String(5) + "px",
+            borderBottomRightRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+            overflow: "hidden",
+            padding: String(innerMargin) + ea,
+            paddingTop: String(basePaddingTop) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                overflow: "scroll",
+                border: "1px solid " + colorChip.gray3,
+                borderRadius: String(5) + "px",
+                boxSizing: "border-box",
+              },
+              child: {
+                mode: "iframe",
+                attribute: {
+                  src: "/file?mode=" + "etc" + "&dataonly=true&entire=true",
+                },
+                style: {
+                  position: "absolute",
+                  display: "block",
+                  top: String(0),
+                  left: String(0),
+                  width: withOut(0, ea),
+                  height: withOut(0, ea),
+                  border: String(0),
+                }
+              }
+            }
+          ]
+        });
+  
+        titleWhite = createNode({
+          mother: totalContents,
+          class: [ whiteCardClassName ],
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            position: "fixed",
+            top: String(0 + margin) + ea,
+            left: String(margin) + ea,
+            width: withOut((margin * 2), ea),
+            height: String(titleHeight) + ea,
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderTopLeftRadius: String(5) + "px",
+            borderTopRightRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            overflow: "hidden",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "end",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "row",
+              alignItems: "end",
+              justifyContent: "start",
+              width: withOut(innerMargin * 2, ea),
+            },
+            children: [
+              {
+                text: "기타 소스",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(titleTextTop) + ea,
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(titleWeight),
+                  color: colorChip.black,
+                  cursor: "pointer",
+                }
+              },
+            ]
+          }
+        });
+        
+      }
+
+      instance.etcWhiteMaker = etcWhiteMaker;
+
+      if (document.querySelector('.' + whiteCardClassName) === null) {
+        etcWhiteMaker(false);
+      } else {
+        const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+        if (w0 !== undefined) {
+          w0.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        if (w1 !== undefined) {
+          w1.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        setQueue(() => {
+          if (w0 !== undefined) {
+            w0.remove();
+          }
+          if (w1 !== undefined) {
+            w1.remove();
+          }
+          setQueue(() => {
+            etcWhiteMaker(true);
+          })
+        }, 350);
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 ContentsJs.prototype.contentsPannel = async function () {
   const instance = this;
   const { ea, totalContents, belowHeight, totalMother } = this;
@@ -3467,13 +3663,15 @@ ContentsJs.prototype.contentsPannel = async function () {
     menuWeight = 700;
 
     pannelMenu = [
-      {
+      (instance.mode === "data" ? {
         title: "기간 설정",
         event: () => {
           return async function (e) {
             try {
               let startDate, endDate;
               let loading;
+              let whereQuery;
+              let allContents;
 
               startDate = await GeneralJs.promptDate("기간의 시작일을 알려주세요!");
               if (startDate !== null) {
@@ -3481,11 +3679,18 @@ ContentsJs.prototype.contentsPannel = async function () {
                 if (endDate !== null) {
                   cleanChildren(totalMother);
                   loading = await instance.mother.loadingRun();
-                  instance.clients = await ajaxJson({
-                    mode: "get",
-                    startDate,
-                    endDate,
-                  }, CONTENTSHOST + "/clientAnalytics", { equal: true });
+                  endDate.setDate(endDate.getDate() + 1);
+                  whereQuery = {
+                    "contents.portfolio.date": { $gte: startDate, $lt: endDate }
+                  };
+
+                  allContents = await ajaxJson({ mode: "all", nonFore: true, whereQuery }, CONTENTSHOST + "/getAllContents", { equal: true });
+                  instance.contentsArr = new SearchArray(allContents.contentsArr);
+                  instance.foreContents = new SearchArray(allContents.foreContents);
+                  instance.clients = new SearchArray(allContents.clients);
+                  instance.projects = new SearchArray(allContents.projects);
+                  instance.designers = new SearchArray(allContents.designers);
+
                   await instance.coreContentsLoad(true);
                   loading.parentNode.removeChild(loading);
                 }
@@ -3498,23 +3703,62 @@ ContentsJs.prototype.contentsPannel = async function () {
             }
           }
         },
-      },
-      {
-        title: "계약자만 보기",
+      } : null),
+      (instance.mode === "data" ? {
+        title: "발행 예정만",
         event: () => {
           return async function (e) {
             try {
               const thisTitle = this.querySelector('.' + titleStringClassName).textContent;
-              const thisValue = /계약자/gi.test(thisTitle) ? "진행" : "$all";
+              const thisValue = /예정만/gi.test(thisTitle) ? "예정" : "$all";
               const name = "status";
               const index = 0;
               let filterFunc;
+              let loading;
+              let whereQuery;
+              let allContents;
               filterFunc = instance.menuEventTong.filterEvent(thisValue, name, index);
               await filterFunc(e);
-              if (/계약자/gi.test(thisTitle)) {
-                this.querySelector('.' + titleStringClassName).textContent = "전체 보기";
+              if (/예정만/gi.test(thisTitle)) {
+
+                if (instance.foreContents.length === 0) {
+
+                  cleanChildren(totalMother);
+                  loading = await instance.mother.loadingRun();
+                  whereQuery = {
+                    "contents.portfolio.date": { $gte: new Date() }
+                  };
+
+                  allContents = await ajaxJson({ mode: "all", whereQuery }, CONTENTSHOST + "/getAllContents", { equal: true });
+                  instance.contentsArr = new SearchArray(allContents.contentsArr);
+                  instance.foreContents = new SearchArray(allContents.foreContents);
+                  instance.clients = new SearchArray(allContents.clients);
+                  instance.projects = new SearchArray(allContents.projects);
+                  instance.designers = new SearchArray(allContents.designers);
+
+                  await instance.coreContentsLoad(true);
+                  loading.parentNode.removeChild(loading);
+
+                } else {
+                  this.querySelector('.' + titleStringClassName).textContent = "전체 컨텐츠";
+                }
+
               } else {
-                this.querySelector('.' + titleStringClassName).textContent = "계약자만 보기";
+
+                cleanChildren(totalMother);
+                loading = await instance.mother.loadingRun();
+                whereQuery = {};
+                allContents = await ajaxJson({ mode: "all", nonFore: true, whereQuery }, CONTENTSHOST + "/getAllContents", { equal: true });
+                instance.contentsArr = new SearchArray(allContents.contentsArr);
+                instance.foreContents = new SearchArray(allContents.foreContents);
+                instance.clients = new SearchArray(allContents.clients);
+                instance.projects = new SearchArray(allContents.projects);
+                instance.designers = new SearchArray(allContents.designers);
+
+                await instance.coreContentsLoad(true);
+                loading.parentNode.removeChild(loading);
+
+                this.querySelector('.' + titleStringClassName).textContent = "발행 예정만";
               }
             } catch (e) {
               console.log(e);
@@ -3523,29 +3767,86 @@ ContentsJs.prototype.contentsPannel = async function () {
             }
           }
         },
-      },
+      } : null),
       {
-        title: "소스 보기",
-        event: () => {
+        title: instance.mode === "data" ? "소스 보기" : "데이터 보기",
+        event: instance.mode === "data" ? (() => {
           return async function (e) {
             try {
-              const adsFunc = instance.adsWhiteCard();
-              await adsFunc(e);
+              let loading, allContents;
+
+              document.querySelector('.' + "totalMother").remove();
+
+              loading = await instance.mother.loadingRun();
+              allContents = await ajaxJson({ mode: "all" }, CONTENTSHOST + "/getAllContents", { equal: true });
+              instance.contentsCalendar = [];
+              instance.contentsArr = new SearchArray(allContents.contentsArr);
+              instance.foreContents = new SearchArray(allContents.foreContents);
+              instance.clients = new SearchArray(allContents.clients);
+              instance.projects = new SearchArray(allContents.projects);
+              instance.designers = new SearchArray(allContents.designers);
+              instance.belowAreaBetween = 0;
+              instance.controlPannelWidth = 0;
+              instance.scrollTong = null;
+              instance.belowScrollTong = null;
+              instance.belowMiddleScrollTong = null;
+              instance.belowRightScrollTong = null;
+              instance.contentsTong = [];
+              instance.designersTong = [];
+              loading.parentElement.removeChild(loading);
+
+              instance.mode = "source";
+              await instance.baseMaker();
+
             } catch (e) {
               console.log(e);
               window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
               window.location.reload();
             }
           }
-        },
+        }) : (() => {
+          return async function (e) {
+            try {
+              let loading, allContents;
+
+              document.querySelector('.' + "totalMother").remove();
+
+              loading = await instance.mother.loadingRun();
+              allContents = await ajaxJson({ mode: "all", init: true }, CONTENTSHOST + "/getAllContents", { equal: true });
+              instance.contentsCalendar = [];
+              instance.contentsArr = new SearchArray(allContents.contentsArr);
+              instance.foreContents = new SearchArray(allContents.foreContents);
+              instance.clients = new SearchArray(allContents.clients);
+              instance.projects = new SearchArray(allContents.projects);
+              instance.designers = new SearchArray(allContents.designers);
+              instance.belowAreaBetween = 0;
+              instance.controlPannelWidth = 0;
+              instance.scrollTong = null;
+              instance.belowScrollTong = null;
+              instance.belowMiddleScrollTong = null;
+              instance.belowRightScrollTong = null;
+              instance.contentsTong = [];
+              instance.designersTong = [];
+              loading.parentElement.removeChild(loading);
+
+              instance.mode = "data";
+              await instance.contentsBase();
+
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        }),
       },
       {
         title: "기타 소스",
         event: () => {
           return async function (e) {
             try {
-              const adsFunc = instance.adsWhiteCard();
-              await adsFunc(e);
+              const etcFunc = instance.etcWhiteCard();
+              await etcFunc(e);
             } catch (e) {
               console.log(e);
               window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
@@ -3554,7 +3855,7 @@ ContentsJs.prototype.contentsPannel = async function () {
           }
         },
       },
-    ];
+    ].filter((o) => { return o !== null })
 
     pannelBase = createNode({
       mother: totalMother,
@@ -3644,23 +3945,14 @@ ContentsJs.prototype.launching = async function () {
     }
 
     document.getElementById("grayLeftOpenButton").remove();
+    this.member = this.mother.member;
 
     loading = await this.mother.loadingRun();
 
-    allContents = await ajaxJson({ mode: "all", init: true }, CONTENTSHOST + "/getAllContents", { equal: true });
-
-    this.member = this.mother.member;
-    // this.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus", { equal: true });
     this.contentsView = await ajaxJson({ mode: "pick" }, CONTENTSHOST + "/getContentsView", { equal: true });
-    this.contentsCalendar = [];
-    this.contentsArr = new SearchArray(allContents.contentsArr);
-    this.foreContents = new SearchArray(allContents.foreContents);
-    this.clients = new SearchArray(allContents.clients);
-    this.projects = new SearchArray(allContents.projects);
-    this.designers = new SearchArray(allContents.designers);
+
     this.whitePopupClassName = "whitePopupClassName";
     this.whiteIframeClassName = "whiteIframeClassName";
-
     this.valueTargetClassName = "valueTargetClassName";
     this.valueCaseClassName = "valueCaseClassName";
     this.standardCaseClassName = "standardCaseClassName";
@@ -3672,6 +3964,21 @@ ContentsJs.prototype.launching = async function () {
     this.processDetailEventClassName = "processDetailEventClassName";
     this.asyncProcessText = "로드중..";
 
+    this.entireMode = entireMode;
+
+    if (getObj.mode === "source") {
+      allContents = await ajaxJson({ mode: "all" }, CONTENTSHOST + "/getAllContents", { equal: true });
+    } else {
+      allContents = await ajaxJson({ mode: "all", init: true }, CONTENTSHOST + "/getAllContents", { equal: true });
+    }
+
+    this.contentsCalendar = [];
+    this.contentsArr = new SearchArray(allContents.contentsArr);
+    this.foreContents = new SearchArray(allContents.foreContents);
+    this.clients = new SearchArray(allContents.clients);
+    this.projects = new SearchArray(allContents.projects);
+    this.designers = new SearchArray(allContents.designers);
+
     this.belowAreaBetween = 0;
     this.controlPannelWidth = 0;
     this.scrollTong = null;
@@ -3682,18 +3989,22 @@ ContentsJs.prototype.launching = async function () {
     this.contentsTong = [];
     this.designersTong = [];
 
-    this.entireMode = entireMode;
-
     loading.parentElement.removeChild(loading);
 
     if (typeof getObj.mode === "string") {
       if (getObj.mode === "data") {
+        this.mode = "data";
         await this.contentsBase();
-      } else {
+      } else if (getObj.mode === "source") {
+        this.mode = "source";
         await this.baseMaker();
+      } else {
+        this.mode = "data";
+        await this.contentsBase();
       }
     } else {
-      await this.baseMaker();
+      this.mode = "data";
+      await this.contentsBase();
     }
 
     /*

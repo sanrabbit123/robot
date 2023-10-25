@@ -3937,6 +3937,8 @@ FileJs.prototype.launching = async function () {
         }
       } else if (getObj.mode === "photo") {
         startPoint = rootToken + "/drive/HomeLiaisonServer/사진_등록_포트폴리오";
+      } else if (getObj.mode === "etc") {
+        startPoint = rootToken + "/drive/HomeLiaisonServer/사진_인물";
       } else if (getObj.mode === "project") {
         startPoint = rootToken + "/drive/HomeLiaisonServer/디자이너/partnership";
       } else if (getObj.mode === "aspirant") {

@@ -1043,7 +1043,7 @@ ContentsRouter.prototype.rou_post_getAllContents = function () {
       const selfMongo = instance.mongo;
       const selfLocalMongo = instance.mongolocal;
       const collection = "foreContents";
-      const delta = 12;
+      const delta = 24;
       let contentsArr, projects, clients, designers;
       let whereQuery0, whereQuery1;
       let resultObj;
