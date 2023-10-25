@@ -3386,12 +3386,17 @@ ContentsJs.prototype.launching = async function () {
     this.contentsTong = [];
     this.designersTong = [];
 
-    console.log(this.contentsCalendar);
-
     loading.parentElement.removeChild(loading);
 
-    // await this.baseMaker();
-    await this.contentsBase();
+    if (typeof getObj.mode === "string") {
+      if (getObj.mode === "data") {
+        await this.contentsBase();
+      } else {
+        await this.baseMaker();
+      }
+    } else {
+      await this.baseMaker();
+    }
     
     /*
 
