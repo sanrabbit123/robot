@@ -175,7 +175,7 @@ OpenAiAPIs.prototype.fairyGPT = function (fromId, input) {
   });
 }
 
-OpenAiAPIs.prototype.slackGPT = function (channel, input) {
+OpenAiAPIs.prototype.slackGPT = function (channel, input, user = null) {
   const instance = this;
   const address = this.address;
   const { requestSystem } = this.mother;
@@ -185,7 +185,7 @@ OpenAiAPIs.prototype.slackGPT = function (channel, input) {
     instance.chatGPT(input.trim() === "" ? "안녕?" : input.trim()).then((result) => {
       return requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
         channel: channel,
-        text: result,
+        text: (user !== null ? "<@" + user + "> " : "") + result,
       }, {
         headers: {
           "Content-Type": "application/json"

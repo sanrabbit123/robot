@@ -3099,12 +3099,9 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       const members = instance.members;
       let text;
       let thisChannel;
-      
-      console.log(thisBody);
-
+    
       if (typeof thisBody.event === "object") {
         if (thisBody.event.type === "message") {
-
           if (typeof thisBody.event.text === "string") {
             if (/^요정[아]?/i.test(thisBody.event.text.trim()) || (new RegExp(slack_fairyId, "gi")).test(thisBody.event.text.trim())) {
               if (/온라인/gi.test(thisBody.event.text.trim()) || /실시간/gi.test(thisBody.event.text.trim()) || /현재/gi.test(thisBody.event.text.trim())) {
@@ -3120,7 +3117,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                   });
                 }
               } else {
-                openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, "")).catch((err) => {
+                openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisBody.event.user).catch((err) => {
                   console.log(err);
                 });
               }
