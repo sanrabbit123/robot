@@ -5457,10 +5457,10 @@ DesignerJs.prototype.aspirantBase = async function () {
             mother: valueArea,
             attribute: { aspid: aspirant.aspid, lastfilter: "none" },
             class: [ moveTargetClassName, valueCaseClassName, aspirant.aspid ],
-            event: {
-              mouseenter: hoverEvent(),
-              mouseleave: hoverOutEvent(),
-            },
+            // event: {
+            //   mouseenter: hoverEvent(),
+            //   mouseleave: hoverOutEvent(),
+            // },
             style: {
               display: "flex",
               position: "relative",

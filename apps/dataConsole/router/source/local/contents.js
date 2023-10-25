@@ -1303,31 +1303,31 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
         pid,
         conid,
       },
-      event: {
-        click: async function (e) {
-          try {
-            const pid = this.getAttribute("pid");
-            const conid = this.getAttribute("conid");
-            let whereQuery, updateQuery;
+      // event: {
+      //   click: async function (e) {
+      //     try {
+      //       const pid = this.getAttribute("pid");
+      //       const conid = this.getAttribute("conid");
+      //       let whereQuery, updateQuery;
             
-            whereQuery = { conid };
-            updateQuery = {};
-            updateQuery.conid = conid;
-            updateQuery.pid = pid;
-            updateQuery.complete = true;
-            updateQuery.date = new Date();
+      //       whereQuery = { conid };
+      //       updateQuery = {};
+      //       updateQuery.conid = conid;
+      //       updateQuery.pid = pid;
+      //       updateQuery.complete = true;
+      //       updateQuery.date = new Date();
 
-            await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/updateContentsStatus");
-            instance.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus", { equal: true });
+      //       await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/updateContentsStatus");
+      //       instance.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus", { equal: true });
 
-            fireEvent(cancelBack, "click");
-            await instance.spreadContents(null);
+      //       fireEvent(cancelBack, "click");
+      //       await instance.spreadContents(null);
 
-          } catch (e) {
-            console.log(e);
-          }
-        }
-      },
+      //     } catch (e) {
+      //       console.log(e);
+      //     }
+      //   }
+      // },
       style: {
         top: String(8) + ea,
         right: String(0),
@@ -1891,9 +1891,9 @@ ContentsJs.prototype.whiteIframeEvent = function (pid) {
   }
 }
 
-ContentsJs.prototype.mainDataRender = async function (matrixMode = false) {
+ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
   const instance = this;
-  const { ea, totalContents, asyncProcessText } = this;
+  const { ea, totalContents, asyncProcessText, valueTargetClassName } = this;
   const { createNode, colorChip, withOut, dateToString, ajaxJson, autoComma, findByAttribute, serviceParsing, blankHref } = GeneralJs;
   try {
     let columns;
@@ -2199,11 +2199,6 @@ ContentsJs.prototype.mainDataRender = async function (matrixMode = false) {
         thisClient = instance.clients.search("cliid", thisProject.cliid);
       }
 
-      thisCalendar = instance.contentsCalendar.find((o) => { return o.pid === fore.pid });
-      if (thisCalendar === undefined) {
-        thisCalendar = null;
-      }
-
       standards.values[fore.pid] = [
         {
           value: "-",
@@ -2229,7 +2224,7 @@ ContentsJs.prototype.mainDataRender = async function (matrixMode = false) {
           name: "photo",
         },
         {
-          value: thisCalendar === null ? "-" : dateToString(thisCalendar.date.start),
+          value: asyncProcessText,
           name: "forecast",
         },
         {
@@ -2434,6 +2429,25 @@ ContentsJs.prototype.mainDataRender = async function (matrixMode = false) {
 
     }
 
+    if (firstLoad) {
+      ajaxJson({ mode: "get" }, CONTENTSHOST + "/contentsCalendar", { equal: true }).then((contentsCalendar) => {
+        let thisCalendar, thisValueDoms;
+        let thisTarget;
+        instance.contentsCalendar = contentsCalendar;
+        for (let fore of instance.foreContents) {
+          thisCalendar = instance.contentsCalendar.find((o) => { return o.pid === fore.pid });
+          if (thisCalendar === undefined) {
+            thisCalendar = null;
+          }
+          thisValueDoms = [ ...document.querySelector('.' + fore.pid).querySelectorAll('.' + valueTargetClassName) ];
+          thisTarget = findByAttribute(thisValueDoms, "name", "forecast");
+          thisTarget.textContent = thisCalendar === null ? "-" : dateToString(thisCalendar.date.start);
+          thisTarget.style.color = colorChip.black;
+        }
+        return instance.coreColorSync();
+      }).catch((err) => { console.log(err); });
+    }
+
     return { standards, columns, values };
 
   } catch (e) {
@@ -2453,7 +2467,7 @@ ContentsJs.prototype.coreColorSync = async function () {
     let thisColor;
     let thisTargets;
 
-    ({ columns } = await this.mainDataRender());
+    ({ columns } = await this.mainDataRender(false));
 
     colorStandard = columns.find((obj) => { return obj.colorStandard === true });
 
@@ -2548,7 +2562,7 @@ ContentsJs.prototype.contentsBase = async function () {
     circleRight = 2.5;
     circleTop = isMac() ? 3 : 1;
 
-    ({ standards, columns, values } = await this.mainDataRender());
+    ({ standards, columns, values } = await this.mainDataRender(true));
   
     hoverEvent = () => {
       return function (e) {
@@ -2982,7 +2996,7 @@ ContentsJs.prototype.contentsBase = async function () {
       try {
 
         if (reload) {
-          ({ standards, columns, values } = await instance.mainDataRender());
+          ({ standards, columns, values } = await instance.mainDataRender(true));
         }
 
         cleanChildren(totalMother);
@@ -3448,9 +3462,10 @@ ContentsJs.prototype.launching = async function () {
     const allContents = await ajaxJson({ mode: "all" }, CONTENTSHOST + "/getAllContents", { equal: true });
 
     this.member = this.mother.member;
-    this.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus", { equal: true });
+    // this.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus", { equal: true });
     this.contentsView = await ajaxJson({ mode: "pick" }, CONTENTSHOST + "/getContentsView", { equal: true });
-    this.contentsCalendar = await ajaxJson({ mode: "get" }, CONTENTSHOST + "/contentsCalendar", { equal: true });
+    // this.contentsCalendar = await ajaxJson({ mode: "get" }, CONTENTSHOST + "/contentsCalendar", { equal: true });
+    this.contentsCalendar = [];
     this.contentsArr = new SearchArray(allContents.contentsArr);
     this.foreContents = new SearchArray(allContents.foreContents);
     this.clients = new SearchArray(allContents.clients);
