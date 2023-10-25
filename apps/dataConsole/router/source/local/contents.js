@@ -2213,6 +2213,8 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
 
     for (let fore of instance.foreContents) {
 
+      fore.title = "";
+
       thisDesigner = null;
       thisClient = null;
       thisProject = null;
@@ -2220,11 +2222,19 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
       if (fore.proid !== "") {
         thisProject = instance.projects.search("proid", fore.proid);
       }
-      if (thisProject.desid !== "") {
-        thisDesigner = instance.designers.search("desid", thisProject.desid);
-      }
       if (thisProject.cliid !== "") {
         thisClient = instance.clients.search("cliid", thisProject.cliid);
+        fore.title += thisClient.name + " C";
+        fore.cliid = thisClient.cliid;
+      } else {
+        fore.title += "개인";
+        fore.cliid = "";
+      }
+      fore.title += " ";
+      if (thisProject.desid !== "") {
+        thisDesigner = instance.designers.search("desid", thisProject.desid);
+        fore.title += thisDesigner.designer + " D";
+        fore.desid = thisDesigner.desid;
       }
 
       standards.values[fore.pid] = [
@@ -2333,14 +2343,24 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
 
     for (let contents of instance.contentsArr) {
 
+      contents.title = "";
+
       thisDesigner = null;
       thisClient = null;
       thisProject = null;
-      if (contents.desid !== "") {
-        thisDesigner = instance.designers.search("desid", contents.desid);
-      }
       if (contents.cliid !== "") {
         thisClient = instance.clients.search("cliid", contents.cliid);
+        contents.title += thisClient.name + " C";
+        contents.cliid = thisClient.cliid;
+      } else {
+        contents.title += "개인";
+        contents.cliid = "";
+      }
+      contents.title += " ";
+      if (contents.desid !== "") {
+        thisDesigner = instance.designers.search("desid", contents.desid);
+        contents.title += thisDesigner.designer + " D";
+        contents.desid = thisDesigner.desid;
       }
       if (contents.proid !== "") {
         thisProject = instance.projects.search("proid", contents.proid);
@@ -3203,9 +3223,9 @@ ContentsJs.prototype.contentsBase = async function () {
           createNode({
             mother: idNameArea,
             attribute: { pid: contents.contents.portfolio.pid, lastfilter: "none" },
-            // event: {
-            //   click: instance.clientWhiteCard(client.cliid, requestNumber),
-            // },
+            event: {
+              click: instance.pidWhiteCard(contents.contents.portfolio.pid, contents.title, contents.cliid, contents.desid, "contents"),
+            },
             class: [ standardCaseClassName ],
             style: {
               display: "flex",
@@ -3317,9 +3337,9 @@ ContentsJs.prototype.contentsBase = async function () {
           createNode({
             mother: idNameArea,
             attribute: { pid: fore.pid, lastfilter: "none" },
-            // event: {
-            //   click: instance.clientWhiteCard(client.cliid, requestNumber),
-            // },
+            event: {
+              click: instance.pidWhiteCard(fore.pid, fore.title, fore.cliid, fore.desid, "fore"),
+            },
             class: [ standardCaseClassName ],
             style: {
               display: "flex",
@@ -3623,6 +3643,247 @@ ContentsJs.prototype.etcWhiteCard = function () {
           }
           setQueue(() => {
             etcWhiteMaker(true);
+          })
+        }, 350);
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+ContentsJs.prototype.pidWhiteCard = function (pid, title = "", cliid = "", desid = "", type = "contents") {
+  const instance = this;
+  const { ea, totalContents, grayBarWidth, belowHeight } = this;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, hasQuery, removeQuery, appendQuery } = GeneralJs;
+  return async function (e) {
+    try {
+      const zIndex = 4;
+      const blank = "&nbsp;/&nbsp;";
+      let cancelBack, whitePrompt;
+      let titleWhite;
+      let margin;
+      let titleHeight;
+      let innerMargin;
+      let overlap;
+      let titleTextTop, titleSize;
+      let titleWeight;
+      let fontTextTop, fontSize, fontBetween, fontWeight;
+      let pidWhiteMaker;
+      let innerMarginTop;
+      let basePaddingTop;
+      let today;
+      let loading;
+      let iframeLink;
+      let thisTitle;
+
+      margin = 30;
+      titleHeight = 50;
+      innerMargin = 24;
+      innerMarginTop = 20;
+      overlap = 12;
+      basePaddingTop = 12;
+
+      titleTextTop = isMac() ? 2 : 5;
+      titleSize = 21;
+      titleWeight = 800;
+
+      fontTextTop = isMac() ? 1 : 3;
+      fontSize = 14;
+      fontBetween = 8;
+      fontWeight = 400;
+
+      loadingWidth = 48;
+
+      iframeLink = "/file?pid=" + pid + "&preview=true&previewonly=true&dataonly=true&entire=true";
+      if (title === "" || typeof title !== "string") {
+        thisTitle = pid;
+      } else {
+        thisTitle = title;
+      }
+
+      pidWhiteMaker = (reload = false) => {
+
+        if (!reload) {
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ "justfadein", whiteCardClassName ],
+            event: (e) => { removeByClass(whiteCardClassName) },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(grayBarWidth) + ea,
+              width: withOut(grayBarWidth, ea),
+              height: withOut(belowHeight, ea),
+              background: colorChip.black,
+            }
+          });
+        } 
+
+        whitePrompt = createNode({
+          mother: totalContents,
+          class: [ whiteCardClassName, whiteBaseClassName ],
+          style: {
+            position: "fixed",
+            top: String(0 + margin + titleHeight) + ea,
+            left: String(grayBarWidth + margin) + ea,
+            width: withOut((margin * 2) + grayBarWidth + (innerMargin * 2), ea),
+            height: withOut(0 + (margin * 2) + titleHeight + belowHeight + (innerMargin + basePaddingTop), ea),
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderBottomLeftRadius: String(5) + "px",
+            borderBottomRightRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+            overflow: "hidden",
+            padding: String(innerMargin) + ea,
+            paddingTop: String(basePaddingTop) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                overflow: "scroll",
+                border: "1px solid " + colorChip.gray3,
+                borderRadius: String(5) + "px",
+                boxSizing: "border-box",
+              },
+              child: {
+                mode: "iframe",
+                attribute: {
+                  src: iframeLink,
+                },
+                style: {
+                  position: "absolute",
+                  display: "block",
+                  top: String(0),
+                  left: String(0),
+                  width: withOut(0, ea),
+                  height: withOut(0, ea),
+                  border: String(0),
+                }
+              }
+            }
+          ]
+        });
+  
+        titleWhite = createNode({
+          mother: totalContents,
+          class: [ whiteCardClassName ],
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            position: "fixed",
+            top: String(0 + margin) + ea,
+            left: String(grayBarWidth + margin) + ea,
+            width: withOut((margin * 2) + grayBarWidth, ea),
+            height: String(titleHeight) + ea,
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderTopLeftRadius: String(5) + "px",
+            borderTopRightRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            overflow: "hidden",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "end",
+          },
+          child: {
+            attribute: { cliid, desid, pid },
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "row",
+              alignItems: "end",
+              justifyContent: "start",
+              width: withOut(innerMargin * 2, ea),
+            },
+            children: [
+              {
+                text: thisTitle,
+                attribute: { cliid, desid, pid },
+                event: {
+                  click: function (e) {
+                    const cliid = this.getAttribute("cliid");
+                    const desid = this.getAttribute("desid");
+                    if (cliid !== "") {
+                      blankHref(BACKHOST + "/client?cliid=" + cliid);
+                    } else {
+                      blankHref(BACKHOST + "/designer?mode=normal&desid=" + desid);
+                    }
+                  }
+                },
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(titleTextTop) + ea,
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(titleWeight),
+                  color: colorChip.black,
+                  cursor: "pointer",
+                }
+              },
+              {
+                attribute: { cliid, desid, pid, type },
+                event: {
+                  click: async function (e) {
+                    try {
+                      const type = this.getAttribute("type");
+                      const pid = this.getAttribute("pid");
+                      if (type === "contents") {
+                        blankHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+                      }
+                    } catch (e) {
+                      console.log(e);
+                      window.alert("오류가 발생했습니다! 다시 시도해주세요!");
+                      window.location.reload();
+                    }
+                  }
+                },
+                text: type === "contents" ? "front web" : "",
+                style: {
+                  display: "inline-block",
+                  position: "absolute",
+                  right: String(0),
+                  top: String(titleTextTop + 9) + ea,
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,
+                  cursor: "pointer",
+                }
+              },
+            ]
+          }
+        });
+        
+      }
+
+      instance.pidWhiteMaker = pidWhiteMaker;
+
+      if (document.querySelector('.' + whiteCardClassName) === null) {
+        pidWhiteMaker(false);
+      } else {
+        const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+        if (w0 !== undefined) {
+          w0.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        if (w1 !== undefined) {
+          w1.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        setQueue(() => {
+          if (w0 !== undefined) {
+            w0.remove();
+          }
+          if (w1 !== undefined) {
+            w1.remove();
+          }
+          setQueue(() => {
+            pidWhiteMaker(true);
           })
         }, 350);
       }
