@@ -3828,6 +3828,7 @@ DesignerJs.prototype.normalView = async function () {
   const instance = this;
   try {
     const { colorChip, ajaxJson, returnGet } = GeneralJs;
+    const getObj = returnGet();
     let loading;
     let designers;
     let histories;
@@ -3836,6 +3837,7 @@ DesignerJs.prototype.normalView = async function () {
     let noticeSendRows;
     let profileList, workList;
     let representativeList;
+    let execFunc;
 
     loading = await this.mother.loadingRun();
 
@@ -3886,6 +3888,11 @@ DesignerJs.prototype.normalView = async function () {
     this.communicationRender();
 
     loading.parentNode.removeChild(loading);
+
+    if (typeof getObj.desid === "string" && /^d/gi.test(getObj.desid)) {
+      execFunc = instance.normalWhiteCard(getObj.desid);
+      await execFunc(new Event("click", { bubbles: true }));
+    }
 
   } catch (e) {
     console.log(e);

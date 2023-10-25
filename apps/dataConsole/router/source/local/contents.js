@@ -1894,7 +1894,7 @@ ContentsJs.prototype.whiteIframeEvent = function (pid) {
 ContentsJs.prototype.mainDataRender = async function (matrixMode = false) {
   const instance = this;
   const { ea, totalContents, asyncProcessText } = this;
-  const { createNode, colorChip, withOut, dateToString, ajaxJson, autoComma, findByAttribute, serviceParsing } = GeneralJs;
+  const { createNode, colorChip, withOut, dateToString, ajaxJson, autoComma, findByAttribute, serviceParsing, blankHref } = GeneralJs;
   try {
     let columns;
     let values;
@@ -1983,18 +1983,105 @@ ContentsJs.prototype.mainDataRender = async function (matrixMode = false) {
         width: 90,
         name: "designer",
         type: "string",
+        script: (pid, type) => {
+          return async function (e) {
+            try {
+              let thisContents;
+              if (type === "contents") {
+                thisContents = instance.contentsArr.find((c) => {
+                  return c.contents.portfolio.pid === pid;
+                });
+                if (thisContents !== undefined) {
+                  blankHref(BACKHOST + "/designer?mode=normal&desid=" + thisContents.desid);
+                }
+              } else if (type === "foreContents") {
+                thisContents = instance.foreContents.find((c) => {
+                  return c.pid === pid;
+                });
+                if (thisContents !== undefined) {
+                  blankHref(BACKHOST + "/designer?mode=normal&desid=" + thisContents.desid);
+                }
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        }
       },
       {
         title: "고객",
         width: 80,
         name: "client",
         type: "string",
+        script: (pid, type) => {
+          return async function (e) {
+            try {
+              let thisContents;
+              let thisProject;
+              if (type === "contents") {
+                thisContents = instance.contentsArr.find((c) => {
+                  return c.contents.portfolio.pid === pid;
+                });
+                if (thisContents !== undefined) {
+                  if (thisContents.cliid !== "") {
+                    blankHref(BACKHOST + "/client?cliid=" + thisContents.cliid);
+                  }
+                }
+              } else if (type === "foreContents") {
+                thisContents = instance.foreContents.find((c) => {
+                  return c.pid === pid;
+                });
+                if (thisContents !== undefined) {
+                  thisProject = instance.projects.find((o) => { return o.proid === thisContents.proid });
+                  if (thisProject !== undefined) {
+                    blankHref(BACKHOST + "/client?cliid=" + thisProject.cliid);
+                  }
+                }
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        }
       },
       {
         title: "프로젝트",
         width: 120,
         name: "proid",
         type: "string",
+        script: (pid, type) => {
+          return async function (e) {
+            try {
+              let thisContents;
+              let thisProject;
+              if (type === "contents") {
+                thisContents = instance.contentsArr.find((c) => {
+                  return c.contents.portfolio.pid === pid;
+                });
+                if (thisContents !== undefined) {
+                  if (thisContents.proid !== "") {
+                    thisProject = instance.projects.find((o) => { return o.proid === thisContents.proid });
+                    if (thisProject !== undefined) {
+                      blankHref(BACKHOST + "/project?proid=" + thisProject.proid);
+                    }
+                  }
+                }
+              } else if (type === "foreContents") {
+                thisContents = instance.foreContents.find((c) => {
+                  return c.pid === pid;
+                });
+                if (thisContents !== undefined) {
+                  thisProject = instance.projects.find((o) => { return o.proid === thisContents.proid });
+                  if (thisProject !== undefined) {
+                    blankHref(BACKHOST + "/project?proid=" + thisProject.proid);
+                  }
+                }
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        }
       },
       {
         title: "서비스",
@@ -2428,6 +2515,7 @@ ContentsJs.prototype.contentsBase = async function () {
     let menuEventTong;
     let coreContentsLoad;
     let circleRight, circleTop;
+    let valueDom;
   
     totalPaddingTop = 38;
     columnAreaHeight = 32;
@@ -2499,8 +2587,8 @@ ContentsJs.prototype.contentsBase = async function () {
   
             domMatrix = [];
             for (let i = 0; i < idNameDoms.length; i++) {
-              thisKey = idNameDoms[i].getAttribute("key");
-              thisValueDom = findByAttribute(valueDoms, "key", thisKey);
+              thisKey = idNameDoms[i].getAttribute("pid");
+              thisValueDom = findByAttribute(valueDoms, "pid", thisKey);
               domMatrix.push([
                 idNameDoms[i],
                 thisValueDom
@@ -2596,8 +2684,8 @@ ContentsJs.prototype.contentsBase = async function () {
   
             domMatrix = [];
             for (let i = 0; i < idNameDoms.length; i++) {
-              thisKey = idNameDoms[i].getAttribute("key");
-              thisValueDom = findByAttribute(valueDoms, "key", thisKey);
+              thisKey = idNameDoms[i].getAttribute("pid");
+              thisValueDom = findByAttribute(valueDoms, "pid", thisKey);
               domMatrix.push([
                 idNameDoms[i],
                 thisValueDom
@@ -2659,8 +2747,8 @@ ContentsJs.prototype.contentsBase = async function () {
   
             domMatrix = [];
             for (let i = 0; i < idNameDoms.length; i++) {
-              thisKey = idNameDoms[i].getAttribute("key");
-              thisValueDom = findByAttribute(valueDoms, "key", thisKey);
+              thisKey = idNameDoms[i].getAttribute("pid");
+              thisValueDom = findByAttribute(valueDoms, "pid", thisKey);
               domMatrix.push([
                 idNameDoms[i],
                 thisValueDom
@@ -3128,7 +3216,7 @@ ContentsJs.prototype.contentsBase = async function () {
             }
           });
           for (let i = 0; i < columns.length; i++) {
-            createNode({
+            valueDom = createNode({
               mother: thisTong,
               style: {
                 display: "inline-flex",
@@ -3173,6 +3261,9 @@ ContentsJs.prototype.contentsBase = async function () {
                 }
               }
             });
+            if (typeof columns[i].script === "function") {
+              valueDom.addEventListener("click", columns[i].script(contents.contents.portfolio.pid, "contents"));
+            }
           }
         }
 
@@ -3239,7 +3330,7 @@ ContentsJs.prototype.contentsBase = async function () {
             }
           });
           for (let i = 0; i < columns.length; i++) {
-            createNode({
+            valueDom = createNode({
               mother: thisTong,
               style: {
                 display: "inline-flex",
@@ -3284,6 +3375,9 @@ ContentsJs.prototype.contentsBase = async function () {
                 }
               }
             });
+            if (typeof columns[i].script === "function") {
+              valueDom.addEventListener("click", columns[i].script(fore.pid, "foreContents"));
+            }
           }
         }
 
@@ -3395,9 +3489,10 @@ ContentsJs.prototype.launching = async function () {
         await this.baseMaker();
       }
     } else {
-      await this.baseMaker();
+      await this.contentsBase();
+      // await this.baseMaker();
     }
-    
+
     /*
 
     window.addEventListener("resize", (e) => {
