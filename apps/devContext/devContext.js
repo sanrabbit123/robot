@@ -156,28 +156,17 @@ DevContext.prototype.launching = async function () {
 
 
 
-    /*
-    
-    const slack_fairyToken = "xoxp-717757271335-6079209779318-6090567837762-8889bdc12b1afff4f3b30ecc9dae0ac6";
 
-    const url = "https://slack.com/api/chat.postMessage";
-    const attackTargetUser = "U054W05RAU9";
-    const attackTargetChannel = "D062L8SRQ04";
+    
 
-    await requestSystem(url, {
-      channel: attackTargetChannel,
-      text: `안녕! <@${attackTargetUser}>`,
-    }, {
-      headers: {
-        "Content-type": "application/json",
-        "Authorization": "Bearer " + slack_fairyToken,
-      }
-    })
     
-    // U05NNQYUFHD =>  Name hidden
-    // D062B65SSNS
     
-    */
+
+    
+
+
+
+
 
 
 

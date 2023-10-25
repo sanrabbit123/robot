@@ -58,7 +58,11 @@ const SecondGhost = function (mother = null, back = null, address = null) {
       "C02KKLHUVBJ": "call",
       "C04H4LBJZ3R": "emergency_alarm",
       "C04LB1RBWQ5": "plan",
-    }
+    },
+    attackTarget: {
+      user: "U05NNQYUFHD",
+      channel: "D062B65SSNS",
+    },
   };
   this.telegram = {
     chat: {
