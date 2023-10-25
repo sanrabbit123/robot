@@ -1186,7 +1186,7 @@ ContentsRouter.prototype.rou_post_getAllContents = function () {
               searchContents = [];
               searchForeContents = [];
               if (proidArr.length > 0) {
-                searchProidArr = proidArr.map((proid) => { return { proid } });
+                searchProidArr = proidArr.map((proid) => { return { proid } }).concat(desidArr.map((desid) => { return { desid } }));
                 searchContents = await back.getContentsArrByQuery({ $or: searchProidArr }, { selfMongo });
                 searchForeContents = await back.mongoRead(collection, { $or: searchProidArr }, { selfMongo: selfLocalMongo });  
               }
@@ -1374,6 +1374,66 @@ ContentsRouter.prototype.rou_post_getAllContents = function () {
                 projects,
                 clients,
                 designers
+              };
+            }
+
+          } else if (/^d/i.test(value)) {
+
+            designers = (await back.getDesignersByQuery({ desid: { $regex: value } }, { selfMongo })).toNormal();
+            if (designers.length > 0) {
+
+              desidArr = designers.filter((d) => { return d.desid !== "" }).map((d) => { return d.desid });
+              desidArr = [ ...new Set(desidArr) ];
+              
+              projects = (await back.getProjectsByQuery({ $or: desidArr.map((desid) => { return { desid } }) }, { selfMongo })).toNormal();
+              proidArr = projects.filter((d) => { return d.proid !== "" }).map((d) => { return d.proid });
+              proidArr = [ ...new Set(proidArr) ];
+
+              searchContents = [];
+              searchForeContents = [];
+              if (proidArr.length > 0) {
+                searchProidArr = proidArr.map((proid) => { return { proid } }).concat(desidArr.map((desid) => { return { desid } }));
+                searchContents = await back.getContentsArrByQuery({ $or: searchProidArr }, { selfMongo });
+                searchForeContents = await back.mongoRead(collection, { $or: searchProidArr }, { selfMongo: selfLocalMongo });  
+              }
+
+              proidArr = searchContents.filter((c) => { return c.proid !== "" }).map((obj) => { return obj.proid });
+              proidArr = proidArr.concat(searchForeContents.map((o) => { return o.proid }));
+              proidArr = [ ...new Set(proidArr) ];
+              
+              if (proidArr.length > 0) {
+                whereQuery0 = {};
+                whereQuery0["$or"] = proidArr.map((proid) => { return { proid } });
+                projects = (await back.getProjectsByQuery(whereQuery0, { selfMongo })).toNormal();
+                whereQuery1 = {};
+                whereQuery1["$or"] = projects.map((obj) => { return { cliid: obj.cliid } });
+                clients = (await back.getClientsByQuery(whereQuery1, { selfMongo })).toNormal();
+                resultObj = {
+                  contentsArr: searchContents,
+                  foreContents: searchForeContents,
+                  projects,
+                  clients,
+                  designers
+                };
+              } else {
+                projects = [];
+                clients = [];
+                resultObj = {
+                  contentsArr: searchContents,
+                  foreContents: searchForeContents,
+                  projects,
+                  clients,
+                  designers
+                };
+              }
+
+            } else {
+              resultObj = {
+                contentsArr: [],
+                foreContents: [],
+                projects: [],
+                clients: [],
+                designers: [],
               };
             }
 
