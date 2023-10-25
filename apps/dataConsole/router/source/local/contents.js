@@ -9,6 +9,32 @@ const ContentsJs = function () {
   this.ea = "px";
 }
 
+class SearchArray extends Array {
+  constructor(arr) {
+    super();
+    for (let i of arr) {
+      this.push(i);
+    }
+  }
+  search(target, value) {
+    let obj = null;
+    for (let i of this) {
+      if (i[target] === value) {
+        obj = i;
+        break;
+      }
+    }
+    return obj;
+  }
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i);
+    }
+    return arr;
+  }
+}
+
 ContentsJs.prototype.baseMaker = async function () {
   const instance = this;
   const { ea, totalContents, belowHeight } = this;
@@ -3396,6 +3422,7 @@ ContentsJs.prototype.contentsBase = async function () {
         }
 
         await instance.coreColorSync();
+        await instance.contentsPannel();
 
       } catch (e) {
         console.log(e);
@@ -3410,12 +3437,199 @@ ContentsJs.prototype.contentsBase = async function () {
   }
 }
 
+ContentsJs.prototype.contentsPannel = async function () {
+  const instance = this;
+  const { ea, totalContents, belowHeight, totalMother } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
+  const titleStringClassName = "titleStringClassName";
+  try {
+    const zIndex = 2;
+    let pannelBase;
+    let pannelOuterMargin;
+    let pannelInnerPadding;
+    let pannelMenu;
+    let menuPromptWidth;
+    let menuPromptHeight;
+    let menuTextTop;
+    let menuBetween;
+    let menuSize;
+    let menuWeight;
+    let pannelTong;
+
+    pannelOuterMargin = 40;
+    pannelInnerPadding = 6;
+
+    menuPromptWidth = 110;
+    menuPromptHeight = 32;
+    menuTextTop = isMac() ? -1 : 1,
+    menuBetween = 3;
+    menuSize = 13;
+    menuWeight = 700;
+
+    pannelMenu = [
+      {
+        title: "기간 설정",
+        event: () => {
+          return async function (e) {
+            try {
+              let startDate, endDate;
+              let loading;
+
+              startDate = await GeneralJs.promptDate("기간의 시작일을 알려주세요!");
+              if (startDate !== null) {
+                endDate = await GeneralJs.promptDate("기간의 종료일을 알려주세요!", false, "", startDate);
+                if (endDate !== null) {
+                  cleanChildren(totalMother);
+                  loading = await instance.mother.loadingRun();
+                  instance.clients = await ajaxJson({
+                    mode: "get",
+                    startDate,
+                    endDate,
+                  }, CONTENTSHOST + "/clientAnalytics", { equal: true });
+                  await instance.coreContentsLoad(true);
+                  loading.parentNode.removeChild(loading);
+                }
+              }
+
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+      {
+        title: "계약자만 보기",
+        event: () => {
+          return async function (e) {
+            try {
+              const thisTitle = this.querySelector('.' + titleStringClassName).textContent;
+              const thisValue = /계약자/gi.test(thisTitle) ? "진행" : "$all";
+              const name = "status";
+              const index = 0;
+              let filterFunc;
+              filterFunc = instance.menuEventTong.filterEvent(thisValue, name, index);
+              await filterFunc(e);
+              if (/계약자/gi.test(thisTitle)) {
+                this.querySelector('.' + titleStringClassName).textContent = "전체 보기";
+              } else {
+                this.querySelector('.' + titleStringClassName).textContent = "계약자만 보기";
+              }
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+      {
+        title: "소스 보기",
+        event: () => {
+          return async function (e) {
+            try {
+              const adsFunc = instance.adsWhiteCard();
+              await adsFunc(e);
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+      {
+        title: "기타 소스",
+        event: () => {
+          return async function (e) {
+            try {
+              const adsFunc = instance.adsWhiteCard();
+              await adsFunc(e);
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+    ];
+
+    pannelBase = createNode({
+      mother: totalMother,
+      style: {
+        display: "flex",
+        position: "absolute",
+        bottom: String(pannelOuterMargin) + ea,
+        right: String(pannelOuterMargin) + ea,
+        background: colorChip.white,
+        zIndex: String(zIndex),
+        borderRadius: String(5) + "px",
+        animation: "fadeuplite 0.3s ease forwards",
+        boxShadow: "0 3px 15px -9px " + colorChip.shadow,
+        padding: String(pannelInnerPadding) + ea,
+        flexDirection: "column",
+      },
+      child: {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(menuPromptWidth) + ea,
+          flexDirection: "column",
+        }
+      }
+    });
+    pannelTong = pannelBase.firstChild;
+
+    for (let obj of pannelMenu) {
+      createNode({
+        mother: pannelTong,
+        event: {
+          click: obj.event(),
+        },
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(menuPromptWidth) + ea,
+          height: String(menuPromptHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          marginBottom: String(menuBetween) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        child: {
+          class: [ titleStringClassName ],
+          text: obj.title,
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
+          style: {
+            position: "relative",
+            top: String(menuTextTop) + ea,
+            fontSize: String(menuSize) + ea,
+            fontWeight: String(menuWeight),
+            color: colorChip.white,
+          }
+        }
+      })
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 ContentsJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, setQueue, returnGet } = GeneralJs;
   try {
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true" && getObj.dataonly === "true");
+    let loading, allContents;
 
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
@@ -3431,40 +3645,13 @@ ContentsJs.prototype.launching = async function () {
 
     document.getElementById("grayLeftOpenButton").remove();
 
-    const loading = await this.mother.loadingRun();
+    loading = await this.mother.loadingRun();
 
-    class SearchArray extends Array {
-      constructor(arr) {
-        super();
-        for (let i of arr) {
-          this.push(i);
-        }
-      }
-      search(target, value) {
-        let obj = null;
-        for (let i of this) {
-          if (i[target] === value) {
-            obj = i;
-            break;
-          }
-        }
-        return obj;
-      }
-      toNormal() {
-        let arr = [];
-        for (let i of this) {
-          arr.push(i);
-        }
-        return arr;
-      }
-    }
-
-    const allContents = await ajaxJson({ mode: "all" }, CONTENTSHOST + "/getAllContents", { equal: true });
+    allContents = await ajaxJson({ mode: "all", init: true }, CONTENTSHOST + "/getAllContents", { equal: true });
 
     this.member = this.mother.member;
     // this.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus", { equal: true });
     this.contentsView = await ajaxJson({ mode: "pick" }, CONTENTSHOST + "/getContentsView", { equal: true });
-    // this.contentsCalendar = await ajaxJson({ mode: "get" }, CONTENTSHOST + "/contentsCalendar", { equal: true });
     this.contentsCalendar = [];
     this.contentsArr = new SearchArray(allContents.contentsArr);
     this.foreContents = new SearchArray(allContents.foreContents);
@@ -3494,6 +3681,8 @@ ContentsJs.prototype.launching = async function () {
 
     this.contentsTong = [];
     this.designersTong = [];
+
+    this.entireMode = entireMode;
 
     loading.parentElement.removeChild(loading);
 

@@ -1043,14 +1043,32 @@ ContentsRouter.prototype.rou_post_getAllContents = function () {
       const selfMongo = instance.mongo;
       const selfLocalMongo = instance.mongolocal;
       const collection = "foreContents";
+      const delta = 18;
       let contentsArr, projects, clients, designers;
       let whereQuery0, whereQuery1;
       let resultObj;
       let foreContents;
       let proidArr;
+      let coreWhereQuery;
+      let ago;
 
       if (mode === "all") {
-        contentsArr = (await back.getContentsArrByQuery({}, { selfMongo })).toNormal();
+
+        if (req.body.whereQuery === undefined) {
+          if (req.body.init !== undefined) {
+            ago = new Date();
+            ago.setMonth(ago.getMonth() - delta);
+            contentsArr = (await back.getContentsArrByQuery({
+              "contents.portfolio.date": { $gte: ago }
+            }, { selfMongo })).toNormal();
+          } else {
+            contentsArr = (await back.getContentsArrByQuery({}, { selfMongo })).toNormal();
+          }
+        } else {
+          coreWhereQuery = equalJson(req.body.whereQuery);
+          contentsArr = (await back.getContentsArrByQuery(coreWhereQuery, { selfMongo })).toNormal();
+        }
+
         designers = (await back.getDesignersByQuery({}, { selfMongo })).toNormal();
         foreContents = await back.mongoRead(collection, {}, { selfMongo: selfLocalMongo });
         foreContents.sort((a, b) => { return Number(b.pid.replace(/[^0-9]/gi, '')) - Number(a.pid.replace(/[^0-9]/gi, '')); });
