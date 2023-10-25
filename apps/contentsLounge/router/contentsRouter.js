@@ -1043,7 +1043,7 @@ ContentsRouter.prototype.rou_post_getAllContents = function () {
       const selfMongo = instance.mongo;
       const selfLocalMongo = instance.mongolocal;
       const collection = "foreContents";
-      const delta = 18;
+      const delta = 12;
       let contentsArr, projects, clients, designers;
       let whereQuery0, whereQuery1;
       let resultObj;
@@ -1070,8 +1070,13 @@ ContentsRouter.prototype.rou_post_getAllContents = function () {
         }
 
         designers = (await back.getDesignersByQuery({}, { selfMongo })).toNormal();
-        foreContents = await back.mongoRead(collection, {}, { selfMongo: selfLocalMongo });
-        foreContents.sort((a, b) => { return Number(b.pid.replace(/[^0-9]/gi, '')) - Number(a.pid.replace(/[^0-9]/gi, '')); });
+
+        if (req.body.nonFore !== undefined) {
+          foreContents = [];  
+        } else {
+          foreContents = await back.mongoRead(collection, {}, { selfMongo: selfLocalMongo });
+          foreContents.sort((a, b) => { return Number(b.pid.replace(/[^0-9]/gi, '')) - Number(a.pid.replace(/[^0-9]/gi, '')); });  
+        }
 
         proidArr = contentsArr.filter((c) => { return c.proid !== "" }).map((obj) => { return obj.proid });
         proidArr = proidArr.concat(foreContents.map((o) => { return o.proid }));
