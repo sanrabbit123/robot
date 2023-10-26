@@ -3973,8 +3973,8 @@ FileJs.prototype.launching = async function () {
         }
       } else if (getObj.mode === "designRequest") {
         startPoint = rootToken + "/drive/# 홈리에종/500_marketing/550_디자인_제작_요청";
-        if (typeof getObj.id === "string") {
-          startPoint = startPoint + "/" + getObj.id;
+        if (typeof getObj.request === "string") {
+          startPoint = startPoint + "/request_" + getObj.request;
         }
       } else {
         startPoint = rootToken + "/drive/# 홈리에종";
