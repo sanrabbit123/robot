@@ -2677,6 +2677,45 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
             result = await analytics.queryParsing(thisDate, instance.mongolog);
             if (result === null) {
               await logger.error("query parsing error : " + dateToString(thisDate));
+              await sleep(1000);
+              result = await analytics.queryParsing(thisDate, instance.mongolog);
+              if (result === null) {
+                await logger.error("query parsing error : " + dateToString(thisDate));
+                await sleep(1000);
+                result = await analytics.queryParsing(thisDate, instance.mongolog);
+                if (result === null) {
+                  await logger.error("query parsing error : " + dateToString(thisDate));
+                  await sleep(1000);
+                  result = await analytics.queryParsing(thisDate, instance.mongolog);
+                  if (result === null) {
+                    await logger.error("query parsing error : " + dateToString(thisDate));
+                  } else {
+                    key = result.key;
+                    rows = await back.mongoRead(collection, { key }, { selfMongo });
+                    if (rows.length !== 0) {
+                      await back.mongoDelete(collection, { key }, { selfMongo })
+                    }
+                    await back.mongoCreate(collection, result, { selfMongo });
+                    logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+                  }
+                } else {
+                  key = result.key;
+                  rows = await back.mongoRead(collection, { key }, { selfMongo });
+                  if (rows.length !== 0) {
+                    await back.mongoDelete(collection, { key }, { selfMongo })
+                  }
+                  await back.mongoCreate(collection, result, { selfMongo });
+                  logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+                }
+              } else {
+                key = result.key;
+                rows = await back.mongoRead(collection, { key }, { selfMongo });
+                if (rows.length !== 0) {
+                  await back.mongoDelete(collection, { key }, { selfMongo })
+                }
+                await back.mongoCreate(collection, result, { selfMongo });
+                logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+              }
             } else {
               key = result.key;
               rows = await back.mongoRead(collection, { key }, { selfMongo });

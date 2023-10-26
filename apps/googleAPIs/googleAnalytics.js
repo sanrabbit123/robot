@@ -113,7 +113,7 @@ GoogleAnalytics.prototype.returnAnalyticsObject = async function (analyticsDataC
 
 GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
   const instance = this;
-  const { dateToString, equalJson, stringToDate, requestSystem, fileSystem, zeroAddition } = this.mother;
+  const { dateToString, equalJson, stringToDate, requestSystem, fileSystem, zeroAddition, emergencyAlarm } = this.mother;
   const { BetaAnalyticsDataClient } = require("@google-analytics/data");
   try {
     let startDate, endDate;
@@ -152,7 +152,9 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
       { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
     ];
     dataObject.users = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, userMetric, userDimensions);
-
+    if (dataObject.users === null) {
+      throw new Error("users parsing fail");
+    }
 
     // views
     viewMetric = "screenPageViews";
@@ -167,7 +169,9 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
       { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
     ];
     dataObject.views = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, viewMetric, viewDimensions);
-
+    if (dataObject.views === null) {
+      throw new Error("views parsing fail");
+    }
 
     // events
     eventMetric = "eventCount";
@@ -179,7 +183,9 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
       { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
     ];
     dataObject.events = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, eventMetric, eventDimensions);
-
+    if (dataObject.events === null) {
+      throw new Error("events parsing fail");
+    }
 
     // conversion
     dataObject.conversion = {};
@@ -196,7 +202,9 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
       { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
     ];
     dataObject.conversion.popupOpen = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, conversionPopupOpenMetric, conversionPopupOpenDimensions, { filter: { fieldName: "eventName", stringFilter: { matchType: "CONTAINS", value: "popupOpen", caseSensitive: true } } });
-
+    if (dataObject.conversion.popupOpen === null) {
+      throw new Error("conversion.popupOpen parsing fail");
+    }
 
     // conversion - consulting page
     conversionConsultingPageMetric = "screenPageViews";
@@ -209,7 +217,9 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
       { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
     ];
     dataObject.conversion.consultingPage = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, conversionConsultingPageMetric, conversionConsultingPageDimensions, { filter: { fieldName: "pagePath", stringFilter: { matchType: "CONTAINS", value: "consulting.php", caseSensitive: true } } });
-
+    if (dataObject.conversion.consultingPage === null) {
+      throw new Error("conversion.consultingPage parsing fail");
+    }
 
     // final
     start = new Date(JSON.stringify(thisDate).slice(1, -1));
@@ -226,6 +236,7 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
 
     return finalObj;
   } catch (e) {
+    await emergencyAlarm("GoogleAnalytics.dailyMetric error : " + e.message + " / " + dateToString(thisDate));
     console.log(e);
     return null;
   }
@@ -584,6 +595,9 @@ GoogleAnalytics.prototype.queryParsing = async function (targetDate, selfMongo) 
     if (targetReport !== undefined) {
 
       // from referrer
+
+      console.log(targetReport.data);
+
       targetCases = targetReport.data.views.detail.referer.cases;
 
       res = targetCases.map((obj) => {
