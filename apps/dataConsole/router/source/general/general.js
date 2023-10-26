@@ -2136,27 +2136,35 @@ GeneralJs.prototype.greenBar = function () {
       const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) - move;
       return ("translateX(" + String(newValue) + ea + ")");
     }
-    let targets;
-    if (document.querySelector("iframe") !== null) {
-      if (document.querySelector("iframe").contentWindow.document.querySelector(".moveTarget") !== null) {
-        targets = document.querySelector("iframe").contentWindow.document.querySelectorAll(".moveTarget");
+    let target, targets;
+    if (document.querySelector(".moveTarget2") === null) {
+      if (document.querySelector("iframe") !== null) {
+        if (document.querySelector("iframe").contentWindow.document.querySelector(".moveTarget") !== null) {
+          targets = document.querySelector("iframe").contentWindow.document.querySelectorAll(".moveTarget");
+        } else {
+          targets = document.querySelectorAll(".moveTarget");
+        }
       } else {
         targets = document.querySelectorAll(".moveTarget");
       }
+      for (let target of targets) {
+        if (target.style.transform === '') {
+          target.style.transform = "translateX(" + String(-1 * move) + ea + ")";
+        } else {
+          target.style.transform = translateFunc(target.style.transform);
+        }
+        if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
+          target.style.transform = "translateX(0px)";
+        } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + instance.grayBarWidth) {
+          target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + instance.grayBarWidth)) + ea + ")";
+        }
+      }
     } else {
-      targets = document.querySelectorAll(".moveTarget");
-    }
-
-    for (let target of targets) {
+      target = document.querySelector(".moveTarget2");
       if (target.style.transform === '') {
         target.style.transform = "translateX(" + String(-1 * move) + ea + ")";
       } else {
         target.style.transform = translateFunc(target.style.transform);
-      }
-      if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
-        target.style.transform = "translateX(0px)";
-      } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + instance.grayBarWidth) {
-        target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + instance.grayBarWidth)) + ea + ")";
       }
     }
   }
@@ -2182,27 +2190,38 @@ GeneralJs.prototype.greenBar = function () {
       const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) + move;
       return ("translateX(" + String(newValue) + ea + ")");
     }
-    let targets;
-    if (document.querySelector("iframe") !== null) {
-      if (document.querySelector("iframe").contentWindow.document.querySelector(".moveTarget") !== null) {
-        targets = document.querySelector("iframe").contentWindow.document.querySelectorAll(".moveTarget");
+    let target, targets;
+    if (document.querySelector(".moveTarget2") === null) {
+      if (document.querySelector("iframe") !== null) {
+        if (document.querySelector("iframe").contentWindow.document.querySelector(".moveTarget") !== null) {
+          targets = document.querySelector("iframe").contentWindow.document.querySelectorAll(".moveTarget");
+        } else {
+          targets = document.querySelectorAll(".moveTarget");
+        }
       } else {
         targets = document.querySelectorAll(".moveTarget");
       }
+      for (let target of targets) {
+        if (target.style.transform === '') {
+          target.style.transform = "translateX(" + String(move) + ea + ")";
+        } else {
+          target.style.transform = translateFunc(target.style.transform);
+        }
+        if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
+          target.style.transform = "translateX(0px)";
+        } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + instance.grayBarWidth) {
+          target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + instance.grayBarWidth)) + ea + ")";
+        }
+      }
     } else {
-      targets = document.querySelectorAll(".moveTarget");
-    }
-
-    for (let target of targets) {
+      target = document.querySelector(".moveTarget2");
       if (target.style.transform === '') {
-        target.style.transform = "translateX(" + String(move) + ea + ")";
+        target.style.transform = "translateX(" + String(-1 * move) + ea + ")";
       } else {
         target.style.transform = translateFunc(target.style.transform);
       }
       if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
         target.style.transform = "translateX(0px)";
-      } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + instance.grayBarWidth) {
-        target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + instance.grayBarWidth)) + ea + ")";
       }
     }
   }

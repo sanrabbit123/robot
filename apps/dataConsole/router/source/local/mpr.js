@@ -2794,9 +2794,8 @@ MprJs.prototype.coreColorSync = async function () {
 
 MprJs.prototype.mprBase = async function () {
   const instance = this;
-  const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
+  const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName, moveTargetClassName } = this;
   const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
-  const moveTargetClassName = "moveTarget";
   const menuPromptClassName = "menuPromptClassName";
   const importantCircleClassName = "importantCircleClassName";
   try {
@@ -5493,6 +5492,528 @@ MprJs.prototype.frontWhiteCard = function () {
   }
 }
 
+MprJs.prototype.queryWhiteCard = function () {
+  const instance = this;
+  const { ea, totalContents, grayBarWidth, belowHeight, entireMode } = this;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName, moveTargetClassName2 } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, autoComma, zeroAddition, chartJsPatch, serviceParsing, hasQuery, removeQuery, appendQuery } = GeneralJs;
+  return async function (e) {
+    try {
+      const zIndex = 4;
+      let cancelBack, whitePrompt;
+      let margin;
+      let titleHeight;
+      let innerMargin;
+      let overlap;
+      let titleTextTop, titleSize;
+      let titleWeight;
+      let fontTextTop, fontSize, fontBetween, fontWeight;
+      let whiteReportMaker;
+      let scrollBox;
+      let titleArea;
+      let today;
+      let ago;
+      let agoDate;
+      let loading;
+      let loadingWidth;
+      let startPaddingTop;
+      let inputWidth, inputSize, inputWeight;
+      let subTodaySize, subTodayWeight;
+      let dataLoad;
+      let fromDate, toDate;
+      let chartBetween;
+      let chartHeight;
+      let style;
+      let todayRange;
+      let todayString;
+      let dateInput;
+      let inputBottom;
+      let middleTitleHeight;
+      let previousToDate;
+      let innerMarginTop;
+      let basePaddingTop;
+      let mainTitleSize;
+      let timeDelta;
+      let thisDate;
+      let timeMatrix;
+      let thisRow, thisCharge, thisBasic;
+      let thisRows, thisCharges, thisBasics;
+      let tableMatrix;
+      let columnsLength;
+      let tableTong;
+      let rows;
+      let charge;
+      let basic;
+      let type;
+      let labels;
+      let fill;
+      let tension;
+      let borderJoinStyle;
+      let complexBoxesLength;
+      let naverAds, metaAds, googleAds;
+      let naverAd, metaAd, googleAd;
+      let caseTong;
+      let maxWidth;
+      let tableBlockHeight;
+      let tableSize, tableTextTop;
+      let whereQuery;
+      let num;
+      let valueTong;
+      let caseTongWidth, valueTongWidth;
+      let caseMaxLength;
+      let pastLength;
+      let thisTotalTong;
+
+      toDate = new Date();
+      previousToDate = new Date();
+      previousToDate.setDate(previousToDate.getDate() - 1);
+      ago = 12;
+      fromDate = new Date();
+      fromDate.setMonth(fromDate.getMonth() - ago);
+
+      margin = entireMode ? 0 : 30;
+      titleHeight = 50;
+      innerMargin = 24;
+      innerMarginTop = 20;
+      overlap = 12;
+      basePaddingTop = 12;
+
+      titleTextTop = isMac() ? 2 : 5;
+      mainTitleSize = 21;
+      titleSize = 18;
+      titleWeight = 800;
+      middleTitleHeight = 36;
+
+      fontTextTop = isMac() ? 1 : 3;
+      fontSize = 14;
+      fontBetween = 8;
+      fontWeight = 400;
+
+      loadingWidth = 48;
+
+      inputWidth = 500;
+      inputSize = 29;
+      inputWeight = 200;
+
+      subTodaySize = 15;
+      subTodayWeight = 500;
+
+      chartBetween = 40;
+      chartHeight = 480;
+
+      startPaddingTop = 40;
+      inputBottom = 8;
+
+      maxWidth = 1000;
+
+      tableBlockHeight = 30;
+      tableSize = 12;
+      tableTextTop = isMac() ? -1 : 1;
+
+      caseTongWidth = 200;
+      valueTongWidth = 60;
+
+      dataLoad = () => {};
+
+      whiteReportMaker = (fromDate, toDate, reload = false) => {
+
+        fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate(), 0, 0, 0);
+        toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate(), 0, 0, 0);
+        timeDelta = Math.floor(((((toDate.valueOf() - fromDate.valueOf()) / 1000) / 60) / 60) / 24);
+
+        if (!reload) {
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ "justfadein", whiteCardClassName ],
+            event: (e) => { if (hasQuery("whitekey")) { removeQuery("whitekey"); } removeByClass(whiteCardClassName) },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0) + ea,
+              width: withOut(0, ea),
+              height: withOut(belowHeight, ea),
+              background: colorChip.black,
+            }
+          });
+        } 
+  
+        whitePrompt = createNode({
+          mother: totalContents,
+          class: [ whiteCardClassName, whiteBaseClassName ],
+          attribute: {
+            key: "query",
+          },
+          style: {
+            position: "fixed",
+            top: String(0 + margin + titleHeight) + ea,
+            left: String(margin) + ea,
+            width: withOut((margin * 2) + (innerMargin * 2), ea),
+            height: withOut(0 + (margin * 2) + titleHeight + belowHeight + (innerMargin + basePaddingTop), ea),
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderBottomLeftRadius: String(5) + "px",
+            borderBottomRightRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+            overflow: "hidden",
+            padding: String(innerMargin) + ea,
+            paddingTop: String(basePaddingTop) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                overflow: "scroll",
+                border: "1px solid " + colorChip.gray3,
+                borderRadius: String(5) + "px",
+                boxSizing: "border-box",
+                padding: String(innerMargin) + ea,
+                paddingTop: String(innerMarginTop) + ea,
+              },
+              child: {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0, ea),
+                }
+              }
+            }
+          ]
+        });
+
+        titleWhite = createNode({
+          mother: totalContents,
+          class: [ whiteCardClassName ],
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            position: "fixed",
+            top: String(0 + margin) + ea,
+            left: String(margin) + ea,
+            width: withOut((margin * 2), ea),
+            height: String(titleHeight) + ea,
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderTopLeftRadius: String(5) + "px",
+            borderTopRightRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            overflow: "hidden",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "end",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "row",
+              alignItems: "end",
+              justifyContent: "start",
+              width: withOut(innerMargin * 2, ea),
+            },
+            children: [
+              {
+                text: "검색어 현황",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(titleTextTop) + ea,
+                  fontSize: String(mainTitleSize) + ea,
+                  fontWeight: String(titleWeight),
+                  color: colorChip.black,
+                  cursor: "pointer",
+                }
+              },
+              {
+                event: {
+                  click: async function (e) {
+                    try {
+                      const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+                      let startDate, endDate;
+        
+                      startDate = await GeneralJs.promptDate("기간의 시작일을 알려주세요!");
+                      if (startDate !== null) {
+                        endDate = await GeneralJs.promptDate("기간의 종료일을 알려주세요!", false, "", startDate);
+                        if (endDate !== null) {
+                          if (w0 !== undefined) {
+                            w0.remove();
+                          }
+                          if (w1 !== undefined) {
+                            w1.remove();
+                          }
+                          setQueue(() => {
+                            whiteReportMaker(startDate, endDate, true);
+                          });
+                        }
+                      }
+
+                    } catch (e) {
+                      console.log(e);
+                      window.alert("오류가 발생했습니다! 다시 시도해주세요!");
+                      window.location.reload();
+                    }
+                  }
+                },
+                text: dateToString(fromDate).slice(2) + " ~ " + dateToString(toDate).slice(2),
+                style: {
+                  display: "inline-block",
+                  position: "absolute",
+                  top: String(titleTextTop) + ea,
+                  right: String(0),
+                  fontSize: String(mainTitleSize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.black,
+                  cursor: "pointer",
+                }
+              },
+            ]
+          }
+        });
+
+        loading = instance.mother.returnLoadingIcon();
+        style = {
+          position: "absolute",
+          width: String(loadingWidth) + ea,
+          height: String(loadingWidth) + ea,
+          top: withOut(50, loadingWidth / 2, ea),
+          left: withOut(50, loadingWidth / 2, ea),
+        }
+        for (let i in style) {
+          loading.style[i] = style[i];
+        }
+        whitePrompt.children[0].appendChild(loading);
+        scrollBox = whitePrompt.children[0].firstChild;
+
+        dataLoad = (loading) => {
+          return (result) => {
+
+            loading.remove();
+            cleanChildren(scrollBox);
+            result.sort((a, b) => {
+              return b.date.from.valueOf() - a.date.from.valueOf();
+            });
+            caseMaxLength = 0;
+            for (let obj of result) {
+              obj.data.detail.sort((a, b) => { return b.value - a.value });
+              caseMaxLength = obj.data.detail.length >= caseMaxLength ? obj.data.detail.length : caseMaxLength;
+            }
+
+            tableTong = createNode({
+              mother: scrollBox,
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                verticalAlign: "top",
+                overflow: "hidden",
+              },
+              child: {
+                class: [ moveTargetClassName2 ],
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: "auto",
+                  border: "1px solid " + colorChip.gray3,
+                  borderRadius: String(5) + "px",
+                  boxSizing: "border-box",
+                  flexDirection: "row",
+                  overflow: "hidden",
+                },
+              }
+            }).firstChild;
+
+            pastLength = 99999999;
+            for (let i = 0; i < result.length; i++) {
+
+              thisTotalTong = createNode({
+                mother: tableTong,
+                style: {
+                  display: "inline-block",
+                  width: String(caseTongWidth + valueTongWidth) + ea,
+                  height: "auto",
+                  position: "relative",
+                }
+              });
+              createNode({
+                mother: thisTotalTong,
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(caseTongWidth + valueTongWidth) + ea,
+                  height: String(tableBlockHeight) + ea,
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRight: "1px solid " + colorChip.gray3,
+                  borderBottom: "1px solid " + colorChip.gray3,
+                  background: i % 2 === 0 ? colorChip.darkDarkShadow : colorChip.darkShadow,
+                },
+                child: {
+                  text: dateToString(result[i].date.from),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(tableSize) + ea,
+                    fontWeight: String(700),
+                    color: colorChip.white,
+                    top: String(tableTextTop) + ea,
+                  }
+                }
+              });
+
+              caseTong = createNode({
+                mother: thisTotalTong,
+                style: {
+                  display: "inline-flex",
+                  width: String(caseTongWidth) + ea,
+                  height: "auto",
+                  position: "relative",
+                  flexDirection: "column",
+                }
+              });
+              num = 0;
+              for (let obj of result[i].data.detail) {
+                createNode({
+                  mother: caseTong,
+                  style: {
+                    display: "inline-block",
+                    width: String(caseTongWidth) + ea,
+                    height: String(tableBlockHeight) + ea,
+                    position: "relative",
+                    textAlign: "center",
+                    borderRight: "1px solid " + colorChip.gray3,
+                    borderBottom: num !== caseMaxLength - 1 ? "1px solid " + colorChip.gray3 : "",
+                    borderLeft: num < pastLength ? "" : "1px solid " + colorChip.gray3,
+                    overflow: "hidden",
+                  },
+                  child: {
+                    style: {
+                      display: "inline-flex",
+                      width: String(maxWidth) + ea,
+                      marginLeft: withOut(50, (maxWidth / 2), ea),
+                      height: withOut(0, ea),
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textAlign: "center",
+                    },
+                    child: {
+                      text: obj.case,
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        fontSize: String(tableSize) + ea,
+                        fontWeight: String(500),
+                        color: colorChip.black,
+                        top: String(tableTextTop) + ea,
+                      }
+                    }
+                  },
+                });
+                num++;
+              }
+              valueTong = createNode({
+                mother: thisTotalTong,
+                style: {
+                  display: "inline-flex",
+                  width: String(valueTongWidth) + ea,
+                  height: "auto",
+                  position: "relative",
+                  flexDirection: "column",
+                }
+              });
+              num = 0;
+              for (let obj of result[i].data.detail) {
+                createNode({
+                  mother: valueTong,
+                  style: {
+                    display: "inline-block",
+                    width: String(valueTongWidth) + ea,
+                    height: String(tableBlockHeight) + ea,
+                    position: "relative",
+                    textAlign: "center",
+                    borderRight: "1px solid " + colorChip.gray3,
+                    borderBottom: num !== caseMaxLength - 1 ? "1px solid " + colorChip.gray3 : "",
+                    overflow: "hidden",
+                  },
+                  child: {
+                    style: {
+                      display: "inline-flex",
+                      width: String(maxWidth) + ea,
+                      marginLeft: withOut(50, (maxWidth / 2), ea),
+                      height: withOut(0, ea),
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textAlign: "center",
+                    },
+                    child: {
+                      text: String(obj.value),
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        fontSize: String(tableSize) + ea,
+                        fontWeight: String(500),
+                        color: colorChip.black,
+                        top: String(tableTextTop) + ea,
+                      }
+                    }
+                  },
+                });
+                num++;
+              }
+              pastLength = result[i].data.detail.length;
+            }
+
+          }
+        }
+
+        whereQuery = {
+          "date.from": { $gte: fromDate, $lte: toDate }
+        };
+        ajaxJson({ mode: "get", whereQuery }, CONTENTSHOST + "/queryAnalytics", { equal: true }).then(dataLoad(loading)).catch((err) => {
+          console.log(err);
+        });
+
+        if (hasQuery("whitekey")) {
+          removeQuery("whitekey");
+        }
+        appendQuery({ whitekey: "query" });
+
+      }
+
+      if (document.querySelector('.' + whiteCardClassName) === null) {
+        whiteReportMaker(fromDate, toDate, false);
+      } else {
+        const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+        if (w0 !== undefined) {
+          w0.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        if (w1 !== undefined) {
+          w1.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        setQueue(() => {
+          if (w0 !== undefined) {
+            w0.remove();
+          }
+          if (w1 !== undefined) {
+            w1.remove();
+          }
+          setQueue(() => {
+            whiteReportMaker(fromDate, toDate, true);
+          })
+        }, 350);
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 MprJs.prototype.statisticsWhiteCard = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight, entireMode } = this;
@@ -5992,6 +6513,21 @@ MprJs.prototype.mprPannel = async function () {
         },
       },
       {
+        title: "검색어 현황",
+        event: () => {
+          return async function (e) {
+            try {
+              const queryFunc = instance.queryWhiteCard();
+              await queryFunc(e);
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+      {
         title: "고객 현황",
         event: () => {
           return async function (e) {
@@ -6345,6 +6881,8 @@ MprJs.prototype.launching = async function () {
     this.whiteCardClassName = "whiteCardClassName";
     this.whiteBaseClassName = "whiteBaseClassName";
     this.processDetailEventClassName = "processDetailEventClassName";
+    this.moveTargetClassName = "moveTarget";
+    this.moveTargetClassName2 = "moveTarget2";
     this.whiteCardMode = "client";
     this.asyncProcessText = "로드중..";
     this.entireMode = entireMode;
@@ -6367,6 +6905,9 @@ MprJs.prototype.launching = async function () {
         await execFunc(new Event("click", { bubbles: true }));
       } else if (getObj.whitekey === "statistics") {
         execFunc = this.statisticsWhiteCard();
+        await execFunc(new Event("click", { bubbles: true }));
+      } else if (getObj.whitekey === "query") {
+        execFunc = this.queryWhiteCard();
         await execFunc(new Event("click", { bubbles: true }));
       } else {
         execFunc = this.clientWhiteCard(getObj.whitekey.split("_").slice(0, -1).join("_"), Number(getObj.whitekey.split("_").slice(-1).join("_")));

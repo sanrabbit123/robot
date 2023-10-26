@@ -155,22 +155,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+    
 
-    // await this.MONGOLOGC.connect();
-    // const selfMongo = this.MONGOLOGC;
-
-    // const now = new Date();
-    // const queryStandardDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    // const collection = "queryAnalytics";
-    // let queryEntireRows;
-
-    // queryStandardDate.setMonth(queryStandardDate.getMonth() - 24);
-    // queryEntireRows = await back.mongoRead(collection, { "date.from": { $gte: queryStandardDate } }, { selfMongo });
-
-    // console.log(queryEntireRows[20].data);
-
-    // await this.MONGOLOGC.close();
-
+    
 
 
 

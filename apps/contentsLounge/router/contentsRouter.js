@@ -1777,6 +1777,9 @@ ContentsRouter.prototype.rou_post_queryAnalytics = function () {
         }
         const { whereQuery } = equalJson(req.body);
         rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        for (let obj of rows) {
+          delete obj._id;
+        }
         res.send(JSON.stringify(rows));
       } else {
         throw new Error("invalid mode");
