@@ -2385,7 +2385,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
       admin: false,
       contents: [
         {
-          property: "역량 범위",
+          property: "진행 범위",
           admin: true,
           returnValue: (designer) => { return [
             "홈퍼니싱",
@@ -2432,7 +2432,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     desid: desid,
                     date: new Date(),
                     type: "selection",
-                    property: "역량 범위",
+                    property: "진행 범위",
                     column: "analytics.construct.ability",
                     value: targetIndex,
                   }
@@ -2442,7 +2442,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                 desid: desid,
                 date: new Date(),
                 type: "selection",
-                property: "역량 범위",
+                property: "진행 범위",
                 column: "analytics.construct.ability",
                 value: targetIndex,
                 designer: designer.designer,
@@ -2455,11 +2455,11 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             }
           },
           noticeText: (designer) => {
-            return "홈리에종과 진행하기로 한 서비스의 범위와 상관 없이 " + designer.designer + " 디자이너님의 역량상 할 수 있는 범위입니다.";
+            return "홈리에종과 진행하기로 한 서비스의 범위입니다.";
           },
         },
         {
-          property: "진행 범위",
+          property: "역량 범위",
           admin: true,
           returnValue: (designer) => { return [
             "홈퍼니싱",
@@ -2508,7 +2508,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     desid: desid,
                     date: new Date(),
                     type: "selection",
-                    property: "진행 범위",
+                    property: "역량 범위",
                     column: "analytics.construct.level",
                     value: targetIndex,
                   }
@@ -2518,7 +2518,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                 desid: desid,
                 date: new Date(),
                 type: "selection",
-                property: "진행 범위",
+                property: "역량 범위",
                 column: "analytics.construct.level",
                 value: targetIndex,
                 designer: designer.designer,
@@ -2531,7 +2531,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             }
           },
           noticeText: (designer) => {
-            return "홈리에종과 진행하기로 한 서비스의 범위입니다.";
+            return "홈리에종과 진행하기로 한 서비스의 범위와 상관 없이 " + designer.designer + " 디자이너님의 역량상 할 수 있는 범위입니다.";
           },
         },
         {

@@ -1237,6 +1237,9 @@ BackWorker.prototype.designerFeeTable = async function (desid, option = { selfMo
         throw new Error("service error");
       }
       serviceMatchBoo = (y <= designer.analytics.construct.level);
+      if (serviceMatchBoo) {
+        serviceMatchBoo = (y <= designer.analytics.construct.ability);
+      }
 
       res = await this.getDesignerFee(desid, cliidConst, serid, xValueConst, { selfMongo: MONGOC, selfLocalMongo: MONGOLOCALC, generalPriceView: true });
       result.alphaPercentage = res.alphaPercentage;
@@ -1507,6 +1510,9 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     for (let designer of designers) {
 
       serviceMatchBoo = (y <= designer.analytics.construct.level);
+      if (serviceMatchBoo) {
+        serviceMatchBoo = (y <= designer.analytics.construct.ability);
+      }
 
       if (client.requests[requestNumber].request.space.resident.living) {
         if (designer.analytics.project.living) {
