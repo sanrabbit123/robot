@@ -1818,7 +1818,7 @@ FileJs.prototype.baseMaker = function () {
           if (id === undefined) {
             window.alert("해당 폴더는 공유 링크를 만들 수 없습니다!");
           } else {
-            await window.navigator.clipboard.writeText(window.location.protocol + "//" + window.location.host + "/dashboard?mode=file&path=" + id);
+            await window.navigator.clipboard.writeText(window.location.protocol + "//" + window.location.host + "/file&path=" + id);
             instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
           }
           removeByClass(contextmenuClassName);
@@ -2369,7 +2369,7 @@ FileJs.prototype.baseMaker = function () {
               window.alert("해당 폴더는 공유 링크를 만들 수 없습니다!");
               return (new Promise((resolve, reject) => { resolve(null) }));
             } else {
-              return window.navigator.clipboard.writeText(window.location.protocol + "//" + window.location.host + "/dashboard?mode=file&path=" + id);
+              return window.navigator.clipboard.writeText(window.location.protocol + "//" + window.location.host + "/file&path=" + id);
             }
           }).then(() => {
             instance.mother.greenAlert(`클립보드에 저장되었습니다!`);

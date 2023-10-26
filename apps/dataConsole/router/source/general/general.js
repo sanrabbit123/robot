@@ -2439,7 +2439,7 @@ GeneralJs.prototype.greenBar = function () {
   this.belowButtons.sub.folder = svg_icon;
   if (!/\/dashboard/gi.test(window.location.pathname)) {
     this.belowButtons.sub.folder.addEventListener("click", function (e) {
-      GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/dashboard?mode=file");
+      GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/file");
     });
   }
   this.belowButtons.sub.folder.addEventListener("contextmenu", function (e) {
