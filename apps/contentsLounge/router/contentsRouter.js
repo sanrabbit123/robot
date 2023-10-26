@@ -1749,6 +1749,46 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_queryAnalytics = function () {
+  const instance = this;
+  const back = this.back;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/queryAnalytics" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const { mode } = equalJson(req.body);
+      const selfMongo = instance.mongolog;
+      const collection = "queryAnalytics";
+      let rows;
+      if (mode === "get") {
+        if (req.body.whereQuery === undefined) {
+          throw new Error("invalid post 2");
+        }
+        const { whereQuery } = equalJson(req.body);
+        rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        res.send(JSON.stringify(rows));
+      } else {
+        throw new Error("invalid mode");
+      }
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_queryAnalytics): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 ContentsRouter.prototype.rou_post_shareGoogleId = function () {
   const instance = this;
   const back = this.back;

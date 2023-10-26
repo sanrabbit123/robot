@@ -2641,6 +2641,45 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
             result = await analytics.dailyMetric(thisDate);
             if (result === null) {
               await logger.error("daily metric error : " + dateToString(thisDate));
+              await sleep(1000);
+              result = await analytics.dailyMetric(thisDate);
+              if (result === null) {
+                await logger.error("daily metric error : " + dateToString(thisDate));
+                await sleep(1000);
+                result = await analytics.dailyMetric(thisDate);
+                if (result === null) {
+                  await logger.error("daily metric error : " + dateToString(thisDate));
+                  await sleep(1000);
+                  result = await analytics.dailyMetric(thisDate);
+                  if (result === null) {
+                    await logger.error("daily metric error : " + dateToString(thisDate));      
+                  } else {
+                    anaid = result.anaid;
+                    rows = await back.mongoRead(collection, { anaid }, { selfMongo });
+                    if (rows.length !== 0) {
+                      await back.mongoDelete(collection, { anaid }, { selfMongo })
+                    }
+                    await back.mongoCreate(collection, result, { selfMongo });
+                    logger.cron("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+                  }
+                } else {
+                  anaid = result.anaid;
+                  rows = await back.mongoRead(collection, { anaid }, { selfMongo });
+                  if (rows.length !== 0) {
+                    await back.mongoDelete(collection, { anaid }, { selfMongo })
+                  }
+                  await back.mongoCreate(collection, result, { selfMongo });
+                  logger.cron("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+                }
+              } else {
+                anaid = result.anaid;
+                rows = await back.mongoRead(collection, { anaid }, { selfMongo });
+                if (rows.length !== 0) {
+                  await back.mongoDelete(collection, { anaid }, { selfMongo })
+                }
+                await back.mongoCreate(collection, result, { selfMongo });
+                logger.cron("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+              }
             } else {
               anaid = result.anaid;
               rows = await back.mongoRead(collection, { anaid }, { selfMongo });
