@@ -411,6 +411,8 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
           sourceArr.push("facebook");
         } else if (referrerArr.some((str) => { return /facebook/gi.test(str) })) {
           sourceArr.push("facebook");
+        } else if (referrerArr.some((str) => { return /meta/gi.test(str) })) {
+          sourceArr.push("facebook");
         }
   
         thisSource = [ ...new Set(sourceArr) ];
@@ -421,7 +423,7 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
           let result;
           if (/naver/gi.test(str)) {
             result = "naver";
-          } else if (/instagram/gi.test(str) || /facebook/gi.test(str)) {
+          } else if (/instagram/gi.test(str) || /facebook/gi.test(str) || /meta/gi.test(str)) {
             result = "facebook";
           } else {
             result = str;

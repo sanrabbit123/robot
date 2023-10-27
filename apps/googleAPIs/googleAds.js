@@ -17,8 +17,7 @@ const GoogleAds = function (mother = null, back = null, address = null) {
 GoogleAds.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, logger = null) {
   const instance = this;
   const back = this.back;
-  const { sleep, dateToString, stringToDate, requestSystem, pythonExecute, emergencyAlarm } = this.mother;
-  const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
+  const { sleep, dateToString, stringToDate, requestSystem, pythonExecute, emergencyAlarm, zeroAddition } = this.mother;
   try {
     const campaignCollection = "dailyCampaign";
     let startDate;
@@ -113,6 +112,87 @@ GoogleAds.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, lo
 
   } catch (e) {
     emergencyAlarm("GoogleAds.dailyCampaign error : " + e.message).catch((err) => { console.log(err); });
+    console.log(e);
+  }
+}
+
+GoogleAds.prototype.getCampaignsByDate = async function (targetDate) {
+  const instance = this;
+  const back = this.back;
+  const { sleep, dateToString, stringToDate, requestSystem, pythonExecute, emergencyAlarm, zeroAddition } = this.mother;
+  try {
+    let res;
+    let targetRows;
+    let num;
+    let key, json;
+    let from, to;
+    let result;
+
+    if (!(targetDate instanceof Date)) {
+      throw new Error("invalid input");
+    }
+
+    from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), 0, 0, 0, 0);
+    to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), 0, 0, 0, 0);
+    to.setDate(to.getDate() + 1);
+
+    res = await pythonExecute(`${this.dir}/python/app.py`, [ "ads", "getCampaignList" ], { date: dateToString(targetDate) });
+    if (Array.isArray(res)) {
+      targetRows = res.map((obj) => {
+        return {
+          id: obj.id,
+          account: obj.account,
+          name: obj.name,
+          type: obj.type.replace(/^AdvertisingChannelType\./i, ''),
+          cost: Math.round(Number(obj.cost_micros) / 1000000),
+          impressions: Number(obj.impressions),
+          clicks: Number(obj.clicks),
+          interactions: Number(obj.interactions),
+        }
+      }).filter((obj) => {
+        return !(obj.cost === 0 && obj.impressions === 0 && obj.clicks === 0);
+      });
+
+      num = 0;
+      result = [];
+      for (let obj of targetRows) {
+
+        key = dateToString(targetDate).replace(/\-/gi, '') + "_" + obj.id
+
+        json = {
+          key,
+          date: { from, to },
+          value: {
+            charge: Number(obj.cost),
+            performance: {
+              impressions: Number(obj.impressions),
+              clicks: Number(obj.clicks),
+              interactions: Number(obj.interactions),
+            },
+          },
+          information: {
+            mother: "google",
+            type: obj.type,
+            id: {
+              account: obj.account,
+              campaign: obj.id,
+            },
+            name: obj.name,
+          }
+        };
+
+        result.push(json);
+        num++;
+      }
+
+      return result;
+
+    } else {
+      return [];
+    }
+
+  } catch (e) {
+    emergencyAlarm("GoogleAds.getCampaignsByDate error : " + e.message).catch((err) => { console.log(err); });
     console.log(e);
   }
 }

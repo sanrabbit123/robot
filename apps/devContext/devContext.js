@@ -155,7 +155,75 @@ DevContext.prototype.launching = async function () {
 
 
 
+    /*
+
+    const ads = new GoogleAds();
+    let targetDate;
+    let json;
+    let from, to;
+    let campaigns;
+
+    targetDate = new Date(2023, 7, 23);
+
+    from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), 0, 0, 0, 0);
+    to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), 0, 0, 0, 0);
+    to.setDate(to.getDate() + 1);
+
+    json = {
+      camid: "",
+      key: dateToString(targetDate).replace(/[^0-9]/gi, '') + "_google",
+      date: { from, to },
+      advertisement: {
+        value: {
+          charge: 0,
+          performance: {
+            interactions: 0,
+            impressions: 0,
+            clicks: 0
+          }
+        },
+        campaign: [],
+      }
+    };
+
+    campaigns = await ads.getCampaignsByDate(targetDate);
+    for (let campaign of campaigns) {
+      json.advertisement.campaign.push({
+        value: {
+          charge: campaign.value.charge,
+          performance: {
+            interactions: campaign.value.performance.interactions,
+            impressions: campaign.value.performance.impressions,
+            clicks: campaign.value.performance.clicks,
+          }
+        },
+        information: {
+          id: campaign.information.id.campaign,
+          account: campaign.information.id.account,
+          name: campaign.information.id.name,
+        }
+      })
+    }
+
+    json.advertisement.value.charge = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
+    json.advertisement.value.performance.interactions = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.interactions }, 0);
+    json.advertisement.value.performance.impressions = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0);
+    json.advertisement.value.performance.clicks = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0);
+
+    console.log(JSON.stringify(json.advertisement, null, 2));
+
+
+    */
+
+
+
     
+
+    
+
+
+
+
 
     
 
@@ -6889,9 +6957,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김재석",
-    //     designer: "권미정",
-    //     link: "https://drive.google.com/drive/folders/1AIHksr86JO8rKI3qKROxmmI7E390rYOJ",
+    //     client: null,
+    //     designer: "김희연",
+    //     link: "https://drive.google.com/drive/folders/1sU5S-5cCBU4SCOxeAxs7TQcs855sKtyX",
     //     pay: true
     //   },
     // ]);
@@ -6944,7 +7012,6 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-
     // get photo folder
     // const drive = new GoogleDrive();
     // await drive.get_folder_inPython("https://drive.google.com/drive/folders/1RD8A65ghQe4oPruXYJ4Koieny0n3jYO9", "test");
@@ -6957,7 +7024,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2309_aa07s" ]);
+    // await work.newDesignerToFront([ "d2310_aa04s" ]);
 
 
     // new designer set proposal setting

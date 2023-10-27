@@ -1063,7 +1063,7 @@ LogReport.prototype.dailyReports = async function () {
         const clientsEntireRows = await back.mongoRead("dailyClients", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
 
         const facebookCampaignBoo = (str) => {
-          return (/instagram/gi.test(str) || /facebook/gi.test(str));
+          return (/instagram/gi.test(str) || /facebook/gi.test(str) || /meta/gi.test(str));
         }
         const naverCampaignBoo = (str) => {
           return (/naver/gi.test(str)) && !(/organic/gi.test(str) || /referral/gi.test(str));
@@ -1225,7 +1225,7 @@ LogReport.prototype.dailyReports = async function () {
           // 2 - facebook
 
           facebookRows = campaignRows.filter((obj) => {
-            return /facebook/gi.test(obj.information.mother);
+            return /facebook/gi.test(obj.information.mother) || /meta/gi.test(obj.information.mother) || /instagram/gi.test(obj.information.mother);
           });
           if (facebookRows.length > 0) {
             facebookCharge = facebookRows.reduce((acc, curr) => {
@@ -2809,7 +2809,7 @@ LogReport.prototype.dailyReports = async function () {
             budgetSet[10].value = budgetSet[10].value + 1;
           }
 
-          if (/facebook/gi.test(source) || /instagram/gi.test(source)) {
+          if (/facebook/gi.test(source) || /instagram/gi.test(source) || /meta/gi.test(source)) {
             sourceSet[0].value = sourceSet[0].value + 1;
           } else if (/naver/gi.test(source)) {
             sourceSet[1].value = sourceSet[1].value + 1;

@@ -62,7 +62,7 @@ class GoogleAds:
 
     def getCampaignList(self, targetDate):
         ga_service = self.app.get_service("GoogleAdsService")
-        query = f"SELECT campaign.id, campaign.name, campaign.advertising_channel_type, metrics.impressions, metrics.clicks, metrics.cost_micros FROM campaign WHERE segments.date >= '{targetDate}' AND segments.date <= '{targetDate}'"
+        query = f"SELECT campaign.id, campaign.name, campaign.advertising_channel_type, metrics.impressions, metrics.clicks, metrics.cost_micros, metrics.interactions FROM campaign WHERE segments.date >= '{targetDate}' AND segments.date <= '{targetDate}'"
         stream = ga_service.search_stream(customer_id=str(self.childId), query=query)
         tong = []
         for batch in stream:
@@ -75,5 +75,6 @@ class GoogleAds:
                     "cost_micros": str(row.metrics.cost_micros),
                     "impressions": str(row.metrics.impressions),
                     "clicks": str(row.metrics.clicks),
+                    "interactions": str(row.metrics.interactions)
                 })
         return dumps(tong)
