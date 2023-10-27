@@ -3955,6 +3955,8 @@ SecondRouter.prototype.rou_post_designerChecklistLog = function () {
       const { source: userAgent, browser, os, platform } = rawUserAgent;
       let text;
 
+      console.log(data);
+
       text = "";
       ipParsing(ip).then((ipObj) => {
         if (ipObj === null) {
