@@ -1695,6 +1695,7 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
 
   }).catch((err) => {
     GeneralJs.ajaxJson({ message: "FirstMeetingJs.insertPhotoBox : " + err.message }, BACKHOST + "/errorLog").catch((e) => {});
+    GeneralJs.ajaxJson({ message: "FirstMeetingJs.insertPhotoBox : " + JSON.stringify(err) }, BACKHOST + "/errorLog").catch((e) => {});
   });
 
 }

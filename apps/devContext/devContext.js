@@ -6952,7 +6952,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "장지숙", "2023-10-18" ],
+    //   [ "고은나라", "2023-10-23" ],
     // ]);
 
 
@@ -6961,17 +6961,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2309_aa07s", [
-    //   { porlid: "a112", index: 1 },
-    //   { porlid: "a112", index: 9 },
-    //   { porlid: "a112", index: 10 },
-    //   { porlid: "a112", index: 7 },
-    //   { porlid: "a112", index: 11 },
-    //   { porlid: "a112", index: 12 },
+    // await this.setProposalSettingForDesigner("d2310_aa04s", [
+    //   { porlid: "ghost", index: 17 },
+    //   { porlid: "ghost", index: 16 },
+    //   { porlid: "ghost", index: 3 },
+    //   { porlid: "ghost", index: 10 },
+    //   { porlid: "ghost", index: 24 },
+    //   { porlid: "ghost", index: 25 },
     // ], [
-    //   "디자인을 사전에 잘 보여드릴 수 있는 페이퍼 워크 작업 능력이 있습니다.",
-    //   "세세한 내용까지 꼼꼼히 챙길 수 있는 능력이 있고, 그만큼 경력이 있어 믿을 수 있습니다.",
-    //   "원활한 소통 능력이 뛰어나, 진행하는 동안 내내 안정적인 프로세스를 제공해드릴 수 있습니다.",
+    //   "다양한 분야의 노하우와 스타일을 만들어 왔고, 여러 스타일을 다양하게 소화할 수 있습니다.",
+    //   "디스플레이 업무를 진행했던 경험으로 다양한 스타일의 제안과 연출이 가능합니다.",
+    //   "여러 분야의 협력 업체들과 각종 필요한 가구, 소품 등 설계, 제작이 가능합니다.",
     // ]);
 
 
