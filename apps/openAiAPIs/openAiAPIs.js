@@ -253,10 +253,38 @@ OpenAiAPIs.prototype.slackGPT = async function (channel, input, user = null, sel
             });
 
           } else if (/디자이너/gi.test(thisText) && /de/gi.test(thisText)) {
-  
+            tempArr = thisText.split(" ");
+            if (/ 디자이너/gi.test(thisText)) {
+              index = tempArr.findIndex((str) => { return /디자이너/gi.test(str) });
+              if (tempArr[index - 1] === undefined) {
+                throw new Error("index error");
+              }
+              thisDesignerName = tempArr[index - 1].trim();
+            } else {
+              index = tempArr.findIndex((str) => { return /디자이너/gi.test(str) });
+              if (index === -1) {
+                throw new Error("index error");
+              }
+              thisDesignerName = tempArr[index].trim().replace(/디자이너/gi, "").replace(/님$/gi, "");
+            }
+
+            thisDesigners = await back.getDesignersByQuery({ designer: { $regex: thisDesignerName } }, { selfMongo })
+            if (thisDesigners.length === 0) {
+              throw new Error("general case");
+            }
             
-  
-  
+            result = thisDesigners.toNormal().map((designer) => {
+              return `${designer.name} 실장님 (${designer.desid}) => https://${address.backinfo.host}/designer?mode=normal&desid=${designer.desid}`;
+            }).join("\n");
+
+            res = await requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
+              channel: channel,
+              text: "<@" + user.slack + ">\n" + result,
+            }, {
+              headers: {
+                "Content-Type": "application/json"
+              }
+            });
   
           } else {
             throw new Error("general case");
