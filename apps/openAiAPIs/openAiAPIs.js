@@ -182,20 +182,52 @@ OpenAiAPIs.prototype.slackGPT = function (channel, input, user = null) {
   const port = 3000;
   const path = "/fairySlack";
   return new Promise((resolve, reject) => {
-    instance.chatGPT(input.trim() === "" ? "안녕?" : input.trim()).then((result) => {
-      return requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
-        channel: channel,
-        text: (user !== null ? "<@" + user + "> " : "") + result,
-      }, {
-        headers: {
-          "Content-Type": "application/json"
-        }
+    if (typeof user === "object" && user !== null) {
+      if (user.level > 2) {
+        instance.chatGPT(input.trim() === "" ? "안녕?" : input.trim()).then((result) => {
+          return requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
+            channel: channel,
+            text: "<@" + user.slack + "> " + result,
+          }, {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          });
+        }).then((res) => {
+          resolve(res.data);
+        }).catch((err) => {
+          reject(err);
+        });
+      } else {
+        requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
+          channel: channel,
+          text: "<@" + user.slack + "> " + "당신에게는 아무런 대답도, 도움도 주고 싶지 않습니다.",
+        }, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }).then((res) => {
+          resolve(res.data);
+        }).catch((err) => {
+          reject(err);
+        });
+      }
+    } else {
+      instance.chatGPT(input.trim() === "" ? "안녕?" : input.trim()).then((result) => {
+        return requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
+          channel: channel,
+          text: (user !== null ? "<@" + user + "> " : "") + result,
+        }, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+      }).then((res) => {
+        resolve(res.data);
+      }).catch((err) => {
+        reject(err);
       });
-    }).then((res) => {
-      resolve(res.data);
-    }).catch((err) => {
-      reject(err);
-    });
+    }
   });
 }
 

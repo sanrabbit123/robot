@@ -3098,8 +3098,13 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
     const thisBody = equalJson(req.body);
     try {
       const members = instance.members;
-      let text;
-      let thisChannel;
+      const membersSlack = members.map((o) => { return {
+        name: o.name,
+        title: o.title,
+        slack: o.slack.id,
+        level: o.level,
+      } });
+      let thisUser;
     
       if (typeof thisBody.event === "object") {
         if (thisBody.api_app_id.toLowerCase() === slack_fairyAppId.toLowerCase()) {
@@ -3107,29 +3112,36 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
             if (typeof thisBody.event.text === "string") {
               if (/^요정[아]?/i.test(thisBody.event.text.trim()) || (new RegExp(slack_fairyId, "gi")).test(thisBody.event.text.trim())) {
                 if (/온라인/gi.test(thisBody.event.text.trim()) || /실시간/gi.test(thisBody.event.text.trim()) || /현재/gi.test(thisBody.event.text.trim())) {
-                  if (/웹/gi.test(thisBody.event.text.trim()) || /홈페이지/gi.test(thisBody.event.text.trim()) || /홈리에종/gi.test(thisBody.event.text.trim())) {
+                  if ((/웹/gi.test(thisBody.event.text.trim()) || /홈페이지/gi.test(thisBody.event.text.trim())) && /홈리에종/gi.test(thisBody.event.text.trim())) {
                     requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/realtimeMessage", { channel: thisBody.event.channel }, {
                       headers: { "Content-Type": "application/json" }
                     }).catch((err) => {
                       console.log(err);
                     })
                   } else {
-                    openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, "")).catch((err) => {
+                    thisUser = membersSlack.find((o) => { return o.slack.toLowerCase().trim() === thisBody.event.user.toLowerCase().trim() });
+                    if (thisUser === undefined) {
+                      openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisBody.event.user).catch((err) => {
+                        console.log(err);
+                      });
+                    } else {
+                      openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisUser).catch((err) => {
+                        console.log(err);
+                      });
+                    }
+                  }
+                } else {
+                  thisUser = membersSlack.find((o) => { return o.slack.toLowerCase().trim() === thisBody.event.user.toLowerCase().trim() });
+                  if (thisUser === undefined) {
+                    openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisBody.event.user).catch((err) => {
+                      console.log(err);
+                    });
+                  } else {
+                    openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisUser).catch((err) => {
                       console.log(err);
                     });
                   }
-                } else {
-                  openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisBody.event.user).catch((err) => {
-                    console.log(err);
-                  });
                 }
-              }
-              if (thisBody.event.text.trim() === "온라인" || thisBody.event.text.trim() === "현재" || thisBody.event.text.trim() === "실시간") {
-                requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/realtimeMessage", { channel: thisBody.event.channel }, {
-                  headers: { "Content-Type": "application/json" }
-                }).catch((err) => {
-                  console.log(err);
-                })
               }
             }
   
