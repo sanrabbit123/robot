@@ -2080,7 +2080,11 @@ DataRouter.prototype.rou_post_sendSlack = function () {
       const { message, channel } = req.body;
       let text;
       let voiceBoo;
+      let ip, rawUserAgent;
 
+      ip = String(req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"]).trim().replace(/[^0-9\.]/gi, '');
+      rawUserAgent = req.useragent;
+      
       text = message.replace(/__equal__/g, '=').replace(/__amper__/g, '&').replace(/__query__/g, '?').replace(/__plus__/g, '+');
       if (req.body.voice !== undefined) {
         if (req.body.voice === null) {
@@ -2097,7 +2101,7 @@ DataRouter.prototype.rou_post_sendSlack = function () {
       }
 
       if (channel === "#error_log") {
-        await logger.error(text);
+        await logger.error(text + "\n\n" + "ip: " + String(ip) + "\n\n" + JSON.stringify(rawUserAgent, null, 2));
       } else {
         await messageSend({ text, channel, voice: voiceBoo, target: (req.body.target !== undefined ? equalJson(req.body).target : null), fairy: false });
       }

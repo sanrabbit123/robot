@@ -1162,7 +1162,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
   const { targetColumn, barWidth, barLeft, secondWidth, secondLeft, secondUpdateWidth, updateWidth, columnIndent } = DataPatch.toolsGrayLeftStandard(thisPathName);
   const UPDATE_WORD = "담당자";
   if (window.localStorage.getItem("GoogleClientProfile") === null) {
-    throw new Error(window.location.href + " / now allowed");
+    throw new Error(window.location.href + " / not allowed");
     window.localStorage.clear();
     window.location.reload();
   }
