@@ -155,8 +155,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    /*
 
+    
     const ads = new GoogleAds();
     let targetDate;
     let json;
@@ -180,6 +180,9 @@ DevContext.prototype.launching = async function () {
             interactions: 0,
             impressions: 0,
             clicks: 0
+          },
+          length: {
+            campaign: 0,
           }
         },
         campaign: [],
@@ -205,16 +208,18 @@ DevContext.prototype.launching = async function () {
       })
     }
 
+
+    json.advertisement.value.length.campaign = json.advertisement.campaign.length;
     json.advertisement.value.charge = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
     json.advertisement.value.performance.interactions = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.interactions }, 0);
     json.advertisement.value.performance.impressions = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0);
     json.advertisement.value.performance.clicks = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0);
 
-    console.log(JSON.stringify(json.advertisement, null, 2));
+    console.log(JSON.stringify(json, null, 2));
 
 
-    */
 
+    
 
 
     

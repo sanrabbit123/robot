@@ -3983,6 +3983,12 @@ SecondRouter.prototype.rou_post_designerChecklistLog = function () {
         return back.mongoCreate(collection, data, { selfMongo });
       }).then(() => {
         return messageSend({ text, channel, voice });
+      }).then(() => {
+        if (data.property === "성함") {
+          return messageSend({ text: data.designer + " 실장님의 이름이 바뀜 => " + data.value, channel: "#300_designer", voice: true });
+        } else {
+          return (new Promise((resolve, reject) => { return resolve(null) }));
+        }
       }).catch((err) => {
         console.log(err);
       });
