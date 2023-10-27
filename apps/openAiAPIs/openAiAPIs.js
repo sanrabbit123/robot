@@ -222,7 +222,7 @@ OpenAiAPIs.prototype.slackGPT = async function (channel, input, user = null, sel
                 return `${client.name} 고객님 (${client.cliid} / ${dateToString(client.requests[0].request.timeline, true)} / ${client.requests[0].analytics.response.status}) => https://${address.backinfo.host}/client?cliid=${client.cliid}`;
               }).join("\n");
             } else if (/ca/gi.test(thisText)) {
-              thisProjects = await back.getProjectsByQuery({ $or: thisClients.toNormal().map((cliid) => { return { cliid } }) }, { selfMongo });
+              thisProjects = await back.getProjectsByQuery({ $or: thisClients.toNormal().map((client) => { return { cliid: client.cliid } }) }, { selfMongo });
               result = "";
               for (let project of thisProjects) {
                 thisClient = thisClients.toNormal().find((c) => { return c.cliid === project.cliid });
@@ -254,7 +254,7 @@ OpenAiAPIs.prototype.slackGPT = async function (channel, input, user = null, sel
 
           } else if (/디자이너/gi.test(thisText) && /de/gi.test(thisText)) {
   
-  
+            
   
   
   
