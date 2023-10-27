@@ -55,6 +55,7 @@ const OpenAiAPIs = require(`${process.cwd()}/apps/openAiAPIs/openAiAPIs.js`);
 const LocalDevices = require(`${process.cwd()}/apps/localDevices/localDevices.js`);
 const RequestWhisk = require(`${process.cwd()}/apps/requestWhisk/requestWhisk.js`);
 const ContentsCalculator = require(`${process.cwd()}/apps/contentsLounge/router/contentsCalculator.js`);
+const GoogleYoutube = require(APP_PATH + "/googleAPIs/googleYoutube.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -155,83 +156,19 @@ DevContext.prototype.launching = async function () {
 
 
 
+
     /*
     
-    const ads = new GoogleAds();
-    let targetDate;
-    let json;
-    let from, to;
-    let campaigns;
+    const youtube = new GoogleYoutube();
+    let res, from;
+    let views, likes, subscribers;
 
-    targetDate = new Date(2023, 7, 23);
+    from = new Date(2023, 9, 10);
+    res = await pythonExecute(`${youtube.dir}/python/app.py`, [ "youtube", "channelNumbers" ], { startDate: dateToString(from), endDate: dateToString(from) });
 
-    from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), 0, 0, 0, 0);
-    to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), 0, 0, 0, 0);
-    to.setDate(to.getDate() + 1);
-
-    json = {
-      camid: "",
-      key: dateToString(targetDate).replace(/[^0-9]/gi, '') + "_google",
-      date: { from, to },
-      advertisement: {
-        value: {
-          charge: 0,
-          performance: {
-            interactions: 0,
-            impressions: 0,
-            clicks: 0
-          },
-          length: {
-            campaign: 0,
-          }
-        },
-        campaign: [],
-      }
-    };
-
-    campaigns = await ads.getCampaignsByDate(targetDate);
-    for (let campaign of campaigns) {
-      json.advertisement.campaign.push({
-        value: {
-          charge: campaign.value.charge,
-          performance: {
-            interactions: campaign.value.performance.interactions,
-            impressions: campaign.value.performance.impressions,
-            clicks: campaign.value.performance.clicks,
-          }
-        },
-        information: {
-          id: campaign.information.id.campaign,
-          account: campaign.information.id.account,
-          name: campaign.information.id.name,
-        }
-      })
-    }
-
-
-    json.advertisement.value.length.campaign = json.advertisement.campaign.length;
-    json.advertisement.value.charge = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
-    json.advertisement.value.performance.interactions = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.interactions }, 0);
-    json.advertisement.value.performance.impressions = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0);
-    json.advertisement.value.performance.clicks = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0);
-
-    console.log(JSON.stringify(json, null, 2));
-
+    console.log(res);
 
     */
-    
-
-
-    
-
-    
-
-
-
-
-
-    
-
 
 
 

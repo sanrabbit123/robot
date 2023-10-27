@@ -197,4 +197,116 @@ GoogleAds.prototype.getCampaignsByDate = async function (targetDate) {
   }
 }
 
+GoogleAds.prototype.googleComplex = async function (selfMongo, dayNumber = 3, logger = null) {
+  const instance = this;
+  const back = this.back;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition } = this.mother;
+  try {
+    const collection = "googleComplex";
+    const idKeyword = 'f';
+    const googleKeyword = 'g';
+    const googleKeyKeyword = "google";
+    let tempRows;
+    let res;
+    let json;
+    let from, to;
+    let startDate;
+    let num;
+    let key;
+    let now;
+    let campaignId;
+    let adsetId;
+    let targetObj;
+    let campaigns;
+
+    now = new Date();
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    for (let i = 0; i < dayNumber; i++) {
+      startDate.setDate(startDate.getDate() - 1);
+    }
+
+    for (let i = 0; i < dayNumber; i++) {
+
+      await sleep(500);
+      if (i === 0) {
+        from = new Date(JSON.stringify(startDate).slice(1, -1));
+        to = new Date(JSON.stringify(startDate).slice(1, -1));
+        to.setDate(to.getDate() + 1);
+      } else {
+        from.setDate(from.getDate() + 1);
+        to.setDate(to.getDate() + 1);
+      }
+
+      key = dateToString(from).replace(/\-/gi, '') + "_" + googleKeyKeyword;
+      json = {
+        camid: idKeyword + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + googleKeyword + 'a' + zeroAddition(from.getDate()) + 's',
+        key,
+        date: { from, to },
+        advertisement: {
+          value: {
+            charge: 0,
+            performance: {
+              interactions: 0,
+              impressions: 0,
+              clicks: 0
+            },
+            length: {
+              campaign: 0,
+            }
+          },
+          campaign: [],
+        }
+      };
+
+      // campaign
+      campaigns = await ads.getCampaignsByDate(from);
+      for (let campaign of campaigns) {
+        json.advertisement.campaign.push({
+          value: {
+            charge: campaign.value.charge,
+            performance: {
+              interactions: campaign.value.performance.interactions,
+              impressions: campaign.value.performance.impressions,
+              clicks: campaign.value.performance.clicks,
+            }
+          },
+          information: {
+            id: campaign.information.id.campaign,
+            account: campaign.information.id.account,
+            name: campaign.information.id.name,
+          }
+        })
+      }
+      json.advertisement.value.length.campaign = json.advertisement.campaign.length;
+      json.advertisement.value.charge = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
+      json.advertisement.value.performance.interactions = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.interactions }, 0);
+      json.advertisement.value.performance.impressions = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0);
+      json.advertisement.value.performance.clicks = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0);
+  
+      // youtube
+
+
+      // search
+
+
+      // store
+      // tempRows = await back.mongoRead(collection, { key }, { selfMongo });
+      // if (tempRows.length !== 0) {
+      //   await back.mongoDelete(collection, { key }, { selfMongo });
+      // }
+      // await back.mongoCreate(collection, json, { selfMongo });
+      console.log(json);
+
+    }
+
+    if (logger !== null) {
+      logger.cron("google complex store done : " + dateToString(new Date())).catch((err) => { console.log(err); });
+    }
+
+  } catch (e) {
+    emergencyAlarm("GoogleAds.googleComplex error : " + e.message).catch((err) => { console.log(err); });
+    console.log(e);
+  }
+}
+
 module.exports = GoogleAds;
