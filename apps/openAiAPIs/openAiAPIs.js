@@ -179,7 +179,7 @@ OpenAiAPIs.prototype.slackGPT = async function (channel, input, user = null, sel
   const instance = this;
   const address = this.address;
   const back = this.back;
-  const { requestSystem } = this.mother;
+  const { requestSystem, dateToString } = this.mother;
   const port = 3000;
   const path = "/fairySlack";
   try {
@@ -219,7 +219,7 @@ OpenAiAPIs.prototype.slackGPT = async function (channel, input, user = null, sel
               
             if (/sa/gi.test(thisText)) {
               result = thisClients.toNormal().map((client) => {
-                return `${client.name} 고객님 (${client.cliid}) => https://${address.backinfo.host}/client?cliid=${client.cliid}`;
+                return `${client.name} 고객님 (${client.cliid} / ${dateToString(client.requests[0].request.timeline, true)} / ${client.requests[0].analytics.response.status}) => https://${address.backinfo.host}/client?cliid=${client.cliid}`;
               }).join("\n");
             } else if (/ca/gi.test(thisText)) {
               thisProjects = await back.getProjectsByQuery({ $or: thisClients.toNormal().map((cliid) => { return { cliid } }) }, { selfMongo });
@@ -227,13 +227,16 @@ OpenAiAPIs.prototype.slackGPT = async function (channel, input, user = null, sel
               for (let project of thisProjects) {
                 thisClient = thisClients.toNormal().find((c) => { return c.cliid === project.cliid });
                 if (project.desid === "") {
-                  result += `${thisClient.name} 고객님 (${thisClient.cliid}) => https://${address.backinfo.host}/proposal?proid=${project.proid}`;
+                  result += `${thisClient.name} 고객님 (${thisClient.cliid} / 제안서) => https://${address.backinfo.host}/proposal?proid=${project.proid}`;
                 } else {
-                  result += `${thisClient.name} 고객님 (${thisClient.cliid}) => https://${address.backinfo.host}/project?proid=${project.proid}`;
+                  result += `${thisClient.name} 고객님 (${thisClient.cliid} / 프로젝트 / ${project.process.status}) => https://${address.backinfo.host}/project?proid=${project.proid}`;
                 }
                 result += "\n";
               }
-              result = result.slice(0, -1);
+              result = result.slice(0, -1).trim();
+              if (result === '') {
+                result = "해당 고객님에 대한 project 결과가 없습니다.";
+              }
             } else {
               result = thisClients.toNormal().map((client) => {
                 return `${client.name} 고객님 (${client.cliid}) => https://${address.backinfo.host}/mpr?cliid=${client.cliid}`;
