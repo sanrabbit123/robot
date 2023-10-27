@@ -294,7 +294,7 @@ OpenAiAPIs.prototype.slackGPT = async function (channel, input, user = null, sel
           result = await instance.chatGPT(thisText === "" ? "안녕?" : thisText);
           res = await requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
             channel: channel,
-            text: "<@" + user.slack + "> " + result,
+            text: "<@" + user.slack + "> " + result.replace(/\<\@[^\>]+\>/gi, ''),
           }, {
             headers: {
               "Content-Type": "application/json"
@@ -319,7 +319,7 @@ OpenAiAPIs.prototype.slackGPT = async function (channel, input, user = null, sel
       result = await instance.chatGPT(thisText === "" ? "안녕?" : thisText);
       res = await requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
         channel: channel,
-        text: (user !== null ? "<@" + user + "> " : "") + result,
+        text: (user !== null ? "<@" + user + "> " : "") + result.replace(/\<\@[^\>]+\>/gi, ''),
       }, {
         headers: {
           "Content-Type": "application/json"
