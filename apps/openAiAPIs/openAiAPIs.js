@@ -175,17 +175,93 @@ OpenAiAPIs.prototype.fairyGPT = function (fromId, input) {
   });
 }
 
-OpenAiAPIs.prototype.slackGPT = function (channel, input, user = null) {
+OpenAiAPIs.prototype.slackGPT = async function (channel, input, user = null, selfMongo = null) {
   const instance = this;
   const address = this.address;
+  const back = this.back;
   const { requestSystem } = this.mother;
   const port = 3000;
   const path = "/fairySlack";
-  return new Promise((resolve, reject) => {
+  try {
+    let thisText;
+    let thisClientName, thisDesignerName;
+    let thisClients, thisDesigners;
+    let thisClient;
+    let thisProjects;
+    let tempArr;
+    let index;
+    let result;
+    let res;
     if (typeof user === "object" && user !== null) {
       if (user.level > 2) {
-        instance.chatGPT(input.trim() === "" ? "안녕?" : input.trim()).then((result) => {
-          return requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
+        thisText = input.trim();
+        try {
+          if (/고객/gi.test(thisText) && (/sa/gi.test(thisText) || /ca/gi.test(thisText) || /mr/gi.test(thisText))) {
+            tempArr = thisText.split(" ");
+            if (/ 고객/gi.test(thisText)) {
+              index = tempArr.findIndex((str) => { return /고객/gi.test(str) });
+              if (tempArr[index - 1] === undefined) {
+                throw new Error("index error");
+              }
+              thisClientName = tempArr[index - 1].trim();
+            } else {
+              index = tempArr.findIndex((str) => { return /고객/gi.test(str) });
+              if (index === -1) {
+                throw new Error("index error");
+              }
+              thisClientName = tempArr[index].trim().replace(/고객/gi, "").replace(/님$/gi, "");
+            }
+
+            thisClients = await back.getClientsByQuery({ name: { $regex: thisClientName } }, { selfMongo })
+            if (thisClients.length === 0) {
+              throw new Error("general case");
+            }
+              
+            if (/sa/gi.test(thisText)) {
+              result = thisClients.toNormal().map((client) => {
+                return `${client.name} 고객님 (${client.cliid}) => https://${address.backinfo.host}/client?cliid=${client.cliid}`;
+              }).join("\n");
+            } else if (/ca/gi.test(thisText)) {
+              thisProjects = await back.getProjectsByQuery({ $or: thisClients.toNormal().map((cliid) => { return { cliid } }) }, { selfMongo });
+              result = "";
+              for (let project of thisProjects) {
+                thisClient = thisClients.toNormal().find((c) => { return c.cliid === project.cliid });
+                if (project.desid === "") {
+                  result += `${thisClient.name} 고객님 (${thisClient.cliid}) => https://${address.backinfo.host}/proposal?proid=${project.proid}`;
+                } else {
+                  result += `${thisClient.name} 고객님 (${thisClient.cliid}) => https://${address.backinfo.host}/project?proid=${project.proid}`;
+                }
+                result += "\n";
+              }
+              result = result.slice(0, -1);
+            } else {
+              result = thisClients.toNormal().map((client) => {
+                return `${client.name} 고객님 (${client.cliid}) => https://${address.backinfo.host}/mpr?cliid=${client.cliid}`;
+              }).join("\n");
+            }
+
+            res = await requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
+              channel: channel,
+              text: "<@" + user.slack + ">\n" + result,
+            }, {
+              headers: {
+                "Content-Type": "application/json"
+              }
+            });
+
+          } else if (/디자이너/gi.test(thisText) && /de/gi.test(thisText)) {
+  
+  
+  
+  
+  
+          } else {
+            throw new Error("general case");
+          }
+        } catch {
+
+          result = await instance.chatGPT(thisText === "" ? "안녕?" : thisText);
+          res = await requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
             channel: channel,
             text: "<@" + user.slack + "> " + result,
           }, {
@@ -193,42 +269,39 @@ OpenAiAPIs.prototype.slackGPT = function (channel, input, user = null) {
               "Content-Type": "application/json"
             }
           });
-        }).then((res) => {
-          resolve(res.data);
-        }).catch((err) => {
-          reject(err);
-        });
+
+          return res.data;
+        }
       } else {
-        requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
+        res = await requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
           channel: channel,
           text: "<@" + user.slack + "> " + "당신에게는 아무런 대답도, 도움도 주고 싶지 않습니다.",
         }, {
           headers: {
             "Content-Type": "application/json"
           }
-        }).then((res) => {
-          resolve(res.data);
-        }).catch((err) => {
-          reject(err);
         });
+        return res.data;
       }
     } else {
-      instance.chatGPT(input.trim() === "" ? "안녕?" : input.trim()).then((result) => {
-        return requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
-          channel: channel,
-          text: (user !== null ? "<@" + user + "> " : "") + result,
-        }, {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        });
-      }).then((res) => {
-        resolve(res.data);
-      }).catch((err) => {
-        reject(err);
+      thisText = input.trim();
+      result = await instance.chatGPT(thisText === "" ? "안녕?" : thisText);
+      res = await requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
+        channel: channel,
+        text: (user !== null ? "<@" + user + "> " : "") + result,
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }
       });
+      return res.data;
     }
-  });
+
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
 }
 
 module.exports = OpenAiAPIs;

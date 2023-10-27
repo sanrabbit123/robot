@@ -3097,6 +3097,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
     });
     const thisBody = equalJson(req.body);
     try {
+      const selfMongo = instance.mongo;
       const members = instance.members;
       const membersSlack = members.map((o) => { return {
         name: o.name,
@@ -3121,11 +3122,11 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                   } else {
                     thisUser = membersSlack.find((o) => { return o.slack.toLowerCase().trim() === thisBody.event.user.toLowerCase().trim() });
                     if (thisUser === undefined) {
-                      openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisBody.event.user).catch((err) => {
+                      openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisBody.event.user, selfMongo).catch((err) => {
                         console.log(err);
                       });
                     } else {
-                      openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisUser).catch((err) => {
+                      openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisUser, selfMongo).catch((err) => {
                         console.log(err);
                       });
                     }
@@ -3133,11 +3134,11 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                 } else {
                   thisUser = membersSlack.find((o) => { return o.slack.toLowerCase().trim() === thisBody.event.user.toLowerCase().trim() });
                   if (thisUser === undefined) {
-                    openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisBody.event.user).catch((err) => {
+                    openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisBody.event.user, selfMongo).catch((err) => {
                       console.log(err);
                     });
                   } else {
-                    openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisUser).catch((err) => {
+                    openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisUser, selfMongo).catch((err) => {
                       console.log(err);
                     });
                   }
