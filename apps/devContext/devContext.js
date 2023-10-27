@@ -155,7 +155,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    /*
     
     const ads = new GoogleAds();
     let targetDate;
@@ -218,7 +218,7 @@ DevContext.prototype.launching = async function () {
     console.log(JSON.stringify(json, null, 2));
 
 
-
+    */
     
 
 
