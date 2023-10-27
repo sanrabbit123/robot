@@ -274,7 +274,7 @@ OpenAiAPIs.prototype.slackGPT = async function (channel, input, user = null, sel
             }
             
             result = thisDesigners.toNormal().map((designer) => {
-              return `${designer.name} 실장님 (${designer.desid}) => https://${address.backinfo.host}/designer?mode=normal&desid=${designer.desid}`;
+              return `${designer.designer} 실장님 (${designer.desid}) => https://${address.backinfo.host}/designer?mode=normal&desid=${designer.desid}`;
             }).join("\n");
 
             res = await requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
