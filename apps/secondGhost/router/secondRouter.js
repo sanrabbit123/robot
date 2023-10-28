@@ -3107,7 +3107,18 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       } });
       let thisUser;
     
-      console.log(thisBody);
+      requestSystem("https://slack.com/api/reactions.add", {
+        channel: thisBody.event.ts,
+        name: "thumbsup",
+        thisBody.event.ts
+      }, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer " + instance.slack_userToken,
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
 
       if (typeof thisBody.event === "object") {
         if (thisBody.api_app_id.toLowerCase() === slack_fairyAppId.toLowerCase()) {
