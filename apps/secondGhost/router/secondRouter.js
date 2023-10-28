@@ -3107,18 +3107,18 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       } });
       let thisUser;
     
-      requestSystem("https://slack.com/api/reactions.add", {
-        channel: thisBody.event.channel,
-        name: "thumbsup",
-        timestamp: thisBody.event.ts
-      }, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Authorization": "Bearer " + instance.slack_fairyToken,
-        }
-      }).catch((err) => {
-        console.log(err);
-      })
+      // requestSystem("https://slack.com/api/reactions.add", {
+      //   channel: thisBody.event.channel,
+      //   name: "thumbsup",
+      //   timestamp: thisBody.event.ts
+      // }, {
+      //   headers: {
+      //     "Content-Type": "application/x-www-form-urlencoded",
+      //     "Authorization": "Bearer " + instance.slack_fairyToken,
+      //   }
+      // }).catch((err) => {
+      //   console.log(err);
+      // })
 
       if (typeof thisBody.event === "object") {
         if (thisBody.api_app_id.toLowerCase() === slack_fairyAppId.toLowerCase()) {
