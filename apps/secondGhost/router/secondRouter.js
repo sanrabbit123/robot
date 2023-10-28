@@ -3107,7 +3107,6 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       } });
       let thisUser;
     
-      console.log(thisBody)
       requestSystem("https://slack.com/api/reactions.add", {
         channel: thisBody.event.channel,
         name: "thumbsup",
@@ -3115,10 +3114,8 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       }, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          "Authorization": "Bearer " + instance.slack_userToken,
+          "Authorization": "Bearer " + instance.slack_fairyToken,
         }
-      }).then((res) => {
-        console.log(res);
       }).catch((err) => {
         console.log(err);
       })
