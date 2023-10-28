@@ -3110,7 +3110,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       requestSystem("https://slack.com/api/reactions.add", {
         channel: thisBody.event.ts,
         name: "thumbsup",
-        thisBody.event.ts
+        timestamp: thisBody.event.ts
       }, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
