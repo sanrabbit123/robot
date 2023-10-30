@@ -6986,17 +6986,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2310_aa04s", [
-    //   { porlid: "ghost", index: 17 },
-    //   { porlid: "ghost", index: 16 },
+    // await this.setProposalSettingForDesigner("d2310_aa05s", [
+    //   { porlid: "ghost", index: 2 },
     //   { porlid: "ghost", index: 3 },
     //   { porlid: "ghost", index: 10 },
-    //   { porlid: "ghost", index: 24 },
-    //   { porlid: "ghost", index: 25 },
+    //   { porlid: "ghost", index: 6 },
+    //   { porlid: "ghost", index: 8 },
+    //   { porlid: "ghost", index: 12 },
     // ], [
-    //   "다양한 분야의 노하우와 스타일을 만들어 왔고, 여러 스타일을 다양하게 소화할 수 있습니다.",
-    //   "디스플레이 업무를 진행했던 경험으로 다양한 스타일의 제안과 연출이 가능합니다.",
-    //   "여러 분야의 협력 업체들과 각종 필요한 가구, 소품 등 설계, 제작이 가능합니다.",
+    //   "색상에 대한 이해도가 높고, 컬러리스트 자격증도 소지하고 있어 정확하고 섬세한 컬러 컨실팅이 가능합니다.",
+    //   "공간의 레이아웃과 설계에 충실한 디자이너로 가장 기본적인 디자인에 집중합니다.",
+    //   "주부 경력 17년차 소통 중심으로 주부들의 로망을 재현해드릴 수 있는 디자이너입니다."
     // ]);
 
 
