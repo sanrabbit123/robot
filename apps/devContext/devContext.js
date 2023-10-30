@@ -169,7 +169,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    
 
     
 
@@ -6909,6 +6909,16 @@ DevContext.prototype.launching = async function () {
     //     designer: "김보하",
     //     link: "https://drive.google.com/drive/folders/1CHhsCaF_T5CiLq3Pps2hrK2OJaY5lCOC",
     //     pay: true
+    //   },
+    // ]);
+
+
+    // raw video
+    // const filter = new PortfolioFilter();
+    // await filter.rawVideo([
+    //   {
+    //     client: "주진영",
+    //     designer: "이정아",
     //   },
     // ]);
 

@@ -950,6 +950,7 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
     let thisFileName;
     let exe;
     let targetFolder, targetFolderList;
+    let num;
 
     await selfMongo.connect();
     await selfContentsMongo.connect();
@@ -957,9 +958,14 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
 
     for (let { client, designer } of arr) {
 
-      
+      targetFolder = options.photo_dir;
+      targetFolderList = await fileSystem(`readFolder`, [ targetFolder ]);
 
-
+      num = 0;
+      for (let name of targetFolderList) {
+        await shellExec(`mv ${shellLink(targetFolder + "/" + name)} ${shellLink(targetFolder + "/" + client + "_" + designer + "_" + String(num) + "." + name.split(".")[name.split(".").length - 1])}`);
+        num++;
+      }
 
       targetFolder = options.photo_dir;
       targetFolderList = await fileSystem(`readFolder`, [ targetFolder ]);
