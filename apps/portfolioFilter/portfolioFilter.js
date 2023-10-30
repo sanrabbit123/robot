@@ -476,7 +476,6 @@ PortfolioFilter.prototype.image_ready = async function () {
 
     if (fileList.length === 0) {
       throw new Error(`There is no photo.\nPlease give me photos. in : ${resourceFolder}`);
-      process.exit();
     }
 
     fileList.sort((a, b) => { return Number(instance.just_filter(a)) - Number(instance.just_filter(b)); });
