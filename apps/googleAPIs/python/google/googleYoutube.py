@@ -38,5 +38,5 @@ class GoogleYoutube:
         self.app = youtube
 
     def channelNumbers(self, startDate, endDate):
-        result = self.app.reports().query(ids='channel==MINE', startDate=startDate, endDate=endDate, dimensions="channel", metrics='views,likes,subscribersGained').execute()
+        result = self.app.reports().query(ids='channel==MINE', startDate=startDate, endDate=endDate, dimensions="channel", metrics='views,likes,subscribersGained,shares').execute()
         return result['rows'][0][1:]

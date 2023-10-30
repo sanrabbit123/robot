@@ -156,14 +156,10 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const youtube = new GoogleYoutube();
-    // let res, from;
-    // let views, likes, subscribers;
+    // const ads = new GoogleAds();
+    // await ads.googleComplex(this.MONGOLOCALC, 5, null);
+    
 
-    // from = new Date(2023, 9, 10);
-    // res = await pythonExecute(`${youtube.dir}/python/app.py`, [ "youtube", "channelNumbers" ], { startDate: dateToString(from), endDate: dateToString(from) });
-
-    // console.log(res);
 
 
 
@@ -172,6 +168,9 @@ DevContext.prototype.launching = async function () {
     
 
     
+
+
+
 
 
 

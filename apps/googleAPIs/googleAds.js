@@ -159,6 +159,8 @@ GoogleAds.prototype.getCampaignsByDate = async function (targetDate) {
 
         key = dateToString(targetDate).replace(/\-/gi, '') + "_" + obj.id
 
+        console.log(obj);
+
         json = {
           key,
           date: { from, to },
@@ -200,7 +202,7 @@ GoogleAds.prototype.getCampaignsByDate = async function (targetDate) {
 GoogleAds.prototype.googleComplex = async function (selfMongo, dayNumber = 3, logger = null) {
   const instance = this;
   const back = this.back;
-  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition } = this.mother;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, pythonExecute } = this.mother;
   try {
     const collection = "googleComplex";
     const idKeyword = 'f';
@@ -218,6 +220,7 @@ GoogleAds.prototype.googleComplex = async function (selfMongo, dayNumber = 3, lo
     let adsetId;
     let targetObj;
     let campaigns;
+    let views, likes, shares, followers;
 
     now = new Date();
     startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
@@ -255,11 +258,21 @@ GoogleAds.prototype.googleComplex = async function (selfMongo, dayNumber = 3, lo
             }
           },
           campaign: [],
+        },
+        youtube: {
+          profile: {
+            followers: 0
+          },
+          performance: {
+            views: 0,
+            likes: 0,
+            shares: 0
+          }
         }
       };
 
       // campaign
-      campaigns = await ads.getCampaignsByDate(from);
+      campaigns = await this.getCampaignsByDate(from);
       for (let campaign of campaigns) {
         json.advertisement.campaign.push({
           value: {
@@ -273,7 +286,7 @@ GoogleAds.prototype.googleComplex = async function (selfMongo, dayNumber = 3, lo
           information: {
             id: campaign.information.id.campaign,
             account: campaign.information.id.account,
-            name: campaign.information.id.name,
+            name: campaign.information.name,
           }
         })
       }
@@ -284,10 +297,36 @@ GoogleAds.prototype.googleComplex = async function (selfMongo, dayNumber = 3, lo
       json.advertisement.value.performance.clicks = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0);
   
       // youtube
-
+      res = await pythonExecute(`${this.dir}/python/app.py`, [ "youtube", "channelNumbers" ], { startDate: dateToString(from), endDate: dateToString(from) });
+      if (!Array.isArray(res) || !res.every((s) => { return typeof s === "number" })) {
+        views = 0;
+        likes = 0;
+        followers = 0;
+        shares = 0;
+      } else {
+        [ views, likes, followers, shares ] = res;
+      }
+      [ views, likes, followers, shares ] = res;
+      json.youtube = {
+        profile: {
+          followers
+        },
+        performance: {
+          views,
+          likes,
+          shares
+        }
+      };
 
       // search
 
+
+
+
+
+
+
+      
 
       // store
       // tempRows = await back.mongoRead(collection, { key }, { selfMongo });
@@ -296,7 +335,9 @@ GoogleAds.prototype.googleComplex = async function (selfMongo, dayNumber = 3, lo
       // }
       // await back.mongoCreate(collection, json, { selfMongo });
       console.log(json);
+      console.log(JSON.stringify(json.advertisement, null, 2));
 
+      
     }
 
     if (logger !== null) {
