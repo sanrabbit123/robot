@@ -3106,19 +3106,6 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
         level: o.level,
       } });
       let thisUser;
-    
-      // requestSystem("https://slack.com/api/reactions.add", {
-      //   channel: thisBody.event.channel,
-      //   name: "thumbsup",
-      //   timestamp: thisBody.event.ts
-      // }, {
-      //   headers: {
-      //     "Content-Type": "application/x-www-form-urlencoded",
-      //     "Authorization": "Bearer " + instance.slack_fairyToken,
-      //   }
-      // }).catch((err) => {
-      //   console.log(err);
-      // })
 
       if (typeof thisBody.event === "object") {
         if (thisBody.api_app_id.toLowerCase() === slack_fairyAppId.toLowerCase()) {
@@ -3165,11 +3152,51 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                   }
                 }
               }
-
-              console.log(thisBody.event);
-
-
-              
+              // if (thisBody.event.channel === "C06236WSGGN") {
+              if (thisBody.event.channel === "CPG2AGSCC") {
+                try {
+                  thisUser = membersSlack.find((o) => { return o.slack.toLowerCase().trim() === thisBody.event.user.toLowerCase().trim() });
+                } catch {
+                  thisUser = null;
+                }
+                if (thisUser !== null) {
+                  if (thisUser.level > 2) {
+                    openAi.slackGPT(thisBody.event.channel, "오늘도 수고했다는 격려의 말을 해줘", thisUser, selfMongo).catch((err) => {
+                      console.log(err);
+                    });
+                    await requestSystem("https://slack.com/api/reactions.add", {
+                      channel: thisBody.event.channel,
+                      name: "thumbsup",
+                      timestamp: thisBody.event.ts
+                    }, {
+                      headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Authorization": "Bearer " + instance.slack_fairyToken,
+                      }
+                    });
+                    await requestSystem("https://slack.com/api/reactions.add", {
+                      channel: thisBody.event.channel,
+                      name: "heart",
+                      timestamp: thisBody.event.ts
+                    }, {
+                      headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Authorization": "Bearer " + instance.slack_fairyToken,
+                      }
+                    });
+                    await requestSystem("https://slack.com/api/reactions.add", {
+                      channel: thisBody.event.channel,
+                      name: "innocent",
+                      timestamp: thisBody.event.ts
+                    }, {
+                      headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Authorization": "Bearer " + instance.slack_fairyToken,
+                      }
+                    });
+                  }
+                }
+              }
             }
   
           } else if (thisBody.event.type === "app_home_opened") {
