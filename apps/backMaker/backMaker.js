@@ -2237,11 +2237,8 @@ BackMaker.prototype.getProjectsByNames = async function (nameArr, option = { wit
 
     projects = await this.getProjectsByQuery(whereQuery, option);
 
-    if (projects.length === 0) {
-      return [];
-    } else {
-      return projects;
-    }
+    return projects;
+
   } catch (e) {
     console.log(e);
   }

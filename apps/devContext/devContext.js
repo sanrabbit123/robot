@@ -156,17 +156,141 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const youtube = new GoogleYoutube();
+    // let res, from;
+    // let views, likes, subscribers;
+
+    // from = new Date(2023, 9, 10);
+    // res = await pythonExecute(`${youtube.dir}/python/app.py`, [ "youtube", "channelNumbers" ], { startDate: dateToString(from), endDate: dateToString(from) });
+
+    // console.log(res);
+
+
+
+
+
+
 
     /*
-    
-    const youtube = new GoogleYoutube();
-    let res, from;
-    let views, likes, subscribers;
 
-    from = new Date(2023, 9, 10);
-    res = await pythonExecute(`${youtube.dir}/python/app.py`, [ "youtube", "channelNumbers" ], { startDate: dateToString(from), endDate: dateToString(from) });
+    await this.MONGOCONTENTSC.connect();
 
-    console.log(res);
+    const selfMongo = this.MONGOC;
+    const selfContentsMongo = this.MONGOCONTENTSC;
+    const targetFolder = `${process.cwd()}/temp/target`;
+    const targetFolderList = await fileSystem(`readFolder`, [ targetFolder ]);
+    const hangul = new ParsingHangul();
+    const collection = "foreContents";
+    const splitToken = "__split__";
+    const corePortfolio = "corePortfolio";
+    const serverFolderName = "rawVideo";
+    let tempArr, tempArr2;
+    let clientName, designerName;
+    let projects;
+    let targetProject;
+    let rows;
+    let thisProid, thisPid;
+    let contentsArr;
+    let thisFolderName;
+    let response;
+
+    for (let fileName of targetFolderList) {
+      tempArr = fileName.split("_");
+      tempArr2 = tempArr[tempArr.length - 1].split(".");
+      tempArr[tempArr.length - 1] = tempArr2[0];
+      for (let i = 1; i < tempArr2.length; i++) {
+        tempArr.push(tempArr2[i]);
+      }
+
+      [ clientName, designerName ] = tempArr;
+
+      projects = await back.getProjectsByNames([ hangul.fixString(clientName.trim()), hangul.fixString(designerName.trim()) ], { selfMongo });
+
+      if (projects.length === 0) {
+        console.log(clientName, designerName);
+        targetProject = null;
+      } else {
+        projects = projects.toNormal().filter((p) => { return p.desid !== "" });
+        if (projects.length === 0) {
+          console.log(clientName, designerName);
+          targetProject = null;
+        } else if (projects.length !== 1) {
+          projects = projects.filter((p) => {
+            return p.process.contract.remain.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+          }).filter((p) => {
+            return !/^드/gi.test(p.process.status);
+          }).filter((p) => {
+            return p.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+          }).filter((p) => {
+            return p.contents.photo.date.valueOf() <= (new Date()).valueOf() && p.contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+          });
+          projects.sort((a, b) => {
+            return b.contents.photo.date.valueOf() - a.contents.photo.date.valueOf();
+          });
+          if (projects.length === 0) {
+            console.log(clientName, designerName);
+            targetProject = null;
+          } else {
+            [ targetProject ] = projects;
+          }
+        } else {
+          [ targetProject ] = projects;
+        }
+      }
+
+      if (targetProject === null) {
+        throw new Error(clientName + " " + designerName + " " + "project not found");
+      }
+
+      thisProid = targetProject.proid;
+      rows = await back.mongoRead(collection, { proid: thisProid }, { selfMongo: selfContentsMongo });
+
+      if (rows.length > 0) {
+        thisPid = rows[0].pid;
+      } else {
+        contentsArr = await back.getContentsArrByQuery({ proid: thisProid }, { selfMongo });
+        if (contentsArr.length === 0) {
+          if (projects.length > 1) {
+            thisPid = null;
+            for (let i = 1; i < projects.length; i++) {
+              rows = await back.mongoRead(collection, { proid: projects[i].proid }, { selfMongo: selfContentsMongo });
+              if (rows.length > 0) {
+                thisPid = rows[0].pid;
+              } else {
+                contentsArr = await back.getContentsArrByQuery({ proid: projects[i].proid }, { selfMongo });
+                if (contentsArr.length > 0) {
+                  thisPid = contentsArr[0].contents.portfolio.pid;
+                }
+              }
+              if (thisPid !== null) {
+                thisProid = projects[i].proid;
+                break;
+              }
+            }
+            if (thisPid === null) {
+              throw new Error(clientName + " " + designerName + " " + thisProid + " " + "pid error");
+            }
+          } else {
+            throw new Error(clientName + " " + designerName + " " + thisProid + " " + "pid error");
+          }
+        } else {
+          thisPid = contentsArr[0].contents.portfolio.pid;
+        }
+      }
+
+      thisFolderName = thisProid + splitToken + thisPid;
+
+      response = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/makeFolder", {
+        path: "/" + corePortfolio + "/" + serverFolderName + "/" + thisFolderName,
+      }, {
+        headers: { "Content-Type": "application/json" }
+      })
+
+      console.log(response);
+    }
+
+
+    await this.MONGOCONTENTSC.close();
 
     */
 
@@ -174,6 +298,12 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
+
+    
 
 
 
@@ -6899,9 +7029,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "김희연",
-    //     link: "https://drive.google.com/drive/folders/1sU5S-5cCBU4SCOxeAxs7TQcs855sKtyX",
+    //     client: "정다운",
+    //     designer: "김보하",
+    //     link: "https://drive.google.com/drive/folders/1CHhsCaF_T5CiLq3Pps2hrK2OJaY5lCOC",
     //     pay: true
     //   },
     // ]);

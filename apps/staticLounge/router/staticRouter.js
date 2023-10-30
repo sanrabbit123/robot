@@ -1404,6 +1404,8 @@ StaticRouter.prototype.rou_post_makeFolder = function () {
       let targetList;
       let tempString;
       let tempDir;
+      let target2;
+      let folderList;
 
       target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
       if (target.trim() === '') {
@@ -1412,7 +1414,6 @@ StaticRouter.prototype.rou_post_makeFolder = function () {
       if (!/^__/.test(target)) {
         target = sambaToken + "/" + target;
       }
-
       target = target.replace(new RegExp(sambaToken, "gi"), '');
       targetList = target.split("/");
       tempString = staticConst;
@@ -1425,7 +1426,17 @@ StaticRouter.prototype.rou_post_makeFolder = function () {
         tempString += targetList[i];
       }
 
-      res.send(JSON.stringify({ message: "done" }));
+      target2 = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
+      if (target2.trim() === '') {
+        target2 = sambaToken;
+      }
+      if (!/^__/.test(target2)) {
+        target2 = sambaToken + "/" + target2;
+      }
+      target2 = target2.replace(new RegExp(sambaToken, "gi"), staticConst);
+      folderList = await fileSystem(`readFolder`, [ target2 ]);
+      
+      res.send(JSON.stringify({ message: "done", list: folderList }));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_makeFolder): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
