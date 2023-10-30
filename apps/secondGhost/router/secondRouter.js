@@ -3165,6 +3165,11 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                   }
                 }
               }
+
+              console.log(thisBody.event);
+
+
+              
             }
   
           } else if (thisBody.event.type === "app_home_opened") {
