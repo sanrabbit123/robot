@@ -3141,7 +3141,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                   } catch {
                     thisUser = null;
                   }
-                  if (thisUser === undefined || null) {
+                  if (thisUser === undefined || thisUser === null) {
                     openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, ""), thisBody.event.user, selfMongo).catch((err) => {
                       console.log(err);
                     });
@@ -3158,7 +3158,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                 } catch {
                   thisUser = null;
                 }
-                if (thisUser !== null) {
+                if (thisUser !== null && thisUser !== undefined) {
                   if (thisUser.level > 2) {
                     openAi.slackGPT(thisBody.event.channel, "오늘도 수고했다는 격려의 말을 해줘", thisUser, selfMongo).catch((err) => {
                       console.log(err);
