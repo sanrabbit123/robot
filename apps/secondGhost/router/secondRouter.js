@@ -3152,8 +3152,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                   }
                 }
               }
-              // if (thisBody.event.channel === "C06236WSGGN") {
-              if (thisBody.event.channel === "CPG2AGSCC") {
+              if (thisBody.event.channel === "C06236WSGGN") {
                 try {
                   thisUser = membersSlack.find((o) => { return o.slack.toLowerCase().trim() === thisBody.event.user.toLowerCase().trim() });
                 } catch {
@@ -3187,6 +3186,26 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                     await requestSystem("https://slack.com/api/reactions.add", {
                       channel: thisBody.event.channel,
                       name: "innocent",
+                      timestamp: thisBody.event.ts
+                    }, {
+                      headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Authorization": "Bearer " + instance.slack_fairyToken,
+                      }
+                    });
+                    await requestSystem("https://slack.com/api/reactions.add", {
+                      channel: thisBody.event.channel,
+                      name: "pray",
+                      timestamp: thisBody.event.ts
+                    }, {
+                      headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Authorization": "Bearer " + instance.slack_fairyToken,
+                      }
+                    });
+                    await requestSystem("https://slack.com/api/reactions.add", {
+                      channel: thisBody.event.channel,
+                      name: "blush",
                       timestamp: thisBody.event.ts
                     }, {
                       headers: {
