@@ -2,6 +2,7 @@ const PortfolioFilter = function (clientName = "", apartName = "", designer = ""
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const ImageReader = require(`${process.cwd()}/apps/imageReader/imageReader.js`);
+  const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const apart = function (str) {
     let arr = str.split(' ');
     let new_string = '';
@@ -16,6 +17,7 @@ const PortfolioFilter = function (clientName = "", apartName = "", designer = ""
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = `${process.cwd()}/apps/portfolioFilter`;
   this.image = new ImageReader(this.mother, this.back, this.address);
+  this.hangul = new ParsingHangul();
   this.generator = {
     factory: require(this.dir + "/factory/generator.js"),
   };
@@ -914,6 +916,158 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     console.log(e);
   } finally {
     await selfMongo.close();
+  }
+}
+
+PortfolioFilter.prototype.rawVideo = async function (arr) {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const hangul = this.hangul;
+  const options = this.options;
+  const { mongo, mongoinfo, mongocontentsinfo, fileSystem, shellExec, shellLink, consoleQ, sleep, messageSend, requestSystem, ghostFileUpload } = this.mother;
+  const errorMessage = `argument must be => [ { client: "", designer: "" } ... ]`;
+  const selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const selfContentsMongo = new mongo(mongocontentsinfo, { useUnifiedTopology: true });
+  const collection = "foreContents";
+  const splitToken = "__split__";
+  const corePortfolio = "corePortfolio";
+  const serverFolderName = "rawVideo";
+  const videoFileKeyword = "v";
+  try {
+    if (!Array.isArray(arr)) {
+      throw new Error(errorMessage);
+    }
+    let tempArr, tempArr2;
+    let clientName, designerName;
+    let projects;
+    let targetProject;
+    let rows;
+    let thisProid, thisPid;
+    let contentsArr;
+    let thisFolderName;
+    let response;
+    let thisFileName;
+    let exe;
+    let targetFolder, targetFolderList;
+
+    await selfMongo.connect();
+    await selfContentsMongo.connect();
+    await this.static_setting();
+
+    for (let { client, designer } of arr) {
+
+      
+
+
+
+      targetFolder = options.photo_dir;
+      targetFolderList = await fileSystem(`readFolder`, [ targetFolder ]);
+  
+      for (let fileName of targetFolderList) {
+        tempArr = fileName.split("_");
+        tempArr2 = tempArr[tempArr.length - 1].split(".");
+        tempArr[tempArr.length - 1] = tempArr2[0];
+        for (let i = 1; i < tempArr2.length; i++) {
+          tempArr.push(tempArr2[i]);
+        }
+        [ clientName, designerName ] = tempArr;
+        exe = tempArr[tempArr.length - 1];
+  
+        projects = await back.getProjectsByNames([ hangul.fixString(clientName.trim()), hangul.fixString(designerName.trim()) ], { selfMongo });
+  
+        if (projects.length === 0) {
+          console.log(clientName, designerName);
+          targetProject = null;
+        } else {
+          projects = projects.toNormal().filter((p) => { return p.desid !== "" });
+          if (projects.length === 0) {
+            console.log(clientName, designerName);
+            targetProject = null;
+          } else if (projects.length !== 1) {
+            projects = projects.filter((p) => {
+              return p.process.contract.remain.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+            }).filter((p) => {
+              return !/^드/gi.test(p.process.status);
+            }).filter((p) => {
+              return p.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+            }).filter((p) => {
+              return p.contents.photo.date.valueOf() <= (new Date()).valueOf() && p.contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+            });
+            projects.sort((a, b) => {
+              return b.contents.photo.date.valueOf() - a.contents.photo.date.valueOf();
+            });
+            if (projects.length === 0) {
+              console.log(clientName, designerName);
+              targetProject = null;
+            } else {
+              [ targetProject ] = projects;
+            }
+          } else {
+            [ targetProject ] = projects;
+          }
+        }
+  
+        if (targetProject === null) {
+          throw new Error(clientName + " " + designerName + " " + "project not found");
+        }
+  
+        thisProid = targetProject.proid;
+        rows = await back.mongoRead(collection, { proid: thisProid }, { selfMongo: selfContentsMongo });
+  
+        if (rows.length > 0) {
+          thisPid = rows[0].pid;
+        } else {
+          contentsArr = await back.getContentsArrByQuery({ proid: thisProid }, { selfMongo });
+          if (contentsArr.length === 0) {
+            if (projects.length > 1) {
+              thisPid = null;
+              for (let i = 1; i < projects.length; i++) {
+                rows = await back.mongoRead(collection, { proid: projects[i].proid }, { selfMongo: selfContentsMongo });
+                if (rows.length > 0) {
+                  thisPid = rows[0].pid;
+                } else {
+                  contentsArr = await back.getContentsArrByQuery({ proid: projects[i].proid }, { selfMongo });
+                  if (contentsArr.length > 0) {
+                    thisPid = contentsArr[0].contents.portfolio.pid;
+                  }
+                }
+                if (thisPid !== null) {
+                  thisProid = projects[i].proid;
+                  break;
+                }
+              }
+              if (thisPid === null) {
+                throw new Error(clientName + " " + designerName + " " + thisProid + " " + "pid error");
+              }
+            } else {
+              throw new Error(clientName + " " + designerName + " " + thisProid + " " + "pid error");
+            }
+          } else {
+            thisPid = contentsArr[0].contents.portfolio.pid;
+          }
+        }
+  
+        thisFolderName = thisProid + splitToken + thisPid;
+  
+        response = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/makeFolder", {
+          path: "/" + corePortfolio + "/" + serverFolderName + "/" + thisFolderName,
+        }, {
+          headers: { "Content-Type": "application/json" }
+        });
+        
+        thisFileName = videoFileKeyword + String(response.data.list.length) + thisPid + "." + exe;
+        await ghostFileUpload([ `${targetFolder}/${fileName}` ], [ "/" + corePortfolio + "/" + serverFolderName + "/" + thisFolderName + "/" + thisFileName ]);
+  
+      }
+
+    }
+
+  } catch (e) {
+    console.log(e);
+  } finally {
+    await selfMongo.close();
+    await selfContentsMongo.close();
   }
 }
 
