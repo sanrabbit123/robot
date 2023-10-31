@@ -735,6 +735,7 @@ GoogleAnalytics.prototype.googleQuery = async function (targetDate) {
 
   } catch (e) {
     console.log(e);
+    return null;
   }
 }
 

@@ -202,7 +202,9 @@ GoogleAds.prototype.getCampaignsByDate = async function (targetDate) {
 GoogleAds.prototype.googleComplex = async function (selfMongo, dayNumber = 3, logger = null) {
   const instance = this;
   const back = this.back;
-  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, pythonExecute } = this.mother;
+  const GoogleAnalytics = require(this.dir + "/googleAnalytics.js");
+  const analytics = new GoogleAnalytics();
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, pythonExecute, equalJson } = this.mother;
   try {
     const collection = "googleComplex";
     const idKeyword = 'f';
@@ -221,6 +223,7 @@ GoogleAds.prototype.googleComplex = async function (selfMongo, dayNumber = 3, lo
     let targetObj;
     let campaigns;
     let views, likes, shares, followers;
+    let report;
 
     now = new Date();
     startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
@@ -268,6 +271,11 @@ GoogleAds.prototype.googleComplex = async function (selfMongo, dayNumber = 3, lo
             likes: 0,
             shares: 0
           }
+        },
+        search: {
+          clicks: 0,
+          impressions: 0,
+          detail: [],
         }
       };
 
@@ -298,15 +306,21 @@ GoogleAds.prototype.googleComplex = async function (selfMongo, dayNumber = 3, lo
   
       // youtube
       res = await pythonExecute(`${this.dir}/python/app.py`, [ "youtube", "channelNumbers" ], { startDate: dateToString(from), endDate: dateToString(from) });
-      if (!Array.isArray(res) || !res.every((s) => { return typeof s === "number" })) {
+      if (!Array.isArray(res)) {
         views = 0;
         likes = 0;
         followers = 0;
         shares = 0;
       } else {
-        [ views, likes, followers, shares ] = res;
+        if (!res.every((s) => { return typeof s === "number" })) {
+          views = 0;
+          likes = 0;
+          followers = 0;
+          shares = 0;
+        } else {
+          [ views, likes, followers, shares ] = res;
+        }
       }
-      [ views, likes, followers, shares ] = res;
       json.youtube = {
         profile: {
           followers
@@ -319,24 +333,18 @@ GoogleAds.prototype.googleComplex = async function (selfMongo, dayNumber = 3, lo
       };
 
       // search
-
-
-
-
-
-
-
-      
+      report = await analytics.googleQuery(from);
+      if (report !== null) {
+        json.search = equalJson(JSON.stringify(report.data));
+      }
 
       // store
-      // tempRows = await back.mongoRead(collection, { key }, { selfMongo });
-      // if (tempRows.length !== 0) {
-      //   await back.mongoDelete(collection, { key }, { selfMongo });
-      // }
-      // await back.mongoCreate(collection, json, { selfMongo });
+      tempRows = await back.mongoRead(collection, { key }, { selfMongo });
+      if (tempRows.length !== 0) {
+        await back.mongoDelete(collection, { key }, { selfMongo });
+      }
+      await back.mongoCreate(collection, json, { selfMongo });
       console.log(json);
-      console.log(JSON.stringify(json.advertisement, null, 2));
-
       
     }
 
