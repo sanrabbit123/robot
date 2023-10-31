@@ -1510,9 +1510,9 @@ DesignerJs.prototype.spreadData = async function (search = null, localMode = fal
     let standardDomsTargets, caseDomsTargets;
 
     if (search === null || search === '' || search === '-') {
-      designers = JSON.parse(await GeneralJs.ajaxPromise("limit=100", "/getDesigners"));
+      designers = JSON.parse(await GeneralJs.ajaxJson("limit=1000", "/getDesigners"));
     } else {
-      designers = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchDesigners"));
+      designers = JSON.parse(await GeneralJs.ajaxJson("query=" + search, "/searchDesigners"));
     }
 
     const { standard, data } = designers;
