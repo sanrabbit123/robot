@@ -159,11 +159,8 @@ DevContext.prototype.launching = async function () {
 
 
     
-    // await this.MONGOCONTENTSC.connect();
-    // const ads = new GoogleAds();
-    // await ads.googleComplex(this.MONGOCONTENTSC, 183, null);
-    // await this.MONGOCONTENTSC.close();
 
+    
 
 
 
