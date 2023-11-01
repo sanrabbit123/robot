@@ -1,5 +1,6 @@
 const dayId = [
-  "d085",
+  "d092",
+  "d131",
 ];
 
 const hourId = [];
@@ -8,7 +9,7 @@ const worker = async function (package) {
   const { mother, address, back, mongo, mongolocal } = package;
   const { messageLog, errorLog, requestSystem, emergencyAlarm } = mother;
   try {
-    await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/logBasicReport", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
+    await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/analyticsToday", { report: 1 }, { headers: { "Content-Type": "application/json" } });
     await errorLog("marketing reporting done");
     return true;
   } catch (e) {

@@ -2841,6 +2841,7 @@ StaticRouter.prototype.rou_post_analyticsToday = function () {
     });
     try {
       const selfMongo = instance.mongolog;
+      const reportMode = (req.body.report === 1 || req.body.report === "1")
       let collection;
       let anaid, ancid, key, rows;
       let result;
@@ -2978,6 +2979,10 @@ StaticRouter.prototype.rou_post_analyticsToday = function () {
             logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
           }
           await sleep(1000);
+
+          if (reportMode) {
+            await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/logBasicReport", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
+          }
 
           return true;
         } catch (e) {
