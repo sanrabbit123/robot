@@ -8812,7 +8812,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           }).then(() => {
             return sleep(30 * 1000);
           }).then(() => {
-            return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/analyticsToday", { data: null }, { headers: { "Content-Type": "application/json" } });
+            return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/analyticsToday", { report: 0 }, { headers: { "Content-Type": "application/json" } });
           }).catch((err) => { logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + err.message).catch((err) => { console.log(err) }) });
         }
 

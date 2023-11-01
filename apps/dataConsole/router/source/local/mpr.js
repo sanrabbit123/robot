@@ -6702,12 +6702,22 @@ MprJs.prototype.mprSearchEvent = async function () {
             loading.parentNode.removeChild(loading);
 
           } else {
-            whereQuery = {
-              "client.name": { $regex: value }
-            };
-            coreWhereQuery = {
-              "name": { $regex: value }
-            };
+
+            if (/^c[0-9]+/.test(value)) {
+              whereQuery = {
+                "client.cliid": { $regex: value }
+              };
+              coreWhereQuery = {
+                "cliid": { $regex: value }
+              };
+            } else {
+              whereQuery = {
+                "client.name": { $regex: value }
+              };
+              coreWhereQuery = {
+                "name": { $regex: value }
+              };
+            }
 
             cleanChildren(totalMother);
             loading = await instance.mother.loadingRun();
@@ -6833,7 +6843,7 @@ MprJs.prototype.mprExtractEvent = async function () {
 
 MprJs.prototype.launching = async function () {
   const instance = this;
-  const { returnGet, ajaxJson } = GeneralJs;
+  const { returnGet, ajaxJson, cleanChildren, setQueue } = GeneralJs;
   try {
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true" && getObj.dataonly === "true");
@@ -6844,6 +6854,8 @@ MprJs.prototype.launching = async function () {
     let clients;
     let now;
     let execFunc;
+    let whereQuery;
+    let coreWhereQuery;
 
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
@@ -6925,6 +6937,34 @@ MprJs.prototype.launching = async function () {
     }).catch((err) => {
       console.log(err);
     });
+
+    if (getObj.cliid !== undefined) {
+      whereQuery = {
+        "client.cliid": { $regex: getObj.cliid }
+      };
+      coreWhereQuery = {
+        "cliid": { $regex: getObj.cliid }
+      };
+
+      cleanChildren(this.totalMother);
+      loading = await instance.mother.loadingRun();
+      instance.clients = await ajaxJson({
+        mode: "query",
+        whereQuery,
+        coreWhereQuery,
+      }, CONTENTSHOST + "/clientAnalytics", { equal: true });
+      await instance.coreContentsLoad(true);
+      loading.parentNode.removeChild(loading);
+
+      setQueue(async () => {
+        try {
+          const tempFunc = instance.clientWhiteCard(instance.clients[0].cliid, instance.clients[0].requestNumber);
+          await tempFunc(new Event("click", { bubbles: true }));
+        } catch (e) {
+          console.log(e);
+        }
+      }, 100);
+    }
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
