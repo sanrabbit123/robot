@@ -159,7 +159,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
 
     for (let i = 0; i < dayNumber; i++) {
 
-      await sleep(500);
+      await sleep(60 * 1000);
       if (i === 0) {
         from = new Date(JSON.stringify(startDate).slice(1, -1));
         to = new Date(JSON.stringify(startDate).slice(1, -1));
@@ -203,6 +203,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
       };
 
       // campaign
+      await sleep(1000);
       res = await requestSystem("https://graph.facebook.com/" + appVersion + "/act_" + facebookAdId + "/insights", {
         level: "campaign",
         fields: [
@@ -241,7 +242,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
           children: [],
         });
 
-        await sleep(500);
+        await sleep(5000);
         campaignId = obj.campaign_id;
         res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + campaignId + "/insights", {
           level: "adset",
@@ -281,7 +282,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
             children: [],
           })
 
-          await sleep(500);
+          await sleep(5000);
           adsetId = obj2.adset_id;
           res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + adsetId + "/insights", {
             level: "ad",
@@ -336,6 +337,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
       }
 
       // instagram
+      await sleep(5000);
       res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + instagramId + "/insights", {
         metric: "impressions,profile_views,follower_count,website_clicks",
         period: "day",
