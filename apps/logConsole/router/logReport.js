@@ -956,8 +956,11 @@ LogReport.prototype.dailyReports = async function () {
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    const startDay = new Date(2023, 3, 1);
-    const dateAgo = Math.floor((((((new Date()).valueOf() - (new Date(2023, 4, 1, 9, 0, 0)).valueOf()) / 1000) / 60) / 60) / 24);
+    const startDay = new Date();
+    startDay.setMonth(startDay.getMonth() - 3);
+    const dateAgoStandard = new Date();
+    dateAgoStandard.setMonth(dateAgoStandard.getMonth() - 1);
+    const dateAgo = Math.floor((((((new Date()).valueOf() - dateAgoStandard.valueOf()) / 1000) / 60) / 60) / 24);
     const sixthTypeArr = [
       "string",
       "string",
@@ -1897,7 +1900,6 @@ LogReport.prototype.dailyReports = async function () {
         now = new Date();
 
         standardDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        standardDate.setDate(standardDate.getDate() - 1);
 
         for (let i = 0; i < dateAgo; i++) {
           resMatrix = await getReportsByDate(standardDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories);
@@ -2998,11 +3000,9 @@ LogReport.prototype.dailyReports = async function () {
     await selfCoreMongo.close();
 
     slackMessage = '';
-    slackMessage += dateToString(today) + " ====================================================";
+    slackMessage += dateToString(today) + " MPR 시트를 업데이트 하였습니다!";
     slackMessage += "\n";
-    slackMessage += dateToString(startDay) + " ~ " + dateToString(yesterday) + " 기간의 지표를 업데이트하였습니다!";
-    slackMessage += "\n";
-    slackMessage += "MPR 통합관리장표 : " + "https://docs.google.com/spreadsheets/d/" + zeroSheetsId + "/edit?usp=sharing";
+    slackMessage += "https://docs.google.com/spreadsheets/d/" + zeroSheetsId + "/edit?usp=sharing";
 
     await messageSend({
       text: slackMessage,
