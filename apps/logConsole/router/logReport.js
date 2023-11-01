@@ -956,13 +956,13 @@ LogReport.prototype.dailyReports = async function () {
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    const startDay = new Date();
-    startDay.setMonth(startDay.getMonth() - 4);
-    const dateAgoStandard = new Date();
-    dateAgoStandard.setMonth(dateAgoStandard.getMonth() - 1);
+    // const startDay = new Date();
+    // startDay.setMonth(startDay.getMonth() - 4);
+    // const dateAgoStandard = new Date();
+    // dateAgoStandard.setMonth(dateAgoStandard.getMonth() - 1);
     const dateAgo = Math.floor((((((new Date()).valueOf() - dateAgoStandard.valueOf()) / 1000) / 60) / 60) / 24);
-    // const startDay = new Date(2023, 3, 1);
-    // const dateAgo = Math.floor((((((new Date()).valueOf() - (new Date(2023, 4, 1, 9, 0, 0)).valueOf()) / 1000) / 60) / 60) / 24);
+    const startDay = new Date(2023, 3, 1);
+    const dateAgo = Math.floor((((((new Date()).valueOf() - (new Date(2023, 4, 1, 9, 0, 0)).valueOf()) / 1000) / 60) / 60) / 24);
     const sixthTypeArr = [
       "string",
       "string",
@@ -2170,7 +2170,7 @@ LogReport.prototype.dailyReports = async function () {
         totalFunnelWeekMatrix = totalFunnelWeekMatrix.map(weekSpread);
 
         // facebook paid
-        thisIndex = 1;
+        thisIndex = 2;
         facebookPaidCopied = equalJson(JSON.stringify(matrix[thisIndex])).slice(1);
         facebookPaidMonthMatrix = equalJson(JSON.stringify(monthArr));
         facebookPaidWeekMatrix = equalJson(JSON.stringify(weekArr));
@@ -2263,7 +2263,7 @@ LogReport.prototype.dailyReports = async function () {
         facebookPaidWeekMatrix = facebookPaidWeekMatrix.map(weekSpread);
 
         // naver paid
-        thisIndex = 2;
+        thisIndex = 3;
         naverPaidCopied = equalJson(JSON.stringify(matrix[thisIndex])).slice(1);
         naverPaidMonthMatrix = equalJson(JSON.stringify(monthArr));
         naverPaidWeekMatrix = equalJson(JSON.stringify(weekArr));
@@ -2354,7 +2354,7 @@ LogReport.prototype.dailyReports = async function () {
         naverPaidWeekMatrix = naverPaidWeekMatrix.map(weekSpread);
 
         // google paid
-        thisIndex = 6;
+        thisIndex = 7;
         googlePaidCopied = equalJson(JSON.stringify(matrix[thisIndex])).slice(1);
         googlePaidMonthMatrix = equalJson(JSON.stringify(monthArr));
         googlePaidWeekMatrix = equalJson(JSON.stringify(weekArr));
