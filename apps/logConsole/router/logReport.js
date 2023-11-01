@@ -956,14 +956,13 @@ LogReport.prototype.dailyReports = async function () {
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    // const startDay = new Date();
-    // startDay.setMonth(startDay.getMonth() - 4);
-    // const dateAgoStandard = new Date();
-    // dateAgoStandard.setMonth(dateAgoStandard.getMonth() - 1);
-    // const dateAgo = Math.floor((((((new Date()).valueOf() - dateAgoStandard.valueOf()) / 1000) / 60) / 60) / 24);
-
-    const startDay = new Date(2023, 3, 1);
-    const dateAgo = Math.floor((((((new Date()).valueOf() - (new Date(2023, 4, 1, 9, 0, 0)).valueOf()) / 1000) / 60) / 60) / 24);
+    const startDay = new Date();
+    startDay.setMonth(startDay.getMonth() - 4);
+    const dateAgoStandard = new Date();
+    dateAgoStandard.setMonth(dateAgoStandard.getMonth() - 1);
+    const dateAgo = Math.floor((((((new Date()).valueOf() - dateAgoStandard.valueOf()) / 1000) / 60) / 60) / 24);
+    // const startDay = new Date(2023, 3, 1);
+    // const dateAgo = Math.floor((((((new Date()).valueOf() - (new Date(2023, 4, 1, 9, 0, 0)).valueOf()) / 1000) / 60) / 60) / 24);
     const sixthTypeArr = [
       "string",
       "string",
