@@ -957,7 +957,7 @@ LogReport.prototype.dailyReports = async function () {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const startDay = new Date();
-    startDay.setMonth(startDay.getMonth() - 3);
+    startDay.setMonth(startDay.getMonth() - 4);
     const dateAgoStandard = new Date();
     dateAgoStandard.setMonth(dateAgoStandard.getMonth() - 1);
     const dateAgo = Math.floor((((((new Date()).valueOf() - dateAgoStandard.valueOf()) / 1000) / 60) / 60) / 24);
@@ -2398,6 +2398,7 @@ LogReport.prototype.dailyReports = async function () {
 
       } catch (e) {
         console.log(e);
+        return null;
       }
     }
 
@@ -3009,8 +3010,11 @@ LogReport.prototype.dailyReports = async function () {
       channel: "#500_marketing",
     });
 
+    return true;
+
   } catch (e) {
     console.log(e);
+    return false;
   }
 }
 

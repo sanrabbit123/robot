@@ -2853,6 +2853,61 @@ StaticRouter.prototype.rou_post_analyticsToday = function () {
           now = new Date();
           thisDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
 
+          // daily analytics
+          collection = "dailyAnalytics";
+          result = await analytics.dailyMetric(thisDate);
+          if (result === null) {
+            await logger.error("daily metric error : " + dateToString(thisDate));
+            await sleep(1000);
+            result = await analytics.dailyMetric(thisDate);
+            if (result === null) {
+              await logger.error("daily metric error : " + dateToString(thisDate));
+              await sleep(1000);
+              result = await analytics.dailyMetric(thisDate);
+              if (result === null) {
+                await logger.error("daily metric error : " + dateToString(thisDate));
+                await sleep(1000);
+                result = await analytics.dailyMetric(thisDate);
+                if (result === null) {
+                  await logger.error("daily metric error : " + dateToString(thisDate));      
+                } else {
+                  anaid = result.anaid;
+                  rows = await back.mongoRead(collection, { anaid }, { selfMongo });
+                  if (rows.length !== 0) {
+                    await back.mongoDelete(collection, { anaid }, { selfMongo })
+                  }
+                  await back.mongoCreate(collection, result, { selfMongo });
+                  logger.cron("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+                }
+              } else {
+                anaid = result.anaid;
+                rows = await back.mongoRead(collection, { anaid }, { selfMongo });
+                if (rows.length !== 0) {
+                  await back.mongoDelete(collection, { anaid }, { selfMongo })
+                }
+                await back.mongoCreate(collection, result, { selfMongo });
+                logger.cron("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+              }
+            } else {
+              anaid = result.anaid;
+              rows = await back.mongoRead(collection, { anaid }, { selfMongo });
+              if (rows.length !== 0) {
+                await back.mongoDelete(collection, { anaid }, { selfMongo })
+              }
+              await back.mongoCreate(collection, result, { selfMongo });
+              logger.cron("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+            }
+          } else {
+            anaid = result.anaid;
+            rows = await back.mongoRead(collection, { anaid }, { selfMongo });
+            if (rows.length !== 0) {
+              await back.mongoDelete(collection, { anaid }, { selfMongo })
+            }
+            await back.mongoCreate(collection, result, { selfMongo });
+            logger.cron("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+          }
+          await sleep(1000);
+
           // today clients
           collection = "dailyClients";
           result = await analytics.dailyClients(thisDate, instance.mongo, instance.mongolog);
@@ -2867,6 +2922,62 @@ StaticRouter.prototype.rou_post_analyticsToday = function () {
             await back.mongoCreate(collection, result, { selfMongo });
             logger.cron("daily clients done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
           }
+          await sleep(1000);
+
+          // daily query
+          collection = "queryAnalytics";
+          result = await analytics.queryParsing(thisDate, instance.mongolog);
+          if (result === null) {
+            await logger.error("query parsing error : " + dateToString(thisDate));
+            await sleep(1000);
+            result = await analytics.queryParsing(thisDate, instance.mongolog);
+            if (result === null) {
+              await logger.error("query parsing error : " + dateToString(thisDate));
+              await sleep(1000);
+              result = await analytics.queryParsing(thisDate, instance.mongolog);
+              if (result === null) {
+                await logger.error("query parsing error : " + dateToString(thisDate));
+                await sleep(1000);
+                result = await analytics.queryParsing(thisDate, instance.mongolog);
+                if (result === null) {
+                  await logger.error("query parsing error : " + dateToString(thisDate));
+                } else {
+                  key = result.key;
+                  rows = await back.mongoRead(collection, { key }, { selfMongo });
+                  if (rows.length !== 0) {
+                    await back.mongoDelete(collection, { key }, { selfMongo })
+                  }
+                  await back.mongoCreate(collection, result, { selfMongo });
+                  logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+                }
+              } else {
+                key = result.key;
+                rows = await back.mongoRead(collection, { key }, { selfMongo });
+                if (rows.length !== 0) {
+                  await back.mongoDelete(collection, { key }, { selfMongo })
+                }
+                await back.mongoCreate(collection, result, { selfMongo });
+                logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+              }
+            } else {
+              key = result.key;
+              rows = await back.mongoRead(collection, { key }, { selfMongo });
+              if (rows.length !== 0) {
+                await back.mongoDelete(collection, { key }, { selfMongo })
+              }
+              await back.mongoCreate(collection, result, { selfMongo });
+              logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+            }
+          } else {
+            key = result.key;
+            rows = await back.mongoRead(collection, { key }, { selfMongo });
+            if (rows.length !== 0) {
+              await back.mongoDelete(collection, { key }, { selfMongo })
+            }
+            await back.mongoCreate(collection, result, { selfMongo });
+            logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+          }
+          await sleep(1000);
 
           return true;
         } catch (e) {
@@ -4004,8 +4115,12 @@ StaticRouter.prototype.rou_post_logBasicReport = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      report.dailyReports().then(() => {
-        logger.cron("marketing reporting done").catch((err) => { console.log(err) });
+      report.dailyReports().then((boo) => {
+        if (boo) {
+          logger.cron("marketing reporting done").catch((err) => { console.log(err) });
+        } else {
+          logger.error("logBasicReport fail").catch((err) => { console.log(err) });
+        }
       }).catch((err) => {
         logger.error("logBasicReport error : " + err.message).catch((err) => { console.log(err) });
       });
