@@ -2806,6 +2806,70 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_analyticsToday = function () {
+  const instance = this;
+  const { equalJson, stringToDate, requestSystem, sleep, dateToString } = this.mother;
+  const back = this.back;
+  const analytics = this.analytics;
+  const address = this.address;
+  let obj = {};
+  obj.link = [ "/analyticsToday" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolog;
+      let collection;
+      let anaid, ancid, key, rows;
+      let result;
+      let thisDate;
+      let now;
+
+      (async () => {
+        try {
+
+          now = new Date();
+          thisDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+
+          // today clients
+          collection = "dailyClients";
+          result = await analytics.dailyClients(thisDate, instance.mongo, instance.mongolog);
+          if (result === null) {
+            await logger.error("daily clients error : " + dateToString(thisDate));
+          } else {
+            ancid = result.ancid;
+            rows = await back.mongoRead(collection, { ancid }, { selfMongo });
+            if (rows.length !== 0) {
+              await back.mongoDelete(collection, { ancid }, { selfMongo })
+            }
+            await back.mongoCreate(collection, result, { selfMongo });
+            logger.cron("daily clients done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+          }
+
+          return true;
+        } catch (e) {
+          console.log(e);
+          logger.error("Static lounge 서버 문제 생김 (rou_post_analyticsToday): " + e.message).catch((e) => { console.log(e); });
+          return false;
+        }
+      })().catch((err) => {
+        console.log(err);
+        logger.error("Static lounge 서버 문제 생김 (rou_post_analyticsToday): " + err.message).catch((e) => { console.log(e); });
+      });
+
+      res.send({ message: "will do" });
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_analyticsToday): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_analyticsMonthly = function () {
   const instance = this;
   const { equalJson, stringToDate, requestSystem, sleep, dateToString } = this.mother;
