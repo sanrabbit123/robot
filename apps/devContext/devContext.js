@@ -161,8 +161,8 @@ DevContext.prototype.launching = async function () {
     // console.log(res);
 
 
-    await findCode("/analyticsToday")
 
+    
     
     
 
