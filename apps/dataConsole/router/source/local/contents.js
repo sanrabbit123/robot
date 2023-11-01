@@ -1921,7 +1921,7 @@ ContentsJs.prototype.whiteIframeEvent = function (pid) {
 
 ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
   const instance = this;
-  const { ea, totalContents, asyncProcessText, valueTargetClassName } = this;
+  const { ea, totalContents, asyncProcessText, valueTargetClassName, videoFiles } = this;
   const { createNode, colorChip, withOut, dateToString, ajaxJson, autoComma, findByAttribute, serviceParsing, blankHref } = GeneralJs;
   try {
     let columns;
@@ -1981,6 +1981,50 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
             functionName: "filterEvent_" + str,
           }
         })),
+      },
+      {
+        title: "영상 소스",
+        width: 80,
+        name: "video",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          }
+        ].concat([
+          "있음",
+          "없음",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        })),
+        script: (pid, type) => {
+          return async function (e) {
+            try {
+              let thisContents;
+              let tempFunction;
+              if (instance.videoFiles.filter((o) => { return o.pid === pid }).length !== 0) {
+                if (type === "contents") {
+                  thisContents = instance.contentsArr.find((c) => {
+                    return c.contents.portfolio.pid === pid;
+                  });
+                  tempFunction = instance.pidWhiteCard(thisContents.contents.portfolio.pid, thisContents.title, thisContents.cliid, thisContents.desid, "contents", true, thisContents.proid);
+                } else if (type === "foreContents") {
+                  thisContents = instance.foreContents.find((c) => {
+                    return c.pid === pid;
+                  });
+                  tempFunction = instance.pidWhiteCard(thisContents.pid, thisContents.title, thisContents.cliid, thisContents.desid, "fore", true, thisContents.proid);
+                }
+                await tempFunction(new Event("click", { bubbles: true }));
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        }
       },
       {
         title: "종류",
@@ -2266,6 +2310,10 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
           name: "status",
         },
         {
+          value: videoFiles.filter((o) => { return o.pid === fore.pid }).length === 0 ? "없음" : "있음",
+          name: "video",
+        },
+        {
           value: thisClient === null ? "개인" : "홈리에종",
           name: "type",
         },
@@ -2408,6 +2456,10 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
         {
           value: "발행",
           name: "status",
+        },
+        {
+          value: videoFiles.filter((o) => { return o.pid === contents.contents.portfolio.pid }).length === 0 ? "없음" : "있음",
+          name: "video",
         },
         {
           value: thisClient === null ? "개인" : "홈리에종",
@@ -3252,7 +3304,7 @@ ContentsJs.prototype.contentsBase = async function () {
             mother: idNameArea,
             attribute: { pid: contents.contents.portfolio.pid, lastfilter: "none" },
             event: {
-              click: instance.pidWhiteCard(contents.contents.portfolio.pid, contents.title, contents.cliid, contents.desid, "contents"),
+              click: instance.pidWhiteCard(contents.contents.portfolio.pid, contents.title, contents.cliid, contents.desid, "contents", false, contents.proid),
             },
             class: [ standardCaseClassName ],
             style: {
@@ -3366,7 +3418,7 @@ ContentsJs.prototype.contentsBase = async function () {
             mother: idNameArea,
             attribute: { pid: fore.pid, lastfilter: "none" },
             event: {
-              click: instance.pidWhiteCard(fore.pid, fore.title, fore.cliid, fore.desid, "fore"),
+              click: instance.pidWhiteCard(fore.pid, fore.title, fore.cliid, fore.desid, "fore", false, fore.proid),
             },
             class: [ standardCaseClassName ],
             style: {
@@ -3681,9 +3733,9 @@ ContentsJs.prototype.etcWhiteCard = function () {
   }
 }
 
-ContentsJs.prototype.pidWhiteCard = function (pid, title = "", cliid = "", desid = "", type = "contents") {
+ContentsJs.prototype.pidWhiteCard = function (pid, title = "", cliid = "", desid = "", type = "contents", video = false, proid = "") {
   const instance = this;
-  const { ea, totalContents, grayBarWidth, belowHeight } = this;
+  const { ea, totalContents, grayBarWidth, belowHeight, videoFiles } = this;
   const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
   const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, hasQuery, removeQuery, appendQuery } = GeneralJs;
   return async function (e) {
@@ -3725,7 +3777,11 @@ ContentsJs.prototype.pidWhiteCard = function (pid, title = "", cliid = "", desid
 
       loadingWidth = 48;
 
-      iframeLink = "/file?pid=" + pid + "&preview=true&previewonly=true&dataonly=true&entire=true";
+      if (video) {
+        iframeLink = "/file?video=" + proid + "__split__" + pid + "&dataonly=true&entire=true";
+      } else {
+        iframeLink = "/file?pid=" + pid + "&preview=true&previewonly=true&dataonly=true&entire=true";
+      }
       if (title === "" || typeof title !== "string") {
         thisTitle = pid;
       } else {
@@ -3857,14 +3913,25 @@ ContentsJs.prototype.pidWhiteCard = function (pid, title = "", cliid = "", desid
                 }
               },
               {
-                attribute: { cliid, desid, pid, type },
+                attribute: { cliid, desid, proid, pid, type, title: thisTitle, video: (videoFiles.filter((o) => { return o.proid === proid }).length === 0 ? "false" : "true") },
                 event: {
                   click: async function (e) {
                     try {
                       const type = this.getAttribute("type");
                       const pid = this.getAttribute("pid");
-                      if (type === "contents") {
-                        blankHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+                      const cliid = this.getAttribute("cliid");
+                      const desid = this.getAttribute("desid");
+                      const proid = this.getAttribute("proid");
+                      const title = this.getAttribute("title");
+                      const video = this.getAttribute("video") === "true";
+                      let tempFunction;
+                      if (video) {
+                        tempFunction = instance.pidWhiteCard(pid, title, cliid, desid, type, video, proid);
+                        await tempFunction(new Event("click", { bubbles: true }));
+                      } else {
+                        if (type === "contents") {
+                          blankHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+                        }
                       }
                     } catch (e) {
                       console.log(e);
@@ -3873,7 +3940,7 @@ ContentsJs.prototype.pidWhiteCard = function (pid, title = "", cliid = "", desid
                     }
                   }
                 },
-                text: type === "contents" ? "front web" : "",
+                text: videoFiles.filter((o) => { return o.proid === proid }).length === 0 ? (type === "contents" ? "front web" : "") : ("video source"),
                 style: {
                   display: "inline-block",
                   position: "absolute",
@@ -4501,6 +4568,7 @@ ContentsJs.prototype.launching = async function () {
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true" && getObj.dataonly === "true");
     let loading, allContents;
+    let videoFiles;
 
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
@@ -4520,7 +4588,13 @@ ContentsJs.prototype.launching = async function () {
     loading = await this.mother.loadingRun();
 
     this.contentsView = await ajaxJson({ mode: "pick" }, CONTENTSHOST + "/getContentsView", { equal: true });
-
+    videoFiles = await ajaxJson({ path: "/corePortfolio/rawVideo" }, S3HOST + ":3000/listFiles", { equal: true });
+    this.videoFiles = videoFiles.map((o) => {
+      const arr = o.fileName.split("__split__");
+      o.proid = arr[0];
+      o.pid = arr[1];
+      return o;
+    });
     this.whitePopupClassName = "whitePopupClassName";
     this.whiteIframeClassName = "whiteIframeClassName";
     this.valueTargetClassName = "valueTargetClassName";

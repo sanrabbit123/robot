@@ -4002,6 +4002,9 @@ FileJs.prototype.launching = async function () {
         this.path = pidPath;
       }
     }
+    if (typeof getObj.video === "string" && /^[p]/gi.test(getObj.video)) {
+      this.path = rootToken + "/corePortfolio/rawVideo/" + getObj.video;
+    }
     if (typeof getObj.ghostdesid === "string") {
       ghostDesidPath = rootToken + "/rawDesigner/ghost/" + getObj.ghostdesid;
 

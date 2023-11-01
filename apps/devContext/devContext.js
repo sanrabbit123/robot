@@ -156,7 +156,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    
 
     
 
@@ -6895,9 +6895,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "정다운",
-    //     designer: "김보하",
-    //     link: "https://drive.google.com/drive/folders/1CHhsCaF_T5CiLq3Pps2hrK2OJaY5lCOC",
+    //     client: "송유정",
+    //     designer: "강주현",
+    //     link: "https://drive.google.com/drive/folders/1rOHqFYns8lNry4ej2plfaJUrVms_wpos",
     //     pay: true
     //   },
     // ]);
@@ -6907,8 +6907,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "주진영",
-    //     designer: "이정아",
+    //     client: "송유정",
+    //     designer: "강주현",
     //   },
     // ]);
 
@@ -6976,17 +6976,16 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2310_aa05s", [
+    // await this.setProposalSettingForDesigner("d2310_aa07s", [
+    //   { porlid: "ghost", index: 1 },
     //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 3 },
-    //   { porlid: "ghost", index: 10 },
-    //   { porlid: "ghost", index: 6 },
+    //   { porlid: "ghost", index: 4 },
+    //   { porlid: "ghost", index: 7 },
     //   { porlid: "ghost", index: 8 },
-    //   { porlid: "ghost", index: 12 },
     // ], [
-    //   "색상에 대한 이해도가 높고, 컬러리스트 자격증도 소지하고 있어 정확하고 섬세한 컬러 컨실팅이 가능합니다.",
-    //   "공간의 레이아웃과 설계에 충실한 디자이너로 가장 기본적인 디자인에 집중합니다.",
-    //   "주부 경력 17년차 소통 중심으로 주부들의 로망을 재현해드릴 수 있는 디자이너입니다."
+    //   "고객님의 상황과 라이프 스타일에 대한 이해도를 바탕으로 고객 맞춤형 제안을 해드릴 수 있습니다.",
+    //   "친절하고 밝은 성격의 소유자로 고객님과 즐겁게 소통하며 프로젝트를 이끌어 나갈 수 있습니다.",
+    //   "센스 있는 감각으로 고객님의 집을 트렌디하고 고급스럽게 만들어 드릴 수 있습니다.",
     // ]);
 
 
