@@ -956,11 +956,14 @@ LogReport.prototype.dailyReports = async function () {
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    const startDay = new Date();
-    startDay.setMonth(startDay.getMonth() - 4);
-    const dateAgoStandard = new Date();
-    dateAgoStandard.setMonth(dateAgoStandard.getMonth() - 1);
-    const dateAgo = Math.floor((((((new Date()).valueOf() - dateAgoStandard.valueOf()) / 1000) / 60) / 60) / 24);
+    // const startDay = new Date();
+    // startDay.setMonth(startDay.getMonth() - 4);
+    // const dateAgoStandard = new Date();
+    // dateAgoStandard.setMonth(dateAgoStandard.getMonth() - 1);
+    // const dateAgo = Math.floor((((((new Date()).valueOf() - dateAgoStandard.valueOf()) / 1000) / 60) / 60) / 24);
+
+    const startDay = new Date(2023, 3, 1);
+    const dateAgo = Math.floor((((((new Date()).valueOf() - (new Date(2023, 4, 1, 9, 0, 0)).valueOf()) / 1000) / 60) / 60) / 24);
     const sixthTypeArr = [
       "string",
       "string",
@@ -1157,7 +1160,7 @@ LogReport.prototype.dailyReports = async function () {
           let googleSubmitConverting;
           let googleSubmitChargeConverting;
           let seventhMatrix;
-
+          let firstNewMatrix;
 
           from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
           to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
@@ -1222,6 +1225,31 @@ LogReport.prototype.dailyReports = async function () {
               popupOpenEvents,
               requestsNumber,
               contractsNumber,
+            ]
+          ];
+
+          // 1-2 - new front values
+          firstNewMatrix = [
+            [
+              dateToString(targetDate),
+              totalUsers,
+              pageViews,
+              analyticsRows.data.conversion.consultingPage.total,
+              analyticsRows.data.conversion.popupOpen.total,
+              analyticsRows.data.conversion.consultingPage.total + analyticsRows.data.conversion.popupOpen.total,
+              requestsNumber,
+              contractsNumber,
+              analyticsRows.data.users.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0),
+              analyticsRows.data.users.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+              analyticsRows.data.users.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+              analyticsRows.data.users.total - (analyticsRows.data.users.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (analyticsRows.data.users.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
+              analyticsRows.data.users.detail.source.cases.filter((c) => { return /naver/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+              analyticsRows.data.users.detail.source.cases.filter((c) => { return /instagram/gi.test(c.case) || /facebook/gi.test(c.case) || /meta/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+              analyticsRows.data.users.detail.source.cases.filter((c) => { return /google/gi.test(c.case) || /youtube/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+              (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
+              (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)),
+              (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)),
+              (analyticsRows.data.conversion.consultingPage.total + analyticsRows.data.conversion.popupOpen.total) - (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
             ]
           ];
 
@@ -1736,6 +1764,7 @@ LogReport.prototype.dailyReports = async function () {
 
           return [
             firstMatrix,
+            firstNewMatrix,
             secondMatrix,
             thirdMatrix,
             fourthMatrix,
@@ -1779,6 +1808,29 @@ LogReport.prototype.dailyReports = async function () {
               "신청 팝업수",
               "문의수",
               "계약수",
+            ]
+          ],
+          [
+            [
+              "기준일",
+              "유저수",
+              "페이지뷰",
+              "컨설팅 페이지",
+              "팝업 오픈",
+              "전환수",
+              "문의수",
+              "계약수",
+              "오가닉 유저수",
+              "광고 유저수",
+              "SNS 유저수",
+              "다이렉트 유저수",
+              "네이버 유입",
+              "메타 유입",
+              "구글 유입",
+              "오가닉 전환수",
+              "광고 전환수",
+              "SNS 전환수",
+              "다이렉트 전환수",
             ]
           ],
           [
@@ -1900,7 +1952,6 @@ LogReport.prototype.dailyReports = async function () {
         now = new Date();
 
         standardDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
         for (let i = 0; i < dateAgo; i++) {
           resMatrix = await getReportsByDate(standardDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories);
           for (let i = 0; i < matrix.length; i++) {
@@ -2951,6 +3002,7 @@ LogReport.prototype.dailyReports = async function () {
     const eighthSheetsId = "1TPSsXlaNz8ZssqImPZUYTZvnsqRuInSQXaAoFJ-CttU";
     const ninthSheetsId = "1ocaqxxtKIXdyEKV9SodBQW-IzoCWUe8L_dTjKOLGMe8";
     const tenthSheetsId = "18-Kpl062mlA9fyTXgP_RWZvmhCZsg1sMi0Y0cx4qaS0";
+    const firstNewSheetsId = "1zIA6AdkY2uZO4Lg3qykbiionnbYOBjVzQut5Oir_tEs";
 
     const monthSheets = {
       totalFunnelMonthMatrix: "1jmbTM-pKZ6hwWtQyEsQPuKsT2t3YtVsEo6XuU6kqENU",
@@ -2967,7 +3019,7 @@ LogReport.prototype.dailyReports = async function () {
     };
 
     const {
-      matrix: [ first, second, third, fourth, fifth, sixth, seventh ],
+      matrix: [ first, firstNew, second, third, fourth, fifth, sixth, seventh ],
       month: { totalFunnelMonthMatrix, facebookPaidMonthMatrix, naverPaidMonthMatrix, googlePaidMonthMatrix },
       week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix }
     } = await marketingBasicMatrix(startDay);
@@ -2979,6 +3031,8 @@ LogReport.prototype.dailyReports = async function () {
     const newFifth = await applyUpdate(fifthSheetsId, fifth);
     const newSixth = await applyUpdate(sixthSheetsId, sixth);
     const newSeventh = await applyUpdate(seventhSheetsId, seventh);
+
+    await applyUpdate(firstNewSheetsId, firstNew);
 
     const [ ninth ] = await subAnalyticsMatrix(startDay);
     const tenth = await tenthParsingMatrix(newSixth);
