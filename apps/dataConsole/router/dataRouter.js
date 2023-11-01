@@ -8607,7 +8607,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   const back = this.back;
   const work = this.work;
   const address = this.address;
-  const { equalJson, requestSystem, messageSend, serviceParsing } = this.mother;
+  const { equalJson, requestSystem, messageSend, serviceParsing, sleep } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_updateCalculation";
   obj.func = async function (req, res, logger) {
@@ -8809,6 +8809,10 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" });
           requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/printClient", { cliid, requestNumber: 0, history }, { headers: { "Content-Type": "application/json" } }).then(() => {
             return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/storeClientAnalytics", { fast: true }, { headers: { "Content-Type": "application/json" } });
+          }).then(() => {
+            return sleep(30 * 1000);
+          }).then(() => {
+            return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/analyticsToday", { data: null }, { headers: { "Content-Type": "application/json" } });
           }).catch((err) => { logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + err.message).catch((err) => { console.log(err) }) });
         }
 

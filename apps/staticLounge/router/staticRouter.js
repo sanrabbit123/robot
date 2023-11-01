@@ -2598,6 +2598,7 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
       let targets;
       let tempRows;
       let json;
+      let now, todayDate;
 
       if (typeof date !== "string") {
         throw new Error("invaild post");
@@ -2608,6 +2609,10 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
         throw new Error("invaild post");
       }
       dateArr = dateArr.map((str) => { return stringToDate(str) });
+
+      now = new Date();
+      todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+
       (async () => {
         try {
           let result;
@@ -2720,6 +2725,19 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
             }
             await sleep(1000);
           }
+          result = await analytics.dailyClients(todayDate, instance.mongo, instance.mongolog);
+          if (result === null) {
+            await logger.error("daily clients error : " + dateToString(todayDate));
+          } else {
+            ancid = result.ancid;
+            rows = await back.mongoRead(collection, { ancid }, { selfMongo });
+            if (rows.length !== 0) {
+              await back.mongoDelete(collection, { ancid }, { selfMongo })
+            }
+            await back.mongoCreate(collection, result, { selfMongo });
+            logger.cron("daily clients done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+          }
+          await sleep(1000);
 
           // daily query
           collection = "queryAnalytics";
