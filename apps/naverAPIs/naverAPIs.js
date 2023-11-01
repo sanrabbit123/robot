@@ -316,9 +316,12 @@ NaverAPIs.prototype.naverComplex = async function (selfMongo, dayNumber = 3, log
       logger.cron("naver complex store done : " + dateToString(new Date())).catch((err) => { console.log(err); });
     }
 
+    return true;
+
   } catch (e) {
     emergencyAlarm("NaverAPIs.naverComplex error : " + e.message).catch((err) => { console.log(err); });
     console.log(e);
+    return false;
   }
 }
 

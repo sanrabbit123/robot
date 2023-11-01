@@ -352,9 +352,12 @@ GoogleAds.prototype.googleComplex = async function (selfMongo, dayNumber = 3, lo
       logger.cron("google complex store done : " + dateToString(new Date())).catch((err) => { console.log(err); });
     }
 
+    return true;
+
   } catch (e) {
     emergencyAlarm("GoogleAds.googleComplex error : " + e.message).catch((err) => { console.log(err); });
     console.log(e);
+    return false;
   }
 }
 

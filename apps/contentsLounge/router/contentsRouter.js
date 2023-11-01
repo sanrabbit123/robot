@@ -589,13 +589,67 @@ ContentsRouter.prototype.rou_post_metaComplex = function () {
       const selfMongo = instance.mongolocal;
       const defaultDay = 3;
       const dayConst = req.body.day === undefined ? defaultDay : (Number.isNaN(Number(req.body.day)) ? defaultDay : Number(req.body.day));
-      meta.metaComplex(selfMongo, dayConst, logger).then(() => {
-        return naver.naverComplex(selfMongo, dayConst, logger);
-      }).then(() => {
-        return google.googleComplex(selfMongo, dayConst, logger);
-      }).catch((err) => {
+      let boo;
+
+      (async () => {
+        try {
+
+          boo = await meta.metaComplex(selfMongo, dayConst, logger);
+          if (!boo) {
+            await sleep(3000);
+            boo = await meta.metaComplex(selfMongo, dayConst, logger);
+            if (!boo) {
+              await sleep(3000);
+              boo = await meta.metaComplex(selfMongo, dayConst, logger);
+              if (!boo) {
+                await sleep(3000);
+                await meta.metaComplex(selfMongo, dayConst, logger);
+              }
+            }
+          }
+
+          await sleep(500);
+
+          boo = await naver.naverComplex(selfMongo, dayConst, logger);
+          if (!boo) {
+            await sleep(3000);
+            boo = await naver.naverComplex(selfMongo, dayConst, logger);
+            if (!boo) {
+              await sleep(3000);
+              boo = await naver.naverComplex(selfMongo, dayConst, logger);
+              if (!boo) {
+                await sleep(3000);
+                await naver.naverComplex(selfMongo, dayConst, logger);
+              }
+            }
+          }
+
+          await sleep(500);
+
+          boo = await google.googleComplex(selfMongo, dayConst, logger);
+          if (!boo) {
+            await sleep(3000);
+            boo = await google.googleComplex(selfMongo, dayConst, logger);
+            if (!boo) {
+              await sleep(3000);
+              boo = await google.googleComplex(selfMongo, dayConst, logger);
+              if (!boo) {
+                await sleep(3000);
+                await google.googleComplex(selfMongo, dayConst, logger);
+              }
+            }
+          }
+
+        } catch (e) {
+          console.log(e);
+          logger.error("Contents lounge 서버 문제 생김 (rou_post_metaComplex): " + e.message).catch((e) => { console.log(e); });
+          return false;
+        }
+      })().catch((err) => {
+        console.log(err);
         logger.error("Contents lounge 서버 문제 생김 (rou_post_metaComplex): " + err.message).catch((e) => { console.log(e); });
       });
+
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       logger.error("Contents lounge 서버 문제 생김 (rou_post_metaComplex): " + e.message).catch((e) => { console.log(e); });

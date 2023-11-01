@@ -378,9 +378,12 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
       logger.cron("meta complex store done : " + dateToString(new Date())).catch((err) => { console.log(err); });
     }
 
+    return true;
+
   } catch (e) {
     emergencyAlarm("FacebookAPIs.metaComplex error : " + e.message).catch((err) => { console.log(err); });
     console.log(e);
+    return false;
   }
 }
 
