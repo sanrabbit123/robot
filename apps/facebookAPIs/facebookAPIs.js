@@ -152,7 +152,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
     let targetObj;
 
     now = new Date();
-    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
     for (let i = 0; i < dayNumber; i++) {
       startDate.setDate(startDate.getDate() - 1);
     }
@@ -198,6 +198,10 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
           performance: {
             impressions: 0,
             clicks: 0,
+            likes: 0,
+            comments: 0,
+            saves: 0,
+            shares: 0,
           }
         }
       };
@@ -365,6 +369,26 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
       } catch {
         json.instagram.performance.clicks = 0;
       }  
+      await sleep(1000);
+      try {
+        res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + instagramId + "/insights", {
+          metric: "likes,comments,saves,shares",
+          metric_type: "total_value",
+          period: "day",
+          since: dateToString(from),
+          until: dateToString(to),
+          access_token: facebookToken
+        }, { method: "get" });
+        json.instagram.performance.likes = res.data.data.find((o) => { return o.name === "likes" }).total_value.value;
+        json.instagram.performance.comments = res.data.data.find((o) => { return o.name === "comments" }).total_value.value;
+        json.instagram.performance.saves = res.data.data.find((o) => { return o.name === "saves" }).total_value.value;
+        json.instagram.performance.shares = res.data.data.find((o) => { return o.name === "shares" }).total_value.value;
+      } catch (e) {
+        json.instagram.performance.likes = 0;
+        json.instagram.performance.comments = 0;
+        json.instagram.performance.saves = 0;
+        json.instagram.performance.shares = 0;
+      }
 
       // store
       tempRows = await back.mongoRead(collection, { key }, { selfMongo });
