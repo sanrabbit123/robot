@@ -1547,7 +1547,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
 
     timeWidth = 150;
     typeWidth = 80;
-    blockWidth = window.innerWidth / 12;
+    blockWidth = window.innerWidth / 15;
 
     blockHeight = 44;
 
@@ -1694,7 +1694,6 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
           boxSizing: "border-box",       
         },
         child: {
-          text: dateToString(obj.date),
           style: {
             display: "inline-flex",
             position: "relative",
@@ -1702,6 +1701,26 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
             fontSize: String(timeSize) + ea,
             fontWeight: String(timeWeight),
             color: colorChip.black,
+            width: withOut(0, ea),
+            overflow: "hidden",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          },
+          child: {
+            text: dateToString(obj.date),
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              top: String(textTop) + ea,
+              fontSize: String(timeSize) + ea,
+              fontWeight: String(timeWeight),
+              color: colorChip.black,
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              width: withOut(0, ea),
+            },
           }
         }
       });
@@ -1760,7 +1779,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
               display: "inline-block",
               verticalAlign: "top",
               position: "relative",
-              width: String((blockWidth * 8) + 1) + ea,
+              width: String((blockWidth * 10) + 1) + ea,
               borderRight: "1px solid " + colorChip.gray3,
               boxSizing: "border-box",       
             },
@@ -1810,7 +1829,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
                 display: "inline-block",
                 verticalAlign: "top",
                 position: "relative",
-                width: String(blockWidth * 6) + ea,
+                width: String(blockWidth * 8) + ea,
               },
             });
             num2 = 0;
@@ -1976,9 +1995,71 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
                     alignItems: "center",
                     textAlign: "center",
                     boxSizing: "border-box",
+                    borderRight: "1px dashed " + colorChip.gray3,
                   },
                   child: {
                     text: "클릭:" + blank + "<b%" + String(ad.value.performance.clicks) + "%b>",
+                    style: {
+                      display: "inline-flex",
+                      position: "relative",
+                      top: String(textTop) + ea,
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.deactive,
+                    },
+                    bold: {
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(valueWeight),
+                      color: colorChip.green,
+                    }
+                  }
+                });
+                createNode({
+                  mother: adBaseBlock,
+                  style: {
+                    display: "inline-flex",
+                    verticalAlign: "top",
+                    position: "relative",
+                    width: String(blockWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    boxSizing: "border-box",
+                    borderRight: "1px dashed " + colorChip.gray3,
+                  },
+                  child: {
+                    text: "CTR:" + blank + "<b%" + String(ad.value.performance.impressions === 0 ? 0 : Math.round((ad.value.performance.clicks / ad.value.performance.impressions) * 10000) / 100) + "%%b>",
+                    style: {
+                      display: "inline-flex",
+                      position: "relative",
+                      top: String(textTop) + ea,
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.deactive,
+                    },
+                    bold: {
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(valueWeight),
+                      color: colorChip.green,
+                    }
+                  }
+                });
+                createNode({
+                  mother: adBaseBlock,
+                  style: {
+                    display: "inline-flex",
+                    verticalAlign: "top",
+                    position: "relative",
+                    width: String(blockWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    boxSizing: "border-box",
+                  },
+                  child: {
+                    text: "CPC:" + blank + "<b%" + String(ad.value.performance.clicks === 0 ? 0 : autoComma((ad.value.charge / ad.value.performance.clicks))) + "원%b>",
                     style: {
                       display: "inline-flex",
                       position: "relative",
@@ -2022,7 +2103,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
               display: "inline-block",
               verticalAlign: "top",
               position: "relative",
-              width: String((blockWidth * 8) + 1) + ea,
+              width: String((blockWidth * 10) + 1) + ea,
               borderRight: "1px solid " + colorChip.gray3,
               boxSizing: "border-box",       
             },
@@ -2144,7 +2225,69 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
                 borderRight: "1px dashed " + colorChip.gray3,
               },
               child: {
-                text: "노출:" + blank + ";<b%" + String(naverCampaign.value.performance.impressions) + "%b>",
+                text: "노출:" + blank + "<b%" + String(naverCampaign.value.performance.impressions) + "%b>",
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.deactive,
+                },
+                bold: {
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: colorChip.green,
+                }
+              }
+            });
+            createNode({
+              mother: performanceTong,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth) + ea,
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                boxSizing: "border-box",
+                borderRight: "1px dashed " + colorChip.gray3,
+              },
+              child: {
+                text: "클릭:" + blank + "<b%" + String(naverCampaign.value.performance.clicks) + "%b>",
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.deactive,
+                },
+                bold: {
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: colorChip.green,
+                }
+              }
+            });
+            createNode({
+              mother: performanceTong,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth) + ea,
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                boxSizing: "border-box",
+                borderRight: "1px dashed " + colorChip.gray3,
+              },
+              child: {
+                text: "CTR:" + blank + "<b%" + String(naverCampaign.value.performance.impressions === 0 ? 0 : Math.round((naverCampaign.value.performance.clicks / naverCampaign.value.performance.impressions) * 10000) / 100) + "%%b>",
                 style: {
                   display: "inline-flex",
                   position: "relative",
@@ -2174,7 +2317,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
                 boxSizing: "border-box",
               },
               child: {
-                text: "클릭:" + blank + "<b%" + String(naverCampaign.value.performance.clicks) + "%b>",
+                text: "CPC:" + blank + "<b%" + String(naverCampaign.value.performance.clicks === 0 ? 0 : autoComma((naverCampaign.value.charge / naverCampaign.value.performance.clicks))) + "원%b>",
                 style: {
                   display: "inline-flex",
                   position: "relative",
@@ -2201,7 +2344,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
               naverCampaign.value.charge,
               naverCampaign.value.performance.impressions,
               naverCampaign.value.performance.clicks,
-            ])
+            ]);
 
             num4++;
           }
@@ -2212,7 +2355,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
               display: "inline-block",
               verticalAlign: "top",
               position: "relative",
-              width: String((blockWidth * 8) + 1) + ea,
+              width: String((blockWidth * 10) + 1) + ea,
               height: String(blockHeight) + ea,
               borderRight: "1px solid " + colorChip.gray3,
               boxSizing: "border-box",       
@@ -2317,9 +2460,71 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
               alignItems: "center",
               textAlign: "center",
               boxSizing: "border-box",
+              borderRight: "1px dashed " + colorChip.gray3,
             },
             child: {
               text: "클릭:" + blank + "<b%" + String(campaign.value.performance.clicks) + "%b>",
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                top: String(textTop) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.deactive,
+              },
+              bold: {
+                fontSize: String(textSize) + ea,
+                fontWeight: String(valueWeight),
+                color: colorChip.black,
+              }
+            }
+          });
+          createNode({
+            mother: totalCampaignTong,
+            style: {
+              display: "inline-flex",
+              verticalAlign: "top",
+              position: "relative",
+              width: String(blockWidth) + ea,
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              boxSizing: "border-box",
+              borderRight: "1px dashed " + colorChip.gray3,
+            },
+            child: {
+              text: "CTR:" + blank + "<b%" + String(campaign.value.performance.impressions === 0 ? 0 : Math.round((campaign.value.performance.clicks / campaign.value.performance.impressions) * 10000) / 100) + "%%b>",
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                top: String(textTop) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.deactive,
+              },
+              bold: {
+                fontSize: String(textSize) + ea,
+                fontWeight: String(valueWeight),
+                color: colorChip.black,
+              }
+            }
+          });
+          createNode({
+            mother: totalCampaignTong,
+            style: {
+              display: "inline-flex",
+              verticalAlign: "top",
+              position: "relative",
+              width: String(blockWidth) + ea,
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              boxSizing: "border-box",
+            },
+            child: {
+              text: "CPC:" + blank + "<b%" + String(campaign.value.performance.clicks === 0 ? 0 : autoComma((campaign.value.charge / campaign.value.performance.clicks))) + "원%b>",
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -2342,7 +2547,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
               display: "inline-flex",
               verticalAlign: "top",
               position: "relative",
-              width: withOut(typeWidth + (blockWidth * 8) + 1, ea),
+              width: withOut(typeWidth + (blockWidth * 10) + 1, ea),
               justifyContent: "center",
               alignItems: "center",
               textAlign: "center",       
@@ -2368,7 +2573,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
               display: "inline-flex",
               verticalAlign: "top",
               position: "relative",
-              width: withOut(typeWidth + (blockWidth * 8) + 1, ea),
+              width: withOut(typeWidth + (blockWidth * 10) + 1, ea),
               justifyContent: "center",
               alignItems: "center",
               textAlign: "center",       
