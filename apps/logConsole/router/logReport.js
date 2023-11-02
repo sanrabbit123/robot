@@ -944,25 +944,26 @@ LogReport.prototype.dailyReports = async function () {
   const back = this.back;
   const address = this.address;
   const { host } = this;
-  const { mongo, mongoinfo, fileSystem, requestSystem, autoComma, dateToString, stringToDate, equalJson, errorLog, messageLog, messageSend, serviceParsing, getDateMatrix, zeroAddition } = this.mother;
+  const { mongo, mongoinfo, mongocontentsinfo, fileSystem, requestSystem, autoComma, dateToString, stringToDate, equalJson, errorLog, messageLog, messageSend, serviceParsing, getDateMatrix, zeroAddition } = this.mother;
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   const querystring = require("querystring");
+  const selfCoreMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const selfContentsMongo = new mongo(mongocontentsinfo, { useUnifiedTopology: true });
+  const selfMongo = this.mongo;
   try {
-    const selfCoreMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
-    const selfMongo = this.mongo;
     const sheets = new GoogleSheet();
     const analytics = new GoogleAnalytics();
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    const startDay = new Date();
-    startDay.setMonth(startDay.getMonth() - 4);
-    const dateAgoStandard = new Date();
-    dateAgoStandard.setMonth(dateAgoStandard.getMonth() - 1);
-    const dateAgo = Math.floor((((((new Date()).valueOf() - dateAgoStandard.valueOf()) / 1000) / 60) / 60) / 24);
-    // const startDay = new Date(2023, 3, 1);
-    // const dateAgo = Math.floor((((((new Date()).valueOf() - (new Date(2023, 4, 1, 9, 0, 0)).valueOf()) / 1000) / 60) / 60) / 24);
+    // const startDay = new Date();
+    // startDay.setMonth(startDay.getMonth() - 4);
+    // const dateAgoStandard = new Date();
+    // dateAgoStandard.setMonth(dateAgoStandard.getMonth() - 1);
+    // const dateAgo = Math.floor((((((new Date()).valueOf() - dateAgoStandard.valueOf()) / 1000) / 60) / 60) / 24);
+    const startDay = new Date(2023, 3, 1);
+    const dateAgo = Math.floor((((((new Date()).valueOf() - (new Date(2023, 4, 1, 9, 0, 0)).valueOf()) / 1000) / 60) / 60) / 24);
     const sixthTypeArr = [
       "string",
       "string",
@@ -1050,6 +1051,7 @@ LogReport.prototype.dailyReports = async function () {
     let slackMessage;
 
     await selfCoreMongo.connect();
+    await selfContentsMongo.connect();
 
     // day report
     const marketingBasicMatrix = async (startDate) => {
@@ -1066,6 +1068,8 @@ LogReport.prototype.dailyReports = async function () {
         const campaignEntireRows = await back.mongoRead("dailyCampaign", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
         const analyticsEntireRows = await back.mongoRead("dailyAnalytics", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
         const clientsEntireRows = await back.mongoRead("dailyClients", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
+        const metaComplexRows = await back.mongoRead("metaComplex", { "date.from": { $gte: queryStandardDate } }, { selfMongo: selfContentsMongo });
+        const googleComplexRows = await back.mongoRead("googleComplex", { "date.from": { $gte: queryStandardDate } }, { selfMongo: selfContentsMongo });
 
         const facebookCampaignBoo = (str) => {
           return (/instagram/gi.test(str) || /facebook/gi.test(str) || /meta/gi.test(str));
@@ -1077,7 +1081,7 @@ LogReport.prototype.dailyReports = async function () {
           return (/google/gi.test(str) || /youtube/gi.test(str));
         }
 
-        const getReportsByDate = async (targetDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories) => {
+        const getReportsByDate = async (targetDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories, metaComplexRows, googleComplexRows) => {
           const keyMaker = (date) => {
             const keyRegMaker = (date) => {
               return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}_`;
@@ -1088,16 +1092,26 @@ LogReport.prototype.dailyReports = async function () {
             const clientsIdMaker = (date) => {
               return `y${String(date.getFullYear()).slice(2)}${zeroAddition(date.getMonth() + 1)}_aa${zeroAddition(date.getDate())}s`;
             }
+            const metaKeyMaker = (date) => {
+              return dateToString(date).replace(/[^0-9]/gi, '') + "_meta"
+            }
+            const googleKeyMaker = (date) => {
+              return dateToString(date).replace(/[^0-9]/gi, '') + "_google"
+            }
             return {
               campaign: keyRegMaker(date),
               analytics: analyticsIdMaker(date),
               clients: clientsIdMaker(date),
+              meta: metaKeyMaker(date),
+              google: googleKeyMaker(date),
             }
           };
           const {
             campaign: campaignKey,
             analytics: analyticsKey,
-            clients: clientsKey
+            clients: clientsKey,
+            meta: metaKey,
+            google: googleKey,
           } = keyMaker(targetDate);
           const requests = clients.getRequestsTong();
           let campaignRows, analyticsRows, clientsRows;
@@ -1160,6 +1174,8 @@ LogReport.prototype.dailyReports = async function () {
           let googleSubmitChargeConverting;
           let seventhMatrix;
           let firstNewMatrix;
+          let snsMatrix;
+          let thisMeta, thisGoogle;
 
           from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
           to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
@@ -1174,6 +1190,8 @@ LogReport.prototype.dailyReports = async function () {
             console.log(analyticsKey, clientsKey);
             throw new Error("invaild date");
           }
+          thisMeta = metaComplexRows.find((obj) => { return obj.key === metaKey });
+          thisGoogle = googleComplexRows.find((obj) => { return obj.key === googleKey });
 
           // 1 - total funnel
 
@@ -1761,6 +1779,27 @@ LogReport.prototype.dailyReports = async function () {
             ]
           ];
 
+
+          // 8 - sns
+
+          snsMatrix = [
+            [
+              dateToString(targetDate),
+              thisMeta.instagram.profile.views,
+              thisMeta.instagram.profile.followers,
+              thisMeta.instagram.performance.impressions,
+              thisMeta.instagram.performance.clicks,
+              thisMeta.instagram.performance.likes,
+              thisMeta.instagram.performance.comments,
+              thisMeta.instagram.performance.saves,
+              thisMeta.instagram.performance.shares,
+              thisGoogle.youtube.profile.followers,
+              thisGoogle.youtube.performance.views,
+              thisGoogle.youtube.performance.likes,
+              thisGoogle.youtube.performance.shares,
+            ]
+          ];
+
           return [
             firstMatrix,
             firstNewMatrix,
@@ -1770,6 +1809,7 @@ LogReport.prototype.dailyReports = async function () {
             fifthMatrix,
             sixthMatrix,
             seventhMatrix,
+            snsMatrix,
           ];
         }
 
@@ -1946,13 +1986,30 @@ LogReport.prototype.dailyReports = async function () {
               "문의당 비용",
             ]
           ],
+          [
+            [
+              "기준일",
+              "인스타 프로필뷰",
+              "인스타 팔로워",
+              "인스타 노출수",
+              "인스타 클릭수",
+              "인스타 좋아요수",
+              "인스타 댓글수",
+              "인스타 저장수",
+              "인스타 공유수",
+              "유투브 구독자",
+              "유투브 노출수",
+              "유투브 좋아요수",
+              "유투브 공유수",
+            ]
+          ],
         ];
 
         now = new Date();
 
         standardDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         for (let i = 0; i < dateAgo; i++) {
-          resMatrix = await getReportsByDate(standardDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories);
+          resMatrix = await getReportsByDate(standardDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories, metaComplexRows, googleComplexRows);
           for (let i = 0; i < matrix.length; i++) {
             for (let arr of resMatrix[i]) {
               matrix[i].push(arr);
@@ -2998,6 +3055,7 @@ LogReport.prototype.dailyReports = async function () {
     const fifthSheetsId = "1QFr_a5cnexPyvcKAsIDvcq7SCwHKLAbiQcQGkcoeuAo";
     const sixthSheetsId = "1d64IEb9S4MIfb0rTQW1ojWI9Tq6utyzdE6MEsEbVvcs";
     const seventhSheetsId = "1XvZGAalipoQFzwWM178_c8Ect6n2hRf_MV5OfSXGfl8";
+    const snsSheetsId = "1Rz_El0Dtu64876EsJ9od06jsQftiAs1Mfqj3NaReFrw";
     const eighthSheetsId = "1TPSsXlaNz8ZssqImPZUYTZvnsqRuInSQXaAoFJ-CttU";
     const ninthSheetsId = "1ocaqxxtKIXdyEKV9SodBQW-IzoCWUe8L_dTjKOLGMe8";
     const tenthSheetsId = "18-Kpl062mlA9fyTXgP_RWZvmhCZsg1sMi0Y0cx4qaS0";
@@ -3018,7 +3076,7 @@ LogReport.prototype.dailyReports = async function () {
     };
 
     const {
-      matrix: [ first, firstNew, second, third, fourth, fifth, sixth, seventh ],
+      matrix: [ first, firstNew, second, third, fourth, fifth, sixth, seventh, sns ],
       month: { totalFunnelMonthMatrix, facebookPaidMonthMatrix, naverPaidMonthMatrix, googlePaidMonthMatrix },
       week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix }
     } = await marketingBasicMatrix(startDay);
@@ -3030,6 +3088,7 @@ LogReport.prototype.dailyReports = async function () {
     const newFifth = await applyUpdate(fifthSheetsId, fifth);
     const newSixth = await applyUpdate(sixthSheetsId, sixth);
     const newSeventh = await applyUpdate(seventhSheetsId, seventh);
+    const newSns = await applyUpdate(snsSheetsId, sns);
 
     await applyUpdate(firstNewSheetsId, firstNew);
 
@@ -3052,6 +3111,7 @@ LogReport.prototype.dailyReports = async function () {
     console.log("sheets update all done");
 
     await selfCoreMongo.close();
+    await selfContentsMongo.close();
 
     slackMessage = '';
     slackMessage += dateToString(today) + " MPR 시트를 업데이트 하였습니다!";
@@ -3067,6 +3127,8 @@ LogReport.prototype.dailyReports = async function () {
 
   } catch (e) {
     console.log(e);
+    await selfCoreMongo.close();
+    await selfContentsMongo.close();
     return false;
   }
 }

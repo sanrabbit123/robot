@@ -4913,7 +4913,6 @@ MprJs.prototype.frontWhiteCard = function () {
                 });
               }
             }
-
             timeMatrix.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
 
             tableMatrix = [
@@ -4990,7 +4989,7 @@ MprJs.prototype.frontWhiteCard = function () {
                     textAlign: "center",
                     borderRight: j !== tableMatrix[i].length - 1 ? "1px solid " + colorChip.gray3 : "",
                     boxSizing: "border-box",
-                    overflow: "scroll",
+                    overflow: "hidden",
                   },
                   child: {
                     style: {
@@ -5458,7 +5457,7 @@ MprJs.prototype.snsWhiteCard = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight, entireMode } = this;
   const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, autoComma, zeroAddition, chartJsPatch, serviceParsing, hasQuery, removeQuery, appendQuery } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, autoComma, zeroAddition, chartJsPatch, serviceParsing, hasQuery, removeQuery, appendQuery, equalJson } = GeneralJs;
   return async function (e) {
     try {
       const zIndex = 4;
@@ -5518,6 +5517,9 @@ MprJs.prototype.snsWhiteCard = function () {
       let maxWidth;
       let tableBlockHeight;
       let tableSize, tableTextTop;
+      let snsNumbers;
+      let thisGoogle, thisMeta;
+      let timeMatrixCopied;
 
       toDate = new Date();
       toDate.setDate(toDate.getDate() - 1);
@@ -5669,7 +5671,7 @@ MprJs.prototype.snsWhiteCard = function () {
             },
             children: [
               {
-                text: "프론트 웹 현황",
+                text: "채널 현황",
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -5768,6 +5770,128 @@ MprJs.prototype.snsWhiteCard = function () {
                   },
                 }
               },
+              {
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                  marginRight: String(chartBetween) + ea,
+                  marginBottom: String(chartBetween) + ea,
+                  verticalAlign: "top",
+                },
+                child: {
+                  mode: "canvas",
+                  style: {
+                    display: "block",
+                    position: "relative",      
+                  },
+                  previous: {
+                    text: "인스타 - 노출 현황",
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      justifyContent: "center",
+                      alignItems: "start",
+                      height: String(middleTitleHeight) + ea,
+                    }
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                  marginBottom: String(chartBetween) + ea,
+                  verticalAlign: "top",
+                },
+                child: {
+                  mode: "canvas",
+                  style: {
+                    display: "block",
+                    position: "relative",      
+                  },
+                  previous: {
+                    text: "인스타 - 반응 현황",
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      justifyContent: "center",
+                      alignItems: "start",
+                      height: String(middleTitleHeight) + ea,
+                    }
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                  marginRight: String(chartBetween) + ea,
+                  marginBottom: String(chartBetween) + ea,
+                  verticalAlign: "top",
+                },
+                child: {
+                  mode: "canvas",
+                  style: {
+                    display: "block",
+                    position: "relative",      
+                  },
+                  previous: {
+                    text: "유튜브 - 노출 현황",
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      justifyContent: "center",
+                      alignItems: "start",
+                      height: String(middleTitleHeight) + ea,
+                    }
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                  marginBottom: String(chartBetween) + ea,
+                  verticalAlign: "top",
+                },
+                child: {
+                  mode: "canvas",
+                  style: {
+                    display: "block",
+                    position: "relative",      
+                  },
+                  previous: {
+                    text: "유튜브 - 반응 현황",
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontWeight: String(titleWeight),
+                      color: colorChip.black,
+                      top: String(titleTextTop) + ea,
+                      justifyContent: "center",
+                      alignItems: "start",
+                      height: String(middleTitleHeight) + ea,
+                    }
+                  }
+                }
+              },
             ].forEach((obj) => {
               obj.mother = scrollBox;
               createNode(obj);
@@ -5775,8 +5899,31 @@ MprJs.prototype.snsWhiteCard = function () {
 
             tableTong = scrollBox.firstChild.firstChild;
 
-            console.log(result);
+            [ snsNumbers ] = result;
+            type = "line";
+            fill = false;
+            tension = 0.3;
+            borderJoinStyle = "round";
+            complexBoxesLength = 1;
             
+            timeMatrix = [];
+            for (let i = 0; i < timeDelta + 1; i++) {
+              thisDate = new Date(JSON.stringify(fromDate).slice(1, -1));
+              thisDate.setDate(thisDate.getDate() + i);
+              thisMeta = snsNumbers.meta.find((o) => { return o.key === dateToString(thisDate).replace(/[^0-9]/gi, '') + "_meta" });
+              thisGoogle = snsNumbers.google.find((o) => { return o.key === dateToString(thisDate).replace(/[^0-9]/gi, '') + "_google" });
+              timeMatrix.push({
+                date: new Date(JSON.stringify(thisDate).slice(1, -1)),
+                meta: thisMeta,
+                google: thisGoogle,
+              });
+            }
+            timeMatrix.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+
+            timeMatrixCopied = equalJson(JSON.stringify(timeMatrix));
+            timeMatrixCopied.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
+            labels = timeMatrixCopied.map((o) => { return dateToString(o.date).slice(5) });
+
             tableMatrix = [
               [
                 "기준일",
@@ -5784,37 +5931,33 @@ MprJs.prototype.snsWhiteCard = function () {
                 "인스타 팔로워",
                 "인스타 노출수",
                 "인스타 클릭수",
-                "유투브 ",
+                "인스타 좋아요수",
+                "인스타 댓글수",
+                "인스타 저장수",
+                "인스타 공유수",
+                "유투브 구독자",
+                "유투브 노출수",
+                "유투브 좋아요수",
+                "유투브 공유수",
               ]
             ]
             columnsLength = tableMatrix[0].length;
 
-
-            /*
-
-
             for (let obj of timeMatrix) {
               tableMatrix.push([
                 dateToString(obj.date).slice(2),
-                obj.users,
-                obj.views,
-                obj.consultingPage,
-                obj.popupOpen,
-                obj.converting,
-                obj.clients,
-                obj.recommend,
-                obj.contract,
-                obj.organic,
-                obj.ads,
-                obj.sns,
-                obj.direct,
-                obj.naver,
-                obj.meta,
-                obj.google,
-                obj.consultingOrganic,
-                obj.consultingAds,
-                obj.consultingSns,
-                obj.consultingDirect,
+                obj.meta.instagram.profile.views,
+                obj.meta.instagram.profile.followers,
+                obj.meta.instagram.performance.impressions,
+                obj.meta.instagram.performance.clicks,
+                obj.meta.instagram.performance.likes,
+                obj.meta.instagram.performance.comments,
+                obj.meta.instagram.performance.saves,
+                obj.meta.instagram.performance.shares,
+                obj.google.youtube.profile.followers,
+                obj.google.youtube.performance.views,
+                obj.google.youtube.performance.likes,
+                obj.google.youtube.performance.shares,
               ])
             }
 
@@ -5842,7 +5985,7 @@ MprJs.prototype.snsWhiteCard = function () {
                     textAlign: "center",
                     borderRight: j !== tableMatrix[i].length - 1 ? "1px solid " + colorChip.gray3 : "",
                     boxSizing: "border-box",
-                    overflow: "scroll",
+                    overflow: "hidden",
                   },
                   child: {
                     style: {
@@ -5872,7 +6015,118 @@ MprJs.prototype.snsWhiteCard = function () {
             }
             
             instance.snsMatrix = tableMatrix;
-            */
+
+            // 1
+            new window.Chart(scrollBox.children[complexBoxesLength + 0].querySelector("canvas"), {
+              type,
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Impressions",
+                    data: timeMatrixCopied.map((o) => { return o.meta.instagram.performance.impressions }),
+                    borderColor: colorChip.red,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Profile",
+                    data: timeMatrixCopied.map((o) => { return o.meta.instagram.profile.views }),
+                    borderColor: colorChip.yellow,
+                    fill, tension, borderJoinStyle,
+                  },
+                ]
+              },
+            });
+
+            // 2
+            new window.Chart(scrollBox.children[complexBoxesLength + 1].querySelector("canvas"), {
+              type,
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Followers",
+                    data: timeMatrixCopied.map((o) => { return o.meta.instagram.profile.followers }),
+                    borderColor: colorChip.red,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Clicks",
+                    data: timeMatrixCopied.map((o) => { return o.meta.instagram.performance.clicks }),
+                    borderColor: colorChip.yellow,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Likes",
+                    data: timeMatrixCopied.map((o) => { return o.meta.instagram.performance.likes }),
+                    borderColor: colorChip.green,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Comments",
+                    data: timeMatrixCopied.map((o) => { return o.meta.instagram.performance.comments }),
+                    borderColor: colorChip.purple,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Saves",
+                    data: timeMatrixCopied.map((o) => { return o.meta.instagram.performance.saves }),
+                    borderColor: colorChip.shadow,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Shares",
+                    data: timeMatrixCopied.map((o) => { return o.meta.instagram.performance.shares }),
+                    borderColor: colorChip.gray3,
+                    fill, tension, borderJoinStyle,
+                  },
+                ]
+              },
+            });
+
+            // 3
+            new window.Chart(scrollBox.children[complexBoxesLength + 2].querySelector("canvas"), {
+              type,
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Impressions",
+                    data: timeMatrixCopied.map((o) => { return o.google.youtube.performance.views }),
+                    borderColor: colorChip.red,
+                    fill, tension, borderJoinStyle,
+                  },
+                ]
+              },
+            });
+
+            // 4
+            new window.Chart(scrollBox.children[complexBoxesLength + 3].querySelector("canvas"), {
+              type,
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Followers",
+                    data: timeMatrixCopied.map((o) => { return o.google.youtube.profile.followers }),
+                    borderColor: colorChip.red,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Likes",
+                    data: timeMatrixCopied.map((o) => { return o.google.youtube.performance.likes }),
+                    borderColor: colorChip.yellow,
+                    fill, tension, borderJoinStyle,
+                  },
+                  {
+                    label: "Shares",
+                    data: timeMatrixCopied.map((o) => { return o.google.youtube.performance.shares }),
+                    borderColor: colorChip.green,
+                    fill, tension, borderJoinStyle,
+                  },
+                ]
+              },
+            });
 
           }
         }
@@ -7220,6 +7474,10 @@ MprJs.prototype.mprExtractEvent = async function () {
         } else if (getObj.whitekey === "front") {
 
           matrix = equalJson(JSON.stringify(instance.frontMatrix));
+
+        } else if (getObj.whitekey === "sns") {
+
+          matrix = equalJson(JSON.stringify(instance.snsMatrix));
 
         } else if (typeof getObj.whitekey === "string" && /^c/gi.test(getObj.whitekey) && /[0-9]$/gi.test(getObj.whitekey)) {
 
