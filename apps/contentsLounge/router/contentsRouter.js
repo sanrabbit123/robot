@@ -682,6 +682,7 @@ ContentsRouter.prototype.rou_post_getAdsComplex = function () {
       const collectionList = [
         "metaComplex",
         "naverComplex",
+        "googleComplex",
       ];
       let resultObj;
       let startDateCopied;

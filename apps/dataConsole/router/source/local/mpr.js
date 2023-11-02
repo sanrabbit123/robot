@@ -1499,6 +1499,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
     const keyTargets = [
       "meta",
       "naver",
+      "google",
     ];
     const keyword = "t";
     const blank = "&nbsp;&nbsp;";
@@ -1670,7 +1671,9 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
         "Ad",
         "비용",
         "노출",
-        "클릭"
+        "클릭",
+        "CTR",
+        "CPC",
       ]
     ];
     num0 = 0;
@@ -2274,6 +2277,8 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
                   ad.value.charge,
                   ad.value.performance.impressions,
                   ad.value.performance.clicks,
+                  (ad.value.performance.impressions === 0 ? 0 : Math.round((ad.value.performance.clicks / ad.value.performance.impressions) * 10000) / 100),
+                  ad.value.performance.clicks === 0 ? 0 : Math.floor((ad.value.charge / ad.value.performance.clicks)),
                 ])
 
                 num3++;
@@ -2672,6 +2677,8 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
               naverCampaign.value.charge,
               naverCampaign.value.performance.impressions,
               naverCampaign.value.performance.clicks,
+              (naverCampaign.value.performance.impressions === 0 ? 0 : Math.round((naverCampaign.value.performance.clicks / naverCampaign.value.performance.impressions) * 10000) / 100),
+              (naverCampaign.value.performance.clicks === 0 ? 0 : Math.floor((naverCampaign.value.charge / naverCampaign.value.performance.clicks)))
             ]);
 
             num4++;
