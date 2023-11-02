@@ -1782,23 +1782,43 @@ LogReport.prototype.dailyReports = async function () {
 
           // 8 - sns
 
-          snsMatrix = [
-            [
-              dateToString(targetDate),
-              thisMeta.instagram.profile.views,
-              thisMeta.instagram.profile.followers,
-              thisMeta.instagram.performance.impressions,
-              thisMeta.instagram.performance.clicks,
-              thisMeta.instagram.performance.likes,
-              thisMeta.instagram.performance.comments,
-              thisMeta.instagram.performance.saves,
-              thisMeta.instagram.performance.shares,
-              thisGoogle.youtube.profile.followers,
-              thisGoogle.youtube.performance.views,
-              thisGoogle.youtube.performance.likes,
-              thisGoogle.youtube.performance.shares,
-            ]
-          ];
+          if (thisMeta !== undefined && thisGoogle !== undefined) {
+            snsMatrix = [
+              [
+                dateToString(targetDate),
+                thisMeta.instagram.profile.views,
+                thisMeta.instagram.profile.followers,
+                thisMeta.instagram.performance.impressions,
+                thisMeta.instagram.performance.clicks,
+                thisMeta.instagram.performance.likes,
+                thisMeta.instagram.performance.comments,
+                thisMeta.instagram.performance.saves,
+                thisMeta.instagram.performance.shares,
+                thisGoogle.youtube.profile.followers,
+                thisGoogle.youtube.performance.views,
+                thisGoogle.youtube.performance.likes,
+                thisGoogle.youtube.performance.shares,
+              ]
+            ];
+          } else {
+            snsMatrix = [
+              [
+                dateToString(targetDate),
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+              ]
+            ];
+          }
 
           return [
             firstMatrix,
