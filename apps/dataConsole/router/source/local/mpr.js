@@ -1547,6 +1547,8 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
     let thisClicks;
     let maxWidth;
     let leftPadding;
+    let googleTargets;
+    let googleCampaignTong;
 
     timeWidth = 150;
     typeWidth = 80;
@@ -1607,7 +1609,8 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
     for (let obj of timeMatrix) {
       naverTargets = obj.data.filter((o) => { return o.kinds === "naver" });
       metaTargets = obj.data.filter((o) => { return o.kinds === "meta" });
-      newDataArray = obj.data.filter((o) => { return o.kinds !== "naver" && o.kinds !== "meta" });
+      googleTargets = obj.data.filter((o) => { return o.kinds === "google" });
+      newDataArray = obj.data.filter((o) => { return o.kinds !== "naver" && o.kinds !== "meta" && o.kinds !== "google" });
 
       thisCharge = metaTargets.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
       thisImpressions = metaTargets.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0);
@@ -1640,6 +1643,23 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
             }
           },
           children: equalJson(JSON.stringify(naverTargets)),
+        });
+      }
+
+      thisCharge = googleTargets.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
+      thisImpressions = googleTargets.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0);
+      thisClicks = googleTargets.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0);
+      if (!(thisCharge === 0 && thisImpressions === 0 && thisClicks === 0)) {
+        newDataArray.push({
+          kinds: "google",
+          value: {
+            charge: thisCharge,
+            performance: {
+              impressions: thisImpressions,
+              clicks: thisClicks,
+            }
+          },
+          children: equalJson(JSON.stringify(googleTargets)),
         });
       }
 
@@ -1677,6 +1697,9 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
       ]
     ];
     num0 = 0;
+
+    console.log(timeMatrix);
+
     for (let obj of timeMatrix) {
       baseBlock = createNode({
         mother: tong,
@@ -2683,6 +2706,353 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
 
             num4++;
           }
+
+        } else if (campaign.kinds === "google") {
+
+          googleCampaignTong = createNode({
+            mother: campaignBaseBlock,
+            style: {
+              display: "inline-block",
+              verticalAlign: "top",
+              position: "relative",
+              width: String((blockWidth * 10) + 1) + ea,
+              borderRight: "1px solid " + colorChip.gray3,
+              boxSizing: "border-box",       
+            },
+          });
+          num4 = 0;
+          for (let googleCampaign of campaign.children) {
+            performanceTong = createNode({
+              mother: googleCampaignTong,
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                position: "relative",
+                width: withOut(0, ea),
+                height: String(blockHeight) + ea,
+                boxSizing: "border-box",
+                borderBottom: num4 !== campaign.children.length - 1 ? "1px solid " + colorChip.gray3 : "",
+              },
+            });
+            createNode({
+              mother: performanceTong,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth * 5) + ea,
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                boxSizing: "border-box",
+                borderRight: "1px solid " + colorChip.gray3,
+              },
+              child: {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(leftPadding * 2, ea),
+                  overflow: "hidden",
+                  textAlign: "center",
+                },
+                child: {
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: String(maxWidth) + ea,
+                    left: withOut(50, maxWidth / 2, ea),
+                    textAlign: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                  child: {
+                    text: googleCampaign.information.name,
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(textTop) + ea,
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.black,
+                    }
+                  }
+                },
+              }
+            });
+
+            createNode({
+              mother: performanceTong,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth) + ea,
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                boxSizing: "border-box",
+                borderRight: "1px dashed " + colorChip.gray3,
+              },
+              child: {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(leftPadding * 2, ea),
+                  overflow: "hidden",
+                  textAlign: "center",
+                },
+                child: {
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: String(maxWidth) + ea,
+                    left: withOut(50, maxWidth / 2, ea),
+                    textAlign: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                  child: {
+                    text: "비용:" + blank + "<b%" + autoComma(googleCampaign.value.charge) + "원" + "%b>",
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(textTop) + ea,
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.deactive,
+                    },
+                    bold: {
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(valueWeight),
+                      color: colorChip.green,
+                    }
+                  }
+                },
+              }
+            });
+            createNode({
+              mother: performanceTong,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth) + ea,
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                boxSizing: "border-box",
+                borderRight: "1px dashed " + colorChip.gray3,
+              },
+              child: {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(leftPadding * 2, ea),
+                  overflow: "hidden",
+                  textAlign: "center",
+                },
+                child: {
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: String(maxWidth) + ea,
+                    left: withOut(50, maxWidth / 2, ea),
+                    textAlign: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                  child: {
+                    text: "노출:" + blank + "<b%" + String(googleCampaign.value.performance.impressions) + "%b>",
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(textTop) + ea,
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.deactive,
+                    },
+                    bold: {
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(valueWeight),
+                      color: colorChip.green,
+                    }
+                  }
+                },
+              }
+            });
+            createNode({
+              mother: performanceTong,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth) + ea,
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                boxSizing: "border-box",
+                borderRight: "1px dashed " + colorChip.gray3,
+              },
+              child: {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(leftPadding * 2, ea),
+                  overflow: "hidden",
+                  textAlign: "center",
+                },
+                child: {
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: String(maxWidth) + ea,
+                    left: withOut(50, maxWidth / 2, ea),
+                    textAlign: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                  child: {
+                    text: "클릭:" + blank + "<b%" + String(googleCampaign.value.performance.clicks) + "%b>",
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(textTop) + ea,
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.deactive,
+                    },
+                    bold: {
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(valueWeight),
+                      color: colorChip.green,
+                    }
+                  }
+                },
+              }
+            });
+            createNode({
+              mother: performanceTong,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth) + ea,
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                boxSizing: "border-box",
+                borderRight: "1px dashed " + colorChip.gray3,
+              },
+              child: {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(leftPadding * 2, ea),
+                  overflow: "hidden",
+                  textAlign: "center",
+                },
+                child: {
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: String(maxWidth) + ea,
+                    left: withOut(50, maxWidth / 2, ea),
+                    textAlign: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                  child: {
+                    text: "CTR:" + blank + "<b%" + String(googleCampaign.value.performance.impressions === 0 ? 0 : Math.round((googleCampaign.value.performance.clicks / googleCampaign.value.performance.impressions) * 10000) / 100) + "%%b>",
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(textTop) + ea,
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.deactive,
+                    },
+                    bold: {
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(valueWeight),
+                      color: colorChip.green,
+                    }
+                  }
+                },
+              }
+            });
+            createNode({
+              mother: performanceTong,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth) + ea,
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                boxSizing: "border-box",
+              },
+              child: {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(leftPadding * 2, ea),
+                  overflow: "hidden",
+                  textAlign: "center",
+                },
+                child: {
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: String(maxWidth) + ea,
+                    left: withOut(50, maxWidth / 2, ea),
+                    textAlign: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                  child: {
+                    text: "CPC:" + blank + "<b%" + String(googleCampaign.value.performance.clicks === 0 ? 0 : autoComma((googleCampaign.value.charge / googleCampaign.value.performance.clicks))) + "원%b>",
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(textTop) + ea,
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.deactive,
+                    },
+                    bold: {
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(valueWeight),
+                      color: colorChip.green,
+                    }
+                  }
+                },
+              }
+            });
+
+            instance.adsMatrix.push([
+              dateToString(obj.date),
+              campaign.kinds,
+              googleCampaign.information.name,
+              "-",
+              "-",
+              "-",
+              googleCampaign.value.charge,
+              googleCampaign.value.performance.impressions,
+              googleCampaign.value.performance.clicks,
+              (googleCampaign.value.performance.impressions === 0 ? 0 : Math.round((googleCampaign.value.performance.clicks / googleCampaign.value.performance.impressions) * 10000) / 100),
+              (googleCampaign.value.performance.clicks === 0 ? 0 : Math.floor((googleCampaign.value.charge / googleCampaign.value.performance.clicks)))
+            ]);
+
+            num4++;
+          }
+
         } else if (campaign.kinds === "total") {
           totalCampaignTong = createNode({
             mother: campaignBaseBlock,
@@ -2981,7 +3351,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
                 textAlign: "center",       
               },
               child: {
-                text: "<b%" + campaign.kinds + "%b>" + "\n" + "비용:" + blank + "<b%" + autoComma(campaign.value.charge) + "원" + "%b>" + "\n" + "노출:" + blank + "<b%" + String(campaign.value.performance.impressions) + "%b>" + slash + "클릭:" + blank + "<b%" + String(campaign.value.performance.clicks) + "%b>",
+                text: "<b%" + campaign.kinds + "%b>" + " => " + "비용:" + blank + "<b%" + autoComma(campaign.value.charge) + "원" + "%b>" + "\n" + "노출:" + blank + "<b%" + String(campaign.value.performance.impressions) + "%b>" + slash + "클릭:" + blank + "<b%" + String(campaign.value.performance.clicks) + "%b>",
                 style: {
                   display: "inline-block",
                   position: "relative",
