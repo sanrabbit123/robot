@@ -5085,7 +5085,7 @@ MprJs.prototype.frontWhiteCard = function () {
                 datasets: [
                   {
                     label: "Organic",
-                    data: rows.map((o) => { return o.data.users.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    data: rows.map((o) => { return o.data.views.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
                     borderColor: colorChip.red,
                     backgroundColor: colorChip.red,
                     borderRadius: 3,
@@ -5093,7 +5093,7 @@ MprJs.prototype.frontWhiteCard = function () {
                   },
                   {
                     label: "Ads",
-                    data: rows.map((o) => { return o.data.users.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    data: rows.map((o) => { return o.data.views.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
                     borderColor: colorChip.yellow,
                     backgroundColor: colorChip.yellow,
                     borderRadius: 3,
@@ -5101,7 +5101,7 @@ MprJs.prototype.frontWhiteCard = function () {
                   },
                   {
                     label: "Sns",
-                    data: rows.map((o) => { return o.data.users.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    data: rows.map((o) => { return o.data.views.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
                     borderColor: colorChip.purple,
                     backgroundColor: colorChip.purple,
                     borderRadius: 3,
@@ -5109,7 +5109,7 @@ MprJs.prototype.frontWhiteCard = function () {
                   },
                   {
                     label: "Direct",
-                    data: rows.map((o) => { return o.data.users.total - (o.data.users.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (o.data.users.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
+                    data: rows.map((o) => { return o.data.views.total - (o.data.views.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (o.data.views.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
                     borderColor: colorChip.gray3,
                     backgroundColor: colorChip.gray3,
                     borderRadius: 3,
@@ -5138,7 +5138,7 @@ MprJs.prototype.frontWhiteCard = function () {
                 datasets: [
                   {
                     label: "Naver",
-                    data: rows.map((o) => { return o.data.users.detail.source.cases.filter((c) => { return /naver/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    data: rows.map((o) => { return o.data.views.detail.source.cases.filter((c) => { return /naver/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
                     borderColor: colorChip.softGreen,
                     backgroundColor: colorChip.softGreen,
                     borderRadius: 3,
@@ -5146,7 +5146,7 @@ MprJs.prototype.frontWhiteCard = function () {
                   },
                   {
                     label: "Meta",
-                    data: rows.map((o) => { return o.data.users.detail.source.cases.filter((c) => { return /instagram/gi.test(c.case) || /facebook/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    data: rows.map((o) => { return o.data.views.detail.source.cases.filter((c) => { return /instagram/gi.test(c.case) || /facebook/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
                     borderColor: colorChip.purple,
                     backgroundColor: colorChip.purple,
                     borderRadius: 3,
@@ -5154,7 +5154,7 @@ MprJs.prototype.frontWhiteCard = function () {
                   },
                   {
                     label: "Google",
-                    data: rows.map((o) => { return o.data.users.detail.source.cases.filter((c) => { return /google/gi.test(c.case) || /youtube/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    data: rows.map((o) => { return o.data.views.detail.source.cases.filter((c) => { return /google/gi.test(c.case) || /youtube/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
                     borderColor: colorChip.gray3,
                     backgroundColor: colorChip.gray3,
                     borderRadius: 3,
@@ -5768,311 +5768,6 @@ MprJs.prototype.snsWhiteCard = function () {
                   },
                 }
               },
-              {
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  marginRight: String(chartBetween) + ea,
-                  marginBottom: String(chartBetween) + ea,
-                  verticalAlign: "top",
-                },
-                child: {
-                  mode: "canvas",
-                  style: {
-                    display: "block",
-                    position: "relative",      
-                  },
-                  previous: {
-                    text: "페이지뷰, 유저수, 전환수",
-                    style: {
-                      display: "flex",
-                      position: "relative",
-                      fontSize: String(titleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.black,
-                      top: String(titleTextTop) + ea,
-                      justifyContent: "center",
-                      alignItems: "start",
-                      height: String(middleTitleHeight) + ea,
-                    }
-                  }
-                }
-              },
-              {
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  marginBottom: String(chartBetween) + ea,
-                  verticalAlign: "top",
-                },
-                child: {
-                  mode: "canvas",
-                  style: {
-                    display: "block",
-                    position: "relative",      
-                  },
-                  previous: {
-                    text: "유저수, 전환수, 문의수",
-                    style: {
-                      display: "flex",
-                      position: "relative",
-                      fontSize: String(titleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.black,
-                      top: String(titleTextTop) + ea,
-                      justifyContent: "center",
-                      alignItems: "start",
-                      height: String(middleTitleHeight) + ea,
-                    }
-                  }
-                }
-              },
-              {
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  marginRight: String(chartBetween) + ea,
-                  marginBottom: String(chartBetween) + ea,
-                  verticalAlign: "top",
-                },
-                child: {
-                  mode: "canvas",
-                  style: {
-                    display: "block",
-                    position: "relative",      
-                  },
-                  previous: {
-                    text: "유저수 - 오가닉 / 광고 / SNS / 다이렉트",
-                    style: {
-                      display: "flex",
-                      position: "relative",
-                      fontSize: String(titleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.black,
-                      top: String(titleTextTop) + ea,
-                      justifyContent: "center",
-                      alignItems: "start",
-                      height: String(middleTitleHeight) + ea,
-                    }
-                  }
-                }
-              },
-              {
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  marginBottom: String(chartBetween) + ea,
-                  verticalAlign: "top",
-                },
-                child: {
-                  mode: "canvas",
-                  style: {
-                    display: "block",
-                    position: "relative",      
-                  },
-                  previous: {
-                    text: "유저수 - 네이버 유입 / 메타 유입 / 구글 유입",
-                    style: {
-                      display: "flex",
-                      position: "relative",
-                      fontSize: String(titleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.black,
-                      top: String(titleTextTop) + ea,
-                      justifyContent: "center",
-                      alignItems: "start",
-                      height: String(middleTitleHeight) + ea,
-                    }
-                  }
-                }
-              },
-              {
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  marginRight: String(chartBetween) + ea,
-                  marginBottom: String(chartBetween) + ea,
-                  verticalAlign: "top",
-                },
-                child: {
-                  mode: "canvas",
-                  style: {
-                    display: "block",
-                    position: "relative",      
-                  },
-                  previous: {
-                    text: "전환수 - 오가닉 / 광고 / SNS / 다이렉트",
-                    style: {
-                      display: "flex",
-                      position: "relative",
-                      fontSize: String(titleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.black,
-                      top: String(titleTextTop) + ea,
-                      justifyContent: "center",
-                      alignItems: "start",
-                      height: String(middleTitleHeight) + ea,
-                    }
-                  }
-                }
-              },
-              {
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  marginBottom: String(chartBetween) + ea,
-                  verticalAlign: "top",
-                },
-                child: {
-                  mode: "canvas",
-                  style: {
-                    display: "block",
-                    position: "relative",      
-                  },
-                  previous: {
-                    text: "페이지뷰 기기 비율 - 모바일 / 데스트탑 / 태블릿",
-                    style: {
-                      display: "flex",
-                      position: "relative",
-                      fontSize: String(titleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.black,
-                      top: String(titleTextTop) + ea,
-                      justifyContent: "center",
-                      alignItems: "start",
-                      height: String(middleTitleHeight) + ea,
-                    }
-                  }
-                }
-              },
-              {
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  marginRight: String(chartBetween) + ea,
-                  marginBottom: String(chartBetween) + ea,
-                  verticalAlign: "top",
-                },
-                child: {
-                  mode: "canvas",
-                  style: {
-                    display: "block",
-                    position: "relative",      
-                  },
-                  previous: {
-                    text: "문의수, 추천수, 계약수",
-                    style: {
-                      display: "flex",
-                      position: "relative",
-                      fontSize: String(titleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.black,
-                      top: String(titleTextTop) + ea,
-                      justifyContent: "center",
-                      alignItems: "start",
-                      height: String(middleTitleHeight) + ea,
-                    }
-                  }
-                }
-              },
-              {
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  marginBottom: String(chartBetween) + ea,
-                  verticalAlign: "top",
-                },
-                child: {
-                  mode: "canvas",
-                  style: {
-                    display: "block",
-                    position: "relative",      
-                  },
-                  previous: {
-                    text: "유저수 / 20, 문의수, 계약수",
-                    style: {
-                      display: "flex",
-                      position: "relative",
-                      fontSize: String(titleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.black,
-                      top: String(titleTextTop) + ea,
-                      justifyContent: "center",
-                      alignItems: "start",
-                      height: String(middleTitleHeight) + ea,
-                    }
-                  }
-                }
-              },
-              {
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  marginRight: String(chartBetween) + ea,
-                  marginBottom: String(chartBetween) + ea,
-                  verticalAlign: "top",
-                },
-                child: {
-                  mode: "canvas",
-                  style: {
-                    display: "block",
-                    position: "relative",      
-                  },
-                  previous: {
-                    text: "광고 비용 - 네이버 / 메타 / 구글",
-                    style: {
-                      display: "flex",
-                      position: "relative",
-                      fontSize: String(titleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.black,
-                      top: String(titleTextTop) + ea,
-                      justifyContent: "center",
-                      alignItems: "start",
-                      height: String(middleTitleHeight) + ea,
-                    }
-                  }
-                }
-              },
-              {
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  marginBottom: String(chartBetween) + ea,
-                  verticalAlign: "top",
-                },
-                child: {
-                  mode: "canvas",
-                  style: {
-                    display: "block",
-                    position: "relative",      
-                  },
-                  previous: {
-                    text: "광고 클릭 - 네이버 / 메타 / 구글",
-                    style: {
-                      display: "flex",
-                      position: "relative",
-                      fontSize: String(titleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.black,
-                      top: String(titleTextTop) + ea,
-                      justifyContent: "center",
-                      alignItems: "start",
-                      height: String(middleTitleHeight) + ea,
-                    }
-                  }
-                }
-              },
             ].forEach((obj) => {
               obj.mother = scrollBox;
               createNode(obj);
@@ -6080,155 +5775,24 @@ MprJs.prototype.snsWhiteCard = function () {
 
             tableTong = scrollBox.firstChild.firstChild;
 
-            [ rows, charge, basic ] = result;
-            type = "line";
-            labels = rows.map((o) => { return dateToString(o.date.from).slice(5) });
-            fill = false;
-            tension = 0.3;
-            borderJoinStyle = "round";
-            complexBoxesLength = 1;
-
-            rows.sort((a, b) => { return a.date.from.valueOf() - b.date.from.valueOf() });
-            charge.sort((a, b) => { return a.date.from.valueOf() - b.date.from.valueOf() });
-            basic.sort((a, b) => { return a.fromDate.valueOf() - b.fromDate.valueOf() });
-
-            naverAds = [];
-            metaAds = [];
-            googleAds = [];
-            for (let { date: { from, to } } of rows) {
-              naverAds.push(charge.filter((o) => {
-                return /naver/gi.test(o.information.mother);
-              }).filter((o) => {
-                return o.date.from.valueOf() >= from.valueOf() && o.date.to.valueOf() <= to.valueOf();
-              }).reduce((acc, curr) => {
-                return {
-                  charge: acc.charge + curr.value.charge,
-                  clicks: acc.clicks + curr.value.performance.clicks,
-                  impressions: acc.impressions + curr.value.performance.impressions,
-                  date: { from, to },
-                }
-              }, {
-                charge: 0,
-                clicks: 0,
-                impressions: 0,
-                date: { from, to },
-              }));
-  
-              metaAds.push(charge.filter((o) => {
-                return /facebook/gi.test(o.information.mother) || /instagram/gi.test(o.information.mother) || /meta/gi.test(o.information.mother);
-              }).filter((o) => {
-                return o.date.from.valueOf() >= from.valueOf() && o.date.to.valueOf() <= to.valueOf();
-              }).reduce((acc, curr) => {
-                return {
-                  charge: acc.charge + curr.value.charge,
-                  clicks: acc.clicks + curr.value.performance.clicks,
-                  impressions: acc.impressions + curr.value.performance.impressions,
-                  date: { from, to },
-                }
-              }, {
-                charge: 0,
-                clicks: 0,
-                impressions: 0,
-                date: { from, to },
-              }));
-  
-              googleAds.push(charge.filter((o) => {
-                return /google/gi.test(o.information.mother);
-              }).filter((o) => {
-                return o.date.from.valueOf() >= from.valueOf() && o.date.to.valueOf() <= to.valueOf();
-              }).reduce((acc, curr) => {
-                return {
-                  charge: acc.charge + curr.value.charge,
-                  clicks: acc.clicks + curr.value.performance.clicks,
-                  impressions: acc.impressions + curr.value.performance.impressions,
-                  date: { from, to },
-                }
-              }, {
-                charge: 0,
-                clicks: 0,
-                impressions: 0,
-                date: { from, to },
-              }));
-  
-            }
-
-            timeMatrix = [];
-            for (let i = 0; i < timeDelta + 1; i++) {
-              thisDate = new Date(JSON.stringify(fromDate).slice(1, -1));
-              thisDate.setDate(thisDate.getDate() + i);
-
-              thisRows = rows.filter((o) => { return dateToString(o.date.from) === dateToString(thisDate) })
-              thisCharges = charge.filter((o) => { return dateToString(o.date.from) === dateToString(thisDate) })
-              thisBasics = basic.filter((o) => { return dateToString(o.fromDate) === dateToString(thisDate) })
-
-              if (thisRows.length === 1 && thisBasics.length === 1) {
-                [ thisRow ] = thisRows;
-                [ thisBasic ] = thisBasics;
-                [ naverAd ] = naverAds.filter((o) => { return dateToString(o.date.from) === dateToString(thisDate) });
-                [ metaAd ] = metaAds.filter((o) => { return dateToString(o.date.from) === dateToString(thisDate) });
-                [ googleAd ] = googleAds.filter((o) => { return dateToString(o.date.from) === dateToString(thisDate) });
-
-                timeMatrix.push({
-                  date: new Date(JSON.stringify(thisDate).slice(1, -1)),
-                  users: thisRow.data.users.total,
-                  views: thisRow.data.views.total,
-                  consultingPage: thisRow.data.conversion.consultingPage.total,
-                  popupOpen: thisRow.data.conversion.popupOpen.total,
-                  converting: thisRow.data.conversion.consultingPage.total + thisRow.data.conversion.popupOpen.total,
-                  clients: thisBasic.client,
-                  recommend: thisBasic.recommend,
-                  contract: thisBasic.contract,
-                  organic: thisRow.data.views.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0),
-                  ads: thisRow.data.views.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
-                  sns: thisRow.data.views.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
-                  direct: thisRow.data.views.total - (thisRow.data.views.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (thisRow.data.views.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
-                  naver: thisRow.data.views.detail.source.cases.filter((c) => { return /naver/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
-                  meta: thisRow.data.views.detail.source.cases.filter((c) => { return /instagram/gi.test(c.case) || /facebook/gi.test(c.case) || /meta/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
-                  google: thisRow.data.views.detail.source.cases.filter((c) => { return /google/gi.test(c.case) || /youtube/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
-                  consultingOrganic: (thisRow.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + thisRow.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
-                  consultingAds: (thisRow.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + thisRow.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)),
-                  consultingSns: (thisRow.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + thisRow.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)),
-                  consultingDirect: (thisRow.data.conversion.consultingPage.total + thisRow.data.conversion.popupOpen.total) - (thisRow.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + thisRow.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (thisRow.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + thisRow.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
-                  chargeNaver: naverAd.charge,
-                  chargeMeta: metaAd.charge,
-                  chargeGoogle: googleAd.charge,
-                  impressionsNaver: naverAd.impressions,
-                  impressionsMeta: metaAd.impressions,
-                  impressionsGoogle: googleAd.impressions,
-                  clicksNaver: naverAd.clicks,
-                  clicksMeta: metaAd.clicks,
-                  clicksGoogle: googleAd.clicks,
-                });
-              }
-            }
-
-            timeMatrix.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-
+            console.log(result);
+            
             tableMatrix = [
               [
                 "기준일",
-                "유저수",
-                "페이지뷰",
-                "컨설팅 페이지",
-                "팝업 오픈",
-                "전환수",
-                "문의수",
-                "추천수",
-                "계약수",
-                "오가닉 유저수",
-                "광고 유저수",
-                "SNS 유저수",
-                "다이렉트 유저수",
-                "네이버 유입",
-                "메타 유입",
-                "구글 유입",
-                "오가닉 전환수",
-                "광고 전환수",
-                "SNS 전환수",
-                "다이렉트 전환수",
+                "인스타 프로필뷰",
+                "인스타 팔로워",
+                "인스타 노출수",
+                "인스타 클릭수",
+                "유투브 ",
               ]
             ]
             columnsLength = tableMatrix[0].length;
+
+
+            /*
+
+
             for (let obj of timeMatrix) {
               tableMatrix.push([
                 dateToString(obj.date).slice(2),
@@ -6307,393 +5871,8 @@ MprJs.prototype.snsWhiteCard = function () {
               }
             }
             
-            instance.frontMatrix = tableMatrix;
-
-            // 1
-            new window.Chart(scrollBox.children[complexBoxesLength + 0].querySelector("canvas"), {
-              type,
-              data: {
-                labels,
-                datasets: [
-                  {
-                    label: "Users",
-                    data: rows.map((o) => { return o.data.users.total }),
-                    borderColor: colorChip.red,
-                    fill, tension, borderJoinStyle,
-                  },
-                  {
-                    label: "Views",
-                    data: rows.map((o) => { return o.data.views.total }),
-                    borderColor: colorChip.yellow,
-                    fill, tension, borderJoinStyle,
-                  },
-                  {
-                    label: "Conversion",
-                    data: rows.map((o) => { return o.data.conversion.consultingPage.total + o.data.conversion.popupOpen.total }),
-                    borderColor: colorChip.purple,
-                    fill, tension, borderJoinStyle,
-                  },
-                ]
-              },
-            });
-  
-            // 2
-            new window.Chart(scrollBox.children[complexBoxesLength + 1].querySelector("canvas"), {
-              type,
-              data: {
-                labels,
-                datasets: [
-                  {
-                    label: "Users",
-                    data: rows.map((o) => { return o.data.users.total }),
-                    borderColor: colorChip.red,
-                    fill, tension, borderJoinStyle,
-                  },
-                  {
-                    label: "Conversion",
-                    data: rows.map((o) => { return o.data.conversion.consultingPage.total + o.data.conversion.popupOpen.total }),
-                    borderColor: colorChip.purple,
-                    fill, tension, borderJoinStyle,
-                  },
-                  {
-                    label: "Clients",
-                    data: basic.map((o) => { return o.client }),
-                    borderColor: colorChip.green,
-                    fill, tension, borderJoinStyle,
-                  },
-                ]
-              },
-            });
-  
-            // 3
-            new window.Chart(scrollBox.children[complexBoxesLength + 2].querySelector("canvas"), {
-              type: "bar",
-              data: {
-                labels,
-                datasets: [
-                  {
-                    label: "Organic",
-                    data: rows.map((o) => { return o.data.users.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
-                    borderColor: colorChip.red,
-                    backgroundColor: colorChip.red,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                  {
-                    label: "Ads",
-                    data: rows.map((o) => { return o.data.users.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
-                    borderColor: colorChip.yellow,
-                    backgroundColor: colorChip.yellow,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                  {
-                    label: "Sns",
-                    data: rows.map((o) => { return o.data.users.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
-                    borderColor: colorChip.purple,
-                    backgroundColor: colorChip.purple,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                  {
-                    label: "Direct",
-                    data: rows.map((o) => { return o.data.users.total - (o.data.users.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (o.data.users.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
-                    borderColor: colorChip.gray3,
-                    backgroundColor: colorChip.gray3,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                ]
-              },
-              options: {
-                scales: {
-                  x: {
-                    stacked: true,
-                  },
-                  y: {
-                    beginAtZero: true,
-                    stacked: true,
-                  }
-                }
-              }
-            });
-  
-            // 4
-            new window.Chart(scrollBox.children[complexBoxesLength + 3].querySelector("canvas"), {
-              type: "bar",
-              data: {
-                labels,
-                datasets: [
-                  {
-                    label: "Naver",
-                    data: rows.map((o) => { return o.data.users.detail.source.cases.filter((c) => { return /naver/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
-                    borderColor: colorChip.softGreen,
-                    backgroundColor: colorChip.softGreen,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                  {
-                    label: "Meta",
-                    data: rows.map((o) => { return o.data.users.detail.source.cases.filter((c) => { return /instagram/gi.test(c.case) || /facebook/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
-                    borderColor: colorChip.purple,
-                    backgroundColor: colorChip.purple,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                  {
-                    label: "Google",
-                    data: rows.map((o) => { return o.data.users.detail.source.cases.filter((c) => { return /google/gi.test(c.case) || /youtube/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
-                    borderColor: colorChip.gray3,
-                    backgroundColor: colorChip.gray3,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                ]
-              },
-              options: {
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                  }
-                }
-              }
-            });
-  
-            // 5
-            new window.Chart(scrollBox.children[complexBoxesLength + 4].querySelector("canvas"), {
-              type: "bar",
-              data: {
-                labels,
-                datasets: [
-                  {
-                    label: "Organic",
-                    data: rows.map((o) => { return (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
-                    borderColor: colorChip.red,
-                    backgroundColor: colorChip.red,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                  {
-                    label: "Ads",
-                    data: rows.map((o) => { return (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
-                    borderColor: colorChip.yellow,
-                    backgroundColor: colorChip.yellow,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                  {
-                    label: "Sns",
-                    data: rows.map((o) => { return (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
-                    borderColor: colorChip.purple,
-                    backgroundColor: colorChip.purple,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                  {
-                    label: "Direct",
-                    data: rows.map((o) => { return (o.data.conversion.consultingPage.total + o.data.conversion.popupOpen.total) - (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
-                    borderColor: colorChip.gray3,
-                    backgroundColor: colorChip.gray3,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                ]
-              },
-              options: {
-                scales: {
-                  x: {
-                    stacked: true,
-                  },
-                  y: {
-                    beginAtZero: true,
-                    stacked: true,
-                  }
-                }
-              }
-            });
-  
-            // 6
-            new window.Chart(scrollBox.children[complexBoxesLength + 5].querySelector("canvas"), {
-              type: "bar",
-              data: {
-                labels,
-                datasets: [
-                  {
-                    label: "Mobile",
-                    data: rows.map((o) => { return o.data.views.detail.deviceCategory.cases.filter((c) => { return c.case === "mobile" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
-                    borderColor: colorChip.purple,
-                    backgroundColor: colorChip.purple,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                  {
-                    label: "Desktop",
-                    data: rows.map((o) => { return o.data.views.detail.deviceCategory.cases.filter((c) => { return c.case === "desktop" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
-                    borderColor: colorChip.black,
-                    backgroundColor: colorChip.black,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                  {
-                    label: "Tablet",
-                    data: rows.map((o) => { return o.data.views.detail.deviceCategory.cases.filter((c) => { return c.case === "tablet" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
-                    borderColor: colorChip.gray3,
-                    backgroundColor: colorChip.gray3,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                ]
-              },
-              options: {
-                scales: {
-                  x: {
-                    stacked: true,
-                  },
-                  y: {
-                    beginAtZero: true,
-                    stacked: true,
-                  }
-                }
-              }
-            });
-  
-            // 7
-            new window.Chart(scrollBox.children[complexBoxesLength + 6].querySelector("canvas"), {
-              type,
-              data: {
-                labels,
-                datasets: [
-                  {
-                    label: "Clients",
-                    data: basic.map((o) => { return o.client }),
-                    borderColor: colorChip.green,
-                    fill, tension, borderJoinStyle,
-                  },
-                  {
-                    label: "Recommend",
-                    data: basic.map((o) => { return o.recommend }),
-                    borderColor: colorChip.black,
-                    fill, tension, borderJoinStyle,
-                  },
-                  {
-                    label: "Contracts",
-                    data: basic.map((o) => { return o.contract }),
-                    borderColor: colorChip.yellow,
-                    fill, tension, borderJoinStyle,
-                  },
-                ]
-              },
-            });
-  
-            // 8
-            new window.Chart(scrollBox.children[complexBoxesLength + 7].querySelector("canvas"), {
-              type,
-              data: {
-                labels,
-                datasets: [
-                  {
-                    label: "Users / 20",
-                    data: rows.map((o) => { return o.data.users.total / 20 }),
-                    borderColor: colorChip.red,
-                    fill, tension, borderJoinStyle,
-                  },
-                  {
-                    label: "Clients",
-                    data: basic.map((o) => { return o.client }),
-                    borderColor: colorChip.green,
-                    fill, tension, borderJoinStyle,
-                  },
-                  {
-                    label: "Contracts",
-                    data: basic.map((o) => { return o.contract }),
-                    borderColor: colorChip.yellow,
-                    fill, tension, borderJoinStyle,
-                  },
-                ]
-              },
-            });
-  
-            // 9
-            new window.Chart(scrollBox.children[complexBoxesLength + 8].querySelector("canvas"), {
-              type: "bar",
-              data: {
-                labels,
-                datasets: [
-                  {
-                    label: "Naver",
-                    data: naverAds.map((o) => { return o.charge }),
-                    borderColor: colorChip.softGreen,
-                    backgroundColor: colorChip.softGreen,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                  {
-                    label: "Meta",
-                    data: metaAds.map((o) => { return o.charge }),
-                    borderColor: colorChip.purple,
-                    backgroundColor: colorChip.purple,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                  {
-                    label: "Google",
-                    data: googleAds.map((o) => { return o.charge }),
-                    borderColor: colorChip.gray3,
-                    backgroundColor: colorChip.gray3,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                ]
-              },
-              options: {
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                  }
-                }
-              }
-            });
-  
-            // 10
-            new window.Chart(scrollBox.children[complexBoxesLength + 9].querySelector("canvas"), {
-              type: "bar",
-              data: {
-                labels,
-                datasets: [
-                  {
-                    label: "Naver",
-                    data: naverAds.map((o) => { return o.clicks }),
-                    borderColor: colorChip.softGreen,
-                    backgroundColor: colorChip.softGreen,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                  {
-                    label: "Meta",
-                    data: metaAds.map((o) => { return o.clicks }),
-                    borderColor: colorChip.purple,
-                    backgroundColor: colorChip.purple,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                  {
-                    label: "Google",
-                    data: googleAds.map((o) => { return o.clicks }),
-                    borderColor: colorChip.gray3,
-                    backgroundColor: colorChip.gray3,
-                    borderRadius: 3,
-                    borderWidth: 0,
-                  },
-                ]
-              },
-              options: {
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                  }
-                }
-              }
-            });
+            instance.snsMatrix = tableMatrix;
+            */
 
           }
         }
