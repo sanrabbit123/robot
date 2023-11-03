@@ -96,7 +96,7 @@ DevContext.prototype.launching = async function () {
 
     // await this.MONGOLOGC.connect();
     // const report = new LogReport(this.MONGOLOGC);
-    // await report.unknownCampaign(2023, 8, 9159116 - 9164516);
+    // await report.unknownCampaign(2023, 10, 770000);
     // await this.MONGOLOGC.close();
 
     // =======================================================================================================================================================
@@ -6880,8 +6880,8 @@ DevContext.prototype.launching = async function () {
     // await filter.rawToRaw([
     //   {
     //     client: null,
-    //     designer: "허유진",
-    //     link: "https://drive.google.com/drive/folders/14MNVFmyJsecu5ctpR_cmWmELgYSuX95C",
+    //     designer: "고은나라",
+    //     link: "https://drive.google.com/drive/folders/1MX5h1g4-A4dGYnaQOpZicvhLL8cXw9ck",
     //     pay: true
     //   },
     // ]);
@@ -6956,21 +6956,20 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2310_aa06s" ]);
+    // await work.newDesignerToFront([ "d2310_aa08s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2310_aa06s", [
-    //   { porlid: "a114", index: 3 },
-    //   { porlid: "a114", index: 1 },
-    //   { porlid: "a114", index: 14 },
-    //   { porlid: "a114", index: 18 },
-    //   { porlid: "a114", index: 23 },
-    //   { porlid: "a114", index: 12 },
+    // await this.setProposalSettingForDesigner("d2310_aa08s", [
+    //   { porlid: "a115", index: 4 },
+    //   { porlid: "a115", index: 2 },
+    //   { porlid: "a115", index: 5 },
+    //   { porlid: "a115", index: 9 },
+    //   { porlid: "a115", index: 12 },
     // ], [
-    //   "고객님과 딱 맞는 맞춤 의사 소통으로 프로젝트를 스무스하게 이끌어 드립니다.",
-    //   "고객님의 머릿속에 있는 디자인들을 정리해서 예쁘게 실현시켜드립니다.",
-    //   "고객님 라이프스타일에 맞는 맞춤 디자인, 예쁜 디자인 제안이 가능합니다.",
+    //   "바로크, 로코코 시대 무드가 컨셉으로 한 클래식 스타일에 탁월합니다.",
+    //   "앤틱 가구 소품을 활용한 화려한, 때로는 목가적인 클래식 프렌치를 지향합니다.",
+    //   "화려한 경력을 바탕으로 스무스하고 편안한 프로젝트 운영을 제공해드립니다.",
     // ]);
 
 

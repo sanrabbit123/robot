@@ -901,6 +901,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   let markWidth, markTop;
   let whiteCircleWidth;
   let realPhotoCircleWidth;
+  let maxHeight;
 
   tongPaddingLeft = <%% 100, 70, 80, 50, 6.5 %%>;
   blockMargin = <%% 40, 30, 20, 20, 2 %%>;
@@ -950,6 +951,8 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
   markWidth = <%% 34, 34, 34, 34, 6.4 %%>;
   markTop = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isIphone() ? 2.3 : 2) %%>;
+
+  maxHeight = <%% 45, 35.5, 42, 39, 6 %%>;
 
   cleanChildren(designerTong);
 
@@ -1180,7 +1183,8 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
         color: colorChip.black,
         lineHeight: String(descriptionLineHeight),
         height: desktop ? "" : String(contentsBlockHeight) + ea,
-        overflow: desktop ? "" : "scroll",
+        "max-height": desktop ? String(maxHeight) + ea : "",
+        overflow: desktop ? "scroll" : "scroll",
         cursor: "pointer",
       }
     });

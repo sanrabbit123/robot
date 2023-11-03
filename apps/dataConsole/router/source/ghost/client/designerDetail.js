@@ -152,6 +152,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
   let tabletVisualBottom;
   let mobileButtonTongMarginTop;
   let mobileButtonBetween;
+  let descriptionMinus;
 
   tongPaddingLeft = <%% 75, 75, 65, 60, 6.5 %%>;
   blockMargin = <%% 0, 0, 0, 0, 0 %%>;
@@ -190,6 +191,8 @@ DesignerDetailJs.prototype.designerBlock = function () {
   buttonTextTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), (isMac() ? 4 : 2), (isIphone() ? 1.1 : 0.8) %%>;
   buttonLeft = <%% -36, -36, -36, -36, -7 %%>;
   circleWidth = <%% 10, 10, 10, 10, 2 %%>;
+
+  descriptionMinus = <%% 200, 180, 160, 160, 0 %%>;
 
   tabletVisualBottom = 4;
   mobileButtonTongMarginTop = 3;
@@ -373,6 +376,8 @@ DesignerDetailJs.prototype.designerBlock = function () {
       text: desktop ? designer.setting.front.introduction.desktop.join("\n") : designer.setting.front.introduction.mobile.join(" "),
       style: {
         display: "block",
+        position: "relative",
+        width: withOut(descriptionMinus, ea),
         marginTop: String(grayBarBottom) + ea,
         fontSize: String(descriptionSize) + ea,
         fontWeight: String(descriptionWeight),
