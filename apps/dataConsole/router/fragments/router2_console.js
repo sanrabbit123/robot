@@ -6788,7 +6788,7 @@ DataRouter.prototype.rou_post_dailySales = function () {
 
       now = new Date();
 
-      standard0From = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);    
+      standard0From = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0, 0);    
       while (standard0From.getDay() === 0 || standard0From.getDay() === 6) {
         standard0From.setDate(standard0From.getDate() - 1);
       }
@@ -6860,6 +6860,8 @@ DataRouter.prototype.rou_post_dailySales = function () {
           cliids: [],
         }
     
+        console.log(standardFrom, standardTo);
+
         thisRequests = requests.filter((request) => { return request.request.timeline.valueOf() > standardFrom.valueOf() && request.request.timeline.valueOf() <= standardTo.valueOf() })
     
         for (let obj of thisRequests) {

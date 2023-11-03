@@ -155,7 +155,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+    await requestSystem("https://" + address.backinfo.host + ":3000/dailySales", { data: null }, { headers: { "Content-Type": "application/json" } });
+
 
 
     /*
