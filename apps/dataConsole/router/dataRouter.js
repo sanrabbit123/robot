@@ -7624,7 +7624,7 @@ DataRouter.prototype.rou_post_dailySales = function () {
 
       now = new Date();
 
-      standard0From = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);    
+      standard0From = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0, 0);    
       while (standard0From.getDay() === 0 || standard0From.getDay() === 6) {
         standard0From.setDate(standard0From.getDate() - 1);
       }
@@ -7708,9 +7708,10 @@ DataRouter.prototype.rou_post_dailySales = function () {
         }
     
         rows = await back.mongoRead(collection, { id: dummy.id }, { selfMongo });
-        if (rows.length === 0) {
-          await back.mongoCreate(collection, equalJson(JSON.stringify(dummy)), { selfMongo });
+        if (rows.length !== 0) {
+          await back.mongoDelete(collection, { id: dummy.id }, { selfMongo });
         }
+        await back.mongoCreate(collection, equalJson(JSON.stringify(dummy)), { selfMongo });
 
       }
 

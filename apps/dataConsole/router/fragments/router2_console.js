@@ -6860,8 +6860,6 @@ DataRouter.prototype.rou_post_dailySales = function () {
           cliids: [],
         }
     
-        console.log(standardFrom, standardTo);
-
         thisRequests = requests.filter((request) => { return request.request.timeline.valueOf() > standardFrom.valueOf() && request.request.timeline.valueOf() <= standardTo.valueOf() })
     
         for (let obj of thisRequests) {
@@ -6874,9 +6872,10 @@ DataRouter.prototype.rou_post_dailySales = function () {
         }
     
         rows = await back.mongoRead(collection, { id: dummy.id }, { selfMongo });
-        if (rows.length === 0) {
-          await back.mongoCreate(collection, equalJson(JSON.stringify(dummy)), { selfMongo });
+        if (rows.length !== 0) {
+          await back.mongoDelete(collection, { id: dummy.id }, { selfMongo });
         }
+        await back.mongoCreate(collection, equalJson(JSON.stringify(dummy)), { selfMongo });
 
       }
 
