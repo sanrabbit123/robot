@@ -155,8 +155,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await requestSystem("https://" + address.backinfo.host + ":3000/dailySales", { data: null }, { headers: { "Content-Type": "application/json" } });
 
+    
 
     
     /*
@@ -6879,9 +6879,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "송유정",
-    //     designer: "강주현",
-    //     link: "https://drive.google.com/drive/folders/1rOHqFYns8lNry4ej2plfaJUrVms_wpos",
+    //     client: null,
+    //     designer: "허유진",
+    //     link: "https://drive.google.com/drive/folders/14MNVFmyJsecu5ctpR_cmWmELgYSuX95C",
     //     pay: true
     //   },
     // ]);
@@ -6956,20 +6956,21 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2310_aa04s" ]);
+    // await work.newDesignerToFront([ "d2310_aa06s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2310_aa07s", [
-    //   { porlid: "ghost", index: 1 },
-    //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 4 },
-    //   { porlid: "ghost", index: 7 },
-    //   { porlid: "ghost", index: 8 },
+    // await this.setProposalSettingForDesigner("d2310_aa06s", [
+    //   { porlid: "a114", index: 3 },
+    //   { porlid: "a114", index: 1 },
+    //   { porlid: "a114", index: 14 },
+    //   { porlid: "a114", index: 18 },
+    //   { porlid: "a114", index: 23 },
+    //   { porlid: "a114", index: 12 },
     // ], [
-    //   "고객님의 상황과 라이프 스타일에 대한 이해도를 바탕으로 고객 맞춤형 제안을 해드릴 수 있습니다.",
-    //   "친절하고 밝은 성격의 소유자로 고객님과 즐겁게 소통하며 프로젝트를 이끌어 나갈 수 있습니다.",
-    //   "센스 있는 감각으로 고객님의 집을 트렌디하고 고급스럽게 만들어 드릴 수 있습니다.",
+    //   "고객님과 딱 맞는 맞춤 의사 소통으로 프로젝트를 스무스하게 이끌어 드립니다.",
+    //   "고객님의 머릿속에 있는 디자인들을 정리해서 예쁘게 실현시켜드립니다.",
+    //   "고객님 라이프스타일에 맞는 맞춤 디자인, 예쁜 디자인 제안이 가능합니다.",
     // ]);
 
 
