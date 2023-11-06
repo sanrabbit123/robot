@@ -1431,7 +1431,7 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
         rows = await back.mongoRead(collection, { proid }, { selfMongo });
         resultObj = { result: 0 };
         if (rows.length > 0) {
-          boo = rows[0].schedule.every((obj) => {
+          boo = rows[0].schedule.some((obj) => {
             return obj.date.start.valueOf() > (new Date(2000, 0, 1)).valueOf() && obj.date.end.valueOf() > (new Date(2000, 0, 1)).valueOf();
           });
           if (boo) {

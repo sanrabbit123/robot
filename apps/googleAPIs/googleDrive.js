@@ -131,6 +131,7 @@ GoogleDrive.prototype.get_folder_inPython = async function (folder_id, folder_na
     await shellExec(`mkdir ${shellLink(folderPath)}`);
 
     //download files
+    console.log(files);
     index = 0;
     for (let { id, name } of files) {
       await sleep(1000);
@@ -139,18 +140,17 @@ GoogleDrive.prototype.get_folder_inPython = async function (folder_id, folder_na
     }
 
     if (is_photo) {
-      folderInside = await fileSystem(`readDir`, [ folderPath ]);
+      folderInside = await fileSystem(`readFolder`, [ folderPath ]);
       for (let i = 0; i < folderInside.length; i++) {
-        if (folderInside[i] !== ".DS_Store") {
-          if (/\.(jpg|jpeg)$/i.test(folderInside[i])) {
-            thisExec = ".jpg";
-          } else if (/\.(png)$/i.test(folderInside[i])) {
-            thisExec = ".png";
-          } else {
-            throw new Error("must be photo");
-          }
-          await shellExec(`mv ${shellLink(folderPath + "/" + folderInside[i])} ${shellLink(folderPath)}/photo${String(i + 1)}${thisExec}`);
+        if (/\.(jpg|jpeg)$/i.test(folderInside[i])) {
+          thisExec = ".jpg";
+        } else if (/\.(png)$/i.test(folderInside[i])) {
+          thisExec = ".png";
+        } else {
+          console.log(`remove ${shellLink(folderPath + "/" + folderInside[i])}`);
+          await shellExec(`rm -rf ${shellLink(folderPath + "/" + folderInside[i])}`);
         }
+        await shellExec(`mv ${shellLink(folderPath + "/" + folderInside[i])} ${shellLink(folderPath)}/photo${String(i + 1)}${thisExec}`);
       }
     }
 
