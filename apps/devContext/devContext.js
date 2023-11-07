@@ -154,15 +154,8 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-    await requestSystem("https://home-liaison.net:3000/messageLog", {
-        "text": "안녕하세요",
-        "channel": "error_log",
-        "collection": "errorLog"
-    }, {
-        "headers": {
-            "Content-Type": "x-www-form-urlencoded"
-        }
-    })
+
+    
 
 
 
