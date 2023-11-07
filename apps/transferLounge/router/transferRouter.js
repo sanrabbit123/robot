@@ -1755,9 +1755,6 @@ TransferRouter.prototype.rou_post_generalFileUpload = function () {
         throw new Error("post ban");
       }
       const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
-
-      console.log(req)
-
       form.parse(req, async function (err, fields, files) {
         try {
           if (err) {

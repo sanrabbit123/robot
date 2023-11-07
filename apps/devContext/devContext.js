@@ -182,39 +182,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    /*
-
-    // attack in slack
-
-    const attackTargetToken = "xoxp-717757271335-5770848967591-6178062869536-4e31e9714d5ccedfd4267372a918d2e6"
-    const url = "https://slack.com/api";
-    const type = "application/x-www-form-urlencoded";
-    let res;
-    let targetChannel;
-    
-    // res = await requestSystem(url + "/conversations.list", {
-    //   types: "mpim,im"
-    // }, {
-    //   method: "get",
-    //   headers: {
-    //     "Content-Type": type,
-    //     "Authorization": "Bearer " + attackTargetToken,
-    //   }
-    // })
-    // console.log(res.data.channels.map((o) => { return { id: o.id, user: o.user } }))
-
-    targetChannel = "D05NWMW5NPQ";
-    res = await requestSystem(url + "/conversations.history", {
-      channel: targetChannel
-    }, {
-      headers: {
-        "Content-Type": type,
-        "Authorization": "Bearer " + attackTargetToken,
-      }
-    })
-    console.log(res.data.messages.map((o) => { return { text: o.text, time: dateToString(new Date(Math.floor(Number(o.ts) * 1000)), true) } }));
-
-    */
 
 
     
