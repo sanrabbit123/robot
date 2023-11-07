@@ -116,7 +116,7 @@ SecondGhost.prototype.ghostConnect = async function () {
 
   app.use(useragent.express());
   app.use(express.json({ limit : "50mb" }));
-  app.use(multiForms.array());
+  // app.use(multiForms.array());
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   app.use(express.static(staticFolder));
   app.use((req, res, next) => {
