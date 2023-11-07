@@ -194,6 +194,10 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+
+      
+      console.log(req.body);
+
       if (req.body.text === undefined || req.body.channel === undefined || req.body.collection === undefined) {
         throw new Error("invaild post, must be text, channel");
       }

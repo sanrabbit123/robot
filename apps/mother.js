@@ -372,6 +372,15 @@ Mother.prototype.fileSystem = function (sw, arr) {
         });
       });
       break;
+    case "writeString":
+      return new Promise(function (resolve, reject) {
+        if (arr.length !== 2) { reject("second argument must be length 2 array"); }
+        fs.writeFile(arr[0], arr[1], "utf8", (err) => {
+          if (err) { reject(err); }
+          else { resolve("success"); }
+        });
+      });
+      break;
     case "writeBinary":
       return new Promise(function (resolve, reject) {
         if (arr.length !== 2) { reject("second argument must be length 2 array"); }
