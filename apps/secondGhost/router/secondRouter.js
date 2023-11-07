@@ -195,7 +195,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
     });
     try {
 
-      
+      console.log(req);
       console.log(req.body);
 
       if (req.body.text === undefined || req.body.channel === undefined || req.body.collection === undefined) {
