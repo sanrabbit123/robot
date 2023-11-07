@@ -1763,6 +1763,10 @@ TransferRouter.prototype.rou_post_generalFileUpload = function () {
           if (err) {
             throw new Error(err);
           } else {
+
+            console.log(fields)
+            console.log(files)
+
             const toArr = JSON.parse(fields.toArr).map((path) => { return hangul.fixString(path); });
             let filesKey, fromArr, num;
             let tempArr, tempString, tempDir;
