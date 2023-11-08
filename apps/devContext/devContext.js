@@ -163,7 +163,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+    
 
+    
 
 
 
@@ -6906,22 +6908,20 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "박진아",
-    //     designer: "김지은",
-    //     link: "https://drive.google.com/drive/folders/1edmgsNgx-CTe8Yrz2BMXaCM0wux2K0AM",
+    //     client: "박성훈",
+    //     designer: "김윤진",
+    //     link: "https://drive.google.com/drive/folders/13Uwm0g9731ZrpmmnWQUN-lcseTuxco0A",
     //     pay: true
     //   },
     // ]);
 
 
-
-    
     // raw video
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "박진아",
-    //     designer: "김지은",
+    //     client: "박성훈",
+    //     designer: "김윤진",
     //   },
     // ]);
 
@@ -7013,8 +7013,8 @@ DevContext.prototype.launching = async function () {
 
     
     // // send sms
-    // const name = "이슬아";
-    // const amount = 2607000;
+    // const name = "황원정";
+    // const amount = 8697000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
