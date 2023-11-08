@@ -1757,10 +1757,6 @@ TransferRouter.prototype.rou_post_generalFileUpload = function () {
       const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
-
-          console.log(fields);
-          console.log(files);
-
           if (err) {
             throw new Error(err);
           } else {
