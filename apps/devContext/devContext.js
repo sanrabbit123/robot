@@ -6887,9 +6887,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "박성훈",
-    //     designer: "김윤진",
-    //     link: "https://drive.google.com/drive/folders/13Uwm0g9731ZrpmmnWQUN-lcseTuxco0A",
+    //     client: "윤소영",
+    //     designer: "전경화",
+    //     link: "https://drive.google.com/drive/folders/1geQE5JFEZCtyNPoceseKT4vyNMdhx0D0",
     //     pay: true
     //   },
     // ]);
@@ -6899,8 +6899,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "박성훈",
-    //     designer: "김윤진",
+    //     client: "윤소영",
+    //     designer: "전경화",
     //   },
     // ]);
 
