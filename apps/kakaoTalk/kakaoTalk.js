@@ -4284,7 +4284,7 @@ KakaoTalk.prototype.friendTalk = async function (name, phone, bodyObject) {
   const instance = this;
   const { requestSystem, fileSystem } = this.mother;
   try {
-    const subject = "(광고) 홈리에종 HomeLiaison";
+    const subject = bodyObject.ads === true ? "(광고) 홈리에종 HomeLiaison" : "홈리에종 HomeLiaison";
     let options, boo, data;
     let result;
     let body;
@@ -4400,13 +4400,11 @@ KakaoTalk.prototype.friendsTalk = async function (friends, bodyObject) {
         console.log(`${name} / ${phone} success`);
         text = `${name} (${phone}) 고객님께 ${bodyObject.title} 친구톡을 전송하였습니다!`;
         await messageSend({ text, channel, voice: false });
-        await requestSystem("https://" + instance.address.testinfo.host + "/marketingMessage", { text, channel: channel2 }, { headers: { "Content-Type": "application/json" } });
         successList.push({ name, phone });
       } else {
         console.log(`${name} / ${phone} fail`);
         text = `${name} (${phone}) 고객님께 ${bodyObject.title} 친구톡 전송에 실패하였습니다!`;
         await messageSend({ text, channel, voice: false });
-        await requestSystem("https://" + instance.address.testinfo.host + "/marketingMessage", { text, channel: channel2 }, { headers: { "Content-Type": "application/json" } });
         failList.push({ name, phone });
       }
       await sleep(delta);

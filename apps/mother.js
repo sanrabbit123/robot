@@ -3078,7 +3078,7 @@ Mother.prototype.linkToString = function (link) {
   }
 
   if (search !== "") {
-    getObj = search.split("&").map((str) => { return { key: str.split("=")[0], value: str.split("=")[1] } });
+    getObj = search.split("&").map((str) => { return { key: globalThis.encodeURIComponent(str.split("=")[0]), value: globalThis.encodeURIComponent(str.split("=")[1]) } });
   } else {
     getObj = [];
   }

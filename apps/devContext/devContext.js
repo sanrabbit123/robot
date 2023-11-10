@@ -127,20 +127,21 @@ DevContext.prototype.launching = async function () {
     // const kakao = new KakaoTalk();
     // console.log(await kakao.friendsTalk([
     //   {
-    //     name: "김혜숙",
-    //     phone: "010-6473-9615",
+    //     name: "정민재",
+    //     phone: "010-8691-3704",
     //   },
     // ], {
-    //   title: `홈리에종 메세지 테스트`,
-    //   body: `안녕하세요! 홈리에종입니다. 현재 김혜숙 고객님의 채팅창이 홈리에종 카카오 채널 관리자 센터에서 검색이 되질 않아 CX 담당자 분께서 채팅 시도를 하지 못하고 있습니다. 이용에 불편을 드려 죄송합니다.\n\n아래 링크를 클릭하셔서 누르셔서 채팅방 다시 열어주세요! 채팅방을 다시 열어 이름을 남겨주시면, 새로 채팅방이 갱신되어 채팅이 가능해집니다. 번거롭더라도 갱신 부탁드리겠습니다.\n\nhttp://pf.kakao.com/_vxixkjxl/chat`,
-    //   image: `${process.cwd()}/temp/target.jpg`,
+    //   ads: false,
+    //   title: `홈리에종 디자이너 교육`,
+    //   body: `안녕하세요, #{name} 실장님! 홈리에종의 디자이너 케어 및 총괄 관리를 맡고 있는 이지안 팀장 입니다.\n\n원활한 디자이너분들과의 소통을 위해, 그리고 좀더 체계적인 디자이너분들 관리를 위해, 쇼규모의 교육과 티타임을 갖게 되었습니다.\n\n바쁘신 와중 소중한 시간 내어 주셔서 진심으로 감사드립니다.\n\n일정: 2023년 11월 29일 (수) 오후 3시\n장소: 서울특별시 성동구 성수일로 10(서울숲 ITCT 지식산업센터) 605호 (주) 홈리에종 - 회의실\n\n다른 디자이너분들도 참석 하시기 때문에, 시간 준수 해주시면 감사하겠습니다.\n\n그럼 그때 뵙겠습니다. 갑자기 추워진 날씨 감기 조심하세요. ^^`,
+    //   // image: `${process.cwd()}/temp/target.jpg`,
     //   convert: {
     //     name: (name, phone) => { return name; },
     //   },
-    //   button: {
-    //     title: "채팅방 열기",
-    //     link: "http://pf.kakao.com/_vxixkjxl/chat",
-    //   }
+    //   // button: {
+    //   //   title: "채팅방 열기",
+    //   //   link: "http://pf.kakao.com/_vxixkjxl/chat",
+    //   // }
     // }));
     // =======================================================================================================================================================
 
@@ -155,13 +156,12 @@ DevContext.prototype.launching = async function () {
 
 
 
+    
 
 
 
-
-
-
-
+    
+    
 
 
 
@@ -6992,14 +6992,14 @@ DevContext.prototype.launching = async function () {
 
     
     // // send sms
-    // const name = "황원정";
+    // const name = "이승리";
     // const amount = 8697000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
     // });
 
-    
+
     // bill passive sync
     // console.log(await bill.passiveSync("b219g_aa02s", "김수진", 1, 330000, new Date(2021, 8, 15, 15, 0, 0), "카드(삼성)", "이니시스"));
 
