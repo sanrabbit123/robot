@@ -246,7 +246,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
 
       }
 
-      if (!(/silent/gi.test(channel) || /error_log/gi.test(channel) || /alive_log/gi.test(channel) || /cron_log/gi.test(channel))) {
+      if (!(/silent/gi.test(channel) || /error_log/gi.test(channel) || /alive_log/gi.test(channel) || /cron_log/gi.test(channel) || /checklist_log/gi.test(channel))) {
         instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
       }
 
