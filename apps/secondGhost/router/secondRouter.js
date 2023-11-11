@@ -246,7 +246,9 @@ SecondRouter.prototype.rou_post_messageLog = function () {
 
       }
 
-      instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
+      if (!(/silent/gi.test(channel) || /error_log/gi.test(channel) || /alive_log/gi.test(channel) || /cron_log/gi.test(channel))) {
+        instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
+      }
 
       if (req.body.voice === true || req.body.voice === "true") {
         requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/textToVoice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });

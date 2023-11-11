@@ -4414,9 +4414,6 @@ StaticRouter.prototype.rou_post_storeRealtimeAnalytics = function () {
         } else {
           logger.error("realtime analytics store fail : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
         }
-        return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/realtimeMessage", { channel: "#205_realtime" }, {
-          headers: { "Content-Type": "application/json" }
-        });
       }).catch((err) => {
         logger.error("Static lounge 서버 문제 생김 (rou_post_storeRealtimeAnalytics): " + err.message).catch((err) => { console.log(err) });
       });
