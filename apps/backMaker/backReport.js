@@ -16,7 +16,7 @@ BackReport.prototype.getDesignerProposalReport = async function (option = { self
   const instance = this;
   const back = this.back;
   const { mongo, mongoinfo } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const MONGOC = new mongo(mongoinfo);
   try {
     let selfBoo;
     if (option.selfMongo === null || option.selfMongo === undefined) {

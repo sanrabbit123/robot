@@ -692,7 +692,7 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
   const back = this.back;
   const address = this.address;
   const AppleNotes = require(process.cwd() + "/apps/appleAPIs/appleNotes.js");
-  const MONGOC = new mongo(mongotestinfo, { useUnifiedTopology: true });
+  const MONGOC = new mongo(mongotestinfo);
   const collection = "magazine";
   try {
     let note, targetArr;
@@ -848,8 +848,8 @@ ResourceMaker.prototype.launching = async function () {
   const instance = this;
   const back = this.back;
   const { fileSystem, mongo, mongoinfo, mongocontentsinfo, shellExec, shellLink, headRequest, binaryRequest, ghostFileUpload, requestSystem } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const MONGOCONTENTSC = new mongo(mongocontentsinfo, { useUnifiedTopology: true });
+  const MONGOC = new mongo(mongoinfo);
+  const MONGOCONTENTSC = new mongo(mongocontentsinfo);
   const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
   const sizeMatrix = [
     [ 1200, 848 ],

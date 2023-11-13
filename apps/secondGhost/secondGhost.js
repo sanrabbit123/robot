@@ -137,8 +137,8 @@ SecondGhost.prototype.ghostConnect = async function () {
 
     //set mongo connetion
     let MONGOC, MONGOLOCALC;
-    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-    MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    MONGOC = new mongo(mongoinfo);
+    MONGOLOCALC = new mongo(mongolocalinfo);
     console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
     console.log(``);
     await MONGOC.connect();

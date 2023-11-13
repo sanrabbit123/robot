@@ -141,7 +141,7 @@ MongoReflection.prototype.mongoToJson = async function (dir = "default", target 
       targetDb = target;
     }
 
-    const MONGOC = new mongo("mongodb://" + this.address[targetDb].user + ':' + this.address[targetDb].password + '@' + this.address[targetDb].host + ':' + String(this.address[targetDb].port) + "/admin", { useUnifiedTopology: true });
+    const MONGOC = new mongo("mongodb://" + this.address[targetDb].user + ':' + this.address[targetDb].password + '@' + this.address[targetDb].host + ':' + String(this.address[targetDb].port) + "/admin");
     await MONGOC.connect();
     const collections = await MONGOC.db(`miro81`).listCollections().toArray();
     MONGOC.close();
@@ -188,8 +188,8 @@ MongoReflection.prototype.mongoMigration = async function (to = "local", from = 
     console.log(from);
     console.log(`from DB : ${JSON.stringify(this.address[fromDB], null, 2)}`);
 
-    MONGOC_FROM = new mongo(fromString, { useUnifiedTopology: true });
-    MONGOC_TO = new mongo(toString, { useUnifiedTopology: true });
+    MONGOC_FROM = new mongo(fromString);
+    MONGOC_TO = new mongo(toString);
 
     await MONGOC_FROM.connect();
     await MONGOC_TO.connect();
@@ -380,8 +380,8 @@ MongoReflection.prototype.coreReflection = async function (to = "local") {
 
       console.log(`from DB : ${JSON.stringify(this.address[fromDB], null, 2)}`);
 
-      MONGOC_FROM = new mongo(fromString, { useUnifiedTopology: true });
-      MONGOC_TO = new mongo(toString, { useUnifiedTopology: true });
+      MONGOC_FROM = new mongo(fromString);
+      MONGOC_TO = new mongo(toString);
 
       await MONGOC_FROM.connect();
       await MONGOC_TO.connect();
@@ -627,8 +627,8 @@ MongoReflection.prototype.frontReflection = async function (to = "local") {
 
       console.log(`from DB : ${JSON.stringify(this.address[fromDB], null, 2)}`);
 
-      MONGOC_FROM = new mongo(fromString, { useUnifiedTopology: true });
-      MONGOC_TO = new mongo(toString, { useUnifiedTopology: true });
+      MONGOC_FROM = new mongo(fromString);
+      MONGOC_TO = new mongo(toString);
 
       await MONGOC_FROM.connect();
       await MONGOC_TO.connect();
@@ -687,8 +687,8 @@ MongoReflection.prototype.logReflection = async function () {
 
     console.log(`from DB : ${JSON.stringify(this.address[fromDB], null, 2)}`);
 
-    MONGOC_FROM = new mongo(fromString, { useUnifiedTopology: true });
-    MONGOC_TO = new mongo(toString, { useUnifiedTopology: true });
+    MONGOC_FROM = new mongo(fromString);
+    MONGOC_TO = new mongo(toString);
 
     await MONGOC_FROM.connect();
     await MONGOC_TO.connect();

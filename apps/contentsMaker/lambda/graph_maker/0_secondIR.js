@@ -27,7 +27,7 @@ module.exports = async function (Mother) {
       { id: "1ygfQKHwigARiTh1sBaP4eRxNH8gOtsQYDnlAjQ0xKvg", sheet: "지표", xyz: [ 0, 0 ] }
     ]
   }
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const MONGOC = new mongo(mongoinfo);
 
   try {
     let rawArr = {};

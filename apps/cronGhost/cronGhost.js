@@ -288,8 +288,8 @@ CronGhost.prototype.cronServer = async function () {
   const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
   const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num) }
   const CronSource = require(`${this.dir}/source/cronSource.js`);
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const MONGOC = new mongo(mongoinfo);
+  const MONGOLOCALC = new mongo(mongolocalinfo);
   try {
     const https = require("https");
     const express = require("express");

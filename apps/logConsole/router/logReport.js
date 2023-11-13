@@ -948,8 +948,8 @@ LogReport.prototype.dailyReports = async function () {
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   const querystring = require("querystring");
-  const selfCoreMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const selfContentsMongo = new mongo(mongocontentsinfo, { useUnifiedTopology: true });
+  const selfCoreMongo = new mongo(mongoinfo);
+  const selfContentsMongo = new mongo(mongocontentsinfo);
   const selfMongo = this.mongo;
   try {
     const sheets = new GoogleSheet();

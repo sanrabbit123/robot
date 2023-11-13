@@ -61,13 +61,13 @@ const DevContext = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, mongocontentsinfo } = this.mother;
-  this.MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  this.MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-  this.MONGOPYTHONC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
-  this.MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-  this.MONGOLOGC = new mongo(mongotestinfo, { useUnifiedTopology: true });
-  this.MONGOSECONDC = new mongo(mongosecondinfo, { useUnifiedTopology: true });
-  this.MONGOCONTENTSC = new mongo(mongocontentsinfo, { useUnifiedTopology: true });
+  this.MONGOC = new mongo(mongoinfo);
+  this.MONGOLOCALC = new mongo(mongolocalinfo);
+  this.MONGOPYTHONC = new mongo(mongopythoninfo);
+  this.MONGOCONSOLEC = new mongo(mongoconsoleinfo);
+  this.MONGOLOGC = new mongo(mongotestinfo);
+  this.MONGOSECONDC = new mongo(mongosecondinfo);
+  this.MONGOCONTENTSC = new mongo(mongocontentsinfo);
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = `${process.cwd()}/apps/devContext`;
 }
@@ -165,7 +165,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    
 
 
     
@@ -6050,7 +6050,7 @@ DevContext.prototype.launching = async function () {
     // console.log(JSON.stringify(project.toNormal()).length === JSON.stringify(p).length)
     // const bilid = "b218s_aa04s";
     // const b = await bill.getBillById(bilid);
-    // const MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+    // const MONGOC = new mongo(mongopythoninfo);
     // await MONGOC.connect();
     // const p = (await MONGOC.db("miro81").collection("generalBill").find({ bilid }).toArray())[0]
     // await MONGOC.close();
@@ -6291,7 +6291,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    // const selfMongo = new mongo(mongoconsoleinfo);
     // await selfMongo.connect();
     // const coreMongo = this.MONGOC;
     // const rows = (await back.mongoRead("projectHistory", {}, { selfMongo })).filter((obj) => { return obj.manager === '' || obj.manager === '-' || obj.manager === "홀딩"; });
@@ -6547,7 +6547,7 @@ DevContext.prototype.launching = async function () {
 
     /*
 
-    const MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    const MONGOC = new mongo(mongoconsoleinfo);
     await MONGOC.connect();
     const selfMongo = MONGOC;
     const sheetsId = "1iRp_N0RMWCxxIO96uBNlph6bX3jKaP-At2Phj3qEiHA";

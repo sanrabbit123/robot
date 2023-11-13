@@ -983,7 +983,7 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
       }
 
       if (!selfBoo) {
-        MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+        MONGOC = new mongo(mongopythoninfo);
         await MONGOC.connect();
       } else {
         MONGOC = option.selfMongo;
@@ -1038,7 +1038,7 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
       }
 
       if (!selfBoo) {
-        MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+        MONGOC = new mongo(mongopythoninfo);
         await MONGOC.connect();
       } else {
         MONGOC = option.selfMongo;
@@ -1101,7 +1101,7 @@ BillMaker.prototype.readBill = async function (collection, whereQuery, option = 
     }
 
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1155,7 +1155,7 @@ BillMaker.prototype.getBillById = async function (bilid, option = { selfMongo: n
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1191,7 +1191,7 @@ BillMaker.prototype.getBillsByQuery = async function (whereQuery, option = { sel
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1238,7 +1238,7 @@ BillMaker.prototype.updateBill = async function (queryArr, option = { selfMongo:
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1270,7 +1270,7 @@ BillMaker.prototype.deleteBill = async function (bilid, option = { selfMongo: nu
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1319,19 +1319,19 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
     }
 
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
     }
     if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOCOREC = new mongo(mongoinfo);
       await MONGOCOREC.connect();
     } else {
       MONGOCOREC = option.selfCoreMongo;
     }
     if (!selfConsoleBoo) {
-      MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      MONGOCONSOLEC = new mongo(mongoconsoleinfo);
       await MONGOCONSOLEC.connect();
     } else {
       MONGOCONSOLEC = option.selfConsoleMongo;
@@ -1498,7 +1498,7 @@ BillMaker.prototype.createInvoice = async function (updateQuery = {}, option = {
     }
 
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1575,7 +1575,7 @@ BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, opt
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -1586,7 +1586,7 @@ BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, opt
       selfCoreBoo = true;
     }
     if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOCOREC = new mongo(mongoinfo);
       await MONGOCOREC.connect();
     } else {
       MONGOCOREC = option.selfCoreMongo;
@@ -1890,7 +1890,7 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -2076,7 +2076,7 @@ BillMaker.prototype.requestEjection = async function (bilid, requestIndex, optio
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -2152,7 +2152,7 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -2333,7 +2333,7 @@ BillMaker.prototype.responseEjection = async function (bilid, responseIndex, opt
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -2444,7 +2444,7 @@ BillMaker.prototype.itemInjection = async function (id, itemKey, client, designe
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -2585,7 +2585,7 @@ BillMaker.prototype.itemEjection = async function (id, itemKey, option = { selfM
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -2668,7 +2668,7 @@ BillMaker.prototype.passiveSync = async function (bilid, clientName, requestNumb
   const address = this.address;
   let selfMongo, selfBoo;
   if (option.selfMongo === undefined || option.selfMongo === null) {
-    selfMongo = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+    selfMongo = new mongo(mongopythoninfo);
     selfBoo = false;
   } else {
     selfMongo = option.selfMongo;
@@ -2741,8 +2741,8 @@ BillMaker.prototype.passiveSyncAll = async function () {
   const instance = this;
   const back = this.back;
   const { mongo, mongoinfo, mongopythoninfo } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const MONGOPYTHONC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+  const MONGOC = new mongo(mongoinfo);
+  const MONGOPYTHONC = new mongo(mongopythoninfo);
   try {
     await MONGOC.connect();
     await MONGOPYTHONC.connect();
@@ -2984,7 +2984,7 @@ BillMaker.prototype.travelInjection = async function (injectionCase, proid, meth
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -2996,7 +2996,7 @@ BillMaker.prototype.travelInjection = async function (injectionCase, proid, meth
       selfCoreBoo = true;
     }
     if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOCOREC = new mongo(mongoinfo);
       await MONGOCOREC.connect();
     } else {
       MONGOCOREC = option.selfCoreMongo;
@@ -3107,7 +3107,7 @@ BillMaker.prototype.travelEjection = async function (injectionCase, proid, metho
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -3119,7 +3119,7 @@ BillMaker.prototype.travelEjection = async function (injectionCase, proid, metho
       selfCoreBoo = true;
     }
     if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOCOREC = new mongo(mongoinfo);
       await MONGOCOREC.connect();
     } else {
       MONGOCOREC = option.selfCoreMongo;
@@ -3284,7 +3284,7 @@ BillMaker.prototype.travelUpDown = async function (order, proid, method, index, 
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -3296,7 +3296,7 @@ BillMaker.prototype.travelUpDown = async function (order, proid, method, index, 
       selfCoreBoo = true;
     }
     if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOCOREC = new mongo(mongoinfo);
       await MONGOCOREC.connect();
     } else {
       MONGOCOREC = option.selfCoreMongo;
@@ -3412,7 +3412,7 @@ BillMaker.prototype.travelReconfig = async function (injectionCase, proid, metho
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -3424,7 +3424,7 @@ BillMaker.prototype.travelReconfig = async function (injectionCase, proid, metho
       selfCoreBoo = true;
     }
     if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOCOREC = new mongo(mongoinfo);
       await MONGOCOREC.connect();
     } else {
       MONGOCOREC = option.selfCoreMongo;
@@ -3561,7 +3561,7 @@ BillMaker.prototype.designerSelect = async function (proid, desid, option = { se
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -3718,7 +3718,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -3730,7 +3730,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       selfCoreBoo = true;
     }
     if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOCOREC = new mongo(mongoinfo);
       await MONGOCOREC.connect();
     } else {
       MONGOCOREC = option.selfCoreMongo;
@@ -4198,7 +4198,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -4210,7 +4210,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
       selfCoreBoo = true;
     }
     if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOCOREC = new mongo(mongoinfo);
       await MONGOCOREC.connect();
     } else {
       MONGOCOREC = option.selfCoreMongo;
@@ -4698,7 +4698,7 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -4710,7 +4710,7 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
       selfCoreBoo = true;
     }
     if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOCOREC = new mongo(mongoinfo);
       await MONGOCOREC.connect();
     } else {
       MONGOCOREC = option.selfCoreMongo;
@@ -5048,13 +5048,13 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
       selfCoreBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
     }
     if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOCOREC = new mongo(mongoinfo);
       await MONGOCOREC.connect();
     } else {
       MONGOCOREC = option.selfCoreMongo;
@@ -5404,13 +5404,13 @@ BillMaker.prototype.cashRefund = async function (mode, bilid, requestIndex, payI
       selfCoreBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
     }
     if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOCOREC = new mongo(mongoinfo);
       await MONGOCOREC.connect();
     } else {
       MONGOCOREC = option.selfCoreMongo;
@@ -5726,13 +5726,13 @@ BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo
       selfCoreBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
     }
     if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOCOREC = new mongo(mongoinfo);
       await MONGOCOREC.connect();
     } else {
       MONGOCOREC = option.selfCoreMongo;
@@ -5879,14 +5879,14 @@ BillMaker.prototype.constructInjection = async function (bilid, buiid, amountObj
     }
 
     if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongopythoninfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
     }
 
     if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOCOREC = new mongo(mongoinfo);
       await MONGOCOREC.connect();
     } else {
       MONGOCOREC = option.selfCoreMongo;
@@ -5928,7 +5928,7 @@ BillMaker.prototype.taxBill = async function () {
   const instance = this;
   const back = this.back;
   const { mongo, mongoinfo, mongolocalinfo, fileSystem, shellExec, shellLink, pythonExecute, requestSystem, decryptoHash, autoComma, messageLog, messageSend, errorLog, curlRequest, equalJson, zeroAddition } = this.mother;
-  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const MONGOLOCALC = new mongo(mongolocalinfo);
   const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
   const human = new HumanPacket();
   try {

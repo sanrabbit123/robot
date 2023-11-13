@@ -665,7 +665,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const kakaoInstance = new KakaoTalk();
   const drive = new GoogleDrive();
   const collection = "foreContents";
-  const selfMongo = new mongo(mongocontentsinfo, { useUnifiedTopology: true });
+  const selfMongo = new mongo(mongocontentsinfo);
   const garoseroParser = new GaroseroParser();
   try {
     if (!Array.isArray(arr)) {
@@ -926,8 +926,8 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
   const options = this.options;
   const { mongo, mongoinfo, mongocontentsinfo, fileSystem, shellExec, shellLink, consoleQ, sleep, messageSend, requestSystem, ghostFileUpload } = this.mother;
   const errorMessage = `argument must be => [ { client: "", designer: "" } ... ]`;
-  const selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const selfContentsMongo = new mongo(mongocontentsinfo, { useUnifiedTopology: true });
+  const selfMongo = new mongo(mongoinfo);
+  const selfContentsMongo = new mongo(mongocontentsinfo);
   const collection = "foreContents";
   const splitToken = "__split__";
   const corePortfolio = "corePortfolio";

@@ -32,7 +32,7 @@ BackWorker.prototype.setProposalToClient = async function (dateArray = [], optio
     }
     let MONGOC;
     if (option.selfMongo === undefined || option.selfMongo === null) {
-      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -260,7 +260,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
 
     let MONGOC;
     if (option.selfMongo === undefined || option.selfMongo === null) {
-      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongoinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -668,8 +668,8 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
 BackWorker.prototype.designerCalculation = async function (alarm = true) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, dateToString, autoComma, messageSend } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-  const PYTHONMONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const MONGOC = new mongo(mongoinfo);
+  const PYTHONMONGOC = new mongo(mongolocalinfo);
   try {
     await MONGOC.connect();
     await PYTHONMONGOC.connect();
@@ -1136,7 +1136,7 @@ BackWorker.prototype.designerTendencySync = async function () {
   const back = this.back;
   const { mongo, mongoinfo, equalJson } = this.mother;
   try {
-    const selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+    const selfMongo = new mongo(mongoinfo);
     await selfMongo.connect();
     const contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
     const designers = await back.getDesignersByQuery({}, { selfMongo });
@@ -1206,14 +1206,14 @@ BackWorker.prototype.designerFeeTable = async function (desid, option = { selfMo
   let MONGOC, MONGOLOCALC;
 
   if (option.selfMongo === null || option.selfMongo === undefined) {
-    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+    MONGOC = new mongo(mongoinfo);
     await MONGOC.connect();
   } else {
     MONGOC = option.selfMongo;
   }
 
   if (option.selfLocalMongo === null || option.selfLocalMongo === undefined) {
-    MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    MONGOLOCALC = new mongo(mongoconsoleinfo);
     await MONGOLOCALC.connect();
   } else {
     MONGOLOCALC = option.selfLocalMongo;
@@ -1360,14 +1360,14 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
   let MONGOC, MONGOLOCALC;
 
   if (option.selfMongo === null || option.selfMongo === undefined) {
-    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+    MONGOC = new mongo(mongoinfo);
     await MONGOC.connect();
   } else {
     MONGOC = option.selfMongo;
   }
 
   if (option.selfLocalMongo === null || option.selfLocalMongo === undefined) {
-    MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    MONGOLOCALC = new mongo(mongoconsoleinfo);
     await MONGOLOCALC.connect();
   } else {
     MONGOLOCALC = option.selfLocalMongo;
@@ -2135,14 +2135,14 @@ BackWorker.prototype.proposalReset = async function (cliid, option = { selfMongo
     }
 
     if (!selfBoo) {
-      selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+      selfMongo = new mongo(mongoinfo);
       await selfMongo.connect();
     } else {
       selfMongo = option.selfMongo;
     }
 
     if (!selfLocalBoo) {
-      selfLocalMongo = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      selfLocalMongo = new mongo(mongolocalinfo);
       await selfLocalMongo.connect();
     } else {
       selfLocalMongo = option.selfLocalMongo;
@@ -2228,13 +2228,13 @@ BackWorker.prototype.realtimeDesignerSync = async function (proid, option = { se
     let final;
 
     if (!selfBoo) {
-      selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+      selfMongo = new mongo(mongoinfo);
       await selfMongo.connect();
     } else {
       selfMongo = option.selfMongo;
     }
     if (!selfConsoleBoo) {
-      selfConsoleMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      selfConsoleMongo = new mongo(mongoconsoleinfo);
       await selfConsoleMongo.connect();
     } else {
       selfConsoleMongo = option.selfConsoleMongo;
@@ -2617,13 +2617,13 @@ BackWorker.prototype.realtimeDesignerMatch = async function (desid, proid, serid
     let online;
 
     if (!selfBoo) {
-      selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+      selfMongo = new mongo(mongoinfo);
       await selfMongo.connect();
     } else {
       selfMongo = option.selfMongo;
     }
     if (!selfConsoleBoo) {
-      selfConsoleMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      selfConsoleMongo = new mongo(mongoconsoleinfo);
       await selfConsoleMongo.connect();
     } else {
       selfConsoleMongo = option.selfConsoleMongo;
@@ -2735,9 +2735,9 @@ BackWorker.prototype.clientActionSync = async function (option = { selfMongo: nu
 
     if (!selfBoo) {
       if (!fromLocalMode) {
-        selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+        selfMongo = new mongo(mongoinfo);
       } else {
-        selfMongo = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+        selfMongo = new mongo(mongolocalinfo);
       }
       await selfMongo.connect();
     } else {
@@ -2745,16 +2745,16 @@ BackWorker.prototype.clientActionSync = async function (option = { selfMongo: nu
     }
     if (!selfConsoleBoo) {
       if (!fromLocalMode) {
-        selfConsoleMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+        selfConsoleMongo = new mongo(mongoconsoleinfo);
       } else {
-        selfConsoleMongo = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+        selfConsoleMongo = new mongo(mongolocalinfo);
       }
       await selfConsoleMongo.connect();
     } else {
       selfConsoleMongo = option.selfConsoleMongo;
     }
     if (!updateBoo) {
-      updateMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+      updateMongo = new mongo(mongoinfo);
       await updateMongo.connect();
     } else {
       updateMongo = option.updateMongo;
@@ -3217,9 +3217,9 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
 
     if (!selfBoo) {
       if (!fromLocalMode) {
-        selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+        selfMongo = new mongo(mongoinfo);
       } else {
-        selfMongo = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+        selfMongo = new mongo(mongolocalinfo);
       }
       await selfMongo.connect();
     } else {
@@ -3227,16 +3227,16 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
     }
     if (!selfConsoleBoo) {
       if (!fromLocalMode) {
-        selfConsoleMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+        selfConsoleMongo = new mongo(mongoconsoleinfo);
       } else {
-        selfConsoleMongo = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+        selfConsoleMongo = new mongo(mongolocalinfo);
       }
       await selfConsoleMongo.connect();
     } else {
       selfConsoleMongo = option.selfConsoleMongo;
     }
     if (!updateBoo) {
-      updateMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+      updateMongo = new mongo(mongoinfo);
       await updateMongo.connect();
     } else {
       updateMongo = option.updateMongo;

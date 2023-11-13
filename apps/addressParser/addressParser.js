@@ -100,7 +100,7 @@ AddressParser.prototype.createApartment = async function (updateQuery, option = 
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongolocalinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -152,7 +152,7 @@ AddressParser.prototype.updateApartment = async function (queryArr, option = { s
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongolocalinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -197,7 +197,7 @@ AddressParser.prototype.readApartment = async function (whereQuery, option = { s
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongolocalinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -248,7 +248,7 @@ AddressParser.prototype.rawToApartment = async function (data, option = { selfMo
       selfBoo = true;
     }
     if (!selfBoo) {
-      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongolocalinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;
@@ -673,7 +673,7 @@ AddressParser.prototype.getDistance = async function (from, to, option = { selfM
     let MONGOC;
 
     if (option.selfMongo === null || option.selfMongo === undefined) {
-      MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongoconsoleinfo);
       await MONGOC.connect();
     } else {
       MONGOC = option.selfMongo;

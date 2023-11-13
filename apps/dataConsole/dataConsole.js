@@ -906,16 +906,16 @@ DataConsole.prototype.connect = async function () {
     let MONGOC, MONGOLOCALC;
     if (/localhost/gi.test(address.host) || address.host === this.address.officeinfo.ghost.host || isTest) {
       isLocal = true;
-      MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongolocalinfo);
       console.log(`\x1b[33m%s\x1b[0m`, `set DB server => 127.0.0.1`);
-      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      MONGOLOCALC = new mongo(mongolocalinfo);
       console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => 127.0.0.1`);
     } else {
       await this.back.setInfoObj({ getMode: false });
       isLocal = false;
-      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      MONGOC = new mongo(mongoinfo);
       console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
-      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      MONGOLOCALC = new mongo(mongoconsoleinfo);
       console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => ${this.address.backinfo.host}`);
     }
     console.log(``);

@@ -51,10 +51,10 @@ ContentsLounge.prototype.contentsConnect = async function () {
 
     //set mongo connetion
     let MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC;
-    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-    MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-    MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-    MONGOLOGC = new mongo(mongotestinfo, { useUnifiedTopology: true });
+    MONGOC = new mongo(mongoinfo);
+    MONGOLOCALC = new mongo(mongolocalinfo);
+    MONGOCONSOLEC = new mongo(mongoconsoleinfo);
+    MONGOLOGC = new mongo(mongotestinfo);
     console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
     console.log(``);
     await MONGOC.connect();

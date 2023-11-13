@@ -406,7 +406,7 @@ SnsParsing.prototype.getSnsReport = async function () {
       return obj;
     }
 
-    const MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+    const MONGOC = new mongo(mongopythoninfo);
     await MONGOC.connect();
 
     let snsObject;

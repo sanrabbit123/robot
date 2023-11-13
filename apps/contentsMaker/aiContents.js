@@ -604,7 +604,7 @@ AiContents.prototype.to_google = async function (pid) {
     }
     const GoogleDocs = require(`${process.cwd()}/apps/googleAPIs/googleDocs.js`);
     const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
-    const selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+    const selfMongo = new mongo(mongoinfo);
     const motherId = "1dr47rrgppRWa3-u0Tl28GgJ4rpjhwD52";
     const docs = new GoogleDocs();
     const drive = new GoogleDrive();

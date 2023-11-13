@@ -11,7 +11,7 @@ const ReceiptObserver = function () {
 ReceiptObserver.prototype.wssClientLaunching = async function (url = "") {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, messageSend } = this.mother;
-  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const MONGOC = new mongo(mongoinfo);
   const back = this.back;
   const address = this.address;
   const WebSocket = require('ws');
@@ -177,8 +177,8 @@ ReceiptObserver.prototype.taxServerLaunching = async function () {
   try {
     await this.back.setInfoObj({ getMode: false });
 
-    const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-    const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    const MONGOC = new mongo(mongoinfo);
+    const MONGOLOCALC = new mongo(mongolocalinfo);
 
     await MONGOC.connect();
     await MONGOLOCALC.connect();

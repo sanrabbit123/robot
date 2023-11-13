@@ -202,7 +202,7 @@ AbstractRabbit.prototype.connect = async function () {
     console.log(``);
 
     // set mongo connetion
-    const MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    const MONGOC = new mongo(mongolocalinfo);
     await MONGOC.connect();
 
     // set pem key

@@ -188,7 +188,7 @@ LogConsole.prototype.logConnect = async function () {
 
     //set mongo connetion
     let MONGOC;
-    MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    MONGOC = new mongo(mongolocalinfo);
     console.log(`\x1b[33m%s\x1b[0m`, `set DB server => 127.0.0.1`);
     console.log(``);
 
