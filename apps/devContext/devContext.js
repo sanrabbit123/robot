@@ -28,7 +28,6 @@ const DataConsole = require(APP_PATH + "/dataConsole/dataConsole.js");
 const ParsingHangul = require(APP_PATH + "/parsingHangul/parsingHangul.js");
 const SnsParsing = require(APP_PATH + "/snsParsing/snsParsing.js");
 const PlayAudio = require(APP_PATH + "/playAudio/playAudio.js");
-const SpawnBoradoli = require(APP_PATH + "/spawnBoradoli/spawnBoradoli.js");
 const MongoReflection = require(APP_PATH + "/mongoReflection/mongoReflection.js");
 const SvgOptimizer = require(APP_PATH + "/svgOptimizer/svgOptimizer.js");
 const NaverBlogParsing = require(APP_PATH + "/naverAPIs/naverBlogParsing.js");
@@ -56,6 +55,7 @@ const LocalDevices = require(`${process.cwd()}/apps/localDevices/localDevices.js
 const RequestWhisk = require(`${process.cwd()}/apps/requestWhisk/requestWhisk.js`);
 const ContentsCalculator = require(`${process.cwd()}/apps/contentsLounge/router/contentsCalculator.js`);
 const GoogleYoutube = require(APP_PATH + "/googleAPIs/googleYoutube.js");
+const SpawnHuman = require(APP_PATH + "/spawnHuman/spawnHuman.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -154,10 +154,10 @@ DevContext.prototype.launching = async function () {
     // await whisk.requestBeating();
     // =======================================================================================================================================================
 
-
-
-    
-    
+    // spawn human
+    // const spawn = new SpawnHuman();
+    // console.log(await spawn.spawnLaunching());
+    // =======================================================================================================================================================
     
     
 
