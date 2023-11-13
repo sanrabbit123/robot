@@ -1,0 +1,9 @@
+{
+    "workbench.tree.renderIndentGuides": "none",
+    "editor.guides.highlightActiveIndentation": false,
+    "editor.fontLigatures": false,
+    "editor.guides.indentation": true,
+    "editor.fontVariations": false,
+    "editor.fontWeight": "100",
+    "editor.lineHeight": 21
+}

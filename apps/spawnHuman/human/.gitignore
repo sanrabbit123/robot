@@ -1,0 +1,16 @@
+.DS_Store
+._.DS_Store
+__pycache__/
+apps/infoObj.py
+apps/infoObj_bak.py
+apps/memberObj.py
+binary/
+temp/
+dist/
+node_modules/
+python_modules/
+pems/
+bin/
+include/
+lib/
+pyvenv.cfg
