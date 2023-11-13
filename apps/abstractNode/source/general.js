@@ -490,10 +490,10 @@ GeneralJs.ajaxPromise = function (data, url) {
         if (data[i] instanceof Date) {
           dataString += JSON.stringify(data[i]).replace(/^\"/g, '').replace(/\"$/g, '');
         } else {
-          dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '');
+          dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '').replace(/[ ]/g, '+');
         }
       } else {
-        dataString += String(data[i]).replace(/[\=\&]/g, '');
+        dataString += String(data[i]).replace(/[\=\&]/g, '').replace(/[ ]/g, '+');
       }
       dataString += '&';
     }

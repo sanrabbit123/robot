@@ -491,6 +491,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   let getData;
   let querystring;
   let formHeaders;
+  let dataString;
 
   method = "get";
   dataKeys = Object.keys(data);
@@ -521,8 +522,22 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
       jsonBoo = true;
     } else if (/x\-www\-form\-urlencoded/gi.test(JSON.stringify(config))) {
       nvpBoo = true;
-      querystring = require("querystring");
-      data = querystring.stringify(data);
+      dataString = "";
+      for (let i in data) {
+        dataString += i.replace(/[\=\&]/g, '');
+        dataString += '=';
+        if (typeof data[i] === "object") {
+          if (data[i] instanceof Date) {
+            dataString += JSON.stringify(data[i]).replace(/^\"/g, '').replace(/\"$/g, '');
+          } else {
+            dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '').replace(/[ ]/g, '+');
+          }
+        } else {
+          dataString += String(data[i]).replace(/[\=\&]/g, '').replace(/[ ]/g, '+');
+        }
+        dataString += '&';
+      }
+      data = dataString.slice(0, -1);
     } else if (config.method === "get") {
       method = "get";
       querystring = require("querystring");
