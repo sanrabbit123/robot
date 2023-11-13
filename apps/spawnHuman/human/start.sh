@@ -1,0 +1,2 @@
+#!/bin/zsh
+hypercorn human:app -b 0.0.0.0:8000 -w 2 --certfile ./pems/home-liaison.net/cert/cert1.pem --keyfile ./pems/home-liaison.net/key/privkey1.pem --ca-certs ./pems/home-liaison.net/ca/chain1.pem --ca-certs ./pems/home-liaison.net/ca/fullchain1.pem
