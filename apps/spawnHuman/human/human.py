@@ -32,10 +32,3 @@ except Exception as e:
 # python start --------------------------------------------------------------------------------------------------------
 
 import asyncio
-from apps.constructLounge.constructLounge import ConstructLounge
-
-try:
-    server = ConstructLounge()
-    app = server.returnApp()
-except Exception as e:
-    print(e)

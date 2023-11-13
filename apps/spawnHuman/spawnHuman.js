@@ -9,8 +9,9 @@ const SpawnHuman = function () {
   this.appDir = this.dir + "/" + this.applicationName;
 }
 
-SpawnHuman.prototype.spawnLaunching = async function (setupMode = false) {
+SpawnHuman.prototype.spawnLaunching = async function (serverName = "constructLounge", setupMode = false) {
   const instance = this;
+  const address = this.address;
   const { applicationName, appDir } = this;
   const { equalJson, shellExec, shellLink, fileSystem, uniqueValue } = this.mother;
   try {
@@ -21,12 +22,18 @@ SpawnHuman.prototype.spawnLaunching = async function (setupMode = false) {
     const tempFolderPath = homeFolder + "/" + tempFolderName;
     let moveTargets;
     let moveBoo;
+    let infoArr;
+    let intend;
+    let infoPythonScript;
+    let startPointPython;
+    let startScript;
 
     moveTargets = [
       "temp",
       "python_modules",
       ".git",
-    ]
+    ];
+    intend = "    ";
 
     await shellExec("mkdir", [ tempFolderPath ]);
 
@@ -49,17 +56,46 @@ SpawnHuman.prototype.spawnLaunching = async function (setupMode = false) {
 
       if (setupMode) {
         await shellExec("rm", [ "-rf", homeTarget + "/python_modules" ]);
-        await shellExec(`cd ${shellLink(homeTarget)};python3 ./human.py;`);
+        await shellExec(`cd ${shellLink(homeTarget)};python3 ./setup.py;`);
       }
 
     } else {
       await shellExec("mkdir", [ homeTarget + "/temp" ]);
       await shellExec(`cd ${shellLink(homeTarget)};git init;`);
-      await shellExec(`cd ${shellLink(homeTarget)};python3 ./human.py;`);
+      await shellExec(`cd ${shellLink(homeTarget)};python3 ./setup.py;`);
     }
 
     await shellExec("rm", [ "-rf", tempFolderPath ]);
 
+    infoArr = JSON.stringify(address, null, 2).split("\n")
+    infoArr = infoArr.map((str) => { return intend + str })
+    infoArr[0] = intend + "infoAddress = {";
+    infoArr.unshift("def returnAddress():")
+    infoArr.push(intend + "return infoAddress");
+    infoPythonScript = infoArr.join("\n").replace(/\"\: null/gi, "\": None").replace(/\"\: true/gi, "\": True").replace(/\"\: false/gi, "\": False");
+
+    await fileSystem("write", [ homeTarget + "/apps/infoObj.py", infoPythonScript ]);
+    await shellExec("cp", [ "-r", process.cwd() + "/pems", homeTarget ]);
+
+    if (serverName === "constructLounge") {
+      startPointPython = await fileSystem("readString", [ appDir + "/human.py" ]);
+      startPointPython += "\n";
+      startPointPython += "from apps.constructLounge.constructLounge import ConstructLounge";
+      startPointPython += "\n";
+      startPointPython += "\n";
+      startPointPython += "server = ConstructLounge()";
+      startPointPython += "\n";
+      startPointPython += "app = server.returnApp()";
+      startPointPython += "\n";
+      await fileSystem("write", [ homeTarget + "/human.py", startPointPython ]);
+  
+      startScript = `#!/bin/bash\nhypercorn human:app -b 0.0.0.0:8000 -w 2 --certfile ./pems/${address.constructinfo.host}/cert/cert1.pem --keyfile ./pems/${address.constructinfo.host}/key/privkey1.pem --ca-certs ./pems/${address.constructinfo.host}/ca/chain1.pem --ca-certs ./pems/${address.constructinfo.host}/ca/fullchain1.pem`;
+      await fileSystem("write", [ homeTarget + "/start.sh", startScript ]);
+      await shellExec("chmod", [ "+x", homeTarget + "/start.sh" ]);
+    } else {
+      throw new Error("invalid server name");
+    }
+    
     return true;
 
   } catch (e) {
