@@ -3832,6 +3832,7 @@ BackMaker.prototype.mongoPick = async function (collection, queryArr, option = {
   try {
     let MONGOC;
     let tong;
+    let cursor;
 
     if (!Array.isArray(queryArr)) {
       throw new Error("must be [ whereQuery, projectQuery ]");
@@ -3866,10 +3867,11 @@ BackMaker.prototype.mongoPick = async function (collection, queryArr, option = {
       await MONGOC.close();
     } else {
       if (option.limit !== undefined) {
-        tong = await option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).limit(Number(option.limit)).toArray();
+        cursor = option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).limit(Number(option.limit));
       } else {
-        tong = await option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).toArray();
+        cursor = option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]);
       }
+      tong = await cursor.toArray();
     }
 
     if (option.hexaMode === true) {
