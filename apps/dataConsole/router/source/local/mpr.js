@@ -8367,6 +8367,8 @@ MprJs.prototype.contractWhiteCard = function () {
                 "성함",
                 "아이디",
                 "지역",
+                "문의일",
+                "계약일",
                 "아파트명",
                 "준공년차",
                 "평수",
@@ -8383,6 +8385,8 @@ MprJs.prototype.contractWhiteCard = function () {
               tempArr = [];
               tempArr.push(contractClient.name);
               tempArr.push(contractClient.cliid);
+              tempArr.push(dateToString(contractClient.timeline, true).slice(2, -3));
+              tempArr.push(dateToString(contractClient.thisProject.process.contract.first.date, true).slice(2, -3));
               tempArr.push(contractClient.summary.region);
               tempArr.push(contractClient.summary.naverObject === null ? "알 수 없음" : contractClient.summary.naverObject.name);
               tempArr.push(contractClient.summary.howLong);
