@@ -626,6 +626,7 @@ MongoReflection.prototype.frontReflection = async function (to = "office") {
       }
 
       console.log(`from DB : ${JSON.stringify(this.address[fromDB], null, 2)}`);
+      console.log(`to DB : ${toString}`);
 
       MONGOC_FROM = new mongo(fromString);
       MONGOC_TO = new mongo(toString);
