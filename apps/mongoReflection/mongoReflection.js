@@ -592,7 +592,7 @@ MongoReflection.prototype.mongoToFront = async function () {
   }
 }
 
-MongoReflection.prototype.frontReflection = async function (to = "local") {
+MongoReflection.prototype.frontReflection = async function (to = "office") {
   const instance = this;
   const { mongo } = this.mother;
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
@@ -619,8 +619,8 @@ MongoReflection.prototype.frontReflection = async function (to = "local") {
       fromHost = this.address[fromDB].host;
       toDB = to;
       fromString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + fromHost + ':' + String(this.address[fromDB].port) + "/admin";
-      if (toDB === "local") {
-        toString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + "127.0.0.1" + ':' + String(this.address[fromDB].port) + "/admin";
+      if (toDB === "office") {
+        toString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + this.address["officeinfo"].ghost.host + ':' + String(this.address[fromDB].port) + "/admin";
       } else {
         toString = "mongodb://" + this.address[toDB].user + ':' + this.address[toDB].password + '@' + this.address[toDB].host + ':' + String(this.address[toDB].port) + "/admin";
       }
