@@ -414,7 +414,7 @@ LogRouter.prototype.rou_post_getContents = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const selfMongo = instance.mongo;
+      const selfMongo = instance.mongolocal;
       const hideContents = [ "p61" ];
       let limit;
       let contentsArr_raw;
@@ -840,7 +840,7 @@ LogRouter.prototype.rou_post_updateContents = function () {
         throw new Error("invaild post");
       }
 
-      const selfMongo = instance.mongo;
+      const selfMongo = instance.mongolocal;
       const { whereQuery, updateQuery } = equalJson(req.body);
       let data;
 
