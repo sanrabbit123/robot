@@ -72,6 +72,16 @@ Robot.prototype.spawnHuman = async function () {
   }
 }
 
+Robot.prototype.constructConnect = async function () {
+  try {
+    const ConstructLounge = require(process.cwd() + "/apps/constructLounge/constructLounge.js");
+    const app = new ConstructLounge();
+    await app.constructConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.reverseHuman = async function () {
   try {
     const SpawnHuman = require(process.cwd() + "/apps/spawnHuman/spawnHuman.js");
@@ -1319,6 +1329,13 @@ const MENU = {
       console.log(e);
     }
   },
+  construct: async function () {
+    try {
+      await robot.constructConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  }
 };
 let launchingFunc;
 

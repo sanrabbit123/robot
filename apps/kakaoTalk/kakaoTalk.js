@@ -23,6 +23,7 @@ const KakaoTalk = function () {
     member: address.memberinfo.ip.outer,
     home: address.homeinfo.ip.outer,
     contents: address.contentsinfo.ip.outer,
+    construct: address.constructinfo.ip.outer,
   };
   this.ipRegExp = {
     office: new RegExp(this.ip.office, 'gi'),
@@ -34,6 +35,7 @@ const KakaoTalk = function () {
     member: new RegExp(this.ip.member, 'gi'),
     home: new RegExp(this.ip.home, 'gi'),
     contents: new RegExp(this.ip.contents, 'gi'),
+    construct: new RegExp(this.ip.construct, 'gi'),
   };
   this.token = {
     office: "b264d72b44dde4663f7a3b6b7e56cd335134bbd62a36c8038f761e11d4b241fdc647a40ac7e658bb63d81efe72c98eefafa6adc423ba5bfa44b2e30ca039f3f1TKi0eIQUIc4hQqCusGbRL+RzNnEAUgUqq4ci5UXFOuLuUipVERMC0jgxPv/cZ3bJkRsv/h331DrNt4PTJckrng==",
@@ -44,6 +46,7 @@ const KakaoTalk = function () {
     member: "b264d72b44dde4663f7a3b6b7e56cd335134bbd62a36c8038f761e11d4b241fdc647a40ac7e658bb63d81efe72c98eefafa6adc423ba5bfa44b2e30ca039f3f1TKi0eIQUIc4hQqCusGbRL+RzNnEAUgUqq4ci5UXFOuLuUipVERMC0jgxPv/cZ3bJkRsv/h331DrNt4PTJckrng==",
     home: "2d1767c90dfe8cf798a7f2f1685ee9fc935e2097c0e30109dc23e4e4b952c22273f1dc2f452632c5e79001d622ef38f8d79f6143be0e3cb9c689cd1d72de06e2bLlRGTT+s2NPHBTb7e58CK9BgK42hoFP0kZnTk4ao+Owx8yu1mWXCBiNvb8PdM1ue0pEQhrgk1CQ9VZ+ZoLUuQ==",
     contents: "4e44e0b63f76be0d9b6bfc917ff4f06c720ade46bf825d58d18a83ab826a4673da42dabb2d3bd95e8983c40a99454dd388d27a4d510df3d221e22d3041faf8bf7eaL5qGkCiwSB8G0GcgLnDmCouI+7PohQAzcAwOve4jcT7pm32dv1mj08oC8C4P295DOIGGNj58NpjuANpgQtw==",
+    construct: "4e44e0b63f76be0d9b6bfc917ff4f06c720ade46bf825d58d18a83ab826a4673da42dabb2d3bd95e8983c40a99454dd388d27a4d510df3d221e22d3041faf8bf7eaL5qGkCiwSB8G0GcgLnDmCouI+7PohQAzcAwOve4jcT7pm32dv1mj08oC8C4P295DOIGGNj58NpjuANpgQtw==",
   };
   this.authObj = {};
   this.message = {};
@@ -89,6 +92,8 @@ KakaoTalk.prototype.setAuth = async function () {
       this.authObj.token = this.token.home;
     } else if (this.ipRegExp.contents.test(data.trim())) {
       this.authObj.token = this.token.contents;
+    } else if (this.ipRegExp.construct.test(data.trim())) {
+      this.authObj.token = this.token.construct;
     }
 
     return true;
