@@ -688,11 +688,11 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cl
 
 ResourceMaker.prototype.magazineMaker = async function (mid) {
   const instance = this;
-  const { equalJson, mongo, mongotestinfo } = this.mother;
+  const { equalJson, mongo, mongologinfo } = this.mother;
   const back = this.back;
   const address = this.address;
   const AppleNotes = require(process.cwd() + "/apps/appleAPIs/appleNotes.js");
-  const MONGOC = new mongo(mongotestinfo);
+  const MONGOC = new mongo(mongologinfo);
   const collection = "magazine";
   try {
     let note, targetArr;

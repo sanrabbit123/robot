@@ -150,7 +150,7 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
 
 LogConsole.prototype.logConnect = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog, messageLog, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongotestinfo, mongoconsoleinfo, errorLog, messageLog, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -188,7 +188,7 @@ LogConsole.prototype.logConnect = async function () {
 
     //set mongo connetion
     let MONGOC, MONGOLOCALC;
-    MONGOC = new mongo(mongolocalinfo);
+    MONGOC = new mongo(mongotestinfo);
     MONGOLOCALC = new mongo(mongolocalinfo);
     console.log(`\x1b[33m%s\x1b[0m`, `set DB server => 127.0.0.1`);
     console.log(``);

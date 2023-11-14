@@ -28,6 +28,7 @@ Robot.prototype.mongoToJson = async function () {
       [ "pythoninfo", "python" ],
       [ "testinfo", "log" ],
       [ "secondinfo", "second" ],
+      [ "contentsinfo", "contents" ],
     ];
     const robotDirArr = process.cwd().split("/");
     robotDirArr.pop();
@@ -45,6 +46,9 @@ Robot.prototype.mongoToJson = async function () {
       tempInfo = this.address[infoName];
       await shellExec(`mongodump --uri="mongodb://${tempInfo["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --out="${shellLink(backDir)}/${timeString}/${dbName}${timeString}" --authenticationDatabase admin`);
     }
+
+    tempInfo = this.address["officeinfo"];
+    await shellExec(`mongodump --uri="mongodb://${tempInfo["ghost"]["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --out="${shellLink(backDir)}/${timeString}/${"office"}${timeString}" --authenticationDatabase admin`);
 
     await shellExec(`cd ${shellLink(backDir)};zip -r ./${timeString}.zip ./${timeString};rm -rf ${shellLink(backDir)}/${timeString}`);
 

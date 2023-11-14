@@ -155,10 +155,9 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-    // await findCode("mongotestinfo")
-    
-    await requestSystem("https://" + address.testinfo.host + ":" + String(3000) + "/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
 
+    
+    
     /*
 
     await this.MONGOCONSOLEC.connect();

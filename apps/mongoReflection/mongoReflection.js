@@ -9,7 +9,6 @@ const MongoReflection = function () {
   this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/mongoReflection";
   this.servers = mongoTargets;
-  this.dropExceptionList = [ "slackMessages", "apartInfo" ];
 }
 
 MongoReflection.prototype.showTables = async function (location = "local") {
@@ -200,8 +199,8 @@ MongoReflection.prototype.mongoMigration = async function (to = "local", from = 
     const collections_local = await MONGOC_TO.db(dbName).listCollections().toArray();
 
     if (option.drop === true || option.drop === undefined) {
-      for (let i of collections_local) {
-        if (!this.dropExceptionList.includes(i.name)) {
+      for (let i of collections) {
+        if (collections_local.map((o) => { return o.name }).includes(i.name)) {
           await MONGOC_TO.db(dbName).collection(i.name).drop();
         }
       }
@@ -209,9 +208,8 @@ MongoReflection.prototype.mongoMigration = async function (to = "local", from = 
 
     for (let i of collections) {
       rows = await MONGOC_FROM.db(dbName).collection(i.name).find({}).toArray();
-      for (let j of rows) {
-        await MONGOC_TO.db(dbName).collection(i.name).insertOne(j);
-      }
+      console.log(i.name, " targets length => ", rows.length)
+      await MONGOC_TO.db(dbName).collection(i.name).insertMany(rows.map((o) => { delete o._id; return o; }));
       console.log(`migration ${i.name} success`);
     }
 
