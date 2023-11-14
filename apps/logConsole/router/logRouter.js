@@ -1,4 +1,4 @@
-const LogRouter = function (slack_bot, MONGOC) {
+const LogRouter = function (slack_bot, MONGOC, MONGOLOCALC) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
@@ -11,6 +11,7 @@ const LogRouter = function (slack_bot, MONGOC) {
   this.mother = new Mother();
   this.back = new BackMaker();
   this.mongo = MONGOC;
+  this.mongolocal = MONGOLOCALC;
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.report = new LogReport(MONGOC);
   this.host = this.address.testinfo.host;
