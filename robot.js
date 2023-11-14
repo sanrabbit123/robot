@@ -68,6 +68,16 @@ Robot.prototype.spawnHuman = async function () {
   }
 }
 
+Robot.prototype.reverseHuman = async function () {
+  try {
+    const SpawnHuman = require(process.cwd() + "/apps/spawnHuman/spawnHuman.js");
+    const spawn = new SpawnHuman();
+    console.log(await spawn.reverseUpdate());
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.diskTest = function () {
   const instance = this;
   const CronGhost = require(`${process.cwd()}/apps/cronGhost/cronGhost.js`);
@@ -1297,7 +1307,14 @@ const MENU = {
     } catch (e) {
       console.log(e);
     }
-  }
+  },
+  reverseHuman: async function () {
+    try {
+      await robot.reverseHuman();
+    } catch (e) {
+      console.log(e);
+    }
+  },
 };
 let launchingFunc;
 

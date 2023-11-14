@@ -22,6 +22,7 @@ class ConstructRouter:
     def setRouting(self):
         app = self.app
 
+
         # get ==================================================================================
 
         @app.get("/")
@@ -43,6 +44,7 @@ class ConstructRouter:
             headers = self.headers
             disk = await diskReading()
             return { "disk": disk }, 200, headers
+
 
         # post =================================================================================
 

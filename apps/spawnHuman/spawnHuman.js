@@ -104,4 +104,58 @@ SpawnHuman.prototype.spawnLaunching = async function (serverName = "constructLou
   }
 }
 
+SpawnHuman.prototype.reverseUpdate = async function () {
+  const instance = this;
+  const address = this.address;
+  const { applicationName, appDir, dir } = this;
+  const { equalJson, shellExec, shellLink, fileSystem, uniqueValue } = this.mother;
+  try {
+    const homeFolder = process.env.HOME;
+    const homeFolderList = await fileSystem("readFolder", [ homeFolder ]);
+    const homeTarget = homeFolder + "/" + applicationName;
+    const tempFolderName = "human_temp_python_folder_" + uniqueValue("hex");
+    const tempFolderPath = homeFolder + "/" + tempFolderName;
+    let moveTargets;
+    let humanScriptBuffer;
+
+    if (!homeFolderList.includes(applicationName)) {
+      throw new Error("human must be")
+    } 
+
+    moveTargets = [
+      "temp",
+      "python_modules",
+      ".git",
+      "pems",
+      "start.sh",
+      "human.py",
+    ];
+
+    await shellExec("mkdir", [ tempFolderPath ]);
+
+    await shellExec("rm", [ "-rf", homeTarget + "/.DS_Store" ]);
+    for (let target of moveTargets) {
+      await shellExec("mv", [ homeTarget + "/" + target, tempFolderPath + "/" ]);
+    }
+    await shellExec("mv", [ homeTarget + "/apps/infoObj.py", tempFolderPath + "/" ]);
+
+    humanScriptBuffer = await fileSystem("readString", [ appDir + "/human.py" ]);
+
+    await shellExec("rm", [ "-rf", appDir ]);
+    await shellExec("cp", [ "-r", homeTarget, dir + "/" ]);
+    await fileSystem("write", [ appDir + "/human.py", humanScriptBuffer ]);
+
+    for (let target of moveTargets) {
+      await shellExec("mv", [ tempFolderPath + "/" + target, homeTarget + "/" ]);
+    }
+    await shellExec("mv", [ tempFolderPath + "/infoObj.py", homeTarget + "/apps/" ]);
+    await shellExec("rm", [ "-rf", tempFolderPath ]);
+    
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
 module.exports = SpawnHuman;
