@@ -197,7 +197,7 @@ const withTools = function (Project) {
       }
       const supplyDiscount = (supply / (1 - discount)) - supply;
       const consumerDiscount = (consumer / (1 - discount)) - consumer;
-      return `${String(discount * 100)}% (${autoComma(supplyDiscount)}원/${autoComma(consumerDiscount)}원)`;
+      return `${String(Math.floor(discount * 100))}% (${autoComma(supplyDiscount)}원/${autoComma(consumerDiscount)}원)`;
     }
 
     let tong = [];
@@ -251,6 +251,7 @@ const withTools = function (Project) {
       remainInfo: infoToString(remainInfo),
       remainRefund: String(remainRefund),
       discount: discountToString(remainDiscount, remainSupply, remainConsumer),
+      discountDesigner: discountToString(remainDiscount, remainSupply, remainConsumer),
       formDateFrom: dateToString(formDateFrom),
       formDateTo: dateToString(formDateTo),
       formDateCancel: dateToString(formDateCancel),

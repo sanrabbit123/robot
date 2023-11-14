@@ -4575,7 +4575,8 @@ DataPatch.prototype.projectWhiteViewStandard = function () {
       { name: "소비자가", target: "remainConsumer" },
       { name: "잔금", target: "remainPure" },
       { name: "잔금 정보", target: "remainInfo" },
-      { name: "할인율", target: "discount" },
+      { name: "할인율(홈)", target: "discount" },
+      { name: "할인율(디)", target: "discountDesigner" },
       { name: "계약", target: "formDateFrom",  subTargets: [ "formDateTo" ], subTitles: [ "시작일", "종료일" ] },
       { name: "정산 방식", target: "method" },
       { name: "수수료", target: "percentage" },
@@ -4620,6 +4621,8 @@ DataPatch.prototype.projectChainingTarget = function () {
 
       resultObj = { remainVat, remainConsumer, remainPure, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
 
+      globalThis.window.alert("할인율을 눌러 갱신이 필요합니다.");
+
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     remainVat: async function (thisCase, value) {
@@ -4648,6 +4651,9 @@ DataPatch.prototype.projectChainingTarget = function () {
       paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
       resultObj = { remainSupply, remainConsumer, remainPure, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+
+      globalThis.window.alert("할인율을 눌러 갱신이 필요합니다.");
+
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     remainConsumer: async function (thisCase, value) {
@@ -4676,6 +4682,9 @@ DataPatch.prototype.projectChainingTarget = function () {
       paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
       resultObj = { remainSupply, remainVat, remainPure, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+
+      globalThis.window.alert("할인율을 눌러 갱신이 필요합니다.");
+
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     remainPure: async function (thisCase, value) {
@@ -4704,6 +4713,9 @@ DataPatch.prototype.projectChainingTarget = function () {
       paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
       resultObj = { remainSupply, remainVat, remainConsumer, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+
+      globalThis.window.alert("할인율을 눌러 갱신이 필요합니다.");
+
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     method: async function (thisCase, value) {
@@ -4724,6 +4736,9 @@ DataPatch.prototype.projectChainingTarget = function () {
       paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
       resultObj = { paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+
+      globalThis.window.alert("할인율을 눌러 갱신이 필요합니다.");
+
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     percentage: async function (thisCase, value) {
@@ -4747,6 +4762,9 @@ DataPatch.prototype.projectChainingTarget = function () {
       paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
       resultObj = { paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+
+      globalThis.window.alert("할인율을 눌러 갱신이 필요합니다.");
+
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     paymentsTotalAmount: async function (thisCase, value) {
@@ -6570,11 +6588,11 @@ DataPatch.prototype.projectMap = function () {
           const percentageInput = document.querySelector('.' + percentageValueInputClassName);
           const supplyInput = document.querySelector('.' + supplyValueInputClassName);
           const consumerInput = document.querySelector('.' + consumerValueInputClassName);
-          const percentage = Number(percentageInput.value);
-          const supply = Number(supplyInput.value);
-          const consumer = Number(consumerInput.value);
-          const supplyOriginal = Number(supplyInput.getAttribute("original"));
-          const consumerOriginal = Number(consumerInput.getAttribute("original"));
+          const percentage = Number(percentageInput.value.replace(/[^0-9]/gi, ''));
+          const supply = Number(supplyInput.value.replace(/[^0-9]/gi, ''));
+          const consumer = Number(consumerInput.value.replace(/[^0-9]/gi, ''));
+          const supplyOriginal = Number(supplyInput.getAttribute("original").replace(/[^0-9]/gi, ''));
+          const consumerOriginal = Number(consumerInput.getAttribute("original").replace(/[^0-9]/gi, ''));
           let proid, project;
           let whereQuery, updateQuery;
           let discount;
@@ -6761,14 +6779,14 @@ DataPatch.prototype.projectMap = function () {
                           const consumerTarget = document.querySelector('.' + consumerValueInputClassName);
                           const supplyOriginal = Number(supplyTarget.getAttribute("original"));
                           const consumerOriginal = Number(consumerTarget.getAttribute("original"));
-                          supplyTarget.value = String((supplyOriginal / 100) * newPercentage);
-                          consumerTarget.value = String((consumerOriginal / 100) * newPercentage);
+                          supplyTarget.value = GeneralJs.autoComma(Math.floor((supplyOriginal / 100) * newPercentage)) + "원";
+                          consumerTarget.value = GeneralJs.autoComma(Math.floor((consumerOriginal / 100) * newPercentage)) + "원";
                         }
                       }
                     },
                     attribute: {
                       type: "text",
-                      value: String(percentage)
+                      value: String(Math.floor(percentage))
                     },
                     style: {
                       ...inputStyle
@@ -6826,14 +6844,15 @@ DataPatch.prototype.projectMap = function () {
                           const supplyOriginal = Number(this.getAttribute("original"));
                           const consumerOriginal = Number(consumerTarget.getAttribute("original"));
                           const newPercentage = (newSupply / supplyOriginal) * 100;
-                          consumerTarget.value = String((consumerOriginal / 100) * newPercentage);
+                          this.value = GeneralJs.autoComma(Math.floor(newSupply)) + "원";
+                          consumerTarget.value = GeneralJs.autoComma(Math.floor((consumerOriginal / 100) * newPercentage)) + "원";
                           percentageTarget.value = String(Math.round(newPercentage * 100) / 100);
                         }
                       }
                     },
                     attribute: {
                       type: "text",
-                      value: String(supply),
+                      value: GeneralJs.autoComma(Math.floor(supply)) + "원",
                       original: String(supplyOriginal)
                     },
                     style: {
@@ -6892,14 +6911,523 @@ DataPatch.prototype.projectMap = function () {
                           const supplyOriginal = Number(supplyTarget.getAttribute("original"));
                           const consumerOriginal = Number(this.getAttribute("original"));
                           const newPercentage = (newConsumer / consumerOriginal) * 100;
-                          supplyTarget.value = String((supplyOriginal / 100) * newPercentage);
+                          this.value = GeneralJs.autoComma(Math.floor(newConsumer)) + "원";
+                          supplyTarget.value = GeneralJs.autoComma(Math.floor((supplyOriginal / 100) * newPercentage)) + "원";
                           percentageTarget.value = String(Math.round(newPercentage * 100) / 100);
                         }
                       }
                     },
                     attribute: {
                       type: "text",
-                      value: String(consumer),
+                      value: GeneralJs.autoComma(Math.floor(consumer)) + "원",
+                      original: String(consumerOriginal)
+                    },
+                    style: {
+                      ...inputStyle
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            style: {
+              ...buttonStyle
+            },
+            children: [
+              {
+                style: {
+                  ...buttonDetailStyles[0]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: "정가(공)"
+                    },
+                    style: {
+                      ...inputStyle,
+                      cursor: "pointer"
+                    }
+                  }
+                ]
+              },
+              {
+                style: {
+                  ...buttonDetailStyles[1]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: GeneralJs.autoComma(supplyOriginal) + '원',
+                      original: String(supplyOriginal)
+                    },
+                    style: {
+                      ...inputStyle
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            style: {
+              ...buttonStyle
+            },
+            children: [
+              {
+                style: {
+                  ...buttonDetailStyles[0]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: "정가(소)"
+                    },
+                    style: {
+                      ...inputStyle,
+                      cursor: "pointer"
+                    }
+                  }
+                ]
+              },
+              {
+                style: {
+                  ...buttonDetailStyles[1]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: GeneralJs.autoComma(consumerOriginal) + '원',
+                      original: String(consumerOriginal)
+                    },
+                    style: {
+                      ...inputStyle
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            mode: "svg",
+            source: GeneralJs.prototype.returnOk(GeneralJs.colorChip.green),
+            event: {
+              click: endEvent
+            },
+            style: {
+              position: "absolute",
+              bottom: String(0),
+              width: String(iconWidth) + ea,
+              left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
+              cursor: "pointer"
+            }
+          }
+        ]
+      });
+
+    }).catch((err) => {
+      console.log(err);
+    });
+  };
+
+  const discountDesignerToObject = function (value, pastValue, vaildMode) {
+    let number;
+    let temp;
+    let boo = false;
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    return (Number((value.split('%')[0]).replace(/[^0-9]/gi, '')) / 100);
+  };
+  const discountDesignerInputFunction = function (mother, input, callback) {
+    const ea = "px";
+    const percentageValueInputClassName = "percentageValueInputClassName";
+    const supplyValueInputClassName = "supplyValueInputClassName";
+    const consumerValueInputClassName = "consumerValueInputClassName";
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyles;
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let endEvent;
+    let tempArr;
+    let valuesTong;
+    let originalValue;
+    let online;
+    let supplyConsumer;
+    let percentage, supply, consumer;
+    let supplyOriginal, consumerOriginal;
+    let proid;
+
+    proid = mother.parentElement.className.replace(/(p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z])/g, (match, proid) => { return proid.trim(); });
+    if (!/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g.test(proid)) {
+      proid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+    }
+
+    GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true }).then((projects) => {
+      const [ project ] = projects;
+
+      originalValue = input.value;
+
+      [ percentage, supplyConsumer ] = originalValue.replace(/ /gi, '').split('%');
+      [ supply, consumer ] = supplyConsumer.split('/');
+
+      percentage = Number(percentage.replace(/[^0-9\.\-]/gi, ''));
+      supply = Number(supply.replace(/[^0-9]/gi, ''));
+      consumer = Number(consumer.replace(/[^0-9]/gi, ''));
+
+      supplyOriginal = project.process.contract.remain.calculation.amount.supply + supply;
+      consumerOriginal = project.process.contract.remain.calculation.amount.consumer + consumer;
+
+      endEvent = async function (e) {
+        try {
+          const percentageInput = document.querySelector('.' + percentageValueInputClassName);
+          const supplyInput = document.querySelector('.' + supplyValueInputClassName);
+          const consumerInput = document.querySelector('.' + consumerValueInputClassName);
+          const percentage = Number(percentageInput.value.replace(/[^0-9]/gi, ''));
+          const supply = Number(supplyInput.value.replace(/[^0-9]/gi, ''));
+          const consumer = Number(consumerInput.value.replace(/[^0-9]/gi, ''));
+          const supplyOriginal = Number(supplyInput.getAttribute("original").replace(/[^0-9]/gi, ''));
+          const consumerOriginal = Number(consumerInput.getAttribute("original").replace(/[^0-9]/gi, ''));
+          let proid, project;
+          let whereQuery, updateQuery;
+          let discount;
+          let desid, designer;
+          let newSupply;
+          let newVat;
+          let newConsumer;
+          let res;
+          let calculate;
+
+          proid = mother.parentElement.className.replace(/(p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z])/g, (match, proid) => { return proid.trim(); });
+          if (!/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g.test(proid)) {
+            proid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+          }
+          project = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true }))[0];
+          desid = project.desid;
+          designer = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true }))[0];
+
+          discount = percentage / 100;
+          newSupply = Math.floor((supplyOriginal - supply) / 10) * 10;
+          newVat = newSupply * (0.1);
+          newConsumer = newSupply + newVat;
+
+          ({ calculate } = await GeneralJs.ajaxJson({
+            supply: newSupply,
+            classification: designer.information.business.businessInfo.classification,
+            percentage: designer.information.business.service.cost.percentage,
+            cliid: proid
+          }, PYTHONHOST + "/designerCalculation"));
+
+          whereQuery = { proid };
+          updateQuery = {};
+          updateQuery["process.contract.remain.calculation.amount.supply"] = newSupply;
+          updateQuery["process.contract.remain.calculation.amount.vat"] = newVat;
+          updateQuery["process.contract.remain.calculation.amount.consumer"] = newConsumer;
+          updateQuery["process.contract.remain.calculation.discount"] = discount;
+          updateQuery["process.calculation.payments.totalAmount"] = calculate;
+          updateQuery["process.calculation.payments.first.amount"] = Math.floor(calculate / 2);
+          updateQuery["process.calculation.payments.remain.amount"] = calculate - updateQuery["process.calculation.payments.first.amount"];
+
+          await GeneralJs.ajaxJson({ whereQuery, updateQuery }, "/rawUpdateProject");
+          await GeneralJs.ajaxJson({ proid }, PYTHONHOST + "/stylingAmountSync");
+
+          window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + proid;
+
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      input.value = "입력중";
+      if (input.parentElement.childNodes[0].nodeType === 3) {
+        input.parentElement.style.transition = "0s all ease";
+        input.parentElement.style.color = "transparent";
+      }
+
+      mother.style.overflow = "";
+      height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+      fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+      width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 60;
+      if (width === '' || Number.isNaN(width)) {
+        width = String(300);
+      }
+      top = height * 0.5;
+      iconWidth = 18;
+
+      buttonStyle = {
+        display: "block",
+        position: "relative",
+        left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+        width: String(width) + ea,
+        paddingTop: String(height * 0.3) + ea,
+        height: String(height * 1.5) + ea,
+        fontSize: "inherit",
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        animation: "fadeuplite 0.3s ease forwards",
+        marginBottom: String(height / 4) + ea,
+      };
+
+      buttonDetailStyles = [
+        {
+          position: "absolute",
+          left: String(0) + ea,
+          top: String(0) + ea,
+          width: "28%",
+          height: "100%",
+          background: GeneralJs.colorChip.green,
+          zIndex: String(3),
+          borderRadius: String(3) + ea,
+          fontSize: "inherit",
+          boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
+        },
+        {
+          position: "absolute",
+          right: String(0) + ea,
+          top: String(0) + ea,
+          width: "calc(72% - " + String(Math.round((height) / 4)) + ea + ")",
+          height: "100%",
+          background: GeneralJs.colorChip.green,
+          zIndex: String(3),
+          borderRadius: String(3) + ea,
+          fontSize: "inherit",
+          boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
+        },
+      ];
+
+      inputStyle = {
+        position: "absolute",
+        fontSize: "inherit",
+        fontWeight: String(400),
+        color: GeneralJs.colorChip.whiteBlack,
+        zIndex: String(3),
+        textAlign: "center",
+        background: "transparent",
+        width: "100%",
+        height: (GeneralJs.isMac() ? "95%" : "98%"),
+        left: String(0) + ea,
+        top: String(GeneralJs.isMac() ? 0 : 2) + ea,
+        borderRadius: String(3) + ea,
+        outline: String(0),
+        border: String(0),
+      };
+
+      GeneralJs.createNode({
+        mother,
+        class: [ "removeTarget", "divTong" ],
+        style: {
+          display: "block",
+          position: "absolute",
+          top: String((height * 2) - top) + ea,
+          left: (width !== "300" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+          width: String(width) + ea,
+          textAlign: "center",
+          fontSize: "inherit",
+          zIndex: String(3),
+          paddingBottom: String(iconWidth + 3) + ea,
+        },
+        children: [
+          {
+            style: {
+              ...buttonStyle
+            },
+            children: [
+              {
+                style: {
+                  ...buttonDetailStyles[0]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: "%"
+                    },
+                    style: {
+                      ...inputStyle,
+                      cursor: "pointer"
+                    }
+                  }
+                ]
+              },
+              {
+                style: {
+                  ...buttonDetailStyles[1]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    class: [ percentageValueInputClassName ],
+                    event: {
+                      keyup: function (e) {
+                        if (e.key === "Enter") {
+                          this.blur();
+                        }
+                      },
+                      blur: function (e) {
+                        this.value = this.value.replace(/[^0-9\.\-]/gi, '');
+                        if (Number.isNaN(Number(this.value))) {
+                          window.alert("숫자만 입력해주세요!");
+                        } else {
+                          const newPercentage = Number(this.value);
+                          const supplyTarget = document.querySelector('.' + supplyValueInputClassName);
+                          const consumerTarget = document.querySelector('.' + consumerValueInputClassName);
+                          const supplyOriginal = Number(supplyTarget.getAttribute("original"));
+                          const consumerOriginal = Number(consumerTarget.getAttribute("original"));
+                          supplyTarget.value = GeneralJs.autoComma(Math.floor((supplyOriginal / 100) * newPercentage)) + "원";
+                          consumerTarget.value = GeneralJs.autoComma(Math.floor((consumerOriginal / 100) * newPercentage)) + "원";
+                        }
+                      }
+                    },
+                    attribute: {
+                      type: "text",
+                      value: String(Math.floor(percentage))
+                    },
+                    style: {
+                      ...inputStyle
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            style: {
+              ...buttonStyle
+            },
+            children: [
+              {
+                style: {
+                  ...buttonDetailStyles[0]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: "공급가"
+                    },
+                    style: {
+                      ...inputStyle,
+                      cursor: "pointer"
+                    }
+                  }
+                ]
+              },
+              {
+                style: {
+                  ...buttonDetailStyles[1]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    class: [ supplyValueInputClassName ],
+                    event: {
+                      keyup: function (e) {
+                        if (e.key === "Enter") {
+                          this.blur();
+                        }
+                      },
+                      blur: function (e) {
+                        this.value = this.value.replace(/[^0-9\.\-]/gi, '');
+                        if (Number.isNaN(Number(this.value))) {
+                          window.alert("숫자만 입력해주세요!");
+                        } else {
+                          const newSupply = Number(this.value);
+                          const percentageTarget = document.querySelector('.' + percentageValueInputClassName);
+                          const consumerTarget = document.querySelector('.' + consumerValueInputClassName);
+                          const supplyOriginal = Number(this.getAttribute("original"));
+                          const consumerOriginal = Number(consumerTarget.getAttribute("original"));
+                          const newPercentage = (newSupply / supplyOriginal) * 100;
+                          this.value = GeneralJs.autoComma(Math.floor(newSupply)) + "원";
+                          consumerTarget.value = GeneralJs.autoComma(Math.floor((consumerOriginal / 100) * newPercentage)) + "원";
+                          percentageTarget.value = String(Math.round(newPercentage * 100) / 100);
+                        }
+                      }
+                    },
+                    attribute: {
+                      type: "text",
+                      value: GeneralJs.autoComma(Math.floor(supply)) + "원",
+                      original: String(supplyOriginal)
+                    },
+                    style: {
+                      ...inputStyle
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            style: {
+              ...buttonStyle
+            },
+            children: [
+              {
+                style: {
+                  ...buttonDetailStyles[0]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: "소비자가"
+                    },
+                    style: {
+                      ...inputStyle,
+                      cursor: "pointer"
+                    }
+                  }
+                ]
+              },
+              {
+                style: {
+                  ...buttonDetailStyles[1]
+                },
+                children: [
+                  {
+                    mode: "input",
+                    class: [ consumerValueInputClassName ],
+                    event: {
+                      keyup: function (e) {
+                        if (e.key === "Enter") {
+                          this.blur();
+                        }
+                      },
+                      blur: function (e) {
+                        this.value = this.value.replace(/[^0-9\.\-]/gi, '');
+                        if (Number.isNaN(Number(this.value))) {
+                          window.alert("숫자만 입력해주세요!");
+                        } else {
+                          const newConsumer = Number(this.value);
+                          const percentageTarget = document.querySelector('.' + percentageValueInputClassName);
+                          const supplyTarget = document.querySelector('.' + supplyValueInputClassName);
+                          const supplyOriginal = Number(supplyTarget.getAttribute("original"));
+                          const consumerOriginal = Number(this.getAttribute("original"));
+                          const newPercentage = (newConsumer / consumerOriginal) * 100;
+                          this.value = GeneralJs.autoComma(Math.floor(newConsumer)) + "원";
+                          supplyTarget.value = GeneralJs.autoComma(Math.floor((supplyOriginal / 100) * newPercentage)) + "원";
+                          percentageTarget.value = String(Math.round(newPercentage * 100) / 100);
+                        }
+                      }
+                    },
+                    attribute: {
+                      type: "text",
+                      value: GeneralJs.autoComma(Math.floor(consumer)) + "원",
                       original: String(consumerOriginal)
                     },
                     style: {
@@ -7192,7 +7720,8 @@ DataPatch.prototype.projectMap = function () {
     remainPure: { name: "잔금", position: "process.contract.remain.calculation.amount.consumer", type: "object", objectFunction: remainPureToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, moneyBoo: true },
     remainInfo: { name: "잔금 정보", position: "process.contract.remain.calculation.info", type: "object", inputFunction: methodInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     remainRefund: { name: "계약금 환불액", position: "process.contract.remain.calculation.refund", type: "number", searchBoo: true, moneyBoo: true },
-    discount: { name: "할인율", position: "process.contract.remain.calculation.discount", type: "object", inputFunction: discountInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: discountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true },
+    discount: { name: "할인율(홈)", position: "process.contract.remain.calculation.discount", type: "object", inputFunction: discountInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: discountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true },
+    discountDesigner: { name: "할인율(디)", position: "process.contract.remain.calculation.discount", type: "object", inputFunction: discountDesignerInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: discountDesignerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true },
     formDateFrom: { name: "프로젝트 시작일", position: "process.contract.form.date.from", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     formDateTo: { name: "프로젝트 종료일", position: "process.contract.form.date.to", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     formDateCancel: { name: "계약 취소", position: "process.contract.form.date.cancel", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
