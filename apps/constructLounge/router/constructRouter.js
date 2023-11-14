@@ -85,7 +85,6 @@ ConstructRouter.prototype.rou_get_First = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-
       if (req.params.id === "ssl") {
         const disk = await diskReading();
         const aliveMongoResult = await aliveMongo();
@@ -96,7 +95,6 @@ ConstructRouter.prototype.rou_get_First = function () {
       } else {
         res.send(JSON.stringify({ message: "hi" }));
       }
-
     } catch (e) {
       logger.error("Construct lounge 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
@@ -125,7 +123,7 @@ ConstructRouter.prototype.rou_post_storeHoliday = function () {
     });
     try {
 
-      
+
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
