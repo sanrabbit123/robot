@@ -1642,6 +1642,8 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
         endDate = new Date(endDateCopied.getFullYear(), endDateCopied.getMonth(), endDateCopied.getDate(), 0, 0, 0);
         endDate.setDate(endDate.getDate() + 1);
 
+        console.log(new Date());
+
         rows = await back.mongoPick(collection, [ {
           "client.requests": {
             $elemMatch: {
@@ -1653,6 +1655,9 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
           sessions: 1,
           source: 1,
         } ], { selfMongo });
+
+        console.log(new Date());
+
         
         startRequestTimeline = new Date(JSON.stringify(startDate).slice(1, -1));
         startRequestTimeline.setDate(startRequestTimeline.getDate() - 3);
@@ -1678,6 +1683,11 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
             }
           };
         }
+
+
+        console.log(new Date());
+
+
         coreRows = (await back.getClientsByQuery(coreWhereQuery, { selfMongo: selfCoreMongo })).toNormal();
         for (let obj of rows) {
           thisClient = coreRows.find((c) => { return c.cliid === obj.cliid }) === undefined ? null : coreRows.find((c) => { return c.cliid === obj.cliid });
@@ -1687,6 +1697,9 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
             obj.client = (await back.getClientById(obj.cliid, { selfMongo: selfCoreMongo })).toNormal();
           }
         }
+
+        console.log(new Date());
+
 
         cliidArr = [ ...new Set(rows.map((o) => { return o.cliid })) ];
         if (cliidArr.length > 0) {
@@ -1707,6 +1720,10 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
         } else {
           projects = [];
         }
+
+
+        console.log(new Date());
+
 
         projects.sort((a, b) => { return a.proposal.date.valueOf() - b.proposal.date.valueOf() });
         rows.sort((a, b) => {
@@ -1749,6 +1766,10 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
             }
           }
         }
+
+
+        console.log(new Date());
+
 
         if (req.body.initRequest !== true && req.body.initRequest !== "true") {
           finalRows = finalRows.filter((o) => {
