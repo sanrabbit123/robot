@@ -5987,7 +5987,6 @@ MprJs.prototype.frontWhiteCard = function () {
                 })
               }
             }
-            
             instance.frontMatrix = tableMatrix;
 
             // 1
@@ -7665,8 +7664,6 @@ MprJs.prototype.queryWhiteCard = function () {
   }
 }
 
-/*
-
 MprJs.prototype.statisticsWhiteCard = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight, entireMode } = this;
@@ -8010,9 +8007,7 @@ MprJs.prototype.statisticsWhiteCard = function () {
   }
 }
 
-*/
-
-MprJs.prototype.statisticsWhiteCard = function () {
+MprJs.prototype.contractWhiteCard = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight, entireMode } = this;
   const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
@@ -8080,6 +8075,13 @@ MprJs.prototype.statisticsWhiteCard = function () {
       let contractDetailBlockMarginBottom;
       let contractDetailFinalMargin;
       let num;
+      let contractMatrix;
+      let tempArr;
+      let tableBlockHeight;
+      let tableSize;
+      let tableTextTop;
+      let columnsLength;
+      let tableTong;
 
       toDate = new Date();
       toDate.setDate(toDate.getDate() - 1);
@@ -8148,6 +8150,10 @@ MprJs.prototype.statisticsWhiteCard = function () {
       contractDetailBlockMarginBottom = 4;
 
       contractDetailFinalMargin = 40;
+
+      tableBlockHeight = 30;
+      tableSize = 12;
+      tableTextTop = isMac() ? -1 : 1;
 
       dataLoad = () => {};
 
@@ -8353,151 +8359,118 @@ MprJs.prototype.statisticsWhiteCard = function () {
               createNode(obj);
             });
 
-            console.log(result);
-
             const [ complex ] = result;
             const { contractDetail } = complex;
     
-            // 0 - complex report
-            complexMother = scrollBox.children[0];
+            contractMatrix = [
+              [
+                "성함",
+                "아이디",
+                "지역",
+                "아파트명",
+                "준공년차",
+                "평수",
+                "이사 여부",
+                "계약 상태",
+                "예산",
+                "디자인비",
+                "서비스",
+                "광고 여부",
+                "소스",
+              ]
+            ];
+            for (let contractClient of contractDetail) {
+              tempArr = [];
+              tempArr.push(contractClient.name);
+              tempArr.push(contractClient.cliid);
+              tempArr.push(contractClient.summary.region);
+              tempArr.push(contractClient.summary.naverObject === null ? "알 수 없음" : contractClient.summary.naverObject.name);
+              tempArr.push(contractClient.summary.howLong);
+              tempArr.push(String(contractClient.summary.pyeong) + "평");
+              tempArr.push(contractClient.summary.living);
+              tempArr.push(contractClient.budget.replace(/ 이상/gi, ""));
+              tempArr.push(contractClient.summary.contract);
+              tempArr.push(autoComma(contractClient.thisProject.process.contract.remain.calculation.amount.consumer) + '원');
+              tempArr.push(serviceParsing(contractClient.thisProject.service).replace(/[a-zA-Z]/gi, '').trim());
+              tempArr.push(contractClient.summary.ad.replace(/ 유입/gi, ""));
+              tempArr.push(contractClient.summary.source);
+              contractMatrix.push(tempArr);
+            }
 
-            // contracts detail    
-            createNode({
+            columnsLength = contractMatrix[0].length;
+            
+            // 0 - complex report
+
+            complexMother = scrollBox.firstChild
+            tableTong = createNode({
               mother: complexMother,
               style: {
-                display: "block",
+                display: "flex",
                 position: "relative",
                 width: withOut(0, ea),
-                marginBottom: String(chartBetween / visualDivide) + ea,
-                verticalAlign: "top",
-                borderBottom: "1px solid " + colorChip.gray3,
-              },
-              child: {
-                text: "계약자 상세 (" + String(contractDetail.length) + "명)",
-                style: {
-                  display: "flex",
-                  position: "relative",
-                  fontSize: String(propertySize) + ea,
-                  fontWeight: String(800),
-                  color: colorChip.black,
-                  top: String(titleTextTop) + ea,
-                  justifyContent: "start",
-                  alignItems: "start",
-                  height: String(detailTitleBlockHeight) + ea,
-                }
+                border: "1px solid " + colorChip.gray3,
+                borderRadius: String(5) + "px",
+                boxSizing: "border-box",
+                flexDirection: "column",
+                overflow: "hidden",
+                marginBottom: String(chartBetween) + ea,
               }
             });
-            detailValueInjection = (contractBlockMother, value, width) => {
-              createNode({
-                mother: contractBlockMother,
+
+            // contracts detail    
+            for (let i = 0; i < contractMatrix.length; i++) {
+              caseTong = createNode({
+                mother: tableTong,
                 style: {
-                  display: "inline-block",
+                  display: "flex",
+                  height: String(tableBlockHeight) + ea,
+                  width: withOut(0, ea),
                   position: "relative",
-                  width: typeof width === "number" ? String(width) + ea : width,
-                  height: String(detailBlockHeight) + ea,
-                  overflow: "scroll",
-                },
-                child: {
-                  text: value,
-                  style: {
-                    position: "relative",
-                    fontSize: String(detailBlockSize) + ea,
-                    fontWeight: String(300),
-                    color: colorChip.green,
-                    top: String(titleTextTop) + ea,
-                    width: String(contentsLongWidth) + ea,
-                  }
+                  flexDirection: "row",
+                  borderBottom: i !== contractMatrix.length - 1 ? "1px solid " + colorChip.gray3 : "",
+                  background: i === 0 ? colorChip.gray0 : colorChip.white,
                 }
               });
-              if (typeof width === "number") {
+              for (let j = 0; j < contractMatrix[i].length; j++) {
                 createNode({
-                  mother: contractBlockMother,
+                  mother: caseTong,
                   style: {
                     display: "inline-block",
+                    width: "calc(100% / " + String(columnsLength) + ")",
+                    height: withOut(0, ea),
                     position: "relative",
-                    width: String(barWidth) + ea,
-                    height: String(detailBlockHeight) + ea,
-                    overflow: "scroll",
+                    textAlign: "center",
+                    borderRight: j !== contractMatrix[i].length - 1 ? "1px solid " + colorChip.gray3 : "",
+                    boxSizing: "border-box",
+                    overflow: "hidden",
                   },
                   child: {
-                    text: "|",
                     style: {
+                      display: "inline-flex",
+                      width: String(maxWidth) + ea,
+                      marginLeft: withOut(50, (maxWidth / 2), ea),
+                      height: withOut(0, ea),
                       position: "relative",
-                      fontSize: String(detailBlockSize) + ea,
-                      fontWeight: String(200),
-                      color: colorChip.gray3,
-                      top: String(titleTextTop) + ea,
-                      width: String(contentsLongWidth) + ea,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textAlign: "center",
+                    },
+                    child: {
+                      text: String(contractMatrix[i][j]),
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        fontSize: String(tableSize) + ea,
+                        fontWeight: String(i === 0 ? 700 : 500),
+                        color: colorChip.black,
+                        top: String(tableTextTop) + ea,
+                      }
                     }
-                  }
-                });
-              }
-              return width + barWidth;
-            }
-
-            if (contractDetail.length > 0) {
-              num = 0;
-              for (let contractClient of contractDetail) {
-                // mother
-                contractBlockMother = createNode({
-                  mother: complexMother,
-                  style: {
-                    display: "block",
-                    position: "relative",
-                    width: withOut(0, ea),
-                    marginBottom: String(num === contractDetail.length - 1 ? contractDetailFinalMargin : contractDetailBlockMarginBottom) + ea,
-                    verticalAlign: "top",
                   },
-                });
-                // name
-                createNode({
-                  mother: contractBlockMother,
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    width: String(nameBlockWidth) + ea,
-                    height: String(detailBlockHeight) + ea,
-                    overflow: "scroll",
-                  },
-                  child: {
-                    text: contractClient.name + "(" + contractClient.cliid + ")",
-                    style: {
-                      position: "relative",
-                      fontSize: String(detailBlockSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                      top: String(titleTextTop) + ea,
-                      width: String(contentsLongWidth) + ea,
-                    }
-                  }
-                });
-                // values
-                totalWidth = nameBlockWidth;
-                totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.region, detailBlockWidth);
-                totalWidth += detailValueInjection(contractBlockMother, (contractClient.summary.naverObject === null ? "알 수 없음" : contractClient.summary.naverObject.name), detailDoubleBlockWidth);
-                totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.howLong, detailNormalWidth);
-                totalWidth += detailValueInjection(contractBlockMother, String(contractClient.summary.pyeong) + "평", detailBlockWidth);
-                totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.living, detailBlockWidth);
-                totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.contract, detailBlockWidth);
-                totalWidth += detailValueInjection(contractBlockMother, contractClient.budget.replace(/ 이상/gi, ""), detailNormalWidth);
-                totalWidth += detailValueInjection(contractBlockMother, serviceParsing(contractClient.thisProject.service).replace(/[a-zA-Z]/gi, '').trim(), detailServiceWidth);
-                totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.ad.replace(/ 유입/gi, ""), detailBlockWidth);
-                detailValueInjection(contractBlockMother, contractClient.family, withOut(totalWidth, ea));
-  
-                num++;
+                })
               }
-            } else {
-              createNode({
-                mother: complexMother,
-                style: {
-                  display: "block",
-                  position: "relative",
-                  width: withOut(0, ea),
-                  marginBottom: String(contractDetailFinalMargin) + ea,
-                  verticalAlign: "top",
-                },
-              });
             }
+            instance.contractMatrix = contractMatrix;
 
             // 0 - 12
 
@@ -9228,7 +9201,7 @@ MprJs.prototype.statisticsWhiteCard = function () {
         if (hasQuery("whitekey")) {
           removeQuery("whitekey");
         }
-        appendQuery({ whitekey: "statistics" });
+        appendQuery({ whitekey: "contract" });
 
       }
 
@@ -9415,6 +9388,21 @@ MprJs.prototype.mprPannel = async function () {
             try {
               const statisticsFunc = instance.statisticsWhiteCard();
               await statisticsFunc(e);
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+      {
+        title: "계약자 특성",
+        event: () => {
+          return async function (e) {
+            try {
+              const contractFunc = instance.contractWhiteCard();
+              await contractFunc(e);
             } catch (e) {
               console.log(e);
               window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
@@ -9664,6 +9652,10 @@ MprJs.prototype.mprExtractEvent = async function () {
 
           matrix = equalJson(JSON.stringify(instance.snsMatrix));
 
+        } else if (getObj.whitekey === "contract") {
+
+          matrix = equalJson(JSON.stringify(instance.contractMatrix));
+
         } else if (typeof getObj.whitekey === "string" && /^c/gi.test(getObj.whitekey) && /[0-9]$/gi.test(getObj.whitekey)) {
 
           matrix = equalJson(JSON.stringify(instance.clientDetailMatrix));
@@ -9804,6 +9796,9 @@ MprJs.prototype.launching = async function () {
         await execFunc(new Event("click", { bubbles: true }));
       } else if (getObj.whitekey === "statistics") {
         execFunc = this.statisticsWhiteCard();
+        await execFunc(new Event("click", { bubbles: true }));
+      } else if (getObj.whitekey === "contract") {
+        execFunc = this.contractWhiteCard();
         await execFunc(new Event("click", { bubbles: true }));
       } else if (getObj.whitekey === "query") {
         execFunc = this.queryWhiteCard();
