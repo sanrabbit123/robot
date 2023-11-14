@@ -1656,13 +1656,28 @@ ContentsRouter.prototype.rou_post_clientAnalytics = function () {
         
         startRequestTimeline = new Date(JSON.stringify(startDate).slice(1, -1));
         startRequestTimeline.setDate(startRequestTimeline.getDate() - 3);
-        coreWhereQuery = {
-          requests: {
-            $elemMatch: {
-              "request.timeline": { $gte: startRequestTimeline, $lt: endDate }
-            }
+        if (rows.length > 0) {
+          coreWhereQuery = {
+            $or: [
+              ...rows.map((o) => { return { cliid: o.cliid } }),
+              {
+                requests: {
+                  $elemMatch: {
+                    "request.timeline": { $gte: startRequestTimeline, $lt: endDate }
+                  }
+                }
+              }
+            ]
           }
-        };
+        } else {
+          coreWhereQuery = {
+            requests: {
+              $elemMatch: {
+                "request.timeline": { $gte: startRequestTimeline, $lt: endDate }
+              }
+            }
+          };
+        }
         coreRows = (await back.getClientsByQuery(coreWhereQuery, { selfMongo: selfCoreMongo })).toNormal();
         for (let obj of rows) {
           thisClient = coreRows.find((c) => { return c.cliid === obj.cliid }) === undefined ? null : coreRows.find((c) => { return c.cliid === obj.cliid });
