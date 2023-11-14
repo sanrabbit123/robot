@@ -54,6 +54,20 @@ Robot.prototype.mongoToJson = async function () {
   }
 }
 
+Robot.prototype.spawnHuman = async function () {
+  try {
+    const SpawnHuman = require(process.cwd() + "/apps/spawnHuman/spawnHuman.js");
+    const spawn = new SpawnHuman();
+    let mode;
+
+    mode = "constructLounge";
+
+    console.log(await spawn.spawnLaunching(mode, false));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.diskTest = function () {
   const instance = this;
   const CronGhost = require(`${process.cwd()}/apps/cronGhost/cronGhost.js`);
@@ -1277,6 +1291,13 @@ const MENU = {
       console.log(e);
     }
   },
+  human: async function () {
+    try {
+      await robot.spawnHuman();
+    } catch (e) {
+      console.log(e);
+    }
+  }
 };
 let launchingFunc;
 

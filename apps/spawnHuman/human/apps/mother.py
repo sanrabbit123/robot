@@ -47,6 +47,14 @@ def mongoConnection(target: str = "core"):
     connection = AsyncIOMotorClient(url)
     return connection
 
+def generalHeaders():
+    return {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    }
+
 def processCwd():
     return os.getcwd()
 

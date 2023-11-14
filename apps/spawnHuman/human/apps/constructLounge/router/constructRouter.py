@@ -1,5 +1,5 @@
 import asyncio
-from apps.mother import diskReading, aliveMongo, equalJson, alertLog, jsonStringify
+from apps.mother import diskReading, aliveMongo, equalJson, alertLog, jsonStringify, generalHeaders
 from apps.infoObj import returnAddress
 from apps.backMaker.backMaker import BackMaker
 from quart import request
@@ -13,6 +13,7 @@ class ConstructRouter:
         self.address = returnAddress()
 
         self.collection = "builder"
+        self.headers = generalHeaders()
 
         self.mongo = coreConnection
         self.mongoconsole = backConnection
@@ -25,25 +26,29 @@ class ConstructRouter:
 
         @app.get("/")
         async def rou_get_root():
+            headers = self.headers
             disk = await diskReading()
             aliveMongoResult = await aliveMongo()
-            return { "disk": disk, "mongo": aliveMongoResult }
+            return { "disk": disk, "mongo": aliveMongoResult }, 200, headers
 
         @app.get("/ssl")
         async def rou_get_ssl():
+            headers = self.headers
             disk = await diskReading()
             aliveMongoResult = await aliveMongo()
-            return { "disk": disk, "mongo": aliveMongoResult }
+            return { "disk": disk, "mongo": aliveMongoResult }, 200, headers
 
         @app.get("/disk")
         async def rou_get_disk():
+            headers = self.headers
             disk = await diskReading()
-            return { "disk": disk }
+            return { "disk": disk }, 200, headers
 
         # post =================================================================================
 
         @app.post("/getBuilders")
         async def rou_post_getBuilders():
+            headers = self.headers
             back = self.back
             collection = self.collection
             selfMongo = self.mongo
@@ -56,7 +61,7 @@ class ConstructRouter:
                 whereQuery = body["whereQuery"]
                 rows = await back.mongoRead(collection, whereQuery, { "selfMongo": selfMongo })
 
-                return rows
+                return rows, 200, headers
             except Exception as e:
                 print(e)
                 await alertLog("Construct lounge 서버 문제 생김 (rou_get_First): " + str(e) + " / " + jsonStringify(body))
