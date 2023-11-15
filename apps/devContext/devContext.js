@@ -155,8 +155,14 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
+    // const targetRoot = "/Users/baechang-gyu/temp/target";
+    // const res = await requestSystem("https://home-liaison.kr:3000/middlePhotoRead", { target: "/d2105_aa01s" }, { headers: { "Content-Type": "application/json" } });
+    // console.log(res.data)
 
     
+
+
+
     
     /*
 

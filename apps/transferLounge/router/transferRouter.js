@@ -21,6 +21,7 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.documents = new ReadDocuments();
 
   this.staticConst = process.env.HOME + "/static";
+  this.sambaToken = "__samba__";
   this.folderConst = this.staticConst + "/photo/designer";
   this.clientConst = this.staticConst + "/photo/client";
   this.aspirantConst = this.staticConst + "/photo/aspirant";
@@ -113,6 +114,51 @@ TransferRouter.prototype.rou_get_First = function () {
 }
 
 //POST ---------------------------------------------------------------------------------------------
+
+TransferRouter.prototype.rou_post_readDir = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink } = this.mother;
+  const { staticConst, sambaToken } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/readDir", "/readFolder" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.path === undefined) {
+        throw new Error("invaild post");
+      }
+      let target;
+      let list;
+
+      target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
+      if (target.trim() === '') {
+        target = sambaToken;
+      }
+      if (!/^__/.test(target)) {
+        target = sambaToken + "/" + target;
+      }
+
+      target = target.replace(new RegExp("^" + sambaToken, "i"), staticConst);
+
+      list = await fileSystem(`readFolder`, [ target ]);
+
+      res.send(JSON.stringify(list));
+    } catch (e) {
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_readDir): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
 
 TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
   const instance = this;
@@ -370,6 +416,7 @@ TransferRouter.prototype.rou_post_representativeFileRead = function () {
           tempList = (await fileSystem(`readDir`, [ designerRepresentativeFolderConst + "/" + desid ])).filter((str) => { return (!/^\._/.test(str) && !/DS_Store/gi.test(str)) });
           resultList.push({
             desid,
+            folder: designerRepresentativeFolderConst,
             boo: (tempList.length > 0),
           })
         }
@@ -2852,7 +2899,7 @@ TransferRouter.prototype.rou_post_designerWorksList = function () {
 
       } else if (mode === "entire" || mode === "list") {
 
-        res.send(JSON.stringify([ result0, result1, result2, result3 ]));
+        res.send(JSON.stringify([ result0, result1, result2, result3, [ staticConst, designerWorksConst, designerWorksConstFactors ] ]));
 
       } else {
         throw new Error("invalid mode");

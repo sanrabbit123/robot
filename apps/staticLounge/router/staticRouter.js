@@ -198,7 +198,7 @@ StaticRouter.prototype.rou_post_listFiles = function () {
       }
 
       list = list.map((i) => {
-        i.absolute = i.absolute.replace(new RegExp("^" + staticConst, "i"), "__samba__");
+        i.absolute = i.absolute.replace(new RegExp("^" + staticConst, "i"), sambaToken);
         return i;
       }).filter((i) => {
         return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
@@ -218,7 +218,7 @@ StaticRouter.prototype.rou_post_listFiles = function () {
 StaticRouter.prototype.rou_post_searchFiles = function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, leafParsing } = this.mother;
-  const { staticConst } = this;
+  const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
   obj.link = [ "/searchFiles" ];
@@ -242,13 +242,13 @@ StaticRouter.prototype.rou_post_searchFiles = function () {
 
       target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
       if (target.trim() === '') {
-        target = "__samba__";
+        target = sambaToken;
       }
       if (!/^__/.test(target)) {
-        target = "__samba__" + "/" + target;
+        target = sambaToken + "/" + target;
       }
 
-      target = target.replace(/__samba__/gi, staticConst);
+      target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
       if (req.body.mode === "entire") {
         list = await leafParsing(target, true, req.body.keyword);
         if (!Array.isArray(list)) {
@@ -267,7 +267,7 @@ StaticRouter.prototype.rou_post_searchFiles = function () {
       }
 
       list = list.map((i) => {
-        i.absolute = i.absolute.replace(new RegExp("^" + staticConst, "i"), "__samba__");
+        i.absolute = i.absolute.replace(new RegExp("^" + staticConst, "i"), sambaToken);
         return i;
       }).filter((i) => {
         return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
@@ -287,10 +287,10 @@ StaticRouter.prototype.rou_post_searchFiles = function () {
 StaticRouter.prototype.rou_post_readDir = function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink } = this.mother;
-  const { staticConst } = this;
+  const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
-  obj.link = [ "/readDir" ];
+  obj.link = [ "/readDir", "/readFolder" ];
   obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
@@ -310,15 +310,15 @@ StaticRouter.prototype.rou_post_readDir = function () {
 
       target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
       if (target.trim() === '') {
-        target = "__samba__";
+        target = sambaToken;
       }
       if (!/^__/.test(target)) {
-        target = "__samba__" + "/" + target;
+        target = sambaToken + "/" + target;
       }
 
-      target = target.replace(/__samba__/gi, staticConst);
+      target = target.replace(new RegExp("^" + sambaToken, "i"), staticConst);
 
-      list = await fileSystem(`readDir`, [ target ]);
+      list = await fileSystem(`readFolder`, [ target ]);
 
       res.send(JSON.stringify(list));
     } catch (e) {
