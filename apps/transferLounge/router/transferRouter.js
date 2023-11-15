@@ -149,9 +149,17 @@ TransferRouter.prototype.rou_post_readDir = function () {
 
       target = target.replace(new RegExp("^" + sambaToken, "i"), staticConst);
 
-      list = await fileSystem(`readFolder`, [ target ]);
+      if (await fileSystem(`exist`, [ target ])) {
+        if (await fileSystem(`isDir`, [ target ])) {
+          list = await fileSystem(`readFolder`, [ target ]);
+          res.send(JSON.stringify(list));
+        } else {
+          res.send(JSON.stringify([]));
+        }
+      } else {
+        res.send(JSON.stringify([]));
+      }
 
-      res.send(JSON.stringify(list));
     } catch (e) {
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_readDir): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -299,7 +307,7 @@ TransferRouter.prototype.rou_post_middlePhotoRead = function () {
         tempString += tempArr[i];
       }
 
-      list = (await fileSystem(`readDir`, [ folderConst + finalTarget ])).filter((str) => { return (!/^\._/.test(str) && !/DS_Store/gi.test(str)) });
+      list = (await fileSystem(`readFolder`, [ folderConst + finalTarget ])).filter((str) => { return (!/^\._/.test(str) && !/DS_Store/gi.test(str)) });
 
       res.send(JSON.stringify(list));
     } catch (e) {

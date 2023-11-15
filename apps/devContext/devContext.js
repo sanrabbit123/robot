@@ -155,11 +155,98 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-    // const targetRoot = "/Users/baechang-gyu/temp/target";
     // const res = await requestSystem("https://home-liaison.kr:3000/middlePhotoRead", { target: "/d2105_aa01s" }, { headers: { "Content-Type": "application/json" } });
     // console.log(res.data)
 
     
+    /*
+
+    const targetRoot = "/Users/baechang-gyu/temp/target";
+    const targetImageRoot = "/Users/baechang-gyu/temp/target2";
+    const selfMongo = this.MONGOC;
+    const toNormal = true;
+    const endPoint = "https://" + address.transinfo.host + ":" + String(3000);
+    const config = { headers: { "Content-Type": "application/json" } };
+    const userName = "ubuntu";
+    const scpPath = "/home/" + userName + "/static/photo/designer";
+    const representativeRootPath = "/photo/designer/representative";
+    const designers = await back.getDesignersByQuery({}, { selfMongo, toNormal });
+    let rootFolderStatus, rootImageFolderStatus;
+    let desid;
+    let targetProjects;
+    let response;
+    let fileTargets;
+    let downloadPath;
+    let result0, result1, result2, result3;
+    let result0Path, result1Path, result2Path, result3Path;
+    let worksInfo;
+    let worksFiles;
+
+    rootFolderStatus = await fileSystem(`readFolder`, [ targetRoot ]);
+    rootImageFolderStatus = await fileSystem(`readFolder`, [ targetImageRoot ]);
+    for (let designer of designers) {
+      if (!rootFolderStatus.includes(designer.desid)) {
+        await shellExec(`mkdir`, [ `${targetRoot}/${designer.desid}` ]);
+      }
+      if (!rootImageFolderStatus.includes(designer.desid)) {
+        await shellExec(`mkdir`, [ `${targetImageRoot}/${designer.desid}` ]);
+      }
+    }
+
+
+    /*
+
+    response = await requestSystem(endPoint + "/designerWorksList", { mode: "entire" }, config);
+    [ result0, result1, result2, result3, worksInfo ] = response.data;
+
+    result0Path = worksInfo[1] + "/" + worksInfo[2][0]
+    result1Path = worksInfo[1] + "/" + worksInfo[2][1]
+    result2Path = worksInfo[1] + "/" + worksInfo[2][2]
+    result3Path = worksInfo[1] + "/" + worksInfo[2][3]
+
+    worksFiles = [];
+    worksFiles = worksFiles.concat(result0.map((obj) => { return { desid: obj.desid, file: result0Path + "/" + obj.file.name } }));
+    worksFiles = worksFiles.concat(result1.map((obj) => { return { desid: obj.desid, file: result1Path + "/" + obj.file.name } }));
+    worksFiles = worksFiles.concat(result2.map((obj) => { return { desid: obj.desid, file: result2Path + "/" + obj.file.name } }));
+    worksFiles = worksFiles.concat(result3.map((obj) => { return { desid: obj.desid, file: result3Path + "/" + obj.file.name } }));
+
+
+    for (let designer of designers) {
+      desid = designer.desid;
+
+      // projects
+      response = await requestSystem(endPoint + "/middlePhotoRead", { target: "/" + desid }, config);
+      targetProjects = response.data.filter((s) => { return /^p/gi.test(s) });
+      for (let proid of targetProjects) {
+        response = await requestSystem(endPoint + "/middlePhotoRead", { target: "/" + desid + "/" + proid }, config);
+        fileTargets = response.data.filter((s) => { return !/^firstPhoto/gi.test(s) }).filter((s) => { return !/^quarterPhoto/gi.test(s) }).filter((s) => { return !/^middlePhoto/gi.test(s) }).filter((s) => { return /jpg$/gi.test(s) || /jpeg$/gi.test(s) || /png$/gi.test(s) || /pdf$/gi.test(s) });
+        for (let fileName of fileTargets) {
+          downloadPath = userName + "@" + address.transinfo.host + ":" + scpPath + "/" + desid + "/" + proid + "/" + fileName;
+          await shellExec("scp", [ downloadPath, targetRoot + "/" + desid + "/" ]);
+          console.log("download", downloadPath);
+          await sleep(500);
+        }
+      }
+      console.log(desid, designer.designer, "sync success");
+      await sleep(500);
+    }
+    */
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

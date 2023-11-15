@@ -573,7 +573,7 @@ BackMaker.prototype.updateMemberObj = async function (option = { selfMongo: null
 
 // GET Client --------------------------------------------------------------------------------
 
-BackMaker.prototype.getClientById = async function (cliid, option = { withTools: false, selfMongo: null, devAlive: false }) {
+BackMaker.prototype.getClientById = async function (cliid, option = { withTools: false, selfMongo: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
@@ -597,6 +597,9 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
 
     if (arr.length > 0) {
       target = new Client(arr[0]);
+      if (option.toNormal === true) {
+        target = target.toNormal();
+      }
     } else {
       target = null;
     }
@@ -607,7 +610,7 @@ BackMaker.prototype.getClientById = async function (cliid, option = { withTools:
   }
 }
 
-BackMaker.prototype.getClientsByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
+BackMaker.prototype.getClientsByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   let MONGOC;
@@ -659,13 +662,17 @@ BackMaker.prototype.getClientsByQuery = async function (query, option = { withTo
       }
     }
 
+    if (option.toNormal === true) {
+      clientsArr = clientsArr.toNormal();
+    }
+
     return clientsArr;
   } catch (e) {
     console.log(e);
   }
 }
 
-BackMaker.prototype.getClientsAll = async function (option = { withTools: false, selfMongo: null, devAlive: false }) {
+BackMaker.prototype.getClientsAll = async function (option = { withTools: false, selfMongo: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
@@ -695,6 +702,10 @@ BackMaker.prototype.getClientsAll = async function (option = { withTools: false,
       for (let i of tong) {
         clientsArr.push(new Client(i));
       }
+    }
+
+    if (option.toNormal === true) {
+      clientsArr = clientsArr.toNormal();
     }
 
     return clientsArr;
@@ -1142,7 +1153,7 @@ BackMaker.prototype.getCaseProidById = async function (id, option = { selfMongo:
 
 // GET Contents --------------------------------------------------------------------------------
 
-BackMaker.prototype.getContentsById = async function (conid, option = { withTools: false, selfMongo: null, devAlive: false }) {
+BackMaker.prototype.getContentsById = async function (conid, option = { withTools: false, selfMongo: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
@@ -1165,6 +1176,9 @@ BackMaker.prototype.getContentsById = async function (conid, option = { withTool
 
     if (arr.length > 0) {
       target = new Contents(arr[0]);
+      if (option.toNormal === true) {
+        target = target.toNormal();
+      }
     } else {
       target = null;
     }
@@ -1175,7 +1189,7 @@ BackMaker.prototype.getContentsById = async function (conid, option = { withTool
   }
 }
 
-BackMaker.prototype.getContentsByPid = async function (pid, option = { withTools: false, selfMongo: null, devAlive: false }) {
+BackMaker.prototype.getContentsByPid = async function (pid, option = { withTools: false, selfMongo: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
@@ -1198,6 +1212,9 @@ BackMaker.prototype.getContentsByPid = async function (pid, option = { withTools
 
     if (arr.length > 0) {
       target = new Contents(arr[0]);
+      if (option.toNormal === true) {
+        target = target.toNormal();
+      }
     } else {
       target = null;
     }
@@ -1208,7 +1225,7 @@ BackMaker.prototype.getContentsByPid = async function (pid, option = { withTools
   }
 }
 
-BackMaker.prototype.getContentsArrByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
+BackMaker.prototype.getContentsArrByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   let MONGOC;
@@ -1259,13 +1276,17 @@ BackMaker.prototype.getContentsArrByQuery = async function (query, option = { wi
       }
     }
 
+    if (option.toNormal === true) {
+      contentsArr = contentsArr.toNormal();
+    }
+
     return contentsArr;
   } catch (e) {
     console.log(e);
   }
 }
 
-BackMaker.prototype.getContentsArrAll = async function (option = { withTools: false, selfMongo: null, devAlive: false }) {
+BackMaker.prototype.getContentsArrAll = async function (option = { withTools: false, selfMongo: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
@@ -1294,6 +1315,10 @@ BackMaker.prototype.getContentsArrAll = async function (option = { withTools: fa
       for (let i of tong) {
         projectsArr.push(new Contents(i));
       }
+    }
+
+    if (option.toNormal === true) {
+      projectsArr = projectsArr.toNormal();
     }
 
     return projectsArr;
@@ -1394,7 +1419,7 @@ BackMaker.prototype.createContents = async function (updateQuery, option = { sel
 
 // GET Service --------------------------------------------------------------------------------
 
-BackMaker.prototype.getServiceById = async function (serid, option = { withTools: false, selfMongo: null, devAlive: false }) {
+BackMaker.prototype.getServiceById = async function (serid, option = { withTools: false, selfMongo: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
@@ -1417,6 +1442,9 @@ BackMaker.prototype.getServiceById = async function (serid, option = { withTools
 
     if (arr.length > 0) {
       target = new Service(arr[0]);
+      if (option.toNormal === true) {
+        target = target.toNormal();
+      }
     } else {
       target = null;
     }
@@ -1427,7 +1455,7 @@ BackMaker.prototype.getServiceById = async function (serid, option = { withTools
   }
 }
 
-BackMaker.prototype.getServiceByKey = async function (key, option = { withTools: false, selfMongo: null, devAlive: false }) {
+BackMaker.prototype.getServiceByKey = async function (key, option = { withTools: false, selfMongo: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
@@ -1450,6 +1478,9 @@ BackMaker.prototype.getServiceByKey = async function (key, option = { withTools:
 
     if (arr.length > 0) {
       target = new Service(arr[0]);
+      if (option.toNormal === true) {
+        target = target.toNormal();
+      }
     } else {
       target = null;
     }
@@ -1460,7 +1491,7 @@ BackMaker.prototype.getServiceByKey = async function (key, option = { withTools:
   }
 }
 
-BackMaker.prototype.getServicesByKind = async function (kind, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
+BackMaker.prototype.getServicesByKind = async function (kind, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   let MONGOC;
@@ -1525,13 +1556,17 @@ BackMaker.prototype.getServicesByKind = async function (kind, option = { withToo
       }
     }
 
+    if (option.toNormal === true) {
+      servicesArr = servicesArr.toNormal();
+    }
+
     return servicesArr;
   } catch (e) {
     console.log(e);
   }
 }
 
-BackMaker.prototype.getServicesByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
+BackMaker.prototype.getServicesByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   let MONGOC;
@@ -1580,6 +1615,10 @@ BackMaker.prototype.getServicesByQuery = async function (query, option = { withT
       for (let i of tong) {
         servicesArr.push(new Service(i));
       }
+    }
+
+    if (option.toNormal === true) {
+      servicesArr = servicesArr.toNormal();
     }
 
     return servicesArr;
@@ -1715,7 +1754,7 @@ BackMaker.prototype.deleteService = async function (serid, option = { selfMongo:
 
 // GET Designer --------------------------------------------------------------------------------
 
-BackMaker.prototype.getDesignerById = async function (desid, option = { withTools: false, selfMongo: null, devAlive: false }) {
+BackMaker.prototype.getDesignerById = async function (desid, option = { withTools: false, selfMongo: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
@@ -1738,6 +1777,9 @@ BackMaker.prototype.getDesignerById = async function (desid, option = { withTool
 
     if (arr.length > 0) {
       target = new Designer(arr[0]);
+      if (option.toNormal === true) {
+        target = target.toNormal();
+      }
     } else {
       target = null;
     }
@@ -1748,7 +1790,7 @@ BackMaker.prototype.getDesignerById = async function (desid, option = { withTool
   }
 }
 
-BackMaker.prototype.getDesignersByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
+BackMaker.prototype.getDesignersByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   let MONGOC;
@@ -1799,13 +1841,17 @@ BackMaker.prototype.getDesignersByQuery = async function (query, option = { with
       }
     }
 
+    if (option.toNormal === true) {
+      designersArr = designersArr.toNormal();
+    }
+
     return designersArr;
   } catch (e) {
     console.log(e);
   }
 }
 
-BackMaker.prototype.getDesignersAll = async function (option = { withTools: false, selfMongo: null, devAlive: false }) {
+BackMaker.prototype.getDesignersAll = async function (option = { withTools: false, selfMongo: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
@@ -1834,6 +1880,10 @@ BackMaker.prototype.getDesignersAll = async function (option = { withTools: fals
       for (let i of tong) {
         designersArr.push(new Designer(i));
       }
+    }
+
+    if (option.toNormal === true) {
+      designersArr = designersArr.toNormal();
     }
 
     return designersArr;
@@ -2001,7 +2051,7 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
 
 // GET Project --------------------------------------------------------------------------------
 
-BackMaker.prototype.getProjectById = async function (proid, option = { withTools: false, selfMongo: null, devAlive: false }) {
+BackMaker.prototype.getProjectById = async function (proid, option = { withTools: false, selfMongo: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
@@ -2024,6 +2074,9 @@ BackMaker.prototype.getProjectById = async function (proid, option = { withTools
 
     if (arr.length > 0) {
       target = new Project(arr[0]);
+      if (option.toNormal === true) {
+        target = target.toNormal();
+      }
     } else {
       target = null;
     }
@@ -2034,7 +2087,7 @@ BackMaker.prototype.getProjectById = async function (proid, option = { withTools
   }
 }
 
-BackMaker.prototype.getProjectsByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
+BackMaker.prototype.getProjectsByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   let MONGOC;
@@ -2085,13 +2138,17 @@ BackMaker.prototype.getProjectsByQuery = async function (query, option = { withT
       }
     }
 
+    if (option.toNormal === true) {
+      projectsArr = projectsArr.toNormal();
+    }
+
     return projectsArr;
   } catch (e) {
     console.log(e);
   }
 }
 
-BackMaker.prototype.getProjectsAll = async function (option = { withTools: false, selfMongo: null, devAlive: false }) {
+BackMaker.prototype.getProjectsAll = async function (option = { withTools: false, selfMongo: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
@@ -2122,13 +2179,17 @@ BackMaker.prototype.getProjectsAll = async function (option = { withTools: false
       }
     }
 
+    if (option.toNormal === true) {
+      projectsArr = projectsArr.toNormal();
+    }
+
     return projectsArr;
   } catch (e) {
     console.log(e);
   }
 }
 
-BackMaker.prototype.getProjectsByCliidArr = function (cliidArr, option = { withTools: false, selfMongo: null, recycle: null, devAlive: false }) {
+BackMaker.prototype.getProjectsByCliidArr = function (cliidArr, option = { withTools: false, selfMongo: null, recycle: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const button = "project";
   let { Project, Projects, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
@@ -2139,7 +2200,7 @@ BackMaker.prototype.getProjectsByCliidArr = function (cliidArr, option = { withT
     if (option.withTools === true) {
       Projects = Tools.withToolsArr(Projects);
     }
-    let result = new Projects();
+    let result = (option.toNormal === true) ? [] : new Projects();
     for (let p of projects) {
       if (cliidArr.includes(p.cliid)) {
         result.push(p);
@@ -2151,11 +2212,11 @@ BackMaker.prototype.getProjectsByCliidArr = function (cliidArr, option = { withT
     const { mongo, mongoinfo } = this.mother;
     const MONGOC = new mongo(mongoinfo);
     return new Promise(function (resolve, reject) {
-      instance.getProjectsByQuery({}, option).then(function (projects) {
+      instance.getProjectsByQuery({}, option).then((projects) => {
         if (option.withTools === true) {
           Projects = Tools.withToolsArr(Projects);
         }
-        let result = new Projects();
+        let result = (option.toNormal === true) ? [] : new Projects();
         for (let p of projects) {
           if (cliidArr.includes(p.cliid)) {
             result.push(p);
@@ -2170,7 +2231,7 @@ BackMaker.prototype.getProjectsByCliidArr = function (cliidArr, option = { withT
 
 }
 
-BackMaker.prototype.getProjectsByNames = async function (nameArr, option = { withTools: false, selfMongo: null, devAlive: false }) {
+BackMaker.prototype.getProjectsByNames = async function (nameArr, option = { withTools: false, selfMongo: null, devAlive: false, toNormal: false }) {
   const instance = this;
   let confirmMode = false;
   try {
@@ -2346,7 +2407,7 @@ BackMaker.prototype.createProject = async function (updateQuery, option = { self
 
 // GET Aspirant -------------------------------------------------------------------------------
 
-BackMaker.prototype.getAspirantById = async function (aspid, option = { withTools: false, selfMongo: null, portfolioReset: null, devAlive: false }) {
+BackMaker.prototype.getAspirantById = async function (aspid, option = { withTools: false, selfMongo: null, portfolioReset: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
@@ -2369,6 +2430,9 @@ BackMaker.prototype.getAspirantById = async function (aspid, option = { withTool
 
     if (arr.length > 0) {
       target = new Aspirant(arr[0]);
+      if (option.toNormal === true) {
+        target = target.toNormal();
+      }
     } else {
       target = null;
     }
@@ -2379,7 +2443,7 @@ BackMaker.prototype.getAspirantById = async function (aspid, option = { withTool
   }
 }
 
-BackMaker.prototype.getAspirantsByQuery = async function (query, option = { withTools: false, selfMongo: null, portfolioReset: null, fromLocal: null, devAlive: false }) {
+BackMaker.prototype.getAspirantsByQuery = async function (query, option = { withTools: false, selfMongo: null, portfolioReset: null, fromLocal: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   let MONGOC;
@@ -2458,6 +2522,10 @@ BackMaker.prototype.getAspirantsByQuery = async function (query, option = { with
       for (let i of tong) {
         aspirantsArr.push(new Aspirant(i));
       }
+    }
+
+    if (option.toNormal === true) {
+      aspirantsArr = aspirantsArr.toNormal();
     }
 
     return aspirantsArr;
@@ -2595,7 +2663,7 @@ BackMaker.prototype.unshiftAspirantPortfolioConfirm = async function (whereQuery
 
 // GET builder --------------------------------------------------------------------------------
 
-BackMaker.prototype.getBuilderById = async function (buiid, option = { withTools: false, selfMongo: null, portfolioReset: null, devAlive: false }) {
+BackMaker.prototype.getBuilderById = async function (buiid, option = { withTools: false, selfMongo: null, portfolioReset: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
@@ -2618,6 +2686,9 @@ BackMaker.prototype.getBuilderById = async function (buiid, option = { withTools
 
     if (arr.length > 0) {
       target = new Builder(arr[0]);
+      if (option.toNormal === true) {
+        target = target.toNormal();
+      }
     } else {
       target = null;
     }
@@ -2628,7 +2699,7 @@ BackMaker.prototype.getBuilderById = async function (buiid, option = { withTools
   }
 }
 
-BackMaker.prototype.getBuildersByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
+BackMaker.prototype.getBuildersByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   let MONGOC;
@@ -2677,6 +2748,10 @@ BackMaker.prototype.getBuildersByQuery = async function (query, option = { withT
       for (let i of tong) {
         buildersArr.push(new Builder(i));
       }
+    }
+
+    if (option.toNormal === true) {
+      buildersArr = buildersArr.toNormal();
     }
 
     return buildersArr;
@@ -2779,7 +2854,7 @@ BackMaker.prototype.createBuilder = async function (updateQuery, option = { self
 
 // GET user --------------------------------------------------------------------------------
 
-BackMaker.prototype.getUserById = async function (useid, option = { withTools: false, selfMongo: null, portfolioReset: null, devAlive: false }) {
+BackMaker.prototype.getUserById = async function (useid, option = { withTools: false, selfMongo: null, portfolioReset: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo);
@@ -2802,6 +2877,9 @@ BackMaker.prototype.getUserById = async function (useid, option = { withTools: f
 
     if (arr.length > 0) {
       target = new User(arr[0]);
+      if (option.toNormal === true) {
+        target = target.toNormal();
+      }
     } else {
       target = null;
     }
@@ -2812,7 +2890,7 @@ BackMaker.prototype.getUserById = async function (useid, option = { withTools: f
   }
 }
 
-BackMaker.prototype.getUsersByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
+BackMaker.prototype.getUsersByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false, toNormal: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;
   let MONGOC;
@@ -2861,6 +2939,10 @@ BackMaker.prototype.getUsersByQuery = async function (query, option = { withTool
       for (let i of tong) {
         usersArr.push(new User(i));
       }
+    }
+
+    if (option.toNormal === true) {
+      usersArr = usersArr.toNormal();
     }
 
     return usersArr;
