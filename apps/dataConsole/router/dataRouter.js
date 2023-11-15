@@ -3601,7 +3601,11 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       movein = movein.value.trim();
       living = living.value.trim();
       etc = etc.value.trim();
-      call = call.value.trim();
+      if (call !== undefined && call !== null) {
+        call = call.value.trim();
+      } else {
+        call = "";
+      }
 
       budget = budget.value.trim();
       furniture = furniture.value.trim();

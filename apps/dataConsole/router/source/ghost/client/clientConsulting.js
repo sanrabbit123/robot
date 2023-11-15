@@ -3374,14 +3374,14 @@ ClientConsultingJs.prototype.finalSubmit = function () {
 
               figureDoms = [ ...firstDom.querySelectorAll("figure") ];
               if (figureDoms.every((dom) => { return dom.getAttribute("toggle") === "off" })) {
-                throw new Error("상담이 가능한 시간대를 모두 선택해주세요!");
+                tempObj.value = "선택 안 함";
+              } else {
+                figureValue = figureDoms.filter((dom) => { return dom.getAttribute("toggle") === "on" }).map((dom) => { return dom.getAttribute("value") }).join(", ");
+                if (firstDom.querySelector("input").value !== "") {
+                  figureValue = figureValue + ", " + firstDom.querySelector("input").value
+                }
+                tempObj.value = figureValue;
               }
-
-              figureValue = figureDoms.filter((dom) => { return dom.getAttribute("toggle") === "on" }).map((dom) => { return dom.getAttribute("value") }).join(", ");
-              if (firstDom.querySelector("input").value !== "") {
-                figureValue = figureValue + ", " + firstDom.querySelector("input").value
-              }
-              tempObj.value = figureValue;
 
             } catch (e) {
               window.alert(e.message);
