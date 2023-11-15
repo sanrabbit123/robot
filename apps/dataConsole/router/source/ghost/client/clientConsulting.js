@@ -2801,7 +2801,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                         value: "9:30 ~ 11:00",
                       },
                       event: {
-                        click: timeFactorClickEvent,
+                        touch: timeFactorClickEvent,
                       },
                       style: {
                         display: "inline-flex",
@@ -2813,7 +2813,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                         background: colorChip.gray1,
                         borderRight: "1px solid " + colorChip.gray3,
                         boxSizing: "border-box",
-                        transition: "all 0.2s ease",
+                        transition: desktop ? "all 0.2s ease" : "all 0s ease",
                       },
                       child: {
                         text: "9:30 ~ 11:00",
@@ -2823,7 +2823,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                           fontWeight: String(timeFactorWeight),
                           color: colorChip.deactive,
                           top: String(timeFactorTextTop) + ea,
-                          transition: "all 0.2s ease",
+                          transition: desktop ? "all 0.2s ease" : "all 0s ease",
                         }
                       }
                     },
@@ -2834,7 +2834,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                         value: "11:00 ~ 12:30",
                       },
                       event: {
-                        click: timeFactorClickEvent,
+                        touch: timeFactorClickEvent,
                       },
                       style: {
                         display: "inline-flex",
@@ -2846,7 +2846,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                         background: colorChip.gray1,
                         borderRight: "1px solid " + colorChip.gray3,
                         boxSizing: "border-box",
-                        transition: "all 0.2s ease",
+                        transition: desktop ? "all 0.2s ease" : "all 0s ease",
                       },
                       child: {
                         text: "11:00 ~ 12:30",
@@ -2856,7 +2856,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                           fontWeight: String(timeFactorWeight),
                           color: colorChip.deactive,
                           top: String(timeFactorTextTop) + ea,
-                          transition: "all 0.2s ease",
+                          transition: desktop ? "all 0.2s ease" : "all 0s ease",
                         }
                       }
                     },
@@ -2867,7 +2867,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                         value: "13:30 ~ 16:30",
                       },
                       event: {
-                        click: timeFactorClickEvent,
+                        touch: timeFactorClickEvent,
                       },
                       style: {
                         display: "inline-flex",
@@ -2879,7 +2879,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                         background: colorChip.gray1,
                         borderRight: "1px solid " + colorChip.gray3,
                         boxSizing: "border-box",
-                        transition: "all 0.2s ease",
+                        transition: desktop ? "all 0.2s ease" : "all 0s ease",
                       },
                       child: {
                         text: "13:30 ~ 16:30",
@@ -2889,7 +2889,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                           fontWeight: String(timeFactorWeight),
                           color: colorChip.deactive,
                           top: String(timeFactorTextTop) + ea,
-                          transition: "all 0.2s ease",
+                          transition: desktop ? "all 0.2s ease" : "all 0s ease",
                         }
                       }
                     },
@@ -2900,7 +2900,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                         value: "16:30 ~ 18:30",
                       },
                       event: {
-                        click: timeFactorClickEvent,
+                        touch: timeFactorClickEvent,
                       },
                       style: {
                         display: "inline-flex",
@@ -2910,7 +2910,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                         justifyContent: "center",
                         alignItems: "center",
                         background: colorChip.gray1,
-                        transition: "all 0.2s ease",
+                        transition: desktop ? "all 0.2s ease" : "all 0s ease",
                       },
                       child: {
                         text: "16:30 ~ 18:30",
@@ -2920,7 +2920,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                           fontWeight: String(timeFactorWeight),
                           color: colorChip.deactive,
                           top: String(timeFactorTextTop) + ea,
-                          transition: "all 0.2s ease",
+                          transition: desktop ? "all 0.2s ease" : "all 0s ease",
                         }
                       }
                     },

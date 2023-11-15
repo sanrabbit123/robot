@@ -1201,7 +1201,6 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
                 if (typeof obj.event === "function") {
                   if (str === "touch") {
                     if (/iPhone/gi.test(window.navigator.userAgent)) {
-                      dom_clone.addEventListener("click", obj.event);
                       dom_clone.addEventListener("touchstart", obj.event);
                     } else {
                       dom_clone.addEventListener("click", obj.event);
@@ -1218,7 +1217,6 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
               if (typeof obj.event === "function") {
                 if (obj.type === "touch") {
                   if (/iPhone/gi.test(window.navigator.userAgent)) {
-                    dom_clone.addEventListener("click", obj.event);
                     dom_clone.addEventListener("touchstart", obj.event);
                   } else {
                     dom_clone.addEventListener("click", obj.event);
@@ -1239,7 +1237,6 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
             if (typeof style.events[type] === "function") {
               if (type === "touch") {
                 if (/iPhone/gi.test(window.navigator.userAgent)) {
-                  dom_clone.addEventListener("click", style.events[type]);
                   dom_clone.addEventListener("touchstart", style.events[type]);
                 } else {
                   dom_clone.addEventListener("click", style.events[type]);
@@ -1419,7 +1416,6 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
                 if (typeof obj.event === "function") {
                   if (str === "touch") {
                     if (/iPhone/gi.test(window.navigator.userAgent)) {
-                      dom_clone.addEventListener("click", obj.event);
                       dom_clone.addEventListener("touchstart", obj.event);
                     } else {
                       dom_clone.addEventListener("click", obj.event);
@@ -1433,7 +1429,6 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
               if (typeof obj.event === "function") {
                 if (obj.type === "touch") {
                   if (/iPhone/gi.test(window.navigator.userAgent)) {
-                    dom_clone.addEventListener("click", obj.event);
                     dom_clone.addEventListener("touchstart", obj.event);
                   } else {
                     dom_clone.addEventListener("click", obj.event);
@@ -1451,7 +1446,6 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
             if (typeof style.events[type] === "function") {
               if (type === "touch") {
                 if (/iPhone/gi.test(window.navigator.userAgent)) {
-                  dom_clone.addEventListener("click", style.events[type]);
                   dom_clone.addEventListener("touchstart", style.events[type]);
                 } else {
                   dom_clone.addEventListener("click", style.events[type]);
