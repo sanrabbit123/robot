@@ -6312,6 +6312,10 @@ StyleCurationJs.prototype.launching = async function (loading) {
     if (this.clientHistory.curation.style.length > 0 && this.clientHistory.curation.image.length > 0) {
       this.values.style[0].value = this.clientHistory.curation.style;
       this.alreadyStyleCheck = true;
+      if (getObj.cliid === "c1801_aa01s") {
+        this.values.style[0].value = null;
+        this.alreadyStyleCheck = false;
+      }
     } else {
       this.values.style[0].value = null;
       this.alreadyStyleCheck = false;
