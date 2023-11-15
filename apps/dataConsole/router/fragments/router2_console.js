@@ -2717,6 +2717,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       let budget;
       let furniture;
       let contract;
+      let call;
 
       name = map.find((obj) => { return obj.property === "name" });
       phone = map.find((obj) => { return obj.property === "phone" });
@@ -2727,6 +2728,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       movein = map.find((obj) => { return obj.property === "movein" });
       living = map.find((obj) => { return obj.property === "living" });
       etc = map.find((obj) => { return obj.property === "etc" });
+      call = map.find((obj) => { return obj.property === "call" });
 
       sessionId = map.find((obj) => { return obj.property === "sessionId" });
 
@@ -2763,6 +2765,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       movein = movein.value.trim();
       living = living.value.trim();
       etc = etc.value.trim();
+      call = call.value.trim();
 
       budget = budget.value.trim();
       furniture = furniture.value.trim();
@@ -2847,7 +2850,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       } else {
 
         cliid = await back.createClient(requestObject, { selfMongo });
-        await back.createHistory("client", { cliid, space: "최초 고객이 적은 주소 : " + requestObject["requests.0.request.space.address"] }, { selfMongo: instance.mongolocal });
+        await back.createHistory("client", { cliid, history: "상담 가능 시간대\n" + call, space: "최초 고객이 적은 주소 : " + requestObject["requests.0.request.space.address"] }, { selfMongo: instance.mongolocal });
         message += "새로운 상담 문의가 왔습니다!\n";
 
       }

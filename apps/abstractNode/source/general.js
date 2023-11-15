@@ -846,13 +846,14 @@ GeneralJs.nodes = {
   textarea: document.createElement("TEXTAREA"),
   a: document.createElement('A'),
   b: document.createElement('B'),
-  label: document.createElement('LABEL'),
-  iframe: document.createElement('IFRAME'),
-  aside: document.createElement('ASIDE'),
-  article: document.createElement('ARTICLE'),
-  video: document.createElement('VIDEO'),
-  source: document.createElement('SOURCE'),
+  label: document.createElement("LABEL"),
+  iframe: document.createElement("IFRAME"),
+  aside: document.createElement("ASIDE"),
+  article: document.createElement("ARTICLE"),
+  video: document.createElement("VIDEO"),
+  source: document.createElement("SOURCE"),
   canvas: document.createElement("CANVAS"),
+  figure: document.createElement("FIGURE"),
 }
 
 GeneralJs.scrollTo = function (from, valueOrTo, visualSpecific = 0, noSmoothMode = false) {
