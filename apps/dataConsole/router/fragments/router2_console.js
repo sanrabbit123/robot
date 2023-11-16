@@ -2694,7 +2694,6 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       const defaultPyeong = 34;
       const moveinConst0 = 60;
       const moveinConst1 = 10;
-
       let ifOverlap;
       let requestObject;
       let name;

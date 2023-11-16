@@ -2217,7 +2217,7 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
 
     await this.mother.ghostClientLaunching({
       mode: "front",
-      name: "clientConsulting",
+      name: "aspirantExplanation",
       client: null,
       base: {
         instance: this,
