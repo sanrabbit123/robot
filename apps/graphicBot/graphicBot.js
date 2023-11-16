@@ -27,16 +27,14 @@ const GraphicBot = function () {
   this.back = new BackMaker();
   this.chromeGhost = new GoogleChrome();
 
+  this.bot = require("robotjs");
   if (/Linux/gi.test(thisOs)) {
-    this.bot = require(`${process.cwd()}/apps/graphicBot/os/linux/build/Release/robotjs.node`);
     this.os = "linux";
     this.staticHomeFolder = "/";
   } else if (/Darwin/gi.test(thisOs)) {
-    this.bot = require(`${process.cwd()}/apps/graphicBot/os/mac/build/Release/robotjs.node`);
     this.os = "mac";
     this.staticHomeFolder = "/Users/graphic/Sites";
   } else if (/Windows/gi.test(thisOs)) {
-    this.bot = require(`${process.cwd()}/apps/graphicBot/os/windows/build/Release/robotjs.node`);
     this.os = "windows";
     this.staticHomeFolder = "/";
   } else {
@@ -301,7 +299,7 @@ GraphicBot.prototype.chromeOpen = async function (url) {
         exec(`google-chrome ${url} --start-maximized`);
         setTimeout(function () {
           resolve(stdout);
-        }, 10000);
+        }, 5000);
       });
     });
 
@@ -315,7 +313,7 @@ GraphicBot.prototype.chromeOpen = async function (url) {
         execFile(normalize(chrome), [ "--start-maximized", url ], function (error, stdout, stderr) {
           setTimeout(function () {
             resolve(stdout);
-          }, 3000);
+          }, 5000);
         });
       });
     });
@@ -326,7 +324,7 @@ GraphicBot.prototype.chromeOpen = async function (url) {
         exec(`/Applications/'Google Chrome.app'/Contents/MacOS/'Google Chrome' --start-maximized ${url}`);
         setTimeout(function () {
           resolve(stdout);
-        }, 30000);
+        }, 5000);
       });
     });
 
@@ -1482,6 +1480,7 @@ GraphicBot.prototype.getChromeSize = async function () {
 GraphicBot.prototype.botServer = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
+  const http = require("http");
   const https = require("https");
   const express = require("express");
   const multer = require("multer");
@@ -1489,6 +1488,7 @@ GraphicBot.prototype.botServer = async function () {
   const useragent = require("express-useragent");
   const FrontMethods = require(this.dir + "/router/frontMethods.js");
   const app = express();
+  const port = 53000;
 
   app.use(useragent.express());
   app.use(express.json({ limit: "50mb" }));
@@ -1516,22 +1516,12 @@ GraphicBot.prototype.botServer = async function () {
     pems = {};
     if (isGhost) {
       pemsLink = process.cwd() + "/pems/" + address.host;
-      if (Array.isArray(address.second.port)) {
-        this.port = address.second.port[1];
-        this.localhost = "https://" + address.host + ":" + String(address.second.port[0]);
-      } else {
-        this.port = address.second.port;
-        this.localhost = "https://" + address.host + ":" + String(address.second.port);
-      }
+      this.port = port;
+      this.localhost = "https://" + address.host + ":" + String(port);
     } else {
       pemsLink = process.cwd() + "/pems/" + address.ghost.host;
-      if (Array.isArray(address.ghost.second.port)) {
-        this.port = address.ghost.second.port[1];
-        this.localhost = "https://" + address.ghost.host + ":" + String(address.ghost.second.port[0]);
-      } else {
-        this.port = address.ghost.second.port;
-        this.localhost = "https://" + address.ghost.host + ":" + String(address.ghost.second.port);
-      }
+      this.port = port;
+      this.localhost = "https://" + address.ghost.host + ":" + String(port);
     }
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
@@ -1576,7 +1566,12 @@ GraphicBot.prototype.botServer = async function () {
 
     await this.getChromeSize();
 
-    https.createServer(pems, app).listen(this.port, () => {
+    // https.createServer(pems, app).listen(this.port, () => {
+    //   console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(this.port)}`);
+    // });
+
+    this.localhost = "http://" + "localhost" + ":" + String(port);
+    http.createServer(app).listen(this.port, () => {
       console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(this.port)}`);
     });
 

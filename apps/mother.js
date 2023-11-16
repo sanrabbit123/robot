@@ -1052,6 +1052,7 @@ Mother.prototype.ipCheck = function () {
           if (outer === ip) {
             target = keys[number].replace(/info$/, '');
             targetNum = number;
+            break;
           }
           number++;
         }
