@@ -3602,7 +3602,15 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       living = living.value.trim();
       etc = etc.value.trim();
       if (call !== undefined && call !== null) {
-        call = call.value.trim();
+        if (typeof call === "object") {
+          if (typeof call.value === "string") {
+            call = call.value.trim();
+          } else {
+            call = "";
+          }
+        } else {
+          call = "";
+        }
       } else {
         call = "";
       }

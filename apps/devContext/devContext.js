@@ -159,8 +159,8 @@ DevContext.prototype.launching = async function () {
     // console.log(res.data)
 
     
-    /*
 
+    
     const targetRoot = "/Users/baechang-gyu/temp/target";
     const targetImageRoot = "/Users/baechang-gyu/temp/target2";
     const selfMongo = this.MONGOC;
