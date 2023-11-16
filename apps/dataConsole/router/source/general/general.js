@@ -5583,16 +5583,6 @@ GeneralJs.prototype.consultingPopup = function () {
     let descriptionMarginTop;
     let descriptionBoldWeight;
     let textAreaBlockHeight;
-    let timeFactorWidth;
-    let timeFactorSize;
-    let timeFactorWeight;
-    let timeFactorBetween;
-    let timeFactorTextTop;
-    let timeTongMarginTop;
-    let timeTongHeight;
-    let timeFactorClickEvent;
-    let timeFactorInputSize;
-    let barFactorTongVisualTop;
 
     whiteWidth = <%% 990, 980, 710, 660, 88 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
@@ -5746,29 +5736,6 @@ GeneralJs.prototype.consultingPopup = function () {
     defaultRatio = 0.5;
 
     textAreaBlockHeight = <%% 156, 136, 133, 130, 44.2 %%>;
-
-    barFactorTongVisualTop = <%% 0, 1, 0, 0, 0 %%>;
-
-    timeFactorWidth = <%% 110, 91, 91, 113.5, 11 %%>;
-    timeFactorSize = <%% 13, 12, 12, 12, 2.6 %%>;
-    timeFactorWeight = <%% 400, 400, 400, 400, 600 %%>;
-    timeFactorBetween = <%% 7, 6, 5, 4, 1 %%>;
-    timeFactorTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.1 %%>;
-    timeTongMarginTop = <%% 18, 16, 16, 14, 3.9 %%>;
-    timeFactorInputSize = <%% 14, 12, 12, 12, 3 %%>;
-  
-    timeFactorClickEvent = function (e) {
-      const toggle = this.getAttribute("toggle");
-      if (toggle === "off") {
-        this.style.background = colorChip.softGreen;
-        this.firstChild.style.color = colorChip.white;
-        this.setAttribute("toggle", "on");
-      } else {
-        this.style.background = colorChip.gray1;
-        this.firstChild.style.color = colorChip.deactive;
-        this.setAttribute("toggle", "off");
-      }
-    }
 
     budgetValues = [
       { title: (desktop ? "1,000만원 이하" : "1천만원 이하"), value: "1,000만원", },
@@ -7788,305 +7755,6 @@ GeneralJs.prototype.consultingPopup = function () {
       }
     });
 
-    // 14
-    createNode({
-      mother: formBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(moduleHeight * (small ? 4 : 3)) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleRadius * 2) + ea,
-            height: String(circleRadius * 2) + ea,
-            marginRight: String(circleBetween) + ea,
-            borderRadius: String(circleRadius) + ea,
-            background: colorChip.green,
-            top: String(circleTop) + ea,
-            verticalAlign: "top",
-          }
-        },
-        {
-          text: "상담 시간",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(mainTop) + ea,
-            fontSize: String(mainSize) + ea,
-            fontWeight: String(mainWeight),
-            color: colorChip.black,
-            verticalAlign: "top",
-          }
-        },
-        {
-          style: {
-            display: "inline-flex",
-            position: "absolute",
-            top: String(barFactorTongVisualTop) + ea,
-            left: String(leftGrayType2) + ea,
-            width: withOut(leftGrayType2, ea),
-            height: "auto",
-            flexDirection: "column",
-            justifyContent: "start",
-            alignItems: "start",
-          },
-          children: [
-            {
-              text: [
-                "상담이 가능한 <b%시간대를 모두 선택해 주세요!%b>",
-                desktop ? "<u%* 상담 시간 : 9:30 ~ 18:30 / 점심 시간 : 12:30 ~ 13:30%u>" : "<u%* 영업 : 9:30 ~ 18:30 / 점심 시간 : 12:30 ~ 13:30%u>",
-              ].join("\n"),
-              style: {
-                display: "block",
-                position: "relative",
-                fontSize: String(descriptionSize) + ea,
-                fontWeight: String(descriptionWeight),
-                lineHeight: String(barDescriptionLingHeight),
-                color: colorChip.black,
-                top: String(barDescriptionTextTop) + ea,
-              },
-              bold: {
-                fontSize: String(descriptionSize) + ea,
-                fontWeight: String(descriptionBoldWeight),
-                color: colorChip.black
-              },
-              under: {
-                fontSize: String(barDescriptionSubSize) + ea,
-                fontWeight: String(descriptionWeight),
-                color: colorChip.green
-              },
-            },
-            {
-              mode: "article",
-              class: [ inputClassName ],
-              attribute: {
-                property: "call",
-              },
-              style: {
-                display: "block",
-                position: "relative",
-                height: String(big ? grayHeight : (grayHeight * 2) + timeFactorBetween) + ea,
-                cursor: "pointer",
-                width: desktop ? withOut(0, ea) : withOut(-1 * leftGrayType2, ea),
-                marginTop: String(timeTongMarginTop) + ea,
-                left: mobile ? String(-1 * leftGrayType2) + ea : "",
-              },
-              child: {
-                style: {
-                  display: "flex",
-                  position: "relative",
-                  flexDirection: big ? "row" : "column",
-                  width: withOut(0, ea),
-                  height: withOut(0, ea),
-                  justifyContent: "start",
-                  alignItems: "start",
-                },
-                children: [
-                  {
-                    style: {
-                      display: big ? "inline-flex" : "flex",
-                      position: "relative",
-                      width: desktop ? String(timeFactorWidth * 4) + ea : withOut(0, ea),
-                      height: big ? withOut(0, ea) : String(grayHeight) + ea,
-                      borderRadius: String(5) + "px",
-                      flexDirection: "row",
-                      overflow: "hidden",
-                    },
-                    children: [
-                      {
-                        mode: "figure",
-                        attribute: {
-                          toggle: "off",
-                          value: "9:30 ~ 11:00",
-                        },
-                        event: {
-                          touch: timeFactorClickEvent,
-                        },
-                        style: {
-                          display: "inline-flex",
-                          position: "relative",
-                          width: desktop ? String(timeFactorWidth) + ea : "calc(100% / 4)",
-                          height: withOut(0, ea),
-                          justifyContent: "center",
-                          alignItems: "center",
-                          background: colorChip.gray1,
-                          borderRight: "1px solid " + colorChip.gray3,
-                          boxSizing: "border-box",
-                          transition: desktop ? "all 0.2s ease" : "all 0s ease",
-                        },
-                        child: {
-                          text: "9:30 ~ 11:00",
-                          style: {
-                            position: "relative",
-                            fontSize: String(timeFactorSize) + ea,
-                            fontWeight: String(timeFactorWeight),
-                            color: colorChip.deactive,
-                            top: String(timeFactorTextTop) + ea,
-                            transition: desktop ? "all 0.2s ease" : "all 0s ease",
-                          }
-                        }
-                      },
-                      {
-                        mode: "figure",
-                        attribute: {
-                          toggle: "off",
-                          value: "11:00 ~ 12:30",
-                        },
-                        event: {
-                          touch: timeFactorClickEvent,
-                        },
-                        style: {
-                          display: "inline-flex",
-                          position: "relative",
-                          width: desktop ? String(timeFactorWidth) + ea : "calc(100% / 4)",
-                          height: withOut(0, ea),
-                          justifyContent: "center",
-                          alignItems: "center",
-                          background: colorChip.gray1,
-                          borderRight: "1px solid " + colorChip.gray3,
-                          boxSizing: "border-box",
-                          transition: desktop ? "all 0.2s ease" : "all 0s ease",
-                        },
-                        child: {
-                          text: "11:00 ~ 12:30",
-                          style: {
-                            position: "relative",
-                            fontSize: String(timeFactorSize) + ea,
-                            fontWeight: String(timeFactorWeight),
-                            color: colorChip.deactive,
-                            top: String(timeFactorTextTop) + ea,
-                            transition: desktop ? "all 0.2s ease" : "all 0s ease",
-                          }
-                        }
-                      },
-                      {
-                        mode: "figure",
-                        attribute: {
-                          toggle: "off",
-                          value: "13:30 ~ 16:30",
-                        },
-                        event: {
-                          touch: timeFactorClickEvent,
-                        },
-                        style: {
-                          display: "inline-flex",
-                          position: "relative",
-                          width: desktop ? String(timeFactorWidth) + ea : "calc(100% / 4)",
-                          height: withOut(0, ea),
-                          justifyContent: "center",
-                          alignItems: "center",
-                          background: colorChip.gray1,
-                          borderRight: "1px solid " + colorChip.gray3,
-                          boxSizing: "border-box",
-                          transition: desktop ? "all 0.2s ease" : "all 0s ease",
-                        },
-                        child: {
-                          text: "13:30 ~ 16:30",
-                          style: {
-                            position: "relative",
-                            fontSize: String(timeFactorSize) + ea,
-                            fontWeight: String(timeFactorWeight),
-                            color: colorChip.deactive,
-                            top: String(timeFactorTextTop) + ea,
-                            transition: desktop ? "all 0.2s ease" : "all 0s ease",
-                          }
-                        }
-                      },
-                      {
-                        mode: "figure",
-                        attribute: {
-                          toggle: "off",
-                          value: "16:30 ~ 18:30",
-                        },
-                        event: {
-                          touch: timeFactorClickEvent,
-                        },
-                        style: {
-                          display: "inline-flex",
-                          position: "relative",
-                          width: desktop ? String(timeFactorWidth) + ea : "calc(100% / 4)",
-                          height: withOut(0, ea),
-                          justifyContent: "center",
-                          alignItems: "center",
-                          background: colorChip.gray1,
-                          transition: desktop ? "all 0.2s ease" : "all 0s ease",
-                        },
-                        child: {
-                          text: "16:30 ~ 18:30",
-                          style: {
-                            position: "relative",
-                            fontSize: String(timeFactorSize) + ea,
-                            fontWeight: String(timeFactorWeight),
-                            color: colorChip.deactive,
-                            top: String(timeFactorTextTop) + ea,
-                            transition: desktop ? "all 0.2s ease" : "all 0s ease",
-                          }
-                        }
-                      },
-                    ]
-                  },
-                  {
-                    style: {
-                      display: big ? "inline-flex" : "flex",
-                      position: "relative",
-                      width: big ? withOut((timeFactorWidth * 4) + timeFactorBetween, ea) : withOut(0, ea),
-                      marginLeft: big ? String(timeFactorBetween) + ea : "",
-                      marginTop: !big ? String(timeFactorBetween) + ea : "",
-                      height: big ? withOut(0, ea) : String(grayHeight) + ea,
-                      background: colorChip.gray1,
-                      borderRadius: String(5) + "px",
-                      flexDirection: "row",
-                    },
-                    child: {
-                      mode: "input",
-                      attribute: {
-                        type: "text",
-                        placeholder: !media[2] ? "기타 시간 관련 요청 사항을 적어주세요!" : "기타 시간 관련 요청 사항",
-                        value: "",
-                      },
-                      style: {
-                        position: "absolute",
-                        top: String(grayInputTop) + ea,
-                        left: String(0) + ea,
-                        width: withOut(0, ea),
-                        height: String(grayHeight) + ea,
-                        outline: String(0),
-                        border: String(0),
-                        fontSize: String(timeFactorInputSize) + ea,
-                        fontWeight: String(inputWeight),
-                        color: colorChip.black,
-                        textAlign: "left",
-                        background: "transparent",
-                        textIndent: String(inputIndent) + ea,
-                      }
-                    }
-                  }
-                ]
-              }
-            },
-          ]
-        },
-      ]
-    });
-  
-    // 15 : margin
-    if (!media[2] && !media[3]) {
-      createNode({
-        mother: formBox,
-        style: {
-          display: "block",
-          position: "relative",
-          marginBottom: String(blockMarginBottom) + ea,
-          height: String(moduleHeight * marginRatio) + ea,
-        }
-      });
-    }
-
     // 16
     createNode({
       mother: formBox,
@@ -8308,6 +7976,7 @@ GeneralJs.prototype.consultingPopup = function () {
       }
     });
 
+
     // payment
     paymentArea = createNode({
       mother: contentsTong,
@@ -8366,8 +8035,6 @@ GeneralJs.prototype.finalSubmit = function () {
       let tempTargets;
       let onValue;
       let boo;
-      let figureDoms;
-      let figureValue;
 
       if (document.querySelector('.' + agreeTargetClassName).getAttribute("toggle") === "off") {
         window.alert("개인정보 취급 방침에 동의해주세요!");
@@ -8467,28 +8134,6 @@ GeneralJs.prototype.finalSubmit = function () {
           } else if (/ASIDE/gi.test(nodeName)) {
 
             tempObj.value = firstDom.getAttribute("value");
-
-          } else if (/ARTICLE/gi.test(nodeName)) {
-            try {
-
-              figureDoms = [ ...firstDom.querySelectorAll("figure") ];
-              if (figureDoms.every((dom) => { return dom.getAttribute("toggle") === "off" })) {
-                tempObj.value = "선택 안 함";
-              } else {
-                figureValue = figureDoms.filter((dom) => { return dom.getAttribute("toggle") === "on" }).map((dom) => { return dom.getAttribute("value") }).join(", ");
-                if (firstDom.querySelector("input").value !== "") {
-                  figureValue = figureValue + ", " + firstDom.querySelector("input").value
-                }
-                tempObj.value = figureValue;
-              }
-
-
-            } catch (e) {
-              window.alert(e.message);
-              boo = false;
-              scrollTo(window, firstDom, visualSpecific);
-              break;
-            }
 
           }
 
