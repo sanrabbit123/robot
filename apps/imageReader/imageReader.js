@@ -208,10 +208,6 @@ ImageReader.prototype.pdfToJpg = function (filePath, removeMode = false) {
 
     arr = [];
     gs.stdout.on("data", (data) => {
-
-      console.log(data);
-
-
       if (/^Page/i.test(String(data).trim())) {
         arr.push(Number(String(data).trim().replace(/[^0-9]/gi, '')));
       } else if (String(data).trim() === "GS>") {
@@ -230,7 +226,7 @@ ImageReader.prototype.pdfToJpg = function (filePath, removeMode = false) {
           const rm = spawn("rm", [ `-rf`, filePath ]);
           rm.on("close", (code) => { resolve(results); });
         }
-      } else if (/error occurred/gi.test(String(data))) {
+      } else if (/error occurred/gi.test(String(data)) || /Error\:/gi.test(String(data))) {
         gs.kill();
         const rm = spawn("rm", [ `-rf`, filePath ]);
         rm.on("close", (code) => { reject("pdf to jpg fail"); });
