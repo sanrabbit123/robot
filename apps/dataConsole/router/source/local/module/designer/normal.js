@@ -1016,6 +1016,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
         possible: BACKHOST + "/middle/designerPossible?desid=" + designer.desid + "&entire=true&normal=true&cx=" + (isCxMember ? "true" : "false"),
         portfolio: BACKHOST + "/designer?mode=general&desid=" + designer.desid + "&dataonly=true&entire=true&normal=true&cx=" + (isCxMember ? "true" : "false"),
         report: BACKHOST + "/middle/designerReport?desid=" + designer.desid + "&entire=true&normal=true&cx=" + (isCxMember ? "true" : "false"),
+        proposal: BACKHOST + "/file?proposaldesid=" + designer.desid + "&preview=true&previewonly=true&dataonly=true&entire=true",
       }
 
       margin = 30;
@@ -1310,6 +1311,23 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                       marginLeft: String(fontBetween) + ea,
                       fontWeight: String(fontWeight),
                       color: instance.whiteCardMode === "portfolio" ? colorChip.green : colorChip.black,
+                      cursor: "pointer",
+                    }
+                  },
+                  {
+                    class: [ titleButtonsClassName ],
+                    attribute: { toggle: (instance.whiteCardMode === "proposal" ? "on" : "off"), desid, mode: "proposal" },
+                    event: {
+                      click: iframeMaker("proposal"),
+                    },
+                    text: "디자인 제안",
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: instance.whiteCardMode === "proposal" ? colorChip.green : colorChip.black,
                       cursor: "pointer",
                     }
                   },

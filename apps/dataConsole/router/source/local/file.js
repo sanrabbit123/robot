@@ -3478,19 +3478,28 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
       window.location.reload();
     }
 
-    thisFolderFiles.sort((a, b) => {
-      const fileConst = 1000000000000;
-      let aCode, bCode;
-      aCode = a.fileName.charCodeAt(0);
-      bCode = b.fileName.charCodeAt(0);
-      if (!a.directory) {
-        aCode = aCode + fileConst;
-      }
-      if (!b.directory) {
-        bCode = bCode + fileConst;
-      }
-      return aCode - bCode;
-    });
+    if (thisFolderFiles.every((o) => { return /____index____/gi.test(o.fileName) })) {
+      thisFolderFiles.sort((a, b) => {
+        let aCode, bCode;
+        aCode = a.fileName.split("____index____")[0];
+        bCode = b.fileName.split("____index____")[0];
+        return Number(aCode) - Number(bCode);
+      });
+    } else {
+      thisFolderFiles.sort((a, b) => {
+        const fileConst = 1000000000000;
+        let aCode, bCode;
+        aCode = a.fileName.charCodeAt(0);
+        bCode = b.fileName.charCodeAt(0);
+        if (!a.directory) {
+          aCode = aCode + fileConst;
+        }
+        if (!b.directory) {
+          bCode = bCode + fileConst;
+        }
+        return aCode - bCode;
+      });
+    }
 
     files.parentNode.removeChild(loading);
 
@@ -4012,6 +4021,9 @@ FileJs.prototype.launching = async function () {
       if (Array.isArray(response) && response.length > 0) {
         this.path = ghostDesidPath;
       }
+    }
+    if (typeof getObj.proposaldesid === "string") {
+      this.path = rootToken + "/designProposal/image/" + getObj.proposaldesid;
     }
 
     this.startPoint = startPoint;
