@@ -208,6 +208,10 @@ ImageReader.prototype.pdfToJpg = function (filePath, removeMode = false) {
 
     arr = [];
     gs.stdout.on("data", (data) => {
+
+      console.log(data);
+
+
       if (/^Page/i.test(String(data).trim())) {
         arr.push(Number(String(data).trim().replace(/[^0-9]/gi, '')));
       } else if (String(data).trim() === "GS>") {
