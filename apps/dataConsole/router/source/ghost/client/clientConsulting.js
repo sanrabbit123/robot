@@ -2937,7 +2937,6 @@ ClientConsultingJs.prototype.finalSubmit = function () {
       if (document.querySelector('.' + agreeTargetClassName).getAttribute("toggle") === "off") {
         window.alert("개인정보 취급 방침에 동의해주세요!");
       } else {
-
         visualSpecific = 150;
 
         properties = [];

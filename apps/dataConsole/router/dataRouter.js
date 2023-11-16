@@ -3480,6 +3480,7 @@ DataRouter.prototype.rou_post_sendCertification = function () {
       const { name, phone, certification } = req.body;
 
       logger.log("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
+      logger.alert("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
 
       human.sendSms({
         to: phone,
