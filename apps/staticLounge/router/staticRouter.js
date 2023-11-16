@@ -6240,7 +6240,9 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
           return obj;
         });
         for (let obj of thisFolderContents) {
-          await shellExec("mv", [ thisFolderPath + obj.original, thisFolderPath + String(obj.index) + indexToken + obj.fileName ]);
+          if (thisFolderPath + obj.original !== thisFolderPath + String(obj.index) + indexToken + obj.fileName) {
+            await shellExec("mv", [ thisFolderPath + obj.original, thisFolderPath + String(obj.index) + indexToken + obj.fileName ]);
+          }
         }
   
         console.log(desid, designer.designer, "sync success");
