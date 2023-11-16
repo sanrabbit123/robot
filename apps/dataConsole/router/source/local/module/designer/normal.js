@@ -1315,6 +1315,17 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                     }
                   },
                   {
+                    text: blank,
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.gray3,
+                    }
+                  },
+                  {
                     class: [ titleButtonsClassName ],
                     attribute: { toggle: (instance.whiteCardMode === "proposal" ? "on" : "off"), desid, mode: "proposal" },
                     event: {
