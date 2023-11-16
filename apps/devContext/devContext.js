@@ -160,18 +160,24 @@ DevContext.prototype.launching = async function () {
 
     
 
+
     
     const targetRoot = "/Users/baechang-gyu/temp/target";
-    const targetImageRoot = "/Users/baechang-gyu/temp/target2";
     const selfMongo = this.MONGOC;
+    const imageReader = new ImageReader();
+    
     const toNormal = true;
     const endPoint = "https://" + address.transinfo.host + ":" + String(3000);
     const config = { headers: { "Content-Type": "application/json" } };
     const userName = "ubuntu";
-    const scpPath = "/home/" + userName + "/static/photo/designer";
-    const representativeRootPath = "/photo/designer/representative";
+    const scpRoot = userName + "@" + address.transinfo.host + ":"
+    const scpPath = scpRoot + "/home/" + userName + "/static/photo/designer";
+    const representativeFolderPath = "/representative";
+    const representativeRootPath = "/photo/designer" + representativeFolderPath;
+    const indexToken = "____index____";
+    const digitStandard = 5;
     const designers = await back.getDesignersByQuery({}, { selfMongo, toNormal });
-    let rootFolderStatus, rootImageFolderStatus;
+    let rootFolderStatus;
     let desid;
     let targetProjects;
     let response;
@@ -181,20 +187,21 @@ DevContext.prototype.launching = async function () {
     let result0Path, result1Path, result2Path, result3Path;
     let worksInfo;
     let worksFiles;
+    let representativeFiles;
+    let worksFilesTargets;
+    let thisFileName;
+    let thisFilePureName;
+    let thisFileExe;
+    let thisFilePath;
+    let thisFolderPath;
+    let thisFolderContents_past, thisFolderContents;
 
     rootFolderStatus = await fileSystem(`readFolder`, [ targetRoot ]);
-    rootImageFolderStatus = await fileSystem(`readFolder`, [ targetImageRoot ]);
     for (let designer of designers) {
       if (!rootFolderStatus.includes(designer.desid)) {
         await shellExec(`mkdir`, [ `${targetRoot}/${designer.desid}` ]);
       }
-      if (!rootImageFolderStatus.includes(designer.desid)) {
-        await shellExec(`mkdir`, [ `${targetImageRoot}/${designer.desid}` ]);
-      }
     }
-
-
-    /*
 
     response = await requestSystem(endPoint + "/designerWorksList", { mode: "entire" }, config);
     [ result0, result1, result2, result3, worksInfo ] = response.data;
@@ -213,6 +220,16 @@ DevContext.prototype.launching = async function () {
 
     for (let designer of designers) {
       desid = designer.desid;
+      thisFolderPath = targetRoot + "/" + desid + "/";
+      thisFolderContents_past = await fileSystem(`readFolder`, [ thisFolderPath ]);
+      thisFolderContents_past = thisFolderContents_past.map((s) => {
+        let original;
+        let pureFileName;
+        original = s.split(indexToken)[1];
+        pureFileName = original.split('.')[0];
+        pureFileName = pureFileName.slice(0, -1 * digitStandard);
+        return { original, pure: pureFileName };
+      });
 
       // projects
       response = await requestSystem(endPoint + "/middlePhotoRead", { target: "/" + desid }, config);
@@ -221,23 +238,110 @@ DevContext.prototype.launching = async function () {
         response = await requestSystem(endPoint + "/middlePhotoRead", { target: "/" + desid + "/" + proid }, config);
         fileTargets = response.data.filter((s) => { return !/^firstPhoto/gi.test(s) }).filter((s) => { return !/^quarterPhoto/gi.test(s) }).filter((s) => { return !/^middlePhoto/gi.test(s) }).filter((s) => { return /jpg$/gi.test(s) || /jpeg$/gi.test(s) || /png$/gi.test(s) || /pdf$/gi.test(s) });
         for (let fileName of fileTargets) {
-          downloadPath = userName + "@" + address.transinfo.host + ":" + scpPath + "/" + desid + "/" + proid + "/" + fileName;
-          await shellExec("scp", [ downloadPath, targetRoot + "/" + desid + "/" ]);
+          thisFileName = fileName;
+          thisFilePureName = thisFileName.split(".")[0];
+          thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
+          thisFilePath = thisFolderPath + thisFileName;
+          downloadPath = scpPath + "/" + desid + "/" + proid + "/" + fileName;
+          if (!thisFolderContents_past.map((o) => { return new RegExp(o.pure, "g") }).some((r) => { return r.test(thisFilePureName) })) {
+            await shellExec("scp", [ downloadPath, thisFolderPath ]);
+            if (/pdf/gi.test(thisFileExe)) {
+              await imageReader.pdfToJpg(thisFilePath, true);
+            }
+            console.log("download", downloadPath);
+            await sleep(500);
+          }
+        }
+      }
+
+      // representative
+      response = await requestSystem(endPoint + "/readFolder", { path: representativeRootPath + "/" + desid }, config);
+      representativeFiles = response.data.filter((s) => { return /jpg$/gi.test(s) || /jpeg$/gi.test(s) || /png$/gi.test(s) || /pdf$/gi.test(s) }).map((s) => { return scpPath + representativeFolderPath + "/" + desid + "/" + s });
+      for (let downloadPath of representativeFiles) {
+        thisFileName = downloadPath.split("/")[downloadPath.split("/").length - 1];
+        thisFilePureName = thisFileName.split(".")[0];
+        thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
+        thisFilePath = thisFolderPath + thisFileName;
+        if (!thisFolderContents_past.map((o) => { return new RegExp(o.pure, "g") }).some((r) => { return r.test(thisFilePureName) })) {
+          await shellExec("scp", [ downloadPath, thisFolderPath ]);
+          if (/pdf/gi.test(thisFileExe)) {
+            await imageReader.pdfToJpg(thisFilePath, true);
+          }
           console.log("download", downloadPath);
           await sleep(500);
         }
       }
+
+      // works files
+      worksFilesTargets = worksFiles.filter((o) => { return o.desid === desid });
+      worksFilesTargets = worksFilesTargets.map((o) => { return scpRoot + o.file });
+      for (let downloadPath of worksFilesTargets) {
+        thisFileName = downloadPath.split("/")[downloadPath.split("/").length - 1];
+        thisFilePureName = thisFileName.split(".")[0];
+        thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
+        thisFilePath = thisFolderPath + thisFileName;
+        if (!thisFolderContents_past.map((o) => { return new RegExp(o.pure, "g") }).some((r) => { return r.test(thisFilePureName) })) {
+          await shellExec("scp", [ downloadPath, thisFolderPath ]);
+          if (/pdf/gi.test(thisFileExe)) {
+            await imageReader.pdfToJpg(thisFilePath, true);
+          }
+          console.log("download", downloadPath);
+          await sleep(500);
+        }
+      }
+      
+      thisFolderContents = await fileSystem(`readFolder`, [ thisFolderPath ]);
+      thisFolderContents = thisFolderContents.map((s) => {
+        let arr, dateString;
+        let newString;
+        let thisDate;
+        let pastBoo;
+        newString = "";
+        if ((new RegExp(indexToken, "gi")).test(s)) {
+          newString = s.split(indexToken)[1];
+          if (/__split__/gi.test(s)) {
+            arr = newString.split("__split__")
+            dateString = arr[2];
+          } else {
+            arr = newString.split("_")
+            dateString = arr[1];
+          }
+          pastBoo = true;
+        } else {
+          if (/__split__/gi.test(s)) {
+            arr = s.split("__split__")
+            dateString = arr[2];
+          } else {
+            arr = s.split("_")
+            dateString = arr[1];
+          }
+          pastBoo = false;
+        }
+        thisDate = new Date(Number(dateString.replace(/[^0-9]/gi, '')));
+        return {
+          original: s,
+          past: pastBoo,
+          fileName: pastBoo ? newString : s,
+          date: thisDate,
+        }
+      })
+      thisFolderContents.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+      thisFolderContents = thisFolderContents.map((obj, index) => {
+        obj.index = index;
+        return obj;
+      });
+      for (let obj of thisFolderContents) {
+        await shellExec("mv", [ thisFolderPath + obj.original, thisFolderPath + String(obj.index) + indexToken + obj.fileName ]);
+      }
+
       console.log(desid, designer.designer, "sync success");
-      await sleep(500);
+      await sleep(1000);
     }
-    */
-
 
     
     
 
-
-
+    
 
 
 

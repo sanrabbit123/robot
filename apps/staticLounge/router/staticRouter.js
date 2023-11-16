@@ -6066,6 +6066,224 @@ StaticRouter.prototype.rou_post_hahaDropClients = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_syncDesignProposal = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const imageReader = this.imageReader;
+  const { equalJson, dateToString, stringToDate, requestSystem, mysqlQuery, sleep, fileSystem, shellExec, shellLink } = this.mother;
+  const { staticConst } = this;
+  const downloadDesignProposal = async (selfMongo, logger = null) => {
+    try {
+      const targetRoot = staticConst + "/designProposal/image";
+      const toNormal = true;
+      const endPoint = "https://" + address.transinfo.host + ":" + String(3000);
+      const config = { headers: { "Content-Type": "application/json" } };
+      const userName = "ubuntu";
+      const scpRoot = userName + "@" + address.transinfo.host + ":"
+      const scpPath = scpRoot + "/home/" + userName + "/static/photo/designer";
+      const representativeFolderPath = "/representative";
+      const representativeRootPath = "/photo/designer" + representativeFolderPath;
+      const indexToken = "____index____";
+      const digitStandard = 5;
+      const designers = await back.getDesignersByQuery({}, { selfMongo, toNormal });
+      let rootFolderStatus;
+      let desid;
+      let targetProjects;
+      let response;
+      let fileTargets;
+      let downloadPath;
+      let result0, result1, result2, result3;
+      let result0Path, result1Path, result2Path, result3Path;
+      let worksInfo;
+      let worksFiles;
+      let representativeFiles;
+      let worksFilesTargets;
+      let thisFileName;
+      let thisFilePureName;
+      let thisFileExe;
+      let thisFilePath;
+      let thisFolderPath;
+      let thisFolderContents_past, thisFolderContents;
+
+      rootFolderStatus = await fileSystem(`readFolder`, [ targetRoot ]);
+      for (let designer of designers) {
+        if (!rootFolderStatus.includes(designer.desid)) {
+          await shellExec(`mkdir`, [ `${targetRoot}/${designer.desid}` ]);
+        }
+      }
+
+      response = await requestSystem(endPoint + "/designerWorksList", { mode: "entire" }, config);
+      [ result0, result1, result2, result3, worksInfo ] = response.data;
+  
+      result0Path = worksInfo[1] + "/" + worksInfo[2][0]
+      result1Path = worksInfo[1] + "/" + worksInfo[2][1]
+      result2Path = worksInfo[1] + "/" + worksInfo[2][2]
+      result3Path = worksInfo[1] + "/" + worksInfo[2][3]
+  
+      worksFiles = [];
+      worksFiles = worksFiles.concat(result0.map((obj) => { return { desid: obj.desid, file: result0Path + "/" + obj.file.name } }));
+      worksFiles = worksFiles.concat(result1.map((obj) => { return { desid: obj.desid, file: result1Path + "/" + obj.file.name } }));
+      worksFiles = worksFiles.concat(result2.map((obj) => { return { desid: obj.desid, file: result2Path + "/" + obj.file.name } }));
+      worksFiles = worksFiles.concat(result3.map((obj) => { return { desid: obj.desid, file: result3Path + "/" + obj.file.name } }));
+
+      for (let designer of designers) {
+        desid = designer.desid;
+        thisFolderPath = targetRoot + "/" + desid + "/";
+        thisFolderContents_past = await fileSystem(`readFolder`, [ thisFolderPath ]);
+        thisFolderContents_past = thisFolderContents_past.map((s) => {
+          let original;
+          let pureFileName;
+          original = s.split(indexToken)[1];
+          pureFileName = original.split('.')[0];
+          pureFileName = pureFileName.slice(0, -1 * digitStandard);
+          return { original, pure: pureFileName };
+        });
+  
+        // projects
+        response = await requestSystem(endPoint + "/middlePhotoRead", { target: "/" + desid }, config);
+        targetProjects = response.data.filter((s) => { return /^p/gi.test(s) });
+        for (let proid of targetProjects) {
+          response = await requestSystem(endPoint + "/middlePhotoRead", { target: "/" + desid + "/" + proid }, config);
+          fileTargets = response.data.filter((s) => { return !/^firstPhoto/gi.test(s) }).filter((s) => { return !/^quarterPhoto/gi.test(s) }).filter((s) => { return !/^middlePhoto/gi.test(s) }).filter((s) => { return /jpg$/gi.test(s) || /jpeg$/gi.test(s) || /png$/gi.test(s) || /pdf$/gi.test(s) });
+          for (let fileName of fileTargets) {
+            thisFileName = fileName;
+            thisFilePureName = thisFileName.split(".")[0];
+            thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
+            thisFilePath = thisFolderPath + thisFileName;
+            downloadPath = scpPath + "/" + desid + "/" + proid + "/" + fileName;
+            if (!thisFolderContents_past.map((o) => { return new RegExp(o.pure, "g") }).some((r) => { return r.test(thisFilePureName) })) {
+              await shellExec("scp", [ downloadPath, thisFolderPath ]);
+              if (/pdf/gi.test(thisFileExe)) {
+                await imageReader.pdfToJpg(thisFilePath, true);
+              }
+              console.log("download", downloadPath);
+              await sleep(500);
+            }
+          }
+        }
+  
+        // representative
+        response = await requestSystem(endPoint + "/readFolder", { path: representativeRootPath + "/" + desid }, config);
+        representativeFiles = response.data.filter((s) => { return /jpg$/gi.test(s) || /jpeg$/gi.test(s) || /png$/gi.test(s) || /pdf$/gi.test(s) }).map((s) => { return scpPath + representativeFolderPath + "/" + desid + "/" + s });
+        for (let downloadPath of representativeFiles) {
+          thisFileName = downloadPath.split("/")[downloadPath.split("/").length - 1];
+          thisFilePureName = thisFileName.split(".")[0];
+          thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
+          thisFilePath = thisFolderPath + thisFileName;
+          if (!thisFolderContents_past.map((o) => { return new RegExp(o.pure, "g") }).some((r) => { return r.test(thisFilePureName) })) {
+            await shellExec("scp", [ downloadPath, thisFolderPath ]);
+            if (/pdf/gi.test(thisFileExe)) {
+              await imageReader.pdfToJpg(thisFilePath, true);
+            }
+            console.log("download", downloadPath);
+            await sleep(500);
+          }
+        }
+  
+        // works files
+        worksFilesTargets = worksFiles.filter((o) => { return o.desid === desid });
+        worksFilesTargets = worksFilesTargets.map((o) => { return scpRoot + o.file });
+        for (let downloadPath of worksFilesTargets) {
+          thisFileName = downloadPath.split("/")[downloadPath.split("/").length - 1];
+          thisFilePureName = thisFileName.split(".")[0];
+          thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
+          thisFilePath = thisFolderPath + thisFileName;
+          if (!thisFolderContents_past.map((o) => { return new RegExp(o.pure, "g") }).some((r) => { return r.test(thisFilePureName) })) {
+            await shellExec("scp", [ downloadPath, thisFolderPath ]);
+            if (/pdf/gi.test(thisFileExe)) {
+              await imageReader.pdfToJpg(thisFilePath, true);
+            }
+            console.log("download", downloadPath);
+            await sleep(500);
+          }
+        }
+        
+        thisFolderContents = await fileSystem(`readFolder`, [ thisFolderPath ]);
+        thisFolderContents = thisFolderContents.map((s) => {
+          let arr, dateString;
+          let newString;
+          let thisDate;
+          let pastBoo;
+          newString = "";
+          if ((new RegExp(indexToken, "gi")).test(s)) {
+            newString = s.split(indexToken)[1];
+            if (/__split__/gi.test(s)) {
+              arr = newString.split("__split__")
+              dateString = arr[2];
+            } else {
+              arr = newString.split("_")
+              dateString = arr[1];
+            }
+            pastBoo = true;
+          } else {
+            if (/__split__/gi.test(s)) {
+              arr = s.split("__split__")
+              dateString = arr[2];
+            } else {
+              arr = s.split("_")
+              dateString = arr[1];
+            }
+            pastBoo = false;
+          }
+          thisDate = new Date(Number(dateString.replace(/[^0-9]/gi, '')));
+          return {
+            original: s,
+            past: pastBoo,
+            fileName: pastBoo ? newString : s,
+            date: thisDate,
+          }
+        })
+        thisFolderContents.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        thisFolderContents = thisFolderContents.map((obj, index) => {
+          obj.index = index;
+          return obj;
+        });
+        for (let obj of thisFolderContents) {
+          await shellExec("mv", [ thisFolderPath + obj.original, thisFolderPath + String(obj.index) + indexToken + obj.fileName ]);
+        }
+  
+        console.log(desid, designer.designer, "sync success");
+        await sleep(1000);
+      }
+
+      return true;
+    } catch (e) {
+      logger.error("Static lounge 서버 문제 생김 (rou_post_syncDesignProposal): " + e.message).catch((err) => { console.log(err) });
+      console.log(e);
+      return false;
+    }
+  }
+  let obj;
+  obj = {};
+  obj.link = [ "/syncDesignProposal" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      downloadDesignProposal(selfMongo, logger).then((boo) => {
+        if (boo) {
+          return logger.cron("sync design proposal success : " + JSON.stringify(new Date()));
+        } else {
+          return logger.alert("sync design proposal fail");
+        }
+      }).catch((err) => {
+        logger.error("Static lounge 서버 문제 생김 (rou_post_syncDesignProposal): " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_syncDesignProposal): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.setMembers = async function () {
