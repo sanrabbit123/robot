@@ -226,10 +226,12 @@ ImageReader.prototype.pdfToJpg = function (filePath, removeMode = false) {
           const rm = spawn("rm", [ `-rf`, filePath ]);
           rm.on("close", (code) => { resolve(results); });
         }
+      } else if (/error occurred/gi.test(String(data))) {
+        gs.kill();
+        const rm = spawn("rm", [ `-rf`, filePath ]);
+        rm.on("close", (code) => { reject("pdf to jpg fail"); });
       }
     });
-
-    // gs.stderr.on("data", (data) => { reject(String(data)); });
   });
 }
 

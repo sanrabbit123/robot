@@ -228,17 +228,19 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
 
               if (type === "photo") {
                 if (/pdf$/i.test(execName)) {
-                  results = await instance.imageReader.pdfToJpg(`${folderConst}/${desid}/${proid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName}`, true);
-                  for (let index = 0; index < results.length; index++) {
-                    past = results[index];
-                    pureConst = past.slice(0, -1 * (digitConst + (exeConst.length + 1)));
-                    digitTenConst = 10 ** digitConst;
-                    pureFileConst = pureConst.split("/")[pureConst.split("/").length - 1];
-                    pureFolderConst = pureConst.split("/").slice(0, -1).join("/");
-                    [ jpgKey, jpgDateValue, jpgOrder, jpgName ] = pureFileConst.split(token);
-                    newOrder = String(((Number(jpgOrder) + 1) * digitTenConst) + (index + 1));
-                    await shellExec(`mv ${shellLink(past)} ${shellLink(pureFolderConst)}/${jpgKey}${token}${jpgDateValue}${token}${newOrder}${token}${name}.${exeConst}`);
-                  }
+                  try {
+                    results = await instance.imageReader.pdfToJpg(`${folderConst}/${desid}/${proid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName}`, true);
+                    for (let index = 0; index < results.length; index++) {
+                      past = results[index];
+                      pureConst = past.slice(0, -1 * (digitConst + (exeConst.length + 1)));
+                      digitTenConst = 10 ** digitConst;
+                      pureFileConst = pureConst.split("/")[pureConst.split("/").length - 1];
+                      pureFolderConst = pureConst.split("/").slice(0, -1).join("/");
+                      [ jpgKey, jpgDateValue, jpgOrder, jpgName ] = pureFileConst.split(token);
+                      newOrder = String(((Number(jpgOrder) + 1) * digitTenConst) + (index + 1));
+                      await shellExec(`mv ${shellLink(past)} ${shellLink(pureFolderConst)}/${jpgKey}${token}${jpgDateValue}${token}${newOrder}${token}${name}.${exeConst}`);
+                    }
+                  } catch {}
                 }
               }
 
@@ -580,13 +582,17 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
                 for (let j of files[filesKeys[i]]) {
                   await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(clientFolder + '/' + list[i] + '/' + j.originalFilename)};`);
                   if (/\.pdf$/.test(j.originalFilename)) {
-                    await instance.imageReader.pdfToJpg(clientFolder + '/' + list[i] + '/' + j.originalFilename, true);
+                    try {
+                      await instance.imageReader.pdfToJpg(clientFolder + '/' + list[i] + '/' + j.originalFilename, true);
+                    } catch {}
                   }
                 }
               } else {
                 await shellExec(`mv ${shellLink(files[filesKeys[i]].filepath)} ${shellLink(clientFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename)};`);
                 if (/\.pdf$/.test(files[filesKeys[i]].originalFilename)) {
-                  await instance.imageReader.pdfToJpg(clientFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename, true);
+                  try {
+                    await instance.imageReader.pdfToJpg(clientFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename, true);
+                  } catch {}
                 }
               }
             }
@@ -666,13 +672,17 @@ TransferRouter.prototype.rou_post_aspirantBinary = function () {
                 for (let j of files[filesKeys[i]]) {
                   await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(aspirantFolder + '/' + list[i] + '/' + j.originalFilename)};`);
                   if (/\.pdf$/.test(j.originalFilename)) {
-                    await instance.imageReader.pdfToJpg(aspirantFolder + '/' + list[i] + '/' + j.originalFilename, true);
+                    try {
+                      await instance.imageReader.pdfToJpg(aspirantFolder + '/' + list[i] + '/' + j.originalFilename, true);
+                    } catch {}
                   }
                 }
               } else {
                 await shellExec(`mv ${shellLink(files[filesKeys[i]].filepath)} ${shellLink(aspirantFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename)};`);
                 if (/\.pdf$/.test(files[filesKeys[i]].originalFilename)) {
-                  await instance.imageReader.pdfToJpg(aspirantFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename, true);
+                  try {
+                    await instance.imageReader.pdfToJpg(aspirantFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename, true);
+                  } catch {}
                 }
               }
             }
@@ -755,13 +765,17 @@ TransferRouter.prototype.rou_post_aspirantSettingBinary = function () {
                 for (let j of files[filesKeys[i]]) {
                   await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(aspirantFolder + '/' + list[i] + '/' + j.originalFilename)};`);
                   if (/\.pdf$/.test(j.originalFilename)) {
-                    await instance.imageReader.pdfToJpg(aspirantFolder + '/' + list[i] + '/' + j.originalFilename, true);
+                    try {
+                      await instance.imageReader.pdfToJpg(aspirantFolder + '/' + list[i] + '/' + j.originalFilename, true);
+                    } catch {}
                   }
                 }
               } else {
                 await shellExec(`mv ${shellLink(files[filesKeys[i]].filepath)} ${shellLink(aspirantFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename)};`);
                 if (/\.pdf$/.test(files[filesKeys[i]].originalFilename)) {
-                  await instance.imageReader.pdfToJpg(aspirantFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename, true);
+                  try {
+                    await instance.imageReader.pdfToJpg(aspirantFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename, true);
+                  } catch {}
                 }
               }
             }
@@ -920,13 +934,17 @@ TransferRouter.prototype.rou_post_aspirantDocuments = function () {
                 for (let j of files[filesKeys[i]]) {
                   await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(aspirantFolder + '/' + list[i] + '/' + j.originalFilename)};`);
                   if (/\.pdf$/.test(j.originalFilename)) {
-                    await instance.imageReader.pdfToJpg(aspirantFolder + '/' + list[i] + '/' + j.originalFilename, true);
+                    try {
+                      await instance.imageReader.pdfToJpg(aspirantFolder + '/' + list[i] + '/' + j.originalFilename, true);
+                    } catch {}
                   }
                 }
               } else {
                 await shellExec(`mv ${shellLink(files[filesKeys[i]].filepath)} ${shellLink(aspirantFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename)};`);
                 if (/\.pdf$/.test(files[filesKeys[i]].originalFilename)) {
-                  await instance.imageReader.pdfToJpg(aspirantFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename, true);
+                  try {
+                    await instance.imageReader.pdfToJpg(aspirantFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename, true);
+                  } catch {}
                 }
               }
             }

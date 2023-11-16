@@ -6155,7 +6155,9 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
             if (!thisFolderContents_past.map((o) => { return new RegExp(o.pure, "g") }).some((r) => { return r.test(thisFilePureName) })) {
               await shellExec("scp", [ downloadPath, thisFolderPath ]);
               if (/pdf/gi.test(thisFileExe)) {
-                await imageReader.pdfToJpg(thisFilePath, true);
+                try {
+                  await imageReader.pdfToJpg(thisFilePath, true);
+                } catch {}
               }
               console.log("download", downloadPath);
               await sleep(500);
@@ -6174,7 +6176,9 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
           if (!thisFolderContents_past.map((o) => { return new RegExp(o.pure, "g") }).some((r) => { return r.test(thisFilePureName) })) {
             await shellExec("scp", [ downloadPath, thisFolderPath ]);
             if (/pdf/gi.test(thisFileExe)) {
-              await imageReader.pdfToJpg(thisFilePath, true);
+              try {
+                await imageReader.pdfToJpg(thisFilePath, true);
+              } catch {}
             }
             console.log("download", downloadPath);
             await sleep(500);
@@ -6192,7 +6196,9 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
           if (!thisFolderContents_past.map((o) => { return new RegExp(o.pure, "g") }).some((r) => { return r.test(thisFilePureName) })) {
             await shellExec("scp", [ downloadPath, thisFolderPath ]);
             if (/pdf/gi.test(thisFileExe)) {
-              await imageReader.pdfToJpg(thisFilePath, true);
+              try {
+                await imageReader.pdfToJpg(thisFilePath, true);
+              } catch {}
             }
             console.log("download", downloadPath);
             await sleep(500);
