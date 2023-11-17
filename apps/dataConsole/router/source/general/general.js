@@ -5438,6 +5438,47 @@ GeneralJs.prototype.whiteProgressLoading = function (mother = null, emptyProgres
   return (new WhiteLoading(cancel, loading, progressBox));
 }
 
+GeneralJs.prototype.setMemory = function (obj) {
+  if (typeof obj !== "object" || obj === null) {
+    throw new Error("invalid input");
+  }
+  if (obj.property === undefined) {
+    throw new Error("invalid preperty");
+  }
+  const memoryKeywords = "____memory____";
+  const thisKey = memoryKeywords + obj.property;
+  window.localStorage.setItem(thisKey, JSON.stringify(obj));
+}
+
+GeneralJs.prototype.getMemory = function () {
+  class MemoryArr extends Array {
+    constructor() {
+      super();
+    }
+    find(property) {
+      let result;
+      result = null;
+      for (let obj of this) {
+        if (obj.property === property) {
+          result = obj;
+          break;
+        }
+      }
+      return result;
+    }
+  }
+  const storage = window.localStorage;
+  let result, thisValue;
+  result = new MemoryArr();
+  for (let key in storage) {
+    if (/^____memory____/g.test(key)) {
+      thisValue = JSON.parse(window.localStorage.getItem(key));
+      result.push(thisValue)
+    }
+  }
+  return result;
+}
+
 GeneralJs.prototype.consultingPopup = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson, homeliaisonAnalytics, equalJson } = GeneralJs;

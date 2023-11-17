@@ -395,6 +395,8 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   let defaultRatio;
   let barClickEvent;
   let barFactorTongVisualTop;
+  let valueMemory;
+  let thisTempBlock;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -652,6 +654,8 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
 
   defaultRatio = 0.5;
 
+  valueMemory = instance.mother.getMemory();
+
   contents = {
     main: [
       "홈리에종 서비스 신청",
@@ -705,6 +709,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
 
   nameBlurEvent = function (e) {
     this.value = this.value.trim().replace(/[^a-zA-Z가-힣]/gi, '');
+    instance.mother.setMemory({
+      property: "name",
+      type: "text",
+      value: this.value,
+    });
     if (this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -1357,7 +1366,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   });
 
   // 1
-  createNode({
+  thisTempBlock = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -1431,6 +1440,8 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
     ]
   });
+  thisTempBlock.querySelector("." + inputClassName).value = (valueMemory.find("name") === null ? "" : valueMemory.find("name").value);
+
   // 2
   createNode({
     mother: rightBox,
