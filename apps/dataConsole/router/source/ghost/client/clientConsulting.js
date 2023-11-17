@@ -3062,11 +3062,16 @@ ClientConsultingJs.prototype.finalSubmit = function () {
           instance.mother.certificationBox(name, phone, async function (back, box) {
             try {
               const { cliid } = await ajaxJson({ map }, BACKHOST + "/clientSubmit");
-              window.gtag("event", "conversion", {
-                "send_to": window.gadsConverting,
-                "value": 1.0,
-                "currency": 'KRW'
-              });
+              if (typeof window.gtag === "function" && typeof window.gadsConverting === "string") {
+                window.gtag("event", "conversion", {
+                  "send_to": window.gadsConverting,
+                  "value": 1.0,
+                  "currency": 'KRW'
+                });
+              }
+              if (typeof window.kakaoPixel === "function" && typeof window.kakaoPixelHlId === "string") {
+                window.kakaoPixel(window.kakaoPixelHlId).signUp();
+              }
               homeliaisonAnalytics({
                 page: instance.pageName,
                 standard: instance.firstPageViewTime,

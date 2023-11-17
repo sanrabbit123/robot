@@ -19,6 +19,7 @@ class GeneralPhp {
     $naverSearchId = "59096f538ddb9a8704025cefc11269d504f62aac";
     $naverLogId = "s_dc977e44f53";
     $facebookId = "814052605684956";
+    $kakaoId = "2786607572511510355";
     $indexName = "frontIndex";
     $hostLink = "https://".$this->host;
     $curationName = "styleCuration";
@@ -85,6 +86,17 @@ class GeneralPhp {
     $html .= '</script>'."\n";
     $html .= '<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.$facebookId.'&ev=PageView&noscript=1" /></noscript>'."\n";
     $html .= '<!-- End Meta Pixel Code -->'."\n";
+
+    // kakao
+    $html .= '<!-- Kakao Pixel Code -->'."\n";
+    $html .= '<script type="text/javascript" charset="UTF-8" src="//t1.daumcdn.net/kas/static/kp.js"></script>'."\n";
+    $html .= '<script type="text/javascript">'."\n";
+    $html .= 'window.kakaoPixelHlId = "'.$kakaoId.'";'."\n";
+    $html .= 'if (typeof window.kakaoPixel === "function") {'."\n";
+    $html .= '  window.kakaoPixel("'.$kakaoId.'").pageView();'."\n";
+    $html .= '}'."\n";
+    $html .= '</script>'."\n";
+    $html .= '<!-- End Kakao Pixel Code -->'."\n";
 
     // body
     $html .= '</head><body>'."\n";
