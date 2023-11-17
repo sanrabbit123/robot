@@ -157,17 +157,35 @@ DevContext.prototype.launching = async function () {
 
 
     
-    
-    
-    
-    
+    /*
+    const apiKey = "73833f6c89c66fd71bc326498c70b5d2";
+    const code = "xr8Z4C-h2lXgfK_Qy8xJyZBov6BxkLcfIPFbk1cxDxMg8hI4aBUpFC0PYlMKPXTbAAABi9x6tY1APV-WDrAHcw";
+    const baseUrl = "https://apis.moment.kakao.com";
+    const redirectUri = "https://home-liaison.net/kakaoRedirect";
+    const config = { headers: { "Content-Type": "application/json" } };
+    let url, res;
 
+    res = await requestSystem("https://kauth.kakao.com/oauth/authorize", {
+      response_type: "code",
+      client_id: apiKey,
+      redirect_uri: redirectUri,
+    }, {
+      method: "get",
+    });
+    console.log(res.data)
 
-    
-
-
-
-
+    // res = await requestSystem("https://kauth.kakao.com/oauth/token", {
+    //   grant_type: "authorization_code",
+    //   client_id: apiKey,
+    //   redirect_uri: redirectUri,
+    //   code: code,
+    // }, {
+    //   headers: {
+    //     "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
+    //   }
+    // })
+    // console.log(res.data);
+    */
     
 
 
