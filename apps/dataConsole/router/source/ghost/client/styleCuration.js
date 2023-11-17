@@ -521,6 +521,8 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   class StyleCurationWordings {
     constructor() {
       this.wordings = {};
@@ -711,7 +713,6 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
           },
         ]
       });
-
       this.wordings.center.push({
         name: "construct",
         title: "시공",
@@ -954,6 +955,80 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                 }
               }
             }
+          },
+        ]
+      });
+      this.wordings.center.push({
+        name: "call",
+        title: "상담 시간",
+        callback: "blockCheck",
+        children: [
+          {
+            name: "callTime",
+            type: "checkbox",
+            half: false,
+            required: true,
+            rewind: "가능한 상담 시간을 모두 체크해주세요!",
+            question: [
+              big ? "<b%가능한 상담 시간%b>을 모두 체크해주세요!" : "<b%가능한 상담 시간%b>을 알려주세요!",
+            ],
+            multiple: true,
+            items: [
+              "9:30 ~ 11:00",
+              "11:00 ~ 12:30",
+              "13:30 ~ 16:30",
+              "16:30 ~ 18:30"
+            ],
+            realItems: [
+              "9:30 ~ 11:00",
+              "11:00 ~ 12:30",
+              "13:30 ~ 16:30",
+              "16:30 ~ 18:30"
+            ],
+            exception: function (items, media) {
+              const mother = items[0].parentNode;
+              const grandMother = mother.parentNode;
+              const mobile = media[4];
+              const desktop = !mobile;
+              let ratio = 40;
+              if (media[3]) {
+                ratio = 30;
+              }
+              if (desktop) {
+                grandMother.firstChild.style.width = String(ratio) + '%';
+                grandMother.lastChild.style.width = String(100 - ratio) + '%';
+              } else {
+                mother.style.textAlign = "left";
+                mother.style.left = String(-0.4) + "vw";
+                mother.style.paddingTop = String(0.5) + "vw";
+                for (let i of items) {
+                  i.style.display = "block";
+                }
+              }
+            },
+            value: function (request, history, self) {
+              return [ "9:30 ~ 11:00", "11:00 ~ 12:30" ];
+            },
+            update: function (value, siblings, client) {
+              if (value === null) {
+                return { history: null, core: null };
+              }
+              const { items, realItems, selected } = value;
+              if (selected === null) {
+                return { history: null, core: null };
+              } else if (Array.isArray(selected)) {
+                let historyQuery, coreQuery;
+                coreQuery = null;
+                historyQuery = {};
+                historyQuery["budget"] = "상담 가능 시간 : " + "\n" + selected.map((n, index) => { return realItems[n] }).join(", ");
+                return {
+                  history: historyQuery,
+                  core: coreQuery
+                };
+              } else {
+                return { history: null, core: null };
+                } 
+            },
           },
         ]
       });
@@ -1765,7 +1840,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         position: "relative",
         width: desktop ? String(100 * questionRatio) + '%' : String(100) + '%',
         verticalAlign: "top",
-        marginBottom: desktop ? "" : String(0.5) + ea,
+        marginBottom: desktop ? "" : String(1.2) + ea,
       },
       children: [
         {
@@ -6065,7 +6140,7 @@ StyleCurationJs.prototype.insertDescriptionBox = function () {
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  descriptionSize = <%% 15, 15, 14, 12, 3.6 %%>;
+  descriptionSize = <%% 15, 15, 14, 12, 3.2 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
@@ -6089,8 +6164,8 @@ StyleCurationJs.prototype.insertDescriptionBox = function () {
     },
     right: {
       description: [
-        `홈리에종의 디자이너를 먼저 만나는 과정부터 시작합니다. 디자이너와 디자인을 먼저 진행한 후, 시공과 구매가 이루어지는 프로세스입니다. 따라서 <b%잘 맞는 디자이너와의 매칭은 중요%b>합니다.`,
-        `고객님의 정보를 바탕으로, 홈리에종은 고객님께 적합한 디자이너를 큐레이션하여 추천드리는 서비스를 제공합니다. 이를 위해 고객님의 현장과 취향에 대한 상세한 정보가 필요합니다. <b%아래 내용에 대해 알려주시면 맞춤화된 서비스를 제공할 수 있습니다.%b> 큐레이션을 위해 아래 내용에 대해서 알려주세요!`,      
+        desktop ? `홈리에종의 디자이너를 먼저 만나는 과정부터 시작합니다. 디자이너와 디자인을 먼저 진행한 후, 시공과 구매가 이루어지는 프로세스입니다. 따라서 <b%잘 맞는 디자이너와의 매칭은 중요%b>합니다.` : `홈리에종의 디자이너를 먼저 만나는 과정부터 시작합니다. <b%디자이너와 디자인을 먼저 진행%b>한 후, 시공과 구매가 이루어지는 프로세스입니다.`,
+        desktop ? `고객님의 정보를 바탕으로, 홈리에종은 고객님께 적합한 디자이너를 큐레이션하여 추천드리는 서비스를 제공합니다. 이를 위해 고객님의 현장과 취향에 대한 상세한 정보가 필요합니다. <b%아래 내용에 대해 알려주시면 맞춤화된 서비스를 제공할 수 있습니다.%b> 큐레이션을 위해 아래 내용에 대해서 알려주세요!` : `이러한 프로세스를 위해 디자이너 큐레이션이 이루어지고, 고객님의 현장과 취향에 대한 정보가 필요합니다. <b%큐레이션을 위해 아래 내용에 대해서 알려주세요!%b>`,      
       ],
       image: StyleCurationJs.binaryPath + "/curation_designer_00.jpg",
     }

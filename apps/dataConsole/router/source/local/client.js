@@ -2409,7 +2409,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     { column: "space", name: "현장 관련", dom: null },
     { column: "styling", name: "스타일링 관련", dom: null },
     { column: "construct", name: "시공 관련", dom: null },
-    { column: "budget", name: "예산 관련", dom: null },
+    { column: "budget", name: "상담 관련", dom: null },
     { column: "progress", name: "기타 메모", dom: null },
   ];
   visualSpecificMarginTop = fontSize * (1 / 5);
