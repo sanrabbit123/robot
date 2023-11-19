@@ -5479,6 +5479,33 @@ GeneralJs.prototype.getMemory = function () {
   return result;
 }
 
+GeneralJs.prototype.insertMemory = function (dom, property) {
+  const instance = this;
+  const inputClassName = "inputClassName";
+  let nodeName;
+  let target;
+  let valueMemory;
+  let targetMemory;
+
+  valueMemory = instance.getMemory();
+
+  nodeName = dom.nodeName;
+  if (/INPUT/gi.test(nodeName)) {
+    target = dom;
+  } else {
+    target = dom.querySelector('.' + inputClassName);
+  }
+
+  if (typeof property === "string") {
+    targetMemory = valueMemory.find(property);
+    if (targetMemory !== null) {
+      target.value = valueMemory.find(property).value;
+    } else {
+      target.value = "";
+    }
+  }
+}
+
 GeneralJs.prototype.consultingPopup = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson, homeliaisonAnalytics, equalJson } = GeneralJs;

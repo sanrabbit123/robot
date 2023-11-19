@@ -395,7 +395,6 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   let defaultRatio;
   let barClickEvent;
   let barFactorTongVisualTop;
-  let valueMemory;
   let thisTempBlock;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
@@ -654,8 +653,6 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
 
   defaultRatio = 0.5;
 
-  valueMemory = instance.mother.getMemory();
-
   contents = {
     main: [
       "홈리에종 서비스 신청",
@@ -733,6 +730,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   phoneBlurEvent = function (e) {
     this.value = this.value.trim().replace(/[^0-9\-]/gi, '');
     this.value = autoHypenPhone(this.value);
+    instance.mother.setMemory({
+      property: "phone",
+      type: "text",
+      value: this.value,
+    });
     if (this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -751,6 +753,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
 
   emailBlurEvent = function () {
     this.value = this.value.replace(/[\=\+\?\#\&\(\)]/gi, '');
+    instance.mother.setMemory({
+      property: "email",
+      type: "text",
+      value: this.value,
+    });
     if (this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -768,6 +775,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   }
 
   bigAddressBlurEvent = function () {
+    instance.mother.setMemory({
+      property: "address0",
+      type: "text",
+      value: this.value,
+    });
     if (this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -896,6 +908,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     for (let dom of targets) {
       dom.remove();
     }
+    instance.mother.setMemory({
+      property: "address1",
+      type: "text",
+      value: this.value,
+    });
     if (this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -1041,6 +1058,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     } else {
       this.value = this.value.replace(/[^0-9\.]/gi, '') + "평";
     }
+    instance.mother.setMemory({
+      property: "pyeong",
+      type: "text",
+      value: this.value,
+    });
     if (this.value !== "00평" && this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -1252,8 +1274,26 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       }).firstChild;
 
       calendar = instance.mother.makeCalendar(stringToDate(new Date()), function (e) {
+        const self = findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "movein");
         let targets;
-        findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "movein").value = this.getAttribute("buttonValue");
+        self.value = this.getAttribute("buttonValue");
+        instance.mother.setMemory({
+          property: "movein",
+          type: "text",
+          value: self.value,
+        });
+        homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "inputBlur",
+          data: {
+            property: "movein",
+            value: self.value,
+            date: dateToString(new Date(), true),
+          },
+        }).catch((err) => {
+          console.log(err);
+        });
         targets = document.querySelectorAll('.' + removeTargets);
         for (let dom of targets) {
           dom.remove();
@@ -1440,10 +1480,9 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
     ]
   });
-  thisTempBlock.querySelector("." + inputClassName).value = (valueMemory.find("name") === null ? "" : valueMemory.find("name").value);
-
+  instance.mother.insertMemory(thisTempBlock, "name");
   // 2
-  createNode({
+  thisTempBlock = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -1518,8 +1557,9 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
     ]
   });
+  instance.mother.insertMemory(thisTempBlock, "phone");
   // 3
-  createNode({
+  thisTempBlock = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -1594,8 +1634,9 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
     ]
   });
+  instance.mother.insertMemory(thisTempBlock, "email");
   // 4
-  createNode({
+  thisTempBlock = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -1699,8 +1740,9 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
     ]
   });
+  instance.mother.insertMemory(thisTempBlock, "address0");
   // 5
-  createNode({
+  thisTempBlock = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -1751,6 +1793,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
     ]
   });
+  instance.mother.insertMemory(thisTempBlock, "address1");
 
   // 6 : margin
   createNode({
@@ -1764,7 +1807,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   });
 
   // 7
-  createNode({
+  thisTempBlock = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -1840,6 +1883,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       }
     ]
   });
+  instance.mother.insertMemory(thisTempBlock, "pyeong");
   // 8
   createNode({
     mother: rightBox,
@@ -1998,7 +2042,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     ]
   });
   // 9
-  createNode({
+  thisTempBlock = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -2055,6 +2099,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         event: {
           click: calendarViewEvent,
           blur: function () {
+            instance.mother.setMemory({
+              property: "movein",
+              type: "text",
+              value: this.value,
+            });
             if (this.value !== '') {
               homeliaisonAnalytics({
                 page: instance.pageName,
@@ -2088,6 +2137,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
     ]
   });
+  instance.mother.insertMemory(thisTempBlock, "movein");
   // 10
   createNode({
     mother: rightBox,
