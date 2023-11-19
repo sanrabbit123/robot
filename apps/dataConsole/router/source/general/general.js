@@ -5438,24 +5438,29 @@ GeneralJs.prototype.whiteProgressLoading = function (mother = null, emptyProgres
   return (new WhiteLoading(cancel, loading, progressBox));
 }
 
-GeneralJs.prototype.setMemory = function (obj) {
-  if (typeof obj !== "object" || obj === null) {
-    throw new Error("invalid input");
+GeneralJs.prototype.setMemory = async function (obj) {
+  const instance = this;
+  try {
+    if (typeof obj !== "object" || obj === null) {
+      throw new Error("invalid input");
+    }
+    if (obj.property === undefined) {
+      throw new Error("invalid preperty");
+    }
+    const memoryKeywords = "____memory____";
+    const thisKey = memoryKeywords + obj.property;
+    window.localStorage.setItem(thisKey, JSON.stringify(obj));
+  } catch (e) {
+    console.log(e);
   }
-  if (obj.property === undefined) {
-    throw new Error("invalid preperty");
-  }
-  const memoryKeywords = "____memory____";
-  const thisKey = memoryKeywords + obj.property;
-  window.localStorage.setItem(thisKey, JSON.stringify(obj));
 }
 
-GeneralJs.prototype.getMemory = function () {
+GeneralJs.prototype.getMemory = async function () {
   class MemoryArr extends Array {
     constructor() {
       super();
     }
-    find(property) {
+    findProperty(property) {
       let result;
       result = null;
       for (let obj of this) {
@@ -5467,42 +5472,123 @@ GeneralJs.prototype.getMemory = function () {
       return result;
     }
   }
-  const storage = window.localStorage;
-  let result, thisValue;
-  result = new MemoryArr();
-  for (let key in storage) {
-    if (/^____memory____/g.test(key)) {
-      thisValue = JSON.parse(window.localStorage.getItem(key));
-      result.push(thisValue)
+  try {
+    const storage = window.localStorage;
+    let result, thisValue;
+    result = new MemoryArr();
+    for (let key in storage) {
+      if (/^____memory____/g.test(key)) {
+        thisValue = JSON.parse(window.localStorage.getItem(key));
+        result.push(thisValue)
+      }
     }
+    return result;
+  } catch (e) {
+    console.log(e);
+    return null;
   }
-  return result;
 }
 
-GeneralJs.prototype.insertMemory = function (dom, property) {
+GeneralJs.prototype.insertMemory = async function (property, popupMode = false) {
   const instance = this;
+  const baseBlockClassName = "baseBlockClassName";
   const inputClassName = "inputClassName";
-  let nodeName;
-  let target;
-  let valueMemory;
-  let targetMemory;
+  const variableBarClassName = "variableBarClassName";
+  const whitePopupBaseBlockClassName = "whitePopupBaseBlockClassName";
+  const whitePopupInputClassName = "whitePopupInputClassName";
+  const dom = GeneralJs.findByAttribute((!popupMode ? document.querySelectorAll('.' + baseBlockClassName) : document.querySelectorAll('.' + whitePopupBaseBlockClassName)), "baseclass", property);
+  try {
+    let nodeName;
+    let target;
+    let valueMemory;
+    let targetMemory;
+    let targetsAll, targets;
+    let valuesArr, ratio, bar;
+  
+    valueMemory = await instance.getMemory();
+    if (valueMemory !== null && typeof valueMemory.findProperty === "function") {
+      targetMemory = valueMemory.findProperty(property);
+      nodeName = dom.nodeName;
+    
+      if (targetMemory !== null) {
+    
+        if (targetMemory.type === "text") {
+          if (/INPUT/gi.test(nodeName) || /TEXTAREA/gi.test(nodeName)) {
+            target = dom;
+          } else {
+            target = dom.querySelector('.' + (!popupMode ? inputClassName : whitePopupInputClassName));
+          }
 
-  valueMemory = instance.getMemory();
-
-  nodeName = dom.nodeName;
-  if (/INPUT/gi.test(nodeName)) {
-    target = dom;
-  } else {
-    target = dom.querySelector('.' + inputClassName);
-  }
-
-  if (typeof property === "string") {
-    targetMemory = valueMemory.find(property);
-    if (targetMemory !== null) {
-      target.value = valueMemory.find(property).value;
-    } else {
-      target.value = "";
+          target.value = targetMemory.value;
+        } else if (targetMemory.type === "radio") {
+    
+          targetsAll = [ ...dom.querySelectorAll("." + (!popupMode ? inputClassName : whitePopupInputClassName)) ];
+          targets = targetsAll.filter((d) => { return d.getAttribute("property") === property });
+    
+          for (let i = 0; i < targets.length; i++) {
+            if (targetMemory.value[i] === 1) {
+              targets[i].setAttribute("toggle", "on");
+              targets[i].children[0].style.opacity = String(0);
+              targets[i].children[1].style.opacity = String(1);
+              targets[i].children[2].style.color = GeneralJs.colorChip.green;
+            } else {
+              targets[i].setAttribute("toggle", "off");
+              targets[i].children[0].style.opacity = String(1);
+              targets[i].children[1].style.opacity = String(0);
+              targets[i].children[2].style.color = GeneralJs.colorChip.black;
+            }
+          }
+    
+        } else if (targetMemory.type === "bar") {
+    
+          if (/ASIDE/gi.test(nodeName)) {
+            target = dom;
+          } else {
+            target = dom.querySelector('.' + (!popupMode ? inputClassName : whitePopupInputClassName));
+          }
+    
+          ({ valuesArr, ratio } = targetMemory.value);
+          bar = target.querySelector("." + variableBarClassName);
+    
+          bar.style.width = String(ratio * 100) + '%';
+          target.setAttribute("ratio", String(ratio));
+          target.setAttribute("value", valuesArr[Math.round((valuesArr.length - 1) * ratio)].value);
+    
+        }
+    
+      } else {
+        if (/INPUT/gi.test(nodeName) || /TEXTAREA/gi.test(nodeName)) {
+          target = dom;
+        } else {
+          target = dom.querySelector('.' + (!popupMode ? inputClassName : whitePopupInputClassName));
+        }
+        if (/INPUT/gi.test(target.nodeName) || /TEXTAREA/gi.test(target.nodeName)) {
+          target.value = "";
+        }
+      }
     }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+GeneralJs.prototype.insertMemories = async function (propertyArr, popupMode = false) {
+  const instance = this;
+  try {
+    GeneralJs.setQueue(async () => {
+      try {
+        for (let property of propertyArr) {
+          try {
+            await instance.insertMemory(property, popupMode);
+          } catch {}
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  } catch (e) {
+    console.log(e);
   }
 }
 
@@ -5516,6 +5602,7 @@ GeneralJs.prototype.consultingPopup = function () {
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const whitePopupClassName = "whitePopupClassName";
+  const whitePopupBaseBlockClassName = "whitePopupBaseBlockClassName";
   const inputClassName = "whitePopupInputClassName";
   const agreeTargetClassName = "agreeTargetClassName";
   const variableBarClassName = "variableBarClassName";
@@ -5823,7 +5910,7 @@ GeneralJs.prototype.consultingPopup = function () {
       { title: "전체 구매", value: "전체 구매", },
     ];
   
-    barClickEvent = (arr) => {
+    barClickEvent = (arr, property) => {
       const valuesArr = equalJson(JSON.stringify(arr));
       return function (e) {
         const bar = this.querySelector("." + variableBarClassName);
@@ -5837,6 +5924,12 @@ GeneralJs.prototype.consultingPopup = function () {
         bar.style.width = String(ratio * 100) + '%';
         this.setAttribute("ratio", String(ratio));
         this.setAttribute("value", valuesArr[Math.round((valuesArr.length - 1) * ratio)].value);
+
+        instance.setMemory({
+          property: property,
+          type: "bar",
+          value: { valuesArr, ratio },
+        }).catch((err) => { console.log(err) });
       }
     }
 
@@ -5953,6 +6046,11 @@ GeneralJs.prototype.consultingPopup = function () {
       for (let dom of targets) {
         dom.remove();
       }
+      instance.setMemory({
+        property: "address1",
+        type: "text",
+        value: this.value,
+      }).catch((err) => { console.log(err) });
       if (this.value !== '') {
         homeliaisonAnalytics({
           page: instance.pageName,
@@ -6066,6 +6164,11 @@ GeneralJs.prototype.consultingPopup = function () {
         dom.remove();
       }
       this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+      instance.setMemory({
+        property: "etc",
+        type: "text",
+        value: this.value,
+      }).catch((err) => { console.log(err) });
       if (this.value !== '') {
         homeliaisonAnalytics({
           page: instance.pageName,
@@ -6098,6 +6201,11 @@ GeneralJs.prototype.consultingPopup = function () {
       } else {
         this.value = this.value.replace(/[^0-9\.]/gi, '') + "평";
       }
+      instance.setMemory({
+        property: "pyeong",
+        type: "text",
+        value: this.value,
+      }).catch((err) => { console.log(err) });
       if (this.value !== "00평" && this.value !== '') {
         homeliaisonAnalytics({
           page: instance.pageName,
@@ -6226,24 +6334,33 @@ GeneralJs.prototype.consultingPopup = function () {
         const toggle = this.getAttribute("toggle");
         const targetsAll = [ ...document.querySelectorAll("." + inputClassName) ];
         const targets = targetsAll.filter((dom) => { return dom.getAttribute("property") === property });
-        if (toggle === "off") {
-          for (let dom of targets) {
-            if (dom === this) {
-              if (/거주중/gi.test(dom.children[2].textContent)) {
-                livingAlertEvent(dom);
-              }
-              dom.setAttribute("toggle", "on");
-              dom.children[0].style.opacity = String(0);
-              dom.children[1].style.opacity = String(1);
-              dom.children[2].style.color = colorChip.green;
-            } else {
-              dom.setAttribute("toggle", "off");
-              dom.children[0].style.opacity = String(1);
-              dom.children[1].style.opacity = String(0);
-              dom.children[2].style.color = colorChip.black;
+        let valueArr, index;
+        valueArr = new Array(targets.length);
+        index = 0;
+        for (let dom of targets) {
+          if (dom === this) {
+            if (/거주중/gi.test(dom.children[2].textContent)) {
+              livingAlertEvent(dom);
             }
+            dom.setAttribute("toggle", "on");
+            dom.children[0].style.opacity = String(0);
+            dom.children[1].style.opacity = String(1);
+            dom.children[2].style.color = colorChip.green;
+            valueArr[index] = 1;
+          } else {
+            dom.setAttribute("toggle", "off");
+            dom.children[0].style.opacity = String(1);
+            dom.children[1].style.opacity = String(0);
+            dom.children[2].style.color = colorChip.black;
+            valueArr[index] = 0;
           }
+          index++;
         }
+        instance.setMemory({
+          property: property,
+          type: "radio",
+          value: valueArr,
+        }).catch((err) => { console.log(err) });
       } catch (e) {
         console.log(e);
       }
@@ -6309,8 +6426,26 @@ GeneralJs.prototype.consultingPopup = function () {
         }).firstChild;
 
         calendar = instance.makeCalendar(stringToDate(new Date()), function (e) {
+          const self = findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "movein");
           let targets;
-          findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "movein").value = this.getAttribute("buttonValue");
+          self.value = this.getAttribute("buttonValue");
+          instance.setMemory({
+            property: "movein",
+            type: "text",
+            value: self.value,
+          }).catch((err) => { console.log(err) });
+          homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "inputBlur",
+            data: {
+              property: "movein",
+              value: self.value,
+              date: dateToString(new Date(), true),
+            },
+          }).catch((err) => {
+            console.log(err);
+          });
           targets = document.querySelectorAll('.' + removeTargets);
           for (let dom of targets) {
             dom.remove();
@@ -6451,6 +6586,8 @@ GeneralJs.prototype.consultingPopup = function () {
     // 1
     createNode({
       mother: formBox,
+      class: [ whitePopupBaseBlockClassName ],
+      attribute: { baseclass: "name" },
       style: {
         display: "block",
         position: "relative",
@@ -6506,6 +6643,11 @@ GeneralJs.prototype.consultingPopup = function () {
           event: {
             blur: function (e) {
               this.value = this.value.replace(/[^a-zA-Z가-힣]/gi, '');
+              instance.setMemory({
+                property: "name",
+                type: "text",
+                value: this.value,
+              }).catch((err) => { console.log(err) });
               if (this.value !== '') {
                 homeliaisonAnalytics({
                   page: instance.pageName,
@@ -6542,6 +6684,8 @@ GeneralJs.prototype.consultingPopup = function () {
     // 2
     createNode({
       mother: formBox,
+      class: [ whitePopupBaseBlockClassName ],
+      attribute: { baseclass: "phone" },
       style: {
         display: "block",
         position: "relative",
@@ -6601,6 +6745,11 @@ GeneralJs.prototype.consultingPopup = function () {
             blur: function (e) {
               this.value = this.value.replace(/[^0-9\-]/gi, '');
               this.value = autoHypenPhone(this.value);
+              instance.setMemory({
+                property: "phone",
+                type: "text",
+                value: this.value,
+              }).catch((err) => { console.log(err) });
               if (this.value !== '') {
                 homeliaisonAnalytics({
                   page: instance.pageName,
@@ -6637,6 +6786,8 @@ GeneralJs.prototype.consultingPopup = function () {
     // 3
     createNode({
       mother: formBox,
+      class: [ whitePopupBaseBlockClassName ],
+      attribute: { baseclass: "email" },
       style: {
         display: "block",
         position: "relative",
@@ -6698,6 +6849,11 @@ GeneralJs.prototype.consultingPopup = function () {
                 window.alert("올바른 형태의 이메일로 적어주세요!");
                 this.value = this.value.replace(/[\=\+\?\#\&\(\)]/gi, '');
               }
+              instance.setMemory({
+                property: "email",
+                type: "text",
+                value: this.value,
+              }).catch((err) => { console.log(err) });
               if (this.value !== '') {
                 homeliaisonAnalytics({
                   page: instance.pageName,
@@ -6735,6 +6891,8 @@ GeneralJs.prototype.consultingPopup = function () {
     // 4
     createNode({
       mother: formBox,
+      class: [ whitePopupBaseBlockClassName ],
+      attribute: { baseclass: "address0" },
       style: {
         display: "block",
         position: "relative",
@@ -6815,6 +6973,11 @@ GeneralJs.prototype.consultingPopup = function () {
               this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
             },
             blur: function (e) {
+              instance.setMemory({
+                property: "address0",
+                type: "text",
+                value: this.value,
+              }).catch((err) => { console.log(err) });
               if (this.value !== '') {
                 homeliaisonAnalytics({
                   page: instance.pageName,
@@ -6858,6 +7021,8 @@ GeneralJs.prototype.consultingPopup = function () {
     // 5
     createNode({
       mother: formBox,
+      class: [ whitePopupBaseBlockClassName ],
+      attribute: { baseclass: "address1" },
       style: {
         display: "block",
         position: "relative",
@@ -6922,6 +7087,8 @@ GeneralJs.prototype.consultingPopup = function () {
     // 7
     createNode({
       mother: formBox,
+      class: [ whitePopupBaseBlockClassName ],
+      attribute: { baseclass: "pyeong" },
       style: {
         display: "block",
         position: "relative",
@@ -6999,6 +7166,8 @@ GeneralJs.prototype.consultingPopup = function () {
     // 8
     createNode({
       mother: formBox,
+      class: [ whitePopupBaseBlockClassName ],
+      attribute: { baseclass: "living" },
       style: {
         display: "block",
         position: "relative",
@@ -7158,6 +7327,8 @@ GeneralJs.prototype.consultingPopup = function () {
     // 9
     createNode({
       mother: formBox,
+      class: [ whitePopupBaseBlockClassName ],
+      attribute: { baseclass: "movein" },
       style: {
         display: "block",
         position: "relative",
@@ -7213,6 +7384,11 @@ GeneralJs.prototype.consultingPopup = function () {
           event: {
             click: calendarViewEvent,
             blur: function () {
+              instance.setMemory({
+                property: "movein",
+                type: "text",
+                value: this.value,
+              }).catch((err) => { console.log(err) });
               if (this.value !== '') {
                 homeliaisonAnalytics({
                   page: instance.pageName,
@@ -7249,6 +7425,8 @@ GeneralJs.prototype.consultingPopup = function () {
     // 10
     createNode({
       mother: formBox,
+      class: [ whitePopupBaseBlockClassName ],
+      attribute: { baseclass: "contract" },
       style: {
         display: "block",
         position: "relative",
@@ -7418,6 +7596,8 @@ GeneralJs.prototype.consultingPopup = function () {
     // 12
     createNode({
       mother: formBox,
+      class: [ whitePopupBaseBlockClassName ],
+      attribute: { baseclass: "budget" },
       style: {
         display: "block",
         position: "relative",
@@ -7497,7 +7677,7 @@ GeneralJs.prototype.consultingPopup = function () {
                 property: "budget",
               },
               event: {
-                click: barClickEvent(budgetValues),
+                click: barClickEvent(budgetValues, "budget"),
               },
               style: {
                 display: "block",
@@ -7633,6 +7813,8 @@ GeneralJs.prototype.consultingPopup = function () {
     // 14
     createNode({
       mother: formBox,
+      class: [ whitePopupBaseBlockClassName ],
+      attribute: { baseclass: "furniture" },
       style: {
         display: "block",
         position: "relative",
@@ -7712,7 +7894,7 @@ GeneralJs.prototype.consultingPopup = function () {
                 property: "furniture",
               },
               event: {
-                click: barClickEvent(furnitureValues),
+                click: barClickEvent(furnitureValues, "furniture"),
               },
               style: {
                 display: "block",
@@ -7826,6 +8008,8 @@ GeneralJs.prototype.consultingPopup = function () {
     // 16
     createNode({
       mother: formBox,
+      class: [ whitePopupBaseBlockClassName ],
+      attribute: { baseclass: "etc" },
       style: {
         display: "block",
         position: "relative",
@@ -7924,6 +8108,21 @@ GeneralJs.prototype.consultingPopup = function () {
         height: String(moduleHeight * marginRatio) + ea,
       }
     });
+
+    instance.insertMemories([
+      "name",
+      "phone",
+      "email",
+      "address0",
+      "address1",
+      "pyeong",
+      "living",
+      "movein",
+      "contract",
+      "budget",
+      "furniture",
+      "etc",
+    ], true).catch((err) => { console.log(err); });
 
     // 12
     policyTong = createNode({

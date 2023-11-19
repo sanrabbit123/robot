@@ -232,6 +232,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
+  const baseBlockClassName = "baseBlockClassName";
   const inputClassName = "inputClassName";
   const agreeTargetClassName = "agreeTargetClassName";
   const variableBarClassName = "variableBarClassName";
@@ -683,7 +684,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     { title: "전체 구매", value: "전체 구매", },
   ];
 
-  barClickEvent = (arr) => {
+  barClickEvent = (arr, property) => {
     const valuesArr = equalJson(JSON.stringify(arr));
     return function (e) {
       const bar = this.querySelector("." + variableBarClassName);
@@ -697,6 +698,12 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       bar.style.width = String(ratio * 100) + '%';
       this.setAttribute("ratio", String(ratio));
       this.setAttribute("value", valuesArr[Math.round((valuesArr.length - 1) * ratio)].value);
+
+      instance.mother.setMemory({
+        property: property,
+        type: "bar",
+        value: { valuesArr, ratio },
+      }).catch((err) => { console.log(err) });
     }
   }
 
@@ -710,7 +717,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       property: "name",
       type: "text",
       value: this.value,
-    });
+    }).catch((err) => { console.log(err) });
     if (this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -734,7 +741,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       property: "phone",
       type: "text",
       value: this.value,
-    });
+    }).catch((err) => { console.log(err) });
     if (this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -752,12 +759,15 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   }
 
   emailBlurEvent = function () {
-    this.value = this.value.replace(/[\=\+\?\#\&\(\)]/gi, '');
+    if (!/\@/.test(this.value) || !/\./.test(this.value)) {
+      window.alert("올바른 형태의 이메일로 적어주세요!");
+      this.value = this.value.replace(/[\=\+\?\#\&\(\)]/gi, '');
+    }
     instance.mother.setMemory({
       property: "email",
       type: "text",
       value: this.value,
-    });
+    }).catch((err) => { console.log(err) });
     if (this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -779,7 +789,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       property: "address0",
       type: "text",
       value: this.value,
-    });
+    }).catch((err) => { console.log(err) });
     if (this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -912,7 +922,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       property: "address1",
       type: "text",
       value: this.value,
-    });
+    }).catch((err) => { console.log(err) });
     if (this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -1026,6 +1036,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       dom.remove();
     }
     this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+    instance.mother.setMemory({
+      property: "etc",
+      type: "text",
+      value: this.value,
+    }).catch((err) => { console.log(err) });
     if (this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -1062,7 +1077,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       property: "pyeong",
       type: "text",
       value: this.value,
-    });
+    }).catch((err) => { console.log(err) });
     if (this.value !== "00평" && this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
@@ -1191,24 +1206,33 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       const toggle = this.getAttribute("toggle");
       const targetsAll = [ ...document.querySelectorAll("." + inputClassName) ];
       const targets = targetsAll.filter((dom) => { return dom.getAttribute("property") === property });
-      if (toggle === "off") {
-        for (let dom of targets) {
-          if (dom === this) {
-            if (/거주중/gi.test(dom.children[2].textContent)) {
-              livingAlertEvent(dom);
-            }
-            dom.setAttribute("toggle", "on");
-            dom.children[0].style.opacity = String(0);
-            dom.children[1].style.opacity = String(1);
-            dom.children[2].style.color = colorChip.green;
-          } else {
-            dom.setAttribute("toggle", "off");
-            dom.children[0].style.opacity = String(1);
-            dom.children[1].style.opacity = String(0);
-            dom.children[2].style.color = colorChip.black;
+      let valueArr, index;
+      valueArr = new Array(targets.length);
+      index = 0;
+      for (let dom of targets) {
+        if (dom === this) {
+          if (/거주중/gi.test(dom.children[2].textContent)) {
+            livingAlertEvent(dom);
           }
+          dom.setAttribute("toggle", "on");
+          dom.children[0].style.opacity = String(0);
+          dom.children[1].style.opacity = String(1);
+          dom.children[2].style.color = colorChip.green;
+          valueArr[index] = 1;
+        } else {
+          dom.setAttribute("toggle", "off");
+          dom.children[0].style.opacity = String(1);
+          dom.children[1].style.opacity = String(0);
+          dom.children[2].style.color = colorChip.black;
+          valueArr[index] = 0;
         }
+        index++;
       }
+      instance.mother.setMemory({
+        property: property,
+        type: "radio",
+        value: valueArr,
+      }).catch((err) => { console.log(err) });
     } catch (e) {
       console.log(e);
     }
@@ -1281,7 +1305,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           property: "movein",
           type: "text",
           value: self.value,
-        });
+        }).catch((err) => { console.log(err) });
         homeliaisonAnalytics({
           page: instance.pageName,
           standard: instance.firstPageViewTime,
@@ -1406,8 +1430,10 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   });
 
   // 1
-  thisTempBlock = createNode({
+  createNode({
     mother: rightBox,
+    class: [ baseBlockClassName ],
+    attribute: { baseclass: "name" },
     style: {
       display: "block",
       position: "relative",
@@ -1480,10 +1506,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
     ]
   });
-  instance.mother.insertMemory(thisTempBlock, "name");
   // 2
-  thisTempBlock = createNode({
+  createNode({
     mother: rightBox,
+    class: [ baseBlockClassName ],
+    attribute: { baseclass: "phone" },
     style: {
       display: "block",
       position: "relative",
@@ -1557,10 +1584,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
     ]
   });
-  instance.mother.insertMemory(thisTempBlock, "phone");
   // 3
-  thisTempBlock = createNode({
+  createNode({
     mother: rightBox,
+    class: [ baseBlockClassName ],
+    attribute: { baseclass: "email" },
     style: {
       display: "block",
       position: "relative",
@@ -1634,10 +1662,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
     ]
   });
-  instance.mother.insertMemory(thisTempBlock, "email");
   // 4
-  thisTempBlock = createNode({
+  createNode({
     mother: rightBox,
+    class: [ baseBlockClassName ],
+    attribute: { baseclass: "address0" },
     style: {
       display: "block",
       position: "relative",
@@ -1740,10 +1769,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
     ]
   });
-  instance.mother.insertMemory(thisTempBlock, "address0");
   // 5
-  thisTempBlock = createNode({
+  createNode({
     mother: rightBox,
+    class: [ baseBlockClassName ],
+    attribute: { baseclass: "address1" },
     style: {
       display: "block",
       position: "relative",
@@ -1793,7 +1823,6 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
     ]
   });
-  instance.mother.insertMemory(thisTempBlock, "address1");
 
   // 6 : margin
   createNode({
@@ -1807,8 +1836,10 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   });
 
   // 7
-  thisTempBlock = createNode({
+  createNode({
     mother: rightBox,
+    class: [ baseBlockClassName ],
+    attribute: { baseclass: "pyeong" },
     style: {
       display: "block",
       position: "relative",
@@ -1883,10 +1914,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       }
     ]
   });
-  instance.mother.insertMemory(thisTempBlock, "pyeong");
   // 8
   createNode({
     mother: rightBox,
+    class: [ baseBlockClassName ],
+    attribute: { baseclass: "living" },
     style: {
       display: "block",
       position: "relative",
@@ -2042,8 +2074,10 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     ]
   });
   // 9
-  thisTempBlock = createNode({
+  createNode({
     mother: rightBox,
+    class: [ baseBlockClassName ],
+    attribute: { baseclass: "movein" },
     style: {
       display: "block",
       position: "relative",
@@ -2103,7 +2137,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
               property: "movein",
               type: "text",
               value: this.value,
-            });
+            }).catch((err) => { console.log(err) });
             if (this.value !== '') {
               homeliaisonAnalytics({
                 page: instance.pageName,
@@ -2137,10 +2171,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
     ]
   });
-  instance.mother.insertMemory(thisTempBlock, "movein");
   // 10
   createNode({
     mother: rightBox,
+    class: [ baseBlockClassName ],
+    attribute: { baseclass: "contract" },
     style: {
       display: "block",
       position: "relative",
@@ -2310,6 +2345,8 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   // 12
   createNode({
     mother: rightBox,
+    class: [ baseBlockClassName ],
+    attribute: { baseclass: "budget" },
     style: {
       display: "block",
       position: "relative",
@@ -2389,7 +2426,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
               property: "budget",
             },
             event: {
-              click: barClickEvent(budgetValues),
+              click: barClickEvent(budgetValues, "budget"),
             },
             style: {
               display: "block",
@@ -2525,6 +2562,8 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   // 14
   createNode({
     mother: rightBox,
+    class: [ baseBlockClassName ],
+    attribute: { baseclass: "furniture" },
     style: {
       display: "block",
       position: "relative",
@@ -2604,7 +2643,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
               property: "furniture",
             },
             event: {
-              click: barClickEvent(furnitureValues),
+              click: barClickEvent(furnitureValues, "furniture"),
             },
             style: {
               display: "block",
@@ -2718,6 +2757,8 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   // 16
   createNode({
     mother: rightBox,
+    class: [ baseBlockClassName ],
+    attribute: { baseclass: "etc" },
     style: {
       display: "block",
       position: "relative",
@@ -2805,6 +2846,21 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       }
     ]
   });
+
+  instance.mother.insertMemories([
+    "name",
+    "phone",
+    "email",
+    "address0",
+    "address1",
+    "pyeong",
+    "living",
+    "movein",
+    "contract",
+    "budget",
+    "furniture",
+    "etc",
+  ], false).catch((err) => { console.log(err); });
 
   // policy and submit
   policyArea = createNode({
