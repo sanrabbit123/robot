@@ -819,6 +819,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
             findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address0").value = e.data.trim();
             findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address1").value = '';
             findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address1").focus();
+            instance.mother.setMemory({
+              property: "address0",
+              type: "text",
+              value: e.data.trim(),
+            }).catch((err) => { console.log(err) });
           }
           const targets = document.querySelectorAll('.' + removeTargets);
           for (let dom of targets) {
