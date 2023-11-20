@@ -5579,6 +5579,225 @@ GeneralJs.prompt = function (message, preValue = '') {
           resolve(finalValue === '' ? null : finalValue);
         }
       });
+    } else {
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Tab") {
+          e.preventDefault();
+          const finalValue = this.value.trim();
+          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+          for (let z = 0; z < targets.length; z++) {
+            try {
+              targets[z].remove();
+            } catch {}
+          }
+          resolve(finalValue);
+        }
+      });
+    }
+
+  });
+}
+
+GeneralJs.promptLong = function (message, preValue = '') {
+  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const ea = "px";
+  const promptAsideClassName = "promptAsideClassName";
+  const mobile = window.innerWidth <= 900;
+  const desktop = !mobile;
+  let whiteTongBase;
+  let whiteTong;
+  let whiteWidth, whiteHeight;
+  let paddingTop, paddingLeft;
+  let paddingBottom;
+  let size0, size1;
+  let marginLeft;
+  let bottomVisual;
+  let inputBoxHeight;
+  let input;
+  let inputIndent;
+  let inputBottomVisual;
+  let greenBarHeight;
+  let lineHeight;
+  let wordingVisual;
+  let finalEvent;
+  let inputSize;
+  let textareaVisual;
+
+  whiteWidth = 320;
+  whiteHeight = 150;
+  paddingTop = 17;
+  paddingLeft = 23;
+  paddingBottom = 152;
+  size0 = 14;
+  size1 = 15;
+  inputSize = 13;
+  marginLeft = 18;
+  bottomVisual = 7;
+  inputBoxHeight = 120;
+  inputIndent = 9;
+  inputBottomVisual = 0;
+  lineHeight = 1.5;
+  wordingVisual = GeneralJs.isMac() ? 0 : 2;
+  textareaVisual = 5;
+
+  greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
+  if (Number.isNaN(greenBarHeight)) {
+    greenBarHeight = 0;
+  }
+
+  whiteTongBase = createNode({
+    mode: "aside",
+    mother: document.body,
+    class: [ promptAsideClassName ],
+    event: {
+      contextmenu: (e) => { e.stopPropagation(); },
+      dblclick: (e) => { e.stopPropagation(); },
+      drop: (e) => { e.stopPropagation(); },
+      keyup: (e) => { e.stopPropagation(); },
+      keydown: (e) => { e.stopPropagation(); },
+      keypress: (e) => { e.stopPropagation(); },
+    },
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "fixed",
+      top: String(0) + "vh",
+      left: String(1) + "vw",
+      width: String(98) + "vw",
+      height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
+      background: "transparent",
+      zIndex: String(900)
+    }
+  });
+
+  whiteTong = createNode({
+    mother: whiteTongBase,
+    event: {
+      click: (e) => { e.stopPropagation(); },
+    },
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(whiteWidth - (paddingLeft * 2)) + ea,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(paddingBottom) + ea,
+      paddingLeft: String(paddingLeft) + ea,
+      paddingRight: String(paddingLeft) + ea,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      background: colorChip.white,
+      animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    text: "Q",
+    style: {
+      fontSize: String(size0) + ea,
+      fontWeight: String(400),
+      color: colorChip.green,
+      fontFamily: "graphik",
+      position: "absolute",
+      top: String(paddingTop) + ea,
+      left: String(paddingLeft) + ea,
+      lineHeight: String(lineHeight),
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    text: message,
+    style: {
+      position: "relative",
+      marginLeft: String(marginLeft) + ea,
+      fontSize: String(size1) + ea,
+      fontWeight: String(500),
+      color: colorChip.black,
+      lineHeight: String(lineHeight),
+      top: String(wordingVisual) + ea,
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    style: {
+      position: "absolute",
+      bottom: String(paddingTop + bottomVisual) + ea,
+      left: String(paddingLeft + marginLeft) + ea,
+      width: withOut((paddingLeft * 2) + marginLeft, ea),
+      height: String(inputBoxHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gray1,
+    }
+  });
+
+  input = createNode({
+    mother: whiteTong,
+    mode: "textarea",
+    attribute: {
+      type: "text",
+    },
+    style: {
+      position: "absolute",
+      bottom: String(paddingTop + bottomVisual + inputBottomVisual) + ea,
+      left: String(paddingLeft + marginLeft + inputIndent) + ea,
+      width: withOut((paddingLeft * 2) + marginLeft + (inputIndent * 2), ea),
+      height: String(inputBoxHeight - textareaVisual) + ea,
+      background: "transparent",
+      fontSize: String(inputSize) + ea,
+      fontWeight: String(400),
+      color: colorChip.black,
+      border: String(0),
+      outline: String(0),
+      lineHeight: String(1.7),
+    }
+  });
+
+  input.value = (typeof preValue === "string" ? preValue : "");
+  input.focus();
+
+  return new Promise((resolve, reject) => {
+
+    whiteTongBase.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+      for (let z = 0; z < targets.length; z++) {
+        try {
+          targets[z].remove();
+        } catch {}
+      }
+      resolve(input.value.trim());
+    });
+
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const finalValue = this.value.trim();
+        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+        for (let z = 0; z < targets.length; z++) {
+          try {
+            targets[z].remove();
+          } catch {}
+        }
+        resolve(finalValue);
+      }
+    });
+
+    if (mobile) {
+      input.addEventListener("blur", function (e) {
+        if (document.querySelector('.' + promptAsideClassName) !== null) {
+          const finalValue = this.value.trim();
+          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+          for (let z = 0; z < targets.length; z++) {
+            try {
+              targets[z].remove();
+            } catch {}
+          }
+          resolve(finalValue === '' ? null : finalValue);
+        }
+      });
     }
 
   });
@@ -6095,6 +6314,215 @@ GeneralJs.promptButtons = function (message, buttons) {
       num++;
     }
 
+  }
+
+  return new Promise((resolve, reject) => {
+
+    whiteTongBase.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+      for (let z = 0; z < targets.length; z++) {
+        try {
+          targets[z].remove();
+        } catch {}
+      }
+      resolve(null);
+    });
+
+    buttonsChildren = [ ...buttonsBaseTong.children ];
+    for (let dom of buttonsChildren) {
+      dom.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const thisValue = this.getAttribute("value").trim();
+        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+        for (let z = 0; z < targets.length; z++) {
+          try {
+            targets[z].remove();
+          } catch {}
+        }
+        resolve(thisValue);
+      });
+    }
+
+  });
+}
+
+GeneralJs.promptLongButtons = function (message, buttons) {
+  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const ea = "px";
+  const promptAsideClassName = "promptAsideClassName";
+  const mobile = window.innerWidth <= 900;
+  const desktop = !mobile;
+  let whiteTongBase;
+  let whiteTong;
+  let whiteWidth, whiteHeight;
+  let paddingTop, paddingLeft;
+  let paddingBottom;
+  let size0, size1;
+  let marginLeft;
+  let bottomVisual;
+  let inputBoxHeight;
+  let input;
+  let inputIndent;
+  let inputBottomVisual;
+  let greenBarHeight;
+  let lineHeight;
+  let wordingVisual;
+  let finalEvent;
+  let inputSize;
+  let buttonsBaseTong;
+  let buttonBetween;
+  let num;
+  let buttonSize;
+  let textTop;
+  let buttonsChildren;
+  let buttonsBaseTongMarginTop;
+  let buttonPaddingLeft;
+
+  whiteWidth = 320;
+  whiteHeight = 150;
+  paddingTop = 17;
+  paddingLeft = 23;
+  paddingBottom = 62;
+  size0 = 14;
+  size1 = 15;
+  inputSize = 13;
+  buttonSize = 12;
+  marginLeft = 18;
+  bottomVisual = 7;
+  inputBoxHeight = 26;
+  inputIndent = 9;
+  inputBottomVisual = 0;
+  lineHeight = 1.5;
+  wordingVisual = GeneralJs.isMac() ? 0 : 2;
+  textTop = GeneralJs.isMac() ? -1 : 1;
+  buttonBetween = 4;
+  buttonsBaseTongMarginTop = 10;
+  buttonPaddingLeft = 10;
+
+  greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
+  if (Number.isNaN(greenBarHeight)) {
+    greenBarHeight = 0;
+  }
+
+  whiteTongBase = createNode({
+    mode: "aside",
+    mother: document.body,
+    class: [ promptAsideClassName ],
+    event: {
+      contextmenu: (e) => { e.stopPropagation(); },
+      dblclick: (e) => { e.stopPropagation(); },
+      drop: (e) => { e.stopPropagation(); },
+      keyup: (e) => { e.stopPropagation(); },
+      keydown: (e) => { e.stopPropagation(); },
+      keypress: (e) => { e.stopPropagation(); },
+    },
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "fixed",
+      top: String(0) + "vh",
+      left: String(1) + "vw",
+      width: String(98) + "vw",
+      height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
+      background: "transparent",
+      zIndex: String(900)
+    }
+  });
+
+  whiteTong = createNode({
+    mother: whiteTongBase,
+    event: {
+      click: (e) => { e.stopPropagation(); },
+    },
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(whiteWidth - (paddingLeft * 2)) + ea,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(paddingLeft - buttonBetween) + ea,
+      paddingLeft: String(paddingLeft) + ea,
+      paddingRight: String(paddingLeft) + ea,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      background: colorChip.white,
+      animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    text: "Q",
+    style: {
+      fontSize: String(size0) + ea,
+      fontWeight: String(400),
+      color: colorChip.green,
+      fontFamily: "graphik",
+      position: "absolute",
+      top: String(paddingTop) + ea,
+      left: String(paddingLeft) + ea,
+      lineHeight: String(lineHeight),
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    text: message,
+    style: {
+      position: "relative",
+      marginLeft: String(marginLeft) + ea,
+      fontSize: String(size1) + ea,
+      fontWeight: String(500),
+      color: colorChip.black,
+      lineHeight: String(lineHeight),
+      top: String(wordingVisual) + ea,
+    }
+  });
+
+  buttonsBaseTong = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      marginTop: String(buttonsBaseTongMarginTop) + ea,
+      width: withOut(0, ea),
+      height: "auto",
+      borderRadius: String(5) + "px",
+      background: colorChip.white,
+    }
+  });
+
+  num = 0;
+  for (let text of buttons) {
+    createNode({
+      mother: buttonsBaseTong,
+      attribute: { value: text },
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        height: String(inputBoxHeight) + ea,
+        width: withOut(buttonPaddingLeft * 2, ea),
+        marginBottom: String(buttonBetween) + ea,
+        background: colorChip.softGreen,
+        borderRadius: String(5) + "px",
+        paddingLeft: String(buttonPaddingLeft) + ea,
+        paddingRight: String(buttonPaddingLeft) + ea,
+      },
+      child: {
+        text,
+        style: {
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.white,
+          position: "relative",
+          top: String(textTop) + ea,
+        }
+      }
+    });
+    num++;
   }
 
   return new Promise((resolve, reject) => {

@@ -156,37 +156,58 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-    
     /*
+    
+    const adsId = "608725";
     const apiKey = "73833f6c89c66fd71bc326498c70b5d2";
-    const code = "xr8Z4C-h2lXgfK_Qy8xJyZBov6BxkLcfIPFbk1cxDxMg8hI4aBUpFC0PYlMKPXTbAAABi9x6tY1APV-WDrAHcw";
     const baseUrl = "https://apis.moment.kakao.com";
     const redirectUri = "https://home-liaison.net/kakaoRedirect";
     const config = { headers: { "Content-Type": "application/json" } };
+    const codeTarget = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=73833f6c89c66fd71bc326498c70b5d2&redirect_uri=https%3A%2F%2Fhome-liaison.net%2FkakaoRedirect";
+    const token0 = "eyJraWQiOiI5ZjI1MmRhZGQ1ZjIzM2Y5M2QyZmE1MjhkMTJmZWEiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI3MzgzM2Y2Yzg5YzY2ZmQ3MWJjMzI2NDk4YzcwYjVkMiIsInN1YiI6IjI3ODE4OTkyODIiLCJhdXRoX3RpbWUiOjE3MDA0NDczNDgsImlzcyI6Imh0dHBzOi8va2F1dGgua2FrYW8uY29tIiwiZXhwIjoxNzAwNDY4OTQ4LCJpYXQiOjE3MDA0NDczNDh9.qDl9fYy-xBEydbyz9LlJz4toU6QqjstEm4fkvBPe4qOjq-Od5D7os1-IzyiT-oVhWQVjTn495v3yidEpwF12ZvBjlcSiIJr_8UbicdTulST0wuNFXRBJKXEZQetOo9tS6gsh71BHzA0PE01BTOFEh7dbujL2-ewxZjm2xThkwx7TkhlOmZdBqKs-kSTLuA8qqBWLuT72msDkFMahCOHfngInDNmAldzIwk3E5RR1kyU2LHCNzdc32umPyoj4BBAJtSfsgRGg3zfEjzjW7zj9VYj9qqzLY3A0ZkYgsrf3vqO-xe9Xnzay1QZPConuupIgmU3oUG1YKEeh6QsFwPH2Pg";
+    const token1 = "eyJraWQiOiI5ZjI1MmRhZGQ1ZjIzM2Y5M2QyZmE1MjhkMTJmZWEiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI3MzgzM2Y2Yzg5YzY2ZmQ3MWJjMzI2NDk4YzcwYjVkMiIsInN1YiI6IjI3ODE4OTkyODIiLCJhdXRoX3RpbWUiOjE3MDA0NDc0NTMsImlzcyI6Imh0dHBzOi8va2F1dGgua2FrYW8uY29tIiwiZXhwIjoxNzAwNDY5MDUzLCJpYXQiOjE3MDA0NDc0NTN9.p1pd7_xsbNdISddluBq_gOe1zm91NSV_76F7xklqA5QM-skrZvjqxEgqPxS2MhdeSD7dTb3M7QghDe0jn_RbuImj6jVoNSlxV-7SPvxANIx77xwgAJSPWIno34LN8hHPoQtPH6G1TxuDL4vGUSfuLRfcxV3ph4k9lq2vuLq5Jn-jJhm7pGjW62ZnR4T84ARI-jIj6OIcYhhg2tZcUgiaz6TMPTmVjTnY4EmC8CnsvIjg-navfSQFWtBwE9R0ENRUUoehW71-JO7RsU5Jr1ho9K7bYZxRO3NW9LMpmuFnrHtD-fzUX5aBdza6QSatBjkfdl7XSi0zn7_9N8PjhVy7aw";
+
     let url, res;
 
-    res = await requestSystem("https://kauth.kakao.com/oauth/authorize", {
-      response_type: "code",
-      client_id: apiKey,
-      redirect_uri: redirectUri,
-    }, {
-      method: "get",
-    });
-    console.log(res.data)
+    // res = await requestSystem("https://kauth.kakao.com/oauth/authorize", {
+    //   response_type: "code",
+    //   client_id: apiKey,
+    //   redirect_uri: redirectUri,
+    // }, {
+    //   method: "get",
+    // });
+    // console.log(res)
 
     // res = await requestSystem("https://kauth.kakao.com/oauth/token", {
     //   grant_type: "authorization_code",
     //   client_id: apiKey,
     //   redirect_uri: redirectUri,
-    //   code: code,
+    //   code: "gqvbsTDNa3ypWSLBWDj6Y_ghQKgqzbEyliBa9qBcrYtamn-sIOcFgW52tGoKPXSXAAABi-qQrCqt1856Xp2T3g",
     // }, {
     //   headers: {
     //     "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
     //   }
     // })
     // console.log(res.data);
+
+    // try {
+    //   res = await requestSystem("https://apis.moment.kakao.com/openapi/v4/adAccounts", {
+
+    //   }, {
+    //     method: "get",
+    //     headers: {
+    //       "Authorization": "Bearer " + token1,
+    //     }
+    //   })
+    // } catch (e) {
+    //   console.log(e.response)
+    // }
+
     */
+
+
+
+
     
 
 
@@ -7031,6 +7052,11 @@ DevContext.prototype.launching = async function () {
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
+    // });
+
+    // await human.sendSms({
+    //   to: "01030601025",
+    //   body: `안녕하세요, 양새얀 디자이너님!\n주식회사 홈리에종입니다.\n\n면접 날짜와 시간, 주소에 대한 정보 공지해드립니다. 해당 시간과 장소에서 뵙겠습니다 :)\n\n* 시간 : 11월 22일 수요일 오후 6시 30분\n* 장소 : 서울특별시 성동구 성수일로 10 605호 (주)홈리에종`,
     // });
 
     // bill passive sync

@@ -378,7 +378,7 @@ FileJs.prototype.scheduleViewing = function () {
 FileJs.prototype.imagePreviewBox = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight, searchModeButtonsClassName, thisMember, memberTongClassName, intervalDelta, previewOnlyMode } = this;
-  const { createNode, createNodes, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref, linkToString, stringToLink, equalJson, cleanChildren, svgMaker } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref, linkToString, stringToLink, equalJson, cleanChildren, svgMaker, dateToString, stringToDate } = GeneralJs;
   const fileBaseClassName = "fileBase";
   const contextmenuClassName = "contextmenuFactor";
   const tempInputClassName = "tempInputClassName";
@@ -493,6 +493,11 @@ FileJs.prototype.imagePreviewBox = function () {
                 let thisMemberId;
                 let sendId;
                 let thisDesid, thisInfo;
+                let clientSearch;
+                let clientResponse, clientResponseData;
+                let purposeSelection;
+                let preDescription;
+                let thisClientName;
 
                 if (active) {
                   if (instance.imageSelected.length > 0) {
@@ -500,30 +505,103 @@ FileJs.prototype.imagePreviewBox = function () {
                     targets = instance.imageSelected.map((dom) => {
                       return dom.getAttribute("absolute");
                     });
-                    targetCliid = "c1801_aa01s";
-                    purpose = "디자이너 추천";
-                    description = "기타 안내 사항에 대한 텍스트";
-                    thisMemberId = instance.mother.member.id;
-                    thisDesid = "d1701_aa01s";
-                    thisInfo = "제안 문서";
-                    
-                    response = await ajaxJson({
-                      mode: "store",
-                      cliid: targetCliid,
-                      desid: thisDesid,
-                      info: thisInfo,
-                      purpose,
-                      description,
-                      member: thisMemberId,
-                      images: targets,
-                    }, S3HOST + ":3000/imageTransfer");
-                    sendId = response.id;
 
-                    if (typeof sendId !== "string") {
-                      throw new Error("store fail");
+                    clientSearch = await GeneralJs.prompt("고객 이름, 또는 아이디를 입력해주세요!");
+                    if (clientSearch === null) {
+                      throw new Error("interrupt");
+                    }
+                    clientResponse = await ajaxJson({
+                      query: clientSearch
+                    }, BACKHOST + "/searchClients", { equal: true });
+                    clientResponseData = [];
+                    clientResponse.data.sort((a, b) => { return stringToDate(b.info.timeline).valueOf() - stringToDate(a.info.timeline).valueOf() });
+                    for (let obj of clientResponse.data) {
+                      if (!clientResponseData.map((o) => { return o.cliid }).includes(obj.standard.cliid)) {
+                        clientResponseData.push({
+                          cliid: obj.standard.cliid,
+                          title: obj.standard.cliid + " - " + obj.standard.name + " : " + obj.info.timeline.split(" ")[0] + " 문의",
+                          original: equalJson(JSON.stringify(obj)),
+                        });
+                      }
                     }
 
-                    console.log(sendId);
+                    if (clientResponseData.length === 0) {
+
+                      window.alert("고객을 찾을 수 없습니다!");
+                      throw new Error("invalid cliid");
+
+                    } else if (clientResponseData.length >= 1) {
+
+                      if (clientResponseData.length > 1) {
+                        clientSearch = await GeneralJs.promptLongButtons("고객 이름, 또는 아이디를 선택해주세요!", clientResponseData.map((o) => { return o.title }));
+                        if (clientSearch === null) {
+                          throw new Error("invalid selection");
+                        }
+                        targetCliid = clientSearch.split(" ")[0];
+                        thisClientName = clientSearch.split(" ")[2];
+                      } else {
+                        targetCliid = clientResponseData[0].cliid;
+                        thisClientName = clientResponseData[0].original.standard.name;
+                      }
+                      
+                      purposeSelection = await GeneralJs.promptLongButtons("전송 목적을 선택해주세요!", [
+                        "포트폴리오 전송",
+                        "비공개 사진 전송",
+                        "디자인 제안 이미지 전송",
+                        "기타 사진 전송",
+                        "직접 입력...",
+                      ]);
+                      if (purposeSelection === null) {
+                        throw new Error("invalid selection");
+                      }
+                      if (/직접 입력/gi.test(purposeSelection)) {
+                        purpose = await GeneralJs.prompt("전송 목적을 적어주세요!");
+                        if (purpose === null) {
+                          throw new Error("invalid purpose");
+                        }
+                      } else {
+                        purpose = purposeSelection;
+                      }
+
+                      console.log(/[ap][0-9]+/gi.exec(targets))
+
+                      description = await GeneralJs.promptLong("기타 안내 사항을 적어주세요!", `안녕하세요, ${thisClientName} 고객님!`);
+                      if (description === null || description === '') {
+                        window.alert("안내 사항을 적어주세요!");
+                        throw new Error("invalid description");
+                      }
+
+                      console.log(description);
+
+                      thisMemberId = instance.mother.member.id;
+
+                      // thisDesid = "d1701_aa01s";
+                      // thisInfo = {};
+                      
+                      // response = await ajaxJson({
+                      //   mode: "store",
+                      //   cliid: targetCliid,
+                      //   desid: thisDesid,
+                      //   info: thisInfo,
+                      //   purpose,
+                      //   description,
+                      //   member: thisMemberId,
+                      //   images: targets,
+                      // }, S3HOST + ":3000/imageTransfer");
+                      // sendId = response.id;
+  
+                      // if (typeof sendId !== "string") {
+                      //   throw new Error("store fail");
+                      // }
+  
+                      // console.log(sendId);
+
+
+
+
+
+                    }
+                    
                     
                     // loading = instance.mother.whiteProgressLoading();
 
@@ -544,7 +622,6 @@ FileJs.prototype.imagePreviewBox = function () {
               } catch (e) {
                 console.log(e);
                 window.alert("전송에 실패하였습니다! 다시 시도해주세요!");
-                window.location.reload();
               }
             }
           },
