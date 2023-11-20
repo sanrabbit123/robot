@@ -6476,7 +6476,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
           [ targetJson ] = rows;
 
           client = targetJson.target.name;
-          purpose = targetJson.contents.designer.designer + " 디자이너 " + targetJson.contents.purpose;
+          purpose = targetJson.contents.designer.designer + " " + targetJson.contents.purpose;
           host = address.frontinfo.host;
           path = "transfer";
           cliid = targetJson.target.cliid;
