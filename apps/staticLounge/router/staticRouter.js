@@ -1,4 +1,4 @@
-const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
+const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, kakao, human) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
@@ -53,6 +53,9 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
   this.facebook = new FacebookAPIs();
   this.google = new GoogleAds();
   this.youtube = new GoogleYoutube();
+
+  this.kakao = kakao;
+  this.human = human;
 
   this.staticConst = process.env.HOME + "/samba";
   this.sambaToken = "__samba__";
@@ -6296,6 +6299,8 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
+  const human = this.human;
+  const kakao = this.kakao;
   const { equalJson, dateToString, stringToDate, requestSystem, mysqlQuery, sleep, fileSystem, shellExec, shellLink, linkToString, uniqueValue } = this.mother;
   const { staticConst, sambaToken } = this;
   let obj;
@@ -6327,6 +6332,15 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
       let thisDesigner, thisClient, thisMember;
       let tempObj;
       let thisSrc, finalSrc;
+      let rows;
+      let targetJson;
+      let client;
+      let purpose;
+      let host;
+      let path;
+      let cliid;
+      let id;
+      let historyArr;
       
       if (mode === "store") {
         if (req.body.cliid === undefined || req.body.desid === undefined || req.body.info === undefined || req.body.purpose === undefined || req.body.description === undefined || req.body.member === undefined || req.body.images === undefined) {
@@ -6453,6 +6467,37 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
 
       } else if (mode === "send") {
 
+        if (req.body.id === undefined) {
+          throw new Error("invalid post");
+        }
+        const { id } = equalJson(req.body);
+        rows = await back.mongoRead(collection, { id });
+        if (rows.length === 1) {
+          [ targetJson ] = rows;
+
+          client = targetJson.target.name;
+          purpose = targetJson.contents.designer.designer + " 디자이너 " + targetJson.contents.purpose;
+          host = address.frontinfo.host;
+          path = "transfer";
+          cliid = targetJson.target.cliid;
+
+          historyArr = equalJson(JSON.stringify(targetJson.history));
+          historyArr.unshift({
+            action: "send",
+            date: new Date(),
+          });
+          await back.mongoUpdate(collection, [ { id }, { history: historyArr } ], { selfMongo });
+
+          await human.sendSms({
+            to: targetJson.target.phone.replace(/[^0-9]/gi, ''),
+            body: `${client} 고객님 안녕하세요! 홈리에종입니다 :) 이미지 전달 페이지 링크를 보내드립니다.\n\n* 이미지 제목 : ${purpose}\n* 이미지 보기\nhttps://${host}/${path}.php?cliid=${cliid}&id=${id}`,
+          });
+
+          res.send(JSON.stringify({ message: "done" }));
+
+        } else {
+          throw new Error("invalid id");
+        }
 
       } else {
         throw new Error("invalid mode");

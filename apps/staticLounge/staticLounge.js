@@ -62,6 +62,14 @@ StaticLounge.prototype.staticConnect = async function () {
     await MONGOCONSOLEC.connect();
     await MONGOLOGC.connect();
 
+    //set kakao
+    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+    const kakaoInstance = new KakaoTalk();
+
+    //set human
+    const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
+    const humanInstance = new HumanPacket();
+
     //set pem key
     let pems, pemsLink;
     let certDir, keyDir, caDir;
@@ -93,7 +101,7 @@ StaticLounge.prototype.staticConnect = async function () {
 
     //set router
     const StaticRouter = require(`${this.dir}/router/staticRouter.js`);
-    const router = new StaticRouter(MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC);
+    const router = new StaticRouter(MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, kakaoInstance, humanInstance);
     await router.setMembers();
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);

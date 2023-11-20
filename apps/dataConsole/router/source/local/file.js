@@ -509,7 +509,7 @@ FileJs.prototype.imagePreviewBox = function () {
                       return { src: dom.getAttribute("src").replace(/^http[s]?\:\/\//i, "").replace(new RegExp("^" + S3HOST.replace(/^http[s]?\:\/\//i, "").split(":")[0], "gi"), "__samba__"), absolute: dom.getAttribute("absolute") };
                     });
 
-                    if (!/\/corePortfolio/g.test(targets[0].src) && !/\/designProposal\/image/g.test(targets[0].src)) {
+                    if (!/\/corePortfolio/g.test(targets[0].src) && !/\/designProposal\/image/g.test(targets[0].src) && !/\/rawDesigner\/ghost/g.test(targets[0].src)) {
                       window.alert("현재 폴더에서는 지원하지 않는 기능입니다!");
                       throw new Error("invalid folder");
                     }
@@ -538,7 +538,7 @@ FileJs.prototype.imagePreviewBox = function () {
                       thisDesid = /[d][0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g.exec(targets[0].src)[0];
                       [ thisDesigner ] = await ajaxJson({ noFlat: true, whereQuery: { desid: thisDesid } }, SECONDHOST + "/getDesigners", { equal: true });
                       thisInfo = {
-                        type: "proposal",
+                        type: /\/designProposal\/image/g.test(targets[0].src) ? "proposal" : "ghost",
                         desid: thisDesid,
                         designer: thisDesigner.designer
                       }
@@ -608,6 +608,8 @@ FileJs.prototype.imagePreviewBox = function () {
 
                       thisMemberId = instance.mother.member.id;
                       
+                      loading = instance.mother.whiteProgressLoading(null, true);
+
                       response = await ajaxJson({
                         mode: "store",
                         cliid: targetCliid,
@@ -624,30 +626,20 @@ FileJs.prototype.imagePreviewBox = function () {
                         throw new Error("store fail");
                       }
   
-                      console.log(sendId);
+                      await sleep(1 * 1000);
 
+                      response = await ajaxJson({
+                        mode: "send",
+                        id: sendId,
+                      }, S3HOST + ":3000/imageTransfer");
 
+                      loading.remove();
 
+                      instance.mother.greenAlert("전송에 성공하였습니다!");
 
-
+                      instance.imagePreviewBox().call(document.querySelector('.' + fileBaseClassName), new Event("click", { bubbles: true }));
                     }
-                    
-                    
-                    // loading = instance.mother.whiteProgressLoading();
-
-                    // files = [];
-                    // for (let dom of instance.imageSelected) {
-                    //   absolute = dom.getAttribute("absolute");
-                    //   files.push({ absolute, type: "file" });
-                    // }
-
-                    // response = await ajaxJson({ files }, S3HOST + ":3000/filesToZip");
-                    // await downloadFile(instance.absoluteParsing(response.link), null, loading.progress.firstChild);
-
-                    // loading.remove();
-
                   }
-                  // instance.imagePreviewBox().call(document.querySelector('.' + fileBaseClassName), new Event("click", { bubbles: true }));
                 }
               } catch (e) {
                 console.log(e);
