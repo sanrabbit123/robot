@@ -2494,7 +2494,7 @@ GeneralJs.prototype.greenBar = function () {
     margin = 30;
     GeneralJs.removeByClass(whitePopupClassName);
     
-    cancelBack = createNode({
+    cancelBack = GeneralJs.createNode({
       mother: totalContents,
       class: [ whitePopupClassName ],
       event: {
@@ -2514,7 +2514,7 @@ GeneralJs.prototype.greenBar = function () {
       }
     });
   
-    whitePrompt = createNode({
+    whitePrompt = GeneralJs.createNode({
       mother: totalContents,
       class: [ whitePopupClassName ],
       style: {
