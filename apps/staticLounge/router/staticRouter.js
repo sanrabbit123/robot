@@ -6292,6 +6292,148 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_imageTransfer = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, dateToString, stringToDate, requestSystem, mysqlQuery, sleep, fileSystem, shellExec, shellLink, linkToString } = this.mother;
+  const { staticConst, sambaToken } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/imageTransfer" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const { mode } = req.body;
+      const collection = "imageTransfer";
+      const selfCoreMongo = instance.mongo;
+      const selfMongo = instance.mongolocal;
+      const idKeyword = "image_trans_";
+      let json;
+      let thisId;
+      let now;
+      let imagesArr;
+      let thisPath;
+      let finalPath;
+      let thisLink;
+      let thisDesigner, thisClient, thisMember;
+      let tempObj;
+      
+      if (mode === "store") {
+        if (req.body.cliid === undefined || req.body.desid === undefined || req.body.info === undefined || req.body.purpose === undefined || req.body.description === undefined || req.body.member === undefined || req.body.images === undefined) {
+          throw new Error("invalid post 2");
+        }
+        const { cliid, purpose, description, member, images, desid, info } = equalJson(req.body);
+
+        now = new Date();
+        thisId = idKeyword + String(now.valueOf()) + "_" + uniqueValue("hex");
+        
+        imagesArr = [];
+        for (let rawPath of images) {
+          thisPath = rawPath.replace(/^\//i, '').replace(/\/$/i, '');
+          if (thisPath.trim() === '') {
+            finalPath = sambaToken;
+          } else {
+            finalPath = thisPath;
+          }
+          if (!/^__/.test(finalPath)) {
+            finalPath = sambaToken + "/" + finalPath;
+          }
+          
+          thisLink = "https://" + address.officeinfo.ghost.host + finalPath.replace(new RegExp(sambaToken, "gi"), "");
+          imagesArr.push({
+            original: finalPath,
+            link: linkToString(thisLink),
+          });
+        }
+
+        thisMember = instance.members.find((o) => { return o.id === member });
+        if (thisMember === undefined) {
+          thisMember = {
+            id: member,
+            name: "리에종",
+            title: "봇",
+            roles: [],
+          }
+        } else {
+          tempObj = {
+            id: member,
+            name: thisMember.name,
+            title: thisMember.title,
+            roles: thisMember.roles,
+          };
+          thisMember = equalJson(JSON.stringify(tempObj));
+        }
+
+        if (desid !== "") {
+          thisDesigner = {
+            desid: desid,
+            designer: "",
+          };
+        } else {
+          tempObj = await back.getDesignerById(desid, { selfMongo: selfCoreMongo });
+          if (tempObj !== null) {
+            thisDesigner = {
+              desid: desid,
+              designer: tempObj.designer,
+            }
+          } else {
+            thisDesigner = {
+              desid: desid,
+              designer: "",
+            };
+          }
+        }
+
+        if (cliid === "") {
+          throw new Error("invalid cliid 0");
+        }
+        tempObj = await back.getClientById(cliid, { selfMongo: selfCoreMongo });
+        if (tempObj === null) {
+          throw new Error("invalid cliid 1");
+        }
+        thisClient = {
+          cliid: cliid,
+          name: tempObj.name,
+        }
+
+        json = {
+          id: thisId,
+          date: now,
+          from: thisMember,
+          target: thisClient,
+          contents: {
+            designer: thisDesigner,
+            info,
+            purpose,
+            description,
+          },
+          images: imagesArr,
+        };
+
+        await back.mongoCreate(collection, json, { selfMongo });
+
+        res.send(JSON.stringify({ id: thisId }));
+      } else {
+        throw new Error("invalid mode");
+      }
+
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_imageTransfer): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.setMembers = async function () {

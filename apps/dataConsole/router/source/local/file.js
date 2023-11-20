@@ -478,6 +478,79 @@ FileJs.prototype.imagePreviewBox = function () {
           deactive: () => { return instance.imageSelected.length === 0 },
         },
         {
+          title: "선택 이미지 고객 전송",
+          event: () => {
+            return async function (e) {
+              try {
+                const active = (this.getAttribute("active") === "true");
+                let files;
+                let response;
+                let loading;
+                let absolute;
+                let targets;
+                let targetCliid;
+                let purpose, description;
+                let thisMemberId;
+                let sendId;
+                let thisDesid, thisInfo;
+
+                if (active) {
+                  if (instance.imageSelected.length > 0) {
+
+                    targets = instance.imageSelected.map((dom) => {
+                      return dom.getAttribute("absolute");
+                    });
+                    targetCliid = "c1801_aa01s";
+                    purpose = "디자이너 추천";
+                    description = "기타 안내 사항에 대한 텍스트";
+                    thisMemberId = instance.mother.member.id;
+                    thisDesid = "d1701_aa01s";
+                    thisInfo = "제안 문서";
+                    
+                    response = await ajaxJson({
+                      mode: "store",
+                      cliid: targetCliid,
+                      desid: thisDesid,
+                      info: thisInfo,
+                      purpose,
+                      description,
+                      member: thisMemberId,
+                      images: targets,
+                    }, S3HOST + ":3000/imageTransfer");
+                    sendId = response.id;
+
+                    if (typeof sendId !== "string") {
+                      throw new Error("store fail");
+                    }
+
+                    console.log(sendId);
+                    
+                    // loading = instance.mother.whiteProgressLoading();
+
+                    // files = [];
+                    // for (let dom of instance.imageSelected) {
+                    //   absolute = dom.getAttribute("absolute");
+                    //   files.push({ absolute, type: "file" });
+                    // }
+
+                    // response = await ajaxJson({ files }, S3HOST + ":3000/filesToZip");
+                    // await downloadFile(instance.absoluteParsing(response.link), null, loading.progress.firstChild);
+
+                    // loading.remove();
+
+                  }
+                  // instance.imagePreviewBox().call(document.querySelector('.' + fileBaseClassName), new Event("click", { bubbles: true }));
+                }
+              } catch (e) {
+                console.log(e);
+                window.alert("전송에 실패하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+          deactive: () => { return instance.imageSelected.length === 0 },
+        },
+        {
           title: "전체 이미지 다운로드",
           event: () => {
             return async function (e) {
