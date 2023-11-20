@@ -2507,8 +2507,8 @@ GeneralJs.prototype.greenBar = function () {
         position: "fixed",
         top: String(0),
         left: String(0) + ea,
-        width: withOut(0, ea),
-        height: withOut(instance.belowHeight, ea),
+        width: GeneralJs.withOut(0, ea),
+        height: GeneralJs.withOut(instance.belowHeight, ea),
         background: GeneralJs.colorChip.black,
         opacity: String(0.3),
       }
@@ -2522,8 +2522,8 @@ GeneralJs.prototype.greenBar = function () {
         position: "fixed",
         top: String(margin) + ea,
         left: String(0 + margin) + ea,
-        width: withOut(0 + (margin * 2), ea),
-        height: withOut(instance.belowHeight + (margin * 2), ea),
+        width: GeneralJs.withOut(0 + (margin * 2), ea),
+        height: GeneralJs.withOut(instance.belowHeight + (margin * 2), ea),
         borderRadius: String(5) + "px",
         background: colorChip.white,
         boxShadow: "0px 3px 15px -9px " + GeneralJs.colorChip.darkShadow,
@@ -2542,8 +2542,8 @@ GeneralJs.prototype.greenBar = function () {
           position: "relative",
           top: String(0),
           left: String(0),
-          width: withOut(0, ea),
-          height: withOut(0, ea),
+          width: GeneralJs.withOut(0, ea),
+          height: GeneralJs.withOut(0, ea),
           border: String(0),
         }
       }
