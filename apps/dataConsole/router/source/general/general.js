@@ -2483,8 +2483,71 @@ GeneralJs.prototype.greenBar = function () {
   for (let i in additionalStyle) {
     svg_icon.style[i] = additionalStyle[i];
   }
+  // svg_icon.addEventListener("click", function (e) {
+  //   GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/dashboard?mode=board");
+  // });
   svg_icon.addEventListener("click", function (e) {
-    GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/dashboard?mode=board");
+    const whitePopupClassName = "whitePopupClassName";
+    const totalContents = document.getElementById("totalcontents");
+    let margin;
+    let cancelBack, whitePrompt;
+    margin = 30;
+    GeneralJs.removeByClass(whitePopupClassName);
+    
+    cancelBack = createNode({
+      mother: totalContents,
+      class: [ whitePopupClassName ],
+      event: {
+        click: (e) => {
+          GeneralJs.removeByClass(whitePopupClassName);
+        },
+      },
+      style: {
+        display: "block",
+        position: "fixed",
+        top: String(0),
+        left: String(0) + ea,
+        width: withOut(0, ea),
+        height: withOut(instance.belowHeight, ea),
+        background: GeneralJs.colorChip.black,
+        opacity: String(0.3),
+      }
+    });
+  
+    whitePrompt = createNode({
+      mother: totalContents,
+      class: [ whitePopupClassName ],
+      style: {
+        display: "block",
+        position: "fixed",
+        top: String(margin) + ea,
+        left: String(0 + margin) + ea,
+        width: withOut(0 + (margin * 2), ea),
+        height: withOut(instance.belowHeight + (margin * 2), ea),
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+        boxShadow: "0px 3px 15px -9px " + GeneralJs.colorChip.darkShadow,
+        animation: "fadeuplite 0.3s ease forwards",
+        overflow: "hidden",
+      },
+      child: {
+        mode: "iframe",
+        attribute: {
+          src: S3HOST + ":6081/vnc_lite.html",
+          width: String(100) + '%',
+          height: String(100) + '%',
+        },
+        style: {
+          display: "block",
+          position: "relative",
+          top: String(0),
+          left: String(0),
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          border: String(0),
+        }
+      }
+    });
   });
   this.belowButtons.sub.profile = svg_icon;
   div_clone.appendChild(svg_icon);
