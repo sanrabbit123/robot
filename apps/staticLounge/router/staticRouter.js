@@ -6471,7 +6471,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
           throw new Error("invalid post");
         }
         const { id } = equalJson(req.body);
-        rows = await back.mongoRead(collection, { id });
+        rows = await back.mongoRead(collection, { id }, { selfMongo });
         if (rows.length === 1) {
           [ targetJson ] = rows;
 
