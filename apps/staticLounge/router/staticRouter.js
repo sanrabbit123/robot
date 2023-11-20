@@ -6397,6 +6397,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
           thisDesigner = {
             desid: desid,
             designer: "",
+            phone: "",
           };
         } else {
           tempObj = await back.getDesignerById(desid, { selfMongo: selfCoreMongo });
@@ -6404,11 +6405,13 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
             thisDesigner = {
               desid: desid,
               designer: tempObj.designer,
+              phone: tempObj.information.phone,
             }
           } else {
             thisDesigner = {
               desid: desid,
               designer: "",
+              phone: "",
             };
           }
         }
@@ -6423,6 +6426,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
         thisClient = {
           cliid: cliid,
           name: tempObj.name,
+          phone: tempObj.phone,
         }
 
         json = {
@@ -6437,6 +6441,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
             info,
           },
           images: imagesArr,
+          history: []
         };
 
         await back.mongoCreate(collection, json, { selfMongo });

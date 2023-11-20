@@ -532,6 +532,7 @@ FileJs.prototype.imagePreviewBox = function () {
                       if (contentsResponse.projects.length > 0) {
                         thisInfo["proid"] = contentsResponse.projects[0].proid;
                       }
+                      thisDesid = thisDesigner.desid;
 
                     } else {
                       thisDesid = /[d][0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g.exec(targets[0].src)[0];
