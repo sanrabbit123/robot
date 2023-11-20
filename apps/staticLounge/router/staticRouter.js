@@ -6326,6 +6326,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
       let thisLink;
       let thisDesigner, thisClient, thisMember;
       let tempObj;
+      let thisSrc, finalSrc;
       
       if (mode === "store") {
         if (req.body.cliid === undefined || req.body.desid === undefined || req.body.info === undefined || req.body.purpose === undefined || req.body.description === undefined || req.body.member === undefined || req.body.images === undefined) {
@@ -6337,7 +6338,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
         thisId = idKeyword + String(now.valueOf()) + "_" + uniqueValue("hex");
         
         imagesArr = [];
-        for (let rawPath of images) {
+        for (let { absolute: rawPath, src: rawSrc } of images) {
           thisPath = rawPath.replace(/^\//i, '').replace(/\/$/i, '');
           if (thisPath.trim() === '') {
             finalPath = sambaToken;
@@ -6348,9 +6349,20 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
             finalPath = sambaToken + "/" + finalPath;
           }
           
-          thisLink = "https://" + address.officeinfo.ghost.host + finalPath.replace(new RegExp(sambaToken, "gi"), "");
+          thisSrc = rawSrc.replace(/^\//i, '').replace(/\/$/i, '');
+          if (thisSrc.trim() === '') {
+            finalSrc = sambaToken;
+          } else {
+            finalSrc = thisSrc;
+          }
+          if (!/^__/.test(finalSrc)) {
+            finalSrc = sambaToken + "/" + finalSrc;
+          }
+
+          thisLink = "https://" + address.officeinfo.ghost.host + finalSrc.replace(new RegExp(sambaToken, "gi"), "");
           imagesArr.push({
             original: finalPath,
+            source: finalSrc,
             link: linkToString(thisLink),
           });
         }
@@ -6412,9 +6424,9 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
           target: thisClient,
           contents: {
             designer: thisDesigner,
-            info,
             purpose,
             description,
+            info,
           },
           images: imagesArr,
         };

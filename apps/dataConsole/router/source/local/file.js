@@ -492,19 +492,56 @@ FileJs.prototype.imagePreviewBox = function () {
                 let purpose, description;
                 let thisMemberId;
                 let sendId;
+                let thisPid;
                 let thisDesid, thisInfo;
+                let thisDesigner;
                 let clientSearch;
                 let clientResponse, clientResponseData;
                 let purposeSelection;
                 let preDescription;
                 let thisClientName;
+                let contentsResponse;
 
                 if (active) {
                   if (instance.imageSelected.length > 0) {
 
                     targets = instance.imageSelected.map((dom) => {
-                      return dom.getAttribute("absolute");
+                      return { src: dom.getAttribute("src").replace(/^http[s]?\:\/\//i, "").replace(new RegExp("^" + S3HOST.replace(/^http[s]?\:\/\//i, "").split(":")[0], "gi"), "__samba__"), absolute: dom.getAttribute("absolute") };
                     });
+
+                    if (!/\/corePortfolio/g.test(targets[0].src) && !/\/designProposal\/image/g.test(targets[0].src)) {
+                      window.alert("현재 폴더에서는 지원하지 않는 기능입니다!");
+                      throw new Error("invalid folder");
+                    }
+
+                    if (/\/corePortfolio/g.test(targets[0].src)) {
+
+                      thisPid = targets[0].src.split("/").find((s) => { return /^[ap][0-9]+/g.test(s) });
+                      contentsResponse = await ajaxJson({ mode: "search", value: thisPid }, CONTENTSHOST + "/getAllContents", { equal: true });
+                      thisDesigner = contentsResponse.designers[0];
+
+                      thisInfo = {};
+                      thisInfo["pid"] = thisPid;
+                      thisInfo["type"] = "portfolio";
+                      thisInfo["designer"] = thisDesigner.designer;
+                      thisInfo["desid"] = thisDesigner.desid;
+                      if (contentsResponse.clients.length > 0) {
+                        thisInfo["cliid"] = contentsResponse.clients[0].cliid;
+                        thisInfo["name"] = contentsResponse.clients[0].name;
+                      }
+                      if (contentsResponse.projects.length > 0) {
+                        thisInfo["proid"] = contentsResponse.projects[0].proid;
+                      }
+
+                    } else {
+                      thisDesid = /[d][0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g.exec(targets[0].src)[0];
+                      [ thisDesigner ] = await ajaxJson({ noFlat: true, whereQuery: { desid: thisDesid } }, SECONDHOST + "/getDesigners", { equal: true });
+                      thisInfo = {
+                        type: "proposal",
+                        desid: thisDesid,
+                        designer: thisDesigner.designer
+                      }
+                    }
 
                     clientSearch = await GeneralJs.prompt("고객 이름, 또는 아이디를 입력해주세요!");
                     if (clientSearch === null) {
@@ -548,7 +585,6 @@ FileJs.prototype.imagePreviewBox = function () {
                         "포트폴리오 전송",
                         "비공개 사진 전송",
                         "디자인 제안 이미지 전송",
-                        "기타 사진 전송",
                         "직접 입력...",
                       ]);
                       if (purposeSelection === null) {
@@ -563,38 +599,31 @@ FileJs.prototype.imagePreviewBox = function () {
                         purpose = purposeSelection;
                       }
 
-                      console.log(/[ap][0-9]+/gi.exec(targets))
-
-                      description = await GeneralJs.promptLong("기타 안내 사항을 적어주세요!", `안녕하세요, ${thisClientName} 고객님!`);
+                      description = await GeneralJs.promptLong("기타 안내 사항을 적어주세요!", `안녕하세요, ${thisClientName} 고객님! ${thisDesigner.designer} 디자이너 관련 이미지 전송해드립니다 :)`);
                       if (description === null || description === '') {
                         window.alert("안내 사항을 적어주세요!");
                         throw new Error("invalid description");
                       }
 
-                      console.log(description);
-
                       thisMemberId = instance.mother.member.id;
-
-                      // thisDesid = "d1701_aa01s";
-                      // thisInfo = {};
                       
-                      // response = await ajaxJson({
-                      //   mode: "store",
-                      //   cliid: targetCliid,
-                      //   desid: thisDesid,
-                      //   info: thisInfo,
-                      //   purpose,
-                      //   description,
-                      //   member: thisMemberId,
-                      //   images: targets,
-                      // }, S3HOST + ":3000/imageTransfer");
-                      // sendId = response.id;
+                      response = await ajaxJson({
+                        mode: "store",
+                        cliid: targetCliid,
+                        desid: thisDesid,
+                        info: thisInfo,
+                        purpose,
+                        description,
+                        member: thisMemberId,
+                        images: targets,
+                      }, S3HOST + ":3000/imageTransfer");
+                      sendId = response.id;
   
-                      // if (typeof sendId !== "string") {
-                      //   throw new Error("store fail");
-                      // }
+                      if (typeof sendId !== "string") {
+                        throw new Error("store fail");
+                      }
   
-                      // console.log(sendId);
+                      console.log(sendId);
 
 
 
