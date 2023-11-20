@@ -6373,7 +6373,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
           thisMember = equalJson(JSON.stringify(tempObj));
         }
 
-        if (desid !== "") {
+        if (desid === "") {
           thisDesigner = {
             desid: desid,
             designer: "",
