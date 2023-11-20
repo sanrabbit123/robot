@@ -6296,7 +6296,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { equalJson, dateToString, stringToDate, requestSystem, mysqlQuery, sleep, fileSystem, shellExec, shellLink, linkToString } = this.mother;
+  const { equalJson, dateToString, stringToDate, requestSystem, mysqlQuery, sleep, fileSystem, shellExec, shellLink, linkToString, uniqueValue } = this.mother;
   const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
@@ -6422,6 +6422,13 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
         await back.mongoCreate(collection, json, { selfMongo });
 
         res.send(JSON.stringify({ id: thisId }));
+
+      } else if (mode === "get") {
+
+
+      } else if (mode === "send") {
+
+
       } else {
         throw new Error("invalid mode");
       }
