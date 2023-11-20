@@ -6360,11 +6360,19 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
           }
 
           thisLink = "https://" + address.officeinfo.ghost.host + finalSrc.replace(new RegExp(sambaToken, "gi"), "");
-          imagesArr.push({
-            original: finalPath,
-            source: finalSrc,
-            link: linkToString(thisLink),
-          });
+          if (/mobile\/mo/gi.test(finalSrc)) {
+            imagesArr.push({
+              original: finalPath,
+              source: finalSrc.replace(/mobile\/mo/gi, ""),
+              link: linkToString(thisLink),
+            });
+          } else {
+            imagesArr.push({
+              original: finalPath,
+              source: finalSrc,
+              link: linkToString(thisLink),
+            });
+          }
         }
 
         thisMember = instance.members.find((o) => { return o.id === member });
