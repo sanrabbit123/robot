@@ -2525,7 +2525,7 @@ GeneralJs.prototype.greenBar = function () {
         width: GeneralJs.withOut(0 + (margin * 2), ea),
         height: GeneralJs.withOut(instance.belowHeight + (margin * 2), ea),
         borderRadius: String(5) + "px",
-        background: colorChip.white,
+        background: GeneralJs.colorChip.white,
         boxShadow: "0px 3px 15px -9px " + GeneralJs.colorChip.darkShadow,
         animation: "fadeuplite 0.3s ease forwards",
         overflow: "hidden",
