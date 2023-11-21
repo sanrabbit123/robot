@@ -349,11 +349,11 @@ ImageTransferJs.prototype.launching = async function (loading) {
     }
 
     const { id, cliid } = getObj;
-
-    console.log(id);
-    console.log(cliid);
-
-
+    const { data, client, designer } = await ajaxJson({ mode: "get", id }, S3HOST + ":3000/imageTransfer", { equal: true });
+    this.data = data;
+    this.client = client;
+    this.designer = designer;
+    
     await this.mother.ghostClientLaunching({
       mode: "front",
       name: "imageTransfer",

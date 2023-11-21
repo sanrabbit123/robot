@@ -6468,7 +6468,23 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
         rows = await back.mongoRead(collection, { id }, { selfMongo });
         if (rows.length === 1) {
           [ targetJson ] = rows;
-          res.send(JSON.stringify(targetJson));
+
+          thisDesigner = await back.getDesignerById(targetJson.contents.designer.desid, { selfMongo: selfCoreMongo, toNormal: true });
+          thisClient = await back.getClientById(targetJson.target.cliid, { selfMongo: selfCoreMongo, toNormal: true });
+          
+          historyArr = equalJson(JSON.stringify(targetJson.history));
+          historyArr.unshift({
+            action: "view",
+            date: new Date(),
+          });
+          await back.mongoUpdate(collection, [ { id }, { history: historyArr } ], { selfMongo });
+          targetJson.history = historyArr;
+
+          res.send(JSON.stringify({
+            data: targetJson,
+            client: thisClient,
+            designer: thisDesigner,
+          }));
         } else {
           throw new Error("invalid id");
         }
