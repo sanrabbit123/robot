@@ -6328,7 +6328,6 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
       let imagesArr;
       let thisPath;
       let finalPath;
-      let thisLink;
       let thisDesigner, thisClient, thisMember;
       let tempObj;
       let thisSrc, finalSrc;
@@ -6339,7 +6338,6 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
       let host;
       let path;
       let cliid;
-      let id;
       let historyArr;
       
       if (mode === "store") {
@@ -6373,18 +6371,17 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
             finalSrc = sambaToken + "/" + finalSrc;
           }
 
-          thisLink = "https://" + address.officeinfo.ghost.host + finalSrc.replace(new RegExp(sambaToken, "gi"), "");
           if (/mobile\/mo/gi.test(finalSrc)) {
             imagesArr.push({
-              original: finalPath,
-              source: finalSrc.replace(/mobile\/mo/gi, ""),
-              link: linkToString(thisLink),
+              original: finalPath.replace(new RegExp(sambaToken, "gi"), ""),
+              source: finalSrc.replace(/mobile\/mo/gi, "").replace(new RegExp(sambaToken, "gi"), ""),
+              link: finalSrc.replace(new RegExp(sambaToken, "gi"), ""),
             });
           } else {
             imagesArr.push({
-              original: finalPath,
-              source: finalSrc,
-              link: linkToString(thisLink),
+              original: finalPath.replace(new RegExp(sambaToken, "gi"), ""),
+              source: finalSrc.replace(new RegExp(sambaToken, "gi"), ""),
+              link: finalSrc.replace(new RegExp(sambaToken, "gi"), ""),
             });
           }
         }
@@ -6464,6 +6461,17 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
 
       } else if (mode === "get") {
 
+        if (req.body.id === undefined) {
+          throw new Error("invalid post");
+        }
+        const { id } = equalJson(req.body);
+        rows = await back.mongoRead(collection, { id }, { selfMongo });
+        if (rows.length === 1) {
+          [ targetJson ] = rows;
+          res.send(JSON.stringify(targetJson));
+        } else {
+          throw new Error("invalid id");
+        }
 
       } else if (mode === "send") {
 

@@ -5622,6 +5622,15 @@ GeneralJs.promptLong = function (message, preValue = '') {
   let finalEvent;
   let inputSize;
   let textareaVisual;
+  let buttonBetween;
+  let buttonTop;
+  let buttonRight;
+  let buttonHeight;
+  let buttonPadding;
+  let buttonWidth;
+  let size2;
+  let textTop;
+  let toTextButton;
 
   whiteWidth = 320;
   whiteHeight = 150;
@@ -5639,6 +5648,14 @@ GeneralJs.promptLong = function (message, preValue = '') {
   lineHeight = 1.5;
   wordingVisual = GeneralJs.isMac() ? 0 : 2;
   textareaVisual = 5;
+  buttonBetween = 4;
+  buttonTop = 20;
+  buttonRight = 23;
+  buttonHeight = 19;
+  buttonPadding = 7;
+  buttonWidth = 49;
+  size2 = desktop ? 9 : 9;
+  textTop = GeneralJs.isMac() ? -1 : 1;
 
   greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
   if (Number.isNaN(greenBarHeight)) {
@@ -5720,6 +5737,35 @@ GeneralJs.promptLong = function (message, preValue = '') {
     }
   });
 
+  toTextButton = createNode({
+    mother: whiteTong,
+    style: {
+      display: "inline-flex",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "absolute",
+      top: String(buttonTop) + ea,
+      right: String(buttonRight) + ea,
+      height: String(buttonHeight) + ea,
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      background: colorChip.gradientGreen,
+      borderRadius: String(5) + "px",
+      zIndex: String(1),
+    },
+    child: {
+      text: "확인",
+      style: {
+        position: "relative",
+        fontSize: String(size2) + ea,
+        fontWeight: String(700),
+        color: colorChip.white,
+        top: String(textTop) + ea,
+      }
+    }
+  });
+
   createNode({
     mother: whiteTong,
     style: {
@@ -5762,6 +5808,16 @@ GeneralJs.promptLong = function (message, preValue = '') {
 
     whiteTongBase.addEventListener("click", function (e) {
       e.stopPropagation();
+      const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+      for (let z = 0; z < targets.length; z++) {
+        try {
+          targets[z].remove();
+        } catch {}
+      }
+      resolve(input.value.trim());
+    });
+
+    toTextButton.addEventListener("click", function (e) {
       const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
       for (let z = 0; z < targets.length; z++) {
         try {

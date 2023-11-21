@@ -333,11 +333,26 @@ ImageTransferJs.prototype.insertPhotoBox = async function () {
 
 ImageTransferJs.prototype.launching = async function (loading) {
   const instance = this;
+  const { returnGet, ajaxJson, selfHref } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson } = GeneralJs;
     const getObj = returnGet();
+
+    if (getObj.id === undefined) {
+      window.alert("잘못된 접근입니다!");
+      selfHref(FRONTHOST);
+    }
+    if (getObj.cliid === undefined) {
+      window.alert("잘못된 접근입니다!");
+      selfHref(FRONTHOST);
+    }
+
+    const { id, cliid } = getObj;
+
+    console.log(id);
+    console.log(cliid);
+
 
     await this.mother.ghostClientLaunching({
       mode: "front",
@@ -365,6 +380,7 @@ ImageTransferJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await GeneralJs.ajaxJson({ message: "ImageTransferJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
+    await ajaxJson({ message: "ImageTransferJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
+    selfHref(FRONTHOST);
   }
 }
