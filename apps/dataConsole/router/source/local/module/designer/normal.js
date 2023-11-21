@@ -3901,7 +3901,7 @@ DesignerJs.prototype.normalView = async function () {
     this.whiteCardClassName = "whiteCardClassName";
     this.whiteBaseClassName = "whiteBaseClassName";
     this.processDetailEventClassName = "processDetailEventClassName";
-    this.whiteCardMode = "checklist";
+    this.whiteCardMode = getObj.whitecardmode === undefined ? "checklist" : getObj.whitecardmode;
     this.asyncProcessText = "로드중..";
     this.noticeSendRows = noticeSendRows;
     this.profileList = profileList;

@@ -3639,7 +3639,60 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
             top: String(0) + ea,
           }
         }
-      })
+      });
+
+      createNode({
+        mother: dom,
+        attribute: {
+          desid: desid,
+          index: String(0),
+        },
+        event: {
+          mouseenter: function (e) {
+            this.firstChild.style.color = colorChip.whiteGreen;
+          },
+          mouseleave: function (e) {
+            this.firstChild.style.color = colorChip.whiteBlack;
+          },
+          selectstart: (e) => { e.preventDefault() },
+          click: async function (e) {
+            try {
+              const desid = this.getAttribute("desid");
+              GeneralJs.blankHref(BACKHOST + "/designer?mode=normal&desid=" + desid + "&whitecardmode=proposal");
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        style: {
+          display: "flex",
+          position: "absolute",
+          bottom: "calc(calc(" + String(56) + ea + " + " + String(3.2) + "vh" + ")" + " + " + String(14) + "px" + ")",
+          right: String(21) + ea,
+          width: String(54) + ea,
+          height: String(28) + ea,
+          background: colorChip.green,
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          borderRadius: String(4) + "px",
+          paddingBottom: String(3) + ea,
+        },
+        child: {
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
+          text: "제안서",
+          style: {
+            position: "relative",
+            fontSize: String(14) + ea,
+            fontWeight: String(600),
+            color: colorChip.whiteBlack,
+            top: String(0) + ea,
+          }
+        }
+      });
+
     },
   ];
   for (let i = 0; i < leftList.length; i++) {
