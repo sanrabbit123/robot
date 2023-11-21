@@ -820,6 +820,9 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           zipIdDesigner = zipPhotoRes.data.googleId.designer;
           zipIdClient = zipPhotoRes.data.googleId.client;
 
+          console.log(zipIdDesigner);
+          console.log(zipIdClient);
+
           await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/shareGoogleId", {
             mode: "store",
             proid: project.proid,
