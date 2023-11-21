@@ -600,7 +600,13 @@ FileJs.prototype.imagePreviewBox = function () {
                         purpose = purposeSelection;
                       }
 
-                      preDescription = `${thisDesigner.designer} 디자이너 관련 이미지 전송해드립니다.`;
+                      if (/포트폴리오/gi.test(purpose)) {
+                        preDescription = `${thisDesigner.designer} 디자이너 관련 포트폴리오 이미지 전송해드립니다.`;
+                      } else if (/제안 이미지/gi.test(purpose)) {
+                        preDescription = `${thisDesigner.designer} 디자이너 관련 디자인 제안 방식 샘플 이미지 전송해드립니다.`;
+                      } else {
+                        preDescription = `${thisDesigner.designer} 디자이너 관련 이미지 전송해드립니다.`;
+                      }
                       description = await GeneralJs.promptLong("기타 안내 사항을 적어주세요!", preDescription);
                       if (description === null || description === '') {
                         window.alert("안내 사항을 적어주세요!");
