@@ -6496,6 +6496,15 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
           throw new Error("invalid id");
         }
 
+      } else if (mode === "proposal") {
+
+        if (req.body.proid === undefined) {
+          throw new Error("invalid post");
+        }
+        const { proid } = equalJson(req.body);
+        rows = await back.mongoRead(collection, { proposals: { $elemMatch: { $regex: proid } } }, { selfMongo });
+        res.send(JSON.stringify(rows));
+
       } else if (mode === "send") {
 
         if (req.body.id === undefined) {

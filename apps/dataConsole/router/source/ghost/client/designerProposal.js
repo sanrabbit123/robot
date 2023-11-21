@@ -4248,6 +4248,10 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     this.proposalHistory = proposalHistory;
     this.proposalHistoryNumber = 0;
 
+    this.imageTransferData = await ajaxJson({ mode: "proposal", proid: project.proid }, S3HOST + ":3000/imageTransfer", { equal: true });
+
+    console.log(this.imageTransferData);
+
     // TEST Center ==================================================================================================
     if (proid === "p1801_aa01s") {
       for (let d of designers) {
