@@ -250,6 +250,7 @@ ImageTransferJs.prototype.insertNoticeBox = function () {
   let titleVisualTextTop;
   let descriptionVisualTextTop;
   let client;
+  let designer, type;
 
   bottomMargin = <%% 16, 16, 16, 12, 2 %%>;
   margin = <%% 55, 55, 47, 39, 5.5 %%>;
@@ -282,6 +283,8 @@ ImageTransferJs.prototype.insertNoticeBox = function () {
   descriptionVisualTextTop = desktop ? (isMac() ? 0 : 2) : 0;
 
   client = targetJson.target.name;
+  designer = targetJson.contents.designer.designer;
+  type = (/포트폴리오/gi.test(targetJson.contents.purpose) ? "포트폴리오" : (/제안/gi.test(targetJson.contents.purpose) ? "디자인 제안" : targetJson.contents.purpose));
 
   contents = {
     left: {
@@ -289,7 +292,7 @@ ImageTransferJs.prototype.insertNoticeBox = function () {
     },
     right: {
       description: [
-        `${client} 고객님 안녕하세요, 홈리에종입니다! 홈리에종 CX 팀에서 고객님을 위해 홈스타일링 관련 이미지를 전달해드립니다. <b%하단 블록에서 이미지를 확인%b>하실 수 있으며, 각각의 이미지를 클릭해 보시면 크게 보실 수 있습니다.`,
+        `${client} 고객님 안녕하세요, 홈리에종입니다! 고객님께 디자이너 추천을 위해 ${designer} 디자이너의 ${type} 관련 이미지를 전달해드립니다. <b%하단 블록에서 이미지를 확인%b>하실 수 있으며, 각각의 이미지를 클릭해 보시면 크게 보실 수 있습니다.`,
         "<b%담당자 전달 사항%b> : " + targetJson.contents.description
       ],
     }
