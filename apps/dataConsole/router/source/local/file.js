@@ -651,6 +651,198 @@ FileJs.prototype.imagePreviewBox = function () {
           deactive: () => { return instance.imageSelected.length === 0 },
         },
         {
+          title: "선택 이미지 추천서 묶기",
+          event: () => {
+            return async function (e) {
+              try {
+                const active = (this.getAttribute("active") === "true");
+                let files;
+                let response;
+                let loading;
+                let absolute;
+                let targets;
+                let targetCliid;
+                let purpose, description;
+                let thisMemberId;
+                let sendId;
+                let thisPid;
+                let thisDesid, thisInfo;
+                let thisDesigner;
+                let clientSearch;
+                let clientResponse, clientResponseData;
+                let purposeSelection;
+                let preDescription;
+                let thisClientName;
+                let contentsResponse;
+                let targetProposal;
+                let proposalSearch;
+                let thisProid;
+
+                if (active) {
+                  if (instance.imageSelected.length > 0) {
+
+                    targets = instance.imageSelected.map((dom) => {
+                      return { src: dom.getAttribute("src").replace(/^http[s]?\:\/\//i, "").replace(new RegExp("^" + S3HOST.replace(/^http[s]?\:\/\//i, "").split(":")[0], "gi"), "__samba__"), absolute: dom.getAttribute("absolute") };
+                    });
+
+                    if (!/\/corePortfolio/g.test(targets[0].src) && !/\/designProposal\/image/g.test(targets[0].src) && !/\/rawDesigner\/ghost/g.test(targets[0].src)) {
+                      window.alert("현재 폴더에서는 지원하지 않는 기능입니다!");
+                      throw new Error("invalid folder");
+                    }
+
+                    if (/\/corePortfolio/g.test(targets[0].src)) {
+
+                      thisPid = targets[0].src.split("/").find((s) => { return /^[ap][0-9]+/g.test(s) });
+                      contentsResponse = await ajaxJson({ mode: "search", value: thisPid }, CONTENTSHOST + "/getAllContents", { equal: true });
+                      thisDesigner = contentsResponse.designers[0];
+
+                      thisInfo = {};
+                      thisInfo["pid"] = thisPid;
+                      thisInfo["type"] = "portfolio";
+                      thisInfo["designer"] = thisDesigner.designer;
+                      thisInfo["desid"] = thisDesigner.desid;
+                      if (contentsResponse.clients.length > 0) {
+                        thisInfo["cliid"] = contentsResponse.clients[0].cliid;
+                        thisInfo["name"] = contentsResponse.clients[0].name;
+                      }
+                      if (contentsResponse.projects.length > 0) {
+                        thisInfo["proid"] = contentsResponse.projects[0].proid;
+                      }
+                      thisDesid = thisDesigner.desid;
+
+                    } else {
+                      thisDesid = /[d][0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g.exec(targets[0].src)[0];
+                      [ thisDesigner ] = await ajaxJson({ noFlat: true, whereQuery: { desid: thisDesid } }, SECONDHOST + "/getDesigners", { equal: true });
+                      thisInfo = {
+                        type: /\/designProposal\/image/g.test(targets[0].src) ? "proposal" : "ghost",
+                        desid: thisDesid,
+                        designer: thisDesigner.designer
+                      }
+                    }
+
+                    clientSearch = await GeneralJs.prompt("고객 이름, 또는 아이디를 입력해주세요!");
+                    if (clientSearch === null) {
+                      throw new Error("interrupt");
+                    }
+                    clientResponse = await ajaxJson({
+                      query: clientSearch
+                    }, BACKHOST + "/searchClients", { equal: true });
+                    clientResponseData = [];
+                    clientResponse.data.sort((a, b) => { return stringToDate(b.info.timeline).valueOf() - stringToDate(a.info.timeline).valueOf() });
+                    for (let obj of clientResponse.data) {
+                      if (!clientResponseData.map((o) => { return o.cliid }).includes(obj.standard.cliid)) {
+                        clientResponseData.push({
+                          cliid: obj.standard.cliid,
+                          title: obj.standard.cliid + " - " + obj.standard.name + " : " + obj.info.timeline.split(" ")[0] + " 문의",
+                          original: equalJson(JSON.stringify(obj)),
+                        });
+                      }
+                    }
+
+                    if (clientResponseData.length === 0) {
+
+                      window.alert("고객을 찾을 수 없습니다!");
+                      throw new Error("invalid cliid");
+
+                    } else if (clientResponseData.length >= 1) {
+
+                      if (clientResponseData.length > 1) {
+                        clientSearch = await GeneralJs.promptLongButtons("고객 이름, 또는 아이디를 선택해주세요!", clientResponseData.map((o) => { return o.title }));
+                        if (clientSearch === null) {
+                          throw new Error("invalid selection");
+                        }
+                        targetCliid = clientSearch.split(" ")[0];
+                        thisClientName = clientSearch.split(" ")[2];
+                      } else {
+                        targetCliid = clientResponseData[0].cliid;
+                        thisClientName = clientResponseData[0].original.standard.name;
+                      }
+                      
+
+                      targetProposal = await ajaxJson({
+                        query: targetCliid
+                      }, BACKHOST + "/searchProjects", { equal: true });
+
+                      if (targetProposal.data.length === 0) {
+                        window.alert("추천서를 찾을 수 없습니다!");
+                        throw new Error("invalid proposal");  
+                      }
+
+                      if (targetProposal.data.length !== 1) {
+                        proposalSearch = await GeneralJs.promptButtons("추천서 아이디를 선택해주세요!", targetProposal.data.map((o) => { return o.standard.proid }));
+                        if (proposalSearch === null) {
+                          throw new Error("invalid selection");
+                        }
+                        thisProid = proposalSearch
+                      } else {
+                        thisProid = targetProposal.data[0].standard.proid;
+                      }
+
+                      purposeSelection = await GeneralJs.promptLongButtons("전송 목적을 선택해주세요!", [
+                        "포트폴리오 전송",
+                        "비공개 사진 전송",
+                        "디자인 제안 이미지 전송",
+                        "직접 입력...",
+                      ]);
+                      if (purposeSelection === null) {
+                        throw new Error("invalid selection");
+                      }
+                      if (/직접 입력/gi.test(purposeSelection)) {
+                        purpose = await GeneralJs.prompt("전송 목적을 적어주세요!");
+                        if (purpose === null) {
+                          throw new Error("invalid purpose");
+                        }
+                      } else {
+                        purpose = purposeSelection;
+                      }
+
+                      preDescription = `${thisDesigner.designer} 디자이너 관련 이미지 전송해드립니다.`;
+                      description = await GeneralJs.promptLong("기타 안내 사항을 적어주세요!", preDescription);
+                      if (description === null || description === '') {
+                        window.alert("안내 사항을 적어주세요!");
+                        throw new Error("invalid description");
+                      }
+
+                      thisMemberId = instance.mother.member.id;
+                      
+                      loading = instance.mother.whiteProgressLoading(null, true);
+
+                      response = await ajaxJson({
+                        mode: "store",
+                        cliid: targetCliid,
+                        desid: thisDesid,
+                        info: thisInfo,
+                        purpose,
+                        description,
+                        member: thisMemberId,
+                        images: targets,
+                        proid: thisProid,
+                      }, S3HOST + ":3000/imageTransfer");
+                      sendId = response.id;
+  
+                      if (typeof sendId !== "string") {
+                        throw new Error("store fail");
+                      }
+  
+                      await sleep(1 * 1000);
+
+                      loading.remove();
+
+                      instance.mother.greenAlert("추천서 바인딩에 성공하였습니다!");
+
+                      instance.imagePreviewBox().call(document.querySelector('.' + fileBaseClassName), new Event("click", { bubbles: true }));
+                    }
+                  }
+                }
+              } catch (e) {
+                console.log(e);
+                window.alert("전송에 실패하였습니다! 다시 시도해주세요!");
+              }
+            }
+          },
+          deactive: () => { return instance.imageSelected.length === 0 },
+        },
+        {
           title: "전체 이미지 다운로드",
           event: () => {
             return async function (e) {

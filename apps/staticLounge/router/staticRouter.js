@@ -6339,6 +6339,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
       let path;
       let cliid;
       let historyArr;
+      let proidArr;
       
       if (mode === "store") {
         if (req.body.cliid === undefined || req.body.desid === undefined || req.body.info === undefined || req.body.purpose === undefined || req.body.description === undefined || req.body.member === undefined || req.body.images === undefined) {
@@ -6440,6 +6441,11 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
           phone: tempObj.phone,
         }
 
+        proidArr = [];
+        if (typeof req.body.proid === "string") {
+          proidArr.push(req.body.proid);
+        }
+
         json = {
           id: thisId,
           date: now,
@@ -6452,7 +6458,8 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
             info,
           },
           images: imagesArr,
-          history: []
+          history: [],
+          proposals: proidArr,
         };
 
         await back.mongoCreate(collection, json, { selfMongo });
