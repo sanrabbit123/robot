@@ -600,7 +600,8 @@ FileJs.prototype.imagePreviewBox = function () {
                         purpose = purposeSelection;
                       }
 
-                      description = await GeneralJs.promptLong("기타 안내 사항을 적어주세요!", `안녕하세요, ${thisClientName} 고객님! ${thisDesigner.designer} 디자이너 관련 이미지 전송해드립니다 :)`);
+                      preDescription = `${thisDesigner.designer} 디자이너 관련 이미지 전송해드립니다.`;
+                      description = await GeneralJs.promptLong("기타 안내 사항을 적어주세요!", preDescription);
                       if (description === null || description === '') {
                         window.alert("안내 사항을 적어주세요!");
                         throw new Error("invalid description");

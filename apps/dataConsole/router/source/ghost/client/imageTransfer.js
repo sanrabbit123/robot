@@ -223,65 +223,469 @@ ImageTransferJs.prototype.insertInitBox = function () {
 
 }
 
-ImageTransferJs.prototype.insertNoticeBox = async function () {
+ImageTransferJs.prototype.insertNoticeBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson, cleanChildren } = GeneralJs;
-  const { ea, media, baseTong } = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing } = GeneralJs;
+  const { ea, media, data: targetJson } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  try {
-    let mainBlock;
-    let mainPaddingTop;
-    let mainPaddingBottom;
-    let contentsAreaMarginTop;
-    let innerPadding;
+  let whiteBlock;
+  let style;
+  let bottomMargin;
+  let leftBox, rightBox;
+  let margin, marginTop;
+  let contents;
+  let leftBoxWidth;
+  let titleBarTop, titleBarWidth, titleBarHeight, titleBarMarginRight;
+  let titleSize, titleWeight, titleLineHeight;
+  let descriptionSize, descriptionWeight, descriptionLineHeight;
+  let descriptionBoldWeight;
+  let mobilePaddingLeft;
+  let mobileTitleMarginBottom;
+  let mobileTitleToken;
+  let imageHeight;
+  let mobileImageMarginBottom;
+  let titleVisualTextTop;
+  let descriptionVisualTextTop;
+  let client;
 
-    mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 2 %%>;
+  margin = <%% 55, 55, 47, 39, 5.5 %%>;
+  marginTop = <%% 52, 50, 40, 32, 7 %%>;
+
+  leftBoxWidth = <%% 414, 343, 274, 222, 32 %%>;
+
+  titleBarTop = <%% 8, 7, (isMac() ? 6 : 7), (isMac() ? 6 : 7), 8 %%>;
+  titleBarWidth = <%% 5, 5, 4, 3, 5 %%>;
+  titleBarHeight = <%% 47, 42, 40, 38, 4 %%>;
+  titleBarMarginRight = <%% 15, 14, 12, 10, 15 %%>;
+
+  titleSize = <%% 20, 18, 17, 16, 4 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+
+  descriptionSize = <%% 15, 15, 14, 12, 3.2 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+
+  imageHeight = <%% 320, 270, 230, 180, 28 %%>;
+
+  mobilePaddingLeft = 3.8;
+  mobileTitleMarginBottom = 4;
+  mobileImageMarginBottom = 4.5;
+  mobileTitleToken = "<u%>%u>&nbsp;&nbsp;";
+
+  titleVisualTextTop = desktop ? (isMac() ? 0 : 3) : 0;
+  descriptionVisualTextTop = desktop ? (isMac() ? 0 : 2) : 0;
+
+  client = targetJson.target.name;
+
+  contents = {
+    left: {
+      title: [ targetJson.contents.designer.designer + " " + "디자이너", targetJson.contents.purpose ]
+    },
+    right: {
+      description: [
+        `${client} 고객님 안녕하세요, 홈리에종입니다! 홈리에종 CX 팀에서 고객님을 위해 홈스타일링 관련 이미지를 전달해드립니다. <b%하단 블록에서 이미지를 확인%b>하실 수 있으며, 각각의 이미지를 클릭해 보시면 크게 보실 수 있습니다.`,
+        "<b%담당자 전달 사항%b> : " + targetJson.contents.description
+      ],
+    }
+  };
+
+  whiteBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: desktop ? "row" : "column",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      paddingTop: String(marginTop) + ea,
+      paddingBottom: String(marginTop) + ea,
+      background: colorChip.white,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      justifyContent: "start",
+      alignItems: "start",
+    }
+  });
+
+  leftBox = createNode({
+    mother: whiteBlock,
+    style: {
+      width: desktop ? String(leftBoxWidth) + ea : withOut(margin * 2, ea),
+      display: desktop ? "inline-flex" : "flex",
+      flexDirection: "row",
+      position: "relative",
+      justifyContent: "start",
+      alignItems: "start",
+      marginLeft: String(margin) + ea,
+      marginBottom: desktop ? "" : String(mobileTitleMarginBottom) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "none",
+          position: "relative",
+          top: String(titleBarTop) + ea,
+          width: String(titleBarWidth) + ea,
+          height: String(titleBarHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.black,
+          marginRight: String(titleBarMarginRight) + ea,
+        }
+      },
+      {
+        text: (mobile ? mobileTitleToken : "") + contents.left.title.join(desktop ? "\n" : " "),
+        style: {
+          display: "inline-block",
+          verticalAlign: "top",
+          position: "relative",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+          lineHeight: String(titleLineHeight),
+          top: String(titleVisualTextTop) + ea,
+        },
+        under: {
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(200),
+          color: colorChip.green,
+          lineHeight: String(titleLineHeight),
+        }
+      }
+    ]
+  });
+
+  rightBox = createNode({
+    mother: whiteBlock,
+    style: {
+      width: desktop ? withOut(leftBoxWidth + (margin * 2), ea) : withOut(margin * 2, ea),
+      display: desktop ? "inline-flex" : "flex",
+      verticalAlign: "top",
+      position: "relative",
+      justifyContent: "start",
+      alignItems: "start",
+      marginLeft: desktop ? "" : String(margin) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "column",
+          justifyContent: "start",
+          alignItems: "start",
+        },
+        children: [
+          {
+            text: contents.right.description.join("\n\n"),
+            style: {
+              display: "block",
+              position: "relative",
+              top: String(descriptionVisualTextTop) + ea,
+              fontSize: String(descriptionSize) + ea,
+              fontWeight: String(descriptionWeight),
+              color: colorChip.black,
+              lineHeight: String(descriptionLineHeight),
+              paddingLeft: mobile ? String(mobilePaddingLeft) + ea : "",
+            },
+            bold: {
+              fontSize: String(descriptionSize) + ea,
+              fontWeight: String(descriptionBoldWeight),
+              color: colorChip.green,
+            }
+          }
+        ]
+      }
+    ]
+  });
+
+}
+
+ImageTransferJs.prototype.imageViewing = function (images) {
+  const instance = this;
+  const { ea, totalContents, media } = this;
+  const { createNode, withOut, colorChip, equalJson, downloadFile, removeByClass, sleep } = GeneralJs;
+  const className = "photoSelectedTarget";
+  const zIndex = 3;
+  const mobile = media[4];
+  const desktop = !mobile;
+  return async function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    try {
+      let img, height, imgBox;
+      let title, titleSize, bottom;
+      let titleBox;
+      let leftArrow, rightArrow;
+      let leftArrowBox, rightArrowBox;
+      let arrowHeight;
+      let arrowMargin;
+      let index, src;
+      let convertEvent;
+      let length;
+      let totalImages;
+      let source;
+      let width;
+      let loading;
   
-    mainPaddingBottom = <%% 16, 16, 16, 12, 5 %%>;
-
-    contentsAreaMarginTop = <%% 45, 40, 34, 28, 6 %%>;
-    innerPadding = <%% 60, 50, 45, 40, 6 %%>;
-
-    mainBlock = createNode({
-      mother: this.baseTong,
-      style: {
-        display: "block",
-        position: "relative",
-        paddingBottom: String(mainPaddingBottom) + ea,
+      totalImages = equalJson(JSON.stringify(images));
+  
+      src = this.getAttribute("src");
+      source = this.getAttribute("source");
+      length = Number(this.getAttribute("length"));
+      index = Number(this.getAttribute("index"));
+  
+      convertEvent = () => {};
+  
+      height = 0.95;
+      width = desktop ? 0.9 : 0.94;
+      titleSize = 2;
+      bottom = 6.6;
+      arrowHeight = <%% 1.7, 1.6, 1.4, 1.2, 1 %%>;
+      arrowMargin = <%% 64, 48, 36, 30, 1 %%>;
+  
+      createNode({
+        mother: totalContents,
+        class: [ className ],
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              removeByClass(className);
+            }
+          }
+        ],
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: colorChip.darkDarkShadow,
+          zIndex: String(zIndex),
+          animation: "justfadeineight 0.2s ease forwards",
+        }
+      });
+  
+      img = createNode({
+        mother: totalContents,
+        class: [ className ],
+        mode: "img",
+        attribute: [
+          { src: S3HOST + source },
+          { direction: "right" }
+        ],
+        style: {
+          opacity: String(0),
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          height: "calc(calc(100% - " + String(instance.naviHeight) + "px" + ") * " + String(height) + ")",
+          width: "auto",
+          zIndex: String(zIndex),
+          borderRadius: String(3) + "px",
+          transition: "all 0s ease",
+        }
+      });
+      imgBox = img.getBoundingClientRect();
+      while (imgBox.width === 0) {
+        await sleep(100);
+        imgBox = img.getBoundingClientRect();
       }
-    });
 
-    createNode({
-      mother: mainBlock,
-      style: {
-        display: "block",
-        position: "relative",
-        width: String(100) + '%',
-        marginTop: String(contentsAreaMarginTop) + ea,
-        background: colorChip.white,
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-        paddingTop: String(innerPadding) + ea,
-        paddingBottom: String(innerPadding) + ea,
-        height: String(132) + ea,
+      if (imgBox.width < window.innerWidth) {
+        img.style.top = "calc(" + withOut(50, imgBox.height / 2, "px") + " + " + String(instance.naviHeight / 2) + "px" + ")";
+        img.style.left = withOut(50, imgBox.width / 2, "px");
+        img.style.opacity = String(1);
+      } else {
+        img.style.height = "auto";
+        img.style.width = String(window.innerWidth * width) + "px";
+        imgBox = img.getBoundingClientRect();
+        while (imgBox.width === 0) {
+          await sleep(100);
+          imgBox = img.getBoundingClientRect();
+        }
+        img.style.top = "calc(" + withOut(50, imgBox.height / 2, "px") + " + " + String(instance.naviHeight / 2) + "px" + ")";
+        img.style.left = withOut(50, imgBox.width / 2, "px");
+        img.style.opacity = String(1);
       }
-    });
 
+      leftArrow = createNode({
+        mother: totalContents,
+        events: [
+          {
+            type: [ "dblclick", "selectstart" ],
+            event: (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+            }
+          }
+        ],
+        attribute: [
+          { direction: "left" }
+        ],
+        class: [ className ],
+        mode: "svg",
+        source: instance.mother.returnArrow("left", colorChip.whiteBlack),
+        style: {
+          display: desktop ? "inline-block" : "none",
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          height: String(arrowHeight) + "vh",
+          zIndex: String(zIndex),
+          transition: "all 0s ease",
+          animation: "fadeuplite 0.2s ease forwards",
+          cursor: "pointer"
+        }
+      });
+      leftArrowBox = leftArrow.getBoundingClientRect();
+      leftArrow.style.top = "calc(" + String(instance.naviHeight * 0.7) + "px" + " + calc(calc(calc(100% - " + String(instance.naviHeight) + "px" + ") / 2) - " + String(leftArrowBox.height / 2) + "px" + "))"
+      leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+  
+      rightArrow = createNode({
+        mother: totalContents,
+        events: [
+          {
+            type: [ "dblclick", "selectstart" ],
+            event: (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+            }
+          }
+        ],
+        attribute: [
+          { direction: "right" }
+        ],
+        class: [ className ],
+        mode: "svg",
+        source: instance.mother.returnArrow("right", colorChip.whiteBlack),
+        style: {
+          display: desktop ? "inline-block" : "none",
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          height: String(arrowHeight) + "vh",
+          zIndex: String(zIndex),
+          transition: "all 0s ease",
+          animation: "fadeuplite 0.2s ease forwards",
+          cursor: "pointer"
+        }
+      });
+      rightArrowBox = rightArrow.getBoundingClientRect();
+      rightArrow.style.top = "calc(" + String(instance.naviHeight * 0.7) + "px" + " + calc(calc(calc(100% - " + String(instance.naviHeight) + "px" + ") / 2) - " + String(rightArrowBox.height / 2) + "px" + "))"
+      rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+  
+      convertEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        const direction = this.getAttribute("direction");
+        try {
+          let targetIndex, targetImage;
+          if (direction === "left") {
+            targetIndex = index - 1;
+            if (totalImages[targetIndex] === undefined) {
+              targetIndex = length - 1;
+            }
+          } else {
+            targetIndex = index + 1;
+            if (totalImages[targetIndex] === undefined) {
+              targetIndex = 0;
+            }
+          }
+          targetImage = totalImages[targetIndex]
+          img.setAttribute("src", S3HOST + targetImage.source);
+          img.style.opacity = String(0);
+          img.style.height = "calc(calc(100% - " + String(instance.naviHeight) + "px" + ") * " + String(height) + ")";
+          img.style.width = "auto";
 
-  } catch (e) {
-    console.log(e);
-    window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
-    window.location.reload();
+          loading = instance.mother.whiteProgressLoading(null, true, true, true);
+
+          await sleep(500);
+          img.style.height = "calc(calc(100% - " + String(instance.naviHeight) + "px" + ") * " + String(height) + ")";
+          img.style.width = "auto";
+
+          index = targetIndex;
+
+          imgBox = img.getBoundingClientRect();
+          await sleep(100);
+          while (imgBox.width === 0) {
+            await sleep(100);
+            imgBox = img.getBoundingClientRect();
+          }
+          img.style.height = "calc(calc(100% - " + String(instance.naviHeight) + "px" + ") * " + String(height) + ")";
+          img.style.width = "auto";
+
+          if (imgBox.width < window.innerWidth) {
+            img.style.top = "calc(" + withOut(50, imgBox.height / 2, "px") + " + " + String(instance.naviHeight / 2) + "px" + ")";
+            img.style.left = withOut(50, imgBox.width / 2, "px");
+          } else {
+            img.style.height = "auto";
+            img.style.width = String(window.innerWidth * width) + "px";
+            imgBox = img.getBoundingClientRect();
+            while (imgBox.width === 0) {
+              await sleep(100);
+              imgBox = img.getBoundingClientRect();
+            }
+            img.style.top = "calc(" + withOut(50, imgBox.height / 2, "px") + " + " + String(instance.naviHeight / 2) + "px" + ")";
+            img.style.left = withOut(50, imgBox.width / 2, "px");
+          }
+          leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, "px");
+          rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, "px");
+
+          for (let z = 0; z < 5; z++) {
+            await sleep(500);
+            imgBox = img.getBoundingClientRect();
+            await sleep(100);
+            while (imgBox.width === 0) {
+              await sleep(100);
+              imgBox = img.getBoundingClientRect();
+            }
+            if (imgBox.width < window.innerWidth) {
+              img.style.top = "calc(" + withOut(50, imgBox.height / 2, "px") + " + " + String(instance.naviHeight / 2) + "px" + ")";
+              img.style.left = withOut(50, imgBox.width / 2, "px");
+            } else {
+              img.style.height = "auto";
+              img.style.width = String(window.innerWidth * width) + "px";
+              imgBox = img.getBoundingClientRect();
+              while (imgBox.width === 0) {
+                await sleep(100);
+                imgBox = img.getBoundingClientRect();
+              }
+              img.style.top = "calc(" + withOut(50, imgBox.height / 2, "px") + " + " + String(instance.naviHeight / 2) + "px" + ")";
+              img.style.left = withOut(50, imgBox.width / 2, "px");
+            }
+            leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, "px");
+            rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, "px");
+            if (z === 0) {
+              loading.remove();
+              img.style.opacity = String(1);
+            }
+          }
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      leftArrow.addEventListener("click", convertEvent);
+      rightArrow.addEventListener("click", convertEvent);
+      img.addEventListener("click", convertEvent);
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 
 ImageTransferJs.prototype.insertPhotoBox = async function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson, cleanChildren } = GeneralJs;
-  const { ea, media, baseTong } = this;
+  const { ea, media, baseTong, data } = this;
+  const { images } = data;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -292,12 +696,26 @@ ImageTransferJs.prototype.insertPhotoBox = async function () {
     let mainPaddingBottom;
     let contentsAreaMarginTop;
     let innerPadding;
+    let imageMargin;
+    let columnsLength;
+    let tong;
+    let imageTongList;
+    let targetTong;
+    let margin;
+
+    imageMargin = <%% 3, 3, 2, 2, 0.5 %%>;
+    columnsLength = <%% 4, 3, 3, 2, 2 %%>;
 
     mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
     mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 20 %%>;
   
     contentsAreaMarginTop = <%% 45, 40, 34, 28, 6 %%>;
+    margin = <%% 55, 55, 47, 39, 5.5 %%>;
     innerPadding = <%% 60, 50, 45, 40, 6 %%>;
+
+    if (images.length <= columnsLength) {
+      columnsLength = images.length;
+    }
 
     mainBlock = createNode({
       mother: this.baseTong,
@@ -308,20 +726,88 @@ ImageTransferJs.prototype.insertPhotoBox = async function () {
       }
     });
 
-    createNode({
+    tong = createNode({
       mother: mainBlock,
       style: {
         display: "block",
         position: "relative",
-        width: String(100) + '%',
         background: colorChip.white,
         borderRadius: String(5) + "px",
         boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
         paddingTop: String(innerPadding) + ea,
         paddingBottom: String(innerPadding) + ea,
-        height: String(800) + ea,
+        height: "auto",
+      },
+      child: {
+        style: {
+          position: "relative",
+          marginLeft: String(margin) + ea,
+          width: withOut(margin * 2, ea),
+          height: "auto",
+        }
       }
-    });
+    }).firstChild;
+
+    imageTongList = [];
+    for (let i = 0; i < columnsLength; i++) {
+      imageTongList.push(createNode({
+        mother: tong,
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(calc(100% - " + String(imageMargin * (columnsLength - 1)) + ea + ") / " + String(columnsLength) + ")",
+          marginRight: String(i % columnsLength === columnsLength - 1 ? 0 : imageMargin) + ea,
+          marginBottom: String(imageMargin) + ea,
+          borderRadius: String(3) + "px",
+          verticalAlign: "top",
+          cursor: "pointer",
+        },
+      }));
+    }
+
+    for (let i = 0; i < images.length; i++) {
+      imageTongList.sort((a, b) => {
+        return a.getBoundingClientRect().height - b.getBoundingClientRect().height;
+      });
+      targetTong = imageTongList[0];
+      createNode({
+        mother: targetTong,
+        attribute: {
+          src: S3HOST + images[i].link,
+          index: String(i),
+          length: String(images.length),
+          toggle: "off",
+          source: images[i].source,
+        },
+        event: {
+          click: instance.imageViewing(images),
+        },
+        style: {
+          position: "relative",
+          display: "inline-flex",
+          width: withOut(0, ea),
+          marginBottom: String(imageMargin) + ea,
+          borderRadius: String(3) + "px",
+          verticalAlign: "top",
+          cursor: "pointer",
+          overflow: "hidden",
+        },
+        child: {
+          mode: "img",
+          attribute: {
+            src: S3HOST + images[i].link,
+          },
+          style: {
+            position: "relative",
+            display: "block",
+            width: withOut(0, ea),
+            height: "auto",
+          },
+        },
+      });
+
+    }
+
 
 
   } catch (e) {
@@ -355,20 +841,24 @@ ImageTransferJs.prototype.launching = async function (loading) {
     this.designer = designer;
     
     await this.mother.ghostClientLaunching({
-      mode: "front",
+      mode: "ghost",
       name: "imageTransfer",
-      client: null,
+      client: this.client,
       base: {
         instance: this,
         binaryPath: ImageTransferJs.binaryPath,
-        subTitle: "",
+        subTitle: (this.client.name + " 고객님 이미지 전송"),
         secondBackground: false,
         backgroundType: 0,
+        talk: {
+          text: "기타 문의 사항은 홈리에종 채널에 주세요!",
+          event: "channel",
+        }
       },
       local: async () => {
         try {
           instance.insertInitBox();
-          await instance.insertNoticeBox();
+          instance.insertNoticeBox();
           await instance.insertPhotoBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ImageTransferJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");

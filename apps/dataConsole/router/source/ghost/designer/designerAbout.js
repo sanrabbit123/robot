@@ -2156,10 +2156,10 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             }
           },
           noticeText: (designer) => {
-            return "출장비를 받지 않고 기본적으로 가줄 수 있는 거리의 최대값입니다. 최소 25km, 최대 40km 내에서 작성해주세요!";
+            return "출장비를 받지 않고 기본적으로 가줄 수 있는 거리의 최대값입니다. 최소 25km, 최대 60km 내에서 작성해주세요!";
           },
           visualNotice: (designer) => {
-            return "(25km ~ 45km 이내)"
+            return "(25km ~ 60km 이내)"
           },
         },
         {

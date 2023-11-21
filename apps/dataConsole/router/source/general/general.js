@@ -5402,7 +5402,7 @@ GeneralJs.prototype.grayLoading = function (mother = null, whiteMode = false) {
   return (new GrayLoading(cancel, loading));
 }
 
-GeneralJs.prototype.whiteProgressLoading = function (mother = null, emptyProgress = false) {
+GeneralJs.prototype.whiteProgressLoading = function (mother = null, emptyProgress = false, transparentBackground = false, frontMode = false) {
   if (typeof mother !== "object" || mother !== null) {
     throw new Error("input must be dom");
   }
@@ -5451,7 +5451,7 @@ GeneralJs.prototype.whiteProgressLoading = function (mother = null, emptyProgres
       left: String(0),
       width: String(100) + '%',
       height: String(100) + '%',
-      background: colorChip.white,
+      background: transparentBackground ? "transparent" : colorChip.white,
       zIndex: String(zIndex),
       opacity: String(0.7),
     }
@@ -5464,7 +5464,7 @@ GeneralJs.prototype.whiteProgressLoading = function (mother = null, emptyProgres
     class: [ "loading" ],
     style: {
       position: "fixed",
-      top: withOut(50, (width / 2) + progressPadding, ea),
+      top: !frontMode ? withOut(50, (width / 2) + progressPadding, ea) : "calc(" + String(instance.naviHeight) + "px" + " + calc(calc(calc(100% - " + String(instance.naviHeight) + "px" + ") / 2) - " + String((width / 2) + progressPadding) + ea + "))",
       left: withOut(50, width / 2, ea),
       width: String(width) + ea,
       height: String(width) + ea,
@@ -5481,7 +5481,7 @@ GeneralJs.prototype.whiteProgressLoading = function (mother = null, emptyProgres
       position: "fixed",
       height: String(progressHeight) + ea,
       width: String(progressWidth) + ea,
-      top: withOut(50, (progressHeight / 2) - progressPadding, ea),
+      top: !frontMode ? withOut(50, (progressHeight / 2) - progressPadding, ea) : "calc(" + String(instance.naviHeight) + "px" + " + calc(calc(calc(100% - " + String(instance.naviHeight) + "px" + ") / 2) - " + String((progressHeight / 2) - progressPadding) + ea + "))",
       left: withOut(50, progressWidth / 2, ea),
       zIndex: String(zIndex),
     },
