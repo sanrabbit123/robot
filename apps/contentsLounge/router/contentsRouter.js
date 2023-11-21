@@ -1232,7 +1232,7 @@ ContentsRouter.prototype.rou_post_getAllContents = function () {
 
         if (/^[가-힣]/i.test(value)) {
 
-          designers = (await back.getDesignersByQuery({ designer: { $regex: thisDesignerName } }, { selfMongo })).toNormal();
+          designers = (await back.getDesignersByQuery({ designer: { $regex: value } }, { selfMongo })).toNormal();
           if (designers.length > 0) {
 
             desidArr = designers.filter((d) => { return d.desid !== "" }).map((d) => { return d.desid });
