@@ -1116,6 +1116,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   const { desid, designer, pictureSettings, description } = info;
   const { createNode, colorChip, withOut, removeByClass, serviceParsing, dateToString, isMac } = GeneralJs;
+  const { top, bottom, left } = this.subBoxMargin;
   const mobile = media[4];
   const desktop = !mobile;
   let bottomMarginVisual;
@@ -1144,12 +1145,18 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   let analyticsBoxTitle;
   let portfolioBox, portfolioBoxTitle;
   let portfolioBoxHeight;
+  let transferBox, transferBoxTitle;
   let feeBox;
   let feeHeight, feeMarginBottom;
   let feeDetailBox, feeDetailBoxTitle;
   let thisDesigner;
   let thisDesignerEndBoo;
   let markWidth, markMargin, markTop;
+  let marginTop;
+  let marginBottom;
+
+  marginTop = <%% left - 6, left - 6, top, top, 2 %%>;
+  marginBottom = <%% left - 3, left - 3, bottom, bottom, 4.5 %%>;
 
   bottomMarginVisual = <%% 3, 3, 3, 3, 3 %%>;
 
@@ -1599,6 +1606,47 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   this.designerAnalytics(analyticsBox, desid);
   mother.appendChild(analyticsBox);
 
+  if (this.designers.pick(desid).imageTransfer.length > 0) {
+    //designer transfer
+    transferBox = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "relative",
+      marginLeft: String(desktop ? leftMargin : 0) + ea,
+      marginRight: String(desktop ? leftMargin : 0) + ea,
+      paddingTop: String(marginTop) + ea,
+      paddingBottom: String(marginBottom) + ea,
+      paddingLeft: String(left) + ea,
+      paddingRight: String(left) + ea,
+      width: desktop ? "calc(100% - " + String((leftMargin * 2) + (0 * 2)) + ea + ")" : "calc(100% - " + String((0 * 2)) + ea + ")",
+      marginTop: String(analyticsBoxTopMargin) + ea,
+      boxSizing: "border-box",
+      borderRadius: String(3) + "px",
+      border: desktop ? "1px solid " + GeneralJs.colorChip.gray3 : String(0),
+      background: mobile ? GeneralJs.colorChip.white : "transparent",
+      boxShadow: mobile ? "0px 5px 12px -10px " + GeneralJs.colorChip.gray5 : "",
+    };
+    for (let i in style) {
+      transferBox.style[i] = style[i];
+    }
+    transferBoxTitle = GeneralJs.nodes.div.cloneNode(true);
+    transferBoxTitle.textContent = "디자이너 관련 전송건";
+    style = {
+      position: desktop ? "absolute" : "relative",
+      left: String(desktop ? 0 : 0) + ea,
+      top: desktop ?String(descriptionTitleTop) + ea : "",
+      fontSize: String(descriptionTitleSize) + ea,
+      fontWeight: String(800),
+      marginTop: desktop ? "" : String(2) + ea,
+      marginBottom: desktop ? "" : String(2) + ea,
+    };
+    for (let i in style) {
+      transferBoxTitle.style[i] = style[i];
+    }
+    transferBox.appendChild(transferBoxTitle);
+    this.designerTransfer(transferBox, desid);
+    mother.appendChild(transferBox);
+  }
+
   //designer portfolio
   portfolioBox = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -1658,7 +1706,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
     left: String(desktop ? 0 : this.subBoxMargin.left) + ea,
     top: String(descriptionTitleTop) + ea,
     fontSize: String(descriptionTitleSize) + ea,
-    fontWeight: String(600),
+    fontWeight: String(800),
   };
   for (let i in style) {
     feeDetailBoxTitle.style[i] = style[i];
@@ -2275,6 +2323,94 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
   }).catch((err) => {
     console.log(err);
   });
+}
+
+DesignerProposalJs.prototype.designerTransfer = function (mother, desid) {
+  const instance = this;
+  const { ajaxJson, colorChip, createNode, withOut, dateToString, blankHref } = GeneralJs;
+  const { ea, media, frontPage } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { top, bottom, left } = this.subBoxMargin;
+  const thisDesigner = this.designers.pick(desid);
+  const client = this.client;
+  const slash = "&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;"
+  let buttonSize;
+  let inputBoxHeight;
+  let textTop
+  let buttonBetween;
+  let buttonPaddingLeft;
+  let num;
+  let wording;
+
+  buttonSize = <%% 13, 13, 12, 12, 2.8 %%>;
+  inputBoxHeight = <%% 30, 30, 26, 26, 6 %%>;
+  textTop = GeneralJs.isMac() ? -1 : 1;
+  buttonBetween = <%% 4, 4, 4, 3, 1 %%>;
+  buttonPaddingLeft = <%% 12, 12, 10, 10, 3 %%>;
+  
+  num = 0;
+  for (let data of thisDesigner.imageTransfer) {
+
+    if (media[0] || media[1] || media[2]) {
+      wording = String(num + 1) + " - " + "<b%" + data.contents.purpose + "건%b>" + slash + "전송 : " + dateToString(data.date);
+    } else if (media[3]) {
+      wording = String(num + 1) + " - " + "<b%" + data.contents.purpose + "건%b>";
+    } else {
+      wording = String(num + 1) + " - " + "<b%" + data.contents.purpose + "건%b>";
+    }
+
+    createNode({
+      mother: mother,
+      attribute: {
+        cliid: client.cliid,
+        id: data.id,
+      },
+      event: {
+        click: function (e) {
+          const id = this.getAttribute("id");
+          const cliid = this.getAttribute("cliid");
+          blankHref(FRONTHOST + "/transfer.php?cliid=" + cliid + "&id=" + id);
+        }
+      },
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        height: String(inputBoxHeight) + ea,
+        marginRight: String(buttonBetween) + ea,
+        marginBottom: String(buttonBetween) + ea,
+        background: colorChip.green,
+        borderRadius: String(5) + "px",
+        paddingLeft: String(buttonPaddingLeft) + ea,
+        paddingRight: String(buttonPaddingLeft) + ea,
+        cursor: "pointer",
+      },
+      child: {
+        text: wording,
+        style: {
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(200),
+          color: colorChip.white,
+          position: "relative",
+          top: String(desktop ? textTop : -0.1) + ea,
+        },
+        under: {
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(200),
+          color: colorChip.gray2,
+        },
+        bold: {
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.white,
+        }
+      }
+    });
+    num++;
+  }
+
 }
 
 DesignerProposalJs.prototype.feeToString = function (fee) {
@@ -4240,6 +4376,16 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       }
     }
 
+    this.imageTransferData = await ajaxJson({ mode: "proposal", proid: project.proid }, S3HOST + ":3000/imageTransfer", { equal: true });
+    for (let d of designers) {
+      d.imageTransfer = [];
+      for (let data of this.imageTransferData) {
+        if (d.desid === data.contents.designer.desid) {
+          d.imageTransfer.push(equalJson(JSON.stringify(data)));
+        }
+      }
+    }
+
     this.project = project;
     this.client = client;
     this.requestNumber = requestNumber;
@@ -4247,10 +4393,6 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     this.proposal = project.proposal;
     this.proposalHistory = proposalHistory;
     this.proposalHistoryNumber = 0;
-
-    this.imageTransferData = await ajaxJson({ mode: "proposal", proid: project.proid }, S3HOST + ":3000/imageTransfer", { equal: true });
-
-    console.log(this.imageTransferData);
 
     // TEST Center ==================================================================================================
     if (proid === "p1801_aa01s") {
