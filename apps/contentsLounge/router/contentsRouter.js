@@ -1232,64 +1232,51 @@ ContentsRouter.prototype.rou_post_getAllContents = function () {
 
         if (/^[가-힣]/i.test(value)) {
 
-          thisDesignerName = value.split(":").map((str) => { return str.trim() })[1];
-          if (thisDesignerName !== undefined) {
+          designers = (await back.getDesignersByQuery({ designer: { $regex: thisDesignerName } }, { selfMongo })).toNormal();
+          if (designers.length > 0) {
 
-            designers = (await back.getDesignersByQuery({ designer: { $regex: thisDesignerName } }, { selfMongo })).toNormal();
-            if (designers.length > 0) {
+            desidArr = designers.filter((d) => { return d.desid !== "" }).map((d) => { return d.desid });
+            desidArr = [ ...new Set(desidArr) ];
+            
+            projects = (await back.getProjectsByQuery({ $or: desidArr.map((desid) => { return { desid } }) }, { selfMongo })).toNormal();
+            proidArr = projects.filter((d) => { return d.proid !== "" }).map((d) => { return d.proid });
+            proidArr = [ ...new Set(proidArr) ];
 
-              desidArr = designers.filter((d) => { return d.desid !== "" }).map((d) => { return d.desid });
-              desidArr = [ ...new Set(desidArr) ];
-              
-              projects = (await back.getProjectsByQuery({ $or: desidArr.map((desid) => { return { desid } }) }, { selfMongo })).toNormal();
-              proidArr = projects.filter((d) => { return d.proid !== "" }).map((d) => { return d.proid });
-              proidArr = [ ...new Set(proidArr) ];
+            searchContents = [];
+            searchForeContents = [];
+            if (proidArr.length > 0) {
+              searchProidArr = proidArr.map((proid) => { return { proid } }).concat(desidArr.map((desid) => { return { desid } }));
+              searchContents = await back.getContentsArrByQuery({ $or: searchProidArr }, { selfMongo });
+              searchForeContents = await back.mongoRead(collection, { $or: searchProidArr }, { selfMongo: selfLocalMongo });  
+            }
 
-              searchContents = [];
-              searchForeContents = [];
-              if (proidArr.length > 0) {
-                searchProidArr = proidArr.map((proid) => { return { proid } }).concat(desidArr.map((desid) => { return { desid } }));
-                searchContents = await back.getContentsArrByQuery({ $or: searchProidArr }, { selfMongo });
-                searchForeContents = await back.mongoRead(collection, { $or: searchProidArr }, { selfMongo: selfLocalMongo });  
-              }
-
-              proidArr = searchContents.filter((c) => { return c.proid !== "" }).map((obj) => { return obj.proid });
-              proidArr = proidArr.concat(searchForeContents.map((o) => { return o.proid }));
-              proidArr = [ ...new Set(proidArr) ];
-              
-              if (proidArr.length > 0) {
-                whereQuery0 = {};
-                whereQuery0["$or"] = proidArr.map((proid) => { return { proid } });
-                projects = (await back.getProjectsByQuery(whereQuery0, { selfMongo })).toNormal();
-                whereQuery1 = {};
-                whereQuery1["$or"] = projects.map((obj) => { return { cliid: obj.cliid } });
-                clients = (await back.getClientsByQuery(whereQuery1, { selfMongo })).toNormal();
-                resultObj = {
-                  contentsArr: searchContents,
-                  foreContents: searchForeContents,
-                  projects,
-                  clients,
-                  designers
-                };
-              } else {
-                projects = [];
-                clients = [];
-                resultObj = {
-                  contentsArr: searchContents,
-                  foreContents: searchForeContents,
-                  projects,
-                  clients,
-                  designers
-                };
-              }
-
-            } else {
+            proidArr = searchContents.filter((c) => { return c.proid !== "" }).map((obj) => { return obj.proid });
+            proidArr = proidArr.concat(searchForeContents.map((o) => { return o.proid }));
+            proidArr = [ ...new Set(proidArr) ];
+            
+            if (proidArr.length > 0) {
+              whereQuery0 = {};
+              whereQuery0["$or"] = proidArr.map((proid) => { return { proid } });
+              projects = (await back.getProjectsByQuery(whereQuery0, { selfMongo })).toNormal();
+              whereQuery1 = {};
+              whereQuery1["$or"] = projects.map((obj) => { return { cliid: obj.cliid } });
+              clients = (await back.getClientsByQuery(whereQuery1, { selfMongo })).toNormal();
               resultObj = {
-                contentsArr: [],
-                foreContents: [],
-                projects: [],
-                clients: [],
-                designers: [],
+                contentsArr: searchContents,
+                foreContents: searchForeContents,
+                projects,
+                clients,
+                designers
+              };
+            } else {
+              projects = [];
+              clients = [];
+              resultObj = {
+                contentsArr: searchContents,
+                foreContents: searchForeContents,
+                projects,
+                clients,
+                designers
               };
             }
 
@@ -1305,10 +1292,12 @@ ContentsRouter.prototype.rou_post_getAllContents = function () {
 
         } else if (/^c[ ]*\:[ ]*[가-힣]*/i.test(value)) {
 
+          thisDesignerName = value.split(":").map((str) => { return str.trim() })[1];
+
           searchContents = [];
           searchForeContents = [];
           searchClients = await back.getClientsByQuery({
-            name: { $regex: value }
+            name: { $regex: thisDesignerName }
           }, { selfMongo });
           if (searchClients.length > 0) {
             cliidArr = searchClients.toNormal().map((c) => { return c.cliid }).map((cliid) => { return { cliid } });
