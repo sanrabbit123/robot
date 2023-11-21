@@ -6490,7 +6490,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
 
           await human.sendSms({
             to: targetJson.target.phone.replace(/[^0-9]/gi, ''),
-            body: `${client} 고객님 안녕하세요! 홈리에종입니다 :) 이미지 전달 페이지 링크를 보내드립니다.\n\n* 이미지 제목 : ${purpose}\n* 이미지 보기\nhttps://${host}/${path}.php?cliid=${cliid}&id=${id}`,
+            body: `${client} 고객님 안녕하세요, 홈리에종입니다!\n\n홈리에종 CX 팀에서 고객님을 위해 홈스타일링 관련 이미지를 전달해드립니다. 하단 페이지 링크를 통해 전달해드린 이미지들을 보실 수 있습니다.\n\n기타 문의사항이 있다면 홈리에종 채널을 통해 남겨주세요~! 감사합니다 :)\n\n* 제목 : ${purpose}\n* 페이지 링크\nhttps://${host}/${path}.php?cliid=${cliid}&id=${id}`,
           });
 
           res.send(JSON.stringify({ message: "done" }));
