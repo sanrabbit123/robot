@@ -7661,6 +7661,8 @@ GeneralJs.prototype.consultingPopup = function () {
       }
     });
 
+    /*
+
     // 12
     createNode({
       mother: formBox,
@@ -8073,6 +8075,8 @@ GeneralJs.prototype.consultingPopup = function () {
       }
     });
 
+    */
+
     // 16
     createNode({
       mother: formBox,
@@ -8187,8 +8191,8 @@ GeneralJs.prototype.consultingPopup = function () {
       "living",
       "movein",
       "contract",
-      "budget",
-      "furniture",
+      // "budget",
+      // "furniture",
       "etc",
     ], true).catch((err) => { console.log(err); });
 

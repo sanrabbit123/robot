@@ -1629,7 +1629,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
       transferBox.style[i] = style[i];
     }
     transferBoxTitle = GeneralJs.nodes.div.cloneNode(true);
-    transferBoxTitle.textContent = "디자이너 관련 전송건";
+    transferBoxTitle.textContent = "디자이너 추가 이미지";
     style = {
       position: desktop ? "absolute" : "relative",
       left: String(desktop ? 0 : 0) + ea,
@@ -2381,7 +2381,7 @@ DesignerProposalJs.prototype.designerTransfer = function (mother, desid) {
         height: String(inputBoxHeight) + ea,
         marginRight: String(buttonBetween) + ea,
         marginBottom: String(buttonBetween) + ea,
-        background: colorChip.green,
+        background: colorChip.gray1,
         borderRadius: String(5) + "px",
         paddingLeft: String(buttonPaddingLeft) + ea,
         paddingRight: String(buttonPaddingLeft) + ea,
@@ -2391,20 +2391,20 @@ DesignerProposalJs.prototype.designerTransfer = function (mother, desid) {
         text: wording,
         style: {
           fontSize: String(buttonSize) + ea,
-          fontWeight: String(200),
-          color: colorChip.white,
+          fontWeight: String(300),
+          color: colorChip.green,
           position: "relative",
           top: String(desktop ? textTop : -0.1) + ea,
         },
         under: {
           fontSize: String(buttonSize) + ea,
-          fontWeight: String(200),
-          color: colorChip.gray2,
+          fontWeight: String(300),
+          color: colorChip.deactive,
         },
         bold: {
           fontSize: String(buttonSize) + ea,
-          fontWeight: String(700),
-          color: colorChip.white,
+          fontWeight: String(600),
+          color: colorChip.black,
         }
       }
     });

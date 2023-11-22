@@ -575,6 +575,9 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
         }
       };
       this.wordings.center = [];
+
+      /*
+
       this.wordings.center.push({
         name: "space",
         title: "공간",
@@ -713,6 +716,9 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
           },
         ]
       });
+
+      */
+
       this.wordings.center.push({
         name: "construct",
         title: "시공",
@@ -956,6 +962,144 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               }
             }
           },
+        ]
+      });
+      this.wordings.center.push({
+        name: "budget",
+        title: "예산",
+        callback: "blockCheck",
+        children: [
+          {
+            name: "budgetReady",
+            type: "budget",
+            half: false,
+            required: false,
+            question: [
+              "인테리어에 사용하실 <b%전체 예산을 알려주세요!%b>",
+              "(스타일링, 시공 포함 / 가전 예산은 제외)"
+            ],
+            items: [
+              desktop ? "1,000만원 이하" : "1천만원",
+              desktop ? "3,000만원" : "3천만원",
+              desktop ? "5,000만원" : "5천만원",
+              desktop ? "7,000만원" : "7천만원",
+              desktop ? "1억원 이상" : "1억원",
+            ],
+            total: 100,
+            ea: '%',
+            value: function (request, history, self) {
+              return (Number(request.request.budget.replace(/[^0-9]/gi, '')) === 1 ? 10000 : Number(request.request.budget.replace(/[^0-9]/gi, ''))) / 100;
+            },
+            update: function (value, siblings, client) {
+              if (value !== null) {
+                const menu = [ '500만원 이하', '1,000만원', '1,500만원', '2,000만원', '2,500만원', '3,000만원', '3,500만원', '4,000만원', '4,500만원', '5,000만원 이상', '6,000만원 이상', '7,000만원 이상', '8,000만원 이상', '9,000만원 이상', '1억원 이상', '1억 5,000만원 이상', '2억원 이상', '3억원 이상', '5억원 이상', '10억원 이상', ];
+                const man = 10000;
+                const standardValue = 10000 * man;
+                let updateQuery;
+                let thisValue;
+                let finalValue;
+
+                thisValue = standardValue * (value.value / 100);
+                finalValue = menu[0];
+
+                if (thisValue <= 1200 * man) {
+                  finalValue = menu[1];
+                } else if (thisValue > 1200 * man && thisValue <= 1700 * man) {
+                  finalValue = menu[2];
+                } else if (thisValue > 1700 * man && thisValue <= 2200 * man) {
+                  finalValue = menu[3];
+                } else if (thisValue > 2200 * man && thisValue <= 2700 * man) {
+                  finalValue = menu[4];
+                } else if (thisValue > 2700 * man && thisValue <= 3200 * man) {
+                  finalValue = menu[5];
+                } else if (thisValue > 3200 * man && thisValue <= 3700 * man) {
+                  finalValue = menu[6];
+                } else if (thisValue > 3700 * man && thisValue <= 4200 * man) {
+                  finalValue = menu[7];
+                } else if (thisValue > 4200 * man && thisValue <= 4700 * man) {
+                  finalValue = menu[8];
+                } else if (thisValue > 4700 * man && thisValue <= 5700 * man) {
+                  finalValue = menu[9];
+                } else if (thisValue > 5700 * man && thisValue <= 6700 * man) {
+                  finalValue = menu[10];
+                } else if (thisValue > 6700 * man && thisValue <= 7700 * man) {
+                  finalValue = menu[11];
+                } else if (thisValue > 7700 * man && thisValue <= 8700 * man) {
+                  finalValue = menu[12];
+                } else if (thisValue > 8700 * man && thisValue <= 9700 * man) {
+                  finalValue = menu[13];
+                } else {
+                  finalValue = menu[14];
+                }
+
+                updateQuery = {};
+                updateQuery["requests.0.request.budget"] = finalValue;
+
+                return {
+                  history: null,
+                  core: updateQuery
+                };
+              } else {
+                return { history: null, core: null };
+              }
+            }
+          }
+        ]
+      });
+      this.wordings.center.push({
+        name: "furniture",
+        title: "가구",
+        callback: "blockCheck",
+        children: [
+          {
+            name: "purchaseRatio",
+            type: "opposite",
+            half: false,
+            required: false,
+            question: (mobile ? [
+              "가구의 <b%재사용과 구매의 비율%b>을 알려주세요!"
+            ] : [
+              "가구와 소품의 <b%재사용과 구매의%b>",
+              "<b%비율%b>을 알려주세요!"
+            ]),
+            items: [
+              "재배치",
+              "일부 구매",
+              "전체 구매",
+            ],
+            total: 100,
+            ea: '%',
+            value: function (request, history, self) {
+              if (typeof request.request.furniture !== "string") {
+                return (desktop ? 47.2 : 48);
+              } else {
+                if (request.request.furniture.trim() === "" || /알 수 없음/gi.test(request.request.furniture)) {
+                  return (desktop ? 47.2 : 48);
+                } else {
+                  return /일부/gi.test(request.request.furniture) ? (desktop ? 47.2 : 48) : (/전체/gi.test(request.request.furniture) ? 100 : 0);
+                }
+              }
+            },
+            update: function (value, siblings, client) {
+              if (value !== null) {
+                let updateQuery;
+                updateQuery = {};
+                if (value.value < 25) {
+                  updateQuery["requests.0.request.furniture"] = "재배치";
+                } else if (value.value < 75) {
+                  updateQuery["requests.0.request.furniture"] = "일부 구매";
+                } else {
+                  updateQuery["requests.0.request.furniture"] = "전체 구매";
+                }
+                return {
+                  history: null,
+                  core: updateQuery
+                };
+              } else {
+                return { history: null, core: null };
+              }
+            }
+          }
         ]
       });
       this.wordings.center.push({
@@ -2504,7 +2648,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           position: "relative",
           fontSize: String(standardSize) + ea,
           fontWeight: String(700),
-          color: colorChip.shadow,
+          color: colorChip.black,
           top: String(barTextTop) + ea,
         }
       });
@@ -2516,7 +2660,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           fontSize: String(standardSize) + ea,
           fontWeight: String(700),
           color: colorChip.black,
-          left: String(<&& 363 | 222 | 166 | 115 | 27 &&>) + ea,
+          left: String(<&& 363 | 228 | 175 | 127 | 30.1 &&>) + ea,
           top: String(barTextTop) + ea,
         },
         bold: {
@@ -2574,7 +2718,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
       barClone = bar.cloneNode(true);
       barClone.style.width = String(100) + '%';
       barClone.style.left = String(0) + ea;
-      barClone.style.background = colorChip.green;
+      barClone.style.background = colorChip.black;
       barBox.appendChild(barClone);
 
       barButton = createNode({

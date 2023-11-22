@@ -3566,8 +3566,8 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
 
       sessionId = map.find((obj) => { return obj.property === "sessionId" });
 
-      budget = map.find((obj) => { return obj.property === "budget" });
-      furniture = map.find((obj) => { return obj.property === "furniture" });
+      // budget = map.find((obj) => { return obj.property === "budget" });
+      // furniture = map.find((obj) => { return obj.property === "furniture" });
       contract = map.find((obj) => { return obj.property === "contract" });
 
       if (name === undefined || phone === undefined || address0 === undefined || address1 === undefined || email === undefined || pyeong === undefined || movein === undefined || living === undefined || etc === undefined) {
@@ -3580,12 +3580,12 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
         sessionId = [ sessionId.value.trim() ];
       }
 
-      if (budget === undefined) {
-        budget = { property: "budget", value: budgetArr[9] };
-      }
-      if (furniture === undefined) {
-        furniture = { property: "furniture", value: furnitureArr[1] };
-      }
+      // if (budget === undefined) {
+      //   budget = { property: "budget", value: budgetArr[9] };
+      // }
+      // if (furniture === undefined) {
+      //   furniture = { property: "furniture", value: furnitureArr[1] };
+      // }
       if (contract === undefined) {
         contract = { property: "contract", value: contractArr[0] };
       }
@@ -3600,8 +3600,8 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       living = living.value.trim();
       etc = etc.value.trim();
 
-      budget = budget.value.trim();
-      furniture = furniture.value.trim();
+      // budget = budget.value.trim();
+      // furniture = furniture.value.trim();
       contract = contract.value.trim();
 
       requestObject = {};
@@ -3613,8 +3613,8 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       requestObject["requests.0.request.space.address"] = address0 + " " + address1;
       requestObject["requests.0.request.family"] = "";
 
-      requestObject["requests.0.request.budget"] = budget;
-      requestObject["requests.0.request.furniture"] = furniture;
+      // requestObject["requests.0.request.budget"] = budget;
+      // requestObject["requests.0.request.furniture"] = furniture;
 
       if (Number.isNaN(Number(pyeong.replace(/[^0-9\.]/gi, ''))) || Number(pyeong.replace(/[^0-9\.]/gi, '')) === 0) {
         requestObject["requests.0.request.space.pyeong"] = defaultPyeong;

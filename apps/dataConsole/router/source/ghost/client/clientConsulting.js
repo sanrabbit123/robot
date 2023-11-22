@@ -2347,6 +2347,9 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     }
   });
   
+
+  /*
+
   // 12
   createNode({
     mother: rightBox,
@@ -2759,6 +2762,8 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     }
   });
 
+  */
+
   // 16
   createNode({
     mother: rightBox,
@@ -2862,8 +2867,8 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     "living",
     "movein",
     "contract",
-    "budget",
-    "furniture",
+    // "budget",
+    // "furniture",
     "etc",
   ], false).catch((err) => { console.log(err); });
 
