@@ -118,7 +118,7 @@ MprJs.prototype.mainDataRender = async function (matrixMode = false) {
       },
       {
         title: "소스",
-        width: 150,
+        width: 240,
         name: "source",
         type: "string",
         menu: [
@@ -135,7 +135,7 @@ MprJs.prototype.mainDataRender = async function (matrixMode = false) {
       },
       {
         title: "미디움",
-        width: 150,
+        width: 240,
         name: "medium",
         type: "string",
         menu: [
@@ -152,7 +152,7 @@ MprJs.prototype.mainDataRender = async function (matrixMode = false) {
       },
       {
         title: "캠페인",
-        width: 150,
+        width: 240,
         name: "campaign",
         type: "string",
         menu: [
