@@ -948,11 +948,11 @@ GoogleAnalytics.prototype.clientsMetric = async function (clientsArr, selfCoreMo
 
     clientsObjectArr = [];
     for (let client of clientsArr) {
-      clientResult = await this.clientMetric(client, contentsArr, historiesArr, selfMongo, store);
+      clientResult = await this.clientMetric(client, contentsArr, historiesArr, selfMongo, selfCoreMongo, selfConsoleMongo, store);
       while (typeof clientResult !== "object" || clientResult === null) {
         await sleep(2000);
         if (!clientResult) {
-          clientResult = await this.clientMetric(client, contentsArr, historiesArr, selfMongo, store);
+          clientResult = await this.clientMetric(client, contentsArr, historiesArr, selfMongo, selfCoreMongo, selfConsoleMongo, store);
         } else {
           clientResult = {};
         }
@@ -968,7 +968,7 @@ GoogleAnalytics.prototype.clientsMetric = async function (clientsArr, selfCoreMo
   }
 }
 
-GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMongo, selfConsoleMongo, selfMongo, store = false) {
+GoogleAnalytics.prototype.clientMetric = async function (thisClient, contentsArrInput, historyArrInput, selfMongo, selfCoreMongo, selfConsoleMongo, store = false) {
   const instance = this;
   const back = this.back;
   const address = this.address;
@@ -1012,8 +1012,8 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
       throw new Error("session parsing error");
     }
 
-    if (selfConsoleMongo instanceof Array) {
-      thisHistory = selfConsoleMongo.find((obj) => { return obj.cliid === cliid });
+    if (historyArrInput instanceof Array) {
+      thisHistory = historyArrInput.find((obj) => { return obj.cliid === cliid });
     } else {
       [ thisHistory ] = await back.mongoPick("clientHistory", [ { cliid }, { curation: 1, cliid: 1, manager: 1, important: 1 } ], { selfMongo: selfConsoleMongo });
     }
@@ -1154,8 +1154,8 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
     whereQuery = {};
     whereQuery["$or"] = (pidList.map((str) => { return /pid\=([^\&]+)/gi.exec(str)[1] }).map((pid) => { return { "contents.portfolio.pid": pid } }));
     if (whereQuery["$or"].length > 0) {
-      if (selfCoreMongo instanceof Array) {
-        constentsArr = selfCoreMongo.filter((obj) => { return whereQuery["$or"].map((o) => { return o["contents.portfolio.pid"]; }).includes(obj.contents.portfolio.pid); });
+      if (contentsArrInput instanceof Array) {
+        constentsArr = contentsArrInput.filter((obj) => { return whereQuery["$or"].map((o) => { return o["contents.portfolio.pid"]; }).includes(obj.contents.portfolio.pid); });
       } else {
         constentsArr = await back.mongoPick("contents", [ whereQuery, { "contents.portfolio.pid": 1, conid: 1, desid: 1 } ], { selfMongo: selfCoreMongo });
       }
