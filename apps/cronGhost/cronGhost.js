@@ -8,13 +8,15 @@ const CronGhost = function () {
   this.address = ADDRESS;
   this.dir = `${process.cwd()}/apps/cronGhost`;
   this.aws = new AwsAPIs();
+  this.generalPort = 3000;
+  this.graphicPort = 53001;
 }
 
 CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) {
   const instance = this;
   const address = this.address;
   const { requestSystem, messageLog, errorLog, emergencyAlarm, aliveLog } = this.mother;
-  const generalPort = 3000;
+  const { generalPort, graphicPort } = this;
   const controlPath = "/ssl";
   const aws = this.aws;
   const back = this.back;
@@ -167,7 +169,7 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
   const instance = this;
   const address = this.address;
   const { requestSystem, messageLog, errorLog } = this.mother;
-  const generalPort = 3000;
+  const { generalPort, graphicPort } = this;
   const selfMongo = MONGOC;
   try {
 
@@ -193,6 +195,8 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
       return requestSystem("https://" + address.secondinfo.host + ":" + String(generalPort) + "/timeAspirantCommon", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.secondinfo.host + ":" + String(generalPort) + "/designerCareerSync", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
+    }).then(() => {
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(graphicPort) + "/kakao", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).catch((e) => {
       throw new Error(e);
     });
@@ -206,7 +210,7 @@ CronGhost.prototype.pollingAsyncRequest = async function (MONGOC) {
   const instance = this;
   const address = this.address;
   const { requestSystem, messageLog, errorLog } = this.mother;
-  const generalPort = 3000;
+  const { generalPort, graphicPort } = this;
   const selfMongo = MONGOC;
   try {
 

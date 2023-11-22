@@ -1239,6 +1239,31 @@ GraphicBot.prototype.botRouter = function () {
     }
   };
 
+  funcObj.post_kakao = {
+    link: [ "/kakao" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      try {
+        const taskNumber = 1;
+        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, "" ]);
+        if (instance.task !== null) {
+          clearTimeout(instance.task);
+          instance.task = null;
+        }
+        instance.task = setTimeout(instance.startWork(), 3000);
+        res.send({ message: "will do" });
+      } catch (e) {
+        console.log(e);
+        res.send({ error: e.message });
+      }
+    }
+  };
+
   funcObj.get_confirm = {
     link: [ "/confirm" ],
     func: function (req, res) {
