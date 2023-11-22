@@ -4190,15 +4190,15 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
                 }
               }
             },
-            // {
-            //   "requests": {
-            //     $elemMatch: {
-            //       "analytics.response.status": {
-            //         $regex: "^[응장]"
-            //       }
-            //     }
-            //   }
-            // }
+            {
+              "requests": {
+                $elemMatch: {
+                  "analytics.response.status": {
+                    $regex: "^[응장]"
+                  }
+                }
+              }
+            }
           ]
         }, { selfMongo: selfCoreMongo })).toNormal();
 
