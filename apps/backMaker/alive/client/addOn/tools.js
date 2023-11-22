@@ -211,8 +211,6 @@ const withTools = function (Client) {
       message += "입주 예정일 : " + "거주중" + "\n";
     }
     message += "계약 형태 : " + request.space.contract.value + "\n";
-    message += "예산 : " + request.budget.toNormal() + "\n";
-    message += "가구 : " + request.furniture.toNormal() + "\n";
     message += "요청 사항 : " + request.etc.comment + "\n";
 
     return message.replace(/\n$/, '');
