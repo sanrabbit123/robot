@@ -1255,33 +1255,8 @@ GraphicBot.prototype.botRouter = function () {
     }
   };
 
-  funcObj.get_cash = {
-    link: [ "/cash" ],
-    func: async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      try {
-        const taskNumber = 2;
-        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, "" ]);
-        if (instance.task !== null) {
-          clearTimeout(instance.task);
-          instance.task = null;
-        }
-        instance.task = setTimeout(instance.startWork(), 3000);
-        res.send({ message: "will do" });
-      } catch (e) {
-        console.log(e);
-        res.send({ error: e.message });
-      }
-    }
-  };
-
-  funcObj.get_blog = {
-    link: [ "/blog" ],
+  funcObj.get_kakao = {
+    link: [ "/kakao" ],
     func: async function (req, res) {
       res.set({
         "Content-Type": "application/json",
@@ -1298,83 +1273,6 @@ GraphicBot.prototype.botRouter = function () {
         }
         instance.task = setTimeout(instance.startWork(), 3000);
         res.send({ message: "will do" });
-      } catch (e) {
-        console.log(e);
-        res.send({ error: e.message });
-      }
-    }
-  };
-
-  funcObj.post_receiptSend = {
-    link: [ "/receiptSend" ],
-    func: async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      try {
-        const taskNumber = 5;
-        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, JSON.stringify(req.body) ]);
-        if (instance.task !== null) {
-          clearTimeout(instance.task);
-          instance.task = null;
-        }
-        instance.task = setTimeout(instance.startWork(), 3000);
-        res.send({ message: "will do" });
-      } catch (e) {
-        console.log(e);
-        res.send({ error: e.message });
-      }
-    }
-  };
-
-  funcObj.post_apartment = {
-    link: [ "/apartment" ],
-    func: async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      try {
-        const taskNumber = 3;
-        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, JSON.stringify(req.body) ]);
-        if (instance.task !== null) {
-          clearTimeout(instance.task);
-          instance.task = null;
-        }
-        instance.task = setTimeout(instance.startWork(), 3000);
-        res.send({ message: "will do" });
-      } catch (e) {
-        console.log(e);
-        res.send({ error: e.message });
-      }
-    }
-  };
-
-  funcObj.post_browserRequest = {
-    link: [ "/browserRequest" ],
-    func: async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      try {
-        let taskNumber;
-        taskNumber = 6;
-        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, JSON.stringify(req.body) ]);
-        if (instance.task !== null) {
-          clearTimeout(instance.task);
-          instance.task = null;
-        }
-        instance.task = setTimeout(instance.startWork(), 3000);
-        res.send({ message: "will do" });
-
       } catch (e) {
         console.log(e);
         res.send({ error: e.message });
