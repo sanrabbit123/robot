@@ -178,8 +178,8 @@ DevContext.prototype.launching = async function () {
     */
 
 
-    // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/storeClientAnalytics", { fast: true, talk: true, cliid: "c2311_ab22s" }, { headers: { "Content-Type": "application/json" } });
-
+    await findCode("instagram")
+    
     
 
     

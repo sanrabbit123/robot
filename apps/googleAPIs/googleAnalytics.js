@@ -412,7 +412,7 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
         } else if (referrerArr.some((str) => { return /youtube/gi.test(str) })) {
           sourceArr.push("google");
         } else if (referrerArr.some((str) => { return /instagram/gi.test(str) })) {
-          sourceArr.push("facebook");
+          sourceArr.push("instagram");
         } else if (referrerArr.some((str) => { return /facebook/gi.test(str) })) {
           sourceArr.push("facebook");
         } else if (referrerArr.some((str) => { return /meta/gi.test(str) })) {
@@ -427,7 +427,9 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
           let result;
           if (/naver/gi.test(str)) {
             result = "naver";
-          } else if (/instagram/gi.test(str) || /facebook/gi.test(str) || /meta/gi.test(str)) {
+          } else if (/instagram/gi.test(str)) {
+            result = "instagram";
+          } else if (/facebook/gi.test(str) || /meta/gi.test(str)) {
             result = "facebook";
           } else {
             result = str;
