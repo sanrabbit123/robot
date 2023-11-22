@@ -142,7 +142,7 @@ SecondRouter.prototype.telegramSend = async function (chat_id, text, logger) {
 
 SecondRouter.prototype.rou_get_First = function () {
   const instance = this;
-  const { diskReading, aliveMongo, requestSystem } = this.mother;
+  const { diskReading, aliveMongo, requestSystem, fileSystem } = this.mother;
   const kakao = this.kakao;
   let obj = {};
   obj.link = "/:id";
@@ -176,7 +176,8 @@ SecondRouter.prototype.rou_get_First = function () {
             "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
           }
         });
-        res.send(JSON.stringify(response.data));
+        await fileSystem(`write`, [ kakao.accessTokenPath, response.data.access_token ]);
+        res.send(JSON.stringify(response.data.access_token));
       } else {
         res.send(JSON.stringify({ message: "hi" }));
       }
