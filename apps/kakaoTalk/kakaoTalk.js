@@ -50,7 +50,7 @@ const KakaoTalk = function () {
   };
   this.authObj = {};
   this.message = {};
-  this.dir = process.cwd() + "/kakaoTalk";
+  this.dir = process.cwd() + "/apps/kakaoTalk";
   this.tokenDir = this.dir + "/token";
   this.accessTokenPath = this.tokenDir + "/access_token.txt";
   this.moment = {
