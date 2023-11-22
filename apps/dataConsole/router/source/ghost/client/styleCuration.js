@@ -988,7 +988,11 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             total: 100,
             ea: '%',
             value: function (request, history, self) {
-              return (Number(request.request.budget.replace(/[^0-9]/gi, '')) === 1 ? 10000 : Number(request.request.budget.replace(/[^0-9]/gi, ''))) / 100;
+              if (/알 수 없음/.test(request.request.budget)) {
+                return desktop ? 27 : 29;
+              } else {
+                return (Number(request.request.budget.replace(/[^0-9]/gi, '')) === 1 ? 10000 : Number(request.request.budget.replace(/[^0-9]/gi, ''))) / 100;
+              }
             },
             update: function (value, siblings, client) {
               if (value !== null) {

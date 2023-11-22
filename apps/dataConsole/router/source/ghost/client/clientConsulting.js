@@ -2336,6 +2336,9 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     ]
   });
 
+
+  /*
+
   // 11 : margin
   createNode({
     mother: rightBox,
@@ -2347,9 +2350,6 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     }
   });
   
-
-  /*
-
   // 12
   createNode({
     mother: rightBox,

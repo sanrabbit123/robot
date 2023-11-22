@@ -7650,6 +7650,8 @@ GeneralJs.prototype.consultingPopup = function () {
       ]
     });
 
+    /*
+
     // 11 : margin
     createNode({
       mother: formBox,
@@ -7660,8 +7662,6 @@ GeneralJs.prototype.consultingPopup = function () {
         height: String(moduleHeight * marginRatio) + ea,
       }
     });
-
-    /*
 
     // 12
     createNode({
