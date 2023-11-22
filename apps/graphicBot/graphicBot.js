@@ -1480,7 +1480,6 @@ GraphicBot.prototype.getChromeSize = async function () {
 GraphicBot.prototype.botServer = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
-  const http = require("http");
   const https = require("https");
   const express = require("express");
   const multer = require("multer");
@@ -1488,7 +1487,7 @@ GraphicBot.prototype.botServer = async function () {
   const useragent = require("express-useragent");
   const FrontMethods = require(this.dir + "/router/frontMethods.js");
   const app = express();
-  const port = 53000;
+  const port = 53001;
 
   app.use(useragent.express());
   app.use(express.json({ limit: "50mb" }));
@@ -1566,12 +1565,7 @@ GraphicBot.prototype.botServer = async function () {
 
     await this.getChromeSize();
 
-    // https.createServer(pems, app).listen(this.port, () => {
-    //   console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(this.port)}`);
-    // });
-
-    this.localhost = "http://" + "localhost" + ":" + String(port);
-    http.createServer(app).listen(this.port, () => {
+    https.createServer(pems, app).listen(this.port, () => {
       console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(this.port)}`);
     });
 
