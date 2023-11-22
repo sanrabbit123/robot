@@ -180,17 +180,17 @@ DevContext.prototype.launching = async function () {
     // });
     // console.log(res)
 
-    // res = await requestSystem("https://kauth.kakao.com/oauth/token", {
-    //   grant_type: "authorization_code",
-    //   client_id: apiKey,
-    //   redirect_uri: redirectUri,
-    //   code: "16HRs4a9Jm93YfsCA_IyOz1CS7B3P0gUuTFjdhVxLTCenWI4P9h-vHCulccKKiUOAAABi_TPPVeo9NUiJo7xnA",
-    // }, {
-    //   headers: {
-    //     "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
-    //   }
-    // })
-    // console.log(res.data);
+    response = await requestSystem("https://kauth.kakao.com/oauth/token", {
+      grant_type: "authorization_code",
+      client_id: apiKey,
+      redirect_uri: redirectUri,
+      code: "16HRs4a9Jm93YfsCA_IyOz1CS7B3P0gUuTFjdhVxLTCenWI4P9h-vHCulccKKiUOAAABi_TPPVeo9NUiJo7xnA",
+    }, {
+      headers: {
+        "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
+      }
+    })
+    console.log(res.data);
 
     try {
       res = await requestSystem("https://apis.moment.kakao.com/openapi/v4/adAccounts", {}, {
