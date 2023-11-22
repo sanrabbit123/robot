@@ -8375,6 +8375,15 @@ GeneralJs.prototype.finalSubmit = function () {
       let onValue;
       let boo;
 
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "submitLaunching",
+        data: {
+          date: dateToString(new Date(), true),
+        },
+      }).catch((err) => { console.log(err); });
+      
       if (document.querySelector('.' + agreeTargetClassName).getAttribute("toggle") === "off") {
         window.alert("개인정보 취급 방침에 동의해주세요!");
       } else {
@@ -8432,19 +8441,27 @@ GeneralJs.prototype.finalSubmit = function () {
                 }
               } else if (p === "etc") {
                 firstDom.value = firstDom.value.trim().replace(/[\=\+\&\>\<\/\\\{\}\[\]\`\-]/gi, '');
-                if (firstDom.value.trim() === '') {
-                  throw new Error("예시를 보시고 요청사항을 최대한 자세하게 적어주세요!");
-                }
-                if (firstDom.value.length < 3) {
-                  throw new Error("예시를 보시고 요청사항을 최대한 자세하게 적어주세요!");
-                }
+                // if (firstDom.value.trim() === '') {
+                //   throw new Error("예시를 보시고 요청 사항을 최대한 자세하게 적어주세요!");
+                // }
+                // if (firstDom.value.length < 3) {
+                //   throw new Error("예시를 보시고 요청 사항을 최대한 자세하게 적어주세요!");
+                // }
               }
-
               tempObj.value = firstDom.value.replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
 
             } catch (e) {
               window.alert(e.message);
               boo = false;
+              await homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "errorOccur",
+                data: {
+                  error: e.message,
+                  date: dateToString(new Date(), true),
+                },
+              });
               scrollTo(window, firstDom, visualSpecific);
               firstDom.previousElementSibling.style.border = "1px solid " + colorChip.green;
               if (typeof firstDom.focus === "function") {
@@ -8535,6 +8552,15 @@ GeneralJs.prototype.finalSubmit = function () {
 
     } catch (e) {
       console.log(e);
+      await homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "errorOccur",
+        data: {
+          error: e.message,
+          date: dateToString(new Date(), true),
+        },
+      });
       window.location.reload();
     }
   }

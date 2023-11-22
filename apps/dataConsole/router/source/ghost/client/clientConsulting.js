@@ -2817,14 +2817,14 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         class: [ inputClassName ],
         attribute: {
           placeholder: (desktop ? [
-            "스타일링, 예산, 시공 등의 요청사항을 적어주세요!",
+            "스타일링, 예산, 시공 등의 요청 사항을 적어주세요!",
             "홈리에종은 스타일링 없이 시공만 하지 않습니다. 문의 전 고려해 주세요 :)",
             "(예시)",
             "=> 시공: 도배, 조명만 부분적으로 원해요.",
             "=> 스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.",
             "=> 예산: 최대 00만원 이내로 하고 싶어요.",
           ].join("\n") : [
-            "스타일링, 예산, 시공 등의 요청사항을 적어주세요!",
+            "스타일링, 예산, 시공 등의 요청 사항을 적어주세요!",
             "홈리에종은 스타일링 없이 시공만 하지 않습니다.",
             "문의 전 고려해 주세요 :)",
             "(예시)",
@@ -3061,6 +3061,15 @@ ClientConsultingJs.prototype.finalSubmit = function () {
       let onValue;
       let boo;
 
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "submitLaunching",
+        data: {
+          date: dateToString(new Date(), true),
+        },
+      }).catch((err) => { console.log(err); });
+
       if (document.querySelector('.' + agreeTargetClassName).getAttribute("toggle") === "off") {
         window.alert("개인정보 취급 방침에 동의해주세요!");
       } else {
@@ -3122,12 +3131,12 @@ ClientConsultingJs.prototype.finalSubmit = function () {
                 }
               } else if (p === "etc") {
                 firstDom.value = firstDom.value.trim().replace(/[\=\+\&\>\<\/\\\{\}\[\]\`\-]/gi, '');
-                if (firstDom.value.trim() === '') {
-                  throw new Error("예시를 보시고 요청사항을 최대한 자세하게 적어주세요!");
-                }
-                if (firstDom.value.length < 3) {
-                  throw new Error("예시를 보시고 요청사항을 최대한 자세하게 적어주세요!");
-                }
+                // if (firstDom.value.trim() === '') {
+                //   throw new Error("예시를 보시고 요청 사항을 최대한 자세하게 적어주세요!");
+                // }
+                // if (firstDom.value.length < 3) {
+                //   throw new Error("예시를 보시고 요청 사항을 최대한 자세하게 적어주세요!");
+                // }
               }
 
               tempObj.value = firstDom.value.replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
@@ -3135,6 +3144,15 @@ ClientConsultingJs.prototype.finalSubmit = function () {
             } catch (e) {
               window.alert(e.message);
               boo = false;
+              await homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "errorOccur",
+                data: {
+                  error: e.message,
+                  date: dateToString(new Date(), true),
+                },
+              });
               scrollTo(window, firstDom, visualSpecific);
               firstDom.previousElementSibling.style.border = "1px solid " + colorChip.green;
               if (typeof firstDom.focus === "function") {
@@ -3227,6 +3245,15 @@ ClientConsultingJs.prototype.finalSubmit = function () {
 
     } catch (e) {
       console.log(e);
+      await homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "errorOccur",
+        data: {
+          error: e.message,
+          date: dateToString(new Date(), true),
+        },
+      });
       window.location.reload();
     }
   }

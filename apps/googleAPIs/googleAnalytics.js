@@ -279,7 +279,7 @@ GoogleAnalytics.prototype.dailyClients = async function (thisDate, selfCoreMongo
     dataObject.detail = [];
 
     for (let cliid of targetCliids) {
-      sessionResult = await this.getSessionObjectByCliid(cliid, selfMongo);
+      sessionResult = await this.getSessionObjectByCliid(cliid, selfMongo, selfCoreMongo);
       if (sessionResult === null) {
         throw new Error("session parsing error");
       }
@@ -303,7 +303,7 @@ GoogleAnalytics.prototype.dailyClients = async function (thisDate, selfCoreMongo
   }
 }
 
-GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfMongo) {
+GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfMongo, selfCoreMongo) {
   const instance = this;
   const back = this.back;
   const address = this.address;
@@ -311,7 +311,7 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
   const { dateToString, stringToDate, ipParsing, requestSystem, sleep } = this.mother;
   const querystring = require("querystring");
   try {
-    let rows;
+    let rows, rows2;
     let sessionIds;
     let whereQuery, updateQuery;
     let thisIp;
@@ -327,8 +327,12 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
     let finalObj;
     let num;
     let rowsMother;
+    let thisClient;
 
+    thisClient = await back.getClientById(cliid, { selfMongo: selfCoreMongo, toNormal: true });
     rows = await back.mongoRead(collection, { "data.cliid": cliid }, { selfMongo });
+    rows2 = await back.mongoRead(collection, { "data.value": thisClient.phone }, { selfMongo });
+    rows = rows.concat(rows2);
     rows = rows.filter((obj) => {
       return !/\&mode\=test/g.test(obj.info.requestUrl);
     }).filter((obj) => {
@@ -1003,7 +1007,7 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
     cliid = thisClient.cliid;
 
     await sleep(1000);
-    sessionResult = await this.getSessionObjectByCliid(cliid, selfMongo);
+    sessionResult = await this.getSessionObjectByCliid(cliid, selfMongo, selfCoreMongo);
     if (sessionResult === null) {
       throw new Error("session parsing error");
     }
