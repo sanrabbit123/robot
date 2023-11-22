@@ -1,4 +1,4 @@
-const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairyToken, slack_fairyId, slack_fairyAppId, telegram, kakao, human) {
+const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairyToken, slack_fairyId, slack_fairyAppId, telegram, kakao, human, graphicPort) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
@@ -27,6 +27,7 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
 
   this.kakao = kakao;
   this.human = human;
+  this.graphicPort = graphicPort;
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -157,6 +158,7 @@ SecondRouter.prototype.rou_get_First = function () {
       let disk;
       let aliveMongoResult;
       let response;
+      let accessToken;
 
       if (req.params.id === "ssl") {
         disk = await diskReading();
@@ -178,6 +180,12 @@ SecondRouter.prototype.rou_get_First = function () {
         });
         await fileSystem(`write`, [ kakao.accessTokenPath, response.data.access_token ]);
         res.send(JSON.stringify(response.data.access_token));
+
+      } else if (req.params.id === "kakaoAccessToken") {
+
+        accessToken = await fileSystem("readString", [ kakao.accessTokenPath ]);
+        res.send(JSON.stringify({ accessToken }));  
+
       } else {
         res.send(JSON.stringify({ message: "hi" }));
       }
@@ -304,6 +312,31 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       logger.error("Second Ghost 서버 문제 생김 (rou_post_messageLog): " + JSON.stringify(req.body) + " " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+SecondRouter.prototype.rou_post_kakaoAccessToken = function () {
+  const instance = this;
+  const kakao = this.kakao;
+  const { requestSystem, ajaxJson, equalJson, sleep, setQueue, fileSystem } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/kakaoAccessToken" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const accessToken = await fileSystem("readString", [ kakao.accessTokenPath ]);
+      res.send(JSON.stringify({ accessToken }));
+    } catch (e) {
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_kakaoAccessToken): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
