@@ -4779,9 +4779,9 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       reportNumbersObj.convertRate = summaryTong.proposal === 0 ? 0 : Math.round((summaryTong.process / summaryTong.proposal) * 1000) / 10;
       reportNumbersObj.processRate = summaryTong.client === 0 ? 0 : Math.round((summaryTong.contract / summaryTong.client) * 1000) / 10;
   
-      reportNumbersObj.mau = report[i].mau;
-      reportNumbersObj.charge = report[i].charge;
-      reportNumbersObj.adClients = report[i].adClients;
+      // reportNumbersObj.mau = report[i].mau;
+      // reportNumbersObj.charge = report[i].charge;
+      // reportNumbersObj.adClients = report[i].adClients;
   
       reportNumbersObj.clientCac = Math.round((summaryTong.client === 0 ? 0 : (report[i].charge / summaryTong.client)));
       reportNumbersObj.contractCac = Math.round((summaryTong.contract === 0 ? 0 : (report[i].charge / summaryTong.contract)));
@@ -4792,8 +4792,8 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
 
       summaryBox.insertAdjacentHTML(`beforeend`, `명<br>추천율 <b style="color:${colorChip.green}">${String(reportNumbersObj.recommendRate)}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;계약율 <b style="color:${colorChip.green}">${String(reportNumbersObj.contractRate)}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;전환율 <b style="color:${colorChip.green}">${String(reportNumbersObj.convertRate)}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;진행율 <b style="color:${colorChip.green}">${String(reportNumbersObj.processRate)}</b>%`);
       summaryBox.insertAdjacentHTML(`beforeend`, `<br>계약성공 <b style="color:${colorChip.green}">${String(report[i].contractsPure)}</b>명&nbsp;&nbsp;/&nbsp;&nbsp;계약공급가 <b style="color:${colorChip.green}">${autoComma(report[i].contractsPureAmount)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;계약순이익 <b style="color:${colorChip.green}">${autoComma(report[i].contractAmountSubtract)}</b>원`);
-      summaryBox.insertAdjacentHTML(`beforeend`, `<br>MAU <b style="color:${colorChip.green}">${String(report[i].mau)}</b>명&nbsp;&nbsp;/&nbsp;&nbsp;광고비용 <b style="color:${colorChip.green}">${autoComma(report[i].charge)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;광고유입 <b style="color:${colorChip.green}">${String(report[i].adClients)}</b>명`);
-      summaryBox.insertAdjacentHTML(`beforeend`, `<br>문의CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.clientCac)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;계약CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.contractCac)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;진행CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.processCac)}</b>원`);
+      // summaryBox.insertAdjacentHTML(`beforeend`, `<br>MAU <b style="color:${colorChip.green}">${String(report[i].mau)}</b>명&nbsp;&nbsp;/&nbsp;&nbsp;광고비용 <b style="color:${colorChip.green}">${autoComma(report[i].charge)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;광고유입 <b style="color:${colorChip.green}">${String(report[i].adClients)}</b>명`);
+      // summaryBox.insertAdjacentHTML(`beforeend`, `<br>문의CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.clientCac)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;계약CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.contractCac)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;진행CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.processCac)}</b>원`);
   
       div_clone.appendChild(summaryBox);
   
@@ -5418,7 +5418,7 @@ ClientJs.prototype.reportViewMakerDetail = function (recycle = false) {
       instance.whiteBox.contentsBox = div_clone;
       instance.totalContents.appendChild(div_clone);
 
-      GeneralJs.ajax("month=8", "/getClientReport", (data) => {
+      GeneralJs.ajax("month=6", "/getClientReport", (data) => {
         svg_icon.style.opacity = "0";
         instance.reportContents(data, div_clone, svg_icon).catch((err) => { console.log(err); });
       });
@@ -6759,9 +6759,9 @@ ClientJs.prototype.addExtractEvent = function () {
         matrix = [];
         matrix.push([
           "날짜",
-          "MAU",
+          // "MAU",
           "문의",
-          "광고 문의",
+          // "광고 문의",
           "추천",
           "열람",
           "계약",
@@ -6770,18 +6770,18 @@ ClientJs.prototype.addExtractEvent = function () {
           "전환율",
           "계약율",
           "진행율",
-          "지출 비용",
-          "문의 CAC",
-          "계약 CAC",
-          "진행 CAC",
+          // "지출 비용",
+          // "문의 CAC",
+          // "계약 CAC",
+          // "진행 CAC",
         ])
 
         for (let obj of instance.reportNumbers) {
           matrix.push([
             obj.date,
-            obj.mau,
+            // obj.mau,
             obj.client,
-            obj.adClients,
+            // obj.adClients,
             obj.proposal,
             obj.recommend,
             obj.contract,
@@ -6790,10 +6790,10 @@ ClientJs.prototype.addExtractEvent = function () {
             obj.convertRate,
             obj.contractRate,
             obj.processRate,
-            obj.charge,
-            obj.clientCac,
-            obj.contractCac,
-            obj.processCac,
+            // obj.charge,
+            // obj.clientCac,
+            // obj.contractCac,
+            // obj.processCac,
           ]);
         }
 
