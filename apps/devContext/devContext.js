@@ -155,58 +155,34 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-    
-    
+
 
     /*
-    
-    const adsId = "608725";
-    const apiKey = "7c646aef29f8c1a06c13e1af68c9a54c";
-    const baseUrl = "https://apis.moment.kakao.com";
-    const redirectUri = "https://home-liaison.net/kakaoRedirect";
-    const config = { headers: { "Content-Type": "application/json" } };
-    const codeTarget = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=7c646aef29f8c1a06c13e1af68c9a54c&redirect_uri=https%3A%2F%2Fhome-liaison.net%2FkakaoRedirect";
-    const token0 = "VNQiq-ub01LqA58umPM1uH3ZhJpAy4sgH1cKPXRoAAABi_TOVThSGUcvaFb1Eg";
-    const token1 = "JXHx-78014hLaROB1dcvPnw3-FvYZEd7YokKPXTbAAABi_TPaCdSGUcvaFb1Eg";
 
-    let url, res;
-
-    // res = await requestSystem("https://kauth.kakao.com/oauth/authorize", {
-    //   response_type: "code",
-    //   client_id: apiKey,
-    //   redirect_uri: redirectUri,
-    // }, {
-    //   method: "get",
-    // });
-    // console.log(res)
-
-    response = await requestSystem("https://kauth.kakao.com/oauth/token", {
-      grant_type: "authorization_code",
-      client_id: apiKey,
-      redirect_uri: redirectUri,
-      code: "16HRs4a9Jm93YfsCA_IyOz1CS7B3P0gUuTFjdhVxLTCenWI4P9h-vHCulccKKiUOAAABi_TPPVeo9NUiJo7xnA",
-    }, {
-      headers: {
-        "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
-      }
-    })
-    console.log(res.data);
-
-    try {
-      res = await requestSystem("https://apis.moment.kakao.com/openapi/v4/adAccounts", {}, {
-        method: "get",
-        headers: {
-          "Authorization": "Bearer " + token0,
-        }
-      })
-      console.log(res.data);
-    } catch (e) {
-      console.log(e.response)
+    const kakao = new KakaoTalk();
+    const { moment: { adsId, baseUrl, version } } = kakao;
+    const token = await kakao.getAccessToken();
+    const campaigns = await fileSystem(`readJson`, [ `${process.cwd()}/temp/target.json` ]);
+    const defaultHeaders = {
+      "Authorization": "Bearer " + token,
     }
+    let url;
+    let targets;
+    let res;
+
+    url = baseUrl + "/" + version + "/creatives/report";
+    targets = campaigns[0].adGroups[0].ads.map((o) => { return o.id });
+    res = await requestSystem(url, { creativeId: targets, timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+    console.log(res.data.data);
 
     */
-    
 
+
+
+
+
+
+    
 
 
     
@@ -6943,9 +6919,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "정진호",
-    //     designer: "호지희",
-    //     link: "https://drive.google.com/drive/folders/1l78-B2xXz3znt1Vcd_qTHbIs4XSyeYaY",
+    //     client: "권수민",
+    //     designer: "정다연",
+    //     link: "https://drive.google.com/drive/folders/10uLhC2ds7J67zsYpYD9Uqwxkv15oxy-U",
     //     pay: true
     //   },
     // ]);

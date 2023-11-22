@@ -56,7 +56,8 @@ const KakaoTalk = function () {
   this.moment = {
     adsId: "608725",
     apiKey: "7c646aef29f8c1a06c13e1af68c9a54c",
-    baseUrl: "https://apis.moment.kakao.com",
+    baseUrl: "https://apis.moment.kakao.com/openapi",
+    version: "v4",
     redirectUri: "https://home-liaison.net/kakaoRedirect",
     codeTarget: "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=7c646aef29f8c1a06c13e1af68c9a54c&redirect_uri=https%3A%2F%2Fhome-liaison.net%2FkakaoRedirect",
   }
@@ -4466,6 +4467,58 @@ KakaoTalk.prototype.ready = async function () {
 
   } catch (e) {
     console.log(e);
+  }
+}
+
+KakaoTalk.prototype.getAccessToken = async function () {
+  const instance = this;
+  const address = this.address;
+  const { requestSystem } = this.mother;
+  try {
+    const { accessToken } = (await requestSystem("https://" + address.secondinfo.host + "/kakaoAccessToken")).data;
+    return accessToken;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+KakaoTalk.prototype.campaignsIdMap = async function (store = false) {
+  const instance = this;
+  const { requestSystem, fileSystem, equalJson, uniqueValue } = this.mother;
+  try {
+    const { moment: { adsId, baseUrl, version } } = this;
+    const token = await this.getAccessToken();
+    const defaultHeaders = {
+      "Authorization": "Bearer " + token,
+    }
+    const storeName = `${process.cwd()}/temp/campaigns_${uniqueValue("hex")}.json`;
+    let url, url2, res;
+    let campaigns;
+
+    url = baseUrl + "/" + version + "/campaigns";
+    res = await requestSystem(url, {}, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+    campaigns = res.data.content;
+
+    url = baseUrl + "/" + version + "/adGroups";
+    for (let campaign of campaigns) {
+      res = await requestSystem(url, { campaignId: String(campaign.id) }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+      campaign.adGroups = equalJson(JSON.stringify(res.data.content));
+      for (let adGroup of campaign.adGroups) {
+        url2 = baseUrl + "/" + version + "/creatives";
+        res = await requestSystem(url2, { adGroupId: String(adGroup.id) }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+        adGroup.ads = equalJson(JSON.stringify(res.data.content));
+      }
+    }
+
+    if (store) {
+      await fileSystem("writeJson", [ storeName, campaigns ]);
+    }
+
+    return { store, file: !store ? null : storeName, campaigns };
+  } catch (e) {
+    console.log(e);
+    return null;
   }
 }
 
