@@ -15656,7 +15656,7 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function (feedback = false) {
 ProcessDetailJs.prototype.insertFormStatusBox = async function () {
   const instance = this;
   const mother = this.mother;
-  const { ea, baseTong, media, client, project } = this;
+  const { ea, baseTong, media, client, project, onlyMode } = this;
   const { proid, desid } = project;
   const mobile = media[4];
   const desktop = !mobile;
@@ -15762,6 +15762,11 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     margin = <%% 55, 55, 47, 39, 6 %%>;
     paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
   
+    if (onlyMode === "status") {
+      margin = margin * 0.6;
+      paddingTop = paddingTop * 0.6;
+    }
+
     whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
   
     titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
@@ -16491,16 +16496,16 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     }
 
     whiteBlock = createNode({
-      mother: baseTong,
+      mother: onlyMode === "status" ? document.getElementById("totalcontents") : baseTong,
       style: {
         position: "relative",
         borderRadius: String(desktop ? 8 : 1) + ea,
         width: String(100) + '%',
-        background: colorChip.white,
+        background: onlyMode === "status" ? "" : colorChip.white,
         paddingTop: String(paddingTop) + ea,
         paddingBottom: String(desktop ? whiteBottomMargin - blockBetweenBottom : 6.6) + ea,
         marginBottom: String(bottomMargin) + ea,
-        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+        boxShadow: onlyMode === "status" ? "" : "0px 5px 12px -10px " + colorChip.gray5,
       },
       children: [
         {
@@ -16541,7 +16546,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
       children: [
         {
           style: {
-            display: "inline-flex",
+            display: onlyMode === "status" ? "none" : "inline-flex",
             position: "relative",
             width: desktop ? String(firstWidth) + ea : withOut(0, ea),
             verticalAlign: "top",
@@ -16581,7 +16586,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
           style: {
             display: "inline-flex",
             position: "relative",
-            width: desktop ? withOut(firstWidth, ea) : withOut(0, ea),
+            width: desktop ? withOut(onlyMode === "status" ? 0 : firstWidth, ea) : withOut(0, ea),
             verticalAlign: "top",
             flexDirection: "column",
           }
@@ -16723,8 +16728,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
             display: "inline-flex",
             position: "relative",
             flexDirection: "column",
-            width: desktop ? (media[0] ? "calc(calc(100% - " + String(panBetween * (thisForm.length - 1)) + ea + ") / " + String(thisForm.length) + ")" : "calc(calc(100% - " + String(panBetween * ((thisForm.length / 2) - 1)) + ea + ") / " + String(thisForm.length / 2) + ")") : withOut(0, ea),
-            marginRight: desktop ? (media[0] ? (i === thisForm.length - 1 ? "" : String(panBetween) + ea) : (i === thisForm.length - 1 || i === (thisForm.length / 2) - 1 ? "" : String(panBetween) + ea)) : "",
+            width: desktop ? ((media[0] || onlyMode === "status") ? "calc(calc(100% - " + String(panBetween * (thisForm.length - 1)) + ea + ") / " + String(thisForm.length) + ")" : "calc(calc(100% - " + String(panBetween * ((thisForm.length / 2) - 1)) + ea + ") / " + String(thisForm.length / 2) + ")") : withOut(0, ea),
+            marginRight: desktop ? ((media[0] || onlyMode === "status") ? (i === thisForm.length - 1 ? "" : String(panBetween) + ea) : (i === thisForm.length - 1 || i === (thisForm.length / 2) - 1 ? "" : String(panBetween) + ea)) : "",
             paddingTop: String(panPaddingTop) + ea,
             verticalAlign: "top",
           }
@@ -17071,6 +17076,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     let wsMessageEvent;
     let wsCloseEvent;
     let analyticsData;
+    let onlyMode;
 
     if (getObj.proid === undefined) {
       window.alert("잘못된 접근입니다!");
@@ -17148,106 +17154,118 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     this.downloaded = [];
     this.nowUploading = false;
 
-    await this.mother.ghostDesignerLaunching({
-      name: "processDetail",
-      designer: this.designer,
-      base: {
-        instance: this,
-        binaryPath: ProcessDetailJs.binaryPath,
-        subTitle: "",
-      },
-      local: async () => {
-        try {
-          if (typeof getObj.mode === "string" && getObj.mode === "request") {
-            instance.insertInitBox();
-            instance.insertInformationBox();
-            instance.insertDetailBox();
-            await instance.insertStyleBox();
-            instance.insertUploadBox();
-            instance.insertControlBox();
-            instance.insertNoticeBox();
-            if (getObj.green !== "deactive") {
+    if (typeof getObj.only !== "string") {
+      this.onlyMode = null;
+      await this.mother.ghostDesignerLaunching({
+        name: "processDetail",
+        designer: this.designer,
+        base: {
+          instance: this,
+          binaryPath: ProcessDetailJs.binaryPath,
+          subTitle: "",
+        },
+        local: async () => {
+          try {
+            if (typeof getObj.mode === "string" && getObj.mode === "request") {
+              instance.insertInitBox();
+              instance.insertInformationBox();
+              instance.insertDetailBox();
+              await instance.insertStyleBox();
+              instance.insertUploadBox();
+              instance.insertControlBox();
+              instance.insertNoticeBox();
+              if (getObj.green !== "deactive") {
+                instance.insertGreenButtons();
+              }
+  
+            } else if (typeof getObj.mode === "string" && getObj.mode === "schedule") {
+  
+              instance.insertInitBox();
+              instance.insertScheduleStartBox();
+              instance.insertScheduleAboutBox();
+              await instance.insertScheduleBox();
+              await instance.insertFormStatusBox();
+              instance.insertUploadBox();
+              instance.insertControlBox();
+              if (mobile) {
+                instance.insertBelowBox();
+              } else {
+                instance.insertInformationBox();
+              }
+              instance.insertDetailBox();
+              await instance.insertStyleBox();
+              instance.insertNoticeBox();
+              instance.insertGreenButtons();
+  
+            } else {
+              instance.insertInitBox();
+              if (getObj.mode === "photopay") {
+                instance.insertPhotoPayBox();
+              } else if (getObj.mode === "feedback") {
+                instance.insertMeetingBackBox();
+                instance.insertAboutConsoleBox(true);
+              } else if (getObj.mode === "payfirst") {
+                instance.insertPayFirstBox();
+              } else if (getObj.mode === "payremain") {
+                instance.insertPayRemainBox();
+              } else if (getObj.mode === "contractconfirm") {
+                instance.insertContractConfirmBox();
+                instance.insertAboutConsoleBox(false);
+              } else if (getObj.mode === "contractstart") {
+                instance.insertContractStartBox();
+                instance.insertAboutConsoleBox(false);
+              }
+              if (instance.contentsArr.length > 0) {
+                instance.insertContentsBox();
+              } else {
+                await instance.insertFormStatusBox();
+              }
+              instance.insertUploadBox();
+              await instance.insertScheduleBox();
+              instance.insertControlBox();
+              if (mobile) {
+                instance.insertBelowBox();
+              } else {
+                instance.insertInformationBox();
+              }
+              instance.insertDetailBox();
+              await instance.insertStyleBox();
+              instance.insertNoticeBox();
               instance.insertGreenButtons();
             }
-
-          } else if (typeof getObj.mode === "string" && getObj.mode === "schedule") {
-
-            instance.insertInitBox();
-            instance.insertScheduleStartBox();
-            instance.insertScheduleAboutBox();
-            await instance.insertScheduleBox();
-            await instance.insertFormStatusBox();
-            instance.insertUploadBox();
-            instance.insertControlBox();
-            if (mobile) {
-              instance.insertBelowBox();
-            } else {
-              instance.insertInformationBox();
-            }
-            instance.insertDetailBox();
-            await instance.insertStyleBox();
-            instance.insertNoticeBox();
-            instance.insertGreenButtons();
-
-          } else {
-            instance.insertInitBox();
-            if (getObj.mode === "photopay") {
-              instance.insertPhotoPayBox();
-            } else if (getObj.mode === "feedback") {
-              instance.insertMeetingBackBox();
-              instance.insertAboutConsoleBox(true);
-            } else if (getObj.mode === "payfirst") {
-              instance.insertPayFirstBox();
-            } else if (getObj.mode === "payremain") {
-              instance.insertPayRemainBox();
-            } else if (getObj.mode === "contractconfirm") {
-              instance.insertContractConfirmBox();
-              instance.insertAboutConsoleBox(false);
-            } else if (getObj.mode === "contractstart") {
-              instance.insertContractStartBox();
-              instance.insertAboutConsoleBox(false);
-            }
-            if (instance.contentsArr.length > 0) {
-              instance.insertContentsBox();
-            } else {
-              await instance.insertFormStatusBox();
-            }
-            instance.insertUploadBox();
-            await instance.insertScheduleBox();
-            instance.insertControlBox();
-            if (mobile) {
-              instance.insertBelowBox();
-            } else {
-              instance.insertInformationBox();
-            }
-            instance.insertDetailBox();
-            await instance.insertStyleBox();
-            instance.insertNoticeBox();
-            instance.insertGreenButtons();
+          } catch (e) {
+            await GeneralJs.ajaxJson({ message: "ProcessDetailJs.launching.ghostDesignerLaunching : " + e.message }, BACKHOST + "/errorLog");
           }
-        } catch (e) {
-          await GeneralJs.ajaxJson({ message: "ProcessDetailJs.launching.ghostDesignerLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
-      }
-    });
+      });
+    } else {
+
+      this.onlyMode = getObj.only;
+      await instance.insertFormStatusBox();
+
+    }
 
     loading.parentNode.removeChild(loading);
 
-    analyticsData = {
-      desid: instance.designer.desid,
-      href: window.encodeURIComponent(window.location.href),
-      date: dateToString(new Date(), true),
-      mode: getObj.mode === undefined ? "general" : getObj.mode,
-      process: {
-        proid: instance.project.proid,
-        cliid: instance.project.cliid,
-        name: instance.project.name,
-        service: instance.project.service,
-        status: instance.project.process.status,
-      }
-    };
-    analyticsData = equalJson(JSON.stringify(analyticsData));
-    homeliaisonAnalytics({ page: instance.pageName, standard: instance.firstPageViewTime, action: "processDetail", data: analyticsData }).catch((err) => { console.log(err); });
+    if (typeof getObj.only !== "string") {
+
+      analyticsData = {
+        desid: instance.designer.desid,
+        href: window.encodeURIComponent(window.location.href),
+        date: dateToString(new Date(), true),
+        mode: getObj.mode === undefined ? "general" : getObj.mode,
+        process: {
+          proid: instance.project.proid,
+          cliid: instance.project.cliid,
+          name: instance.project.name,
+          service: instance.project.service,
+          status: instance.project.process.status,
+        }
+      };
+      analyticsData = equalJson(JSON.stringify(analyticsData));
+      homeliaisonAnalytics({ page: instance.pageName, standard: instance.firstPageViewTime, action: "processDetail", data: analyticsData }).catch((err) => { console.log(err); });
+  
+    }
 
     // mobile payment
     // if (typeof getObj.mobilecard === "string") {

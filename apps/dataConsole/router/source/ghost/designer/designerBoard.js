@@ -3029,6 +3029,7 @@ DesignerBoardJs.prototype.insertFormStatusBox = async function (whiteTong, clien
   }
 }
 
+/*
 DesignerBoardJs.prototype.insertFormsBox = async function () {
   const instance = this;
   const mother = this.mother;
@@ -3126,148 +3127,661 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
     console.log(e);
   }
 }
+*/
 
-DesignerBoardJs.prototype.popupLaunching = function () {
+DesignerBoardJs.prototype.insertFormsBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref, blankHref } = GeneralJs;
-  const { ea, media, totalContents, standardWidth } = this;
+  const mother = this.mother;
+  const { clients, projects, requestNumber, ea, baseTong, media, desid } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const popupFactorClassName = "popupFactorClassName";
-  const popupInboundClassName = "popupInboundClassName";
-  const popupCloseClassName = "popupCloseClassName";
-  const popupNeverClassName = "popupNeverClassName";
-  const keyName = "homeliaisonPopupBan";
-  let cancelBack, whitePopup;
-  let image;
-  let zIndex;
-  let speed;
-  let delay;
-  let popupWidth, popupHeight;
-  let buttonSize, buttonWeight, buttonBottom;
-  let exitEvent;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const nameTypeClassName = "nameTypeClassName";
+  const timelineTypeClassName = "timelineTypeClassName";
+  const nameBlankTypeClassName = "nameBlankTypeClassName";
+  const statusTypeClassName = "statusTypeClassName";
+  const moveTargetClassName = "moveTargetClassName";
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, selfHref, getDateMatrix, findByAttribute } = GeneralJs;
+  try {
+    let currentTargets;
+    let whiteBlock;
+    let whiteTong;
+    let bottomMargin;
+    let margin;
+    let paddingTop;
+    let whiteBottomMargin;
+    let blockBetweenBottom;
+    let thisBase;
+    let num;
+    let blockBetween;
+    let dateMatrix;
+    let pastDateMatrix;
+    let baseMatrix;
+    let delta;
+    let tempDateMatrix;
+    let standardDate;
+    let basicBase;
+    let scrollTong;
+    let dateTong;
+    let thisDateBox;
+    let previousDate;
+    let dateBoxHeight;
+    let dateBoxPaddingTop;
+    let factorDateBoxHeight;
+    let factorDateBoxPaddingTop;
+    let unitBoxWidth;
+    let fridayMargin;
+    let backgroundColor;
+    let unitBetween;
+    let nameAreaWidth;
+    let nameTong;
+    let textTop;
+    let buttonWidth;
+    let buttonBetween;
+    let arrowWidth;
+    let move;
+    let dateSize, dateWeight;
+    let todayLineTop;
+    let todayLineWidth;
+    let monthTop, monthSize, monthWeight;
+    let spreadHeight;
+    let nameSize, nameWeight, nameBoldWeight;
 
-  zIndex = 101;
-  speed = 0.3;
-  delay = 0.8;
-  image = DesignerBoardJs.binaryPath + "/popup" + String(media.findIndex(boo => boo)) + ".jpg";
+    delta = 18;
 
-  popupWidth = <%% 500, 450, 420, 360, 80 %%>;
-  popupHeight = <%% 680, 614, 572, 490, 108 %%>;
+    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+    margin = <%% 55, 55, 47, 39, 6 %%>;
+    paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
+    whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
+    blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
+    blockBetween = <%% 14, 14, 12, 10, 2 %%>;
 
-  buttonSize = <%% 15, 15, 14, 13, 3 %%>;
-  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonBottom = <%% -27, -27, -27, -25, -6 %%>;
+    dateBoxHeight = <%% 20, 20, 20, 20, 20 %%>;
+    dateBoxPaddingTop = <%% 16, 16, 16, 16, 16 %%>;
 
-  exitEvent = () => {
-    const removeTargets = document.querySelectorAll('.' + popupFactorClassName);
-    for (let dom of removeTargets) {
-      totalContents.removeChild(dom);
+    factorDateBoxHeight = <%% 20, 20, 20, 20, 2 %%>;
+    factorDateBoxPaddingTop = <%% 6, 5, 4, 3, 1 %%>;
+
+    unitBoxWidth = <%% 20, 20, 20, 20, 20 %%>;
+
+    fridayMargin = <%% 4, 4, 3, 2, 1 %%>;
+
+    unitBetween = <%% 1, 1, 1, 1, 0.1 %%>;
+
+    nameAreaWidth = <%% 110, 110, 110, 110, 12 %%>;
+
+    buttonWidth = <%% 18, 18, 18, 18, 18 %%>;
+    buttonBetween = <%% 2, 2, 2, 1, 1 %%>;
+
+    arrowWidth = <%% 8, 8, 8, 8, 1 %%>;
+
+    move = 500;
+
+    dateSize = <%% 10, 10, 10, 10, 10 %%>;
+    dateWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+    todayLineTop = <%% -16, -16, -16, -16, -1 %%>;
+    todayLineWidth = <%% 8, 8, 8, 8, 1 %%>;
+
+    monthTop = <%% -18, -18, -18, -18, -18 %%>;
+    monthSize = <%% 11, 11, 11, 11, 11 %%>;
+    monthWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+    spreadHeight = <%% 756, 756, 756, 756, 75 %%>;
+
+    nameSize = <%% 14, 14, 14, 14, 14 %%>;
+    nameWeight = <%% 300, 300, 300, 300, 300 %%>;
+    nameBoldWeight = <%% 600, 600, 600, 600, 600 %%>;
+
+    standardDate = new Date();
+    standardDate.setDate(standardDate.getDate() - 18);
+    dateMatrix = getDateMatrix();
+    pastDateMatrix = dateMatrix.previousMatrix();
+
+    baseMatrix = equalJson(JSON.stringify(pastDateMatrix.matrix.flat().filter((o) => { return o !== null }).filter((o) => { return o.day !== "일" && o.day !== "토" })));
+    baseMatrix = baseMatrix.concat(equalJson(JSON.stringify(dateMatrix.matrix.flat().filter((o) => { return o !== null }).filter((o) => { return o.day !== "일" && o.day !== "토" }))));
+
+    tempDateMatrix = dateMatrix.nextMatrix();
+    for (let i = 0; i < delta; i++) {
+      baseMatrix = baseMatrix.concat(equalJson(JSON.stringify(tempDateMatrix.matrix.flat().filter((o) => { return o !== null }).filter((o) => { return o.day !== "일" && o.day !== "토" }))));
+      tempDateMatrix = tempDateMatrix.nextMatrix();
     }
-  }
+    baseMatrix = baseMatrix.filter((o) => { return o.dateObject.valueOf() >= standardDate.valueOf() });
+    baseMatrix = baseMatrix.slice(baseMatrix.findIndex((o) => { return o.day === "월" }));
 
-  if (window.localStorage.getItem(keyName) !== String(1)) {
-    cancelBack = createNode({
-      mother: totalContents,
-      class: [ popupFactorClassName ],
-      event: {
-        click: (e) => { exitEvent(); }
-      },
-      style: {
-        position: "fixed",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(100) + '%',
-        background: colorChip.realBlack,
-        opacity: String(0),
-        animation: "justfadein " + String(speed) + "s " + String(delay) + "s ease forwards",
-        zIndex: String(zIndex),
+    textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.1 %%>;
+
+    currentTargets = equalJson(JSON.stringify(projects));
+    currentTargets = currentTargets.filter((obj) => {
+      return (!/드[랍롭]/gi.test(obj.process.status) && !/홀[드딩]/gi.test(obj.process.status) && !/완료/gi.test(obj.process.status));
+    })
+    currentTargets.sort((a, b) => {
+      const emptyValue = Math.abs((new Date(1200, 0, 1)).valueOf());
+      let aConst, bConst;
+
+      if (/드[랍롭]/gi.test(a.process.status) || /홀[드딩]/gi.test(a.process.status)) {
+        aConst = 1;
+      } else if (/완료/gi.test(a.process.status)) {
+        aConst = 10000;
+      } else {
+        aConst = 100000000;
       }
+
+      if (/드[랍롭]/gi.test(b.process.status) || /홀[드딩]/gi.test(b.process.status)) {
+        bConst = 1;
+      } else if (/완료/gi.test(b.process.status)) {
+        bConst = 10000;
+      } else {
+        bConst = 100000000;
+      }
+
+      return ((b.process.contract.form.date.from.valueOf() + emptyValue) * bConst) - ((a.process.contract.form.date.from.valueOf() + emptyValue) * aConst);
     });
 
-    whitePopup = createNode({
-      mother: totalContents,
-      class: [ popupFactorClassName, popupInboundClassName ],
-      event: {
-        click: (e) => {
-          exitEvent();
+    if (currentTargets.length > 0) {
+      whiteBlock = createNode({
+        mother: baseTong,
+        style: {
+          position: "relative",
+          borderRadius: String(desktop ? 8 : 1) + ea,
+          width: String(100) + '%',
+          background: colorChip.white,
+          paddingTop: String(paddingTop) + ea,
+          paddingBottom: String(desktop ? whiteBottomMargin - blockBetweenBottom : 6.6) + ea,
+          marginBottom: String(bottomMargin) + ea,
+          boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
         },
-      },
-      style: {
-        display: "block",
-        position: "fixed",
-        top: withOut(50, popupHeight / 2, ea),
-        left: withOut(50, popupWidth / 2, ea),
-        width: String(popupWidth) + ea,
-        height: String(popupHeight) + ea,
-        background: colorChip.white,
-        backgroundImage: "url('" + image + "')",
-        backgroundSize: "100% auto",
-        backgroundPosition: "50% 50%",
-        boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
-        borderRadius: String(8) + "px",
-        animation: "fadeuporiginal " + String(speed) + "s " + String(delay) + "s ease forwards",
-        opacity: String(0),
-        transform: "translateY(20px)",
-        zIndex: String(zIndex),
-        cursor: "pointer",
-      },
-      children: [
-        {
+        children: [
+          {
+            display: "block",
+            position: "relative",
+            width: withOut(margin * 2, ea),
+            height: String(100) + '%',
+            marginLeft: String(margin) + ea,
+          }
+        ]
+      });
+      whiteTong = whiteBlock.firstChild;
+  
+      createNode({
+        mother: whiteTong,
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String((buttonWidth * 3) + (buttonBetween * 2)) + ea,
+          height: String(buttonWidth) + ea,
+          zIndex: String(2),
+        },
+        children: [
+          {
+            event: {
+              click: function (e) {
+                const translateFunc = function (past) {
+                  const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) + move;
+                  return ("translateX(" + String(newValue) + ea + ")");
+                }
+                let targets;
+                targets = document.querySelectorAll("." + moveTargetClassName);
+                for (let target of targets) {
+                  if (target.style.transform === '') {
+                    target.style.transform = "translateX(" + String(move) + ea + ")";
+                  } else {
+                    target.style.transform = translateFunc(target.style.transform);
+                  }
+                  if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
+                    target.style.transform = "translateX(0px)";
+                  } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
+                    target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
+                  }
+                }
+              }
+            },
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(buttonWidth) + ea,
+              height: String(buttonWidth) + ea,
+              marginRight: String(buttonBetween) + ea,
+              borderRadius: String(3) + "px",
+              background: colorChip.gradientGray,
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            },
+            child: {
+              mode: "svg",
+              source: instance.mother.returnArrow("left", colorChip.white),
+              style: {
+                position: "relative",
+                width: String(arrowWidth) + ea,
+              }
+            },
+          },
+          {
+            event: {
+              click: function (e) {
+                const translateFunc = function (past) {
+                  const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) - move;
+                  return ("translateX(" + String(newValue) + ea + ")");
+                }
+                let targets;
+                targets = document.querySelectorAll("." + moveTargetClassName);
+                for (let target of targets) {
+                  if (target.style.transform === '') {
+                    target.style.transform = "translateX(" + String(-1 * move) + ea + ")";
+                  } else {
+                    target.style.transform = translateFunc(target.style.transform);
+                  }
+                }
+              }
+            },
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(buttonWidth) + ea,
+              height: String(buttonWidth) + ea,
+              marginRight: String(buttonBetween) + ea,
+              borderRadius: String(3) + "px",
+              background: colorChip.gradientGray,
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            },
+            child: {
+              mode: "svg",
+              source: instance.mother.returnArrow("right", colorChip.white),
+              style: {
+                position: "relative",
+                width: String(arrowWidth) + ea,
+              }
+            },
+          },
+          {
+            event: function (e) {
+              const targets0 = [ ...document.querySelectorAll('.' + nameBlankTypeClassName) ];
+              const targets1 = [ ...document.querySelectorAll('.' + statusTypeClassName) ];
+              const toggle = targets0.some((dom) => { return dom.getAttribute("toggle") !== "on" });
+              if (toggle) {
+                for (let i = 0; i < targets0.length; i++) {
+                  targets0[i].style.height = String(spreadHeight) + ea;
+                  targets1[i].style.height = String(spreadHeight) + ea;
+                  targets0[i].setAttribute("toggle", "on");
+                  targets1[i].setAttribute("toggle", "on");
+                }
+              } else {
+                for (let i = 0; i < targets0.length; i++) {
+                  targets0[i].style.height = String(0) + ea;
+                  targets1[i].style.height = String(0) + ea;
+                  targets0[i].setAttribute("toggle", "off");
+                  targets1[i].setAttribute("toggle", "off");
+                }
+              }
+            },
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(buttonWidth) + ea,
+              height: String(buttonWidth) + ea,
+              borderRadius: String(3) + "px",
+              background: colorChip.gradientGreen,
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            },
+            child: {
+              style: {
+                position: "relative",
+                width: String(arrowWidth) + ea,
+                height: String(arrowWidth) + ea,
+                borderRadius: String(arrowWidth) + ea,
+                background: colorChip.white,
+              }
+            },
+          },
+        ]
+      });
+  
+      basicBase = createNode({
+        mother: whiteTong,
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          position: "relative",
+          height: "auto",
+          width: withOut(0, ea),
+        }
+      });
+      nameTong = createNode({
+        mother: basicBase,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(nameAreaWidth) + ea,
+          paddingTop: String(dateBoxPaddingTop) + ea,
+          verticalAlign: "top",
+        }
+      });
+      scrollTong = createNode({
+        mother: basicBase,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: withOut(nameAreaWidth, ea),
+          overflow: "hidden",
+          paddingTop: String(dateBoxPaddingTop) + ea,
+          verticalAlign: "top",
+        }
+      });
+  
+      createNode({
+        mother: nameTong,
+        style: {
+          height: String(dateBoxHeight) + ea,
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+        }
+      });
+  
+      dateTong = createNode({
+        mother: scrollTong,
+        class: [ moveTargetClassName ],
+        style: {
+          display: "block",
+          position: "relative",
+          width: String((unitBoxWidth * 2) * baseMatrix.length) + ea,
+          height: String(dateBoxHeight) + ea,
+          zIndex: String(2),
+        }
+      });
+      num = 0;
+      for (let { day, dateObject } of baseMatrix) {
+        thisDateBox = createNode({
+          mother: dateTong,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(unitBoxWidth) + ea,
+            marginRight: String(day === "금" ? 0 : unitBetween) + ea,
+            height: withOut(0, ea),
+            background: colorChip.gray0,
+            borderRadius: String(2) + "px",
+            justifyContent: "center",
+            alignItems: "center",
+            verticalAlign: "top",
+          },
+          child: {
+            text: String(dateObject.getDate()),
+            style: {
+              position: "relative",
+              top: String(textTop) + ea,
+              fontSize: String(dateSize) + ea,
+              fontWeight: String(dateWeight),
+              color: colorChip.black,
+            }
+          }
+        });
+  
+        if (dateToString(dateObject) === dateToString(new Date())) {
+          createNode({
+            mother: thisDateBox,
+            style: {
+              display: "flex",
+              position: "absolute",
+              top: String(todayLineTop) + ea,
+              width: String(todayLineWidth) + ea,
+              left: String((unitBoxWidth / 2) - (todayLineWidth / 2)) + ea,
+              height: String((dateBoxHeight + factorDateBoxPaddingTop) + ((factorDateBoxPaddingTop + factorDateBoxPaddingTop + factorDateBoxHeight + 2) * currentTargets.length) - factorDateBoxPaddingTop + Math.abs(todayLineTop)) + ea,
+              borderTop: "1px solid " + colorChip.green,
+              borderBottom: "1px solid " + colorChip.green,
+              boxSizing: "border-box",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              style: {
+                position: "relative",
+                width: String(0),
+                height: withOut(0, ea),
+                borderRight: "1px solid " + colorChip.green,
+              }
+            }
+          });
+        }
+  
+  
+        previousDate = new Date(JSON.stringify(dateObject).slice(1, -1));
+        previousDate.setDate(previousDate.getDate() - 1);
+        if (previousDate.getMonth() !== dateObject.getMonth()) {
+          num = 0;
+        }
+  
+        if (num === 0) {
+          createNode({
+            mother: thisDateBox,
+            style: {
+              position: "absolute",
+              width: String(unitBoxWidth) + ea,
+              textAlign: "center",
+              top: String(monthTop) + ea,
+              left: String(0) + ea,
+            },
+            child: {
+              text: String(dateObject.getMonth() + 1),
+              style: {
+                fontSize: String(monthSize) + ea,
+                fontWeight: String(monthWeight),
+                color: colorChip.black,
+              },
+            }
+          });
+        }
+  
+        if (day === "금") {
+          createNode({
+            mother: dateTong,
+            style: {
+              display: "inline-block",
+              position: "relative",  
+              width: String(fridayMargin) + ea,
+              height: withOut(0, ea),
+              borderRight: "1px dashed " + colorChip.gray3,
+              marginRight: String(fridayMargin) + ea,
+              verticalAlign: "top",
+            }
+          });
+        }
+  
+        num++;
+      }
+  
+      currentTargets.sort((a, b) => {
+        return a.process.contract.form.date.from.valueOf() - b.process.contract.form.date.from.valueOf();
+      });
+      num = 0;
+      for (let project of currentTargets) {
+  
+        createNode({
+          mother: nameTong,
+          class: [ nameTypeClassName ],
+          attribute: {
+            proid: project.proid,
+            type: "name",
+          },
+          event: {
+            mouseenter: function (e) {
+              this.firstChild.style.color = colorChip.green;
+            },
+            mouseleave: function (e) {
+              this.firstChild.style.color = colorChip.black;
+            },
+            click: function (e) {
+              const proid = this.getAttribute("proid");
+              const target0 = findByAttribute(document.querySelectorAll('.' + nameBlankTypeClassName), "proid", proid);
+              const target1 = findByAttribute(document.querySelectorAll('.' + statusTypeClassName), "proid", proid);
+              const toggle = target0.getAttribute("toggle");
+              if (toggle === "off") {
+                target0.style.height = String(spreadHeight) + ea;
+                target1.style.height = String(spreadHeight) + ea;
+                target0.setAttribute("toggle", "on");
+                target1.setAttribute("toggle", "on");
+              } else {
+                target0.style.height = String(0) + ea;
+                target1.style.height = String(0) + ea;
+                target0.setAttribute("toggle", "off");
+                target1.setAttribute("toggle", "off");
+              }
+            },
+          },
+          style: {
+            paddingTop: String(factorDateBoxPaddingTop) + ea,
+            height: String(factorDateBoxHeight) + ea,
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            justifyContent: "start",
+            alignItems: "center",
+            cursor: "pointer",
+          },
+          child: {
+            text: project.name + "<b% - " + project.process.status + "%b>",
+            style: {
+              position: "relative",
+              top: String(textTop) + ea,
+              fontSize: String(nameSize) + ea,
+              fontWeight: String(nameBoldWeight),
+              color: colorChip.black,
+              transition: "all 0.3s ease",
+            },
+            bold: {
+              fontSize: String(nameSize) + ea,
+              fontWeight: String(nameWeight),
+              color: colorChip.deactive,
+            }
+          }
+        });
+        dateTong = createNode({
+          mother: scrollTong,
+          class: [ timelineTypeClassName, moveTargetClassName ],
+          attribute: {
+            proid: project.proid,
+            type: "timeline",
+          },
+          style: {
+            display: "block",
+            position: "relative",
+            width: String((unitBoxWidth * 2) * baseMatrix.length) + ea,
+            paddingTop: String(factorDateBoxPaddingTop) + ea,
+            height: String(factorDateBoxHeight) + ea,
+          }
+        });
+  
+        createNode({
+          mother: nameTong,
+          class: [ nameBlankTypeClassName ],
+          attribute: {
+            proid: project.proid,
+            type: "nameBlank",
+            toggle: "off",
+          },
           style: {
             display: "block",
             position: "relative",
             width: withOut(0, ea),
-            height: withOut(0, ea),
+            height: String(0) + ea,
+            borderRadius: String(5) + "px",
+            border: "1px solid " + colorChip.gray2,
+            boxSizing: "border-box",
+            marginTop: String(factorDateBoxPaddingTop) + ea,
+            overflow: "hidden",
+            opacity: String(0),
           },
-          children: [
-            {
-              text: "닫기",
-              class: [ popupCloseClassName ],
-              event: {
-                click: (e) => {
-                  e.stopPropagation();
-                  exitEvent();
-                }
-              },
-              style: {
-                position: "absolute",
-                fontSize: String(buttonSize) + ea,
-                fontWeight: String(buttonWeight),
-                color: colorChip.white,
-                bottom: String(buttonBottom) + ea,
-                right: String(0) + ea,
-                cursor: "pointer",
-              }
+        });
+        createNode({
+          mother: scrollTong,
+          class: [ statusTypeClassName ],
+          attribute: {
+            proid: project.proid,
+            type: "status",
+            toggle: "off",
+          },
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            height: String(0) + ea,
+            borderRadius: String(5) + "px",
+            border: "1px solid " + colorChip.gray2,
+            boxSizing: "border-box",
+            marginTop: String(factorDateBoxPaddingTop) + ea,
+            overflow: "hidden",
+          },
+          child: {
+            mode: "iframe",
+            attribute: { src: "/middle/processDetail?proid=" + project.proid + "&only=status" },
+            style: {
+              position: "absolute",
+              display: "block",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              border: String(0),
+            }
+          }
+        });
+  
+        for (let { day, dateObject } of baseMatrix) {
+  
+          backgroundColor = colorChip.gray1;
+          if (project.process.contract.form.date.from.valueOf() <= dateObject.valueOf()) {
+            if (project.process.contract.form.date.to.valueOf() >= dateObject.valueOf()) {
+              backgroundColor = colorChip.softGreen;
+            }
+          }
+  
+          thisDateBox = createNode({
+            mother: dateTong,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(unitBoxWidth) + ea,
+              marginRight: String(day === "금" ? 0 : unitBetween) + ea,
+              height: withOut(0, ea),
+              background: backgroundColor,
+              borderRadius: String(2) + "px",
+              justifyContent: "center",
+              alignItems: "center",
+              verticalAlign: "top",
             },
-            {
-              text: "다시 보지 않기",
-              class: [ popupNeverClassName ],
-              event: {
-                click: (e) => {
-                  e.stopPropagation();
-                  window.localStorage.setItem(keyName, String(1));
-                  exitEvent();
-                }
-              },
+          });
+          if (day === "금") {
+            createNode({
+              mother: dateTong,
               style: {
-                position: "absolute",
-                fontSize: String(buttonSize) + ea,
-                fontWeight: String(buttonWeight),
-                color: colorChip.white,
-                bottom: String(buttonBottom) + ea,
-                left: String(0) + ea,
-                cursor: "pointer",
+                display: "inline-block",
+                position: "relative",  
+                width: String(fridayMargin) + ea,
+                height: withOut(0, ea),
+                borderRight: "1px dashed " + colorChip.gray3,
+                marginRight: String(fridayMargin) + ea,
+                verticalAlign: "top",
               }
-            },
-          ]
+            });
+          }
         }
-      ]
-    });
+        
+        num++;
+      }
+    }
 
+  } catch (e) {
+    console.log(e);
   }
-
 }
 
 DesignerBoardJs.prototype.launching = async function (loading) {
@@ -3393,7 +3907,6 @@ DesignerBoardJs.prototype.launching = async function (loading) {
             instance.insertProcessBox();
             instance.insertReleaseBox();
             instance.insertPortfolioBase();
-            // instance.popupLaunching();
   
           } catch (e) {
             await GeneralJs.ajaxJson({ message: "DesignerBoardJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
