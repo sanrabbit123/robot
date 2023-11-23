@@ -6919,9 +6919,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "권수민",
-    //     designer: "정다연",
-    //     link: "https://drive.google.com/drive/folders/10uLhC2ds7J67zsYpYD9Uqwxkv15oxy-U",
+    //     client: "홍수정",
+    //     designer: "김소영",
+    //     link: "https://drive.google.com/drive/folders/11rRpPr2zIpveK2PEWsvj20vHHmLbb0v7",
     //     pay: true
     //   },
     // ]);
@@ -6931,8 +6931,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "정진호",
-    //     designer: "호지희",
+    //     client: "홍수정",
+    //     designer: "김소영",
     //   },
     // ]);
 

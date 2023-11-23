@@ -4129,6 +4129,62 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       }
     },
+    "imageTransfer": {
+      "name": "이미지 전달 수정 수정",
+      "id": "TQ_0295",
+      "needs": [
+        "client",
+        "designer",
+        "type",
+        "purpose",
+        "host",
+        "path",
+        "cliid",
+        "id"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"type\", to: obj.type },\n          { from: \"purpose\", to: obj.purpose },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n          { from: \"id\", to: obj.id }\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{client} 고객님 안녕하세요, 홈리에종입니다!\r\n\r\n고객님께서 요청하신 디자이너 추천을 위해 #{designer} 디자이너의 #{type} 관련 이미지를 전달해드립니다. 하단 페이지 링크를 통해 전달해드린 이미지들을 보실 수 있습니다.\r\n\r\n감사합니다 :)\r\n\r\n* 제목 : #{purpose}\r\n* 페이지 링크\r\nhttps://#{host}/#{path}.php?cliid=#{cliid}&id=#{id}",
+        "templtName": "이미지 전달 수정 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-11-21 17:24:59",
+        "templtCode": "TQ_0295",
+        "comments": [
+          {
+            "cdate": "2023-11-22 14:51:19",
+            "name": "검수자",
+            "id": "2961497",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n알림톡은 수신자의 액션을 기반한 정보성 메시지에 한하여 발송 가능합니다.\r\n허나 해당 메시지는 수신자가 요청하지 않은 내용으로 광고성 및 공지성 메시지에 해당함에 따라 알림톡 발송 불가합니다.\r\n만약 수신자액션(요청, 신청 등)에 의해 발송되는 메시지일 경우, 메시지내 수신자액션을 고정값으로 추가하여 주시기 바랍니다.\r\n(예: 예약완료. / 요청하신 디자이너 추천~ 등)\r\n\r\n더 자세한 알림톡 검수 가이드는 딜러사를 통해 확인 부탁드립니다.\r\n감사합니다.",
+            "createdAt": "2023-11-22 14:51:19",
+            "status": "REJ"
+          },
+          {
+            "cdate": "2023-11-23 08:26:24",
+            "name": "검수자",
+            "id": "2963113",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 1회성 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2023-11-23 08:26:24",
+            "status": "APR"
+          }
+        ]
+      }
+    },
   };
   if (target === "$all") {
     return tong;

@@ -6531,10 +6531,16 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
           });
           await back.mongoUpdate(collection, [ { id }, { history: historyArr } ], { selfMongo });
 
-          await human.sendSms({
-            to: targetJson.target.phone.replace(/[^0-9]/gi, ''),
-            body: `${client} 고객님 안녕하세요, 홈리에종입니다!\n\n고객님께 디자이너 추천을 위해 ${designer} 디자이너의 ${type} 관련 이미지를 전달해드립니다. 하단 페이지 링크를 통해 전달해드린 이미지들을 보실 수 있습니다.\n\n기타 문의사항이 있다면 홈리에종 채널을 통해 남겨주세요~! 감사합니다 :)\n\n* 제목 : ${purpose}\n* 페이지 링크\nhttps://${host}/${path}.php?cliid=${cliid}&id=${id}`,
-          });
+          kakao.sendTalk("imageTransfer", client, targetJson.target.phone, {
+            client,
+            designer,
+            type,
+            purpose,
+            host,
+            path,
+            cliid,
+            id,
+          }).catch((e) => { console.log(e); });
 
           res.send(JSON.stringify({ message: "done" }));
 
