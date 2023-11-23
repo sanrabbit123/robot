@@ -721,14 +721,14 @@ AiContents.prototype.to_google = async function (pid) {
         await messageSend({ text: `${designer.designer} 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
   
         if (proid !== '') {
-          await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, {
-            client: client.name,
-            designer: designer.designer,
-            host: instance.address.frontinfo.host,
-            pid,
-            proid,
-          });
-          await messageSend({ text: `${designer.designer} 디자이너님에게 컨텐츠 공유 링크를 보냈어요.`, channel: "#502_sns_contents", voice: true });
+          // await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, {
+          //   client: client.name,
+          //   designer: designer.designer,
+          //   host: instance.address.frontinfo.host,
+          //   pid,
+          //   proid,
+          // });
+          // await messageSend({ text: `${designer.designer} 디자이너님에게 컨텐츠 공유 링크를 보냈어요.`, channel: "#502_sns_contents", voice: true });
   
           project = await back.getProjectById(proid, { selfMongo });
           if (project !== null) {
@@ -744,13 +744,13 @@ AiContents.prototype.to_google = async function (pid) {
         channel = "#200_web";
         await messageSend({ text: `${client.name} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
   
-        await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, {
-          client: client.name,
-          designer: designer.designer,
-          host: instance.address.frontinfo.host,
-          pid,
-          proid,
-        });
+        // await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, {
+        //   client: client.name,
+        //   designer: designer.designer,
+        //   host: instance.address.frontinfo.host,
+        //   pid,
+        //   proid,
+        // });
   
         project = await back.getProjectById(proid, { selfMongo });
         if (project !== null) {
