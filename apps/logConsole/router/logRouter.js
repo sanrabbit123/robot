@@ -799,7 +799,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
           if (thisData.network.ip.trim().replace(/[^0-9\.]/gi, '') !== address.homeinfo.ip.outer.trim().replace(/[^0-9\.]/gi, '')) {
             await back.mongoCreate(collection, thisData, { selfMongo: instance.mongo });
             if (thisData.action === "inputBlur" && thisData.data.property === "name") {
-              logger.alert("이름 입력 감지 " + thisData.data.value).catch((e) => { console.log(e); });
+              logger.alert("이름 입력 감지 : " + thisData.data.value + " / " + thisData.id).catch((e) => { console.log(e); });
             }
           }
         }
