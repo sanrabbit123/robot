@@ -417,6 +417,8 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
           sourceArr.push("facebook");
         } else if (referrerArr.some((str) => { return /meta/gi.test(str) })) {
           sourceArr.push("facebook");
+        } else if (referrerArr.some((str) => { return /kakao/gi.test(str) })) {
+          sourceArr.push("kakao");
         }
   
         thisSource = [ ...new Set(sourceArr) ];
@@ -431,6 +433,8 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
             result = "instagram";
           } else if (/facebook/gi.test(str) || /meta/gi.test(str)) {
             result = "facebook";
+          } else if (/kakao/gi.test(str)) {
+            result = "kakao";
           } else {
             result = str;
           }
