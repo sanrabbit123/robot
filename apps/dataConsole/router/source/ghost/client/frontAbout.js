@@ -41,7 +41,7 @@ const FrontAboutJs = function () {
   this.mother = new GeneralJs();
 }
 
-FrontAboutJs.binaryPath = FRONTHOST + "/middle/about";
+FrontAboutJs.binaryPath = "/middle/about";
 
 FrontAboutJs.prototype.insertInitBox = function () {
   const instance = this;
@@ -267,6 +267,9 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   let titleTop;
   let descriptionSize;
   let descriptionBottom;
+  let pictureTong;
+  let pictureBetween;
+  let pictureTongPaddingTop;
 
   blockHeight = <%% 383, 316, 273, 226, 129.5 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -274,7 +277,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 22, 22, 20, 17, 4.5 %%>;
+  titleFont = <%% 26, 24, 20, 17, 4.5 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 800, 800, 800, 800, 800 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -289,7 +292,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  leftWidth = <%% 340, 260, 250, 210, 300 %%>;
+  leftWidth = <%% 230, 230, 230, 210, 300 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
   initWordingSize = <%% 15.5, 15, 14.5, 13.5, 5 %%>;
@@ -337,6 +340,9 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
 
   grayBoxImageVisualWidth = <%% 16, 4, 0, 0, 19 %%>;
 
+  pictureBetween = <%% 4, 4, 3, 2, 1 %%>;
+  pictureTongPaddingTop = <%% 44, 44, 36, 28, 52 %%>;
+
   grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
   grayDownWordings = [ "비용 구성", "시공 비용", "구매 비용", "디자인비" ];
 
@@ -346,7 +352,6 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      height: String(blockHeight) + ea,
       background: colorChip.white,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -367,37 +372,29 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
     },
     children: [
       {
-        text: "인테리어, 막상 하려니\n막막하지 않으세요?",
         style: {
-          position: "absolute",
+          display: "inline-block",
+          position: "relative",
+          width: String(6) + ea,
+          height: String(54) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          marginRight: String(14) + ea,
+        }
+      },
+      {
+        text: "홈리에종\n홈스타일링?",
+        style: {
+          display: "inline-block",
+          position: "relative",
           fontSize: String(titleFont) + ea,
           fontWeight: String(titleFontWeight),
-          top: String(titleTop) + ea,
-          left: String(titleLeft) + ea,
           color: colorChip.black,
+          lineHeight: String(1.3),
           width: desktop ? "" : String(100) + '%',
           textAlign: desktop ? "" : "center",
         }
       },
-      {
-        text: [
-          desktop ? "알아보면 알아볼수록 해야 할 것이" : "알아볼수록 해야할 것이 너무 많은 인테리어,",
-          desktop ? "너무나도 많은 인테리어, 준비하다 보면" : "막히는 부분도 많고 실패도 많이 하기 마련입니다.",
-          desktop ? "막히는 부분도 많고, 구입하다 보면" : "",
-          desktop ? "실패도 많이 하기 마련입니다." : "",
-        ].join("\n"),
-        style: {
-          position: "absolute",
-          bottom: String(descriptionBottom) + ea,
-          left: String(titleLeft) + ea,
-          color: colorChip.black,
-          textAlign: desktop ? "" : "center",
-          width: desktop ? "" : withOut(0),
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(400),
-          lineHeight: String(1.6),
-        }
-      }
     ]
   });
 
@@ -408,27 +405,133 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
       position: "relative",
       verticalAlign: "top",
       top: String(0) + ea,
-      width: desktop ? withOut(leftWidth + margin, ea) : String(100) + '%',
+      width: desktop ? withOut(leftWidth + (margin * 2), ea) : String(100) + '%',
       height: desktop ? String(100) + '%' : withOut(mobileLeftBoxHeight, ea),
       borderRadius: String(5) + "px",
       overflow: "hidden",
+      marginTop: String(marginTop) + ea,
+      marginBottom: String(margin) + ea,
+      height: "calc(100% - " + String(margin * 2) + ea + ")",
     },
-    children: [
-      {
-        mode: "img",
-        attribute: {
-          src: FrontAboutJs.binaryPath + "/contents5" + String(media.findIndex(boo => boo)) + ".png",
-        },
+    child: {
+      text: [
+        "홈스타일링은 빈 집으로 끝나는 기존 리모델링과 달리 홈퍼니싱, 제작 가구, 그리고 패브릭까지 완벽하게 끝내는 주거 인테리어를 뜻합니다.",
+        "홈스타일링은 가구와 소품까지 모두 완성된 상태를 사전에 기획하며 시공의 범위를 조정하고, 가구 / 소품 / 패브릭의 조화까지 모두 고려하여 공간의 모습을 그려내고 또 완성해 나아갑니다."
+      ].join(" "),
+      style: {
+        display: "block",
+        position: "relative",
+        fontSize: String(descriptionSize) + ea,
+        fontWeight: String(400),
+        color: colorChip.black,
+        lineHeight: String(1.6),
+      },
+      next: {
         style: {
           display: "block",
-          position: "absolute",
-          width: String(100) + '%',
-          bottom: String(0),
-          right: String(0),
-        }
+          position: "relative",
+          width: withOut(0, ea),
+          paddingTop: String(pictureTongPaddingTop) + ea,
+        },
       }
-    ]
+    }
   });
+
+  pictureTong = rightBox.children[1];
+
+  createNode({
+    mother: pictureTong,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: "calc(calc(100% - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
+      height: String(45) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientBlack,
+      marginRight: String(pictureBetween) + ea,
+      marginBottom: String(pictureBetween) + ea,
+      justifyContent: "center",
+      alignItems: "center",
+      verticalAlign: "top",
+    },
+    child: {
+      text: "빈 집으로 끝나는 리모델링",
+      style: {
+        top: String(-1) + ea,
+        position: "relative",
+        fontSize: String(descriptionSize) + ea,
+        fontWeight: String(800),
+        color: colorChip.white,
+      }
+    }
+  });
+
+  createNode({
+    mother: pictureTong,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: "calc(calc(calc(100% - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(2) + ") + " + String(pictureBetween) + ea + ")",
+      height: String(45) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.shadow,
+      marginRight: String(pictureBetween) + ea,
+      marginBottom: String(pictureBetween) + ea,
+      justifyContent: "center",
+      alignItems: "center",
+      verticalAlign: "top",
+    },
+    // child: {
+    //   mode: "svg",
+    //   source: svgMaker.horizontalArrow()
+    // }
+  });
+
+  createNode({
+    mother: pictureTong,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: "calc(calc(100% - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
+      height: String(45) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientGreen,
+      marginBottom: String(pictureBetween) + ea,
+      justifyContent: "center",
+      alignItems: "center",
+      verticalAlign: "top",
+    },
+    child: {
+      text: "가구까지 완벽하게 홈스타일링",
+      style: {
+        top: String(-1) + ea,
+        position: "relative",
+        fontSize: String(descriptionSize) + ea,
+        fontWeight: String(800),
+        color: colorChip.white,
+      }
+    }
+  });
+
+  for (let i = 0; i < 4 * 3; i++) {
+    createNode({
+      mother: pictureTong,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: "calc(calc(100% - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
+        height: String(262) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.black,
+        marginRight: String(i % 4 === (4 - 1) ? 0 : pictureBetween) + ea,
+        marginBottom: String(Math.floor(i / 4) < 2 ? pictureBetween : 0) + ea,
+        backgroundImage: "url('" + FrontAboutJs.binaryPath + "/rooms/a" + String(i) + ".jpg" + "')",
+        backgroundSize: "100% auto",
+        backgroundPosition: "50% 50%",
+      }
+    });
+  }
+  
 
 }
 
