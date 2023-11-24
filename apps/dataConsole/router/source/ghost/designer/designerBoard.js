@@ -3112,7 +3112,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
 
     unitBetween = <%% 1, 1, 1, 1, 0.2 %%>;
 
-    nameAreaWidth = <%% 110, 100, 90, 75, 9.6 %%>;
+    nameAreaWidth = <%% 110, 100, 90, 75, 10 %%>;
 
     buttonWidth = <%% 18, 18, 16, 14, 1 %%>;
     buttonBetween = <%% 2, 2, 2, 1, 1 %%>;
@@ -3432,7 +3432,6 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
             marginRight: String(day === "금" ? 0 : unitBetween) + ea,
             height: withOut(0, ea),
             background: desktop ? colorChip.gray0 : colorChip.white,
-            borderRadius: String(2) + "px",
             justifyContent: "center",
             alignItems: "center",
             verticalAlign: "top",
@@ -3707,7 +3706,6 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
               marginRight: String(day === "금" ? 0 : unitBetween) + ea,
               height: withOut(0, ea),
               background: backgroundColor,
-              borderRadius: String(2) + "px",
               justifyContent: "center",
               alignItems: "center",
               verticalAlign: "top",
