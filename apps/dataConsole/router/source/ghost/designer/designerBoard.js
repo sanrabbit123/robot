@@ -3131,7 +3131,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
     monthSize = <%% 12, 11, 11, 10, 2.5 %%>;
     monthWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    spreadHeight = <%% 675, 565, 515, 410, 128 %%>;
+    spreadHeight = <%% 675, 565, 515, 410, (isIphone() ? 118 : 128) %%>;
 
     nameSize = <%% 14, 13, 12, 10, 2.7 %%>;
     nameWeight = <%% 300, 300, 300, 300, 300 %%>;
@@ -3417,7 +3417,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
           width: String((unitBoxWidth * 2) * baseMatrix.length) + ea,
           height: String(dateBoxHeight) + ea,
           zIndex: String(2),
-          transition: "all 0.3s ease",
+          transition: desktop ? "all 0.3s ease" : "all 0s ease",
         }
       });
       num = 0;
@@ -3464,7 +3464,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
               boxSizing: "border-box",
               justifyContent: "center",
               alignItems: "center",
-              transition: "all 0.3s ease",
+              transition: desktop ? "all 0.3s ease" : "all 0s ease",
             },
             child: {
               style: {
@@ -3529,9 +3529,9 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
       for (let project of currentTargets) {
   
         if ((new RegExp(FRONTHOST.split("//")[1], "gi")).test(window.location.host)) {
-          iframeSrc = FRONTHOST + "/designer/process.php?proid=" + project.proid + "&only=status" + (desktop ? "" : "&onlymode=mobile");
+          iframeSrc = FRONTHOST + "/designer/process.php?proid=" + project.proid + "&only=status&view=test" + (desktop ? "" : "&onlymode=mobile");
         } else {
-          iframeSrc = "/middle/processDetail?proid=" + project.proid + "&only=status" + (desktop ? "" : "&onlymode=mobile");
+          iframeSrc = "/middle/processDetail?proid=" + project.proid + "&only=status&view=test" + (desktop ? "" : "&onlymode=mobile");
         }
 
         createNode({
@@ -3552,7 +3552,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
                 this.firstChild.style.color = colorChip.black;
               }
             },
-            click: function (e) {
+            touch: function (e) {
               const proid = this.getAttribute("proid");
               const target0 = findByAttribute(document.querySelectorAll('.' + nameBlankTypeClassName), "proid", proid);
               const target1 = findByAttribute(document.querySelectorAll('.' + statusTypeClassName), "proid", proid);
@@ -3596,7 +3596,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
               fontSize: String(nameSize) + ea,
               fontWeight: String(nameBoldWeight),
               color: colorChip.black,
-              transition: "all 0.3s ease",
+              transition: desktop ? "all 0.3s ease" : "all 0s ease",
             },
             bold: {
               fontSize: String(nameSize) + ea,
@@ -3618,7 +3618,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
             width: String((unitBoxWidth * 2) * baseMatrix.length) + ea,
             paddingTop: String(factorDateBoxPaddingTop) + ea,
             height: String(factorDateBoxHeight) + ea,
-            transition: "all 0.3s ease",
+            transition: desktop ? "all 0.3s ease" : "all 0s ease",
           }
         });
   
@@ -3641,7 +3641,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
             marginTop: String(factorDateBoxPaddingTop) + ea,
             overflow: "hidden",
             opacity: String(0),
-            transition: "all 0.3s ease",
+            transition: desktop ? "all 0.3s ease" : "all 0s ease",
           },
         });
         iframeBase = createNode({
@@ -3662,7 +3662,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
             boxSizing: "border-box",
             marginTop: String(factorDateBoxPaddingTop) + ea,
             overflow: "hidden",
-            transition: "all 0.3s ease",
+            transition: desktop ? "all 0.3s ease" : "all 0s ease",
           },
           child: {
             mode: "iframe",
@@ -3845,10 +3845,8 @@ DesignerBoardJs.prototype.launching = async function (loading) {
           try {
             let whiteBlock;
             instance.insertInitBox();
-            if (getObj.mode === "status") {
-              await instance.insertFormsBox();
-            }
             instance.insertRouterBox();
+            await instance.insertFormsBox();
             instance.insertProcessBox();
             instance.insertReleaseBox();
             instance.insertPortfolioBase();
