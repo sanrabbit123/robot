@@ -3422,6 +3422,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
       });
       num = 0;
       for (let { day, dateObject } of baseMatrix) {
+
         thisDateBox = createNode({
           mother: dateTong,
           style: {
@@ -3447,7 +3448,15 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
             }
           }
         });
-  
+
+        if (day === "월") {
+          thisDateBox.style.borderTopLeftRadius = String(3) + "px";
+          thisDateBox.style.borderBottomLeftRadius = String(3) + "px";
+        } else if (day === "금") {
+          thisDateBox.style.borderTopRightRadius = String(3) + "px";
+          thisDateBox.style.borderBottomRightRadius = String(3) + "px";
+        }
+
         if (dateToString(dateObject) === dateToString(new Date())) {
           createNode({
             mother: thisDateBox,
@@ -3704,6 +3713,15 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
               verticalAlign: "top",
             },
           });
+
+          if (day === "월") {
+            thisDateBox.style.borderTopLeftRadius = String(3) + "px";
+            thisDateBox.style.borderBottomLeftRadius = String(3) + "px";
+          } else if (day === "금") {
+            thisDateBox.style.borderTopRightRadius = String(3) + "px";
+            thisDateBox.style.borderBottomRightRadius = String(3) + "px";
+          }
+
           if (day === "금") {
             createNode({
               mother: dateTong,
