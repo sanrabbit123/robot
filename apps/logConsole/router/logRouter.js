@@ -801,6 +801,12 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
             if (thisData.action === "inputBlur" && thisData.data.property === "name") {
               logger.alert("이름 입력 감지 : " + thisData.data.value + " / " + thisData.id).catch((e) => { console.log(e); });
             }
+            if (thisData.action === "pageInit" && thisData.page === "clientConsulting") {
+              logger.alert("상담 신청 페이지 접근 감지 : " + thisData.id).catch((e) => { console.log(e); });
+            }
+            if (thisData.action === "popupOpen") {
+              logger.alert("누군가 팝업을 염 감지 : " + thisData.id).catch((e) => { console.log(e); });
+            }
           }
         }
       }
