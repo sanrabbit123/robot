@@ -3455,7 +3455,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             }
           },
           noticeText: (designer) => {
-            return "붙박이장, 냉장고장, 신발장, 주방 가구 등의 빌트인 가구를 제작할 수 있는 지에 대한 여부와 레벨입니다.";
+            return "붙박이장, 냉장고장, 신발장 등의 빌트인 가구를 제작할 수 있는 지에 대한 여부와 레벨입니다.";
           },
           fourStepValue: (designer) => {
             return [
@@ -3733,7 +3733,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
       notice: [
         {
           title: "빌트인 가구",
-          body: "붙박이장, 냉장고장, 신발장, 주방 가구 등의 빌트인 가구를 제작할 수 있는 지에 대한 여부와 레벨입니다.",
+          body: "붙박이장, 냉장고장, 신발장 등의 빌트인 가구를 제작할 수 있는 지에 대한 여부와 레벨입니다.",
         },
         {
           title: "디자인 가구",

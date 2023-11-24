@@ -178,17 +178,35 @@ DevContext.prototype.launching = async function () {
     */
 
 
+    /*
 
+    await this.MONGOSECONDC.connect();
+    const selfMongo = this.MONGOSECONDC;
+    const collection = "projectDesignerStatus";
+    let rows;
+    let whereQuery, updateQuery;
+    let matrixCopied;
 
+    rows = await back.mongoRead(collection, {}, { selfMongo });
 
+    for (let row of rows) {
+      whereQuery = {};
+      whereQuery["proid"] = row.proid;
+      matrixCopied = equalJson(JSON.stringify(row.matrix));
+      for (let obj of matrixCopied) {
+        for (let obj2 of obj.children) {
+          obj2.title = obj2.title.replace(/공유됨/gi, "공유").replace(/1차 디자인 제안서/gi, "디자인 제안서").replace(/디자인 제안서 최종/gi, "제안서 최종");
+        }
+      }
+      
+      updateQuery = {};
+      updateQuery["matrix"] = matrixCopied;
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+      console.log(whereQuery, updateQuery);
+    }
+    await this.MONGOSECONDC.close();
 
-    
-
-
-
-
-
-
+    */
 
 
 
