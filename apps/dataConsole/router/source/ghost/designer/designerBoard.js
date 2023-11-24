@@ -3090,6 +3090,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
     let iframeSrc;
     let iframeBase;
     let zoom;
+    let iframeOpenEvent;
 
     delta = 18;
 
@@ -3138,6 +3139,34 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
     nameBoldWeight = <%% 600, 600, 600, 600, 600 %%>;
 
     zoom = <%% 1, 1, 0.98, 0.78, 1.2 %%>;
+
+    iframeOpenEvent = () => {
+      return function (e) {
+        const proid = this.getAttribute("proid");
+        const target0 = findByAttribute(document.querySelectorAll('.' + nameBlankTypeClassName), "proid", proid);
+        const target1 = findByAttribute(document.querySelectorAll('.' + statusTypeClassName), "proid", proid);
+        const toggle = target0.getAttribute("toggle");
+        if (toggle === "off") {
+          target0.style.height = String(spreadHeight) + ea;
+          target1.style.height = String(spreadHeight) + ea;
+          target0.setAttribute("toggle", "on");
+          target1.setAttribute("toggle", "on");
+        } else {
+          target0.style.height = String(0) + ea;
+          target1.style.height = String(0) + ea;
+          target0.setAttribute("toggle", "off");
+          target1.setAttribute("toggle", "off");
+        }
+
+        target1.querySelector("iframe").contentWindow.document.querySelector("html").style.zoom = String(zoom);
+
+        if ([ ...document.querySelectorAll('.' + nameBlankTypeClassName) ].every((dom) => { return dom.getAttribute("toggle") === "off" })) {
+          document.querySelector("." + todayLineClassName).style.opacity = String(1);
+        } else {
+          document.querySelector("." + todayLineClassName).style.opacity = String(0);
+        }
+      }
+    }
 
     standardDate = new Date();
     standardDate.setDate(standardDate.getDate() - 18);
@@ -3560,31 +3589,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
                 this.firstChild.style.color = colorChip.black;
               }
             },
-            touch: function (e) {
-              const proid = this.getAttribute("proid");
-              const target0 = findByAttribute(document.querySelectorAll('.' + nameBlankTypeClassName), "proid", proid);
-              const target1 = findByAttribute(document.querySelectorAll('.' + statusTypeClassName), "proid", proid);
-              const toggle = target0.getAttribute("toggle");
-              if (toggle === "off") {
-                target0.style.height = String(spreadHeight) + ea;
-                target1.style.height = String(spreadHeight) + ea;
-                target0.setAttribute("toggle", "on");
-                target1.setAttribute("toggle", "on");
-              } else {
-                target0.style.height = String(0) + ea;
-                target1.style.height = String(0) + ea;
-                target0.setAttribute("toggle", "off");
-                target1.setAttribute("toggle", "off");
-              }
-
-              target1.querySelector("iframe").contentWindow.document.querySelector("html").style.zoom = String(zoom);
-
-              if ([ ...document.querySelectorAll('.' + nameBlankTypeClassName) ].every((dom) => { return dom.getAttribute("toggle") === "off" })) {
-                document.querySelector("." + todayLineClassName).style.opacity = String(1);
-              } else {
-                document.querySelector("." + todayLineClassName).style.opacity = String(0);
-              }
-            },
+            touch: iframeOpenEvent(),
           },
           style: {
             paddingTop: String(factorDateBoxPaddingTop) + ea,
@@ -3620,6 +3625,9 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
             proid: project.proid,
             type: "timeline",
           },
+          event: {
+            click: iframeOpenEvent(),
+          },
           style: {
             display: "block",
             position: "relative",
@@ -3627,6 +3635,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
             paddingTop: String(factorDateBoxPaddingTop) + ea,
             height: String(factorDateBoxHeight) + ea,
             transition: desktop ? "all 0.3s ease" : "all 0s ease",
+            cursor: "pointer",
           }
         });
   
