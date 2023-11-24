@@ -1636,7 +1636,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               ],
             },
             {
-              title: "일정표 공유됨",
+              title: "일정표 공유",
               type: "upload",
               deactive: false,
               value: 0,
@@ -1656,7 +1656,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               ],
             },
             {
-              title: "컨셉 제안서 공유됨",
+              title: "컨셉 제안서 공유",
               type: "upload",
               deactive: false,
               value: 0,
@@ -1676,7 +1676,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               ],
             },
             {
-              title: "1차 디자인 제안서 공유됨",
+              title: "디자인 제안서 공유",
               type: "upload",
               deactive: false,
               value: 0,
@@ -1696,7 +1696,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               ],
             },
             {
-              title: "수정 제안서 공유됨",
+              title: "수정 제안서 공유",
               type: "upload",
               deactive: false,
               value: 0,
@@ -1716,7 +1716,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               ],
             },
             {
-              title: "제품 리스트 공유됨",
+              title: "제품 리스트 공유",
               type: "upload",
               deactive: false,
               value: 0,
@@ -1736,7 +1736,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               ],
             },
             {
-              title: "디자인 제안서 최종 컨펌",
+              title: "제안서 최종 컨펌",
               type: "string",
               deactive: false,
               value: 0,
@@ -1755,7 +1755,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
           title: "시공",
           children: [
             {
-              title: "시공 의뢰서 공유됨",
+              title: "시공 의뢰서 공유",
               type: "upload",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
@@ -1775,7 +1775,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               ],
             },
             {
-              title: "시공 견적서 공유됨",
+              title: "시공 견적서 공유",
               type: "upload",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
@@ -1822,7 +1822,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               ]
             },
             {
-              title: "공정표 공유됨",
+              title: "공정표 공유",
               type: "string",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
@@ -3584,7 +3584,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
             "callback_id": "rawPhoto",
             "title": {
               "type": "plain_text",
-              "text": "원본 사진 링크 공유됨"
+              "text": "원본 사진 링크 공유"
             },
             "blocks": [
               {

@@ -275,10 +275,9 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
   let currentTargets, totalTargets, contentsTargets;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
-
-  whiteBottomMargin = <%% 58, 58, 58, 58, 6 %%>;
+  margin = <%% 55, 55, 47, 39, 4 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4 %%>;
+  whiteBottomMargin = <%% 58, 58, 58, 58, 5 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -293,7 +292,7 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
   grayMargin = <%% 0, 0, 0, 0, 0 %%>;
   grayPadding = <%% 14, 14, 10, 10, 0 %%>;
 
-  tongMargin = <%% 6, 6, 6, 6, 1 %%>;
+  tongMargin = <%% 6, 6, 6, 6, 0.5 %%>;
 
   tongHeight = <%% 72, 68, 60, 52, 12 %%>;
 
@@ -669,13 +668,13 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     numbersTop = 7;
     circleTop = 16;
   } else {
-    margin = <%% 55, 55, 47, 39, 6 %%>;
-    paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
-    whiteBottomMargin = <%% 58, 56, 50, 44, 6 %%>;
-    titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+    margin = <%% 55, 55, 47, 39, 4 %%>;
+    paddingTop =  <%% 52, 52, 44, 36, 4 %%>;
+    whiteBottomMargin = <%% 58, 56, 50, 44, 5 %%>;
+    titleFontSize = <%% 21, 21, 19, 17, 3.8 %%>;
     titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 2.5 %%>;
     titleTopNumber = <%% isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, 0 %%>;
-    grayMargin = <%% 12, 12, 10, 10, 2 %%>;
+    grayMargin = <%% 12, 12, 10, 10, 1 %%>;
     grayPadding = <%% 14, 14, 10, 10, 2.5 %%>;
     tongHeight = <%% 50, 50, 42, 42, 15.64 %%>;
     whiteSize = <%% 15, 15, 13, 13, 3 %%>;
@@ -690,7 +689,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
   mobileTitleLeft = 6;
 
-  tongMargin = <%% 2, 2, 2, 2, 1 %%>;
+  tongMargin = <%% 2, 2, 2, 2, 0.5 %%>;
 
   whiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
@@ -1340,13 +1339,13 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
     numbersTop = 7;
     circleTop = 16;
   } else {
-    margin = <%% 55, 55, 47, 39, 6 %%>;
-    paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
-    whiteBottomMargin = <%% 58, 56, 50, 44, 6 %%>;
-    titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+    margin = <%% 55, 55, 47, 39, 4 %%>;
+    paddingTop =  <%% 52, 52, 44, 36, 4 %%>;
+    whiteBottomMargin = <%% 58, 56, 50, 44, 5 %%>;
+    titleFontSize = <%% 21, 21, 19, 17, 3.8 %%>;
     titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 2.5 %%>;
     titleTopNumber = <%% isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, 0 %%>;
-    grayMargin = <%% 12, 12, 10, 10, 2 %%>;
+    grayMargin = <%% 12, 12, 10, 10, 1 %%>;
     grayPadding = <%% 14, 14, 10, 10, 2.5 %%>;
     tongHeight = <%% 50, 50, 42, 42, 15.64 %%>;
     whiteSize = <%% 15, 15, 13, 13, 3 %%>;
@@ -1361,7 +1360,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
 
   mobileTitleLeft = 6;
 
-  tongMargin = <%% 2, 2, 2, 2, 1 %%>;
+  tongMargin = <%% 2, 2, 2, 2, 0.5 %%>;
 
   whiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
@@ -2705,7 +2704,7 @@ DesignerBoardJs.prototype.insertFormStatusBox = async function (whiteTong, clien
     let printSize;
 
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-    margin = <%% 55, 55, 47, 39, 6 %%>;
+    margin = <%% 55, 55, 47, 39, 4 %%>;
     paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
     whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
   
@@ -3029,106 +3028,6 @@ DesignerBoardJs.prototype.insertFormStatusBox = async function (whiteTong, clien
   }
 }
 
-/*
-DesignerBoardJs.prototype.insertFormsBox = async function () {
-  const instance = this;
-  const mother = this.mother;
-  const { clients, projects, requestNumber, ea, baseTong, media, desid } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const big = (media[0] || media[1] || media[2]);
-  const small = !big;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, selfHref } = GeneralJs;
-  try {
-    let currentTargets;
-    let whiteBlock;
-    let whiteTong;
-    let bottomMargin;
-    let margin;
-    let paddingTop;
-    let whiteBottomMargin;
-    let blockBetweenBottom;
-    let thisBase;
-    let num;
-    let blockBetween;
-
-    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-    margin = <%% 55, 55, 47, 39, 6 %%>;
-    paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
-    whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
-    blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
-    blockBetween = <%% 14, 14, 12, 10, 2 %%>;
-
-    currentTargets = equalJson(JSON.stringify(projects));
-    currentTargets = currentTargets.filter((obj) => {
-      return (!/드[랍롭]/gi.test(obj.process.status) && !/홀[드딩]/gi.test(obj.process.status) && !/완료/gi.test(obj.process.status));
-    })
-    currentTargets.sort((a, b) => {
-      const emptyValue = Math.abs((new Date(1200, 0, 1)).valueOf());
-      let aConst, bConst;
-
-      if (/드[랍롭]/gi.test(a.process.status) || /홀[드딩]/gi.test(a.process.status)) {
-        aConst = 1;
-      } else if (/완료/gi.test(a.process.status)) {
-        aConst = 10000;
-      } else {
-        aConst = 100000000;
-      }
-
-      if (/드[랍롭]/gi.test(b.process.status) || /홀[드딩]/gi.test(b.process.status)) {
-        bConst = 1;
-      } else if (/완료/gi.test(b.process.status)) {
-        bConst = 10000;
-      } else {
-        bConst = 100000000;
-      }
-
-      return ((b.process.contract.form.date.from.valueOf() + emptyValue) * bConst) - ((a.process.contract.form.date.from.valueOf() + emptyValue) * aConst);
-    });
-
-
-    whiteBlock = createNode({
-      mother: baseTong,
-      style: {
-        position: "relative",
-        borderRadius: String(desktop ? 8 : 1) + ea,
-        width: String(100) + '%',
-        background: colorChip.white,
-        paddingTop: String(paddingTop) + ea,
-        paddingBottom: String(desktop ? whiteBottomMargin - blockBetweenBottom : 6.6) + ea,
-        marginBottom: String(bottomMargin) + ea,
-        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-      },
-      children: [
-        {
-          display: "block",
-          position: "relative",
-          width: withOut(margin * 2, ea),
-          height: String(100) + '%',
-          marginLeft: String(margin) + ea,
-        }
-      ]
-    });
-    whiteTong = whiteBlock.firstChild;
-
-    num = 0;
-    for (let project of currentTargets) {
-      thisBase = await instance.insertFormStatusBox(whiteTong, clients.find((obj) => { return obj.cliid === project.cliid }), project);
-
-      if (num !== currentTargets.length - 1) {
-        thisBase.style.paddingBottom = String(blockBetween) + ea;
-        thisBase.style.marginBottom = String(blockBetween) + ea;
-        thisBase.style.borderBottom = "1px dashed " + colorChip.gray3;
-      }
-
-      num++;
-    }  
-  } catch (e) {
-    console.log(e);
-  }
-}
-*/
-
 DesignerBoardJs.prototype.insertFormsBox = async function () {
   const instance = this;
   const mother = this.mother;
@@ -3142,6 +3041,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
   const nameBlankTypeClassName = "nameBlankTypeClassName";
   const statusTypeClassName = "statusTypeClassName";
   const moveTargetClassName = "moveTargetClassName";
+  const todayLineClassName = "todayLineClassName";
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, selfHref, getDateMatrix, findByAttribute } = GeneralJs;
   try {
     let currentTargets;
@@ -3187,52 +3087,57 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
     let monthTop, monthSize, monthWeight;
     let spreadHeight;
     let nameSize, nameWeight, nameBoldWeight;
+    let iframeSrc;
+    let iframeBase;
+    let zoom;
 
     delta = 18;
 
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-    margin = <%% 55, 55, 47, 39, 6 %%>;
+    margin = <%% 55, 55, 47, 39, 4 %%>;
     paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
     whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
     blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
     blockBetween = <%% 14, 14, 12, 10, 2 %%>;
 
-    dateBoxHeight = <%% 20, 20, 20, 20, 20 %%>;
-    dateBoxPaddingTop = <%% 16, 16, 16, 16, 16 %%>;
+    dateBoxHeight = <%% 20, 20, 18, 16, 3.2 %%>;
+    dateBoxPaddingTop = <%% 16, 16, 14, 12, 1 %%>;
 
-    factorDateBoxHeight = <%% 20, 20, 20, 20, 2 %%>;
+    factorDateBoxHeight = <%% 20, 20, 18, 16, 3.2 %%>;
     factorDateBoxPaddingTop = <%% 6, 5, 4, 3, 1 %%>;
 
-    unitBoxWidth = <%% 20, 20, 20, 20, 20 %%>;
+    unitBoxWidth = <%% 20, 20, 18, 16, 3.2 %%>;
 
     fridayMargin = <%% 4, 4, 3, 2, 1 %%>;
 
-    unitBetween = <%% 1, 1, 1, 1, 0.1 %%>;
+    unitBetween = <%% 1, 1, 1, 1, 0.2 %%>;
 
-    nameAreaWidth = <%% 110, 110, 110, 110, 12 %%>;
+    nameAreaWidth = <%% 110, 100, 90, 75, 9.6 %%>;
 
-    buttonWidth = <%% 18, 18, 18, 18, 18 %%>;
+    buttonWidth = <%% 18, 18, 16, 14, 1 %%>;
     buttonBetween = <%% 2, 2, 2, 1, 1 %%>;
 
-    arrowWidth = <%% 8, 8, 8, 8, 1 %%>;
+    arrowWidth = <%% 8, 8, 7, 6, 1 %%>;
 
     move = 500;
 
-    dateSize = <%% 10, 10, 10, 10, 10 %%>;
+    dateSize = <%% 10, 10, 10, 10, 2.5 %%>;
     dateWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-    todayLineTop = <%% -16, -16, -16, -16, -1 %%>;
-    todayLineWidth = <%% 8, 8, 8, 8, 1 %%>;
+    todayLineTop = <%% -16, -16, -14, -12, -1 %%>;
+    todayLineWidth = <%% 8, 8, 6, 6, 1 %%>;
 
-    monthTop = <%% -18, -18, -18, -18, -18 %%>;
-    monthSize = <%% 11, 11, 11, 11, 11 %%>;
+    monthTop = <%% -20, -20, -18, -16, -4 %%>;
+    monthSize = <%% 12, 11, 11, 10, 2.5 %%>;
     monthWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    spreadHeight = <%% 756, 756, 756, 756, 75 %%>;
+    spreadHeight = <%% 675, 565, 515, 410, 128 %%>;
 
-    nameSize = <%% 14, 14, 14, 14, 14 %%>;
+    nameSize = <%% 14, 13, 12, 10, 2.7 %%>;
     nameWeight = <%% 300, 300, 300, 300, 300 %%>;
     nameBoldWeight = <%% 600, 600, 600, 600, 600 %%>;
+
+    zoom = <%% 1, 1, 0.98, 0.78, 1.2 %%>;
 
     standardDate = new Date();
     standardDate.setDate(standardDate.getDate() - 18);
@@ -3304,146 +3209,158 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
       });
       whiteTong = whiteBlock.firstChild;
   
-      createNode({
-        mother: whiteTong,
-        style: {
-          display: "flex",
-          flexDirection: "row",
-          position: "absolute",
-          top: String(0),
-          left: String(0),
-          width: String((buttonWidth * 3) + (buttonBetween * 2)) + ea,
-          height: String(buttonWidth) + ea,
-          zIndex: String(2),
-        },
-        children: [
-          {
-            event: {
-              click: function (e) {
-                const translateFunc = function (past) {
-                  const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) + move;
-                  return ("translateX(" + String(newValue) + ea + ")");
-                }
-                let targets;
-                targets = document.querySelectorAll("." + moveTargetClassName);
-                for (let target of targets) {
-                  if (target.style.transform === '') {
-                    target.style.transform = "translateX(" + String(move) + ea + ")";
-                  } else {
-                    target.style.transform = translateFunc(target.style.transform);
-                  }
-                  if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
-                    target.style.transform = "translateX(0px)";
-                  } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
-                    target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
-                  }
-                }
-              }
-            },
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              width: String(buttonWidth) + ea,
-              height: String(buttonWidth) + ea,
-              marginRight: String(buttonBetween) + ea,
-              borderRadius: String(3) + "px",
-              background: colorChip.gradientGray,
-              justifyContent: "center",
-              alignItems: "center",
-              cursor: "pointer",
-            },
-            child: {
-              mode: "svg",
-              source: instance.mother.returnArrow("left", colorChip.white),
-              style: {
-                position: "relative",
-                width: String(arrowWidth) + ea,
-              }
-            },
+      if (desktop) {
+        createNode({
+          mother: whiteTong,
+          style: {
+            display: "flex",
+            flexDirection: "row",
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String((buttonWidth * 3) + (buttonBetween * 2)) + ea,
+            height: String(buttonWidth) + ea,
+            zIndex: String(2),
           },
-          {
-            event: {
-              click: function (e) {
-                const translateFunc = function (past) {
-                  const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) - move;
-                  return ("translateX(" + String(newValue) + ea + ")");
-                }
-                let targets;
-                targets = document.querySelectorAll("." + moveTargetClassName);
-                for (let target of targets) {
-                  if (target.style.transform === '') {
-                    target.style.transform = "translateX(" + String(-1 * move) + ea + ")";
-                  } else {
-                    target.style.transform = translateFunc(target.style.transform);
+          children: [
+            {
+              event: {
+                click: function (e) {
+                  const translateFunc = function (past) {
+                    const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) + move;
+                    return ("translateX(" + String(newValue) + ea + ")");
+                  }
+                  let targets;
+                  targets = document.querySelectorAll("." + moveTargetClassName);
+                  for (let target of targets) {
+                    if (target.style.transform === '') {
+                      target.style.transform = "translateX(" + String(move) + ea + ")";
+                    } else {
+                      target.style.transform = translateFunc(target.style.transform);
+                    }
+                    if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
+                      target.style.transform = "translateX(0px)";
+                    } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, ''))) {
+                      target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) + ea + ")";
+                    }
                   }
                 }
-              }
-            },
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              width: String(buttonWidth) + ea,
-              height: String(buttonWidth) + ea,
-              marginRight: String(buttonBetween) + ea,
-              borderRadius: String(3) + "px",
-              background: colorChip.gradientGray,
-              justifyContent: "center",
-              alignItems: "center",
-              cursor: "pointer",
-            },
-            child: {
-              mode: "svg",
-              source: instance.mother.returnArrow("right", colorChip.white),
+              },
               style: {
+                display: "inline-flex",
                 position: "relative",
-                width: String(arrowWidth) + ea,
-              }
-            },
-          },
-          {
-            event: function (e) {
-              const targets0 = [ ...document.querySelectorAll('.' + nameBlankTypeClassName) ];
-              const targets1 = [ ...document.querySelectorAll('.' + statusTypeClassName) ];
-              const toggle = targets0.some((dom) => { return dom.getAttribute("toggle") !== "on" });
-              if (toggle) {
-                for (let i = 0; i < targets0.length; i++) {
-                  targets0[i].style.height = String(spreadHeight) + ea;
-                  targets1[i].style.height = String(spreadHeight) + ea;
-                  targets0[i].setAttribute("toggle", "on");
-                  targets1[i].setAttribute("toggle", "on");
+                width: String(buttonWidth) + ea,
+                height: String(buttonWidth) + ea,
+                marginRight: String(buttonBetween) + ea,
+                borderRadius: String(3) + "px",
+                background: colorChip.gradientGray,
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+              },
+              child: {
+                mode: "svg",
+                source: instance.mother.returnArrow("left", colorChip.white),
+                style: {
+                  position: "relative",
+                  width: String(arrowWidth) + ea,
                 }
-              } else {
-                for (let i = 0; i < targets0.length; i++) {
-                  targets0[i].style.height = String(0) + ea;
-                  targets1[i].style.height = String(0) + ea;
-                  targets0[i].setAttribute("toggle", "off");
-                  targets1[i].setAttribute("toggle", "off");
+              },
+            },
+            {
+              event: {
+                click: function (e) {
+                  const translateFunc = function (past) {
+                    const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) - move;
+                    return ("translateX(" + String(newValue) + ea + ")");
+                  }
+                  let targets;
+                  targets = document.querySelectorAll("." + moveTargetClassName);
+                  for (let target of targets) {
+                    if (target.style.transform === '') {
+                      target.style.transform = "translateX(" + String(-1 * move) + ea + ")";
+                    } else {
+                      target.style.transform = translateFunc(target.style.transform);
+                    }
+                  }
                 }
-              }
-            },
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              width: String(buttonWidth) + ea,
-              height: String(buttonWidth) + ea,
-              borderRadius: String(3) + "px",
-              background: colorChip.gradientGreen,
-              justifyContent: "center",
-              alignItems: "center",
-              cursor: "pointer",
-            },
-            child: {
+              },
               style: {
+                display: "inline-flex",
                 position: "relative",
-                width: String(arrowWidth) + ea,
-                height: String(arrowWidth) + ea,
-                borderRadius: String(arrowWidth) + ea,
-                background: colorChip.white,
-              }
+                width: String(buttonWidth) + ea,
+                height: String(buttonWidth) + ea,
+                marginRight: String(buttonBetween) + ea,
+                borderRadius: String(3) + "px",
+                background: colorChip.gradientGray,
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+              },
+              child: {
+                mode: "svg",
+                source: instance.mother.returnArrow("right", colorChip.white),
+                style: {
+                  position: "relative",
+                  width: String(arrowWidth) + ea,
+                }
+              },
             },
-          },
-        ]
-      });
+            {
+              event: function (e) {
+                const targets0 = [ ...document.querySelectorAll('.' + nameBlankTypeClassName) ];
+                const targets1 = [ ...document.querySelectorAll('.' + statusTypeClassName) ];
+                const toggle = targets0.some((dom) => { return dom.getAttribute("toggle") !== "on" });
+                if (toggle) {
+                  for (let i = 0; i < targets0.length; i++) {
+                    targets0[i].style.height = String(spreadHeight) + ea;
+                    targets1[i].style.height = String(spreadHeight) + ea;
+                    targets0[i].setAttribute("toggle", "on");
+                    targets1[i].setAttribute("toggle", "on");
+                  }
+                } else {
+                  for (let i = 0; i < targets0.length; i++) {
+                    targets0[i].style.height = String(0) + ea;
+                    targets1[i].style.height = String(0) + ea;
+                    targets0[i].setAttribute("toggle", "off");
+                    targets1[i].setAttribute("toggle", "off");
+                  }
+                }
+  
+                for (let target1 of targets1) {
+                  target1.querySelector("iframe").contentWindow.document.querySelector("html").style.zoom = String(zoom);
+                }
+  
+                if ([ ...document.querySelectorAll('.' + nameBlankTypeClassName) ].every((dom) => { return dom.getAttribute("toggle") === "off" })) {
+                  document.querySelector("." + todayLineClassName).style.opacity = String(1);
+                } else {
+                  document.querySelector("." + todayLineClassName).style.opacity = String(0);
+                }
+              },
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(buttonWidth) + ea,
+                height: String(buttonWidth) + ea,
+                borderRadius: String(3) + "px",
+                background: colorChip.gradientGreen,
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+              },
+              child: {
+                style: {
+                  position: "relative",
+                  width: String(arrowWidth) + ea,
+                  height: String(arrowWidth) + ea,
+                  borderRadius: String(arrowWidth) + ea,
+                  background: colorChip.white,
+                }
+              },
+            },
+          ]
+        });
+      }
   
       basicBase = createNode({
         mother: whiteTong,
@@ -3461,7 +3378,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
           display: "inline-block",
           position: "relative",
           width: String(nameAreaWidth) + ea,
-          paddingTop: String(dateBoxPaddingTop) + ea,
+          paddingTop: String(desktop ? dateBoxPaddingTop : 3) + ea,
           verticalAlign: "top",
         }
       });
@@ -3471,11 +3388,15 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
           display: "inline-block",
           position: "relative",
           width: withOut(nameAreaWidth, ea),
-          overflow: "hidden",
-          paddingTop: String(dateBoxPaddingTop) + ea,
+          overflow: desktop ? "hidden" : "",
+          paddingTop: String(desktop ? dateBoxPaddingTop : 3) + ea,
           verticalAlign: "top",
         }
       });
+      if (mobile) {
+        scrollTong.style["overflow-x"] = "scroll";
+        scrollTong.style["overflow-y"] = "hidden";
+      }
   
       createNode({
         mother: nameTong,
@@ -3496,6 +3417,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
           width: String((unitBoxWidth * 2) * baseMatrix.length) + ea,
           height: String(dateBoxHeight) + ea,
           zIndex: String(2),
+          transition: "all 0.3s ease",
         }
       });
       num = 0;
@@ -3508,7 +3430,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
             width: String(unitBoxWidth) + ea,
             marginRight: String(day === "금" ? 0 : unitBetween) + ea,
             height: withOut(0, ea),
-            background: colorChip.gray0,
+            background: desktop ? colorChip.gray0 : colorChip.white,
             borderRadius: String(2) + "px",
             justifyContent: "center",
             alignItems: "center",
@@ -3529,30 +3451,31 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
         if (dateToString(dateObject) === dateToString(new Date())) {
           createNode({
             mother: thisDateBox,
+            class: [ todayLineClassName ],
             style: {
               display: "flex",
               position: "absolute",
               top: String(todayLineTop) + ea,
               width: String(todayLineWidth) + ea,
               left: String((unitBoxWidth / 2) - (todayLineWidth / 2)) + ea,
-              height: String((dateBoxHeight + factorDateBoxPaddingTop) + ((factorDateBoxPaddingTop + factorDateBoxPaddingTop + factorDateBoxHeight + 2) * currentTargets.length) - factorDateBoxPaddingTop + Math.abs(todayLineTop)) + ea,
-              borderTop: "1px solid " + colorChip.green,
-              borderBottom: "1px solid " + colorChip.green,
+              height: desktop ? String((dateBoxHeight + factorDateBoxPaddingTop) + ((factorDateBoxPaddingTop + factorDateBoxPaddingTop + factorDateBoxHeight + 2) * currentTargets.length) - factorDateBoxPaddingTop + Math.abs(todayLineTop)) + ea : "calc(calc(" + String(dateBoxHeight + factorDateBoxPaddingTop) + ea + " + " + "calc(calc(" + String(factorDateBoxPaddingTop + factorDateBoxPaddingTop + factorDateBoxHeight) + ea + " + 2px) * " + String(currentTargets.length) + ")" + ") + " + "calc(" + String(Math.abs(todayLineTop) - factorDateBoxPaddingTop) + ea + ")" + ")",
+              borderTop: "1px solid " + colorChip.yellow,
+              borderBottom: "1px solid " + colorChip.yellow,
               boxSizing: "border-box",
               justifyContent: "center",
               alignItems: "center",
+              transition: "all 0.3s ease",
             },
             child: {
               style: {
                 position: "relative",
                 width: String(0),
                 height: withOut(0, ea),
-                borderRight: "1px solid " + colorChip.green,
+                borderRight: "1px solid " + colorChip.yellow,
               }
             }
           });
         }
-  
   
         previousDate = new Date(JSON.stringify(dateObject).slice(1, -1));
         previousDate.setDate(previousDate.getDate() - 1);
@@ -3605,6 +3528,12 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
       num = 0;
       for (let project of currentTargets) {
   
+        if ((new RegExp(FRONTHOST.split("//")[1], "gi")).test(window.location.host)) {
+          iframeSrc = FRONTHOST + "/designer/process.php?proid=" + project.proid + "&only=status" + (desktop ? "" : "&onlymode=mobile");
+        } else {
+          iframeSrc = "/middle/processDetail?proid=" + project.proid + "&only=status" + (desktop ? "" : "&onlymode=mobile");
+        }
+
         createNode({
           mother: nameTong,
           class: [ nameTypeClassName ],
@@ -3614,10 +3543,14 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
           },
           event: {
             mouseenter: function (e) {
-              this.firstChild.style.color = colorChip.green;
+              if (desktop) {
+                this.firstChild.style.color = colorChip.green;
+              }
             },
             mouseleave: function (e) {
-              this.firstChild.style.color = colorChip.black;
+              if (desktop) {
+                this.firstChild.style.color = colorChip.black;
+              }
             },
             click: function (e) {
               const proid = this.getAttribute("proid");
@@ -3635,6 +3568,14 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
                 target0.setAttribute("toggle", "off");
                 target1.setAttribute("toggle", "off");
               }
+
+              target1.querySelector("iframe").contentWindow.document.querySelector("html").style.zoom = String(zoom);
+
+              if ([ ...document.querySelectorAll('.' + nameBlankTypeClassName) ].every((dom) => { return dom.getAttribute("toggle") === "off" })) {
+                document.querySelector("." + todayLineClassName).style.opacity = String(1);
+              } else {
+                document.querySelector("." + todayLineClassName).style.opacity = String(0);
+              }
             },
           },
           style: {
@@ -3648,7 +3589,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
             cursor: "pointer",
           },
           child: {
-            text: project.name + "<b% - " + project.process.status + "%b>",
+            text: desktop ? project.name + "<b% - " + project.process.status + "%b>" : project.name,
             style: {
               position: "relative",
               top: String(textTop) + ea,
@@ -3677,6 +3618,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
             width: String((unitBoxWidth * 2) * baseMatrix.length) + ea,
             paddingTop: String(factorDateBoxPaddingTop) + ea,
             height: String(factorDateBoxHeight) + ea,
+            transition: "all 0.3s ease",
           }
         });
   
@@ -3699,9 +3641,10 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
             marginTop: String(factorDateBoxPaddingTop) + ea,
             overflow: "hidden",
             opacity: String(0),
+            transition: "all 0.3s ease",
           },
         });
-        createNode({
+        iframeBase = createNode({
           mother: scrollTong,
           class: [ statusTypeClassName ],
           attribute: {
@@ -3719,10 +3662,11 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
             boxSizing: "border-box",
             marginTop: String(factorDateBoxPaddingTop) + ea,
             overflow: "hidden",
+            transition: "all 0.3s ease",
           },
           child: {
             mode: "iframe",
-            attribute: { src: "/middle/processDetail?proid=" + project.proid + "&only=status" },
+            attribute: { src: iframeSrc },
             style: {
               position: "absolute",
               display: "block",
@@ -3734,6 +3678,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
             }
           }
         });
+        iframeBase.querySelector("iframe").contentWindow.document.querySelector("html").style.zoom = String(zoom);
   
         for (let { day, dateObject } of baseMatrix) {
   

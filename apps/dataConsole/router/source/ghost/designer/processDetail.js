@@ -260,7 +260,7 @@ ProcessDetailJs.prototype.insertNumbersBox = function () {
   let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
+  margin = <%% 55, 55, 47, 39, 4 %%>;
   paddingTop = <%% 44, 44, 36, 28, 5.4 %%>;
 
   whiteBottomMargin = <%% 46, 46, 38, 30, 5.6 %%>;
@@ -10537,7 +10537,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
+  margin = <%% 55, 55, 47, 39, 4 %%>;
   paddingTop = <%% 44, 44, 36, 28, 5.4 %%>;
 
   whiteBottomMargin = <%% 46, 46, 46, 38, 5.6 %%>;
@@ -11654,7 +11654,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
   let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
+  margin = <%% 55, 55, 47, 39, 4 %%>;
   paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
   whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
@@ -12056,7 +12056,7 @@ ProcessDetailJs.prototype.insertMeetingBackBox = function () {
   let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
+  margin = <%% 55, 55, 47, 39, 4 %%>;
   paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
   whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
@@ -12479,7 +12479,7 @@ ProcessDetailJs.prototype.insertPayFirstBox = function () {
   let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
+  margin = <%% 55, 55, 47, 39, 4 %%>;
   paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
   whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
@@ -12915,7 +12915,7 @@ ProcessDetailJs.prototype.insertPayRemainBox = function () {
   let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
+  margin = <%% 55, 55, 47, 39, 4 %%>;
   paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
   whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
@@ -13351,7 +13351,7 @@ ProcessDetailJs.prototype.insertContractConfirmBox = function () {
   let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
+  margin = <%% 55, 55, 47, 39, 4 %%>;
   paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
   whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
@@ -13803,7 +13803,7 @@ ProcessDetailJs.prototype.insertContractStartBox = function () {
   let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
+  margin = <%% 55, 55, 47, 39, 4 %%>;
   paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
   whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
@@ -14255,7 +14255,7 @@ ProcessDetailJs.prototype.insertScheduleStartBox = function () {
   let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
+  margin = <%% 55, 55, 47, 39, 4 %%>;
   paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
   whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
@@ -14714,7 +14714,7 @@ ProcessDetailJs.prototype.insertScheduleAboutBox = function () {
   let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
+  margin = <%% 55, 55, 47, 39, 4 %%>;
   paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
   whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
@@ -15222,7 +15222,7 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function (feedback = false) {
   let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
+  margin = <%% 55, 55, 47, 39, 4 %%>;
   paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
   whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
@@ -15656,20 +15656,15 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function (feedback = false) {
 ProcessDetailJs.prototype.insertFormStatusBox = async function () {
   const instance = this;
   const mother = this.mother;
-  const { ea, baseTong, media, client, project, onlyMode } = this;
+  const { baseTong, media, client, project, onlyMode } = this;
   const { proid, desid } = project;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const big = (media[0] || media[1] || media[2]);
-  const small = !big;
-  const veryBig = (media[0] || media[1]);
-  const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing, removeByClass, equalJson, homeliaisonAnalytics } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing, removeByClass, equalJson, homeliaisonAnalytics, returnGet } = GeneralJs;
   const siblingKeywords = "siblingKeywords__";
   const valueBlockClassName = "valueBlockClassName__";
   const blockContextMenuClassName = "blockContextMenuClassName__";
   const svgArrowColorTargetClassName = "svgArrowColorTargetClassName__";
   try {
+    let ea, desktop, mobile, big, veryBig, generalSmall;
     let margin;
     let paddingTop;
     let whiteBottomMargin;
@@ -15757,132 +15752,267 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     let mainClickEvent, mainContextEvent;
     let detailArrowAreaWidth, detailArrowWidth;
     let detailArrowVisualTop;
+    let statusMode;
 
-    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-    margin = <%% 55, 55, 47, 39, 6 %%>;
-    paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
+    statusMode = (onlyMode === "status" && returnGet().onlymode !== "mobile");
+
+    if (!statusMode) {
+      ea = this.ea;
+      mobile = media[4];
+      desktop = !mobile;
+      big = (media[0] || media[1] || media[2]);
+      small = !big;
+      veryBig = (media[0] || media[1]);
+      generalSmall = !veryBig;
+
+      bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+      margin = <%% 55, 55, 47, 39, 4 %%>;
+      paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
   
-    if (onlyMode === "status") {
+      whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
+    
+      titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+    
+      bigTextSize = <%% 36, 36, 36, 36, 4.2 %%>;
+      bigTextWeight = <%% 100, 100, 100, 100, 100 %%>;
+      bigTextTextTop = <%% (isMac() ? -7 : -5), (isMac() ? -7 : -5), -7, -7, -1 %%>;
+    
+      veryBigSize = <%% 23, 21, 20, 16, 4.4 %%>;
+      veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
+      veryBigTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 0), -1 %%>;
+    
+      innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+    
+      textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+      smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
+    
+      textSize = <%% 14, 14, 13, 12, 3 %%>;
+      textWeight = <%% 700, 700, 700, 700, 700 %%>;
+      textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
+    
+      whitePadding = <%% 12, 12, 8, 8, 2.2 %%>;
+    
+      blockBetween = <%% 36, 28, 26, 24, 5 %%>;
+      blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
+      blockHeight = <%% 36, 36, 32, 26, 4 %%>;
+    
+      lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
+    
+      firstWidth = <%% 298, 230, 213, 142, 300 %%>;
+    
+      panWidth = <%% 20, 20, 20, 20, 2 %%>;
+      panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
+    
+      circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
+      circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
+      circleLeft = <%% -7, -7, -7, -5, -0.8 %%>;
+    
+      arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
+      arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
+    
+      subButtonWidth = <%% 90, 72, 72, 64, 16 %%>;
+    
+      mobileVisualPaddingValue = 0.2;
+    
+      thirdWidth = <%% 240, 0, 0, 0, 0 %%>;
+    
+      imageBoxVisualPaddingBottom = <%% 4, 2, 2, 2, 0 %%>;
+      imageBetween = <%% 32, 16, 12, 12, 6 %%>;
+      panBoxBetween = <%% 12, 32, 26, 24, 12 %%>;
+    
+      wordingPaddingTop0 = <%% 300, 213, 213, 213, 213 %%>;
+      wordingPaddingTop1 = <%% 309, 243, 243, 243, 243 %%>;
+    
+      wordingBoxWidth = <%% 175, 185, 175, 115, 175 %%>;
+    
+      contentsTongPaddingBottom = <%% 15, 15, 15, 15, 5 %%>;
+      panBetween = <%% 28, 28, 24, 20, 2 %%>;
+    
+      panHeight = <%% 42, 42, 40, 36, 8.2 %%>;
+      panInnerMargin = <%% 4, 4, 4, 3, 0.5 %%>;
+    
+      panCheckBoxWidth = <%% 24, 24, 20, 20, 5 %%>;
+      checkBoxWidth = <%% 10, 10, 9, 9, 1.8 %%>;
+    
+      panWhitePaddingLeft = <%% 13, 14, 14, 14, 2.5 %%>; 
+      panBlockBetween = <%% 5, 4, 4, 4, 0.8 %%>; 
+      panBlockBigBetween = <%% 5, 4, 4, 4, 0.8 %%>; 
+    
+      buttonWidth = <%% 100, 80, 70, 60, 24 %%>;
+      buttonHeight = <%% 36, 28, 26, 24, 8.2 %%>;
+    
+      buttonSize = <%% 15, 13, 12, 11, 3.5 %%>;
+      buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
+      buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+    
+      panPaddingTop = <%% 22, 16, 14, 14, 3 %%>;
+    
+      panTitleSize = <%% 16, 15, 14, 13, 3.2 %%>;
+      panTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+    
+      formPanBaseMarginBottom = <%% 12, 8, 6, 6, 4 %%>;
+    
+      blockTextSize = <%% 13, 13, 12, 11, 2.7 %%>;
+      blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
+    
+      barBaseHeight = <%% 40, 36, 32, 28, 6.8 %%>;
+      barFirstWidth = <%% 70, 60, 50, 42, 14 %%>;
+      barFactorHeight = <%% 20, 20, 18, 16, 5 %%>;
+      barFactorBetween = <%% 0, 0, 0, 0, 0 %%>;
+  
+      barArrBasePaddingTop = <%% 38, 36, 32, 26, 8 %%>;
+      barArrBaseMarginTop = <%% 48, 46, 40, 32, 9.5 %%>;
+  
+      barArrTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+  
+      percentageSize = <%% 20, 20, 17, 14, 6.2 %%>;
+      percentageTextTop = <%% -1, -1, -1, -1, 0 %%>;
+  
+      blackButtonWidth = <%% 132, 122, 114, 104, 28 %%>;
+      blackButtonHeight = <%% 34, 30, 28, 26, 7 %%>;
+      blackButtonBetween = <%% 4, 4, 3, 2, 1 %%>;
+      blackButtonMargin = <%% 6, 6, 5, 4, 1.2 %%>;
+      blackButtonSize = <%% 13, 12, 11, 10, 2.8 %%>;
+      blackButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
+      blackButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+  
+      detailArrowAreaWidth = <%% 28, 28, 28, 28, 6 %%>;
+      detailArrowVisualTop = <%% 0.5, 0.5, 0.5, 0.5, 0 %%>;
+      detailArrowWidth = <%% 8, 8, 7, 7, 1.8 %%>;
+
+    } else {
+      ea = "px";
+      mobile = false;
+      desktop = true;
+      big = true;
+      small = !big;
+      veryBig = true;
+      generalSmall = !veryBig;
+
+      bottomMargin = <%% 16, 16, 16, 12, 10 %%>;
+      margin = <%% 55, 55, 47, 39, 32 %%>;
+      paddingTop = <%% 44, 44, 36, 34, 28 %%>;
       margin = margin * 0.6;
       paddingTop = paddingTop * 0.6;
+  
+      whiteBottomMargin = <%% 52, 47, 39, 36, 36 %%>;
+    
+      titleFontSize = <%% 21, 21, 19, 17, 17 %%>;
+    
+      bigTextSize = <%% 36, 36, 36, 36, 36 %%>;
+      bigTextWeight = <%% 100, 100, 100, 100, 100 %%>;
+      bigTextTextTop = <%% (isMac() ? -7 : -5), (isMac() ? -7 : -5), -7, -7, -7 %%>;
+    
+      veryBigSize = <%% 23, 21, 20, 16, 16 %%>;
+      veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
+      veryBigTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 0), -1 %%>;
+    
+      innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+    
+      textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
+      smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1) %%>;
+    
+      textSize = <%% 14, 14, 13, 12, 12 %%>;
+      textWeight = <%% 700, 700, 700, 700, 700 %%>;
+      textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
+    
+      whitePadding = <%% 12, 12, 8, 8, 8 %%>;
+    
+      blockBetween = <%% 36, 28, 26, 24, 24 %%>;
+      blockBetweenBottom = <%% 10, 4, 4, 4, 4 %%>;
+      blockHeight = <%% 36, 36, 32, 26, 26 %%>;
+    
+      lineTop = <%% 18, 18, 16, 13, 13 %%>;
+    
+      firstWidth = <%% 298, 230, 213, 142, 300 %%>;
+    
+      panWidth = <%% 20, 20, 20, 20, 20 %%>;
+      panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
+    
+      circleWidth = <%% 5, 5, 5, 4, 4 %%>;
+      circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3) %%>;
+      circleLeft = <%% -7, -7, -7, -5, -5 %%>;
+    
+      arrowWidth = <%% 18, 16, 15, 14, 13 %%>;
+      arrowHeight = <%% 8, 8, 8, 7, 6 %%>;
+    
+      subButtonWidth = <%% 90, 72, 72, 64, 64 %%>;
+    
+      mobileVisualPaddingValue = 0.2;
+    
+      thirdWidth = <%% 240, 0, 0, 0, 0 %%>;
+    
+      imageBoxVisualPaddingBottom = <%% 4, 2, 2, 2, 2 %%>;
+      imageBetween = <%% 32, 16, 12, 12, 12 %%>;
+      panBoxBetween = <%% 12, 32, 26, 24, 24 %%>;
+    
+      wordingPaddingTop0 = <%% 300, 213, 213, 213, 213 %%>;
+      wordingPaddingTop1 = <%% 309, 243, 243, 243, 243 %%>;
+    
+      wordingBoxWidth = <%% 175, 185, 175, 115, 115 %%>;
+    
+      contentsTongPaddingBottom = <%% 15, 15, 15, 15, 15 %%>;
+      panBetween = <%% 28, 28, 20, 16, 10 %%>;
+    
+      panHeight = <%% 42, 42, 40, 36, 32 %%>;
+      panInnerMargin = <%% 4, 4, 4, 3, 2 %%>;
+    
+      panCheckBoxWidth = <%% 24, 24, 20, 20, 20 %%>;
+      checkBoxWidth = <%% 10, 10, 9, 9, 8 %%>;
+
+      panWhitePaddingLeft = <%% 13, 13, 12, 11, 8 %%>; 
+      panBlockBetween = <%% 5, 4, 4, 4, 4 %%>; 
+      panBlockBigBetween = <%% 5, 4, 4, 4, 4 %%>; 
+    
+      buttonWidth = <%% 100, 80, 70, 60, 60 %%>;
+      buttonHeight = <%% 36, 28, 26, 24, 24 %%>;
+    
+      buttonSize = <%% 15, 13, 12, 11, 11 %%>;
+      buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
+      buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
+    
+      panPaddingTop = <%% 22, 16, 14, 14, 14 %%>;
+    
+      panTitleSize = <%% 16, 15, 14, 13, 13 %%>;
+      panTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+    
+      formPanBaseMarginBottom = <%% 12, 8, 6, 6, 6 %%>;
+    
+      blockTextSize = <%% 14, 13, 12, 11, 11 %%>;
+      blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
+    
+      barBaseHeight = <%% 40, 36, 32, 28, 28 %%>;
+      barFirstWidth = <%% 70, 60, 50, 42, 42 %%>;
+      barFactorHeight = <%% 20, 20, 18, 16, 16 %%>;
+      barFactorBetween = <%% 0, 0, 0, 0, 0 %%>;
+  
+      barArrBasePaddingTop = <%% 38, 36, 32, 26, 26 %%>;
+      barArrBaseMarginTop = <%% 48, 46, 40, 32, 32 %%>;
+  
+      barArrTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2) %%>;
+  
+      percentageSize = <%% 20, 20, 17, 14, 14 %%>;
+      percentageTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  
+      blackButtonWidth = <%% 132, 122, 114, 104, 104 %%>;
+      blackButtonHeight = <%% 34, 30, 28, 26, 26 %%>;
+      blackButtonBetween = <%% 4, 4, 3, 2, 2 %%>;
+      blackButtonMargin = <%% 6, 6, 5, 4, 4 %%>;
+      blackButtonSize = <%% 13, 12, 11, 10, 10 %%>;
+      blackButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
+      blackButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
+  
+      detailArrowAreaWidth = <%% 28, 28, 28, 26, 22 %%>;
+      detailArrowVisualTop = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
+      detailArrowWidth = <%% 8, 8, 7, 7, 6 %%>;
+
     }
-
-    whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
-  
-    titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
-  
-    bigTextSize = <%% 36, 36, 36, 36, 4.4 %%>;
-    bigTextWeight = <%% 100, 100, 100, 100, 100 %%>;
-    bigTextTextTop = <%% (isMac() ? -7 : -5), (isMac() ? -7 : -5), -7, -7, -1 %%>;
-  
-    veryBigSize = <%% 23, 21, 20, 16, 4.4 %%>;
-    veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
-    veryBigTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 0), -1 %%>;
-  
-    innerMargin = <%% 0, 0, 0, 0, 1 %%>;
-  
-    textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
-    smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
-  
-    textSize = <%% 14, 14, 13, 12, 3.2 %%>;
-    textWeight = <%% 700, 700, 700, 700, 700 %%>;
-    textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
-  
-    whitePadding = <%% 12, 12, 8, 8, 2.2 %%>;
-  
-    blockBetween = <%% 36, 28, 26, 24, 5 %%>;
-    blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
-    blockHeight = <%% 36, 36, 32, 26, 4 %%>;
-  
-    lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
-  
-    firstWidth = <%% 298, 230, 213, 142, 300 %%>;
-  
-    panWidth = <%% 20, 20, 20, 20, 2 %%>;
-    panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
-  
-    circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
-    circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
-    circleLeft = <%% -7, -7, -7, -5, -0.8 %%>;
-  
-    arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
-    arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
-  
-    subButtonWidth = <%% 90, 72, 72, 64, 16 %%>;
-  
-    mobileVisualPaddingValue = 0.2;
-  
-    thirdWidth = <%% 240, 0, 0, 0, 0 %%>;
-  
-    imageBoxVisualPaddingBottom = <%% 4, 2, 2, 2, 0 %%>;
-    imageBetween = <%% 32, 16, 12, 12, 6 %%>;
-    panBoxBetween = <%% 12, 32, 26, 24, 12 %%>;
-  
-    wordingPaddingTop0 = <%% 300, 213, 213, 213, 213 %%>;
-    wordingPaddingTop1 = <%% 309, 243, 243, 243, 243 %%>;
-  
-    wordingBoxWidth = <%% 175, 185, 175, 115, 175 %%>;
-  
-    contentsTongPaddingBottom = <%% 15, 15, 15, 15, 5 %%>;
-    panBetween = <%% 28, 28, 24, 20, 2 %%>;
-  
-    panHeight = <%% 48, 48, 45, 42, 11 %%>;
-    panInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
-  
-    panCheckBoxWidth = <%% 28, 24, 20, 20, 8 %%>;
-    checkBoxWidth = <%% 12, 11, 9, 9, 3 %%>;
-  
-    panWhitePaddingLeft = <%% 13, 14, 14, 14, 3.5 %%>; 
-    panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
-    panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
-  
-    buttonWidth = <%% 100, 80, 70, 60, 24 %%>;
-    buttonHeight = <%% 36, 28, 26, 24, 8.2 %%>;
-  
-    buttonSize = <%% 15, 13, 12, 11, 3.5 %%>;
-    buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
-    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
-  
-    panPaddingTop = <%% 22, 16, 14, 14, 4 %%>;
-  
-    panTitleSize = <%% 16, 15, 14, 13, 3.8 %%>;
-    panTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  
-    formPanBaseMarginBottom = <%% 12, 8, 6, 6, 4 %%>;
-  
-    blockTextSize = <%% 14, 13, 12, 11, 3.2 %%>;
-    blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
-  
-    barBaseHeight = <%% 40, 36, 32, 28, 6.8 %%>;
-    barFirstWidth = <%% 70, 60, 50, 42, 14 %%>;
-    barFactorHeight = <%% 20, 20, 18, 16, 5 %%>;
-    barFactorBetween = <%% 0, 0, 0, 0, 0 %%>;
-
-    barArrBasePaddingTop = <%% 38, 36, 32, 26, 8 %%>;
-    barArrBaseMarginTop = <%% 48, 46, 40, 32, 9.5 %%>;
-
-    barArrTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
-
-    percentageSize = <%% 20, 20, 17, 14, 7.5 %%>;
-    percentageTextTop = <%% -1, -1, -1, -1, 0 %%>;
-
-    blackButtonWidth = <%% 132, 122, 114, 104, 28 %%>;
-    blackButtonHeight = <%% 34, 30, 28, 26, 7 %%>;
-    blackButtonBetween = <%% 4, 4, 3, 2, 1 %%>;
-    blackButtonMargin = <%% 6, 6, 5, 4, 1.2 %%>;
-    blackButtonSize = <%% 13, 12, 11, 10, 2.8 %%>;
-    blackButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
-    blackButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
-
-    detailArrowAreaWidth = <%% 28, 28, 28, 28, 6 %%>;
-    detailArrowVisualTop = <%% 0.5, 0.5, 0.5, 0.5, 0 %%>;
-    detailArrowWidth = <%% 8, 8, 7, 7, 2 %%>;
 
     thisForm = await ajaxJson({ mode: "get", proid, desid }, SECONDHOST + "/projectDesignerStatus", { equal: true });
   
     contents = {
       title: [
-        project.name + "님은 현재",
+        project.name + "님은",
         "어느 단계인가요?"
       ],
       description: [
@@ -16105,7 +16235,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                         }
                       }
                       siblings[i].style.background = colorChip.whiteGreen;
-                      siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.green);
+                      siblings[i].children[0].children[0].children[1].style.opacity = String(1);
                       siblings[i].children[1].children[0].style.color = colorChip.softGreen;
                       siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.softGreen;
                       siblings[i].setAttribute("toggle", "on");
@@ -16113,8 +16243,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                       siblings[i].setAttribute("red", "off");
                     }
                   } else if (i === thisIndex) {
-                    siblings[i].style.background = colorChip.gradientGreen;
-                    siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                    siblings[i].style.background = colorChip.softGreen;
+                    siblings[i].children[0].children[0].children[1].style.opacity = String(1);
                     siblings[i].children[1].children[0].style.color = colorChip.black;
                     siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.green;
                     siblings[i].setAttribute("toggle", "on");
@@ -16122,7 +16252,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                     siblings[i].setAttribute("red", "off");
                   } else {
                     siblings[i].style.background = colorChip.gray1;
-                    siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                    siblings[i].children[0].children[0].children[1].style.opacity = String(0);
                     siblings[i].children[1].children[0].style.color = colorChip.deactive;
                     siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
                     siblings[i].setAttribute("toggle", "off");
@@ -16134,7 +16264,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
               } else {
 
                 siblings[thisIndex].style.background = colorChip.whiteGreen;
-                siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.green);
+                siblings[thisIndex].children[0].children[0].children[1].style.opacity = String(1);
                 siblings[thisIndex].children[1].children[0].style.color = colorChip.softGreen;
                 siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.softGreen;
                 siblings[thisIndex].setAttribute("toggle", "on");
@@ -16153,7 +16283,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                 if (siblings[thisIndex - 1] === undefined) {
 
                   siblings[thisIndex].style.background = colorChip.gray1;
-                  siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                  siblings[thisIndex].children[0].children[0].children[1].style.opacity = String(0);
                   siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
                   siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
                   siblings[thisIndex].setAttribute("toggle", "off");
@@ -16165,15 +16295,15 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                   if (siblings[thisIndex - 1].getAttribute("middle") === "on") {
 
                     siblings[thisIndex].style.background = colorChip.gray1;
-                    siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                    siblings[thisIndex].children[0].children[0].children[1].style.opacity = String(0);
                     siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
                     siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
                     siblings[thisIndex].setAttribute("toggle", "off");
                     siblings[thisIndex].setAttribute("middle", "off");
                     siblings[thisIndex].setAttribute("red", "off");
 
-                    siblings[thisIndex - 1].style.background = colorChip.gradientGreen;
-                    siblings[thisIndex - 1].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                    siblings[thisIndex - 1].style.background = colorChip.softGreen;
+                    siblings[thisIndex - 1].children[0].children[0].children[1].style.opacity = String(1);
                     siblings[thisIndex - 1].children[1].children[0].style.color = colorChip.black;
                     siblings[thisIndex - 1].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.green;
                     siblings[thisIndex - 1].setAttribute("toggle", "on");
@@ -16183,7 +16313,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                   } else {
 
                     siblings[thisIndex].style.background = colorChip.gray1;
-                    siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                    siblings[thisIndex].children[0].children[0].children[1].style.opacity = String(0);
                     siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
                     siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
                     siblings[thisIndex].setAttribute("toggle", "off");
@@ -16202,8 +16332,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                       if (i < finalIndex) {
                         // pass
                       } else if (i === finalIndex) {
-                        siblings[i].style.background = colorChip.gradientGreen;
-                        siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                        siblings[i].style.background = colorChip.softGreen;
+                        siblings[i].children[0].children[0].children[1].style.opacity = String(1);
                         siblings[i].children[1].children[0].style.color = colorChip.black;
                         siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.green;
                         siblings[i].setAttribute("toggle", "on");
@@ -16211,7 +16341,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                         siblings[i].setAttribute("red", "off");
                       } else {
                         siblings[i].style.background = colorChip.gray1;
-                        siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                        siblings[i].children[0].children[0].children[1].style.opacity = String(0);
                         siblings[i].children[1].children[0].style.color = colorChip.deactive;
                         siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
                         siblings[i].setAttribute("toggle", "off");
@@ -16225,7 +16355,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
 
               } else {
                 siblings[thisIndex].style.background = colorChip.gray1;
-                siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.red);
+                siblings[thisIndex].children[0].children[0].children[1].style.opacity = String(0);
                 siblings[thisIndex].children[1].children[0].style.color = colorChip.red;
                 siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.red;
                 siblings[thisIndex].setAttribute("toggle", "off");
@@ -16345,8 +16475,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                 display: "inline-block",
                 position: "absolute",
                 top: String(e.clientY - formPanBase.getBoundingClientRect().top) + "px",
-                left: desktop ? String(e.clientX - formPanBase.getBoundingClientRect().left) + "px" : "",
-                right: desktop ? "" : String(0) + "px",
+                left: desktop ? String(e.clientX - formPanBase.getBoundingClientRect().left) + "px" : "calc(" + String(e.clientX - formPanBase.getBoundingClientRect().left) + "px" + " - " + String(blackButtonWidth) + ea + ")",
                 width: String(blackButtonWidth) + ea,
                 background: colorChip.white,
                 borderRadius: String(5) + "px",
@@ -16502,7 +16631,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
         borderRadius: String(desktop ? 8 : 1) + ea,
         width: String(100) + '%',
         background: onlyMode === "status" ? "" : colorChip.white,
-        paddingTop: String(paddingTop) + ea,
+        paddingTop: returnGet().onlymode === "mobile" ? "" : String(paddingTop) + ea,
         paddingBottom: String(desktop ? whiteBottomMargin - blockBetweenBottom : 6.6) + ea,
         marginBottom: String(bottomMargin) + ea,
         boxShadow: onlyMode === "status" ? "" : "0px 5px 12px -10px " + colorChip.gray5,
@@ -16524,7 +16653,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
       style: {
         display: "block",
         position: "relative",
-        paddingTop: String(innerMargin) + ea,
+        paddingTop: returnGet().onlymode === "mobile" ? "" : String(innerMargin) + ea,
         paddingBottom: String(desktop ? innerMargin : 0) + ea,
         paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
         paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
@@ -16599,7 +16728,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     clock = createNode({
       mother: contentsTong,
       style: {
-        display: "flex",
+        display: returnGet().onlymode === "mobile" ? "none" : "flex",
         position: "relative",
         flexDirection: "row",
         width: withOut(0),
@@ -16688,28 +16817,28 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
       barArrBase = createNode({
         mother: contentsTong,
         style: {
-          display: "flex",
+          display: returnGet().onlymode === "mobile" ? "none" : "flex",
           position: "relative",
           flexDirection: "column",
           width: withOut(0),
           justifyContent: "start",
           alignItems: "start",
-          paddingBottom: String(11) + ea,
+          paddingBottom: String(9) + ea,
         }
       });
 
       formPanBase = createNode({
         mother: contentsTong,
         style: {
-          display: (media[0] || media[4] ? "flex" : "block"),
+          display: "block",
           position: "relative",
           flexDirection: desktop ? "row" : "column",
           width: withOut(0),
           justifyContent: "start",
           alignItems: "start",
-          paddingBottom: desktop ? "" : String(18) + ea,
-          borderTop: "1px dashed " + colorChip.gray3,
-          paddingTop: String(2) + ea,
+          paddingBottom: desktop ? "" : String(15) + ea,
+          borderTop: returnGet().onlymode === "mobile" ? "" : "1px dashed " + colorChip.gray3,
+          paddingTop: returnGet().onlymode === "mobile" ? "" : String(2) + ea,
         },
       });
 
@@ -16728,8 +16857,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
             display: "inline-flex",
             position: "relative",
             flexDirection: "column",
-            width: desktop ? ((media[0] || onlyMode === "status") ? "calc(calc(100% - " + String(panBetween * (thisForm.length - 1)) + ea + ") / " + String(thisForm.length) + ")" : "calc(calc(100% - " + String(panBetween * ((thisForm.length / 2) - 1)) + ea + ") / " + String(thisForm.length / 2) + ")") : withOut(0, ea),
-            marginRight: desktop ? ((media[0] || onlyMode === "status") ? (i === thisForm.length - 1 ? "" : String(panBetween) + ea) : (i === thisForm.length - 1 || i === (thisForm.length / 2) - 1 ? "" : String(panBetween) + ea)) : "",
+            width: (media[0] || statusMode) ? "calc(calc(100% - " + String(panBetween * (thisForm.length - 1)) + ea + ") / " + String(thisForm.length) + ")" : "calc(calc(100% - " + String(panBetween * ((thisForm.length / 2) - 1)) + ea + ") / " + String(thisForm.length / 2) + ")",
+            marginRight: (media[0] || statusMode) ? (i === thisForm.length - 1 ? "" : String(panBetween) + ea) : (i === thisForm.length - 1 || i === (thisForm.length / 2) - 1 ? "" : String(panBetween) + ea),
             paddingTop: String(panPaddingTop) + ea,
             verticalAlign: "top",
           }
