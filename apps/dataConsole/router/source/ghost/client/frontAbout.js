@@ -270,6 +270,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   let pictureTong;
   let pictureBetween;
   let pictureTongPaddingTop;
+  let subDescriptionColorBoxHeight;
 
   blockHeight = <%% 383, 316, 273, 226, 129.5 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -340,8 +341,10 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
 
   grayBoxImageVisualWidth = <%% 16, 4, 0, 0, 19 %%>;
 
-  pictureBetween = <%% 4, 4, 3, 2, 1 %%>;
+  pictureBetween = <%% 2, 2, 1, 1, 1 %%>;
   pictureTongPaddingTop = <%% 44, 44, 36, 28, 52 %%>;
+
+  subDescriptionColorBoxHeight = <%% 40, 40, 36, 32, 2 %%>;
 
   grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
   grayDownWordings = [ "비용 구성", "시공 비용", "구매 비용", "디자인비" ];
@@ -445,9 +448,9 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
       display: "inline-flex",
       position: "relative",
       width: "calc(calc(100% - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
-      height: String(45) + ea,
+      height: String(subDescriptionColorBoxHeight) + ea,
       borderRadius: String(5) + "px",
-      background: colorChip.gradientBlack,
+      background: colorChip.gray2,
       marginRight: String(pictureBetween) + ea,
       marginBottom: String(pictureBetween) + ea,
       justifyContent: "center",
@@ -461,7 +464,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
         position: "relative",
         fontSize: String(descriptionSize) + ea,
         fontWeight: String(800),
-        color: colorChip.white,
+        color: colorChip.black,
       }
     }
   });
@@ -472,19 +475,24 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
       display: "inline-flex",
       position: "relative",
       width: "calc(calc(calc(100% - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(2) + ") + " + String(pictureBetween) + ea + ")",
-      height: String(45) + ea,
+      height: String(subDescriptionColorBoxHeight) + ea,
       borderRadius: String(5) + "px",
-      background: colorChip.shadow,
+      background: colorChip.gray1,
       marginRight: String(pictureBetween) + ea,
       marginBottom: String(pictureBetween) + ea,
       justifyContent: "center",
       alignItems: "center",
       verticalAlign: "top",
     },
-    // child: {
-    //   mode: "svg",
-    //   source: svgMaker.horizontalArrow()
-    // }
+    child: {
+      mode: "svg",
+      source: svgMaker.horizontalArrow(496, 11, colorChip.gray3),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(496),
+      }
+    }
   });
 
   createNode({
@@ -493,7 +501,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
       display: "inline-flex",
       position: "relative",
       width: "calc(calc(100% - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
-      height: String(45) + ea,
+      height: String(subDescriptionColorBoxHeight) + ea,
       borderRadius: String(5) + "px",
       background: colorChip.gradientGreen,
       marginBottom: String(pictureBetween) + ea,
