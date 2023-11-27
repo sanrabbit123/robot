@@ -2312,6 +2312,11 @@ ProcessJs.prototype.baseMaker = function () {
     instance.clientDoms = [];
     instance.totalValues = [];
     for (let { designer, desid, projects } of newProjectsTong) {
+
+      if (projects.length === 0) {
+        continue;
+      }
+
       motherBlock = createNode({
         mother: grayTong,
         attribute: {
@@ -10118,9 +10123,10 @@ ProcessJs.prototype.searchProjects = function () {
         ajaxJson({ mode: "search", value: value.trim() }, BACKHOST + "/processConsole", { equal: true }).then((serverResponse) => {
           instance.reloadProjects(serverResponse);
           instance.contentsLoad(true);
-    
-          loading.remove();
-
+  
+          try {
+            loading.remove();
+          } catch {}
           if (instance.clientDoms.length === 1) {
             instance.clientDoms[0].click();
           }
@@ -11489,7 +11495,6 @@ ProcessJs.prototype.launching = async function () {
     history = Object.values(matrix[1]);
     clientHistory = Object.values(matrix[2]);
     secondRes = matrix[3];
-    designers = designers.filter((d) => { return /완료/gi.test(d.information.contract.status) })
 
     serverResponse = {
       projects,
