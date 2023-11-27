@@ -283,7 +283,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 22, 20, 19, 16, 3.8 %%>;
+  titleFont = <%% 22, 21, 19, 16, 3.8 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 800, 800, 800, 800, 800 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -350,17 +350,17 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   pictureBetween = <%% 2, 2, 1, 1, 1 %%>;
   pictureTongPaddingTop = <%% 44, 44, 36, 28, 52 %%>;
 
-  subDescriptionColorBoxHeight = <%% 38, 35, 28, 24, 2 %%>;
+  subDescriptionColorBoxHeight = <%% 38, 35, 30, 24, 2 %%>;
 
   titleBarWidth = <%% 5, 5, 4, 3, 5 %%>;
-  titleBarHeight = <%% 45, 40, 40, 40, 41 %%>;
+  titleBarHeight = <%% 45, 42, 38, 40, 41 %%>;
   titleBarMarginRight = <%% 14, 12, 12, 12, 14 %%>;
 
-  factorImageWidth = <%% 262, 195, 195, 180, 25 %%>;
+  factorImageWidth = <%% 262, 195, 167, 180, 25 %%>;
 
-  descriptionSizeInBox = <%% 14, 13, 12, 11, 3.3 %%>;
+  descriptionSizeInBox = <%% 14, 13, 11, 10, 3.3 %%>;
 
-  arrowWidth = <%% 496, 366, 366, 366, 366 %%>;
+  arrowWidth = <%% 496, 366, 308, 308, 366 %%>;
   arrowHeight = <%% 11, 11, 10, 10, 11 %%>;
 
   grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
@@ -668,7 +668,7 @@ FrontAboutJs.prototype.insertMainContentsBox = function () {
 
   middleTongPaddinngTop = <%% 138, 104, 92, 72, 10 %%>;
   middleTongPaddingBottom = <%% 190, 130, 100, 70, 12 %%>;
-  middleTitleMarginBottom = <%% 30, 30, 30, 30, 7.5 %%>;
+  middleTitleMarginBottom = <%% 30, 30, 50, 30, 7.5 %%>;
   middleTitleMarginBottom2 = <%% 122, 100, 84, 72, 10 %%>;
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
 
@@ -1113,7 +1113,6 @@ FrontAboutJs.prototype.insertMainContentsBox = function () {
 
 
   // box0
-
   whiteBlock0 = createNode({
     mother: baseTong,
     style: {
@@ -1141,8 +1140,17 @@ FrontAboutJs.prototype.insertMainContentsBox = function () {
       borderRadius: String(desktop ? 8 : 1) + ea,
       marginTop: String(whiteInjectionMarginTop) + ea,
     }
-  })
+  });
+  
   instance.insertRoleBox(whiteInjection);
+  GeneralJs.setQueue(() => {
+    if (media[1]) {
+      baseTong.style.marginBottom = String(150) + ea;
+    }
+    if (media[2]) {
+      baseTong.style.marginBottom = String(130) + ea;
+    }
+  })
 
   // white area ---------------------------------------------------------------------------------------------------
 
@@ -1933,7 +1941,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
 
   margin = <%% 52, 52, 44, 32, 6 %%>;
 
-  titleFont = <%% 22, 20, 19, 16, 3.8 %%>;
+  titleFont = <%% 22, 21, 20, 16, 3.8 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 800, 800, 800, 800, 800 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -1959,7 +1967,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
 
   contents1Columns = <%% 5, 5, 5, 5, 3 %%>;
 
-  contents1UpBoxWidth = <%% 232, 197, 225, 185, 88 %%>;
+  contents1UpBoxWidth = <%% 232, 197, 229, 185, 88 %%>;
   contents1UpBoxMargin = <%% 10, 8, 8, 7, 1 %%>;
   contents1UpBoxPaddingLeft = <%% 18, 16, 18, 12, 3.5 %%>;
   contents1UpBoxPaddingTop = <%% (isMac() ? 16 : 17), (isMac() ? 14 : 15), (isMac() ? 15 : 16), (isMac() ? 11 : 12), 3.5 %%>;
@@ -1993,7 +2001,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
   contentsMotherBoxMarginTop = <%% 64, 64, 42, 40, 7 %%>;
 
   titleBarWidth = <%% 5, 5, 4, 3, 5 %%>;
-  titleBarHeight = <%% 45, 41, 41, 41, 41 %%>;
+  titleBarHeight = <%% 45, 42, 38, 41, 41 %%>;
   titleBarMarginRight = <%% 14, 12, 12, 12, 14 %%>;
 
   descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
@@ -2054,7 +2062,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
   leftBox1 = createNode({
     mother: whiteBlock,
     style: {
-      display: big ? "inline-flex" : "none",
+      display: big ? "inline-flex" : "flex",
       position: "relative",
       width: big ? String(leftBoxWidth) + ea : String(100) + '%',
       verticalAlign: "top",
@@ -2064,7 +2072,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
     children: [
       {
         style: {
-          display: "inline-block",
+          display: big ? "inline-block" : "none",
           position: "relative",
           width: String(titleBarWidth) + ea,
           height: String(titleBarHeight) + ea,
@@ -2074,7 +2082,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
         }
       },
       {
-        text: <&& "디자이너 전면\n배치 모델" | "디자이너\n전면 배치" | "디자이너\n전면 배치" | "디자이너\n전면 배치" | "디자이너 전면 배치 모델" &&>,
+        text: <&& "디자이너 전면\n배치 모델" | "디자이너\n전면 배치" | "디자이너 전면 배치 모델" | "디자이너 전면 배치 모델" | "디자이너 전면 배치 모델" &&>,
         style: {
           display: "inline-block",
           position: "relative",
@@ -2086,6 +2094,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
           width: big ? "" : String(100) + '%',
           textAlign: desktop ? "" : "center",
           lineHeight: String(1.3),
+          textAlign: big ? "" : "center",
         }
       }
     ]
@@ -2099,16 +2108,19 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
       width: big ? withOut(leftBoxWidth, ea) : String(100) + '%',
       height: String(100) + '%',
       verticalAlign: "top",
-      textAlign: desktop ? "" : "center",
+      textAlign: big ? "" : "center",
     }
   });
 
   createNode({
     mother: rightBox1,
-    text: [
+    text: big ? [
       "홈리에종은 디자이너를 전면으로 내세워 디자인을 선행하여, 선 기획 후 시공의 방식으로 주거 인테리어를 다시 모델링하였습니다.",
-      "이러한 방식으로 진행하면 불필요한 시공을 막을 수 있고, 더 완성도 있는 모습으로 끝낼 수 있어 효율적이고 효과적인 주거 인테리어를 경험할 수 있습니다."
-    ].join(" "),
+      "이러한 방식으로 진행하면 불필요한 시공을 막을 수 있고, 더 완성도 있는 모습으로 끝낼 수 있어 효율적이고 효과적인 주거 인테리어를 경험할 수 있습니다.",
+    ].join(" ") : [
+      "홈리에종은 디자이너를 전면으로 내세워 디자인을 선행하여, 선 기획 후 시공의 방식으로 주거 인테리어를 모델링하였습니다.",
+      "이렇게 진행하면 불필요한 시공을 막을 수 있고, 완성도 있게 끝낼 수 있어 효율적인 인테리어를 경험할 수 있습니다.",
+    ].join("\n"),
     style: {
       display: "block",
       position: "relative",
@@ -2116,6 +2128,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
       fontWeight: String(400),
       color: colorChip.black,
       lineHeight: String(1.6),
+      textAlign: big ? "" : "center",
     },
     next: {
       style: {
