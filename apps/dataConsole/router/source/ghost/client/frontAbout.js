@@ -273,6 +273,9 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   let subDescriptionColorBoxHeight;
   let descriptionTextTop;
   let titleBarWidth, titleBarHeight, titleBarMarginRight;
+  let factorImageWidth;
+  let descriptionSizeInBox;
+  let arrowWidth, arrowHeight;
 
   blockHeight = <%% 383, 316, 273, 226, 129.5 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -296,7 +299,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  leftWidth = <%% 230, 230, 230, 210, 300 %%>;
+  leftWidth = <%% 230, 160, 140, 120, 12 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
   initWordingSize = <%% 15.5, 15, 14.5, 13.5, 5 %%>;
@@ -347,11 +350,18 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   pictureBetween = <%% 2, 2, 1, 1, 1 %%>;
   pictureTongPaddingTop = <%% 44, 44, 36, 28, 52 %%>;
 
-  subDescriptionColorBoxHeight = <%% 38, 34, 28, 24, 2 %%>;
+  subDescriptionColorBoxHeight = <%% 38, 35, 28, 24, 2 %%>;
 
-  titleBarWidth = <%% 5, 5, 5, 5, 5 %%>;
-  titleBarHeight = <%% 46, 46, 46, 46, 46 %%>;
-  titleBarMarginRight = <%% 14, 14, 14, 14, 14 %%>;
+  titleBarWidth = <%% 5, 5, 4, 3, 5 %%>;
+  titleBarHeight = <%% 45, 40, 40, 40, 41 %%>;
+  titleBarMarginRight = <%% 14, 12, 12, 12, 14 %%>;
+
+  factorImageWidth = <%% 262, 195, 195, 180, 25 %%>;
+
+  descriptionSizeInBox = <%% 14, 13, 12, 11, 3.3 %%>;
+
+  arrowWidth = <%% 496, 366, 366, 366, 366 %%>;
+  arrowHeight = <%% 11, 11, 10, 10, 11 %%>;
 
   grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
   grayDownWordings = [ "비용 구성", "시공 비용", "구매 비용", "디자인비" ];
@@ -371,11 +381,14 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   leftBox = createNode({
     mother: whiteBlock,
     style: {
-      display: desktop ? "inline-block" : "block",
+      display: desktop ? "inline-flex" : "block",
       position: "relative",
       width: desktop ? String(leftWidth) + ea : String(100) + '%',
       lineHeight: String(1.42),
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(mobileLeftBoxHeight) + ea,
+      verticalAlign: "top",
+      justifyContent: "start",
+      alignItems: "center",
+      height: desktop ? "" : String(mobileLeftBoxHeight) + ea,
       marginTop: desktop ? String(marginTop) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
       marginLeft: desktop ? String(margin) + ea : "",
@@ -469,7 +482,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
       style: {
         top: String(descriptionTextTop) + ea,
         position: "relative",
-        fontSize: String(descriptionSize) + ea,
+        fontSize: String(descriptionSizeInBox) + ea,
         fontWeight: String(800),
         color: colorChip.black,
       }
@@ -493,11 +506,11 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
     },
     child: {
       mode: "svg",
-      source: svgMaker.horizontalArrow(496, 11, colorChip.gray3),
+      source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorChip.gray3),
       style: {
         display: "inline-block",
         position: "relative",
-        width: String(496),
+        width: String(arrowWidth),
       }
     }
   });
@@ -521,7 +534,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
       style: {
         top: String(descriptionTextTop) + ea,
         position: "relative",
-        fontSize: String(descriptionSize) + ea,
+        fontSize: String(descriptionSizeInBox) + ea,
         fontWeight: String(800),
         color: colorChip.white,
       }
@@ -535,7 +548,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
         display: "inline-block",
         position: "relative",
         width: "calc(calc(100% - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
-        height: String(262) + ea,
+        height: String(factorImageWidth) + ea,
         borderRadius: String(5) + "px",
         background: colorChip.black,
         marginRight: String(i % 4 === (4 - 1) ? 0 : pictureBetween) + ea,
@@ -558,8 +571,8 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
     },
     child: {
       text: [
-        "<b%*%b> 홈리에종 프로젝트 현장 사진",
-        "<b%**%b> 인공지능 기술로 만든 이미지",
+        <&& "<b%*%b> 홈리에종 프로젝트 현장 사진" | "<b%*%b> 홈리에종 현장 사진" | "<b%*%b> 홈리에종 현장 사진" | "<b%*%b> 홈리에종 현장 사진" | "<b%*%b> 홈리에종 현장 사진" &&>,
+        <&& "<b%**%b> 인공지능 기술로 만든 이미지" | "<b%**%b> 인공지능 이미지" | "<b%**%b> 인공지능 이미지" | "<b%**%b> 인공지능 이미지" | "<b%**%b> 인공지능 이미지" &&>,
       ],
       style: {
         display: "block",
@@ -1979,15 +1992,14 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
 
   contentsMotherBoxMarginTop = <%% 64, 64, 42, 40, 7 %%>;
 
-  titleBarWidth = <%% 5, 5, 5, 5, 5 %%>;
-  titleBarHeight = <%% 46, 46, 46, 46, 46 %%>;
-  titleBarMarginRight = <%% 14, 14, 14, 14, 14 %%>;
+  titleBarWidth = <%% 5, 5, 4, 3, 5 %%>;
+  titleBarHeight = <%% 45, 41, 41, 41, 41 %%>;
+  titleBarMarginRight = <%% 14, 12, 12, 12, 14 %%>;
 
   descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
   descriptionBottom = <%% 0, -8, -7, -2, 0 %%>;
   descriptionTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
   pictureTongPaddingTop = <%% 44, 44, 36, 28, 52 %%>;
-
 
   contents1 = [
     {
@@ -2042,11 +2054,12 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
   leftBox1 = createNode({
     mother: whiteBlock,
     style: {
-      display: big ? "inline-block" : "none",
+      display: big ? "inline-flex" : "none",
       position: "relative",
       width: big ? String(leftBoxWidth) + ea : String(100) + '%',
-      height: big ? String(100) + '%' : "",
       verticalAlign: "top",
+      justifyContent: "start",
+      alignItems: "center",
     },
     children: [
       {
@@ -2061,7 +2074,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
         }
       },
       {
-        text: big ? "디자이너 전면\n배치 모델" : "디자이너 전면 배치 모델",
+        text: <&& "디자이너 전면\n배치 모델" | "디자이너\n전면 배치" | "디자이너\n전면 배치" | "디자이너\n전면 배치" | "디자이너 전면 배치 모델" &&>,
         style: {
           display: "inline-block",
           position: "relative",
@@ -2115,10 +2128,23 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
   });
 
   createNode({
+    mother: rightBox1,
+    text: "디자이너 전면 배치",
+    style: {
+      display: "block",
+      fontSize: String(contents1TitleSize) + ea,
+      fontWeight: String(contents1TitleWeight),
+      color: colorChip.black,
+      marginBottom: String(contents1TitleBetween) + ea,
+      textAlign: desktop ? "left" : "center",
+    }
+  });
+
+  createNode({
     mode: "img",
     mother: rightBox1,
     attribute: {
-      src: FrontAboutJs.binaryPath + "/model.svg",
+      src: <&& FrontAboutJs.binaryPath + "/model.svg" | FrontAboutJs.binaryPath + "/model1.svg" | FrontAboutJs.binaryPath + "/model1.svg" | FrontAboutJs.binaryPath + "/model1.svg" | FrontAboutJs.binaryPath + "/model1.svg" &&>,
     },
     style: {
       display: "block",
@@ -2134,7 +2160,6 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
       },
     }
   });
-
 
   createNode({
     mother: rightBox1,

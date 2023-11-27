@@ -10115,19 +10115,19 @@ ProcessJs.prototype.searchProjects = function () {
 
       if (value.trim() !== '' && value.trim() !== '.' && value.trim() !== "전체") {
 
-        // ajaxJson({ mode: "search", value: value.trim() }, BACKHOST + "/processConsole", { equal: true }).then((serverResponse) => {
-        //   instance.reloadProjects(serverResponse);
-        //   instance.contentsLoad(true);
+        ajaxJson({ mode: "search", value: value.trim() }, BACKHOST + "/processConsole", { equal: true }).then((serverResponse) => {
+          instance.reloadProjects(serverResponse);
+          instance.contentsLoad(true);
     
-        //   loading.remove();
+          loading.remove();
 
-        //   if (instance.clientDoms.length === 1) {
-        //     instance.clientDoms[0].click();
-        //   }
+          if (instance.clientDoms.length === 1) {
+            instance.clientDoms[0].click();
+          }
 
-        // }).catch((err) => {
-        //   console.log(err);
-        // });
+        }).catch((err) => {
+          console.log(err);
+        });
 
         searchTarget = instance.designers.filter((o) => { return (new RegExp(value.trim(), "gi")).test(o.designer) })
         if (searchTarget.length === 0) {
