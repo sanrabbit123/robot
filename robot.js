@@ -11,16 +11,9 @@ Robot.timeouts = {};
 
 Robot.prototype.mongoToJson = async function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink, zeroAddition } = this.mother;
   try {
     const today = new Date();
-    const zeroAddition = function (number) {
-      if (number < 10) {
-        return `0${String(number)}`;
-      } else {
-        return String(number);
-      }
-    }
     const backFolderName = "backup";
     const mongoTargets = [
       [ "mongoinfo", "mongo" ],
