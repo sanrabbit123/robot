@@ -140,13 +140,20 @@ Robot.prototype.dataConsole = function (noStatic = false) {
 Robot.prototype.renderFrontPhp = async function () {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
   const app = new DataConsole();
-  await app.renderFrontPhp();
+  await app.renderFrontPhp(false);
+}
+
+Robot.prototype.renderTestFrontPhp = async function () {
+  const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
+  const app = new DataConsole();
+  await app.renderFrontPhp(true);
+  await app.renderDesignerPhp(true);
 }
 
 Robot.prototype.renderDesignerPhp = async function () {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
   const app = new DataConsole();
-  await app.renderDesignerPhp();
+  await app.renderDesignerPhp(false);
 }
 
 Robot.prototype.contentsMaker = function (button, arg) {
@@ -1227,6 +1234,13 @@ const MENU = {
   phpClient: async function () {
     try {
       await robot.renderFrontPhp();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  phpTest: async function () {
+    try {
+      await robot.renderTestFrontPhp();
     } catch (e) {
       console.log(e);
     }
