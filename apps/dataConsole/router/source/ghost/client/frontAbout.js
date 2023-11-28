@@ -354,7 +354,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   pictureBetween = <%% 2, 2, 1, 1, 0.5 %%>;
   pictureTongPaddingTop = <%% 44, 44, 36, 28, 7.5 %%>;
 
-  subDescriptionColorBoxHeight = <%% 38, 35, 30, 24, 2 %%>;
+  subDescriptionColorBoxHeight = <%% 38, 35, 30, 24, 7.5 %%>;
 
   titleBarWidth = <%% 5, 5, 4, 3, 5 %%>;
   titleBarHeight = <%% 45, 42, 38, 40, 41 %%>;
@@ -362,7 +362,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
 
   factorImageWidth = <%% 262, 195, 167, 135, 37 %%>;
 
-  descriptionSizeInBox = <%% 14, 13, 11, 10, 3.4 %%>;
+  descriptionSizeInBox = <%% 14, 13, 11, 10, 2.9 %%>;
 
   arrowWidth = <%% 496, 366, 308, 256, 366 %%>;
   arrowHeight = <%% 11, 11, 10, 9, 11 %%>;
@@ -549,7 +549,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
         verticalAlign: "top",
       },
       child: {
-        text: "가구까지 완벽하게 홈스타일링",
+        text: "가구까지 완벽한 홈스타일링",
         style: {
           top: String(descriptionTextTop) + ea,
           position: "relative",
@@ -613,6 +613,48 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
 
     for (let z = 0; z < 3; z++) {
 
+      createNode({
+        mother: pictureTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: "calc(calc(100% - " + String(pictureBetween * (2 - 1)) + ea + ") / " + String(2) + ")",
+          height: String(subDescriptionColorBoxHeight) + ea,
+          borderRadius: String(5) + "px",
+          marginRight: String(pictureBetween) + ea,
+          marginBottom: String(pictureBetween) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          verticalAlign: "top",
+          background: colorChip.gray2,
+        },
+        child: {
+          text: "빈 집으로 끝나는 리모델링",
+          style: {
+            top: String(descriptionTextTop) + ea,
+            position: "relative",
+            fontSize: String(descriptionSizeInBox) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+          }
+        }
+      });
+      createNode({
+        mother: pictureTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: "calc(calc(100% - " + String(pictureBetween * (2 - 1)) + ea + ") / " + String(2) + ")",
+          height: String(subDescriptionColorBoxHeight) + ea,
+          borderRadius: String(5) + "px",
+          marginBottom: String(pictureBetween) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          verticalAlign: "top",
+          background: "transparent",
+        },
+      });
+
       for (let i = 0; i < 4; i++) {
         createNode({
           mother: pictureTong,
@@ -631,6 +673,46 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
           }
         });
       }
+
+      createNode({
+        mother: pictureTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: "calc(calc(100% - " + String(pictureBetween * (2 - 1)) + ea + ") / " + String(2) + ")",
+          height: String(subDescriptionColorBoxHeight) + ea,
+          borderRadius: String(5) + "px",
+          marginRight: String(pictureBetween) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          verticalAlign: "top",
+          background: "transparent",
+        },
+      });
+      createNode({
+        mother: pictureTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: "calc(calc(100% - " + String(pictureBetween * (2 - 1)) + ea + ") / " + String(2) + ")",
+          height: String(subDescriptionColorBoxHeight) + ea,
+          borderRadius: String(5) + "px",
+          justifyContent: "center",
+          alignItems: "center",
+          verticalAlign: "top",
+          background: colorChip.gradientGreen,
+        },
+        child: {
+          text: "가구까지 완벽한 홈스타일링",
+          style: {
+            top: String(descriptionTextTop) + ea,
+            position: "relative",
+            fontSize: String(descriptionSizeInBox) + ea,
+            fontWeight: String(700),
+            color: colorChip.white,
+          }
+        }
+      });
 
       if (z !== 3 - 1) {
 
