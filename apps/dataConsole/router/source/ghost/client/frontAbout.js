@@ -227,6 +227,8 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
   const { ea, media, osException, testMode } = this;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -283,7 +285,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 22, 21, 19, 16, 3.8 %%>;
+  titleFont = <%% 22, 21, 19, 17, 3.8 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 800, 800, 800, 800, 800 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -299,7 +301,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  leftWidth = <%% 230, 160, 140, 120, 12 %%>;
+  leftWidth = <%% 230, 160, 140, 110, 12 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
   initWordingSize = <%% 15.5, 15, 14.5, 13.5, 5 %%>;
@@ -396,7 +398,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
     children: [
       {
         style: {
-          display: "inline-block",
+          display: big ? "inline-block" : "none",
           position: "relative",
           width: String(titleBarWidth) + ea,
           height: String(titleBarHeight) + ea,
