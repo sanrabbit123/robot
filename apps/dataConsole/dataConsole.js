@@ -12,8 +12,8 @@ const DataConsole = function () {
   this.middleModuleDir = this.middleDir + "/module";
   this.testModeInfo = {
     host: "192.168.0.23",
-    port: 60080,
-    log: 63000,
+    port: 51080,
+    log: 54000,
     path: "/home/ubuntu",
     name: "ubuntu",
   }

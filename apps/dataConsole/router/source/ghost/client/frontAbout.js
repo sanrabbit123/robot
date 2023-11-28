@@ -41,7 +41,7 @@ const FrontAboutJs = function () {
   this.mother = new GeneralJs();
 }
 
-FrontAboutJs.binaryPath = "/middle/about";
+FrontAboutJs.binaryPath = FRONTHOST + "/middle/about";
 
 FrontAboutJs.prototype.insertInitBox = function () {
   const instance = this;
@@ -278,6 +278,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   let factorImageWidth;
   let descriptionSizeInBox;
   let arrowWidth, arrowHeight;
+  let subDescriptionBottomSize;
 
   blockHeight = <%% 383, 316, 273, 226, 129.5 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -356,14 +357,16 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
 
   titleBarWidth = <%% 5, 5, 4, 3, 5 %%>;
   titleBarHeight = <%% 45, 42, 38, 40, 41 %%>;
-  titleBarMarginRight = <%% 14, 12, 12, 12, 14 %%>;
+  titleBarMarginRight = <%% 14, 12, 10, 10, 1 %%>;
 
-  factorImageWidth = <%% 262, 195, 167, 180, 25 %%>;
+  factorImageWidth = <%% 262, 195, 167, 135, 25 %%>;
 
   descriptionSizeInBox = <%% 14, 13, 11, 10, 3.3 %%>;
 
-  arrowWidth = <%% 496, 366, 308, 308, 366 %%>;
-  arrowHeight = <%% 11, 11, 10, 10, 11 %%>;
+  arrowWidth = <%% 496, 366, 308, 256, 366 %%>;
+  arrowHeight = <%% 11, 11, 10, 9, 11 %%>;
+
+  subDescriptionBottomSize = <%% 12, 12, 11, 10, 3 %%>;
 
   grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
   grayDownWordings = [ "비용 구성", "시공 비용", "구매 비용", "디자인비" ];
@@ -579,18 +582,18 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
       style: {
         display: "block",
         position: "relative",
-        fontSize: String(12) + ea,
+        fontSize: String(subDescriptionBottomSize) + ea,
         fontWeight: String(500),
         color: colorChip.black,
         lineHeight: String(1.5),
       },
       bold: {
-        fontSize: String(12) + ea,
+        fontSize: String(subDescriptionBottomSize) + ea,
         fontWeight: String(400),
         color: colorChip.deactive,
       }
     }
-  })
+  });
 
 }
 
@@ -1962,14 +1965,14 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
 
   boxTongPaddingBottom = <%% 10, 10, 6, 10, 10 %%>;
 
-  contents1TitleSize = <%% 17, 17, 14, 13, 3.4 %%>;
+  contents1TitleSize = <%% 17, 17, 16, 14, 3.4 %%>;
   contents1TitleWeight = <%% 700, 700, 800, 800, 800 %%>;
   contents1TitleBetween = <%% 14, 12, 10, 8, 2 %%>;
   contents1Between = <%% 45, 40, 30, 22, 9 %%>;
 
   contents1Columns = <%% 5, 5, 5, 5, 3 %%>;
 
-  contents1UpBoxWidth = <%% 232, 197, 229, 185, 88 %%>;
+  contents1UpBoxWidth = <%% 232, 197, 229, 190, 88 %%>;
   contents1UpBoxMargin = <%% 10, 8, 8, 7, 1 %%>;
   contents1UpBoxPaddingLeft = <%% 18, 16, 18, 12, 3.5 %%>;
   contents1UpBoxPaddingTop = <%% (isMac() ? 16 : 17), (isMac() ? 14 : 15), (isMac() ? 15 : 16), (isMac() ? 11 : 12), 3.5 %%>;
@@ -1978,7 +1981,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
   contents1UpBoxCheckWidth = <%% 11, 11, 11, 10, 2.6 %%>;
   contents1UpBoxCheckMarginRight = <%% 6, 6, 6, 6, 6 %%>;
 
-  contents1UpBoxTitleSize = <%% 15, 15, 15, 14, 3.2 %%>;
+  contents1UpBoxTitleSize = <%% 15, 15, 14, 13, 3.2 %%>;
   contents1UpBoxTitleWeight = <%% 600, 600, 600, 600, 700 %%>;
 
   contents1UpBoxWhiteMarginTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 8 : 6), 3 %%>;
@@ -2004,7 +2007,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
 
   titleBarWidth = <%% 5, 5, 4, 3, 5 %%>;
   titleBarHeight = <%% 45, 42, 38, 41, 41 %%>;
-  titleBarMarginRight = <%% 14, 12, 12, 12, 14 %%>;
+  titleBarMarginRight = <%% 14, 12, 10, 10, 1 %%>;
 
   descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
   descriptionBottom = <%% 0, -8, -7, -2, 0 %%>;
@@ -2159,7 +2162,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
     mode: "img",
     mother: rightBox1,
     attribute: {
-      src: <&& FrontAboutJs.binaryPath + "/model.svg" | FrontAboutJs.binaryPath + "/model1.svg" | FrontAboutJs.binaryPath + "/model1.svg" | FrontAboutJs.binaryPath + "/model1.svg" | FrontAboutJs.binaryPath + "/model1.svg" &&>,
+      src: <&& FrontAboutJs.binaryPath + "/model.svg" | FrontAboutJs.binaryPath + "/model1.svg" | FrontAboutJs.binaryPath + "/model1.svg" | FrontAboutJs.binaryPath + "/model2.svg" | FrontAboutJs.binaryPath + "/model1.svg" &&>,
     },
     style: {
       display: "block",
@@ -2207,6 +2210,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
         paddingRight: String(contents1UpBoxPaddingLeft) + ea,
         paddingBottom: String(contents1UpBoxPaddingLeft) + ea,
         marginBottom: desktop ? "" : String(1) + ea,
+        textAlign: "left",
       }
     });
 
