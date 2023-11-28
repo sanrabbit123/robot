@@ -293,7 +293,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
   titleTop = <%% 108, 54, 40, 30, 8.5 %%>;
-  descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 3.4 %%>;
   descriptionBottom = <%% 0, -8, -7, -2, 0 %%>;
   descriptionTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
@@ -362,7 +362,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
 
   factorImageWidth = <%% 262, 195, 167, 135, 37 %%>;
 
-  descriptionSizeInBox = <%% 14, 13, 11, 10, 3.3 %%>;
+  descriptionSizeInBox = <%% 14, 13, 11, 10, 3.4 %%>;
 
   arrowWidth = <%% 496, 366, 308, 256, 366 %%>;
   arrowHeight = <%% 11, 11, 10, 9, 11 %%>;
@@ -411,6 +411,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
           borderRadius: String(5) + "px",
           background: colorChip.gradientGray,
           marginRight: String(titleBarMarginRight) + ea,
+          marginBottom: desktop ? String(isMac() ? 0 : 2) + ea : "",
         }
       },
       {
@@ -742,8 +743,8 @@ FrontAboutJs.prototype.insertMainContentsBox = function () {
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
 
   downTitleSize = <%% 20, 18, 14, 13, 4 %%>;
-  contentsSize = <%% 16, 15, 14, 13, 3.3 %%>;
-  contentsSmallSize = <%% 15, 14, 13, 12, 3.3 %%>;
+  contentsSize = <%% 16, 15, 14, 13, 3.4 %%>;
+  contentsSmallSize = <%% 15, 14, 13, 12, 3.4 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
@@ -1192,8 +1193,8 @@ FrontAboutJs.prototype.insertMainContentsBox = function () {
     style: {
       position: "relative",
       width: withOut(0 * 2, ea),
-      paddingTop: String(middleTongPaddinngTop) + ea,
-      paddingBottom: String(middleTitleMarginBottom2) + ea,
+      paddingTop: String(desktop ? middleTongPaddinngTop : 14) + ea,
+      paddingBottom: String(desktop ? middleTitleMarginBottom2 : 11) + ea,
     }
   });
   basicContentsMaker(whiteBlock0, "service", colorChip.gray1);
@@ -2082,7 +2083,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
   titleBarHeight = <%% 45, 42, 38, 41, 41 %%>;
   titleBarMarginRight = <%% 14, 12, 10, 10, 1 %%>;
 
-  descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 3.4 %%>;
   descriptionBottom = <%% 0, -8, -7, -2, 0 %%>;
   descriptionTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
   pictureTongPaddingTop = <%% 44, 44, 36, 28, 11 %%>;
@@ -2166,6 +2167,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
           borderRadius: String(5) + "px",
           background: colorChip.gradientGray,
           marginRight: String(titleBarMarginRight) + ea,
+          marginBottom: desktop ? String(isMac() ? -2 : 2) + ea : "",
         }
       },
       {
