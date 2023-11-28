@@ -2433,7 +2433,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
           "집 무드를 변화시켜주는 스타일링",
         ],
         color: "#bfb8b0",
-        background: FrontIndexJs.binaryPath + "/" + "startillf0.png",
+        background: FrontIndexJs.binaryPath + "/" + "startf0.jpg",
         href: FRONTHOST + "/service.php?mode=furnishing",
       },
       {
@@ -2444,7 +2444,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
           "컨셉에 맞게 변화시켜주는 스타일링",
         ],
         color: "#b1ae9d",
-        background: FrontIndexJs.binaryPath + "/" + "startills0.png",
+        background: FrontIndexJs.binaryPath + "/" + "starts0.jpg",
         href: FRONTHOST + "/service.php?mode=styling",
       },
       {
@@ -2455,7 +2455,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
           "전체적인 구조를 변경하는 스타일링",
         ],
         color: "#546d81",
-        background: FrontIndexJs.binaryPath + "/" + "startillt0.png",
+        background: FrontIndexJs.binaryPath + "/" + "startt0.jpg",
         href: FRONTHOST + "/service.php?mode=total",
       },
     ]
@@ -2611,7 +2611,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
             width: desktop ? withOut(0, ea) : String(threeBlockWidth) + ea,
             height: desktop ? String(threePhotoHeight) + ea : String(102) + '%',
             backgroundImage: "url('" + contents.three[i].background + "')",
-            backgroundSize: desktop ? "100% auto" : "100% auto",
+            backgroundSize: desktop ? "auto 100%" : "auto 100%",
             backgroundPosition: "50% 50%",
             verticalAlign: desktop ? "" : "top",
           }
