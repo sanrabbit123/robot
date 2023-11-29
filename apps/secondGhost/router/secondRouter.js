@@ -191,6 +191,10 @@ SecondRouter.prototype.rou_get_First = function () {
           }
         });
         
+        console.log(kakao.refreshTokenPath);
+        console.log(response.data.refresh_token);
+
+
         await fileSystem(`write`, [ kakao.accessTokenPath, response.data.access_token ]);
         await fileSystem(`write`, [ kakao.refreshTokenPath, response.data.refresh_token ]);
 
