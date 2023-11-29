@@ -15753,6 +15753,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     let detailArrowAreaWidth, detailArrowWidth;
     let detailArrowVisualTop;
     let statusMode;
+    let buttonBetween;
 
     statusMode = (onlyMode === "status" && returnGet().onlymode !== "mobile");
 
@@ -15876,6 +15877,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
       blackButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
       blackButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
   
+      buttonBetween = <%% 4, 4, 3, 2, 1 %%>;
+
       detailArrowAreaWidth = <%% 28, 28, 28, 28, 6 %%>;
       detailArrowVisualTop = <%% 0.5, 0.5, 0.5, 0.5, 0 %%>;
       detailArrowWidth = <%% 8, 8, 7, 7, 1.8 %%>;
@@ -16002,6 +16005,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
       blackButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
       blackButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
   
+      buttonBetween = <%% 4, 4, 3, 2, 2 %%>;
+
       detailArrowAreaWidth = <%% 28, 28, 28, 26, 22 %%>;
       detailArrowVisualTop = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
       detailArrowWidth = <%% 8, 8, 7, 7, 6 %%>;
@@ -16020,7 +16025,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
         "고객님께 해당되는 상태를 <b%모두 체크%b>해주세요!",
       ],
       form: thisForm,
-      button: "공유하기",
+      button: "고객 공유",
+      schedule: "일정 관리"
     };
 
     colorArr = [
@@ -17070,6 +17076,61 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
           }
         }
       });
+      createNode({
+        mother: formPanBase,
+        attribute: { proid, desid },
+        event: {
+          click: async function (e) {
+            try {
+              const proid = this.getAttribute("proid");
+              const desid = this.getAttribute("desid");
+              if (window.confirm(instance.client.name + " 고객님께 프로젝트 진행율 알림톡을 보낼까요?")) {
+                await ajaxJson({ mode: "send", type: "status", proid, desid, designer: instance.designer.designer, name: instance.client.name, phone: instance.client.phone }, SECONDHOST + "/projectDesignerStatus");
+                await homeliaisonAnalytics({
+                  page: instance.pageName,
+                  standard: instance.firstPageViewTime,
+                  action: "sendDesignerStatus",
+                  data: {
+                    desid: desid,
+                    cliid: instance.client.cliid,
+                    proid: proid,
+                    date: new Date(),
+                  }
+                });
+                window.alert(instance.client.name + " 고객님에게 프로젝트 진행율 알림톡을 전송하였습니다!");  
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
+        style: {
+          display: "inline-flex",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          width: String(buttonWidth) + ea,
+          height: String(buttonHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          bottom: media[0] ? String(buttonHeight + buttonBetween) + ea : String(0) + ea,
+          right: desktop ? (media[0] ? String(buttonHeight + buttonBetween) + ea : String(buttonHeight + buttonBetween) + ea) : withOut(50, buttonWidth / 2, ea),
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          cursor: "pointer",
+        },
+        child: {
+          text: contents.schedule,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(buttonWeight),
+            top: String(buttonTextTop) + ea,
+            color: colorChip.white,
+            cursor: "pointer",
+          }
+        }
+      });
     }
 
     reloadBarArr = (barArrBase, thisForm) => {
@@ -17311,7 +17372,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
   
               instance.insertInitBox();
               instance.insertScheduleStartBox();
-              instance.insertScheduleAboutBox();
+              // instance.insertScheduleAboutBox();
               await instance.insertScheduleBox();
               await instance.insertFormStatusBox();
               instance.insertUploadBox();
@@ -17350,7 +17411,6 @@ ProcessDetailJs.prototype.launching = async function (loading) {
                 await instance.insertFormStatusBox();
               }
               instance.insertUploadBox();
-              await instance.insertScheduleBox();
               instance.insertControlBox();
               if (mobile) {
                 instance.insertBelowBox();

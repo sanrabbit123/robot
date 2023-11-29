@@ -1193,7 +1193,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                       const thisMonth = this.querySelector('.' + numberClassName).querySelector('b');
                       const thisBack = this.querySelector('.' + backClassName);
                       const mode = thisOk.getAttribute("mode");
-                      const defaultCount = 10;
+                      const defaultCount = 2;
                       let index, first, last;
                       let clients, clientTong, clientDom, widthArr;
                       let matrix, countMatrix;
