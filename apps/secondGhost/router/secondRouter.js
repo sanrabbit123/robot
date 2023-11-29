@@ -182,8 +182,6 @@ SecondRouter.prototype.rou_get_First = function () {
 
         refreshToken = response.data.refresh_token;
 
-        console.log(refreshToken);
-
         response = await requestSystem("https://kauth.kakao.com/oauth/token", {
           grant_type: "refresh_token",
           client_id: kakao.moment.apiKey,
@@ -193,12 +191,6 @@ SecondRouter.prototype.rou_get_First = function () {
             "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
           }
         });
-        
-        console.log(response.data);
-
-        console.log(kakao.refreshTokenPath);
-        console.log(response.data.refresh_token);
-
 
         await fileSystem(`write`, [ kakao.accessTokenPath, response.data.access_token ]);
         await fileSystem(`write`, [ kakao.refreshTokenPath, refreshToken ]);
@@ -220,7 +212,6 @@ SecondRouter.prototype.rou_get_First = function () {
 
         accessToken = response.data.access_token
         await fileSystem(`write`, [ kakao.accessTokenPath, response.data.access_token ]);
-        await fileSystem(`write`, [ kakao.refreshTokenPath, response.data.refresh_token ]);
 
         res.send(JSON.stringify({ accessToken }));  
 
