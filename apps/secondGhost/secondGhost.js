@@ -13,7 +13,6 @@ const SecondGhost = function (mother = null, back = null, address = null) {
   }
   const { WebClient } = require("@slack/web-api");
   this.dir = process.cwd() + "/apps/secondGhost";
-  this.graphicPort = 53001;
   this.slack_token = "xoxb-717757271335-4566120587107-i7TxxYzbPWPzdBMPoZDo2kxn";
   this.slack_userToken = "xoxp-717757271335-704486967090-4566130160163-fd2a2cc412e2a509a43635fb8f6c65e2";
   this.slack_bot = new WebClient(this.slack_token);
@@ -100,7 +99,7 @@ SecondGhost.prototype.ghostConnect = async function () {
   const instance = this;
   const back = this.back;
   const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, equalJson, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
-  const { slack_userToken, slack_info, slack_fairyToken, slack_fairyId, slack_fairyAppId, telegram, graphicPort } = this;
+  const { slack_userToken, slack_info, slack_fairyToken, slack_fairyId, slack_fairyAppId, telegram } = this;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -196,7 +195,7 @@ SecondGhost.prototype.ghostConnect = async function () {
 
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
-    const router = new SecondRouter(this.slack_bot, this.slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairyToken, slack_fairyId, slack_fairyAppId, telegram, kakaoInstance, humanInstance, graphicPort);
+    const router = new SecondRouter(this.slack_bot, this.slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairyToken, slack_fairyId, slack_fairyAppId, telegram, kakaoInstance, humanInstance);
     await router.setMembers();
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);
@@ -270,10 +269,6 @@ SecondGhost.prototype.ghostConnect = async function () {
       });
     }
     console.log(`set router`);
-
-    setQueue(() => {
-      requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(graphicPort) + "/kakao", { data: null }, { headers: { "Content-Type": "application/json" } })
-    });
 
     //server on
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });

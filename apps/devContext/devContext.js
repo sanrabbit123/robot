@@ -156,7 +156,10 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const kakao = new KakaoTalk();
 
+
+    
     /*
 
     const kakao = new KakaoTalk();
@@ -179,7 +182,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
 
     

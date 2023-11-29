@@ -1,4 +1,4 @@
-const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairyToken, slack_fairyId, slack_fairyAppId, telegram, kakao, human, graphicPort) {
+const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairyToken, slack_fairyId, slack_fairyAppId, telegram, kakao, human) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
@@ -27,7 +27,6 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
 
   this.kakao = kakao;
   this.human = human;
-  this.graphicPort = graphicPort;
 
   this.vaildHost = [
     this.address.frontinfo.host,
