@@ -583,7 +583,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
+  titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 13 : 12), (isMac() ? 11 : 10), 0 %%>;
   contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
 
   mobileTitleLeft = 1.5;
@@ -959,7 +959,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   return whiteBlock;
 }
 
-ProcessDetailJs.prototype.insertScheduleBox = async function () {
+ProcessDetailJs.prototype.insertScheduleBox = async function (whitePopup = false) {
   const instance = this;
   const mother = this.mother;
   const { client, ea, baseTong, media, project, contentsRawInfo, totalContents, requestNumber } = this;
@@ -974,8 +974,10 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
   const mainTitle = "프로젝트 일정";
   const dragElementClassName = "dragElementClassName";
   const tempInputClassName = "tempInputClassName";
+  const scheduleWhiteBoxClassName = "scheduleWhiteBoxClassName";
   const duringTextToken = "~";
   const duringToken = "<b%&nbsp;&nbsp;" + duringTextToken + "&nbsp;&nbsp;%b>";
+  const zIndex = 4;
   const dateToHangul = (dateObject) => {
     if (dateObject.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
       return '-';
@@ -1051,11 +1053,16 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     let calendarTongPaddingTop, calendarTongPaddingBottom;
     let calendarDateArr;
     let updatedContents;
+    let cancelBack;
+    let whiteMargin;
+    let standardWidth;
 
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 4.7 %%>;
     paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
   
+    whiteMargin = <%% 40, 40, 36, 24, 10 %%>;
+
     whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
   
     titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
@@ -1064,13 +1071,13 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
     titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
   
-    titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
+    titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 13 : 12), (isMac() ? 11 : 10), 0 %%>;
     contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
 
     panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
     panBetween = <%% 8, 8, 8, 8, 1 %%>;
     panTitleBoxWidth = <%% 124, 120, 114, 108, 21 %%>;
-    panTitleBoxHeight = <%% 52, 48, 40, 35, 8.2 %%>;
+    panTitleBoxHeight = <%% 42, 42, 35, 32, 8.2 %%>;
   
     panMotherBetween = <%% 8, 7, 6, 5, 1 %%>;
     smallBetween = <%% 3, 3, 2, 2, 1 %%>;
@@ -1078,10 +1085,10 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     mobileTitleLeft = 1.5;
     mobileTitleTop = -8.7;
   
-    itemBetween = <%% 7, 7, 7, 6, 1.5 %%>;
+    itemBetween = <%% 4, 4, 3, 2, 1.5 %%>;
   
     contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
-    contentsWordingSize = <%% 14, 14, 12, 11, 2.7 %%>;
+    contentsWordingSize = <%% 14, 14, 12, 10, 2.7 %%>;
     contentsWordingBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
     contentsWordingWeight = <%% 700, 700, 700, 700, 700 %%>;
     contentsWordingContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -1111,6 +1118,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
 
     mobileInnerPaddingBottom = 0;
   
+    whiteBlock = {};
     this.whiteMargin = (desktop ? margin : 0);
   
     setScheduleContents = () => {};
@@ -1237,7 +1245,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               top: String(0),
               left: String(0),
               width: withOut(0, ea),
-              height: withOut(0, ea),
+              height: String(500) + "%",
               background: "transparent",
               zIndex: String(zIndex),
             }
@@ -1384,7 +1392,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               top: String(0),
               left: String(0),
               width: withOut(0, ea),
-              height: withOut(0, ea),
+              height: String(500) + "%",
               background: "transparent",
               zIndex: String(zIndex),
             }
@@ -1403,8 +1411,8 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             },
             style: {
               position: "fixed",
-              top: String(e.clientY - baseTong.getBoundingClientRect().top) + "px",
-              left: String(e.clientX - baseTong.getBoundingClientRect().left) + "px",
+              top: String(e.clientY - (whitePopup ? whiteBlock.getBoundingClientRect().top - (whiteBlock.getBoundingClientRect().top - whiteBlock.firstChild.getBoundingClientRect().top) : baseTong.getBoundingClientRect().top)) + "px",
+              left: String(e.clientX - (whitePopup ? whiteBlock.getBoundingClientRect().left : baseTong.getBoundingClientRect().left)) + "px",
               background: colorChip.white,
               padding: String(6) + ea,
               zIndex: String(zIndex),
@@ -1516,7 +1524,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               top: String(0),
               left: String(0),
               width: withOut(0, ea),
-              height: withOut(0, ea),
+              height: String(500) + "%",
               background: "transparent",
               zIndex: String(zIndex),
             }
@@ -1596,7 +1604,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               top: String(0),
               left: String(0),
               width: withOut(0, ea),
-              height: withOut(0, ea),
+              height: String(500) + "%",
               background: "transparent",
               zIndex: String(zIndex),
             }
@@ -1733,30 +1741,83 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     
     originalContents = await ajaxJson({ mode: "original", proid: project.proid, desid: instance.designer.desid }, SECONDHOST + "/projectDesignerSchedule");
 
-    whiteBlock = createNode({
-      mother: baseTong,
-      attribute: { toggle: "on" },
-      style: {
-        position: "relative",
-        borderRadius: String(desktop ? 8 : 1) + ea,
-        width: String(100) + '%',
-        background: desktop ? colorChip.white : "",
-        paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
-        paddingBottom: desktop ? String(margin) + ea : "",
-        marginBottom: String(bottomMargin) + ea,
-        boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
-      },
-      children: [
-        {
-          display: "block",
+    if (!whitePopup) {
+      whiteBlock = createNode({
+        mother: baseTong,
+        attribute: { toggle: "on" },
+        style: {
           position: "relative",
-          width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+          borderRadius: String(desktop ? 8 : 1) + ea,
+          width: String(100) + '%',
+          background: desktop ? colorChip.white : "",
+          paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+          paddingBottom: desktop ? String(margin) + ea : "",
+          marginBottom: String(bottomMargin) + ea,
+          boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+        },
+        children: [
+          {
+            display: "block",
+            position: "relative",
+            width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+            height: String(100) + '%',
+            marginLeft: String(desktop ? margin : 0) + ea,
+          }
+        ]
+      });
+      whiteTong = whiteBlock.firstChild;
+    } else {
+
+      margin = margin * (desktop ? 0.7 : 1);
+      standardWidth = desktop ? instance.standardWidth * 0.9 : 90;
+
+      cancelBack = createNode({
+        mother: document.body,
+        class: [ scheduleWhiteBoxClassName ],
+        event: (e) => { removeByClass(scheduleWhiteBoxClassName) },
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          zIndex: String(zIndex),
+          width: String(100) + '%',
           height: String(100) + '%',
-          marginLeft: String(desktop ? margin : 0) + ea,
+          background: colorChip.black,
+          opacity: String(0.4),
         }
-      ]
-    });
-    whiteTong = whiteBlock.firstChild;
+      });
+
+      whiteBlock = createNode({
+        mother: document.body,
+        class: [ scheduleWhiteBoxClassName ],
+        style: {
+          position: "fixed",
+          left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+          top: "calc(" +  String(instance.naviHeight) + "px" + " + " + String(desktop ? whiteMargin : 5) + ea + ")",
+          width: String(standardWidth) + ea,
+          height: "calc(calc(100% - " + String(instance.naviHeight) + "px" + ") - " + String(whiteMargin * 2) + ea + ")",
+          zIndex: String(zIndex),
+          background: colorChip.white,
+          borderRadius: String(8) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          animation: "fadeuphard 0.3s ease forwards",
+          overflow: "scroll",
+        },
+        children: [
+          {
+            display: "block",
+            position: "relative",
+            width: desktop ? withOut(margin * 2, ea) : withOut(0, ea),
+            height: "auto",
+            marginLeft: String(desktop ? margin : 0) + ea,
+            paddingTop: desktop ? String(margin) + ea : "",
+            paddingBottom: desktop ? String(margin * 3) + ea : "",
+          }
+        ]
+      });
+      whiteTong = whiteBlock.firstChild;
+
+    }
   
     block = createNode({
       mother: whiteTong,
@@ -1797,9 +1858,9 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             display: "block",
             position: "relative",
             width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
-            borderRadius: mobile ? String(1) + ea : "",
+            borderRadius: mobile ? (whitePopup ? "" : String(1) + ea) : "",
             marginBottom: String(0) + ea,
-            marginTop: desktop ? "" : String(14) + ea,
+            marginTop: desktop ? "" : String(whitePopup ? 0 : 14) + ea,
             paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
             paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
             paddingBottom: desktop ? "" : String(mobileInnerPaddingBottom) + ea,
@@ -1815,7 +1876,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
         display: "flex",
         flexDirection: "column",
         position: "relative",
-        borderRadius: String(5) + "px",
+        borderRadius: (mobile && whitePopup) ? "" : String(5) + "px",
         background: desktop ? colorChip.gray3 : colorChip.gray1,
         width: withOut(panMotherInnerPadding * 2, ea),
         padding: String(panMotherInnerPadding) + ea,
@@ -1826,7 +1887,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
           display: "flex",
           flexDirection: "column",
           position: "relative",
-          borderRadius: String(5) + "px",
+          borderRadius: (mobile && whitePopup) ? "" : String(5) + "px",
           background: desktop ? colorChip.gray1 : colorChip.gray3,
           width: withOut(contentsPanPaddingTop * 2, ea),
           padding: String(contentsPanPaddingTop) + ea,
@@ -1841,14 +1902,14 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
         display: "flex",
         flexDirection: "column",
         position: "relative",
-        borderRadius: String(5) + "px",
+        borderRadius: (mobile && whitePopup) ? "" : String(5) + "px",
         background: desktop ? colorChip.gray1 : colorChip.gray3,
         width: withOut(contentsPanPaddingTop * 2, ea),
         paddingLeft: String(contentsPanPaddingTop) + ea,
         paddingRight: String(contentsPanPaddingTop) + ea,
         paddingTop: String(calendarTongPaddingTop) + ea,
         paddingBottom: String(calendarTongPaddingBottom) + ea,
-        marginTop: String(desktop ? panMotherInnerPadding : 2) + ea,
+        marginTop: String(desktop ? panMotherInnerPadding : ((mobile && whitePopup) ? 0 : 2)) + ea,
         verticalAlign: "top",
       },
     });
@@ -2500,7 +2561,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
+  titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 13 : 12), (isMac() ? 11 : 10), 0 %%>;
   contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
 
   mobileTitleLeft = 1.5;
@@ -3340,7 +3401,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
+  titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 13 : 12), (isMac() ? 11 : 10), 0 %%>;
   contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
 
   mobileTitleLeft = 1.5;
@@ -6178,7 +6239,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 0 %%>;
+  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 13 : 12), (isMac() ? 11 : 10), 0 %%>;
 
   mobileTitleLeft = 6;
   mobileTitleTop = -8.7;
@@ -6812,7 +6873,7 @@ ProcessDetailJs.prototype.insertBelowBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 0 %%>;
+  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 13 : 12), (isMac() ? 11 : 10), 0 %%>;
 
 
   secondBlockWidth = <%% 300, 230, 180, 200, 33 %%>;
@@ -7232,7 +7293,7 @@ ProcessDetailJs.prototype.insertDetailBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 0 %%>;
+  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 13 : 12), (isMac() ? 11 : 10), 0 %%>;
   contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
 
   mobileTitleLeft = 1.5;
@@ -7541,7 +7602,7 @@ ProcessDetailJs.prototype.insertStyleBox = async function () {
     titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
     titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
   
-    titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 0 %%>;
+    titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 13 : 12), (isMac() ? 11 : 10), 0 %%>;
     contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
   
     mobileTitleLeft = 1.5;
@@ -8005,7 +8066,7 @@ ProcessDetailJs.prototype.insertNoticeBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 0 %%>;
+  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 13 : 12), (isMac() ? 11 : 10), 0 %%>;
   contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
 
   mobileTitleLeft = 1.5;
@@ -10573,7 +10634,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
 
   mobileVisualPaddingValue = 0.2;
 
-  titleBottom = <%% (isMac() ? 16 : 15), (isMac() ? 16 : 15), (isMac() ? 16 : 15), (isMac() ? 16 : 15), 0 %%>;
+  titleBottom = <%% (isMac() ? 16 : 15), (isMac() ? 16 : 15), (isMac() ? 13 : 12), (isMac() ? 11 : 10), 0 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
@@ -15754,7 +15815,9 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     let detailArrowVisualTop;
     let statusMode;
     let buttonBetween;
+    let onlyStatus;
 
+    onlyStatus = onlyMode === "status";
     statusMode = (onlyMode === "status" && returnGet().onlymode !== "mobile");
 
     if (!statusMode) {
@@ -17059,7 +17122,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
           borderRadius: String(5) + "px",
           background: colorChip.gradientGray,
           bottom: String(0),
-          right: desktop ? String(0) : withOut(50, buttonWidth / 2, ea),
+          right: desktop ? String(0) : withOut(50, (onlyStatus ? buttonWidth : (buttonBetween * -1)) / 2, ea),
           boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
           cursor: "pointer",
         },
@@ -17076,61 +17139,47 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
           }
         }
       });
-      createNode({
-        mother: formPanBase,
-        attribute: { proid, desid },
-        event: {
-          click: async function (e) {
-            try {
-              const proid = this.getAttribute("proid");
-              const desid = this.getAttribute("desid");
-              if (window.confirm(instance.client.name + " 고객님께 프로젝트 진행율 알림톡을 보낼까요?")) {
-                await ajaxJson({ mode: "send", type: "status", proid, desid, designer: instance.designer.designer, name: instance.client.name, phone: instance.client.phone }, SECONDHOST + "/projectDesignerStatus");
-                await homeliaisonAnalytics({
-                  page: instance.pageName,
-                  standard: instance.firstPageViewTime,
-                  action: "sendDesignerStatus",
-                  data: {
-                    desid: desid,
-                    cliid: instance.client.cliid,
-                    proid: proid,
-                    date: new Date(),
-                  }
-                });
-                window.alert(instance.client.name + " 고객님에게 프로젝트 진행율 알림톡을 전송하였습니다!");  
+      if (!onlyStatus) {
+        createNode({
+          mother: formPanBase,
+          attribute: { proid, desid },
+          event: {
+            click: async function (e) {
+              try {
+                await instance.insertScheduleBox(true);
+              } catch (e) {
+                console.log(e);
               }
-            } catch (e) {
-              console.log(e);
+            }
+          },
+          style: {
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            width: String(buttonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gradientGray,
+            bottom: media[0] ? String(buttonHeight + buttonBetween) + ea : String(0) + ea,
+            right: desktop ? (media[0] ? String(0) + ea : String(buttonWidth + buttonBetween) + ea) : withOut(50, (buttonWidth + buttonWidth + buttonBetween) / 2, ea),
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            cursor: "pointer",
+          },
+          child: {
+            text: contents.schedule,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              top: String(buttonTextTop) + ea,
+              color: colorChip.white,
+              cursor: "pointer",
             }
           }
-        },
-        style: {
-          display: "inline-flex",
-          justifyContent: "center",
-          alignItems: "center",
-          position: "absolute",
-          width: String(buttonWidth) + ea,
-          height: String(buttonHeight) + ea,
-          borderRadius: String(5) + "px",
-          background: colorChip.gradientGray,
-          bottom: media[0] ? String(buttonHeight + buttonBetween) + ea : String(0) + ea,
-          right: desktop ? (media[0] ? String(buttonHeight + buttonBetween) + ea : String(buttonHeight + buttonBetween) + ea) : withOut(50, buttonWidth / 2, ea),
-          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          cursor: "pointer",
-        },
-        child: {
-          text: contents.schedule,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(buttonSize) + ea,
-            fontWeight: String(buttonWeight),
-            top: String(buttonTextTop) + ea,
-            color: colorChip.white,
-            cursor: "pointer",
-          }
-        }
-      });
+        });
+      }
     }
 
     reloadBarArr = (barArrBase, thisForm) => {
