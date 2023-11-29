@@ -2624,7 +2624,8 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
           await instance.facebook.dailyCampaign(selfMongo, dayNumber, logger);
           await instance.naver.dailyCampaign(selfMongo, dayNumber, logger);
           await instance.google.dailyCampaign(selfMongo, dayNumber, logger);
-      
+          await instance.kakao.dailyCampaign(selfMongo, dayNumber, logger);
+
           // daily aspirant campaign
           fromCollection = "dailyCampaign";
           toCollection = "dailyAspirantCampaign";

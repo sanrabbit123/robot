@@ -4775,4 +4775,117 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
   }
 }
 
+KakaoTalk.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, logger = null) {
+  const instance = this;
+  const back = this.back;
+  const { moment: { adsId, baseUrl, version } } = this;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  try {
+    const campaignCollection = "dailyCampaign";
+    let tempRows;
+    let res;
+    let json;
+    let from, to;
+    let startDate;
+    let num;
+    let key;
+    let now;
+    let token;
+    let defaultHeaders;
+    let thisResult;
+    let campaigns;
+    let response;
+    let url;
+    let targets;
+    let reportResult;
+    let thisCampaign;
+
+    now = new Date();
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    for (let i = 0; i < dayNumber; i++) {
+      startDate.setDate(startDate.getDate() - 1);
+    }
+    token = await this.getAccessToken();
+    defaultHeaders = {
+      "Authorization": "Bearer " + token,
+    }
+    thisResult = await this.campaignsIdMap();
+    campaigns = thisResult.campaigns;
+
+    url = baseUrl + "/" + version + "/campaigns/report";
+    targets = campaigns.map((o) => { return o.id });
+
+    for (let i = 0; i < dayNumber; i++) {
+
+      await sleep(60 * 1000);
+      if (i === 0) {
+        from = new Date(JSON.stringify(startDate).slice(1, -1));
+        to = new Date(JSON.stringify(startDate).slice(1, -1));
+        to.setDate(to.getDate() + 1);
+      } else {
+        from.setDate(from.getDate() + 1);
+        to.setDate(to.getDate() + 1);
+      }
+
+      response = await requestSystem(url, { campaignId: targets.slice(0, 5), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+      reportResult = [].concat(equalJson(JSON.stringify(response.data.data)));
+      for (let i = 0; i < Math.floor(targets.length / 5); i++) {
+        response = await requestSystem(url, { campaignId: targets.slice((i + 1) * 5, (i + 2) * 5), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+        reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));
+        await sleep(60 * 1000);
+      }
+
+      num = 0;
+      for (let obj of campaigns) {
+
+        thisCampaign = reportResult.find((o) => { return String(o.dimensions.campaign_id) === String(obj.id) });
+        if (thisCampaign !== undefined) {
+
+          key = dateToString(from).replace(/\-/gi, '') + "_" + String(obj.id)
+          json = {
+            camid: 'g' + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + 'f' + String.fromCharCode(97 + num) + zeroAddition(from.getDate()) + 's',
+            key,
+            date: { from, to },
+            value: {
+              charge: thisCampaign.metrics.cost,
+              performance: {
+                play: thisCampaign.metrics.video_play_3s,
+                impressions: thisCampaign.metrics.imp,
+                clicks: thisCampaign.metrics.click,
+              },
+            },
+            information: {
+              mother: "kakao",
+              type: "moment",
+              id: {
+                account: adsId,
+                campaign: String(obj.id),
+              },
+              name: obj.name,
+            }
+          };
+  
+          tempRows = await back.mongoRead(campaignCollection, { key }, { selfMongo });
+          if (tempRows.length !== 0) {
+            await back.mongoDelete(campaignCollection, { key }, { selfMongo });
+          }
+          await back.mongoCreate(campaignCollection, json, { selfMongo });
+          console.log(json);
+          num++;
+
+        }
+      }
+
+    }
+
+    if (logger !== null) {
+      logger.cron("facebook daily campaign done : " + dateToString(new Date())).catch((err) => { console.log(err); });
+    }
+
+  } catch (e) {
+    emergencyAlarm("KakaoTalk.dailyCampaign error : " + e.message).catch((err) => { console.log(err); });
+    console.log(e);
+  }
+}
+
 module.exports = KakaoTalk;
