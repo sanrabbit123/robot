@@ -179,8 +179,26 @@ SecondRouter.prototype.rou_get_First = function () {
             "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
           }
         });
-        refreshToken = response.data.refresh_token;
 
+        refreshToken = response.data.refresh_token;
+        response = await requestSystem("https://kauth.kakao.com/oauth/token", {
+          grant_type: "refresh_token",
+          client_id: kakao.moment.apiKey,
+          refresh_token: refreshToken,
+        }, {
+          headers: {
+            "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
+          }
+        });
+        
+        await fileSystem(`write`, [ kakao.accessTokenPath, response.data.access_token ]);
+        await fileSystem(`write`, [ kakao.refreshTokenPath, response.data.refresh_token ]);
+
+        res.send(JSON.stringify(response.data.access_token));
+
+      } else if (req.params.id === "kakaoAccessToken") {
+
+        refreshToken = await fileSystem("readString", [ kakao.refreshTokenPath ]);
         response = await requestSystem("https://kauth.kakao.com/oauth/token", {
           grant_type: "refresh_token",
           client_id: kakao.moment.apiKey,
@@ -191,15 +209,10 @@ SecondRouter.prototype.rou_get_First = function () {
           }
         });
 
-        console.log(response.data.expires_in);
-        console.log(response.data.access_token);
-        
+        accessToken = response.data.access_token
         await fileSystem(`write`, [ kakao.accessTokenPath, response.data.access_token ]);
-        res.send(JSON.stringify(response.data.access_token));
+        await fileSystem(`write`, [ kakao.refreshTokenPath, response.data.refresh_token ]);
 
-      } else if (req.params.id === "kakaoAccessToken") {
-
-        accessToken = await fileSystem("readString", [ kakao.accessTokenPath ]);
         res.send(JSON.stringify({ accessToken }));  
 
       } else {
