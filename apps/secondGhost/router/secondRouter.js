@@ -159,6 +159,7 @@ SecondRouter.prototype.rou_get_First = function () {
       let aliveMongoResult;
       let response;
       let accessToken;
+      let refreshToken;
 
       if (req.params.id === "ssl") {
         disk = await diskReading();
@@ -178,6 +179,21 @@ SecondRouter.prototype.rou_get_First = function () {
             "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
           }
         });
+        refreshToken = response.data.refresh_token;
+
+        response = await requestSystem("https://kauth.kakao.com/oauth/token", {
+          grant_type: "refresh_token",
+          client_id: kakao.moment.apiKey,
+          refresh_token: refreshToken,
+        }, {
+          headers: {
+            "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
+          }
+        });
+
+        console.log(response.data.expires_in);
+        console.log(response.data.access_token);
+        
         await fileSystem(`write`, [ kakao.accessTokenPath, response.data.access_token ]);
         res.send(JSON.stringify(response.data.access_token));
 
