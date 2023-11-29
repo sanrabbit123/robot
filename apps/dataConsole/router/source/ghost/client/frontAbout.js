@@ -280,6 +280,8 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   let descriptionSizeInBox;
   let arrowWidth, arrowHeight;
   let subDescriptionBottomSize;
+  let plusWidth;
+  let plusSize;
 
   blockHeight = <%% 383, 316, 273, 226, 129.5 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -360,7 +362,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   titleBarHeight = <%% 45, 42, 38, 40, 41 %%>;
   titleBarMarginRight = <%% 14, 12, 10, 10, 1 %%>;
 
-  factorImageWidth = <%% 262, 195, 167, 135, 37 %%>;
+  factorImageWidth = <%% 234, 174, 151, 135, 37 %%>;
 
   descriptionSizeInBox = <%% 14, 13, 11, 10, 2.9 %%>;
 
@@ -368,6 +370,9 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
   arrowHeight = <%% 11, 11, 10, 9, 11 %%>;
 
   subDescriptionBottomSize = <%% 12, 12, 11, 10, 3 %%>;
+
+  plusWidth = <%% 60, 40, 30, 0, 0 %%>;
+  plusSize = <%% 38, 26, 20, 0, 0 %%>;
 
   grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
   grayDownWordings = [ "비용 구성", "시공 비용", "구매 비용", "디자인비" ];
@@ -488,11 +493,11 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
       style: {
         display: "inline-flex",
         position: "relative",
-        width: "calc(calc(100% - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
+        width: "calc(calc(calc(100% - " + String(plusWidth * 2) + ea + ") - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
         height: String(subDescriptionColorBoxHeight) + ea,
         borderRadius: String(5) + "px",
         background: colorChip.gray2,
-        marginRight: String(pictureBetween) + ea,
+        marginRight: String(pictureBetween + plusWidth) + ea,
         marginBottom: String(pictureBetween) + ea,
         justifyContent: "center",
         alignItems: "center",
@@ -514,23 +519,24 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
       style: {
         display: "inline-flex",
         position: "relative",
-        width: "calc(calc(calc(100% - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(2) + ") + " + String(pictureBetween) + ea + ")",
+        width: "calc(calc(calc(calc(100% - " + String(plusWidth * 2) + ea + ") - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(2) + ") + " + String(pictureBetween) + ea + ")",
         height: String(subDescriptionColorBoxHeight) + ea,
         borderRadius: String(5) + "px",
         background: colorChip.gray1,
-        marginRight: String(pictureBetween) + ea,
+        marginRight: String(pictureBetween + plusWidth) + ea,
         marginBottom: String(pictureBetween) + ea,
         justifyContent: "center",
         alignItems: "center",
         verticalAlign: "top",
       },
       child: {
-        mode: "svg",
-        source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorChip.gray3),
+        text: "가구 / 소품 / 패브릭",
         style: {
-          display: "inline-block",
+          top: String(descriptionTextTop) + ea,
           position: "relative",
-          width: String(arrowWidth),
+          fontSize: String(descriptionSizeInBox) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
         }
       }
     });
@@ -539,7 +545,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
       style: {
         display: "inline-flex",
         position: "relative",
-        width: "calc(calc(100% - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
+        width: "calc(calc(calc(100% - " + String(plusWidth * 2) + ea + ") - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
         height: String(subDescriptionColorBoxHeight) + ea,
         borderRadius: String(5) + "px",
         background: colorChip.gradientGreen,
@@ -566,7 +572,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          width: "calc(calc(100% - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
+          width: "calc(calc(calc(100% - " + String(plusWidth * 2) + ea + ") - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
           height: String(factorImageWidth) + ea,
           borderRadius: String(5) + "px",
           background: colorChip.black,
@@ -575,8 +581,64 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
           backgroundImage: "url('" + FrontAboutJs.binaryPath + "/rooms/a" + String(i) + ".jpg" + "')",
           backgroundSize: "100% auto",
           backgroundPosition: "50% 50%",
+          verticalAlign: "top",
         }
       });
+
+      if (i % 4 === 0) {
+        createNode({
+          mother: pictureTong,
+          style: {
+            display: big ? "inline-flex" : "none",
+            position: "relative",
+            width: String(plusWidth) + ea,
+            height: String(factorImageWidth) + ea,
+            marginBottom: String(Math.floor(i / 4) < 2 ? pictureBetween : 0) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            verticalAlign: "top",
+          },
+          child: {
+            text: "+",
+            style: {
+              position: "relative",
+              top: String(descriptionTextTop) + ea,
+              fontSize: String(plusSize) + ea,
+              fontWeight: String(800),
+              color: colorChip.black,
+            }
+          }
+        })
+      }
+
+      if (i % 4 === 2) {
+        createNode({
+          mother: pictureTong,
+          style: {
+            display: big ? "inline-flex" : "none",
+            position: "relative",
+            width: String(plusWidth) + ea,
+            height: String(factorImageWidth) + ea,
+            marginBottom: String(Math.floor(i / 4) < 2 ? pictureBetween : 0) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            verticalAlign: "top",
+          },
+          child: {
+            text: "=",
+            style: {
+              position: "relative",
+              top: String(descriptionTextTop) + ea,
+              fontSize: String(plusSize) + ea,
+              fontWeight: String(800),
+              color: colorChip.green,
+            }
+          }
+        })
+      }
+
     }
     
     createNode({
