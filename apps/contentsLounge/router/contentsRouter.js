@@ -574,6 +574,7 @@ ContentsRouter.prototype.rou_post_metaComplex = function () {
   const meta = this.facebook;
   const naver = this.naver;
   const google = this.google;
+  const kakao = this.kakao;
   const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
   let obj;
   obj = {};
@@ -639,6 +640,24 @@ ContentsRouter.prototype.rou_post_metaComplex = function () {
               }
             }
           }
+
+          await sleep(500);
+
+          boo = await kakao.kakaoComplex(selfMongo, dayConst, logger);
+          if (!boo) {
+            await sleep(3000);
+            boo = await kakao.kakaoComplex(selfMongo, dayConst, logger);
+            if (!boo) {
+              await sleep(3000);
+              boo = await kakao.kakaoComplex(selfMongo, dayConst, logger);
+              if (!boo) {
+                await sleep(3000);
+                await kakao.kakaoComplex(selfMongo, dayConst, logger);
+              }
+            }
+          }
+
+          await sleep(500);
 
         } catch (e) {
           console.log(e);

@@ -4542,7 +4542,7 @@ KakaoTalk.prototype.getAccessToken = async function () {
 
 KakaoTalk.prototype.campaignsIdMap = async function (store = false) {
   const instance = this;
-  const { requestSystem, fileSystem, equalJson, uniqueValue } = this.mother;
+  const { requestSystem, fileSystem, equalJson, uniqueValue, sleep } = this.mother;
   try {
     const { moment: { adsId, baseUrl, version } } = this;
     const token = await this.getAccessToken();
@@ -4553,15 +4553,19 @@ KakaoTalk.prototype.campaignsIdMap = async function (store = false) {
     let url, url2, res;
     let campaigns;
 
+    await sleep(500);
+
     url = baseUrl + "/" + version + "/campaigns";
     res = await requestSystem(url, {}, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
     campaigns = res.data.content;
 
     url = baseUrl + "/" + version + "/adGroups";
     for (let campaign of campaigns) {
+      await sleep(1000);
       res = await requestSystem(url, { campaignId: String(campaign.id) }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
       campaign.adGroups = equalJson(JSON.stringify(res.data.content));
       for (let adGroup of campaign.adGroups) {
+        await sleep(500);
         url2 = baseUrl + "/" + version + "/creatives";
         res = await requestSystem(url2, { adGroupId: String(adGroup.id) }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
         adGroup.ads = equalJson(JSON.stringify(res.data.content));
@@ -4576,6 +4580,198 @@ KakaoTalk.prototype.campaignsIdMap = async function (store = false) {
   } catch (e) {
     console.log(e);
     return null;
+  }
+}
+
+KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, logger = null) {
+  const instance = this;
+  const back = this.back;
+  const { moment: { adsId, baseUrl, version } } = this;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  try {
+    const collection = "kakaoComplex";
+    const idKeyword = 'f';
+    const kakaoKeyword = 'k';
+    const kakaoKeyKeyword = "kakao";
+    let now;
+    let startDate;
+    let from;
+    let to;
+    let json;
+    let key;
+    let advertisement;
+    let url;
+    let targets;
+    let response;
+    let complexCampaignArr;
+    let campaignObj;
+    let adGroupObj;
+    let adObj;
+    let reportResult;
+    let thisAdObj;
+    let token;
+    let campaigns;
+    let tempRows;
+    let defaultHeaders;
+    let thisResult;
+    
+    now = new Date();
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    for (let i = 0; i < dayNumber; i++) {
+      startDate.setDate(startDate.getDate() - 1);
+    }
+
+    token = await this.getAccessToken();
+    defaultHeaders = {
+      "Authorization": "Bearer " + token,
+    }
+    thisResult = await this.campaignsIdMap();
+
+    campaigns = thisResult.campaigns;
+
+    for (let i = 0; i < dayNumber; i++) {
+
+      await sleep(60 * 1000);
+      if (i === 0) {
+        from = new Date(JSON.stringify(startDate).slice(1, -1));
+        to = new Date(JSON.stringify(startDate).slice(1, -1));
+        to.setDate(to.getDate() + 1);
+      } else {
+        from.setDate(from.getDate() + 1);
+        to.setDate(to.getDate() + 1);
+      }
+
+      key = dateToString(from).replace(/\-/gi, '') + "_" + kakaoKeyKeyword;
+      json = {
+        camid: idKeyword + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + kakaoKeyword + 'a' + zeroAddition(from.getDate()) + 's',
+        key,
+        date: { from, to },
+      };
+
+      await sleep(1000);
+      url = baseUrl + "/" + version + "/creatives/report";
+      complexCampaignArr = [];
+      for (let campaign of campaigns) {
+        campaignObj = {
+          value: {
+            charge: 0,
+            performance: {
+              play: 0,
+              impressions: 0,
+              clicks: 0,
+            }
+          },
+          information: {
+            id: String(campaign.id),
+            account: String(adsId),
+            name: campaign.name,
+          },
+          children: []
+        };
+        await sleep(500);
+        targets = campaign.adGroups.map((o) => { return o.ads.map((o) => { return o.id }); }).flat();
+        response = await requestSystem(url, { creativeId: targets.slice(0, 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+        reportResult = [].concat(equalJson(JSON.stringify(response.data.data)));
+        for (let i = 0; i < Math.floor(targets.length / 100); i++) {
+          response = await requestSystem(url, { creativeId: targets.slice((i + 1) * 100, (i + 2) * 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+          reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));
+          await sleep(60 * 1000);
+        }
+        for (let adGroup of campaign.adGroups) {
+          adGroupObj = {
+            value: {
+              charge: 0,
+              performance: {
+                play: 0,
+                impressions: 0,
+                clicks: 0,
+              }
+            },
+            information: {
+              id: String(adGroup.id),
+              campaign: String(campaign.id),
+              name: adGroup.name,
+            },
+            children: []
+          }
+          for (let ad of adGroup.ads) {
+            thisAdObj = reportResult.find((o) => { return o.dimensions.creative_id === String(ad.id) });
+            if (thisAdObj === undefined) {
+              thisAdObj = null;
+            }
+            if (thisAdObj !== null) {
+              adObj = {
+                value: {
+                  charge: thisAdObj.metrics.cost,
+                  performance: {
+                    play: thisAdObj.metrics.video_play_3s,
+                    impressions: thisAdObj.metrics.imp,
+                    clicks: thisAdObj.metrics.click,
+                  }
+                },
+                information: {
+                  id: String(ad.id),
+                  adset: String(adGroup.id),
+                  name: ad.name,
+                },
+              }
+              adGroupObj.children.push(equalJson(JSON.stringify(adObj)));
+            }
+          }
+          if (adGroupObj.children.length > 0) {
+            adGroupObj.value.charge = adGroupObj.children.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
+            adGroupObj.value.performance.play = adGroupObj.children.reduce((acc, curr) => { return acc + curr.value.performance.play }, 0);
+            adGroupObj.value.performance.impressions = adGroupObj.children.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0);
+            adGroupObj.value.performance.clicks = adGroupObj.children.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0);
+            campaignObj.children.push(equalJson(JSON.stringify(adGroupObj)));
+          }
+        }
+        if (campaignObj.children.length > 0) {
+          campaignObj.value.charge = campaignObj.children.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
+          campaignObj.value.performance.play = campaignObj.children.reduce((acc, curr) => { return acc + curr.value.performance.play }, 0);
+          campaignObj.value.performance.impressions = campaignObj.children.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0);
+          campaignObj.value.performance.clicks = campaignObj.children.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0);
+          complexCampaignArr.push(equalJson(JSON.stringify(campaignObj)));
+        }
+      }
+  
+      advertisement = {
+        value: {
+          charge: complexCampaignArr.reduce((acc, curr) => { return acc + curr.value.charge }, 0),
+          performance: {
+            play: complexCampaignArr.reduce((acc, curr) => { return acc + curr.value.performance.play }, 0),
+            impressions: complexCampaignArr.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0),
+            clicks: complexCampaignArr.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0),
+          },
+          length: {
+            campaign: complexCampaignArr.length,
+            adset: complexCampaignArr.map((c) => { return c.children.length }).reduce((acc, curr) => { return acc + curr }, 0),
+            ad: complexCampaignArr.map((c) => { return c.children.map((a) => { return a.children.length }).reduce((acc, curr) => { return acc + curr }, 0) }).reduce((acc, curr) => { return acc + curr }, 0),
+          }
+        },
+        campaign: equalJson(JSON.stringify(complexCampaignArr)),
+      };
+
+      json.advertisement = equalJson(JSON.stringify(advertisement));
+
+      // store
+      tempRows = await back.mongoRead(collection, { key }, { selfMongo });
+      if (tempRows.length !== 0) {
+        await back.mongoDelete(collection, { key }, { selfMongo });
+      }
+      await back.mongoCreate(collection, json, { selfMongo });
+      console.log(json);
+    }
+
+    if (logger !== null) {
+      logger.cron("kakao complex store done : " + dateToString(new Date())).catch((err) => { console.log(err); });
+    }
+
+    return true;
+
+  } catch (e) {
+    emergencyAlarm("KakaoTalk.kakaoComplex error : " + e.message).catch((err) => { console.log(err); });
+    return false;
   }
 }
 

@@ -156,30 +156,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const kakao = new KakaoTalk();
 
 
     
-    /*
-
-    const kakao = new KakaoTalk();
-    const { moment: { adsId, baseUrl, version } } = kakao;
-    const token = await kakao.getAccessToken();
-    const campaigns = await fileSystem(`readJson`, [ `${process.cwd()}/temp/target.json` ]);
-    const defaultHeaders = {
-      "Authorization": "Bearer " + token,
-    }
-    let url;
-    let targets;
-    let res;
-
-    url = baseUrl + "/" + version + "/creatives/report";
-    targets = campaigns[0].adGroups[0].ads.map((o) => { return o.id });
-    res = await requestSystem(url, { creativeId: targets, timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
-    console.log(res.data.data);
-
-    */
-
 
 
 
