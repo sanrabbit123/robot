@@ -1201,6 +1201,11 @@ LogReport.prototype.dailyReports = async function () {
           let kakaoSubmitChargeConverting;
           let kakaoMatrix;
           let campaignAspirantRows;
+          let facebookAspirantRows;
+          let facebookAspirantCharge;
+          let facebookAspirantReach;
+          let facebookAspirantImpressions;
+          let facebookAspirantClicks;
 
           from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
           to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
@@ -1321,6 +1326,29 @@ LogReport.prototype.dailyReports = async function () {
             facebookClicks = 0;
           }
 
+          facebookAspirantRows = campaignAspirantRows.filter((obj) => {
+            return /facebook/gi.test(obj.information.mother) || /meta/gi.test(obj.information.mother) || /instagram/gi.test(obj.information.mother);
+          });
+          if (facebookAspirantRows.length > 0) {
+            facebookAspirantCharge = facebookAspirantRows.reduce((acc, curr) => {
+              return acc + curr.value.charge;
+            }, 0);
+            facebookAspirantReach = facebookAspirantRows.reduce((acc, curr) => {
+              return acc + curr.value.performance.reach;
+            }, 0);
+            facebookAspirantImpressions = facebookAspirantRows.reduce((acc, curr) => {
+              return acc + curr.value.performance.impressions;
+            }, 0);
+            facebookAspirantClicks = facebookAspirantRows.reduce((acc, curr) => {
+              return acc + curr.value.performance.clicks;
+            }, 0);
+          } else {
+            facebookAspirantCharge = 0;
+            facebookAspirantReach = 0;
+            facebookAspirantImpressions = 0;
+            facebookAspirantClicks = 0;
+          }
+
           facebookFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
             return facebookCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
@@ -1395,6 +1423,10 @@ LogReport.prototype.dailyReports = async function () {
               facebookClicksChargeConverting,
               facebookSubmitConverting,
               facebookSubmitChargeConverting,
+              facebookAspirantCharge,
+              facebookAspirantReach,
+              facebookAspirantImpressions,
+              facebookAspirantClicks,
             ]
           ];
 
@@ -2034,6 +2066,10 @@ LogReport.prototype.dailyReports = async function () {
               "전환당 비용",
               "문의율",
               "문의당 비용",
+              "디자이너 비용",
+              "디자이너 도달",
+              "디자이너 노출",
+              "디자이너 클릭",
             ]
           ],
           [

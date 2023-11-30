@@ -2592,7 +2592,7 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
     try {
       const { date } = equalJson(req.body);
       const selfMongo = instance.mongolog;
-      const dayNumber = 10;
+      const dayNumber = 5;
       let dateArr;
       let collection;
       let anaid, ancid, key, rows;
@@ -2806,7 +2806,7 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
   
           // meta, naver complex
           await sleep(1000);
-          await requestSystem("https://" + address.contentsinfo.host + ":3000/metaComplex", { day: 5 }, { headers: { "Content-Type": "application/json" } });
+          await requestSystem("https://" + address.contentsinfo.host + ":3000/metaComplex", { day: dayNumber }, { headers: { "Content-Type": "application/json" } });
 
           return true;
         } catch (e) {
