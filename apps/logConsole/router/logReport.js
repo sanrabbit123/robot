@@ -1080,6 +1080,9 @@ LogReport.prototype.dailyReports = async function () {
         const googleCampaignBoo = (str) => {
           return (/google/gi.test(str) || /youtube/gi.test(str));
         }
+        const kakaoCampaignBoo = (str) => {
+          return (/kakao/gi.test(str));
+        }
 
         const getReportsByDate = async (targetDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories, metaComplexRows, googleComplexRows) => {
           const keyMaker = (date) => {
@@ -1098,12 +1101,16 @@ LogReport.prototype.dailyReports = async function () {
             const googleKeyMaker = (date) => {
               return dateToString(date).replace(/[^0-9]/gi, '') + "_google"
             }
+            const kakaoKeyMaker = (date) => {
+              return dateToString(date).replace(/[^0-9]/gi, '') + "_kakao"
+            }
             return {
               campaign: keyRegMaker(date),
               analytics: analyticsIdMaker(date),
               clients: clientsIdMaker(date),
               meta: metaKeyMaker(date),
               google: googleKeyMaker(date),
+              kakao: kakaoKeyMaker(date),
             }
           };
           const {
@@ -1112,6 +1119,7 @@ LogReport.prototype.dailyReports = async function () {
             clients: clientsKey,
             meta: metaKey,
             google: googleKey,
+            kakao: kakaoKey,
           } = keyMaker(targetDate);
           const requests = clients.getRequestsTong();
           let campaignRows, analyticsRows, clientsRows;
@@ -1175,7 +1183,22 @@ LogReport.prototype.dailyReports = async function () {
           let seventhMatrix;
           let firstNewMatrix;
           let snsMatrix;
-          let thisMeta, thisGoogle;
+          let thisMeta, thisGoogle, thisKakao;
+          let kakaoRows;
+          let kakaoCharge;
+          let kakaoImpressions;
+          let kakaoClicks;
+          let kakaoFromUsers;
+          let kakaoFromClicks;
+          let kakaoFromPopups;
+          let kakaoFromSubmit;
+          let kakaoCtr;
+          let kakaoCpc;
+          let kakaoClicksConverting;
+          let kakaoClicksChargeConverting;
+          let kakaoSubmitConverting;
+          let kakaoSubmitChargeConverting;
+          let kakaoMatrix;
 
           from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
           to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
@@ -1820,6 +1843,103 @@ LogReport.prototype.dailyReports = async function () {
             ];
           }
 
+          // 9 - kakao
+
+          kakaoRows = campaignRows.filter((obj) => {
+            return /kakao/gi.test(obj.information.mother);
+          });
+          if (kakaoRows.length > 0) {
+            kakaoCharge = kakaoRows.reduce((acc, curr) => {
+              return acc + curr.value.charge;
+            }, 0);
+            kakaoImpressions = kakaoRows.reduce((acc, curr) => {
+              return acc + curr.value.performance.impressions;
+            }, 0);
+            kakaoClicks = kakaoRows.reduce((acc, curr) => {
+              return acc + curr.value.performance.clicks;
+            }, 0);
+          } else {
+            kakaoCharge = 0;
+            kakaoImpressions = 0;
+            kakaoClicks = 0;
+          }
+
+          kakaoFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
+            return kakaoCampaignBoo(obj.case);
+          }).reduce((acc, curr) => {
+            return acc + curr.value;
+          }, 0);
+
+          kakaoFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
+            return kakaoCampaignBoo(obj.case);
+          }).reduce((acc, curr) => {
+            return acc + curr.value;
+          }, 0);
+
+          kakaoFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
+            return kakaoCampaignBoo(obj.case);
+          }).reduce((acc, curr) => {
+            return acc + curr.value;
+          }, 0);
+
+          kakaoFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
+            return arr.some((obj) => {
+              if (obj === null) {
+                return false;
+              } else {
+                return obj.source.mother.some((c) => { return kakaoCampaignBoo(c); }) && obj.source.campaign.length > 0;
+              }
+            });
+          }).length;
+
+          kakaoCtr = 0;
+          kakaoCpc = 0;
+          kakaoClicksConverting = 0;
+          kakaoClicksChargeConverting = 0;
+          kakaoSubmitConverting = 0;
+          kakaoSubmitChargeConverting = 0;
+
+          if (kakaoImpressions !== 0) {
+            kakaoCtr = kakaoClicks / kakaoImpressions;
+            kakaoCtr = Math.floor(kakaoCtr * 10000) / 10000;
+          }
+          if (kakaoClicks !== 0) {
+            kakaoCpc = Math.round(kakaoCharge / kakaoClicks);
+          }
+          if (kakaoClicks !== 0) {
+            kakaoClicksConverting = (kakaoFromClicks + kakaoFromPopups) / kakaoClicks;
+            kakaoClicksConverting = Math.floor(kakaoClicksConverting * 10000) / 10000;
+          }
+          if (kakaoFromClicks + kakaoFromPopups !== 0) {
+            kakaoClicksChargeConverting = Math.round(kakaoCharge / (kakaoFromClicks + kakaoFromPopups));
+          }
+          if (kakaoClicks !== 0) {
+            kakaoSubmitConverting = kakaoFromSubmit / kakaoClicks;
+            kakaoSubmitConverting = Math.floor(kakaoSubmitConverting * 10000) / 10000;
+          }
+          if (kakaoFromSubmit !== 0) {
+            kakaoSubmitChargeConverting = Math.round(kakaoCharge / kakaoFromSubmit);
+          }
+
+          kakaoMatrix = [
+            [
+              dateToString(targetDate),
+              kakaoCharge,
+              kakaoImpressions,
+              kakaoClicks,
+              kakaoFromUsers,
+              kakaoFromClicks,
+              kakaoFromPopups,
+              kakaoFromSubmit,
+              kakaoCtr,
+              kakaoCpc,
+              kakaoClicksConverting,
+              kakaoClicksChargeConverting,
+              kakaoSubmitConverting,
+              kakaoSubmitChargeConverting,
+            ]
+          ];
+
           return [
             firstMatrix,
             firstNewMatrix,
@@ -1830,6 +1950,7 @@ LogReport.prototype.dailyReports = async function () {
             sixthMatrix,
             seventhMatrix,
             snsMatrix,
+            kakaoMatrix,
           ];
         }
 
@@ -1842,6 +1963,7 @@ LogReport.prototype.dailyReports = async function () {
         let facebookPaidCopied, facebookPaidMonthMatrix, facebookPaidWeekMatrix;
         let naverPaidCopied, naverPaidMonthMatrix, naverPaidWeekMatrix;
         let googlePaidCopied, googlePaidMonthMatrix, googlePaidWeekMatrix;
+        let kakaoPaidCopied, kakaoPaidMonthMatrix, kakaoPaidWeekMatrix;
         let tempArr;
         let monthStartDate;
         let monthArr;
@@ -2021,6 +2143,24 @@ LogReport.prototype.dailyReports = async function () {
               "유투브 노출수",
               "유투브 좋아요수",
               "유투브 공유수",
+            ]
+          ],
+          [
+            [
+              "날짜",
+              "비용",
+              "노출",
+              "클릭",
+              "사용자수",
+              "신청 페이지뷰",
+              "신청 팝업수",
+              "문의수",
+              "CTR",
+              "CPC",
+              "전환율",
+              "전환당 비용",
+              "문의율",
+              "문의당 비용",
             ]
           ],
         ];
@@ -2521,7 +2661,98 @@ LogReport.prototype.dailyReports = async function () {
         googlePaidWeekMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
         googlePaidWeekMatrix = googlePaidWeekMatrix.map(weekSpread);
 
-        return { matrix, month: { totalFunnelMonthMatrix, facebookPaidMonthMatrix, naverPaidMonthMatrix, googlePaidMonthMatrix }, week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix } };
+        // kakao paid
+        thisIndex = 9;
+        kakaoPaidCopied = equalJson(JSON.stringify(matrix[thisIndex])).slice(1);
+        kakaoPaidMonthMatrix = equalJson(JSON.stringify(monthArr));
+        kakaoPaidWeekMatrix = equalJson(JSON.stringify(weekArr));
+
+        for (let obj of kakaoPaidMonthMatrix) {
+          target = [];
+          for (let arr of kakaoPaidCopied) {
+            if ((new RegExp("^" + String(obj.year) + "-" + zeroAddition(obj.month))).test(arr[0])) {
+              target.push(equalJson(JSON.stringify(arr)));
+            }
+          }
+          if (target.length !== 0) {
+            endD = target[0][0];
+            startD = target[target.length - 1][0];
+            target = target.reduce((acc, curr) => {
+              for (let i = 0; i < curr.length; i++) {
+                if (i !== 0) {
+                  acc[i] = acc[i] + curr[i];
+                }
+              }
+              return acc;
+            }, new Array(target[0].length).fill(0, 0));
+
+            simpleRows = await back.mongoRead("simpleAnalytics", { key: "simple_analytics_" + startD.replace(/\-/gi, '') + "_" + endD.replace(/\-/gi, '') }, { selfMongo });
+            if (simpleRows.length === 0) {
+              simpleRes = await analytics.simpleMetric(startD, endD);
+              await back.mongoCreate("simpleAnalytics", simpleRes, { selfMongo });
+            } else {
+              simpleRes = simpleRows[0];
+            }
+            target[4] = simpleRes.data.users.detail.sourceDetail.cases.filter((obj) => {
+              return kakaoCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+
+          }
+          obj.matrix = target;
+        }
+        kakaoPaidMonthMatrix = kakaoPaidMonthMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ year, month, matrix }) => {
+          matrix[0] = String(year) + "년 " + String(month) + "월";
+          return matrix;
+        });
+        kakaoPaidMonthMatrix.forEach(ratioConverting("kakao"));
+        kakaoPaidMonthMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
+
+        for (let obj of kakaoPaidWeekMatrix) {
+          target = [];
+          for (let arr of kakaoPaidCopied) {
+            if (stringToDate(obj.start).valueOf() <= stringToDate(arr[0]).valueOf() && stringToDate(obj.end).valueOf() >= stringToDate(arr[0]).valueOf()) {
+              target.push(equalJson(JSON.stringify(arr)));
+            }
+          }
+          if (target.length !== 0) {
+            endD = target[0][0];
+            startD = target[target.length - 1][0];
+            target = target.reduce((acc, curr) => {
+              for (let i = 0; i < curr.length; i++) {
+                if (i !== 0) {
+                  acc[i] = acc[i] + curr[i];
+                }
+              }
+              return acc;
+            }, new Array(target[0].length).fill(0, 0));
+
+            simpleRows = await back.mongoRead("simpleAnalytics", { key: "simple_analytics_" + startD.replace(/\-/gi, '') + "_" + endD.replace(/\-/gi, '') }, { selfMongo });
+            if (simpleRows.length === 0) {
+              simpleRes = await analytics.simpleMetric(startD, endD);
+              await back.mongoCreate("simpleAnalytics", simpleRes, { selfMongo });
+            } else {
+              simpleRes = simpleRows[0];
+            }
+            target[4] = simpleRes.data.users.detail.sourceDetail.cases.filter((obj) => {
+              return kakaoCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+
+          }
+          obj.matrix = target;
+        }
+        kakaoPaidWeekMatrix = kakaoPaidWeekMatrix.filter((obj) => { return obj.matrix.length !== 0 }).map(({ start, end, matrix }) => {
+          matrix[0] = String(start) + " ~ " + String(end);
+          return matrix;
+        });
+        kakaoPaidWeekMatrix.forEach(ratioConverting("kakao"));
+        kakaoPaidWeekMatrix.unshift(equalJson(JSON.stringify(matrix[thisIndex][0])));
+        kakaoPaidWeekMatrix = kakaoPaidWeekMatrix.map(weekSpread);
+
+        return { matrix, month: { totalFunnelMonthMatrix, facebookPaidMonthMatrix, naverPaidMonthMatrix, googlePaidMonthMatrix, kakaoPaidMonthMatrix }, week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix, kakaoPaidWeekMatrix } };
 
       } catch (e) {
         console.log(e);
@@ -3080,12 +3311,14 @@ LogReport.prototype.dailyReports = async function () {
     const ninthSheetsId = "1ocaqxxtKIXdyEKV9SodBQW-IzoCWUe8L_dTjKOLGMe8";
     const tenthSheetsId = "18-Kpl062mlA9fyTXgP_RWZvmhCZsg1sMi0Y0cx4qaS0";
     const firstNewSheetsId = "1zIA6AdkY2uZO4Lg3qykbiionnbYOBjVzQut5Oir_tEs";
+    const kakaoSheetsId = "1pLZwub_dSBDmOZig6MPPyiTKLNKe6MQATXEH6l5tet4";
 
     const monthSheets = {
       totalFunnelMonthMatrix: "1jmbTM-pKZ6hwWtQyEsQPuKsT2t3YtVsEo6XuU6kqENU",
       facebookPaidMonthMatrix: "1EVBjmpFlqmitvQkkWM6K2NWH7h8I-r0vxe7Dub2HLZM",
       naverPaidMonthMatrix: "1xkcwOZRAwsXC6JGeSio-Ubm--dr4ddxgG6gdGZb52xc",
       googlePaidMonthMatrix: "1w_SCBYBlocVsD5QQNR-1l3i-mYOODbSFxmJnL75inag",
+      kakaoPaidMonthMatrix: "1cjTz6i5G1hHXZZXjXGv-ZeL4O96rRL7D5MmWbReg0DI",
     };
 
     const weekSheets = {
@@ -3093,12 +3326,13 @@ LogReport.prototype.dailyReports = async function () {
       facebookPaidWeekMatrix: "1-A0v7Ox22l5wcS2H-gYkq200BZrAakKBMa3muwm8eKg",
       naverPaidWeekMatrix: "1q3NFIYnbFCuQUgJRWvgchFOdAeIQxaWmkbAPIuqY1AU",
       googlePaidWeekMatrix: "15Rd2JbqCcm9LjIIMuPVm0U13cDJC_uYxyPdFRjf4b2Y",
+      kakaoPaidWeekMatrix: "1_HiuwxXmyWtoKKTt_cWvLfss8H_tQcebbY7qwWwVJKg",
     };
 
     const {
-      matrix: [ first, firstNew, second, third, fourth, fifth, sixth, seventh, sns ],
-      month: { totalFunnelMonthMatrix, facebookPaidMonthMatrix, naverPaidMonthMatrix, googlePaidMonthMatrix },
-      week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix }
+      matrix: [ first, firstNew, second, third, fourth, fifth, sixth, seventh, sns, kakao ],
+      month: { totalFunnelMonthMatrix, facebookPaidMonthMatrix, naverPaidMonthMatrix, googlePaidMonthMatrix, kakaoPaidMonthMatrix },
+      week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix, kakaoPaidWeekMatrix }
     } = await marketingBasicMatrix(startDay);
 
     const newFirst = await applyUpdate(firstSheetsId, first);
@@ -3109,6 +3343,7 @@ LogReport.prototype.dailyReports = async function () {
     const newSixth = await applyUpdate(sixthSheetsId, sixth);
     const newSeventh = await applyUpdate(seventhSheetsId, seventh);
     const newSns = await applyUpdate(snsSheetsId, sns);
+    const newKakao = await applyUpdate(kakaoSheetsId, kakao);
 
     await applyUpdate(firstNewSheetsId, firstNew);
 
@@ -3122,11 +3357,13 @@ LogReport.prototype.dailyReports = async function () {
     await applyUpdate(monthSheets.facebookPaidMonthMatrix, facebookPaidMonthMatrix);
     await applyUpdate(monthSheets.naverPaidMonthMatrix, naverPaidMonthMatrix);
     await applyUpdate(monthSheets.googlePaidMonthMatrix, googlePaidMonthMatrix);
+    await applyUpdate(monthSheets.kakaoPaidMonthMatrix, kakaoPaidMonthMatrix);
 
     await applyUpdate(weekSheets.totalFunnelWeekMatrix, totalFunnelWeekMatrix);
     await applyUpdate(weekSheets.facebookPaidWeekMatrix, facebookPaidWeekMatrix);
     await applyUpdate(weekSheets.naverPaidWeekMatrix, naverPaidWeekMatrix);
     await applyUpdate(weekSheets.googlePaidWeekMatrix, googlePaidWeekMatrix);
+    await applyUpdate(weekSheets.kakaoPaidWeekMatrix, kakaoPaidWeekMatrix);
 
     console.log("sheets update all done");
 
