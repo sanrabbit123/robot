@@ -1066,6 +1066,7 @@ LogReport.prototype.dailyReports = async function () {
         }, { headers: { "Content-Type": "application/json" } })).data;
 
         const campaignEntireRows = await back.mongoRead("dailyCampaign", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
+        const campaignAspirantEntireRows = await back.mongoRead("dailyAspirantCampaign", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
         const analyticsEntireRows = await back.mongoRead("dailyAnalytics", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
         const clientsEntireRows = await back.mongoRead("dailyClients", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
         const metaComplexRows = await back.mongoRead("metaComplex", { "date.from": { $gte: queryStandardDate } }, { selfMongo: selfContentsMongo });
@@ -1084,7 +1085,7 @@ LogReport.prototype.dailyReports = async function () {
           return (/kakao/gi.test(str));
         }
 
-        const getReportsByDate = async (targetDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories, metaComplexRows, googleComplexRows) => {
+        const getReportsByDate = async (targetDate, campaignEntireRows, campaignAspirantEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories, metaComplexRows, googleComplexRows) => {
           const keyMaker = (date) => {
             const keyRegMaker = (date) => {
               return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}_`;
@@ -1199,6 +1200,7 @@ LogReport.prototype.dailyReports = async function () {
           let kakaoSubmitConverting;
           let kakaoSubmitChargeConverting;
           let kakaoMatrix;
+          let campaignAspirantRows;
 
           from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
           to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
@@ -1207,6 +1209,7 @@ LogReport.prototype.dailyReports = async function () {
           // get data
 
           campaignRows = campaignEntireRows.filter((obj) => { return (new RegExp("^" + campaignKey)).test(obj.key); });
+          campaignAspirantRows = campaignAspirantEntireRows.filter((obj) => { return (new RegExp("^" + campaignKey)).test(obj.key); });
           analyticsRows = analyticsEntireRows.find((obj) => { return obj.anaid === analyticsKey });
           clientsRows = clientsEntireRows.find((obj) => { return obj.ancid === clientsKey });
           if (analyticsRows === undefined || clientsRows === undefined) {
@@ -2169,7 +2172,7 @@ LogReport.prototype.dailyReports = async function () {
 
         standardDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         for (let i = 0; i < dateAgo; i++) {
-          resMatrix = await getReportsByDate(standardDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories, metaComplexRows, googleComplexRows);
+          resMatrix = await getReportsByDate(standardDate, campaignEntireRows, campaignAspirantEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories, metaComplexRows, googleComplexRows);
           for (let i = 0; i < matrix.length; i++) {
             for (let arr of resMatrix[i]) {
               matrix[i].push(arr);
