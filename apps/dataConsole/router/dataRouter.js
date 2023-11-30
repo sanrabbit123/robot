@@ -5771,10 +5771,15 @@ DataRouter.prototype.rou_post_errorLog = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      let ip, rawUserAgent;
       if (typeof req.body.message !== "string") {
         throw new Error("invalid post");
       }
-      await logger.error(req.body.message);
+
+      ip = String(req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"]).trim().replace(/[^0-9\.]/gi, '');
+      rawUserAgent = req.useragent;
+
+      await logger.error(req.body.message + "\n\n" + "ip: " + String(ip) + "\n\n" + JSON.stringify(rawUserAgent, null, 2));
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       await logger.error("Console 서버 문제 생김 (rou_post_errorLog): " + e.message);
