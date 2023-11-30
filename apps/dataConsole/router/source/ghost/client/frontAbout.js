@@ -1753,6 +1753,7 @@ FrontAboutJs.prototype.insertThreeBox = function (middleTong) {
   let mobileTitleMarginBottom;
   let mobileContentsMarginBottom;
   let titleTextTop, descriptionTextTop;
+  let smallTextTop;
 
   middleTongPaddinngTop = <%% 160, 140, 110, 95, 0 %%>;
   middleTongPaddingBottom = <%% 180, 150, 120, 105, 0 %%>;
@@ -1817,6 +1818,8 @@ FrontAboutJs.prototype.insertThreeBox = function (middleTong) {
   mobileTitleMarginBottom = 2.5;
   mobileContentsMarginBottom = 4;
 
+  smallTextTop = <%% (isMac() ? 20 : 22), (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 11 : 13), 0 %%>;
+
   titleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 1), 0 %%>;
   descriptionTextTop = <%% (isMac() ? 0 : 2.5), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 1.5), 0 %%>;
 
@@ -1829,6 +1832,7 @@ FrontAboutJs.prototype.insertThreeBox = function (middleTong) {
     three: [
       {
         title: "홈퍼니싱",
+        small: "시공 없이 스타일링만",
         sub: "home-furnishing",
         description: [
           "인테리어 시공 없이 가구, 패브릭, 소품만",
@@ -1840,6 +1844,7 @@ FrontAboutJs.prototype.insertThreeBox = function (middleTong) {
       },
       {
         title: "홈스타일링",
+        small: "부분 시공과 스타일링",
         sub: "home-styling",
         description: [
           "집 컨디션에 맞는 범위의 시공을 진행",
@@ -1851,6 +1856,7 @@ FrontAboutJs.prototype.insertThreeBox = function (middleTong) {
       },
       {
         title: "토탈 스타일링",
+        small: "전체 시공과 스타일링",
         sub: "total-styling",
         description: [
           "원하는 스타일과 라이프 패턴에 맞게 기획",
@@ -1922,6 +1928,18 @@ FrontAboutJs.prototype.insertThreeBox = function (middleTong) {
               fontWeight: String(threeTitleWeight),
               color: colorChip.black,
               top: desktop ? String(titleTextTop) + ea : "",
+            },
+            next: {
+              text: contents.three[i].small,
+              style: {
+                display: desktop ? "inline-block" : "none", 
+                position: "absolute",
+                fontSize: String(threeSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.deactive,
+                top: String(smallTextTop) + ea,
+                right: String(threeTitlePaddingLeft - 2) + ea,
+              },
             }
           }
         },
