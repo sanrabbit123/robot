@@ -459,11 +459,11 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
     },
     child: {
       text: desktop ? [
-        "홈스타일링은 빈 집으로 끝나는 기존 리모델링과 달리 홈퍼니싱, 제작 가구, 그리고 패브릭까지 완벽하게 끝내는 주거 인테리어를 뜻합니다.",
-        "홈스타일링은 가구와 소품까지 모두 완성된 상태를 사전에 기획하며 시공의 범위를 조정하고, 가구 / 소품 / 패브릭의 조화까지 모두 고려하여 공간의 모습을 그려내고 또 완성해 나아갑니다."
+        "홈리에종은 빈 집으로 끝나는 기존 리모델링과 다르게 온전히 거주할 수 있는 상태로 완성하는 인테리어를 합니다.",
+        "처음부터 예산을 고려하여 시공 범위를 조정하고, 가구, 소품, 패브릭의 조화까지 고려하여 공간의 쓰임을 미리 고민하고 각 고객님께 맞추어 완성해 나갑니다."
       ].join(" ") : [
-        "홈스타일링은 빈 집으로 끝나는 리모델링과 달리 가구, 패브릭, 소품까지 완벽하게 끝내는 인테리어를 뜻합니다.",
-        "홈스타일링은 소품까지 완성된 상태를 먼저 기획하여 시공 범위를 조정하고, 가구의 조화까지 모두 고려하여 공간을 그려내고 완성해갑니다."
+        "홈리에종은 빈 집으로 끝나는 기존 리모델링과 다르게 온전히 거주할 수 있는 상태로 완성하는 인테리어를 합니다.",
+        "처음부터 예산을 고려하여 시공 범위를 조정하고, 가구, 소품, 패브릭의 조화까지 고려하여 공간의 쓰임을 미리 고민하고 완성해 나갑니다."
       ].join(" "),
       style: {
         display: "block",
@@ -964,11 +964,11 @@ FrontAboutJs.prototype.insertMainContentsBox = function () {
       up: {
         title: "홈리에종의 프로젝트 케어",
         description: desktop ? [
-          "홈리에종은 디자인, 시공, 가구 제작 및 스타일링과 세팅을 모두 하나의 통합된 시스템으로 제공함으로써, 일일히 여러 업체들과 협의하는 번거로움을",
-          "줄입니다. 자신의 현장의 진행 상황을 한 눈에 보고 관리할 수 있게 하여 불투명한 인테리어를 방지하고 리스크 관리를 가능하게 합니다.",
+          "인테리어는 디자이너, 각 공정별 반장님, 현장 소장님, 제품 구입처 등 수많은 사람들과 1~3개월 이상 진행하게 되는 특별한 프로젝트입니다.",
+          "전문 영역의 수많은 단계와 방식을 투명하게 관리하여 고객님이 잘 이해할 수 있도록 하나의 통합된 시스템을 제공하여 관리해 드립니다.",
         ] : [
-          "홈리에종은 디자인, 시공, 제작 및 세팅을 모두 하나의 시스템으로 제공함으로써, 여러 업체들과 협의하는 번거로움을",
-          "줄입니다. 자신의 현장의 상황을 한 눈에 보고 관리할 수 있게 하여 불투명한 인테리어를 방지하고 리스크 관리를 가능하게 합니다.",
+          "인테리어는 디자이너, 반장님, 소장님, 제품 구입처 등 수많은 사람들과 1~3개월 이상 진행하게 되는 프로젝트입니다.",
+          "전문 영역의 수많은 단계와 방식을 투명하게 관리하여 고객님이 잘 이해할 수 있도록 하나의 통합된 시스템을 제공하여 관리해 드립니다.",
         ]
       },
     },
@@ -989,11 +989,11 @@ FrontAboutJs.prototype.insertMainContentsBox = function () {
       up: {
         title: "홈리에종의 서비스 종류",
         description: desktop ? [
-          "서비스는 시공에 따라 구분됩니다. 홈퍼니싱은 시공이 없는 서비스이며, 홈스타일링과 토탈 스타일링은 부분 시공만 진행하는 지, 전체 시공을 진행하는 지에 따라 구분됩니다.",
-          "엑스트라 스타일링은 토탈 스타일링의 프리미엄 버전으로, '설계 변경'이라고도 불리며, 시공 디자인이 필요한지 여부에 따라 토탈과 구분됩니다.",
+          "시공의 정도에 따라 서비스를 구분합니다. 시공이 아예 없는 경우(홈퍼니싱), 톤을 보정하는 간단한 부분 시공의 경우(홈스타일링), 집의 전체 공간을 대체로 교체하는",
+          "시공의 경우(토탈 스타일링)으로 나누고 스타일링에 필요한 디자인과 예산을 함께 분할하여 조화로운 구성으로 마무리합니다.",
         ] : [
-          "서비스는 시공에 따라 구분됩니다. 시공 없는 홈퍼니싱, 부분 시공만 진행하는 홈스타일링, 전체 시공의 토탈 스타일링으로 구분됩니다.",
-          "엑스트라 스타일링은 토탈 스타일링의 프리미엄 버전으로, 시공 디자인이 필요한지 여부에 따라 토탈과 구분됩니다.",
+          "시공 정도에 따라 서비스를 구분합니다. 시공이 없는 경우(홈퍼니싱), 간단한 부분 시공의 경우(홈스타일링), 집의 전체 공간을 교체하는",
+          "시공의 경우(토탈 스타일링)으로 나누고 스타일링에 필요한 디자인과 예산을 분할해 조화로운 구성으로 마무리합니다",
         ]
       },
     },
@@ -1936,7 +1936,7 @@ FrontAboutJs.prototype.insertThreeBox = function (middleTong) {
                 position: "absolute",
                 fontSize: String(threeSize) + ea,
                 fontWeight: String(600),
-                color: colorChip.deactive,
+                color: colorChip.green,
                 top: String(smallTextTop) + ea,
                 right: String(threeTitlePaddingLeft - 2) + ea,
               },
@@ -2333,7 +2333,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
         }
       },
       {
-        text: <&& "디자이너 전면\n배치 모델" | "디자이너\n전면 배치" | "디자이너 전면 배치 모델" | "디자이너 전면 배치 모델" | mobileTitleToken + "디자이너 전면 배치 모델" &&>,
+        text: <&& "디자이너\n선택을 먼저!" | "디자이너\n선택을 먼저!" | "디자이너 선택을 먼저!" | "디자이너 선택을 먼저!" | mobileTitleToken + "디자이너 선택을 먼저!" &&>,
         style: {
           display: "inline-block",
           position: "relative",
@@ -2342,10 +2342,9 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
           wordSpacing: String(wordSpacing) + "px",
           marginBottom: big ? "" : String(titleMarginBottom) + ea,
           color: colorChip.black,
-          width: !media[3] ? "" : String(100) + '%',
-          textAlign: desktop ? "" : "center",
+          width: big ? "" : String(100) + '%',
+          textAlign: big ? "" : (desktop ? "center" : "left"),
           lineHeight: String(1.3),
-          textAlign: !media[3] ? "" : "center",
         },
         under: {
           fontSize: String(titleFont) + ea,
@@ -2371,11 +2370,11 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
   createNode({
     mother: rightBox1,
     text: big ? [
-      "홈리에종은 디자이너를 전면으로 내세워 디자인을 선행하여, 선 기획 후 시공의 방식으로 주거 인테리어를 다시 모델링하였습니다.",
-      "이러한 방식으로 진행하면 불필요한 시공을 막을 수 있고, 더 완성도 있는 모습으로 끝낼 수 있어 효율적이고 효과적인 주거 인테리어를 경험할 수 있습니다.",
+      "디자인 감성의 취향을 맞추고, 시공 난이도에 따라 적합한 역량을 가진 디자이너를 선택합니다. 처음부터 공간 상태, 예산, 스타일 등을 고려하여",
+      "시공하고 스타일링하면 만족스러운 공간 경험을 하게 됩니다. 수많은 의사 결정이 필요한 인테리어, 전문가와 함께 하며 실패를 줄이고 가심비 높은 결과를 얻기를 추천합니다."
     ].join(" ") : [
-      "홈리에종은 디자이너를 전면으로 내세워 디자인을 선행하여, 선 기획 후 시공의 방식으로 주거 인테리어를 모델링하였습니다.",
-      "이렇게 진행하면 불필요한 시공을 막을 수 있고, 완성도 있게 끝낼 수 있어 효율적인 인테리어를 경험할 수 있습니다.",
+      "디자인 감성의 취향을 맞추고, 시공 난이도에 따라 역량을 가진 디자이너를 선택합니다. 처음부터 공간, 예산, 스타일을 고려해",
+      "홈스타일링하면 만족스러운 경험을 하게 됩니다. 수많은 결정이 필요한 인테리어, 전문가와 함께 하며 효과적인 결과를 얻기를 추천합니다."
     ].join(desktop ? "\n" : " "),
     style: {
       display: "block",
@@ -2384,7 +2383,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
       fontWeight: String(400),
       color: colorChip.black,
       lineHeight: String(1.6),
-      textAlign: !media[3] ? "" : "center",
+      textAlign: big ? "" : (desktop ? "center" : "left"),
     },
     next: {
       style: {
