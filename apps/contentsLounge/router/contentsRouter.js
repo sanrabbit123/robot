@@ -702,6 +702,7 @@ ContentsRouter.prototype.rou_post_getAdsComplex = function () {
         "metaComplex",
         "naverComplex",
         "googleComplex",
+        "kakaoComplex",
       ];
       let resultObj;
       let startDateCopied;

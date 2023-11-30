@@ -1591,6 +1591,9 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
         data: [],
       });
     }
+
+    console.log(data);
+
     for (let key of keyTargets) {
       targetData = equalJson(JSON.stringify(data[key]));
       for (let obj of targetData) {
@@ -1697,8 +1700,6 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
       ]
     ];
     num0 = 0;
-
-    console.log(timeMatrix);
 
     for (let obj of timeMatrix) {
       baseBlock = createNode({
