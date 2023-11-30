@@ -157,10 +157,10 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/analyticsToday", { report: 1 }, { headers: { "Content-Type": "application/json" } });
-
 
     
+    // await requestSystem("https://" + address.contentsinfo.host + ":3000/metaComplex", { day: 10 }, { headers: { "Content-Type": "application/json" } });
+
 
     
 

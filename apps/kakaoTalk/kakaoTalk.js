@@ -4879,7 +4879,7 @@ KakaoTalk.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, lo
     }
 
     if (logger !== null) {
-      logger.cron("facebook daily campaign done : " + dateToString(new Date())).catch((err) => { console.log(err); });
+      logger.cron("kakao daily campaign done : " + dateToString(new Date())).catch((err) => { console.log(err); });
     }
 
   } catch (e) {
