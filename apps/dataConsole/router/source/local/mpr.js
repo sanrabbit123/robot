@@ -1500,6 +1500,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
       "meta",
       "naver",
       "google",
+      "kakao",
     ];
     const keyword = "t";
     const blank = "&nbsp;&nbsp;";
@@ -1542,6 +1543,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
     let metaTargets;
     let metaCampaignTong;
     let realCampaignTong;
+    let kakaoCampaignTong;
     let thisCharge;
     let thisImpressions;
     let thisClicks;
@@ -1549,6 +1551,7 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
     let leftPadding;
     let googleTargets;
     let googleCampaignTong;
+    let kakaoTargets;
 
     timeWidth = 150;
     typeWidth = 80;
@@ -1592,8 +1595,6 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
       });
     }
 
-    console.log(data);
-
     for (let key of keyTargets) {
       targetData = equalJson(JSON.stringify(data[key]));
       for (let obj of targetData) {
@@ -1609,11 +1610,13 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
         }
       }
     }
+
     for (let obj of timeMatrix) {
       naverTargets = obj.data.filter((o) => { return o.kinds === "naver" });
       metaTargets = obj.data.filter((o) => { return o.kinds === "meta" });
       googleTargets = obj.data.filter((o) => { return o.kinds === "google" });
-      newDataArray = obj.data.filter((o) => { return o.kinds !== "naver" && o.kinds !== "meta" && o.kinds !== "google" });
+      kakaoTargets = obj.data.filter((o) => { return o.kinds === "kakao" });
+      newDataArray = obj.data.filter((o) => { return o.kinds !== "naver" && o.kinds !== "meta" && o.kinds !== "google" && o.kinds !== "kakao" });
 
       thisCharge = metaTargets.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
       thisImpressions = metaTargets.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0);
@@ -1663,6 +1666,23 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
             }
           },
           children: equalJson(JSON.stringify(googleTargets)),
+        });
+      }
+
+      thisCharge = kakaoTargets.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
+      thisImpressions = kakaoTargets.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0);
+      thisClicks = kakaoTargets.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0);
+      if (!(thisCharge === 0 && thisImpressions === 0 && thisClicks === 0)) {
+        newDataArray.push({
+          kinds: "kakao",
+          value: {
+            charge: thisCharge,
+            performance: {
+              impressions: thisImpressions,
+              clicks: thisClicks,
+            }
+          },
+          children: equalJson(JSON.stringify(kakaoTargets)),
         });
       }
 
@@ -2313,6 +2333,493 @@ MprJs.prototype.adsWhiteContents = async function (tong, data, startDate, endDat
             num5++;
           }
 
+        } else if (campaign.kinds === "kakao") {
+
+          kakaoCampaignTong = createNode({
+            mother: campaignBaseBlock,
+            style: {
+              display: "inline-block",
+              verticalAlign: "top",
+              position: "relative",
+              width: String((blockWidth * 10) + 1) + ea,
+              borderRight: "1px solid " + colorChip.gray3,
+              boxSizing: "border-box",       
+            },
+          });
+
+          num5 = 0;
+          for (let realCampaign of campaign.children) {
+            realCampaignTong = createNode({
+              mother: kakaoCampaignTong,
+              style: {
+                display: "flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: withOut(0, ea),
+                borderBottom: num5 !== campaign.children.length - 1 ? "1px solid " + colorChip.gray3 : "",
+                flexDirection: "row",
+              }
+            });
+            createNode({
+              mother: realCampaignTong,
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth * 2) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                borderRight: "1px solid " + colorChip.gray3,
+                boxSizing: "border-box",
+              },
+              child: {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(leftPadding * 2, ea),
+                  overflow: "hidden",
+                  textAlign: "center",
+                },
+                child: {
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: String(maxWidth) + ea,
+                    left: withOut(50, maxWidth / 2, ea),
+                    textAlign: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                  child: {
+                    text: realCampaign.information.name,
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(textTop) + ea,
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.black,
+                    }
+                  }
+                },
+              }
+            });
+            adSetTong = createNode({
+              mother: realCampaignTong,
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                position: "relative",
+                width: String(blockWidth * 8) + ea,
+              },
+            });
+            num2 = 0;
+            for (let adset of realCampaign.children) {
+  
+              adSetBaseBlock = createNode({
+                mother: adSetTong,
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  boxSizing: "border-box",
+                  flexDirection: "row",
+                  borderBottom: num2 !== realCampaign.children.length - 1 ? "1px solid " + colorChip.gray3 : "",
+                },
+              });
+              createNode({
+                mother: adSetBaseBlock,
+                style: {
+                  display: "inline-flex",
+                  verticalAlign: "top",
+                  position: "relative",
+                  width: String(blockWidth * 2) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  borderRight: "1px solid " + colorChip.gray3,
+                  boxSizing: "border-box",       
+                },
+                child: {
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    width: withOut(leftPadding * 2, ea),
+                    overflow: "hidden",
+                    textAlign: "center",
+                  },
+                  child: {
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      width: String(maxWidth) + ea,
+                      left: withOut(50, maxWidth / 2, ea),
+                      textAlign: "center",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      text: adset.information.name,
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        top: String(textTop) + ea,
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(textWeight),
+                        color: colorChip.black,
+                      }
+                    }
+                  },
+                }
+              });
+              adTong = createNode({
+                mother: adSetBaseBlock,
+                style: {
+                  display: "inline-block",
+                  verticalAlign: "top",
+                  position: "relative",
+                  width: withOut(blockWidth * 2, ea),
+                  boxSizing: "border-box",
+                },
+              });
+  
+              num3 = 0;
+              for (let ad of adset.children) {
+                adBaseBlock = createNode({
+                  mother: adTong,
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    width: withOut(0, ea),
+                    height: String(blockHeight) + ea,
+                    boxSizing: "border-box",
+                    borderBottom: num3 !== adset.children.length - 1 ? "1px solid " + colorChip.gray3 : "",
+                  },
+                });
+                createNode({
+                  mother: adBaseBlock,
+                  style: {
+                    display: "inline-flex",
+                    verticalAlign: "top",
+                    position: "relative",
+                    width: String(blockWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    borderRight: "1px solid " + colorChip.gray3,
+                    boxSizing: "border-box",       
+                  },
+                  child: {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      width: withOut(leftPadding * 2, ea),
+                      overflow: "hidden",
+                      textAlign: "center",
+                    },
+                    child: {
+                      style: {
+                        display: "flex",
+                        position: "relative",
+                        width: String(maxWidth) + ea,
+                        left: withOut(50, maxWidth / 2, ea),
+                        textAlign: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      },
+                      child: {
+                        text: ad.information.name,
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          top: String(textTop) + ea,
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(textWeight),
+                          color: colorChip.black,
+                        }
+                      }
+                    },
+                  }
+                });
+                createNode({
+                  mother: adBaseBlock,
+                  style: {
+                    display: "inline-flex",
+                    verticalAlign: "top",
+                    position: "relative",
+                    width: String(blockWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    boxSizing: "border-box",
+                    borderRight: "1px dashed " + colorChip.gray3,
+                  },
+                  child: {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      width: withOut(leftPadding * 2, ea),
+                      overflow: "hidden",
+                      textAlign: "center",
+                    },
+                    child: {
+                      style: {
+                        display: "flex",
+                        position: "relative",
+                        width: String(maxWidth) + ea,
+                        left: withOut(50, maxWidth / 2, ea),
+                        textAlign: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      },
+                      child: {
+                        text: "비용:" + blank + "<b%" + autoComma(ad.value.charge) + "원" + "%b>",
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          top: String(textTop) + ea,
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(textWeight),
+                          color: colorChip.deactive,
+                        },
+                        bold: {
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(valueWeight),
+                          color: colorChip.green,
+                        }
+                      }
+                    },
+                  }
+                });
+                createNode({
+                  mother: adBaseBlock,
+                  style: {
+                    display: "inline-flex",
+                    verticalAlign: "top",
+                    position: "relative",
+                    width: String(blockWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    boxSizing: "border-box",
+                    borderRight: "1px dashed " + colorChip.gray3,
+                  },
+                  child: {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      width: withOut(leftPadding * 2, ea),
+                      overflow: "hidden",
+                      textAlign: "center",
+                    },
+                    child: {
+                      style: {
+                        display: "flex",
+                        position: "relative",
+                        width: String(maxWidth) + ea,
+                        left: withOut(50, maxWidth / 2, ea),
+                        textAlign: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      },
+                      child: {
+                        text: "노출:" + blank + "<b%" + String(ad.value.performance.impressions) + "%b>",
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          top: String(textTop) + ea,
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(textWeight),
+                          color: colorChip.deactive,
+                        },
+                        bold: {
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(valueWeight),
+                          color: colorChip.green,
+                        }
+                      }
+                    },
+                  }
+                });
+                createNode({
+                  mother: adBaseBlock,
+                  style: {
+                    display: "inline-flex",
+                    verticalAlign: "top",
+                    position: "relative",
+                    width: String(blockWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    boxSizing: "border-box",
+                    borderRight: "1px dashed " + colorChip.gray3,
+                  },
+                  child: {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      width: withOut(leftPadding * 2, ea),
+                      overflow: "hidden",
+                      textAlign: "center",
+                    },
+                    child: {
+                      style: {
+                        display: "flex",
+                        position: "relative",
+                        width: String(maxWidth) + ea,
+                        left: withOut(50, maxWidth / 2, ea),
+                        textAlign: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      },
+                      child: {
+                        text: "클릭:" + blank + "<b%" + String(ad.value.performance.clicks) + "%b>",
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          top: String(textTop) + ea,
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(textWeight),
+                          color: colorChip.deactive,
+                        },
+                        bold: {
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(valueWeight),
+                          color: colorChip.green,
+                        }
+                      }
+                    },
+                  }
+                });
+                createNode({
+                  mother: adBaseBlock,
+                  style: {
+                    display: "inline-flex",
+                    verticalAlign: "top",
+                    position: "relative",
+                    width: String(blockWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    boxSizing: "border-box",
+                    borderRight: "1px dashed " + colorChip.gray3,
+                  },
+                  child: {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      width: withOut(leftPadding * 2, ea),
+                      overflow: "hidden",
+                      textAlign: "center",
+                    },
+                    child: {
+                      style: {
+                        display: "flex",
+                        position: "relative",
+                        width: String(maxWidth) + ea,
+                        left: withOut(50, maxWidth / 2, ea),
+                        textAlign: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      },
+                      child: {
+                        text: "CTR:" + blank + "<b%" + String(ad.value.performance.impressions === 0 ? 0 : Math.round((ad.value.performance.clicks / ad.value.performance.impressions) * 10000) / 100) + "%%b>",
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          top: String(textTop) + ea,
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(textWeight),
+                          color: colorChip.deactive,
+                        },
+                        bold: {
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(valueWeight),
+                          color: colorChip.green,
+                        }
+                      }
+                    },
+                  }
+                });
+                createNode({
+                  mother: adBaseBlock,
+                  style: {
+                    display: "inline-flex",
+                    verticalAlign: "top",
+                    position: "relative",
+                    width: String(blockWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    boxSizing: "border-box",
+                  },
+                  child: {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      width: withOut(leftPadding * 2, ea),
+                      overflow: "hidden",
+                      textAlign: "center",
+                    },
+                    child: {
+                      style: {
+                        display: "flex",
+                        position: "relative",
+                        width: String(maxWidth) + ea,
+                        left: withOut(50, maxWidth / 2, ea),
+                        textAlign: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      },
+                      child: {
+                        text: "CPC:" + blank + "<b%" + String(ad.value.performance.clicks === 0 ? 0 : autoComma((ad.value.charge / ad.value.performance.clicks))) + "원%b>",
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          top: String(textTop) + ea,
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(textWeight),
+                          color: colorChip.deactive,
+                        },
+                        bold: {
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(valueWeight),
+                          color: colorChip.green,
+                        }
+                      }
+                    },
+                  }
+                });
+
+                instance.adsMatrix.push([
+                  dateToString(obj.date),
+                  campaign.kinds,
+                  realCampaign.information.name,
+                  "instagram",
+                  adset.information.name,
+                  ad.information.name,
+                  ad.value.charge,
+                  ad.value.performance.impressions,
+                  ad.value.performance.clicks,
+                  (ad.value.performance.impressions === 0 ? 0 : Math.round((ad.value.performance.clicks / ad.value.performance.impressions) * 10000) / 100),
+                  ad.value.performance.clicks === 0 ? 0 : Math.floor((ad.value.charge / ad.value.performance.clicks)),
+                ])
+
+                num3++;
+              }
+              
+              num2++;
+            }
+            num5++;
+          }
+          
         } else if (campaign.kinds === "naver") {
           naverCampaignTong = createNode({
             mother: campaignBaseBlock,

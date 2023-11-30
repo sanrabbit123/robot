@@ -49,7 +49,7 @@ GoogleAnalytics.prototype.setCredentials = async function () {
   }
 }
 
-GoogleAnalytics.prototype.returnAnalyticsObject = async function (analyticsDataClient, startDate, endDate, metric, dimensionsArr, dimensionFilter = null) {
+GoogleAnalytics.prototype.returnAnalyticsObjectExecute = async function (analyticsDataClient, startDate, endDate, metric, dimensionsArr, dimensionFilter = null) {
   const instance = this;
   const { property } = this;
   const { dateToString, equalJson, stringToDate, requestSystem, fileSystem, zeroAddition } = this.mother;
@@ -111,9 +111,37 @@ GoogleAnalytics.prototype.returnAnalyticsObject = async function (analyticsDataC
   }
 }
 
+GoogleAnalytics.prototype.returnAnalyticsObject = async function (analyticsDataClient, startDate, endDate, metric, dimensionsArr, dimensionFilter = null) {
+  const instance = this;
+  const { sleep, emergencyAlarm } = this.mother;
+  try {
+    let result;
+    let safeNum;
+    await sleep(500);
+    result = await this.returnAnalyticsObjectExecute(analyticsDataClient, startDate, endDate, metric, dimensionsArr, dimensionFilter);
+    safeNum = 0;
+    while (result === null) {
+      await sleep(5 * 1000);
+      result = await this.returnAnalyticsObjectExecute(analyticsDataClient, startDate, endDate, metric, dimensionsArr, dimensionFilter);
+      safeNum++;
+      if (safeNum > 10) {
+        break;
+      }
+    }
+    if (result === null) {
+      throw new Error("metric fail");
+    }
+    return result;
+  } catch (e) {
+    await emergencyAlarm("metric fail (GoogleAnalytics.prototype.returnAnalyticsObject): " + e.message);
+    console.log(e);
+    return null;
+  }
+}
+
 GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
   const instance = this;
-  const { dateToString, equalJson, stringToDate, requestSystem, fileSystem, zeroAddition, emergencyAlarm } = this.mother;
+  const { dateToString, equalJson, stringToDate, requestSystem, fileSystem, zeroAddition, emergencyAlarm, sleep } = this.mother;
   const { BetaAnalyticsDataClient } = require("@google-analytics/data");
   try {
     let startDate, endDate;
@@ -141,6 +169,8 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
     analyticsDataClient = new BetaAnalyticsDataClient();
     dataObject = {};
 
+    await sleep(500);
+
     // users
     userMetric = "totalUsers";
     userDimensions = [
@@ -155,6 +185,8 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
     if (dataObject.users === null) {
       throw new Error("users parsing fail");
     }
+
+    await sleep(500);
 
     // views
     viewMetric = "screenPageViews";
@@ -173,6 +205,8 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
       throw new Error("views parsing fail");
     }
 
+    await sleep(500);
+
     // events
     eventMetric = "eventCount";
     eventDimensions = [
@@ -190,6 +224,8 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
     // conversion
     dataObject.conversion = {};
 
+    await sleep(500);
+
     // conversion - popup open
     conversionPopupOpenMetric = "eventCount";
     conversionPopupOpenDimensions = [
@@ -205,6 +241,8 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
     if (dataObject.conversion.popupOpen === null) {
       throw new Error("conversion.popupOpen parsing fail");
     }
+
+    await sleep(500);
 
     // conversion - consulting page
     conversionConsultingPageMetric = "screenPageViews";
@@ -500,7 +538,7 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
 
 GoogleAnalytics.prototype.simpleMetric = async function (startDate, endDate) {
   const instance = this;
-  const { dateToString, equalJson, stringToDate, requestSystem, fileSystem, zeroAddition } = this.mother;
+  const { dateToString, equalJson, stringToDate, requestSystem, fileSystem, zeroAddition, sleep } = this.mother;
   const { BetaAnalyticsDataClient } = require("@google-analytics/data");
   try {
     let analyticsDataClient;
@@ -529,6 +567,8 @@ GoogleAnalytics.prototype.simpleMetric = async function (startDate, endDate) {
     analyticsDataClient = new BetaAnalyticsDataClient();
     dataObject = {};
 
+    await sleep(1000);
+
     // users
     userMetric = "totalUsers";
     userDimensions = [
@@ -539,6 +579,7 @@ GoogleAnalytics.prototype.simpleMetric = async function (startDate, endDate) {
     ];
     dataObject.users = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, userMetric, userDimensions);
 
+    await sleep(1000);
 
     // events
     eventMetric = "eventCount";
@@ -751,7 +792,7 @@ GoogleAnalytics.prototype.googleQuery = async function (targetDate) {
 
 GoogleAnalytics.prototype.complexMetric = async function (startDate, endDate) {
   const instance = this;
-  const { dateToString, equalJson, stringToDate, requestSystem, fileSystem, zeroAddition } = this.mother;
+  const { dateToString, equalJson, stringToDate, requestSystem, fileSystem, zeroAddition, sleep } = this.mother;
   const { BetaAnalyticsDataClient } = require("@google-analytics/data");
   try {
     let userMetric, userDimensions;
@@ -781,6 +822,8 @@ GoogleAnalytics.prototype.complexMetric = async function (startDate, endDate) {
     analyticsDataClient = new BetaAnalyticsDataClient();
     dataObject = {};
 
+    await sleep(500);
+
     // users
     userMetric = "totalUsers";
     userDimensions = [
@@ -792,6 +835,8 @@ GoogleAnalytics.prototype.complexMetric = async function (startDate, endDate) {
       { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
     ];
     dataObject.users = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, userMetric, userDimensions);
+
+    await sleep(500);
 
     // views
     viewMetric = "screenPageViews";
@@ -807,6 +852,8 @@ GoogleAnalytics.prototype.complexMetric = async function (startDate, endDate) {
     ];
     dataObject.views = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, viewMetric, viewDimensions);
 
+    await sleep(500);
+
     // events
     eventMetric = "eventCount";
     eventDimensions = [
@@ -817,6 +864,8 @@ GoogleAnalytics.prototype.complexMetric = async function (startDate, endDate) {
       { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
     ];
     dataObject.events = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, eventMetric, eventDimensions);
+
+    await sleep(500);
 
     // conversion
     dataObject.conversion = {};
@@ -833,6 +882,8 @@ GoogleAnalytics.prototype.complexMetric = async function (startDate, endDate) {
       { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
     ];
     dataObject.conversion.popupOpen = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, conversionPopupOpenMetric, conversionPopupOpenDimensions, { filter: { fieldName: "eventName", stringFilter: { matchType: "CONTAINS", value: "popupOpen", caseSensitive: true } } });
+
+    await sleep(500);
 
     // conversion - consulting page
     conversionConsultingPageMetric = "screenPageViews";
