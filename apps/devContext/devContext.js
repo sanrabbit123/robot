@@ -117,10 +117,10 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
     // kakao template json
-    // const kakao = new KakaoTalk();
-    // const json = await kakao.getTemplate();
-    // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/kakaoJson.json`, json ]);
-    // await shellExec(`code`, [ `${process.cwd()}/temp/kakaoJson.json` ]);
+    const kakao = new KakaoTalk();
+    const json = await kakao.getTemplate();
+    await fileSystem(`writeJson`, [ `${process.cwd()}/temp/kakaoJson.json`, json ]);
+    await shellExec(`code`, [ `${process.cwd()}/temp/kakaoJson.json` ]);
     // =======================================================================================================================================================
 
     // kakao friend send
@@ -157,10 +157,10 @@ DevContext.prototype.launching = async function () {
 
 
 
+    
+    
 
     
-    // await requestSystem("https://" + address.contentsinfo.host + ":3000/metaComplex", { day: 10 }, { headers: { "Content-Type": "application/json" } });
-
     
     
 
@@ -6895,9 +6895,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이나현",
-    //     designer: "오정수",
-    //     link: "https://drive.google.com/drive/folders/1NG4DNdq7sHB06NGby3C-A9-MQC7j64ye",
+    //     client: "김진영",
+    //     designer: "이주영",
+    //     link: "https://drive.google.com/drive/folders/1K1j6AkLPXeSPzsKR9YiuaPMEV98R_vjI",
     //     pay: true
     //   },
     // ]);
@@ -6907,8 +6907,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "이나현",
-    //     designer: "오정수",
+    //     client: "김진영",
+    //     designer: "이주영",
     //   },
     // ]);
 

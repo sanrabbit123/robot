@@ -266,6 +266,9 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         if (Number(req.body.fromConsole) !== 1) {
           await instance.kakao.sendTalk("curationComplete", client.name, client.phone, {
             client: client.name,
+            cliid: client.client,
+            host: instance.address.frontinfo.host,
+            path: "about",
           });
           await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" });
           requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/printClient", { cliid, requestNumber: 0, history }, { headers: { "Content-Type": "application/json" } }).then(() => {
