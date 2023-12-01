@@ -129,6 +129,100 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3,
   }
 }
 
+FacebookAPIs.prototype.accountStatusCheck = async function (logger = null) {
+  const instance = this;
+  const back = this.back;
+  const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition } = this.mother;
+  try {
+    const statusDictionary = {
+      "s1": "ACTIVE",
+      "s2": "DISABLED",
+      "s3": "UNSETTLED",
+      "s7": "PENDING_RISK_REVIEW",
+      "s8": "PENDING_SETTLEMENT",
+      "s9": "IN_GRACE_PERIOD",
+      "s100": "PENDING_CLOSURE",
+      "s101": "CLOSED",
+      "s201": "ANY_ACTIVE",
+      "s202": "ANY_CLOSED",
+    };
+    const disableDictionary = {
+      "d0": "NONE",
+      "d1": "ADS_INTEGRITY_POLICY",
+      "d2": "ADS_IP_REVIEW",
+      "d3": "RISK_PAYMENT",
+      "d4": "GRAY_ACCOUNT_SHUT_DOWN",
+      "d5": "ADS_AFC_REVIEW",
+      "d6": "BUSINESS_INTEGRITY_RAR",
+      "d7": "PERMANENT_CLOSE",
+      "d8": "UNUSED_RESELLER_ACCOUNT",
+      "d9": "UNUSED_ACCOUNT",
+      "d10": "UMBRELLA_AD_ACCOUNT",
+      "d11": "BUSINESS_MANAGER_INTEGRITY_POLICY",
+      "d12": "MISREPRESENTED_AD_ACCOUNT",
+      "d13": "AOAB_DESHARE_LEGAL_ENTITY",
+      "d14": "CTX_THREAD_REVIEW",
+      "d15": "COMPROMISED_AD_ACCOUNT",
+    };
+    let res;
+    let account_status;
+    let disable_reason;
+    let statusErrorMessage;
+    let disableErrorMessage;
+    let boo;
+
+    res = await requestSystem("https://graph.facebook.com/" + appVersion + "/act_" + facebookAdId, {
+      fields: [
+        "account_id",
+        "account_status",
+        "amount_spent",
+        "disable_reason",
+      ].join(","),
+      access_token: facebookToken
+    }, { method: "get" });
+
+    ({ account_status, disable_reason } = res.data);
+
+    boo = true;
+
+    if (Number(account_status) !== 1) {
+      statusErrorMessage = statusDictionary["s" + String(account_status)] === undefined ? "UNKNOWN" : statusDictionary["s" + String(account_status)];
+      statusErrorMessage = "facebook account status error (" + statusErrorMessage + ")";
+      statusErrorMessage = "FacebookAPIs.accountStatusCheck error : " + statusErrorMessage + " / " + dateToString(new Date());
+      if (logger !== null) {
+        logger.error(statusErrorMessage).catch((err) => { console.log(err); });
+      } else {
+        emergencyAlarm(statusErrorMessage).catch((err) => { console.log(err); });
+      }
+      boo = false;
+    }
+
+    if (Number(disable_reason) !== 0) {
+      disableErrorMessage = disableDictionary["d" + String(disable_reason)] === undefined ? "UNKNOWN" : disableDictionary["d" + String(disable_reason)];
+      disableErrorMessage = "facebook account disable reason (" + disableErrorMessage + ")";
+      disableErrorMessage = "FacebookAPIs.accountStatusCheck error : " + disableErrorMessage + " / " + dateToString(new Date());
+      if (logger !== null) {
+        logger.error(disableErrorMessage).catch((err) => { console.log(err); });
+      } else {
+        emergencyAlarm(disableErrorMessage).catch((err) => { console.log(err); });
+      }
+      boo = false;
+    }
+
+    if (logger !== null) {
+      logger.cron("facebook account status check done : " + dateToString(new Date())).catch((err) => { console.log(err); });
+    }
+
+    return boo;
+
+  } catch (e) {
+    emergencyAlarm("FacebookAPIs.accountStatusCheck error : " + e.message).catch((err) => { console.log(err); });
+    console.log(e);
+    return false;
+  }
+}
+
 FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, logger = null) {
   const instance = this;
   const back = this.back;

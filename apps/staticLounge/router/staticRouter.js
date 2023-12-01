@@ -6561,6 +6561,34 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_metaAccountCheck = function () {
+  const instance = this;
+  const facebook = this.facebook;
+  const { equalJson, dateToString, stringToDate, requestSystem, mysqlQuery, sleep, fileSystem, shellExec, shellLink, linkToString, uniqueValue } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/metaAccountCheck" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const boo = await facebook.accountStatusCheck(logger);
+      if (!boo) {
+        throw new Error("meta account error");
+      }
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_metaAccountCheck): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.setMembers = async function () {
