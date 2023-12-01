@@ -6898,9 +6898,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김진영",
-    //     designer: "이주영",
-    //     link: "https://drive.google.com/drive/folders/1K1j6AkLPXeSPzsKR9YiuaPMEV98R_vjI",
+    //     client: null,
+    //     designer: "조안나",
+    //     link: "https://drive.google.com/drive/folders/1ALZqgE0sKPuFuGHIdhG8FZr-v0qhKkzG",
     //     pay: true
     //   },
     // ]);
@@ -6975,20 +6975,20 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2310_aa08s" ]);
+    // await work.newDesignerToFront([ "d2311_aa02s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2310_aa08s", [
-    //   { porlid: "a115", index: 4 },
-    //   { porlid: "a115", index: 2 },
-    //   { porlid: "a115", index: 5 },
-    //   { porlid: "a115", index: 9 },
-    //   { porlid: "a115", index: 12 },
+    // await this.setProposalSettingForDesigner("d2311_aa02s", [
+    //   { porlid: "a116", index: 3 },
+    //   { porlid: "a116", index: 7 },
+    //   { porlid: "a116", index: 9 },
+    //   { porlid: "a116", index: 5 },
+    //   { porlid: "a116", index: 16 },
     // ], [
-    //   "바로크, 로코코 시대 무드가 컨셉으로 한 클래식 스타일에 탁월합니다.",
-    //   "앤틱 가구 소품을 활용한 화려한, 때로는 목가적인 클래식 프렌치를 지향합니다.",
-    //   "화려한 경력을 바탕으로 스무스하고 편안한 프로젝트 운영을 제공해드립니다.",
+    //   "색조합 능력이 뛰어나며, 뻔하지 않는, 특색 있는 공간 연출에 탁월합니다.",
+    //   "색감이 좋아 다양한 컬러를 자연스럽게 조합하는 데 탁월한 능력을 갖추고 있습니다.",
+    //   "소통 능력이 뛰어나 고객님만을 위한 맞춤 공간을 만들어 내는 데에 능숙합니다.",
     // ]);
 
 

@@ -8812,7 +8812,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         if (Number(req.body.fromConsole) !== 1) {
           await instance.kakao.sendTalk("curationComplete", client.name, client.phone, {
             client: client.name,
-            cliid: client.client,
+            cliid: client.cliid,
             host: instance.address.frontinfo.host,
             path: "about",
           });
