@@ -117,10 +117,10 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
     // kakao template json
-    const kakao = new KakaoTalk();
-    const json = await kakao.getTemplate();
-    await fileSystem(`writeJson`, [ `${process.cwd()}/temp/kakaoJson.json`, json ]);
-    await shellExec(`code`, [ `${process.cwd()}/temp/kakaoJson.json` ]);
+    // const kakao = new KakaoTalk();
+    // const json = await kakao.getTemplate();
+    // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/kakaoJson.json`, json ]);
+    // await shellExec(`code`, [ `${process.cwd()}/temp/kakaoJson.json` ]);
     // =======================================================================================================================================================
 
     // kakao friend send
@@ -6888,6 +6888,9 @@ DevContext.prototype.launching = async function () {
     // const kakao = new KakaoTalk();
     // await kakao.sendTalk("curationComplete", "배창규", "010-2747-3403", {
     //   client: "배창규",
+    //   cliid: "c1801_aa01s",
+    //   host: instance.address.frontinfo.host,
+    //   path: "about",
     // });
 
 
