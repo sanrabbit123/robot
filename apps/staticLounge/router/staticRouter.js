@@ -6494,9 +6494,17 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
             client: thisClient,
             designer: thisDesigner,
           }));
-        } else {
-          throw new Error("invalid id");
-        }
+
+        } else if (mode === "list") {
+
+          if (req.body.whereQuery === undefined) {
+            throw new Error("invalid post");
+          }
+          const { whereQuery } = equalJson(req.body);
+          rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+          res.send(JSON.stringify({
+            data: rows,
+          }));
 
       } else if (mode === "proposal") {
 
