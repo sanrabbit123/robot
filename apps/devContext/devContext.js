@@ -6885,7 +6885,7 @@ DevContext.prototype.launching = async function () {
 
     // kakao test
     // const kakao = new KakaoTalk();
-    // await kakao.sendTalk("curationComplete", "배창규", "010-2747-3403", {
+    // await kakao.sendTalk("curationComplete", "배창규", "010-2199-3403", {
     //   client: "배창규",
     //   cliid: "c1801_aa01s",
     //   host: instance.address.frontinfo.host,
