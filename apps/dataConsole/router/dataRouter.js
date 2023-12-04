@@ -6406,7 +6406,7 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
       const selfMongo = instance.mongolocal;
       const oidConstDictionary = {
         mini: "mini_",
-        designerPhoto: "designerPhoto_",
+        designerPhoto: "dpho_",
         designerRegistration: "dreg_",
       };
       let pluginScript;

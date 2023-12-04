@@ -10393,11 +10393,6 @@ ProcessDetailJs.prototype.paymentByCard = function () {
   return (project) => {
     return async function (e) {
       try {
-
-        window.alert("카드 결제 시스템 점검중입니다! 촬영비 결제는 계좌 이체로 부탁드립니다 :)");
-
-        /*
-
         const amount = 165000;
         const proid = project.proid;
         const cliid = project.cliid;
@@ -10472,8 +10467,6 @@ ProcessDetailJs.prototype.paymentByCard = function () {
           }, (rsp) => {});
 
         }
-
-        */
 
       } catch (e) {
         console.log(e);
@@ -11713,6 +11706,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
   let veryBigTextTop;
   let circleWidth, circleTop, circleLeft;
   let whiteTong;
+  let visualPaddingTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4 %%>;
@@ -11751,10 +11745,10 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
 
   firstWidth = <%% 298, 220, 203, 130, 300 %%>;
 
-  buttonWidth = <%% 140, 136, 124, 106, 34.5 %%>;
-  buttonHeight = <%% 36, 40, 33, 31, 8 %%>;
+  buttonWidth = <%% 132, 132, 124, 106, 28 %%>;
+  buttonHeight = <%% 32, 31, 31, 28, 7 %%>;
 
-  buttonOuterPadding = <%% 6, 6, 6, 5, 1 %%>;
+  buttonOuterPadding = 0;
   buttonInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
 
   descriptionBetween = <%% 15, 15, 15, 14, 1 %%>;
@@ -11765,6 +11759,8 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
   circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
   circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
   circleLeft = <%% -7, -7, -7, -5, -0.8 %%>;
+
+  visualPaddingTop = <%% 0, 0, 18, 17, 1 %%>;
 
   mobileVisualPaddingValue = 0.2;
 
@@ -11830,6 +11826,11 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
       ],
       [
         {
+          title: "",
+          active: false,
+          click: null,
+        },
+        {
           title: "촬영비 카드 결제",
           active: true,
           click: instance.paymentByCard(),
@@ -11839,14 +11840,9 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
           active: true,
           click: instance.paymentByAccount(),
         },
-        {
-          title: "",
-          active: false,
-          click: null,
-        }
       ],
     ];
-  } else {
+  } else if (desktop) {
     contents.buttonSet = [
       [
         {
@@ -11867,6 +11863,11 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
       ],
       [
         {
+          title: "",
+          active: false,
+          click: null,
+        },
+        {
           title: "촬영비 카드 결제",
           active: true,
           click: instance.paymentByCard(),
@@ -11876,11 +11877,21 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
           active: true,
           click: instance.paymentByAccount(),
         },
+      ],
+    ];
+  } else {
+    contents.buttonSet = [
+      [
         {
-          title: "",
-          active: false,
-          click: null,
-        }
+          title: "촬영비 카드 결제",
+          active: true,
+          click: instance.paymentByCard(),
+        },
+        {
+          title: "촬영비 계좌 이체",
+          active: true,
+          click: instance.paymentByAccount(),
+        },
       ],
     ];
   }
@@ -11894,7 +11905,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
       width: String(100) + '%',
       background: colorChip.white,
       paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(desktop ? whiteBottomMargin - blockBetweenBottom : 6.6) + ea,
+      paddingBottom: String(desktop ? whiteBottomMargin - blockBetweenBottom : 8.6) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
@@ -11979,21 +11990,9 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
           position: "relative",
           width: desktop ? withOut(firstWidth + ((buttonWidth + buttonOuterPadding + buttonOuterPadding) * contents.buttonSet.length) + (buttonOuterPadding * (contents.buttonSet.length - 1)), ea) : withOut(0, ea),
           flexDirection: "column",
-          marginBottom: desktop ? "" : String(7.2) + ea,
+          marginBottom: desktop ? "" : String(6.2) + ea,
         },
         children: [
-          {
-            style: {
-              display: veryBig ? "display" : "none",
-              position: "absolute",
-              top: String(0),
-              left: String(panVisualLeft) + ea,
-              width: String(panWidth) + ea,
-              height: String((buttonHeight * contents.buttonSet[0].length) + (buttonInnerMargin * (contents.buttonSet[0].length - 1)) + (buttonOuterPadding * 2)) + ea,
-              borderBottom: String(3) + "px solid " + colorChip.black,
-              boxSizing: "border-box",
-            }
-          },
           {
             text: contents.description[0].join("\n"),
             style: {
@@ -12025,10 +12024,14 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
             display: "inline-flex",
             position: "relative",
             borderRadius: String(8) + "px",
-            background: i !== contents.buttonSet.length - 1 ? colorChip.gray3 : colorChip.gray1,
+            background: "transparent",
             padding: String(buttonOuterPadding) + ea,
-            flexDirection: "column",
+            paddingTop: String(visualPaddingTop) + ea,
+            flexDirection: desktop ? "column" : "row",
+            justifyContent: desktop ? "" : "center",
+            width: desktop ? "" : withOut(0, ea),
             marginRight: i !== contents.buttonSet.length - 1 ? String(buttonOuterPadding) + ea : "",
+            opacity: i !== contents.buttonSet.length - 1 ? String(0) : String(1),
           },
           children: variableArray(contents.buttonSet[i].length).map((index) => {
             return {
@@ -12044,8 +12047,9 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
                 alignItems: "center",
                 position: "relative",
                 borderRadius: String(5) + "px",
-                background: contents.buttonSet[i][index].active ? (i !== contents.buttonSet.length - 1 ? colorChip.white : colorChip.gradientGreen) : (i !== contents.buttonSet.length - 1 ? colorChip.gray2 : colorChip.gray3),
+                background: contents.buttonSet[i][index].active ? (i !== contents.buttonSet.length - 1 ? colorChip.white : colorChip.gradientGreen) : (i !== contents.buttonSet.length - 1 ? colorChip.white : colorChip.white),
                 marginBottom: index !== contents.buttonSet[i].length - 1 ? String(buttonInnerMargin) + ea : "",
+                marginRight: desktop ? "" : (index === 0 ? String(1) + ea : ""),
                 cursor: "pointer",
               },
               child: {
@@ -17506,49 +17510,49 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     }
 
     // mobile payment
-    // if (typeof getObj.mobilecard === "string") {
-    //   const grayLoadingIcon = instance.mother.grayLoading();
-    //   const response = await ajaxJson({ mode: "open", key: getObj.mobilecard }, BACKHOST + "/generalImpPayment", { equal: true });
-    //   if (response.data !== undefined && response.rsp !== undefined) {
-    //     const { data, rsp } = response;
-    //     let whereQuery, updateQuery;
-    //     let amount;
+    if (typeof getObj.mobilecard === "string") {
+      const grayLoadingIcon = instance.mother.grayLoading();
+      const response = await ajaxJson({ mode: "open", key: getObj.mobilecard }, BACKHOST + "/generalImpPayment", { equal: true });
+      if (response.data !== undefined && response.rsp !== undefined) {
+        const { data, rsp } = response;
+        let whereQuery, updateQuery;
+        let amount;
 
-    //     if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+        if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
 
-    //       whereQuery = { proid: instance.project.proid };
-    //       updateQuery = {};
+          whereQuery = { proid: instance.project.proid };
+          updateQuery = {};
 
-    //       if (typeof rsp.amount === "string") {
-    //         amount = Number(rsp.amount.replace(/[^0-9]/gi, ''));
-    //       } else if (typeof rsp.amount === "number") {
-    //         amount = rsp.amount
-    //       } else {
-    //         amount = 165000;
-    //       }
+          if (typeof rsp.amount === "string") {
+            amount = Number(rsp.amount.replace(/[^0-9]/gi, ''));
+          } else if (typeof rsp.amount === "number") {
+            amount = rsp.amount
+          } else {
+            amount = 165000;
+          }
 
-    //       updateQuery["contents.payment.status"] = "결제 완료";
-    //       updateQuery["contents.payment.date"] = new Date();
-    //       updateQuery["contents.payment.calculation.amount"] = amount;
-    //       updateQuery["contents.payment.calculation.info.method"] = `카드(${rsp.card_name.replace(/카드/gi, '')})`;
-    //       updateQuery["contents.payment.calculation.info.proof"] = "이니시스";
-    //       updateQuery["contents.payment.calculation.info.to"] = instance.designer.designer;
+          updateQuery["contents.payment.status"] = "결제 완료";
+          updateQuery["contents.payment.date"] = new Date();
+          updateQuery["contents.payment.calculation.amount"] = amount;
+          updateQuery["contents.payment.calculation.info.method"] = `카드(${rsp.card_name.replace(/카드/gi, '')})`;
+          updateQuery["contents.payment.calculation.info.proof"] = "이니시스";
+          updateQuery["contents.payment.calculation.info.to"] = instance.designer.designer;
 
-    //       await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
-    //       await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + instance.client.name + " 고객님 카드 촬영비를 결제하셨습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
-    //       await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + instance.client.name + " 고객님 카드 촬영비를 결제하셨습니다!", channel: "#700_operation" }, BACKHOST + "/sendSlack");
+          await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
+          await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + instance.client.name + " 고객님 카드 촬영비를 결제하셨습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
+          await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + instance.client.name + " 고객님 카드 촬영비를 결제하셨습니다!", channel: "#700_operation" }, BACKHOST + "/sendSlack");
 
-    //       window.alert("결제가 완료 되었습니다!");
-    //       window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
+          window.alert("결제가 완료 되었습니다!");
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
 
-    //     } else {
-    //       window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-    //     }
-    //   } else {
-    //     window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-    //   }
-    //   grayLoadingIcon.remove();
-    // }
+        } else {
+          window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+        }
+      } else {
+        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+      }
+      grayLoadingIcon.remove();
+    }
 
     // auto download
     if (typeof getObj.download === "string") {

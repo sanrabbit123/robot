@@ -5199,14 +5199,14 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
     let whiteTong;
 
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-    margin = <%% 55, 55, 47, 39, 6 %%>;
+    margin = <%% 55, 55, 47, 39, 4 %%>;
     paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
-  
+
     whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
   
     titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   
-    bigTextSize = <%% 36, 36, 36, 36, 4.4 %%>;
+    bigTextSize = <%% 36, 36, 36, 36, 4.2 %%>;
     bigTextWeight = <%% 100, 100, 100, 100, 100 %%>;
     bigTextTextTop = <%% (isMac() ? -7 : -5), (isMac() ? -7 : -5), -7, -7, -1 %%>;
   
@@ -5219,7 +5219,7 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
     textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
     smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
   
-    textSize = <%% 14, 14, 13, 12, 3.2 %%>;
+    textSize = <%% 14, 14, 13, 12, 3 %%>;
     textWeight = <%% 700, 700, 700, 700, 700 %%>;
     textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
   
@@ -5261,31 +5261,31 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
     contentsTongPaddingBottom = <%% 15, 15, 15, 15, 5 %%>;
     panBetween = <%% 28, 28, 24, 20, 2 %%>;
   
-    panHeight = <%% 48, 48, 45, 42, 11 %%>;
-    panInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
+    panHeight = <%% 42, 42, 40, 36, 8.2 %%>;
+    panInnerMargin = <%% 4, 4, 4, 3, 0.5 %%>;
   
-    panCheckBoxWidth = <%% 32, 24, 20, 20, 8 %%>;
-    checkBoxWidth = <%% 13, 11, 9, 9, 3 %%>;
+    panCheckBoxWidth = <%% 24, 24, 20, 20, 5 %%>;
+    checkBoxWidth = <%% 10, 10, 9, 9, 1.8 %%>;
   
-    panWhitePaddingLeft = <%% 16, 14, 14, 12, 3.5 %%>; 
-    panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
-    panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
+    panWhitePaddingLeft = <%% 13, 14, 14, 14, 2.5 %%>; 
+    panBlockBetween = <%% 5, 4, 4, 4, 0.8 %%>; 
+    panBlockBigBetween = <%% 5, 4, 4, 4, 0.8 %%>; 
   
-    buttonWidth = <%% 100, 80, 70, 60, 20 %%>;
-    buttonHeight = <%% 36, 28, 26, 24, 7.8 %%>;
+    buttonWidth = <%% 100, 80, 70, 60, 24 %%>;
+    buttonHeight = <%% 36, 28, 26, 24, 8.2 %%>;
   
-    buttonSize = <%% 15, 13, 12, 11, 3.2 %%>;
+    buttonSize = <%% 15, 13, 12, 11, 3.5 %%>;
     buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
   
-    panPaddingTop = <%% 22, 18, 14, 14, 4 %%>;
+    panPaddingTop = <%% 22, 16, 14, 14, 3 %%>;
   
-    panTitleSize = <%% 16, 15, 14, 13, 3.8 %%>;
+    panTitleSize = <%% 16, 15, 14, 13, 3.2 %%>;
     panTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   
     formPanBaseMarginBottom = <%% 12, 8, 6, 6, 4 %%>;
   
-    blockTextSize = <%% 14, 13, 12, 11, 3.2 %%>;
+    blockTextSize = <%% 13, 13, 12, 11, 2.7 %%>;
     blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
   
     barBaseHeight = <%% 40, 36, 32, 28, 6.8 %%>;
@@ -5293,13 +5293,27 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
     barFactorHeight = <%% 20, 20, 18, 16, 5 %%>;
     barFactorBetween = <%% 0, 0, 0, 0, 0 %%>;
 
-    barArrBasePaddingTop = <%% 36, 32, 28, 25, 8 %%>;
+    barArrBasePaddingTop = <%% 38, 36, 32, 26, 8 %%>;
     barArrBaseMarginTop = <%% 48, 46, 40, 32, 9.5 %%>;
 
     barArrTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
-    percentageSize = <%% 20, 20, 17, 14, 7.5 %%>;
+    percentageSize = <%% 20, 20, 17, 14, 6.2 %%>;
     percentageTextTop = <%% -1, -1, -1, -1, 0 %%>;
+
+    blackButtonWidth = <%% 132, 122, 114, 104, 28 %%>;
+    blackButtonHeight = <%% 34, 30, 28, 26, 7 %%>;
+    blackButtonBetween = <%% 4, 4, 3, 2, 1 %%>;
+    blackButtonMargin = <%% 6, 6, 5, 4, 1.2 %%>;
+    blackButtonSize = <%% 13, 12, 11, 10, 2.8 %%>;
+    blackButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
+    blackButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+
+    buttonBetween = <%% 4, 4, 3, 2, 1 %%>;
+
+    detailArrowAreaWidth = <%% 28, 28, 28, 28, 6 %%>;
+    detailArrowVisualTop = <%% 0.5, 0.5, 0.5, 0.5, 0 %%>;
+    detailArrowWidth = <%% 8, 8, 7, 7, 1.8 %%>;
 
     formPanBasePaddingBottom = <%% 16, 14, 12, 8, 2 %%>;
 
@@ -5526,20 +5540,20 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
           width: withOut(0),
           justifyContent: "start",
           alignItems: "start",
-          paddingBottom: String(3) + ea,
+          paddingBottom: String(9) + ea,
         }
       });
 
       formPanBase = createNode({
         mother: contentsTong,
         style: {
-          display: "none",
+          display: "block",
           position: "relative",
           flexDirection: desktop ? "row" : "column",
           width: withOut(0),
           justifyContent: "start",
           alignItems: "start",
-          paddingBottom: desktop ? "" : String(18) + ea,
+          paddingBottom: desktop ? "" : String(2) + ea,
           borderTop: "1px dashed " + colorChip.gray3,
           paddingTop: String(2) + ea,
         },
@@ -5560,8 +5574,8 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
             display: "inline-flex",
             position: "relative",
             flexDirection: "column",
-            width: desktop ? (media[0] ? "calc(calc(100% - " + String(panBetween * (thisForm.length - 1)) + ea + ") / " + String(thisForm.length) + ")" : "calc(calc(100% - " + String(panBetween * ((thisForm.length / 2) - 1)) + ea + ") / " + String(thisForm.length / 2) + ")") : withOut(0, ea),
-            marginRight: desktop ? (media[0] ? (i === thisForm.length - 1 ? "" : String(panBetween) + ea) : (i === thisForm.length - 1 || i === (thisForm.length / 2) - 1 ? "" : String(panBetween) + ea)) : "",
+            width: (media[0]) ? "calc(calc(100% - " + String(panBetween * (thisForm.length - 1)) + ea + ") / " + String(thisForm.length) + ")" : "calc(calc(100% - " + String(panBetween * ((thisForm.length / 2) - 1)) + ea + ") / " + String(thisForm.length / 2) + ")",
+            marginRight: (media[0]) ? (i === thisForm.length - 1 ? "" : String(panBetween) + ea) : (i === thisForm.length - 1 || i === (thisForm.length / 2) - 1 ? "" : String(panBetween) + ea),
             paddingTop: String(panPaddingTop) + ea,
             verticalAlign: "top",
           }
@@ -5679,45 +5693,6 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
         }
       }
 
-      if (mobile) {
-        createNode({
-          mother: formPanBase,
-          event: {
-            click: function (e) {
-              formPanBase.style.display = "none";
-              barArrBase.style.paddingBottom = String(3) + ea;
-              barArrBase.lastChild.style.display = "inline-flex";
-            }
-          },
-          style: {
-            display: "inline-flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
-            width: String(buttonWidth) + ea,
-            height: String(buttonHeight) + ea,
-            borderRadius: String(5) + "px",
-            background: colorChip.gradientGray,
-            bottom: String(0),
-            right: desktop ? String(0) : withOut(50, buttonWidth / 2, ea),
-            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            cursor: "pointer",
-          },
-          child: {
-            text: "간단히 보기",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(buttonSize) + ea,
-              fontWeight: String(buttonWeight),
-              top: String(buttonTextTop) + ea,
-              color: colorChip.white,
-              cursor: "pointer",
-            }
-          }
-        });
-      }
-
     }
 
     reloadBarArr = (barArrBase, thisForm) => {
@@ -5817,45 +5792,6 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
           }
         });
 
-      }
-
-      if (mobile) {
-        createNode({
-          mother: barArrBase,
-          event: {
-            click: function (e) {
-              this.style.display = "none";
-              formPanBase.style.display = "block";
-              barArrBase.style.paddingBottom = String(11) + ea;
-            }
-          },
-          style: {
-            display: "inline-flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-            width: String(buttonWidth) + ea,
-            height: String(buttonHeight) + ea,
-            borderRadius: String(5) + "px",
-            background: colorChip.gradientGray,
-            left: desktop ? String(0) : withOut(50, buttonWidth / 2, ea),
-            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            cursor: "pointer",
-            marginTop: String(5.6) + ea,
-          },
-          child: {
-            text: "상세 보기",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(buttonSize) + ea,
-              fontWeight: String(buttonWeight),
-              top: String(buttonTextTop) + ea,
-              color: colorChip.white,
-              cursor: "pointer",
-            }
-          }
-        });
       }
 
     }
