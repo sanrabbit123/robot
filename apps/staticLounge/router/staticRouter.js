@@ -6468,6 +6468,72 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
 
         res.send(JSON.stringify({ id: thisId }));
 
+      } else if (mode === "copy") {
+
+        const { cliid, id, purpose, description, member } = equalJson(req.body);
+        [ targetJson ] = await back.mongoRead(collection, { id }, { selfMongo });
+
+        now = new Date();
+        thisId = idKeyword + String(now.valueOf()) + "_" + uniqueValue("hex");
+        
+        imagesArr = equalJson(JSON.stringify(targetJson.images))
+
+        thisMember = instance.members.find((o) => { return o.id === member });
+        if (thisMember === undefined) {
+          thisMember = {
+            id: member,
+            name: "리에종",
+            title: "봇",
+            roles: [],
+          }
+        } else {
+          tempObj = {
+            id: member,
+            name: thisMember.name,
+            title: thisMember.title,
+            roles: thisMember.roles,
+          };
+          thisMember = equalJson(JSON.stringify(tempObj));
+        }
+
+        if (cliid === "") {
+          throw new Error("invalid cliid 0");
+        }
+        tempObj = await back.getClientById(cliid, { selfMongo: selfCoreMongo });
+        if (tempObj === null) {
+          throw new Error("invalid cliid 1");
+        }
+        thisClient = {
+          cliid: cliid,
+          name: tempObj.name,
+          phone: tempObj.phone,
+        }
+
+        proidArr = [];
+        if (typeof req.body.proid === "string") {
+          proidArr.push(req.body.proid);
+        }
+
+        json = {
+          id: thisId,
+          date: now,
+          from: thisMember,
+          target: thisClient,
+          contents: {
+            designer: equalJson(JSON.stringify(targetJson.contents.designer)),
+            purpose,
+            description,
+            info: equalJson(JSON.stringify(targetJson.contents.info)),
+          },
+          images: imagesArr,
+          history: [],
+          proposals: proidArr,
+        };
+
+        await back.mongoCreate(collection, json, { selfMongo });
+
+        res.send(JSON.stringify({ id: thisId }));
+
       } else if (mode === "get") {
 
         if (req.body.id === undefined) {

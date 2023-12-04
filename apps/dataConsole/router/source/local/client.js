@@ -7423,7 +7423,6 @@ ClientJs.prototype.communicationRender = function () {
       }
     }
   ]);
-
 }
 
 ClientJs.prototype.sseCardParsing = function (raw) {
