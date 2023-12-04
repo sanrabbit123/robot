@@ -6473,7 +6473,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
         if (req.body.id === undefined) {
           throw new Error("invalid post");
         }
-        const { id } = equalJson(req.body);
+        const { id, view } = equalJson(req.body);
         rows = await back.mongoRead(collection, { id }, { selfMongo });
         if (rows.length === 1) {
           [ targetJson ] = rows;
@@ -6481,13 +6481,15 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
           thisDesigner = await back.getDesignerById(targetJson.contents.designer.desid, { selfMongo: selfCoreMongo, toNormal: true });
           thisClient = await back.getClientById(targetJson.target.cliid, { selfMongo: selfCoreMongo, toNormal: true });
           
-          historyArr = equalJson(JSON.stringify(targetJson.history));
-          historyArr.unshift({
-            action: "view",
-            date: new Date(),
-          });
-          await back.mongoUpdate(collection, [ { id }, { history: historyArr } ], { selfMongo });
-          targetJson.history = historyArr;
+          if (view !== 1 && view !== "1") {
+            historyArr = equalJson(JSON.stringify(targetJson.history));
+            historyArr.unshift({
+              action: "view",
+              date: new Date(),
+            });
+            await back.mongoUpdate(collection, [ { id }, { history: historyArr } ], { selfMongo });
+            targetJson.history = historyArr;
+          }
 
           res.send(JSON.stringify({
             data: targetJson,

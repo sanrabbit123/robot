@@ -2043,6 +2043,432 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
 
 }
 
+GeneralJs.prototype.imageTransferHistory = async function (e) {
+  const instance = this;
+  const promptAsideClassName = "promptAsideClassName";
+  const { ajaxJson, blankHref, createNode, withOut, colorChip, dateToString } = GeneralJs;
+  const ea = "px";
+  try {
+    let response, ago, delta;
+    let targets;
+    let whiteTongBase;
+    let whiteTong;
+    let whiteWidth;
+    let whiteHeight;
+    let paddingTop;
+    let paddingLeft;
+    let paddingBottom;
+    let size0;
+    let size1;
+    let inputSize;
+    let marginLeft;
+    let greenBarHeight;
+    let bottomVisual;
+    let inputBoxHeight;
+    let inputIndent;
+    let inputBottomVisual;
+    let lineHeight;
+    let wordingVisual;
+    let targetsTong;
+    let targetsTongMarginTop;
+    let inputBoxBetween;
+    let inputLength;
+    let baseMother;
+    let inputTextTop;
+    let buttonBetween;
+    let buttonTop;
+    let buttonRight;
+    let buttonHeight;
+    let buttonPadding;
+    let buttonWidth;
+    let size2;
+    let textTop;
+    let buttonWidth2;
+
+    delta = 3;
+
+    whiteWidth = 610;
+    whiteHeight = 150;
+    paddingTop = 17;
+    paddingLeft = 23;
+    paddingBottom = 62;
+    size0 = 14;
+    size1 = 15;
+    inputSize = 13;
+    marginLeft = 18;
+    bottomVisual = 7;
+    inputBoxHeight = 30;
+    inputIndent = 9;
+    inputBottomVisual = 0;
+    lineHeight = 1.5;
+    targetsTongMarginTop = 10;
+    inputBoxBetween = 4;
+    inputLength = 5;
+    wordingVisual = GeneralJs.isMac() ? 0 : 2;
+    inputTextTop = GeneralJs.isMac() ? -1 : 1;
+    buttonBetween = 3;
+    buttonTop = 5;
+    buttonRight = 5;
+    buttonHeight = 20;
+    buttonPadding = 7;
+    buttonWidth = 54;
+    buttonWidth2 = 47;
+    size2 = 9;
+    textTop = GeneralJs.isMac() ? -1 : 1;
+    greenBarHeight = Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, ''));
+
+    ago = new Date();
+    ago.setMonth(ago.getMonth() - delta);
+
+    response = await ajaxJson({ mode: "list", whereQuery: { "from.id": instance.member.id, date: { $gte: ago } } }, S3HOST + ":3000/imageTransfer", { equal: true });
+    ({ data: targets } = response);
+
+    targets.sort((a, b) => {
+      return b.date.valueOf() - a.date.valueOf();
+    })
+
+    whiteTongBase = createNode({
+      mode: "aside",
+      mother: document.body,
+      class: [ promptAsideClassName ],
+      event: {
+        contextmenu: (e) => { e.stopPropagation(); },
+        dblclick: (e) => { e.stopPropagation(); },
+        drop: (e) => { e.stopPropagation(); },
+        keyup: (e) => { e.stopPropagation(); },
+        keydown: (e) => { e.stopPropagation(); },
+        keypress: (e) => { e.stopPropagation(); },
+        click: function (e) {
+          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+          for (let z = 0; z < targets.length; z++) {
+            try {
+              targets[z].remove();
+            } catch {}
+          }
+        }
+      },
+      style: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "fixed",
+        top: String(0) + "vh",
+        left: String(1) + "vw",
+        width: String(98) + "vw",
+        height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
+        background: "transparent",
+        zIndex: String(900)
+      }
+    });
+
+    whiteTong = createNode({
+      mother: whiteTongBase,
+      event: {
+        click: (e) => { e.stopPropagation(); },
+      },
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(whiteWidth - (paddingLeft * 2)) + ea,
+        paddingTop: String(paddingTop) + ea,
+        paddingBottom: String(paddingLeft) + ea,
+        paddingLeft: String(paddingLeft) + ea,
+        paddingRight: String(paddingLeft) + ea,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        background: colorChip.white,
+        animation: "fadeuplite 0.4s ease forwards",
+      }
+    });
+
+    createNode({
+      mother: whiteTong,
+      text: ">",
+      style: {
+        fontSize: String(size0) + ea,
+        fontWeight: String(400),
+        color: colorChip.green,
+        fontFamily: "graphik",
+        position: "absolute",
+        top: String(paddingTop) + ea,
+        left: String(paddingLeft) + ea,
+        lineHeight: String(lineHeight),
+      }
+    });
+  
+    createNode({
+      mother: whiteTong,
+      text: "최근 3개월 간 이미지 전송 기록입니다.",
+      style: {
+        position: "relative",
+        marginLeft: String(marginLeft) + ea,
+        fontSize: String(size1) + ea,
+        fontWeight: String(500),
+        color: colorChip.black,
+        lineHeight: String(lineHeight),
+        top: String(wordingVisual) + ea,
+      }
+    });
+  
+
+    targetsTong = createNode({
+      mother: whiteTong,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        marginLeft: String(marginLeft) + ea,
+        marginTop: String(targetsTongMarginTop) + ea,
+        height: String((inputBoxHeight * inputLength) + (inputBoxBetween * (inputLength - 1))) + ea,
+        width: withOut(marginLeft, ea),
+        overflow: "scroll",
+      },
+      child: {
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          height: "auto",
+        }
+      }
+    })
+
+    for (let i = 0; i < targets.length; i++) {
+      baseMother = createNode({
+        mother: targetsTong.firstChild,
+        style: {
+          display: "flex",
+          position: "relative",
+          marginBottom: String(inputBoxBetween) + ea,
+          width: withOut(0, ea),
+          height: String(inputBoxHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gray1,
+          flexDirection: "row",
+          alignItems: "center",
+        }
+      });
+
+      // contents
+      createNode({
+        mother: baseMother,
+        text: dateToString(targets[i].date, true).slice(2, -3),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          top: String(inputTextTop) + ea,
+          width: String(90) + ea,
+          marginLeft: String(12) + ea,
+        }
+      });
+      createNode({
+        mother: baseMother,
+        text: "|",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.deactive,
+          top: String(inputTextTop) + ea,
+        }
+      });
+      createNode({
+        mother: baseMother,
+        text: targets[i].target.name.slice(0, 3),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          top: String(inputTextTop) + ea,
+          width: String(44) + ea,
+          marginLeft: String(10) + ea,
+        }
+      });
+      createNode({
+        mother: baseMother,
+        text: "|",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.deactive,
+          top: String(inputTextTop) + ea,
+        }
+      });
+      createNode({
+        mother: baseMother,
+        text: targets[i].contents.designer.designer.slice(0, 3),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          top: String(inputTextTop) + ea,
+          width: String(44) + ea,
+          marginLeft: String(10) + ea,
+        }
+      });
+      createNode({
+        mother: baseMother,
+        text: "|",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.deactive,
+          top: String(inputTextTop) + ea,
+        }
+      });
+      createNode({
+        mother: baseMother,
+        text: targets[i].contents.purpose,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(inputSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          top: String(inputTextTop) + ea,
+          marginLeft: String(10) + ea,
+        }
+      });
+
+      // buttons
+      createNode({
+        mother: baseMother,
+        attribute: {
+          cliid: targets[i].target.cliid,
+          id: targets[i].id,
+        },
+        style: {
+          display: "inline-flex",
+          textAlign: "center",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          top: String(buttonTop) + ea,
+          right: String(buttonRight) + ea,
+          height: String(buttonHeight) + ea,
+          paddingLeft: String(buttonPadding) + ea,
+          paddingRight: String(buttonPadding) + ea,
+          background: colorChip.gradientGray,
+          borderRadius: String(5) + "px",
+          zIndex: String(1),
+        },
+        child: {
+          text: "제안서 묶기",
+          style: {
+            position: "relative",
+            fontSize: String(size2) + ea,
+            fontWeight: String(700),
+            color: colorChip.white,
+            top: String(textTop) + ea,
+          }
+        }
+      });
+      createNode({
+        mother: baseMother,
+        attribute: {
+          cliid: targets[i].target.cliid,
+          id: targets[i].id,
+        },
+        style: {
+          display: "inline-flex",
+          textAlign: "center",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          top: String(buttonTop) + ea,
+          right: String(buttonWidth + buttonBetween + buttonRight) + ea,
+          height: String(buttonHeight) + ea,
+          paddingLeft: String(buttonPadding) + ea,
+          paddingRight: String(buttonPadding) + ea,
+          background: colorChip.gradientGray,
+          borderRadius: String(5) + "px",
+          zIndex: String(1),
+        },
+        child: {
+          text: "고객 전송",
+          style: {
+            position: "relative",
+            fontSize: String(size2) + ea,
+            fontWeight: String(700),
+            color: colorChip.white,
+            top: String(textTop) + ea,
+          }
+        }
+      });
+      createNode({
+        mother: baseMother,
+        attribute: {
+          cliid: targets[i].target.cliid,
+          id: targets[i].id,
+        },
+        event: {
+          click: function (e) {
+            const id = this.getAttribute("id");
+            const cliid = this.getAttribute("cliid");
+            blankHref(FRONTHOST + "/transfer.php?cliid=" + cliid + "&id=" + id + "&view=test");
+          }
+        },
+        style: {
+          display: "inline-flex",
+          textAlign: "center",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          top: String(buttonTop) + ea,
+          right: String(buttonWidth + buttonBetween + buttonWidth2 + buttonBetween + buttonRight) + ea,
+          height: String(buttonHeight) + ea,
+          paddingLeft: String(buttonPadding) + ea,
+          paddingRight: String(buttonPadding) + ea,
+          background: colorChip.gradientGreen,
+          borderRadius: String(5) + "px",
+          zIndex: String(1),
+        },
+        child: {
+          text: "미리 보기",
+          style: {
+            position: "relative",
+            fontSize: String(size2) + ea,
+            fontWeight: String(700),
+            color: colorChip.white,
+            top: String(textTop) + ea,
+          }
+        }
+      });
+    }
+
+    for (let i = 0; i < inputLength; i++) {
+      baseMother = createNode({
+        mother: targetsTong.firstChild,
+        style: {
+          display: "flex",
+          position: "relative",
+          marginBottom: String(inputBoxBetween) + ea,
+          width: withOut(0, ea),
+          height: String(inputBoxHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gray1,
+          flexDirection: "row",
+          alignItems: "center",
+        }
+      });
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GeneralJs.prototype.greenBar = function () {
   const instance = this;
   let pathArr = window.location.pathname.split("?");

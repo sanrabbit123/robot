@@ -7020,7 +7020,7 @@ ClientJs.prototype.globalChaining = async function (thisCase, column, value, pas
 ClientJs.prototype.communicationRender = function () {
   const instance = this;
   const { communication } = this.mother;
-  const { ajaxJson, sleep, blankHref } = GeneralJs;
+  const { ajaxJson, sleep, blankHref, createNode, withOut, colorChip, dateToString } = GeneralJs;
   communication.setItem([
     () => { return "추천서 자동 생성"; },
     function () {
@@ -7410,6 +7410,20 @@ ClientJs.prototype.communicationRender = function () {
       }
     }
   ]);
+  communication.setItem([
+    () => { return "이미지 전송 기록"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        await instance.mother.imageTransferHistory();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
 }
 
 ClientJs.prototype.sseCardParsing = function (raw) {
