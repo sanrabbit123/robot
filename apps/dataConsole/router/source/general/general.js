@@ -2100,6 +2100,9 @@ GeneralJs.prototype.imageTransferHistory = async function (e) {
     let preDescription;
     let thisClientName;
     let contentsResponse;
+    let targetProposal;
+    let proposalSearch;
+    let thisProid;
 
     delta = 3;
 
@@ -2362,7 +2365,141 @@ GeneralJs.prototype.imageTransferHistory = async function (e) {
         mother: baseMother,
         attribute: {
           cliid: targets[i].target.cliid,
+          desid: targets[i].contents.designer.desid,
           id: targets[i].id,
+        },
+        event: {
+          click: async function (e) {
+            try {
+              const id = this.getAttribute("id");
+              const cliid = this.getAttribute("cliid");
+              const desid = this.getAttribute("desid");
+
+              removeByClass(promptAsideClassName);
+  
+              thisDesid = desid;
+              [ thisDesigner ] = await ajaxJson({ noFlat: true, whereQuery: { desid: thisDesid } }, SECONDHOST + "/getDesigners", { equal: true });
+  
+              clientSearch = await GeneralJs.prompt("고객 이름, 또는 아이디를 입력해주세요!");
+              if (clientSearch === null) {
+                throw new Error("interrupt");
+              }
+              clientResponse = await ajaxJson({
+                query: clientSearch
+              }, BACKHOST + "/searchClients", { equal: true });
+              clientResponseData = [];
+              clientResponse.data.sort((a, b) => { return stringToDate(b.info.timeline).valueOf() - stringToDate(a.info.timeline).valueOf() });
+              for (let obj of clientResponse.data) {
+                if (!clientResponseData.map((o) => { return o.cliid }).includes(obj.standard.cliid)) {
+                  clientResponseData.push({
+                    cliid: obj.standard.cliid,
+                    title: obj.standard.cliid + " - " + obj.standard.name + " : " + obj.info.timeline.split(" ")[0] + " 문의",
+                    original: equalJson(JSON.stringify(obj)),
+                  });
+                }
+              }
+  
+              if (clientResponseData.length === 0) {
+  
+                window.alert("고객을 찾을 수 없습니다!");
+                throw new Error("invalid cliid");
+  
+              } else if (clientResponseData.length >= 1) {
+  
+                if (clientResponseData.length > 1) {
+                  clientSearch = await GeneralJs.promptLongButtons("고객 이름, 또는 아이디를 선택해주세요!", clientResponseData.map((o) => { return o.title }));
+                  if (clientSearch === null) {
+                    throw new Error("invalid selection");
+                  }
+                  targetCliid = clientSearch.split(" ")[0];
+                  thisClientName = clientSearch.split(" ")[2];
+                } else {
+                  targetCliid = clientResponseData[0].cliid;
+                  thisClientName = clientResponseData[0].original.standard.name;
+                }
+                
+                targetProposal = await ajaxJson({
+                  query: targetCliid
+                }, BACKHOST + "/searchProjects", { equal: true });
+
+                if (targetProposal.data.length === 0) {
+                  window.alert("추천서를 찾을 수 없습니다!");
+                  throw new Error("invalid proposal");  
+                }
+
+                if (targetProposal.data.length !== 1) {
+                  proposalSearch = await GeneralJs.promptButtons("추천서 아이디를 선택해주세요!", targetProposal.data.map((o) => { return o.standard.proid }));
+                  if (proposalSearch === null) {
+                    throw new Error("invalid selection");
+                  }
+                  thisProid = proposalSearch
+                } else {
+                  thisProid = targetProposal.data[0].standard.proid;
+                }
+
+                purposeSelection = await GeneralJs.promptLongButtons("전송 목적을 선택해주세요!", [
+                  "포트폴리오 전송",
+                  "비공개 사진 전송",
+                  "디자인 제안 이미지 전송",
+                  "직접 입력...",
+                ]);
+                if (purposeSelection === null) {
+                  throw new Error("invalid selection");
+                }
+                if (/직접 입력/gi.test(purposeSelection)) {
+                  purpose = await GeneralJs.prompt("전송 목적을 적어주세요!");
+                  if (purpose === null) {
+                    throw new Error("invalid purpose");
+                  }
+                } else {
+                  purpose = purposeSelection;
+                }
+  
+                if (/포트폴리오/gi.test(purpose)) {
+                  preDescription = `${thisDesigner.designer} 디자이너 관련 포트폴리오 이미지 전송해드립니다.`;
+                } else if (/제안 이미지/gi.test(purpose)) {
+                  preDescription = `${thisDesigner.designer} 디자이너 관련 디자인 제안 방식 샘플 이미지 전송해드립니다.`;
+                } else {
+                  preDescription = `${thisDesigner.designer} 디자이너 관련 이미지 전송해드립니다.`;
+                }
+                description = await GeneralJs.promptLong("기타 안내 사항을 적어주세요!", preDescription);
+                if (description === null || description === '') {
+                  window.alert("안내 사항을 적어주세요!");
+                  throw new Error("invalid description");
+                }
+  
+                thisMemberId = instance.member.id;
+                
+                loading = instance.whiteProgressLoading(null, true);
+  
+                response = await ajaxJson({
+                  mode: "copy",
+                  id: id,
+                  cliid: targetCliid,
+                  purpose,
+                  description,
+                  member: thisMemberId,
+                  proid: thisProid,
+                }, S3HOST + ":3000/imageTransfer");
+                sendId = response.id;
+  
+                if (typeof sendId !== "string") {
+                  throw new Error("store fail");
+                }
+  
+                await sleep(1 * 1000);
+  
+                loading.remove();
+  
+                instance.greenAlert("추천서 바인딩에 성공하였습니다!");
+                removeByClass(promptAsideClassName);
+              }
+
+            } catch (e) {
+              console.log(e);
+              window.alert("전송에 실패하였습니다! 다시 시도해주세요!");
+            }
+          }
         },
         style: {
           display: "inline-flex",
@@ -2380,7 +2517,7 @@ GeneralJs.prototype.imageTransferHistory = async function (e) {
           zIndex: String(1),
         },
         child: {
-          text: "제안서 묶기",
+          text: "추천서 묶기",
           style: {
             position: "relative",
             fontSize: String(size2) + ea,

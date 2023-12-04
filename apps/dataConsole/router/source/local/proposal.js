@@ -6294,6 +6294,26 @@ ProposalJs.prototype.cssInjection = function () {
   document.querySelector("style").insertAdjacentHTML("beforeend", css);
 }
 
+ProposalJs.prototype.communicationRender = function () {
+  const instance = this;
+  const { communication } = this.mother;
+  const { whiteCardClassName, whiteBaseClassName } = this;
+  const { ajaxJson, sleep, blankHref } = GeneralJs;
+  communication.setItem([
+    () => { return "이미지 전송 기록"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        await instance.mother.imageTransferHistory();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+}
+
 ProposalJs.prototype.launching = async function () {
   const instance = this;
   const { arrow: { left, right }, square: { up, down, reportIcon, returnIcon }, sub: { extractIcon } } = this.mother.belowButtons;
@@ -6320,6 +6340,7 @@ ProposalJs.prototype.launching = async function () {
     this.domBox = await this.firstProcess();
     this.thirdChildren = await this.thirdProcess();
     await this.secondProcess();
+    this.communicationRender();
 
     if (query.proid !== undefined) {
 
