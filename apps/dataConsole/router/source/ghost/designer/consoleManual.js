@@ -296,7 +296,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
   mobileVisualPaddingValue = 0.2;
 
   detailImageHeight0 = <%% 914, 1329, 1166, 999, 770 %%>;
-  detailImageHeight1 = <%% 1820, 1945, 2018, 1789, 1500 %%>;
+  detailImageHeight1 = <%% 2324, 2470, 3151, 2740, 1500 %%>;
 
   detailBlockHeight = <%% 188, 205, 174, 151, 188 %%>;
 
@@ -346,7 +346,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
             "리스트업 되어 있으며, 대기와",
             "진행중을 구분하여 볼 수 있습니다.",
           ],
-          margin: <&& -21 | -1 | 17 | -6 | 11 &&>,
+          margin: <&& 77 | 107 | 109 | 73 | 11 &&>,
         },
         {
           title: "완료된 프로젝트",
@@ -361,7 +361,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
             "프로젝트들입니다. 각 항목을 클릭해",
             "보면 컨텐츠 설정을 할 수 있습니다.",
           ],
-          margin: <&& 52 | 78 | 97 | 81 | 11 &&>,
+          margin: <&& 52 | 86 | 97 | 80 | 11 &&>,
         },
         {
           title: "발행된 컨텐츠",
@@ -376,7 +376,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
             "웹의 디자이너 탭의 실장님 섹션으로",
             "가셨을 때와 같은 리스트입니다."
           ],
-          margin: <&& 126 | 165 | 136 | 115 | 11 &&>,
+          margin: <&& 126 | 129 | 136 | 115 | 11 &&>,
         },
       ],
       detail: [
@@ -394,7 +394,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
             "별로 고객님께 해당되는 단계를",
             "클릭해 주시면 됩니다."
           ],
-          margin: <&& 174 | 371 | 361 | 289 | 11 &&>,
+          margin: <&& 135 | 283 | 304 | 239 | 11 &&>,
         },
         {
           title: "프로젝트 파일",
@@ -410,7 +410,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
             "업로드해주시면 쉽게 관리하실 수",
             "있으며, 공유도 할 수 있습니다.",
           ],
-          margin: <&& 127 | 344 | 282 | 221 | 11 &&>,
+          margin: <&& 167 | 432 | 339 | 272 | 11 &&>,
         },
         {
           title: "프로젝트 파일",
@@ -426,38 +426,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
             "고객 공유 또한 간편하게 하실 수",
             "있으므로 이용 부탁드립니다.",
           ],
-          margin: <&& 133 | 6 | 7 | 43 | 11 &&>,
-        },
-        {
-          title: "프로젝트 일정표 기입",
-          description: big ? [
-            "프로젝트의 일정표입니다. 계약서상 시작일을",
-            "기준으로 미리 세팅되어 있으며 실장님께서는",
-            "각 항목의 순서 변경과 날짜 입력을 통해",
-            "프로젝트의 일정을 기입해 주시면 됩니다.",
-          ] : [
-            "프로젝트의 일정표입니다. 계약서상",
-            "시작일을 기준으로 세팅되어 있으며",
-            "각 항목의 순서 변경, 날짜 입력을",
-            "통해 일정을 기입해 주시면 됩니다.",
-          ],
-          margin: <&& 240 | 253 | 223 | 191 | 11 &&>,
-        },
-        {
-          title: "프로젝트 일정표 캘린더",
-          description: big ? [
-            "프로젝트 일정표를 수정하시게 되면 자동으로",
-            "캘린더에도 표시가 되며, 이는 고객님께",
-            "공유될 예정이므로 꼭 일정표를 작성해 주셔서",
-            "원활한 공유가 될 수 있도록 부탁드립니다.",
-          ] : [
-            "프로젝트 일정표를 수정하시게",
-            "되면 캘린더에도 자동 표시가 되며",
-            "이는 고객님께 공유될 예정이므로",
-            "일정표를 작성해 주셔서 원활한",
-            "공유가 될 수 있도록 부탁드립니다.",
-          ],
-          margin: <&& 176 | 256 | 223 | 170 | 11 &&>,
+          margin: <&& 133 | 97 | 354 | 320 | 11 &&>,
         },
         {
           title: "프로젝트 상태",
@@ -472,7 +441,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
             "디자이너 글 관련 등 상태 확인과",
             "여러 액션을 하실 수 있습니다.",
           ],
-          margin: <&& 385 | 18 | 16 | 11 | 11 &&>,
+          margin: <&& 386 | 13 | 13 | 9 | 11 &&>,
         },
       ],
     }
