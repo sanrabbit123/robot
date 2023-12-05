@@ -156,12 +156,14 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    // const res = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/textToVoice", { text: "안녕하세요" }, { headers: { "Content-Type": "application/json" } });
     
+    // console.log(res);
 
-
-    
-
+    const audio = new PlayAudio();
+    audio.textToVoice("안녕하세요").catch((err) => {
+      console.log(err);
+    })
 
 
 
@@ -7002,7 +7004,7 @@ DevContext.prototype.launching = async function () {
 
     
     // // send sms
-    // const name = "이승리";
+    // const name = "김남윤";
     // const amount = 8697000;
     // await human.sendSms({
     //   to: "01055432039",
@@ -7010,8 +7012,13 @@ DevContext.prototype.launching = async function () {
     // });
 
     // await human.sendSms({
-    //   to: "01033057323",
-    //   body: `안녕하세요, 김시온 디자이너님!\n주식회사 홈리에종입니다.\n\n면접 날짜와 시간, 주소에 대한 정보 공지해드립니다. 해당 시간과 장소에서 뵙겠습니다 :)\n\n* 시간 : 11월 27일 월요일 오전 10시 00분\n* 장소 : 서울특별시 성동구 성수일로 10 605호 (주)홈리에종`,
+    //   to: "01095128258",
+    //   body: `안녕하세요, 최슬기 디자이너님!\n주식회사 홈리에종입니다.\n\n면접 날짜와 시간, 주소에 대한 정보 공지해드립니다. 해당 시간과 장소에서 뵙겠습니다 :)\n\n* 시간 : 12월 8일 금요일 오후 1시 00분\n* 장소 : 서울특별시 성동구 성수일로 10 605호 (주)홈리에종`,
+    // });
+
+    // await human.sendSms({
+    //   to: "01075533125",
+    //   body: `안녕하세요, 황보배 디자이너님!\n주식회사 홈리에종입니다.\n\n면접 날짜와 시간, 주소에 대한 정보 공지해드립니다. 해당 시간과 장소에서 뵙겠습니다 :)\n\n* 시간 : 12월 6일 수요일 오후 4시 00분\n* 장소 : 서울특별시 성동구 성수일로 10 605호 (주)홈리에종`,
     // });
 
     // bill passive sync
