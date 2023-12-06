@@ -1009,6 +1009,8 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
       let linkDictionary;
       let isCxMember;
 
+      window.history.pushState({ desid }, "");
+
       isCxMember = await GeneralJs.nonCxBan(true);
       linkDictionary = {
         checklist: BACKHOST + "/middle/designerAbout?desid=" + designer.desid + "&entire=true&normal=true&cx=" + (isCxMember ? "true" : "false"),
@@ -1064,6 +1066,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
             }
           }
           instance.whiteCardMode = mode;
+          window.history.pushState({ mode }, "");
         }
       }
 
@@ -3928,6 +3931,10 @@ DesignerJs.prototype.normalView = async function () {
     await this.normalExtractEvent();
     await this.normalReportEvent();
     this.communicationRender();
+
+    window.addEventListener("popstate", (event) => {
+      window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+    });
 
     loading.parentNode.removeChild(loading);
 
