@@ -9139,12 +9139,12 @@ GeneralJs.prototype.finalSubmit = function () {
                 }
               } else if (p === "etc") {
                 firstDom.value = firstDom.value.trim().replace(/[\=\+\&\>\<\/\\\{\}\[\]\`\-]/gi, '');
-                // if (firstDom.value.trim() === '') {
-                //   throw new Error("예시를 보시고 요청 사항을 최대한 자세하게 적어주세요!");
-                // }
-                // if (firstDom.value.length < 3) {
-                //   throw new Error("예시를 보시고 요청 사항을 최대한 자세하게 적어주세요!");
-                // }
+                if (firstDom.value.trim() === '') {
+                  throw new Error("예시를 보시고 요청 사항을 최대한 자세하게 적어주세요!");
+                }
+                if (firstDom.value.length < 5) {
+                  throw new Error("예시를 보시고 요청 사항을 최대한 자세하게 적어주세요!");
+                }
               }
               tempObj.value = firstDom.value.replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
 
