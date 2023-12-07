@@ -4634,7 +4634,7 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
 
     for (let i = 0; i < dayNumber; i++) {
 
-      // await sleep(60 * 1000);
+      await sleep(60 * 1000);
       if (i === 0) {
         from = new Date(JSON.stringify(startDate).slice(1, -1));
         to = new Date(JSON.stringify(startDate).slice(1, -1));
@@ -4674,12 +4674,20 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
         await sleep(500);
         targets = campaign.adGroups.map((o) => { return o.ads.map((o) => { return o.id }); }).flat();
         if (targets.slice(0, 100).length > 0) {
-          response = await requestSystem(url, { creativeId: targets.slice(0, 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
-          reportResult = [].concat(equalJson(JSON.stringify(response.data.data)));
+          try {
+            response = await requestSystem(url, { creativeId: targets.slice(0, 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+            reportResult = [].concat(equalJson(JSON.stringify(response.data.data)));
+          } catch {
+            reportResult = [];
+          }
           for (let i = 0; i < Math.floor(targets.length / 100); i++) {
             if (targets.slice((i + 1) * 100, (i + 2) * 100).length > 0) {
-              response = await requestSystem(url, { creativeId: targets.slice((i + 1) * 100, (i + 2) * 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
-              reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));  
+              try {
+                response = await requestSystem(url, { creativeId: targets.slice((i + 1) * 100, (i + 2) * 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+                reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));  
+              } catch {
+                reportResult = reportResult.concat([]);
+              }
             }
             await sleep(60 * 1000);
           }
@@ -4839,14 +4847,18 @@ KakaoTalk.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, lo
         to.setDate(to.getDate() + 1);
       }
 
-      response = await requestSystem(url, { campaignId: targets.slice(0, 5), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
-      reportResult = [].concat(equalJson(JSON.stringify(response.data.data)));
-      for (let i = 0; i < Math.floor(targets.length / 5); i++) {
-        if (targets.slice((i + 1) * 5, (i + 2) * 5).length > 0) {
-          response = await requestSystem(url, { campaignId: targets.slice((i + 1) * 5, (i + 2) * 5), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
-          reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));
+      try {
+        response = await requestSystem(url, { campaignId: targets.slice(0, 5), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+        reportResult = [].concat(equalJson(JSON.stringify(response.data.data)));
+        for (let i = 0; i < Math.floor(targets.length / 5); i++) {
+          if (targets.slice((i + 1) * 5, (i + 2) * 5).length > 0) {
+            response = await requestSystem(url, { campaignId: targets.slice((i + 1) * 5, (i + 2) * 5), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+            reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));
+          }
+          await sleep(60 * 1000);
         }
-        await sleep(60 * 1000);
+      } catch {
+        reportResult = [];
       }
 
       num = 0;
