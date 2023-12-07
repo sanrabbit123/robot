@@ -1280,6 +1280,16 @@ DesignManualJs.prototype.insertEducationBox = function () {
   let heightRatio;
   let rightArrowBox;
   let downloadSource;
+  let initialVisualConst;
+  let imageBasePadding;
+  let imageBasePaddingBase;
+  let mainImageHeight;
+  let buttonsTongHeight;
+  let buttonCircleWidth;
+  let buttonCircleBetween;
+  let buttonArrowWidth, buttonArrowVisual;
+  let entireArrowWidth, entireArrowVisual;
+  let downloadArrowWidth, downloadArrowVisual;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -1300,6 +1310,25 @@ DesignManualJs.prototype.insertEducationBox = function () {
   textWeight = <%% 800, 800, 800, 800, 800 %%>;
   textMarginLeft = <%% 50, 48, 45, 30, 3 %%>;
 
+  imageBasePadding = <%% 45, 40, 25, 20, 2 %%>;
+  imageBasePaddingBase = <%% 25, 20, 15, 10, 1 %%>;
+
+  mainImageHeight = <%% 675, 675, 450, 400, 67 %%>;
+
+  buttonsTongHeight = <%% 80, 80, 80, 80, 8 %%>;
+  buttonCircleWidth = <%% 34, 34, 34, 34, 3 %%>;
+
+  buttonCircleBetween = <%% 6, 6, 5, 4, 1 %%>;
+
+  buttonArrowWidth = <%% 15, 15, 15, 15, 1 %%>;
+  buttonArrowVisual = <%% 5, 5, 5, 4, 1 %%>;
+
+  entireArrowWidth = <%% 16, 16, 15, 14, 1 %%>;
+  entireArrowVisual = <%% 0, 0, 0, 0, 0 %%>;
+
+  downloadArrowWidth = <%% 19, 19, 19, 19, 1 %%>;
+  downloadArrowVisual = <%% -1, -1, 0, 0, 0 %%>;
+
   mobileVisualPaddingValue = 0.2;
 
   zIndex = 4;
@@ -1310,6 +1339,8 @@ DesignManualJs.prototype.insertEducationBox = function () {
   bigArrowHeight = 1.5;
   bigArrowMargin = 48;
   heightVisual = 20;
+
+  initialVisualConst = 20;
 
   slideSource = [
     DesignManualJs.binaryPath + "/education/education_desktop_title.png",
@@ -1479,7 +1510,7 @@ DesignManualJs.prototype.insertEducationBox = function () {
       style: {
         position: "fixed",
         top: "calc(" + String(naviHeight) + "px" + " + calc(calc(calc(100% - " + String(naviHeight) + "px" + ") / 2) - " + String(bigArrowHeight / 2) + "vh" + "))",
-        left: withOut(50, ((bigWidth / 2) + bigArrowMargin - 20) * -1, ea),
+        left: withOut(50, ((bigWidth / 2) + bigArrowMargin - initialVisualConst) * -1, ea),
         height: String(bigArrowHeight) + "vh",
         zIndex: String(zIndex),
         transition: "all 0s ease",
@@ -1536,11 +1567,11 @@ DesignManualJs.prototype.insertEducationBox = function () {
     style: {
       display: "block",
       position: "relative",
-      padding: String(45) + ea,
-      width: withOut(45 * 2, ea),
+      padding: String(imageBasePadding) + ea,
+      width: withOut(imageBasePadding * 2, ea),
       background: colorChip.gray2,
       borderRadius: String(8) + "px",
-      paddingBottom: String(25) + ea,
+      paddingBottom: String(imageBasePaddingBase) + ea,
     }
   });
 
@@ -1555,7 +1586,7 @@ DesignManualJs.prototype.insertEducationBox = function () {
       display: "block",
       position: "relative",
       width: withOut(0, ea),
-      height: String(675) + ea,
+      height: String(mainImageHeight) + ea,
       borderRadius: String(8) + "px",
       boxShadow: "0px 5px 12px -10px " + colorChip.darkShadow,
       backgroundSize: "100% auto",
@@ -1572,7 +1603,7 @@ DesignManualJs.prototype.insertEducationBox = function () {
       flexDirection: "row",
       position: "relative",
       width: withOut(0, ea),
-      height: String(80) + ea,
+      height: String(buttonsTongHeight) + ea,
       justifyContent: "center",
       alignItems: "center",
       textAlign: "center",
@@ -1583,11 +1614,11 @@ DesignManualJs.prototype.insertEducationBox = function () {
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(34) + ea,
-          height: String(34) + ea,
+          width: String(buttonCircleWidth) + ea,
+          height: String(buttonCircleWidth) + ea,
           background: colorChip.gradientGray,
-          borderRadius: String(34) + ea,
-          marginRight: String(6) + ea,
+          borderRadius: String(buttonCircleWidth) + ea,
+          marginRight: String(buttonCircleBetween) + ea,
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
@@ -1599,8 +1630,8 @@ DesignManualJs.prototype.insertEducationBox = function () {
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(16) + ea,
-            marginTop: String(0) + ea,
+            width: String(entireArrowWidth) + ea,
+            marginTop: String(entireArrowVisual) + ea,
           }
         }
       },
@@ -1622,11 +1653,11 @@ DesignManualJs.prototype.insertEducationBox = function () {
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(34) + ea,
-          height: String(34) + ea,
+          width: String(buttonCircleWidth) + ea,
+          height: String(buttonCircleWidth) + ea,
           background: colorChip.gradientGray,
-          borderRadius: String(34) + ea,
-          marginRight: String(6) + ea,
+          borderRadius: String(buttonCircleWidth) + ea,
+          marginRight: String(buttonCircleBetween) + ea,
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
@@ -1638,8 +1669,8 @@ DesignManualJs.prototype.insertEducationBox = function () {
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(15) + ea,
-            marginLeft: String(-5) + ea,
+            width: String(buttonArrowWidth) + ea,
+            marginLeft: String(-1 * buttonArrowVisual) + ea,
           }
         }
       },
@@ -1661,11 +1692,11 @@ DesignManualJs.prototype.insertEducationBox = function () {
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(34) + ea,
-          height: String(34) + ea,
+          width: String(buttonCircleWidth) + ea,
+          height: String(buttonCircleWidth) + ea,
           background: colorChip.gradientGray,
-          borderRadius: String(34) + ea,
-          marginRight: String(6) + ea,
+          borderRadius: String(buttonCircleWidth) + ea,
+          marginRight: String(buttonCircleBetween) + ea,
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
@@ -1677,8 +1708,8 @@ DesignManualJs.prototype.insertEducationBox = function () {
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(15) + ea,
-            marginLeft: String(5) + ea,
+            width: String(buttonArrowWidth) + ea,
+            marginLeft: String(buttonArrowVisual) + ea,
           }
         }
       },
@@ -1695,10 +1726,10 @@ DesignManualJs.prototype.insertEducationBox = function () {
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(34) + ea,
-          height: String(34) + ea,
+          width: String(buttonCircleWidth) + ea,
+          height: String(buttonCircleWidth) + ea,
           background: colorChip.gradientGray,
-          borderRadius: String(34) + ea,
+          borderRadius: String(buttonCircleWidth) + ea,
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
@@ -1710,8 +1741,8 @@ DesignManualJs.prototype.insertEducationBox = function () {
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(19) + ea,
-            marginTop: String(-1) + ea,
+            width: String(downloadArrowWidth) + ea,
+            marginTop: String(downloadArrowVisual) + ea,
           }
         }
       },
