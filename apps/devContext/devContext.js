@@ -157,8 +157,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
 
+    
 
     
 
@@ -6978,17 +6978,16 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2312_aa01s", [
-    //   { porlid: "a117", index: 1 },
-    //   { porlid: "a117", index: 4 },
-    //   { porlid: "a117", index: 11 },
-    //   { porlid: "a117", index: 15 },
-    //   { porlid: "a117", index: 8 },
-    //   { porlid: "a117", index: 14 },
+    // await this.setProposalSettingForDesigner("d2311_aa01s", [
+    //   { porlid: "ghost", index: 2 },
+    //   { porlid: "ghost", index: 21 },
+    //   { porlid: "ghost", index: 8 },
+    //   { porlid: "ghost", index: 11 },
+    //   { porlid: "ghost", index: 6 },
     // ], [
-    //   "전공과 다년간의 인테리어 설계 경력으로 도면, 제안서 작업에 능숙하여 효과적인 결과물을 확인하실 수 있습니다.",
-    //   "전체적인 컬러톤과 가구, 패브릭, 소품 등의 디자인 제안을 뛰어난 감각으로 매치해 드릴 수 있습니다.",
-    //   "고객님과의 적극적인 소통과 대화로 합리적이면서도 이상적인 공간을 만들어 갑니다.",
+    //   "25년의 풍부한 경력으로 다양한 현장과 상황에 대한 전문적인 응대와 문제 해결이 가능합니다.",
+    //   "디자인을 전공하였으며, 현장경험 실무 경험을 바탕으로 안정감 있는 프로젝트 운영이 가능합니다.",
+    //   "디테일한 가구 설계가 가능하여 제작 가구가 가능하며 완전히 커스터마이징된 공간을 만들어 드릴 수 있습니다.",
     // ]);
 
 

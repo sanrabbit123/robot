@@ -819,8 +819,8 @@ DesignManualJs.prototype.insertInitBox = function () {
   tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "제공 내역 안내";
-  subTitleContents = "디자인 진행시 확인해야 할 체크리스트";
+  titleWording = "디자이너 교육";
+  subTitleContents = "홈리에종 프로젝트 디자이너 매뉴얼";
 
   mobileBlockTop = 4.5;
 
@@ -1160,6 +1160,489 @@ DesignManualJs.prototype.insertProcessBox = function () {
     });
   }
 
+}
+
+DesignManualJs.prototype.insertEducationBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { ea, baseTong, media, totalContents, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, removeByClass, downloadFile } = GeneralJs;
+  const buttonsClassName = "buttonsClassName";
+  const educationImageClassName = "educationImageClassName";
+  const bigPhotoImageClassName = "bigPhotoImageClassName";
+  const bigPhotoImageTargetClassName = "bigPhotoImageTargetClassName";
+  let margin;
+  let paddingTop;
+  let whiteBottomMargin;
+  let titleFontSize;
+  let bottomMargin;
+  let whiteBlock;
+  let grayTong;
+  let arrowBetween;
+  let contents;
+  let innerMargin;
+  let arrowWidth, arrowHeight;
+  let textTop;
+  let textSize, textWeight;
+  let textMarginLeft;
+  let mobileVisualPaddingValue;
+  let imageTong;
+  let buttonsTong;
+  let slideSource;
+  let bigPhotoEvent;
+  let zIndex;
+  let ratio;
+  let bigWidth, bigHeight;
+  let widthRatio;
+  let leftArrow, rightArrow;
+  let bigArrowHeight;
+  let bigArrowMargin;
+  let heightVisual;
+  let heightRatio;
+  let rightArrowBox;
+  let downloadSource;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 6 %%>;
+  paddingTop = <%% 52, 52, 44, 36, 6 %%>;
+
+  whiteBottomMargin = <%% 55, 55, 47, 39, 6 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+
+  innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+
+  arrowBetween = <%% 5, 5, 5, 3, 1 %%>;
+  arrowWidth = <%% 214, 160, 138, 109, 40 %%>;
+  arrowHeight = <%% 100, 90, 80, 60, 12 %%>;
+
+  textTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+  textSize = <%% 16, 14, 13, 11, 3.3 %%>;
+  textWeight = <%% 800, 800, 800, 800, 800 %%>;
+  textMarginLeft = <%% 50, 48, 45, 30, 3 %%>;
+
+  mobileVisualPaddingValue = 0.2;
+
+  zIndex = 4;
+  ratio = (1920 / 1080);
+  widthRatio = 0.92;
+  heightRatio = 0.9;
+
+  bigArrowHeight = 1.5;
+  bigArrowMargin = 48;
+  heightVisual = 20;
+
+  slideSource = [
+    DesignManualJs.binaryPath + "/education/education_desktop_title.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_0.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_1.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_2.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_3.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_4.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_5.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_6.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_7.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_8.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_9.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_10.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_11.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_12.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_13.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_14.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_15.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_16.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_17.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_18.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_19.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_20.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_21.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_22.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_23.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_24.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_25.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_26.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_27.png",
+    DesignManualJs.binaryPath + "/education/education_desktop_28.png",
+  ];
+  downloadSource = DesignManualJs.binaryPath + "/education/education_desktop_download.pdf";
+
+  bigPhotoEvent = function (e) {
+    const target = document.querySelector('.' + educationImageClassName);
+    const current = Number(target.getAttribute("index"));
+    const total = Number(target.getAttribute("length"));
+
+    bigWidth = window.innerWidth * widthRatio;
+    bigHeight = (window.innerWidth * widthRatio) / ratio;
+
+    if (bigHeight >= (window.innerHeight - naviHeight) - heightVisual) {
+      bigHeight = (window.innerHeight - naviHeight) * heightRatio;
+      bigWidth = bigHeight * ratio;
+    }
+
+    createNode({
+      mother: totalContents,
+      class: [ bigPhotoImageClassName ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            removeByClass(bigPhotoImageClassName);
+          }
+        }
+      ],
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        background: colorChip.black,
+        zIndex: String(zIndex),
+        animation: "justfadeineight 0.2s ease forwards",
+      }
+    });
+
+    createNode({
+      mother: totalContents,
+      class: [ bigPhotoImageClassName, bigPhotoImageTargetClassName ],
+      attribute: [
+        { index: String(current) },
+        { length: String(total) },
+      ],
+      style: {
+        position: "fixed",
+        top: "calc(" + String(naviHeight) + "px" + " + calc(calc(calc(100% - " + String(naviHeight) + "px" + ") / 2) - " + String(bigHeight / 2) + "px" + "))",
+        left: withOut(50, bigWidth / 2, "px"),
+        width: String(bigWidth) + "px",
+        height: String(bigHeight) + "px",
+        zIndex: String(zIndex),
+        borderRadius: String(3) + "px",
+        transition: "all 0s ease",
+        backgroundSize: "100% auto",
+        backgroundPosition: "50% 50%",
+        backgroundImage: "url('" + slideSource[current] + "')"
+      }
+    });
+
+    leftArrow = createNode({
+      mother: totalContents,
+      events: [
+        {
+          type: [ "dblclick", "selectstart" ],
+          event: (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }
+        },
+        {
+          type: "click",
+          event: function (e) {
+            const target = document.querySelector('.' + bigPhotoImageTargetClassName);
+            const current = Number(target.getAttribute("index"));
+            const total = Number(target.getAttribute("length"));
+            let next;
+            next = current - 1;
+            if (next < 0) {
+              next = total - 1;
+            }
+            target.style.backgroundImage = "url('" + slideSource[next] + "')";
+            target.setAttribute("index", String(next));
+          }
+        },
+      ],
+      attribute: [
+        { direction: "left" }
+      ],
+      class: [ bigPhotoImageClassName ],
+      mode: "svg",
+      source: svgMaker.buttonArrow("left", colorChip.whiteBlack),
+      style: {
+        position: "fixed",
+        top: "calc(" + String(naviHeight) + "px" + " + calc(calc(calc(100% - " + String(naviHeight) + "px" + ") / 2) - " + String(bigArrowHeight / 2) + "vh" + "))",
+        left: withOut(50, (bigWidth / 2) + bigArrowMargin, ea),
+        height: String(bigArrowHeight) + "vh",
+        zIndex: String(zIndex),
+        transition: "all 0s ease",
+        animation: "fadeuplite 0.2s ease forwards",
+        cursor: "pointer"
+      }
+    });
+
+    rightArrow = createNode({
+      mother: totalContents,
+      events: [
+        {
+          type: [ "dblclick", "selectstart" ],
+          event: (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }
+        },
+        {
+          type: "click",
+          event: function (e) {
+            const target = document.querySelector('.' + bigPhotoImageTargetClassName);
+            const current = Number(target.getAttribute("index"));
+            const total = Number(target.getAttribute("length"));
+            let next;
+            next = current + 1;
+            if (next >= total) {
+              next = 0;
+            }
+            target.style.backgroundImage = "url('" + slideSource[next] + "')";
+            target.setAttribute("index", String(next));
+          }
+        },
+      ],
+      class: [ bigPhotoImageClassName ],
+      mode: "svg",
+      source: svgMaker.buttonArrow("right", colorChip.whiteBlack),
+      style: {
+        position: "fixed",
+        top: "calc(" + String(naviHeight) + "px" + " + calc(calc(calc(100% - " + String(naviHeight) + "px" + ") / 2) - " + String(bigArrowHeight / 2) + "vh" + "))",
+        left: withOut(50, ((bigWidth / 2) + bigArrowMargin - 20) * -1, ea),
+        height: String(bigArrowHeight) + "vh",
+        zIndex: String(zIndex),
+        transition: "all 0s ease",
+        animation: "fadeuplite 0.2s ease forwards",
+        cursor: "pointer"
+      }
+    });
+    rightArrowBox = rightArrow.getBoundingClientRect();
+    rightArrow.style.left = withOut(50, ((bigWidth / 2) + bigArrowMargin - rightArrowBox.width) * -1, ea)
+
+  }
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(whiteBottomMargin) + ea,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  grayTong = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(innerMargin) + ea,
+      paddingBottom: String(desktop ? innerMargin : innerMargin - arrowBetween) + ea,
+      paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+      paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
+      width: withOut(innerMargin * 2, ea),
+      background: colorChip.white,
+      borderRadius: String(8) + "px",
+    }
+  });
+
+  imageTong = createNode({
+    mother: grayTong,
+    style: {
+      display: "block",
+      position: "relative",
+      padding: String(45) + ea,
+      width: withOut(45 * 2, ea),
+      background: colorChip.gray3,
+      borderRadius: String(8) + "px",
+      paddingBottom: String(25) + ea,
+    }
+  });
+
+  createNode({
+    mother: imageTong,
+    class: [ educationImageClassName ],
+    attribute: {
+      index: String(0),
+      length: String(slideSource.length),
+    },
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(675) + ea,
+      borderRadius: String(8) + "px",
+      boxShadow: "0px 5px 12px -10px " + colorChip.darkShadow,
+      backgroundSize: "100% auto",
+      backgroundPosition: "50% 50%",
+      backgroundImage: "url('" + slideSource[0] + "')",
+      transition: "all 0s ease",
+    }
+  });
+
+  buttonsTong = createNode({
+    mother: imageTong,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(80) + ea,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+    },
+    children: [
+      {
+        event: { click: bigPhotoEvent },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(34) + ea,
+          height: String(34) + ea,
+          background: colorChip.gradientGray,
+          borderRadius: String(34) + ea,
+          marginRight: String(6) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        child: {
+          mode: "svg",
+          source: svgMaker.entireArrow(colorChip.white),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(16) + ea,
+            marginTop: String(0) + ea,
+          }
+        }
+      },
+      {
+        event: {
+          click: function (e) {
+            const target = document.querySelector('.' + educationImageClassName);
+            const current = Number(target.getAttribute("index"));
+            const total = Number(target.getAttribute("length"));
+            let next;
+            next = current - 1;
+            if (next < 0) {
+              next = total - 1;
+            }
+            target.style.backgroundImage = "url('" + slideSource[next] + "')";
+            target.setAttribute("index", String(next));
+          }
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(34) + ea,
+          height: String(34) + ea,
+          background: colorChip.gradientGray,
+          borderRadius: String(34) + ea,
+          marginRight: String(6) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        child: {
+          mode: "svg",
+          source: svgMaker.buttonArrow("left", colorChip.white),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(15) + ea,
+            marginLeft: String(-5) + ea,
+          }
+        }
+      },
+      {
+        event: {
+          click: function (e) {
+            const target = document.querySelector('.' + educationImageClassName);
+            const current = Number(target.getAttribute("index"));
+            const total = Number(target.getAttribute("length"));
+            let next;
+            next = current + 1;
+            if (next >= total) {
+              next = 0;
+            }
+            target.style.backgroundImage = "url('" + slideSource[next] + "')";
+            target.setAttribute("index", String(next));
+          }
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(34) + ea,
+          height: String(34) + ea,
+          background: colorChip.gradientGray,
+          borderRadius: String(34) + ea,
+          marginRight: String(6) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        child: {
+          mode: "svg",
+          source: svgMaker.buttonArrow("right", colorChip.white),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(15) + ea,
+            marginLeft: String(5) + ea,
+          }
+        }
+      },
+      {
+        event: {
+          click: async function (e) {
+            try {
+              await downloadFile(downloadSource);
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(34) + ea,
+          height: String(34) + ea,
+          background: colorChip.gradientGray,
+          borderRadius: String(34) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        child: {
+          mode: "svg",
+          source: svgMaker.downloadArrow(colorChip.white),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(19) + ea,
+            marginTop: String(-1) + ea,
+          }
+        }
+      },
+    ]
+  })
+
+
+  
 }
 
 DesignManualJs.prototype.contentsLoop = function () {
@@ -2692,6 +3175,7 @@ DesignManualJs.prototype.launching = async function (loading) {
             instance.insertContractButtonBox();
           } else {
             instance.insertInitBox();
+            instance.insertEducationBox();
             instance.insertProcessBox();
             instance.contentsLoop();
             instance.insertButtonBox();
