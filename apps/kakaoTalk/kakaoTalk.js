@@ -4634,7 +4634,7 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
 
     for (let i = 0; i < dayNumber; i++) {
 
-      await sleep(60 * 1000);
+      // await sleep(60 * 1000);
       if (i === 0) {
         from = new Date(JSON.stringify(startDate).slice(1, -1));
         to = new Date(JSON.stringify(startDate).slice(1, -1));
@@ -4676,8 +4676,10 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
         response = await requestSystem(url, { creativeId: targets.slice(0, 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
         reportResult = [].concat(equalJson(JSON.stringify(response.data.data)));
         for (let i = 0; i < Math.floor(targets.length / 100); i++) {
-          response = await requestSystem(url, { creativeId: targets.slice((i + 1) * 100, (i + 2) * 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
-          reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));
+          if (targets.slice((i + 1) * 100, (i + 2) * 100).length > 0) {
+            response = await requestSystem(url, { creativeId: targets.slice((i + 1) * 100, (i + 2) * 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+            reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));  
+          }
           await sleep(60 * 1000);
         }
         for (let adGroup of campaign.adGroups) {
@@ -4775,11 +4777,7 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
   } catch (e) {
     console.log(e);
     console.log(e.response);
-    if (e.response !== undefined) {
-      emergencyAlarm("KakaoTalk.kakaoComplex error : " + JSON.stringify(e.response, null, 2)).catch((err) => { console.log(err); });
-    } else {
-      emergencyAlarm("KakaoTalk.kakaoComplex error : " + e.message).catch((err) => { console.log(err); });
-    }
+    emergencyAlarm("KakaoTalk.kakaoComplex error : " + e.message).catch((err) => { console.log(err); });
     return false;
   }
 }
@@ -4818,6 +4816,7 @@ KakaoTalk.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, lo
     defaultHeaders = {
       "Authorization": "Bearer " + token,
     }
+
     thisResult = await this.campaignsIdMap();
     campaigns = thisResult.campaigns;
 
@@ -4839,8 +4838,10 @@ KakaoTalk.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, lo
       response = await requestSystem(url, { campaignId: targets.slice(0, 5), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
       reportResult = [].concat(equalJson(JSON.stringify(response.data.data)));
       for (let i = 0; i < Math.floor(targets.length / 5); i++) {
-        response = await requestSystem(url, { campaignId: targets.slice((i + 1) * 5, (i + 2) * 5), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
-        reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));
+        if (targets.slice((i + 1) * 5, (i + 2) * 5).length > 0) {
+          response = await requestSystem(url, { campaignId: targets.slice((i + 1) * 5, (i + 2) * 5), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+          reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));
+        }
         await sleep(60 * 1000);
       }
 
