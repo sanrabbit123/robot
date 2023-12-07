@@ -4673,14 +4673,18 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
         };
         await sleep(500);
         targets = campaign.adGroups.map((o) => { return o.ads.map((o) => { return o.id }); }).flat();
-        response = await requestSystem(url, { creativeId: targets.slice(0, 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
-        reportResult = [].concat(equalJson(JSON.stringify(response.data.data)));
-        for (let i = 0; i < Math.floor(targets.length / 100); i++) {
-          if (targets.slice((i + 1) * 100, (i + 2) * 100).length > 0) {
-            response = await requestSystem(url, { creativeId: targets.slice((i + 1) * 100, (i + 2) * 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
-            reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));  
+        if (targets.slice(0, 100).length > 0) {
+          response = await requestSystem(url, { creativeId: targets.slice(0, 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+          reportResult = [].concat(equalJson(JSON.stringify(response.data.data)));
+          for (let i = 0; i < Math.floor(targets.length / 100); i++) {
+            if (targets.slice((i + 1) * 100, (i + 2) * 100).length > 0) {
+              response = await requestSystem(url, { creativeId: targets.slice((i + 1) * 100, (i + 2) * 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
+              reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));  
+            }
+            await sleep(60 * 1000);
           }
-          await sleep(60 * 1000);
+        } else {
+          reportResult = [];
         }
         for (let adGroup of campaign.adGroups) {
           adGroupObj = {
