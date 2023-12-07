@@ -6897,9 +6897,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이지민",
-    //     designer: "김도현",
-    //     link: "https://drive.google.com/drive/folders/1Owu7EfbDCh1Qy1XNJonOs8CVSQLvkJj5",
+    //     client: null,
+    //     designer: "이윤아",
+    //     link: "https://drive.google.com/drive/folders/1SeXCs4GN7ESQ3HYcuJkgsjbIhMnkFrDk",
     //     pay: true
     //   },
     // ]);
@@ -6974,20 +6974,21 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2311_aa02s" ]);
+    // await work.newDesignerToFront([ "d2312_aa01s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2311_aa02s", [
-    //   { porlid: "a116", index: 3 },
-    //   { porlid: "a116", index: 7 },
-    //   { porlid: "a116", index: 9 },
-    //   { porlid: "a116", index: 5 },
-    //   { porlid: "a116", index: 16 },
+    // await this.setProposalSettingForDesigner("d2312_aa01s", [
+    //   { porlid: "a117", index: 1 },
+    //   { porlid: "a117", index: 4 },
+    //   { porlid: "a117", index: 11 },
+    //   { porlid: "a117", index: 15 },
+    //   { porlid: "a117", index: 8 },
+    //   { porlid: "a117", index: 14 },
     // ], [
-    //   "색조합 능력이 뛰어나며, 뻔하지 않는, 특색 있는 공간 연출에 탁월합니다.",
-    //   "색감이 좋아 다양한 컬러를 자연스럽게 조합하는 데 탁월한 능력을 갖추고 있습니다.",
-    //   "소통 능력이 뛰어나 고객님만을 위한 맞춤 공간을 만들어 내는 데에 능숙합니다.",
+    //   "전공과 다년간의 인테리어 설계 경력으로 도면, 제안서 작업에 능숙하여 효과적인 결과물을 확인하실 수 있습니다.",
+    //   "전체적인 컬러톤과 가구, 패브릭, 소품 등의 디자인 제안을 뛰어난 감각으로 매치해 드릴 수 있습니다.",
+    //   "고객님과의 적극적인 소통과 대화로 합리적이면서도 이상적인 공간을 만들어 갑니다.",
     // ]);
 
 
