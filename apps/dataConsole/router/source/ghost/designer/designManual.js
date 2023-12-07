@@ -934,14 +934,21 @@ DesignManualJs.prototype.insertProcessBox = function () {
   let textSize, textWeight;
   let textMarginLeft;
   let mobileVisualPaddingValue;
+  let numberRight;
+  let titleTopNumber;
+  let titleTop;
+  let titleBottom;
+  let contentsAreaPaddingTop;
+  let mobileTitleLeft;
+  let mobileTitleTop;
+  let mobilePaddingLeft;
+  let mobileInnerPaddingBottom;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
   paddingTop = <%% 52, 52, 44, 36, 6 %%>;
 
   whiteBottomMargin = <%% 55, 55, 47, 39, 6 %%>;
-
-  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
   innerMargin = <%% 0, 0, 0, 0, 1 %%>;
 
@@ -955,6 +962,20 @@ DesignManualJs.prototype.insertProcessBox = function () {
   textMarginLeft = <%% 50, 48, 45, 30, 3 %%>;
 
   mobileVisualPaddingValue = 0.2;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
+  contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+  mobilePaddingLeft = 6;
+  mobileInnerPaddingBottom = 8;
 
   contents = {
     process: this.contents,
@@ -983,6 +1004,62 @@ DesignManualJs.prototype.insertProcessBox = function () {
     ]
   });
   whiteTong = whiteBlock.firstChild;
+
+  createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: mobile ? "absolute" : "relative",
+          left: desktop ? "" : String(mobileTitleLeft) + ea,
+          top: desktop ? "" : String(mobileTitleTop) + ea,
+          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+          marginBottom: String(titleBottom) + ea,
+          zIndex: mobile ? String(1) : "",
+        },
+        children: [
+          {
+            text: "프로세스별 체크리스트",
+            style: {
+              position: "relative",
+              display: "inline-block",
+              top: String(titleTopNumber) + ea,
+              fontSize: String(titleFontSize) + ea,
+              fontWeight: String(600),
+              background: desktop ? colorChip.white : colorChip.gray1,
+              paddingRight: String(numberRight) + ea,
+              color: colorChip.black,
+            }
+          },
+        ]
+      },
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
+          background: desktop ? "" : colorChip.white,
+          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+          borderRadius: mobile ? String(1) + ea : "",
+          overflow: "hidden",
+          marginBottom: String(0) + ea,
+          marginTop: desktop ? "" : String(14) + ea,
+          paddingTop: String(contentsAreaPaddingTop) + ea,
+          borderTop: desktop ? "1px solid " + colorChip.shadow : "",
+          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingBottom: desktop ? "" : String(mobileInnerPaddingBottom) + ea,
+        }
+      },
+    ]
+  });
+
 
   grayTong = createNode({
     mother: whiteTong,
@@ -3178,7 +3255,6 @@ DesignManualJs.prototype.launching = async function (loading) {
             instance.insertEducationBox();
             instance.insertProcessBox();
             instance.contentsLoop();
-            instance.insertButtonBox();
           }
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignManualJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
