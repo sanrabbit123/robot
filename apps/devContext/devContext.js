@@ -6898,8 +6898,8 @@ DevContext.prototype.launching = async function () {
     // await filter.rawToRaw([
     //   {
     //     client: null,
-    //     designer: "이윤아",
-    //     link: "https://drive.google.com/drive/folders/1SeXCs4GN7ESQ3HYcuJkgsjbIhMnkFrDk",
+    //     designer: "노경아",
+    //     link: "https://drive.google.com/drive/folders/1UfGV11EY_ADe1isYoDiFc-KXOjgQ5TZ9",
     //     pay: true
     //   },
     // ]);
@@ -6974,7 +6974,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2312_aa01s" ]);
+    // await work.newDesignerToFront([ "d2311_aa01s" ]);
 
 
     // new designer set proposal setting
