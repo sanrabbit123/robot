@@ -4773,7 +4773,13 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
     return true;
 
   } catch (e) {
-    emergencyAlarm("KakaoTalk.kakaoComplex error : " + e.message).catch((err) => { console.log(err); });
+    console.log(e);
+    console.log(e.response);
+    if (e.response !== undefined) {
+      emergencyAlarm("KakaoTalk.kakaoComplex error : " + JSON.stringify(e.response, null, 2)).catch((err) => { console.log(err); });
+    } else {
+      emergencyAlarm("KakaoTalk.kakaoComplex error : " + e.message).catch((err) => { console.log(err); });
+    }
     return false;
   }
 }
