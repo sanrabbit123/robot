@@ -1538,7 +1538,7 @@ DesignManualJs.prototype.insertEducationBox = function () {
       position: "relative",
       padding: String(45) + ea,
       width: withOut(45 * 2, ea),
-      background: colorChip.gray3,
+      background: colorChip.gray2,
       borderRadius: String(8) + "px",
       paddingBottom: String(25) + ea,
     }
