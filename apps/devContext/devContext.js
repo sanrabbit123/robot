@@ -6909,8 +6909,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "박진아",
-    //     designer: "김지은",
+    //     client: "김동환",
+    //     designer: "박주령",
     //   },
     // ]);
 
