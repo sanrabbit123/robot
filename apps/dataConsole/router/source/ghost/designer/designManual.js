@@ -1026,6 +1026,9 @@ DesignManualJs.prototype.insertProcessBox = function () {
         children: [
           {
             text: "프로세스별 체크리스트",
+            event: {
+              selectstart: (e) => { e.preventDefault() },
+            },
             style: {
               position: "relative",
               display: "inline-block",
@@ -1310,24 +1313,24 @@ DesignManualJs.prototype.insertEducationBox = function () {
   textWeight = <%% 800, 800, 800, 800, 800 %%>;
   textMarginLeft = <%% 50, 48, 45, 30, 3 %%>;
 
-  imageBasePadding = <%% 45, 40, 25, 20, 2 %%>;
-  imageBasePaddingBase = <%% 25, 20, 15, 10, 1 %%>;
+  imageBasePadding = <%% 45, 25, 10, 20, 2 %%>;
+  imageBasePaddingBase = <%% 25, 10, 3, 10, 1 %%>;
 
-  mainImageHeight = <%% 675, 675, 450, 400, 67 %%>;
+  mainImageHeight = <%% 675, 500, 440, 400, 67 %%>;
 
-  buttonsTongHeight = <%% 80, 80, 80, 80, 8 %%>;
-  buttonCircleWidth = <%% 34, 34, 34, 34, 3 %%>;
+  buttonsTongHeight = <%% 80, 72, 54, 48, 8 %%>;
+  buttonCircleWidth = <%% 34, 34, 28, 24, 3 %%>;
 
   buttonCircleBetween = <%% 6, 6, 5, 4, 1 %%>;
 
-  buttonArrowWidth = <%% 15, 15, 15, 15, 1 %%>;
+  buttonArrowWidth = <%% 15, 15, 13, 13, 1 %%>;
   buttonArrowVisual = <%% 5, 5, 5, 4, 1 %%>;
 
-  entireArrowWidth = <%% 16, 16, 15, 14, 1 %%>;
+  entireArrowWidth = <%% 16, 16, 14, 14, 1 %%>;
   entireArrowVisual = <%% 0, 0, 0, 0, 0 %%>;
 
-  downloadArrowWidth = <%% 19, 19, 19, 19, 1 %%>;
-  downloadArrowVisual = <%% -1, -1, 0, 0, 0 %%>;
+  downloadArrowWidth = <%% 19, 19, 17, 17, 1 %%>;
+  downloadArrowVisual = <%% -1, -1, -1, -1, 0 %%>;
 
   mobileVisualPaddingValue = 0.2;
 
@@ -1648,7 +1651,8 @@ DesignManualJs.prototype.insertEducationBox = function () {
             }
             target.style.backgroundImage = "url('" + slideSource[next] + "')";
             target.setAttribute("index", String(next));
-          }
+          },
+          selectstart: (e) => { e.preventDefault() },
         },
         style: {
           display: "inline-flex",
@@ -1687,7 +1691,8 @@ DesignManualJs.prototype.insertEducationBox = function () {
             }
             target.style.backgroundImage = "url('" + slideSource[next] + "')";
             target.setAttribute("index", String(next));
-          }
+          },
+          selectstart: (e) => { e.preventDefault() },
         },
         style: {
           display: "inline-flex",
@@ -1721,7 +1726,8 @@ DesignManualJs.prototype.insertEducationBox = function () {
             } catch (e) {
               console.log(e);
             }
-          }
+          },
+          selectstart: (e) => { e.preventDefault() },
         },
         style: {
           display: "inline-flex",
