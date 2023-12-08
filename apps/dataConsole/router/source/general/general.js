@@ -3233,7 +3233,7 @@ GeneralJs.prototype.greenBar = function () {
         attribute: {
           src: S3HOST + ":6081/vnc_lite.html",
           width: String(100) + '%',
-          height: String(200) + '%',
+          height: String(100) + '%',
         },
         style: {
           display: "block",
