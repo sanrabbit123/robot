@@ -3241,7 +3241,7 @@ GeneralJs.prototype.greenBar = function () {
           top: String(0),
           left: String(0),
           width: GeneralJs.withOut(0, ea),
-          height: String(200) + '%',
+          height: String(100) + '%',
           border: String(0),
         }
       }
