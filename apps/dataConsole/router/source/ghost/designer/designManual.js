@@ -1248,6 +1248,8 @@ DesignManualJs.prototype.insertEducationBox = function () {
   const { ea, baseTong, media, totalContents, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, removeByClass, downloadFile } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   const educationImageClassName = "educationImageClassName";
@@ -1316,7 +1318,7 @@ DesignManualJs.prototype.insertEducationBox = function () {
   imageBasePadding = <%% 45, 25, 10, 20, 2 %%>;
   imageBasePaddingBase = <%% 25, 10, 3, 10, 1 %%>;
 
-  mainImageHeight = <%% 675, 500, 440, 400, 67 %%>;
+  mainImageHeight = <%% 675, 500, 440, 400, 78 %%>;
 
   buttonsTongHeight = <%% 80, 72, 54, 48, 8 %%>;
   buttonCircleWidth = <%% 34, 34, 28, 24, 3 %%>;
@@ -1345,38 +1347,49 @@ DesignManualJs.prototype.insertEducationBox = function () {
 
   initialVisualConst = 20;
 
-  slideSource = [
-    DesignManualJs.binaryPath + "/education/education_desktop_title.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_0.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_1.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_2.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_3.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_4.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_5.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_6.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_7.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_8.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_9.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_10.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_11.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_12.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_13.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_14.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_15.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_16.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_17.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_18.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_19.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_20.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_21.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_22.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_23.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_24.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_25.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_26.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_27.png",
-    DesignManualJs.binaryPath + "/education/education_desktop_28.png",
-  ];
+  if (big) {
+    slideSource = [
+      DesignManualJs.binaryPath + "/education/education_desktop_title.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_0.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_1.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_2.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_3.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_4.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_5.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_6.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_7.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_8.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_9.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_10.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_11.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_12.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_13.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_14.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_15.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_16.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_17.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_18.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_19.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_20.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_21.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_22.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_23.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_24.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_25.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_26.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_27.png",
+      DesignManualJs.binaryPath + "/education/education_desktop_28.png",
+    ];
+  } else {
+    slideSource = [
+      DesignManualJs.binaryPath + "/education/education_mobile_0.png",
+      DesignManualJs.binaryPath + "/education/education_mobile_1.png",
+      DesignManualJs.binaryPath + "/education/education_mobile_2.png",
+      DesignManualJs.binaryPath + "/education/education_mobile_3.png",
+      DesignManualJs.binaryPath + "/education/education_mobile_4.png",
+      DesignManualJs.binaryPath + "/education/education_mobile_5.png",
+    ];
+  }
   downloadSource = DesignManualJs.binaryPath + "/education/education_desktop_download.pdf";
 
   bigPhotoEvent = function (e) {
