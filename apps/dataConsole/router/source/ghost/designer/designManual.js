@@ -1318,7 +1318,7 @@ DesignManualJs.prototype.insertEducationBox = function () {
   imageBasePadding = <%% 45, 25, 10, 20, 0 %%>;
   imageBasePaddingBase = <%% 25, 10, 3, 10, 0 %%>;
 
-  mainImageHeight = <%% 675, 500, 440, 677, 103.5 %%>;
+  mainImageHeight = <%% 675, 500, 440, 677, 96.6 %%>;
 
   buttonsTongHeight = <%% 80, 72, 54, 48, 8 %%>;
   buttonCircleWidth = <%% 34, 34, 28, 24, 3 %%>;
@@ -1678,7 +1678,7 @@ DesignManualJs.prototype.insertEducationBox = function () {
       position: "relative",
       width: withOut(0, ea),
       height: String(mainImageHeight) + ea,
-      borderRadius: String(8) + "px",
+      borderRadius: String(5) + "px",
       boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.darkShadow : "",
       backgroundSize: "100% auto",
       backgroundPosition: "50% 50%",
