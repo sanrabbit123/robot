@@ -1304,7 +1304,7 @@ DesignManualJs.prototype.insertEducationBox = function () {
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
-  innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+  innerMargin = <%% 0, 0, 0, 0, 0 %%>;
 
   arrowBetween = <%% 5, 5, 5, 3, 1 %%>;
   arrowWidth = <%% 214, 160, 138, 109, 40 %%>;
@@ -1315,10 +1315,10 @@ DesignManualJs.prototype.insertEducationBox = function () {
   textWeight = <%% 800, 800, 800, 800, 800 %%>;
   textMarginLeft = <%% 50, 48, 45, 30, 3 %%>;
 
-  imageBasePadding = <%% 45, 25, 10, 20, 2 %%>;
-  imageBasePaddingBase = <%% 25, 10, 3, 10, 1 %%>;
+  imageBasePadding = <%% 45, 25, 10, 20, 0 %%>;
+  imageBasePaddingBase = <%% 25, 10, 3, 10, 0 %%>;
 
-  mainImageHeight = <%% 675, 500, 440, 400, 78 %%>;
+  mainImageHeight = <%% 675, 500, 440, 677, 103.5 %%>;
 
   buttonsTongHeight = <%% 80, 72, 54, 48, 8 %%>;
   buttonCircleWidth = <%% 34, 34, 28, 24, 3 %%>;
@@ -1381,14 +1381,89 @@ DesignManualJs.prototype.insertEducationBox = function () {
       DesignManualJs.binaryPath + "/education/education_desktop_28.png",
     ];
   } else {
-    slideSource = [
-      DesignManualJs.binaryPath + "/education/education_mobile_0.png",
-      DesignManualJs.binaryPath + "/education/education_mobile_1.png",
-      DesignManualJs.binaryPath + "/education/education_mobile_2.png",
-      DesignManualJs.binaryPath + "/education/education_mobile_3.png",
-      DesignManualJs.binaryPath + "/education/education_mobile_4.png",
-      DesignManualJs.binaryPath + "/education/education_mobile_5.png",
-    ];
+    if (desktop) {
+      slideSource = [
+        DesignManualJs.binaryPath + "/education/education_tablet_title.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_0.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_1.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_2.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_3.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_4.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_5.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_6.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_7.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_8.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_9.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_10.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_11.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_12.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_13.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_14.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_15.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_16.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_17.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_18.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_19.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_20.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_21.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_22.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_23.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_24.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_25.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_26.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_27.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_28.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_29.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_30.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_31.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_32.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_33.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_34.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_35.png",
+        DesignManualJs.binaryPath + "/education/education_tablet_36.png",
+      ];
+    } else {
+      slideSource = [
+        DesignManualJs.binaryPath + "/education/education_mobile_title.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_0.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_1.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_2.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_3.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_4.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_5.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_6.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_7.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_8.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_9.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_10.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_11.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_12.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_13.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_14.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_15.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_16.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_17.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_18.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_19.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_20.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_21.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_22.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_23.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_24.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_25.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_26.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_27.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_28.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_29.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_30.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_31.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_32.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_33.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_34.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_35.png",
+        DesignManualJs.binaryPath + "/education/education_mobile_36.png",
+      ];
+    }
   }
   downloadSource = DesignManualJs.binaryPath + "/education/education_desktop_download.pdf";
 
@@ -1585,7 +1660,7 @@ DesignManualJs.prototype.insertEducationBox = function () {
       position: "relative",
       padding: String(imageBasePadding) + ea,
       width: withOut(imageBasePadding * 2, ea),
-      background: colorChip.gray2,
+      background: desktop ? colorChip.gray2 : "transparent",
       borderRadius: String(8) + "px",
       paddingBottom: String(imageBasePaddingBase) + ea,
     }
@@ -1604,7 +1679,7 @@ DesignManualJs.prototype.insertEducationBox = function () {
       width: withOut(0, ea),
       height: String(mainImageHeight) + ea,
       borderRadius: String(8) + "px",
-      boxShadow: "0px 5px 12px -10px " + colorChip.darkShadow,
+      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.darkShadow : "",
       backgroundSize: "100% auto",
       backgroundPosition: "50% 50%",
       backgroundImage: "url('" + slideSource[0] + "')",
