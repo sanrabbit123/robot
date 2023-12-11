@@ -159,7 +159,7 @@ GeneralJs.prototype.setNavigator = function (designer) {
       green: [],
     },
     {
-      title: "디자이너 교육",
+      title: "디자이너 가이드",
       href: FRONTHOST + "/designer/provision.php?desid=" + designer.desid,
       // href: FRONTHOST + "/designer/partnership.php?desid=" + designer.desid,
       green: [],

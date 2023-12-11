@@ -4836,12 +4836,12 @@ PartnershipManualJs.prototype.insertButtonBox = function () {
   arrowHeight = <%% 100, 100, 100, 100, 100 %%>;
 
   textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
-  textSize = <%% 17, 17, 15, 14, 2.7 %%>;
+  textSize = <%% 17, 17, 15, 14, 2.5 %%>;
   textWeight = <%% 700, 700, 700, 700, 700 %%>;
   textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
 
   buttonPadding = <%% 20, 19, 18, 18, 2.1 %%>;
-  buttonHeight = <%% 42, 42, 36, 32, 6.5 %%>;
+  buttonHeight = <%% 42, 42, 36, 32, 6.3 %%>;
 
   buttonBetween = <%% 6, 6, 5, 4, 0.5 %%>;
 
@@ -4998,7 +4998,7 @@ PartnershipManualJs.prototype.insertButtonBox = function () {
     },
     children: [
       {
-        text: "디자이너 교육",
+        text: "디자이너 가이드",
         style: {
           display: "inline-block",
           position: "relative",
