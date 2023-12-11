@@ -41,7 +41,7 @@ const AboutServiceJs = function () {
   this.mother = new GeneralJs();
 }
 
-AboutServiceJs.binaryPath = FRONTHOST + "/middle/curation";
+AboutServiceJs.binaryPath = FRONTHOST + "/middle/about";
 
 AboutServiceJs.prototype.insertInitBox = function () {
   const instance = this;
@@ -227,6 +227,9 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
   const { ea, media, osException, testMode } = this;
+  const mobileTitleToken = "<u%>%u>&nbsp;&nbsp;";
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -267,6 +270,18 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
   let titleTop;
   let descriptionSize;
   let descriptionBottom;
+  let pictureTong;
+  let pictureBetween;
+  let pictureTongPaddingTop;
+  let subDescriptionColorBoxHeight;
+  let descriptionTextTop;
+  let titleBarWidth, titleBarHeight, titleBarMarginRight;
+  let factorImageWidth;
+  let descriptionSizeInBox;
+  let arrowWidth, arrowHeight;
+  let subDescriptionBottomSize;
+  let plusWidth;
+  let plusSize;
 
   blockHeight = <%% 383, 316, 273, 226, 129.5 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -274,14 +289,15 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 22, 22, 20, 17, 4.5 %%>;
+  titleFont = <%% 22, 21, 19, 17, 4.2 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 800, 800, 800, 800, 800 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
   titleTop = <%% 108, 54, 40, 30, 8.5 %%>;
-  descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 3.4 %%>;
   descriptionBottom = <%% 0, -8, -7, -2, 0 %%>;
+  descriptionTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
   barWidth = <%% 70, 80, 80, 80, 80 %%>;
   barLeft = <%% 240, titleLeft + 234, titleLeft + 234, titleLeft + 234, titleLeft + 234 %%>;
@@ -289,7 +305,7 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  leftWidth = <%% 340, 260, 250, 210, 300 %%>;
+  leftWidth = <%% 230, 160, 140, 110, 12 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
   initWordingSize = <%% 15.5, 15, 14.5, 13.5, 5 %%>;
@@ -337,6 +353,27 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
 
   grayBoxImageVisualWidth = <%% 16, 4, 0, 0, 19 %%>;
 
+  pictureBetween = <%% 2, 2, 1, 1, 0.5 %%>;
+  pictureTongPaddingTop = <%% 44, 44, 36, 28, 7.5 %%>;
+
+  subDescriptionColorBoxHeight = <%% 38, 35, 30, 24, 7.5 %%>;
+
+  titleBarWidth = <%% 5, 5, 4, 3, 5 %%>;
+  titleBarHeight = <%% 45, 42, 38, 40, 41 %%>;
+  titleBarMarginRight = <%% 14, 12, 10, 10, 1 %%>;
+
+  factorImageWidth = <%% 234, 174, 151, 135, 37 %%>;
+
+  descriptionSizeInBox = <%% 14, 13, 11, 10, 2.9 %%>;
+
+  arrowWidth = <%% 496, 366, 308, 256, 366 %%>;
+  arrowHeight = <%% 11, 11, 10, 9, 11 %%>;
+
+  subDescriptionBottomSize = <%% 12, 12, 11, 10, 3 %%>;
+
+  plusWidth = <%% 60, 40, 30, 0, 0 %%>;
+  plusSize = <%% 38, 26, 20, 0, 0 %%>;
+
   grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
   grayDownWordings = [ "비용 구성", "시공 비용", "구매 비용", "디자인비" ];
 
@@ -346,7 +383,6 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      height: String(blockHeight) + ea,
       background: colorChip.white,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -356,48 +392,51 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
   leftBox = createNode({
     mother: whiteBlock,
     style: {
-      display: desktop ? "inline-block" : "block",
+      display: desktop ? "inline-flex" : "block",
       position: "relative",
-      width: desktop ? String(leftWidth) + ea : String(100) + '%',
       lineHeight: String(1.42),
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(mobileLeftBoxHeight) + ea,
+      verticalAlign: "top",
+      justifyContent: "start",
+      alignItems: "center",
       marginTop: desktop ? String(marginTop) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
       marginLeft: desktop ? String(margin) + ea : "",
+      paddingTop: desktop ? "" : String(7.8) + ea,
+      paddingLeft: desktop ? "" : String(6) + ea,
+      paddingRight: desktop ? "" : String(6) + ea,
+      width: desktop ? String(leftWidth) + ea : withOut(6 * 2, ea),
     },
     children: [
       {
-        text: "인테리어, 막상 하려니\n막막하지 않으세요?",
         style: {
-          position: "absolute",
-          fontSize: String(titleFont) + ea,
-          fontWeight: String(titleFontWeight),
-          top: String(titleTop) + ea,
-          left: String(titleLeft) + ea,
-          color: colorChip.black,
-          width: desktop ? "" : String(100) + '%',
-          textAlign: desktop ? "" : "center",
+          display: big ? "inline-block" : "none",
+          position: "relative",
+          width: String(titleBarWidth) + ea,
+          height: String(titleBarHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          marginRight: String(titleBarMarginRight) + ea,
+          marginBottom: desktop ? String(isMac() ? 0 : 2) + ea : "",
         }
       },
       {
-        text: [
-          desktop ? "알아보면 알아볼수록 해야 할 것이" : "알아볼수록 해야할 것이 너무 많은 인테리어,",
-          desktop ? "너무나도 많은 인테리어, 준비하다 보면" : "막히는 부분도 많고 실패도 많이 하기 마련입니다.",
-          desktop ? "막히는 부분도 많고, 구입하다 보면" : "",
-          desktop ? "실패도 많이 하기 마련입니다." : "",
-        ].join("\n"),
+        text: desktop ? "홈리에종\n홈스타일링?" : mobileTitleToken + "홈리에종 홈스타일링?",
         style: {
-          position: "absolute",
-          bottom: String(descriptionBottom) + ea,
-          left: String(titleLeft) + ea,
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(titleFont) + ea,
+          fontWeight: String(titleFontWeight),
           color: colorChip.black,
-          textAlign: desktop ? "" : "center",
-          width: desktop ? "" : withOut(0),
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(400),
-          lineHeight: String(1.6),
+          lineHeight: String(1.3),
+          width: desktop ? "" : String(100) + '%',
+          textAlign: desktop ? "" : "left",
+        },
+        under: {
+          fontSize: String(titleFont) + ea,
+          fontWeight: String(200),
+          color: colorChip.green,
         }
-      }
+      },
     ]
   });
 
@@ -408,27 +447,362 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
       position: "relative",
       verticalAlign: "top",
       top: String(0) + ea,
-      width: desktop ? withOut(leftWidth + margin, ea) : String(100) + '%',
+      width: desktop ? withOut(leftWidth + (margin * 2), ea) : withOut(6 * 2, ea),
       height: desktop ? String(100) + '%' : withOut(mobileLeftBoxHeight, ea),
       borderRadius: String(5) + "px",
       overflow: "hidden",
+      marginTop: desktop ? String(marginTop) + ea : "",
+      marginBottom: desktop ? String(margin) + ea : "",
+      height: "calc(100% - " + String(margin * 2) + ea + ")",
+      padding: desktop ? "" : String(6) + ea,
+      paddingTop: desktop ? "" : String(2.5) + ea,
     },
-    children: [
-      {
-        mode: "img",
-        attribute: {
-          src: AboutServiceJs.binaryPath + "/contents5" + String(media.findIndex(boo => boo)) + ".png",
-        },
+    child: {
+      text: desktop ? [
+        "홈리에종은 빈 집으로 끝나는 기존 리모델링과 다르게 온전히 거주할 수 있는 상태로 완성하는 인테리어를 합니다.",
+        "처음부터 예산을 고려하여 시공 범위를 조정하고, 가구, 소품, 패브릭의 조화까지 고려해 공간의 쓰임을 미리 고민하며 각 고객님께 맞추어 완성해 나갑니다!"
+      ].join(" ") : [
+        "홈리에종은 빈 집으로 끝나는 기존 리모델링과 다르게 온전히 거주할 수 있는 상태로 완성하는 인테리어를 합니다.",
+        "처음부터 예산을 고려하여 시공 범위를 조정하고, 가구, 소품, 패브릭의 조화까지 고려해 공간의 쓰임을 미리 고민하며 완성해 나갑니다."
+      ].join(" "),
+      style: {
+        display: "block",
+        position: "relative",
+        fontSize: String(descriptionSize) + ea,
+        fontWeight: String(400),
+        color: colorChip.black,
+        lineHeight: String(1.6),
+      },
+      next: {
         style: {
           display: "block",
-          position: "absolute",
-          width: String(100) + '%',
-          bottom: String(0),
-          right: String(0),
+          position: "relative",
+          width: withOut(0, ea),
+          paddingTop: String(pictureTongPaddingTop) + ea,
+        },
+      }
+    }
+  });
+
+  pictureTong = rightBox.children[1];
+
+  if (desktop) {
+
+    createNode({
+      mother: pictureTong,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: "calc(calc(calc(100% - " + String(plusWidth * 2) + ea + ") - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
+        height: String(subDescriptionColorBoxHeight) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.gray2,
+        marginRight: String(pictureBetween + plusWidth) + ea,
+        marginBottom: String(pictureBetween) + ea,
+        justifyContent: "center",
+        alignItems: "center",
+        verticalAlign: "top",
+      },
+      child: {
+        text: "빈 집으로 끝나는 리모델링",
+        style: {
+          top: String(descriptionTextTop) + ea,
+          position: "relative",
+          fontSize: String(descriptionSizeInBox) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
         }
       }
-    ]
-  });
+    });
+    createNode({
+      mother: pictureTong,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: "calc(calc(calc(calc(100% - " + String(plusWidth * 2) + ea + ") - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(2) + ") + " + String(pictureBetween) + ea + ")",
+        height: String(subDescriptionColorBoxHeight) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.gray1,
+        marginRight: String(pictureBetween + plusWidth) + ea,
+        marginBottom: String(pictureBetween) + ea,
+        justifyContent: "center",
+        alignItems: "center",
+        verticalAlign: "top",
+      },
+      child: {
+        text: "가구 / 소품 / 패브릭",
+        style: {
+          top: String(descriptionTextTop) + ea,
+          position: "relative",
+          fontSize: String(descriptionSizeInBox) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
+        }
+      }
+    });
+    createNode({
+      mother: pictureTong,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: "calc(calc(calc(100% - " + String(plusWidth * 2) + ea + ") - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
+        height: String(subDescriptionColorBoxHeight) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.gradientGreen,
+        marginBottom: String(pictureBetween) + ea,
+        justifyContent: "center",
+        alignItems: "center",
+        verticalAlign: "top",
+      },
+      child: {
+        text: "가구까지 완벽한 홈스타일링",
+        style: {
+          top: String(descriptionTextTop) + ea,
+          position: "relative",
+          fontSize: String(descriptionSizeInBox) + ea,
+          fontWeight: String(800),
+          color: colorChip.white,
+        }
+      }
+    });
+  
+    for (let i = 0; i < 4 * 3; i++) {
+      createNode({
+        mother: pictureTong,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: "calc(calc(calc(100% - " + String(plusWidth * 2) + ea + ") - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
+          height: String(factorImageWidth) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.black,
+          marginRight: String(i % 4 === (4 - 1) ? 0 : pictureBetween) + ea,
+          marginBottom: String(Math.floor(i / 4) < 2 ? pictureBetween : 0) + ea,
+          backgroundImage: "url('" + AboutServiceJs.binaryPath + "/rooms/a" + String(i) + ".jpg" + "')",
+          backgroundSize: "100% auto",
+          backgroundPosition: "50% 50%",
+          verticalAlign: "top",
+        }
+      });
+
+      if (i % 4 === 0) {
+        createNode({
+          mother: pictureTong,
+          style: {
+            display: big ? "inline-flex" : "none",
+            position: "relative",
+            width: String(plusWidth) + ea,
+            height: String(factorImageWidth) + ea,
+            marginBottom: String(Math.floor(i / 4) < 2 ? pictureBetween : 0) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            verticalAlign: "top",
+          },
+          child: {
+            text: "+",
+            style: {
+              position: "relative",
+              top: String(descriptionTextTop) + ea,
+              fontSize: String(plusSize) + ea,
+              fontWeight: String(800),
+              color: colorChip.black,
+            }
+          }
+        })
+      }
+
+      if (i % 4 === 2) {
+        createNode({
+          mother: pictureTong,
+          style: {
+            display: big ? "inline-flex" : "none",
+            position: "relative",
+            width: String(plusWidth) + ea,
+            height: String(factorImageWidth) + ea,
+            marginBottom: String(Math.floor(i / 4) < 2 ? pictureBetween : 0) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            verticalAlign: "top",
+          },
+          child: {
+            text: "=",
+            style: {
+              position: "relative",
+              top: String(descriptionTextTop) + ea,
+              fontSize: String(plusSize) + ea,
+              fontWeight: String(800),
+              color: colorChip.green,
+            }
+          }
+        })
+      }
+
+    }
+    
+    createNode({
+      mother: whiteBlock,
+      style: {
+        display: "block",
+        position: "absolute",
+        bottom: String(margin) + ea,
+        left: String(margin) + ea,
+        width: String(leftWidth) + ea,
+      },
+      child: {
+        text: [
+          <&& "<b%*%b> 홈리에종 프로젝트 현장 사진" | "<b%*%b> 홈리에종 현장 사진" | "<b%*%b> 홈리에종 현장 사진" | "<b%*%b> 홈리에종 현장 사진" | "<b%*%b> 홈리에종 현장 사진" &&>,
+          <&& "<b%**%b> 인공지능 기술로 만든 이미지" | "<b%**%b> 인공지능 이미지" | "<b%**%b> 인공지능 이미지" | "<b%**%b> 인공지능 이미지" | "<b%**%b> 인공지능 이미지" &&>,
+        ],
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(subDescriptionBottomSize) + ea,
+          fontWeight: String(500),
+          color: colorChip.black,
+          lineHeight: String(1.5),
+        },
+        bold: {
+          fontSize: String(subDescriptionBottomSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.deactive,
+        }
+      }
+    });
+
+  } else {
+
+    for (let z = 0; z < 3; z++) {
+
+      createNode({
+        mother: pictureTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: "calc(calc(100% - " + String(pictureBetween * (2 - 1)) + ea + ") / " + String(2) + ")",
+          height: String(subDescriptionColorBoxHeight) + ea,
+          borderRadius: String(5) + "px",
+          marginRight: String(pictureBetween) + ea,
+          marginBottom: String(pictureBetween) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          verticalAlign: "top",
+          background: colorChip.gray2,
+        },
+        child: {
+          text: "빈 집으로 끝나는 리모델링",
+          style: {
+            top: String(descriptionTextTop) + ea,
+            position: "relative",
+            fontSize: String(descriptionSizeInBox) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+          }
+        }
+      });
+      createNode({
+        mother: pictureTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: "calc(calc(100% - " + String(pictureBetween * (2 - 1)) + ea + ") / " + String(2) + ")",
+          height: String(subDescriptionColorBoxHeight) + ea,
+          borderRadius: String(5) + "px",
+          marginBottom: String(pictureBetween) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          verticalAlign: "top",
+          background: "transparent",
+        },
+      });
+
+      for (let i = 0; i < 4; i++) {
+        createNode({
+          mother: pictureTong,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: "calc(calc(100% - " + String(pictureBetween * (2 - 1)) + ea + ") / " + String(2) + ")",
+            height: String(factorImageWidth) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.black,
+            marginRight: String(i % 2 === (2 - 1) ? 0 : pictureBetween) + ea,
+            marginBottom: String(Math.floor(i / 2) < 2 ? pictureBetween : 0) + ea,
+            backgroundImage: "url('" + AboutServiceJs.binaryPath + "/rooms/a" + String((i) + (z * 4)) + ".jpg" + "')",
+            backgroundSize: "100% auto",
+            backgroundPosition: "50% 50%",
+          }
+        });
+      }
+
+      createNode({
+        mother: pictureTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: "calc(calc(100% - " + String(pictureBetween * (2 - 1)) + ea + ") / " + String(2) + ")",
+          height: String(subDescriptionColorBoxHeight) + ea,
+          borderRadius: String(5) + "px",
+          marginRight: String(pictureBetween) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          verticalAlign: "top",
+          background: "transparent",
+        },
+      });
+      createNode({
+        mother: pictureTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: "calc(calc(100% - " + String(pictureBetween * (2 - 1)) + ea + ") / " + String(2) + ")",
+          height: String(subDescriptionColorBoxHeight) + ea,
+          borderRadius: String(5) + "px",
+          justifyContent: "center",
+          alignItems: "center",
+          verticalAlign: "top",
+          background: colorChip.gradientGreen,
+        },
+        child: {
+          text: "가구까지 완벽한 홈스타일링",
+          style: {
+            top: String(descriptionTextTop) + ea,
+            position: "relative",
+            fontSize: String(descriptionSizeInBox) + ea,
+            fontWeight: String(700),
+            color: colorChip.white,
+          }
+        }
+      });
+
+      if (z !== 3 - 1) {
+
+        createNode({
+          mother: pictureTong,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            height: String(5.5 * 2) + ea, 
+            flexDirection: "center",
+            alignItems: "center",
+            textAlign: "center",
+          },
+          child: {
+            style: {
+              position: "relative",
+              borderTop: "1px dashed " + colorChip.gray3,
+              width: withOut(0, ea),
+              height: String(0),
+            }
+          }
+        })
+
+      }
+
+    }
+  }
 
 }
 
@@ -493,6 +867,7 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
   let marginTop;
   let whiteVisualPaddingTop;
   let whiteInjectionMarginTop;
+  let middleTitleMarginBottom2;
 
   margin = <%% 52, 52, 44, 32, 6 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 4 %%>;
@@ -505,14 +880,15 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
   middleTitleLineTop = <%% 14, 14, 13, 11, (isIphone() ? 2.9 : 2.6) %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
-  middleTongPaddinngTop = <%% 108, 84, 72, 52, 10 %%>;
-  middleTongPaddingBottom = <%% 150, 130, 100, 70, 12 %%>;
-  middleTitleMarginBottom = <%% 30, 30, 30, 30, 7.5 %%>;
+  middleTongPaddinngTop = <%% 138, 104, 92, 72, 12 %%>;
+  middleTongPaddingBottom = <%% 190, 130, 100, 70, 12 %%>;
+  middleTitleMarginBottom = <%% 30, 30, 50, 30, 7.5 %%>;
+  middleTitleMarginBottom2 = <%% 122, 100, 84, 72, 10 %%>;
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
 
   downTitleSize = <%% 20, 18, 14, 13, 4 %%>;
-  contentsSize = <%% 16, 15, 14, 13, 3.7 %%>;
-  contentsSmallSize = <%% 15, 14, 13, 12, 3.7 %%>;
+  contentsSize = <%% 16, 15, 14, 13, 3.4 %%>;
+  contentsSmallSize = <%% 15, 14, 13, 12, 3.4 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
@@ -586,38 +962,15 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
     },
     homeliaison: {
       up: {
-        title: "전문가의 홈스타일링, 홈리에종에서!",
-        description: [
-          "홈스타일링 디자이너와 함께하는 이유는 다양합니다. 홈리에종을 거치지 않고 디자이너와 직접적으로 연결하면 더 많은 비용을 절약할 수 있지 않을까 생각할 수 있겠지만,",
-          "그래도 홈리에종을 통해 디자이너를 만나야 하는 이유는 분명히 있습니다. 다음과 같이 4가지 대표적인 이유가 있습니다."
+        title: "홈리에종의 프로젝트 케어",
+        description: desktop ? [
+          "인테리어는 디자이너, 각 공정별 반장님, 현장 소장님, 제품 구입처 등 수많은 사람들과 1~3개월 이상 진행하게 되는 특별한 프로젝트입니다.",
+          "전문 영역의 수많은 단계와 방식을 투명하게 관리하여 고객님이 잘 이해할 수 있도록 하나의 통합된 시스템을 제공하여 관리해 드립니다.",
+        ] : [
+          "인테리어는 디자이너, 반장님, 소장님, 제품 구입처 등 수많은 사람들과 1~3개월 이상 진행하게 되는 프로젝트입니다.",
+          "전문 영역의 수많은 단계와 방식을 투명하게 관리하여 고객님이 잘 이해할 수 있도록 하나의 통합된 시스템을 제공하여 관리해 드립니다.",
         ]
       },
-      down: {
-        title: "홈리에종과 함께\n해야 하는 이유",
-        children: [
-          {
-            description: [
-              `첫 번째로 <b%안전한 프로젝트 운영입니다.%b> 디자이너와 직접적으로 연결하여 작업을 진행하는 경우, 문제가 발생할 때 중재해줄 제3자가 없어 리스크가 큽니다. 문제가 발생하여 해결이 되지 않으면 연락이 끊길 수 있고, 책임을 회피하느라 프로젝트가 올바르게 마무리되지 않을 수 있습니다. 특히 인테리어 분야는 예측할 수 없는 문제가 매우 빈번하게 발생하며, 피해 금액도 크기 때문에 리스크 관리가 매우 중요합니다. 디자이너 또는 작업자와 직접 연락을 취하여 중재할 제3자를 끼지 않는 것은 상당히 위험합니다. 인테리어 분야에서는 꼭 플랫폼을 끼고 프로젝트를 진행하는 것이 안전하고 올바른 선택입니다.`,
-            ],
-          },
-          {
-            description: [
-              `두 번째로 홈리에종에는 <b%검증된 디자이너들만 모였다는 점 때문입니다.%b> 프리랜서 디자이너는 수많이 존재하지만, 그들의 실력과 작업 방식을 정확히 평가하기는 어렵습니다. 또한 인테리어 업계에서는 표준화가 잘 이루어지지 않아, 작업 방식이 다양하고 품질이 일정하지 않을 수 있습니다. 그러나 홈리에종의 디자이너들은 검증 과정을 거쳐 선발된 전문가들로 구성되어 있으며, 홈리에종의 표준에 맞춰 작업을 수행합니다. 또한 결과물에 대한 보증 및 포트폴리오 검증도 철저히 이루어지므로, 홈리에종의 디자이너라면 믿고 인테리어를 맡길 수 있는 것입니다.`,
-            ],
-          },
-          {
-            description: [
-              `세 번째로 <b%홈리에종의 큐레이션이 있기 때문입니다.%b> 인테리어를 디자이너와 진행하려면, 수많은 디자이너들 중에서 내 취향과 조건에 부합하는 디자이너를 찾아야 합니다. 하지만 내가 원하는 디자이너가 있더라도 예산, 일정, 거리 등 다양한 요인들을 고려해야 하기 때문에 선택 과정은 복잡하고 어렵습니다. 홈리에종의 큐레이션 서비스는 이러한 문제를 해결해줍니다. 고객 상담을 통해 고객님의 기본 정보와 여러 조건들을 체계적으로 분석하여, 최적의 인테리어 디자이너 3~4명을 추천해줍니다. 이를 통해 고객님은 어떤 디자이너가 가장 적합한지를 쉽게 확인할 수 있으며, 예산, 일정, 거리 등 다양한 요인들도 모두 고려된 맞춤형 추천을 받을 수 있습니다. 홈리에종과 함께하면 디자이너를 찾기 위해 복잡하고 긴 시간을 들일 필요 없이, 쉽고 빠르게 디자이너를 추천받고 선택할 수 있습니다.`,
-            ],
-          },
-          {
-            description: [
-              `네 번째로 <b%홈리에종의 프로젝트 케어가 있기 때문입니다.%b> 인테리어 프로젝트를 진행하는 동안 디자이너와 고객만 소통하는 것이 아니라, 홈리에종은 중재 역할을 하며 문제가 발생하면 적극적으로 해결해줍니다. 만약 디자이너와 맞지 않는 경우, 다른 디자이너로 교체하는 것도 가능합니다. 프로젝트의 각 중요 단계에서 홈리에종은 고객과 디자이너에게 전화를 걸어 문제 없이 진행되고 있는지 확인하며, 현장을 사진으로 확인하여 프로젝트가 원활하게 마무리될 수 있도록 합니다. 또한, 세팅과 촬영까지 진행하게 하여 최종 결과물을 확실하게 만들어드립니다. 고객님은 프로젝트가 중간에 흐지부지 끝나거나 제대로 마무리되지 않을까 하는 걱정 없이, 프로젝트가 완성도 높게 끝나길 기다리기만 하시면 됩니다.`,
-            ],
-          },
-        ]
-      },
-      image: AboutServiceJs.binaryPath + "/about_homeliaison_00.jpg",
     },
     process: {
       up: {
@@ -635,9 +988,12 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
     service: {
       up: {
         title: "홈리에종의 서비스 종류",
-        description: [
-          "서비스는 시공에 따라 구분됩니다. 홈퍼니싱은 시공이 없는 서비스이며, 홈스타일링과 토탈 스타일링은 부분 시공만 진행하는 지, 전체 시공을 진행하는 지에 따라 구분됩니다.",
-          "엑스트라 스타일링은 토탈 스타일링의 프리미엄 버전으로, '설계 변경'이라고도 불리며, 시공 디자인이 필요한지 여부에 따라 토탈과 구분됩니다.",
+        description: desktop ? [
+          "시공의 정도에 따라 서비스를 구분합니다. 시공이 아예 없는 경우(홈퍼니싱), 톤을 보정하는 간단한 부분 시공의 경우(홈스타일링), 집의 전체 공간을 대체로 교체하는",
+          "시공의 경우(토탈 스타일링)으로 나누고 스타일링에 필요한 디자인과 예산을 함께 분할하여 조화로운 구성으로 마무리합니다.",
+        ] : [
+          "시공 정도에 따라 서비스를 구분합니다. 시공이 없는 경우(홈퍼니싱), 간단한 부분 시공의 경우(홈스타일링), 집의 전체 공간을 교체하는",
+          "시공의 경우(토탈 스타일링)으로 나누고 스타일링에 필요한 디자인과 예산을 분할해 조화로운 구성으로 마무리합니다",
         ]
       },
     },
@@ -975,19 +1331,18 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
     }
   }
 
-
   // box0
-
   whiteBlock0 = createNode({
     mother: baseTong,
     style: {
       position: "relative",
       width: withOut(0 * 2, ea),
-      paddingTop: String(middleTongPaddinngTop) + ea,
-      paddingBottom: String(middleTitleMarginBottom) + ea,
+      paddingTop: String(desktop ? middleTongPaddinngTop : 14) + ea,
+      paddingBottom: String(desktop ? middleTitleMarginBottom2 : 11) + ea,
     }
   });
-  basicContentsMaker(whiteBlock0, "designer", colorChip.gray1);
+  basicContentsMaker(whiteBlock0, "service", colorChip.gray1);
+  instance.insertThreeBox(whiteBlock0);
 
   whiteInjection = createNode({
     mother: baseTong,
@@ -997,16 +1352,27 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
       width: withOut(margin * 2, ea),
       paddingLeft: String(margin) + ea,
       paddingRight: String(margin) + ea,
-      paddingTop: String(marginTop + whiteVisualPaddingTop) + ea,
+      paddingTop: String(marginTop) + ea,
       paddingBottom: String(marginTop) + ea,
       background: colorChip.white,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       borderRadius: String(desktop ? 8 : 1) + ea,
       marginTop: String(whiteInjectionMarginTop) + ea,
     }
-  })
-  basicContentsMaker(whiteInjection, "role", colorChip.white, true);
+  });
+  
   instance.insertRoleBox(whiteInjection);
+  GeneralJs.setQueue(() => {
+    if (media[1]) {
+      baseTong.style.marginBottom = String(150) + ea;
+    }
+    if (media[2]) {
+      baseTong.style.marginBottom = String(130) + ea;
+    }
+    if (media[4]) {
+      baseTong.style.marginBottom = String(20) + ea;
+    }
+  })
 
   // white area ---------------------------------------------------------------------------------------------------
 
@@ -1020,7 +1386,8 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
   baseTong2Back.style.left = String(0);
   baseTong2Back.style.background = colorChip.white;
   baseTong.style.marginBottom = String(desktop ? middleTongPaddingBottom : 18) + ea;
-  baseTong2.style.paddingBottom = String(middleTongPaddingBottom) + ea;
+  baseTong2.style.paddingBottom = String(middleTongPaddingBottom - 40) + ea;
+  baseTong2.style.borderBottom = "1px dashed " + colorChip.gray4;
 
   // box1
 
@@ -1030,55 +1397,25 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
       position: "relative",
       width: withOut(0 * 2, ea),
       paddingTop: String(middleTongPaddinngTop) + ea,
-      paddingBottom: String(middleTitleMarginBottom) + ea,
+      paddingBottom: String(desktop ? middleTitleMarginBottom : 11) + ea,
     }
   });
   basicContentsMaker(whiteBlock1, "homeliaison", colorChip.white);
 
-  // box2
-
-  whiteBlock2 = createNode({
-    mother: baseTong2,
+  createNode({
+    mother: whiteBlock1,
+    mode: "img",
+    attribute: {
+      src: AboutServiceJs.binaryPath + "/" + (<&& "app.png" | "app.png" | "app.png" | "app2.png" | "app3.png" &&>),
+    },
     style: {
+      display: "flex",
+      marginTop: String(desktop ? contentsMotherBoxMarginTop : 8) + ea,
+      paddingBottom: desktop ? "" : String(5) + ea,
       position: "relative",
-      width: withOut(0 * 2, ea),
-      paddingTop: String(middleTongPaddinngTop) + ea,
-      paddingBottom: String(middleTitleMarginBottom) + ea,
-    }
+      width: withOut(0, ea),
+    },
   });
-  basicContentsMaker(whiteBlock2, "process", colorChip.white);
-
-
-  // gray area ---------------------------------------------------------------------------------------------------
-
-  baseTong3 = baseTong.cloneNode(false);
-  baseTong3Back = baseTong.cloneNode(false);
-  baseTong.parentNode.appendChild(baseTong3Back);
-  baseTong3Back.appendChild(baseTong3);
-  baseTong3.style.paddingTop = String(0) + ea;
-  baseTong3Back.style.paddingTop = String(middleAreaPaddingTop) + ea;
-  baseTong3Back.style.width = String(100) + '%';
-  baseTong3Back.style.left = String(0);
-  baseTong3Back.style.background = colorChip.gray0;
-  baseTong.style.marginBottom = String(desktop ? middleTongPaddingBottom : 18) + ea;
-  baseTong3.style.marginBottom = String(0) + ea;
-  baseTong3Back.style.marginBottom = String(0) + ea;
-  baseTong3.style.paddingBottom = String(middleTongPaddingBottom) + ea;
-
-
-  whiteBlock3 = createNode({
-    mother: baseTong3,
-    style: {
-      position: "relative",
-      width: withOut(0 * 2, ea),
-      paddingTop: String(middleTongPaddinngTop) + ea,
-      paddingBottom: String(middleTitleMarginBottom) + ea,
-    }
-  });
-  basicContentsMaker(whiteBlock3, "service", colorChip.gray0);
-
-  instance.insertThreeBox(whiteBlock3);
-
 
   // white area ---------------------------------------------------------------------------------------------------
 
@@ -1095,17 +1432,6 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
   baseTong4.style.marginBottom = String(0) + ea;
   baseTong4Back.style.marginBottom = String(0) + ea;
   baseTong4.style.paddingBottom = String(middleTongPaddingBottom) + ea;
-
-  whiteBlock4 = createNode({
-    mother: baseTong4,
-    style: {
-      position: "relative",
-      width: withOut(0 * 2, ea),
-      paddingTop: String(middleTongPaddinngTop) + ea,
-      paddingBottom: String(middleTitleMarginBottom) + ea,
-    }
-  });
-  basicContentsMaker(whiteBlock4, "etc", colorChip.white);
 
   whiteBlock5 = createNode({
     mother: baseTong4,
@@ -1427,6 +1753,7 @@ AboutServiceJs.prototype.insertThreeBox = function (middleTong) {
   let mobileTitleMarginBottom;
   let mobileContentsMarginBottom;
   let titleTextTop, descriptionTextTop;
+  let smallTextTop;
 
   middleTongPaddinngTop = <%% 160, 140, 110, 95, 0 %%>;
   middleTongPaddingBottom = <%% 180, 150, 120, 105, 0 %%>;
@@ -1445,7 +1772,7 @@ AboutServiceJs.prototype.insertThreeBox = function (middleTong) {
   threeBetween = <%% 10, 10, 6, 4, 1 %%>;
   threeHeight = <%% 170, 120, 110, 84, 21 %%>;
   threeVisualPaddingBottom = <%% 2, 2, 2, 2, 0.5 %%>;
-  threeBlockMarginTop = <%% 60, 60, 50, 40, 6 %%>;
+  threeBlockMarginTop = <%% 50, 50, 48, 40, 7 %%>;
 
   threeWidth0 = <%% 525, 525, 525, 525, 525 %%>;
   threeWidth1 = <%% 330, 330, 330, 330, 330 %%>;
@@ -1491,6 +1818,8 @@ AboutServiceJs.prototype.insertThreeBox = function (middleTong) {
   mobileTitleMarginBottom = 2.5;
   mobileContentsMarginBottom = 4;
 
+  smallTextTop = <%% (isMac() ? 20 : 22), (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 11 : 13), 0 %%>;
+
   titleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 1), 0 %%>;
   descriptionTextTop = <%% (isMac() ? 0 : 2.5), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 1.5), 0 %%>;
 
@@ -1503,35 +1832,38 @@ AboutServiceJs.prototype.insertThreeBox = function (middleTong) {
     three: [
       {
         title: "홈퍼니싱",
+        small: "시공 없이 스타일링만",
         sub: "home-furnishing",
         description: [
           "인테리어 시공 없이 가구, 패브릭, 소품만",
           "집 무드를 변화시켜주는 스타일링",
         ],
         color: "#bfb8b0",
-        background: AboutServiceJs.binaryPath + "/" + "startillf0.png",
+        background: AboutServiceJs.binaryPath + "/" + "s0.jpg",
         href: FRONTHOST + "/service.php?mode=furnishing",
       },
       {
         title: "홈스타일링",
+        small: "부분 시공과 스타일링",
         sub: "home-styling",
         description: [
           "집 컨디션에 맞는 범위의 시공을 진행",
           "컨셉에 맞게 변화시켜주는 스타일링",
         ],
         color: "#b1ae9d",
-        background: AboutServiceJs.binaryPath + "/" + "startills0.png",
+        background: AboutServiceJs.binaryPath + "/" + "s1.jpg",
         href: FRONTHOST + "/service.php?mode=styling",
       },
       {
         title: "토탈 스타일링",
+        small: "전체 시공과 스타일링",
         sub: "total-styling",
         description: [
           "원하는 스타일과 라이프 패턴에 맞게 기획",
           "전체적인 구조를 변경하는 스타일링",
         ],
         color: "#546d81",
-        background: AboutServiceJs.binaryPath + "/" + "startillt0.png",
+        background: AboutServiceJs.binaryPath + "/" + "s3.jpg",
         href: FRONTHOST + "/service.php?mode=total",
       },
     ]
@@ -1596,6 +1928,18 @@ AboutServiceJs.prototype.insertThreeBox = function (middleTong) {
               fontWeight: String(threeTitleWeight),
               color: colorChip.black,
               top: desktop ? String(titleTextTop) + ea : "",
+            },
+            next: {
+              text: contents.three[i].small,
+              style: {
+                display: desktop ? "inline-block" : "none", 
+                position: "absolute",
+                fontSize: String(threeSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.green,
+                top: String(smallTextTop) + ea,
+                right: String(threeTitlePaddingLeft - 2) + ea,
+              },
             }
           }
         },
@@ -1606,7 +1950,7 @@ AboutServiceJs.prototype.insertThreeBox = function (middleTong) {
             width: desktop ? withOut(0, ea) : String(threeBlockWidth) + ea,
             height: desktop ? String(threePhotoHeight) + ea : String(102) + '%',
             backgroundImage: "url('" + contents.three[i].background + "')",
-            backgroundSize: desktop ? "100% auto" : "100% auto",
+            backgroundSize: desktop ? "auto 100%" : "auto 100%",
             backgroundPosition: "50% 50%",
             verticalAlign: desktop ? "" : "top",
           }
@@ -1768,6 +2112,7 @@ AboutServiceJs.prototype.insertRoleBox = function (whiteBlock) {
   const instance = this;
   const { ea, media } = this;
   const baseTong = this.baseTong;
+  const mobileTitleToken = "<u%>%u>&nbsp;&nbsp;";
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1]);
@@ -1823,6 +2168,13 @@ AboutServiceJs.prototype.insertRoleBox = function (whiteBlock) {
   let num;
   let titleMarginBottom;
   let contentsMotherBoxMarginTop;
+  let titleBarWidth;
+  let titleBarHeight;
+  let titleBarMarginRight;
+  let descriptionSize;
+  let pictureTongPaddingTop;
+  let descriptionBottom;
+  let descriptionTextTop;
 
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
@@ -1830,7 +2182,7 @@ AboutServiceJs.prototype.insertRoleBox = function (whiteBlock) {
 
   margin = <%% 52, 52, 44, 32, 6 %%>;
 
-  titleFont = <%% 20, 18, 14, 13, 3.8 %%>;
+  titleFont = <%% 22, 21, 20, 16, 4.2 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 800, 800, 800, 800, 800 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -1849,14 +2201,14 @@ AboutServiceJs.prototype.insertRoleBox = function (whiteBlock) {
 
   boxTongPaddingBottom = <%% 10, 10, 6, 10, 10 %%>;
 
-  contents1TitleSize = <%% 17, 17, 14, 13, 3.4 %%>;
+  contents1TitleSize = <%% 17, 17, 16, 14, 3.6 %%>;
   contents1TitleWeight = <%% 700, 700, 800, 800, 800 %%>;
-  contents1TitleBetween = <%% 16, 14, 10, 8, 2 %%>;
+  contents1TitleBetween = <%% 14, 12, 10, 8, 2 %%>;
   contents1Between = <%% 45, 40, 30, 22, 9 %%>;
 
   contents1Columns = <%% 5, 5, 5, 5, 3 %%>;
 
-  contents1UpBoxWidth = <%% 232, 197, 225, 185, 88 %%>;
+  contents1UpBoxWidth = <%% 232, 197, 229, 190, 88 %%>;
   contents1UpBoxMargin = <%% 10, 8, 8, 7, 1 %%>;
   contents1UpBoxPaddingLeft = <%% 18, 16, 18, 12, 3.5 %%>;
   contents1UpBoxPaddingTop = <%% (isMac() ? 16 : 17), (isMac() ? 14 : 15), (isMac() ? 15 : 16), (isMac() ? 11 : 12), 3.5 %%>;
@@ -1865,7 +2217,7 @@ AboutServiceJs.prototype.insertRoleBox = function (whiteBlock) {
   contents1UpBoxCheckWidth = <%% 11, 11, 11, 10, 2.6 %%>;
   contents1UpBoxCheckMarginRight = <%% 6, 6, 6, 6, 6 %%>;
 
-  contents1UpBoxTitleSize = <%% 15, 15, 15, 14, 3.2 %%>;
+  contents1UpBoxTitleSize = <%% 15, 15, 14, 13, 3.2 %%>;
   contents1UpBoxTitleWeight = <%% 600, 600, 600, 600, 700 %%>;
 
   contents1UpBoxWhiteMarginTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 8 : 6), 3 %%>;
@@ -1887,7 +2239,16 @@ AboutServiceJs.prototype.insertRoleBox = function (whiteBlock) {
   contents1DownBoxDescriptionMarginTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), 1 %%>;
   contents1DownBoxDescriptionSize = <%% 13, 12, 13, 11, 2.5 %%>;
 
-  contentsMotherBoxMarginTop = <%% 60, 60, 42, 40, 7 %%>;
+  contentsMotherBoxMarginTop = <%% 64, 64, 42, 40, 7 %%>;
+
+  titleBarWidth = <%% 5, 5, 4, 3, 5 %%>;
+  titleBarHeight = <%% 45, 42, 38, 41, 41 %%>;
+  titleBarMarginRight = <%% 14, 12, 10, 10, 1 %%>;
+
+  descriptionSize = <%% 15, 14, 13, 12, 3.4 %%>;
+  descriptionBottom = <%% 0, -8, -7, -2, 0 %%>;
+  descriptionTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+  pictureTongPaddingTop = <%% 44, 44, 36, 28, 11 %%>;
 
   contents1 = [
     {
@@ -1939,35 +2300,59 @@ AboutServiceJs.prototype.insertRoleBox = function (whiteBlock) {
     }
   ];
 
+  if (mobile) {
+    contents1[1].children.push({
+      title: "시공 의뢰서",
+      description: "시공에 대한\n구체적인 지시사항",
+      image: "contents15.png",
+    });
+  }
+
   leftBox1 = createNode({
     mother: whiteBlock,
     style: {
-      display: big ? "inline-block" : "none",
+      display: big ? "inline-flex" : "flex",
       position: "relative",
       width: big ? String(leftBoxWidth) + ea : String(100) + '%',
-      height: big ? String(100) + '%' : "",
       verticalAlign: "top",
-      marginTop: String(contentsMotherBoxMarginTop) + ea,
-    }
-  });
-
-  createNode({
-    mother: leftBox1,
-    text: big ? "디자이너 역할과\n구체적 제공물" : (mobile ? "디자이너의 3가지 역할" : "디자이너 역할과 구체적 제공물"),
-    style: {
-      display: "inline-block",
-      position: "relative",
-      fontSize: String(titleFont) + ea,
-      fontWeight: String(titleFontWeight),
-      wordSpacing: String(wordSpacing) + "px",
-      top: String(titleVisualTop) + ea,
-      marginLeft: big ? String(titleLeft) + ea : "",
-      marginBottom: big ? "" : String(titleMarginBottom) + ea,
-      color: colorChip.black,
-      width: big ? "" : String(100) + '%',
-      textAlign: desktop ? "" : "center",
-      lineHeight: String(lineHeight),
-    }
+      justifyContent: "start",
+      alignItems: "center",
+      marginBottom: desktop ? "" : String(2.1) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: big ? "inline-block" : "none",
+          position: "relative",
+          width: String(titleBarWidth) + ea,
+          height: String(titleBarHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          marginRight: String(titleBarMarginRight) + ea,
+          marginBottom: desktop ? String(isMac() ? -2 : 2) + ea : "",
+        }
+      },
+      {
+        text: <&& "디자이너\n선택을 먼저!" | "디자이너\n선택을 먼저!" | "디자이너 선택을 먼저!" | "디자이너 선택을 먼저!" | mobileTitleToken + "디자이너 선택을 먼저!" &&>,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(titleFont) + ea,
+          fontWeight: String(titleFontWeight),
+          wordSpacing: String(wordSpacing) + "px",
+          marginBottom: big ? "" : String(titleMarginBottom) + ea,
+          color: colorChip.black,
+          width: big ? "" : String(100) + '%',
+          textAlign: big ? "" : (desktop ? "center" : "left"),
+          lineHeight: String(1.3),
+        },
+        under: {
+          fontSize: String(titleFont) + ea,
+          fontWeight: String(200),
+          color: colorChip.green,
+        }
+      }
+    ]
   });
 
   rightBox1 = createNode({
@@ -1978,8 +2363,69 @@ AboutServiceJs.prototype.insertRoleBox = function (whiteBlock) {
       width: big ? withOut(leftBoxWidth, ea) : String(100) + '%',
       height: String(100) + '%',
       verticalAlign: "top",
-      marginTop: String(contentsMotherBoxMarginTop - (desktop ? 1 : 0)) + ea,
-      textAlign: desktop ? "" : "center",
+      textAlign: !media[3] ? "" : "center",
+    }
+  });
+
+  createNode({
+    mother: rightBox1,
+    text: big ? [
+      "디자인 감성의 취향을 맞추고, 시공 난이도에 따라 적합한 역량을 가진 디자이너를 선택합니다. 처음부터 공간 상태, 예산, 스타일 등을 고려하여",
+      "시공하고 스타일링하면 만족스러운 공간 경험을 하게 됩니다. 수많은 의사 결정이 필요한 인테리어, 전문가와 함께 하며 실패를 줄이고 가심비 높은 결과를 얻기를 추천합니다."
+    ].join(" ") : [
+      "디자인 감성의 취향을 맞추고, 시공 난이도에 따라 역량을 가진 디자이너를 선택합니다. 처음부터 공간, 예산, 스타일을 고려해",
+      "홈스타일링하면 만족스러운 경험을 하게 됩니다. 수많은 결정이 필요한 인테리어, 전문가와 함께 하며 효과적인 결과를 얻기를 추천합니다."
+    ].join(desktop ? "\n" : " "),
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(descriptionSize) + ea,
+      fontWeight: String(400),
+      color: colorChip.black,
+      lineHeight: String(1.6),
+      textAlign: big ? "" : (desktop ? "center" : "left"),
+    },
+    next: {
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        paddingTop: String(pictureTongPaddingTop) + ea,
+      },
+    }
+  });
+
+  createNode({
+    mother: rightBox1,
+    text: "디자이너 전면 배치",
+    style: {
+      display: desktop ? "block" : "none",
+      fontSize: String(contents1TitleSize) + ea,
+      fontWeight: String(contents1TitleWeight),
+      color: colorChip.black,
+      marginBottom: String(contents1TitleBetween) + ea,
+      textAlign: desktop ? "left" : "center",
+    }
+  });
+
+  createNode({
+    mode: "img",
+    mother: rightBox1,
+    attribute: {
+      src: <&& AboutServiceJs.binaryPath + "/model.svg" | AboutServiceJs.binaryPath + "/model1.svg" | AboutServiceJs.binaryPath + "/model1.svg" | AboutServiceJs.binaryPath + "/model2.svg" | AboutServiceJs.binaryPath + "/model3.svg" &&>,
+    },
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0, ea),
+    },
+    next: {
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        paddingTop: String(pictureTongPaddingTop) + ea,
+      },
     }
   });
 
@@ -2014,6 +2460,7 @@ AboutServiceJs.prototype.insertRoleBox = function (whiteBlock) {
         paddingRight: String(contents1UpBoxPaddingLeft) + ea,
         paddingBottom: String(contents1UpBoxPaddingLeft) + ea,
         marginBottom: desktop ? "" : String(1) + ea,
+        textAlign: "left",
       }
     });
 
