@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('홈스타일링 제공 내역 | 홈리에종');"
+      "return ('디자이너 교육 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return ('홈스타일링 제공 내역 | 홈리에종');"
+      "return ('디자이너 교육 | 홈리에종');"
     ],
     "image": [
       "thisPerson",
@@ -31,7 +31,7 @@
     "module": false
   },
   "name": "designManual",
-  "hangul": "제공 내역",
+  "hangul": "디자이너 교육",
   "route": [
     "designManual"
   ]
@@ -2194,10 +2194,10 @@ DesignManualJs.prototype.insertChecklistBox = function (key) {
 DesignManualJs.prototype.insertButtonBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project } = this;
+  const { ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, downloadFile } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, downloadFile, selfHref } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -2227,14 +2227,14 @@ DesignManualJs.prototype.insertButtonBox = function () {
   arrowHeight = <%% 100, 100, 100, 100, 100 %%>;
 
   textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
-  textSize = <%% 17, 17, 15, 14, 3.1 %%>;
+  textSize = <%% 17, 17, 15, 14, 2.7 %%>;
   textWeight = <%% 700, 700, 700, 700, 700 %%>;
   textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
 
-  buttonPadding = <%% 22, 22, 18, 18, 3.6 %%>;
-  buttonHeight = <%% 45, 45, 40, 36, 8.2 %%>;
+  buttonPadding = <%% 20, 19, 18, 18, 2.1 %%>;
+  buttonHeight = <%% 42, 42, 36, 32, 6.5 %%>;
 
-  buttonBetween = <%% 8, 8, 6, 6, 1 %%>;
+  buttonBetween = <%% 6, 6, 5, 4, 0.5 %%>;
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -2276,11 +2276,14 @@ DesignManualJs.prototype.insertButtonBox = function () {
     mother: grayTong,
     event: {
       click: function (e) {
-        cleanChildren(baseTong);
-        instance.insertContractInitBox();
-        instance.insertContractBox();
-        instance.insertContractButtonBox();
-        window.scroll(0, 0);
+        let url;
+        url = "";
+        url += FRONTHOST;
+        url += "/designer/manual.php";
+        url += "?";
+        url += "desid=";
+        url += instance.designer.desid;
+        selfHref(url);
       }
     },
     style: {
@@ -2291,7 +2294,7 @@ DesignManualJs.prototype.insertButtonBox = function () {
       marginRight: String(buttonBetween) + ea,
       height: String(buttonHeight) + ea,
       borderRadius: String(5) + "px",
-      background: colorChip.gradientGreen,
+      background: colorChip.gradientGray,
       justifyContent: "center",
       alignItems: "center",
       textAlign: "center",
@@ -2299,7 +2302,7 @@ DesignManualJs.prototype.insertButtonBox = function () {
     },
     children: [
       {
-        text: "계약 내역 보기",
+        text: "콘솔 사용법",
         style: {
           display: "inline-block",
           position: "relative",
@@ -2315,15 +2318,16 @@ DesignManualJs.prototype.insertButtonBox = function () {
   createNode({
     mother: grayTong,
     event: {
-      click: async function (e) {
-        try {
-          const loading = instance.mother.grayLoading();
-          const res = await ajaxJson({ url: window.encodeURIComponent(window.location.href + "&mode=styling") }, SECONDHOST + "/pageToPdf");
-          downloadFile(window.decodeURIComponent(res.url));
-          loading.remove();
-        } catch (e) {
-          console.log(e);
-        }
+      click: function (e) {
+        window.alert("준비중인 기능입니다!");
+        // let url;
+        // url = "";
+        // url += FRONTHOST;
+        // url += "/designer/manual.php";
+        // url += "?";
+        // url += "desid=";
+        // url += instance.designer.desid;
+        // selfHref(url);
       }
     },
     style: {
@@ -2331,10 +2335,10 @@ DesignManualJs.prototype.insertButtonBox = function () {
       position: "relative",
       paddingLeft: String(buttonPadding) + ea,
       paddingRight: String(buttonPadding) + ea,
-      // marginRight: String(buttonBetween) + ea,
+      marginRight: String(buttonBetween) + ea,
       height: String(buttonHeight) + ea,
       borderRadius: String(5) + "px",
-      background: colorChip.gradientGreen,
+      background: colorChip.gradientGray,
       justifyContent: "center",
       alignItems: "center",
       textAlign: "center",
@@ -2342,7 +2346,7 @@ DesignManualJs.prototype.insertButtonBox = function () {
     },
     children: [
       {
-        text: "PDF 출력",
+        text: "디자인비 설명",
         style: {
           display: "inline-block",
           position: "relative",
@@ -2355,42 +2359,88 @@ DesignManualJs.prototype.insertButtonBox = function () {
     ]
   });
 
-  // createNode({
-  //   mother: grayTong,
-  //   event: {
-  //     click: function (e) {
-  //       window.alert("준비중인 기능입니다!");
-  //     }
-  //   },
-  //   style: {
-  //     display: "inline-flex",
-  //     position: "relative",
-  //     paddingLeft: String(buttonPadding) + ea,
-  //     paddingRight: String(buttonPadding) + ea,
-  //     marginRight: String(buttonBetween) + ea,
-  //     height: String(buttonHeight) + ea,
-  //     borderRadius: String(5) + "px",
-  //     background: colorChip.deactive,
-  //     justifyContent: "center",
-  //     alignItems: "center",
-  //     textAlign: "center",
-  //     cursor: "pointer",
-  //   },
-  //   children: [
-  //     {
-  //       text: "템플릿 다운로드",
-  //       style: {
-  //         display: "inline-block",
-  //         position: "relative",
-  //         top: String(textTop) + ea,
-  //         fontSize: String(textSize) + ea,
-  //         fontWeight: String(textWeight),
-  //         color: colorChip.darkShadow,
-  //       }
-  //     }
-  //   ]
-  // });
+  createNode({
+    mother: grayTong,
+    event: {
+      click: function (e) {
+        let url;
+        url = "";
+        url += FRONTHOST;
+        url += "/designer/partnership.php";
+        url += "?";
+        url += "desid=";
+        url += instance.designer.desid;
+        selfHref(url);
+      }
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      marginRight: String(buttonBetween) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientGray,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: "파트너십 정보",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(textTop) + ea,
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
 
+  createNode({
+    mother: grayTong,
+    event: {
+      click: function (e) {
+        cleanChildren(baseTong);
+        instance.insertContractInitBox();
+        instance.insertContractBox();
+        instance.insertContractButtonBox();
+        window.scroll(0, 0);
+      }
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      // marginRight: String(buttonBetween) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientGray,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: "계약 내역",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(textTop) + ea,
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
 
 }
 
@@ -3169,10 +3219,10 @@ DesignManualJs.prototype.insertContractBox = function () {
 DesignManualJs.prototype.insertContractButtonBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project } = this;
+  const { ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, downloadFile } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, downloadFile, selfHref } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -3202,14 +3252,14 @@ DesignManualJs.prototype.insertContractButtonBox = function () {
   arrowHeight = <%% 100, 100, 100, 100, 100 %%>;
 
   textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
-  textSize = <%% 17, 17, 15, 14, 3.1 %%>;
+  textSize = <%% 17, 17, 15, 14, 2.7 %%>;
   textWeight = <%% 700, 700, 700, 700, 700 %%>;
   textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
 
-  buttonPadding = <%% 22, 22, 18, 18, 3.6 %%>;
-  buttonHeight = <%% 45, 45, 40, 36, 8.2 %%>;
+  buttonPadding = <%% 20, 19, 18, 18, 2.1 %%>;
+  buttonHeight = <%% 42, 42, 36, 32, 6.5 %%>;
 
-  buttonBetween = <%% 8, 8, 6, 6, 1 %%>;
+  buttonBetween = <%% 6, 6, 5, 4, 0.5 %%>;
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -3251,12 +3301,14 @@ DesignManualJs.prototype.insertContractButtonBox = function () {
     mother: grayTong,
     event: {
       click: function (e) {
-        cleanChildren(baseTong);
-        instance.insertInitBox();
-        instance.insertProcessBox();
-        instance.contentsLoop();
-        instance.insertButtonBox();
-        window.scroll(0, 0);
+        let url;
+        url = "";
+        url += FRONTHOST;
+        url += "/designer/manual.php";
+        url += "?";
+        url += "desid=";
+        url += instance.designer.desid;
+        selfHref(url);
       }
     },
     style: {
@@ -3267,7 +3319,7 @@ DesignManualJs.prototype.insertContractButtonBox = function () {
       marginRight: String(buttonBetween) + ea,
       height: String(buttonHeight) + ea,
       borderRadius: String(5) + "px",
-      background: colorChip.gradientGreen,
+      background: colorChip.gradientGray,
       justifyContent: "center",
       alignItems: "center",
       textAlign: "center",
@@ -3275,7 +3327,7 @@ DesignManualJs.prototype.insertContractButtonBox = function () {
     },
     children: [
       {
-        text: "제공 내역 보기",
+        text: "콘솔 사용법",
         style: {
           display: "inline-block",
           position: "relative",
@@ -3291,15 +3343,16 @@ DesignManualJs.prototype.insertContractButtonBox = function () {
   createNode({
     mother: grayTong,
     event: {
-      click: async function (e) {
-        try {
-          const loading = instance.mother.grayLoading();
-          const res = await ajaxJson({ url: window.encodeURIComponent(window.location.href + "&mode=contract") }, SECONDHOST + "/pageToPdf");
-          downloadFile(window.decodeURIComponent(res.url));
-          loading.remove();
-        } catch (e) {
-          console.log(e);
-        }
+      click: function (e) {
+        window.alert("준비중인 기능입니다!");
+        // let url;
+        // url = "";
+        // url += FRONTHOST;
+        // url += "/designer/manual.php";
+        // url += "?";
+        // url += "desid=";
+        // url += instance.designer.desid;
+        // selfHref(url);
       }
     },
     style: {
@@ -3310,7 +3363,7 @@ DesignManualJs.prototype.insertContractButtonBox = function () {
       marginRight: String(buttonBetween) + ea,
       height: String(buttonHeight) + ea,
       borderRadius: String(5) + "px",
-      background: colorChip.gradientGreen,
+      background: colorChip.gradientGray,
       justifyContent: "center",
       alignItems: "center",
       textAlign: "center",
@@ -3318,7 +3371,93 @@ DesignManualJs.prototype.insertContractButtonBox = function () {
     },
     children: [
       {
-        text: "PDF 출력",
+        text: "디자인비 설명",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(textTop) + ea,
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: grayTong,
+    event: {
+      click: function (e) {
+        let url;
+        url = "";
+        url += FRONTHOST;
+        url += "/designer/partnership.php";
+        url += "?";
+        url += "desid=";
+        url += instance.designer.desid;
+        selfHref(url);
+      }
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      marginRight: String(buttonBetween) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientGray,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: "파트너십 정보",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(textTop) + ea,
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: grayTong,
+    event: {
+      click: function (e) {
+        let url;
+        url = "";
+        url += FRONTHOST;
+        url += "/designer/provision.php";
+        url += "?";
+        url += "desid=";
+        url += instance.designer.desid;
+        selfHref(url);
+      }
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      // marginRight: String(buttonBetween) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientGray,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: "디자이너 교육",
         style: {
           display: "inline-block",
           position: "relative",
@@ -3387,6 +3526,7 @@ DesignManualJs.prototype.launching = async function (loading) {
             instance.insertEducationBox();
             instance.insertProcessBox();
             instance.contentsLoop();
+            instance.insertButtonBox();
           }
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignManualJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");

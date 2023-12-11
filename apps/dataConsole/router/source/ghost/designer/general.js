@@ -159,22 +159,23 @@ GeneralJs.prototype.setNavigator = function (designer) {
       green: [],
     },
     {
-      title: "사용설명서",
-      href: FRONTHOST + "/designer/manual.php?desid=" + designer.desid,
+      title: "디자이너 교육",
+      href: FRONTHOST + "/designer/provision.php?desid=" + designer.desid,
+      // href: FRONTHOST + "/designer/partnership.php?desid=" + designer.desid,
       green: [],
     },
     {
-      title: "파트너십",
-      href: FRONTHOST + "/designer/partnership.php?desid=" + designer.desid,
+      title: "콘솔 설명서",
+      href: FRONTHOST + "/designer/manual.php?desid=" + designer.desid,
       green: [],
     },
   ];
-  for (let i = 0; i < naviMenu.length; i++) {
-    if (naviMenu[i].green.includes(name)) {
-      thisIndex = i;
-      break;
-    }
-  }
+  // for (let i = 0; i < naviMenu.length; i++) {
+  //   if (naviMenu[i].green.includes(name)) {
+  //     thisIndex = i;
+  //     break;
+  //   }
+  // }
 
   if (desktop) {
     wordTop = wordTop + (GeneralJs.isMac() ? 0 : 1);

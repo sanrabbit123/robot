@@ -2026,6 +2026,262 @@ ConsoleManualJs.prototype.insertOperationBox = function () {
 
 }
 
+ConsoleManualJs.prototype.insertButtonBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { ea, baseTong, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, downloadFile, selfHref } = GeneralJs;
+  const buttonsClassName = "buttonsClassName";
+  let margin;
+  let paddingTop;
+  let titleFontSize;
+  let bottomMargin;
+  let whiteBlock;
+  let grayTong;
+  let arrowBetween;
+  let innerMargin;
+  let arrowWidth, arrowHeight;
+  let textTop;
+  let textSize, textWeight;
+  let textMarginLeft;
+  let buttonHeight, buttonPadding;
+  let buttonBetween;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 6 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+
+  innerMargin = <%% 40, 40, 40, 40, 4 %%>;
+
+  arrowBetween = <%% 5, 5, 5, 5, 4 %%>;
+  arrowWidth = <%% 204, 203, 203, 203, 203 %%>;
+  arrowHeight = <%% 100, 100, 100, 100, 100 %%>;
+
+  textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+  textSize = <%% 17, 17, 15, 14, 2.7 %%>;
+  textWeight = <%% 700, 700, 700, 700, 700 %%>;
+  textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
+
+  buttonPadding = <%% 20, 19, 18, 18, 2.1 %%>;
+  buttonHeight = <%% 42, 42, 36, 32, 6.5 %%>;
+
+  buttonBetween = <%% 6, 6, 5, 4, 0.5 %%>;
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(paddingTop) + ea,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  grayTong = createNode({
+    mother: whiteTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+    }
+  });
+
+  createNode({
+    mother: grayTong,
+    event: {
+      click: function (e) {
+        let url;
+        url = "";
+        url += FRONTHOST;
+        url += "/designer/provision.php";
+        url += "?";
+        url += "desid=";
+        url += instance.designer.desid;
+        selfHref(url);
+      }
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      marginRight: String(buttonBetween) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientGray,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: "디자이너 교육",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(textTop) + ea,
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: grayTong,
+    event: {
+      click: function (e) {
+        window.alert("준비중인 기능입니다!");
+        // let url;
+        // url = "";
+        // url += FRONTHOST;
+        // url += "/designer/manual.php";
+        // url += "?";
+        // url += "desid=";
+        // url += instance.designer.desid;
+        // selfHref(url);
+      }
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      marginRight: String(buttonBetween) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientGray,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: "디자인비 설명",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(textTop) + ea,
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: grayTong,
+    event: {
+      click: function (e) {
+        let url;
+        url = "";
+        url += FRONTHOST;
+        url += "/designer/partnership.php";
+        url += "?";
+        url += "desid=";
+        url += instance.designer.desid;
+        selfHref(url);
+      }
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      marginRight: String(buttonBetween) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientGray,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: "파트너십 정보",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(textTop) + ea,
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: grayTong,
+    event: {
+      click: function (e) {
+        let url;
+        url = "";
+        url += FRONTHOST;
+        url += "/designer/provision.php";
+        url += "?mode=contract&";
+        url += "desid=";
+        url += instance.designer.desid;
+        selfHref(url);
+      }
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      // marginRight: String(buttonBetween) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientGray,
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        text: "계약 내역",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(textTop) + ea,
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.white,
+        }
+      }
+    ]
+  });
+
+}
+
 ConsoleManualJs.prototype.launching = async function (loading) {
   const instance = this;
   const { returnGet, ajaxJson, setQueue } = GeneralJs;
@@ -2072,6 +2328,7 @@ ConsoleManualJs.prototype.launching = async function (loading) {
           instance.insertDescriptionBox();
           instance.insertBasicIntroductionBox();
           instance.insertManualStartBox();
+          instance.insertButtonBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ConsoleManualJs.launching.ghostDesignerLaunching : " + e.message }, BACKHOST + "/errorLog");
         }

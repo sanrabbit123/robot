@@ -6967,9 +6967,9 @@ DevContext.prototype.launching = async function () {
 
 
     // aspirant to designer
-    // await this.aspirantToDesigner([
-    //   [ "이윤아", "2023-11-24" ],
-    // ]);
+    await this.aspirantToDesigner([
+      [ "한아름", "2023-11-26" ],
+    ]);
 
 
     // new designer to front web
