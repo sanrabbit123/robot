@@ -622,7 +622,7 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
         text: standard[i][j],
         style: {
           position: "absolute",
-          fontSize: String(subSize) + ea,
+          fontSize: String(0.9) + "vh",
           fontWeight: String(700),
           textAlign: "center",
           color: j >= validRangeNumber ? colorChip.deactive : colorChip.green,
@@ -718,7 +718,7 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
               },
               style: {
                 position: "absolute",
-                fontSize: String(size) + ea,
+                fontSize: String(1.6) + "vh",
                 fontWeight: String(300),
                 fontFamily: "graphik",
                 textAlign: "center",
@@ -741,7 +741,7 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
         text: String(price[j].matrix[x][y]),
         style: {
           position: "absolute",
-          fontSize: String(size) + ea,
+          fontSize: String(1.6) + "vh",
           fontWeight: String(300),
           fontFamily: "graphik",
           textAlign: "center",
