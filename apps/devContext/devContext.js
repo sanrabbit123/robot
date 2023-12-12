@@ -6896,9 +6896,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김민지",
-    //     designer: "강주현",
-    //     link: "https://drive.google.com/drive/folders/1Cxyu-0Hw-dn-jNsDRhAxjLrkxQPx2Kuw",
+    //     client: "곽정은",
+    //     designer: "정다연",
+    //     link: "https://drive.google.com/drive/folders/1xcgePNfuLRGT5QR5Of3F6OYNVDy6ImNX",
     //     pay: true
     //   },
     // ]);
@@ -6908,8 +6908,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "김민지",
-    //     designer: "강주현",
+    //     client: "최미정",
+    //     designer: "김윤진",
     //   },
     // ]);
 
@@ -6967,9 +6967,9 @@ DevContext.prototype.launching = async function () {
 
 
     // aspirant to designer
-    await this.aspirantToDesigner([
-      [ "한아름", "2023-11-26" ],
-    ]);
+    // await this.aspirantToDesigner([
+    //   [ "한아름", "2023-11-26" ],
+    // ]);
 
 
     // new designer to front web
@@ -6977,16 +6977,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2311_aa01s", [
+    // await this.setProposalSettingForDesigner("d2312_aa02s", [
+    //   { porlid: "ghost", index: 1 },
+    //   { porlid: "ghost", index: 9 },
     //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 21 },
+    //   { porlid: "ghost", index: 3 },
     //   { porlid: "ghost", index: 8 },
     //   { porlid: "ghost", index: 11 },
-    //   { porlid: "ghost", index: 6 },
     // ], [
-    //   "25년의 풍부한 경력으로 다양한 현장과 상황에 대한 전문적인 응대와 문제 해결이 가능합니다.",
-    //   "디자인을 전공하였으며, 현장경험 실무 경험을 바탕으로 안정감 있는 프로젝트 운영이 가능합니다.",
-    //   "디테일한 가구 설계가 가능하여 제작 가구가 가능하며 완전히 커스터마이징된 공간을 만들어 드릴 수 있습니다.",
+    //   "각종 실시 설계 및 인테리어 디자인 작업 경력으로 능숙한 프로젝트 운영 능력이 있습니다.",
+    //   "모던하고 깔끔한 스타일에 능하며 고급스러운 공간 분위기 연출에 강합니다.",
+    //   "차분하고 감성적인 홈스타일링과 체계적인 시공 리모델링으로 원하시는 집을 만들어 드립니다.",
     // ]);
 
 
