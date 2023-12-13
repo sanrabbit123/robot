@@ -3191,7 +3191,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
         if (thisBody.api_app_id.toLowerCase() === slack_fairyAppId.toLowerCase()) {
           if (thisBody.event.type === "message") {
             if (typeof thisBody.event.text === "string") {
-              if (/^천사[아야님]?/i.test(thisBody.event.text.trim()) || (new RegExp(slack_fairyId, "gi")).test(thisBody.event.text.trim())) {
+              if (/^GPT[아야님]?/i.test(thisBody.event.text.trim()) || (new RegExp(slack_fairyId, "gi")).test(thisBody.event.text.trim())) {
                 if (/온라인/gi.test(thisBody.event.text.trim()) || /실시간/gi.test(thisBody.event.text.trim()) || /현재/gi.test(thisBody.event.text.trim())) {
                   if ((/웹/gi.test(thisBody.event.text.trim()) || /홈페이지/gi.test(thisBody.event.text.trim())) && /홈리에종/gi.test(thisBody.event.text.trim())) {
                     requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/realtimeMessage", { channel: thisBody.event.channel }, {
@@ -3206,11 +3206,11 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                       thisUser = null;
                     }
                     if (thisUser === undefined || null) {
-                      openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^천사[아야님]?/i, ""), thisBody.event.user, selfMongo).catch((err) => {
+                      openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^GPT[아야님]?/i, ""), thisBody.event.user, selfMongo).catch((err) => {
                         console.log(err);
                       });
                     } else {
-                      openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^천사[아야님]?/i, ""), thisUser, selfMongo).catch((err) => {
+                      openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^GPT[아야님]?/i, ""), thisUser, selfMongo).catch((err) => {
                         console.log(err);
                       });
                     }
@@ -3222,11 +3222,11 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                     thisUser = null;
                   }
                   if (thisUser === undefined || thisUser === null) {
-                    openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^천사[아야님]?/i, ""), thisBody.event.user, selfMongo).catch((err) => {
+                    openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^GPT[아야님]?/i, ""), thisBody.event.user, selfMongo).catch((err) => {
                       console.log(err);
                     });
                   } else {
-                    openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^천사[아야님]?/i, ""), thisUser, selfMongo).catch((err) => {
+                    openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^GPT[아야님]?/i, ""), thisUser, selfMongo).catch((err) => {
                       console.log(err);
                     });
                   }
