@@ -28,7 +28,7 @@ OpenAiAPIs.prototype.chatGPT = function (input) {
   const { requestSystem } = this.mother;
   const { token, host } = this;
   const path = "/v1/chat/completions";
-  const model = "gpt-3.5-turbo";
+  const model = "gpt-4";
   return new Promise((resolve, reject) => {
     requestSystem("https://" + host + path, {
       model,

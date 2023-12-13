@@ -17,7 +17,7 @@ const SecondGhost = function (mother = null, back = null, address = null) {
   this.slack_userToken = "xoxp-717757271335-704486967090-4566130160163-fd2a2cc412e2a509a43635fb8f6c65e2";
   this.slack_bot = new WebClient(this.slack_token);
   this.slack_user = new WebClient(this.slack_userToken);
-  this.slack_fairyToken = "xoxp-717757271335-6079209779318-6090567837762-8889bdc12b1afff4f3b30ecc9dae0ac6";
+  this.slack_fairyToken = "xoxp-717757271335-6253548571781-6337284288178-c87ebd41bc1e5f620d9619ca53644de8";
   this.slack_fairyId = "U062B65NX9C";
   this.slack_fairyAppId = "A06315D8UDP";
   this.slack_info = {
