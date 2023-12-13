@@ -18,8 +18,8 @@ const SecondGhost = function (mother = null, back = null, address = null) {
   this.slack_bot = new WebClient(this.slack_token);
   this.slack_user = new WebClient(this.slack_userToken);
   this.slack_fairyToken = "xoxp-717757271335-6253548571781-6337284288178-c87ebd41bc1e5f620d9619ca53644de8";
-  this.slack_fairyId = "U062B65NX9C";
-  this.slack_fairyAppId = "A06315D8UDP";
+  this.slack_fairyId = "U067FG4GTNZ";
+  this.slack_fairyAppId = "A04GQKWAQF6";
   this.slack_info = {
     endPoint: "https://slack.com/api",
     userDictionary: {},

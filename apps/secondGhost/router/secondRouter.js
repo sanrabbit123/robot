@@ -3187,8 +3187,6 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       } });
       let thisUser;
 
-      console.log(thisBody);
-
       if (typeof thisBody.event === "object") {
         if (thisBody.api_app_id.toLowerCase() === slack_fairyAppId.toLowerCase()) {
           if (thisBody.event.type === "message") {
