@@ -742,6 +742,7 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
       { from: "consoleManual", to: "manual", path: "/middle/consoleManual" },
       { from: "designerPossible", to: "possible", path: "/middle/designerPossible" },
       { from: "partnershipManual", to: "partnership", path: "/middle/partnershipManual" },
+      { from: "feeManual", to: "fee", path: "/middle/feeManual" },
       { from: "processDetail", to: "process", path: "/middle/processDetail" },
     ];
     const ghostTargets = (await fileSystem(`readDir`, [ ghostDir + "/designer" ])).filter((str) => { return str !== ".DS_Store" }).filter((str) => {

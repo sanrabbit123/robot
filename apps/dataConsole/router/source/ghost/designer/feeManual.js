@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('디자인비 측정 | 홈리에종');"
+      "return ('홈리에종 디자이너비 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return ('디자인비 측정 | 홈리에종');"
+      "return ('홈리에종 디자이너비 | 홈리에종');"
     ],
     "image": [
       "thisPerson",
@@ -246,7 +246,7 @@ FeeManualJs.prototype.insertFirstBox = function () {
 
   whiteBottomMargin = <%% 42, 42, 42, 36, 0 %%>;
 
-  firstWidth = <%% 380, 360, 360, 318, 50 %%>;
+  firstWidth = <%% 380, 300, 280, 220, 50 %%>;
   firstPaddingLeft = <%% 28, 24, 22, 18, 4 %%>;
 
   barTop = <%% (isMac() ? 9 : 7), (isMac() ? 10 : 7), (isMac() ? 8 : 6), (isMac() ? 7 : 5), 1.4 %%>;
@@ -431,6 +431,10 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
   let factorBoxTop, factorBoxLeft;
   let factorLineTop, factorLineLeft, factorLineWidth, factorLineHeight;
   let image;
+  let funcAreaOuterPadding;
+  let funcAreaHeight;
+  let funcAreaContentsHeight;
+  let funcAreaAlphaContentsHeight;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -471,15 +475,15 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
   zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
   zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
   firstWidth = <%% 240, 180, 170, 150, 10 %%>;
-  secondWidth = <%% 15, 15, 8, 0, 2 %%>;
-  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+  secondWidth = <%% 15, 15, 8, 0, 0 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 0 %%>;
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
   arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
   checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
-  contentsMarginBottom0 = <%% 30, 24, 24, 24, 2 %%>;
+  contentsMarginBottom0 = <%% 30, 24, 24, 24, 3 %%>;
   contentsMarginBottom1 = <%% 32, 32, 30, 28, 6 %%>;
 
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
@@ -499,15 +503,20 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
   factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
   factorLineHeight = <%% 99, 99, 99, 99, 123 %%>;
 
+  funcAreaOuterPadding = <%% 8, 7, 6, 4, 0.5 %%>;
+  funcAreaHeight = <%% 120, 102, 92, 70, 12 %%>;
+  funcAreaContentsHeight = <%% 58, 50, 42, 33, 5.2 %%>;
+  funcAreaAlphaContentsHeight = <%% 26, 22, 19, 15, 2.6 %%>;
+
   mainTitle = "디자이너 산출 공식";
   mainContents = [
     {
       title: "디자이너 매트릭스",
       contents: [
         "홈리에종은 먼저 서비스와 평형대별 표를 만들어 필요한 업무 시간을 나열했습니다. 그리고 인테리어 디자이너의 평균 연봉을 토대로 시간당 비용을 구하고,",
-        "디자이너의 연차, 레벨별 연봉 지점을 16분류로 나누어 각각의 서비스와 평형대별에 적합한 디자인비 기준을 만들어 냈습니다.",
+        "디자이너의 연차, 레벨별 연봉 지점을 16분류로 나누어 각각의 서비스와 평형에 적합한 디자인비 기준을 만들어 냈습니다.",
       ],
-      image: FeeManualJs.binaryPath + "/" + "table_desktop.png",
+      image: <&& FeeManualJs.binaryPath + "/" + "table_desktop.png" | FeeManualJs.binaryPath + "/" + "table_tablet.png" | FeeManualJs.binaryPath + "/" + "table_tablet.png" | FeeManualJs.binaryPath + "/" + "table_mobile.png" | FeeManualJs.binaryPath + "/" + "table_mobile.png" &&>,
     },
     {
       title: "디자인비 기준과 실제 디자인비",
@@ -533,8 +542,7 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
     {
       title: "디자인비 가산점 공식",
       contents: [
-        "디자이너의 일정은 매월 마지막주 정기적으로 익월 일정을 확인합니다. 상시로 일정 변동이 있기 때문에 매월 확인한 일정 외에 변동사항이 생길 때마다 홈리에종 채널로 변동 일정을 공유해주셔야 합니다. 초기 계약시 [활동 대기] 단계에서 일정을 확인합니다. 디자이너는 <b%홈리에종의 서비스 유형(F, S, T, XT) 에 대하여 활동 가능 영역을 결정하고, 이에 따라 서비스 비용을 책정%b>합니다. 초기 계약시 책정한 서비스 비용은 프로젝트 누적 수량에 따라 달라질 수 있습니다. 일정에 대한 답이 없다면, 계속 진행 가능함으로 판단하고 추천서에 등록되게 됩니다.",
-        "이후부터 홈리에종은 디자이너 추천을 시작하고 고객의 선택을 기다리게 됩니다." + (desktop ? "\n" : " ") + "프로젝트 계약이 확정되고 첫번째 현장 미팅이 잡히기까지의 소요시간을 예상할 수 없습니다.",
+        "매트릭스의 값과 평수에 곱해지는 디자이너별 개인 가산점의 구성은 위와 같습니다. 서비스 제공 범위와 역량, 스타일 인기도, 경력과 협업 유지 기간, 페이퍼 워크 능력, 고객 평가 자료가 각각의 함수에 의해 별개로 구해져 모두 하나로 더해지는 구조로 이루어져 있습니다. 디자이너별로 경력과 능력, 그리고 보조 기술 등에 따라 금액적인 차이를 둠으로써 최대한 합리적인 디자인비를 산출하기 위해 노력하고 있습니다.",
       ]
     },
   ];
@@ -638,7 +646,7 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
           position: "relative",
           verticalAlign: "top",
           width: desktop ? String(firstWidth) + ea : String(100) + '%',
-          marginBottom: desktop ? "" : String(1.5) + ea,
+          marginBottom: desktop ? "" : String(3) + ea,
         },
         children: [
           {
@@ -776,7 +784,7 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
     style: {
       display: "block",
       position: "relative",
-      marginBottom: String(desktop ? (contentsMarginBottom0 * 3) : contentsMarginBottom1) + ea,
+      marginBottom: String(contentsMarginBottom0 * 3) + ea,
     },
     children: [
       {
@@ -785,7 +793,7 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
           position: "relative",
           verticalAlign: "top",
           width: desktop ? String(firstWidth) + ea : String(100) + '%',
-          marginBottom: desktop ? "" : String(1.5) + ea,
+          marginBottom: desktop ? "" : String(3) + ea,
         },
         children: [
           {
@@ -900,7 +908,7 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
           position: "relative",
           verticalAlign: "top",
           width: desktop ? String(firstWidth) + ea : String(100) + '%',
-          marginBottom: desktop ? "" : String(1.5) + ea,
+          marginBottom: desktop ? "" : String(3) + ea,
         },
         children: [
           {
@@ -943,7 +951,7 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
           position: "relative",
           verticalAlign: "top",
           width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
-          height: String(120) + ea,
+          height: String(funcAreaHeight) + ea,
           background: colorChip.gray2,
           borderRadius: String(5) + "px",
           justifyContent: "center",
@@ -953,8 +961,8 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
           style: {
             display: "inline-flex",
             position: "relative",
-            width: withOut(8 * 2, ea),
-            height: withOut(8 * 2, ea),
+            width: withOut(funcAreaOuterPadding * 2, ea),
+            height: withOut(funcAreaOuterPadding * 2, ea),
             borderRadius: String(5) + "px",
             background: colorChip.white,
             boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -968,7 +976,7 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
             },
             style: {
               position: "relative",
-              height: String(58) + ea,
+              height: String(funcAreaContentsHeight) + ea,
             }
           }
         }
@@ -1072,7 +1080,7 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
           position: "relative",
           verticalAlign: "top",
           width: desktop ? String(firstWidth) + ea : String(100) + '%',
-          marginBottom: desktop ? "" : String(1.5) + ea,
+          marginBottom: desktop ? "" : String(3) + ea,
         },
         children: [
           {
@@ -1115,7 +1123,7 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
           position: "relative",
           verticalAlign: "top",
           width: withOut(desktop ? firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
-          height: String(120) + ea,
+          height: String(funcAreaHeight) + ea,
           background: colorChip.gray2,
           borderRadius: String(5) + "px",
           justifyContent: "center",
@@ -1125,8 +1133,8 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
           style: {
             display: "inline-flex",
             position: "relative",
-            width: withOut(8 * 2, ea),
-            height: withOut(8 * 2, ea),
+            width: withOut(funcAreaOuterPadding * 2, ea),
+            height: withOut(funcAreaOuterPadding * 2, ea),
             borderRadius: String(5) + "px",
             background: colorChip.white,
             boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -1140,7 +1148,7 @@ FeeManualJs.prototype.insertMainDescriptionBox = function () {
             },
             style: {
               position: "relative",
-              height: String(26) + ea,
+              height: String(funcAreaAlphaContentsHeight) + ea,
             }
           }
         }
