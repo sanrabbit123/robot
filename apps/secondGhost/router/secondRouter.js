@@ -3946,7 +3946,9 @@ SecondRouter.prototype.rou_post_storeDailyReport = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const fromId = req.body.fromId === undefined ? null : req.body.fromId;
+      const selfCoreMongo = instance.mongo;
+      const selfMongo = instance.mongolocal;
+      const collection = "dailyReport";
       const url = slack_info.endPoint + "/conversations.history";
       const members = instance.members;
       const targetChannelId = "C062SLX46QL";
@@ -3955,6 +3957,7 @@ SecondRouter.prototype.rou_post_storeDailyReport = function () {
       let r;
       let targetList;
       let hex;
+      let rows;
 
       r = await requestSystem(url, {
         token,
@@ -3994,6 +3997,11 @@ SecondRouter.prototype.rou_post_storeDailyReport = function () {
         hex = await cryptoString(password, obj.title);
         obj.id = idKeywords + obj.member.id + "_" + dateToString(obj.date).replace(/\-/gi, '') + "_" + hex;
   
+        rows = await back.mongoRead(collection, { id: obj.id }, { selfMongo });
+        if (rows.length === 0) {
+          await back.mongoCreate(collection, equalJson(JSON.stringify(obj)), { selfMongo });
+        }
+
         console.log(obj);
       }
 
