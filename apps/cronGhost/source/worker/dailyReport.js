@@ -11,7 +11,7 @@ const worker = async function (package) {
     await requestSystem("https://" + address.secondinfo.host + ":" + String(3000) + "/storeDailyReport", { data: null }, { headers: { "Content-Type": "application/json" } });
     return true;
   } catch (e) {
-    await emergencyAlarm("contents sync error : " + e.message);
+    await emergencyAlarm("daily report error : " + e.message);
     return false;
   }
 }
