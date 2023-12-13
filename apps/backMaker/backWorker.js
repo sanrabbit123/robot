@@ -1622,9 +1622,9 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       alpha = 0;
       alpha += (designer.information.business.career.relatedY >= 4 ? 0.5 : 0);
       alpha += thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 1 : (thisDesignerCareerStart.valueOf() <= fourYearsAgo.valueOf() ? 0.5 : 0);
-      alpha += (designer.analytics.project.paperWork.values.includes("3D") ? 0.5 : 0);
-      alpha += (designer.analytics.project.paperWork.values.includes("콜라주") ? 0.5 : 0);
-      alpha += (designer.analytics.project.paperWork.values.length >= 4 ? 0.5 : 0);
+      alpha += (designer.analytics.project.cad ? 0.5 : 0);
+      alpha += (designer.analytics.project.modeling >= 1 ? 0.5 : 0);
+      alpha += (designer.analytics.project.collage ? 0.5 : 0);
 
       homeliaison = 0;
       for (let { value } of designer.analytics.etc.personality) {

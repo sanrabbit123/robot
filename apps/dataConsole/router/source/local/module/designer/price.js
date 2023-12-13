@@ -591,16 +591,12 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
   const { price, standard } = pricePast.allCase(...this.key);
   const className = "caseTarget";
   const validRangeNumber = 12;
-  let subSize;
-  let size;
   let x, y;
   let removeTargets;
   let topStart, between;
   let lineHeight;
   let leftPadding;
 
-  subSize = <%% 5, 4, 4, 4, 4 %%>;
-  size = <%% 16, 15, 15, 15, 15 %%>;
   topStart = isMac() ? 9 : 10;
   between = isMac() ? 7 : 6;
   lineHeight = 21;
@@ -615,9 +611,11 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
     x = Number(doms[i].getAttribute('x'));
     y = Number(doms[i].getAttribute('y'));
     for (let j = 0; j < price.length; j++) {
-
       createNode({
         mother: doms[i],
+        attribute: {
+          unique: "v" + String(x) + String(y) + "s" + String(Math.floor(j / 4)) + String(j % 4),
+        },
         class: [ className ],
         text: standard[i][j],
         style: {
@@ -625,6 +623,7 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
           fontSize: String(0.9) + "vh",
           fontWeight: String(700),
           textAlign: "center",
+          // color: colorChip.green,
           color: j >= validRangeNumber ? colorChip.deactive : colorChip.green,
           width: "calc(calc(100% - " + String(leftPadding * 3) + ea + ") / 4)",
           top: "calc(" + String(topStart) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 4)) + "))",
@@ -745,6 +744,7 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
           fontWeight: String(300),
           fontFamily: "graphik",
           textAlign: "center",
+          // color: colorChip.black,
           color: j >= validRangeNumber ? colorChip.gray3 : colorChip.black,
           width: "calc(calc(100% - " + String(leftPadding * 3) + ea + ") / 4)",
           top: "calc(" + String(topStart + between) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 4)) + "))",
