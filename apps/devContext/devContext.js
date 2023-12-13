@@ -158,13 +158,8 @@ DevContext.prototype.launching = async function () {
 
     
     
-    const responseResult = await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsCalendar", { mode: "get", detailMode: true }, { headers: { "Content-Type": "application/json" } });
-    const calendarTargets = equalJson(JSON.stringify(responseResult.data));
 
     
-
-    console.log(calendarTargets);
-
 
     
 
