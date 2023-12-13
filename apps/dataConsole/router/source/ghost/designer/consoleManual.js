@@ -2061,7 +2061,7 @@ ConsoleManualJs.prototype.insertButtonBox = function () {
   arrowWidth = <%% 204, 203, 203, 203, 203 %%>;
   arrowHeight = <%% 100, 100, 100, 100, 100 %%>;
 
-  textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+  textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.1 %%>;
   textSize = <%% 17, 17, 15, 14, 2.5 %%>;
   textWeight = <%% 700, 700, 700, 700, 700 %%>;
   textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;

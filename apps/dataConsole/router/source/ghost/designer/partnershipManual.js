@@ -454,7 +454,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
   buttonBetween = <%% 6, 6, 6, 6, 1.2 %%>;
   buttonSize = <%% 14, 13, 13, 11, 3 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+  buttontextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.1 %%>;
 
   mobileContextBetween = 3;
 
@@ -4835,7 +4835,7 @@ PartnershipManualJs.prototype.insertButtonBox = function () {
   arrowWidth = <%% 204, 203, 203, 203, 203 %%>;
   arrowHeight = <%% 100, 100, 100, 100, 100 %%>;
 
-  textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+  textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.1 %%>;
   textSize = <%% 17, 17, 15, 14, 2.5 %%>;
   textWeight = <%% 700, 700, 700, 700, 700 %%>;
   textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
