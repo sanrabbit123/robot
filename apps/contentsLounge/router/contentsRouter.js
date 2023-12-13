@@ -360,8 +360,17 @@ ContentsRouter.prototype.rou_post_contentsCalendar = function () {
               }
               if (thisProid !== undefined && thisProid !== null && thisProid !== "") {
                 thisProject = projects.find((p) => { return p.proid === thisProid });
-                thisCliid = thisProject.cliid;
-                thisDesid = thisProject.desid;
+                if (thisProject === undefined) {
+                  thisProject = await back.getProjectById(thisProid, { selfMongo: selfCoreMongo });
+                }
+                if (thisProject !== undefined && thisProject !== null) {
+                  thisCliid = thisProject.cliid;
+                  thisDesid = thisProject.desid;
+                } else {
+                  thisProid = "";
+                  thisCliid = "";
+                  thisDesid = "";
+                }
               } else {
                 thisProid = "";
                 thisCliid = "";

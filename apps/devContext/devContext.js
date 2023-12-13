@@ -158,10 +158,12 @@ DevContext.prototype.launching = async function () {
 
     
     
+    const responseResult = await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsCalendar", { mode: "get", detailMode: true }, { headers: { "Content-Type": "application/json" } });
+    const calendarTargets = equalJson(JSON.stringify(responseResult.data));
 
     
 
-
+    console.log(calendarTargets);
 
 
     
@@ -6896,9 +6898,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "곽정은",
-    //     designer: "정다연",
-    //     link: "https://drive.google.com/drive/folders/1xcgePNfuLRGT5QR5Of3F6OYNVDy6ImNX",
+    //     client: null,
+    //     designer: "한아름",
+    //     link: "https://drive.google.com/drive/folders/1gprKLKdLj6gcEth82azGhn6UDI3BeCoO",
     //     pay: true
     //   },
     // ]);
