@@ -3930,6 +3930,85 @@ SecondRouter.prototype.rou_post_fairyMessage = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_storeDailyReport = function () {
+  const instance = this;
+  const back = this.back;
+  const { requestSystem, dateToString, stringToDate, cryptoString, equalJson } = this.mother;
+  const { slack_fairyToken: token, slack_info } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/storeDailyReport" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const fromId = req.body.fromId === undefined ? null : req.body.fromId;
+      const url = slack_info.endPoint + "/conversations.history";
+      const members = instance.members;
+      const targetChannelId = "C062SLX46QL";
+      const password = "homeliaison";
+      const idKeywords = "daily_";  
+      let r;
+      let targetList;
+      let hex;
+
+      r = await requestSystem(url, {
+        token,
+        channel: targetChannelId,
+        limit: 200,
+      }, {
+        method: "get",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/x-www-form-urlencoded",
+        }
+      });
+
+      targetList = r.data.messages.filter((o) => { return (typeof o.text === "string" && /[데대]일리/gi.test(o.text) && /업무/gi.test(o.text) && /보고/gi.test(o.text)) }).map((o) => {
+        return o.text.replace(/\*/gi, '');
+      }).map((str) => {
+        const strArr = str.trim().split("\n");
+        const titleTarget = strArr.find((s) => { return /[데대]일리/gi.test(s) && /업무/gi.test(s) && /보고/gi.test(s) });
+        const titleTargetIndex = strArr.findIndex((s) => { return /[데대]일리/gi.test(s) && /업무/gi.test(s) && /보고/gi.test(s) });
+        const obj = /[0-9][0-9][\-]?[0-9][0-9][\-]?[0-9][0-9]/gi.exec(titleTarget);
+        const date = stringToDate(obj[0]);
+        const name = titleTarget.replace(/[데대]일리/gi, "").replace(/업무/gi, "").replace(/보고/gi, "").replace(/[^가-힣]/gi, "").trim();
+        const member = members.find((o) => { return o.name.trim() === name.trim() });
+        return {
+          raw: str,
+          date,
+          title: titleTarget,
+          contents: strArr.slice(titleTargetIndex + 1).join("\n").replace(/  /gi, ' ').replace(/\t/gi, ' ').trim(),
+          member: {
+            name,
+            id: member.id,
+          }
+        }
+      });
+
+      for (let obj of targetList) {
+        hex = await cryptoString(password, obj.title);
+        obj.id = idKeywords + obj.member.id + "_" + dateToString(obj.date).replace(/\-/gi, '') + "_" + hex;
+  
+        console.log(obj);
+      }
+
+
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      console.log(e);
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_storeDailyReport): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_fairySlack = function () {
   const instance = this;
   const { requestSystem, stringToLink } = this.mother;
