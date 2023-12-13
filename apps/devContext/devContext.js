@@ -157,12 +157,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await requestSystem("https://home-liaison.net:3000/storeDailyReport", { data: null }, { 
-      headers: {
-        "Content-Type": "application/json",
-      }
-    })
 
+    
 
     
 

@@ -3962,7 +3962,7 @@ SecondRouter.prototype.rou_post_storeDailyReport = function () {
       r = await requestSystem(url, {
         token,
         channel: targetChannelId,
-        limit: 200,
+        limit: 100,
       }, {
         method: "get",
         headers: {
@@ -4001,10 +4001,7 @@ SecondRouter.prototype.rou_post_storeDailyReport = function () {
         if (rows.length === 0) {
           await back.mongoCreate(collection, equalJson(JSON.stringify(obj)), { selfMongo });
         }
-
-        console.log(obj);
       }
-
 
       res.send(JSON.stringify({ message: "done" }));
 
