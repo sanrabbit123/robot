@@ -249,9 +249,9 @@ FeeManualJs.prototype.insertFirstBox = function () {
   firstWidth = <%% 380, 300, 280, 220, 50 %%>;
   firstPaddingLeft = <%% 28, 24, 22, 18, 4 %%>;
 
-  barTop = <%% (isMac() ? 9 : 7), (isMac() ? 10 : 7), (isMac() ? 8 : 6), (isMac() ? 7 : 5), 1.4 %%>;
+  barTop = <%% (isMac() ? 9 : 6), (isMac() ? 9 : 6), (isMac() ? 8 : 5), (isMac() ? 7 : 5), 1.4 %%>;
   barWidth = <%% 6, 6, 6, 5, 1 %%>;
-  barHeight = <%% 53, 59, 52, 42, 10.6 %%>;
+  barHeight = <%% 53, 52, 49, 40, 10.6 %%>;
 
   titleSize = <%% 24, 24, 22, 18, 4.3 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -1270,7 +1270,7 @@ FeeManualJs.prototype.insertButtonBox = function () {
   arrowWidth = <%% 204, 203, 203, 203, 203 %%>;
   arrowHeight = <%% 100, 100, 100, 100, 100 %%>;
 
-  textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+  textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
   textSize = <%% 17, 17, 15, 14, 2.5 %%>;
   textWeight = <%% 700, 700, 700, 700, 700 %%>;
   textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
@@ -1363,15 +1363,14 @@ FeeManualJs.prototype.insertButtonBox = function () {
     mother: grayTong,
     event: {
       click: function (e) {
-        window.alert("준비중인 기능입니다!");
-        // let url;
-        // url = "";
-        // url += FRONTHOST;
-        // url += "/designer/manual.php";
-        // url += "?";
-        // url += "desid=";
-        // url += instance.designer.desid;
-        // selfHref(url);
+        let url;
+        url = "";
+        url += FRONTHOST;
+        url += "/designer/partnership.php";
+        url += "?";
+        url += "desid=";
+        url += instance.designer.desid;
+        selfHref(url);
       }
     },
     style: {
@@ -1390,7 +1389,7 @@ FeeManualJs.prototype.insertButtonBox = function () {
     },
     children: [
       {
-        text: "디자인비 설명",
+        text: "파트너십 정보",
         style: {
           display: "inline-block",
           position: "relative",

@@ -2061,7 +2061,7 @@ ConsoleManualJs.prototype.insertButtonBox = function () {
   arrowWidth = <%% 204, 203, 203, 203, 203 %%>;
   arrowHeight = <%% 100, 100, 100, 100, 100 %%>;
 
-  textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+  textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
   textSize = <%% 17, 17, 15, 14, 2.5 %%>;
   textWeight = <%% 700, 700, 700, 700, 700 %%>;
   textMarginLeft = <%% 50, 50, 50, 50, 50 %%>;
@@ -2154,15 +2154,14 @@ ConsoleManualJs.prototype.insertButtonBox = function () {
     mother: grayTong,
     event: {
       click: function (e) {
-        window.alert("준비중인 기능입니다!");
-        // let url;
-        // url = "";
-        // url += FRONTHOST;
-        // url += "/designer/manual.php";
-        // url += "?";
-        // url += "desid=";
-        // url += instance.designer.desid;
-        // selfHref(url);
+        let url;
+        url = "";
+        url += FRONTHOST;
+        url += "/designer/fee.php";
+        url += "?";
+        url += "desid=";
+        url += instance.designer.desid;
+        selfHref(url);
       }
     },
     style: {
