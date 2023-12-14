@@ -16092,7 +16092,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
         "고객님께 해당되는 상태를 <b%모두 체크%b>해주세요!",
       ],
       form: thisForm,
-      button: "고객 공유",
+      button: "체크 완료",
       schedule: "일정 관리"
     };
 
