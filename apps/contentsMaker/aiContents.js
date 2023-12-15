@@ -665,16 +665,16 @@ AiContents.prototype.to_google = async function (pid) {
     portfolio = motherObj.portfolio;
     review = motherObj.review;
 
-    // portfolioId = await docs.create_newDocs_inPython(portfolioTitle, motherId);
-    // console.log(portfolioId);
-    // await docs.update_contents_inPython(portfolioId, portfolio);
+    portfolioId = await docs.create_newDocs_inPython(portfolioTitle, motherId);
+    console.log(portfolioId);
+    await docs.update_contents_inPython(portfolioId, portfolio);
 
     portfolioId = "";
 
     if (review.length !== 0) {
-      // reviewId = await docs.create_newDocs_inPython(reviewTitle, motherId);
-      // console.log(reviewId);
-      // await docs.update_contents_inPython(reviewId, review);
+      reviewId = await docs.create_newDocs_inPython(reviewTitle, motherId);
+      console.log(reviewId);
+      await docs.update_contents_inPython(reviewId, review);
       reviewId = "";
     } else {
       reviewId = null;
@@ -684,27 +684,27 @@ AiContents.prototype.to_google = async function (pid) {
 
     if (reviewId !== null && client !== null) {
 
-      // await messageSend({ text: `${client.name} 고객님, ${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
-      // await messageSend({ text: `${client.name} 고객님의 고객 인터뷰 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(reviewId)}`, channel });
+      await messageSend({ text: `${client.name} 고객님, ${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
+      await messageSend({ text: `${client.name} 고객님의 고객 인터뷰 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(reviewId)}`, channel });
       await messageSend({ text: `${client.name} 고객님 세팅 사진 원본 link : ${photoLink}`, channel });
 
       channel = "#200_web";
       await messageSend({ text: `${client.name} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
       await messageSend({ text: `${client.name} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${reviewLink + pid}`, channel });
 
-      await kakaoInstance.sendTalk("contentsShareClient", client.name, client.phone, {
-        client: client.name,
-        host: instance.address.frontinfo.host,
-        pid
-      });
-      await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, {
-        client: client.name,
-        designer: designer.designer,
-        host: instance.address.frontinfo.host,
-        pid,
-        proid,
-      });
-      await messageSend({ text: `${client.name} 고객님에게 컨텐츠 공유 링크를 보냈어요.`, channel: "#502_sns_contents", voice: true });
+      // await kakaoInstance.sendTalk("contentsShareClient", client.name, client.phone, {
+      //   client: client.name,
+      //   host: instance.address.frontinfo.host,
+      //   pid
+      // });
+      // await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, {
+      //   client: client.name,
+      //   designer: designer.designer,
+      //   host: instance.address.frontinfo.host,
+      //   pid,
+      //   proid,
+      // });
+      // await messageSend({ text: `${client.name} 고객님에게 컨텐츠 공유 링크를 보냈어요.`, channel: "#502_sns_contents", voice: true });
 
       project = await back.getProjectById(proid, { selfMongo });
       if (project !== null) {
@@ -738,7 +738,7 @@ AiContents.prototype.to_google = async function (pid) {
 
       } else {
 
-        // await messageSend({ text: `${client.name} 고객님, ${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
+        await messageSend({ text: `${client.name} 고객님, ${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
         await messageSend({ text: `${client.name} 고객님 세팅 사진 원본 link : ${photoLink}`, channel });
   
         channel = "#200_web";

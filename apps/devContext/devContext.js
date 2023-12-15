@@ -6896,9 +6896,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "한아름",
-    //     link: "https://drive.google.com/drive/folders/1gprKLKdLj6gcEth82azGhn6UDI3BeCoO",
+    //     client: "최보윤",
+    //     designer: "윤지숙",
+    //     link: "https://drive.google.com/drive/folders/1LIplVSuFqzoRt2t6ycpDL_M6apANFdjn",
     //     pay: true
     //   },
     // ]);
@@ -6908,8 +6908,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "최미정",
-    //     designer: "김윤진",
+    //     client: "최보윤",
+    //     designer: "윤지숙",
     //   },
     // ]);
 
@@ -6968,7 +6968,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "한아름", "2023-11-26" ],
+    //   [ "정지수", "2023-11-24" ],
     // ]);
 
 

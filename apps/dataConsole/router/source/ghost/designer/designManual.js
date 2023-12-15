@@ -3534,6 +3534,47 @@ DesignManualJs.prototype.launching = async function (loading) {
 
     loading.parentNode.removeChild(loading);
 
+
+    // login system
+
+    const loginKey = "homeliaisonDesigner_login";
+    let loginKeyObj;
+    let ago, agoValue;
+    let loginName, loginPhone;
+
+    ago = new Date();
+    ago.setMonth(ago.getMonth() - 3);
+    agoValue = ago.valueOf();
+
+    loginKeyObj = GeneralJs.equalJson(window.localStorage.getItem(loginKey));
+    if (typeof loginKeyObj === "object") {
+      if (loginKeyObj !== null && loginKeyObj.date.valueOf() >= agoValue && loginKeyObj.desid === instance.designer.desid) {
+        // pass
+      } else {
+        try {
+          loginName = instance.designer.designer;
+          loginPhone = instance.designer.information.phone;
+          if (instance.designer.desid === "d1701_aa01s") {
+            loginName = "배창규";
+            loginPhone = "010-2747-3403";
+          }
+          instance.mother.certificationBox(loginName, loginPhone, (back, box) => {
+            if (loginKeyObj !== null) {
+              window.localStorage.removeItem(loginKey);
+            }
+            window.localStorage.setItem(loginKey, JSON.stringify({ date: new Date(), desid: instance.designer.desid }));
+            GeneralJs.sleep(1000).then(() => {
+              document.body.removeChild(box);
+              document.body.removeChild(back);
+            });
+          });
+        } catch (e) {
+          window.location.href = FRONTHOST;
+        }
+      }
+    }
+
+
   } catch (err) {
     console.log(err);
     await GeneralJs.ajaxJson({ message: "DesignManualJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
