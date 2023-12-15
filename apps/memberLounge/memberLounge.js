@@ -27,7 +27,7 @@ MemberLounge.prototype.memberConnect = async function () {
   const logKeyword = "expressLog";
   const logFolder = process.env.HOME + "/server/log";
   const thisLogFile = `${logFolder}/${logKeyword}_${(new Date()).valueOf()}.log`;
-  const serverName = "static";
+  const serverName = "member";
 
   app.use(useragent.express());
   app.use(express.json({ limit : "50mb" }));

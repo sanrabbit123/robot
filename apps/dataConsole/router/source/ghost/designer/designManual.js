@@ -3534,7 +3534,6 @@ DesignManualJs.prototype.launching = async function (loading) {
 
     loading.parentNode.removeChild(loading);
 
-
     // login system
 
     const loginKey = "homeliaisonDesigner_login";
