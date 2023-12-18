@@ -4077,7 +4077,7 @@ DesignerJs.prototype.careDataRender = async function () {
 DesignerJs.prototype.careBase = async function () {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, svgMaker } = GeneralJs;
   const moveTargetClassName = "moveTarget";
   const menuPromptClassName = "menuPromptClassName";
   const importantCircleClassName = "importantCircleClassName";
@@ -4125,6 +4125,10 @@ DesignerJs.prototype.careBase = async function () {
     let thisDesigners;
     let idNameLineTop, idNameLineWidth;
     let valueLineLeft, valueLineMaxWidth;
+    let smallTextSize, smallTextTop, smallLineHeight;
+    let progress;
+    let pending;
+    let blankIconRight, blankIconTop, blankIconWidth;
   
     totalPaddingTop = 38;
     columnAreaHeight = 32;
@@ -4171,6 +4175,14 @@ DesignerJs.prototype.careBase = async function () {
 
     valueLineLeft = 9;
     valueLineMaxWidth = 9000;
+
+    smallTextSize = 12;
+    smallTextTop = -10;
+    smallLineHeight = 1.6;
+
+    blankIconRight = 0;
+    blankIconTop = 14;
+    blankIconWidth = 10;
 
     ({ thisDesigners, standards, columns, values } = await this.careDataRender());
   
@@ -4839,6 +4851,11 @@ DesignerJs.prototype.careBase = async function () {
       
         for (let { designer, projects } of thisDesigners) {
       
+          progress = projects.filter((p) => { return /진행/gi.test(p.process.status )})
+          pending = projects.filter((p) => { return /대기/gi.test(p.process.status )})
+    
+          // id name area
+
           createNode({
             mother: idNameArea,
             attribute: { desid: designer.desid, lastfilter: "none", important: designer.important ? "true" : "false" },
@@ -4902,9 +4919,6 @@ DesignerJs.prototype.careBase = async function () {
               createNode({
                 mother: idNameArea,
                 attribute: { desid: designer.desid, lastfilter: "none", important: designer.important ? "true" : "false" },
-                event: {
-                  click: instance.normalWhiteCard(designer.desid),
-                },
                 class: [ standardCaseClassName ],
                 style: {
                   display: "flex",
@@ -4921,19 +4935,44 @@ DesignerJs.prototype.careBase = async function () {
                       display: "inline-flex",
                       flexDirection: "row",
                       position: "relative",
-                      justifyContent: "center",
+                      justifyContent: "end",
                       alignItems: "start",
-                      width: String(standards.columns[index].width) + ea,
+                      width: String((i === 1 ? (index === 0 ? 0 : 132) : 0)) + ea,
                     },
                     child: {
                       class: [ valueTargetClassName ],
+                      text: (i === 1 ? (index === 0 ? "" : "진행중 : " + String(progress.length) + "&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;대기 : " + String(pending.length) + "\n<b%디자이너 콘솔%b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") : ""),
                       style: {
                         position: "relative",
                         transition: "all 0.3s ease",
-                        fontSize: String(fontSize) + ea,
+                        fontSize: String(smallTextSize) + ea,
                         fontWeight: String(fontWeight),
+                        top: String(smallTextTop) + ea,
                         color: colorChip.black,
+                        textAlign: "right",
+                        lineHeight: String(smallLineHeight),
                       },
+                      under: {
+                        fontSize: String(smallTextSize) + ea,
+                        fontWeight: String(300),
+                        color: colorChip.deactive,
+                      },
+                      bold: {
+                        fontSize: String(smallTextSize) + ea,
+                        fontWeight: String(600),
+                        color: colorChip.purple,
+                      },
+                      next: {
+                        mode: "svg",
+                        source: svgMaker.blankArrow(colorChip.purple),
+                        style: {
+                          display: i === 1 && index !== 0 ? "inline-block" : "none",
+                          position: "absolute",
+                          right: String(blankIconRight) + ea,
+                          top: String(blankIconTop) + ea,
+                          width: String(blankIconWidth) + ea,
+                        }
+                      }
                     }
                   }
                 })
@@ -4944,9 +4983,6 @@ DesignerJs.prototype.careBase = async function () {
               createNode({
                 mother: idNameArea,
                 attribute: { desid: designer.desid, lastfilter: "none", important: designer.important ? "true" : "false" },
-                event: {
-                  click: instance.normalWhiteCard(designer.desid),
-                },
                 class: [ standardCaseClassName ],
                 style: {
                   display: "flex",
@@ -4963,19 +4999,44 @@ DesignerJs.prototype.careBase = async function () {
                       display: "inline-flex",
                       flexDirection: "row",
                       position: "relative",
-                      justifyContent: "center",
+                      justifyContent: "end",
                       alignItems: "start",
-                      width: String(standards.columns[index].width) + ea,
+                      width: String((i === 1 ? (index === 0 ? 0 : 132) : 0)) + ea,
                     },
                     child: {
                       class: [ valueTargetClassName ],
+                      text: (i === 1 ? (index === 0 ? "" : "진행중 : " + String(progress.length) + "&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;대기 : " + String(pending.length) + "\n<b%디자이너 콘솔%b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") : ""),
                       style: {
                         position: "relative",
                         transition: "all 0.3s ease",
-                        fontSize: String(fontSize) + ea,
+                        fontSize: String(smallTextSize) + ea,
                         fontWeight: String(fontWeight),
+                        top: String(smallTextTop) + ea,
                         color: colorChip.black,
+                        textAlign: "right",
+                        lineHeight: String(smallLineHeight),
                       },
+                      under: {
+                        fontSize: String(smallTextSize) + ea,
+                        fontWeight: String(300),
+                        color: colorChip.deactive,
+                      },
+                      bold: {
+                        fontSize: String(smallTextSize) + ea,
+                        fontWeight: String(600),
+                        color: colorChip.purple,
+                      },
+                      next: {
+                        mode: "svg",
+                        source: svgMaker.blankArrow(colorChip.purple),
+                        style: {
+                          display: i === 1 && index !== 0 ? "inline-block" : "none",
+                          position: "absolute",
+                          right: String(blankIconRight) + ea,
+                          top: String(blankIconTop) + ea,
+                          width: String(blankIconWidth) + ea,
+                        }
+                      }
                     }
                   }
                 })
@@ -5042,6 +5103,9 @@ DesignerJs.prototype.careBase = async function () {
             })
           });
           // bar -------------------------------------------------------------------------------------------
+
+
+          // value area
 
           if (projects.length >= 3) {
 
