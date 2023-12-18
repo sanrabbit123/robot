@@ -9764,6 +9764,7 @@ MprJs.prototype.mprPannel = async function () {
     let menuSize;
     let menuWeight;
     let pannelTong;
+    let num;
 
     pannelOuterMargin = 40;
     pannelInnerPadding = 6;
@@ -9951,6 +9952,7 @@ MprJs.prototype.mprPannel = async function () {
     });
     pannelTong = pannelBase.firstChild;
 
+    num = 0;
     for (let obj of pannelMenu) {
       createNode({
         mother: pannelTong,
@@ -9964,7 +9966,7 @@ MprJs.prototype.mprPannel = async function () {
           height: String(menuPromptHeight) + ea,
           borderRadius: String(5) + "px",
           background: colorChip.gradientGray,
-          marginBottom: String(menuBetween) + ea,
+          marginBottom: String(num === pannelMenu.length - 1 ? 0 : menuBetween) + ea,
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
@@ -9984,7 +9986,8 @@ MprJs.prototype.mprPannel = async function () {
             color: colorChip.white,
           }
         }
-      })
+      });
+      num++;
     }
 
   } catch (e) {

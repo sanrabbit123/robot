@@ -79,42 +79,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
     columns = [
       {
-        title: "담당자",
-        width: 80,
-        name: "manger",
-        type: "string",
-        menu: [
-          {
-            value: "전체 보기",
-            functionName: "filterEvent_$all",
-          }
-        ].concat(this.members.filter((o) => { return o.roles.includes("CX") }).map((member) => {
-          return member.name;
-        }).map((name) => {
-          return {
-            value: name,
-            functionName: "filterEvent_" + name,
-          }
-        }).concat([
-          {
-            value: "-",
-            functionName: "filterEvent_-",
-          }
-        ]))
-      },
-      {
-        title: "대기",
-        width: 80,
-        name: "processPending",
-        type: "number",
-      },
-      {
-        title: "진행중",
-        width: 80,
-        name: "processDoing",
-        type: "number",
-      },
-      {
         title: "일괄 안내 전송",
         width: 100,
         name: "entireNoticeSend",
@@ -619,18 +583,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
       values[designer.desid] = [
         {
-          value: designer.manager,
-          name: "manger",
-        },
-        {
-          value: asyncProcessText,
-          name: "processPending",
-        },
-        {
-          value: asyncProcessText,
-          name: "processDoing",
-        },
-        {
           value: filteredEntireSendRows.length > 0 ? dateToString(filteredEntireSendRows[0].date) : "-",
           name: "entireNoticeSend",
         },
@@ -806,24 +758,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
   
           filteredProjectsContract = projects.filter((p) => {
             return p.desid === designer.desid;
-          });
-  
-          thisTarget = findByAttribute(thisValueDoms, "name", "processPending");
-          thisValueTemp = filteredProjectsContract.filter((p) => { return /^대/.test(p.process.status) }).length;
-          thisTarget.textContent = String(thisValueTemp);
-          thisTarget.style.color = colorChip.black;
-          instance.normalMatrix[designer.desid].push({
-            name: "processPending",
-            value: String(thisValueTemp),
-          });
-
-          thisTarget = findByAttribute(thisValueDoms, "name", "processDoing");
-          thisValueTemp = filteredProjectsContract.filter((p) => { return /^진/.test(p.process.status) }).length;
-          thisTarget.textContent = String(thisValueTemp);
-          thisTarget.style.color = colorChip.black;
-          instance.normalMatrix[designer.desid].push({
-            name: "processDoing",
-            value: String(thisValueTemp),
           });
 
           // thisTarget = findByAttribute(thisValueDoms, "name", "checklistDone");
@@ -3869,10 +3803,1743 @@ DesignerJs.prototype.communicationRender = function () {
   ]);
 }
 
+DesignerJs.prototype.normalSubPannel = async function () {
+  const instance = this;
+  const { ea, totalContents, belowHeight, totalMother } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
+  const titleStringClassName = "titleStringClassName";
+  try {
+    const zIndex = 2;
+    let pannelBase;
+    let pannelOuterMargin;
+    let pannelInnerPadding;
+    let pannelMenu;
+    let menuPromptWidth;
+    let menuPromptHeight;
+    let menuTextTop;
+    let menuBetween;
+    let menuSize;
+    let menuWeight;
+    let pannelTong;
+    let num;
+
+    pannelOuterMargin = 40;
+    pannelInnerPadding = 6;
+
+    menuPromptWidth = 140;
+    menuPromptHeight = 32;
+    menuTextTop = isMac() ? -1 : 1,
+    menuBetween = 3;
+    menuSize = 13;
+    menuWeight = 700;
+
+    pannelMenu = [
+      {
+        title: "프로젝트 케어 모드",
+        event: () => {
+          return async function (e) {
+            try {
+              await instance.careView();
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+      {
+        title: "디자이너 보고서 모드",
+        event: () => {
+          return async function (e) {
+            try {
+              await instance.numbersView();
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+    ];
+
+    pannelBase = createNode({
+      mother: totalMother,
+      style: {
+        display: "flex",
+        position: "absolute",
+        bottom: String(pannelOuterMargin) + ea,
+        right: String(pannelOuterMargin) + ea,
+        background: colorChip.white,
+        zIndex: String(zIndex),
+        borderRadius: String(5) + "px",
+        animation: "fadeuplite 0.3s ease forwards",
+        boxShadow: "0 3px 15px -9px " + colorChip.shadow,
+        padding: String(pannelInnerPadding) + ea,
+        flexDirection: "column",
+      },
+      child: {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(menuPromptWidth) + ea,
+          flexDirection: "column",
+        }
+      }
+    });
+    pannelTong = pannelBase.firstChild;
+
+    num = 0;
+    for (let obj of pannelMenu) {
+      createNode({
+        mother: pannelTong,
+        event: {
+          click: obj.event(),
+        },
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(menuPromptWidth) + ea,
+          height: String(menuPromptHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          marginBottom: String(num === pannelMenu.length - 1 ? 0 : menuBetween) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        child: {
+          class: [ titleStringClassName ],
+          text: obj.title,
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
+          style: {
+            position: "relative",
+            top: String(menuTextTop) + ea,
+            fontSize: String(menuSize) + ea,
+            fontWeight: String(menuWeight),
+            color: colorChip.white,
+          }
+        }
+      })
+      num++;
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DesignerJs.prototype.careDataRender = async function () {
+  const instance = this;
+  const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows, profileList, workList, representativeList } = this;
+  const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute, equalJson } = GeneralJs;
+  try {
+    let columns;
+    let values;
+    let standards;
+    let desidArr;
+    let thisDesigners;
+    let thisProjects;
+    let progress, pending;
+    let num;
+
+    desidArr = instance.projects.map((p) => { return p.desid });
+    desidArr = [ ...new Set(desidArr) ];
+
+    thisDesigners = [];
+    for (let desid of desidArr) {
+      thisProjects = instance.projects.filter((p) => { return p.desid === desid });
+      if (thisProjects.length > 0) {
+        thisDesigners.push({
+          desid,
+          designer: equalJson(JSON.stringify(thisProjects[0].designer)),
+          projects: equalJson(JSON.stringify(thisProjects)),
+        });
+      }
+    }
+
+    thisDesigners.sort((a, b) => {
+      return b.projects.length - a.projects.length;
+    })
+    
+    standards = {
+      columns: [
+        {
+          title: "아이디",
+          width: 96,
+          name: "desid",
+          type: "string",
+        },
+        {
+          title: "성함",
+          width: 60,
+          name: "designer",
+          type: "string",
+        },
+      ],
+      values: {},
+    }
+
+    columns = [
+      {
+        title: "고객",
+        width: 80,
+        name: "client",
+        type: "string",
+      },
+      {
+        title: "상태",
+        width: 80,
+        name: "status",
+        type: "string",
+      },
+      {
+        title: "시작일",
+        width: 100,
+        name: "startDate",
+        type: "date",
+      },
+      {
+        title: "종료일",
+        width: 100,
+        name: "endDate",
+        type: "date",
+      },
+    ];
+
+    values = {};
+
+    num = 0;
+    for (let { designer, projects } of thisDesigners) {
+
+      progress = projects.filter((p) => { return /진행/gi.test(p.process.status )})
+      pending = projects.filter((p) => { return /대기/gi.test(p.process.status )})
+      progress.sort((a, b) => {
+        return a.process.contract.form.date.from.valueOf() - b.process.contract.form.date.from.valueOf();
+      });
+      pending.sort((a, b) => {
+        return a.process.contract.form.date.from.valueOf() - b.process.contract.form.date.from.valueOf();
+      });
+      projects = progress.concat(pending);
+      thisDesigners[num].projects = equalJson(JSON.stringify(projects));
+
+      standards.values[designer.desid] = [
+        {
+          value: designer.desid,
+          name: "desid",
+        },
+        {
+          value: designer.designer,
+          name: "designer",
+        },
+      ];
+
+      values[designer.desid] = [
+        [],
+        [],
+        [],
+        [],
+      ];
+
+      for (let p of projects) {
+        values[designer.desid][0].push({
+          value: p.name,
+          name: "client",
+        });
+        values[designer.desid][1].push({
+          value: p.process.status,
+          name: "status",
+        });
+        values[designer.desid][2].push({
+          value: dateToString(p.process.contract.form.date.from),
+          name: "startDate",
+        });
+        values[designer.desid][3].push({
+          value: dateToString(p.process.contract.form.date.to),
+          name: "endDate",
+        });
+      }
+      
+      num++;
+    }
+
+    return { thisDesigners, standards, columns, values };
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DesignerJs.prototype.careBase = async function () {
+  const instance = this;
+  const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
+  const moveTargetClassName = "moveTarget";
+  const menuPromptClassName = "menuPromptClassName";
+  const importantCircleClassName = "importantCircleClassName";
+  const designerSubMenuEventFactorClassName = "designerSubMenuEventFactorClassName";
+  try {
+    let totalMother;
+    let grayArea, whiteArea;
+    let totalPaddingTop;
+    let columnAreaHeight;
+    let fontSize, fontWeight;
+    let idWidth, nameWidth;
+    let idNameAreaPaddingTop;
+    let idNameArea;
+    let idNameHeight;
+    let idNamePaddingBottom;
+    let maxWidth;
+    let valueColumnsAreaPaddingLeft;
+    let valueArea;
+    let valueWeight;
+    let thisTong;
+    let columns;
+    let values;
+    let valueMaxWidth;
+    let thisTargets;
+    let hoverEvent, hoverOutEvent;
+    let standards;
+    let menuPromptWidth, menuPromptHeight;
+    let menuVisual;
+    let menuBetween;
+    let menuTextTop, menuSize, menuWeight;
+    let columnsMenuEvent;
+    let menuEventTong;
+    let careContentsLoad;
+    let circleRight, circleTop;
+    let importantMarkingEvent;
+    let designerSubMenuEvent;
+    let contextIndent;
+    let contextButtonOuterMargin;
+    let contextButtonInnerMargin;
+    let contextButtonWidth;
+    let contextButtonHeight;
+    let contextButtonSize;
+    let contextButtonWeight;
+    let contextButtonTextTop;
+    let thisDesigners;
+    let idNameLineTop, idNameLineWidth;
+    let valueLineLeft, valueLineMaxWidth;
+  
+    totalPaddingTop = 38;
+    columnAreaHeight = 32;
+  
+    fontSize = 14;
+    fontWeight = 600;
+    valueWeight = 500;
+  
+    idWidth = 96;
+    nameWidth = 60;
+  
+    idNameAreaPaddingTop = 17;
+    idNameHeight = 36;
+  
+    idNamePaddingBottom = 400;
+    maxWidth = 8000;
+    valueMaxWidth = 1000;
+  
+    valueColumnsAreaPaddingLeft = 20;
+
+    menuPromptWidth = 80;
+    menuPromptHeight = 28;
+    menuVisual = 4;
+    menuBetween = 3;
+
+    menuTextTop = isMac() ? -1 : 1,
+    menuSize = 13;
+    menuWeight = 600;
+
+    circleRight = 2.5;
+    circleTop = isMac() ? 3 : 1;
+
+    contextIndent = 5;
+    contextButtonOuterMargin = 8;
+    contextButtonInnerMargin = 3;
+    contextButtonWidth = 230;
+    contextButtonHeight = 28;
+    contextButtonSize = 12;
+    contextButtonWeight = 700;
+    contextButtonTextTop = isMac() ? -1 : 1;
+
+    idNameLineTop = 11;
+    idNameLineWidth = 154;
+
+    valueLineLeft = 9;
+    valueLineMaxWidth = 9000;
+
+    ({ thisDesigners, standards, columns, values } = await this.careDataRender());
+  
+    hoverEvent = () => {
+      return function (e) {
+        const desid = this.getAttribute("desid");
+        const opposite = findByAttribute(document.querySelectorAll('.' + standardCaseClassName), "desid", desid);
+        thisTargets = [ ...this.querySelectorAll('.' + valueTargetClassName) ].concat([ ...opposite.querySelectorAll('.' + valueTargetClassName) ]);
+        for (let dom of thisTargets) {
+          dom.style.color = colorChip.green;
+        }
+      }
+    }
+
+    hoverOutEvent = () => {
+      return function (e) {
+        const desid = this.getAttribute("desid");
+        const opposite = findByAttribute(document.querySelectorAll('.' + standardCaseClassName), "desid", desid);
+        thisTargets = [ ...this.querySelectorAll('.' + valueTargetClassName) ].concat([ ...opposite.querySelectorAll('.' + valueTargetClassName) ]);
+        for (let dom of thisTargets) {
+          dom.style.color = dom.getAttribute("color") !== null ? dom.getAttribute("color") : colorChip.black;
+        }
+      }
+    }
+
+    menuEventTong = {
+      sortEvent: (thisType, name, index) => {
+        return async function (e) {
+          try {
+            const idNameArea = document.querySelector('.' + idNameAreaClassName);
+            const valueArea = document.querySelector('.' + valueAreaClassName);
+            const idNameDoms = Array.from(document.querySelectorAll('.' + standardCaseClassName));
+            const valueDoms = Array.from(document.querySelectorAll('.' + valueCaseClassName));
+            const type = columns[index].type;
+            let domMatrix;
+            let thisDesid;
+            let thisValueDom;
+  
+            domMatrix = [];
+            for (let i = 0; i < idNameDoms.length; i++) {
+              thisDesid = idNameDoms[i].getAttribute("desid");
+              thisValueDom = findByAttribute(valueDoms, "desid", thisDesid);
+              domMatrix.push([
+                idNameDoms[i],
+                thisValueDom
+              ]);
+            }
+  
+            domMatrix.sort((a, b) => {
+              let aValue, bValue;
+              let aSortValue, bSortValue;
+              let tempArr;
+  
+              aValue = findByAttribute([ ...a[1].querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent;
+              bValue = findByAttribute([ ...b[1].querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent;
+              
+              if (type === "string") {
+                aSortValue = aValue !== '' ? aValue.charCodeAt(0) : 0;
+                bSortValue = bValue !== '' ? bValue.charCodeAt(0) : 0;
+              } else if (type === "number") {
+                aValue = aValue.replace(/[^0-9]/gi, '')
+                bValue = bValue.replace(/[^0-9]/gi, '')
+                aSortValue = aValue !== '' ? Number(aValue) : 0;
+                bSortValue = bValue !== '' ? Number(bValue) : 0;
+              } else if (type === "percentage") {
+                aValue = aValue.replace(/[^0-9\.]/gi, '')
+                bValue = bValue.replace(/[^0-9\.]/gi, '')
+                aSortValue = aValue !== '' ? Number(aValue) : 0;
+                bSortValue = bValue !== '' ? Number(bValue) : 0;
+              } else if (type === "date") {
+                aSortValue = aValue !== '' ? stringToDate(aValue) : stringToDate("1800-01-01");
+                bSortValue = bValue !== '' ? stringToDate(bValue) : stringToDate("1800-01-01");
+                aSortValue = aSortValue.valueOf();
+                bSortValue = bSortValue.valueOf();
+              } else if (type === "during") {
+  
+                if (/년/gi.test(aValue)) {
+                  tempArr = aValue.split('년');
+                  if (tempArr.length > 1) {
+                    aSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) + Number(tempArr[1].replace(/[^0-9]/gi, ''));
+                  } else {
+                    aSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12);
+                  }
+                } else {
+                  aSortValue = Number(aValue.replace(/[^0-9]/gi, ''));
+                }
+  
+                if (/년/gi.test(bValue)) {
+                  tempArr = bValue.split('년');
+                  if (tempArr.length > 1) {
+                    bSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) + Number(tempArr[1].replace(/[^0-9]/gi, ''));
+                  } else {
+                    bSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12);
+                  }
+                } else {
+                  bSortValue = Number(bValue.replace(/[^0-9]/gi, ''));
+                }
+  
+              } else {
+                aSortValue = aValue !== '' ? aValue.charCodeAt(0) : 0;
+                bSortValue = bValue !== '' ? bValue.charCodeAt(0) : 0;
+              }
+              
+              if (thisType === "down") {
+                return bSortValue - aSortValue;
+              } else {
+                return aSortValue - bSortValue;
+              }
+            });
+  
+            for (let [ standard, value ] of domMatrix) {
+              idNameArea.appendChild(standard);
+              valueArea.appendChild(value);
+            }
+  
+            removeByClass(menuPromptClassName);
+  
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      filterEvent: (thisValue, name, index) => {
+        return async function (e) {
+          try {
+            const idNameArea = document.querySelector('.' + idNameAreaClassName);
+            const valueArea = document.querySelector('.' + valueAreaClassName);
+            const idNameDoms = Array.from(document.querySelectorAll('.' + standardCaseClassName));
+            const valueDoms = Array.from(document.querySelectorAll('.' + valueCaseClassName));
+            const last = "lastfilter";
+            const type = columns[index].type;
+            let domMatrix;
+            let thisDesid;
+            let thisValueDom;
+  
+            domMatrix = [];
+            for (let i = 0; i < idNameDoms.length; i++) {
+              thisDesid = idNameDoms[i].getAttribute("desid");
+              thisValueDom = findByAttribute(valueDoms, "desid", thisDesid);
+              domMatrix.push([
+                idNameDoms[i],
+                thisValueDom
+              ]);
+            }
+
+            if (thisValue === "$all") {
+              for (let [ standard, value ] of domMatrix) {
+                standard.style.display = "flex";
+                value.style.display = "flex";
+                standard.setAttribute(last, "none");
+                value.setAttribute(last, "none");
+              }
+            } else {
+              for (let [ standard, value ] of domMatrix) {
+                if (standard.getAttribute(last) === name) {
+                  if (findByAttribute([ ...value.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent.trim() === thisValue) {
+                    standard.style.display = "flex";
+                    value.style.display = "flex";
+                  } else {
+                    standard.style.display = "none";
+                    value.style.display = "none";
+                  }
+                } else {
+                  if (findByAttribute([ ...value.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent.trim() === thisValue) {
+                    if (standard.style.display !== "none") {
+                      standard.style.display = "flex";
+                      value.style.display = "flex";
+                    }
+                  } else {
+                    standard.style.display = "none";
+                    value.style.display = "none";
+                  }
+                }
+                standard.setAttribute(last, name);
+                value.setAttribute(last, name);
+              }
+            }
+
+            removeByClass(menuPromptClassName);
+  
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+    }
+
+    columnsMenuEvent = (index) => {
+      return async function (e) {
+        try {
+          e.preventDefault();
+          const name = this.getAttribute("name");
+          const index = Number(this.getAttribute("index"));
+          const thisObject = columns[index];
+          const zIndex = 4;
+          let cancelBack, blackPrompt;
+          let thisMenu;
+
+          thisMenu = [
+            {
+              value: "내림차순",
+              functionName: "sortEvent_down",
+            },
+            {
+              value: "오름차순",
+              functionName: "sortEvent_up",
+            },
+          ];
+
+          if (Array.isArray(thisObject.menu)) {
+            thisMenu = thisMenu.concat(thisObject.menu);
+          }
+
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ menuPromptClassName ],
+            event: (e) => { removeByClass(menuPromptClassName) },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: "transparent",
+              zIndex: String(zIndex),
+            }
+          });
+
+          blackPrompt = createNode({
+            mother: totalContents,
+            class: [ menuPromptClassName ],
+            style: {
+              position: "fixed",
+              top: String(e.y + menuVisual) + "px",
+              left: String(e.x + menuVisual) + "px",
+              width: String(menuPromptWidth) + ea,
+              animation: "fadeuplite 0.3s ease forwards",
+              zIndex: String(zIndex),
+            },
+            children: thisMenu.map(({ value, functionName }) => {
+              const functionOrderArr = functionName.split("_");
+              const [ thisFunctionName ] = functionOrderArr;
+              let thisArguments;
+              if (functionOrderArr.length > 1) {
+                thisArguments = functionOrderArr.slice(1).concat([ name, index ]);
+              } else {
+                thisArguments = [ name, index ];
+              }
+              return {
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                  click: menuEventTong[thisFunctionName](...thisArguments),
+                },
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(menuPromptWidth) + ea,
+                  height: String(menuPromptHeight) + ea,
+                  borderRadius: String(5) + "px",
+                  background: colorChip.gradientGray,
+                  marginBottom: String(menuBetween) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  cursor: "pointer",
+                },
+                child: {
+                  text: value,
+                  event: {
+                    selectstart: (e) => { e.preventDefault() },
+                  },
+                  style: {
+                    position: "relative",
+                    top: String(menuTextTop) + ea,
+                    fontSize: String(menuSize) + ea,
+                    fontWeight: String(menuWeight),
+                    color: colorChip.white,
+                  }
+                }
+              }
+            })
+          })
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    importantMarkingEvent = (desid) => {
+      return async function (e) {
+        e.preventDefault();
+        try {
+          const circles = this.querySelectorAll('.' + importantCircleClassName);
+          const desid = this.getAttribute("desid");
+          let onoff;
+          let whereQuery, updateQuery;
+
+          for (let circle of circles) {
+            if (circle.getAttribute("toggle") === "on") {
+              circle.style.display = "none";
+              circle.setAttribute("toggle", "off");
+              onoff = "off";
+            } else {
+              circle.style.display = "inline-block";
+              circle.setAttribute("toggle", "on");
+              onoff = "on";
+            }
+          }
+
+          whereQuery = { desid };
+          if (onoff === "on") {
+            updateQuery = { important: true };
+          } else {
+            updateQuery = { important: false };
+          }
+
+          await ajaxJson({
+            id: desid,
+            column: "important",
+            value: updateQuery.important ? 1 : 0,
+            email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail
+          }, BACKHOST + "/updateDesignerHistory");
+          
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    designerSubMenuEvent = (desid, designer) => {
+      return async function (e) {
+        e.preventDefault();
+        try {
+          const px = "px";
+          const zIndex = 4;
+          const contextMenu = [
+            {
+              title: designer + " 실장님께 체크리스트 요청하기",
+              func: (desid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.normalSendNotice("checklist", desid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: designer + " 실장님께 디자이너 콘솔 보내기",
+              func: (desid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.normalSendNotice("console", desid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: designer + " 실장님께 프로필 업로드 요청하기",
+              func: (desid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.normalSendNotice("profile", desid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: designer + " 실장님께 작업 사진 업로드 요청하기",
+              func: (desid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.normalSendNotice("work", desid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: designer + " 실장님께 경력 업데이트 요청하기",
+              func: (desid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.normalSendNotice("career", desid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+          ];
+          const thisBox = this.getBoundingClientRect();
+          const { x, y } = e;
+          let cancelBack, contextBase;
+
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ designerSubMenuEventFactorClassName ],
+            event: {
+              click: (e) => { removeByClass(designerSubMenuEventFactorClassName) },
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: "transparent",
+              zIndex: String(zIndex),
+            }
+          });
+
+          contextBase = createNode({
+            mother: totalContents,
+            class: [ designerSubMenuEventFactorClassName ],
+            style: {
+              display: "inline-block",
+              position: "fixed",
+              top: String(y + contextIndent) + px,
+              left: String(x + (contextIndent / 2)) + px,
+              padding: String(contextButtonOuterMargin) + ea,
+              paddingBottom: String(contextButtonOuterMargin - contextButtonInnerMargin) + ea,
+              background: colorChip.white,
+              borderRadius: String(5) + px,
+              boxShadow: "3px 0px 15px -9px " + colorChip.shadow,
+              zIndex: String(zIndex),
+              animation: "fadeuplite 0.3s ease forwards",
+            }
+          })
+
+          for (let obj of contextMenu) {
+            createNode({
+              mother: contextBase,
+              event: {
+                click: obj.func(desid),
+              },
+              style: {
+                display: "flex",
+                width: String(contextButtonWidth) + ea,
+                height: String(contextButtonHeight) + ea,
+                background: colorChip.gradientGray,
+                borderRadius: String(5) + px,
+                marginBottom: String(contextButtonInnerMargin) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                cursor: "pointer",
+              },
+              child: {
+                text: obj.title,
+                style: {
+                  fontSize: String(contextButtonSize) + ea,
+                  fontWeight: String(contextButtonWeight),
+                  color: colorChip.white,
+                  position: "relative",
+                  display: "inline-block",
+                  top: String(contextButtonTextTop) + ea,
+                }
+              }
+            });
+          }
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    totalMother = createNode({
+      mother: totalContents,
+      class: [ "totalMother" ],
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        height: withOut(this.belowHeight, ea),
+      }
+    });
+    this.totalMother = totalMother;
+
+    careContentsLoad = async (reload = false) => {
+      try {
+
+        if (reload) {
+          ({ thisDesigners, standards, columns, values } = await instance.careDataRender());
+        }
+
+        cleanChildren(totalMother);
+
+        createNode({
+          mother: totalMother,
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String(this.grayBarWidth) + ea,
+            height: withOut(0, ea),
+            background: colorChip.gray0,
+          }
+        });
+        createNode({
+          mother: totalMother,
+          style: {
+            display: "block",
+            position: "relative",
+            paddingTop: String(totalPaddingTop) + ea,
+            height: String(columnAreaHeight) + ea,
+            borderBottom: "1px dashed " + colorChip.gray3,
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                flexDirection: "row",
+                position: "relative",
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "start",
+                verticalAlign: "top",
+                width: String(this.grayBarWidth) + ea,
+              },
+              children: standards.columns.map(({ title, width }) => {
+                return {
+                  style: {
+                    display: "inline-flex",
+                    flexDirection: "row",
+                    position: "relative",
+                    justifyContent: "center",
+                    alignItems: "start",
+                    width: String(width) + ea,
+                    cursor: "pointer",
+                  },
+                  child: {
+                    text: title,
+                    style: {
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.green,
+                    }
+                  }
+                }
+              })
+            },
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                height: withOut(0, ea),
+                verticalAlign: "top",
+                width: withOut(this.grayBarWidth, ea),
+                overflow: "hidden",
+              },
+              child: {
+                class: [ moveTargetClassName ],
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(maxWidth) + ea,
+                  height: withOut(0, ea),
+                  flexDirection: "row",
+                  alignItems: "start",
+                  justifyContent: "start",
+                  paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
+                },
+                children: columns.map(({ title, width, name }, index) => {
+                  return {
+                    attribute: {
+                      name: name,
+                      index: String(index),
+                    },
+                    event: {
+                      selectstart: (e) => { e.preventDefault() },
+                      click: columnsMenuEvent(index),
+                      contextmenu: columnsMenuEvent(index),
+                    },
+                    style: {
+                      display: "inline-flex",
+                      flexDirection: "row",
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "start",
+                      width: String(width) + ea,
+                      cursor: "pointer",
+                    },
+                    child: {
+                      style: {
+                        display: "inline-block",
+                        width: String(90) + '%',
+                        position: "relative",
+                        overflow: "hidden",
+                        textAlign: "center",
+                      },
+                      child: {
+                        style: {
+                          display: "flex",
+                          width: String(valueMaxWidth) + ea,
+                          position: "relative",
+                          left: withOut(50, valueMaxWidth / 2, ea),
+                          textAlign: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        },
+                        child: {
+                          text: title,
+                          style: {
+                            fontSize: String(fontSize) + ea,
+                            fontWeight: String(fontWeight),
+                            color: colorChip.green,
+                          }
+                        }
+                      }
+                    }
+                  }
+                })
+              }
+            }
+          ]
+        });
+      
+        [ idNameArea, valueArea ] = createNode({
+          mother: totalMother,
+          style: {
+            display: "block",
+            position: "relative",
+            paddingTop: String(idNameAreaPaddingTop) + ea,
+            height: withOut(totalPaddingTop + columnAreaHeight + idNameAreaPaddingTop, ea),
+            width: withOut(0, ea),
+            overflow: "scroll",
+          },
+          children: [
+            {
+              class: [ idNameAreaClassName ],
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                flexDirection: "column",
+                position: "relative",
+                width: String(this.grayBarWidth) + ea,
+                paddingBottom: String(idNamePaddingBottom) + ea,
+              }
+            },
+            {
+              class: [ valueAreaClassName ],
+              style: {
+                display: "inline-block",
+                position: "relative",
+                verticalAlign: "top",
+                width: withOut(this.grayBarWidth, ea),
+                overflow: "hidden",
+              },
+            }
+          ]
+        }).children;
+      
+        for (let { designer, projects } of thisDesigners) {
+      
+          createNode({
+            mother: idNameArea,
+            attribute: { desid: designer.desid, lastfilter: "none", important: designer.important ? "true" : "false" },
+            event: {
+              click: instance.normalWhiteCard(designer.desid),
+              dblclick: importantMarkingEvent(designer.desid),
+              contextmenu: designerSubMenuEvent(designer.desid, designer.designer),
+            },
+            class: [ standardCaseClassName ],
+            style: {
+              display: "flex",
+              flexDirection: "row",
+              position: "relative",
+              height: String(idNameHeight) + ea,
+              justifyContent: "center",
+              alignItems: "start",
+              cursor: "pointer",
+            },
+            children: standards.values[designer.desid].map(({ value, name }, index) => {
+              return {
+                style: {
+                  display: "inline-flex",
+                  flexDirection: "row",
+                  position: "relative",
+                  justifyContent: "center",
+                  alignItems: "start",
+                  width: String(standards.columns[index].width) + ea,
+                },
+                child: {
+                  class: [ valueTargetClassName ],
+                  attribute: { name },
+                  text: value,
+                  style: {
+                    position: "relative",
+                    transition: "all 0.3s ease",
+                    fontSize: String(fontSize) + ea,
+                    fontWeight: String(fontWeight),
+                    color: colorChip.black,
+                  },
+                  next: {
+                    class: [ importantCircleClassName ],
+                    attribute: { toggle: designer.important ? "on" : "off" },
+                    mode: "svg",
+                    source: instance.mother.returnCircle("", colorChip.red),
+                    style: {
+                      display: designer.important ? "inline-block" : "none",
+                      position: "absolute",
+                      transform: "scale(0.4)",
+                      transformOrigin: "100% 0%",
+                      right: String(index === 0 ? 0 : circleRight) + ea,
+                      top: String(circleTop) + ea,
+                      zIndex: String(0),
+                    }
+                  }
+                }
+              }
+            })
+          });
+          if (projects.length >= 3) {
+            for (let i = 1; i < projects.length; i++) {
+              createNode({
+                mother: idNameArea,
+                attribute: { desid: designer.desid, lastfilter: "none", important: designer.important ? "true" : "false" },
+                event: {
+                  click: instance.normalWhiteCard(designer.desid),
+                },
+                class: [ standardCaseClassName ],
+                style: {
+                  display: "flex",
+                  flexDirection: "row",
+                  position: "relative",
+                  height: String(idNameHeight) + ea,
+                  justifyContent: "center",
+                  alignItems: "start",
+                  cursor: "pointer",
+                },
+                children: standards.values[designer.desid].map(({ value, name }, index) => {
+                  return {
+                    style: {
+                      display: "inline-flex",
+                      flexDirection: "row",
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "start",
+                      width: String(standards.columns[index].width) + ea,
+                    },
+                    child: {
+                      class: [ valueTargetClassName ],
+                      style: {
+                        position: "relative",
+                        transition: "all 0.3s ease",
+                        fontSize: String(fontSize) + ea,
+                        fontWeight: String(fontWeight),
+                        color: colorChip.black,
+                      },
+                    }
+                  }
+                })
+              });
+            }
+          } else {
+            for (let i = 1; i < 3; i++) {
+              createNode({
+                mother: idNameArea,
+                attribute: { desid: designer.desid, lastfilter: "none", important: designer.important ? "true" : "false" },
+                event: {
+                  click: instance.normalWhiteCard(designer.desid),
+                },
+                class: [ standardCaseClassName ],
+                style: {
+                  display: "flex",
+                  flexDirection: "row",
+                  position: "relative",
+                  height: String(idNameHeight) + ea,
+                  justifyContent: "center",
+                  alignItems: "start",
+                  cursor: "pointer",
+                },
+                children: standards.values[designer.desid].map(({ value, name }, index) => {
+                  return {
+                    style: {
+                      display: "inline-flex",
+                      flexDirection: "row",
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "start",
+                      width: String(standards.columns[index].width) + ea,
+                    },
+                    child: {
+                      class: [ valueTargetClassName ],
+                      style: {
+                        position: "relative",
+                        transition: "all 0.3s ease",
+                        fontSize: String(fontSize) + ea,
+                        fontWeight: String(fontWeight),
+                        color: colorChip.black,
+                      },
+                    }
+                  }
+                })
+              });
+            }
+          }
+
+          // bar -------------------------------------------------------------------------------------------
+          createNode({
+            mother: idNameArea,
+            class: [ standardCaseClassName ],
+            style: {
+              display: "flex",
+              flexDirection: "row",
+              position: "relative",
+              height: String(idNameHeight) + ea,
+              justifyContent: "center",
+              alignItems: "start",
+              cursor: "pointer",
+            },
+            children: standards.values[designer.desid].map(({ value, name }, index) => {
+              if (index === 0) {
+                return {
+                  style: {
+                    display: "inline-flex",
+                    flexDirection: "row",
+                    position: "relative",
+                    justifyContent: "center",
+                    alignItems: "start",
+                    width: String(standards.columns[index].width) + ea,
+                  },
+                  child: {
+                    style: {
+                      position: "absolute",
+                      top: String(idNameLineTop) + ea,
+                      width: String(idNameLineWidth) + ea,
+                      left: String(0),
+                      borderBottom: "1px dashed " + colorChip.gray4,
+                    },
+                  }
+                }
+              } else {
+                return {
+                  style: {
+                    display: "inline-flex",
+                    flexDirection: "row",
+                    position: "relative",
+                    justifyContent: "center",
+                    alignItems: "start",
+                    width: String(standards.columns[index].width) + ea,
+                  },
+                  child: {
+                    class: [ valueTargetClassName ],
+                    style: {
+                      position: "relative",
+                      transition: "all 0.3s ease",
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.black,
+                    },
+                  }
+                }
+              }
+            })
+          });
+          // bar -------------------------------------------------------------------------------------------
+
+          if (projects.length >= 3) {
+
+            for (let p = 0; p < projects.length; p++) {
+              thisTong = createNode({
+                mother: valueArea,
+                attribute: { desid: designer.desid, lastfilter: "none" },
+                class: [ moveTargetClassName, valueCaseClassName, designer.desid ],
+                event: {
+                  mouseenter: hoverEvent(),
+                  mouseleave: hoverOutEvent(),
+                },
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(maxWidth) + ea,
+                  height: String(idNameHeight) + ea,
+                  flexDirection: "row",
+                  alignItems: "start",
+                  justifyContent: "start",
+                  paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
+                  cursor: "pointer",
+                }
+              })
+              for (let i = 0; i < columns.length; i++) {
+                createNode({
+                  mother: thisTong,
+                  style: {
+                    display: "inline-flex",
+                    flexDirection: "row",
+                    position: "relative",
+                    justifyContent: "center",
+                    alignItems: "start",
+                    width: String(columns[i].width) + ea,
+                  },
+                  child: {
+                    style: {
+                      display: "inline-block",
+                      width: String(90) + '%',
+                      position: "relative",
+                      overflow: "hidden",
+                      textAlign: "center",
+                    },
+                    child: {
+                      style: {
+                        display: "flex",
+                        width: String(valueMaxWidth) + ea,
+                        position: "relative",
+                        left: withOut(50, valueMaxWidth / 2, ea),
+                        textAlign: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      },
+                      child: {
+                        attribute: {
+                          desid: designer.desid,
+                          name: values[designer.desid][i][p].name,
+                        },
+                        class: [ valueTargetClassName ],
+                        text: String(values[designer.desid][i][p].value),
+                        style: {
+                          position: "relative",
+                          transition: "all 0.1s ease",
+                          fontSize: String(fontSize) + ea,
+                          fontWeight: String(valueWeight),
+                          color: colorChip.black,
+                        }
+                      }
+                    }
+                  }
+                });
+              }
+            }
+
+          } else {
+
+            for (let p = 0; p < projects.length; p++) {
+              thisTong = createNode({
+                mother: valueArea,
+                attribute: { desid: designer.desid, lastfilter: "none" },
+                class: [ moveTargetClassName, valueCaseClassName, designer.desid ],
+                event: {
+                  mouseenter: hoverEvent(),
+                  mouseleave: hoverOutEvent(),
+                },
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(maxWidth) + ea,
+                  height: String(idNameHeight) + ea,
+                  flexDirection: "row",
+                  alignItems: "start",
+                  justifyContent: "start",
+                  paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
+                  cursor: "pointer",
+                }
+              })
+              for (let i = 0; i < columns.length; i++) {
+                createNode({
+                  mother: thisTong,
+                  style: {
+                    display: "inline-flex",
+                    flexDirection: "row",
+                    position: "relative",
+                    justifyContent: "center",
+                    alignItems: "start",
+                    width: String(columns[i].width) + ea,
+                  },
+                  child: {
+                    style: {
+                      display: "inline-block",
+                      width: String(90) + '%',
+                      position: "relative",
+                      overflow: "hidden",
+                      textAlign: "center",
+                    },
+                    child: {
+                      style: {
+                        display: "flex",
+                        width: String(valueMaxWidth) + ea,
+                        position: "relative",
+                        left: withOut(50, valueMaxWidth / 2, ea),
+                        textAlign: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      },
+                      child: {
+                        attribute: {
+                          desid: designer.desid,
+                          name: values[designer.desid][i][p].name,
+                        },
+                        class: [ valueTargetClassName ],
+                        text: String(values[designer.desid][i][p].value),
+                        style: {
+                          position: "relative",
+                          transition: "all 0.1s ease",
+                          fontSize: String(fontSize) + ea,
+                          fontWeight: String(valueWeight),
+                          color: colorChip.black,
+                        }
+                      }
+                    }
+                  }
+                });
+              }
+            }
+            for (let p = 0; p < 3 - projects.length; p++) {
+              thisTong = createNode({
+                mother: valueArea,
+                attribute: { desid: designer.desid, lastfilter: "none" },
+                class: [ moveTargetClassName, valueCaseClassName, designer.desid ],
+                event: {
+                  mouseenter: hoverEvent(),
+                  mouseleave: hoverOutEvent(),
+                },
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(maxWidth) + ea,
+                  height: String(idNameHeight) + ea,
+                  flexDirection: "row",
+                  alignItems: "start",
+                  justifyContent: "start",
+                  paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
+                  cursor: "pointer",
+                }
+              })
+              for (let i = 0; i < columns.length; i++) {
+                createNode({
+                  mother: thisTong,
+                  style: {
+                    display: "inline-flex",
+                    flexDirection: "row",
+                    position: "relative",
+                    justifyContent: "center",
+                    alignItems: "start",
+                    width: String(columns[i].width) + ea,
+                  },
+                  child: {
+                    style: {
+                      display: "inline-block",
+                      width: String(90) + '%',
+                      position: "relative",
+                      overflow: "hidden",
+                      textAlign: "center",
+                    },
+                    child: {
+                      style: {
+                        display: "flex",
+                        width: String(valueMaxWidth) + ea,
+                        position: "relative",
+                        left: withOut(50, valueMaxWidth / 2, ea),
+                        textAlign: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      },
+                      child: {
+                        attribute: {
+                          desid: designer.desid,
+                        },
+                        class: [ valueTargetClassName ],
+                        text: "",
+                        style: {
+                          position: "relative",
+                          transition: "all 0.1s ease",
+                          fontSize: String(fontSize) + ea,
+                          fontWeight: String(valueWeight),
+                          color: colorChip.black,
+                        }
+                      }
+                    }
+                  }
+                });
+              }
+            }
+
+          }
+
+          // bar -------------------------------------------------------------------------------------------
+          thisTong = createNode({
+            mother: valueArea,
+            attribute: { desid: designer.desid, lastfilter: "none" },
+            class: [ moveTargetClassName, valueCaseClassName, designer.desid ],
+            event: {
+              mouseenter: hoverEvent(),
+              mouseleave: hoverOutEvent(),
+            },
+            style: {
+              display: "flex",
+              position: "relative",
+              width: String(maxWidth) + ea,
+              height: String(idNameHeight) + ea,
+              flexDirection: "row",
+              alignItems: "start",
+              justifyContent: "start",
+              paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
+              cursor: "pointer",
+            }
+          });
+          createNode({
+            mother: thisTong,
+            style: {
+              display: "inline-flex",
+              flexDirection: "row",
+              position: "relative",
+              justifyContent: "center",
+              alignItems: "start",
+              width: String(valueLineMaxWidth) + ea,
+            },
+            child: {
+              style: {
+                position: "absolute",
+                top: String(idNameLineTop) + ea,
+                width: String(valueLineMaxWidth) + ea,
+                left: String(valueLineLeft) + ea,
+                borderBottom: "1px dashed " + colorChip.gray3,
+              },
+            }
+          });
+          // bar -------------------------------------------------------------------------------------------
+
+        }
+    
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    await careContentsLoad(false);
+    this.careContentsLoad = careContentsLoad;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DesignerJs.prototype.reloadProjects = function (serverResponse) {
+  const instance = this;
+  let projects, clients, designers, history;
+  let proid, cliid, desid, service;
+  let thisClient, thisDesigner, thisHistory;
+  let clientHistory, thisClientHistory;
+  let rawContents, rawContent;
+  let requestNumber;
+  let sendStatus, sendSchedule, sendFile;
+  let thisSendStatus, thisSendSchedule, thisSendFile;
+
+  projects = serverResponse.projects;
+  clients = serverResponse.clients;
+  designers = serverResponse.designers;
+  history = serverResponse.history;
+  clientHistory = serverResponse.clientHistory;
+  rawContents = serverResponse.rawContents;
+  sendStatus = serverResponse.sendStatus;
+  sendSchedule = serverResponse.sendSchedule;
+  sendFile = serverResponse.sendFile;
+
+  for (let project of projects) {
+    ({ proid, cliid, desid, service } = project);
+
+    thisClient = clients.find((obj) => { return obj.cliid === cliid });
+    thisDesigner = designers.find((obj) => { return obj.desid === desid });
+    thisHistory = history.find((obj) => {
+      return obj.proid === proid
+    });
+    thisClientHistory = clientHistory.find((obj) => {
+      return obj.cliid === thisClient.cliid
+    });
+    rawContent = rawContents.find((obj) => {
+      return obj.proid === proid
+    });
+
+    thisSendStatus = sendStatus.filter((obj) => { return obj.proid === proid });
+    thisSendSchedule = sendSchedule.filter((obj) => { return obj.proid === proid });
+    thisSendFile = sendFile.filter((obj) => { return obj.proid === proid });
+
+    requestNumber = 0;
+    for (let i = 0; i < thisClient.requests.length; i++) {
+      if (thisClient.requests[i].request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+        requestNumber = i;
+        break;
+      }
+    }
+
+    project.client = thisClient;
+    project.requestNumber = requestNumber;
+    project.designer = thisDesigner;
+    project.history = thisHistory;
+    project.clientHistory = thisClientHistory;
+    project.name = thisClient.name;
+    project.phone = thisClient.phone;
+    if (rawContent !== undefined) {
+      project.rawDate = rawContent.date;
+    } else {
+      project.rawDate = new Date(1800, 0, 1);
+    }
+    if (thisSendStatus.length > 0) {
+      thisSendStatus.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+      project.sendStatus = thisSendStatus[0].date;
+    } else {
+      project.sendStatus = new Date(1800, 0, 1);
+    }
+    if (thisSendSchedule.length > 0) {
+      thisSendSchedule.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+      project.sendSchedule = thisSendSchedule[0].date;
+    } else {
+      project.sendSchedule = new Date(1800, 0, 1);
+    }
+    if (thisSendFile.length > 0) {
+      thisSendFile.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+      project.sendFile = thisSendFile[0].date;
+    } else {
+      project.sendFile = new Date(1800, 0, 1);
+    }
+
+  }
+
+  if (projects.length !== 1) {
+    projects = projects.filter((obj) => {
+      return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
+    });
+  }
+
+  this.clientHistory = clientHistory;
+  this.history = history;
+  this.projects = projects;
+}
+
+DesignerJs.prototype.careView = async function () {
+  const instance = this;
+  const { ea, totalContents } = this;
+  const { createNode, withOut, colorChip, ajaxJson, returnGet, cleanChildren, ajaxMultiple } = GeneralJs;
+  try {
+    const getObj = returnGet();
+    const emptyDate = () => { return new Date(1800, 0, 1) };
+    const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+    let loading;
+    let serverResponse;
+    let projects;
+    let clients, designers;
+    let proidArr;
+    let history;
+    let clientHistory;
+    let cliidArr;
+    let secondRes;
+    let matrix;
+
+    loading = await this.mother.loadingRun();
+
+    if (instance.totalMother !== null && instance.totalMother !== undefined) {
+      totalContents.removeChild(instance.totalMother);
+    }
+
+    ({ projects, clients } = await ajaxJson({ mode: "pre", searchMode: (typeof getObj.proid === "string" ? getObj.proid : "false") }, BACKHOST + "/processConsole", { equal: true }));
+    proidArr = projects.map((p) => { return p.proid });
+    cliidArr = clients.map((c) => { return c.cliid });
+
+    matrix = await ajaxMultiple([
+      [ { noFlat: true, whereQuery: {} }, BACKHOST + "/getDesigners" ],
+      [ { method: "project", idArr: proidArr }, BACKHOST + "/getHistoryTotal" ],
+      [ { method: "client", idArr: cliidArr }, BACKHOST + "/getHistoryTotal" ],
+      [ { proidArr }, SECONDHOST + "/getProcessData" ],
+    ]);
+
+    designers = matrix[0];
+    history = Object.values(matrix[1]);
+    clientHistory = Object.values(matrix[2]);
+    secondRes = matrix[3];
+
+    serverResponse = {
+      projects,
+      clients,
+      designers,
+      history,
+      clientHistory,
+      rawContents: secondRes.rawContents,
+      sendStatus: secondRes.sendStatus,
+      sendSchedule: secondRes.sendSchedule,
+      sendFile: secondRes.sendFile
+    }
+
+    this.reloadProjects(serverResponse);
+    this.designers = designers;
+
+    this.contents = null;
+    ajaxJson({}, SECONDHOST + "/getChecklist").then((contents) => {
+      instance.contents = contents;
+      instance.panContents = this.contents.map((obj) => { return obj.children }).flat();
+      instance.panList = [];
+      instance.itemList = [];
+      instance.panNumbers = [];
+      instance.naviHeight = 0;
+      instance.nowUploading = false;
+      instance.menuArea = null;
+    }).catch((err) => {
+      window.location.reload();
+    })
+
+    this.matrix = [];
+    this.names = [];
+    this.bigDoms = [];
+    this.clientDoms = [];
+    this.totalValues = [];
+    this.totalNumbers = [];
+    this.onofflineWordsClassName = "onofflineWordsClassName";
+    this.numbersExtractClassName = "numbersExtractClassName";
+
+    await this.careBase();
+
+
+
+
+
+
+
+
+    loading.parentNode.removeChild(loading);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DesignerJs.prototype.numbersView = async function () {
+  const instance = this;
+  const { ea, totalContents } = this;
+  const { createNode, withOut, colorChip, ajaxJson, returnGet, cleanChildren } = GeneralJs;
+  try {
+    const getObj = returnGet();
+    let loading;
+
+    loading = await this.mother.loadingRun();
+
+    if (instance.totalMother !== null && instance.totalMother !== undefined) {
+      totalContents.removeChild(instance.totalMother);
+    }
+
+
+
+
+
+
+
+
+
+
+    loading.parentNode.removeChild(loading);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.normalView = async function () {
   const instance = this;
+  const { ea, totalContents } = this;
+  const { createNode, withOut, colorChip, ajaxJson, returnGet, cleanChildren } = GeneralJs;
   try {
-    const { colorChip, ajaxJson, returnGet } = GeneralJs;
     const getObj = returnGet();
     let loading;
     let designers;
@@ -3885,6 +5552,10 @@ DesignerJs.prototype.normalView = async function () {
     let execFunc;
 
     loading = await this.mother.loadingRun();
+
+    if (instance.totalMother !== null && instance.totalMother !== undefined) {
+      totalContents.removeChild(instance.totalMother);
+    }
 
     designers = await ajaxJson({ noFlat: true, whereQuery: {} }, BACKHOST + "/getDesigners", { equal: true });
     histories = await ajaxJson({
@@ -3930,6 +5601,7 @@ DesignerJs.prototype.normalView = async function () {
     await this.normalMessageEvent();
     await this.normalExtractEvent();
     await this.normalReportEvent();
+    await this.normalSubPannel();
     this.communicationRender();
 
     window.addEventListener("popstate", (event) => {

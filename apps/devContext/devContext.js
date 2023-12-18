@@ -162,6 +162,11 @@ DevContext.prototype.launching = async function () {
     
 
 
+
+
+
+
+
     
 
     
@@ -6896,9 +6901,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "최보윤",
-    //     designer: "윤지숙",
-    //     link: "https://drive.google.com/drive/folders/1LIplVSuFqzoRt2t6ycpDL_M6apANFdjn",
+    //     client: "박영화",
+    //     designer: "김지혜",
+    //     link: "https://drive.google.com/drive/folders/1_RwX0ja7qOSL8qYfehatj6RVM9O_sgy9",
     //     pay: true
     //   },
     // ]);
@@ -6908,8 +6913,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "최보윤",
-    //     designer: "윤지숙",
+    //     client: "박영화",
+    //     designer: "김지혜",
     //   },
     // ]);
 
@@ -6973,7 +6978,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2311_aa01s" ]);
+    // await work.newDesignerToFront([ "d2312_aa02s" ]);
 
 
     // new designer set proposal setting
