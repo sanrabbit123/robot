@@ -3999,13 +3999,13 @@ DesignerJs.prototype.careDataRender = async function () {
       },
       {
         title: "시작일",
-        width: 100,
+        width: 110,
         name: "startDate",
         type: "date",
       },
       {
         title: "종료일",
-        width: 100,
+        width: 110,
         name: "endDate",
         type: "date",
       },
