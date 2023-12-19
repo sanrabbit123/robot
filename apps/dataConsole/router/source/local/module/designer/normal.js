@@ -3936,7 +3936,7 @@ DesignerJs.prototype.normalSubPannel = async function () {
 DesignerJs.prototype.careDataRender = async function () {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows, profileList, workList, representativeList } = this;
-  const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute, equalJson } = GeneralJs;
+  const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute, equalJson, serviceParsing } = GeneralJs;
   try {
     let columns;
     let values;
@@ -4009,6 +4009,24 @@ DesignerJs.prototype.careDataRender = async function () {
         name: "endDate",
         type: "date",
       },
+      {
+        title: "온오프",
+        width: 100,
+        name: "onoff",
+        type: "string",
+      },
+      {
+        title: "서비스",
+        width: 120,
+        name: "service",
+        type: "string",
+      },
+      {
+        title: "주소",
+        width: 140,
+        name: "address",
+        type: "string",
+      },
     ];
 
     values = {};
@@ -4043,6 +4061,9 @@ DesignerJs.prototype.careDataRender = async function () {
         [],
         [],
         [],
+        [],
+        [],
+        [],
       ];
 
       for (let p of projects) {
@@ -4061,6 +4082,18 @@ DesignerJs.prototype.careDataRender = async function () {
         values[designer.desid][3].push({
           value: dateToString(p.process.contract.form.date.to),
           name: "endDate",
+        });
+        values[designer.desid][4].push({
+          value: serviceParsing(p.service).split(" ").slice(0, 1).join(" "),
+          name: "onoff",
+        });
+        values[designer.desid][5].push({
+          value: serviceParsing(p.service).split(" ").slice(1, -1).join(" "),
+          name: "service",
+        });
+        values[designer.desid][6].push({
+          value: p.client.requests[p.requestNumber].request.space.address.slice(0, 10),
+          name: "service",
         });
       }
       
@@ -4178,10 +4211,10 @@ DesignerJs.prototype.careBase = async function () {
 
     smallTextSize = 12;
     smallTextTop = -10;
-    smallLineHeight = 1.6;
+    smallLineHeight = 1.61;
 
     blankIconRight = 0;
-    blankIconTop = 14;
+    blankIconTop = 15;
     blankIconWidth = 10;
 
     ({ thisDesigners, standards, columns, values } = await this.careDataRender());
@@ -5677,6 +5710,16 @@ DesignerJs.prototype.normalView = async function () {
     if (typeof getObj.desid === "string" && /^d/gi.test(getObj.desid)) {
       execFunc = instance.normalWhiteCard(getObj.desid);
       await execFunc(new Event("click", { bubbles: true }));
+    }
+
+    if (typeof getObj.type === "string") {
+      if (getObj.type === "project" || getObj.type === "care") {
+        await instance.careView();
+      } else if (getObj.type === "report" || getObj.type === "date") {
+        await instance.numbersView();
+      } else {
+        // pass
+      }
     }
 
   } catch (e) {

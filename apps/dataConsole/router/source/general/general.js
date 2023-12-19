@@ -5348,6 +5348,17 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
   let pending;
   let certification;
   let loader;
+  let randomArr;
+  let randomValue;
+  let randomValueAjaxData;
+  let randomKey;
+  let randomStr;
+  let div_back, div_clone, div_clone2, svg_clone;
+  let input_back, input_clone;
+  let height, width, ea = (boo === "desktop") ? "px" : "vw";
+  let wordWidth, whiteWidth, whiteHeight;
+  let style = {};
+  let endEvent;
 
   pending = "pending_svgIcon";
   certification = "certification_svgIcon";
@@ -5358,12 +5369,6 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
   SvgTong["certification_svgIcon"] = '<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 284.934 20.903"><path d="M4.485 20.837v-5.391H0v-1.914h18.456v1.914h-4.571v5.391h-2.35v-5.391H6.835v5.391H4.485zM1.1 5.148V3.234h16.3v1.914H1.1zM9.271 12.476c-3.751 0-6.425-1.254-6.425-3.256 0-2.003 2.673-3.278 6.425-3.278s6.425 1.275 6.425 3.278C15.696 11.222 13.022 12.476 9.271 12.476zM9.271 7.768c-2.091 0-3.945 0.418-3.945 1.452 0 1.012 1.854 1.43 3.945 1.43 2.07 0 3.924-0.418 3.924-1.43C13.195 8.186 11.341 7.768 9.271 7.768zM5.67 0.176h7.137v1.959H5.67V0.176z" fill="' + GeneralJs.colorChip.darkShadow + '"/><path d="M28.847 15.183c-1.703 0.396-4.355 0.572-6.834 0.572h-2.048V2.53h7.697v1.937c-1.768 0-3.579-0.022-5.326-0.022v9.33c2.566 0 4.657-0.177 6.209-0.528L28.847 15.183zM34.259 20.859V10.298h-2.07v9.549h-2.221V0.418h2.221v7.877h2.07V0h2.264v20.859H34.259z" fill="' + GeneralJs.colorChip.darkShadow + '"/><path d="M38.592 13.202v-1.914h7.999V9.22H40.403V7.283h3.083L42.925 3.696l2.307-0.264 0.453 3.851h4.162l0.517-3.873 2.329 0.353 -0.647 3.521h3.105v1.937H48.941v2.068h8.107v1.914H38.592zM40.36 2.751V0.836H55.172v1.915H40.36zM40.963 20.265V14.5h2.35v3.829h11.6v1.936H40.963z" fill="' + GeneralJs.colorChip.darkShadow + '"/><path d="M69.229 11.75c-3.126 0-5.261-2.112-5.261-5.083s2.113-5.127 5.261-5.127c3.126 0 5.239 2.135 5.239 5.105C74.468 9.615 72.355 11.75 69.229 11.75zM69.229 3.543c-1.746 0-2.911 1.342-2.911 3.103 0 1.716 1.165 3.08 2.911 3.08 1.79 0 2.889-1.364 2.889-3.08C72.118 4.818 71.018 3.543 69.229 3.543zM66.685 20.265v-6.557h2.35v4.621h11.643v1.936H66.685zM77.853 15.139V0h2.35v15.139H77.853z" fill="' + GeneralJs.colorChip.darkShadow + '"/><path d="M101.138 11.882H82.682V9.945h18.456V11.882zM99.197 8.625c-3.062-0.374-6.167-2.134-7.266-4.114 -0.949 2.046-3.881 3.763-7.266 4.137l-1.013-1.893c3.212-0.198 6.274-1.672 6.942-3.982h-6.059V0.836h14.791v1.937h-6.016c0.755 2.311 4.161 3.784 6.921 3.961L99.197 8.625zM91.931 20.793c-4.528 0-7.093-1.518-7.093-3.807 0-2.288 2.565-3.828 7.072-3.828s7.093 1.54 7.093 3.828C99.003 19.275 96.416 20.793 91.931 20.793zM91.91 15.095c-2.868 0-4.657 0.704-4.657 1.892 0 1.211 1.79 1.87 4.657 1.87 2.889 0 4.679-0.659 4.679-1.87C96.588 15.799 94.799 15.095 91.91 15.095z" fill="' + GeneralJs.colorChip.darkShadow + '"/><path d="M102.71 11.706V1.32h2.372v3.389h4.765V1.299h2.35v10.407H102.71zM109.847 6.602h-4.765v3.212h4.765V6.602zM105.47 20.265v-6.513h2.35v4.577h11.449v1.936H105.47zM113.254 7.701V5.699h3.191V0h2.35v15.16h-2.35V7.701H113.254z" fill="' + GeneralJs.colorChip.darkShadow + '"/><path d="M121.273 18.373v-1.937h8.021v-2.332c-3.191-0.286-5.174-1.65-5.174-3.675 0-2.288 2.522-3.763 6.403-3.763s6.382 1.475 6.382 3.763c0 2.046-2.026 3.433-5.261 3.675v2.332h8.085v1.937H121.273zM122.416 5.809V3.873h16.17v1.936H122.416zM130.523 8.516c-2.134 0-4.032 0.616-4.032 1.914 0 1.276 1.897 1.914 4.032 1.914 2.135 0 4.01-0.638 4.01-1.914C134.533 9.132 132.658 8.516 130.523 8.516zM126.857 0.639h7.266v1.914h-7.266V0.639z" fill="' + GeneralJs.colorChip.darkShadow + '"/><path d="M140.57 11.376V9.571h18.456v1.805H140.57zM142.92 20.705v-4.818h11.406v-1.408h-11.47v-1.738h13.82v4.818h-11.405v1.431h11.944v1.716H142.92zM143.006 8.317V3.631h11.189V2.311h-11.233V0.55h13.583v4.709H145.356v1.298h11.644v1.761H143.006z" fill="' + GeneralJs.colorChip.darkShadow + '"/><path d="M171.165 10.605c-2.954 0-5.218-1.804-5.218-4.73 0-2.86 2.264-4.929 5.218-4.929 2.975 0 5.238 2.002 5.238 4.929S174.139 10.605 171.165 10.605zM171.165 2.927c-1.617 0-2.868 1.122-2.868 2.904 0 1.76 1.272 2.794 2.868 2.794 1.616 0 2.889-1.034 2.889-2.794C174.053 4.005 172.825 2.927 171.165 2.927zM168.857 20.595v-8.295h2.351v2.179h8.646v-2.223h2.351v8.339H168.857zM179.853 16.393h-8.646v2.267h8.646V16.393zM179.832 11.156V0h2.35v11.156H179.832z" fill="' + GeneralJs.colorChip.darkShadow + '"/><path d="M195.505 11.244c-2.437 0.483-4.484 0.527-7.396 0.527h-2.674V5.325h6.598V3.059h-6.619V1.166h8.97v6.007h-6.598v2.685c2.264 0 4.938 0 7.417-0.484L195.505 11.244zM201.5 13.752v7.151h-2.351v-5.237h-11.535v-1.914H201.5zM195.85 2.904h3.277V0h2.35v12.608h-2.35V9.264h-3.277V7.306h3.277V4.863h-3.277V2.904z" fill="' + GeneralJs.colorChip.darkShadow + '"/><path d="M203.762 4.973h10.177V6.953H203.762V4.973zM208.958 16.129c-2.609 0-4.398-1.738-4.398-4.049 0-2.509 1.789-4.093 4.398-4.093 2.608 0 4.398 1.628 4.398 4.093C213.357 14.522 211.567 16.129 208.958 16.129zM206.177 1.563h5.541v2.002h-5.541V1.563zM208.958 9.901c-1.315 0-2.243 0.88-2.243 2.179 0 1.276 0.928 2.134 2.243 2.134 1.293 0 2.242-0.901 2.242-2.134C211.201 10.781 210.251 9.901 208.958 9.901zM218.941 20.859V10.496h-2.027v9.373h-2.221V0.418h2.221v8.075h2.027V0h2.242v20.859H218.941z" fill="' + GeneralJs.colorChip.darkShadow + '"/><path d="M231.273 20.837V13.422h-8.021v-1.914h18.455v1.914h-8.085v7.415H231.273zM233.774 2.795c0.409 2.574 4.01 4.466 7.071 4.796l-1.057 1.893c-2.867-0.418-6.252-2.376-7.287-4.312 -0.992 2.046-4.291 3.938-7.309 4.4l-1.122-1.892c3.148-0.33 6.771-2.289 7.18-4.885h-6.295V0.858h15.027v1.937H233.774z" fill="' + GeneralJs.colorChip.darkShadow + '"/><path d="M251.539 15.688c-1.444-0.946-3.277-3.146-3.881-5.303 -0.496 2.267-2.135 4.576-4.097 5.853l-1.423-1.65c2.479-1.649 4.377-4.95 4.377-9.241V2.068h2.264v3.257c0 3.982 1.725 7.194 4.118 8.691L251.539 15.688zM253.522 19.869V9.285h-2.932V7.283h2.932V0.418h2.221v19.451H253.522zM257.533 20.859V0h2.242v20.859H257.533z" fill="' + GeneralJs.colorChip.darkShadow + '"/><path d="M261.844 18.219v-1.914h4.269v-3.631l2.372-0.021v3.652h5.109v-3.652l2.351 0.021v3.631h4.354V18.219H261.844zM271.072 12.124c-4.441 0-7.396-2.2-7.396-5.347s2.954-5.369 7.396-5.369c4.484 0 7.417 2.223 7.417 5.369S275.556 12.124 271.072 12.124zM271.072 3.389c-3.019 0-5.002 1.364-5.002 3.389 0 2.002 1.983 3.366 5.002 3.366s5.023-1.364 5.023-3.366C276.095 4.753 274.112 3.389 271.072 3.389z" fill="' + GeneralJs.colorChip.darkShadow + '"/><path d="M282.304 1.452h2.63l-0.28 11.948h-2.048L282.304 1.452zM282.369 15.755h2.522v2.53h-2.522V15.755z" fill="' + GeneralJs.colorChip.darkShadow + '"/></svg>';
 
   SvgTong["loader_svgIcon"] = '<svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 566.929 566.929"><path d="M196.13 552.859c-23.91-7.75-37.01-33.409-29.26-57.31l0 0c7.74-23.9 33.4-37.01 57.31-29.26l0 0c23.9 7.74 37 33.399 29.26 57.31l0 0c-6.24 19.25-24.08 31.49-43.28 31.49l0 0C205.52 555.09 200.79 554.37 196.13 552.859z" fill="' + GeneralJs.colorChip.green + '"/><path d="M313.729 523.569C305.96 499.67 319.04 474 342.939 466.229l0 0c23.891-7.77 49.561 5.301 57.33 29.2l0 0c7.771 23.9-5.3 49.57-29.2 57.34l0 0c-4.67 1.521-9.409 2.24-14.069 2.24l0 0C337.819 555.01 319.979 542.79 313.729 523.569z" fill="' + GeneralJs.colorChip.green + '"/><path d="M54.55 450.109c-14.81-20.3-10.35-48.76 9.96-63.569l0 0c20.3-14.8 48.77-10.34 63.57 9.97l0 0c14.8 20.3 10.34 48.76-9.96 63.56l0 0c-8.09 5.9-17.47 8.74-26.77 8.74l0 0C77.31 468.81 63.45 462.33 54.55 450.109z" fill="' + GeneralJs.colorChip.green + '"/><path d="M449 459.899c-20.33-14.779-24.82-43.239-10.03-63.56l0 0c14.78-20.32 43.23-24.81 63.561-10.03l0 0c20.319 14.78 24.81 43.24 10.029 63.561l0 0c-8.91 12.239-22.779 18.739-36.84 18.739l0 0C466.439 468.609 457.069 465.78 449 459.899z" fill="' + GeneralJs.colorChip.green + '"/><path d="M0.33 283.77C0.3 258.64 20.65 238.25 45.78 238.22l0 0c25.13-0.03 45.52 20.32 45.55 45.45l0 0C91.35 308.8 71 329.189 45.88 329.22l0 0c-0.02 0-0.03 0-0.05 0l0 0C20.72 329.22 0.35 308.88 0.33 283.77z" fill="' + GeneralJs.colorChip.green + '"/><path d="M475.6 283.46L475.6 283.46c0-0.01 0-0.03 0-0.05l0 0c0-0.12 0-0.24 0-0.36l0 0C475.55 257.92 495.87 237.51 521 237.45l0 0c25.13-0.05 45.55 20.28 45.6 45.41l0 0c0 0.12 0 0.24 0 0.36l0 0c0 0.08 0 0.16 0 0.24l0 0c0 25.13-20.37 45.5-45.5 45.5l0 0C495.97 328.96 475.6 308.59 475.6 283.46z" fill="' + GeneralJs.colorChip.green + '"/><path d="M0.33 283.76v0.01l0 0 0 0 0 0C0.33 283.76 0.33 283.76 0.33 283.76z" fill="' + GeneralJs.colorChip.green + '"/><path d="M64.29 180.85c-20.34-14.76-24.86-43.21-10.1-63.55l0 0C68.95 96.96 97.41 92.44 117.74 107.2l0 0c20.34 14.76 24.86 43.22 10.1 63.55l0 0c-8.9 12.27-22.78 18.78-36.86 18.78l0 0C81.71 189.53 72.36 186.71 64.29 180.85z" fill="' + GeneralJs.colorChip.green + '"/><path d="M438.729 170.26c-14.83-20.29-10.399-48.76 9.891-63.59l0 0c20.29-14.82 48.76-10.39 63.58 9.9l0 0 0 0 0 0c14.83 20.29 10.399 48.75-9.891 63.58l0 0c-8.1 5.92-17.5 8.77-26.81 8.77l0 0C461.47 188.92 447.64 182.45 438.729 170.26z" fill="' + GeneralJs.colorChip.green + '"/><path d="M166.43 71.62C158.63 47.73 171.67 22.05 195.57 14.25l0 0c23.89-7.8 49.57 5.25 57.37 29.14l0 0c7.79 23.89-5.26 49.57-29.14 57.37l0 0c-4.69 1.53-9.45 2.26-14.13 2.26l0 0C190.52 103.02 172.69 90.82 166.43 71.62z" fill="' + GeneralJs.colorChip.green + '"/><path d="M342.56 100.57h-0.01c-23.91-7.72-37.04-33.36-29.32-57.27l0 0C320.95 19.38 346.6 6.25 370.51 13.98l0 0 0 0 0 0C394.42 21.69 407.55 47.34 399.83 71.25l0 0c-6.221 19.27-24.07 31.54-43.29 31.54l0 0C351.91 102.79 347.2 102.07 342.56 100.57z" fill="' + GeneralJs.colorChip.green + '"/><rect width="566.929" height="566.929" fill="none"/></svg>';
-
-  let randomArr;
-  let randomValue;
-  let randomValueAjaxData;
-  let randomKey;
-  let randomStr;
 
   try {
     if (GeneralJs.isIE()) {
@@ -5390,37 +5395,6 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
       randomValue += String(Math.floor(Math.random() * 10));
     }
   }
-
-  GeneralJs.ajaxJson({
-    name,
-    phone,
-    certification: randomValue
-  }, BACKHOST + "/sendCertification").catch((err) => {
-    GeneralJs.ajaxJson({
-      text: "인증번호 오류 (브라우저) => " + err.message,
-    }, LOGHOST + "/errorMessage").catch((err) => {});
-    GeneralJs.ajaxJson({
-      name,
-      phone,
-      certification: randomValue
-    }, BACKHOST + "/sendCertification").catch((err) => {
-      GeneralJs.ajaxJson({
-        name,
-        phone,
-        certification: randomValue
-      }, BACKHOST + "/sendCertification").catch((err) => {
-        window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
-        window.location.reload();
-      });
-    });
-  });
-
-  let div_back, div_clone, div_clone2, svg_clone;
-  let input_back, input_clone;
-  let height, width, ea = (boo === "desktop") ? "px" : "vw";
-  let wordWidth, whiteWidth, whiteHeight;
-  let style = {};
-  let endEvent;
 
   whiteWidth = (boo === "desktop") ? 334 : 77;
   whiteHeight = (boo === "desktop") ? 132 : 31;
@@ -5484,6 +5458,36 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
     div_clone.style[i] = style[i];
   }
   height = (boo === "desktop") ? 19 : 4.5;
+
+  GeneralJs.ajaxJson({
+    name,
+    phone,
+    certification: randomValue
+  }, BACKHOST + "/sendCertification").then((obj) => {
+    if (obj.message === "office") {
+      GeneralJs.setQueue(() => {
+        callback(div_back, div_clone);
+      }, 100);
+    }
+  }).catch((err) => {
+    GeneralJs.ajaxJson({
+      text: "인증번호 오류 (브라우저) => " + err.message,
+    }, LOGHOST + "/errorMessage").catch((err) => {});
+    GeneralJs.ajaxJson({
+      name,
+      phone,
+      certification: randomValue
+    }, BACKHOST + "/sendCertification").catch((err) => {
+      GeneralJs.ajaxJson({
+        name,
+        phone,
+        certification: randomValue
+      }, BACKHOST + "/sendCertification").catch((err) => {
+        window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+        window.location.reload();
+      });
+    });
+  });
 
   svg_clone = SvgTong.stringParsing(SvgTong["certification_svgIcon"]);
   wordWidth = SvgTong.getRatio(svg_clone) * height;
