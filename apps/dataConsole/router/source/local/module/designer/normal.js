@@ -4084,6 +4084,78 @@ DesignerJs.prototype.careDataRender = async function () {
         name: "address",
         type: "string",
       },
+      {
+        title: "평수",
+        width: 80,
+        name: "pyeong",
+        type: "string",
+      },
+      {
+        title: "계약 형태",
+        width: 100,
+        name: "contract",
+        type: "string",
+      },
+      {
+        title: "계약금",
+        width: 110,
+        name: "contractDate",
+        type: "date",
+      },
+      {
+        title: "잔금",
+        width: 110,
+        name: "remainDate",
+        type: "date",
+      },
+      {
+        title: "디자인비",
+        width: 120,
+        name: "designFee",
+        type: "string",
+      },
+      {
+        title: "현장 미팅",
+        width: 110,
+        name: "meetingDate",
+        type: "date",
+      },
+      {
+        title: "상태 공유",
+        width: 110,
+        name: "sendStatus",
+        type: "date",
+      },
+      {
+        title: "디자인 제안",
+        width: 110,
+        name: "sendProposal",
+        type: "date",
+      },
+      {
+        title: "디자이너 글",
+        width: 110,
+        name: "sendContents",
+        type: "date",
+      },
+      {
+        title: "주소 전체",
+        width: 450,
+        name: "addressFull",
+        type: "string",
+      },
+      {
+        title: "연락처",
+        width: 120,
+        name: "phone",
+        type: "string",
+      },
+      {
+        title: "이메일",
+        width: 200,
+        name: "email",
+        type: "string",
+      },
     ];
 
     values = {};
@@ -4121,6 +4193,18 @@ DesignerJs.prototype.careDataRender = async function () {
         [],
         [],
         [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
       ];
 
       for (let p of projects) {
@@ -4150,7 +4234,55 @@ DesignerJs.prototype.careDataRender = async function () {
         });
         values[designer.desid][6].push({
           value: p.client.requests[p.requestNumber].request.space.address.slice(0, 10),
-          name: "service",
+          name: "address",
+        });
+        values[designer.desid][7].push({
+          value: String(p.client.requests[p.requestNumber].request.space.pyeong),
+          name: "pyeong",
+        });
+        values[designer.desid][8].push({
+          value: p.client.requests[p.requestNumber].request.space.contract,
+          name: "contract",
+        });
+        values[designer.desid][9].push({
+          value: dateToString(p.process.contract.first.date),
+          name: "contractDate",
+        });
+        values[designer.desid][10].push({
+          value: dateToString(p.process.contract.remain.date),
+          name: "remainDate",
+        });
+        values[designer.desid][11].push({
+          value: autoComma(p.process.contract.remain.calculation.amount.consumer) + "원",
+          name: "designFee",
+        });
+        values[designer.desid][12].push({
+          value: dateToString(p.process.contract.meeting.date),
+          name: "meetingDate",
+        });
+        values[designer.desid][13].push({
+          value: dateToString(p.sendStatus),
+          name: "sendStatus",
+        });
+        values[designer.desid][14].push({
+          value: dateToString(p.sendFile),
+          name: "sendProposal",
+        });
+        values[designer.desid][15].push({
+          value: dateToString(p.rawDate),
+          name: "sendContents",
+        });
+        values[designer.desid][16].push({
+          value: p.client.requests[p.requestNumber].request.space.address,
+          name: "addressFull",
+        });
+        values[designer.desid][17].push({
+          value: p.client.phone,
+          name: "phone",
+        });
+        values[designer.desid][18].push({
+          value: p.client.email,
+          name: "email",
         });
       }
       
