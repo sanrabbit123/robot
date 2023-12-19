@@ -736,6 +736,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
     if (firstLoad) {
 
+      /*
       ajaxJson({ mode: "total" }, S3HOST + "/designerAboutComplete", { equal: true }).then((c) => {
         completeAnalyticsRows = c;
         return ajaxJson({ noFlat: true, whereQuery: { $or: [ { "proposal.date": { $gte: past } }, { "process.status": { $regex: "^[대진]" } } ] } }, BACKHOST + "/getProjects", { equal: true });
@@ -872,6 +873,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         return instance.normalColorSync();
   
       }).catch((err) => { console.log(err); });
+      */
 
     }
 
@@ -4037,7 +4039,7 @@ DesignerJs.prototype.careSearchEvent = async function () {
           loading = instance.mother.grayLoading(null, true);
           ajaxJson({ mode: "search", value: value.trim() }, BACKHOST + "/processConsole", { equal: true }).then((serverResponse) => {
             instance.reloadProjects(serverResponse);
-            return instance.careContentsLoad(true);
+            return instance.careContentsLoad(true, null);
           }).then(() => {
             try {
               loading.remove();
@@ -4175,7 +4177,7 @@ DesignerJs.prototype.careWhiteCard = function (proid) {
   }
 }
 
-DesignerJs.prototype.careDataRender = async function () {
+DesignerJs.prototype.careDataRender = async function (filterFunc = null) {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows, profileList, workList, representativeList } = this;
   const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute, equalJson, serviceParsing } = GeneralJs;
@@ -4238,6 +4240,24 @@ DesignerJs.prototype.careDataRender = async function () {
         width: 80,
         name: "status",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "진행중",
+            functionName: "filterEvent_진행중",
+          },
+          {
+            value: "대기",
+            functionName: "filterEvent_대기",
+          },
+          {
+            value: "드랍",
+            functionName: "filterEvent_드랍",
+          },
+        ],
       },
       {
         title: "시작일",
@@ -4256,12 +4276,48 @@ DesignerJs.prototype.careDataRender = async function () {
         width: 100,
         name: "onoff",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "오프라인",
+            functionName: "filterEvent_오프라인",
+          },
+          {
+            value: "온라인",
+            functionName: "filterEvent_온라인",
+          },
+        ],
       },
       {
         title: "서비스",
         width: 120,
         name: "service",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "홈퍼니싱",
+            functionName: "filterEvent_홈퍼니싱",
+          },
+          {
+            value: "홈스타일링",
+            functionName: "filterEvent_홈스타일링",
+          },
+          {
+            value: "토탈 스타일링",
+            functionName: "filterEvent_토탈 스타일링",
+          },
+          {
+            value: "엑스트라",
+            functionName: "filterEvent_엑스트라",
+          },
+        ],
       },
       {
         title: "주소",
@@ -4280,6 +4336,20 @@ DesignerJs.prototype.careDataRender = async function () {
         width: 90,
         name: "contract",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "자가",
+            functionName: "filterEvent_자가",
+          },
+          {
+            value: "전월세",
+            functionName: "filterEvent_전월세",
+          },
+        ],
       },
       {
         title: "계약금",
@@ -4347,6 +4417,10 @@ DesignerJs.prototype.careDataRender = async function () {
 
     num = 0;
     for (let { designer, projects } of thisDesigners) {
+
+      if (typeof filterFunc === "function") {
+        projects = filterFunc(projects);
+      }
 
       progress = projects.filter((p) => { return /진행/gi.test(p.process.status )})
       pending = projects.filter((p) => { return /대기/gi.test(p.process.status )})
@@ -4481,7 +4555,7 @@ DesignerJs.prototype.careDataRender = async function () {
   }
 }
 
-DesignerJs.prototype.careBase = async function () {
+DesignerJs.prototype.careBase = async function (filterFunc = null) {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
   const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, svgMaker } = GeneralJs;
@@ -4593,7 +4667,7 @@ DesignerJs.prototype.careBase = async function () {
     blankIconTop = 15;
     blankIconWidth = 10;
 
-    ({ thisDesigners, standards, columns, values } = await this.careDataRender());
+    ({ thisDesigners, standards, columns, values } = await this.careDataRender(filterFunc));
   
     hoverEvent = () => {
       return function (e) {
@@ -4759,61 +4833,79 @@ DesignerJs.prototype.careBase = async function () {
       filterEvent: (thisValue, name, index) => {
         return async function (e) {
           try {
-            const idNameArea = document.querySelector('.' + idNameAreaClassName);
-            const valueArea = document.querySelector('.' + valueAreaClassName);
-            const idNameDoms = Array.from(document.querySelectorAll('.' + standardCaseClassName));
-            const valueDoms = Array.from(document.querySelectorAll('.' + valueCaseClassName));
-            const last = "lastfilter";
-            const type = columns[index].type;
-            let domMatrix;
-            let thisDesid;
-            let thisValueDom;
-  
-            domMatrix = [];
-            for (let i = 0; i < idNameDoms.length; i++) {
-              thisDesid = idNameDoms[i].getAttribute("desid");
-              thisValueDom = findByAttribute(valueDoms, "desid", thisDesid);
-              domMatrix.push([
-                idNameDoms[i],
-                thisValueDom
-              ]);
-            }
+            let loading;
+            let filterFunc;
 
-            if (thisValue === "$all") {
-              for (let [ standard, value ] of domMatrix) {
-                standard.style.display = "flex";
-                value.style.display = "flex";
-                standard.setAttribute(last, "none");
-                value.setAttribute(last, "none");
-              }
-            } else {
-              for (let [ standard, value ] of domMatrix) {
-                if (standard.getAttribute(last) === name) {
-                  if (findByAttribute([ ...value.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent.trim() === thisValue) {
-                    standard.style.display = "flex";
-                    value.style.display = "flex";
-                  } else {
-                    standard.style.display = "none";
-                    value.style.display = "none";
-                  }
-                } else {
-                  if (findByAttribute([ ...value.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent.trim() === thisValue) {
-                    if (standard.style.display !== "none") {
-                      standard.style.display = "flex";
-                      value.style.display = "flex";
-                    }
-                  } else {
-                    standard.style.display = "none";
-                    value.style.display = "none";
-                  }
+            if (name === "status") {
+              if (thisValue === "$all") {
+                filterFunc = null;
+              } else {
+                filterFunc = (ps) => {
+                  return ps.filter((p) => {
+                    return p.process.status === thisValue;
+                  });
                 }
-                standard.setAttribute(last, name);
-                value.setAttribute(last, name);
+              }
+            } else if (name === "onoff") {
+              if (thisValue === "$all") {
+                filterFunc = null;
+              } else {
+                filterFunc = (ps) => {
+                  return ps.filter((p) => {
+                    if (/온라인/gi.test(thisValue)) {
+                      return p.service.online;
+                    } else {
+                      return !p.service.online;
+                    }
+                  });
+                }
+              }
+            } else if (name === "service") {
+              if (thisValue === "$all") {
+                filterFunc = null;
+              } else {
+                filterFunc = (ps) => {
+                  return ps.filter((p) => {
+                    if (/홈퍼니싱/gi.test(thisValue)) {
+                      return /aa01s/gi.test(p.service.serid);
+                    } else if (/홈스타일링/gi.test(thisValue)) {
+                      return /aa02s/gi.test(p.service.serid);
+                    } else if (/토탈 스타일링/gi.test(thisValue)) {
+                      return /aa03s/gi.test(p.service.serid);
+                    } else {
+                      return /aa04s/gi.test(p.service.serid);
+                    }
+                  });
+                }
+              }
+            } else if (name === "contract") {
+              if (thisValue === "$all") {
+                filterFunc = null;
+              } else {
+                filterFunc = (ps) => {
+                  return ps.filter((p) => {
+                    if (/자가/gi.test(thisValue)) {
+                      return /자가/gi.test(p.client.requests[p.requestNumber].request.space.contract);
+                    } else {
+                      return !/자가/gi.test(p.client.requests[p.requestNumber].request.space.contract);
+                    }
+                  });
+                }
               }
             }
 
             removeByClass(menuPromptClassName);
-  
+
+            loading = await instance.mother.loadingRun();
+
+            if (instance.totalMother !== null && instance.totalMother !== undefined) {
+              totalContents.removeChild(instance.totalMother);
+            }
+
+            await instance.careBase(filterFunc);
+
+            loading.parentNode.removeChild(loading);
+            
           } catch (e) {
             console.log(e);
           }
@@ -5060,11 +5152,11 @@ DesignerJs.prototype.careBase = async function () {
     });
     this.totalMother = totalMother;
 
-    careContentsLoad = async (reload = false) => {
+    careContentsLoad = async (reload = false, filterFunc = null) => {
       try {
 
         if (reload) {
-          ({ thisDesigners, standards, columns, values } = await instance.careDataRender());
+          ({ thisDesigners, standards, columns, values } = await instance.careDataRender(filterFunc));
         }
 
         cleanChildren(totalMother);
@@ -5768,14 +5860,14 @@ DesignerJs.prototype.careBase = async function () {
 
         }
 
-        await instance.careColorSync();
-    
+        await instance.careColorSync(typeof filterFunc === "function");
+
       } catch (e) {
         console.log(e);
       }
     }
 
-    await careContentsLoad(false);
+    await careContentsLoad(false, filterFunc);
     this.careContentsLoad = careContentsLoad;
 
   } catch (e) {
@@ -5875,7 +5967,7 @@ DesignerJs.prototype.reloadProjects = function (serverResponse) {
   this.projects = projects;
 }
 
-DesignerJs.prototype.careColorSync = async function () {
+DesignerJs.prototype.careColorSync = async function (allBlack = false) {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText } = this;
   const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute } = GeneralJs;
@@ -5895,15 +5987,15 @@ DesignerJs.prototype.careColorSync = async function () {
       },
       {
         value: "대기",
-        color: colorChip.deactive,
+        color: allBlack ? colorChip.black : colorChip.deactive,
       },
       {
         value: "드랍",
-        color: colorChip.red,
+        color: allBlack ? colorChip.black : colorChip.red,
       },
       {
         value: "홀딩",
-        color: colorChip.red,
+        color: allBlack ? colorChip.black : colorChip.red,
       },
     ];
 
@@ -6008,13 +6100,8 @@ DesignerJs.prototype.careView = async function () {
     this.numbersExtractClassName = "numbersExtractClassName";
 
     this.cleanSearchEvent();
-    await this.careBase();
+    await this.careBase(null);
     await this.careSearchEvent();
-
-
-
-
-
 
 
     loading.parentNode.removeChild(loading);
