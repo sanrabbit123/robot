@@ -2383,10 +2383,7 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
 
         } else if (type === "basicEducation") {
 
-
-
-
-          await kakao.sendTalk("designerEducationBasicSend", "배창규", "010-2747-3403", { designer, host: address.frontinfo.host, desid });
+          await kakao.sendTalk("designerEducationBasicSend", designer, phone, { designer, host: address.frontinfo.host, desid });
           await messageSend({
             text: designer + " 실장님께 디자이너 가이드를 전송하였습니다!",
             channel,
