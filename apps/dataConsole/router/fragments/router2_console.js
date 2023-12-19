@@ -6255,6 +6255,7 @@ DataRouter.prototype.rou_post_processConsole = function () {
       let clientValues, designerValues;
       let finalOr;
       let searchMode;
+      let clientValue;
 
       class NormalArray extends Array {
         constructor(arr) {
@@ -6305,10 +6306,10 @@ DataRouter.prototype.rou_post_processConsole = function () {
           } else {
             if (/\,/gi.test(value)) {
   
-              values = value.split(",").map((str) => { return str.trim() });
-              clientValues = values.filter((str) => { return !(/^d\:/i.test(str) && str.length >= 3) });
-              designerValues = values.filter((str) => { return /^d\:/i.test(str) && str.length >= 3 });
-  
+              values = value.split(",").map((str) => { return str.trim() });  
+              clientValues = values.filter((str) => { return /^c\:/i.test(str) && str.length >= 3 });
+              designerValues = values.filter((str) => { return !(/^c\:/i.test(str) && str.length >= 3) });
+
               if (clientValues.length > 0) {
                 preClients = await back.getClientsByQuery({ $or: clientValues.map((str) => { return { name: { $regex: str } } }) }, { selfMongo: selfCoreMongo });
               } else {
@@ -6331,25 +6332,26 @@ DataRouter.prototype.rou_post_processConsole = function () {
                 projects = [];
               }
               
-            } else if (/^d\:/i.test(value) && value.length >= 3) {
-  
-              designerValue = value.split(":")[1].trim();
+            } else if (/^c\:/i.test(value) && value.length >= 3) {
+
+              clientValue = value.split(":")[1].trim();
+              preClients = await back.getClientsByQuery({ name: { $regex: clientValue } }, { selfMongo: selfCoreMongo });
+              if (preClients.length === 0) {
+                projects = [];
+              } else {
+                projects = await back.getProjectsByQuery({ $or: preClients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfCoreMongo });
+                projects = projects.filter((project) => {
+                  return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+                });
+              }
+
+            } else {
+              designerValue = value;
               preDesigners = await back.getDesignersByQuery({ designer: { $regex: designerValue } }, { selfMongo: selfCoreMongo });
               if (preDesigners.length === 0) {
                 projects = [];
               } else {
                 projects = await back.getProjectsByQuery({ $or: preDesigners.toNormal().map((c) => { return { desid: c.desid } }) }, { selfMongo: selfCoreMongo });
-                projects = projects.filter((project) => {
-                  return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
-                });
-              }
-  
-            } else {
-              preClients = await back.getClientsByQuery({ name: { $regex: value } }, { selfMongo: selfCoreMongo });
-              if (preClients.length === 0) {
-                projects = [];
-              } else {
-                projects = await back.getProjectsByQuery({ $or: preClients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfCoreMongo });
                 projects = projects.filter((project) => {
                   return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
                 });

@@ -2564,6 +2564,7 @@ DesignerJs.prototype.normalBase = async function () {
         }
     
         await this.normalColorSync();
+        await this.normalSubPannel();
 
       } catch (e) {
         console.log(e);
@@ -3985,6 +3986,71 @@ DesignerJs.prototype.normalSubPannel = async function () {
       num++;
     }
 
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DesignerJs.prototype.cleanSearchEvent = function () {
+  const instance = this;
+  let searchInputCloned;
+  searchInputCloned = this.searchInput.cloneNode(true);
+  this.searchInput.parentNode.appendChild(searchInputCloned);
+  this.searchInput.remove();
+  this.searchInput = searchInputCloned;
+}
+
+DesignerJs.prototype.careSearchEvent = async function () {
+  const instance = this;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
+  const { ajaxJson, setQueue } = GeneralJs;
+  try {
+    this.searchInput.addEventListener("keypress", async function (e) {
+      try {
+        if (e.key === "Enter") {
+          if (instance.totalFather !== null) {
+            instance.totalFather.classList.remove("fadein");
+            instance.totalFather.classList.add("fadeout");
+            instance.totalMother.classList.remove("justfadeoutoriginal");
+            instance.totalMother.classList.add("justfadeinoriginal");
+            setQueue(() => {
+              instance.totalFather.remove();
+              instance.totalFather = null;
+            }, 501);
+          }
+          if (document.querySelector('.' + whiteBaseClassName) !== null) {
+            const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+            cancelBack.style.animation = "justfadeout 0.3s ease forwards";
+            if (w0 !== undefined) {
+              w0.style.animation = "fadedownlite 0.3s ease forwards";
+            }
+            if (w1 !== undefined) {
+              w1.style.animation = "fadedownlite 0.3s ease forwards";
+            }
+            setQueue(() => {
+              cancelBack.click();
+            }, 350);
+          }
+
+          const value = this.value.trim().replace(/\&\=\+\\\//gi, '');
+
+          loading = instance.mother.grayLoading(null, true);
+          ajaxJson({ mode: "search", value: value.trim() }, BACKHOST + "/processConsole", { equal: true }).then((serverResponse) => {
+            instance.reloadProjects(serverResponse);
+            return instance.careContentsLoad(true);
+          }).then(() => {
+            try {
+              loading.remove();
+            } catch {}
+          }).catch((err) => {
+            console.log(err);
+          });
+
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
   } catch (e) {
     console.log(e);
   }
@@ -5941,8 +6007,9 @@ DesignerJs.prototype.careView = async function () {
     this.onofflineWordsClassName = "onofflineWordsClassName";
     this.numbersExtractClassName = "numbersExtractClassName";
 
+    this.cleanSearchEvent();
     await this.careBase();
-
+    await this.careSearchEvent();
 
 
 
@@ -6047,13 +6114,13 @@ DesignerJs.prototype.normalView = async function () {
     this.workList = workList;
     this.representativeList = representativeList;
 
+    this.cleanSearchEvent();
     await this.normalBase();
     await this.normalSearchEvent();
     await this.normalDetailSearchEvent();
     await this.normalMessageEvent();
     await this.normalExtractEvent();
     await this.normalReportEvent();
-    await this.normalSubPannel();
     this.communicationRender();
 
     window.addEventListener("popstate", (event) => {
