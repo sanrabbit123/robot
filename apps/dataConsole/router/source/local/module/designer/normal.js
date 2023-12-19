@@ -3990,6 +3990,125 @@ DesignerJs.prototype.normalSubPannel = async function () {
   }
 }
 
+DesignerJs.prototype.careWhiteCard = function (proid) {
+  const instance = this;
+  const { ea, totalContents, grayBarWidth, belowHeight } = this;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson } = GeneralJs;
+  return async function (e) {
+    try {
+      const zIndex = 4;
+      const blank = "&nbsp;/&nbsp;";
+      const project = instance.projects.find((d) => { return d.proid === proid });
+      let cancelBack, whitePrompt;
+      let margin;
+      let titleHeight;
+      let innerMargin;
+      let overlap;
+      let titleTextTop, titleSize;
+      let titleWeight;
+      let fontTextTop, fontSize, fontBetween, fontWeight;
+      let whiteMaker;
+
+      margin = 30;
+      titleHeight = 0;
+      innerMargin = 24;
+      overlap = 12;
+
+      titleTextTop = isMac() ? 2 : 5;
+      titleSize = 21;
+      titleWeight = 800;
+
+      fontTextTop = isMac() ? 1 : 3;
+      fontSize = 14;
+      fontBetween = 8;
+      fontWeight = 400;
+
+      whiteMaker = (reload = false) => {
+
+        if (!reload) {
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ "justfadein", whiteCardClassName ],
+            event: (e) => { removeByClass(whiteCardClassName) },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(grayBarWidth) + ea,
+              width: withOut(grayBarWidth, ea),
+              height: withOut(belowHeight, ea),
+              background: colorChip.black,
+            }
+          });
+        } 
+  
+        whitePrompt = createNode({
+          mother: totalContents,
+          attribute: {
+            proid: proid
+          },
+          class: [ whiteCardClassName, whiteBaseClassName ],
+          style: {
+            position: "fixed",
+            top: String(0 + margin + titleHeight) + ea,
+            left: String(grayBarWidth + margin) + ea,
+            width: withOut((margin * 2) + grayBarWidth, ea),
+            height: withOut(0 + (margin * 2) + titleHeight + belowHeight, ea),
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+            overflow: "hidden",
+          },
+          child: {
+            mode: "iframe",
+            attribute: {
+              src: BACKHOST + "/process?proid=" + proid + "&entire=true&normal=true&dataonly=true",
+            },
+            style: {
+              position: "absolute",
+              display: "block",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              border: String(0),
+            }
+          }
+        });
+  
+      }
+
+      if (document.querySelector('.' + whiteCardClassName) === null) {
+        whiteMaker(false);
+      } else {
+        const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+        if (w0 !== undefined) {
+          w0.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        if (w1 !== undefined) {
+          w1.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        setQueue(() => {
+          if (w0 !== undefined) {
+            w0.remove();
+          }
+          if (w1 !== undefined) {
+            w1.remove();
+          }
+          setQueue(() => {
+            whiteMaker(true);
+          })
+        }, 350);
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 DesignerJs.prototype.careDataRender = async function () {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows, profileList, workList, representativeList } = this;
@@ -4080,19 +4199,19 @@ DesignerJs.prototype.careDataRender = async function () {
       },
       {
         title: "주소",
-        width: 140,
+        width: 120,
         name: "address",
         type: "string",
       },
       {
         title: "평수",
-        width: 80,
+        width: 60,
         name: "pyeong",
-        type: "string",
+        type: "number",
       },
       {
-        title: "계약 형태",
-        width: 100,
+        title: "형태",
+        width: 90,
         name: "contract",
         type: "string",
       },
@@ -4233,7 +4352,7 @@ DesignerJs.prototype.careDataRender = async function () {
           name: "service",
         });
         values[designer.desid][6].push({
-          value: p.client.requests[p.requestNumber].request.space.address.slice(0, 10),
+          value: p.client.requests[p.requestNumber].request.space.address.slice(0, 8),
           name: "address",
         });
         values[designer.desid][7].push({
@@ -4304,6 +4423,8 @@ DesignerJs.prototype.careBase = async function () {
   const menuPromptClassName = "menuPromptClassName";
   const importantCircleClassName = "importantCircleClassName";
   const designerSubMenuEventFactorClassName = "designerSubMenuEventFactorClassName";
+  const standardBarCaseClassName = "standardBarCaseClassName";
+  const valueBarCaseClassName = "valueBarCaseClassName";
   try {
     let totalMother;
     let grayArea, whiteArea;
@@ -4434,90 +4555,132 @@ DesignerJs.prototype.careBase = async function () {
       sortEvent: (thisType, name, index) => {
         return async function (e) {
           try {
-            const idNameArea = document.querySelector('.' + idNameAreaClassName);
             const valueArea = document.querySelector('.' + valueAreaClassName);
-            const idNameDoms = Array.from(document.querySelectorAll('.' + standardCaseClassName));
             const valueDoms = Array.from(document.querySelectorAll('.' + valueCaseClassName));
             const type = columns[index].type;
             let domMatrix;
             let thisDesid;
             let thisValueDom;
-  
-            domMatrix = [];
-            for (let i = 0; i < idNameDoms.length; i++) {
-              thisDesid = idNameDoms[i].getAttribute("desid");
-              thisValueDom = findByAttribute(valueDoms, "desid", thisDesid);
-              domMatrix.push([
-                idNameDoms[i],
-                thisValueDom
-              ]);
+            let newValueDomsArray;
+            let desidArr;
+            let tempFiltered;
+
+            desidArr = [ ...new Set(valueDoms.map((dom) => { return dom.getAttribute("desid") })) ];
+            domMatrix = {};
+            for (let dom of valueDoms) {
+              thisDesid = dom.getAttribute("desid");
+              if (domMatrix[thisDesid] === undefined) {
+                domMatrix[thisDesid] = [];
+              }
+              domMatrix[thisDesid].push(dom);
             }
-  
-            domMatrix.sort((a, b) => {
-              let aValue, bValue;
-              let aSortValue, bSortValue;
-              let tempArr;
-  
-              aValue = findByAttribute([ ...a[1].querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent;
-              bValue = findByAttribute([ ...b[1].querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent;
-              
-              if (type === "string") {
-                aSortValue = aValue !== '' ? aValue.charCodeAt(0) : 0;
-                bSortValue = bValue !== '' ? bValue.charCodeAt(0) : 0;
-              } else if (type === "number") {
-                aValue = aValue.replace(/[^0-9]/gi, '')
-                bValue = bValue.replace(/[^0-9]/gi, '')
-                aSortValue = aValue !== '' ? Number(aValue) : 0;
-                bSortValue = bValue !== '' ? Number(bValue) : 0;
-              } else if (type === "percentage") {
-                aValue = aValue.replace(/[^0-9\.]/gi, '')
-                bValue = bValue.replace(/[^0-9\.]/gi, '')
-                aSortValue = aValue !== '' ? Number(aValue) : 0;
-                bSortValue = bValue !== '' ? Number(bValue) : 0;
-              } else if (type === "date") {
-                aSortValue = aValue !== '' ? stringToDate(aValue) : stringToDate("1800-01-01");
-                bSortValue = bValue !== '' ? stringToDate(bValue) : stringToDate("1800-01-01");
-                aSortValue = aSortValue.valueOf();
-                bSortValue = bSortValue.valueOf();
-              } else if (type === "during") {
-  
-                if (/년/gi.test(aValue)) {
-                  tempArr = aValue.split('년');
-                  if (tempArr.length > 1) {
-                    aSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) + Number(tempArr[1].replace(/[^0-9]/gi, ''));
-                  } else {
-                    aSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12);
-                  }
+
+            for (let desid in domMatrix) {
+              domMatrix[desid].sort((a, b) => {
+                let aValue, bValue;
+                let aSortValue, bSortValue;
+                let tempArr;
+
+                if (findByAttribute([ ...a.querySelectorAll('.' + valueTargetClassName) ], "name", name) !== null) {
+                  aValue = findByAttribute([ ...a.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent;
                 } else {
-                  aSortValue = Number(aValue.replace(/[^0-9]/gi, ''));
-                }
-  
-                if (/년/gi.test(bValue)) {
-                  tempArr = bValue.split('년');
-                  if (tempArr.length > 1) {
-                    bSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) + Number(tempArr[1].replace(/[^0-9]/gi, ''));
+                  if (type === "string") {
+                    aValue = '';
+                  } else if (type === "number") {
+                    aValue = "0";
+                  } else if (type === "percentage") {
+                    aValue = "0";
+                  } else if (type === "date") {
+                    aValue = "1800-01-01";
+                  } else if (type === "during") {
+                    aValue = "0";
                   } else {
-                    bSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12);
-                  }
-                } else {
-                  bSortValue = Number(bValue.replace(/[^0-9]/gi, ''));
+                    aValue = "0";
+                  }  
                 }
-  
-              } else {
-                aSortValue = aValue !== '' ? aValue.charCodeAt(0) : 0;
-                bSortValue = bValue !== '' ? bValue.charCodeAt(0) : 0;
+
+                if (findByAttribute([ ...b.querySelectorAll('.' + valueTargetClassName) ], "name", name) !== null) {
+                  bValue = findByAttribute([ ...b.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent;
+                } else {
+                  if (type === "string") {
+                    bValue = '';
+                  } else if (type === "number") {
+                    bValue = "0";
+                  } else if (type === "percentage") {
+                    bValue = "0";
+                  } else if (type === "date") {
+                    bValue = "1800-01-01";
+                  } else if (type === "during") {
+                    bValue = "0";
+                  } else {
+                    bValue = "0";
+                  }  
+                }
+                
+                if (type === "string") {
+                  aSortValue = aValue !== '' ? aValue.charCodeAt(0) : 0;
+                  bSortValue = bValue !== '' ? bValue.charCodeAt(0) : 0;
+                } else if (type === "number") {
+                  aValue = aValue.replace(/[^0-9]/gi, '')
+                  bValue = bValue.replace(/[^0-9]/gi, '')
+                  aSortValue = aValue !== '' ? Number(aValue) : 0;
+                  bSortValue = bValue !== '' ? Number(bValue) : 0;
+                } else if (type === "percentage") {
+                  aValue = aValue.replace(/[^0-9\.]/gi, '')
+                  bValue = bValue.replace(/[^0-9\.]/gi, '')
+                  aSortValue = aValue !== '' ? Number(aValue) : 0;
+                  bSortValue = bValue !== '' ? Number(bValue) : 0;
+                } else if (type === "date") {
+                  aSortValue = aValue !== '' ? stringToDate(aValue) : stringToDate("1800-01-01");
+                  bSortValue = bValue !== '' ? stringToDate(bValue) : stringToDate("1800-01-01");
+                  aSortValue = aSortValue.valueOf();
+                  bSortValue = bSortValue.valueOf();
+                } else if (type === "during") {
+    
+                  if (/년/gi.test(aValue)) {
+                    tempArr = aValue.split('년');
+                    if (tempArr.length > 1) {
+                      aSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) + Number(tempArr[1].replace(/[^0-9]/gi, ''));
+                    } else {
+                      aSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12);
+                    }
+                  } else {
+                    aSortValue = Number(aValue.replace(/[^0-9]/gi, ''));
+                  }
+    
+                  if (/년/gi.test(bValue)) {
+                    tempArr = bValue.split('년');
+                    if (tempArr.length > 1) {
+                      bSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) + Number(tempArr[1].replace(/[^0-9]/gi, ''));
+                    } else {
+                      bSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12);
+                    }
+                  } else {
+                    bSortValue = Number(bValue.replace(/[^0-9]/gi, ''));
+                  }
+    
+                } else {
+                  aSortValue = aValue !== '' ? aValue.charCodeAt(0) : 0;
+                  bSortValue = bValue !== '' ? bValue.charCodeAt(0) : 0;
+                }
+                
+                if (thisType === "down") {
+                  return bSortValue - aSortValue;
+                } else {
+                  return aSortValue - bSortValue;
+                }
+              });
+              tempFiltered = domMatrix[desid].filter((d) => { return d.getAttribute("blank") === "true" });
+              for (let d of tempFiltered) {
+                domMatrix[desid].push(d);
               }
-              
-              if (thisType === "down") {
-                return bSortValue - aSortValue;
-              } else {
-                return aSortValue - bSortValue;
+              domMatrix[desid].push(domMatrix[desid].find((d) => { return d.getAttribute("bar") === "true" }));
+            }
+
+            for (let desid of desidArr) {
+              for (let d of domMatrix[desid]) {
+                valueArea.appendChild(d);
               }
-            });
-  
-            for (let [ standard, value ] of domMatrix) {
-              idNameArea.appendChild(standard);
-              valueArea.appendChild(value);
             }
   
             removeByClass(menuPromptClassName);
@@ -5070,6 +5233,7 @@ DesignerJs.prototype.careBase = async function () {
               }
             })
           });
+          
           if (projects.length >= 3) {
             for (let i = 1; i < projects.length; i++) {
               createNode({
@@ -5203,7 +5367,8 @@ DesignerJs.prototype.careBase = async function () {
           // bar -------------------------------------------------------------------------------------------
           createNode({
             mother: idNameArea,
-            class: [ standardCaseClassName ],
+            class: [ standardCaseClassName, standardBarCaseClassName ],
+            attribute: { desid: designer.desid, lastfilter: "none" },
             style: {
               display: "flex",
               flexDirection: "row",
@@ -5268,9 +5433,21 @@ DesignerJs.prototype.careBase = async function () {
             for (let p = 0; p < projects.length; p++) {
               thisTong = createNode({
                 mother: valueArea,
-                attribute: { desid: designer.desid, lastfilter: "none" },
+                attribute: { desid: designer.desid, lastfilter: "none", proid: projects[p].proid },
                 class: [ moveTargetClassName, valueCaseClassName, designer.desid ],
                 event: {
+                  click: async function (e) {
+                    try {
+                      const proid = this.getAttribute("proid");
+                      const desid = this.getAttribute("desid");
+                      const eventFunction = instance.careWhiteCard(proid);
+
+                      await eventFunction(e);
+
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  },
                   mouseenter: hoverEvent(),
                   mouseleave: hoverOutEvent(),
                 },
@@ -5411,7 +5588,7 @@ DesignerJs.prototype.careBase = async function () {
             for (let p = 0; p < 3 - projects.length; p++) {
               thisTong = createNode({
                 mother: valueArea,
-                attribute: { desid: designer.desid, lastfilter: "none" },
+                attribute: { desid: designer.desid, lastfilter: "none", blank: "true" },
                 class: [ moveTargetClassName, valueCaseClassName, designer.desid ],
                 event: {
                   mouseenter: hoverEvent(),
@@ -5483,8 +5660,8 @@ DesignerJs.prototype.careBase = async function () {
           // bar -------------------------------------------------------------------------------------------
           thisTong = createNode({
             mother: valueArea,
-            attribute: { desid: designer.desid, lastfilter: "none" },
-            class: [ moveTargetClassName, valueCaseClassName, designer.desid ],
+            attribute: { desid: designer.desid, lastfilter: "none", blank: "true", bar: "true" },
+            class: [ moveTargetClassName, valueCaseClassName, valueBarCaseClassName, designer.desid ],
             event: {
               mouseenter: hoverEvent(),
               mouseleave: hoverOutEvent(),
@@ -5524,6 +5701,8 @@ DesignerJs.prototype.careBase = async function () {
           // bar -------------------------------------------------------------------------------------------
 
         }
+
+        await instance.careColorSync();
     
       } catch (e) {
         console.log(e);
@@ -5628,6 +5807,59 @@ DesignerJs.prototype.reloadProjects = function (serverResponse) {
   this.clientHistory = clientHistory;
   this.history = history;
   this.projects = projects;
+}
+
+DesignerJs.prototype.careColorSync = async function () {
+  const instance = this;
+  const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText } = this;
+  const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute } = GeneralJs;
+  try {
+    let columns;
+    let colorStandard;
+    let standardDoms, valueDoms;
+    let thisValue;
+    let thisColor;
+    let thisTargets;
+    let thisTarget;
+
+    colorStandard = [
+      {
+        value: "진행중",
+        color: colorChip.black,
+      },
+      {
+        value: "대기",
+        color: colorChip.deactive,
+      },
+      {
+        value: "드랍",
+        color: colorChip.red,
+      },
+      {
+        value: "홀딩",
+        color: colorChip.red,
+      },
+    ];
+
+    standardDoms = [ ...document.querySelectorAll('.' + standardCaseClassName) ];
+    valueDoms = [ ...document.querySelectorAll('.' + valueCaseClassName) ];
+
+    for (let i = 0; i < standardDoms.length; i++) {
+      thisTarget = findByAttribute([ ...valueDoms[i].querySelectorAll('.' + valueTargetClassName) ], "name", "status");
+      if (thisTarget !== null) {
+        thisValue = thisTarget.textContent.trim();
+        thisColor = colorStandard.find((o) => { return o.value === thisValue }).color;
+        thisTargets = [ ...standardDoms[i].querySelectorAll('.' + valueTargetClassName) ].concat([ ...valueDoms[i].querySelectorAll('.' + valueTargetClassName) ]);
+        for (let dom of thisTargets) {
+          dom.style.color = thisColor;
+          dom.setAttribute("color", thisColor);
+        }
+      }
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 DesignerJs.prototype.careView = async function () {
