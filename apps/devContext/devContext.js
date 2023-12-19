@@ -6889,11 +6889,10 @@ DevContext.prototype.launching = async function () {
 
     // kakao test
     // const kakao = new KakaoTalk();
-    // await kakao.sendTalk("curationComplete", "배창규", "010-2199-3403", {
-    //   client: "배창규",
-    //   cliid: "c1801_aa01s",
-    //   host: instance.address.frontinfo.host,
-    //   path: "about",
+    // await kakao.sendTalk("designerEducationBasicSend", "배창규", "010-2747-3403", {
+    //   designer: "박혜연",
+    //   desid: "d1701_aa01s",
+    //   host: "home-liaison.com",
     // });
 
 

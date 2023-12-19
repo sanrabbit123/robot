@@ -4189,6 +4189,48 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       }
     },
+    "designerEducationBasicSend": {
+      "name": "디자이너 가이드 교육 자료 전송",
+      "id": "TQ_3634",
+      "needs": [
+        "designer",
+        "host",
+        "desid",
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"desid\", to: obj.desid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님!\n홈리에종의 협업 디자이너들을 위한 홈리에종 프로젝트 디자인 가이드 페이지 링크를 보내드립니다.\n\n홈리에종 프로젝트 디자인 가이드는 홈리에종 프로젝트에 대해서 상세한 디자인 매뉴얼과 함께 실장님께서 하셔야 할 것들, 정산 정책 등이 상세히 적혀 있는 종합적인 가이드입니다.\n\n아래 페이지 링크를 통해 디자인 가이드를 자세히 보실 수 있으니, 해당 페이지에 있는 자료를 숙지해 주시고, 홈리에종 프로젝트 디자인 가이드에 따라 프로젝트를 운영해 주세요!\n\n감사합니다 :)\n\n* 홈리에종 디자인 가이드\nhttps://#{host}/designer/provision.php?desid=#{desid}",
+        "templtName": "디자이너 가이드 교육 자료 전송",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-12-11 16:00:32",
+        "templtCode": "TQ_3634",
+        "comments": [
+          {
+            "cdate": "2023-12-12 13:51:48",
+            "name": "검수자",
+            "id": "3002325",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-12-12 13:51:48",
+            "status": "APR"
+          }
+        ]
+      }
+    },
   };
   if (target === "$all") {
     return tong;
