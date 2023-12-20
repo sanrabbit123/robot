@@ -7188,10 +7188,8 @@ DesignerJs.prototype.numbersView = async function () {
     let histories;
     let members;
     let importants;
-    let noticeSendRows;
-    let profileList, workList;
-    let representativeList;
     let execFunc;
+    let projects;
 
     loading = await this.mother.loadingRun();
 
@@ -7211,6 +7209,13 @@ DesignerJs.prototype.numbersView = async function () {
     }
 
     members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
+
+    projects = await ajaxJson({ whereQuery: {}, projectQuery: { proid: 1, cliid: 1, desid: 1, service: 1, process: 1 } }, SECONDHOST + "/pickProjects", { equal: true });
+
+    
+
+
+    console.log(projects);
 
     this.cleanSearchEvent();
     await this.numbersBase();

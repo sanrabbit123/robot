@@ -776,7 +776,19 @@ SecondRouter.prototype.rou_post_pickProjects = function () {
 
       rows = await back.mongoPick("project", [ whereQuery, projectQuery ], { selfMongo });
 
-      res.send(JSON.stringify(rows));
+      if (projectQuery.proposal === 1) {
+        if (req.body.detail !== "true" && req.body.detail !== true) {
+          for (let project of rows) {
+            for (let obj of project.proposal.detail) {
+              delete obj.pictureSettings;
+              delete obj.description;
+            }
+          }
+        }
+        res.send(JSON.stringify(rows));
+      } else {
+        res.send(JSON.stringify(rows));
+      }
 
     } catch (e) {
       logger.error("Second Ghost 서버 문제 생김 (rou_post_pickProjects): " + req.url + " " + req.headers["origin"] + " " + JSON.stringify(req.body) + " " + e.message).catch((e) => { console.log(e); });
