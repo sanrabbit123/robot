@@ -1016,7 +1016,12 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
           cancelBack = createNode({
             mother: totalContents,
             class: [ "justfadein", whiteCardClassName ],
-            event: (e) => { removeByClass(whiteCardClassName) },
+            event: (e) => {
+              removeByClass(whiteCardClassName);
+              if (hasQuery("desid")) {
+                removeQuery("desid");
+              }
+            },
             style: {
               position: "fixed",
               top: String(0),
@@ -1024,6 +1029,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
               width: withOut(grayBarWidth, ea),
               height: withOut(belowHeight, ea),
               background: colorChip.black,
+              zIndex: String(zIndex),
             }
           });
         } 
@@ -4232,7 +4238,12 @@ DesignerJs.prototype.careWhiteCard = function (proid) {
           cancelBack = createNode({
             mother: totalContents,
             class: [ "justfadein", whiteCardClassName ],
-            event: (e) => { removeByClass(whiteCardClassName) },
+            event: (e) => {
+              removeByClass(whiteCardClassName);
+              if (hasQuery("desid")) {
+                removeQuery("desid");
+              }
+            },
             style: {
               position: "fixed",
               top: String(0),
@@ -4240,6 +4251,7 @@ DesignerJs.prototype.careWhiteCard = function (proid) {
               width: withOut(grayBarWidth, ea),
               height: withOut(belowHeight, ea),
               background: colorChip.black,
+              zIndex: String(zIndex),
             }
           });
         } 
@@ -6158,7 +6170,7 @@ DesignerJs.prototype.careColorSync = async function (allBlack = false) {
 DesignerJs.prototype.careView = async function () {
   const instance = this;
   const { ea, totalContents } = this;
-  const { createNode, withOut, colorChip, ajaxJson, returnGet, cleanChildren, ajaxMultiple } = GeneralJs;
+  const { createNode, withOut, colorChip, ajaxJson, returnGet, cleanChildren, ajaxMultiple, hasQuery, removeQuery, appendQuery } = GeneralJs;
   try {
     const getObj = returnGet();
     const emptyDate = () => { return new Date(1800, 0, 1) };
@@ -6179,6 +6191,11 @@ DesignerJs.prototype.careView = async function () {
     if (instance.totalMother !== null && instance.totalMother !== undefined) {
       totalContents.removeChild(instance.totalMother);
     }
+
+    if (hasQuery("type")) {
+      removeQuery("type");
+    }
+    appendQuery({ type: "care" });
 
     ({ projects, clients } = await ajaxJson({ mode: "pre", searchMode: (typeof getObj.proid === "string" ? getObj.proid : "false") }, BACKHOST + "/processConsole", { equal: true }));
     proidArr = projects.map((p) => { return p.proid });
@@ -6219,7 +6236,6 @@ DesignerJs.prototype.careView = async function () {
       instance.itemList = [];
       instance.panNumbers = [];
       instance.naviHeight = 0;
-      instance.nowUploading = false;
       instance.menuArea = null;
     }).catch((err) => {
       window.location.reload();
