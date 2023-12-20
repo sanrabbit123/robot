@@ -490,70 +490,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           },
         ],
       },
-      {
-        title: "총 추천수",
-        width: 100,
-        name: "proposalNumber",
-        type: "number",
-      },
-      {
-        title: "총 진행수",
-        width: 100,
-        name: "contractNumber",
-        type: "number",
-      },
-      {
-        title: "진행율",
-        width: 100,
-        name: "contractPercentage",
-        type: "percentage",
-      },
-      {
-        title: "총 정산액",
-        width: 120,
-        name: "totalAmount",
-        type: "number",
-      },
     ];
-
-    for (let i = 0; i < yearDelta; i++) {
-      columns.push({
-        title: String(now.getFullYear() - i) + " " + "추천수",
-        width: 120,
-        name: "proposalNumberY" + String(i),
-        type: "number",
-      });
-      columns.push({
-        title: String(now.getFullYear() - i) + " " + "진행수",
-        width: 120,
-        name: "contractNumberY" + String(i),
-        type: "number",
-      });
-      columns.push({
-        title: String(now.getFullYear() - i) + " " + "진행율",
-        width: 120,
-        name: "contractPercentageY" + String(i),
-        type: "percentage",
-      });
-      columns.push({
-        title: String(now.getFullYear() - i) + " " + "총 정산액",
-        width: 120,
-        name: "totalAmountY" + String(i),
-        type: "number",
-      });
-    }
-
-    for (let i = 0; i < monthDelta; i++) {
-      tempDate = new Date();
-      tempDate.setMonth(tempDate.getMonth() - i);
-      tempString = String(tempDate.getFullYear()).slice(2) + ". " + String(tempDate.getMonth() + 1) + "월";
-      columns.push({
-        title: tempString + " " + "추천수",
-        width: 120,
-        name: "monthDelta" + String(tempDate.getFullYear()).slice(2) + String(tempDate.getMonth() + 1),
-        type: "number",
-      });
-    }
 
     values = {};
 
@@ -701,42 +638,9 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         name: "living",
       });
 
-      values[designer.desid].push({
-        value: asyncProcessText,
-        name: "proposalNumber",
-      });
-      values[designer.desid].push({
-        value: asyncProcessText,
-        name: "contractNumber",
-      });
-      values[designer.desid].push({
-        value: asyncProcessText,
-        name: "contractPercentage",
-      });
-      values[designer.desid].push({
-        value: asyncProcessText,
-        name: "totalAmount",
-      });
-
-      for (let i = 0; i < yearDelta; i++) {
-        values[designer.desid].push({ value: asyncProcessText, name: "proposalNumberY" + String(i) });
-        values[designer.desid].push({ value: asyncProcessText, name: "contractNumberY" + String(i) });
-        values[designer.desid].push({ value: asyncProcessText, name: "contractPercentageY" + String(i) });
-        values[designer.desid].push({ value: asyncProcessText, name: "totalAmountY" + String(i) });
-      }
-  
-      for (let i = 0; i < monthDelta; i++) {
-        tempDate = new Date();
-        tempDate.setMonth(tempDate.getMonth() - i);
-        tempString = String(tempDate.getFullYear()).slice(2) + ". " + String(tempDate.getMonth() + 1) + "월";
-        values[designer.desid].push({ value: asyncProcessText, name: "monthDelta" + String(tempDate.getFullYear()).slice(2) + String(tempDate.getMonth() + 1) });
-      }
-
     }
 
-    if (firstLoad) {
-
-      /*
+    if (false) {
       ajaxJson({ mode: "total" }, S3HOST + "/designerAboutComplete", { equal: true }).then((c) => {
         completeAnalyticsRows = c;
         return ajaxJson({ noFlat: true, whereQuery: { $or: [ { "proposal.date": { $gte: past } }, { "process.status": { $regex: "^[대진]" } } ] } }, BACKHOST + "/getProjects", { equal: true });
@@ -873,8 +777,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         return instance.normalColorSync();
   
       }).catch((err) => { console.log(err); });
-      */
-
     }
 
     return { standards, columns, values };
@@ -6261,6 +6163,242 @@ DesignerJs.prototype.careView = async function () {
   }
 }
 
+DesignerJs.prototype.numbersDataRender = async function () {
+  const instance = this;
+  const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows, profileList, workList, representativeList } = this;
+  const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute } = GeneralJs;
+  try {
+    const calcMonthDelta = (from, to) => {
+      return ((to.getFullYear() * 12) + to.getMonth() + 1) - ((from.getFullYear() * 12) + from.getMonth() + 1) + 1;
+    }
+    const now = new Date();
+    const past = new Date();
+    const yearsAgo = new Date();
+    const agoDelta = 24;
+    const agoYearDelta = 3;
+    let columns;
+    let values;
+    let timeDelta;
+    let year, month;
+    let filteredProjectsProposal;
+    let filteredProjectsContract;
+    let thisTarget;
+    let thisValueDoms;
+    let yearDelta;
+    let monthDelta;
+    let tempDate;
+    let tempString;
+    let thisYear, from, to;
+    let filteredFilteredProjectsProposal;
+    let filteredFilteredProjectsContract;
+    let thisDate;
+    let standards;
+    let thisValueTemp;
+    let filteredChecklistSendRows;
+    let filteredProfileSendRows;
+    let filteredWorkSendRows;
+    let completeAnalyticsRows;
+    let profileListSet;
+    let workListSet0, workListSet1, workListSet2, workListSet3;
+    let filteredCareerSendRows;
+    let filteredEntireSendRows;
+    let careerUpdateBoo;
+    let schoolUpdateBoo;
+    let threeStrengthBoo;
+    let representativeBoo;
+
+    past.setFullYear(past.getFullYear() - agoYearDelta);
+    past.setMonth(0);
+    past.setDate(1);
+    past.setHours(9);
+    past.setMinutes(0);
+    past.setSeconds(0);
+
+    yearsAgo.setMonth(yearsAgo.getMonth() - agoDelta);
+    yearDelta = now.getFullYear() - past.getFullYear() + 1
+    monthDelta = calcMonthDelta(yearsAgo, now);
+
+    profileListSet = [ ...new Set(profileList.map((o) => { return o.desid })) ];
+    workListSet0 = [ ...new Set(workList[0].map((o) => { return o.desid })) ];
+    workListSet1 = [ ...new Set(workList[1].map((o) => { return o.desid })) ];
+    workListSet2 = [ ...new Set(workList[2].map((o) => { return o.desid })) ];
+    workListSet3 = [ ...new Set(workList[3].map((o) => { return o.desid })) ];
+
+    standards = {
+      columns: [
+        {
+          title: "아이디",
+          width: 96,
+          name: "desid",
+          type: "string",
+        },
+        {
+          title: "성함",
+          width: 60,
+          name: "designer",
+          type: "string",
+        },
+      ],
+      values: {},
+    }
+
+    columns = [
+      {
+        title: "총 추천수",
+        width: 100,
+        name: "proposalNumber",
+        type: "number",
+      },
+      {
+        title: "총 진행수",
+        width: 100,
+        name: "contractNumber",
+        type: "number",
+      },
+      {
+        title: "진행율",
+        width: 100,
+        name: "contractPercentage",
+        type: "percentage",
+      },
+      {
+        title: "총 정산액",
+        width: 120,
+        name: "totalAmount",
+        type: "number",
+      },
+    ];
+
+    for (let i = 0; i < yearDelta; i++) {
+      columns.push({
+        title: String(now.getFullYear() - i) + " " + "추천수",
+        width: 120,
+        name: "proposalNumberY" + String(i),
+        type: "number",
+      });
+      columns.push({
+        title: String(now.getFullYear() - i) + " " + "진행수",
+        width: 120,
+        name: "contractNumberY" + String(i),
+        type: "number",
+      });
+      columns.push({
+        title: String(now.getFullYear() - i) + " " + "진행율",
+        width: 120,
+        name: "contractPercentageY" + String(i),
+        type: "percentage",
+      });
+      columns.push({
+        title: String(now.getFullYear() - i) + " " + "총 정산액",
+        width: 120,
+        name: "totalAmountY" + String(i),
+        type: "number",
+      });
+    }
+
+    for (let i = 0; i < monthDelta; i++) {
+      tempDate = new Date();
+      tempDate.setMonth(tempDate.getMonth() - i);
+      tempString = String(tempDate.getFullYear()).slice(2) + ". " + String(tempDate.getMonth() + 1) + "월";
+      columns.push({
+        title: tempString + " " + "추천수",
+        width: 120,
+        name: "monthDelta" + String(tempDate.getFullYear()).slice(2) + String(tempDate.getMonth() + 1),
+        type: "number",
+      });
+    }
+
+    values = {};
+
+    for (let designer of instance.designers) {
+
+      filteredProjectsProposal = instance.projects.filter((p) => {
+        return p.proposal.detail.some((obj) => {
+          return obj.desid === designer.desid
+        });
+      });
+
+      filteredProjectsContract = instance.projects.filter((p) => {
+        return p.desid === designer.desid;
+      });
+
+      standards.values[designer.desid] = [
+        {
+          value: designer.desid,
+          name: "desid",
+        },
+        {
+          value: designer.designer,
+          name: "designer",
+        },
+      ];
+
+      values[designer.desid] = [];
+
+      values[designer.desid].push({
+        value: String(filteredProjectsProposal.length),
+        name: "proposalNumber",
+      });
+      values[designer.desid].push({
+        value: String(filteredProjectsContract.length),
+        name: "contractNumber",
+      });
+      values[designer.desid].push({
+        value: String(Math.round((filteredProjectsProposal.length === 0 ? 0 : (filteredProjectsContract.length / filteredProjectsProposal.length)) * 10000) / 100) + '%',
+        name: "contractPercentage",
+      });
+      values[designer.desid].push({
+        value: autoComma(Math.floor(filteredProjectsContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0))) + '원',
+        name: "totalAmount",
+      });
+
+      for (let i = 0; i < yearDelta; i++) {
+
+        thisYear = (new Date()).getFullYear() - i;
+        from = new Date(thisYear, 0, 1);
+        to = new Date(thisYear + 1, 0, 1);
+
+        filteredFilteredProjectsProposal = filteredProjectsProposal.filter((p) => {
+          return (p.proposal.date.valueOf() >= from.valueOf() && p.proposal.date.valueOf() < to.valueOf());
+        });
+
+        filteredFilteredProjectsContract = filteredProjectsContract.filter((p) => {
+          return (p.process.contract.first.date.valueOf() >= from.valueOf() && p.process.contract.first.date.valueOf() < to.valueOf());
+        });
+
+
+        values[designer.desid].push({ value: filteredFilteredProjectsProposal.length, name: "proposalNumberY" + String(i) });
+        values[designer.desid].push({ value: filteredFilteredProjectsContract.length, name: "contractNumberY" + String(i) });
+        values[designer.desid].push({ value: (String(Math.round((filteredFilteredProjectsProposal.length === 0 ? 0 : (filteredFilteredProjectsContract.length / filteredFilteredProjectsProposal.length)) * 10000) / 100) + '%'), name: "contractPercentageY" + String(i) });
+        values[designer.desid].push({ value: (autoComma(Math.floor(filteredFilteredProjectsContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0))) + '원'), name: "totalAmountY" + String(i) });
+      }
+  
+      for (let i = 0; i < monthDelta; i++) {
+
+        thisDate = new Date();
+        thisDate.setMonth(thisDate.getMonth() - i);
+        from = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1);
+        to = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1);
+        to.setMonth(to.getMonth() + 1);
+        filteredFilteredProjectsProposal = filteredProjectsProposal.filter((p) => {
+          return (p.proposal.date.valueOf() >= from.valueOf() && p.proposal.date.valueOf() < to.valueOf());
+        });
+
+        tempDate = new Date();
+        tempDate.setMonth(tempDate.getMonth() - i);
+        tempString = String(tempDate.getFullYear()).slice(2) + ". " + String(tempDate.getMonth() + 1) + "월";
+        values[designer.desid].push({ value: String(filteredFilteredProjectsProposal.length), name: "monthDelta" + String(tempDate.getFullYear()).slice(2) + String(tempDate.getMonth() + 1) });
+      }
+
+    }
+
+    return { standards, columns, values };
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.numbersBase = async function () {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
@@ -6350,7 +6488,7 @@ DesignerJs.prototype.numbersBase = async function () {
     contextButtonWeight = 700;
     contextButtonTextTop = isMac() ? -1 : 1;
 
-    ({ standards, columns, values } = await this.normalDataRender(true));
+    ({ standards, columns, values } = await this.numbersDataRender());
   
     hoverEvent = () => {
       return function (e) {
@@ -6858,7 +6996,7 @@ DesignerJs.prototype.numbersBase = async function () {
       try {
 
         if (reload) {
-          ({ standards, columns, values } = await instance.normalDataRender(true));
+          ({ standards, columns, values } = await instance.numbersDataRender());
         }
 
         cleanChildren(totalMother);
@@ -7161,8 +7299,8 @@ DesignerJs.prototype.numbersBase = async function () {
     
         }
     
-        await this.normalColorSync();
-        await this.normalSubPannel();
+        // await this.normalColorSync();
+        // await this.normalSubPannel();
 
       } catch (e) {
         console.log(e);
@@ -7209,20 +7347,12 @@ DesignerJs.prototype.numbersView = async function () {
     }
 
     members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
+    projects = await ajaxJson({ whereQuery: {}, projectQuery: { proid: 1, cliid: 1, desid: 1, service: 1, process: 1, proposal: 1, } }, SECONDHOST + "/pickProjects", { equal: true });
 
-    projects = await ajaxJson({ whereQuery: {}, projectQuery: { proid: 1, cliid: 1, desid: 1, service: 1, process: 1 } }, SECONDHOST + "/pickProjects", { equal: true });
-
-    
-
-
-    console.log(projects);
+    this.projects = projects;
 
     this.cleanSearchEvent();
     await this.numbersBase();
-
-
-
-
 
 
 
