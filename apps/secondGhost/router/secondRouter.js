@@ -742,6 +742,51 @@ SecondRouter.prototype.rou_post_getDocuments = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_pickProjects = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/pickProjects" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.whereQuery === undefined || req.body.projectQuery === undefined) {
+        throw new Error("invaild post");
+      }
+
+      const selfMongo = instance.mongo;
+      const { whereQuery, projectQuery } = equalJson(req.body);
+      let rows;
+
+      if (typeof whereQuery !== "object" || whereQuery === null) {
+        throw new Error("invaild query object");
+      }
+      if (typeof projectQuery !== "object" || projectQuery === null) {
+        throw new Error("invaild query object");
+      }
+
+      rows = await back.mongoPick("project", [ whereQuery, projectQuery ], { selfMongo });
+
+      res.send(JSON.stringify(rows));
+
+    } catch (e) {
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_pickProjects): " + req.url + " " + req.headers["origin"] + " " + JSON.stringify(req.body) + " " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_updateDocument = function () {
   const instance = this;
   const back = this.back;
