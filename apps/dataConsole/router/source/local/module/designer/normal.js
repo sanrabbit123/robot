@@ -925,7 +925,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
   const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, hasQuery, removeQuery, appendQuery } = GeneralJs;
   return async function (e) {
     try {
       const zIndex = 4;
@@ -946,6 +946,10 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
       let isCxMember;
 
       window.history.pushState({ desid }, "");
+      if (hasQuery("desid")) {
+        removeQuery("desid");
+      }
+      appendQuery({ desid: desid });
 
       isCxMember = await GeneralJs.nonCxBan(true);
       linkDictionary = {
@@ -3909,7 +3913,7 @@ DesignerJs.prototype.normalSubPannel = async function () {
         },
       },
       {
-        title: "디자이너 보고서 모드",
+        title: "디자이너 보고서",
         event: () => {
           return async function (e) {
             try {
@@ -4002,6 +4006,136 @@ DesignerJs.prototype.cleanSearchEvent = function () {
   this.searchInput = searchInputCloned;
 }
 
+DesignerJs.prototype.careSubPannel = async function () {
+  const instance = this;
+  const { ea, totalContents, belowHeight, totalMother } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
+  const titleStringClassName = "titleStringClassName";
+  try {
+    const zIndex = 2;
+    let pannelBase;
+    let pannelOuterMargin;
+    let pannelInnerPadding;
+    let pannelMenu;
+    let menuPromptWidth;
+    let menuPromptHeight;
+    let menuTextTop;
+    let menuBetween;
+    let menuSize;
+    let menuWeight;
+    let pannelTong;
+    let num;
+
+    pannelOuterMargin = 40;
+    pannelInnerPadding = 6;
+
+    menuPromptWidth = 140;
+    menuPromptHeight = 32;
+    menuTextTop = isMac() ? -1 : 1,
+    menuBetween = 3;
+    menuSize = 13;
+    menuWeight = 700;
+
+    pannelMenu = [
+      {
+        title: "디자이너 속성 모드",
+        event: () => {
+          return async function (e) {
+            try {
+              window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+      {
+        title: "디자이너 보고서",
+        event: () => {
+          return async function (e) {
+            try {
+              await instance.numbersView();
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+    ];
+
+    pannelBase = createNode({
+      mother: totalMother,
+      style: {
+        display: "flex",
+        position: "absolute",
+        bottom: String(pannelOuterMargin) + ea,
+        right: String(pannelOuterMargin) + ea,
+        background: colorChip.white,
+        zIndex: String(zIndex),
+        borderRadius: String(5) + "px",
+        animation: "fadeuplite 0.3s ease forwards",
+        boxShadow: "0 3px 15px -9px " + colorChip.shadow,
+        padding: String(pannelInnerPadding) + ea,
+        flexDirection: "column",
+      },
+      child: {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(menuPromptWidth) + ea,
+          flexDirection: "column",
+        }
+      }
+    });
+    pannelTong = pannelBase.firstChild;
+
+    num = 0;
+    for (let obj of pannelMenu) {
+      createNode({
+        mother: pannelTong,
+        event: {
+          click: obj.event(),
+        },
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(menuPromptWidth) + ea,
+          height: String(menuPromptHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          marginBottom: String(num === pannelMenu.length - 1 ? 0 : menuBetween) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        child: {
+          class: [ titleStringClassName ],
+          text: obj.title,
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
+          style: {
+            position: "relative",
+            top: String(menuTextTop) + ea,
+            fontSize: String(menuSize) + ea,
+            fontWeight: String(menuWeight),
+            color: colorChip.white,
+          }
+        }
+      })
+      num++;
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.careSearchEvent = async function () {
   const instance = this;
   const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
@@ -4036,7 +4170,7 @@ DesignerJs.prototype.careSearchEvent = async function () {
 
           const value = this.value.trim().replace(/\&\=\+\\\//gi, '');
 
-          loading = instance.mother.grayLoading(null, true);
+          loading = instance.mother.grayLoading(null, false);
           ajaxJson({ mode: "search", value: value.trim() }, BACKHOST + "/processConsole", { equal: true }).then((serverResponse) => {
             instance.reloadProjects(serverResponse);
             return instance.careContentsLoad(true, null);
@@ -5861,6 +5995,7 @@ DesignerJs.prototype.careBase = async function (filterFunc = null) {
         }
 
         await instance.careColorSync(typeof filterFunc === "function");
+        await instance.careSubPannel();
 
       } catch (e) {
         console.log(e);
@@ -6102,8 +6237,7 @@ DesignerJs.prototype.careView = async function () {
     this.cleanSearchEvent();
     await this.careBase(null);
     await this.careSearchEvent();
-
-
+    
     loading.parentNode.removeChild(loading);
 
   } catch (e) {

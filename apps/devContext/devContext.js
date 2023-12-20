@@ -6981,17 +6981,16 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2312_aa02s", [
-    //   { porlid: "ghost", index: 1 },
-    //   { porlid: "ghost", index: 9 },
+    // await this.setProposalSettingForDesigner("d2312_aa03s", [
     //   { porlid: "ghost", index: 2 },
+    //   { porlid: "ghost", index: 7 },
+    //   { porlid: "ghost", index: 4 },
+    //   { porlid: "ghost", index: 5 },
     //   { porlid: "ghost", index: 3 },
-    //   { porlid: "ghost", index: 8 },
-    //   { porlid: "ghost", index: 11 },
     // ], [
-    //   "각종 실시 설계 및 인테리어 디자인 작업 경력으로 능숙한 프로젝트 운영 능력이 있습니다.",
-    //   "모던하고 깔끔한 스타일에 능하며 고급스러운 공간 분위기 연출에 강합니다.",
-    //   "차분하고 감성적인 홈스타일링과 체계적인 시공 리모델링으로 원하시는 집을 만들어 드립니다.",
+    //   "빠른 문제 해결 능력을 가지고 있어, 속도감 있는 진행을 할 수 있습니다.",
+    //   "창의적인 해답을 내는 능력으로 고객님의 집을, 고객님만의 집답게 만들어 드립니다.",
+    //   "논리적인 의사소통 능력으로 합리적인 디자인안을 도출해내고, 문제를 해결합니다.",
     // ]);
 
 
