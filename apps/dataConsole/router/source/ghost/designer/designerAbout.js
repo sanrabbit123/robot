@@ -1741,7 +1741,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           property: "주민등록번호",
           admin: false,
           returnValue: (designer) => {
-            return designer.information.residentNunber === "" ? "-" : designer.information.residentNunbe;
+            return designer.information.residentNunber === "" ? "-" : designer.information.residentNunber;
           },
           renderValue: (text) => {
             return text;
