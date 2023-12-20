@@ -6163,6 +6163,43 @@ DesignerJs.prototype.careView = async function () {
   }
 }
 
+DesignerJs.prototype.numbersColorSync = async function () {
+  const instance = this;
+  const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText } = this;
+  const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute } = GeneralJs;
+  try {
+    let columns;
+    let colorStandard;
+    let standardDoms, valueDoms;
+    let thisValue;
+    let thisColor;
+    let thisTargets;
+
+    ({ columns } = await this.normalDataRender(false));
+
+    colorStandard = columns.find((obj) => { return obj.colorStandard === true });
+
+    standardDoms = [ ...document.querySelectorAll('.' + standardCaseClassName) ];
+    valueDoms = [ ...document.querySelectorAll('.' + valueCaseClassName) ];
+
+    for (let i = 0; i < standardDoms.length; i++) {
+      thisValue = findByAttribute([ ...valueDoms[i].querySelectorAll('.' + valueTargetClassName) ], "name", colorStandard.name).textContent.trim();
+      if (colorStandard.colorMap.find((o) => { return o.value === thisValue }) === undefined) {
+        throw new Error("invalid value color match");
+      }
+      thisColor = colorStandard.colorMap.find((o) => { return o.value === thisValue }).color;
+      thisTargets = [ ...standardDoms[i].querySelectorAll('.' + valueTargetClassName) ].concat([ ...valueDoms[i].querySelectorAll('.' + valueTargetClassName) ]);
+      for (let dom of thisTargets) {
+        dom.style.color = (new RegExp(asyncProcessText, "gi")).test(dom.textContent) ? colorChip.gray3 : thisColor;
+        dom.setAttribute("color", (new RegExp(asyncProcessText, "gi")).test(dom.textContent) ? colorChip.gray3 : thisColor);
+      }
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.numbersDataRender = async function () {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows, profileList, workList, representativeList } = this;
@@ -6174,8 +6211,8 @@ DesignerJs.prototype.numbersDataRender = async function () {
     const now = new Date();
     const past = new Date();
     const yearsAgo = new Date();
-    const agoDelta = 24;
-    const agoYearDelta = 3;
+    const agoDelta = 36;
+    const agoYearDelta = 4;
     let columns;
     let values;
     let timeDelta;
@@ -6243,6 +6280,52 @@ DesignerJs.prototype.numbersDataRender = async function () {
     }
 
     columns = [
+      {
+        title: "계약 상태",
+        width: 100,
+        name: "status",
+        colorStandard: true,
+        colorMap: [
+          {
+            value: "협약 완료",
+            color: colorChip.black,
+          },
+          {
+            value: "협약 휴직",
+            color: colorChip.deactive,
+          },
+          {
+            value: "협약 해지",
+            color: colorChip.gray3,
+          },
+          {
+            value: "신청 대기",
+            color: colorChip.red,
+          },
+          {
+            value: "컨택중",
+            color: colorChip.deactive,
+          },
+        ],
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          }
+        ].concat([
+          "협약 완료",
+          "협약 휴직",
+          "협약 해지",
+          "신청 대기",
+          "컨택중",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        }))
+      },
       {
         title: "총 추천수",
         width: 100,
@@ -6333,7 +6416,12 @@ DesignerJs.prototype.numbersDataRender = async function () {
         },
       ];
 
-      values[designer.desid] = [];
+      values[designer.desid] = [
+        {
+          value: designer.information.contract.status,
+          name: "status",
+        },
+      ];
 
       values[designer.desid].push({
         value: String(filteredProjectsProposal.length),
@@ -7299,7 +7387,7 @@ DesignerJs.prototype.numbersBase = async function () {
     
         }
     
-        // await this.normalColorSync();
+        await this.numbersColorSync();
         // await this.normalSubPannel();
 
       } catch (e) {
@@ -7353,10 +7441,6 @@ DesignerJs.prototype.numbersView = async function () {
 
     this.cleanSearchEvent();
     await this.numbersBase();
-
-
-
-
 
 
 
