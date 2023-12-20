@@ -2381,6 +2381,9 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
         }
         for (let p of projects) {
           tempClient = clients.find((c) => { return p.cliid === c.cliid });
+          if (tempClient === undefined) {
+            tempClient = await back.getClientById(p.cliid, { selfMongo: instance.mongo, toNormal: true });
+          }
           requestNumber = 0;
           for (let i = 0; i < tempClient.requests.length; i++) {
             if (tempClient.requests[i].request.timeline.valueOf() < p.proposal.date.valueOf()) {
