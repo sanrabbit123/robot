@@ -2499,7 +2499,7 @@ DesignerJs.prototype.normalDetailSearchEvent = async function () {
 DesignerJs.prototype.normalProcessDetailEvent = async function (proid, desid) {
   const instance = this;
   const { ea, totalContents, totalMother, belowHeight, grayBarWidth, processDetailEventClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, setQueue } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, setQueue, blankHref } = GeneralJs;
   try {
     const zIndex = 4;
     let cancelBack, whiteBase;
@@ -2580,7 +2580,11 @@ DesignerJs.prototype.normalProcessDetailEvent = async function (proid, desid) {
         outline: String(0),
         borderRadius: String(5) + "px",
       }
-    })
+    });
+
+    setQueue(() => {
+      blankHref(FRONTHOST + "/designer/process.php?proid=" + proid + "&mode=request&view=test");
+    }, 1000);
 
   } catch (e) {
     console.log(e);
@@ -2626,8 +2630,10 @@ DesignerJs.prototype.normalMessageEvent = async function () {
             });
 
           } else if (data.type === "processDetail") {
+            
             removeByClass(whiteCardClassName);
             await instance.normalProcessDetailEvent(data.proid, data.desid);
+
           } else if (data.type === "returnToPast") {
             const tempFunction = instance.normalWhiteCard(document.querySelectorAll('.' + processDetailEventClassName)[1].getAttribute("desid"));
             removeByClass(processDetailEventClassName);
