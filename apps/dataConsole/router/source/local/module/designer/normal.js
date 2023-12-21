@@ -6482,6 +6482,86 @@ DesignerJs.prototype.numbersDataRender = async function () {
         type: "number",
       },
       {
+        title: "홈퍼니싱",
+        width: 100,
+        name: "homefurnishing",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "가능",
+            functionName: "filterEvent_가능",
+          },
+          {
+            value: "불가능",
+            functionName: "filterEvent_불가능",
+          },
+        ],
+      },
+      {
+        title: "홈스타일링",
+        width: 100,
+        name: "homestyling",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "가능",
+            functionName: "filterEvent_가능",
+          },
+          {
+            value: "불가능",
+            functionName: "filterEvent_불가능",
+          },
+        ],
+      },
+      {
+        title: "토탈 스타일링",
+        width: 100,
+        name: "totalstyling",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "가능",
+            functionName: "filterEvent_가능",
+          },
+          {
+            value: "불가능",
+            functionName: "filterEvent_불가능",
+          },
+        ],
+      },
+      {
+        title: "설계 변경",
+        width: 100,
+        name: "extrastyling",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "가능",
+            functionName: "filterEvent_가능",
+          },
+          {
+            value: "불가능",
+            functionName: "filterEvent_불가능",
+          },
+        ],
+      },
+      {
         title: "3개월 가능수",
         width: 90,
         name: "possible3m",
@@ -6703,6 +6783,22 @@ DesignerJs.prototype.numbersDataRender = async function () {
       values[designer.desid].push({
         value: String(filteredProjectsContract.filter((p) => { return /^진/.test(p.process.status) }).length),
         name: "processDoing",
+      });
+      values[designer.desid].push({
+        value: designer.analytics.project.matrix[0][1] === 1 ? "가능" : "불가능",
+        name: "homefurnishing",
+      });
+      values[designer.desid].push({
+        value: designer.analytics.project.matrix[1][1] === 1 ? "가능" : "불가능",
+        name: "homestyling",
+      });
+      values[designer.desid].push({
+        value: designer.analytics.project.matrix[2][1] === 1 ? "가능" : "불가능",
+        name: "totalstyling",
+      });
+      values[designer.desid].push({
+        value: designer.analytics.project.matrix[3][1] === 1 ? "가능" : "불가능",
+        name: "extrastyling",
       });
       values[designer.desid].push({
         value: String(possible3m),
