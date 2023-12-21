@@ -23,6 +23,24 @@ const ProposalJs = function () {
   this.clickTargets = [];
 }
 
+Set.prototype.intersection = function (setB) {
+  let intersection = new Set();
+  for (let elem of setB) {
+    if (this.has(elem)) {
+      intersection.add(elem);
+    }
+  }
+  return intersection;
+}
+
+Set.prototype.union = function (setB) {
+  let union = new Set(this);
+  for (let elem of setB) {
+    union.add(elem);
+  }
+  return union;
+}
+
 ProposalJs.designerFee = new Map();
 
 ProposalJs.feeKeyMaker = function (desid, cliid, serid, xValue) {
@@ -2891,8 +2909,19 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
 
   designers = instance.designers;
   fourth.callbacks.set("디자이너 이름", function (dom, n) {
+    const expectedToDate = function (str0, startDateNumber = 0) {
+      let expected;
+      expected = new Date(str0);
+      expected.setDate(expected.getDate() - startDateNumber);
+      return expected;
+    }
     let input, div_clone, div_clone2, div_clone3, input_clone, label_clone;
     let i;
+    let thisService;
+    let dateFrom, dateTo;
+    let thisRealtime;
+    let thisPossible;
+    let possible;
 
     input = GeneralJs.nodes.input.cloneNode(true);
     input.classList.add("pp_designer_selected_box_contents_designers_input");
@@ -2921,6 +2950,38 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       div_clone2.setAttribute("cus_num", String(n));
 
       if (designer.analytics.construct.level < Number(instance.serid.replace(/[^0-9]/gi, '')) - 1) {
+        div_clone2.style.background = GeneralJs.colorChip.gray3;
+        div_clone2.style.color = GeneralJs.colorChip.deactive;
+      }
+
+      thisService = GeneralJs.serviceParsing(document.getElementById("pp_title2_sub_b").textContent);
+      dateFrom = expectedToDate(instance.client.requests[0].analytics.date.space.movein, serviceParsing(thisService, true));
+      dateTo = expectedToDate(instance.client.requests[0].analytics.date.space.movein);
+
+      thisRealtime = instance.realtimeDesigner.data.find((o) => { return o.desid === designer.desid });
+      thisPossible = [];
+      if (thisRealtime !== undefined) {
+        thisPossible = GeneralJs.equalJson(JSON.stringify(thisRealtime.possible));
+      }
+      possible = thisPossible.filter((o) => {
+        standard0 = Math.round((((o.start.valueOf() / 1000) / 60) / 60) / 24);
+        standard1 = Math.round((((o.end.valueOf() / 1000) / 60) / 60) / 24);
+        standard2 = Math.round((((dateFrom.valueOf() / 1000) / 60) / 60) / 24);
+        standard3 = Math.round((((dateTo.valueOf() / 1000) / 60) / 60) / 24);
+        range0 = [];
+        range1 = [];
+        for (let i = standard0; i <= standard1; i++) {
+          range0.push(i);
+        }
+        for (let i = standard2; i <= standard3; i++) {
+          range1.push(i);
+        }
+        range0 = new Set(range0);
+        range1 = new Set(range1);
+        return (range0.intersection(range1)).size > 0;
+      });
+
+      if (!possible) {
         div_clone2.style.background = GeneralJs.colorChip.gray3;
         div_clone2.style.color = GeneralJs.colorChip.deactive;
       }
@@ -6327,6 +6388,7 @@ ProposalJs.prototype.launching = async function () {
     let clients;
 
     this.designers = new Designers(await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $regex: "완료" } } }, "/getDesigners", { equal: true }));
+    this.realtimeDesigner = await ajaxJson({ mode: "all" }, BACKHOST + "/realtimeDesigner", { equal: true });
     this.proposalGeneration = {};
 
     left.style.display = "none";

@@ -3964,7 +3964,7 @@ DesignerJs.prototype.careSubPannel = async function () {
         event: () => {
           return async function (e) {
             try {
-              await instance.numbersView();
+              window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal&type=numbers";
             } catch (e) {
               console.log(e);
               window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
@@ -6218,6 +6218,136 @@ Set.prototype.union = function (setB) {
   return union;
 }
 
+DesignerJs.prototype.numbersSubPannel = async function () {
+  const instance = this;
+  const { ea, totalContents, belowHeight, totalMother } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
+  const titleStringClassName = "titleStringClassName";
+  try {
+    const zIndex = 2;
+    let pannelBase;
+    let pannelOuterMargin;
+    let pannelInnerPadding;
+    let pannelMenu;
+    let menuPromptWidth;
+    let menuPromptHeight;
+    let menuTextTop;
+    let menuBetween;
+    let menuSize;
+    let menuWeight;
+    let pannelTong;
+    let num;
+
+    pannelOuterMargin = 40;
+    pannelInnerPadding = 6;
+
+    menuPromptWidth = 140;
+    menuPromptHeight = 32;
+    menuTextTop = isMac() ? -1 : 1,
+    menuBetween = 3;
+    menuSize = 13;
+    menuWeight = 700;
+
+    pannelMenu = [
+      {
+        title: "디자이너 속성 모드",
+        event: () => {
+          return async function (e) {
+            try {
+              window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+      {
+        title: "프로젝트 케어 모드",
+        event: () => {
+          return async function (e) {
+            try {
+              window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal&type=care";
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+    ];
+
+    pannelBase = createNode({
+      mother: totalMother,
+      style: {
+        display: "flex",
+        position: "absolute",
+        bottom: String(pannelOuterMargin) + ea,
+        right: String(pannelOuterMargin) + ea,
+        background: colorChip.white,
+        zIndex: String(zIndex),
+        borderRadius: String(5) + "px",
+        animation: "fadeuplite 0.3s ease forwards",
+        boxShadow: "0 3px 15px -9px " + colorChip.shadow,
+        padding: String(pannelInnerPadding) + ea,
+        flexDirection: "column",
+      },
+      child: {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(menuPromptWidth) + ea,
+          flexDirection: "column",
+        }
+      }
+    });
+    pannelTong = pannelBase.firstChild;
+
+    num = 0;
+    for (let obj of pannelMenu) {
+      createNode({
+        mother: pannelTong,
+        event: {
+          click: obj.event(),
+        },
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(menuPromptWidth) + ea,
+          height: String(menuPromptHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          marginBottom: String(num === pannelMenu.length - 1 ? 0 : menuBetween) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        child: {
+          class: [ titleStringClassName ],
+          text: obj.title,
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
+          style: {
+            position: "relative",
+            top: String(menuTextTop) + ea,
+            fontSize: String(menuSize) + ea,
+            fontWeight: String(menuWeight),
+            color: colorChip.white,
+          }
+        }
+      })
+      num++;
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.numbersDataRender = async function () {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows, profileList, workList, representativeList } = this;
@@ -6526,28 +6656,30 @@ DesignerJs.prototype.numbersDataRender = async function () {
         return (range0.intersection(range1)).size > 0;
       });
       
-      possible3m = possible3m.map((o) => { return o.matrix });
-      possible6m = possible6m.map((o) => { return o.matrix });
-      possible12m = possible12m.map((o) => { return o.matrix });
-
       if (possible3m.length > 0) {
+        possible3m = possible3m.map((o) => { return o.matrix });
         possible3m = possible3m.flat();
         possible3m = possible3m.reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0);
       } else {
         possible3m = 0;
       }
       if (possible6m.length > 0) {
+        possible6m = possible6m.map((o) => { return o.matrix });
         possible6m = possible6m.flat();
         possible6m = possible6m.reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0);
       } else {
         possible6m = 0;
       }
       if (possible12m.length > 0) {
+        possible12m = possible12m.map((o) => { return o.matrix });
         possible12m = possible12m.flat();
         possible12m = possible12m.reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0);
       } else {
         possible12m = 0;
       }
+      
+      
+
 
       standards.values[designer.desid] = [
         {
@@ -7552,7 +7684,7 @@ DesignerJs.prototype.numbersBase = async function () {
         }
     
         await this.numbersColorSync();
-        // await this.normalSubPannel();
+        await this.numbersSubPannel();
 
       } catch (e) {
         console.log(e);
