@@ -3825,7 +3825,7 @@ DesignerJs.prototype.normalSubPannel = async function () {
         event: () => {
           return async function (e) {
             try {
-              await instance.numbersView();
+              await instance.numbersView(false);
             } catch (e) {
               console.log(e);
               window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
@@ -6218,7 +6218,65 @@ Set.prototype.union = function (setB) {
   return union;
 }
 
-DesignerJs.prototype.numbersSubPannel = async function () {
+DesignerJs.prototype.numbersSearchEvent = async function () {
+  const instance = this;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
+  const { ajaxJson, setQueue } = GeneralJs;
+  try {
+    this.searchInput.addEventListener("keypress", async function (e) {
+      try {
+        if (e.key === "Enter") {
+          if (instance.totalFather !== null) {
+            instance.totalFather.classList.remove("fadein");
+            instance.totalFather.classList.add("fadeout");
+            instance.totalMother.classList.remove("justfadeoutoriginal");
+            instance.totalMother.classList.add("justfadeinoriginal");
+            setQueue(() => {
+              instance.totalFather.remove();
+              instance.totalFather = null;
+            }, 501);
+          }
+          if (document.querySelector('.' + whiteBaseClassName) !== null) {
+            const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+            cancelBack.style.animation = "justfadeout 0.3s ease forwards";
+            if (w0 !== undefined) {
+              w0.style.animation = "fadedownlite 0.3s ease forwards";
+            }
+            if (w1 !== undefined) {
+              w1.style.animation = "fadedownlite 0.3s ease forwards";
+            }
+            setQueue(() => {
+              cancelBack.click();
+            }, 350);
+          }
+
+          const value = this.value.trim().replace(/\&\=\+\\\//gi, '');
+          const designers = await ajaxJson({ noFlat: true, query: value }, BACKHOST + "/searchDesigners", { equal: true });
+          const histories = await ajaxJson({
+            method: "designer",
+            property: [ "manager", "important" ],
+            idArr: designers.map((d) => { return d.desid }),
+          }, BACKHOST + "/getHistoryProperty", { equal: true });
+
+          for (let designer of designers) {
+            designer.manager = histories[designer.desid].manager;
+            designer.important = histories[designer.desid].important;
+          }
+
+          instance.designers = designers;
+          await instance.numbersContentsLoad(true);
+
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DesignerJs.prototype.numbersSubPannel = async function (entireDesignerMode = false) {
   const instance = this;
   const { ea, totalContents, belowHeight, totalMother } = this;
   const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
@@ -6249,6 +6307,33 @@ DesignerJs.prototype.numbersSubPannel = async function () {
     menuWeight = 700;
 
     pannelMenu = [
+      (entireDesignerMode ? {
+        title: "협업 디자이너",
+        event: () => {
+          return async function (e) {
+            try {
+              await instance.numbersView(false);
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      } : {
+        title: "전체 디자이너",
+        event: () => {
+          return async function (e) {
+            try {
+              await instance.numbersView(true);
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      }),
       {
         title: "디자이너 속성 모드",
         event: () => {
@@ -6542,6 +6627,7 @@ DesignerJs.prototype.numbersDataRender = async function () {
         width: 120,
         name: "totalAmount",
         type: "number",
+        money: true,
       },
     ];
 
@@ -6569,6 +6655,7 @@ DesignerJs.prototype.numbersDataRender = async function () {
         width: 120,
         name: "totalAmountY" + String(i),
         type: "number",
+        money: true,
       });
     }
 
@@ -6581,6 +6668,25 @@ DesignerJs.prototype.numbersDataRender = async function () {
         width: 100,
         name: "monthDelta" + String(tempDate.getFullYear()).slice(2) + String(tempDate.getMonth() + 1),
         type: "number",
+      });
+      tempDate = new Date();
+      tempDate.setMonth(tempDate.getMonth() - i);
+      tempString = String(tempDate.getFullYear()).slice(2) + ". " + String(tempDate.getMonth() + 1) + "월";
+      columns.push({
+        title: tempString + " " + "계약수",
+        width: 100,
+        name: "monthDeltaContract" + String(tempDate.getFullYear()).slice(2) + String(tempDate.getMonth() + 1),
+        type: "number",
+      });
+      tempDate = new Date();
+      tempDate.setMonth(tempDate.getMonth() - i);
+      tempString = String(tempDate.getFullYear()).slice(2) + ". " + String(tempDate.getMonth() + 1) + "월";
+      columns.push({
+        title: tempString + " " + "정산액",
+        width: 100,
+        name: "monthDeltaAmount" + String(tempDate.getFullYear()).slice(2) + String(tempDate.getMonth() + 1),
+        type: "number",
+        money: true
       });
     }
 
@@ -6677,9 +6783,6 @@ DesignerJs.prototype.numbersDataRender = async function () {
       } else {
         possible12m = 0;
       }
-      
-      
-
 
       standards.values[designer.desid] = [
         {
@@ -6698,7 +6801,6 @@ DesignerJs.prototype.numbersDataRender = async function () {
           name: "status",
         },
       ];
-
       values[designer.desid].push({
         value: String(filteredProjectsContract.filter((p) => { return /^대/.test(p.process.status) }).length),
         name: "processPending",
@@ -6751,8 +6853,8 @@ DesignerJs.prototype.numbersDataRender = async function () {
         });
 
 
-        values[designer.desid].push({ value: filteredFilteredProjectsProposal.length, name: "proposalNumberY" + String(i) });
-        values[designer.desid].push({ value: filteredFilteredProjectsContract.length, name: "contractNumberY" + String(i) });
+        values[designer.desid].push({ value: String(filteredFilteredProjectsProposal.length), name: "proposalNumberY" + String(i) });
+        values[designer.desid].push({ value: String(filteredFilteredProjectsContract.length), name: "contractNumberY" + String(i) });
         values[designer.desid].push({ value: (String(Math.round((filteredFilteredProjectsProposal.length === 0 ? 0 : (filteredFilteredProjectsContract.length / filteredFilteredProjectsProposal.length)) * 10000) / 100) + '%'), name: "contractPercentageY" + String(i) });
         values[designer.desid].push({ value: (autoComma(Math.floor(filteredFilteredProjectsContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0))) + '원'), name: "totalAmountY" + String(i) });
       }
@@ -6764,14 +6866,20 @@ DesignerJs.prototype.numbersDataRender = async function () {
         from = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1);
         to = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1);
         to.setMonth(to.getMonth() + 1);
+
         filteredFilteredProjectsProposal = filteredProjectsProposal.filter((p) => {
           return (p.proposal.date.valueOf() >= from.valueOf() && p.proposal.date.valueOf() < to.valueOf());
+        });
+        filteredFilteredProjectsContract = filteredProjectsContract.filter((p) => {
+          return (p.process.contract.first.date.valueOf() >= from.valueOf() && p.process.contract.first.date.valueOf() < to.valueOf());
         });
 
         tempDate = new Date();
         tempDate.setMonth(tempDate.getMonth() - i);
         tempString = String(tempDate.getFullYear()).slice(2) + ". " + String(tempDate.getMonth() + 1) + "월";
         values[designer.desid].push({ value: String(filteredFilteredProjectsProposal.length), name: "monthDelta" + String(tempDate.getFullYear()).slice(2) + String(tempDate.getMonth() + 1) });
+        values[designer.desid].push({ value: String(filteredFilteredProjectsContract.length), name: "monthDeltaContract" + String(tempDate.getFullYear()).slice(2) + String(tempDate.getMonth() + 1) });
+        values[designer.desid].push({ value: (autoComma(Math.floor(filteredFilteredProjectsContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0))) + '원'), name: "monthDeltaAmount" + String(tempDate.getFullYear()).slice(2) + String(tempDate.getMonth() + 1) });
       }
 
     }
@@ -6783,14 +6891,15 @@ DesignerJs.prototype.numbersDataRender = async function () {
   }
 }
 
-DesignerJs.prototype.numbersBase = async function () {
+DesignerJs.prototype.numbersBase = async function (entireDesignerMode = false) {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, autoComma } = GeneralJs;
   const moveTargetClassName = "moveTarget";
   const menuPromptClassName = "menuPromptClassName";
   const importantCircleClassName = "importantCircleClassName";
   const designerSubMenuEventFactorClassName = "designerSubMenuEventFactorClassName";
+  const sumValueRowsClassName = "sumValueRowsClassName";
   try {
     let totalMother;
     let grayArea, whiteArea;
@@ -6831,7 +6940,8 @@ DesignerJs.prototype.numbersBase = async function () {
     let contextButtonSize;
     let contextButtonWeight;
     let contextButtonTextTop;
-  
+    let sumMatrix;
+
     totalPaddingTop = 38;
     columnAreaHeight = 32;
   
@@ -6904,6 +7014,7 @@ DesignerJs.prototype.numbersBase = async function () {
             const valueArea = document.querySelector('.' + valueAreaClassName);
             const idNameDoms = Array.from(document.querySelectorAll('.' + standardCaseClassName));
             const valueDoms = Array.from(document.querySelectorAll('.' + valueCaseClassName));
+            const [ sumStandard, valueStandard ] = Array.from(document.querySelectorAll('.' + sumValueRowsClassName));
             const type = columns[index].type;
             let domMatrix;
             let thisDesid;
@@ -6985,6 +7096,9 @@ DesignerJs.prototype.numbersBase = async function () {
               idNameArea.appendChild(standard);
               valueArea.appendChild(value);
             }
+
+            idNameArea.appendChild(sumStandard);
+            valueArea.appendChild(valueStandard);
   
             removeByClass(menuPromptClassName);
   
@@ -7549,6 +7663,8 @@ DesignerJs.prototype.numbersBase = async function () {
             }
           ]
         }).children;
+
+        sumMatrix = (new Array(columns.length)).fill(0, 0);
       
         for (let designer of instance.designers) {
       
@@ -7633,6 +7749,13 @@ DesignerJs.prototype.numbersBase = async function () {
           })
     
           for (let i = 0; i < columns.length; i++) {
+
+            if (columns[i].type === "number") {
+              sumMatrix[i] += Number(String(values[designer.desid][i].value).replace(/[^0-9\.]/gi, ''));
+            } else {
+              sumMatrix[i] = '-';
+            }
+
             createNode({
               mother: thisTong,
               style: {
@@ -7682,9 +7805,105 @@ DesignerJs.prototype.numbersBase = async function () {
           }
     
         }
+
+        createNode({
+          mother: idNameArea,
+          class: [ sumValueRowsClassName ],
+          style: {
+            display: "flex",
+            flexDirection: "row",
+            position: "relative",
+            height: String(idNameHeight) + ea,
+            justifyContent: "center",
+            alignItems: "start",
+            cursor: "pointer",
+          },
+          children: [ "-", "총합" ].map((value, index) => {
+            return {
+              style: {
+                display: "inline-flex",
+                flexDirection: "row",
+                position: "relative",
+                justifyContent: "center",
+                alignItems: "start",
+                width: String(standards.columns[index].width) + ea,
+              },
+              child: {
+                text: value,
+                style: {
+                  position: "relative",
+                  transition: "all 0.3s ease",
+                  fontSize: String(fontSize) + ea,
+                  fontWeight: String(fontWeight),
+                  color: colorChip.green,
+                },
+              }
+            }
+          })
+        });
+    
+        thisTong = createNode({
+          mother: valueArea,
+          class: [ moveTargetClassName, sumValueRowsClassName ],
+          style: {
+            display: "flex",
+            position: "relative",
+            width: String(maxWidth) + ea,
+            height: String(idNameHeight) + ea,
+            flexDirection: "row",
+            alignItems: "start",
+            justifyContent: "start",
+            paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
+            cursor: "pointer",
+          }
+        })
+  
+        for (let i = 0; i < columns.length; i++) {
+          createNode({
+            mother: thisTong,
+            style: {
+              display: "inline-flex",
+              flexDirection: "row",
+              position: "relative",
+              justifyContent: "center",
+              alignItems: "start",
+              width: String(columns[i].width) + ea,
+            },
+            child: {
+              style: {
+                display: "inline-block",
+                width: String(90) + '%',
+                position: "relative",
+                overflow: "hidden",
+                textAlign: "center",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  width: String(valueMaxWidth) + ea,
+                  position: "relative",
+                  left: withOut(50, valueMaxWidth / 2, ea),
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: columns[i].money ? autoComma(sumMatrix[i]) + "원": String(sumMatrix[i]),
+                  style: {
+                    position: "relative",
+                    transition: "all 0.1s ease",
+                    fontSize: String(fontSize) + ea,
+                    fontWeight: String(valueWeight),
+                    color: colorChip.green,
+                  }
+                }
+              }
+            }
+          });
+        }
     
         await this.numbersColorSync();
-        await this.numbersSubPannel();
+        await this.numbersSubPannel(entireDesignerMode);
 
       } catch (e) {
         console.log(e);
@@ -7699,7 +7918,7 @@ DesignerJs.prototype.numbersBase = async function () {
   }
 }
 
-DesignerJs.prototype.numbersView = async function () {
+DesignerJs.prototype.numbersView = async function (entireDesignerMode = false) {
   const instance = this;
   const { ea, totalContents } = this;
   const { createNode, withOut, colorChip, ajaxJson, returnGet, cleanChildren, hasQuery, removeQuery, appendQuery } = GeneralJs;
@@ -7725,7 +7944,13 @@ DesignerJs.prototype.numbersView = async function () {
     }
     appendQuery({ type: "numbers" });
 
-    designers = await ajaxJson({ noFlat: true, whereQuery: {} }, BACKHOST + "/getDesigners", { equal: true });
+    if (entireDesignerMode) {
+      designers = await ajaxJson({ noFlat: true, whereQuery: {} }, BACKHOST + "/getDesigners", { equal: true });
+    } else {
+      designers = await ajaxJson({ noFlat: true, whereQuery: {
+        "information.contract.status": { $regex: "완료" }
+      } }, BACKHOST + "/getDesigners", { equal: true });
+    }
     histories = await ajaxJson({
       method: "designer",
       property: [ "manager", "important" ],
@@ -7740,11 +7965,13 @@ DesignerJs.prototype.numbersView = async function () {
     projects = await ajaxJson({ whereQuery: {}, projectQuery: { proid: 1, cliid: 1, desid: 1, service: 1, process: 1, proposal: 1, } }, SECONDHOST + "/pickProjects", { equal: true });
     realtimeDesigner = await ajaxJson({ mode: "all" }, BACKHOST + "/realtimeDesigner", { equal: true });
 
+    this.designers = designers;
     this.projects = projects;
     this.realtimeDesigner = realtimeDesigner;
 
     this.cleanSearchEvent();
-    await this.numbersBase();
+    await this.numbersBase(entireDesignerMode);
+    await this.numbersSearchEvent();
 
     loading.parentNode.removeChild(loading);
 

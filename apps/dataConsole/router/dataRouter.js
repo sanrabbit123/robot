@@ -1109,6 +1109,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
       let dailySalesArr;
       let thisRequestIndex;
       let thisSalesDate;
+      let queryArr;
 
       if (req.url === "/searchClients") {
         standard = instance.patch.clientStandard();
@@ -1148,6 +1149,13 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
             searchArr.push(tempObj2);
           }
         }
+
+        if (req.url === "/searchDesigners" && /,/gi.test(req.body.query)) {
+          queryArr = req.body.query.split(",").map((s) => { return s.trim() });
+          queryArr = queryArr.map((s) => { return { designer: { $regex: s } } });
+          searchArr = searchArr.concat(queryArr);
+        }
+        
       }
       searchQuery["$or"] = searchArr;
 
