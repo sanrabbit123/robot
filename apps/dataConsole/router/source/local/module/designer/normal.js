@@ -6200,10 +6200,28 @@ DesignerJs.prototype.numbersColorSync = async function () {
   }
 }
 
+Set.prototype.intersection = function (setB) {
+  let intersection = new Set();
+  for (let elem of setB) {
+    if (this.has(elem)) {
+      intersection.add(elem);
+    }
+  }
+  return intersection;
+}
+
+Set.prototype.union = function (setB) {
+  let union = new Set(this);
+  for (let elem of setB) {
+    union.add(elem);
+  }
+  return union;
+}
+
 DesignerJs.prototype.numbersDataRender = async function () {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows, profileList, workList, representativeList } = this;
-  const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute } = GeneralJs;
+  const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute, equalJson } = GeneralJs;
   try {
     const calcMonthDelta = (from, to) => {
       return ((to.getFullYear() * 12) + to.getMonth() + 1) - ((from.getFullYear() * 12) + from.getMonth() + 1) + 1;
@@ -6243,6 +6261,21 @@ DesignerJs.prototype.numbersDataRender = async function () {
     let schoolUpdateBoo;
     let threeStrengthBoo;
     let representativeBoo;
+    let thisRealtime;
+    let thisPossible;
+    let possible3m, possible6m, possible12m;
+    let preStandard0, preStandard1, preStandard2, preStandard3;
+    let range0, range1;
+    let standard0, standard1, standard2, standard3;
+
+    preStandard0 = new Date();
+    preStandard1 = new Date();
+    preStandard2 = new Date();
+    preStandard3 = new Date();
+
+    preStandard1.setMonth(preStandard1.getMonth() + 3);
+    preStandard2.setMonth(preStandard2.getMonth() + 6);
+    preStandard3.setMonth(preStandard3.getMonth() + 12);
 
     past.setFullYear(past.getFullYear() - agoYearDelta);
     past.setMonth(0);
@@ -6339,6 +6372,24 @@ DesignerJs.prototype.numbersDataRender = async function () {
         type: "number",
       },
       {
+        title: "3개월 가능수",
+        width: 90,
+        name: "possible3m",
+        type: "number",
+      },
+      {
+        title: "6개월 가능수",
+        width: 90,
+        name: "possible6m",
+        type: "number",
+      },
+      {
+        title: "1년 가능수",
+        width: 90,
+        name: "possible12m",
+        type: "number",
+      },
+      {
         title: "총 추천수",
         width: 90,
         name: "proposalNumber",
@@ -6417,6 +6468,87 @@ DesignerJs.prototype.numbersDataRender = async function () {
         return p.desid === designer.desid;
       });
 
+      thisRealtime = instance.realtimeDesigner.data.find((o) => { return o.desid === designer.desid });
+      thisPossible = [];
+      if (thisRealtime !== undefined) {
+        thisPossible = equalJson(JSON.stringify(thisRealtime.possible));
+      }
+
+      possible3m = thisPossible.filter((o) => {
+        standard0 = Math.round((((o.start.valueOf() / 1000) / 60) / 60) / 24);
+        standard1 = Math.round((((o.end.valueOf() / 1000) / 60) / 60) / 24);
+        standard2 = Math.round((((preStandard0.valueOf() / 1000) / 60) / 60) / 24);
+        standard3 = Math.round((((preStandard1.valueOf() / 1000) / 60) / 60) / 24);
+        range0 = [];
+        range1 = [];
+        for (let i = standard0; i <= standard1; i++) {
+          range0.push(i);
+        }
+        for (let i = standard2; i <= standard3; i++) {
+          range1.push(i);
+        }
+        range0 = new Set(range0);
+        range1 = new Set(range1);
+        return (range0.intersection(range1)).size > 0;
+      });
+      possible6m = thisPossible.filter((o) => {
+        standard0 = Math.round((((o.start.valueOf() / 1000) / 60) / 60) / 24);
+        standard1 = Math.round((((o.end.valueOf() / 1000) / 60) / 60) / 24);
+        standard2 = Math.round((((preStandard0.valueOf() / 1000) / 60) / 60) / 24);
+        standard3 = Math.round((((preStandard2.valueOf() / 1000) / 60) / 60) / 24);
+        range0 = [];
+        range1 = [];
+        for (let i = standard0; i <= standard1; i++) {
+          range0.push(i);
+        }
+        for (let i = standard2; i <= standard3; i++) {
+          range1.push(i);
+        }
+        range0 = new Set(range0);
+        range1 = new Set(range1);
+        return (range0.intersection(range1)).size > 0;
+      });
+      possible12m = thisPossible.filter((o) => {
+        standard0 = Math.round((((o.start.valueOf() / 1000) / 60) / 60) / 24);
+        standard1 = Math.round((((o.end.valueOf() / 1000) / 60) / 60) / 24);
+        standard2 = Math.round((((preStandard0.valueOf() / 1000) / 60) / 60) / 24);
+        standard3 = Math.round((((preStandard3.valueOf() / 1000) / 60) / 60) / 24);
+        range0 = [];
+        range1 = [];
+        for (let i = standard0; i <= standard1; i++) {
+          range0.push(i);
+        }
+        for (let i = standard2; i <= standard3; i++) {
+          range1.push(i);
+        }
+        range0 = new Set(range0);
+        range1 = new Set(range1);
+        return (range0.intersection(range1)).size > 0;
+      });
+      
+      possible3m = possible3m.map((o) => { return o.matrix });
+      possible6m = possible6m.map((o) => { return o.matrix });
+      possible12m = possible12m.map((o) => { return o.matrix });
+
+      if (possible3m.length > 0) {
+        possible3m = possible3m.flat();
+        possible3m = possible3m.reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0);
+      } else {
+        possible3m = 0;
+      }
+      if (possible6m.length > 0) {
+        possible6m = possible6m.flat();
+        possible6m = possible6m.reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0);
+      } else {
+        possible6m = 0;
+      }
+      if (possible12m.length > 0) {
+        possible12m = possible12m.flat();
+        possible12m = possible12m.reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0);
+      } else {
+        possible12m = 0;
+      }
+
       standards.values[designer.desid] = [
         {
           value: designer.desid,
@@ -6442,6 +6574,18 @@ DesignerJs.prototype.numbersDataRender = async function () {
       values[designer.desid].push({
         value: String(filteredProjectsContract.filter((p) => { return /^진/.test(p.process.status) }).length),
         name: "processDoing",
+      });
+      values[designer.desid].push({
+        value: String(possible3m),
+        name: "possible3m",
+      });
+      values[designer.desid].push({
+        value: String(possible6m),
+        name: "possible6m",
+      });
+      values[designer.desid].push({
+        value: String(possible12m),
+        name: "possible12m",
       });
       values[designer.desid].push({
         value: String(filteredProjectsProposal.length),
@@ -7426,7 +7570,7 @@ DesignerJs.prototype.numbersBase = async function () {
 DesignerJs.prototype.numbersView = async function () {
   const instance = this;
   const { ea, totalContents } = this;
-  const { createNode, withOut, colorChip, ajaxJson, returnGet, cleanChildren } = GeneralJs;
+  const { createNode, withOut, colorChip, ajaxJson, returnGet, cleanChildren, hasQuery, removeQuery, appendQuery } = GeneralJs;
   try {
     const getObj = returnGet();
     let loading;
@@ -7443,6 +7587,11 @@ DesignerJs.prototype.numbersView = async function () {
     if (instance.totalMother !== null && instance.totalMother !== undefined) {
       totalContents.removeChild(instance.totalMother);
     }
+
+    if (hasQuery("type")) {
+      removeQuery("type");
+    }
+    appendQuery({ type: "numbers" });
 
     designers = await ajaxJson({ noFlat: true, whereQuery: {} }, BACKHOST + "/getDesigners", { equal: true });
     histories = await ajaxJson({
@@ -7461,8 +7610,6 @@ DesignerJs.prototype.numbersView = async function () {
 
     this.projects = projects;
     this.realtimeDesigner = realtimeDesigner;
-
-    console.log(realtimeDesigner);
 
     this.cleanSearchEvent();
     await this.numbersBase();
@@ -7556,7 +7703,7 @@ DesignerJs.prototype.normalView = async function () {
     if (typeof getObj.type === "string") {
       if (getObj.type === "project" || getObj.type === "care") {
         await instance.careView();
-      } else if (getObj.type === "report" || getObj.type === "date") {
+      } else if (getObj.type === "report" || getObj.type === "numbers") {
         await instance.numbersView();
       } else {
         // pass
