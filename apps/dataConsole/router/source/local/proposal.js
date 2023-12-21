@@ -1208,6 +1208,108 @@ ProposalJs.prototype.firstProcess = async function () {
 
 // Create process 2 ------------------------------------------------------------
 
+ProposalJs.prototype.realtimePossibleConverting = function (possibleArr, dateMargin = 10) {
+  if (!Array.isArray(possibleArr)) {
+    console.log(possibleArr);
+    throw new Error("invaild input : must be possible array");
+  }
+  if (!possibleArr.every((obj) => { return typeof obj === "object" })) {
+    console.log(possibleArr);
+    throw new Error("invaild input : must be possible array");
+  }
+  if (!possibleArr.every((obj) => { return (obj.start !== undefined && obj.end !== undefined) })) {
+    console.log(possibleArr);
+    throw new Error("invaild input : must be possible array");
+  }
+  if (typeof dateMargin !== "number") {
+    dateMargin = 10;
+  }
+  const instance = this;
+  const { equalJson, dateToString } = GeneralJs
+  let rawPossibleArr;
+  let indexArr, indexArrFlat;
+  let tempDateArr;
+  let tempDate2;
+  let tempObj;
+  let removeTargets;
+  let indexArrReverse;
+  let indexArrFinal;
+  let dateBoo;
+
+  rawPossibleArr = possibleArr.map((obj) => { return { start: obj.start, end: obj.end }; });
+
+  do {
+    indexArr = [];
+    for (let i = 0; i < rawPossibleArr.length - 1; i++) {
+      tempDateArr = new Array(dateMargin);
+      for (let j = 0; j < dateMargin; j++) {
+        tempDateArr[j] = new Date(JSON.stringify(rawPossibleArr[i].end).slice(1, -1));
+        tempDateArr[j].setDate(tempDateArr[j].getDate() + (j + 1));
+        tempDateArr[j] = dateToString(tempDateArr[j]);
+      }
+      tempDate2 = new Date(JSON.stringify(rawPossibleArr[i + 1].start).slice(1, -1));
+      if (tempDateArr.includes(dateToString(tempDate2))) {
+        indexArr.push(i);
+      }
+    }
+    if (indexArr.length > 0) {
+
+      indexArr = indexArr.map((num) => { return [ num, num + 1 ] });
+      indexArrFlat = indexArr.flat();
+      tempObj = {};
+      for (let a of indexArrFlat) {
+        if (tempObj['a' + String(a)] !== undefined) {
+          tempObj['a' + String(a)] = tempObj['a' + String(a)] + 1;
+        } else {
+          tempObj['a' + String(a)] = 1;
+        }
+      }
+      removeTargets = [];
+      for (let key in tempObj) {
+        if (tempObj[key] !== 1) {
+          removeTargets.push(Number(key.replace(/[^0-9]/gi, '')));
+        }
+      }
+
+      indexArrReverse = [];
+      for (let i = 0; i < rawPossibleArr.length; i++) {
+        indexArrReverse.push(i);
+      }
+      indexArrReverse = indexArrReverse.filter((num) => { return !indexArrFlat.includes(num); });
+      indexArrFlat = indexArrFlat.filter((num) => { return !removeTargets.includes(num); })
+
+      indexArrFinal = [];
+      for (let i = 0; i < indexArrFlat.length; i++) {
+        if (i % 2 === 0) {
+          indexArrFinal.push([ indexArrFlat[i], indexArrFlat[i + 1] ]);
+        }
+      }
+
+      indexArrFinal = indexArrFinal.map((arr) => {
+        return {
+          start: new Date(JSON.stringify(rawPossibleArr[arr[0]].start).slice(1, -1)),
+          end: new Date(JSON.stringify(rawPossibleArr[arr[1]].end).slice(1, -1))
+        };
+      });
+
+      for (let index of indexArrReverse) {
+        indexArrFinal.push(equalJson(JSON.stringify(rawPossibleArr[index])));
+      }
+      indexArrFinal.sort((a, b) => {
+        return a.start.valueOf() - b.start.valueOf();
+      });
+
+      rawPossibleArr = equalJson(JSON.stringify(indexArrFinal));
+
+      dateBoo = true;
+    } else {
+      dateBoo = false;
+    }
+  } while (dateBoo);
+
+  return rawPossibleArr;
+}
+
 ProposalJs.prototype.secondToggle = function (button, domBox) {
   const instance = this;
   let service, service_input;
@@ -2915,6 +3017,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       expected.setDate(expected.getDate() - startDateNumber);
       return expected;
     }
+    const dateMargin = 10;
     let input, div_clone, div_clone2, div_clone3, input_clone, label_clone;
     let i;
     let thisService;
@@ -2922,6 +3025,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     let thisRealtime;
     let thisPossible;
     let possible;
+    let boo;
+    let rawPossibleArr;
 
     input = GeneralJs.nodes.input.cloneNode(true);
     input.classList.add("pp_designer_selected_box_contents_designers_input");
@@ -2963,25 +3068,16 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       if (thisRealtime !== undefined) {
         thisPossible = GeneralJs.equalJson(JSON.stringify(thisRealtime.possible));
       }
-      possible = thisPossible.filter((o) => {
-        standard0 = Math.round((((o.start.valueOf() / 1000) / 60) / 60) / 24);
-        standard1 = Math.round((((o.end.valueOf() / 1000) / 60) / 60) / 24);
-        standard2 = Math.round((((dateFrom.valueOf() / 1000) / 60) / 60) / 24);
-        standard3 = Math.round((((dateTo.valueOf() / 1000) / 60) / 60) / 24);
-        range0 = [];
-        range1 = [];
-        for (let i = standard0; i <= standard1; i++) {
-          range0.push(i);
+      rawPossibleArr = instance.realtimePossibleConverting(thisPossible, dateMargin);
+      boo = false;
+      for (let { start, end } of rawPossibleArr) {
+        if (start.valueOf() <= dateFrom.valueOf() && dateTo.valueOf() <= end.valueOf()) {
+          boo = true;
+          break;
         }
-        for (let i = standard2; i <= standard3; i++) {
-          range1.push(i);
-        }
-        range0 = new Set(range0);
-        range1 = new Set(range1);
-        return (range0.intersection(range1)).size > 0;
-      });
+      }
 
-      if (!possible) {
+      if (!boo) {
         div_clone2.style.background = GeneralJs.colorChip.gray3;
         div_clone2.style.color = GeneralJs.colorChip.deactive;
       }
