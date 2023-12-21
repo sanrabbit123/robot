@@ -5135,7 +5135,7 @@ DataRouter.prototype.rou_post_realtimeDesigner = function () {
       if (typeof req.body.mode !== "string") {
         throw new Error("invaild post");
       }
-      if (![ "get", "sync", "update" ].includes(req.body.mode)) {
+      if (![ "get", "all", "sync", "update" ].includes(req.body.mode)) {
         throw new Error("invaild post");
       }
       const { mode } = req.body;
