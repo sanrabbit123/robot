@@ -5158,6 +5158,13 @@ DataRouter.prototype.rou_post_realtimeDesigner = function () {
           result = {};
         }
 
+      } else if (mode === "all") {
+
+        rows = await back.mongoPick(collection, [ {}, { desid: 1, possible: 1 } ], { selfMongo: instance.mongolocal });
+        result = {
+          data: rows
+        };
+
       } else if (mode === "sync") {
 
         if (req.body.proid === undefined) {

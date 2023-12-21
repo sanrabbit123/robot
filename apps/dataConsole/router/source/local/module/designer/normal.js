@@ -6327,20 +6327,32 @@ DesignerJs.prototype.numbersDataRender = async function () {
         }))
       },
       {
+        title: "대기",
+        width: 80,
+        name: "processPending",
+        type: "number",
+      },
+      {
+        title: "진행중",
+        width: 80,
+        name: "processDoing",
+        type: "number",
+      },
+      {
         title: "총 추천수",
-        width: 100,
+        width: 90,
         name: "proposalNumber",
         type: "number",
       },
       {
         title: "총 진행수",
-        width: 100,
+        width: 90,
         name: "contractNumber",
         type: "number",
       },
       {
         title: "진행율",
-        width: 100,
+        width: 90,
         name: "contractPercentage",
         type: "percentage",
       },
@@ -6355,19 +6367,19 @@ DesignerJs.prototype.numbersDataRender = async function () {
     for (let i = 0; i < yearDelta; i++) {
       columns.push({
         title: String(now.getFullYear() - i) + " " + "추천수",
-        width: 120,
+        width: 100,
         name: "proposalNumberY" + String(i),
         type: "number",
       });
       columns.push({
         title: String(now.getFullYear() - i) + " " + "진행수",
-        width: 120,
+        width: 100,
         name: "contractNumberY" + String(i),
         type: "number",
       });
       columns.push({
         title: String(now.getFullYear() - i) + " " + "진행율",
-        width: 120,
+        width: 100,
         name: "contractPercentageY" + String(i),
         type: "percentage",
       });
@@ -6385,7 +6397,7 @@ DesignerJs.prototype.numbersDataRender = async function () {
       tempString = String(tempDate.getFullYear()).slice(2) + ". " + String(tempDate.getMonth() + 1) + "월";
       columns.push({
         title: tempString + " " + "추천수",
-        width: 120,
+        width: 100,
         name: "monthDelta" + String(tempDate.getFullYear()).slice(2) + String(tempDate.getMonth() + 1),
         type: "number",
       });
@@ -6423,6 +6435,14 @@ DesignerJs.prototype.numbersDataRender = async function () {
         },
       ];
 
+      values[designer.desid].push({
+        value: String(filteredProjectsContract.filter((p) => { return /^대/.test(p.process.status) }).length),
+        name: "processPending",
+      });
+      values[designer.desid].push({
+        value: String(filteredProjectsContract.filter((p) => { return /^진/.test(p.process.status) }).length),
+        name: "processDoing",
+      });
       values[designer.desid].push({
         value: String(filteredProjectsProposal.length),
         name: "proposalNumber",
