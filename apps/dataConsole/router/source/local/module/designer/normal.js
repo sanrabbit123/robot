@@ -640,145 +640,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
     }
 
-    if (false) {
-      ajaxJson({ mode: "total" }, S3HOST + "/designerAboutComplete", { equal: true }).then((c) => {
-        completeAnalyticsRows = c;
-        return ajaxJson({ noFlat: true, whereQuery: { $or: [ { "proposal.date": { $gte: past } }, { "process.status": { $regex: "^[대진]" } } ] } }, BACKHOST + "/getProjects", { equal: true });
-      }).then((projects) => {
-
-        instance.completeAnalyticsRows = completeAnalyticsRows;
-        instance.projects = projects;
-        instance.normalMatrix = {};
-        for (let designer of instance.designers) {
-
-          instance.normalMatrix[designer.desid] = [];
-
-          thisValueDoms = [ ...document.querySelector('.' + designer.desid).querySelectorAll('.' + valueTargetClassName) ];
-  
-          filteredProjectsProposal = projects.filter((p) => {
-            return p.proposal.detail.some((obj) => {
-              return obj.desid === designer.desid
-            });
-          });
-  
-          filteredProjectsContract = projects.filter((p) => {
-            return p.desid === designer.desid;
-          });
-
-          // thisTarget = findByAttribute(thisValueDoms, "name", "checklistDone");
-          // thisValueTemp = (completeAnalyticsRows[designer.desid]?.aboutUpdateComplete === 1) ? "완료" : "미완료";
-          // thisTarget.textContent = String(thisValueTemp);
-          // thisTarget.style.color = colorChip.black;
-          // instance.normalMatrix[designer.desid].push({
-          //   name: "checklistDone",
-          //   value: String(thisValueTemp),
-          // });
-
-          thisTarget = findByAttribute(thisValueDoms, "name", "proposalNumber");
-          thisTarget.textContent = String(filteredProjectsProposal.length);
-          thisTarget.style.color = colorChip.black;
-          instance.normalMatrix[designer.desid].push({
-            name: "proposalNumber",
-            value: filteredProjectsProposal.length,
-          });
-  
-          thisTarget = findByAttribute(thisValueDoms, "name", "contractNumber");
-          thisTarget.textContent = String(filteredProjectsContract.length);
-          thisTarget.style.color = colorChip.black;
-          instance.normalMatrix[designer.desid].push({
-            name: "contractNumber",
-            value: filteredProjectsContract.length,
-          });
-  
-          thisTarget = findByAttribute(thisValueDoms, "name", "contractPercentage");
-          thisTarget.textContent = String(Math.round((filteredProjectsProposal.length === 0 ? 0 : (filteredProjectsContract.length / filteredProjectsProposal.length)) * 10000) / 100) + '%';
-          thisTarget.style.color = colorChip.black;
-          instance.normalMatrix[designer.desid].push({
-            name: "contractPercentage",
-            value: filteredProjectsProposal.length === 0 ? 0 : (filteredProjectsContract.length / filteredProjectsProposal.length),
-          });
-  
-          thisTarget = findByAttribute(thisValueDoms, "name", "totalAmount");
-          thisTarget.textContent = autoComma(Math.floor(filteredProjectsContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0))) + '원';
-          thisTarget.style.color = colorChip.black;
-          instance.normalMatrix[designer.desid].push({
-            name: "totalAmount",
-            value: Math.floor(filteredProjectsContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0)),
-          });
-  
-          for (let i = 0; i < yearDelta; i++) {
-  
-            thisYear = (new Date()).getFullYear() - i;
-            from = new Date(thisYear, 0, 1);
-            to = new Date(thisYear + 1, 0, 1);
-    
-            filteredFilteredProjectsProposal = filteredProjectsProposal.filter((p) => {
-              return (p.proposal.date.valueOf() >= from.valueOf() && p.proposal.date.valueOf() < to.valueOf());
-            });
-    
-            filteredFilteredProjectsContract = filteredProjectsContract.filter((p) => {
-              return (p.process.contract.first.date.valueOf() >= from.valueOf() && p.process.contract.first.date.valueOf() < to.valueOf());
-            });
-    
-            thisTarget = findByAttribute(thisValueDoms, "name", "proposalNumberY" + String(i));
-            thisTarget.textContent = String(filteredFilteredProjectsProposal.length);
-            thisTarget.style.color = colorChip.black;
-            instance.normalMatrix[designer.desid].push({
-              name: "proposalNumberY" + String(i),
-              value: filteredFilteredProjectsProposal.length,
-            });
-    
-            thisTarget = findByAttribute(thisValueDoms, "name", "contractNumberY" + String(i));
-            thisTarget.textContent = String(filteredFilteredProjectsContract.length);
-            thisTarget.style.color = colorChip.black;
-            instance.normalMatrix[designer.desid].push({
-              name: "contractNumberY" + String(i),
-              value: filteredFilteredProjectsContract.length,
-            });
-    
-            thisTarget = findByAttribute(thisValueDoms, "name", "contractPercentageY" + String(i));
-            thisTarget.textContent = String(Math.round((filteredFilteredProjectsProposal.length === 0 ? 0 : (filteredFilteredProjectsContract.length / filteredFilteredProjectsProposal.length)) * 10000) / 100) + '%';
-            thisTarget.style.color = colorChip.black;
-            instance.normalMatrix[designer.desid].push({
-              name: "contractPercentageY" + String(i),
-              value: filteredFilteredProjectsProposal.length === 0 ? 0 : (filteredFilteredProjectsContract.length / filteredFilteredProjectsProposal.length),
-            });
-    
-            thisTarget = findByAttribute(thisValueDoms, "name", "totalAmountY" + String(i));
-            thisTarget.textContent = autoComma(Math.floor(filteredFilteredProjectsContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0))) + '원';
-            thisTarget.style.color = colorChip.black;
-            instance.normalMatrix[designer.desid].push({
-              name: "totalAmountY" + String(i),
-              value: Math.floor(filteredFilteredProjectsContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0)),
-            });
-    
-          }
-    
-          for (let i = 0; i < monthDelta; i++) {
-            thisDate = new Date();
-            thisDate.setMonth(thisDate.getMonth() - i);
-            from = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1);
-            to = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1);
-            to.setMonth(to.getMonth() + 1);
-            filteredFilteredProjectsProposal = filteredProjectsProposal.filter((p) => {
-              return (p.proposal.date.valueOf() >= from.valueOf() && p.proposal.date.valueOf() < to.valueOf());
-            });
-            thisTarget = findByAttribute(thisValueDoms, "name", "monthDelta" + String(thisDate.getFullYear()).slice(2) + String(thisDate.getMonth() + 1));
-            thisTarget.textContent = String(filteredFilteredProjectsProposal.length);
-            thisTarget.style.color = colorChip.black;
-            instance.normalMatrix[designer.desid].push({
-              name: "monthDelta" + String(thisDate.getFullYear()).slice(2) + String(thisDate.getMonth() + 1),
-              value: filteredFilteredProjectsProposal.length,
-            });
-          }
-  
-        }
-  
-        return instance.normalColorSync();
-  
-      }).catch((err) => { console.log(err); });
-    }
-
     return { standards, columns, values };
 
   } catch (e) {
@@ -2787,82 +2648,98 @@ DesignerJs.prototype.normalExtractEvent = async function () {
     const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
     this.mother.belowButtons.sub.extractIcon.addEventListener("click", async function (e) {
       try {
-        if (instance.normalMatrix === null) {
-          window.alert("잠시 기다렸다가 다시 시도해주세요!");
+        const today = new Date();
+        let thisObject;
+        let matrix;
+        let tempArr;
+        let thisDesigner;
+        let data;
+        let thisLength;
+
+        if (instance.viewMode === "normal") {
+          data = await instance.normalDataRender(false);
+        } else if (instance.viewMode === "numbers") {
+          data = await instance.numbersDataRender();
         } else {
-          const today = new Date();
-          const data = await instance.normalDataRender(false);
-          let thisName;
-          let thisObject;
-          let matrix;
-          let tempArr;
-          let thisDesigner;
+          data = await instance.careDataRender(null);
+        }
 
-          for (let desid in data.values) {
-            for (let obj of data.values[desid]) {
-              thisName = obj.name;
-              thisObject = instance.normalMatrix[desid].find((obj) => { return obj.name === thisName });
-              if (thisObject !== undefined) {
-                obj.value = thisObject.value;
-              }
-            }
-          }
-
-          console.log(data);
-
-          matrix = [];
-          tempArr = [
-            "아이디",
-            "이름",
-            // -------------------------------
-            // add
+        matrix = [];
+        tempArr = [
+          "아이디",
+          "이름",
+        ];
+        if (instance.viewMode === "normal") {
+          tempArr = tempArr.concat([
             "이메일",
             "계좌번호",
             "사업자 분류",
             "사업자 등록번호",
-            // -------------------------------
-          ];
-          for (let obj of data.columns) {
-            tempArr.push(obj.title);
-          }
-          matrix.push(tempArr);
+          ])
+        }
 
-          for (let desid in data.values) {
+        for (let obj of data.columns) {
+          tempArr.push(obj.title);
+        }
+        matrix.push(tempArr);
 
-            thisDesigner = instance.designers.find((d) => { return d.desid === desid });
+        for (let desid in data.values) {
+
+          thisDesigner = instance.designers.find((d) => { return d.desid === desid });
+
+          if (instance.viewMode !== "care") {
 
             tempArr = [];
             tempArr.push(desid);
             tempArr.push(thisDesigner.designer);
-
-            // -------------------------------
-            // add
-            tempArr.push(thisDesigner.information.email);
-            tempArr.push(thisDesigner.information.business.account.length > 0 ? thisDesigner.information.business.account[0].bankName + " " + thisDesigner.information.business.account[0].accountNumber : "");
-            tempArr.push(thisDesigner.information.business.businessInfo.classification);
-            tempArr.push(thisDesigner.information.business.businessInfo.businessNumber);
-            // -------------------------------
-
+            if (instance.viewMode === "normal") {
+              tempArr.push(thisDesigner.information.email);
+              tempArr.push(thisDesigner.information.business.account.length > 0 ? thisDesigner.information.business.account[0].bankName + " " + thisDesigner.information.business.account[0].accountNumber : "");
+              tempArr.push(thisDesigner.information.business.businessInfo.classification);
+              tempArr.push(thisDesigner.information.business.businessInfo.businessNumber);
+            }
             for (let obj of data.columns) {
               thisObject = data.values[desid].find((o) => { return o.name === obj.name });
-              tempArr.push(thisObject.value);
+              if (obj.type === "number") {
+                tempArr.push(Number(String(thisObject.value).replace(/[^0-9\.\-]/gi, '')));
+              } else {
+                tempArr.push(thisObject.value);
+              }
             }
             matrix.push(tempArr);
+
+          } else {
+
+            thisLength = data.values[desid][0].length;
+            for (let i = 0; i < thisLength; i++) {
+              tempArr = [];
+              tempArr.push(desid);
+              tempArr.push(thisDesigner.designer);
+              for (let obj of data.columns) {
+                thisObject = data.values[desid].find((o) => { return o[0].name === obj.name });
+                if (obj.type === "number") {
+                  tempArr.push(Number(String(thisObject[i].value).replace(/[^0-9\.\-]/gi, '')));
+                } else {
+                  tempArr.push(thisObject[i].value);
+                }
+              }
+              matrix.push(tempArr);
+            }
+
           }
-
-          instance.mother.greenAlert("시트 추출이 완료되면 자동으로 열립니다!");
-          ajaxJson({
-            values: matrix,
-            newMake: true,
-            parentId: parentId,
-            sheetName: "fromDB_designer_" + String(today.getFullYear()) + instance.mother.todayMaker()
-          }, BACKHOST + "/sendSheets", { equal: true }).then((result) => {
-            blankHref(result.link);
-          }).catch((err) => {
-            console.log(err);
-          })
-
         }
+
+        instance.mother.greenAlert("시트 추출이 완료되면 자동으로 열립니다!");
+        ajaxJson({
+          values: matrix,
+          newMake: true,
+          parentId: parentId,
+          sheetName: "fromDB_designer_" + String(today.getFullYear()) + instance.mother.todayMaker()
+        }, BACKHOST + "/sendSheets", { equal: true }).then((result) => {
+          blankHref(result.link);
+        }).catch((err) => {
+          console.log(err);
+        });
       } catch (e) {
         console.log(e);
       }
@@ -4415,7 +4292,7 @@ DesignerJs.prototype.careDataRender = async function (filterFunc = null) {
         title: "디자인비",
         width: 120,
         name: "designFee",
-        type: "string",
+        type: "number",
       },
       {
         title: "현장 미팅",
@@ -4606,7 +4483,7 @@ DesignerJs.prototype.careDataRender = async function (filterFunc = null) {
 DesignerJs.prototype.careBase = async function (filterFunc = null) {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, svgMaker } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, svgMaker, blankHref } = GeneralJs;
   const moveTargetClassName = "moveTarget";
   const menuPromptClassName = "menuPromptClassName";
   const importantCircleClassName = "importantCircleClassName";
@@ -5467,6 +5344,17 @@ DesignerJs.prototype.careBase = async function (filterFunc = null) {
                     },
                     child: {
                       class: [ valueTargetClassName ],
+                      attribute: { desid: designer.desid, index: String(index), i: String(i) },
+                      event: {
+                        click: function (e) {
+                          const desid = this.getAttribute("desid");
+                          const index = Number(this.getAttribute("index"));
+                          const i = Number(this.getAttribute("i"));
+                          if (i === 1 && index === 1) {
+                            blankHref(FRONTHOST + "/designer/dashboard.php?desid=" + desid + "&view=test");
+                          }
+                        }
+                      },
                       text: (i === 1 ? (index === 0 ? "" : "진행중 : " + String(progress.length) + "&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;대기 : " + String(pending.length) + "\n<b%디자이너 콘솔%b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") : ""),
                       style: {
                         position: "relative",
@@ -6151,6 +6039,7 @@ DesignerJs.prototype.careView = async function () {
     this.totalNumbers = [];
     this.onofflineWordsClassName = "onofflineWordsClassName";
     this.numbersExtractClassName = "numbersExtractClassName";
+    this.viewMode = "care";
 
     this.cleanSearchEvent();
     await this.careBase(null);
@@ -7965,6 +7854,7 @@ DesignerJs.prototype.numbersView = async function (entireDesignerMode = false) {
     projects = await ajaxJson({ whereQuery: {}, projectQuery: { proid: 1, cliid: 1, desid: 1, service: 1, process: 1, proposal: 1, } }, SECONDHOST + "/pickProjects", { equal: true });
     realtimeDesigner = await ajaxJson({ mode: "all" }, BACKHOST + "/realtimeDesigner", { equal: true });
 
+    this.viewMode = "numbers";
     this.designers = designers;
     this.projects = projects;
     this.realtimeDesigner = realtimeDesigner;
@@ -8022,7 +7912,6 @@ DesignerJs.prototype.normalView = async function () {
     this.members = members;
     this.designers = designers;
     this.projects = null;
-    this.normalMatrix = null;
     this.valueTargetClassName = "valueTargetClassName";
     this.valueCaseClassName = "valueCaseClassName";
     this.standardCaseClassName = "standardCaseClassName";
@@ -8038,6 +7927,7 @@ DesignerJs.prototype.normalView = async function () {
     this.profileList = profileList;
     this.workList = workList;
     this.representativeList = representativeList;
+    this.viewMode = "normal";
 
     this.cleanSearchEvent();
     await this.normalBase();
