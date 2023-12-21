@@ -602,7 +602,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         value: String(designer.analytics.region.expenses) + "km",
         name: "expenses",
       });
-
       values[designer.desid].push({
         value: designer.analytics.project.matrix[0][1] === 1 ? "가능" : "불가능",
         name: "homefurnishing",
@@ -619,7 +618,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         value: designer.analytics.project.matrix[3][1] === 1 ? "가능" : "불가능",
         name: "extrastyling",
       });
-
       values[designer.desid].push({
         value: designer.analytics.project.matrix.some((arr) => { return arr[2] === 1 }) ? "가능" : "불가능",
         name: "premium",
@@ -628,7 +626,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         value: designer.analytics.project.matrix.some((arr) => { return arr[0] === 1 }) ? "가능" : "불가능",
         name: "partial",
       });
-
       values[designer.desid].push({
         value: designer.analytics.project.online ? "가능" : "불가능",
         name: "online",
