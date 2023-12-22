@@ -6888,6 +6888,7 @@ DesignerJs.prototype.numbersBase = async function (entireDesignerMode = false) {
   const importantCircleClassName = "importantCircleClassName";
   const designerSubMenuEventFactorClassName = "designerSubMenuEventFactorClassName";
   const sumValueRowsClassName = "sumValueRowsClassName";
+  const valueSumTargetClassName = "valueSumTargetClassName";
   try {
     let totalMother;
     let grayArea, whiteArea;
@@ -7102,11 +7103,18 @@ DesignerJs.prototype.numbersBase = async function (entireDesignerMode = false) {
             const valueArea = document.querySelector('.' + valueAreaClassName);
             const idNameDoms = Array.from(document.querySelectorAll('.' + standardCaseClassName));
             const valueDoms = Array.from(document.querySelectorAll('.' + valueCaseClassName));
+            const [ sumStandard, valueStandard ] = Array.from(document.querySelectorAll('.' + sumValueRowsClassName));
             const last = "lastfilter";
             const type = columns[index].type;
+            const typeArr = columns.map((o) => { return o.type });
+            const moneyArr = columns.map((o) => { return o.money ? true : false });
             let domMatrix;
             let thisDesid;
             let thisValueDom;
+            let valueMatrix;
+            let valueMatrixMatrix;
+            let sumArr;
+            let num;
   
             domMatrix = [];
             for (let i = 0; i < idNameDoms.length; i++) {
@@ -7118,10 +7126,20 @@ DesignerJs.prototype.numbersBase = async function (entireDesignerMode = false) {
               ]);
             }
 
+            valueMatrixMatrix = [];
             if (thisValue === "$all") {
               for (let [ standard, value ] of domMatrix) {
                 standard.style.display = "flex";
                 value.style.display = "flex";
+                valueMatrix = [ ...value.children ].map((dom) => { return dom.querySelector('.' + valueTargetClassName).textContent });
+                valueMatrix = valueMatrix.map((str, index) => {
+                  if (typeArr[index] === "number") {
+                    return Number(str.replace(/[^0-9\.\-]/gi, ''));
+                  } else {
+                    return str;
+                  }
+                });
+                valueMatrixMatrix.push(valueMatrix);
                 standard.setAttribute(last, "none");
                 value.setAttribute(last, "none");
               }
@@ -7146,10 +7164,45 @@ DesignerJs.prototype.numbersBase = async function (entireDesignerMode = false) {
                     value.style.display = "none";
                   }
                 }
+                if (value.style.display !== "none") {
+                  valueMatrix = [ ...value.children ].map((dom) => { return dom.querySelector('.' + valueTargetClassName).textContent });
+                  valueMatrix = valueMatrix.map((str, index) => {
+                    if (typeArr[index] === "number") {
+                      return Number(str.replace(/[^0-9\.\-]/gi, ''));
+                    } else {
+                      return str;
+                    }
+                  });
+                  valueMatrixMatrix.push(valueMatrix);
+                }
                 standard.setAttribute(last, name);
                 value.setAttribute(last, name);
               }
             }
+
+            sumArr = valueMatrixMatrix.reduce((acc, curr) => {
+              let newArr;
+              newArr = GeneralJs.equalJson(JSON.stringify(acc));
+              for (let i = 0; i < newArr.length; i++) {
+                if (typeArr[i] === "number") {
+                  newArr[i] = newArr[i] + curr[i];
+                }
+              }
+              return newArr;
+            }, (new Array(typeArr.length)).fill(0, 0).map((z, index) => { return typeArr[index] === "number" ? z : '-' }));
+
+            sumArr = sumArr.map((i, index) => {
+              return moneyArr[index] ? GeneralJs.autoComma(i) + "원" : String(i);
+            });
+
+            num = 0;
+            for (let dom of valueStandard.children) {
+              dom.querySelector('.' + valueSumTargetClassName).textContent = sumArr[num];
+              num++;
+            }
+
+            idNameArea.appendChild(sumStandard);
+            valueArea.appendChild(valueStandard);
 
             removeByClass(menuPromptClassName);
   
@@ -7876,6 +7929,7 @@ DesignerJs.prototype.numbersBase = async function (entireDesignerMode = false) {
                   alignItems: "center",
                 },
                 child: {
+                  class: [ valueSumTargetClassName ],
                   text: columns[i].money ? autoComma(sumMatrix[i]) + "원": String(sumMatrix[i]),
                   style: {
                     position: "relative",
