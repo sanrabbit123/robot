@@ -6893,9 +6893,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "박영화",
-    //     designer: "김지혜",
-    //     link: "https://drive.google.com/drive/folders/1_RwX0ja7qOSL8qYfehatj6RVM9O_sgy9",
+    //     client: null,
+    //     designer: "김애란",
+    //     link: "https://drive.google.com/drive/folders/1DR_plkoAE3OYMlF_6esFbyb8cZgS-yB4",
     //     pay: true
     //   },
     // ]);

@@ -789,6 +789,11 @@ GeneralJs.requestPromise = function (url) {
 GeneralJs.downloadFile = function (url, forceName = null, loadingDom = null) {
   return new Promise(function (resolve, reject) {
     const xhr = new XMLHttpRequest();
+    if (/pdf/gi.test(url)) {
+      setTimeout(() => {
+        GeneralJs.blankHref(url);
+      }, 0);
+    }
     xhr.open("GET", url);
     xhr.responseType = "arraybuffer";
     xhr.onprogress = function (e) {
