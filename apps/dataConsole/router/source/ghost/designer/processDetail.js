@@ -12175,7 +12175,7 @@ ProcessDetailJs.prototype.insertMeetingBackBox = function () {
   arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
   arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
 
-  mobileVisualPaddingValue = 0.2;
+  mobileVisualPaddingValue = 0;
 
   contents = {
     title: [
@@ -12301,6 +12301,7 @@ ProcessDetailJs.prototype.insertMeetingBackBox = function () {
       flexDirection: desktop ? "row" : "",
       justifyContent: desktop ? "start" : "",
       alignItems: desktop ? "start" : "",
+      textAlign: desktop ? "" : "center",
     },
     children: [
       {
@@ -12600,7 +12601,7 @@ ProcessDetailJs.prototype.insertPayFirstBox = function () {
 
   subButtonWidth = <%% 90, 70, 70, 56, 15 %%>;
 
-  mobileVisualPaddingValue = 0.2;
+  mobileVisualPaddingValue = 0;
 
   contents = {
     title: [
@@ -12715,6 +12716,7 @@ ProcessDetailJs.prototype.insertPayFirstBox = function () {
       flexDirection: desktop ? "row" : "",
       justifyContent: desktop ? "start" : "",
       alignItems: desktop ? "start" : "",
+      textAlign: desktop ? "" : "center",
     },
     children: [
       {
@@ -13036,7 +13038,7 @@ ProcessDetailJs.prototype.insertPayRemainBox = function () {
 
   subButtonWidth = <%% 90, 70, 70, 56, 15 %%>;
 
-  mobileVisualPaddingValue = 0.2;
+  mobileVisualPaddingValue = 0;
 
   contents = {
     title: [
@@ -13151,6 +13153,7 @@ ProcessDetailJs.prototype.insertPayRemainBox = function () {
       flexDirection: desktop ? "row" : "",
       justifyContent: desktop ? "start" : "",
       alignItems: desktop ? "start" : "",
+      textAlign: desktop ? "" : "center",
     },
     children: [
       {
@@ -13472,7 +13475,7 @@ ProcessDetailJs.prototype.insertContractConfirmBox = function () {
 
   subButtonWidth = <%% 90, 72, 72, 64, 16 %%>;
 
-  mobileVisualPaddingValue = 0.2;
+  mobileVisualPaddingValue = 0;
 
   contents = {
     title: [
@@ -13598,6 +13601,7 @@ ProcessDetailJs.prototype.insertContractConfirmBox = function () {
       flexDirection: desktop ? "row" : "",
       justifyContent: desktop ? "start" : "",
       alignItems: desktop ? "start" : "",
+      textAlign: desktop ? "" : "center",
     },
     children: [
       {
@@ -13924,7 +13928,7 @@ ProcessDetailJs.prototype.insertContractStartBox = function () {
 
   subButtonWidth = <%% 90, 72, 72, 64, 16 %%>;
 
-  mobileVisualPaddingValue = 0.2;
+  mobileVisualPaddingValue = 0;
 
   contents = {
     title: [
@@ -14050,6 +14054,7 @@ ProcessDetailJs.prototype.insertContractStartBox = function () {
       flexDirection: desktop ? "row" : "",
       justifyContent: desktop ? "start" : "",
       alignItems: desktop ? "start" : "",
+      textAlign: desktop ? "" : "center",
     },
     children: [
       {
@@ -14376,7 +14381,7 @@ ProcessDetailJs.prototype.insertScheduleStartBox = function () {
 
   subButtonWidth = <%% 90, 72, 72, 64, 16 %%>;
 
-  mobileVisualPaddingValue = 0.2;
+  mobileVisualPaddingValue = 0;
 
   contents = {
     title: [
@@ -14502,6 +14507,7 @@ ProcessDetailJs.prototype.insertScheduleStartBox = function () {
       flexDirection: desktop ? "row" : "",
       justifyContent: desktop ? "start" : "",
       alignItems: desktop ? "start" : "",
+      textAlign: desktop ? "" : "center",
     },
     children: [
       {
