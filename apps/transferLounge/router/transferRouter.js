@@ -33,6 +33,7 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.tempConst = this.staticConst + "/photo/temp";
   this.designerProfileConst = this.folderConst + "/profile";
   this.designerWorksConst = this.folderConst + "/works";
+  this.designerSettingConst = this.folderConst + "/setting";
   this.designerWorksConstFactors = [ "w0", "w1", "w2", "w3" ];
   this.designerRepresentativeFolderConst = this.folderConst + "/representative";
 
@@ -1360,6 +1361,100 @@ TransferRouter.prototype.rou_post_aspirantProposalDownload = function () {
 
     } catch (e) {
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_aspirantProposalDownload): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_designerSettingBinary = function () {
+  const instance = this;
+  const address = this.address;
+  const { fileSystem, shellExec, shellLink, todayMaker, messageSend, requestSystem, uniqueValue } = this.mother;
+  const { designerSettingConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/designerSettingBinary" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        try {
+          let filesKeys = Object.keys(files);
+          if (!err && filesKeys.length > 0) {
+            const { mode, name, desid, phone, description } = fields;
+            const designerFolderName = ("date" + todayMaker("total")) + '_' + name + '_' + desid;
+            const uploadMap = {
+              upload0: "setting",
+              upload1: "proposal",
+            };
+            let list, designerFolder;
+
+            designerFolder = `${designerSettingConst}/${designerFolderName}`;
+
+            list = [];
+            for (let i = 0; i < filesKeys.length; i++) {
+              list.push(uploadMap[filesKeys[i]]);
+            }
+
+            if (!(await fileSystem(`exist`, [ designerFolder ]))) {
+              await shellExec(`mkdir`, [ designerFolder ]);
+            }
+            for (let i = 0; i < list.length; i++) {
+              if (!(await fileSystem(`exist`, [ `${designerFolder}/${list[i]}` ]))) {
+                await shellExec(`mkdir`, [ `${designerFolder}/${list[i]}` ]);
+              }
+              await fileSystem(`write`, [ `${designerFolder}/${list[i]}/description_${String(uniqueValue("hex"))}.txt`, description ]);
+            }
+
+            for (let i = 0; i < list.length; i++) {
+              if (Array.isArray(files[filesKeys[i]])) {
+                for (let j of files[filesKeys[i]]) {
+                  await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(designerFolder + '/' + list[i] + '/' + j.originalFilename)};`);
+                  if (/\.pdf$/.test(j.originalFilename)) {
+                    try {
+                      await instance.imageReader.pdfToJpg(designerFolder + '/' + list[i] + '/' + j.originalFilename, true);
+                    } catch {}
+                  }
+                }
+              } else {
+                await shellExec(`mv ${shellLink(files[filesKeys[i]].filepath)} ${shellLink(designerFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename)};`);
+                if (/\.pdf$/.test(files[filesKeys[i]].originalFilename)) {
+                  try {
+                    await instance.imageReader.pdfToJpg(designerFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename, true);
+                  } catch {}
+                }
+              }
+            }
+
+
+            await messageSend({ text: name + " 실장님의 " + (mode === "general" ? "1세트 포트폴리오" : "추천서용 사진") + " 파일 전송을 완료하였습니다!", channel: "#300_designer" });
+            res.send(JSON.stringify({ message: "done" }));
+
+          } else {
+            logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerSettingBinary 1)").catch((e) => { console.log(e); });
+            console.log(err);
+            res.send(JSON.stringify({ message: "error" }));
+          }
+        } catch (e) {
+          console.log(e);
+          logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerSettingBinary 2): " + e.message).catch((e) => { console.log(e); });
+          res.send(JSON.stringify({ message: "error : " + e.message }));
+        }
+      });
+
+    } catch (e) {
+      console.log(e);
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerSettingBinary 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

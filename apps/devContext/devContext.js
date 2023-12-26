@@ -6893,9 +6893,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "김애란",
-    //     link: "https://drive.google.com/drive/folders/1DR_plkoAE3OYMlF_6esFbyb8cZgS-yB4",
+    //     client: "김지혜",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/18dPoBeg1KTXf9L2M5UBf3XEbqbZu252E",
     //     pay: true
     //   },
     // ]);
@@ -6905,8 +6905,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "박영화",
-    //     designer: "김지혜",
+    //     client: "김지혜",
+    //     designer: "이정아",
     //   },
     // ]);
 
