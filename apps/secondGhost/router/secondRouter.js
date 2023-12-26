@@ -2461,6 +2461,18 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
 
           res.send(JSON.stringify({ message: "success" }));
 
+        } else if (type === "statusCheck") {
+
+          await kakao.sendTalk("progressDesignerTotal", designer, phone, { designer, host: address.frontinfo.host, desid });
+          await messageSend({
+            text: designer + " 실장님께 프로젝트 상태 체크를 요청하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
+
+          res.send(JSON.stringify({ message: "success" }));
+
         } else if (type === "entire") {
 
           await kakao.sendTalk("noticeDesignerEntire", designer, phone, { designer, host: address.frontinfo.host, path: "about", desid });
