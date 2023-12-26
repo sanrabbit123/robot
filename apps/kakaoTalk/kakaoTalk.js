@@ -4231,6 +4231,48 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       }
     },
+    "designerEducationConsoleSend": {
+      "name": "디자이너 콘솔 교육 자료 전송",
+      "id": "TQ_3633",
+      "needs": [
+        "designer",
+        "host",
+        "desid",
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"desid\", to: obj.desid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님!\n디자이너 콘솔 사용 방법에 대한 설명 페이지 링크를 보내드립니다.\n\n디자이너 콘솔은 홈리에종과 협업 관계에 있는 디자이너님들이 홈리에종을 통해 받으신 모든 홈스타일링 프로젝트를 더 편리하고 직관적으로 관리하고 공유할 수 있도록 제작된 관리자 콘솔입니다.\n\n아래 페이지 링크를 통해 디자이너 콘솔 사용 방법에 대해 자세히 안내받으실 수 있습니다. 해당 페이지에 있는 영상과 설명 자료를 숙지해 주시고, 디자이너 콘솔을 홈리에종 프로젝트 진행 시 적극적으로 사용해 주세요!\n\n감사합니다 :)\n\n* 디자이너 콘솔 매뉴얼\nhttps://#{host}/designer/manual.php?desid=#{desid}",
+        "templtName": "디자이너 콘솔 교육 자료 전송",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-12-11 16:00:04",
+        "templtCode": "TQ_3633",
+        "comments": [
+          {
+            "cdate": "2023-12-12 13:51:40",
+            "name": "검수자",
+            "id": "3002323",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-12-12 13:51:40",
+            "status": "APR"
+          }
+        ]
+      }
+    },
   };
   if (target === "$all") {
     return tong;

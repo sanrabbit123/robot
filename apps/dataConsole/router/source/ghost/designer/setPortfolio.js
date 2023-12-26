@@ -2684,12 +2684,12 @@ SetPortfolioJs.prototype.finalSubmit = function () {
             formData.append((instance.mode === "general" ? "upload0" : "upload1"), instance.fileInput.files[i]);
           }
         }
-        await ajaxForm(formData, BRIDGEHOST + "/aspirantSettingBinary", grayLoading.progress.firstChild);
+        await ajaxForm(formData, BRIDGEHOST + "/designerSettingBinary", grayLoading.progress.firstChild);
         
         grayLoading.remove();
         GeneralJs.scrollTo(window, 0);
         window.alert("전송이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
-        selfHref(FRONTHOST);
+        selfHref(FRONTHOST + "/designer/dashboard.php?desid=" + instance.desid);
 
       }
 

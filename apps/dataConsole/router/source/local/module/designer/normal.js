@@ -1380,6 +1380,34 @@ DesignerJs.prototype.normalSendNotice = function (method, desid, untilDate) {
         return null;
       }
     }
+  } else if (method === "consoleEducation") {
+    return async function () {
+      try {
+        const designer = designers.find((d) => { return d.desid === desid });
+        if (designer === undefined) {
+          throw new Error("invalid desid");
+        }
+
+        const response = await ajaxJson({
+          mode: "send",
+          desid: designer.desid,
+          designer: designer.designer,
+          phone: designer.information.phone,
+          type: "consoleEducation",
+        }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+        if (response.message === "success") {
+          window.alert("전송에 성공하였습니다!");
+        } else {
+          window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+        }
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+        
+      } catch (e) {
+        window.alert(e.message);
+        console.log(e);
+        return null;
+      }
+    }
   } else if (method === "totalChecklist") {
     return async function () {
       try {
@@ -1931,6 +1959,19 @@ DesignerJs.prototype.normalBase = async function () {
                 return async function (e) {
                   try {
                     const sendFunc = instance.normalSendNotice("basicEducation", desid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: designer + " 실장님께 디자이너 콘솔 설명서 보내기",
+              func: (desid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.normalSendNotice("consoleEducation", desid);
                     await sendFunc();
                   } catch (e) {
                     console.log(e);
@@ -3633,6 +3674,22 @@ DesignerJs.prototype.communicationRender = function () {
       const desid = document.querySelector('.' + whiteBaseClassName).getAttribute("desid");
       try {
         const sendFunc = instance.normalSendNotice("basicEducation", desid);
+        await sendFunc();
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal&desid=" + desid;
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "콘솔 설명서 보내기"; },
+    function () {
+      return document.querySelector('.' + whiteBaseClassName) !== null;
+    },
+    async function (e) {
+      const desid = document.querySelector('.' + whiteBaseClassName).getAttribute("desid");
+      try {
+        const sendFunc = instance.normalSendNotice("consoleEducation", desid);
         await sendFunc();
       } catch (e) {
         console.log(e);
@@ -7434,6 +7491,19 @@ DesignerJs.prototype.numbersBase = async function (entireDesignerMode = false) {
                 return async function (e) {
                   try {
                     const sendFunc = instance.normalSendNotice("basicEducation", desid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: designer + " 실장님께 콘솔 설명서 보내기",
+              func: (desid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.normalSendNotice("consoleEducation", desid);
                     await sendFunc();
                   } catch (e) {
                     console.log(e);
