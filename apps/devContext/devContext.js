@@ -155,21 +155,15 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-    // const desid = "d1902_aa01s";
-    // const whereQuery = { action: "updateDesignStatus", "data.desid": desid }
-    // let rows;
+    const desid = "d1902_aa01s";
 
-    
-    // rows = await requestSystem("https://home-liaison.serveftp.com:3000/readHomeliaisonAnalytics", { whereQuery }, { headers: { "Content-Type": "application/json" } });
+    const { data } = await requestSystem("https://home-liaison.net:3000/readLogDesignerStatus", { desid }, { headers: { "Content-Type": "application/json" } });
 
-    // console.log(rows.data.data);
+    console.log(data.data);
 
 
 
 
-
-
-    
     
     /*
 

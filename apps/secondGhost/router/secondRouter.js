@@ -1678,7 +1678,7 @@ SecondRouter.prototype.rou_post_readLogDesignerStatus = function () {
       const projectQuery = { date: 1, data: 1 };
       let rows;
 
-      rows = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/readHomeliaisonAnalytics", { whereQuery }, { headers: { "Content-Type": "application/json" } });
+      rows = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/readHomeliaisonAnalytics", { whereQuery, projectQuery }, { headers: { "Content-Type": "application/json" } });
 
       res.send(JSON.stringify({ data: equalJson(JSON.stringify(rows.data.data)) }));
     } catch (e) {
