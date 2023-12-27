@@ -41,6 +41,10 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     let schoolUpdateBoo;
     let threeStrengthBoo;
     let representativeBoo;
+    let filteredBasicEducationSendRows;
+    let filteredConsoleEducationSendRows;
+    let filteredSettingPortfolioSendRows;
+    let filteredStatusCheckSendRows;
 
     past.setFullYear(past.getFullYear() - agoYearDelta);
     past.setMonth(0);
@@ -100,6 +104,30 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         title: "경력 안내 전송",
         width: 100,
         name: "careerSchoolNoticeSend",
+        type: "date",
+      },
+      {
+        title: "가이드 전송",
+        width: 100,
+        name: "basicEducationSend",
+        type: "date",
+      },
+      {
+        title: "콘솔 교육 전송",
+        width: 100,
+        name: "consoleEducationSend",
+        type: "date",
+      },
+      {
+        title: "세트 포폴 전송",
+        width: 100,
+        name: "settingPortfolioSend",
+        type: "date",
+      },
+      {
+        title: "상태 체크 전송",
+        width: 100,
+        name: "statusCheckSend",
         type: "date",
       },
       // {
@@ -502,6 +530,11 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
       filteredCareerSendRows = noticeSendRows.filter((o) => { return o.type === "career" }).filter((o) => { return o.designer.desid === designer.desid });
       filteredEntireSendRows = noticeSendRows.filter((o) => { return o.type === "until" }).filter((o) => { return o.designer.desid === designer.desid });
 
+      filteredBasicEducationSendRows = noticeSendRows.filter((o) => { return o.type === "basicEducation" }).filter((o) => { return o.designer.desid === designer.desid });
+      filteredConsoleEducationSendRows = noticeSendRows.filter((o) => { return o.type === "consoleEducation" }).filter((o) => { return o.designer.desid === designer.desid });
+      filteredSettingPortfolioSendRows = noticeSendRows.filter((o) => { return o.type === "settingPortfolio" }).filter((o) => { return o.designer.desid === designer.desid });
+      filteredStatusCheckSendRows = noticeSendRows.filter((o) => { return o.type === "statusCheck" }).filter((o) => { return o.designer.desid === designer.desid });
+
       careerUpdateBoo = designer.information.business.career.detail.length > 0;
       schoolUpdateBoo = designer.information.business.career.school.length > 0;
       threeStrengthBoo = designer.setting.description.filter((str) => { return !/null/gi.test(str); }).length > 0;
@@ -534,6 +567,22 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         {
           value: filteredCareerSendRows.length > 0 ? dateToString(filteredCareerSendRows[0].date) : "-",
           name: "careerSchoolNoticeSend",
+        },
+        {
+          value: filteredBasicEducationSendRows.length > 0 ? dateToString(filteredBasicEducationSendRows[0].date) : "-",
+          name: "basicEducationSend",
+        },
+        {
+          value: filteredConsoleEducationSendRows.length > 0 ? dateToString(filteredConsoleEducationSendRows[0].date) : "-",
+          name: "consoleEducationSend",
+        },
+        {
+          value: filteredSettingPortfolioSendRows.length > 0 ? dateToString(filteredSettingPortfolioSendRows[0].date) : "-",
+          name: "settingPortfolioSend",
+        },
+        {
+          value: filteredStatusCheckSendRows.length > 0 ? dateToString(filteredStatusCheckSendRows[0].date) : "-",
+          name: "statusCheckSend",
         },
         // {
         //   value: asyncProcessText,
