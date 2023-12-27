@@ -155,18 +155,28 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
+
+    /*
+
+    await this.MONGOLOGC.connect();
+    const selfMongo = this.MONGOLOGC;
+    const collection = "homeliaisonAnalytics";
+
+    const desid = "d1902_aa01s";
+
+    const rows = await back.mongoRead(collection, { action: "updateDesignStatus", "data.desid": desid }, { selfMongo });
+    console.log(rows);
+
+    // updateDesignStatus
     
 
-
     
 
-    
+    await this.MONGOLOGC.close();
 
-    
+    */
 
-    
 
-    
 
 
 

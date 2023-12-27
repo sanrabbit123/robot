@@ -17488,6 +17488,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
       });
     } else {
 
+      this.pageName = "processDetail_only";
       this.onlyMode = getObj.only;
       await instance.insertFormStatusBox();
 
