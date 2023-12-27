@@ -4142,6 +4142,57 @@ StaticRouter.prototype.rou_post_logBasicReport = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_readHomeliaisonAnalytics = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/readHomeliaisonAnalytics" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.whereQuery === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongolog;
+      const { whereQuery } = equalJson(JSON.stringify(req.body));
+      const collection = "homeliaisonAnalytics";
+      let rows, projectQuery;
+      let projectBoo;
+
+      if (req.body.projectQuery === undefined) {
+        projectBoo = false;
+        projectQuery = null;
+      } else {
+        projectBoo = true;
+        projectQuery = equalJson(JSON.stringify(req.body));
+      }
+
+      if (projectBoo) {
+        rows = await back.mongoPick(collection, [ whereQuery, projectQuery ], { selfMongo });
+      } else {
+        rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+      }
+
+      if (!Array.isArray(rows)) {
+        rows = [];
+      }
+
+      res.send(JSON.stringify({ data: rows }));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_readHomeliaisonAnalytics): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
   const instance = this;
   const { equalJson, requestSystem } = this.mother;
