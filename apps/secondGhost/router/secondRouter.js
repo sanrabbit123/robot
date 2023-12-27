@@ -1652,6 +1652,43 @@ SecondRouter.prototype.rou_post_projectDesignerTravel = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_readLogDesignerStatus = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, serviceParsing, messageSend, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/readLogDesignerStatus" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.desid === undefined) {
+        throw new Error("invalid post");
+      }
+      const { desid } = equalJson(req.body);
+      const whereQuery = { action: "updateDesignStatus", "data.desid": desid };
+      const projectQuery = { date: 1, data: 1 };
+      let rows;
+
+      rows = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/readHomeliaisonAnalytics", { whereQuery }, { headers: { "Content-Type": "application/json" } });
+
+      res.send(JSON.stringify({ data: equalJson(JSON.stringify(rows.data.data)) }));
+    } catch (e) {
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_readLogDesignerStatus): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
   const instance = this;
   const back = this.back;

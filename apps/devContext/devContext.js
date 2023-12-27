@@ -155,28 +155,21 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
+    // const desid = "d1902_aa01s";
+    // const whereQuery = { action: "updateDesignStatus", "data.desid": desid }
+    // let rows;
 
-    /*
-
-    await this.MONGOLOGC.connect();
-    const selfMongo = this.MONGOLOGC;
-    const collection = "homeliaisonAnalytics";
-
-    const desid = "d1902_aa01s";
-
-    const rows = await back.mongoRead(collection, { action: "updateDesignStatus", "data.desid": desid }, { selfMongo });
-    console.log(rows);
-
-    // updateDesignStatus
     
-    await this.MONGOLOGC.close();
+    // rows = await requestSystem("https://home-liaison.serveftp.com:3000/readHomeliaisonAnalytics", { whereQuery }, { headers: { "Content-Type": "application/json" } });
 
-    */
-
-
+    // console.log(rows.data.data);
 
 
 
+
+
+
+    
     
     /*
 
