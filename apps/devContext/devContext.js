@@ -6893,9 +6893,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김지혜",
-    //     designer: "이정아",
-    //     link: "https://drive.google.com/drive/folders/18dPoBeg1KTXf9L2M5UBf3XEbqbZu252E",
+    //     client: "지순정",
+    //     designer: "김지영",
+    //     link: "https://drive.google.com/drive/folders/1Ada09tqX7I4CZIDWn-YfaP1qBWL4gNsH",
     //     pay: true
     //   },
     // ]);
@@ -6905,8 +6905,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "김지혜",
-    //     designer: "이정아",
+    //     client: "지순정",
+    //     designer: "김지영",
     //   },
     // ]);
 

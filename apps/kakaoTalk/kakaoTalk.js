@@ -4273,6 +4273,49 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       }
     },
+    "designerSettingPortfolioSend": {
+      "name": "디자이너 세트 포트폴리오 전송",
+      "id": "TQ_5918",
+      "needs": [
+        "designer",
+        "host",
+        "path",
+        "desid",
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"desid\", to: obj.desid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님!\n홈리에종에서 디자이너님을 추천드리고, 연결해 드리기 위해 세트 포트폴리오 업로드를 요청드립니다! \n\n세트 포트폴리오는 주거 인테리어에 홈스타일링까지 완료된 포트폴리오로 부탁드리며, 한 집의 모든 공간을 보여주고 있어야 합니다. 기타 자세한 조건과 설명은 아래 페이지를 통해 확인해 주시고, 페이지를 통해서 세트 포트폴리오를 전송해주세요!\n\n*세트 포트폴리오 전송\nhttps://#{host}/designer/#{path}.php?desid=#{desid}",
+        "templtName": "디자이너 세트 포트폴리오 전송",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-12-26 12:04:21",
+        "templtCode": "TQ_5918",
+        "comments": [
+          {
+            "cdate": "2023-12-27 10:34:50",
+            "name": "검수자",
+            "id": "3029294",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-12-27 10:34:50",
+            "status": "APR"
+          }
+        ]
+      },
+    },
   };
   if (target === "$all") {
     return tong;

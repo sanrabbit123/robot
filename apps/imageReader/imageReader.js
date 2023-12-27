@@ -651,7 +651,11 @@ ImageReader.prototype.setWatermark = async function (targetImage) {
         mode: "crop",
       });
       cropJson = await this.readImage(cropMiddleTarget);
-      value = cropJson.imageStatistics.Overall.mean;
+      try {
+        value = cropJson.imageStatistics.Overall.mean;
+      } catch {
+        value = 200;
+      }
     } else {
       if (!(width === size[sizeStandard][0] && height === size[sizeStandard][1])) {
         throw new Error("invalid size 1 => " + String(width) + " / " + String(height));
@@ -669,7 +673,11 @@ ImageReader.prototype.setWatermark = async function (targetImage) {
         mode: "crop",
       });
       cropJson = await this.readImage(cropMiddleTarget);
-      value = cropJson.imageStatistics.Overall.mean;
+      try {
+        value = cropJson.imageStatistics.Overall.mean;
+      } catch {
+        value = 200;
+      }
     }
 
     await shellExec(`rm -rf ${shellLink(cropMiddleTarget)}`);
