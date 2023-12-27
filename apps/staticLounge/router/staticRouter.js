@@ -4171,7 +4171,7 @@ StaticRouter.prototype.rou_post_readHomeliaisonAnalytics = function () {
         projectQuery = null;
       } else {
         projectBoo = true;
-        projectQuery = equalJson(JSON.stringify(req.body));
+        ({ projectQuery } = equalJson(JSON.stringify(req.body)));
       }
 
       if (projectBoo) {
