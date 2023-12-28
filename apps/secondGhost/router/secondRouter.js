@@ -1674,10 +1674,22 @@ SecondRouter.prototype.rou_post_readLogDesignerStatus = function () {
         throw new Error("invalid post");
       }
       const { desid } = equalJson(req.body);
+      const delta = 6;
       const whereQuery = { action: "updateDesignStatus", "data.desid": desid };
       const projectQuery = { date: 1, data: 1 };
-      let rows;
+      let rows, ago;
+      let thisDate;
 
+      ago = new Date();
+      ago.setMonth(ago.getDate() - delta);
+
+      if (req.body.date === undefined) {
+        thisDate = new Date(JSON.stringify(ago).slice(1, -1));
+      } else {
+        thisDate = equalJson(req.body).date;
+      }
+
+      whereQuery["date"] = { $gte: thisDate };
       rows = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/readHomeliaisonAnalytics", { whereQuery, projectQuery }, { headers: { "Content-Type": "application/json" } });
 
       res.send(JSON.stringify({ data: equalJson(JSON.stringify(rows.data.data)) }));
