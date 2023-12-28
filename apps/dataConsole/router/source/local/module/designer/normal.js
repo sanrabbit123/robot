@@ -1,7 +1,7 @@
 DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
   const instance = this;
-  const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows, profileList, workList, representativeList } = this;
-  const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute } = GeneralJs;
+  const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows, profileList, workList, representativeList, statusCheckLog } = this;
+  const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute, equalJson } = GeneralJs;
   try {
     const calcMonthDelta = (from, to) => {
       return ((to.getFullYear() * 12) + to.getMonth() + 1) - ((from.getFullYear() * 12) + from.getMonth() + 1) + 1;
@@ -45,6 +45,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     let filteredConsoleEducationSendRows;
     let filteredSettingPortfolioSendRows;
     let filteredStatusCheckSendRows;
+    let filteredStatusCheckLog;
 
     past.setFullYear(past.getFullYear() - agoYearDelta);
     past.setMonth(0);
@@ -128,6 +129,12 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         title: "상태 체크 전송",
         width: 100,
         name: "statusCheckSend",
+        type: "date",
+      },
+      {
+        title: "상태 체크 기록",
+        width: 100,
+        name: "statusCheckLog",
         type: "date",
       },
       // {
@@ -534,6 +541,10 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
       filteredConsoleEducationSendRows = noticeSendRows.filter((o) => { return o.type === "consoleEducation" }).filter((o) => { return o.designer.desid === designer.desid });
       filteredSettingPortfolioSendRows = noticeSendRows.filter((o) => { return o.type === "settingPortfolio" }).filter((o) => { return o.designer.desid === designer.desid });
       filteredStatusCheckSendRows = noticeSendRows.filter((o) => { return o.type === "statusCheck" }).filter((o) => { return o.designer.desid === designer.desid });
+      filteredStatusCheckLog = equalJson(JSON.stringify(statusCheckLog.filter((o) => { return o.data.desid === designer.desid })));
+      filteredStatusCheckLog.sort((a, b) => {
+        return b.date.valueOf() - a.date.valueOf();
+      });
 
       careerUpdateBoo = designer.information.business.career.detail.length > 0;
       schoolUpdateBoo = designer.information.business.career.school.length > 0;
@@ -583,6 +594,10 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         {
           value: filteredStatusCheckSendRows.length > 0 ? dateToString(filteredStatusCheckSendRows[0].date) : "-",
           name: "statusCheckSend",
+        },
+        {
+          value: filteredStatusCheckLog.length > 0 ? dateToString(filteredStatusCheckLog[0].date) : "-",
+          name: "statusCheckLog",
         },
         // {
         //   value: asyncProcessText,
@@ -8297,6 +8312,8 @@ DesignerJs.prototype.normalView = async function () {
     let profileList, workList;
     let representativeList;
     let execFunc;
+    let statusCheckLog;
+    let statusCheckAgo;
 
     loading = await this.mother.loadingRun();
 
@@ -8315,8 +8332,12 @@ DesignerJs.prototype.normalView = async function () {
       designer.important = histories[designer.desid].important;
     }
 
+    statusCheckAgo = new Date();
+    statusCheckAgo.setDate(statusCheckAgo.getDate() - 14);
+
     members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
     noticeSendRows = await ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+    statusCheckLog = await ajaxJson({ mode: "all", date: statusCheckAgo }, SECONDHOST + "/readLogDesignerStatus", { equal: true });
     profileList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerProfileList", { equal: true });
     workList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerWorksList", { equal: true });
     representativeList = await ajaxJson({ target: "$all" }, BRIDGEHOST + "/representativeFileRead", { equal: true });
@@ -8336,6 +8357,7 @@ DesignerJs.prototype.normalView = async function () {
     this.whiteCardMode = getObj.whitecardmode === undefined ? "checklist" : getObj.whitecardmode;
     this.asyncProcessText = "로드중..";
     this.noticeSendRows = noticeSendRows;
+    this.statusCheckLog = statusCheckLog.data;
     this.profileList = profileList;
     this.workList = workList;
     this.representativeList = representativeList;
