@@ -1670,29 +1670,58 @@ SecondRouter.prototype.rou_post_readLogDesignerStatus = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      if (req.body.desid === undefined) {
+      if (req.body.mode === undefined) {
         throw new Error("invalid post");
       }
-      const { desid } = equalJson(req.body);
+      const { mode } = equalJson(req.body);
       const delta = 6;
-      const whereQuery = { action: "updateDesignStatus", "data.desid": desid };
       const projectQuery = { date: 1, data: 1 };
       let rows, ago;
       let thisDate;
+      let whereQuery;
+      let desid;
 
-      ago = new Date();
-      ago.setMonth(ago.getDate() - delta);
+      if (mode === "pick" || mode === "get") {
 
-      if (req.body.date === undefined) {
-        thisDate = new Date(JSON.stringify(ago).slice(1, -1));
+        ({ desid } = equalJson(req.body));
+        whereQuery = { action: "updateDesignStatus", "data.desid": desid };
+  
+        ago = new Date();
+        ago.setMonth(ago.getMonth() - delta);
+  
+        if (req.body.date === undefined) {
+          thisDate = new Date(JSON.stringify(ago).slice(1, -1));
+        } else {
+          thisDate = equalJson(req.body).date;
+        }
+  
+        whereQuery["date"] = { $gte: thisDate };
+        rows = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/readHomeliaisonAnalytics", { whereQuery, projectQuery }, { headers: { "Content-Type": "application/json" } });
+  
+        res.send(JSON.stringify({ data: equalJson(JSON.stringify(rows.data.data)) })); 
+
+      } else if (mode === "all") {
+
+        whereQuery = { action: "updateDesignStatus" };
+        
+        ago = new Date();
+        ago.setMonth(ago.getMonth() - delta);
+  
+        if (req.body.date === undefined) {
+          thisDate = new Date(JSON.stringify(ago).slice(1, -1));
+        } else {
+          thisDate = equalJson(req.body).date;
+        }
+
+        whereQuery["date"] = { $gte: thisDate };
+        rows = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/readHomeliaisonAnalytics", { whereQuery, projectQuery }, { headers: { "Content-Type": "application/json" } });
+  
+        res.send(JSON.stringify({ data: equalJson(JSON.stringify(rows.data.data)) })); 
+
       } else {
-        thisDate = equalJson(req.body).date;
+        throw new Error("invalid mode");
       }
 
-      whereQuery["date"] = { $gte: thisDate };
-      rows = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/readHomeliaisonAnalytics", { whereQuery, projectQuery }, { headers: { "Content-Type": "application/json" } });
-
-      res.send(JSON.stringify({ data: equalJson(JSON.stringify(rows.data.data)) }));
     } catch (e) {
       logger.error("Second Ghost 서버 문제 생김 (rou_post_readLogDesignerStatus): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));

@@ -156,11 +156,11 @@ DevContext.prototype.launching = async function () {
 
 
     const desid = "d1902_aa01s";
-    const { data } = await requestSystem("https://home-liaison.net:3000/readLogDesignerStatus", { desid }, { headers: { "Content-Type": "application/json" } });
+    const { data } = await requestSystem("https://home-liaison.net:3000/readLogDesignerStatus", { mode: "pick", desid }, { headers: { "Content-Type": "application/json" } });
     console.log(data.data);
 
 
-    
+
 
 
 
