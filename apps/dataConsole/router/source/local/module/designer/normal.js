@@ -55,7 +55,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     past.setSeconds(0);
 
     yearsAgo.setMonth(yearsAgo.getMonth() - agoDelta);
-    yearDelta = now.getFullYear() - past.getFullYear() + 1
+    yearDelta = now.getFullYear() - past.getFullYear() + 1;
     monthDelta = calcMonthDelta(yearsAgo, now);
 
     profileListSet = [ ...new Set(profileList.map((o) => { return o.desid })) ];
