@@ -1674,7 +1674,7 @@ SecondRouter.prototype.rou_post_readLogDesignerStatus = function () {
         throw new Error("invalid post");
       }
       const { mode } = equalJson(req.body);
-      const delta = 2;
+      const delta = 1;
       const projectQuery = { date: 1, data: 1 };
       let rows, ago;
       let thisDate;
