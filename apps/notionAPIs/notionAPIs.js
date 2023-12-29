@@ -167,7 +167,7 @@ NotionAPIs.prototype.generateAccessToken = async function () {
     url = this.url + "/oauth/token"
     data = {
       "grant_type": "authorization_code",
-      "code": "038cc604-aef7-4847-b354-926c1d884e55", // something uuid
+      "code": "03cd6985-66dd-4260-adc9-629eebb2b755", // query code uuid
       "redirect_uri": "https://google.com",
     };
 
@@ -181,6 +181,35 @@ NotionAPIs.prototype.generateAccessToken = async function () {
 
   } catch (e) {
     console.log(e);
+  }
+}
+
+NotionAPIs.prototype.readDatabase = async function (id) {
+  const instance = this;
+  const { headers, motherDatabaseId, editUrl, workspaceName } = this;
+  const { requestSystem } = this.mother;
+  try {
+    const delta = 100;
+    let url, res, data;
+    let result;
+    
+    url = this.url + "/databases/" + this.hexToId(id) + "/query";
+
+    res = await requestSystem(url, { filter: { or: [] }, page_size: delta }, { headers });
+
+    console.log(res.data.results);
+
+    // result = {
+    //   id: res.data.id,
+    //   editId: res.data.id.replace(/\-/gi, ''),
+    //   workspace: workspaceName,
+    //   url: editUrl + res.data.id.replace(/\-/gi, ''),
+    // };
+
+    // return result;
+
+  } catch (error) {
+    console.log(error)
   }
 }
 

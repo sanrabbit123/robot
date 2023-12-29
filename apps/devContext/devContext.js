@@ -159,8 +159,14 @@ DevContext.prototype.launching = async function () {
 
 
     
+    // const notion = new NotionAPIs();
+    // await notion.readDatabase("0702e11b1c9845b88935b389751fad95");
 
-    
+
+
+
+
+
 
 
 
