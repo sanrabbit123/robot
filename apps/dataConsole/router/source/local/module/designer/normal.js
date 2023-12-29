@@ -3666,38 +3666,6 @@ DesignerJs.prototype.communicationRender = function () {
     }
   ]);
   communication.setItem([
-    () => { return "미완료 대상 체크리스트 발송"; },
-    function () {
-      return document.querySelector('.' + whiteBaseClassName) === null;
-    },
-    async function (e) {
-      try {
-        const logs = await ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
-        const sendDesids = logs.filter((o) => { return o.type === "checklist" }).map((o) => { return o.designer.desid });
-        const targetDesigners = instance.designers.filter((d) => { return /협약 완료/gi.test(d.information.contract.status) }).filter((d) => { return !sendDesids.includes(d.desid) });
-        let asyncTempFunc;
-        let tempRes;
-        let untilDate;
-        untilDate = await GeneralJs.promptDate("마감일을 언제로 설정할까요?");
-        if (untilDate !== null) {
-          for (let designer of targetDesigners) {
-            asyncTempFunc = instance.normalSendNotice("totalChecklist", designer.desid);
-            tempRes = await asyncTempFunc();
-            if (tempRes === null) {
-              throw new Error("send fail");
-            }
-          }
-        }
-        window.alert("미완료 대상 체크리스트 발송에 성공하였습니다!");
-        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
-      } catch (e) {
-        console.log(e);
-        window.alert("미완료 대상 체크리스트 발송에 실패하였습니다!");
-        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
-      }
-    }
-  ]);
-  communication.setItem([
     () => { return "프로필 요청 전체 발송"; },
     function () {
       return document.querySelector('.' + whiteBaseClassName) === null;

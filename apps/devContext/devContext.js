@@ -158,8 +158,12 @@ DevContext.prototype.launching = async function () {
 
     
 
+    
 
 
+
+
+    
 
 
 
@@ -6893,9 +6897,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "지순정",
-    //     designer: "김지영",
-    //     link: "https://drive.google.com/drive/folders/1Ada09tqX7I4CZIDWn-YfaP1qBWL4gNsH",
+    //     client: null,
+    //     designer: "박수진",
+    //     link: "https://drive.google.com/drive/folders/1gsQoUOXFZNVIRu8OfaEwDB7FLYuKajDL",
     //     pay: true
     //   },
     // ]);
@@ -6970,20 +6974,20 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2312_aa02s" ]);
+    // await work.newDesignerToFront([ "d2312_aa05s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2312_aa03s", [
-    //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 7 },
-    //   { porlid: "ghost", index: 4 },
-    //   { porlid: "ghost", index: 5 },
-    //   { porlid: "ghost", index: 3 },
+    // await this.setProposalSettingForDesigner("d2312_aa05s", [
+    //   { porlid: "a123", index: 7 },
+    //   { porlid: "a123", index: 2 },
+    //   { porlid: "a123", index: 9 },
+    //   { porlid: "a123", index: 12 },
+    //   { porlid: "a123", index: 4 },
     // ], [
-    //   "빠른 문제 해결 능력을 가지고 있어, 속도감 있는 진행을 할 수 있습니다.",
-    //   "창의적인 해답을 내는 능력으로 고객님의 집을, 고객님만의 집답게 만들어 드립니다.",
-    //   "논리적인 의사소통 능력으로 합리적인 디자인안을 도출해내고, 문제를 해결합니다.",
+    //   "상대방에 대해 공감을 잘합니다. 고객님을 이해하고 공감하여 보다 더 나은 디자인을 제공해드립니다.",
+    //   "섬세하고 꼼꼼합니다. 처음 미팅 후 완공 된 후 이미지가 최대한 변동이 없는 디자인을 제공하겠습니다.",
+    //   "성실하고 책임감이 강합니다. 고객님의 현장이 마치 제 현장이라는 마인드로 늘 임해왔습니다.",
     // ]);
 
 
@@ -6998,8 +7002,8 @@ DevContext.prototype.launching = async function () {
 
     
     // // send sms
-    // const name = "김은경";
-    // const amount = 1862000;
+    // const name = "곽예슬";
+    // const amount = 19_695_000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
