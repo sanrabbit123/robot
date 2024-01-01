@@ -347,6 +347,16 @@ Robot.prototype.contentsConnect = async function () {
   }
 }
 
+Robot.prototype.notionConnect = async function () {
+  try {
+    const NotionCenter = require(process.cwd() + "/apps/notionCenter/notionCenter.js");
+    const app = new NotionCenter();
+    await app.notionConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.staticConnect = async function () {
   try {
     const StaticLounge = require(process.cwd() + "/apps/staticLounge/staticLounge.js");
@@ -1318,6 +1328,13 @@ const MENU = {
   contents: async function () {
     try {
       await robot.contentsConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  notionCenter: async function () {
+    try {
+      await robot.notionConnect();
     } catch (e) {
       console.log(e);
     }
