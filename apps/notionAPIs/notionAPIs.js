@@ -1,8 +1,16 @@
-const NotionAPIs = function () {
-  const Mother = require(process.cwd() + "/apps/mother.js");
-  const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
-  this.mother = new Mother();
-  this.back = new BackMaker();
+const NotionAPIs = function (mother = null, back = null, address = null) {
+  if (mother !== null && back !== null && address !== null) {
+    this.mother = mother;
+    this.back = back;
+    this.address = address;
+  } else {
+    const Mother = require(process.cwd() + "/apps/mother.js");
+    const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
+    const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
+    this.mother = new Mother();
+    this.back = new BackMaker();
+    this.address = ADDRESS;
+  }
   this.dir = process.cwd() + "/apps/notionAPIs";
   this.oauth = {
     id: "6496bf10-6b0a-4f80-96df-280fee596755",
@@ -271,6 +279,19 @@ NotionAPIs.prototype.createKanban = async function (pageTitle = "Test title") {
   }
 }
 
+NotionAPIs.prototype.readRichText = function (richTextArr) {
+  const instance = this;
+  if (!Array.isArray(richTextArr)) {
+    if (typeof richTextArr === "object" && richTextArr !== null && Array.isArray(richTextArr.rich_text)) {
+      return richTextArr.rich_text.map((o2) => { return o2.text.content }).join("");
+    } else {
+      throw new Error("invalid input");
+    }
+  } else {
+    return richTextArr.map((o2) => { return o2.text.content }).join("");
+  }
+}
+
 NotionAPIs.prototype.readDatabase = async function (id) {
   const instance = this;
   const { headers, motherDatabaseId, editUrl, workspaceName } = this;
@@ -345,8 +366,13 @@ NotionAPIs.prototype.readPage = async function (id) {
     let cursor;
     let copiedObj;
     
-    url = this.url + "/pages/" + this.hexToId(id);
-    res = await requestSystem(url, {}, { headers });
+    try {
+      url = this.url + "/pages/" + this.hexToId(id);
+      res = await requestSystem(url, {}, { headers });  
+    } catch {
+      url = this.url + "/blocks/" + this.hexToId(id);
+      res = await requestSystem(url, {}, { headers });  
+    }
 
     resultObj = equalJson(JSON.stringify(res.data));
     resultObj.date = {

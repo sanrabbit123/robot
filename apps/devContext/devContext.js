@@ -160,13 +160,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-    // const targetId = "61c677f450604a5795ba54f91933237c";
-
-    // const notion = new NotionAPIs();
-    // await notion.readPage(targetId);
-
-
+    // const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
+    // const app = new LiaisonCalendar();
+    // await app.listCalendars();
 
 
 
