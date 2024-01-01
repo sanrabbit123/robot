@@ -18,6 +18,8 @@ const LiaisonCalendar = function (mother = null, back = null, address = null) {
   this.hexId = "61c677f450604a5795ba54f91933237c";
   this.pageId = this.notion.hexToId(this.hexId);
   this.id = this.pageId;
+  this.iconArr = [ "😇", "🤗", "😎", "😊", "🤭", "🤩" ]
+  this.dayArr = [ "월요일", "화요일", "수요일", "목요일", "금요일" ];
 }
 
 LiaisonCalendar.prototype.listCalendars = async function (allMode = false, targetMember = null) {
@@ -141,6 +143,7 @@ LiaisonCalendar.prototype.listCalendars = async function (allMode = false, targe
                 title: titleRawArr,
                 status: statusRaw,
                 day: dayRawArr,
+                raw: equalJson(JSON.stringify(z)),
               };
             }).filter((o3) => { return o3.day !== null }).map((o3) => {
               if (/월/gi.test(o3.day)) {
@@ -174,6 +177,7 @@ LiaisonCalendar.prototype.listCalendars = async function (allMode = false, targe
                 name: thisMemberName
               },
               value: valueMatrix,
+              databaseId: targetDatabaseId,
             };
             resultObject.push(equalJson(JSON.stringify(thisTempObject)));
   
@@ -214,6 +218,7 @@ LiaisonCalendar.prototype.listCalendars = async function (allMode = false, targe
                   title: titleRawArr,
                   status: statusRaw,
                   day: dayRawArr,
+                  raw: equalJson(JSON.stringify(z)),
                 };
               }).filter((o3) => { return o3.day !== null }).map((o3) => {
                 if (/월/gi.test(o3.day)) {
@@ -247,6 +252,7 @@ LiaisonCalendar.prototype.listCalendars = async function (allMode = false, targe
                   name: thisMemberName
                 },
                 value: valueMatrix,
+                databaseId: targetDatabaseId,
               };
               resultObject.push(equalJson(JSON.stringify(thisTempObject)));
     
@@ -267,6 +273,57 @@ LiaisonCalendar.prototype.listCalendars = async function (allMode = false, targe
       }
     }
     
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+LiaisonCalendar.prototype.createDefaultSet = async function (targetDatabaseId, dayNumber) {
+  const instance = this;
+  const notion = this.notion;
+  const { iconArr, dayArr } = this;
+  const { requestSystem, equalJson, stringToDate } = this.mother;
+  try {
+    if (typeof targetDatabaseId !== "string" || typeof dayNumber !== "number") {
+      throw new Error("invalid input");
+    }
+    const targetDay = dayArr[dayNumber - 1];
+
+    if (targetDay === undefined) {
+      throw new Error("invalid day number");
+    }
+
+    for (let i = 0; i < iconArr.length; i++) {
+      await notion.createPage({
+        parent: targetDatabaseId,
+        icon: iconArr[iconArr.length - 1 - i],
+        properties: {
+          title: {
+            title: [
+              {
+                text: {
+                  content: "Type : Task title " + String(iconArr.length - 1 - i),
+                }
+              }
+            ]
+          },
+          "상태": {
+            select: {
+              name: "예정"
+            }
+          },
+          "요일": {
+            multi_select: [
+              {
+                name: targetDay,
+              }
+            ]
+          },
+        }
+      });
+    }
+
   } catch (error) {
     console.log(error);
     return null;

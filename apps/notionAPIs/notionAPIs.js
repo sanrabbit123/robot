@@ -56,6 +56,13 @@ NotionAPIs.prototype.hexToId = function (hex) {
   }
 }
 
+NotionAPIs.prototype.idToHex = function (id) {
+  if (typeof id !== "string") {
+    throw new Error("invaild input");
+  }
+  return id.replace(/\-/gi, '').trim();
+}
+
 NotionAPIs.prototype.getCollection = async function (id) {
   if (typeof id !== "string") {
     throw new Error("input must be collection id");
@@ -192,7 +199,7 @@ NotionAPIs.prototype.generateAccessToken = async function () {
   }
 }
 
-NotionAPIs.prototype.createPage = async function (pageTitle = "Test title") {
+NotionAPIs.prototype.createPage = async function (pageTitle = "Test title", parent = null, properties = null, icon = null) {
   const instance = this;
   const { headers, motherDatabaseId, editUrl, workspaceName } = this;
   const { requestSystem } = this.mother;
@@ -200,6 +207,13 @@ NotionAPIs.prototype.createPage = async function (pageTitle = "Test title") {
     let url, res, data;
     let result;
     
+    if (typeof pageTitle === "object" && pageTitle !== null) {
+      parent = pageTitle.parent !== undefined ? pageTitle.parent : null;
+      properties = pageTitle.properties !== undefined ? pageTitle.properties : null;
+      icon = pageTitle.icon !== undefined ? pageTitle.icon : null;
+      pageTitle = "";
+    }
+
     url = this.url + "/pages";
     data = {
       "parent": { "database_id": motherDatabaseId },
@@ -214,6 +228,17 @@ NotionAPIs.prototype.createPage = async function (pageTitle = "Test title") {
           ]
         },
       },
+    }
+
+    if (parent !== null) {
+      data.parent.database_id = this.idToHex(parent);
+      if (properties !== null) {
+        data.properties = properties;
+      }
+    }
+    if (icon !== null) {
+      data.icon = {};
+      data.icon.emoji = icon;
     }
 
     res = await requestSystem(url, data, { headers });
