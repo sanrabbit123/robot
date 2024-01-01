@@ -3,10 +3,17 @@ const NotionRouter = function (MONGOC, MONGOLOCALC) {
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const ImageReader = require(process.cwd() + "/apps/imageReader/imageReader.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
+  const NotionAPIs = require(process.cwd() + "/apps/notionAPIs/notionAPIs.js");
+  const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
 
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
+
+  this.notion = new NotionAPIs(this.mother, this.back, this.address);
+  this.notionChildren = {};
+  this.notionChildren.liaisonCalendar = new LiaisonCalendar();
+
   this.host = this.address.notioninfo.host;
   this.mongo = MONGOC;
   this.mongolocal = MONGOLOCALC;
@@ -58,13 +65,15 @@ NotionRouter.prototype.rou_get_First = function () {
 
 //POST ---------------------------------------------------------------------------------------------
 
-NotionRouter.prototype.rou_post_getHoliday = function () {
+NotionRouter.prototype.rou_post_listCalendars = function () {
   const instance = this;
-  const back = this.back;
+  const notion = this.notion;
+  const notionChildren = this.notionChildren;
+  const members = this.members;
   const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
   let obj;
   obj = {};
-  obj.link = [ "/getHoliday" ];
+  obj.link = [ "/listCalendars" ];
   obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
@@ -73,25 +82,23 @@ NotionRouter.prototype.rou_post_getHoliday = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const selfMongo = instance.mongolocal;
-      const collection = "holidayList";
-      let rows;
-      let oneYearsAgo;
-
-      oneYearsAgo = new Date();
-      oneYearsAgo.setFullYear(oneYearsAgo.getFullYear() - 1);
-
-      rows = await back.mongoRead(collection, { date: { $gte: oneYearsAgo } }, { selfMongo });
-      rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-
-      if (rows.length > 0) {
-        res.send(JSON.stringify({ holiday: rows[0].data }));
-      } else {
-        res.send(JSON.stringify({ holiday: [] }));
+      const allMode = equalJson(req.body).all === "true" || equalJson(req.body).all === true;
+      let targetMember = !allMode ? equalJson(req.body).member : null;
+      if (!allMode) {
+        if (targetMember === undefined || targetMember === null) {
+          throw new Error("invalid post");
+        }
       }
-
+      if (targetMember !== null) {
+        targetMember = members.find((o) => { return o.id === targetMember });
+      }
+      if (targetMember === undefined) {
+        throw new Error("invalid post 2");
+      }
+      const result = await notionChildren.liaisonCalendar.listCalendars(allMode, targetMember);
+      res.send(JSON.stringify(result));
     } catch (e) {
-      logger.error("Notion center 서버 문제 생김 (rou_post_getHoliday): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Notion center 서버 문제 생김 (rou_post_listCalendars): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
