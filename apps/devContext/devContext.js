@@ -158,15 +158,19 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
     
+    // const targetId = "61c677f450604a5795ba54f91933237c";
+
     // const notion = new NotionAPIs();
-    // await notion.readDatabase("0702e11b1c9845b88935b389751fad95");
+    // await notion.readPage(targetId);
 
 
 
 
 
-
+    
 
 
 

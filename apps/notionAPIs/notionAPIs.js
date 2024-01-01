@@ -184,35 +184,6 @@ NotionAPIs.prototype.generateAccessToken = async function () {
   }
 }
 
-NotionAPIs.prototype.readDatabase = async function (id) {
-  const instance = this;
-  const { headers, motherDatabaseId, editUrl, workspaceName } = this;
-  const { requestSystem } = this.mother;
-  try {
-    const delta = 100;
-    let url, res, data;
-    let result;
-    
-    url = this.url + "/databases/" + this.hexToId(id) + "/query";
-
-    res = await requestSystem(url, { filter: { or: [] }, page_size: delta }, { headers });
-
-    console.log(res.data.results);
-
-    // result = {
-    //   id: res.data.id,
-    //   editId: res.data.id.replace(/\-/gi, ''),
-    //   workspace: workspaceName,
-    //   url: editUrl + res.data.id.replace(/\-/gi, ''),
-    // };
-
-    // return result;
-
-  } catch (error) {
-    console.log(error)
-  }
-}
-
 NotionAPIs.prototype.createPage = async function (pageTitle = "Test title") {
   const instance = this;
   const { headers, motherDatabaseId, editUrl, workspaceName } = this;
@@ -297,6 +268,132 @@ NotionAPIs.prototype.createKanban = async function (pageTitle = "Test title") {
 
   } catch (error) {
     console.log(error)
+  }
+}
+
+NotionAPIs.prototype.readDatabase = async function (id) {
+  const instance = this;
+  const { headers, motherDatabaseId, editUrl, workspaceName } = this;
+  const { requestSystem, equalJson } = this.mother;
+  try {
+    const delta = 100;
+    let url, res;
+    let resultObj;
+    let cursor;
+    let copiedObj;
+    
+    url = this.url + "/databases/" + this.hexToId(id);
+    res = await requestSystem(url, {}, { headers });
+
+    resultObj = equalJson(JSON.stringify(res.data));
+    resultObj.date = {
+      created: new Date(JSON.stringify(resultObj.created_time).slice(1, -1)),
+      edited: new Date(JSON.stringify(resultObj.last_edited_time).slice(1, -1)),
+    }
+    resultObj.children = [];
+
+    delete resultObj.created_time;
+    delete resultObj.last_edited_time;
+
+    url = this.url + "/databases/" + this.hexToId(id) + "/query";
+    res = await requestSystem(url, { filter: { or: [] }, page_size: delta }, { headers });
+
+    for (let obj of res.data.results) {
+      copiedObj = equalJson(JSON.stringify(obj));
+      copiedObj.date = {
+        created: new Date(JSON.stringify(copiedObj.created_time).slice(1, -1)),
+        edited: new Date(JSON.stringify(copiedObj.last_edited_time).slice(1, -1)),
+      }  
+      delete copiedObj.created_time;
+      delete copiedObj.last_edited_time;
+      resultObj.children.push(copiedObj);
+    }
+
+    while (typeof res.data.next_cursor === "string") {
+      cursor = res.data.next_cursor;
+      res = await requestSystem(url, { filter: { or: [] }, page_size: delta, start_cursor: cursor }, { headers });
+      for (let obj of res.data.results) {
+        copiedObj = equalJson(JSON.stringify(obj));
+        copiedObj.date = {
+          created: new Date(JSON.stringify(copiedObj.created_time).slice(1, -1)),
+          edited: new Date(JSON.stringify(copiedObj.last_edited_time).slice(1, -1)),
+        }  
+        delete copiedObj.created_time;
+        delete copiedObj.last_edited_time;
+        resultObj.children.push(copiedObj);
+      }
+    }
+
+    resultObj.length = resultObj.children.length;
+
+    return resultObj;
+
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+NotionAPIs.prototype.readPage = async function (id) {
+  const instance = this;
+  const { headers, motherDatabaseId, editUrl, workspaceName } = this;
+  const { requestSystem, equalJson } = this.mother;
+  try {
+    const delta = 100;
+    let url, res;
+    let resultObj;
+    let cursor;
+    let copiedObj;
+    
+    url = this.url + "/pages/" + this.hexToId(id);
+    res = await requestSystem(url, {}, { headers });
+
+    resultObj = equalJson(JSON.stringify(res.data));
+    resultObj.date = {
+      created: new Date(JSON.stringify(resultObj.created_time).slice(1, -1)),
+      edited: new Date(JSON.stringify(resultObj.last_edited_time).slice(1, -1)),
+    }
+    resultObj.children = [];
+
+    delete resultObj.created_time;
+    delete resultObj.last_edited_time;    
+
+    url = this.url + "/blocks/" + this.hexToId(id) + "/children";
+    res = await requestSystem(url, { page_size: delta }, { method: "get", headers });
+
+    for (let obj of res.data.results) {
+      copiedObj = equalJson(JSON.stringify(obj));
+      copiedObj.date = {
+        created: new Date(JSON.stringify(copiedObj.created_time).slice(1, -1)),
+        edited: new Date(JSON.stringify(copiedObj.last_edited_time).slice(1, -1)),
+      }  
+      delete copiedObj.created_time;
+      delete copiedObj.last_edited_time;
+      resultObj.children.push(copiedObj);
+    }
+
+    while (typeof res.data.next_cursor === "string") {
+      cursor = res.data.next_cursor;
+      res = await requestSystem(url, { page_size: delta, start_cursor: cursor }, { method: "get", headers });
+      for (let obj of res.data.results) {
+        copiedObj = equalJson(JSON.stringify(obj));
+        copiedObj.date = {
+          created: new Date(JSON.stringify(copiedObj.created_time).slice(1, -1)),
+          edited: new Date(JSON.stringify(copiedObj.last_edited_time).slice(1, -1)),
+        }  
+        delete copiedObj.created_time;
+        delete copiedObj.last_edited_time;
+        resultObj.children.push(copiedObj);
+      }
+    }
+
+    resultObj.length = resultObj.children.length;
+    
+    return resultObj;
+
+  } catch (error) {
+    console.log(error);
+    return null;
   }
 }
 

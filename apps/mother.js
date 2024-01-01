@@ -541,7 +541,8 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
         dataString += '&';
       }
       data = dataString.slice(0, -1);
-    } else if (config.method === "get") {
+    }
+    if (config.method === "get") {
       method = "get";
       querystring = require("querystring");
       getData = "?";
