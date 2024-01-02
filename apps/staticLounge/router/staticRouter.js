@@ -6190,6 +6190,9 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
           let original;
           let pureFileName;
           original = s.split(indexToken)[1];
+          if (original === undefined) {
+            throw new Error("something wrong => " + desid + " / " + s)
+          }
           pureFileName = original.split('.')[0];
           pureFileName = pureFileName.slice(0, -1 * digitStandard);
           return { original, pure: pureFileName };
