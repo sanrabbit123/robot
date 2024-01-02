@@ -90,7 +90,7 @@ NotionRouter.prototype.rou_post_listCalendars = function () {
         }
       }
       if (targetMember !== null) {
-        targetMember = members.find((o) => { return o.id === targetMember });
+        targetMember = members.find((o) => { return o.id === targetMember }) !== undefined ? members.find((o) => { return o.id === targetMember }) : members.find((o) => { return o.name === targetMember });
       }
       if (targetMember === undefined) {
         throw new Error("invalid post 2");
@@ -126,7 +126,7 @@ NotionRouter.prototype.rou_post_defaultSetting = function () {
         throw new Error("invalid post");
       }
       const { member } = equalJson(req.body);
-      const targetMember = members.find((o) => { return o.id === member });
+      const targetMember = members.find((o) => { return o.id === member }) !== undefined ? members.find((o) => { return o.id === member }) : members.find((o) => { return o.name === member });
       const dayNumber = equalJson(req.body).day === undefined ? (new Date()).getDay() : Number(equalJson(req.body).day);
       if (targetMember === undefined) {
         throw new Error("invalid post 2");
