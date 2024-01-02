@@ -170,13 +170,8 @@ DevContext.prototype.launching = async function () {
     // })
 
 
-    const res = await requestSystem("https://home-liaison.link:3000/storeHoliday", { data: null }, { 
-      headers: {
-        "Content-Type": "application/json",
-      }
-     })
-    
-     console.log(res);
+
+
     
 
     
