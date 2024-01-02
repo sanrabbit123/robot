@@ -550,6 +550,9 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
       url = url + getData;
       delete config.method;
     }
+    if (config.method === "patch") {
+      method = "patch";
+    }
   }
 
   return new Promise(function (resolve, reject) {
@@ -643,6 +646,12 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
           }
         });
       }
+    } else if (method === "patch") {
+      axios.patch(url, data, config).then(function (response) {
+        resolve(response);
+      }).catch(function (error) {
+        reject(error);
+      });
     }
   });
 }

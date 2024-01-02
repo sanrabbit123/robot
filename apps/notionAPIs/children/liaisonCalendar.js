@@ -330,4 +330,55 @@ LiaisonCalendar.prototype.createDefaultSet = async function (targetDatabaseId, d
   }
 }
 
+LiaisonCalendar.prototype.todayComplete = async function (targetDatabaseId, memberObject) {
+  const instance = this;
+  const notion = this.notion;
+  const { dayArr } = this;
+  const { requestSystem, equalJson, stringToDate, dateToString, messageSend } = this.mother;
+  try {
+    if (typeof targetDatabaseId !== "string") {
+      throw new Error("invalid input");
+    }
+    if (typeof memberObject !== "object" || memberObject === null) {
+      throw new Error("invalid input 2");
+    }
+    const today = new Date();
+    const todayDayNumber = today.getDay();
+    const rawChildren = (await notion.readDatabase(targetDatabaseId)).children;
+    const targetChildren = rawChildren.filter((o) => {
+      return o.properties["요일"].multi_select.length > 0;
+    }).filter((o) => {
+      return (dayArr.findIndex((k) => { return k === o.properties["요일"].multi_select[0].name }) + 1) === todayDayNumber;
+    });
+    const targetId = targetChildren.map((o) => { return o.id });
+    let finalText;
+
+    for (let id of targetId) {
+      await notion.updatePage({
+        id,
+        properties: {
+          "상태": {
+            select: {
+              name: "완료"
+            }
+          },
+        }
+      })
+    }
+
+    finalText = targetChildren.map((o) => {
+      return "- " + notion.readRichText(o.properties["이름"].title).trim();
+    }).join("\n");
+    finalText = dateToString(today).replace(/\-/gi, '').slice(2) + " 데일리 업무 보고_" + memberObject.name + "\n\n" + finalText;
+
+    await messageSend({ text: finalText, channel: "#002_staff_report", voice: false });
+
+    return true;
+
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 module.exports = LiaisonCalendar;

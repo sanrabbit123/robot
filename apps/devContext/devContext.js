@@ -159,17 +159,32 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const targetDatabaseId = "83de9152-7546-4ab6-b2e5-e0df14d71672";
+    const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
+    const app = new LiaisonCalendar();
+    // // const result = await app.listCalendars();
+    // // console.log(result[0].value[0][0].raw);
+    // await app.createDefaultSet(targetDatabaseId, 4);
 
-    const res = await requestSystem("https://" + address.notioninfo.host + "/defaultSetting", { day: 4, member: "m1810_aa01s" }, {
-      headers: {
-        "Content-Type": "application/json",
-      }
-    })
-    console.log(res);
+    // const res = await requestSystem("https://" + address.notioninfo.host + "/listCalendars", { all: false, member: "m1810_aa01s" }, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   }
+    // })
 
+    // const notion = new NotionAPIs();
+    // await notion.updatePage({
+    //   id: "f17cead2e8424a69b1bca71c6c6782e3",
+    //   properties: {
+    //     "상태": {
+    //       select: {
+    //         name: "완료"
+    //       }
+    //     },
+    //   }
+    // })
 
-
-
+    await app.todayComplete("83de915275464ab6b2e5e0df14d71672", { name: "배창규" });
 
 
     

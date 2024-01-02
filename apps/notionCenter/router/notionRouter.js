@@ -147,6 +147,47 @@ NotionRouter.prototype.rou_post_defaultSetting = function () {
   return obj;
 }
 
+NotionRouter.prototype.rou_post_todayComplete = function () {
+  const instance = this;
+  const notion = this.notion;
+  const notionChildren = this.notionChildren;
+  const members = this.members;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/todayComplete" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.member === undefined) {
+        throw new Error("invalid post");
+      }
+      const { member } = equalJson(req.body);
+      const targetMember = members.find((o) => { return o.id === member }) !== undefined ? members.find((o) => { return o.id === member }) : members.find((o) => { return o.name === member });
+      if (targetMember === undefined) {
+        throw new Error("invalid post 2");
+      }
+
+      notionChildren.liaisonCalendar.listCalendars(false, targetMember).then((result) => {
+        return notionChildren.liaisonCalendar.todayComplete(result.databaseId, targetMember);
+      }).catch((err) => {
+        throw new Error(err.message);
+      });
+      
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      logger.error("Notion center 서버 문제 생김 (rou_post_todayComplete): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 NotionRouter.prototype.setMembers = async function () {

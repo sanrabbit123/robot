@@ -257,6 +257,51 @@ NotionAPIs.prototype.createPage = async function (pageTitle = "Test title", pare
   }
 }
 
+NotionAPIs.prototype.updatePage = async function (updateObject) {
+  const instance = this;
+  const { headers, editUrl, workspaceName } = this;
+  const { requestSystem } = this.mother;
+  try {
+    let url, res, data;
+    let result;
+    let id, properties, icon;
+    
+    if (typeof updateObject !== "object" || updateObject === null) {
+      throw new Error("invalid input");
+    }
+
+    id = updateObject.id !== undefined ? updateObject.id : null;
+    properties = updateObject.properties !== undefined ? updateObject.properties : null;
+    icon = updateObject.icon !== undefined ? updateObject.icon : null;
+
+    if (id === null || properties === null) {
+      throw new Error("invalid input 2");
+    }
+
+    url = this.url + "/pages" + "/" + this.hexToId(id);
+    data = { properties };
+
+    if (icon !== null) {
+      data.icon = {};
+      data.icon.emoji = icon;
+    }
+
+    res = await requestSystem(url, data, { method: "patch", headers });
+
+    result = {
+      id: this.idToHex(id),
+      editId: id.replace(/\-/gi, ''),
+      workspace: workspaceName,
+      url: editUrl + id.replace(/\-/gi, ''),
+    };
+
+    return result;
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 NotionAPIs.prototype.createKanban = async function (pageTitle = "Test title") {
   const instance = this;
   const { headers, motherPageId, editUrl, workspaceName } = this;
