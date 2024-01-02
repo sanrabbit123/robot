@@ -171,10 +171,29 @@ DevContext.prototype.launching = async function () {
 
 
     
+    const returnGoogleCalendarArr = async () => {
+      try {
+        const res = await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsCalendar", { mode: "get" }, { headers: { "Content-Type": "application/json" } });
+        const targets = equalJson(JSON.stringify(res.data));
+        let realTargets;
+        let thisId;
+        realTargets = [];
+        for (let obj of targets) {
+          thisId = obj.pid;
+          realTargets.push({
+            pid: thisId,
+            date: stringToDate(dateToString(obj.date.start))
+          });
+        }
+        return realTargets;
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
+    }
 
-    
+    console.log(await returnGoogleCalendarArr());
 
-    
 
     
     /*
@@ -6905,9 +6924,6 @@ DevContext.prototype.launching = async function () {
     //     pay: true
     //   },
     // ]);
-
-    // await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/syncDesignProposal", { data: null }, { headers: { "Content-Type": "application/json" } });
-
 
     // raw video
     // const filter = new PortfolioFilter();
