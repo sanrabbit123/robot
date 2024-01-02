@@ -18,7 +18,7 @@ const LiaisonCalendar = function (mother = null, back = null, address = null) {
   this.hexId = "61c677f450604a5795ba54f91933237c";
   this.pageId = this.notion.hexToId(this.hexId);
   this.id = this.pageId;
-  this.iconArr = [ "😇", "🤗", "😎", "😊", "🤭", "🤩" ]
+  this.iconArr = [ "😇", "🤗", "😎", "🤭", "🤩" ]
   this.dayArr = [ "월요일", "화요일", "수요일", "목요일", "금요일" ];
 }
 
