@@ -170,6 +170,7 @@ ContentsRouter.prototype.rou_post_storeHoliday = function () {
 
       return holidayArr;
     } catch (e) {
+      console.log(e);
       return null;
     }
   }
@@ -199,6 +200,7 @@ ContentsRouter.prototype.rou_post_storeHoliday = function () {
           let rows;
 
           resultHolidayArr = await returnHolidayArr();
+          console.log(resultHolidayArr);
           safeNum = 0;
           while (!Array.isArray(resultHolidayArr)) {
             if (safeNum > 100) {
@@ -206,6 +208,7 @@ ContentsRouter.prototype.rou_post_storeHoliday = function () {
             }
             await sleep(1000);
             resultHolidayArr = await returnHolidayArr();
+            console.log(resultHolidayArr);
             safeNum++;
           }
 
@@ -273,7 +276,15 @@ ContentsRouter.prototype.rou_post_getHoliday = function () {
       rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
 
       if (rows.length > 0) {
-        res.send(JSON.stringify({ holiday: rows[0].data }));
+        if (rows[0].data === null) {
+          if (rows.find((o) => { return Array.isArray(o.data) }) !== undefined) {
+            res.send(JSON.stringify({ holiday: rows.find((o) => { return Array.isArray(o.data) }).data }));
+          } else {
+            throw new Error("data error");
+          }
+        } else {
+          res.send(JSON.stringify({ holiday: rows[0].data }));
+        }
       } else {
         res.send(JSON.stringify({ holiday: [] }));
       }
