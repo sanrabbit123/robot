@@ -4,6 +4,7 @@ __pycache__/
 apps/infoObj.py
 apps/infoObj_bak.py
 apps/memberObj.py
+apps/memberThis.py
 binary/
 temp/
 dist/
@@ -14,3 +15,5 @@ bin/
 include/
 lib/
 pyvenv.cfg
+homeliaison.app/
+homeliaison.scpt

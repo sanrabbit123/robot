@@ -8,6 +8,7 @@ import json
 import copy
 import re
 import os
+import sys
 from requests_toolbelt import MultipartEncoder
 from motor.motor_asyncio import AsyncIOMotorClient
 import requests
@@ -57,6 +58,11 @@ def generalHeaders():
 
 def processCwd():
     return os.getcwd()
+
+def consoleQ(question: str):
+    print(question)
+    temp = sys.stdin.readline()
+    return temp.strip()
 
 def consoleLog(something, indentNumber: int = 2):
     pp = pprint.PrettyPrinter(indent=indentNumber)
