@@ -7001,8 +7001,8 @@ DevContext.prototype.launching = async function () {
 
     
     // // send sms
-    // const name = "곽예슬";
-    // const amount = 19_695_000;
+    // const name = "김은경";
+    // const amount = 14_896_000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
@@ -7011,16 +7011,6 @@ DevContext.prototype.launching = async function () {
     // await human.sendSms({
     //   to: "01035155023",
     //   body: `안녕하세요, 김정현 디자이너님!\n주식회사 홈리에종입니다.\n\n면접 날짜와 시간, 주소에 대한 정보 공지해드립니다. 해당 시간과 장소에서 뵙겠습니다 :)\n\n* 시간 : 12월 8일 금요일 오후 1시 00분\n* 장소 : 서울특별시 성동구 성수일로 10 605호 (주)홈리에종`,
-    // });
-
-    // await human.sendSms({
-    //   to: "01035155023",
-    //   body: `안녕하세요, 김정현 디자이너님!\n주식회사 홈리에종입니다.\n\n로켓펀치에서 지원해주신 이력서와 포트폴리오를 모두 확인하였고,\n대표님께서 면접을 진행하고 싶으시다고 결정해주셔서 연락 드렸습니다.\n\n면접 날짜와 시간을 정하고 싶은데 통화 가능하실까요?\n010-2747-3403 으로 답변 또는 전화 부탁드립니다.\n\n감사합니다 :)`,
-    // });
-
-    // await human.sendSms({
-    //   to: "01075533125",
-    //   body: `안녕하세요, 황보배 디자이너님!\n주식회사 홈리에종입니다.\n\n면접 날짜와 시간, 주소에 대한 정보 공지해드립니다. 해당 시간과 장소에서 뵙겠습니다 :)\n\n* 시간 : 12월 6일 수요일 오후 4시 00분\n* 장소 : 서울특별시 성동구 성수일로 10 605호 (주)홈리에종`,
     // });
 
     // bill passive sync
