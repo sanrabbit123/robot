@@ -6189,13 +6189,24 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
         thisFolderContents_past = thisFolderContents_past.map((s) => {
           let original;
           let pureFileName;
-          original = s.split(indexToken)[1];
-          if (original === undefined) {
-            throw new Error("something wrong => " + desid + " / " + s)
+          let originalTempArr;
+
+          originalTempArr = s.split(indexToken);
+          if (originalTempArr.length >= 2) {
+            original = originalTempArr[1];
+            if (original === undefined) {
+              throw new Error("something wrong => " + desid + " / " + s)
+            }
+            pureFileName = original.split('.')[0];
+            pureFileName = pureFileName.slice(0, -1 * digitStandard);
+            return { original, pure: pureFileName };
+          } else {
+            original = originalTempArr[0];
+            pureFileName = original.split('.')[0];
+            pureFileName = pureFileName.slice(0, -1 * digitStandard);
+            return { original, pure: pureFileName };
           }
-          pureFileName = original.split('.')[0];
-          pureFileName = pureFileName.slice(0, -1 * digitStandard);
-          return { original, pure: pureFileName };
+
         });
   
         // projects

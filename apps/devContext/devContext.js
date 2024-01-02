@@ -6906,6 +6906,8 @@ DevContext.prototype.launching = async function () {
     //   },
     // ]);
 
+    // await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/syncDesignProposal", { data: null }, { headers: { "Content-Type": "application/json" } });
+
 
     // raw video
     // const filter = new PortfolioFilter();
