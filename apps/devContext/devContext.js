@@ -170,6 +170,18 @@ DevContext.prototype.launching = async function () {
     // })
 
 
+    // const targetId = "1tS-lRBb3yXIC9N-1jgQH--rbigqujGcLRRXEXWCG7xk";
+    // let rows;
+
+    // rows = await sheets.get_value_inPython(targetId, "Performance!B1:Z");
+    // console.log(rows);
+
+
+
+
+
+
+
 
 
     
