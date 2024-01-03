@@ -96,7 +96,7 @@ DevContext.prototype.launching = async function () {
 
     // await this.MONGOLOGC.connect();
     // const report = new LogReport(this.MONGOLOGC);
-    // await report.unknownCampaign(2023, 10, 770000);
+    // await report.unknownCampaign(2023, 12, 8_800_485 - 7_926_458);
     // await this.MONGOLOGC.close();
 
     // =======================================================================================================================================================
