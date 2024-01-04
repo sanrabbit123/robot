@@ -710,6 +710,10 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
     let requestTravel;
     let bilid, responseIndex;
     let thisTargetDesigner;
+    let tongTong;
+    let tongSet;
+    let tongMatrix;
+    let tongTempArr;
 
     ago = new Date();
     ago.setDate(ago.getDate() - 28);
@@ -1112,10 +1116,30 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
       tong.push(`${dateToString(new Date())} 디자이너 디자인비 정산 명단입니다!`);
       tong.push(`상세 : https://${ADDRESS["backinfo"]["host"]}/calculation`);
       tong.push(bar1);
+
+      tongTong = [];
+      tongSet = [];
       for (let { names: { name, designer }, classification: { free, simple, classification }, item: { name: itemName, amount } } of needsResponses) {
-        tong.push(`- ${designer}D ${name}C : ${itemName.replace(/ 정산/gi, '')} ${autoComma(amount)}원 / ${free ? classification : (simple ? "현금 영수증 확인" : "세금 계산서 발행 완료")}`);
+        tongTong.push(`- ${designer}D ${name}C : ${itemName.replace(/ 정산/gi, '')} ${autoComma(amount)}원 / ${free ? classification : (simple ? "현금 영수증 확인" : "세금 계산서 발행 완료")}`);
+        tongSet.push(itemName.replace(/ 정산/gi, ''));
       }
-      tong.push(bar1);
+      tongSet = [ ...new Set(tongSet) ];
+      tongSet.sort();
+
+      tongMatrix = [];
+      for (let itemName of tongSet) {
+        tongTempArr = [];
+        for (let factor of tongTong) {
+          if ((new RegExp(" : " + itemName + " ", "gi")).test(factor)) {
+            tongTempArr.push(factor);
+          }
+        }
+        tongMatrix = tongMatrix.concat(tongTempArr);
+        tongMatrix.push(bar1);
+      }
+
+      tong = tong.concat(tongMatrix);
+
       await messageSend({ text: tong.join("\n"), channel: "#700_operation" });
     }
 
