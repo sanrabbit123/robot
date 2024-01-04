@@ -2154,31 +2154,31 @@ DataRouter.prototype.rou_post_getClientReport = function () {
 
       yearMonthArr.sort();
 
-      // logRes = await requestSystem("https://" + address.testinfo.host + ":" + String(port) + "/getClientReport", {
-      //   fromYear: Math.floor(yearMonthArr[0] / 100),
-      //   fromMonth: yearMonthArr[0] % 100,
-      //   toYear: Math.floor(yearMonthArr[yearMonthArr.length - 1] / 100),
-      //   toMonth: yearMonthArr[yearMonthArr.length - 1] % 100,
-      // }, {
-      //   headers: {
-      //     "Content-Type": "application/json"
-      //   }
-      // });
+      logRes = await requestSystem("https://" + address.testinfo.host + ":" + String(port) + "/getClientReport", {
+        fromYear: Math.floor(yearMonthArr[0] / 100),
+        fromMonth: yearMonthArr[0] % 100,
+        toYear: Math.floor(yearMonthArr[yearMonthArr.length - 1] / 100),
+        toMonth: yearMonthArr[yearMonthArr.length - 1] % 100,
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
 
-      // for (let obj of resultArr) {
-      //   logFound = logRes.data.find((obj2) => {
-      //     return obj2.year === obj.year && obj2.month === obj.month
-      //   });
-      //   if (logFound === undefined) {
-      //     obj.mau = 0;
-      //     obj.adClients = 0;
-      //     obj.charge = 0;
-      //   } else {
-      //     obj.mau = logFound.mau
-      //     obj.adClients = logFound.adClients
-      //     obj.charge = logFound.charge
-      //   }
-      // }
+      for (let obj of resultArr) {
+        logFound = logRes.data.find((obj2) => {
+          return obj2.year === obj.year && obj2.month === obj.month
+        });
+        if (logFound === undefined) {
+          obj.mau = 0;
+          obj.adClients = 0;
+          obj.charge = 0;
+        } else {
+          obj.mau = logFound.mau
+          obj.adClients = logFound.adClients
+          obj.charge = logFound.charge
+        }
+      }
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(resultArr));

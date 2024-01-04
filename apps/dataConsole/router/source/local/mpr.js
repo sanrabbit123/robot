@@ -10138,12 +10138,13 @@ MprJs.prototype.mprSearchEvent = async function () {
 
 MprJs.prototype.mprExtractEvent = async function () {
   const instance = this;
-  const { ajaxJson, blankHref, returnGet, equalJson } = GeneralJs;
+  const { ajaxJson, blankHref, returnGet, equalJson, xyConverting } = GeneralJs;
   try {
     const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
 
     this.mother.belowButtons.sub.extractIcon.addEventListener("click", async function (e) {
       try {
+        const commaTargetsIndexes = [ 7, 8, 9, 11, 12 ];
         const today = new Date();
         const getObj = returnGet();
         let thisName;
@@ -10154,6 +10155,12 @@ MprJs.prototype.mprExtractEvent = async function () {
         let cliid, requestNumber;
         let keyArr;
         let data;
+        let commaTargetsMatrix;
+        let commaTempArr;
+        let matrixValuesCopied;
+        let maxMatrix;
+        let tempTempArr;
+        let num;
   
         if (getObj.whitekey === "ads") {
 
@@ -10210,6 +10217,41 @@ MprJs.prototype.mprExtractEvent = async function () {
             matrix.push(tempArr);
           }
 
+          matrixValuesCopied = equalJson(JSON.stringify(matrix));
+          matrixValuesCopied = matrixValuesCopied.slice(1);
+          if (matrixValuesCopied.length > 0) {
+            commaTargetsMatrix = [];
+            for (let arr of matrixValuesCopied) {
+              commaTempArr = [];
+              for (let index of commaTargetsIndexes) {
+                commaTempArr.push(arr[index]);
+              }
+              commaTargetsMatrix.push(commaTempArr);
+            }
+            maxMatrix = (xyConverting(commaTargetsMatrix).map((a) => { return a.map((str) => { return str.split(", ").length }).reduce((acc, curr) => { return (acc >= curr ? acc : curr) }) }));
+            for (let i = 0; i < commaTargetsIndexes.length; i++) {
+              maxMatrix[i] = [ commaTargetsIndexes[i], maxMatrix[i] ];
+            }
+            maxMatrix = maxMatrix.reverse();
+            maxMatrix.sort((a, b) => { return b[0] - a[0] });
+
+            for (let [ index, addLength ] of maxMatrix) {
+              for (let ar of matrix) {
+                tempTempArr = ar[index].split(", ");
+                for (let i = 0; i < addLength; i++) {
+                  if (tempTempArr[i] === undefined) {
+                    tempTempArr.push("-");
+                  }
+                }
+                tempTempArr = tempTempArr.reverse();
+                num = 0;
+                for (let str of tempTempArr) {
+                  ar.splice(index, num === 0 ? 1 : 0, str);
+                  num++
+                }
+              }
+            }
+          }
         }
         
         instance.mother.greenAlert("시트 추출이 완료되면 자동으로 열립니다!");
