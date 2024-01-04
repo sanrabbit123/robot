@@ -809,7 +809,9 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
         "",
         "히스토리 시간",
         "히스토리 액션",
-        "페이지 아이디",
+        "소스",
+        "미디움",
+        "캠페인",
         "페이지 이름",
       ]
     ];
@@ -3950,10 +3952,30 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
     let leftPadding;
     let maxWidth;
     let matrixDelta;
+    let thisSource, thisMedium, thisCampain;
+    let middleWidth;
 
     targetDetail = history.detail.filter((obj) => {
       return obj.event !== "scrollStop" && obj.event !== "contentsView" && obj.event !== "readTimer" && obj.event !== "addressClick" && obj.event !== "inputBlur" && obj.event !== "photoBigView";
     });
+
+    for (let obj of targetDetail) {
+      thisSource = "-";
+      thisMedium = "-";
+      thisCampain = "-";
+      if (/utm_source\=([^\&]+)/gi.test(obj.path)) {
+        thisSource = /utm_source\=([^\&]+)/gi.exec(obj.path)[1];
+      }
+      if (/utm_medium\=([^\&]+)/gi.test(obj.path)) {
+        thisMedium = /utm_medium\=([^\&]+)/gi.exec(obj.path)[1];
+      }
+      if (/utm_campaign\=([^\&]+)/gi.test(obj.path)) {
+        thisCampain = /utm_campaign\=([^\&]+)/gi.exec(obj.path)[1];
+      }
+      obj.source = thisSource;
+      obj.medium = thisMedium;
+      obj.campaign = thisCampain;
+    }
 
     historyFontSize = 11;
     historyPaddingTop = (isMac() ? 5 : 6)
@@ -3968,6 +3990,7 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
     textTop = isMac() ? -1 : 1;
     leftPadding = 4;
     maxWidth = 1000;
+    middleWidth = 300;
 
     scrollTong = tong;
 
@@ -3976,6 +3999,8 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
     if (matrixDelta > 0) {
       for (let i = 0; i < matrixDelta; i++) {
         this.clientDetailMatrix.push([
+          "",
+          "",
           "",
           "",
           "",
@@ -4043,6 +4068,7 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
                     fontWeight: String(400),
                     color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.shadowWhite,
                     textAlign: "center",
+                    width: String(middleWidth) + ea,
                   },
                   bold: {
                     fontSize: String(historyFontSize) + ea,
@@ -4097,6 +4123,7 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
                     fontWeight: String(700),
                     color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.black,
                     textAlign: "center",
+                    width: String(middleWidth) + ea,
                   },
                   bold: {
                     fontSize: String(historyFontSize) + ea,
@@ -4142,7 +4169,7 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
                   alignItems: "center",
                 },
                 child: {
-                  text: (/\/([a-zA-Z]+\.php)/gi.exec(block.path) || [ "", "(not set)" ])[1].replace(/\.php$/gi, ''),
+                  text: block.source,
                   style: {
                     position: "relative",
                     display: "inline-block",
@@ -4151,6 +4178,7 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
                     fontWeight: String(400),
                     color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.black,
                     textAlign: "center",
+                    width: String(middleWidth) + ea,
                   },
                   bold: {
                     fontSize: String(historyFontSize) + ea,
@@ -4167,7 +4195,117 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
               position: "relative",
               background: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.green : colorChip.gray0,
               height: String(blockHeight) + ea,
-              width: withOut(timeWidth + eventWidth + pageNameWidth + (historyBlockMargin * 3), ea),
+              width: String(pageNameWidth) + ea,
+              marginRight: String(historyBlockMargin) + ea,
+              borderRadius: String(3) + "px",
+              textAlign: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(leftPadding * 2, ea),
+                height: withOut(0, ea),
+                overflow: "scroll",
+                textAlign: "center",
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(maxWidth) + ea,
+                  height: withOut(0, ea),
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: block.medium,
+                  style: {
+                    position: "relative",
+                    display: "inline-block",
+                    top: String(textTop) + ea,
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(400),
+                    color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.black,
+                    textAlign: "center",
+                    width: String(middleWidth) + ea,
+                  },
+                  bold: {
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.green,
+                  }
+                }
+              }
+            },
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              background: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.green : colorChip.gray0,
+              height: String(blockHeight) + ea,
+              width: String(pageNameWidth) + ea,
+              marginRight: String(historyBlockMargin) + ea,
+              borderRadius: String(3) + "px",
+              textAlign: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(leftPadding * 2, ea),
+                height: withOut(0, ea),
+                overflow: "scroll",
+                textAlign: "center",
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(maxWidth) + ea,
+                  height: withOut(0, ea),
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: block.campaign,
+                  style: {
+                    position: "relative",
+                    display: "inline-block",
+                    top: String(textTop) + ea,
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(400),
+                    color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.black,
+                    textAlign: "center",
+                    width: String(middleWidth) + ea,
+                  },
+                  bold: {
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.green,
+                  }
+                }
+              }
+            },
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              background: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.green : colorChip.gray0,
+              height: String(blockHeight) + ea,
+              width: withOut(timeWidth + eventWidth + (pageNameWidth * 3) + (historyBlockMargin * 5), ea),
               borderRadius: String(3) + "px",
               textAlign: "center",
               justifyContent: "center",
@@ -4204,6 +4342,7 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
                     fontWeight: String(400),
                     color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.black,
                     textAlign: "center",
+                    width: String(maxWidth) + ea,
                   },
                   bold: {
                     fontSize: String(historyFontSize) + ea,
@@ -4220,8 +4359,10 @@ MprJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
       if (Array.isArray(this.clientDetailMatrix[num + 1])) {
         this.clientDetailMatrix[num + 1][3] = dateToString(block.date, true);
         this.clientDetailMatrix[num + 1][4] = eventDictionary[block.event.split("_")[0]]?.title || block.event;
-        this.clientDetailMatrix[num + 1][5] = (/\/([a-zA-Z]+\.php)/gi.exec(block.path) || [ "", "(not set)" ])[1].replace(/\.php$/gi, '');
-        this.clientDetailMatrix[num + 1][6] = block.title.replace(/\| 홈리에종$/gi, '').trim();
+        this.clientDetailMatrix[num + 1][5] = block.source;
+        this.clientDetailMatrix[num + 1][6] = block.medium;
+        this.clientDetailMatrix[num + 1][7] = block.campaign;
+        this.clientDetailMatrix[num + 1][8] = block.title.replace(/\| 홈리에종$/gi, '').trim();
       }
 
       scrollTong.style.height = "auto";
@@ -5164,7 +5305,7 @@ MprJs.prototype.clientWhiteCard = function (cliid, requestNumber) {
               style: {
                 display: "inline-block",
                 position: "relative",
-                width: "calc(calc(" + withOut(0, ea) + " / 3) * 2)",
+                width: "calc(calc(" + withOut(0, ea) + " / 5) * 3)",
                 height: withOut(0, ea),
                 overflow: "scroll",
                 border: "1px solid " + colorChip.gray3,
@@ -5187,7 +5328,7 @@ MprJs.prototype.clientWhiteCard = function (cliid, requestNumber) {
               style: {
                 display: "inline-block",
                 position: "relative",
-                width: "calc(calc(" + withOut(0, ea) + " / 3) * 1)",
+                width: "calc(calc(" + withOut(0, ea) + " / 5) * 2)",
                 height: withOut(0, ea),
                 overflow: "scroll",
                 border: "1px solid " + colorChip.gray3,
