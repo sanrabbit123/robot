@@ -160,8 +160,10 @@ DevContext.prototype.launching = async function () {
 
 
     // const targetDatabaseId = "83de9152-7546-4ab6-b2e5-e0df14d71672";
-    // const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
-    // const app = new LiaisonCalendar();
+    const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
+    const app = new LiaisonCalendar();
+
+    await app.listCalendars();
 
     // const res = await requestSystem("https://" + address.notioninfo.host + "/todayComplete", { member: "m1810_aa01s" }, {
     //   headers: {
@@ -7011,8 +7013,8 @@ DevContext.prototype.launching = async function () {
 
     
     // // send sms
-    // const name = "김은경";
-    // const amount = 14_896_000;
+    // const name = "곽예슬";
+    // const amount = 11_817_000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,

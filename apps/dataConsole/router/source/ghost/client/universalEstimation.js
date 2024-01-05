@@ -170,11 +170,11 @@ UniversalEstimationJs.prototype.billWordings = function () {
     wordings.completeComments.push("기타 문의 사항은 02-2039-2252 으로 전화 주시거나, <u%카카오톡 홈리에종 채널을 통해 문의 부탁%u>드립니다!");
   } else if (this.completeInfo.method === "bank") {
     wordings.completeComments = [];
-    wordings.completeComments.push("다음 가상계좌를 통해 입금해주시면 결제가 완료됩니다!");
+    wordings.completeComments.push("다음 가상계좌를 통해 부가세를 포함한 '소비자가'를 입금해주시면 결제가 완료됩니다!");
     wordings.completeComments.push("가상계좌 정보 :&nbsp;&nbsp;<u%" + this.completeInfo.where.bank + between + this.completeInfo.where.account + between + this.completeInfo.where.to.replace(/ /g, '').replace(/\)/, ") ") + "%u>");
   } else if (this.completeInfo.method === "real") {
     wordings.completeComments = [];
-    wordings.completeComments.push("다음 홈리에종 계좌를 통해 입금해주시면 결제가 완료됩니다!");
+    wordings.completeComments.push("다음 홈리에종 계좌를 통해 부가세를 포함한 '소비자가'를 입금해주시면 결제가 완료됩니다!");
     wordings.completeComments.push("계좌 정보 :&nbsp;&nbsp;<u%" + this.completeInfo.where.bank + between + this.completeInfo.where.account + between + this.completeInfo.where.to.replace(/ /g, '').replace(/\)/, ") ") + "%u>");
   }
 
