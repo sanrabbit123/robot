@@ -113,7 +113,7 @@ LiaisonCalendar.prototype.listCalendars = async function (allMode = false, targe
         }
     
         resultObject = [];
-        for (let { targetChildren } of targets) {
+        for (let { targetChildren, startDate, endDate } of targets) {
           for (let obj of targetChildren) {
             tempRaw = equalJson(JSON.stringify(await notion.readPage(obj.id))).children.filter((z) => { return z.type === "child_database" });
             for (let i = 0; i < tempRaw.length; i++) {
@@ -122,8 +122,9 @@ LiaisonCalendar.prototype.listCalendars = async function (allMode = false, targe
               thisMemberObj = members.find((k) => { return k.name === thisMember });
               thisMemberId = thisMemberObj.id;
               thisMemberName = thisMemberObj.name;
-    
-              targetDatabase = await notion.readDatabase(tempRaw[i].id);
+              
+              targetDatabaseId = tempRaw[i].id;
+              targetDatabase = await notion.readDatabase(targetDatabaseId);
     
               thisValueArr = targetDatabase.children.map((z) => {
                 let titleRawArr, valuesArr;
@@ -176,8 +177,8 @@ LiaisonCalendar.prototype.listCalendars = async function (allMode = false, targe
     
               thisTempObject = {
                 date: {
-                  from: tempFrom,
-                  to: tempTo
+                  from: startDate,
+                  to: endDate
                 },
                 member: {
                   id: thisMemberId,
@@ -291,7 +292,6 @@ LiaisonCalendar.prototype.todayComplete = async function (targetDatabaseId, memb
       return (dayArr.findIndex((k) => { return k === o.properties["요일"].multi_select[0].name }) + 1) === todayDayNumber;
     });
     const targetId = targetChildren.map((o) => { return o.id });
-    let finalText;
 
     for (let id of targetId) {
       await notion.updatePage({
@@ -305,13 +305,6 @@ LiaisonCalendar.prototype.todayComplete = async function (targetDatabaseId, memb
         }
       })
     }
-
-    finalText = targetChildren.map((o) => {
-      return "- " + notion.readRichText(o.properties["이름"].title).trim();
-    }).join("\n");
-    finalText = dateToString(today).replace(/\-/gi, '').slice(2) + " 데일리 업무 보고_" + memberObject.name + "\n\n" + finalText;
-
-    await messageSend({ text: finalText, channel: "#002_staff_report", voice: false });
 
     return true;
 
