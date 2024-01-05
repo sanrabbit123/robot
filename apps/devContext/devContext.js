@@ -160,10 +160,10 @@ DevContext.prototype.launching = async function () {
 
 
     // const targetDatabaseId = "83de9152-7546-4ab6-b2e5-e0df14d71672";
-    const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
-    const app = new LiaisonCalendar();
+    // const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
+    // const app = new LiaisonCalendar();
 
-    console.log(await app.listCalendars());
+    // console.log(await app.listCalendars());
 
     // const res = await requestSystem("https://" + address.notioninfo.host + "/todayComplete", { member: "m1810_aa01s" }, {
     //   headers: {
