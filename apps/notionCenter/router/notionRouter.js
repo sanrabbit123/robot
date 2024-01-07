@@ -193,7 +193,7 @@ NotionRouter.prototype.rou_post_todayAllComplete = function () {
   const notion = this.notion;
   const notionChildren = this.notionChildren;
   const members = this.members;
-  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString, messageSend } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/todayAllComplete" ];
@@ -212,6 +212,7 @@ NotionRouter.prototype.rou_post_todayAllComplete = function () {
           for (let { databaseId, member } of allResult) {
             targetMember = members.find((o) => { return o.id === member.id });
             await notionChildren.liaisonCalendar.todayComplete(databaseId, targetMember);
+            await messageSend({ text: "\n===================================================\n", channel: "#002_staff_report", voice: false });
           }
         } catch (e) {
           logger.error("Notion center 서버 문제 생김 (rou_post_todayAllComplete): " + e.message).catch((e) => { console.log(e); });
