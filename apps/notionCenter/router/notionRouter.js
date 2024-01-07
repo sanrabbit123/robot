@@ -207,7 +207,7 @@ NotionRouter.prototype.rou_post_todayAllComplete = function () {
     try {
       (async () => {
         try {
-          const allResult = notionChildren.liaisonCalendar.listCalendars();
+          const allResult = await notionChildren.liaisonCalendar.listCalendars();
           let targetMember;
           for (let { databaseId, member } of allResult) {
             targetMember = members.find((o) => { return o.id === member.id });
