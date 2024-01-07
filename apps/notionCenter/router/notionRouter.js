@@ -188,6 +188,40 @@ NotionRouter.prototype.rou_post_todayComplete = function () {
   return obj;
 }
 
+NotionRouter.prototype.rou_post_weeklySummary = function () {
+  const instance = this;
+  const notion = this.notion;
+  const notionChildren = this.notionChildren;
+  const members = this.members;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/weeklySummary" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      notionChildren.liaisonCalendar.weeklySummary().then((boo) => {
+        if (!boo) {
+          throw new Error("weekly summanry fail");
+        }
+      }).catch((err) => {
+        throw new Error(err.message);
+      });
+      
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      logger.error("Notion center 서버 문제 생김 (rou_post_weeklySummary): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 NotionRouter.prototype.setMembers = async function () {

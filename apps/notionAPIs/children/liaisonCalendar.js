@@ -16,10 +16,18 @@ const LiaisonCalendar = function (mother = null, back = null, address = null) {
   const NotionAPIs = require(this.dir + "/notionAPIs.js");
   this.notion = new NotionAPIs(this.mother, this.back, this.address);
   this.hexId = [
-    "61c677f450604a5795ba54f91933237c",
-    "0c6b28a28b19443d91dcaa72e7656242",
+    {
+      type: "development",
+      hangul: "기획",
+      id: "61c677f450604a5795ba54f91933237c"
+    },
+    {
+      type: "operation",
+      hangul: "운영",
+      id: "0c6b28a28b19443d91dcaa72e7656242",
+    },
   ];
-  this.pageId = this.hexId.map((str) => { return this.notion.hexToId(str) });
+  this.pageId = this.hexId.map(({ type, id, hangul }) => { return { type, id: this.notion.hexToId(id), hangul } });
   this.id = this.pageId;
   this.iconArr = [ "😇", "🤗", "😎", "🤭", "🤩", "🤨", "🤭" ]
   this.dayArr = [ "월요일", "화요일", "수요일", "목요일", "금요일", "예정", "대표님 요청" ];
@@ -59,6 +67,10 @@ LiaisonCalendar.prototype.listCalendars = async function (allMode = false, targe
     let tempResultObject;
 
     targetDate = new Date();
+    if (targetDate.getDay() === 6 || targetDate.getDay() === 0) {
+      targetDate.setDate(targetDate.getDate() - 1);
+      targetDate.setDate(targetDate.getDate() - 1);
+    }
 
     returnResultObject = async (id) => {
       try {
@@ -199,8 +211,11 @@ LiaisonCalendar.prototype.listCalendars = async function (allMode = false, targe
     }
 
     resultObject = [];
-    for (let i of id) {
+    for (let { type, id: i } of id) {
       tempResultObject = await returnResultObject(i);
+      for (let obj of tempResultObject) {
+        obj.type = type;
+      }
       resultObject = resultObject.concat(tempResultObject);
     }
 
@@ -217,6 +232,383 @@ LiaisonCalendar.prototype.listCalendars = async function (allMode = false, targe
   } catch (error) {
     console.log(error);
     return null;
+  }
+}
+
+LiaisonCalendar.prototype.weeklySummary = async function () {
+  const instance = this;
+  const notion = this.notion;
+  const back = this.back;
+  const { requestSystem, equalJson, dateToString, stringToDate } = this.mother;
+  const members = await back.setMemberObj({ getMode: true });
+  const { dayArr, pageId } = this;
+  const motherDatabaseId = "c1372e0770d64043a4343808358d7eaf";
+  try {
+    let thisWeekAllWorks;
+    let typeSet;
+    let resultObject;
+    let typeTargets;
+    let thisValues;
+    let children;
+    let targetDate;
+    let fromDate, toDate;
+    let fromDelta, toDelta;
+    let thisObject, thisChildObject, thisChildChildObject;
+
+    targetDate = new Date();
+    if (targetDate.getDay() === 6 || targetDate.getDay() === 0) {
+      targetDate.setDate(targetDate.getDate() - 1);
+      targetDate.setDate(targetDate.getDate() - 1);
+    }
+
+    fromDate = new Date(JSON.stringify(targetDate).slice(1, -1));
+    toDate = new Date(JSON.stringify(targetDate).slice(1, -1));
+
+    fromDelta = Math.abs(targetDate.getDay() - 1);
+    toDelta = Math.abs(5 - targetDate.getDay());
+
+    for (let i = 0; i < fromDelta; i++) {
+      fromDate.setDate(fromDate.getDate() - 1);
+    }
+    for (let i = 0; i < toDelta; i++) {
+      toDelta.setDate(toDelta.getDate() + 1);
+    }
+
+    thisWeekAllWorks = await this.listCalendars();
+
+    typeSet = thisWeekAllWorks.map((o) => { return o.type; });
+    typeSet = [ ...new Set(typeSet) ];
+    typeSet.sort();
+    typeSet.reverse();
+
+    children = [];
+
+
+    // request
+
+    thisObject = {
+      object: "block",
+      type: "heading_2",
+      heading_2: {
+        rich_text: [
+          {
+            type: "text",
+            text: {
+              content: "대표님 요청",
+            },
+          }
+        ],
+        children: []
+      }
+    };
+    for (let typeName of typeSet) {
+      typeTargets = thisWeekAllWorks.filter((o) => { return o.type === typeName });
+      for (let obj of typeTargets) {
+        thisChildObject = {
+          object: "block",
+          type: "bulleted_list_item",
+          bulleted_list_item: {
+            rich_text: [
+              {
+                type: "text",
+                text: {
+                  content: obj.member.name
+                },
+              }
+            ],
+            children: []
+          },
+        }
+        thisChildObject.bulleted_list_item.children.push({
+          object: "block",
+          type: "code",
+          code: {
+            caption: [],
+            language: "javascript",
+            rich_text: [
+              {
+                type: "text",
+                text: {
+                  content: (obj.value[6].map((o) => { return "- " + o.title.replace(/\n/gi, " ") }).join("\n") || " "),
+                },
+              }
+            ]
+          }
+        });
+        thisChildObject.bulleted_list_item.children.push({
+          object: "block",
+          type: "paragraph",
+          paragraph: {
+            rich_text: [
+              {
+                type: "text",
+                text: {
+                  content: "",
+                },
+              }
+            ]
+          }
+        });
+        thisObject.heading_2.children.push(equalJson(JSON.stringify(thisChildObject)));
+      }
+    }
+    children.push(equalJson(JSON.stringify(thisObject)));
+    children.push({
+      object: "block",
+      type: "paragraph",
+      paragraph: {
+        rich_text: [
+          {
+            type: "text",
+            text: {
+              content: "",
+            },
+          }
+        ]
+      }
+    });
+    children.push({
+      object: "block",
+      type: "divider",
+      divider: {},
+    });
+
+
+    // detail works
+
+    for (let typeName of typeSet) {
+      typeTargets = thisWeekAllWorks.filter((o) => { return o.type === typeName });
+      thisObject = {
+        object: "block",
+        type: "heading_2",
+        heading_2: {
+          rich_text: [
+            {
+              type: "text",
+              text: {
+                content: pageId.find((o) => { return o.type === typeName }).hangul,
+              },
+            }
+          ],
+          children: []
+        }
+      };
+      for (let obj of typeTargets) {
+        thisChildObject = {
+          object: "block",
+          type: "bulleted_list_item",
+          bulleted_list_item: {
+            rich_text: [
+              {
+                type: "text",
+                text: {
+                  content: obj.member.name
+                },
+              }
+            ],
+            children: []
+          },
+        }
+        obj.value.forEach((rawObj, index) => {
+          thisChildObject.bulleted_list_item.children.push({
+            object: "block",
+            type: "bulleted_list_item",
+            bulleted_list_item: {
+              rich_text: [
+                {
+                  type: "text",
+                  text: {
+                    content: dayArr[index]
+                  },
+                }
+              ]
+            }
+          });
+          thisChildObject.bulleted_list_item.children.push({
+            object: "block",
+            type: "code",
+            code: {
+              caption: [],
+              language: "javascript",
+              rich_text: [
+                {
+                  type: "text",
+                  text: {
+                    content: (rawObj.map((o) => { return "- " + o.title.replace(/\n/gi, " ") }).join("\n") || " "),
+                  },
+                }
+              ]
+            }
+          });
+        });
+        thisChildObject.bulleted_list_item.children.push({
+          object: "block",
+          type: "paragraph",
+          paragraph: {
+            rich_text: [
+              {
+                type: "text",
+                text: {
+                  content: "",
+                },
+              }
+            ]
+          }
+        });
+        thisObject.heading_2.children.push(equalJson(JSON.stringify(thisChildObject)));
+      }
+      children.push(equalJson(JSON.stringify(thisObject)));
+      children.push({
+        object: "block",
+        type: "paragraph",
+        paragraph: {
+          rich_text: [
+            {
+              type: "text",
+              text: {
+                content: "",
+              },
+            }
+          ]
+        }
+      });
+      children.push({
+        object: "block",
+        type: "divider",
+        divider: {},
+      });
+    }
+
+
+    // report
+
+    thisObject = {
+      object: "block",
+      type: "heading_2",
+      heading_2: {
+        rich_text: [
+          {
+            type: "text",
+            text: {
+              content: "회의록",
+            },
+          }
+        ],
+        children: [
+          {
+            object: "block",
+            type: "paragraph",
+            paragraph: {
+              rich_text: [
+                {
+                  type: "text",
+                  text: {
+                    content: "",
+                  },
+                }
+              ]
+            }
+          },
+          {
+            object: "block",
+            type: "paragraph",
+            paragraph: {
+              rich_text: [
+                {
+                  type: "text",
+                  text: {
+                    content: "",
+                  },
+                }
+              ]
+            }
+          }
+        ]
+      }
+    };
+    children.push(equalJson(JSON.stringify(thisObject)));
+    children.push({
+      object: "block",
+      type: "paragraph",
+      paragraph: {
+        rich_text: [
+          {
+            type: "text",
+            text: {
+              content: "",
+            },
+          }
+        ]
+      }
+    });
+    children.push({
+      object: "block",
+      type: "divider",
+      divider: {},
+    });
+    children.push({
+      object: "block",
+      type: "paragraph",
+      paragraph: {
+        rich_text: [
+          {
+            type: "text",
+            text: {
+              content: "",
+            },
+          }
+        ]
+      }
+    });
+    children.push({
+      object: "block",
+      type: "code",
+      code: {
+        caption: [],
+        language: "javascript",
+        rich_text: [
+          {
+            type: "text",
+            text: {
+              content: " ",
+            },
+          }
+        ]
+      }
+    });
+
+    await notion.createPage(null, motherDatabaseId, {
+      "이름": {
+        "title": [
+          {
+            "text": {
+              "content": "주간_" + dateToString(toDate).replace(/\-/gi, ""),
+            }
+          }
+        ]
+      },
+      "시작일": {
+        "date": {
+          "start": dateToString(fromDate),
+        }
+      },
+      "종료일": {
+        "date": {
+          "start": dateToString(toDate),
+        }
+      },
+      "회의일": {
+        "date": {
+          "start": dateToString(toDate),
+        }
+      },
+    }, "🤨", children)
+
+    return true;
+
+  } catch (error) {
+    console.log(error);
+    return false;
   }
 }
 

@@ -199,7 +199,7 @@ NotionAPIs.prototype.generateAccessToken = async function () {
   }
 }
 
-NotionAPIs.prototype.createPage = async function (pageTitle = "Test title", parent = null, properties = null, icon = null) {
+NotionAPIs.prototype.createPage = async function (pageTitle = "Test title", parent = null, properties = null, icon = null, children = null) {
   const instance = this;
   const { headers, motherDatabaseId, editUrl, workspaceName } = this;
   const { requestSystem } = this.mother;
@@ -239,6 +239,12 @@ NotionAPIs.prototype.createPage = async function (pageTitle = "Test title", pare
     if (icon !== null) {
       data.icon = {};
       data.icon.emoji = icon;
+    }
+    if (Array.isArray(children)) {
+      data.children = [];
+      for (let obj of children) {
+        data.children.push(obj);
+      }
     }
 
     res = await requestSystem(url, data, { headers });
