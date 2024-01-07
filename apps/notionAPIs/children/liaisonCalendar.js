@@ -675,15 +675,28 @@ LiaisonCalendar.prototype.todayComplete = async function (targetDatabaseId, memb
     if (typeof memberObject !== "object" || memberObject === null) {
       throw new Error("invalid input 2");
     }
-    const today = new Date();
-    const todayDayNumber = today.getDay();
-    const rawChildren = (await notion.readDatabase(targetDatabaseId)).children;
-    const targetChildren = rawChildren.filter((o) => {
+    let today;
+    let todayDayNumber;
+    let rawChildren;
+    let targetChildren;
+    let targetId;
+    let finalText;
+
+    today = new Date();
+    todayDayNumber = today.getDay();
+    if (todayDayNumber === 0 || todayDayNumber === 6) {
+      today.setDate(today.getDate() - 1);
+      today.setDate(today.getDate() - 1);
+      todayDayNumber = today.getDay();
+    }
+
+    rawChildren = (await notion.readDatabase(targetDatabaseId)).children;
+    targetChildren = rawChildren.filter((o) => {
       return o.properties["요일"].multi_select.length > 0;
     }).filter((o) => {
       return (dayArr.findIndex((k) => { return k === o.properties["요일"].multi_select[0].name }) + 1) === todayDayNumber;
     });
-    const targetId = targetChildren.map((o) => { return o.id });
+    targetId = targetChildren.map((o) => { return o.id });
 
     for (let id of targetId) {
       await notion.updatePage({
@@ -695,8 +708,15 @@ LiaisonCalendar.prototype.todayComplete = async function (targetDatabaseId, memb
             }
           },
         }
-      })
+      });
     }
+
+    finalText = targetChildren.map((o) => {
+      return "- " + notion.readRichText(o.properties["이름"].title).trim();
+    }).join("\n");
+    finalText = dateToString(today).replace(/\-/gi, '').slice(2) + " 데일리 업무 보고_" + memberObject.name + "\n\n" + finalText;
+
+    await messageSend({ text: finalText, channel: "#002_staff_report", voice: false });
 
     return true;
 
