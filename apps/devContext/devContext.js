@@ -178,6 +178,17 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+    const res = await requestSystem("https://" + address.notioninfo.host + "/weeklySummary", { member: "m1810_aa01s" }, {
+      headers: {
+        "Content-Type": "application/json",
+      }
+    })
+    console.log(res);
+
+
+
     // const targetId = "1tS-lRBb3yXIC9N-1jgQH--rbigqujGcLRRXEXWCG7xk";
     // let rows;
 

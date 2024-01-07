@@ -273,7 +273,7 @@ LiaisonCalendar.prototype.weeklySummary = async function () {
       fromDate.setDate(fromDate.getDate() - 1);
     }
     for (let i = 0; i < toDelta; i++) {
-      toDelta.setDate(toDelta.getDate() + 1);
+      toDate.setDate(toDate.getDate() + 1);
     }
 
     middleDate0 = new Date(JSON.stringify(fromDate).slice(1, -1));
@@ -294,7 +294,7 @@ LiaisonCalendar.prototype.weeklySummary = async function () {
       dateToString(middleDate0),
       dateToString(middleDate1),
       dateToString(middleDate2),
-      dateToString(toDelta),
+      dateToString(toDate),
     ];
 
     thisWeekAllWorks = await this.listCalendars();

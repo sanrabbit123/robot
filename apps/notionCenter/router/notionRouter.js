@@ -207,10 +207,10 @@ NotionRouter.prototype.rou_post_weeklySummary = function () {
     try {
       notionChildren.liaisonCalendar.weeklySummary().then((boo) => {
         if (!boo) {
-          throw new Error("weekly summanry fail");
+          logger.error("Notion center 서버 문제 생김 (rou_post_weeklySummary): " + "weekly summanry fail").catch((e) => { console.log(e); });
         }
       }).catch((err) => {
-        throw new Error(err.message);
+        logger.error("Notion center 서버 문제 생김 (rou_post_weeklySummary): " + err.message).catch((e) => { console.log(e); });
       });
       
       res.send(JSON.stringify({ message: "will do" }));
