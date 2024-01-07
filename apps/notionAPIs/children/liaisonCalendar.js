@@ -254,6 +254,8 @@ LiaisonCalendar.prototype.weeklySummary = async function () {
     let fromDate, toDate;
     let fromDelta, toDelta;
     let thisObject, thisChildObject, thisChildChildObject;
+    let dateArr;
+    let middleDate0, middleDate1, middleDate2;
 
     targetDate = new Date();
     if (targetDate.getDay() === 6 || targetDate.getDay() === 0) {
@@ -273,6 +275,27 @@ LiaisonCalendar.prototype.weeklySummary = async function () {
     for (let i = 0; i < toDelta; i++) {
       toDelta.setDate(toDelta.getDate() + 1);
     }
+
+    middleDate0 = new Date(JSON.stringify(fromDate).slice(1, -1));
+    middleDate1 = new Date(JSON.stringify(fromDate).slice(1, -1));
+    middleDate2 = new Date(JSON.stringify(fromDate).slice(1, -1));
+
+    middleDate0.setDate(middleDate0.getDate() + 1);
+
+    middleDate1.setDate(middleDate1.getDate() + 1);
+    middleDate1.setDate(middleDate1.getDate() + 1);
+
+    middleDate2.setDate(middleDate2.getDate() + 1);
+    middleDate2.setDate(middleDate2.getDate() + 1);
+    middleDate2.setDate(middleDate2.getDate() + 1);
+
+    dateArr = [
+      dateToString(fromDate),
+      dateToString(middleDate0),
+      dateToString(middleDate1),
+      dateToString(middleDate2),
+      dateToString(toDelta),
+    ];
 
     thisWeekAllWorks = await this.listCalendars();
 
@@ -418,7 +441,7 @@ LiaisonCalendar.prototype.weeklySummary = async function () {
                 {
                   type: "text",
                   text: {
-                    content: dayArr[index]
+                    content: dayArr[index] + (dateArr[index] === undefined ? "" : (" : " + dateArr[index])),
                   },
                 }
               ]
