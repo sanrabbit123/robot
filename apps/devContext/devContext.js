@@ -165,9 +165,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
-    // const app = new LiaisonCalendar();
-    // const result = (await app.listCalendars());
+    const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
+    const app = new LiaisonCalendar();
+    const result = (await app.listCalendars());
     // await fileSystem("writeJson", [ `${process.cwd()}/temp/target.json`, result ]);
     // console.log(result);
 
@@ -176,7 +176,7 @@ DevContext.prototype.launching = async function () {
     // await app.weeklySummary();
 
 
-
+    console.log(result);
 
 
 

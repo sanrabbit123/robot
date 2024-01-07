@@ -17,14 +17,14 @@ const LiaisonCalendar = function (mother = null, back = null, address = null) {
   this.notion = new NotionAPIs(this.mother, this.back, this.address);
   this.hexId = [
     {
-      type: "development",
-      hangul: "기획",
-      id: "61c677f450604a5795ba54f91933237c"
-    },
-    {
       type: "operation",
       hangul: "운영",
       id: "0c6b28a28b19443d91dcaa72e7656242",
+    },
+    {
+      type: "development",
+      hangul: "기획",
+      id: "61c677f450604a5795ba54f91933237c"
     },
   ];
   this.pageId = this.hexId.map(({ type, id, hangul }) => { return { type, id: this.notion.hexToId(id), hangul } });

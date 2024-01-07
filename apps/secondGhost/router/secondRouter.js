@@ -3375,17 +3375,30 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
           if (thisBody.event.type === "message") {
             if (typeof thisBody.event.text === "string") {
               if (/^요정[이아야님]?/i.test(thisBody.event.text.trim()) || (new RegExp(slack_fairyId, "gi")).test(thisBody.event.text.trim())) {
-                if (/주간 보고/gi.test(thisBody.event.text.trim())) {
-                  requestSystem("https://" + address.notioninfo.host + "/weeklySummary", { data: null }, {
-                    headers: {
-                      "Content-Type": "application/json",
-                    }
-                  }).catch((err) => {
-                    console.log(err);
-                  });
-                  openAi.slackGPT(thisBody.event.channel, "오늘 한 주도 수고했다는 위로의 말을 해줘", thisBody.event.user, selfMongo).catch((err) => {
-                    console.log(err);
-                  });
+                if (/(주간|전체) 보고/gi.test(thisBody.event.text.trim())) {
+                  if (/주간/gi.test(thisBody.event.text.trim())) {
+                    requestSystem("https://" + address.notioninfo.host + "/weeklySummary", { data: null }, {
+                      headers: {
+                        "Content-Type": "application/json",
+                      }
+                    }).catch((err) => {
+                      console.log(err);
+                    });
+                    openAi.slackGPT(thisBody.event.channel, "오늘 한 주도 수고했다는 위로의 말을 해줘", thisBody.event.user, selfMongo).catch((err) => {
+                      console.log(err);
+                    });
+                  } else {
+                    requestSystem("https://" + address.notioninfo.host + "/todayAllComplete", { data: null }, {
+                      headers: {
+                        "Content-Type": "application/json",
+                      }
+                    }).catch((err) => {
+                      console.log(err);
+                    });
+                    openAi.slackGPT(thisBody.event.channel, "여기 있는 팀원들 모두에게 오늘 하루 수고했다는 말을 전해줘", thisBody.event.user, selfMongo).catch((err) => {
+                      console.log(err);
+                    });
+                  }
                 } else {
                   if (/퇴근/gi.test(thisBody.event.text.trim())) {
                     try {
