@@ -3362,6 +3362,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       const selfMongo = instance.mongo;
       const members = instance.members;
       const membersSlack = members.map((o) => { return {
+        id: o.id,
         name: o.name,
         title: o.title,
         slack: o.slack.id === null ? "" : o.slack.id,
