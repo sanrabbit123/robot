@@ -4814,6 +4814,11 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
     scrollBox.setAttribute("contract_number", String(totalSummary.contract));
     scrollBox.setAttribute("process_number", String(totalSummary.process));
   
+
+    
+
+
+
     /*
 
     // graph start
