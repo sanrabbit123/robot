@@ -147,7 +147,7 @@ LiaisonCalendar.prototype.listCalendars = async function (allMode = false, targe
                 titleRawArr = valuesArr.find((k) => { return k.id === "title" }).title;
                 titleRawArr = titleRawArr.map((x) => { return x.plain_text }).join("");
     
-                statusRaw = valuesArr.find((k) => { return k.type === "select" }).select?.name || "알 수 없음";
+                statusRaw = valuesArr.find((k) => { return k.type === "status" })?.status?.name || "알 수 없음";
                 dayRawArr = valuesArr.find((k) => { return k.type === "multi_select" }).multi_select;
                 if (dayRawArr.length > 0) {
                   dayRawArr = dayRawArr[0].name;
@@ -205,7 +205,8 @@ LiaisonCalendar.prototype.listCalendars = async function (allMode = false, targe
         }
 
         return resultObject;
-      } catch {
+      } catch (e) {
+        console.log(e);
         return [];
       }
     }
@@ -665,7 +666,7 @@ LiaisonCalendar.prototype.createDefaultSet = async function (targetDatabaseId, d
             ]
           },
           "상태": {
-            select: {
+            status: {
               name: "예정"
             }
           },
@@ -726,7 +727,7 @@ LiaisonCalendar.prototype.todayComplete = async function (targetDatabaseId, memb
         id,
         properties: {
           "상태": {
-            select: {
+            status: {
               name: "완료"
             }
           },
