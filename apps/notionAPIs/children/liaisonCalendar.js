@@ -636,57 +636,6 @@ LiaisonCalendar.prototype.weeklySummary = async function () {
   }
 }
 
-LiaisonCalendar.prototype.createDefaultSet = async function (targetDatabaseId, dayNumber) {
-  const instance = this;
-  const notion = this.notion;
-  const { iconArr, dayArr } = this;
-  const { requestSystem, equalJson, stringToDate } = this.mother;
-  try {
-    if (typeof targetDatabaseId !== "string" || typeof dayNumber !== "number") {
-      throw new Error("invalid input");
-    }
-    const targetDay = dayArr[dayNumber - 1];
-
-    if (targetDay === undefined) {
-      throw new Error("invalid day number");
-    }
-
-    for (let i = 0; i < iconArr.length; i++) {
-      await notion.createPage({
-        parent: targetDatabaseId,
-        icon: iconArr[iconArr.length - 1 - i],
-        properties: {
-          title: {
-            title: [
-              {
-                text: {
-                  content: "Type : Task title " + String(iconArr.length - 1 - i),
-                }
-              }
-            ]
-          },
-          "상태": {
-            status: {
-              name: "예정"
-            }
-          },
-          "요일": {
-            multi_select: [
-              {
-                name: targetDay,
-              }
-            ]
-          },
-        }
-      });
-    }
-
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-}
-
 LiaisonCalendar.prototype.todayComplete = async function (targetDatabaseId, memberObject) {
   const instance = this;
   const notion = this.notion;
