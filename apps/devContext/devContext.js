@@ -165,11 +165,11 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
-    const app = new LiaisonCalendar();
-    const result = (await app.listCalendars());
-    await fileSystem("writeJson", [ `${process.cwd()}/temp/target.json`, result ]);
-    console.log(result);
+    // const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
+    // const app = new LiaisonCalendar();
+    // const result = (await app.listCalendars());
+    // await fileSystem("writeJson", [ `${process.cwd()}/temp/target.json`, result ]);
+    // console.log(result);
 
     // const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
     // const app = new LiaisonCalendar();
@@ -6926,9 +6926,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "윤명화",
-    //     designer: "이정아",
-    //     link: "https://drive.google.com/drive/folders/1TwtvYSGh-8j0ip0Z33NGsQB3lkIVNoUN",
+    //     client: "오현정",
+    //     designer: "오지은",
+    //     link: "https://drive.google.com/drive/folders/1HeIH7BPYTUG410dxksqvvtYHDpbhQINE",
     //     pay: true
     //   },
     // ]);
