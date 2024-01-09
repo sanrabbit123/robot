@@ -93,6 +93,16 @@ def patternReplace(targetString: str, pattern: str, replaceString: str, sensitiv
         result = re.sub(pattern, replaceString, targetString)
     return result
 
+def listMap(target: list, lambFunc):
+    if type(target) is not list:
+        raise TypeError("target must be list")
+    return list(map(lambFunc, target))
+
+def listFilter(target: list, lambFunc):
+    if type(target) is not list:
+        raise TypeError("target must be list")
+    return list(filter(lambFunc, target))
+
 def zeroAddition(num: int):
     if type(num) is not int:
         raise TypeError("invalid input")
