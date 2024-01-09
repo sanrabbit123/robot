@@ -4076,7 +4076,7 @@ DesignerJs.prototype.careSubPannel = async function () {
           event: () => {
             return async function (e) {
               try {
-                // pass
+                window.location.href = window.location.protocol + "//" + window.location.host + "/calculation";
               } catch (e) {
                 console.log(e);
                 window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
@@ -4244,7 +4244,7 @@ DesignerJs.prototype.careSearchEvent = async function () {
   }
 }
 
-DesignerJs.prototype.careWhiteCard = function (proid) {
+DesignerJs.prototype.careWhiteCard = function (proid, caMode = false) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
   const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
@@ -4324,7 +4324,7 @@ DesignerJs.prototype.careWhiteCard = function (proid) {
           child: {
             mode: "iframe",
             attribute: {
-              src: BACKHOST + "/process?proid=" + proid + "&entire=true&normal=true&dataonly=true",
+              src: (!caMode ? BACKHOST + "/process?proid=" + proid + "&entire=true&normal=true&dataonly=true" : "/project?proid=" + proid + "&entire=true&normal=true&dataonly=true"),
             },
             style: {
               position: "absolute",
@@ -5801,7 +5801,20 @@ DesignerJs.prototype.careBase = async function (filterFunc = null) {
                     try {
                       const proid = this.getAttribute("proid");
                       const desid = this.getAttribute("desid");
-                      const eventFunction = instance.careWhiteCard(proid);
+                      const eventFunction = instance.careWhiteCard(proid, false);
+
+                      await eventFunction(e);
+
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  },
+                  contextmenu: async function (e) {
+                    try {
+                      e.preventDefault();
+                      const proid = this.getAttribute("proid");
+                      const desid = this.getAttribute("desid");
+                      const eventFunction = instance.careWhiteCard(proid, true);
 
                       await eventFunction(e);
 

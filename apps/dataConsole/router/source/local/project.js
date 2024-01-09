@@ -41,7 +41,7 @@ ProjectJs.prototype.standardBar = function (standard) {
   }
 
   style = {
-    display: "block",
+    display: GeneralJs.returnGet().dataonly === "true" ? "none" : "block",
     position: "relative",
     background: GeneralJs.colorChip.gray0,
     top: String(0),
@@ -51,7 +51,7 @@ ProjectJs.prototype.standardBar = function (standard) {
   };
 
   style2 = {
-    display: "block",
+    display: GeneralJs.returnGet().dataonly === "true" ? "none" : "block",
     position: "fixed",
     height: String(this.module.height + this.module.marginBottom) + ea,
     paddingTop: String(this.module.paddingTop) + ea,
@@ -319,7 +319,7 @@ ProjectJs.prototype.infoArea = function (info) {
   }
 
   style = {
-    display: "block",
+    display: GeneralJs.returnGet().dataonly === "true" ? "none" : "block",
     position: "absolute",
     top: String(0),
     left: String(grayBarWidth) + ea,
@@ -328,7 +328,7 @@ ProjectJs.prototype.infoArea = function (info) {
   };
 
   style2 = {
-    display: "block",
+    display: GeneralJs.returnGet().dataonly === "true" ? "none" : "block",
     position: "fixed",
     height: String(this.module.height + this.module.marginBottom) + ea,
     paddingTop: String(this.module.paddingTop) + ea,
@@ -5325,7 +5325,9 @@ ProjectJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
 
     //contents box
     div_clone = GeneralJs.nodes.div.cloneNode(true);
-    div_clone.classList.add("fadeup");
+    if (GeneralJs.returnGet().entire !== "true") {
+      div_clone.classList.add("fadeup");
+    }
     div_clone.classList.add("totalWhite");
 
     indexArr = [];
@@ -5342,17 +5344,31 @@ ProjectJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
     div_clone.setAttribute("index", thisCase["proid"]);
     div_clone.setAttribute("request", String(requestIndex));
 
-    style = {
-      position: "fixed",
-      background: colorChip.white,
-      top: String(margin) + ea,
-      left: String(instance.grayBarWidth + margin) + ea,
-      borderRadius: String(5) + ea,
-      boxShadow: "0 2px 10px -6px " + colorChip.shadow,
-      width: String(window.innerWidth - instance.grayBarWidth - (margin * 2)) + ea,
-      height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
-      zIndex: String(2),
-    };
+    if (GeneralJs.returnGet().entire === "true") {
+      style = {
+        position: "fixed",
+        background: colorChip.white,
+        borderRadius: String(5) + ea,
+        boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+        top: String(0) + ea,
+        left: String(0) + ea,
+        width: String(window.innerWidth) + ea,
+        height: String(window.innerHeight) + ea,
+        zIndex: String(2),
+      };
+    } else {
+      style = {
+        position: "fixed",
+        background: colorChip.white,
+        top: String(margin) + ea,
+        left: String(instance.grayBarWidth + margin) + ea,
+        borderRadius: String(5) + ea,
+        boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+        width: String(window.innerWidth - instance.grayBarWidth - (margin * 2)) + ea,
+        height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
+        zIndex: String(2),
+      };
+    }
     for (let i in style) {
       div_clone.style[i] = style[i];
     }
@@ -8257,7 +8273,7 @@ ProjectJs.prototype.projectSubPannel = async function () {
         event: () => {
           return async function (e) {
             try {
-              window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal&type=care";
+              window.location.href = window.location.protocol + "//" + window.location.host + "/calculation";
             } catch (e) {
               console.log(e);
               window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
@@ -8342,20 +8358,27 @@ ProjectJs.prototype.launching = async function () {
   try {
     const { returnGet, setQueue, sleep } = GeneralJs;
     const getObj = returnGet();
+    const entireMode = (getObj.dataonly === "true" && getObj.entire === "true");
     let getTarget;
     let tempFunction;
 
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
-    this.backGrayBar();
-    await this.spreadData();
-    this.addTransFormEvent();
-    this.addSearchEvent();
-    this.addExtractEvent();
-    this.whiteResize();
-    this.communicationRender();
-    await this.projectSubPannel();
+    this.entireMode = entireMode;
+
+    if (getObj.dataonly === "true") {
+      await this.spreadData();
+    } else {
+      this.backGrayBar();
+      await this.spreadData();
+      this.addTransFormEvent();
+      this.addSearchEvent();
+      this.addExtractEvent();
+      this.whiteResize();
+      this.communicationRender();
+      await this.projectSubPannel();
+    }
 
     getTarget = null;
     if (typeof getObj.specificids === "string") {
