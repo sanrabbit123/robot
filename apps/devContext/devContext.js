@@ -156,7 +156,7 @@ DevContext.prototype.launching = async function () {
     // await whisk.requestBeating();
     // =======================================================================================================================================================
 
-    await work.designerCalculation();
+
 
 
     

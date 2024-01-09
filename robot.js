@@ -377,11 +377,11 @@ Robot.prototype.memberConnect = async function () {
   }
 }
 
-Robot.prototype.memberConnect = async function () {
+Robot.prototype.localConnect = async function () {
   try {
-    const MemberLounge = require(process.cwd() + "/apps/memberLounge/memberLounge.js");
+    const MemberLounge = require(process.cwd() + "/apps/localObserver/localObserver.js");
     const app = new MemberLounge();
-    await app.memberConnect();
+    await app.localConnect();
   } catch (e) {
     console.log(e);
   }
@@ -1317,6 +1317,13 @@ const MENU = {
   member: async function () {
     try {
       await robot.memberConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  localObserver: async function () {
+    try {
+      await robot.localConnect();
     } catch (e) {
       console.log(e);
     }

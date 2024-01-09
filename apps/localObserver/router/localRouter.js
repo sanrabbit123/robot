@@ -30,19 +30,29 @@ LocalRouter.prototype.rou_get_First = function () {
 
 //POST ---------------------------------------------------------------------------------------------
 
-LocalRouter.prototype.rou_post_textToVoice = function () {
+LocalRouter.prototype.rou_post_registerIpAddress = function () {
   const instance = this;
   const { equalJson, generalHeaders } = this.mother;
   let obj;
   obj = {};
-  obj.link = [ "/textToVoice" ];
+  obj.link = [ "/registerIpAddress" ];
   obj.func = async function (req, res, logger) {
     res.set(generalHeaders());
     try {
+      if (req.body.id === undefined || req.body.ip === undefined) {
+        throw new Error("invalid post");
+      }
+      const { id, ip } = equalJson(req.body);
+      const member = instance.members.find((o) => { return o.id === id });
+      if (member === undefined) {
+        throw new Error("invalid id");
+      }
 
-      res.send(JSON.stringify({ message: "will do" }));
+      instance.members.find((o) => { return o.id === id }).ip = equalJson(JSON.stringify(ip));
+
+      res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      logger.error("Local observer 서버 문제 생김 (rou_post_textToVoice): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Local observer 서버 문제 생김 (rou_post_registerIpAddress): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
