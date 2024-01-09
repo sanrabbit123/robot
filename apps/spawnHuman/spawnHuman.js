@@ -11,7 +11,9 @@ const SpawnHuman = function () {
 
 SpawnHuman.prototype.spawnLaunching = async function (serverName = "constructLounge", setupMode = false) {
   const instance = this;
+  const back = this.back;
   const address = this.address;
+  const members = await back.setMemberObj({ getMode: true, selfMongo: null });
   const { applicationName, appDir } = this;
   const { equalJson, shellExec, shellLink, fileSystem, uniqueValue } = this.mother;
   try {
@@ -25,6 +27,8 @@ SpawnHuman.prototype.spawnLaunching = async function (serverName = "constructLou
     let infoArr;
     let intend;
     let infoPythonScript;
+    let memberArr;
+    let memberPythonScript;
     let startPointPython;
     let startScript;
 
@@ -73,8 +77,16 @@ SpawnHuman.prototype.spawnLaunching = async function (serverName = "constructLou
     infoArr.unshift("def returnAddress():")
     infoArr.push(intend + "return infoAddress");
     infoPythonScript = infoArr.join("\n").replace(/\"\: null/gi, "\": None").replace(/\"\: true/gi, "\": True").replace(/\"\: false/gi, "\": False");
-
     await fileSystem("write", [ homeTarget + "/apps/infoObj.py", infoPythonScript ]);
+
+    memberArr = JSON.stringify(members, null, 2).split("\n")
+    memberArr = memberArr.map((str) => { return intend + str })
+    memberArr[0] = intend + "memberArray = [";
+    memberArr.unshift("def returnMembers():")
+    memberArr.push(intend + "return memberArray");
+    memberPythonScript = memberArr.join("\n").replace(/\"\: null/gi, "\": None").replace(/\"\: true/gi, "\": True").replace(/\"\: false/gi, "\": False");
+    await fileSystem("write", [ homeTarget + "/apps/memberObj.py", memberPythonScript ]);
+
     await shellExec("cp", [ "-r", process.cwd() + "/pems", homeTarget ]);
 
     if (serverName === "constructLounge") {
@@ -138,6 +150,7 @@ SpawnHuman.prototype.reverseUpdate = async function () {
       await shellExec("mv", [ homeTarget + "/" + target, tempFolderPath + "/" ]);
     }
     await shellExec("mv", [ homeTarget + "/apps/infoObj.py", tempFolderPath + "/" ]);
+    await shellExec("mv", [ homeTarget + "/apps/memberObj.py", tempFolderPath + "/" ]);
 
     humanScriptBuffer = await fileSystem("readString", [ appDir + "/human.py" ]);
 
@@ -149,6 +162,7 @@ SpawnHuman.prototype.reverseUpdate = async function () {
       await shellExec("mv", [ tempFolderPath + "/" + target, homeTarget + "/" ]);
     }
     await shellExec("mv", [ tempFolderPath + "/infoObj.py", homeTarget + "/apps/" ]);
+    await shellExec("mv", [ tempFolderPath + "/memberObj.py", homeTarget + "/apps/" ]);
     await shellExec("rm", [ "-rf", tempFolderPath ]);
     
     return true;
