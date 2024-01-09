@@ -1,12 +1,12 @@
 # set python modules ------------------------------------------------------------------------------------------------------
 
+import os
 from os import path as osPath
-from os import getcwd
 from sys import argv, path
 
 # return human path
 def returnModulepath():
-    rawPath = getcwd()
+    rawPath = os.getcwd()
     rawPathArr = rawPath.split('/')
     num = 0
     index = 0
@@ -23,6 +23,7 @@ def returnModulepath():
 
 # append human in module pathes
 try:
+    os.chdir(os.environ["HOME"] + "/human")
     pathDic = returnModulepath()
     path.insert(0, pathDic["module"])
 except Exception as e:
