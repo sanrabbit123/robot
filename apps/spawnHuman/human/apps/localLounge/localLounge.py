@@ -13,7 +13,6 @@ class LocalLounge:
         self.app = app
 
     async def registerIpAddress(self, router):
-        address = returnAddress()
         members = returnMembers()
 
         result = await shellExec("ifconfig", [ "" ])
@@ -34,7 +33,7 @@ class LocalLounge:
                 break
         
         router.member = targetMember
-        await requestSystem("http://" + address["officeinfo"]["gitlab"]["host"] + ":" + str(address["officeinfo"]["gitlab"]["port"]) + "/registerIpAddress", { "id": targetMember["id"], "ip": filteredArr }, { "headers": { "Content-Type": "application/json" } })
+        router.ip = objectDeepCopy(filteredArr)
 
     def setReady(self):
         localConnection = mongoConnection("local")
