@@ -59,6 +59,9 @@ def generalHeaders():
 def processCwd():
     return os.getcwd()
 
+def processHome():
+    return os.environ["HOME"]
+
 def consoleQ(question: str):
     print(question)
     temp = sys.stdin.readline()
@@ -130,24 +133,31 @@ def shellLink(linkString: str):
     newLinkString = "/".join(newLinkStringArr)
     return newLinkString
 
-async def shellExec(mainCommand: str, commandArr: list):
+async def shellExec(mainCommand: str, commandArr = None):
     if type(mainCommand) is not str:
         raise TypeError("mainCommand must be string")
-    if type(commandArr) is not list:
-        raise TypeError("commandArr must be list")
-    newCommandArr = []
-    for factor in commandArr:
-        if patternTest(r"\/", factor):
-            newCommandArr.append(shellLink(factor))
-        else:
-            newCommandArr.append(factor)
-    cmd = mainCommand + ' ' + ' '.join(newCommandArr)
-    proc = await asyncio.create_subprocess_shell(cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
-    (stdout, stderr) = await proc.communicate()
-    if stdout:
-        return stdout.decode()
-    if stderr:
-        return stderr.decode()
+    if type(commandArr) is list:
+        newCommandArr = []
+        for factor in commandArr:
+            if patternTest(r"\/", factor):
+                newCommandArr.append(shellLink(factor))
+            else:
+                newCommandArr.append(factor)
+        cmd = mainCommand + ' ' + ' '.join(newCommandArr)
+        proc = await asyncio.create_subprocess_shell(cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+        (stdout, stderr) = await proc.communicate()
+        if stdout:
+            return stdout.decode()
+        if stderr:
+            return stderr.decode()
+    else:
+        proc = await asyncio.create_subprocess_shell(mainCommand, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+        (stdout, stderr) = await proc.communicate()
+        if stdout:
+            return stdout.decode()
+        if stderr:
+            return stderr.decode()
+
 
 async def diskReading(mode: str = "check", arr: list = []):
     if type(mode) is not str:
