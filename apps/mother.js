@@ -1187,6 +1187,15 @@ Mother.prototype.zeroAddition = function (number) {
   return (number < 10 ? `0${String(number)}` : String(number));
 }
 
+Mother.prototype.generalHeaders = function () {
+  return {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+    "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+  }
+}
+
 Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
   if (!Array.isArray(fromArr) || !Array.isArray(toArr)) {
     throw new Error("input must be from array, to array")

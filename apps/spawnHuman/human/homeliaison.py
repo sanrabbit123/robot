@@ -1,3 +1,0 @@
-from middle import *
-
-launching()
