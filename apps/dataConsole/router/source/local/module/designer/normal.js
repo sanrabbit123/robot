@@ -4000,7 +4000,7 @@ DesignerJs.prototype.cleanSearchEvent = function () {
 DesignerJs.prototype.careSubPannel = async function () {
   const instance = this;
   const { ea, totalContents, belowHeight, totalMother } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, returnGet } = GeneralJs;
   const titleStringClassName = "titleStringClassName";
   try {
     const zIndex = 2;
@@ -4027,36 +4027,97 @@ DesignerJs.prototype.careSubPannel = async function () {
     menuSize = 13;
     menuWeight = 700;
 
-    pannelMenu = [
-      {
-        title: "디자이너 속성 모드",
-        event: () => {
-          return async function (e) {
-            try {
-              window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
-            } catch (e) {
-              console.log(e);
-              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
-              window.location.reload();
+    if (returnGet()?.from === "ca") {
+      pannelMenu = [
+        {
+          title: returnGet()?.view === "care" ? "전체 보기" : "진행중만 보기",
+          event: () => {
+            return async function (e) {
+              try {
+                window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal&type=care&from=ca&view=" + (returnGet()?.view === "care" ? "all" : "care");
+              } catch (e) {
+                console.log(e);
+                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
             }
-          }
+          },
         },
-      },
-      {
-        title: "디자이너 보고서 모드",
-        event: () => {
-          return async function (e) {
-            try {
-              window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal&type=numbers";
-            } catch (e) {
-              console.log(e);
-              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
-              window.location.reload();
+        {
+          title: "촬영 관리 모드",
+          event: () => {
+            return async function (e) {
+              try {
+                // pass
+              } catch (e) {
+                console.log(e);
+                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
             }
-          }
+          },
         },
-      },
-    ];
+        {
+          title: "기본 프로젝트 모드",
+          event: () => {
+            return async function (e) {
+              try {
+                window.location.href = window.location.protocol + "//" + window.location.host + "/project?type=care&from=de";
+              } catch (e) {
+                console.log(e);
+                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+        },
+        {
+          title: "정산 관리 모드",
+          event: () => {
+            return async function (e) {
+              try {
+                // pass
+              } catch (e) {
+                console.log(e);
+                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+        },
+      ];
+    } else {
+      pannelMenu = [
+        {
+          title: "디자이너 속성 모드",
+          event: () => {
+            return async function (e) {
+              try {
+                window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+              } catch (e) {
+                console.log(e);
+                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+        },
+        {
+          title: "디자이너 보고서 모드",
+          event: () => {
+            return async function (e) {
+              try {
+                window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal&type=numbers";
+              } catch (e) {
+                console.log(e);
+                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+        },
+      ];
+    }
 
     pannelBase = createNode({
       mother: totalMother,
@@ -4187,7 +4248,7 @@ DesignerJs.prototype.careWhiteCard = function (proid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
   const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, hasQuery, removeQuery, appendQuery } = GeneralJs;
   return async function (e) {
     try {
       const zIndex = 4;
@@ -6193,7 +6254,7 @@ DesignerJs.prototype.careView = async function () {
     }
     appendQuery({ type: "care" });
 
-    ({ projects, clients } = await ajaxJson({ mode: "pre", searchMode: (typeof getObj.proid === "string" ? getObj.proid : "false") }, BACKHOST + "/processConsole", { equal: true }));
+    ({ projects, clients } = await ajaxJson({ mode: "pre", searchMode: (typeof getObj.proid === "string" ? getObj.proid : "false"), careView: (getObj.view === "care" ? 1 : 0) }, BACKHOST + "/processConsole", { equal: true }));
     proidArr = projects.map((p) => { return p.proid });
     cliidArr = clients.map((c) => { return c.cliid });
 

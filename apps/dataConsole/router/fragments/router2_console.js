@@ -6436,16 +6436,29 @@ DataRouter.prototype.rou_post_processConsole = function () {
             ]
           }, { selfMongo: selfCoreMongo });
         } else {
-          projects = await back.getProjectsByQuery({
-            $and: [
-              {
-                "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
-              },
-              {
-                "process.status": { $regex: "^[진대]" }
-              }
-            ]
-          }, { selfMongo: selfCoreMongo });
+          if (req.body.careView !== undefined && Number(req.body.careView) === 1) {
+            projects = await back.getProjectsByQuery({
+              $and: [
+                {
+                  "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
+                },
+                {
+                  "process.status": { $regex: "^[진]" }
+                }
+              ]
+            }, { selfMongo: selfCoreMongo });
+          } else {
+            projects = await back.getProjectsByQuery({
+              $and: [
+                {
+                  "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
+                },
+                {
+                  "process.status": { $regex: "^[진대]" }
+                }
+              ]
+            }, { selfMongo: selfCoreMongo });
+          }
         }
         projects.sort((a, b) => { return b.process.contract.first.date.valueOf() - a.process.contract.first.date.valueOf() });
         if (projects.length > 0) {
