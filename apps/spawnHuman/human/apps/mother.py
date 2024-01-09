@@ -158,7 +158,6 @@ async def shellExec(mainCommand: str, commandArr = None):
         if stderr:
             return stderr.decode()
 
-
 async def diskReading(mode: str = "check", arr: list = []):
     if type(mode) is not str:
         raise TypeError("mode must be string")
