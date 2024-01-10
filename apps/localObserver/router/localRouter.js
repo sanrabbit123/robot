@@ -90,7 +90,10 @@ LocalRouter.prototype.rou_post_pushComplete = function () {
           type,
           ...appName,
         }
-      }
+      };
+
+      console.log(member, appName, type, message);
+
 
       await back.mongoCreate(collection, json, { selfMongo: instance.mongolocal });
       messageSend({ text: member.name + "님이 " + appName["name"] + " 프로젝트의 git 저장소를 업데이트 진행하였습니다!", channel: "#checklist_log", voice: false }).catch((err) => { console.log(err); })
