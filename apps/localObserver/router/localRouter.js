@@ -61,6 +61,49 @@ LocalRouter.prototype.rou_post_registerIpAddress = function () {
   return obj;
 }
 
+LocalRouter.prototype.rou_post_pushComplete = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, generalHeaders, messageSend } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/pushComplete" ];
+  obj.func = async function (req, res, logger) {
+    res.set(generalHeaders());
+    try {
+      if (req.body.member === undefined || req.body.appName === undefined || req.body.type === undefined || req.body.message === undefined) {
+        throw new Error("invalid post");
+      }
+      const { member, appName, type, message } = equalJson(req.body);
+      const collection = "gitPushLog";
+      let json;
+
+      json = {
+        date: new Date(),
+        method: "push",
+        member: {
+          id: member.id,
+          name: member.name,
+        },
+        message: message,
+        app: {
+          type,
+          ...appName,
+        }
+      }
+
+      await back.mongoCreate(collection, json, { selfMongo: instance.mongolocal });
+      messageSend({ text: member.name + "님이 " + appName["name"] + " 프로젝트의 git 저장소를 업데이트 진행하였습니다!", channel: "#checklist_log", voice: false }).catch((err) => { console.log(err); })
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      logger.error("Local observer 서버 문제 생김 (rou_post_pushComplete): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 LocalRouter.prototype.setMembers = async function () {
