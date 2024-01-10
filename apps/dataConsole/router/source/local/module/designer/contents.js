@@ -3051,10 +3051,10 @@ DesignerJs.prototype.contentsBase = function (search = null) {
   let dashBoard;
   let topMargin, leftMargin;
 
-  margin = 30;
+  margin = 20;
   size = 18;
-  dashBoardHeight = 49;
-  dashBoardMargin = 16;
+  dashBoardHeight = 0;
+  dashBoardMargin = 0;
   topMargin = 11;
   leftMargin = 10;
 
@@ -3079,15 +3079,11 @@ DesignerJs.prototype.contentsBase = function (search = null) {
       mother: totalMother,
       style: {
         position: "absolute",
-        top: String(margin + dashBoardHeight + dashBoardMargin) + ea,
-        left: String(margin) + ea,
-        width: withOut(margin * 2, ea),
-        height: withOut(margin + dashBoardHeight + dashBoardMargin, ea),
-        borderBottom: String(0),
-        borderTopLeftRadius: String(3) + "px",
-        borderTopRightRadius: String(3) + "px",
-        boxSizing: "border-box",
-        background: colorChip.gray2,
+        top: String(0) + ea,
+        left: String(0) + ea,
+        width: String(265) + ea,
+        height: String(100) + "vh",
+        background: colorChip.gray0
       }
     },
     {
@@ -3096,7 +3092,6 @@ DesignerJs.prototype.contentsBase = function (search = null) {
         position: "relative",
         height: String(dashBoardHeight) + ea,
         marginBottom: String(dashBoardMargin) + ea,
-        background: colorChip.gray2,
         borderRadius: String(3) + "px",
         textAlign: "center",
       }
@@ -3113,8 +3108,8 @@ DesignerJs.prototype.contentsBase = function (search = null) {
       style: {
         display: "block",
         position: "relative",
-        paddingTop: String(topMargin) + ea,
-        paddingLeft: String(leftMargin) + ea,
+        paddingTop: String(0) + ea,
+        paddingLeft: String(0) + ea,
         height: String(100) + '%',
         width: String(100) + '%',
         top: String(0) + ea,
@@ -3128,28 +3123,11 @@ DesignerJs.prototype.contentsBase = function (search = null) {
       style: {
         position: "absolute",
         top: String(margin + dashBoardHeight + dashBoardMargin) + ea,
-        right: String(margin) + ea,
-        width: String(leftMargin) + ea,
-        height: withOut(margin + dashBoardHeight + dashBoardMargin, ea),
-        borderBottom: String(0),
-        borderTopLeftRadius: String(3) + "px",
-        borderTopRightRadius: String(3) + "px",
-        boxSizing: "border-box",
-        background: colorChip.gray2,
-        zIndex: String(4),
-      }
-    },
-    {
-      mother: totalMother,
-      style: {
-        position: "absolute",
-        top: String(margin + dashBoardHeight + dashBoardMargin) + ea,
         right: String(0) + ea,
         width: String(margin) + ea,
         height: withOut(margin + dashBoardHeight + dashBoardMargin, ea),
         borderBottom: String(0),
         boxSizing: "border-box",
-        background: colorChip.white,
         zIndex: String(4),
       }
     },
@@ -3158,12 +3136,12 @@ DesignerJs.prototype.contentsBase = function (search = null) {
   this.contentsSpec.contentsTong = contentsTong;
   this.contentsSpec.dashBoard = dashBoard;
   this.contentsBlockInjection();
-  this.contentsDashBoard();
+  // this.contentsDashBoard();
 }
 
 DesignerJs.prototype.contentsBlockInjection = function () {
   const instance = this;
-  const { ea, projects, actionList } = this;
+  const { ea, projects } = this;
   const { createNode, createNodes, colorChip, withOut, cleanChildren, appendQuery, returnGet, removeQuery, setQueue } = GeneralJs;
   const { contentsTong } = this.contentsSpec;
   let scrollTong;
@@ -3178,7 +3156,7 @@ DesignerJs.prototype.contentsBlockInjection = function () {
   let resultArr;
 
   leftMargin = 10;
-  firstPaddingTop = 44;
+  firstPaddingTop = 42;
   tongPaddingBottom = 500;
 
   cleanChildren(contentsTong);
@@ -3187,7 +3165,7 @@ DesignerJs.prototype.contentsBlockInjection = function () {
     mother: contentsTong,
     style: {
       position: "relative",
-      width: withOut(leftMargin, ea),
+      width: withOut(0, ea),
       overflowX: "hidden",
       paddingTop: String(firstPaddingTop) + ea,
       paddingBottom: String(tongPaddingBottom) + ea,
@@ -3195,8 +3173,6 @@ DesignerJs.prototype.contentsBlockInjection = function () {
   });
 
   maxWidth = [];
-
-  projects.sort((a, b) => { return b.contents.photo.date.valueOf() - a.contents.photo.date.valueOf(); });
 
   this.scrollTong = scrollTong;
   this.contentsBlocks = [];
@@ -3206,13 +3182,11 @@ DesignerJs.prototype.contentsBlockInjection = function () {
   resultArr = [];
   firstBoo = true;
   for (let i = 0; i < projects.length; i++) {
-    if (!actionList.includes(projects[i].process.action)) {
-      if (firstBoo) {
-        this.contentsWhiteBlock(scrollTong, projects[i], (i === 0), i, true);
-        firstBoo = false;
-      }
-      resultArr.push(this.contentsWhiteBlock(scrollTong, projects[i], false, i, false));
+    if (firstBoo) {
+      this.contentsWhiteBlock(scrollTong, projects[i], (i === 0), i, true);
+      firstBoo = false;
     }
+    resultArr.push(this.contentsWhiteBlock(scrollTong, projects[i], false, i, false));
   }
 
   resultArr = resultArr.filter((obj) => { return obj.result; });
@@ -3302,17 +3276,17 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
     ]
   }
 
-  leftMargin = 10;
-  motherMargin = 30;
+  leftMargin = 0;
+  motherMargin = 20;
 
-  height = 43;
-  margin = 1;
+  height = 38;
+  margin = 0;
 
-  width0 = 115;
+  width0 = 220;
   width1 = 3;
-  titleBlockTop = 105;
+  titleBlockTop = 20;
 
-  top = (titleMode ? (isMac() ? 11 : 12.5) : (isMac() ? 11 : 12.5));
+  top = (titleMode ? (isMac() ? 9 : 10.5) : (isMac() ? 9 : 10.5));
   left = 16;
   size = 14;
   textMargin = 6;
@@ -3367,8 +3341,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
           position: "absolute",
           width: "calc(100vw - " + String((motherMargin * 2) + (leftMargin * 2)) + ea + ")",
           height: String(100) + '%',
-          borderRadius: String(3) + "px",
-          background: titleMode ? colorChip.gradientGray : colorChip[grayBoo ? "white" : "gray0"],
+          borderRadius: titleMode ? String(5) + "px" : "",
+          background: titleMode ? colorChip.gradientGray : "transparent",
           top: String(0),
           left: String(0),
           transition: "all 0s ease",
@@ -3377,7 +3351,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
         }
       },
       {
-        text: !titleMode ? project.title : "",
+        text: !titleMode ? project.proid + " <u%---%u> " + project.title : "",
         class: [ "hoverDefault" ],
         events: [
           {
@@ -3395,9 +3369,15 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
           top: String(top + (isMac() ? 1 : 0)) + ea,
           marginLeft: String(left) + ea,
           fontSize: String(size) + ea,
+          fontWeight: String(600),
           zIndex: String(2),
           color: colorChip.black,
           transition: "all 0s ease",
+        },
+        under: {
+          fontSize: String(size) + ea,
+          fontWeight: String(600),
+          color: colorChip.gray3,
         }
       },
       {
@@ -3410,7 +3390,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
           top: String(top + (isMac() ? 1 : 0)) + ea,
           marginLeft: String(textMargin) + ea,
           fontSize: String(size) + ea,
-          color: colorChip.gray4,
+          color: colorChip.gray0,
           zIndex: String(2),
           transition: "all 0s ease",
         }
@@ -3432,6 +3412,10 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
       text: stringArr[i],
       class: [ "white_child_" + String(i) ],
       events: [
+        {
+          type: [ "selectstart" ],
+          event: (e) => { e.preventDefault() },
+        },
         {
           type: [ "click", "contextmenu" ],
           event: function (e) {
@@ -3471,7 +3455,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
               let mode;
               let fontSize;
 
-              if (e.type === "contextmenu") {
+              if (e.type === "click") {
 
                 numberSortBoo = sortTargets.map((dom) => { return dom.querySelector(".value").textContent; }).some((str) => { return (str.replace(/[0-9\-\.\: ]/gi, '').trim() === '' && /[0-9]/gi.test(str)) });
 
@@ -3490,12 +3474,30 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
                 } else {
                   if (thisSort === 1) {
                     sortTargets.sort((a, b) => {
-                      return (b.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 0 : Number(b.querySelector(".value").textContent.replace(/[^0-9]/gi, ''))) - (a.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 0 : Number(a.querySelector(".value").textContent.replace(/[^0-9]/gi, '')));
+                      let aValue, bValue;
+                      aValue = a.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 0 : Number(a.querySelector(".value").textContent.replace(/[^0-9]/gi, ''));
+                      bValue = b.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 0 : Number(b.querySelector(".value").textContent.replace(/[^0-9]/gi, ''));
+                      if (/예정/gi.test(a.querySelector(".value").textContent)) {
+                        aValue = 900000000;
+                      }
+                      if (/예정/gi.test(b.querySelector(".value").textContent)) {
+                        bValue = 900000000;
+                      }
+                      return bValue - aValue;
                     });
                     this.setAttribute("sort", String(0));
                   } else {
                     sortTargets.sort((a, b) => {
-                      return (a.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 90000 * 90000 : Number(a.querySelector(".value").textContent.replace(/[^0-9]/gi, ''))) - (b.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 90000 * 90000 : Number(b.querySelector(".value").textContent.replace(/[^0-9]/gi, '')));
+                      let aValue, bValue;
+                      aValue = a.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 0 : Number(a.querySelector(".value").textContent.replace(/[^0-9]/gi, ''));
+                      bValue = b.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 0 : Number(b.querySelector(".value").textContent.replace(/[^0-9]/gi, ''));
+                      if (/예정/gi.test(a.querySelector(".value").textContent)) {
+                        aValue = 900000000;
+                      }
+                      if (/예정/gi.test(b.querySelector(".value").textContent)) {
+                        bValue = 900000000;
+                      }
+                      return aValue - bValue;
                     });
                     this.setAttribute("sort", String(1));
                   }
@@ -4304,6 +4306,150 @@ DesignerJs.prototype.contentsBlockMove = function () {
   right.addEventListener("click", moveEvent("right"));
 }
 
+DesignerJs.prototype.contentsSubPannel = async function () {
+  const instance = this;
+  const { ea, totalContents, belowHeight, totalMother } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, returnGet } = GeneralJs;
+  const titleStringClassName = "titleStringClassName";
+  try {
+    const zIndex = 2;
+    let pannelBase;
+    let pannelOuterMargin;
+    let pannelInnerPadding;
+    let pannelMenu;
+    let menuPromptWidth;
+    let menuPromptHeight;
+    let menuTextTop;
+    let menuBetween;
+    let menuSize;
+    let menuWeight;
+    let pannelTong;
+    let num;
+
+    pannelOuterMargin = 40;
+    pannelInnerPadding = 6;
+
+    menuPromptWidth = 140;
+    menuPromptHeight = 32;
+    menuTextTop = isMac() ? -1 : 1,
+    menuBetween = 3;
+    menuSize = 13;
+    menuWeight = 700;
+
+    pannelMenu = [
+      {
+        title: "기본 프로젝트 모드",
+        event: () => {
+          return async function (e) {
+            try {
+              window.location.href = window.location.protocol + "//" + window.location.host + "/project?type=care&from=de";
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+      {
+        title: "프로젝트 케어 모드",
+        event: () => {
+          return async function (e) {
+            try {
+              window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal&type=care&from=ca&view=care";
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+      {
+        title: "정산 관리 모드",
+        event: () => {
+          return async function (e) {
+            try {
+              window.location.href = window.location.protocol + "//" + window.location.host + "/calculation";
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+    ];
+
+    pannelBase = createNode({
+      mother: totalMother,
+      style: {
+        display: "flex",
+        position: "fixed",
+        bottom: String(belowHeight + pannelOuterMargin) + ea,
+        right: String(pannelOuterMargin) + ea,
+        background: colorChip.white,
+        zIndex: String(zIndex),
+        borderRadius: String(5) + "px",
+        animation: "fadeuplite 0.3s ease forwards",
+        boxShadow: "0 3px 15px -9px " + colorChip.shadow,
+        padding: String(pannelInnerPadding) + ea,
+        flexDirection: "column",
+      },
+      child: {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(menuPromptWidth) + ea,
+          flexDirection: "column",
+        }
+      }
+    });
+    pannelTong = pannelBase.firstChild;
+
+    num = 0;
+    for (let obj of pannelMenu) {
+      createNode({
+        mother: pannelTong,
+        event: {
+          click: obj.event(),
+        },
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(menuPromptWidth) + ea,
+          height: String(menuPromptHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          marginBottom: String(num === pannelMenu.length - 1 ? 0 : menuBetween) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        child: {
+          class: [ titleStringClassName ],
+          text: obj.title,
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
+          style: {
+            position: "relative",
+            top: String(menuTextTop) + ea,
+            fontSize: String(menuSize) + ea,
+            fontWeight: String(menuWeight),
+            color: colorChip.white,
+          }
+        }
+      })
+      num++;
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.contentsView = async function () {
   const instance = this;
   try {
@@ -4340,6 +4486,10 @@ DesignerJs.prototype.contentsView = async function () {
     let client;
     let requestNumber;
     let matrix;
+    let aMonthAgo;
+
+    aMonthAgo = new Date();
+    aMonthAgo.setMonth(aMonthAgo.getMonth() - 3);
 
     loading = await this.mother.loadingRun();
 
@@ -4358,22 +4508,6 @@ DesignerJs.prototype.contentsView = async function () {
     this.contentsBlocks = null;
     this.localStorageConst = "contentsFilter_";
     this.blockMapConst = "blockMap_";
-    this.actionList = [
-      "계약금 안내",
-      "현장미팅 조율",
-      "현장미팅 확정",
-      "의뢰서 공유",
-      "현장미팅 피드백",
-      "잔금 안내",
-      "시작 대기",
-      "1차 제안",
-      "수정 제안",
-      "시공 진행",
-      "제품 구매",
-      "추가 제안",
-      "배송중",
-      "세팅 마무리",
-    ];
     this.photoActionList = [
       "촬영 컨택",
       "촬영 대기",
@@ -4400,24 +4534,14 @@ DesignerJs.prototype.contentsView = async function () {
     whereQuery["$and"] = [];
     whereQuery["$and"].push({ desid: { $regex: "^d" } });
     whereQuery["$and"].push({ "process.status": { $regex: "^[진홀완]" } });
-    for (let i of this.actionList) {
-      whereQuery["$and"].push({ "process.action": { $not: { $regex: i } } });
-    }
     whereQuery["$and"].push({
       $or: [
-        { "contents.share.client.photo": { $gte: new Date() } },
-        { "contents.share.client.contents": { $gte: new Date() } },
-        { "contents.share.designer.photo": { $gte: new Date() } },
-        { "contents.share.designer.contents": { $gte: new Date() } },
-        { "contents.sns.portfolio.long": { $gte: new Date() } },
-        { "contents.sns.portfolio.short": { $gte: new Date() } },
-        { "contents.sns.interview.long": { $gte: new Date() } },
-        { "contents.sns.interview.short": { $gte: new Date() } },
+        { "contents.photo.date": { $gte: aMonthAgo } },
         { "process.calculation.payments.remain.date": { $lte: new Date(2000, 0, 1) } }
       ]
     });
 
-    projects = new SearchArray(await ajaxJson({ noFlat: true, whereQuery }, "/getProjects", { equal: true }));
+    projects = new SearchArray(await ajaxJson({ noFlat: true, whereQuery }, BACKHOST + "/getProjects", { equal: true }));
 
     desidArr_raw = [];
     cliidArr_raw = [];
@@ -4490,6 +4614,7 @@ DesignerJs.prototype.contentsView = async function () {
     this.contentsSearchEvent();
     this.contentsBlockMove();
     this.contentsExtractEvent();
+    await this.contentsSubPannel();
 
   } catch (e) {
     console.log(e);

@@ -4048,7 +4048,7 @@ DesignerJs.prototype.careSubPannel = async function () {
           event: () => {
             return async function (e) {
               try {
-                // pass
+                window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=contents";
               } catch (e) {
                 console.log(e);
                 window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
