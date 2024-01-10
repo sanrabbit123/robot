@@ -68,7 +68,7 @@ LocalRouter.prototype.setMembers = async function () {
   const back = this.back;
   const { fileSystem } = this.mother;
   try {
-    this.members = await back.setMemberObj({ getMode: true, selfMongo: instance.mongo });
+    this.members = await back.setMemberObj({ getMode: true, selfMongo: null });
   } catch (e) {
     await logger.error("Local observer 서버 문제 생김 (setMembers): " + e.message);
     console.log(e);
