@@ -69,10 +69,39 @@ class LocalRouter:
 
                 asyncio.create_task(shellExec(command))
 
-                return { "message": "will do" }, 200, headers
+                return ({ "message": "will do" }, 200, headers)
             except Exception as e:
                 print(e)
                 await alertLog("Local lounge 서버 문제 생김 (rou_post_gitPull): " + str(e) + " / " + jsonStringify(body))
                 return { "error": str(e) + " / " + jsonStringify(body) }
 
+        @app.post("/gitPush")
+        async def rou_post_gitPush():
+            headers = self.headers
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            body = equalJson(rawBody)
+            try:
+                if not "type" in body:
+                    raise Exception("invalid post")
+                if not body["type"] in self.appNames:
+                    raise Exception("invalid post 2")
 
+                async def futureTask(thisType):
+                    nowDate = getNowDate()
+                    numbersStringValue = patternReplace(dateToString(nowDate, True), r"[^0-9]", "")
+                    command = "cd "
+                    command += shellLink(self.rootFolder + "/" + self.appNames[thisType]["name"])
+                    command += ";"
+                    command += "git add -A;git commit -m \"autoUpdate_" + numbersStringValue + "\";git push;"
+                    
+                    await shellExec(command)
+                    await requestSystem("https://" + self.address["officeinfo"]["gitlab"]["host"] + ":" + str(self.address["officeinfo"]["gitlab"]["endPort"]) + "/pushComplete", { "member": self.member, "appName": self.appNames[thisType] }, { "headers": { "Content-Type": "application/json" } })
+
+                asyncio.create_task(futureTask(body["type"]))
+
+                return ({ "message": "will do" }, 200, headers)
+            except Exception as e:
+                print(e)
+                await alertLog("Local lounge 서버 문제 생김 (rou_post_gitPush): " + str(e) + " / " + jsonStringify(body))
+                return { "error": str(e) + " / " + jsonStringify(body) }

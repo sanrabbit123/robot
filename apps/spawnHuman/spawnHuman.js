@@ -9,7 +9,7 @@ const SpawnHuman = function () {
   this.appDir = this.dir + "/" + this.applicationName;
 }
 
-SpawnHuman.prototype.spawnLaunching = async function (serverName = "constructLounge", setupMode = false) {
+SpawnHuman.prototype.spawnLaunching = async function (serverName = "localLounge", setupMode = false) {
   const instance = this;
   const back = this.back;
   const address = this.address;
@@ -104,6 +104,24 @@ SpawnHuman.prototype.spawnLaunching = async function (serverName = "constructLou
       startScript = `#!/bin/bash\nhypercorn human:app -b 0.0.0.0:8000 -w 2 --certfile ./pems/${address.constructinfo.host}/cert/cert1.pem --keyfile ./pems/${address.constructinfo.host}/key/privkey1.pem --ca-certs ./pems/${address.constructinfo.host}/ca/chain1.pem --ca-certs ./pems/${address.constructinfo.host}/ca/fullchain1.pem`;
       await fileSystem("write", [ homeTarget + "/start.sh", startScript ]);
       await shellExec("chmod", [ "+x", homeTarget + "/start.sh" ]);
+
+    } else if (serverName === "localLounge") {
+
+      startPointPython = await fileSystem("readString", [ appDir + "/human.py" ]);
+      startPointPython += "\n";
+      startPointPython += "from apps.localLounge.localLounge import LocalLounge";
+      startPointPython += "\n";
+      startPointPython += "\n";
+      startPointPython += "server = LocalLounge()";
+      startPointPython += "\n";
+      startPointPython += "app = server.returnApp()";
+      startPointPython += "\n";
+      await fileSystem("write", [ homeTarget + "/human.py", startPointPython ]);
+
+      startScript = `#!/bin/bash\nhypercorn human:app -b 0.0.0.0:8000 -w 2`;
+      await fileSystem("write", [ homeTarget + "/start.sh", startScript ]);
+      await shellExec("chmod", [ "+x", homeTarget + "/start.sh" ]);
+
     } else {
       throw new Error("invalid server name");
     }

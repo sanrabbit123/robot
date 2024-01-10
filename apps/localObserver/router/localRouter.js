@@ -1,10 +1,12 @@
-const LocalRouter = function () {
+const LocalRouter = function (MONGOC) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.formidable = require("formidable");
+  this.mongo = MONGOC;
+  this.mongolocal = MONGOC;
 }
 
 //GET ---------------------------------------------------------------------------------------------
