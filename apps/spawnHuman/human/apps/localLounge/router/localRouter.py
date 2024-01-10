@@ -27,6 +27,9 @@ class LocalRouter:
         self.sambaToken = "__samba__"
         self.staticConst = self.homeFolder
 
+        self.app = "human"
+        self.appDir = self.homeFolder + "/" + self.app
+
         self.appNames = {
             "branding": {
                 "name": "homeliaison-branding-standard",
@@ -92,6 +95,54 @@ class LocalRouter:
                 await alertLog("Local lounge 서버 문제 생김 (rou_post_readFolder): " + str(e) + " / " + jsonStringify(body))
                 return { "error": str(e) + " / " + jsonStringify(body) }
             
+        @app.post("/makeFolder")
+        async def rou_post_makeFolder():
+            headers = self.headers
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            sambaToken = self.sambaToken
+            staticConst = self.staticConst
+            body = equalJson(rawBody)
+            try:
+                if not "path" in body:
+                    raise Exception("invalid post")
+                target = body["path"]
+                target = patternReplace(target, r"^\/", "")
+                target = patternReplace(target, r"\/$", "")
+                target = target.strip()
+                if target == "":
+                    target = sambaToken
+                if not patternTest(r"^__", target):
+                    target = sambaToken + "/" + target
+                target = patternReplace(target, "^" + sambaToken, staticConst)
+
+                targetList = target.split("/")
+                tempString = staticConst
+                for i in targetList:
+                    tempDir = await fileSystem("readFolder", [ tempString ])
+                    if i != "":
+                        if not i in tempDir:
+                            await shellExec("mkdir " + shellLink(tempString + "/" + i))
+                    tempString += "/"
+                    tempString += i
+
+                target2 = body["path"]
+                target2 = patternReplace(target2, r"^\/", "")
+                target2 = patternReplace(target2, r"\/$", "")
+                target2 = target2.strip()
+                if target2 == "":
+                    target2 = sambaToken
+                if not patternTest(r"^__", target2):
+                    target2 = sambaToken + "/" + target2
+                target2 = patternReplace(target2, "^" + sambaToken, staticConst)
+                folderList = await fileSystem("readFolder", [ target2 ])
+
+                return ({ "message": "done", "list": folderList }, 200, headers)
+            except Exception as e:
+                print(e)
+                await alertLog("Local lounge 서버 문제 생김 (rou_post_makeFolder): " + str(e) + " / " + jsonStringify(body))
+                return { "error": str(e) + " / " + jsonStringify(body) }
+
         @app.post("/moveFiles")
         async def rou_post_moveFiles():
             headers = self.headers
@@ -160,6 +211,26 @@ class LocalRouter:
             except Exception as e:
                 print(e)
                 await alertLog("Local lounge 서버 문제 생김 (rou_post_gitPull): " + str(e) + " / " + jsonStringify(body))
+                return { "error": str(e) + " / " + jsonStringify(body) }
+
+        @app.post("/appUpdate")
+        async def rou_post_appUpdate():
+            headers = self.headers
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            body = equalJson(rawBody)
+            try:                
+                command = "cd "
+                command += shellLink(self.appDir)
+                command += ";"
+                command += "git pull;"
+
+                asyncio.create_task(shellExec(command))
+
+                return ({ "message": "will do" }, 200, headers)
+            except Exception as e:
+                print(e)
+                await alertLog("Local lounge 서버 문제 생김 (rou_post_appUpdate): " + str(e) + " / " + jsonStringify(body))
                 return { "error": str(e) + " / " + jsonStringify(body) }
 
         @app.post("/gitPush")
