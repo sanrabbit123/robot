@@ -92,11 +92,8 @@ LocalRouter.prototype.rou_post_pushComplete = function () {
         }
       };
 
-      console.log(member, appName, type, message);
-
-
       await back.mongoCreate(collection, json, { selfMongo: instance.mongolocal });
-      messageSend({ text: member.name + "님이 " + appName["name"] + " 프로젝트의 git 저장소를 업데이트 진행하였습니다!", channel: "#checklist_log", voice: false }).catch((err) => { console.log(err); })
+      messageSend({ text: member.name + "님이 " + appName["name"] + " 프로젝트의 git 저장소를 업데이트 진행하였습니다!", channel: "C063JC1417S", voice: false }).catch((err) => { console.log(err); })
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
