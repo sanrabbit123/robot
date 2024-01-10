@@ -20,11 +20,19 @@ class LocalRouter:
         self.member = None
         self.members = returnMembers()
 
+        self.homeFolder = processHome()
         self.rootFolderName = "project"
-        self.rootFolder = processHome() + "/" + self.rootFolderName
+        self.rootFolder = self.homeFolder + "/" + self.rootFolderName
+
+        self.sambaToken = "__samba__"
+        self.staticConst = self.homeFolder
 
         self.appNames = {
             "branding": {
+                "name": "homeliaison-branding-standard",
+                "address": "ssh://git@homeliaison.co.kr:40022/homeliaisonck/homeliaison-branding-standard.git"
+            },
+            "brand": {
                 "name": "homeliaison-branding-standard",
                 "address": "ssh://git@homeliaison.co.kr:40022/homeliaisonck/homeliaison-branding-standard.git"
             }
@@ -46,7 +54,86 @@ class LocalRouter:
             headers = self.headers
             return ({ "message": "hi" }, 200, headers)
 
+        @app.get("/disk")
+        async def rou_get_disk():
+            headers = self.headers
+            return ({ "message": "hi" }, 200, headers)
+
         # post =================================================================================
+
+        @app.post("/readFolder")
+        async def rou_post_readFolder():
+            headers = self.headers
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            sambaToken = self.sambaToken
+            staticConst = self.staticConst
+            body = equalJson(rawBody)
+            try:
+                if not "path" in body:
+                    raise Exception("invalid post")
+                target = body["path"]
+                target = patternReplace(target, r"^\/", "")
+                target = patternReplace(target, r"\/$", "")
+                target = target.strip()
+
+                if target == "":
+                    target = sambaToken
+                if not patternTest(r"^__", target):
+                    target = sambaToken + "/" + target
+                
+                target = patternReplace(target, "^" + sambaToken, staticConst)
+
+                list = await fileSystem("readFolder", [ target ])
+
+                return (list, 200, headers)
+            except Exception as e:
+                print(e)
+                await alertLog("Local lounge 서버 문제 생김 (rou_post_readFolder): " + str(e) + " / " + jsonStringify(body))
+                return { "error": str(e) + " / " + jsonStringify(body) }
+            
+        @app.post("/moveFiles")
+        async def rou_post_moveFiles():
+            headers = self.headers
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            sambaToken = self.sambaToken
+            staticConst = self.staticConst
+            body = equalJson(rawBody)
+            try:
+                if not "fromItems" in body:
+                    raise Exception("invalid post")
+                if not "toFolder" in body:
+                    raise Exception("invalid post")
+
+                target = body["toFolder"]
+                target = patternReplace(target, r"^\/", "")
+                target = patternReplace(target, r"\/$", "")
+                target = target.strip()
+                if target == "":
+                    target = sambaToken
+                if not patternTest(r"^__", target):
+                    target = sambaToken + "/" + target
+                target = patternReplace(target, "^" + sambaToken, staticConst)
+
+                fromItems = body["fromItems"]
+                for str in fromItems:
+                    thisItem = str
+                    thisItem = patternReplace(thisItem, r"^\/", "")
+                    thisItem = patternReplace(thisItem, r"\/$", "")
+                    thisItem = thisItem.strip()
+                    if thisItem == "":
+                        thisItem = sambaToken
+                    if not patternTest(r"^__", thisItem):
+                        thisItem = sambaToken + "/" + thisItem
+                    thisItem = patternReplace(thisItem, "^" + sambaToken, staticConst)
+                    await shellExec("mv", [ thisItem, target + "/" ])
+
+                return ({ "message": "success" }, 200, headers)
+            except Exception as e:
+                print(e)
+                await alertLog("Local lounge 서버 문제 생김 (rou_post_moveFiles): " + str(e) + " / " + jsonStringify(body))
+                return { "error": str(e) + " / " + jsonStringify(body) }
 
         @app.post("/gitPull")
         async def rou_post_gitPull():

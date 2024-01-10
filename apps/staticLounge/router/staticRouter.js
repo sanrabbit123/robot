@@ -630,7 +630,7 @@ StaticRouter.prototype.rou_post_getPathFromId = function () {
 StaticRouter.prototype.rou_post_moveFiles = function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
-  const { staticConst } = this;
+  const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
   obj.link = [ "/moveFiles" ];
@@ -660,20 +660,20 @@ StaticRouter.prototype.rou_post_moveFiles = function () {
 
       toTarget = toFolder.replace(/^\//i, '').replace(/\/$/i, '');
       if (toTarget.trim() === '') {
-        toTarget = "__samba__";
+        toTarget = sambaToken;
       }
       if (!/^__/.test(toTarget)) {
-        toTarget = "__samba__" + "/" + toTarget;
+        toTarget = sambaToken + "/" + toTarget;
       }
       toTarget = toTarget.replace(/__samba__/gi, staticConst);
 
       for (let str of fromItems) {
         target = str.replace(/^\//i, '').replace(/\/$/i, '');
         if (target.trim() === '') {
-          target = "__samba__";
+          target = sambaToken;
         }
         if (!/^__/.test(target)) {
-          target = "__samba__" + "/" + target;
+          target = sambaToken + "/" + target;
         }
         target = target.replace(/__samba__/gi, staticConst);
         await shellExec("mv", [ target, toTarget + "/" ]);
