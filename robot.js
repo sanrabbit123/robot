@@ -57,7 +57,7 @@ Robot.prototype.spawnHuman = async function () {
     const spawn = new SpawnHuman();
     let mode;
 
-    mode = "constructLounge";
+    mode = "localLounge";
 
     console.log(await spawn.spawnLaunching(mode, false));
   } catch (e) {

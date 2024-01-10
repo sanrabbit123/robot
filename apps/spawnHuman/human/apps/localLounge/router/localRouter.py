@@ -29,7 +29,7 @@ class LocalRouter:
                 "address": "ssh://git@homeliaison.co.kr:40022/homeliaisonck/homeliaison-branding-standard.git"
             }
         }
-
+        self.coreServer = self.address["officeinfo"]["gitlab"]["host"] + ":" + str(self.address["officeinfo"]["gitlab"]["endPort"])
 
     def setRouting(self):
         app = self.app
@@ -96,7 +96,7 @@ class LocalRouter:
                     command += "git add -A;git commit -m \"autoUpdate_" + numbersStringValue + "\";git push;"
                     
                     await shellExec(command)
-                    await requestSystem("https://" + self.address["officeinfo"]["gitlab"]["host"] + ":" + str(self.address["officeinfo"]["gitlab"]["endPort"]) + "/pushComplete", { "member": self.member, "appName": self.appNames[thisType] }, { "headers": { "Content-Type": "application/json" } })
+                    await requestSystem("https://" + self.coreServer + "/pushComplete", { "member": self.member, "appName": self.appNames[thisType] }, { "headers": { "Content-Type": "application/json" } })
 
                 asyncio.create_task(futureTask(body["type"]))
 
