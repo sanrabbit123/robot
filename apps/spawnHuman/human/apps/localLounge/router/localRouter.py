@@ -27,8 +27,8 @@ class LocalRouter:
         self.sambaToken = "__samba__"
         self.staticConst = self.homeFolder
 
-        self.app = "human"
-        self.appDir = self.homeFolder + "/" + self.app
+        self.appRoot = "human"
+        self.appDir = self.homeFolder + "/" + self.appRoot
 
         self.appNames = {
             "branding": {
@@ -114,7 +114,7 @@ class LocalRouter:
                     target = sambaToken
                 if not patternTest(r"^__", target):
                     target = sambaToken + "/" + target
-                target = patternReplace(target, "^" + sambaToken, staticConst)
+                target = patternReplace(target, "^" + sambaToken, "")
 
                 targetList = target.split("/")
                 tempString = staticConst
