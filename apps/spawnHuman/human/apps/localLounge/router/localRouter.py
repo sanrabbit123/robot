@@ -90,13 +90,14 @@ class LocalRouter:
                 async def futureTask(thisType):
                     nowDate = getNowDate()
                     numbersStringValue = patternReplace(dateToString(nowDate, True), r"[^0-9]", "")
+                    message = "autoUpdate_" + numbersStringValue
                     command = "cd "
                     command += shellLink(self.rootFolder + "/" + self.appNames[thisType]["name"])
                     command += ";"
-                    command += "git add -A;git commit -m \"autoUpdate_" + numbersStringValue + "\";git push;"
+                    command += "git add -A;git commit -m \"" + message + "\";git push;"
                     
                     await shellExec(command)
-                    await requestSystem("https://" + self.coreServer + "/pushComplete", { "member": self.member, "appName": self.appNames[thisType] }, { "headers": { "Content-Type": "application/json" } })
+                    await requestSystem("https://" + self.coreServer + "/pushComplete", { "member": self.member, "appName": self.appNames[thisType], "type": thisType, "message": message }, { "headers": { "Content-Type": "application/json" } })
 
                 asyncio.create_task(futureTask(body["type"]))
 
