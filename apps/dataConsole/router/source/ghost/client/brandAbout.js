@@ -43,7 +43,7 @@ const BrandAboutJs = function () {
     blue: "#5e9add",
     blueMiddle: "#3273bb",
     blueDark: "#2a4866",
-    blueGradient: "linear-gradient(40deg, rgba(76,144,222,1) 0%, rgba(115,174,241,1) 100%)",
+    blueGradient: "linear-gradient(40deg, rgba(73,150,215,1) 0%, rgba(135,189,234,1) 100%)",
   }
 }
 
@@ -162,7 +162,7 @@ BrandAboutJs.prototype.baseMaker = async function () {
         src: BrandAboutJs.binaryPath + "/" + "main_0.svg",
       },
       style: {
-        width: String(1200) + ea,
+        width: String(1080) + ea,
         position: "relative",
         display: "inline-block",
         marginTop: String(10) + ea,
