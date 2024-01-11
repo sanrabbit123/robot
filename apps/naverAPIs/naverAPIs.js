@@ -24,12 +24,31 @@ const NaverAPIs = function (mother = null, back = null, address = null) {
 
   this.naverMapVersion = "v5";
   this.naverMapUrl = "https://map.naver.com";
-  this.naverMapSearch = "/" + this.naverMapVersion + "/api/search";
+  this.naverMapSearch = "/p/api/search/allSearch";
 
   this.naverLandUrl = "https://new.land.naver.com";
   this.naverLandAuthorizationKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlJFQUxFU1RBVEUiLCJpYXQiOjE2OTQwNTg5MTUsImV4cCI6MTY5NDA2OTcxNX0.I6HBJO77xIkg_4M9nnTmu-kIYbV8y4bjswqpbNC2LfQ";
 
   this.complexIdKeyword = "land_complex_";
+
+  this.fakeHeaders = {
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "ko-KR,ko;q=0.8,en-US;q=0.6,en;q=0.4",
+    "Cache-Control": "no-cache",
+    "Cookie": "NNB=5XIB6BZTOOQWI; ASID=d2b204fd00000189c9dcbaaa00000062; _ga=GA1.1.937291492.1692025459; naverfinancial_CID=a0caafb6e3ca4fd1acfa82580cb6dd7f; _ga_Q7G1QTKPGB=GS1.1.1692025458.1.0.1692025462.0.0.0; _ga_451MFZ9CFM=GS1.1.1703148673.1.1.1703148684.0.0.0; nx_ssl=2",
+    "Expires": "Sat, 01 Jan 3000 00:00:00 GMT",
+    "Pragma": "no-cache",
+    "Referer": "https://map.naver.com/p/search/%EC%98%A4%EC%82%B0%EC%97%AD%20e-%ED%8E%B8%ED%95%9C%EC%84%B8%EC%83%81%202%EB%8B%A8%EC%A7%80?c=15.00,0,0,0,dh",
+    "Sec-Ch-Ua": `"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"`,
+    "Sec-Ch-Ua-Mobile": `?0`,
+    "Sec-Ch-Ua-Platform": `"macOS"`,
+    "Sec-Fetch-Dest": `empty`,
+    "Sec-Fetch-Mode": `cors`,
+    "Sec-Fetch-Site": `same-origin`,
+    "User-Agent": `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36`,
+  }
+
 }
 
 NaverAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, logger = null) {
@@ -628,36 +647,27 @@ NaverAPIs.prototype.mapVersionCheck = async function () {
 NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) {
   const instance = this;
   const { equalJson, requestSystem, emergencyAlarm } = this.mother;
-  const { chrome, naverMapUrl, naverMapSearch } = this;
+  const { chrome, naverMapUrl, naverMapSearch, fakeHeaders } = this;
   const querystring = require("querystring");
   try {
     const queryStr = querystring.stringify({
-      caller: "pcweb",
       query: query.replace(/아파트/gi, ""),
       searchCoord: "127.05840838974427;37.75015390090829",
-      page: "1",
-      displayCount: "20",
-      isPlaceRecommendationReplace: "true",
+      type: "all",
       lang: "ko"
     });
     const targetUrl = naverMapUrl + naverMapSearch + "?" + queryStr;
-    console.log(targetUrl);
-    const queryResult = await chrome.frontScript(targetUrl, (async function () {
-      try {
-        const targetUrl = "__targetUrl__";
-        const res = await fetch(targetUrl);
-        const json = await res.json();
-        return JSON.stringify(json);
-      } catch (e) {
-        return JSON.stringify({});
+    const { data: queryResult } = await requestSystem(targetUrl, {}, {
+      method: "get",
+      headers: {
+        ...fakeHeaders
       }
-    }).toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '').replace(/__targetUrl__/gi, targetUrl))
+    });
     const { result } = queryResult;
     let targetAddress;
     let resultList;
 
     if (typeof result !== "object") {
-      console.log(queryResult);
       throw new Error("query fail");
     }
 
