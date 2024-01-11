@@ -7581,6 +7581,122 @@ ClientJs.prototype.sseCardParsing = function (raw) {
   }
 }
 
+ClientJs.prototype.projectSubPannel = async function () {
+  const instance = this;
+  const { ea, totalContents, belowHeight, totalMother } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, returnGet } = GeneralJs;
+  const titleStringClassName = "titleStringClassName";
+  try {
+    const zIndex = 2;
+    let pannelBase;
+    let pannelOuterMargin;
+    let pannelInnerPadding;
+    let pannelMenu;
+    let menuPromptWidth;
+    let menuPromptHeight;
+    let menuTextTop;
+    let menuBetween;
+    let menuSize;
+    let menuWeight;
+    let pannelTong;
+    let num;
+
+    pannelOuterMargin = 40;
+    pannelInnerPadding = 6;
+
+    menuPromptWidth = 140;
+    menuPromptHeight = 32;
+    menuTextTop = isMac() ? -1 : 1,
+    menuBetween = 3;
+    menuSize = 13;
+    menuWeight = 700;
+
+    pannelMenu = [
+      {
+        title: "현장 미팅 대상",
+        event: () => {
+          return async function (e) {
+            try {
+              window.location.href = window.location.protocol + "//" + window.location.host + "/project?type=" + "meeting";
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
+    ];
+
+    pannelBase = createNode({
+      mother: totalMother,
+      style: {
+        display: "flex",
+        position: "fixed",
+        bottom: String(belowHeight + pannelOuterMargin) + ea,
+        right: String(pannelOuterMargin) + ea,
+        background: colorChip.white,
+        zIndex: String(zIndex),
+        borderRadius: String(5) + "px",
+        animation: "fadeuplite 0.3s ease forwards",
+        boxShadow: "0 3px 15px -9px " + colorChip.shadow,
+        padding: String(pannelInnerPadding) + ea,
+        flexDirection: "column",
+      },
+      child: {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(menuPromptWidth) + ea,
+          flexDirection: "column",
+        }
+      }
+    });
+    pannelTong = pannelBase.firstChild;
+
+    num = 0;
+    for (let obj of pannelMenu) {
+      createNode({
+        mother: pannelTong,
+        event: {
+          click: obj.event(),
+        },
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(menuPromptWidth) + ea,
+          height: String(menuPromptHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          marginBottom: String(num === pannelMenu.length - 1 ? 0 : menuBetween) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        child: {
+          class: [ titleStringClassName ],
+          text: obj.title,
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
+          style: {
+            position: "relative",
+            top: String(menuTextTop) + ea,
+            fontSize: String(menuSize) + ea,
+            fontWeight: String(menuWeight),
+            color: colorChip.white,
+          }
+        }
+      })
+      num++;
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 ClientJs.prototype.launching = async function () {
   const instance = this;
   try {
@@ -7606,6 +7722,7 @@ ClientJs.prototype.launching = async function () {
       this.addExtractEvent();
       this.whiteResize();
       this.communicationRender();
+      await this.projectSubPannel();
     }
 
     if (document.getElementById("grayLeftOpenButton") !== null) {

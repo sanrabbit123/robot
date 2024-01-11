@@ -1527,18 +1527,29 @@ ProjectJs.prototype.spreadData = async function (search = null) {
     let sortStandard;
     let loading;
     let thisType;
+    let projectWhereQuery;
 
     thisType = "general";
     if (typeof getObj.type === "string" && getObj.type === "care") {
       thisType = "care";
     } else if (typeof getObj.type === "string" && getObj.type === "all") {
       thisType = "general";
+    } else if (typeof getObj.type === "string" && getObj.type === "meeting") {
+      thisType = "meeting";
     }
 
     loading = instance.mother.grayLoading(null, search === null || search === '' || search === '-');
 
     if (search === null || search === '' || search === '-') {
-      projects = await GeneralJs.ajaxJson({ where: { desid: { $regex: "^d" }, "process.status": { $regex: thisType === "care" ? "^[진홀]" : "^[대진홀]" } } }, "/getProjects");
+      if (thisType !== "meeting") {
+        projects = await GeneralJs.ajaxJson({ where: { desid: { $regex: "^d" }, "process.status": { $regex: thisType === "care" ? "^[진홀]" : (thisType === "meeting" ? "^[대]" : "^[대진홀]") } } }, "/getProjects");
+      } else {
+        projectWhereQuery = {};
+        projectWhereQuery["desid"] = { $regex: "^d" };
+        projectWhereQuery["process.status"] = { $regex: "^[대]" };
+        projectWhereQuery["process.contract.meeting.date"] = { $lte: new Date(2000, 0, 1) };
+        projects = await GeneralJs.ajaxJson({ where: projectWhereQuery }, "/getProjects");
+      }
     } else {
       projects = await GeneralJs.ajaxJson({ query: search }, "/searchProjects");
     }
@@ -8226,6 +8237,20 @@ ProjectJs.prototype.projectSubPannel = async function () {
     menuWeight = 700;
 
     pannelMenu = [
+      {
+        title: "현장 미팅 대상",
+        event: () => {
+          return async function (e) {
+            try {
+              window.location.href = window.location.protocol + "//" + window.location.host + "/project?type=" + "meeting";
+            } catch (e) {
+              console.log(e);
+              window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+        },
+      },
       {
         title: returnGet()?.type === "care" ? "전체 보기" : "진행중만 보기",
         event: () => {
