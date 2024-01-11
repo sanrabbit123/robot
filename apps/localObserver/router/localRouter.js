@@ -101,7 +101,9 @@ LocalRouter.prototype.rou_post_pushComplete = function () {
 
       await back.mongoCreate(collection, json, { selfMongo: instance.mongolocal });
       messageSend({ text: member.name + "님이 " + appName["name"] + " 프로젝트의 git 저장소를 업데이트 진행하였습니다!", channel: "C063JC1417S", voice: false }).catch((err) => { console.log(err); })
-      await requestSystem("https://" + address.officeinfo.gitlab.host + ":" + String(address.officeinfo.gitlab.endPort) + "/gitLocalSync");
+      await requestSystem("https://" + address.officeinfo.gitlab.host + ":" + String(address.officeinfo.gitlab.endPort) + "/gitLocalSync", { type }, {
+        headers: { "Content-Type": "application/json" }
+      });
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {

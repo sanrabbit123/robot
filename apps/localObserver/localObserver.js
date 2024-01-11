@@ -167,8 +167,9 @@ LocalObserver.prototype.localConnect = async function () {
       try {
         setInterval(async () => {
           try {
-            const res = await requestSystem("https://" + address.officeinfo.gitlab.host + ":" + String(address.officeinfo.gitlab.endPort) + "/gitLocalSync");
-            console.log(res);
+            const res = await requestSystem("https://" + address.officeinfo.gitlab.host + ":" + String(address.officeinfo.gitlab.endPort) + "/gitLocalSync", { type: "branding" }, {
+              headers: { "Content-Type": "application/json" }
+            });
           } catch {}
         }, 1000 * 60 * 3);
       } catch {}
