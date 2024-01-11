@@ -7,6 +7,12 @@ const LocalRouter = function (MONGOC) {
   this.formidable = require("formidable");
   this.mongo = MONGOC;
   this.mongolocal = MONGOC;
+  this.targetIp = [
+    "192.168.0.90",
+    "192.168.0.24",
+    "192.168.0.30"
+  ]
+  this.port = 8000;
 }
 
 //GET ---------------------------------------------------------------------------------------------
@@ -64,7 +70,8 @@ LocalRouter.prototype.rou_post_registerIpAddress = function () {
 LocalRouter.prototype.rou_post_pushComplete = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, generalHeaders, messageSend } = this.mother;
+  const address = this.address;
+  const { equalJson, generalHeaders, messageSend, requestSystem } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/pushComplete" ];
@@ -94,10 +101,41 @@ LocalRouter.prototype.rou_post_pushComplete = function () {
 
       await back.mongoCreate(collection, json, { selfMongo: instance.mongolocal });
       messageSend({ text: member.name + "님이 " + appName["name"] + " 프로젝트의 git 저장소를 업데이트 진행하였습니다!", channel: "C063JC1417S", voice: false }).catch((err) => { console.log(err); })
+      await requestSystem("https://" + address.officeinfo.gitlab.host + ":" + String(address.officeinfo.gitlab.endPort) + "/gitLocalSync");
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       logger.error("Local observer 서버 문제 생김 (rou_post_pushComplete): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+LocalRouter.prototype.rou_post_gitLocalSync = function () {
+  const instance = this;
+  const back = this.back;
+  const targetIp = this.targetIp;
+  const port = this.port;
+  const { equalJson, generalHeaders, messageSend, requestSystem } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/gitLocalSync" ];
+  obj.func = async function (req, res, logger) {
+    res.set(generalHeaders());
+    try {
+      if (req.body.type === undefined) {
+        throw new Error("invalid post");
+      }
+      const { type } = equalJson(req.body);
+      for (let ip of targetIp) {
+        try {
+          requestSystem("http://" + ip + ":" + String(port), { type }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err) });
+        } catch {}
+      }
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      logger.error("Local observer 서버 문제 생김 (rou_post_gitLocalSync): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
