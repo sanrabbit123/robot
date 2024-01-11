@@ -15,6 +15,9 @@ GeneralJs.prototype.setGeneralProperties = function (instance) {
   this.naviHeight = <%% 72, 72, 66, 60, 60 %%>;
   this.backHeight = <%% 860, 830, 670, 640, 80 %%>;
   this.margin = 20 - this.modeMinus;
+  this.px = "px";
+  this.vw = "vw";
+  this.vh = "vh";
 
   instance.mode = this.mode;
   instance.ea = this.ea;
@@ -24,6 +27,9 @@ GeneralJs.prototype.setGeneralProperties = function (instance) {
   instance.naviHeight = this.naviHeight;
   instance.backHeight = this.backHeight;
   instance.margin = this.margin;
+  instance.px = this.px;
+  instance.vw = this.vw;
+  instance.vh = this.vh;
 
   this.subBoxMargin = {};
   this.subBoxMargin.top = <%% 30, 30, 26, 20, 10.5 %%>;

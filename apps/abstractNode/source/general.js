@@ -271,6 +271,9 @@ GeneralJs.colorSet = {
     yellow: "#ffbd3d",
     purple: "#ba7dd7",
     darkRed: "#d13939",
+    blue: "#5e9add",
+    blueMiddle: "#3273bb",
+    blueDark: "#2a4866",
   },
   dark: {
     white: "#181818",
@@ -316,6 +319,9 @@ GeneralJs.colorSet = {
     yellow: "#ffbd3d",
     purple: "#ba7dd7",
     darkRed: "#d13939",
+    blue: "#5e9add",
+    blueMiddle: "#3273bb",
+    blueDark: "#2a4866",
   }
 }
 
@@ -365,6 +371,9 @@ GeneralJs.colorChip = {
   yellow: "#ffbd3d",
   purple: "#ba7dd7",
   darkRed: "#d13939",
+  blue: "#5e9add",
+  blueMiddle: "#3273bb",
+  blueDark: "#2a4866",
 };
 
 GeneralJs.colorParsing = function (str) {
