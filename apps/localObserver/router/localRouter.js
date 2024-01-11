@@ -132,7 +132,7 @@ LocalRouter.prototype.rou_post_gitLocalSync = function () {
       const { type } = equalJson(req.body);
       for (let ip of targetIp) {
         try {
-          requestSystem("http://" + ip + ":" + String(port), { type }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err) });
+          requestSystem("http://" + ip + ":" + String(port) + "/gitPull", { type }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err) });
         } catch {}
       }
       res.send(JSON.stringify({ message: "will do" }));
