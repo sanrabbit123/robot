@@ -656,6 +656,7 @@ NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) 
     let resultList;
 
     if (typeof result !== "object") {
+      console.log(queryResult);
       throw new Error("query fail");
     }
 
