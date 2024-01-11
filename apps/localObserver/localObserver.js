@@ -18,6 +18,7 @@ LocalObserver.prototype.localConnect = async function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
   const PORT = 3000;
+  const address = this.address;
   const https = require("https");
   const express = require("express");
   const app = express();
@@ -161,6 +162,17 @@ LocalObserver.prototype.localConnect = async function () {
       });
     }
     console.log(`set router`);
+
+    setQueue(async () => {
+      try {
+        setInterval(async () => {
+          try {
+            const res = await requestSystem("https://" + address.officeinfo.gitlab.host + ":" + String(address.officeinfo.gitlab.endPort) + "/gitLocalSync");
+            console.log(res);
+          } catch {}
+        }, 1000 * 60 * 3);
+      } catch {}
+    }, 500);
 
     //server on
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
