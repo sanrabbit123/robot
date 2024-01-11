@@ -641,6 +641,7 @@ NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) 
       lang: "ko"
     });
     const targetUrl = naverMapUrl + naverMapSearch + "?" + queryStr;
+    console.log(targetUrl);
     const queryResult = await chrome.frontScript(targetUrl, (async function () {
       try {
         const targetUrl = "__targetUrl__";
