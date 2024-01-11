@@ -75,16 +75,15 @@ class LocalRouter:
             try:
                 if not "path" in body:
                     raise Exception("invalid post")
+                
                 target = body["path"]
                 target = patternReplace(target, r"^\/", "")
                 target = patternReplace(target, r"\/$", "")
                 target = target.strip()
-
                 if target == "":
                     target = sambaToken
                 if not patternTest(r"^__", target):
                     target = sambaToken + "/" + target
-                
                 target = patternReplace(target, "^" + sambaToken, staticConst)
 
                 list = await fileSystem("readFolder", [ target ])
@@ -263,4 +262,27 @@ class LocalRouter:
             except Exception as e:
                 print(e)
                 await alertLog("Local lounge 서버 문제 생김 (rou_post_gitPush): " + str(e) + " / " + jsonStringify(body))
+                return { "error": str(e) + " / " + jsonStringify(body) }
+
+        @app.post("/scriptInjection")
+        async def rou_post_scriptInjection():
+            headers = self.headers
+            sambaToken = self.sambaToken
+            staticConst = self.staticConst
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            body = equalJson(rawBody)
+            try:
+                if not "script" in body:
+                    raise Exception("invalid post")
+
+                finalCommand = body["script"].strip()
+                finalCommand = patternReplace(finalCommand, sambaToken, staticConst)
+
+                asyncio.create_task(shellExec(finalCommand))
+
+                return ({ "message": "will do" }, 200, headers)
+            except Exception as e:
+                print(e)
+                await alertLog("Local lounge 서버 문제 생김 (rou_post_scriptInjection): " + str(e) + " / " + jsonStringify(body))
                 return { "error": str(e) + " / " + jsonStringify(body) }

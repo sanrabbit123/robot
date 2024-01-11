@@ -8,6 +8,7 @@ class HumanInstall:
     def __init__(self):
         self.install = [
             [ "quart" ],
+            [ "quart-uploads" ],
             [ "motor" ],
             [ "pymongo" ],
             [ "argparse" ],
