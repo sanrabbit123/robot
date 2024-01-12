@@ -286,3 +286,30 @@ class LocalRouter:
                 print(e)
                 await alertLog("Local lounge 서버 문제 생김 (rou_post_scriptInjection): " + str(e) + " / " + jsonStringify(body))
                 return { "error": str(e) + " / " + jsonStringify(body) }
+            
+        @app.post("/chromeOpen")
+        async def rou_post_chromeOpen():
+            headers = self.headers
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            body = equalJson(rawBody)
+            try:
+                if not "url" in body:
+                    raise Exception("invalid post")
+
+                linkTarget = body["url"].strip()
+                if patternTest(r"^http[s]*\:\/\/", linkTarget):
+                    linkTarget = linkTarget
+                else:
+                    linkTarget = stringToLink(linkTarget)
+
+                chromeApp = "/Applications/'Google Chrome.app'/Contents/MacOS/'Google Chrome'"
+                finalCommand = chromeApp + " " + "'" + linkTarget + "'"
+
+                asyncio.create_task(shellExec(finalCommand))
+
+                return ({ "message": "will do" }, 200, headers)
+            except Exception as e:
+                print(e)
+                await alertLog("Local lounge 서버 문제 생김 (rou_post_chromeOpen): " + str(e) + " / " + jsonStringify(body))
+                return { "error": str(e) + " / " + jsonStringify(body) }
