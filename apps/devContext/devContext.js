@@ -173,6 +173,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
     // const targetDatabaseId = "83de9152-7546-4ab6-b2e5-e0df14d71672";
 
 
@@ -6947,9 +6950,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "서승희",
-    //     designer: "이정아",
-    //     link: "https://drive.google.com/drive/folders/1IXI3HjNceA7wlw4bYi5H35ZUFU4M4neQ",
+    //     client: null,
+    //     designer: "정지수",
+    //     link: "https://drive.google.com/drive/folders/1k-d2zUg_vNTYmRZV066eBhaCjH7vSFeg",
     //     pay: true
     //   },
     // ]);
@@ -6958,8 +6961,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "서승희",
-    //     designer: "이정아",
+    //     client: "이한나",
+    //     designer: "김윤진",
     //   },
     // ]);
 
@@ -7023,7 +7026,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2312_aa05s" ]);
+    // await work.newDesignerToFront([ "d2312_aa03s" ]);
 
 
     // new designer set proposal setting
