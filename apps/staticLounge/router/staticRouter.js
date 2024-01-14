@@ -2660,19 +2660,19 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
           for (let thisDate of dateArr) {
             result = await analytics.dailyMetric(thisDate);
             if (result === null) {
-              await logger.error("daily metric error : " + dateToString(thisDate));
+              await logger.error("daily metric error 1 : " + dateToString(thisDate));
               await sleep(1000);
               result = await analytics.dailyMetric(thisDate);
               if (result === null) {
-                await logger.error("daily metric error : " + dateToString(thisDate));
+                await logger.error("daily metric error 2 : " + dateToString(thisDate));
                 await sleep(1000);
                 result = await analytics.dailyMetric(thisDate);
                 if (result === null) {
-                  await logger.error("daily metric error : " + dateToString(thisDate));
+                  await logger.error("daily metric error 3 : " + dateToString(thisDate));
                   await sleep(1000);
                   result = await analytics.dailyMetric(thisDate);
                   if (result === null) {
-                    await logger.error("daily metric error : " + dateToString(thisDate));      
+                    await logger.error("daily metric error 4 : " + dateToString(thisDate));      
                   } else {
                     anaid = result.anaid;
                     rows = await back.mongoRead(collection, { anaid }, { selfMongo });

@@ -346,7 +346,7 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
   const back = this.back;
   const address = this.address;
   const { collection, unknownKeyword } = this;
-  const { dateToString, stringToDate, ipParsing, requestSystem, sleep } = this.mother;
+  const { dateToString, stringToDate, ipParsing, requestSystem, sleep, emergencyAlarm } = this.mother;
   const querystring = require("querystring");
   try {
     let rows, rows2;
@@ -531,6 +531,7 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
     return finalObj;
 
   } catch (e) {
+    await emergencyAlarm("GoogleAnalytics.getSessionObjectByCliid error : " + e.message);
     console.log(e);
     return null;
   }
@@ -1066,7 +1067,7 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, contentsArr
     await sleep(1000);
     sessionResult = await this.getSessionObjectByCliid(cliid, selfMongo, selfCoreMongo);
     if (sessionResult === null) {
-      throw new Error("session parsing error");
+      throw new Error("session parsing error : " + cliid);
     }
 
     if (historyArrInput instanceof Array) {
