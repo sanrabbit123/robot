@@ -17,7 +17,7 @@ const NotionCenter = function (mother = null, back = null, address = null) {
 NotionCenter.prototype.notionConnect = async function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
-  const PORT = instance.address.ghost.notion;
+  const PORT = instance.address.officeinfo.ghost.notion;
   const https = require("https");
   const express = require("express");
   const app = express();
