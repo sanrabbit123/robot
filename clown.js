@@ -11,31 +11,26 @@ Clown.timeouts = {};
 
 Clown.prototype.mongoToJson = async function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink, zeroAddition } = this.mother;
   try {
     const today = new Date();
-    const zeroAddition = function (number) {
-      if (number < 10) {
-        return `0${String(number)}`;
-      } else {
-        return String(number);
-      }
-    }
     const backFolderName = "backup";
     const mongoTargets = [
       [ "mongoinfo", "mongo" ],
       [ "backinfo", "console" ],
       [ "pythoninfo", "python" ],
       [ "testinfo", "log" ],
+      [ "secondinfo", "second" ],
+      [ "contentsinfo", "contents" ],
     ];
-    const robotDirArr = process.cwd().split("/");
-    robotDirArr.pop();
-    const robotDirMother = robotDirArr.join("/");
-    const robotDirMotherDetail = await fileSystem(`readDir`, [ robotDirMother ]);
-    if (!robotDirMotherDetail.includes(backFolderName)) {
-      await shellExec(`mkdir ${shellLink(robotDirMother)}/${backFolderName}`);
+    const clownDirArr = process.cwd().split("/");
+    clownDirArr.pop();
+    const clownDirMother = clownDirArr.join("/");
+    const clownDirMotherDetail = await fileSystem(`readDir`, [ clownDirMother ]);
+    if (!clownDirMotherDetail.includes(backFolderName)) {
+      await shellExec(`mkdir ${shellLink(clownDirMother)}/${backFolderName}`);
     }
-    const backDir = robotDirMother + "/" + backFolderName;
+    const backDir = clownDirMother + "/" + backFolderName;
     let tempInfo, timeString;
 
     timeString = `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`;
@@ -45,9 +40,46 @@ Clown.prototype.mongoToJson = async function () {
       await shellExec(`mongodump --uri="mongodb://${tempInfo["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --out="${shellLink(backDir)}/${timeString}/${dbName}${timeString}" --authenticationDatabase admin`);
     }
 
+    tempInfo = this.address["officeinfo"];
+    await shellExec(`mongodump --uri="mongodb://${tempInfo["ghost"]["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --out="${shellLink(backDir)}/${timeString}/${"office"}${timeString}" --authenticationDatabase admin`);
+
     await shellExec(`cd ${shellLink(backDir)};zip -r ./${timeString}.zip ./${timeString};rm -rf ${shellLink(backDir)}/${timeString}`);
 
     return `mongo exports done`;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.spawnHuman = async function () {
+  try {
+    const SpawnHuman = require(process.cwd() + "/apps/spawnHuman/spawnHuman.js");
+    const spawn = new SpawnHuman();
+    let mode;
+
+    mode = "localLounge";
+
+    console.log(await spawn.spawnLaunching(mode, false));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.constructConnect = async function () {
+  try {
+    const ConstructLounge = require(process.cwd() + "/apps/constructLounge/constructLounge.js");
+    const app = new ConstructLounge();
+    await app.constructConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.reverseHuman = async function () {
+  try {
+    const SpawnHuman = require(process.cwd() + "/apps/spawnHuman/spawnHuman.js");
+    const spawn = new SpawnHuman();
+    console.log(await spawn.reverseUpdate());
   } catch (e) {
     console.log(e);
   }
@@ -101,13 +133,20 @@ Clown.prototype.dataConsole = function (noStatic = false) {
 Clown.prototype.renderFrontPhp = async function () {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
   const app = new DataConsole();
-  await app.renderFrontPhp();
+  await app.renderFrontPhp(false);
+}
+
+Clown.prototype.renderTestFrontPhp = async function () {
+  const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
+  const app = new DataConsole();
+  await app.renderFrontPhp(true);
+  await app.renderDesignerPhp(true);
 }
 
 Clown.prototype.renderDesignerPhp = async function () {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
   const app = new DataConsole();
-  await app.renderDesignerPhp();
+  await app.renderDesignerPhp(false);
 }
 
 Clown.prototype.contentsMaker = function (button, arg) {
@@ -233,6 +272,10 @@ Clown.prototype.proposalMaker = function (button, arg) {
     }).then(() => {
       return messageSend({ text: name + " 고객님께 추천서를 전송하였어요.\nlink : https://" + host + "/" + path + ".php?proid=" + proid + "&mode=test", channel: "#403_proposal", voice: false });
 
+    }).then(() => {
+
+      resolve({ message: "done" });
+
     }).catch((err) => {
       errorLog("추천서 보내는 도중 오류남 : " + err.message).catch((e) => { console.log(e); });
       reject(err);
@@ -289,6 +332,76 @@ Clown.prototype.transferConnect = async function () {
     const TransferLounge = require(process.cwd() + "/apps/transferLounge/transferLounge.js");
     const app = new TransferLounge();
     await app.transConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.contentsConnect = async function () {
+  try {
+    const ContentsLounge = require(process.cwd() + "/apps/contentsLounge/contentsLounge.js");
+    const app = new ContentsLounge();
+    await app.contentsConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.notionConnect = async function () {
+  try {
+    const NotionCenter = require(process.cwd() + "/apps/notionCenter/notionCenter.js");
+    const app = new NotionCenter();
+    await app.notionConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.staticConnect = async function () {
+  try {
+    const StaticLounge = require(process.cwd() + "/apps/staticLounge/staticLounge.js");
+    const app = new StaticLounge();
+    await app.staticConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.memberConnect = async function () {
+  try {
+    const MemberLounge = require(process.cwd() + "/apps/memberLounge/memberLounge.js");
+    const app = new MemberLounge();
+    await app.memberConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.localConnect = async function () {
+  try {
+    const MemberLounge = require(process.cwd() + "/apps/localObserver/localObserver.js");
+    const app = new MemberLounge();
+    await app.localConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.basicConnect = async function () {
+  try {
+    const BasicLounge = require(process.cwd() + "/apps/basicLounge/basicLounge.js");
+    const app = new BasicLounge();
+    await app.basicConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Clown.prototype.photoConnect = async function () {
+  try {
+    const PhotoConsole = require(process.cwd() + "/apps/photoConsole/photoConsole.js");
+    const app = new PhotoConsole();
+    await app.photoConnect();
   } catch (e) {
     console.log(e);
   }
@@ -745,6 +858,16 @@ Clown.prototype.magazineMaker = function (mid) {
   app.magazineMaker(mid).catch((err) => { console.log(err); })
 }
 
+Clown.prototype.designerTendencySync = async function () {
+  try {
+    const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
+    const work = new BackWorker();
+    await work.designerTendencySync();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Clown.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
@@ -754,9 +877,13 @@ Clown.prototype.launching = async function () {
     re = await consoleQ(`Choose commands : 1.contents 2.portfolio 3.magazine\n`);
 
     if (re === "contents" || re === "1") {
-      re2 = await consoleQ(`Choose commands : 1.resource 2.google\n`);
-      re3 = await consoleQ(`Porfolio number?\n`);
-      this.contentsMaker(re2, re3);
+      re2 = await consoleQ(`Choose commands : 1.resource 2.google 3.tendency\n`);
+      if (re2 === '3' || re2 === 3) {
+        await this.designerTendencySync();
+      } else {
+        re3 = await consoleQ(`Porfolio number?\n`);
+        this.contentsMaker(re2, re3);
+      }
 
     } else if (re === "portfolio" || re === "2") {
       re2 = await consoleQ(`Choose commands : 1.portfolio 2.ghost\n`);
@@ -786,14 +913,14 @@ Clown.prototype.launching = async function () {
 
 // EXE --------------------------------------------------------------------------------------
 
-const robot = new Clown();
+const clown = new Clown();
 const MENU = {
   proposal: async function () {
     try {
       if (process.argv[3] === undefined) {
         throw new Error("must be proid");
       }
-      robot.proposalMaker("make", process.argv[3]);
+      clown.proposalMaker("make", process.argv[3]).catch((err) => { console.log(err); });
     } catch (e) {
       console.log(e);
     }
@@ -803,7 +930,7 @@ const MENU = {
       if (process.argv[3] === undefined) {
         throw new Error("must be proid");
       }
-      console.log(await robot.proposalMaker("web", process.argv[3]));
+      console.log(await clown.proposalMaker("web", process.argv[3]));
     } catch (e) {
       console.log(e);
     }
@@ -811,9 +938,9 @@ const MENU = {
   back: async function () {
     try {
       if (/nostatic/gi.test(process.argv[3])) {
-        robot.dataConsole(true);
+        clown.dataConsole(true);
       } else {
-        robot.dataConsole(false);
+        clown.dataConsole(false);
       }
     } catch (e) {
       console.log(e);
@@ -821,91 +948,91 @@ const MENU = {
   },
   request: async function () {
     try {
-      await robot.requestMaker(process.argv[3]);
+      await clown.requestMaker(process.argv[3]);
     } catch (e) {
       console.log(e);
     }
   },
   consolesource: async function () {
     try {
-      robot.consoleSource();
+      clown.consoleSource();
     } catch (e) {
       console.log(e);
     }
   },
   recordCloud: async function () {
     try {
-      await robot.recordCloud();
+      await clown.recordCloud();
     } catch (e) {
       console.log(e);
     }
   },
   pythonCloud: async function () {
     try {
-      await robot.pythonCloud();
+      await clown.pythonCloud();
     } catch (e) {
       console.log(e);
     }
   },
   pythonWatcher: async function () {
     try {
-      await robot.pythonWatcher();
+      await clown.pythonWatcher();
     } catch (e) {
       console.log(e);
     }
   },
   analyticsParsing: async function () {
     try {
-      await robot.analyticsParsing();
+      await clown.analyticsParsing();
     } catch (e) {
       console.log(e);
     }
   },
   reflect: async function () {
     try {
-      await robot.ultimateReflection();
+      await clown.ultimateReflection();
     } catch (e) {
       console.log(e);
     }
   },
   coreReflect: async function () {
     try {
-      await robot.coreReflection();
+      await clown.coreReflection();
     } catch (e) {
       console.log(e);
     }
   },
   frontReflect: async function () {
     try {
-      await robot.frontReflection();
+      await clown.frontReflection();
     } catch (e) {
       console.log(e);
     }
   },
   mysqlReflect: async function () {
     try {
-      await robot.mysqlReflection();
+      await clown.mysqlReflection();
     } catch (e) {
       console.log(e);
     }
   },
   frontReflect: async function () {
     try {
-      await robot.frontReflection();
+      await clown.frontReflection();
     } catch (e) {
       console.log(e);
     }
   },
   localReflect: async function () {
     try {
-      await robot.localReflection(process.argv[3]);
+      await clown.localReflection(process.argv[3]);
     } catch (e) {
       console.log(e);
     }
   },
   clientReportToSheets: async function () {
     try {
-      await robot.clientReportToSheets();
+      await clown.clientReportToSheets();
     } catch (e) {
       console.log(e);
     }
@@ -918,28 +1045,28 @@ const MENU = {
       } else {
         target = process.argv[3];
       }
-      await robot.fixDir(target);
+      await clown.fixDir(target);
     } catch (e) {
       console.log(e);
     }
   },
   proposalToClient: async function () {
     try {
-      await robot.proposalToClient();
+      await clown.proposalToClient();
     } catch (e) {
       console.log(e);
     }
   },
   imageReady: async function () {
     try {
-      await robot.imageReady();
+      await clown.imageReady();
     } catch (e) {
       console.log(e);
     }
   },
   mongoToJson: async function () {
     try {
-      await robot.mongoToJson();
+      await clown.mongoToJson();
     } catch (e) {
       console.log(e);
     }
@@ -973,7 +1100,7 @@ const MENU = {
   },
   devAliveSync: async function () {
     try {
-      await robot.devAliveSync();
+      await clown.devAliveSync();
     } catch (e) {
       console.log(e);
     }
@@ -998,21 +1125,21 @@ const MENU = {
   },
   kakaoTokenGenerate: async function () {
     try {
-      await robot.kakaoTokenGenerate();
+      await clown.kakaoTokenGenerate();
     } catch (e) {
       console.log(e);
     }
   },
   staticInSync: async function () {
     try {
-      await robot.staticInSync();
+      await clown.staticInSync();
     } catch (e) {
       console.log(e);
     }
   },
   designerCalculation: async function () {
     try {
-      await robot.designerCalculation();
+      await clown.designerCalculation();
     } catch (e) {
       console.log(e);
     }
@@ -1021,154 +1148,231 @@ const MENU = {
     try {
       let arg;
       arg = typeof process.argv[3] === "string" ? process.argv[3] : "";
-      await robot.spawnSector(arg === "install");
+      await clown.spawnSector(arg === "install");
     } catch (e) {
       console.log(e);
     }
   },
   publicSector: async function () {
     try {
-      await robot.publicSector();
+      await clown.publicSector();
     } catch (e) {
       console.log(e);
     }
   },
   taxBill: async function () {
     try {
-      await robot.taxBill();
+      await clown.taxBill();
     } catch (e) {
       console.log(e);
     }
   },
   positionWatch: async function () {
     try {
-      await robot.positionWatch();
+      await clown.positionWatch();
     } catch (e) {
       console.log(e);
     }
   },
   graphicServer: async function () {
     try {
-      await robot.graphicServer();
+      await clown.graphicServer();
     } catch (e) {
       console.log(e);
     }
   },
   infoObj: async function () {
     try {
-      await robot.infoObj();
+      await clown.infoObj();
     } catch (e) {
       console.log(e);
     }
   },
   infoUpdate: async function () {
     try {
-      await robot.infoUpdate();
+      await clown.infoUpdate();
     } catch (e) {
       console.log(e);
     }
   },
   memberObj: async function () {
     try {
-      await robot.memberObj();
+      await clown.memberObj();
     } catch (e) {
       console.log(e);
     }
   },
   memberUpdate: async function () {
     try {
-      await robot.memberUpdate();
+      await clown.memberUpdate();
     } catch (e) {
       console.log(e);
     }
   },
   aliveTest: async function () {
     try {
-      await robot.aliveTest();
+      clown.aliveTest();
     } catch (e) {
       console.log(e);
     }
   },
   passiveSync: async function () {
     try {
-      await robot.passiveSync();
+      await clown.passiveSync();
     } catch (e) {
       console.log(e);
     }
   },
   cronServer: async function () {
     try {
-      await robot.cronServer();
+      await clown.cronServer();
     } catch (e) {
       console.log(e);
     }
   },
   log: async function () {
     try {
-      await robot.logConnect();
+      await clown.logConnect();
     } catch (e) {
       console.log(e);
     }
   },
   php: async function () {
     try {
-      await robot.renderFrontPhp();
+      await clown.renderFrontPhp();
     } catch (e) {
       console.log(e);
     }
   },
   phpClient: async function () {
     try {
-      await robot.renderFrontPhp();
+      await clown.renderFrontPhp();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  phpTest: async function () {
+    try {
+      await clown.renderTestFrontPhp();
     } catch (e) {
       console.log(e);
     }
   },
   phpDesigner: async function () {
     try {
-      await robot.renderDesignerPhp();
+      await clown.renderDesignerPhp();
     } catch (e) {
       console.log(e);
     }
   },
   consoleHello: async function () {
     try {
-      await robot.consoleHello();
+      await clown.consoleHello();
     } catch (e) {
       console.log(e);
     }
   },
   diskTest: async function () {
     try {
-      await robot.diskTest();
+      clown.diskTest();
     } catch (e) {
       console.log(e);
     }
   },
   localLog: async function () {
     try {
-      await robot.localLog();
+      await clown.localLog();
     } catch (e) {
       console.log(e);
     }
   },
   arpScan: async function () {
     try {
-      await robot.arpScan();
+      await clown.arpScan();
     } catch (e) {
       console.log(e);
     }
   },
   second: async function () {
     try {
-      await robot.secondConnect();
+      await clown.secondConnect();
     } catch (e) {
       console.log(e);
     }
   },
   trans: async function () {
     try {
-      await robot.transferConnect();
+      await clown.transferConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  static: async function () {
+    try {
+      await clown.staticConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  member: async function () {
+    try {
+      await clown.memberConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  localObserver: async function () {
+    try {
+      await clown.localConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  basic: async function () {
+    try {
+      await clown.basicConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  photo: async function () {
+    try {
+      await clown.photoConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  contents: async function () {
+    try {
+      await clown.contentsConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  notionCenter: async function () {
+    try {
+      await clown.notionConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  human: async function () {
+    try {
+      await clown.spawnHuman();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  reverseHuman: async function () {
+    try {
+      await clown.reverseHuman();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  construct: async function () {
+    try {
+      await clown.constructConnect();
     } catch (e) {
       console.log(e);
     }
@@ -1177,7 +1381,7 @@ const MENU = {
 let launchingFunc;
 
 if (process.argv[2] === undefined) {
-  robot.launching().catch((err) => { console.log(err); });
+  clown.launching().catch((err) => { console.log(err); });
 } else {
   launchingFunc = MENU[process.argv[2]];
   if (launchingFunc !== undefined) {

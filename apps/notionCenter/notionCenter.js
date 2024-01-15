@@ -17,7 +17,7 @@ const NotionCenter = function (mother = null, back = null, address = null) {
 NotionCenter.prototype.notionConnect = async function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
-  const PORT = 3000;
+  const PORT = instance.address.ghost.notion;
   const https = require("https");
   const express = require("express");
   const app = express();
@@ -63,7 +63,7 @@ NotionCenter.prototype.notionConnect = async function () {
     let certDir, keyDir, caDir;
 
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + this.address.notioninfo.host;
+    pemsLink = process.cwd() + "/pems/" + this.address.officeinfo.ghost.host;
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);

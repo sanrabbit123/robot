@@ -14,7 +14,6 @@ const NotionRouter = function (MONGOC, MONGOLOCALC) {
   this.notionChildren = {};
   this.notionChildren.liaisonCalendar = new LiaisonCalendar();
 
-  this.host = this.address.notioninfo.host;
   this.mongo = MONGOC;
   this.mongolocal = MONGOLOCALC;
   this.members = {};
