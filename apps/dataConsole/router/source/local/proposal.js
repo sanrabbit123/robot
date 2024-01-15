@@ -2173,7 +2173,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
               ],
               children: [
                 {
-                  text: "증감율 (DE)",
+                  text: "증감율 (DE 부담)",
                   style: {
                     position: "absolute",
                     fontSize: String(size) + ea,
