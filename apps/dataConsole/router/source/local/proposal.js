@@ -2162,7 +2162,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     }
                     this.lastChild.textContent = String(newNumber) + "%";
                     this.setAttribute("number", String(newNumber));
-
+                    ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.discount[thisOnOff] = ((-1 * newNumber) / 100);
                     original = Number(this.parentElement.children[/^off/.test(thisOnOff) ? offlinePosition : onlinePosition].lastChild.textContent.replace(/[^0-9\-]/gi, ''));
                     final = original * (1 - ((-1 * newNumber) / 100));
                     this.parentElement.children[finalPosition].lastChild.textContent = GeneralJs.autoComma(final) + "원";
@@ -2173,7 +2173,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
               ],
               children: [
                 {
-                  text: "증감율 (신진)",
+                  text: "증감율 (DE)",
                   style: {
                     position: "absolute",
                     fontSize: String(size) + ea,
@@ -5285,8 +5285,6 @@ ProposalJs.save_init = async function (update = false) {
             time: designerFeeCalculObj.detail.travel.time,
             limit: designerFeeCalculObj.detail.travel.limit,
           };
-
-          console.log(designerFeeCalculObj);
 
           if (/^off/gi.test(result_obj["proposal.detail"][i].fee[f].method)) {
             result_obj["proposal.detail"][i].fee[f].discount = designerFeeCalculObj.detail.discount.offline;
