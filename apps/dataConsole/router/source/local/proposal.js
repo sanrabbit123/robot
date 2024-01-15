@@ -2151,7 +2151,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     const thisOnOff = this.getAttribute("thisOnOff");
                     const onlinePosition = 7;
                     const offlinePosition = 8;
-                    const finalPosition = 11;
+                    const finalPosition = 10;
                     let newNumber;
                     let final;
                     let original;

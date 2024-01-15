@@ -17,6 +17,7 @@ from dateutil.parser import parse as dateParse
 import random
 import math
 import pprint
+from apscheduler.schedulers.background import BackgroundScheduler
 
 def mongoConnection(target: str = "core"):
     if type(target) is not str:
@@ -861,6 +862,13 @@ def uniqueValue(mode: str = "number"):
         finalString += 'A'
         finalString += hexString
         return finalString
+
+def setInterval(func, microseconds: int):
+    scheduler = BackgroundScheduler()
+    @scheduler.scheduled_job("interval", seconds=(microseconds / 1000), id="job_" + str(uniqueValue("number")))
+    def job():
+        func()
+    scheduler.start()
 
 def stringToLink(text: str):
     if type(text) is not str:
