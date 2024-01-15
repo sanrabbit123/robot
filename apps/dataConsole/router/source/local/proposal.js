@@ -2173,7 +2173,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
               ],
               children: [
                 {
-                  text: "증감율 (DE 부담)",
+                  text: "할인율",
                   style: {
                     position: "absolute",
                     fontSize: String(size) + ea,
@@ -2184,7 +2184,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                   }
                 },
                 {
-                  text: String(0) + "%",
+                  text: String(Math.round((/^off/gi.test(thisOnOff) ? discountOffline : discountOnline) * 100) * -1) + "%",
                   style: {
                     position: "absolute",
                     fontSize: String(size) + ea,
