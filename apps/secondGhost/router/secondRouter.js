@@ -3377,7 +3377,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
               if (/^요정[이아야님]?/i.test(thisBody.event.text.trim()) || (new RegExp(slack_fairyId, "gi")).test(thisBody.event.text.trim())) {
                 if (/(주간|전체) 보고/gi.test(thisBody.event.text.trim())) {
                   if (/주간/gi.test(thisBody.event.text.trim())) {
-                    requestSystem("https://" + address.officeinfo.ghost.host + String(address.officeinfo.ghost.notion) + "/weeklySummary", { data: null }, {
+                    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.notion) + "/weeklySummary", { data: null }, {
                       headers: {
                         "Content-Type": "application/json",
                       }
@@ -3388,7 +3388,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                       console.log(err);
                     });
                   } else {
-                    requestSystem("https://" + address.officeinfo.ghost.host + String(address.officeinfo.ghost.notion) + "/todayAllComplete", { data: null }, {
+                    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.notion) + "/todayAllComplete", { data: null }, {
                       headers: {
                         "Content-Type": "application/json",
                       }
@@ -3407,7 +3407,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                       thisUser = null;
                     }
                     if (thisUser !== null && thisUser !== undefined) {
-                      requestSystem("https://" + address.officeinfo.ghost.host + String(address.officeinfo.ghost.notion) + "/todayComplete", { member: thisUser.id }, {
+                      requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.notion) + "/todayComplete", { member: thisUser.id }, {
                         headers: {
                           "Content-Type": "application/json",
                         }
