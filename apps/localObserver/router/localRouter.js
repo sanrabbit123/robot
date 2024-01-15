@@ -8,7 +8,7 @@ const LocalRouter = function (MONGOC) {
   this.mongo = MONGOC;
   this.mongolocal = MONGOC;
   this.targetIp = [
-    "192.168.0.90",
+    "192.168.0.20",
     "192.168.0.24",
     "192.168.0.30"
   ]
