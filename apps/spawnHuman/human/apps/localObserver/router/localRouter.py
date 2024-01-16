@@ -24,7 +24,7 @@ class LocalRouter:
             "192.168.0.30"
         ]
         self.port = 8000
-        self.coreServer = self.address["officeinfo"]["gitlab"]["host"] + ":" + str(self.address["officeinfo"]["gitlab"]["endPort"])
+        self.coreServer = "https://" + self.address["officeinfo"]["gitlab"]["host"] + ":" + str(self.address["officeinfo"]["gitlab"]["endPort"])
 
     def setRouting(self):
         app = self.app
