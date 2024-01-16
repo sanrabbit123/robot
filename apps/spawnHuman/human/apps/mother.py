@@ -18,6 +18,9 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import random
 import math
 import pprint
+import platform
+import socket
+import psutil
 
 def mongoConnection(target: str = "core"):
     if type(target) is not str:
@@ -106,6 +109,57 @@ def listFilter(target: list, lambFunc):
     if type(target) is not list:
         raise TypeError("target must be list")
     return list(filter(lambFunc, target))
+
+def listFlatten(target: list):
+    if type(target) is not list:
+        raise TypeError("target must be list")
+    result = []
+    for item in target:
+        result.extend(item)
+    return result
+
+def listFind(target: list, lambFunc):
+    if type(target) is not list:
+        raise TypeError("target must be list")
+    filteredList = listFilter(target, lambFunc)
+    if filteredList.__len__() > 0:
+        return filteredList[0]
+    else:
+        return None
+
+def getSystemInfo():
+    def filterFunc(x):
+        boo = False
+        for item in x:
+            if patternTest(r"^(192|172|10)", item.address):
+                boo = True
+                break
+        return boo
+
+    networkTargets = listFlatten(listFilter(list(psutil.net_if_addrs().values()), filterFunc))
+    ipTarget = listFind(networkTargets, lambda x: patternTest(r"^(192|172|10)", x.address)).address
+    macTarget = listFind(networkTargets, lambda x: patternTest(r"[a-zA-Z0-9][a-zA-Z0-9]\:[a-zA-Z0-9][a-zA-Z0-9]\:[a-zA-Z0-9][a-zA-Z0-9]\:[a-zA-Z0-9][a-zA-Z0-9]\:[a-zA-Z0-9][a-zA-Z0-9]\:[a-zA-Z0-9][a-zA-Z0-9]", x.address)).address
+
+    info = {}
+
+    info["platform"] = {}
+    info["platform"]["detail"] = platform.platform()
+    info["platform"]["architecture"] = platform.machine()
+    info["platform"]["system"] = platform.system()
+    info["platform"]["release"] = platform.release()
+    info["platform"]["version"] = platform.version()
+
+    info["network"] = {}
+    info["network"]["hostname"] = socket.gethostname()
+    info["network"]["ip"] = ipTarget
+    info["network"]["mac"] = macTarget
+
+    info["hardware"] = {}
+    info["hardware"]["cpu"] = psutil.cpu_count()
+    info["hardware"]["ram"] = str(round(psutil.virtual_memory().total / (1024.0 ** 3))) + "GB"
+    info["hardware"]["disk"] =str(round(psutil.disk_usage("/").total / (1024.0 ** 3))) + "GB"
+
+    return info
 
 def zeroAddition(num: int):
     if type(num) is not int:

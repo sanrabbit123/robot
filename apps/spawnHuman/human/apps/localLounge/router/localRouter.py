@@ -62,7 +62,25 @@ class LocalRouter:
             headers = self.headers
             return ({ "message": "hi" }, 200, headers)
 
+        @app.get("/system")
+        async def rou_get_disk():
+            headers = self.headers
+            return (getSystemInfo(), 200, headers)
+
         # post =================================================================================
+
+        @app.post("/getSystemInfo")
+        async def rou_post_getSystemInfo():
+            headers = self.headers
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            body = equalJson(rawBody)
+            try:
+                return (getSystemInfo(), 200, headers)
+            except Exception as e:
+                print(e)
+                await alertLog("Local lounge 서버 문제 생김 (rou_post_getSystemInfo): " + str(e) + " / " + jsonStringify(body))
+                return { "error": str(e) + " / " + jsonStringify(body) }
 
         @app.post("/readFolder")
         async def rou_post_readFolder():
