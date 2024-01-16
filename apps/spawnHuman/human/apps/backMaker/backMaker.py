@@ -1,6 +1,6 @@
 import asyncio
 import motor
-from apps.mother import processCwd, equalJson, jsonStringify
+from apps.mother import processCwd, equalJson, jsonStringify, mongoConnection, objectDeepCopy, fileSystem, patternReplace, listMap
 from apps.infoObj import returnAddress
 
 class BackMaker:
@@ -206,3 +206,22 @@ class BackMaker:
             resultList.append(n)
         return resultList
 
+    async def setInfoObj(self):
+        coreConnection = mongoConnection("core")
+        rows = await self.mongoRead("info", { "classification.id": 0 }, { "selfMongo": coreConnection, "sort": { "date": -1 } })
+        targetInfoObj = objectDeepCopy(rows[0]["info"])
+        rows = await self.mongoRead("info", { "classification.id": 1 }, { "selfMongo": coreConnection, "sort": { "date": -1 } })
+        targetMemberObj = objectDeepCopy(rows[0]["info"])
+
+        infoObjArr = patternReplace(patternReplace(patternReplace(jsonStringify(targetInfoObj, indent=2), r"null", "None"), r"true", "True"), r"false", "False").split("\n")
+        infoObjArr[0] = "infoAddress = {"
+        infoObjArr.append("return infoAddress")
+        fianlInfoScript = "def returnAddress():" + "\n" + "\n".join(listMap(infoObjArr, lambda x: "    " + x))
+
+        infoMemberArr = patternReplace(patternReplace(patternReplace(jsonStringify(targetMemberObj, indent=2), r"null", "None"), r"true", "True"), r"false", "False").split("\n")
+        infoMemberArr[0] = "memberArray = ["
+        infoMemberArr.append("return memberArray")
+        fianlMembersScript = "def returnMembers():" + "\n" + "\n".join(listMap(infoMemberArr, lambda x: "    " + x))
+
+        await fileSystem("writeString", [ processCwd() + "/apps/infoObj.py", fianlInfoScript ])
+        await fileSystem("writeString", [ processCwd() + "/apps/memberObj.py", fianlMembersScript ])

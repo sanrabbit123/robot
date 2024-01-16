@@ -82,6 +82,21 @@ class LocalRouter:
                 await alertLog("Local lounge 서버 문제 생김 (rou_post_getSystemInfo): " + str(e) + " / " + jsonStringify(body))
                 return { "error": str(e) + " / " + jsonStringify(body) }
 
+        @app.post("/infoUpdate")
+        async def rou_post_infoUpdate():
+            headers = self.headers
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            body = equalJson(rawBody)
+            back = self.back
+            try:
+                asyncio.create_task(back.setInfoObj())
+                return ({ "message": "will do" }, 200, headers)
+            except Exception as e:
+                print(e)
+                await alertLog("Local lounge 서버 문제 생김 (rou_post_infoUpdate): " + str(e) + " / " + jsonStringify(body))
+                return { "error": str(e) + " / " + jsonStringify(body) }
+
         @app.post("/readFolder")
         async def rou_post_readFolder():
             headers = self.headers
