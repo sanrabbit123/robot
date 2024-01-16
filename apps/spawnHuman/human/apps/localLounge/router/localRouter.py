@@ -63,7 +63,7 @@ class LocalRouter:
             return ({ "message": "hi" }, 200, headers)
 
         @app.get("/system")
-        async def rou_get_disk():
+        async def rou_get_system():
             headers = self.headers
             return (getSystemInfo(), 200, headers)
 

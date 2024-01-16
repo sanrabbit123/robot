@@ -9,7 +9,7 @@ const SpawnHuman = function () {
   this.appDir = this.dir + "/" + this.applicationName;
 }
 
-SpawnHuman.prototype.spawnLaunching = async function (serverName = "localLounge", setupMode = false) {
+SpawnHuman.prototype.spawnLaunching = async function (setupMode = false) {
   const instance = this;
   const back = this.back;
   const address = this.address;
@@ -31,6 +31,9 @@ SpawnHuman.prototype.spawnLaunching = async function (serverName = "localLounge"
     let memberPythonScript;
     let startPointPython;
     let startScript;
+    let startPointPython_constructLounge, startScript_constructLounge;
+    let startPointPython_localLounge, startScript_localLounge;
+    let startPointPython_localObserver, startScript_localObserver;
 
     moveTargets = [
       "temp",
@@ -89,59 +92,51 @@ SpawnHuman.prototype.spawnLaunching = async function (serverName = "localLounge"
 
     await shellExec("cp", [ "-r", process.cwd() + "/pems", homeTarget ]);
 
-    if (serverName === "constructLounge") {
-      startPointPython = await fileSystem("readString", [ appDir + "/human.py" ]);
-      startPointPython += "\n";
-      startPointPython += "from apps.constructLounge.constructLounge import ConstructLounge";
-      startPointPython += "\n";
-      startPointPython += "\n";
-      startPointPython += "server = ConstructLounge()";
-      startPointPython += "\n";
-      startPointPython += "app = server.returnApp()";
-      startPointPython += "\n";
-      await fileSystem("write", [ homeTarget + "/human.py", startPointPython ]);
-  
-      startScript = `#!/bin/bash\nhypercorn human:app -b 0.0.0.0:8000 -w 2 --certfile ./pems/${address.constructinfo.host}/cert/cert1.pem --keyfile ./pems/${address.constructinfo.host}/key/privkey1.pem --ca-certs ./pems/${address.constructinfo.host}/ca/chain1.pem --ca-certs ./pems/${address.constructinfo.host}/ca/fullchain1.pem`;
-      await fileSystem("write", [ homeTarget + "/start.sh", startScript ]);
-      await shellExec("chmod", [ "+x", homeTarget + "/start.sh" ]);
+    // 1
 
-    } else if (serverName === "localLounge") {
+    startPointPython_constructLounge = await fileSystem("readString", [ appDir + "/human.py" ]);
+    startPointPython_constructLounge += "\n";
+    startPointPython_constructLounge += "from apps.constructLounge.constructLounge import ConstructLounge";
+    startPointPython_constructLounge += "\n";
+    startPointPython_constructLounge += "\n";
+    startPointPython_constructLounge += "server = ConstructLounge()";
+    startPointPython_constructLounge += "\n";
+    startPointPython_constructLounge += "app = server.returnApp()";
+    startPointPython_constructLounge += "\n";
+    await fileSystem("write", [ homeTarget + "/human_constructLounge.py", startPointPython_constructLounge ]);
+    startScript_constructLounge = `#!/bin/bash\nhypercorn human_constructLounge:app -b 0.0.0.0:8000 -w 2 --certfile ./pems/${address.constructinfo.host}/cert/cert1.pem --keyfile ./pems/${address.constructinfo.host}/key/privkey1.pem --ca-certs ./pems/${address.constructinfo.host}/ca/chain1.pem --ca-certs ./pems/${address.constructinfo.host}/ca/fullchain1.pem`;
+    await fileSystem("write", [ homeTarget + "/start_constructLounge.sh", startScript_constructLounge ]);
+    await shellExec("chmod", [ "+x", homeTarget + "/start_constructLounge.sh" ]);
 
-      startPointPython = await fileSystem("readString", [ appDir + "/human.py" ]);
-      startPointPython += "\n";
-      startPointPython += "from apps.localLounge.localLounge import LocalLounge";
-      startPointPython += "\n";
-      startPointPython += "\n";
-      startPointPython += "server = LocalLounge()";
-      startPointPython += "\n";
-      startPointPython += "app = server.returnApp()";
-      startPointPython += "\n";
-      await fileSystem("write", [ homeTarget + "/human.py", startPointPython ]);
+    // 2
+    startPointPython_localLounge = await fileSystem("readString", [ appDir + "/human.py" ]);
+    startPointPython_localLounge += "\n";
+    startPointPython_localLounge += "from apps.localLounge.localLounge import LocalLounge";
+    startPointPython_localLounge += "\n";
+    startPointPython_localLounge += "\n";
+    startPointPython_localLounge += "server = LocalLounge()";
+    startPointPython_localLounge += "\n";
+    startPointPython_localLounge += "app = server.returnApp()";
+    startPointPython_localLounge += "\n";
+    await fileSystem("write", [ homeTarget + "/human_localLounge.py", startPointPython_localLounge ]);
+    startScript_localLounge = `#!/bin/bash\nhypercorn human_localLounge:app -b 0.0.0.0:8000 -w 2`;
+    await fileSystem("write", [ homeTarget + "/start_localLounge.sh", startScript_localLounge ]);
+    await shellExec("chmod", [ "+x", homeTarget + "/start_localLounge.sh" ]);
 
-      startScript = `#!/bin/bash\nhypercorn human:app -b 0.0.0.0:8000 -w 2`;
-      await fileSystem("write", [ homeTarget + "/start.sh", startScript ]);
-      await shellExec("chmod", [ "+x", homeTarget + "/start.sh" ]);
-
-    } else if (serverName === "localObserver") {
-
-      startPointPython = await fileSystem("readString", [ appDir + "/human.py" ]);
-      startPointPython += "\n";
-      startPointPython += "from apps.localObserver.localObserver import LocalObserver";
-      startPointPython += "\n";
-      startPointPython += "\n";
-      startPointPython += "server = LocalObserver()";
-      startPointPython += "\n";
-      startPointPython += "app = server.returnApp()";
-      startPointPython += "\n";
-      await fileSystem("write", [ homeTarget + "/human.py", startPointPython ]);
-
-      startScript = `#!/bin/bash\nhypercorn human:app -b 0.0.0.0:43000 -w 2 --certfile ./pems/${address.officeinfo.gitlab.host}/cert/cert1.pem --keyfile ./pems/${address.officeinfo.gitlab.host}/key/privkey1.pem --ca-certs ./pems/${address.officeinfo.gitlab.host}/ca/chain1.pem --ca-certs ./pems/${address.officeinfo.gitlab.host}/ca/fullchain1.pem`;
-      await fileSystem("write", [ homeTarget + "/start.sh", startScript ]);
-      await shellExec("chmod", [ "+x", homeTarget + "/start.sh" ]);
-
-    } else {
-      throw new Error("invalid server name");
-    }
+    // 3
+    startPointPython_localObserver = await fileSystem("readString", [ appDir + "/human.py" ]);
+    startPointPython_localObserver += "\n";
+    startPointPython_localObserver += "from apps.localObserver.localObserver import LocalObserver";
+    startPointPython_localObserver += "\n";
+    startPointPython_localObserver += "\n";
+    startPointPython_localObserver += "server = LocalObserver()";
+    startPointPython_localObserver += "\n";
+    startPointPython_localObserver += "app = server.returnApp()";
+    startPointPython_localObserver += "\n";
+    await fileSystem("write", [ homeTarget + "/human_localObserver.py", startPointPython_localObserver ]);
+    startScript_localObserver = `#!/bin/bash\nhypercorn human_localObserver:app -b 0.0.0.0:43000 -w 2 --certfile ./pems/${address.officeinfo.gitlab.host}/cert/cert1.pem --keyfile ./pems/${address.officeinfo.gitlab.host}/key/privkey1.pem --ca-certs ./pems/${address.officeinfo.gitlab.host}/ca/chain1.pem --ca-certs ./pems/${address.officeinfo.gitlab.host}/ca/fullchain1.pem`;
+    await fileSystem("write", [ homeTarget + "/start_localObserver.sh", startScript_localObserver ]);
+    await shellExec("chmod", [ "+x", homeTarget + "/start_localObserver.sh" ]);
     
     return true;
 
@@ -174,8 +169,13 @@ SpawnHuman.prototype.reverseUpdate = async function () {
       "python_modules",
       ".git",
       "pems",
-      "start.sh",
       "human.py",
+      "human_constructLounge.py",
+      "human_localLounge.py",
+      "human_localObserver.py",
+      "start_constructLounge.sh",
+      "start_localLounge.sh",
+      "start_localObserver.sh",
     ];
 
     await shellExec("mkdir", [ tempFolderPath ]);

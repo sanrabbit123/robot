@@ -55,11 +55,7 @@ Robot.prototype.spawnHuman = async function () {
   try {
     const SpawnHuman = require(process.cwd() + "/apps/spawnHuman/spawnHuman.js");
     const spawn = new SpawnHuman();
-    let mode;
-
-    mode = "localObserver";
-
-    console.log(await spawn.spawnLaunching(mode, false));
+    console.log(await spawn.spawnLaunching(false));
   } catch (e) {
     console.log(e);
   }

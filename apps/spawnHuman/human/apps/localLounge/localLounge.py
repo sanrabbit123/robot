@@ -26,7 +26,7 @@ class LocalLounge:
                 break
         
         router.member = targetMember
-        router.ip = objectDeepCopy(systemInfo["network"]["ip"])
+        router.ip = [ systemInfo["network"]["ip"] ]
 
     def setReady(self):
         localConnection = mongoConnection("local")
