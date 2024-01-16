@@ -11,7 +11,7 @@
     <key>ProgramArguments</key>
     <array>
       <string>/opt/homebrew/bin/hypercorn</string>
-      <string>/Users/baechang-gyu/human/human_localLounge:app</string>
+      <string>/Users/baechang-gyu/human/entry/human_localLounge:app</string>
       <string>-b=0.0.0.0:8000</string>
     </array>
     <key>WorkingDirectory</key>

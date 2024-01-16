@@ -25,6 +25,7 @@ def returnModulepath():
 try:
     os.chdir(os.environ["HOME"] + "/human")
     pathDic = returnModulepath()
+    path.insert(0, pathDic["human"])
     path.insert(0, pathDic["module"])
 except Exception as e:
     print(e)
