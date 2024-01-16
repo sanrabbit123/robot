@@ -122,6 +122,23 @@ SpawnHuman.prototype.spawnLaunching = async function (serverName = "localLounge"
       await fileSystem("write", [ homeTarget + "/start.sh", startScript ]);
       await shellExec("chmod", [ "+x", homeTarget + "/start.sh" ]);
 
+    } else if (serverName === "localObserver") {
+
+      startPointPython = await fileSystem("readString", [ appDir + "/human.py" ]);
+      startPointPython += "\n";
+      startPointPython += "from apps.localObserver.localObserver import LocalObserver";
+      startPointPython += "\n";
+      startPointPython += "\n";
+      startPointPython += "server = LocalObserver()";
+      startPointPython += "\n";
+      startPointPython += "app = server.returnApp()";
+      startPointPython += "\n";
+      await fileSystem("write", [ homeTarget + "/human.py", startPointPython ]);
+
+      startScript = `#!/bin/bash\nhypercorn human:app -b 0.0.0.0:43000 -w 2 --certfile ./pems/${address.officeinfo.gitlab.host}/cert/cert1.pem --keyfile ./pems/${address.officeinfo.gitlab.host}/key/privkey1.pem --ca-certs ./pems/${address.officeinfo.gitlab.host}/ca/chain1.pem --ca-certs ./pems/${address.officeinfo.gitlab.host}/ca/fullchain1.pem`;
+      await fileSystem("write", [ homeTarget + "/start.sh", startScript ]);
+      await shellExec("chmod", [ "+x", homeTarget + "/start.sh" ]);
+
     } else {
       throw new Error("invalid server name");
     }
