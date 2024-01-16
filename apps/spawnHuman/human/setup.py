@@ -23,6 +23,7 @@ class HumanInstall:
             [ "apscheduler" ],
             [ "aiohttp" ],
             [ "aiofiles" ],
+            [ "aiomysql" ],
             [ "cloudconvert" ],
             [ "psutil" ],
             [ "getmac" ],
