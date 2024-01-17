@@ -30,20 +30,7 @@ class LocalRouter:
         self.appRoot = "human"
         self.appDir = self.homeFolder + "/" + self.appRoot
 
-        self.appNames = {
-            "branding": {
-                "name": "homeliaison-branding-standard",
-                "address": "ssh://git@homeliaison.co.kr:40022/homeliaisonck/homeliaison-branding-standard.git"
-            },
-            "brand": {
-                "name": "homeliaison-branding-standard",
-                "address": "ssh://git@homeliaison.co.kr:40022/homeliaisonck/homeliaison-branding-standard.git"
-            },
-            "apply": {
-                "name": "apply-system-renewal",
-                "address": "ssh://git@homeliaison.co.kr:40022/homeliaisonck/apply-system-renewal.git"
-            }
-        }
+        self.appNames = {}
         self.coreServer = self.address["officeinfo"]["gitlab"]["host"] + ":" + str(self.address["officeinfo"]["gitlab"]["endPort"])
 
     def setRouting(self):
@@ -231,6 +218,7 @@ class LocalRouter:
             try:
                 if not "type" in body:
                     raise Exception("invalid post")
+                self.appNames = await requestSystem("https://" + self.coreServer + "/returnAppNames", { "data": False }, { "headers": { "Content-Type": "application/json" } })
                 if not body["type"] in self.appNames:
                     raise Exception("invalid post 2")
                 
@@ -278,6 +266,7 @@ class LocalRouter:
             try:
                 if not "type" in body:
                     raise Exception("invalid post")
+                self.appNames = await requestSystem("https://" + self.coreServer + "/returnAppNames", { "data": False }, { "headers": { "Content-Type": "application/json" } })
                 if not body["type"] in self.appNames:
                     raise Exception("invalid post 2")
 

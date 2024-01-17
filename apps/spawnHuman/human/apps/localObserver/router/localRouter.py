@@ -24,21 +24,6 @@ class LocalRouter:
             "192.168.0.30"
         ]
         self.port = 8000
-
-        self.appNames = {
-            "branding": {
-                "name": "homeliaison-branding-standard",
-                "address": "ssh://git@homeliaison.co.kr:40022/homeliaisonck/homeliaison-branding-standard.git"
-            },
-            "brand": {
-                "name": "homeliaison-branding-standard",
-                "address": "ssh://git@homeliaison.co.kr:40022/homeliaisonck/homeliaison-branding-standard.git"
-            },
-            "apply": {
-                "name": "apply-system-renewal",
-                "address": "ssh://git@homeliaison.co.kr:40022/homeliaisonck/apply-system-renewal.git"
-            }
-        }
         self.coreServer = "https://" + self.address["officeinfo"]["gitlab"]["host"] + ":" + str(self.address["officeinfo"]["gitlab"]["endPort"])
 
     def setRouting(self):
@@ -126,7 +111,7 @@ class LocalRouter:
                 name = body["name"]
                 address = stringToLink(body["address"])
                 member = body["member"]
-                member = listFind(self.members, lambda x: x.id == member)
+                member = listFind(self.members, lambda x: x["id"] == member)
 
                 if type(thisType) is not list:
                     raise Exception("invalid post 5")
@@ -147,6 +132,35 @@ class LocalRouter:
             except Exception as e:
                 print(e)
                 await alertLog("Local Observer 서버 문제 생김 (rou_post_registerProjectGit): " + str(e) + " / " + jsonStringify(body))
+                return { "error": str(e) + " / " + jsonStringify(body) }
+
+        @app.post("/returnAppNames")
+        async def rou_post_returnAppNames():
+            headers = self.headers
+            back = self.back
+            mongo = self.mongolocal
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            body = equalJson(rawBody)
+            try:
+                collection = "gitProjectInfo"
+                aYearAgo = setRelativeDate(getNowDate(), -1, "year")
+                whereQuery = { "date": { "$gte": aYearAgo } }
+
+                rows = await back.mongoRead(collection, whereQuery, { "selfMongo": mongo })
+
+                finalResult = {}
+                for row in rows:
+                    for t in row["type"]:
+                        finalResult[t] = {
+                            "name": row["name"],
+                            "address": row["address"],
+                        }
+
+                return (finalResult, 200, headers)
+            except Exception as e:
+                print(e)
+                await alertLog("Local Observer 서버 문제 생김 (rou_post_returnAppNames): " + str(e) + " / " + jsonStringify(body))
                 return { "error": str(e) + " / " + jsonStringify(body) }
 
         @app.post("/pushComplete")
