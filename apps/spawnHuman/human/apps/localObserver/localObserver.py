@@ -20,7 +20,11 @@ class LocalObserver:
 
         def intervalFunc():
             try:
-                asyncio.run(requestSystem("https://" + self.address["officeinfo"]["gitlab"]["host"] + ":" + str(self.address["officeinfo"]["gitlab"]["endPort"]) + "/gitLocalSync", { "type": "branding" }, { "headers": { "Content-Type": "application/json" } }))
+                currentType = [
+                    "apply",
+                ]
+                for c in currentType:
+                    asyncio.run(requestSystem("https://" + self.address["officeinfo"]["gitlab"]["host"] + ":" + str(self.address["officeinfo"]["gitlab"]["endPort"]) + "/gitLocalSync", { "type": c }, { "headers": { "Content-Type": "application/json" } }))
             except Exception as e:
                 pass
         

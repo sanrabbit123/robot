@@ -38,6 +38,10 @@ class LocalRouter:
             "brand": {
                 "name": "homeliaison-branding-standard",
                 "address": "ssh://git@homeliaison.co.kr:40022/homeliaisonck/homeliaison-branding-standard.git"
+            },
+            "apply": {
+                "name": "apply-system-renewal",
+                "address": "ssh://git@homeliaison.co.kr:40022/homeliaisonck/apply-system-renewal.git"
             }
         }
         self.coreServer = self.address["officeinfo"]["gitlab"]["host"] + ":" + str(self.address["officeinfo"]["gitlab"]["endPort"])

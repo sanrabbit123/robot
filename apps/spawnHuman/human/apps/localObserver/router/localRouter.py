@@ -24,6 +24,21 @@ class LocalRouter:
             "192.168.0.30"
         ]
         self.port = 8000
+
+        self.appNames = {
+            "branding": {
+                "name": "homeliaison-branding-standard",
+                "address": "ssh://git@homeliaison.co.kr:40022/homeliaisonck/homeliaison-branding-standard.git"
+            },
+            "brand": {
+                "name": "homeliaison-branding-standard",
+                "address": "ssh://git@homeliaison.co.kr:40022/homeliaisonck/homeliaison-branding-standard.git"
+            },
+            "apply": {
+                "name": "apply-system-renewal",
+                "address": "ssh://git@homeliaison.co.kr:40022/homeliaisonck/apply-system-renewal.git"
+            }
+        }
         self.coreServer = "https://" + self.address["officeinfo"]["gitlab"]["host"] + ":" + str(self.address["officeinfo"]["gitlab"]["endPort"])
 
     def setRouting(self):
@@ -35,6 +50,21 @@ class LocalRouter:
         async def rou_get_root():
             headers = self.headers
             return ({ "message": "hi" }, 200, headers)
+
+        @app.get("/ssl")
+        async def rou_get_ssl():
+            headers = self.headers
+            return ({ "message": "hi" }, 200, headers)
+
+        @app.get("/disk")
+        async def rou_get_disk():
+            headers = self.headers
+            return ({ "message": "hi" }, 200, headers)
+
+        @app.get("/system")
+        async def rou_get_system():
+            headers = self.headers
+            return (getSystemInfo(), 200, headers)
 
         # post =================================================================================
 
@@ -70,6 +100,53 @@ class LocalRouter:
             except Exception as e:
                 print(e)
                 await alertLog("Local Observer 서버 문제 생김 (rou_post_registerIpAddress): " + str(e) + " / " + jsonStringify(body))
+                return { "error": str(e) + " / " + jsonStringify(body) }
+
+        @app.post("/registerProjectGit")
+        async def rou_post_registerProjectGit():
+            headers = self.headers
+            back = self.back
+            mongo = self.mongolocal
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            body = equalJson(rawBody)
+            try:
+                if not "type" in body:
+                    raise Exception("invalid post 1")
+                if not "name" in body:
+                    raise Exception("invalid post 2")
+                if not "address" in body:
+                    raise Exception("invalid post 3")
+                if not "member" in body:
+                    raise Exception("invalid post 4")
+
+                collection = "gitProjectInfo"
+
+                thisType = body["type"]
+                name = body["name"]
+                address = stringToLink(body["address"])
+                member = body["member"]
+                member = listFind(self.members, lambda x: x.id == member)
+
+                if type(thisType) is not list:
+                    raise Exception("invalid post 5")
+
+                json = {}
+                json["date"] = getNowDate()
+                json["member"] = {
+                    "id": member["id"],
+                    "name": member["name"]
+                }
+                json["type"] = thisType
+                json["name"] = name
+                json["address"] = address
+
+                await back.mongoCreate(collection, json, { "selfMongo": mongo })
+
+                return ({ "message": "done" }, 200, headers)
+            except Exception as e:
+                print(e)
+                await alertLog("Local Observer 서버 문제 생김 (rou_post_registerProjectGit): " + str(e) + " / " + jsonStringify(body))
                 return { "error": str(e) + " / " + jsonStringify(body) }
 
         @app.post("/pushComplete")
