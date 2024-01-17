@@ -33,8 +33,32 @@ const NotionAPIs = function (mother = null, back = null, address = null) {
   this.pythonApp = this.dir + "/python/app.py";
 }
 
-NotionAPIs.pageDictionay = {
-  commandLineInterface: "8a226148-4cec-4260-b880-1fbc65e99976"
+NotionAPIs.prototype.generateAccessToken = async function () {
+  const instance = this;
+  const { requestSystem } = this.mother;
+  try {
+    let url, data, res;
+
+    // visit => https://api.notion.com/v1/oauth/authorize?client_id=6496bf10-6b0a-4f80-96df-280fee596755&response_type=code&owner=user&redirect_uri=https%3A%2F%2Fgoogle.com => and get code
+
+    url = this.url + "/oauth/token"
+    data = {
+      "grant_type": "authorization_code",
+      "code": "03cd6985-66dd-4260-adc9-629eebb2b755", // query code uuid
+      "redirect_uri": "https://google.com",
+    };
+
+    res = await requestSystem(url, data, { headers: {
+      "Authorization": "Basic " + '"' + this.oauth.base64EncodedText + '"',
+      "Content-Type": "application/json",
+      "Notion-Version": this.headers["Notion-Version"],
+    } });
+
+    console.log(res);
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 NotionAPIs.prototype.hexToId = function (hex) {
@@ -63,139 +87,147 @@ NotionAPIs.prototype.idToHex = function (id) {
   return id.replace(/\-/gi, '').trim();
 }
 
-NotionAPIs.prototype.getCollection = async function (id) {
-  if (typeof id !== "string") {
-    throw new Error("input must be collection id");
-  }
+NotionAPIs.prototype.readRichText = function (richTextArr) {
   const instance = this;
-  const { stringToDate, pythonExecute, equalJson } = this.mother;
-  try {
-    let result, temp, typeArr, keyArr;
-
-    temp = await pythonExecute(this.pythonApp, [ "getCollection" ], { id });
-
-    if (temp.length > 0) {
-
-      keyArr = Object.keys(temp[0]);
-      typeArr = (new Array(keyArr.length)).fill(null, 0);
-
-      for (let obj of temp) {
-        for (let i = 0; i < keyArr.length; i++) {
-          if (typeArr[i] === null) {
-            typeArr[i] = obj[keyArr[i]];
-          }
-        }
-      }
-
-      typeArr = typeArr.map((i) => {
-        let first;
-        first = typeof i;
-        if (first === "object") {
-          if (first instanceof Date) {
-            return "date";
-          } else if (first === null) {
-            return "null";
-          } else if (Array.isArray(first)) {
-            return "array";
-          } else {
-            return "null";
-          }
-        } else if (first === "string") {
-          if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]/gi.test(i)) {
-            return "date";
-          } else if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(i)) {
-            return "date";
-          } else {
-            return first;
-          }
-        } else {
-          return first;
-        }
-      });
-
-      result = temp.map((obj) => {
-        let newObj;
-        newObj = {};
-        for (let i = 0; i < keyArr.length; i++) {
-          if (typeArr[i] === "date") {
-            newObj[keyArr[i]] = stringToDate(obj[keyArr[i]] === null ? "해당 없음" : obj[keyArr[i]]);
-          } else if (typeArr[i] === "number") {
-            newObj[keyArr[i]] = obj[keyArr[i]] === null ? 0 : obj[keyArr[i]];
-          } else {
-            newObj[keyArr[i]] = obj[keyArr[i]];
-          }
-        }
-        return newObj;
-      });
-
-      return result;
+  if (!Array.isArray(richTextArr)) {
+    if (typeof richTextArr === "object" && richTextArr !== null && Array.isArray(richTextArr.rich_text)) {
+      return richTextArr.rich_text.map((o2) => { return o2.text.content }).join("");
     } else {
-      return [];
+      throw new Error("invalid input");
     }
-  } catch (e) {
-    console.log(e);
+  } else {
+    return richTextArr.map((o2) => { return o2.text.content }).join("");
   }
 }
 
-NotionAPIs.prototype.appendRow = async function (id, dictionary) {
-  if (typeof id !== "string" || typeof dictionary !== "object") {
-    throw new Error("input must be collection id, row dictionary");
-  }
+NotionAPIs.prototype.readDatabase = async function (id) {
   const instance = this;
-  const { dateToString, pythonExecute } = this.mother;
+  const { headers, motherDatabaseId, editUrl, workspaceName } = this;
+  const { requestSystem, equalJson } = this.mother;
   try {
-    for (let k in dictionary) {
-      if (dictionary[k] instanceof Date) {
-        dictionary[k] = dateToString(dictionary[k], true);
+    const delta = 100;
+    let url, res;
+    let resultObj;
+    let cursor;
+    let copiedObj;
+    
+    url = this.url + "/databases/" + this.hexToId(id);
+    res = await requestSystem(url, {}, { headers });
+
+    resultObj = equalJson(JSON.stringify(res.data));
+    resultObj.date = {
+      created: new Date(JSON.stringify(resultObj.created_time).slice(1, -1)),
+      edited: new Date(JSON.stringify(resultObj.last_edited_time).slice(1, -1)),
+    }
+    resultObj.children = [];
+
+    delete resultObj.created_time;
+    delete resultObj.last_edited_time;
+
+    url = this.url + "/databases/" + this.hexToId(id) + "/query";
+    res = await requestSystem(url, { filter: { or: [] }, page_size: delta }, { headers });
+
+    for (let obj of res.data.results) {
+      copiedObj = equalJson(JSON.stringify(obj));
+      copiedObj.date = {
+        created: new Date(JSON.stringify(copiedObj.created_time).slice(1, -1)),
+        edited: new Date(JSON.stringify(copiedObj.last_edited_time).slice(1, -1)),
+      }  
+      delete copiedObj.created_time;
+      delete copiedObj.last_edited_time;
+      resultObj.children.push(copiedObj);
+    }
+
+    while (typeof res.data.next_cursor === "string") {
+      cursor = res.data.next_cursor;
+      res = await requestSystem(url, { filter: { or: [] }, page_size: delta, start_cursor: cursor }, { headers });
+      for (let obj of res.data.results) {
+        copiedObj = equalJson(JSON.stringify(obj));
+        copiedObj.date = {
+          created: new Date(JSON.stringify(copiedObj.created_time).slice(1, -1)),
+          edited: new Date(JSON.stringify(copiedObj.last_edited_time).slice(1, -1)),
+        }  
+        delete copiedObj.created_time;
+        delete copiedObj.last_edited_time;
+        resultObj.children.push(copiedObj);
       }
     }
-    await pythonExecute(this.pythonApp, [ "appendRow" ], { id, dictionary });
-    return "done";
-  } catch (e) {
-    console.log(e);
-  }
-}
 
-NotionAPIs.prototype.readPageByName = async function (page) {
-  if (typeof page !== "string") {
-    throw new Error("invaild input");
-  }
-  if (NotionAPIs.pageDictionay[page] === undefined) {
-    throw new Error("invaild page name");
-  }
-  const instance = this;
-  try {
-    return await this.readPageById(NotionAPIs.pageDictionay[page]);
+    resultObj.length = resultObj.children.length;
+
+    return resultObj;
+
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    return null;
   }
 }
 
-NotionAPIs.prototype.generateAccessToken = async function () {
+NotionAPIs.prototype.readPage = async function (id) {
   const instance = this;
-  const { requestSystem } = this.mother;
+  const { headers, motherDatabaseId, editUrl, workspaceName } = this;
+  const { requestSystem, equalJson } = this.mother;
   try {
-    let url, data, res;
+    const delta = 100;
+    let url, res;
+    let resultObj;
+    let cursor;
+    let copiedObj;
+    
+    try {
+      url = this.url + "/pages/" + this.hexToId(id);
+      res = await requestSystem(url, {}, { headers });  
+    } catch {
+      url = this.url + "/blocks/" + this.hexToId(id);
+      res = await requestSystem(url, {}, { headers });  
+    }
 
-    // visit => https://api.notion.com/v1/oauth/authorize?client_id=6496bf10-6b0a-4f80-96df-280fee596755&response_type=code&owner=user&redirect_uri=https%3A%2F%2Fgoogle.com => and get code
+    resultObj = equalJson(JSON.stringify(res.data));
+    resultObj.date = {
+      created: new Date(JSON.stringify(resultObj.created_time).slice(1, -1)),
+      edited: new Date(JSON.stringify(resultObj.last_edited_time).slice(1, -1)),
+    }
+    resultObj.children = [];
 
-    url = this.url + "/oauth/token"
-    data = {
-      "grant_type": "authorization_code",
-      "code": "03cd6985-66dd-4260-adc9-629eebb2b755", // query code uuid
-      "redirect_uri": "https://google.com",
-    };
+    delete resultObj.created_time;
+    delete resultObj.last_edited_time;    
 
-    res = await requestSystem(url, data, { headers: {
-      "Authorization": "Basic " + '"' + this.oauth.base64EncodedText + '"',
-      "Content-Type": "application/json",
-      "Notion-Version": this.headers["Notion-Version"],
-    } });
+    url = this.url + "/blocks/" + this.hexToId(id) + "/children";
+    res = await requestSystem(url, { page_size: delta }, { method: "get", headers });
 
-    console.log(res);
+    for (let obj of res.data.results) {
+      copiedObj = equalJson(JSON.stringify(obj));
+      copiedObj.date = {
+        created: new Date(JSON.stringify(copiedObj.created_time).slice(1, -1)),
+        edited: new Date(JSON.stringify(copiedObj.last_edited_time).slice(1, -1)),
+      }  
+      delete copiedObj.created_time;
+      delete copiedObj.last_edited_time;
+      resultObj.children.push(copiedObj);
+    }
 
-  } catch (e) {
-    console.log(e);
+    while (typeof res.data.next_cursor === "string") {
+      cursor = res.data.next_cursor;
+      res = await requestSystem(url, { page_size: delta, start_cursor: cursor }, { method: "get", headers });
+      for (let obj of res.data.results) {
+        copiedObj = equalJson(JSON.stringify(obj));
+        copiedObj.date = {
+          created: new Date(JSON.stringify(copiedObj.created_time).slice(1, -1)),
+          edited: new Date(JSON.stringify(copiedObj.last_edited_time).slice(1, -1)),
+        }  
+        delete copiedObj.created_time;
+        delete copiedObj.last_edited_time;
+        resultObj.children.push(copiedObj);
+      }
+    }
+
+    resultObj.length = resultObj.children.length;
+    
+    return resultObj;
+
+  } catch (error) {
+    console.log(error);
+    return null;
   }
 }
 
@@ -352,150 +384,6 @@ NotionAPIs.prototype.createKanban = async function (pageTitle = "Test title") {
 
   } catch (error) {
     console.log(error)
-  }
-}
-
-NotionAPIs.prototype.readRichText = function (richTextArr) {
-  const instance = this;
-  if (!Array.isArray(richTextArr)) {
-    if (typeof richTextArr === "object" && richTextArr !== null && Array.isArray(richTextArr.rich_text)) {
-      return richTextArr.rich_text.map((o2) => { return o2.text.content }).join("");
-    } else {
-      throw new Error("invalid input");
-    }
-  } else {
-    return richTextArr.map((o2) => { return o2.text.content }).join("");
-  }
-}
-
-NotionAPIs.prototype.readDatabase = async function (id) {
-  const instance = this;
-  const { headers, motherDatabaseId, editUrl, workspaceName } = this;
-  const { requestSystem, equalJson } = this.mother;
-  try {
-    const delta = 100;
-    let url, res;
-    let resultObj;
-    let cursor;
-    let copiedObj;
-    
-    url = this.url + "/databases/" + this.hexToId(id);
-    res = await requestSystem(url, {}, { headers });
-
-    resultObj = equalJson(JSON.stringify(res.data));
-    resultObj.date = {
-      created: new Date(JSON.stringify(resultObj.created_time).slice(1, -1)),
-      edited: new Date(JSON.stringify(resultObj.last_edited_time).slice(1, -1)),
-    }
-    resultObj.children = [];
-
-    delete resultObj.created_time;
-    delete resultObj.last_edited_time;
-
-    url = this.url + "/databases/" + this.hexToId(id) + "/query";
-    res = await requestSystem(url, { filter: { or: [] }, page_size: delta }, { headers });
-
-    for (let obj of res.data.results) {
-      copiedObj = equalJson(JSON.stringify(obj));
-      copiedObj.date = {
-        created: new Date(JSON.stringify(copiedObj.created_time).slice(1, -1)),
-        edited: new Date(JSON.stringify(copiedObj.last_edited_time).slice(1, -1)),
-      }  
-      delete copiedObj.created_time;
-      delete copiedObj.last_edited_time;
-      resultObj.children.push(copiedObj);
-    }
-
-    while (typeof res.data.next_cursor === "string") {
-      cursor = res.data.next_cursor;
-      res = await requestSystem(url, { filter: { or: [] }, page_size: delta, start_cursor: cursor }, { headers });
-      for (let obj of res.data.results) {
-        copiedObj = equalJson(JSON.stringify(obj));
-        copiedObj.date = {
-          created: new Date(JSON.stringify(copiedObj.created_time).slice(1, -1)),
-          edited: new Date(JSON.stringify(copiedObj.last_edited_time).slice(1, -1)),
-        }  
-        delete copiedObj.created_time;
-        delete copiedObj.last_edited_time;
-        resultObj.children.push(copiedObj);
-      }
-    }
-
-    resultObj.length = resultObj.children.length;
-
-    return resultObj;
-
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-}
-
-NotionAPIs.prototype.readPage = async function (id) {
-  const instance = this;
-  const { headers, motherDatabaseId, editUrl, workspaceName } = this;
-  const { requestSystem, equalJson } = this.mother;
-  try {
-    const delta = 100;
-    let url, res;
-    let resultObj;
-    let cursor;
-    let copiedObj;
-    
-    try {
-      url = this.url + "/pages/" + this.hexToId(id);
-      res = await requestSystem(url, {}, { headers });  
-    } catch {
-      url = this.url + "/blocks/" + this.hexToId(id);
-      res = await requestSystem(url, {}, { headers });  
-    }
-
-    resultObj = equalJson(JSON.stringify(res.data));
-    resultObj.date = {
-      created: new Date(JSON.stringify(resultObj.created_time).slice(1, -1)),
-      edited: new Date(JSON.stringify(resultObj.last_edited_time).slice(1, -1)),
-    }
-    resultObj.children = [];
-
-    delete resultObj.created_time;
-    delete resultObj.last_edited_time;    
-
-    url = this.url + "/blocks/" + this.hexToId(id) + "/children";
-    res = await requestSystem(url, { page_size: delta }, { method: "get", headers });
-
-    for (let obj of res.data.results) {
-      copiedObj = equalJson(JSON.stringify(obj));
-      copiedObj.date = {
-        created: new Date(JSON.stringify(copiedObj.created_time).slice(1, -1)),
-        edited: new Date(JSON.stringify(copiedObj.last_edited_time).slice(1, -1)),
-      }  
-      delete copiedObj.created_time;
-      delete copiedObj.last_edited_time;
-      resultObj.children.push(copiedObj);
-    }
-
-    while (typeof res.data.next_cursor === "string") {
-      cursor = res.data.next_cursor;
-      res = await requestSystem(url, { page_size: delta, start_cursor: cursor }, { method: "get", headers });
-      for (let obj of res.data.results) {
-        copiedObj = equalJson(JSON.stringify(obj));
-        copiedObj.date = {
-          created: new Date(JSON.stringify(copiedObj.created_time).slice(1, -1)),
-          edited: new Date(JSON.stringify(copiedObj.last_edited_time).slice(1, -1)),
-        }  
-        delete copiedObj.created_time;
-        delete copiedObj.last_edited_time;
-        resultObj.children.push(copiedObj);
-      }
-    }
-
-    resultObj.length = resultObj.children.length;
-    
-    return resultObj;
-
-  } catch (error) {
-    console.log(error);
-    return null;
   }
 }
 
