@@ -6929,9 +6929,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "박세미",
-    //     designer: "김도희",
-    //     link: "https://drive.google.com/drive/folders/1eSq0Gjo89KFsCo8ml6QJO6pO7NHyKJ8c",
+    //     client: "채혜린",
+    //     designer: "김은정",
+    //     link: "https://drive.google.com/drive/folders/1pOdHJue8WYRFwANOa_bMJyEqTeCaKu5V",
     //     pay: true
     //   },
     // ]);
@@ -7000,7 +7000,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2301_aa01s" ]);
+    // await work.newDesignerToFront([ "d2307_aa02s" ]);
 
 
     // new designer set proposal setting
