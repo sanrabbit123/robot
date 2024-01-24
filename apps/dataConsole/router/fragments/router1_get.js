@@ -19,7 +19,7 @@ DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
       </head>
       <body>
         <div id="totalcontents"></div>
-        <script src="${target}.js"></script>
+        <script src="/${target}.js"></script>
       </body>
     </html>`;
 
@@ -269,6 +269,8 @@ DataRouter.prototype.rou_get_First = function () {
             target = "sales";
           } else if (/^flo/i.test(req.params.id)) {
             target = "flow";
+          } else if (/^numb/i.test(req.params.id)) {
+            target = "numbers";
           } else {
             target = "client";
           }
