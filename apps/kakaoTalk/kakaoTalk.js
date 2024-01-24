@@ -23,7 +23,6 @@ const KakaoTalk = function () {
     member: address.memberinfo.ip.outer,
     home: address.homeinfo.ip.outer,
     contents: address.contentsinfo.ip.outer,
-    construct: address.constructinfo.ip.outer,
   };
   this.ipRegExp = {
     office: new RegExp(this.ip.office, 'gi'),
@@ -35,10 +34,9 @@ const KakaoTalk = function () {
     member: new RegExp(this.ip.member, 'gi'),
     home: new RegExp(this.ip.home, 'gi'),
     contents: new RegExp(this.ip.contents, 'gi'),
-    construct: new RegExp(this.ip.construct, 'gi'),
   };
   this.token = {
-    office: "e0e1d92a17ab399acbafb4549d462377c6a62faa2e11a65bf3317844bcab85dd900b90ad454f79d2ae87186302e125a29d10ad16b529a8e87b074961bd1f72f6AHscav9F3R0vRFOsRyiuwtGl0K50hqqBa2BdB84hB6b503yGlLkP4hFHrwLh09Siu0RFHhLBgsJQRHYLVZ/9rg==",
+    office: "26d6c548085b85db79b0ba40bdb6e6e9a89df9a8edf9c4d47fd5316ee092593f3c55763ec5675d3c076a6265da472f870d759b4a1938f8a091271f8d4ee39933SvoLlyJoks3YNcowNgGvdb6GGm9pgGQw4QB8I2Ed547KwIX4oBk8UUPrd+IgPOHX11oYq2kG5rEXfNUivXG/aQ==",
     console: "af419408c2d143a8f94b5e586962e0512383d0ca9acc419f07d537ad013175ea266d12a9b79827527bea261a6579ca023788586f34a2be111724ed2b17396dc5GO60YmcJsNN+tCQCer08GX9TjfQlyUxYMF1uhOmO9jrWgCqLlh9F9oRVR5Dksb10HbPX3GjKt4ob78NA/lr3Bg==",
     python: "e2fc36834ad7631eb7bf004165189cf22ef41d1266193f0ffc81b515769abe4477ed200f838b03f7edb032bc8c1e1efa1af88536dbc8db85b9fafa2cdcb91b22rz65rkwUA4Zu7iXKXJqG2nmNqGFnq5PGpiFsHFMB78g4pmoIBYjOwr/AIbUh9M9zJxTBsyf+URQJiWAvJTP51w==",
     test: "68067cb29c9b306d635c436cde293bb9d456daa539213f8a58e0363f207d09a0831c5fabcf250c89adef2285e1ffbd178e2b7db835656084daa8f6c33a51c8c4I4JcqB91inpHwvJrvzr1gXjr/pAXpWLK4r4gjjrGesm8QLFpOMTuj69QsvnCiED/2rbS2BKlDqbSB2G4VYZ+Yw==",
@@ -46,7 +44,6 @@ const KakaoTalk = function () {
     member: "b264d72b44dde4663f7a3b6b7e56cd335134bbd62a36c8038f761e11d4b241fdc647a40ac7e658bb63d81efe72c98eefafa6adc423ba5bfa44b2e30ca039f3f1TKi0eIQUIc4hQqCusGbRL+RzNnEAUgUqq4ci5UXFOuLuUipVERMC0jgxPv/cZ3bJkRsv/h331DrNt4PTJckrng==",
     home: "2d1767c90dfe8cf798a7f2f1685ee9fc935e2097c0e30109dc23e4e4b952c22273f1dc2f452632c5e79001d622ef38f8d79f6143be0e3cb9c689cd1d72de06e2bLlRGTT+s2NPHBTb7e58CK9BgK42hoFP0kZnTk4ao+Owx8yu1mWXCBiNvb8PdM1ue0pEQhrgk1CQ9VZ+ZoLUuQ==",
     contents: "4e44e0b63f76be0d9b6bfc917ff4f06c720ade46bf825d58d18a83ab826a4673da42dabb2d3bd95e8983c40a99454dd388d27a4d510df3d221e22d3041faf8bf7eaL5qGkCiwSB8G0GcgLnDmCouI+7PohQAzcAwOve4jcT7pm32dv1mj08oC8C4P295DOIGGNj58NpjuANpgQtw==",
-    construct: "4b162b1eedf3d87123886e07ee36a692a5c637c59d98d0a807ae0f408e2ef58426133f2db94122f53e7fd3cfbd860b74ff17fc384d9bd0a77c5bc096119f5425+ou+jCEjgjF8EV6PaBuv0LIjJcC4dc36533eYOPe2loX3bi5KN0Vreu8an89DkOjcY1jduN21dadCJWLUITUBg==",
   };
   this.authObj = {};
   this.message = {};
@@ -103,8 +100,6 @@ KakaoTalk.prototype.setAuth = async function () {
       this.authObj.token = this.token.home;
     } else if (this.ipRegExp.contents.test(data.trim())) {
       this.authObj.token = this.token.contents;
-    } else if (this.ipRegExp.construct.test(data.trim())) {
-      this.authObj.token = this.token.construct;
     }
 
     return true;
