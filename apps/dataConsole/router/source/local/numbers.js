@@ -49,7 +49,7 @@ NumbersJs.prototype.mainDataRender = async function (matrixMode = false) {
         {
           title: "아이디",
           width: 96,
-          name: "cliid",
+          name: "proid",
           type: "string",
         },
         {
@@ -288,6 +288,8 @@ NumbersJs.prototype.mainDataRender = async function (matrixMode = false) {
 
     values = {};
 
+    /*
+
     for (let { client, requestNumber, project, sessions, source } of instance.clients) {
 
       standards.values[client.cliid + "_" + String(requestNumber)] = [
@@ -374,6 +376,8 @@ NumbersJs.prototype.mainDataRender = async function (matrixMode = false) {
       values[client.cliid + "_" + String(requestNumber)] = values[client.cliid + "_" + String(requestNumber)].filter((o) => { return o !== null });
 
     }
+
+    */
 
     return { standards, columns, values };
 
@@ -4377,7 +4381,7 @@ NumbersJs.prototype.clientWhiteHistory = async function (tong, dataSet) {
 NumbersJs.prototype.coreColorSync = async function () {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText } = this;
-  const { createNode, colorChip, withOut, dateToString, ajaxJson, autoComma, findByAttribute } = GeneralJs;
+  const { createNode, colorChip, withOut, dateToString, ajaxJson, autoComma, findByAttribute, equalJson } = GeneralJs;
   try {
     let columns;
     let colorStandard;
@@ -4386,7 +4390,7 @@ NumbersJs.prototype.coreColorSync = async function () {
     let thisColor;
     let thisTargets;
 
-    ({ columns } = await this.mainDataRender());
+    ({ columns } = equalJson(JSON.stringify(instance.columns)));
 
     colorStandard = columns.find((obj) => { return obj.colorStandard === true });
 
@@ -4401,8 +4405,8 @@ NumbersJs.prototype.coreColorSync = async function () {
       thisColor = colorStandard.colorMap.find((o) => { return o.value === thisValue }).color;
       thisTargets = [ ...standardDoms[i].querySelectorAll('.' + valueTargetClassName) ].concat([ ...valueDoms[i].querySelectorAll('.' + valueTargetClassName) ]);
       for (let dom of thisTargets) {
-        dom.style.color = (new RegExp(asyncProcessText, "gi")).test(dom.textContent) ? colorChip.gray3 : thisColor;
-        dom.setAttribute("color", (new RegExp(asyncProcessText, "gi")).test(dom.textContent) ? colorChip.gray3 : thisColor);
+        dom.style.color = (new RegExp(asyncProcessText, "gi")).test(dom.textContent) ? colorChip.gray3 : colorChip[thisColor];
+        dom.setAttribute("color", (new RegExp(asyncProcessText, "gi")).test(dom.textContent) ? colorChip.gray3 : colorChip[thisColor]);
       }
     }
 
@@ -4411,10 +4415,10 @@ NumbersJs.prototype.coreColorSync = async function () {
   }
 }
 
-NumbersJs.prototype.mprBase = async function () {
+NumbersJs.prototype.numbersBase = async function () {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName, moveTargetClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, equalJson, autoComma } = GeneralJs;
   const menuPromptClassName = "menuPromptClassName";
   const importantCircleClassName = "importantCircleClassName";
   try {
@@ -4479,8 +4483,10 @@ NumbersJs.prototype.mprBase = async function () {
     circleRight = 2.5;
     circleTop = isMac() ? 3 : 1;
 
-    ({ standards, columns, values } = await this.mainDataRender());
-  
+    standards = equalJson(JSON.stringify(this.standards));
+    columns = equalJson(JSON.stringify(this.columns));
+    values = equalJson(JSON.stringify(this.data));
+
     hoverEvent = () => {
       return function (e) {
         const cliid = this.getAttribute("cliid");
@@ -4913,7 +4919,9 @@ NumbersJs.prototype.mprBase = async function () {
       try {
 
         if (reload) {
-          ({ standards, columns, values } = await instance.mainDataRender());
+          standards = equalJson(JSON.stringify(instance.standards));
+          columns = equalJson(JSON.stringify(instance.columns));
+          values = equalJson(JSON.stringify(instance.data));
         }
 
         cleanChildren(totalMother);
@@ -4950,7 +4958,7 @@ NumbersJs.prototype.mprBase = async function () {
                 verticalAlign: "top",
                 width: String(this.grayBarWidth) + ea,
               },
-              children: standards.columns.map(({ title, width }) => {
+              children: columns.standards.map(({ title, width }) => {
                 return {
                   style: {
                     display: "inline-flex",
@@ -4993,7 +5001,7 @@ NumbersJs.prototype.mprBase = async function () {
                   justifyContent: "start",
                   paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
                 },
-                children: columns.map(({ title, width, name }, index) => {
+                children: columns.columns.map(({ title, width, name }, index) => {
                   return {
                     attribute: {
                       name: name,
@@ -5082,15 +5090,15 @@ NumbersJs.prototype.mprBase = async function () {
             }
           ]
         }).children;
-      
-        for (let { client, requestNumber } of instance.clients) {
+    
+        for (let z = 1; z < standards.length; z++) {
       
           createNode({
             mother: idNameArea,
-            attribute: { cliid: client.cliid, request: String(requestNumber), key: client.cliid + "_" + String(requestNumber), lastfilter: "none" },
-            event: {
-              click: instance.clientWhiteCard(client.cliid, requestNumber),
-            },
+            attribute: { proid: standards[z][0], key: standards[z][0], lastfilter: "none" },
+            // event: {
+            //   click: instance.clientWhiteCard(client.cliid, requestNumber),
+            // },
             class: [ standardCaseClassName ],
             style: {
               display: "flex",
@@ -5101,7 +5109,7 @@ NumbersJs.prototype.mprBase = async function () {
               alignItems: "start",
               cursor: "pointer",
             },
-            children: standards.values[client.cliid + "_" + String(requestNumber)].map(({ value, name }, index) => {
+            children: columns.standards.map(({ width, name }, index) => {
               return {
                 style: {
                   display: "inline-flex",
@@ -5109,12 +5117,12 @@ NumbersJs.prototype.mprBase = async function () {
                   position: "relative",
                   justifyContent: "center",
                   alignItems: "start",
-                  width: String(standards.columns[index].width) + ea,
+                  width: String(width) + ea,
                 },
                 child: {
                   class: [ valueTargetClassName ],
                   attribute: { name },
-                  text: value,
+                  text: standards[z][index],
                   style: {
                     position: "relative",
                     transition: "all 0.3s ease",
@@ -5129,12 +5137,12 @@ NumbersJs.prototype.mprBase = async function () {
       
           thisTong = createNode({
             mother: valueArea,
-            attribute: { cliid: client.cliid, lastfilter: "none", key: client.cliid + "_" + String(requestNumber) },
-            class: [ moveTargetClassName, valueCaseClassName, client.cliid ],
-            event: {
-              mouseenter: hoverEvent(),
-              mouseleave: hoverOutEvent(),
-            },
+            attribute: { proid: standards[z][0], lastfilter: "none", key: standards[z][0] },
+            class: [ moveTargetClassName, valueCaseClassName, standards[z][0] ],
+            // event: {
+            //   mouseenter: hoverEvent(),
+            //   mouseleave: hoverOutEvent(),
+            // },
             style: {
               display: "flex",
               position: "relative",
@@ -5148,7 +5156,7 @@ NumbersJs.prototype.mprBase = async function () {
             }
           })
     
-          for (let i = 0; i < columns.length; i++) {
+          for (let i = 0; i < columns.columns.length; i++) {
             createNode({
               mother: thisTong,
               style: {
@@ -5157,7 +5165,7 @@ NumbersJs.prototype.mprBase = async function () {
                 position: "relative",
                 justifyContent: "center",
                 alignItems: "start",
-                width: String(columns[i].width) + ea,
+                width: String(columns.columns[i].width) + ea,
               },
               child: {
                 style: {
@@ -5179,28 +5187,27 @@ NumbersJs.prototype.mprBase = async function () {
                   },
                   child: {
                     attribute: {
-                      cliid: client.cliid,
-                      name: values[client.cliid + "_" + String(requestNumber)][i].name,
+                      proid: standards[z][0],
+                      name: columns.columns[i].name,
                     },
                     class: [ valueTargetClassName ],
-                    text: String(values[client.cliid + "_" + String(requestNumber)][i].value),
+                    text: columns.columns[i].type === "money" ? autoComma(values[z][i]) : String(values[z][i]),
                     style: {
                       position: "relative",
                       transition: "all 0.1s ease",
                       fontSize: String(fontSize) + ea,
                       fontWeight: String(valueWeight),
-                      color: (new RegExp(asyncProcessText, "gi")).test(values[client.cliid + "_" + String(requestNumber)][i].value) ? colorChip.gray3 : colorChip.black,
+                      color: colorChip.black,
                     }
                   }
                 }
               }
             });
           }
-      
+
         }
-    
+
         await instance.coreColorSync();
-        await instance.mprPannel();
 
       } catch (e) {
         console.log(e);
@@ -10422,7 +10429,7 @@ NumbersJs.prototype.launching = async function () {
   try {
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true" && getObj.dataonly === "true");
-    const defaultMonth = 1;
+    const defaultMonth = 3;
     let loading;
     let members;
     let ago;
@@ -10431,6 +10438,7 @@ NumbersJs.prototype.launching = async function () {
     let execFunc;
     let whereQuery;
     let coreWhereQuery;
+    let data, standards, columns;
 
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
@@ -10450,12 +10458,17 @@ NumbersJs.prototype.launching = async function () {
 
     ago = new Date();
     ago.setMonth(ago.getMonth() - defaultMonth);
-    data = await ajaxJson({
+    ({ data, standards } = await ajaxJson({
       mode: "matrix",
       fromDate: ago,
-    }, NUMBERSHOST + "/calculateEntireIO", { equal: true });
+    }, NUMBERSHOST + "/calculateEntireIO", { equal: true }));
+    ({ columns } = await ajaxJson({
+      mode: "full"
+    }, NUMBERSHOST + "/returnColumns", { equal: true }));
 
-    console.log(data);
+    this.data = data;
+    this.standards = standards;
+    this.columns = columns;
 
     this.members = members;
     this.clients = clients;
@@ -10475,7 +10488,7 @@ NumbersJs.prototype.launching = async function () {
     this.entireMode = entireMode;
     this.menuEventTong = null;
 
-    // await this.mprBase();
+    await this.numbersBase();
     // await this.mprSearchEvent();
     // await this.mprExtractEvent();
     // await this.mprWhiteResize();
