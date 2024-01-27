@@ -40,7 +40,6 @@ GoogleDocs.prototype.create_newDocs_inPython = async function (title, parent) {
   const instance = this;
   const mother = this.mother;
   try {
-    console.log(await mother.pythonExecute(this.pythonApp, [ "docs", "createDocs" ], { title }))
     const { id } = await mother.pythonExecute(this.pythonApp, [ "docs", "createDocs" ], { title });
     console.log(id);
     await mother.pythonExecute(this.pythonApp, [ "drive", "moveFolder" ], { targetId: id, parent: parent });
