@@ -190,8 +190,27 @@ DevContext.prototype.launching = async function () {
     // await app.weeklySummary();
 
 
+    const target = process.cwd() + "/temp/target.xlsx";
+    const excel = new ExcelReader();
+    let result;
 
     
+    result = await excel.fileToMatrix(target, "Sheet1");
+
+
+    console.log(result);
+
+
+
+
+
+    
+
+
+
+
+
+
 
 
 

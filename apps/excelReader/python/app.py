@@ -80,7 +80,7 @@ def excelWrite(data):
     dataFrame = pandas.DataFrame(data["matrix"])
     writer = pandas.ExcelWriter(data["filePath"], engine="xlsxwriter")
     dataFrame.to_excel(writer, sheet_name="Sheet1", index=False)
-    writer.save()
+    writer.close()
 
     return { "message": "done" }
 
