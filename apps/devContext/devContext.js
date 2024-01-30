@@ -190,15 +190,7 @@ DevContext.prototype.launching = async function () {
     // await app.weeklySummary();
 
 
-    const target = process.cwd() + "/temp/target.xlsx";
-    const excel = new ExcelReader();
-    let result;
-
     
-    result = await excel.fileToMatrix(target, "Sheet1");
-
-
-    console.log(result);
 
 
 
@@ -6945,9 +6937,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "채혜린",
-    //     designer: "김은정",
-    //     link: "https://drive.google.com/drive/folders/1pOdHJue8WYRFwANOa_bMJyEqTeCaKu5V",
+    //     client: "지종식",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/1yUgubxXBEj7AxMalYV6hNrp3KMd42wpG",
     //     pay: true
     //   },
     // ]);
@@ -6957,8 +6949,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "박세미",
-    //     designer: "김도희",
+    //     client: "지종식",
+    //     designer: "이정아",
     //   },
     // ]);
 
@@ -7011,7 +7003,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "박수진", "2023-12-22" ],
+    //   [ "이효정", "2024-01-26" ],
     // ]);
 
 
@@ -7052,8 +7044,8 @@ DevContext.prototype.launching = async function () {
     // });
 
     // await human.sendSms({
-    //   to: "01035155023",
-    //   body: `안녕하세요, 김정현 디자이너님!\n주식회사 홈리에종입니다.\n\n면접 날짜와 시간, 주소에 대한 정보 공지해드립니다. 해당 시간과 장소에서 뵙겠습니다 :)\n\n* 시간 : 12월 8일 금요일 오후 1시 00분\n* 장소 : 서울특별시 성동구 성수일로 10 605호 (주)홈리에종`,
+    //   to: "01097789702",
+    //   body: `안녕하세요, 정세은 개발자님!\n주식회사 홈리에종입니다.\n\n면접 날짜와 시간, 주소에 대한 정보 공지해드립니다. 해당 시간과 장소에서 뵙겠습니다 :)\n\n* 시간 : 2월 6일 화요일 오후 2시 00분\n* 장소 : 서울특별시 성동구 성수일로 10 605호 (주)홈리에종`,
     // });
 
     // bill passive sync

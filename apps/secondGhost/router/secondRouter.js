@@ -3374,6 +3374,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
         if (thisBody.api_app_id.toLowerCase() === slack_fairyAppId.toLowerCase()) {
           if (thisBody.event.type === "message") {
             if (typeof thisBody.event.text === "string") {
+              /*
               if (/^요정[이아야님]?/i.test(thisBody.event.text.trim()) || (new RegExp(slack_fairyId, "gi")).test(thisBody.event.text.trim())) {
                 if (/(주간|전체) 보고/gi.test(thisBody.event.text.trim())) {
                   if (/주간/gi.test(thisBody.event.text.trim())) {
@@ -3461,6 +3462,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                   }
                 }
               }
+              */
             }
   
           } else if (thisBody.event.type === "app_home_opened") {
