@@ -1,4 +1,4 @@
-const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairyToken, slack_fairyId, slack_fairyAppId, telegram, kakao, human) {
+const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairy, slack_fairyToken, slack_fairyId, slack_fairyAppId, telegram, kakao, human) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
@@ -24,6 +24,7 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
   this.slack_fairyToken = slack_fairyToken;
   this.slack_fairyId = slack_fairyId;
   this.slack_fairyAppId = slack_fairyAppId;
+  this.slack_fairy = slack_fairy;
 
   this.kakao = kakao;
   this.human = human;
@@ -264,8 +265,6 @@ SecondRouter.prototype.rou_post_messageLog = function () {
         fairyMode = false;
       }
 
-      fairyMode = false;
-
       slackText = text;
       if (Array.isArray(equalJson(req.body).target)) {
 
@@ -299,7 +298,11 @@ SecondRouter.prototype.rou_post_messageLog = function () {
 
       if (!(/silent/gi.test(channel) || /error_log/gi.test(channel) || /alive_log/gi.test(channel) || /cron_log/gi.test(channel) || /checklist_log/gi.test(channel))) {
         setQueue(() => {
-          instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
+          if (!fairyMode) {
+            instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
+          } else {
+            instance.slack_fairy.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
+          }
         }, 0)
       }
 
