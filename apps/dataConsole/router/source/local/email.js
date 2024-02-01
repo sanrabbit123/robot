@@ -23,12 +23,8 @@ const EmailJs = function () {
 
 EmailJs.prototype.baseMaker = async function () {
   const instance = this;
-  const { ea, totalContents, valueAreaClassName, emailAddress } = this;
+  const { ea, totalContents, valueAreaClassName, emailAddress, listTongClassName, bodyTongClassName, attachTongClassName, eventTargetClassName } = this;
   const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, blankHref, cleanChildren, ajaxJson, equalJson, autoComma } = GeneralJs;
-  const listTongClassName = "listTongClassName";
-  const bodyTongClassName = "bodyTongClassName";
-  const attachTongClassName = "attachTongClassName";
-  const eventTargetClassName = "eventTargetClassName";
   try {
     let totalMother;
     let columnAreaHeight;
@@ -107,7 +103,7 @@ EmailJs.prototype.baseMaker = async function () {
     bodyOpenHeight = 640;
 
     titleAreaHeight = 24;
-    titleAreaMarginBottom = 12;
+    titleAreaMarginBottom = 6;
 
     receiveEmails = this.receiveEmails.data;
 
@@ -170,13 +166,13 @@ EmailJs.prototype.baseMaker = async function () {
             display: "block",
             position: "relative",
             fontFamily: "graphik",
-            fontSize: String(19) + ea,
+            fontSize: String(18) + ea,
             fontWeight: String(500),
             color: colorChip.black,
           },
           under: {
             position: "relative",
-            fontSize: String(19) + ea,
+            fontSize: String(18) + ea,
             fontWeight: String(500),
             color: colorChip.gray4,
             top: String(2) + ea,
@@ -568,6 +564,7 @@ EmailJs.prototype.launching = async function () {
     let loading;
     let memid;
     let receiveEmails;
+    let targetSearch;
 
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
@@ -590,6 +587,10 @@ EmailJs.prototype.launching = async function () {
 
     this.receiveEmails = receiveEmails;
     this.valueAreaClassName = "valueAreaClassName";
+    this.listTongClassName = "listTongClassName";
+    this.bodyTongClassName = "bodyTongClassName";
+    this.attachTongClassName = "attachTongClassName";
+    this.eventTargetClassName = "eventTargetClassName";
     this.emailHost = NUMBERSHOST.split(":")[1].split("/")[2];
     this.emailAddress = instance.mother.member.email.find((s) => { return (new RegExp(instance.emailHost, "gi")).test(s) })
 
@@ -600,6 +601,18 @@ EmailJs.prototype.launching = async function () {
     await this.baseMaker();
 
     loading.parentNode.removeChild(loading);
+
+    if (typeof getObj.target === "string") {
+      targetSearch = [ ...document.body.querySelectorAll('.' + getObj.target) ];
+      if (targetSearch.length > 0) {
+        targetSearch = targetSearch.filter((d) => { return d.querySelector('.' + instance.eventTargetClassName) !== null });
+        if (targetSearch.length > 0) {
+          setQueue(() => {
+            targetSearch[0].querySelector('.' + instance.eventTargetClassName)?.click();
+          }, 0);
+        }
+      }
+    }
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});

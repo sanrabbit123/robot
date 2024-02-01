@@ -3229,7 +3229,7 @@ GeneralJs.prototype.greenBar = function () {
       child: {
         mode: "iframe",
         attribute: {
-          src: BACKHOST + "/email?entire=true&dataonly=true",
+          src: BACKHOST + "/email?entire=true&dataonly=true" + (typeof GeneralJs.returnGet().emailtarget === "string" ? ("&target=" + GeneralJs.returnGet().emailtarget) : ""),
           width: String(100) + '%',
           height: String(100) + '%',
         },
