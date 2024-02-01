@@ -24,7 +24,7 @@ const EmailJs = function () {
 EmailJs.prototype.baseMaker = async function () {
   const instance = this;
   const { ea, totalContents, valueAreaClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, equalJson, autoComma } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, blankHref, cleanChildren, ajaxJson, equalJson, autoComma } = GeneralJs;
   const listTongClassName = "listTongClassName";
   const bodyTongClassName = "bodyTongClassName";
   const attachTongClassName = "attachTongClassName";
@@ -307,10 +307,24 @@ EmailJs.prototype.baseMaker = async function () {
 
                         for (let obj of response.attachment) {
                           thisFileName = obj.key.split("/")[obj.key.split("/").length - 1];
-
                           createNode({
                             mother: targetAttachDom,
                             text: thisFileName,
+                            attribute: {
+                              file: thisFileName,
+                              hash: obj.hash
+                            },
+                            event: {
+                              click: async function (e) {
+                                try {
+                                  const hash = this.getAttribute("hash");
+                                  const { link } = await ajaxJson({ hash }, PARSERHOST + "/getFileLink", { equal: true });
+                                  blankHref(link);
+                                } catch (e) {
+                                  console.log(e);
+                                }
+                              }
+                            },
                             style: {
                               height: String(28) + ea,
                               borderRadius: String(5) + "px",
@@ -329,9 +343,6 @@ EmailJs.prototype.baseMaker = async function () {
                               cursor: "pointer",
                             }
                           })
-
-                          
-
                         }
 
                       }
