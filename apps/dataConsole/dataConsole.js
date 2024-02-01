@@ -35,6 +35,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const CONTENTSHOST = "https://" + this.address.contentsinfo.host + ":3000";
   const CONSTRUCTHOST = "https://" + this.address.officeinfo.construct.host + "";
   const NUMBERSHOST = "https://" + this.address.officeinfo.numbers.host + "";
+  const PARSERHOST = "https://" + this.address.officeinfo.parser.host + "";
 
   const classException = {
     proposal: [ "designer.js" ],
@@ -138,7 +139,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     console.log(`set static`);
 
     let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, classString, pythonString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
-    let numbersString;
+    let numbersString, parserString;
     let code0, code1, code2, code3;
     let result;
     let prototypes, dataPatchScript, prototypeBoo;
@@ -157,6 +158,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     contentsString = "const CONTENTSHOST = \"" + CONTENTSHOST + "\";";
     constructString = "const CONSTRUCTHOST = \"" + CONSTRUCTHOST + "\";";
     numbersString = "const NUMBERSHOST = \"" + NUMBERSHOST + "\"";
+    parserString = "const PARSERHOST = \"" + PARSERHOST + "\"";
     officeString = "const FILEHOST = \"" + FILEHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
@@ -197,7 +199,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       }
 
       //merge
-      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + contentsString + "\n\n" + constructString + "\n\n" + numbersString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
+      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + contentsString + "\n\n" + constructString + "\n\n" + numbersString + "\n\n" + parserString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
       code1 = dataPatchScript;
       code2 = generalString + "\n\n" + consoleGeneralString;
       code3 = fileString + "\n\n" + execString;
@@ -257,6 +259,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const CONTENTSHOST = "https://" + this.address.contentsinfo.host + ":3000";
   const CONSTRUCTHOST = "https://" + this.address.officeinfo.construct.host + "";
   const NUMBERSHOST = "https://" + this.address.officeinfo.numbers.host + "";
+  const PARSERHOST = "https://" + this.address.officeinfo.parser.host + "";
   try {
 
     //module transform function
@@ -323,7 +326,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let staticDirList;
     let staticTempDir, staticTempDirList_raw, staticTempDirList;
     let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, pythonString, frontClassString, bridgeString, frontWebString, officeString, logString, backString, secondString, contentsString, constructString;
-    let numbersString;
+    let numbersString, parserString;
     let code0, code1, code2, code3;
     let result, moduleString;
     let prototypes, dataPatchScript, prototypeBoo;
@@ -374,6 +377,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     contentsString = "const CONTENTSHOST = \"" + CONTENTSHOST + "\";";
     constructString = "const CONSTRUCTHOST = \"" + CONSTRUCTHOST + "\";";
     numbersString = "const NUMBERSHOST = \"" + NUMBERSHOST + "\"";
+    parserString = "const PARSERHOST = \"" + PARSERHOST + "\"";
     frontWebString = "const FRONTHOST = \"" + FRONTHOST + "\";";
     officeString = "const FILEHOST = \"" + FILEHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/svgTong.js` ]);
@@ -448,7 +452,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       }
 
       //merge
-      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + contentsString + "\n\n" + constructString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
+      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + contentsString + "\n\n" + constructString + "\n\n" + numbersString + "\n\n" + parserString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
       code1 = dataPatchScript + "\n\n";
       if (kinds === "MIDDLE") {
         code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + frontClassString + "\n\n";
@@ -658,6 +662,7 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
       generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
+      generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.officeinfo.parser.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
       generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
       generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
@@ -688,6 +693,7 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
       generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
+      generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.officeinfo.parser.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
       generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
       generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
@@ -810,6 +816,7 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
       generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
+      generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.officeinfo.parser.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
       generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
       generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
@@ -832,6 +839,7 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
       generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
+      generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.officeinfo.parser.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
       generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
       generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);

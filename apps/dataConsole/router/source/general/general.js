@@ -6105,9 +6105,6 @@ GeneralJs.prototype.grayLoading = function (mother = null, whiteMode = false) {
 }
 
 GeneralJs.prototype.whiteProgressLoading = function (mother = null, emptyProgress = false, transparentBackground = false, frontMode = false) {
-  if (typeof mother !== "object" || mother !== null) {
-    throw new Error("input must be dom");
-  }
   const instance = this;
   const { createNode, colorChip, withOut } = GeneralJs;
   let width, ea;
