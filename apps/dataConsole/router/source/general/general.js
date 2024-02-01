@@ -3166,7 +3166,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //setting icon
-  svg_icon = SvgTong.stringParsing(this.returnSetting(GeneralJs.colorChip.whiteIcon));
+  svg_icon = SvgTong.stringParsing(GeneralJs.svgMaker.mailIcon(GeneralJs.colorChip.whiteIcon));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -3181,9 +3181,6 @@ GeneralJs.prototype.greenBar = function () {
   for (let i in additionalStyle) {
     svg_icon.style[i] = additionalStyle[i];
   }
-  // svg_icon.addEventListener("click", function (e) {
-  //   GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/dashboard?mode=board");
-  // });
   svg_icon.addEventListener("click", function (e) {
     const whitePopupClassName = "whitePopupClassName";
     const totalContents = document.getElementById("totalcontents");
@@ -3227,11 +3224,12 @@ GeneralJs.prototype.greenBar = function () {
         boxShadow: "0px 3px 15px -9px " + GeneralJs.colorChip.darkShadow,
         animation: "fadeuplite 0.3s ease forwards",
         overflow: "hidden",
+        zIndex: String(99),
       },
       child: {
         mode: "iframe",
         attribute: {
-          src: S3HOST + ":6081/vnc_lite.html",
+          src: BACKHOST + "/email?entire=true&dataonly=true",
           width: String(100) + '%',
           height: String(100) + '%',
         },

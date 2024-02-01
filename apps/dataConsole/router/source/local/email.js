@@ -23,7 +23,7 @@ const EmailJs = function () {
 
 EmailJs.prototype.baseMaker = async function () {
   const instance = this;
-  const { ea, totalContents, valueAreaClassName } = this;
+  const { ea, totalContents, valueAreaClassName, emailAddress } = this;
   const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, blankHref, cleanChildren, ajaxJson, equalJson, autoComma } = GeneralJs;
   const listTongClassName = "listTongClassName";
   const bodyTongClassName = "bodyTongClassName";
@@ -60,6 +60,8 @@ EmailJs.prototype.baseMaker = async function () {
     let tongBetween;
     let bodyOpenHeight;
     let fontUpFunc;
+    let titleAreaHeight, titleAreaMarginBottom;
+    let titleArea;
 
     columnAreaHeight = 32;
   
@@ -104,6 +106,9 @@ EmailJs.prototype.baseMaker = async function () {
 
     bodyOpenHeight = 640;
 
+    titleAreaHeight = 24;
+    titleAreaMarginBottom = 12;
+
     receiveEmails = this.receiveEmails.data;
 
     fontUpFunc = (dom) => {
@@ -147,29 +152,60 @@ EmailJs.prototype.baseMaker = async function () {
     });
     this.totalMother = totalMother;
 
-    [ valueArea ] = createNode({
+    titleArea = createNode({
+      mother: totalMother,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(idNameAreaPaddingTop * 2, ea),
+        height: String(titleAreaHeight) + ea,
+        marginBottom: String(titleAreaMarginBottom) + ea,
+        marginLeft: String(idNameAreaPaddingTop) + ea,
+        paddingTop: String(16) + ea,
+      },
+      children: [
+        {
+          text: "<u%< %u>" + emailAddress + "<u% >%u>",
+          style: {
+            display: "block",
+            position: "relative",
+            fontFamily: "graphik",
+            fontSize: String(20) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          },
+          under: {
+            position: "relative",
+            fontSize: String(20) + ea,
+            fontWeight: String(500),
+            color: colorChip.gray4,
+            top: String(2) + ea,
+          }
+        }
+      ]
+    });
+    
+    valueArea = createNode({
       mother: totalMother,
       style: {
         display: "block",
         position: "relative",
         paddingTop: String(idNameAreaPaddingTop) + ea,
-        height: withOut(idNameAreaPaddingTop, ea),
+        height: withOut(titleAreaHeight + titleAreaMarginBottom + idNameAreaPaddingTop, ea),
         width: withOut(0, ea),
         overflow: "scroll",
       },
-      children: [
-        {
-          class: [ valueAreaClassName ],
-          style: {
-            display: "inline-block",
-            position: "relative",
-            verticalAlign: "top",
-            width: withOut(0, ea),
-            overflow: "hidden",
-          },
-        }
-      ]
-    }).children;
+      child: {
+        class: [ valueAreaClassName ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          verticalAlign: "top",
+          width: withOut(0, ea),
+          overflow: "hidden",
+        },
+      }
+    }).firstChild;
 
     receiveEmails.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
     for (let obj of receiveEmails) {
@@ -193,6 +229,7 @@ EmailJs.prototype.baseMaker = async function () {
           cursor: "pointer",
         }
       });
+
       createNode({
         mother: tongBase,
         style: {
@@ -553,7 +590,13 @@ EmailJs.prototype.launching = async function () {
 
     this.receiveEmails = receiveEmails;
     this.valueAreaClassName = "valueAreaClassName";
-    
+    this.emailHost = NUMBERSHOST.split(":")[1].split("/")[2];
+    this.emailAddress = instance.mother.member.email.find((s) => { return (new RegExp(instance.emailHost, "gi")).test(s) })
+
+    if (this.emailAddress === undefined) {
+      throw new Error("invalid member");
+    }
+
     await this.baseMaker();
 
     loading.parentNode.removeChild(loading);
