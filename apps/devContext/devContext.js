@@ -6937,9 +6937,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "조연경",
-    //     designer: "김보하",
-    //     link: "https://drive.google.com/drive/folders/1J0n5o5Jd5W2b5CEkCI2Z7xMtBLjPw2xA",
+    //     client: null,
+    //     designer: "이효정",
+    //     link: "https://drive.google.com/drive/folders/1KT1kqTY1xaHw_wxt1GiJbOilF5UNjeYb",
     //     pay: true
     //   },
     // ]);
@@ -7008,20 +7008,20 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2307_aa01s" ]);
+    // await work.newDesignerToFront([ "d2401_aa01s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2312_aa05s", [
-    //   { porlid: "a123", index: 7 },
-    //   { porlid: "a123", index: 2 },
-    //   { porlid: "a123", index: 9 },
-    //   { porlid: "a123", index: 12 },
-    //   { porlid: "a123", index: 4 },
+    // await this.setProposalSettingForDesigner("d2401_aa01s", [
+    //   { porlid: "a125", index: 1 },
+    //   { porlid: "a125", index: 4 },
+    //   { porlid: "a125", index: 10 },
+    //   { porlid: "a125", index: 15 },
+    //   { porlid: "a125", index: 16 },
     // ], [
-    //   "상대방에 대해 공감을 잘합니다. 고객님을 이해하고 공감하여 보다 더 나은 디자인을 제공해드립니다.",
-    //   "섬세하고 꼼꼼합니다. 처음 미팅 후 완공 된 후 이미지가 최대한 변동이 없는 디자인을 제공하겠습니다.",
-    //   "성실하고 책임감이 강합니다. 고객님의 현장이 마치 제 현장이라는 마인드로 늘 임해왔습니다.",
+    //   "가구와 조명을 공부한 미대 출신의 디자이너가 뻔하지 않은 특색있는 디자인을 제안해 드립니다.",
+    //   "보기에만 아름다운 집이 아닌 동선, 조도, 공간의 부피감을 세심하게 반영하여 편안한 공간으로 변화시켜드립니다!",
+    //   "실제와 가까운 느낌의 3D모델링과 영상으로 공간을 '미리' 만나볼 수 있습니다.",
     // ]);
 
 

@@ -415,7 +415,7 @@ LogRouter.prototype.rou_post_getContents = function () {
     });
     try {
       const selfMongo = instance.mongolocal;
-      const hideContents = [ "p61" ];
+      const hideContents = [ "p61", "p36" ];
       let limit;
       let contentsArr_raw;
       let contentsArr, designers;

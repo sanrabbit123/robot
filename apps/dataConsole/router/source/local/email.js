@@ -42,7 +42,7 @@ EmailJs.prototype.sendMailPopup = function () {
       let scrollBox;
 
       zIndex = 98;
-      margin = 72;
+      margin = 40;
       innerPadding = 30;
 
       popupWidth = 900;
