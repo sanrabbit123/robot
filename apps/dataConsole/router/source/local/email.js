@@ -697,7 +697,7 @@ EmailJs.prototype.sendMailInputSetting = async function (scrollBox) {
         },
         {
           style: {
-            display: "inline-block",
+            display: "inline-flex",
             position: "relative",
             width: withOut((circleRadius * 2) + circleBetween + propertyAreaWidth + (teamInnerPadding * 2), ea),
             "min-height": String(64) + ea,
@@ -705,7 +705,20 @@ EmailJs.prototype.sendMailInputSetting = async function (scrollBox) {
             background: colorChip.gray1,
             borderRadius: String(3) + "px",
             paddingBottom: String(teamInnerPadding - 4) + ea,
+            justifyContent: "center",
+            alignItems: "center",
           },
+          child: {
+            text: "여기에 파일을 드래그하여 업로드...",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(isMac() ? -2 : 0) + ea,
+              fontSize: String(20) + ea,
+              fontWeight: String(200),
+              color: colorChip.deactive,
+            }
+          }
         },
       ]
     });
@@ -777,6 +790,100 @@ EmailJs.prototype.sendMailInputSetting = async function (scrollBox) {
         },
       ]
     });
+
+    // pannel
+    createNode({
+      mother: scrollBox.parentNode,
+      style: {
+        display: "inline-flex",
+        position: "fixed",
+        bottom: String(30 + 16) + ea,
+        right: String(30 + 16) + ea,
+        width: String(84) + ea,
+        padding: String(6) + ea,
+        background: colorChip.white,
+        boxShadow: "0px 3px 18px -9px " + colorChip.darkShadow,
+        borderRadius: String(5) + "px",
+        animation: "fadeuplite 0.3s ease forwards",
+        flexDirection: "column",
+      },
+      children: [
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            width: String(84) + ea,
+            height: String(28) + ea,
+            background: colorChip.gradientGreen,
+            borderRadius: String(5) + "px",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            text: "즉시 발송",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(13) + ea,
+              fontWeight: String(800),
+              color: colorChip.white,
+              top: String(isMac() ? -1 : 1) + ea,
+            }
+          }
+        },
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            width: String(84) + ea,
+            height: String(28) + ea,
+            background: colorChip.gradientGreen,
+            borderRadius: String(5) + "px",
+            marginTop: String(4) + ea,
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            text: "예약 발송",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(13) + ea,
+              fontWeight: String(800),
+              color: colorChip.white,
+              top: String(isMac() ? -1 : 1) + ea,
+            }
+          }
+        },
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            width: String(84) + ea,
+            height: String(28) + ea,
+            background: colorChip.gradientGreen,
+            borderRadius: String(5) + "px",
+            marginTop: String(4) + ea,
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            text: "연쇄 발송",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(13) + ea,
+              fontWeight: String(800),
+              color: colorChip.white,
+              top: String(isMac() ? -1 : 1) + ea,
+            }
+          }
+        },
+      ]
+    })
 
   } catch (e) {
     console.log(e);
