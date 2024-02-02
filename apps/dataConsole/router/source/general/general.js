@@ -3165,9 +3165,10 @@ GeneralJs.prototype.greenBar = function () {
   });
   div_clone.appendChild(svg_icon);
 
-  //setting icon
+  //email icon
   svg_icon = SvgTong.stringParsing(GeneralJs.svgMaker.mailIcon(GeneralJs.colorChip.whiteIcon));
   svg_icon.classList.add("hoverDefault");
+  svg_icon.classList.add("emailTarget");
   for (let i in style) {
     svg_icon.style[i] = style[i];
   }
@@ -3393,6 +3394,15 @@ GeneralJs.prototype.greenBar = function () {
   div_clone2.addEventListener("click", GeneralJs.grayLeftLaunching());
   GeneralJs.stacks["grayLeftButton"] = div_clone2;
   this.below.appendChild(div_clone2);
+
+  GeneralJs.setQueue(() => {
+    if (typeof GeneralJs.returnGet().emailtarget === "string") {
+      const iconTarget = instance.below.querySelector('.' + "emailTarget");
+      if (iconTarget !== null) {
+        iconTarget.dispatchEvent(new Event("click", { bubbles: true }));
+      }
+    }
+  }, 200);
 
 }
 
