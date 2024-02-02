@@ -36,7 +36,7 @@ const KakaoTalk = function () {
     contents: new RegExp(this.ip.contents, 'gi'),
   };
   this.token = {
-    office: "3fc7a22411a09c30a9005dce3b193747cf769b28898aec31f25bcf68b7a076e9d7850de48db2b3113c1307c89d4abb026fe3b78d8961dfec48b5c1e75389ed52q5WJ0ImIn3u0RmcpwapwAZm50j1ih+ujbczXTGicaUAydjRrz13vQQLSqGHRf5/d6mUWLETApyQTHimChdwfEg==",
+    office: "19f2758a0c19d66e8b13d5e461dde9da32c489caac0dbef9ade4a2c0f19c631b96aab4762f14d5d082170acf4e5c730426d04d55db96509e0316746708a609a5otJbdbQibEhdisvCzCJWi0Kk8/RnnW1dkQ/9bLHA4u9Jg9uf/C4QTB/KQyeThZPS2fyNn4SkOUDPsSuRtvUgRQ==",
     console: "d1f471de2a51dcb274c03b667d76d32b6565e26f5ef7b52401ed03721396f8e61bc451c969fe886d47d082a3a22b443b5b031941c67459569dc0ce7afc82e6d7isk4rc0u02hPvi6/qyLQSUN0tCd8DJLnaTSHoo82y2Ke+Dzap1E0Yc9aW6mmXBeBKqsko9TDKKLtg/gwYBw4Dg==",
     python: "fa00d602d8ea0175ea5a589a6a34c194dd366052753b4b104e747013f56cf5bd94cfab495a16b9b0fd3ef3f86e69f365be7062bacdd20dcd0062457f2b06caf5ovKj6SnKOw/DkqgyO17cGsk6eevDREWlyd/i+8ly2gYowpHD2Xn6Lj84hYQxce+KDNeleQZyEbeonIhDSk+YGA==",
     test: "653405233f47846d8a0e221cec348fc9a6ba51b807c5b76cfb0673ab331b6d9007563b912651867b91fed1a6152a67eb00bd6219e97f6ee59b679336f7da06e9+0VRj06cXafvqvU3XP0m0vocW2tFb7wpwIB84vkv/s7L77hgPt6Ux3TOB+IXe7yt1i4zal4l3FGzI04Cjpt7Ew==",
