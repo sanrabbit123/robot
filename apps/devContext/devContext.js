@@ -6939,7 +6939,7 @@ DevContext.prototype.launching = async function () {
     //   {
     //     client: null,
     //     designer: "이효정",
-    //     link: "https://drive.google.com/drive/folders/1KT1kqTY1xaHw_wxt1GiJbOilF5UNjeYb",
+    //     link: "https://drive.google.com/drive/folders/1g1zMcMtbvXZe7ref-H1CWLtYgsVVHLq7",
     //     pay: true
     //   },
     // ]);
