@@ -3089,7 +3089,6 @@ GeneralJs.prototype.greenBar = function () {
       svg_icon.style.opacity = String(0.5);
     }
 
-
     GeneralJs.addHrefEvent(svg_icon, (naviIconsHost + naviIconsLinks[i]));
     svg_icon.addEventListener("contextmenu", function (e) {
       e.preventDefault();
@@ -3185,6 +3184,7 @@ GeneralJs.prototype.greenBar = function () {
   svg_icon.addEventListener("click", function (e) {
     const whitePopupClassName = "whitePopupClassName";
     const totalContents = document.getElementById("totalcontents");
+    const zIndex = 99;
     let margin;
     let cancelBack, whitePrompt;
     margin = 30;
@@ -3207,6 +3207,7 @@ GeneralJs.prototype.greenBar = function () {
         height: GeneralJs.withOut(instance.belowHeight, ea),
         background: GeneralJs.colorChip.black,
         opacity: String(0.3),
+        zIndex: String(zIndex),
       }
     });
   
@@ -3225,7 +3226,7 @@ GeneralJs.prototype.greenBar = function () {
         boxShadow: "0px 3px 15px -9px " + GeneralJs.colorChip.darkShadow,
         animation: "fadeuplite 0.3s ease forwards",
         overflow: "hidden",
-        zIndex: String(99),
+        zIndex: String(zIndex),
       },
       child: {
         mode: "iframe",
