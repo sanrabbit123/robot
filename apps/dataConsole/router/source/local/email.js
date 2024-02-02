@@ -191,6 +191,7 @@ EmailJs.prototype.sendMailInputSetting = async function (scrollBox) {
     let inputWeight;
     let inputIndent;
     let propertyAreaWidth;
+    let teamInnerPadding;
 
     circleRadius = <%% 2.5, 2.5, 2, 2, 0.5 %%>;
     circleTop = 10;
@@ -224,7 +225,9 @@ EmailJs.prototype.sendMailInputSetting = async function (scrollBox) {
     inputIndent = <%% 10, 10, 10, 10, 2.5 %%>;
 
     propertyAreaWidth = 120;
+    teamInnerPadding = 8;
 
+    marginRatio = <%% 1.2, 1.2, 1.1, 1.1, 0.8 %%>;
 
     // 1
     createNode({
@@ -460,6 +463,120 @@ EmailJs.prototype.sendMailInputSetting = async function (scrollBox) {
         display: "flex",
         position: "relative",
         marginBottom: String(blockMarginBottom) + ea,
+        flexDirection: "row",
+        alignItems: "start",
+        justifyContent: "start"
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String((circleRadius * 2) + circleBetween + propertyAreaWidth) + ea,
+            height: String(moduleHeight) + ea,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "start"
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(circleRadius * 2) + ea,
+                height: String(circleRadius * 2) + ea,
+                marginRight: String(circleBetween) + ea,
+                borderRadius: String(circleRadius) + ea,
+                background: colorChip.deactive,
+                verticalAlign: "top",
+              }
+            },
+            {
+              text: "받는 팀원",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(mainWeight),
+                color: colorChip.black,
+                verticalAlign: "top",
+                width: String(propertyAreaWidth) + ea,
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: withOut((circleRadius * 2) + circleBetween + propertyAreaWidth + (teamInnerPadding * 2), ea),
+            "min-height": String(grayHeight) + ea,
+            padding: String(teamInnerPadding) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+            paddingBottom: String(teamInnerPadding - 4) + ea,
+          },
+          children: instance.members.filter((m) => {
+            return m.alive && (m.email.findIndex((e) => { return (new RegExp(instance.emailHost, "gi")).test(e) }) !== -1)
+          }).map((m) => {
+            return {
+              attribute: {
+                toggle: "off",
+                email: m.email.find((e) => { return (new RegExp(instance.emailHost, "gi")).test(e) }),
+                name: m.name,
+                memid: m.id,
+              },
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(64) + ea,
+                height: String(28) + ea,
+                borderRadius: String(5) + "px",
+                background: colorChip.white,
+                marginRight: String(4) + ea,
+                marginBottom: String(4) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+              },
+              child: {
+                text: m.name,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(isMac() ? -1 : 1) + ea,
+                  fontSize: String(13) + ea,
+                  fontWeight: String(700),
+                  color: colorChip.black,
+                }
+              }
+            }
+          })
+        },
+      ]
+    });
+
+    // 5 : margin
+    createNode({
+      mother: scrollBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+
+    // 6
+    createNode({
+      mother: scrollBox,
+      class: [ baseBlockClassName ],
+      attribute: { baseclass: "name" },
+      style: {
+        display: "flex",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
         height: String(moduleHeight) + ea,
         flexDirection: "row",
         alignItems: "center",
@@ -479,7 +596,7 @@ EmailJs.prototype.sendMailInputSetting = async function (scrollBox) {
           }
         },
         {
-          text: "받는 팀원",
+          text: "제목",
           style: {
             display: "inline-block",
             position: "relative",
@@ -494,38 +611,172 @@ EmailJs.prototype.sendMailInputSetting = async function (scrollBox) {
         {
           style: {
             display: "inline-block",
-            position: "absolute",
-            width: withOut((circleRadius * 2) + circleBetween + propertyAreaWidth + (12 * 2), ea),
-            left: String((circleRadius * 2) + circleBetween + propertyAreaWidth) + ea,
-            top: String(0),
-            "min-height": String(grayHeight) + ea,
-            padding: String(12) + ea,
+            position: "relative",
+            width: withOut((circleRadius * 2) + circleBetween + propertyAreaWidth, ea),
+            height: String(grayHeight) + ea,
             background: colorChip.gray1,
             borderRadius: String(3) + "px",
-            paddingBottom: String(12 - 4) + ea,
           },
-          children: instance.members.filter((m) => {
-            return m.alive && (m.email.findIndex((e) => { return (new RegExp(instance.emailHost, "gi")).test(e) }) !== -1)
-          }).map((m) => {
-            return {
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: String(64) + ea,
-                height: String(24) + ea,
-                borderRadius: String(5) + "px",
-                background: colorChip.white,
-                marginRight: String(4) + ea,
-                marginBottom: String(4) + ea,
-              }
+          child:{
+            mode: "input",
+            class: [ inputClassName ],
+            attribute: {
+              type: "text",
+              property: "name",
+              value: "",
+            },
+            style: {
+              position: "absolute",
+              top: String(grayInputTop) + ea,
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              outline: String(0),
+              border: String(0),
+              fontSize: String(inputSize) + ea,
+              fontWeight: String(inputWeight),
+              color: colorChip.black,
+              textAlign: "center",
+              background: "transparent",
             }
-          })
+          }
         },
       ]
     });
 
+    // 7
+    createNode({
+      mother: scrollBox,
+      class: [ baseBlockClassName ],
+      attribute: { baseclass: "name" },
+      style: {
+        display: "flex",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        flexDirection: "row",
+        alignItems: "start",
+        justifyContent: "start"
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String((circleRadius * 2) + circleBetween + propertyAreaWidth) + ea,
+            height: String(moduleHeight) + ea,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "start"
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(circleRadius * 2) + ea,
+                height: String(circleRadius * 2) + ea,
+                marginRight: String(circleBetween) + ea,
+                borderRadius: String(circleRadius) + ea,
+                background: colorChip.deactive,
+                verticalAlign: "top",
+              }
+            },
+            {
+              text: "첨부 파일",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(mainWeight),
+                color: colorChip.black,
+                verticalAlign: "top",
+                width: String(propertyAreaWidth) + ea,
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: withOut((circleRadius * 2) + circleBetween + propertyAreaWidth + (teamInnerPadding * 2), ea),
+            "min-height": String(64) + ea,
+            padding: String(teamInnerPadding) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+            paddingBottom: String(teamInnerPadding - 4) + ea,
+          },
+        },
+      ]
+    });
 
-
+    // 8
+    createNode({
+      mother: scrollBox,
+      class: [ baseBlockClassName ],
+      attribute: { baseclass: "name" },
+      style: {
+        display: "flex",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        flexDirection: "row",
+        alignItems: "start",
+        justifyContent: "start"
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String((circleRadius * 2) + circleBetween + propertyAreaWidth) + ea,
+            height: String(moduleHeight) + ea,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "start"
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(circleRadius * 2) + ea,
+                height: String(circleRadius * 2) + ea,
+                marginRight: String(circleBetween) + ea,
+                borderRadius: String(circleRadius) + ea,
+                background: colorChip.deactive,
+                verticalAlign: "top",
+              }
+            },
+            {
+              text: "본문",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(mainWeight),
+                color: colorChip.black,
+                verticalAlign: "top",
+                width: String(propertyAreaWidth) + ea,
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: withOut((circleRadius * 2) + circleBetween + propertyAreaWidth + (teamInnerPadding * 2), ea),
+            "min-height": String(64) + ea,
+            padding: String(teamInnerPadding) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+            paddingBottom: String(teamInnerPadding - 4) + ea,
+            height: String(8000) + ea,
+          },
+        },
+      ]
+    });
 
   } catch (e) {
     console.log(e);
