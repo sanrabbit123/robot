@@ -6937,9 +6937,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "신경희",
-    //     designer: "김은경",
-    //     link: "https://drive.google.com/drive/folders/1BG0_5xeNoRMeL8wyuJOFMqo_WdY-zVB6",
+    //     client: "조연경",
+    //     designer: "김보하",
+    //     link: "https://drive.google.com/drive/folders/1J0n5o5Jd5W2b5CEkCI2Z7xMtBLjPw2xA",
     //     pay: true
     //   },
     // ]);
@@ -6949,8 +6949,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "신경희",
-    //     designer: "김은경",
+    //     client: "조연경",
+    //     designer: "김보하",
     //   },
     // ]);
 

@@ -7709,7 +7709,7 @@ ClientJs.prototype.launching = async function () {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
 
-    this.members = await ajaxJson({ type: "get" }, "/getMembers", { equal: true });
+    this.members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
     GeneralJs.stacks.members = this.members;
 
     if (getObj.dataonly === "true") {

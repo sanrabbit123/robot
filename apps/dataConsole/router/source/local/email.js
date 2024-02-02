@@ -21,6 +21,517 @@ const EmailJs = function () {
   this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
 }
 
+EmailJs.prototype.sendMailPopup = function () {
+  const instance = this;
+  const { ea, totalContents, whitePopupClassName, belowHeight, emailAddress } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, blankHref, cleanChildren, ajaxJson, equalJson, autoComma } = GeneralJs;
+  return async function (e) {
+    try {
+      let margin;
+      let cancelBack, whitePrompt;
+      let zIndex;
+      let popupWidth;
+      let innerPadding;
+      let titleArea;
+      let idNameAreaPaddingTop;
+      let titleAreaHeight;
+      let titleAreaMarginBottom;
+      let titleSize;
+      let contentsArea;
+      let contentsAreaPaddingTop;
+      let scrollBox;
+
+      zIndex = 98;
+      margin = 72;
+      innerPadding = 30;
+
+      popupWidth = 900;
+
+      idNameAreaPaddingTop = 17;
+
+      titleAreaHeight = 24;
+      titleAreaMarginBottom = 6;
+      titleSize = 16;
+
+      contentsAreaPaddingTop = 16;
+
+      removeByClass(whitePopupClassName);
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ whitePopupClassName ],
+        event: {
+          click: (e) => {
+            removeByClass(whitePopupClassName);
+          },
+        },
+        style: {
+          display: "block",
+          position: "fixed",
+          top: String(0),
+          left: String(0) + ea,
+          width: withOut(0, ea),
+          height: withOut(belowHeight, ea),
+          background: colorChip.white,
+          opacity: String(0.6),
+          zIndex: String(zIndex),
+        }
+      });
+
+      whitePrompt = createNode({
+        mother: totalContents,
+        class: [ whitePopupClassName ],
+        style: {
+          display: "block",
+          position: "fixed",
+          top: String(margin) + ea,
+          width: String(popupWidth - (innerPadding * 2)) + ea,
+          left: "calc(50% - " + String(popupWidth / 2) + ea + ")",
+          height: withOut(belowHeight + (margin * 2) + (innerPadding * 2), ea),
+          padding: String(innerPadding) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.white,
+          boxShadow: "0px 3px 18px -9px " + colorChip.darkShadow,
+          animation: "fadeuplite 0.3s ease forwards",
+          overflow: "hidden",
+          zIndex: String(zIndex),
+        },
+      });
+
+      titleArea = createNode({
+        mother: whitePrompt,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(titleAreaHeight) + ea,
+          marginBottom: String(titleAreaMarginBottom) + ea,
+          flexDirection: "row",
+        },
+        children: [
+          {
+            text: "<u%< %u>" + "Send mail" + "<u% >%u>",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontFamily: "graphik",
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+            },
+            under: {
+              position: "relative",
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(500),
+              color: colorChip.gray4,
+              top: String(2) + ea,
+            }
+          }
+        ]
+      });
+  
+      contentsArea = createNode({
+        mother: whitePrompt,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: withOut(titleAreaHeight + titleAreaMarginBottom + contentsAreaPaddingTop, ea),
+          borderTop: "1px solid " + colorChip.gray3,
+          paddingTop: String(contentsAreaPaddingTop) + ea,
+          overflow: "scroll",
+        }
+      })
+
+      scrollBox = createNode({
+        mother: contentsArea,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+        }
+      });
+
+      await instance.sendMailInputSetting(scrollBox);
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+EmailJs.prototype.sendMailInputSetting = async function (scrollBox) {
+  const instance = this;
+  const { ea, totalContents, whitePopupClassName, belowHeight, emailAddress, baseBlockClassName, inputClassName } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, blankHref, cleanChildren, ajaxJson, equalJson, autoComma } = GeneralJs;
+  try {
+    let grayTop;
+    let grayInputTop;
+    let grayHeight;
+    let grayBigHeight;
+    let grayTextAreaTop;
+    let grayTextAreaWidth;
+    let moduleHeight;
+    let blockMarginBottom;
+    let leftGrayType0;
+    let leftGrayType1;
+    let leftGrayType2;
+    let leftGrayType3;
+    let widthGrayType0;
+    let widthGrayType1;
+    let widthGrayType2;
+    let widthGrayType3;
+    let circleRadius;
+    let circleTop;
+    let circleBetween;
+    let mainSize;
+    let mainWeight;
+    let mainTop;
+    let inputSize;
+    let inputWeight;
+    let inputIndent;
+    let propertyAreaWidth;
+
+    circleRadius = <%% 2.5, 2.5, 2, 2, 0.5 %%>;
+    circleTop = 10;
+    circleBetween = <%% 6, 6, 5, 5, 1.3 %%>;
+
+    grayTop = <%% 0, 0, 0, 0, 0 %%>;
+    grayInputTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.2 %%>;
+    grayHeight = 30;
+    grayBigHeight = <%% 156, 137, 136, 135, 38 %%>;
+    grayTextAreaTop = <%% 3, 3, 3, 3, 1.3 %%>;
+    grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
+  
+    moduleHeight = grayTop + grayHeight;
+    blockMarginBottom = 6;
+  
+    leftGrayType0 = <%% 101, 90, 78, 78, 18 %%>;
+    leftGrayType1 = <%% 418, 361, 318, 96, 22.8 %%>;
+    leftGrayType2 = <%% 125, 112, 98, 98, 22.8 %%>;
+    leftGrayType3 = <%% 164, 151, 130, 129, 30.5 %%>;
+  
+    widthGrayType0 = <%% 160, 140, 140, 150, 34 %%>;
+    widthGrayType1 = <%% 455, 329, 283, 403, 58.1 %%>;
+    widthGrayType2 = <%% 757, 588, 503, 383, 53.4 %%>;
+    widthGrayType3 = <%% 392, 268, 231, 352, 45.6 %%>;
+
+    mainSize = 16;
+    mainWeight = 800;
+    mainTop = isMac() ? -1 : 1;
+    inputSize = <%% 13, 13, 12, 12, 3 %%>;
+    inputWeight = <%% 400, 400, 400, 400, 400 %%>;
+    inputIndent = <%% 10, 10, 10, 10, 2.5 %%>;
+
+    propertyAreaWidth = 120;
+
+
+    // 1
+    createNode({
+      mother: scrollBox,
+      class: [ baseBlockClassName ],
+      attribute: { baseclass: "name" },
+      style: {
+        display: "flex",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "start"
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.deactive,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "받는 사람 1",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+            width: String(propertyAreaWidth) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(300) + ea,
+            height: String(grayHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          },
+          child:{
+            mode: "input",
+            class: [ inputClassName ],
+            attribute: {
+              type: "text",
+              property: "name",
+              value: "",
+            },
+            style: {
+              position: "absolute",
+              top: String(grayInputTop) + ea,
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              outline: String(0),
+              border: String(0),
+              fontSize: String(inputSize) + ea,
+              fontWeight: String(inputWeight),
+              color: colorChip.black,
+              textAlign: "center",
+              background: "transparent",
+            }
+          }
+        },
+      ]
+    });
+    
+    // 2
+    createNode({
+      mother: scrollBox,
+      class: [ baseBlockClassName ],
+      attribute: { baseclass: "name" },
+      style: {
+        display: "flex",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "start"
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.deactive,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "받는 사람 2",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+            width: String(propertyAreaWidth) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(300) + ea,
+            height: String(grayHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          },
+          child:{
+            mode: "input",
+            class: [ inputClassName ],
+            attribute: {
+              type: "text",
+              property: "name",
+              value: "",
+            },
+            style: {
+              position: "absolute",
+              top: String(grayInputTop) + ea,
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              outline: String(0),
+              border: String(0),
+              fontSize: String(inputSize) + ea,
+              fontWeight: String(inputWeight),
+              color: colorChip.black,
+              textAlign: "center",
+              background: "transparent",
+            }
+          }
+        },
+      ]
+    });
+
+    // 3
+    createNode({
+      mother: scrollBox,
+      class: [ baseBlockClassName ],
+      attribute: { baseclass: "name" },
+      style: {
+        display: "flex",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "start"
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.deactive,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "받는 사람 3",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+            width: String(propertyAreaWidth) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(300) + ea,
+            height: String(grayHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          },
+          child:{
+            mode: "input",
+            class: [ inputClassName ],
+            attribute: {
+              type: "text",
+              property: "name",
+              value: "",
+            },
+            style: {
+              position: "absolute",
+              top: String(grayInputTop) + ea,
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              outline: String(0),
+              border: String(0),
+              fontSize: String(inputSize) + ea,
+              fontWeight: String(inputWeight),
+              color: colorChip.black,
+              textAlign: "center",
+              background: "transparent",
+            }
+          }
+        },
+      ]
+    });
+
+    // 4
+    createNode({
+      mother: scrollBox,
+      class: [ baseBlockClassName ],
+      attribute: { baseclass: "name" },
+      style: {
+        display: "flex",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight) + ea,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "start"
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.deactive,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "받는 팀원",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+            width: String(propertyAreaWidth) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "absolute",
+            width: withOut((circleRadius * 2) + circleBetween + propertyAreaWidth + (12 * 2), ea),
+            left: String((circleRadius * 2) + circleBetween + propertyAreaWidth) + ea,
+            top: String(0),
+            "min-height": String(grayHeight) + ea,
+            padding: String(12) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+            paddingBottom: String(12 - 4) + ea,
+          },
+          children: instance.members.filter((m) => {
+            return m.alive && (m.email.findIndex((e) => { return (new RegExp(instance.emailHost, "gi")).test(e) }) !== -1)
+          }).map((m) => {
+            return {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(64) + ea,
+                height: String(24) + ea,
+                borderRadius: String(5) + "px",
+                background: colorChip.white,
+                marginRight: String(4) + ea,
+                marginBottom: String(4) + ea,
+              }
+            }
+          })
+        },
+      ]
+    });
+
+
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 EmailJs.prototype.baseMaker = async function () {
   const instance = this;
   const { ea, totalContents, valueAreaClassName, emailAddress, listTongClassName, bodyTongClassName, attachTongClassName, eventTargetClassName } = this;
@@ -58,6 +569,7 @@ EmailJs.prototype.baseMaker = async function () {
     let fontUpFunc;
     let titleAreaHeight, titleAreaMarginBottom;
     let titleArea;
+    let sendEmailIcon;
 
     columnAreaHeight = 32;
   
@@ -158,12 +670,13 @@ EmailJs.prototype.baseMaker = async function () {
         marginBottom: String(titleAreaMarginBottom) + ea,
         marginLeft: String(idNameAreaPaddingTop) + ea,
         paddingTop: String(16) + ea,
+        flexDirection: "row",
       },
       children: [
         {
           text: "<u%< %u>" + emailAddress + "<u% >%u>",
           style: {
-            display: "block",
+            display: "inline-block",
             position: "relative",
             fontFamily: "graphik",
             fontSize: String(18) + ea,
@@ -180,7 +693,34 @@ EmailJs.prototype.baseMaker = async function () {
         }
       ]
     });
-    
+
+    sendEmailIcon = createNode({
+      mother: titleArea,
+      event: {
+        click: instance.sendMailPopup(),
+      },
+      style: {
+        display: "inline-flex",
+        position: "absolute",
+        width: String(30) + ea,
+        height: String(30) + ea,
+        right: String(0),
+        justifyContent: "center",
+        alignItems: "center",
+        cursor: "pointer",
+      },
+      child: {
+        source: GeneralJs.svgMaker.mailIcon(GeneralJs.colorChip.green),
+        mode: "svg",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(24) + ea,
+          height: String(24) + ea,
+        }
+      }
+    });
+
     valueArea = createNode({
       mother: totalMother,
       style: {
@@ -565,6 +1105,7 @@ EmailJs.prototype.launching = async function () {
     let memid;
     let receiveEmails;
     let targetSearch;
+    let members;
 
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
@@ -584,6 +1125,7 @@ EmailJs.prototype.launching = async function () {
 
     memid = instance.mother.member.id;
     receiveEmails = await ajaxJson({ memid }, PARSERHOST + "/listEmail", { equal: true });
+    members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
 
     this.receiveEmails = receiveEmails;
     this.valueAreaClassName = "valueAreaClassName";
@@ -591,8 +1133,13 @@ EmailJs.prototype.launching = async function () {
     this.bodyTongClassName = "bodyTongClassName";
     this.attachTongClassName = "attachTongClassName";
     this.eventTargetClassName = "eventTargetClassName";
+    this.whitePopupClassName = "whitePopupClassName";
+    this.baseBlockClassName = "baseBlockClassName";
+    this.inputClassName = "inputClassName";
     this.emailHost = NUMBERSHOST.split(":")[1].split("/")[2];
     this.emailAddress = instance.mother.member.email.find((s) => { return (new RegExp(instance.emailHost, "gi")).test(s) })
+    this.members = members;
+    GeneralJs.stacks.members = this.members;
 
     if (this.emailAddress === undefined) {
       throw new Error("invalid member");
