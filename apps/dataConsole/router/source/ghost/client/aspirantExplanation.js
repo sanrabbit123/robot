@@ -92,6 +92,7 @@ const AspirantExplanationJs = function () {
     warmGray0: "#faf7f2",
     warmGray1: "#f3f0e9",
     warmGray2: "#d6d3cb",
+    warmGrayMiddle: "#e5e2dc",
     yellowLine: "#cc921f",
   }
 }
@@ -299,7 +300,7 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
     arrowMargin = 29;
     arrowWidth = 50;
 
-    contentsSize = 22;
+    contentsSize = 21;
 
     boxBetween = 24;
 
@@ -341,7 +342,7 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
             position: "relative",
             color: colorExtended.white,
             fontWeight: String(800),
-            fontSize: String(36) + ea,
+            fontSize: String(35) + ea,
           }
         }
       ]
@@ -905,7 +906,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     mainHeight = 900;
     minusLeft = window.innerWidth - standardWidth + 1;
   
-    pinMargin = 16;
+    pinMargin = 15;
     pinWidth = 6;
 
     arrowMargin = 29;
@@ -916,9 +917,9 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     boxBetween = 24;
     middleBetween = 16;
 
-    unitHeight = 192;
+    unitHeight = 184;
 
-    unitSize = 23;
+    unitSize = 22;
     unitWeight = 700;
 
     thirdBase = createNode({
@@ -959,7 +960,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
             position: "relative",
             color: colorExtended.black,
             fontWeight: String(800),
-            fontSize: String(36) + ea,
+            fontSize: String(35) + ea,
           }
         }
       ]
@@ -1034,7 +1035,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(16) + "px",
-        border: "4px solid " + colorExtended.warmGray1,
+        border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.warmGray0,
         flexDirection: "column",
@@ -1121,7 +1122,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(16) + "px",
-        border: "4px solid " + colorExtended.warmGray1,
+        border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.warmGray0,
         flexDirection: "column",
@@ -1207,7 +1208,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
         borderRadius: String(16) + "px",
-        border: "4px solid " + colorExtended.warmGray1,
+        border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.warmGray0,
         flexDirection: "column",
@@ -1296,7 +1297,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(16) + "px",
-        border: "4px solid " + colorExtended.warmGray1,
+        border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.warmGray0,
         flexDirection: "column",
@@ -1383,7 +1384,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(16) + "px",
-        border: "4px solid " + colorExtended.warmGray1,
+        border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.warmGray0,
         flexDirection: "column",
@@ -1471,7 +1472,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
         borderRadius: String(16) + "px",
-        border: "4px solid " + colorExtended.warmGray1,
+        border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.warmGray0,
         flexDirection: "column",
@@ -1640,7 +1641,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
             position: "relative",
             color: colorExtended.black,
             fontWeight: String(800),
-            fontSize: String(36) + ea,
+            fontSize: String(35) + ea,
             lineHeight: String(1.4),
           }
         }
@@ -1909,6 +1910,10 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
     let unitSize, unitWeight;
     let base0, base1, base2, base3;
     let firstWidth, secondWidth;
+    let titleSize;
+    let numberTop;
+    let numberAreaWidth;
+    let titleAreaWidth;
 
     mainHeight = 900;
     minusLeft = window.innerWidth - standardWidth + 1;
@@ -1922,7 +1927,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
     contentsSize = 22;
 
     boxBetween = 24;
-    middleBetween = 16;
+    middleBetween = 12;
 
     unitHeight = 192;
 
@@ -1931,6 +1936,12 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
 
     firstWidth = 88;
     secondWidth = 372;
+
+    titleSize = 23;
+    numberTop = -17;
+
+    numberAreaWidth = 80;
+    titleAreaWidth = 320;
 
     thirdBase = createNode({
       mother: baseTong,
@@ -1970,7 +1981,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             position: "relative",
             color: colorExtended.black,
             fontWeight: String(800),
-            fontSize: String(36) + ea,
+            fontSize: String(35) + ea,
           }
         }
       ]
@@ -2068,8 +2079,9 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         fontSize: String(72) + ea,
         fontWeight: String(400),
         color: colorExtended.warmGray2,
-        top: String(-18) + ea,
-        width: String(100) + ea,
+        top: String(numberTop) + ea,
+        width: String(numberAreaWidth) + ea,
+        left: String(7) + ea,
       }
     });
     createNode({
@@ -2078,12 +2090,12 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
       style: {
         display: "inline-block",
         position: "relative",
-        fontSize: String(25) + ea,
+        fontSize: String(titleSize) + ea,
         fontWeight: String(600),
         color: colorExtended.black,
-        lineHeight: String(1.33),
+        lineHeight: String(1.5),
         top: String(1) + ea,
-        width: String(360) + ea,
+        width: String(titleAreaWidth) + ea,
       }
     });
     createNode({
@@ -2091,8 +2103,8 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
       style: {
         display: "inline-flex",
         position: "relative",
-        width: withOut(100 + 360, ea),
-        height: String(unitHeight) + ea,
+        width: withOut(numberAreaWidth + titleAreaWidth, ea),
+        height: String(140) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(16) + "px",
         border: "2px solid " + colorExtended.warmGray0,
@@ -2111,7 +2123,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             top: String(pinMargin) + ea,
             left: String(pinMargin) + ea,
           }
@@ -2124,7 +2136,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             top: String(pinMargin) + ea,
             right: String(pinMargin) + ea,
           }
@@ -2137,7 +2149,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             bottom: String(pinMargin) + ea,
             left: String(pinMargin) + ea,
           }
@@ -2150,9 +2162,21 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             bottom: String(pinMargin) + ea,
             right: String(pinMargin) + ea,
+          }
+        },
+        {
+          text: "디자이너 대신 고객의 니즈에 대한 상세한 정보를 확인해요.",
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(19) + ea,
+            fontWeight: String(200),
+            color: colorExtended.black,
+            lineHeight: String(1.5),
+            textAlign: "center",
           }
         },
       ],
@@ -2169,22 +2193,23 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         fontSize: String(72) + ea,
         fontWeight: String(400),
         color: colorExtended.warmGray2,
-        top: String(-18) + ea,
-        width: String(100) + ea,
+        top: String(numberTop) + ea,
+        width: String(numberAreaWidth) + ea,
+        left: String(2) + ea,
       }
     });
     createNode({
       mother: base1,
-      text: "고객의 신청서를 바탕으로\n정보를 수집해요.",
+      text: "디자이너와 고객의\n매칭",
       style: {
         display: "inline-block",
         position: "relative",
-        fontSize: String(25) + ea,
+        fontSize: String(titleSize) + ea,
         fontWeight: String(600),
         color: colorExtended.black,
-        lineHeight: String(1.33),
-        top: String(1) + ea,
-        width: String(360) + ea,
+        lineHeight: String(1.5),
+        top: String(2) + ea,
+        width: String(titleAreaWidth) + ea,
       }
     });
     createNode({
@@ -2192,8 +2217,8 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
       style: {
         display: "inline-flex",
         position: "relative",
-        width: withOut(100 + 360, ea),
-        height: String(unitHeight) + ea,
+        width: withOut(numberAreaWidth + titleAreaWidth, ea),
+        height: String(140) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(16) + "px",
         border: "2px solid " + colorExtended.warmGray0,
@@ -2212,7 +2237,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             top: String(pinMargin) + ea,
             left: String(pinMargin) + ea,
           }
@@ -2225,7 +2250,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             top: String(pinMargin) + ea,
             right: String(pinMargin) + ea,
           }
@@ -2238,7 +2263,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             bottom: String(pinMargin) + ea,
             left: String(pinMargin) + ea,
           }
@@ -2251,16 +2276,27 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             bottom: String(pinMargin) + ea,
             right: String(pinMargin) + ea,
+          }
+        },
+        {
+          text: "지역, 스타일, 예산, 일정이 고려된 홈리에종의\n고객 분석 시스템을 통해 디자이너와 고객을 매칭해요.",
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(19) + ea,
+            fontWeight: String(200),
+            color: colorExtended.black,
+            lineHeight: String(1.5),
+            textAlign: "center",
           }
         },
       ],
     });
 
     
-
     // 3
 
     createNode({
@@ -2273,22 +2309,23 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         fontSize: String(72) + ea,
         fontWeight: String(400),
         color: colorExtended.warmGray2,
-        top: String(-18) + ea,
-        width: String(100) + ea,
+        top: String(numberTop) + ea,
+        width: String(numberAreaWidth) + ea,
+        left: String(1) + ea,
       }
     });
     createNode({
       mother: base2,
-      text: "고객의 신청서를 바탕으로\n정보를 수집해요.",
+      text: "프로젝트\n진행",
       style: {
         display: "inline-block",
         position: "relative",
-        fontSize: String(25) + ea,
+        fontSize: String(titleSize) + ea,
         fontWeight: String(600),
         color: colorExtended.black,
-        lineHeight: String(1.33),
+        lineHeight: String(1.5),
         top: String(1) + ea,
-        width: String(360) + ea,
+        width: String(titleAreaWidth) + ea,
       }
     });
     createNode({
@@ -2296,8 +2333,8 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
       style: {
         display: "inline-flex",
         position: "relative",
-        width: withOut(100 + 360, ea),
-        height: String(unitHeight) + ea,
+        width: withOut(numberAreaWidth + titleAreaWidth, ea),
+        height: String(180) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(16) + "px",
         border: "2px solid " + colorExtended.warmGray0,
@@ -2316,7 +2353,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             top: String(pinMargin) + ea,
             left: String(pinMargin) + ea,
           }
@@ -2329,7 +2366,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             top: String(pinMargin) + ea,
             right: String(pinMargin) + ea,
           }
@@ -2342,7 +2379,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             bottom: String(pinMargin) + ea,
             left: String(pinMargin) + ea,
           }
@@ -2355,9 +2392,21 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             bottom: String(pinMargin) + ea,
             right: String(pinMargin) + ea,
+          }
+        },
+        {
+          text: "고객과 소통하며 디자인에 따라 시공 및 스타일링을 제안, 운영합니다.\n시공 포함된 프로젝트의 경우, 디자이너는 시공사 선택에 도움을 주고\n시공 디자인에 필요한 역할을 수행합니다.",
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(19) + ea,
+            fontWeight: String(200),
+            color: colorExtended.black,
+            lineHeight: String(1.5),
+            textAlign: "center",
           }
         },
       ],
@@ -2376,22 +2425,22 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         fontSize: String(72) + ea,
         fontWeight: String(400),
         color: colorExtended.warmGray2,
-        top: String(-18) + ea,
-        width: String(100) + ea,
+        top: String(numberTop) + ea,
+        width: String(numberAreaWidth) + ea,
       }
     });
     createNode({
       mother: base3,
-      text: "고객의 신청서를 바탕으로\n정보를 수집해요.",
+      text: "프로젝트\n종료",
       style: {
         display: "inline-block",
         position: "relative",
-        fontSize: String(25) + ea,
+        fontSize: String(titleSize) + ea,
         fontWeight: String(600),
         color: colorExtended.black,
-        lineHeight: String(1.33),
+        lineHeight: String(1.5),
         top: String(1) + ea,
-        width: String(360) + ea,
+        width: String(titleAreaWidth) + ea,
       }
     });
     createNode({
@@ -2399,8 +2448,8 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
       style: {
         display: "inline-flex",
         position: "relative",
-        width: withOut(100 + 360, ea),
-        height: String(unitHeight) + ea,
+        width: withOut(numberAreaWidth + titleAreaWidth, ea),
+        height: String(180) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(16) + "px",
         border: "2px solid " + colorExtended.warmGray0,
@@ -2419,7 +2468,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             top: String(pinMargin) + ea,
             left: String(pinMargin) + ea,
           }
@@ -2432,7 +2481,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             top: String(pinMargin) + ea,
             right: String(pinMargin) + ea,
           }
@@ -2445,7 +2494,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             bottom: String(pinMargin) + ea,
             left: String(pinMargin) + ea,
           }
@@ -2458,9 +2507,21 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             height: String(pinWidth) + ea,
             borderRadius: String(pinWidth) + ea,
             border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
+            background: colorExtended.warmGrayMiddle,
             bottom: String(pinMargin) + ea,
             right: String(pinMargin) + ea,
+          }
+        },
+        {
+          text: "스타일링이 완성된 현장의 사진을 촬영합니다.\n해당 이미지는 포트폴리오 콘텐츠를 발행하는데 활용됩니다.\n사진 촬영과 동시에 최종 검수를 마친 후 프로젝트를 종료합니다.",
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(19) + ea,
+            fontWeight: String(200),
+            color: colorExtended.black,
+            lineHeight: String(1.5),
+            textAlign: "center",
           }
         },
       ],
