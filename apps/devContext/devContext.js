@@ -6939,20 +6939,21 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "이효정",
-    //     link: "https://drive.google.com/drive/folders/1g1zMcMtbvXZe7ref-H1CWLtYgsVVHLq7",
+    //     client: "강지연",
+    //     designer: "박미연",
+    //     link: "https://drive.google.com/drive/folders/1AkzyK14ajY1Gp8K0t8Sccw20N2EoEOlH",
     //     pay: true
     //   },
     // ]);
 
+  
     
     // raw video
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "조연경",
-    //     designer: "김보하",
+    //     client: "강지연",
+    //     designer: "박미연",
     //   },
     // ]);
 

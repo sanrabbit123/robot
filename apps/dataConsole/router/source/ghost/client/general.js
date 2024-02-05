@@ -69,85 +69,87 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
   }
   secondBackgroundImageName = "back2.jpg";
 
-  if (!second) {
-    [ backgroundGray, backgroundImageBox ] = createNodes([
-      {
-        mother: totalContents,
-        style: {
-          position: "absolute",
-          top: String(0),
-          left: String(0),
-          width: String(100) + '%',
-          height: String(100) + '%',
-          background: desktop ? (this.backgroundType === 1 ? colorChip.gray0 : colorChip.gray2) : colorChip.gray1,
-          animation: "justfadeinoriginal 0.3s ease forwards",
+  if (this.backgroundType !== 9) {
+    if (!second) {
+      [ backgroundGray, backgroundImageBox ] = createNodes([
+        {
+          mother: totalContents,
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String(100) + '%',
+            height: String(100) + '%',
+            background: desktop ? (this.backgroundType === 1 ? colorChip.gray0 : colorChip.gray2) : colorChip.gray1,
+            animation: "justfadeinoriginal 0.3s ease forwards",
+          }
+        },
+        {
+          mother: totalContents,
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String(100) + '%',
+            height: String(backHeight) + ea,
+            backgroundImage: "url('" + binaryPath + "/" + backgroundImageName + "')",
+            backgroundSize: this.backgroundType !== 1 ? ((!media[3] && !media[4]) ? "100% auto" : "auto 100%") : (mobile ? "auto 100%" : "100% auto"),
+            backgroundPosition: "top",
+            animation: "justfadeinoriginal 0.3s ease forwards",
+          }
         }
-      },
-      {
-        mother: totalContents,
-        style: {
-          position: "absolute",
-          top: String(0),
-          left: String(0),
-          width: String(100) + '%',
-          height: String(backHeight) + ea,
-          backgroundImage: "url('" + binaryPath + "/" + backgroundImageName + "')",
-          backgroundSize: this.backgroundType !== 1 ? ((!media[3] && !media[4]) ? "100% auto" : "auto 100%") : (mobile ? "auto 100%" : "100% auto"),
-          backgroundPosition: "top",
-          animation: "justfadeinoriginal 0.3s ease forwards",
+      ]);
+      this.backgroundGray = backgroundGray;
+      this.backgroundImageBox = backgroundImageBox;
+      this.backgroundImageBox2 = null;
+    } else {
+      [ backgroundGray, backgroundImageBox2, backgroundImageBox ] = createNodes([
+        {
+          mother: totalContents,
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String(100) + '%',
+            height: String(100) + '%',
+            background: desktop ? (this.backgroundType === 1 ? colorChip.gray0 : colorChip.gray2) : colorChip.gray1,
+            animation: "justfadeinoriginal 0.3s ease forwards",
+          }
+        },
+        {
+          mother: totalContents,
+          style: {
+            opacity: "0",
+            transition: "all 0s ease",
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String(100) + '%',
+            height: String(backHeight) + ea,
+            backgroundImage: "url('" + binaryPath + "/" + secondBackgroundImageName + "')",
+            backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
+            backgroundPosition: "top",
+          }
+        },
+        {
+          mother: totalContents,
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String(100) + '%',
+            height: String(backHeight) + ea,
+            backgroundImage: "url('" + binaryPath + "/" + backgroundImageName + "')",
+            backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
+            backgroundPosition: "top",
+            animation: "justfadeinoriginal 0.3s ease forwards",
+          }
         }
-      }
-    ]);
-    this.backgroundGray = backgroundGray;
-    this.backgroundImageBox = backgroundImageBox;
-    this.backgroundImageBox2 = null;
-  } else {
-    [ backgroundGray, backgroundImageBox2, backgroundImageBox ] = createNodes([
-      {
-        mother: totalContents,
-        style: {
-          position: "absolute",
-          top: String(0),
-          left: String(0),
-          width: String(100) + '%',
-          height: String(100) + '%',
-          background: desktop ? (this.backgroundType === 1 ? colorChip.gray0 : colorChip.gray2) : colorChip.gray1,
-          animation: "justfadeinoriginal 0.3s ease forwards",
-        }
-      },
-      {
-        mother: totalContents,
-        style: {
-          opacity: "0",
-          transition: "all 0s ease",
-          position: "absolute",
-          top: String(0),
-          left: String(0),
-          width: String(100) + '%',
-          height: String(backHeight) + ea,
-          backgroundImage: "url('" + binaryPath + "/" + secondBackgroundImageName + "')",
-          backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
-          backgroundPosition: "top",
-        }
-      },
-      {
-        mother: totalContents,
-        style: {
-          position: "absolute",
-          top: String(0),
-          left: String(0),
-          width: String(100) + '%',
-          height: String(backHeight) + ea,
-          backgroundImage: "url('" + binaryPath + "/" + backgroundImageName + "')",
-          backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
-          backgroundPosition: "top",
-          animation: "justfadeinoriginal 0.3s ease forwards",
-        }
-      }
-    ]);
-    this.backgroundGray = backgroundGray;
-    this.backgroundImageBox = backgroundImageBox;
-    this.backgroundImageBox2 = backgroundImageBox2;
+      ]);
+      this.backgroundGray = backgroundGray;
+      this.backgroundImageBox = backgroundImageBox;
+      this.backgroundImageBox2 = backgroundImageBox2;
+    }
   }
 
 }

@@ -165,6 +165,9 @@ GeneralJs.svgMaker = {
   mailIcon: function (color) {
     return `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 198.6291 140.8618"><path fill="${color}" d="M0.0003,19.0035c0-2.5127,0.5001-4.9621,1.488-7.2941L64.368,71.4319L2.0719,130.424 c-1.3573-2.6498-2.0716-5.5953-2.0716-8.5654V19.0035z M18.8279,0.1759c-5.0004,0-9.6737,1.9311-13.2259,5.4519l70.6926,67.1433 c12.908,12.2596,33.1308,12.2596,46.0398,0l70.6926-67.1438c-3.5527-3.5203-8.2255-5.4514-13.2254-5.4514H18.8279z  M179.8015,140.6861c4.5018,0,8.8248-1.6133,12.2468-4.5558l-63.0468-59.7014l-1.6781,1.5926 c-7.5967,7.2155-17.5444,11.1887-28.0085,11.1887c-10.4655,0-20.4123-3.9732-28.0085-11.1887l-1.6776-1.5926L6.5815,136.1303 c3.4215,2.9426,7.745,4.5558,12.2463,4.5558H179.8015z M198.6291,19.0035c0-2.5132-0.5001-4.9626-1.4885-7.2941l-62.8798,59.723 l62.2971,58.9915c1.3568-2.6498,2.0711-5.5943,2.0711-8.5654V19.0035z"/></svg>`;
   },
+  downArrow: function (color) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 295.5974 275.3"><path fill="${color}" d="M289.6034,121.5312h-45.1321V5.982c0-3.3038-2.6782-5.982-5.982-5.982H57.1081c-3.3038,0-5.982,2.6782-5.982,5.982v115.5493 H5.994c-5.3294,0-7.9984,6.4434-4.2299,10.2119l141.8047,141.8047c2.3361,2.3361,6.1237,2.3361,8.4598,0l141.8047-141.8047 C297.6017,127.9747,294.9328,121.5312,289.6034,121.5312z"/></svg>`;
+  },
   checkBox: function (color, back = null) {
     const uncheckColorList = [
       GeneralJs.colorChip.gray3,
@@ -8271,7 +8274,7 @@ GeneralJs.prototype.greenTalk = function (input) {
     event = "consulting";
     text = "홈리에종을 통해 1:1 상담을 받아보세요!";
     second = false;
-    color = "green";
+    color = "black";
   } else if (typeof input === "object") {
     if (input === null) {
       event = "consulting";
@@ -8285,7 +8288,7 @@ GeneralJs.prototype.greenTalk = function (input) {
       } else {
         second = false;
       }
-      color = "green";
+      color = "black";
       if (typeof input.color === "string") {
         color = "black";
       }
@@ -8296,7 +8299,7 @@ GeneralJs.prototype.greenTalk = function (input) {
     throw new Error("invaild input");
   }
   if (typeof color !== "string") {
-    color = "green";
+    color = "black";
   }
 
   const instance = this;
