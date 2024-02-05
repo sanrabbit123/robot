@@ -341,7 +341,7 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
             position: "relative",
             color: colorExtended.white,
             fontWeight: String(800),
-            fontSize: String(37) + ea,
+            fontSize: String(36) + ea,
           }
         }
       ]
@@ -959,7 +959,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
             position: "relative",
             color: colorExtended.black,
             fontWeight: String(800),
-            fontSize: String(37) + ea,
+            fontSize: String(36) + ea,
           }
         }
       ]
@@ -1598,7 +1598,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
     unitSize = 20;
     unitWeight = 700;
 
-    unitBetween = 50;
+    unitBetween = 40;
 
     yellowMargin = 10;
 
@@ -1640,7 +1640,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
             position: "relative",
             color: colorExtended.black,
             fontWeight: String(800),
-            fontSize: String(37) + ea,
+            fontSize: String(36) + ea,
             lineHeight: String(1.4),
           }
         }
@@ -1907,6 +1907,8 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
     let middleBetween;
     let unitHeight;
     let unitSize, unitWeight;
+    let base0, base1, base2, base3;
+    let firstWidth, secondWidth;
 
     mainHeight = 900;
     minusLeft = window.innerWidth - standardWidth + 1;
@@ -1926,6 +1928,9 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
 
     unitSize = 23;
     unitWeight = 700;
+
+    firstWidth = 88;
+    secondWidth = 372;
 
     thirdBase = createNode({
       mother: baseTong,
@@ -1959,13 +1964,13 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
       },
       children: [
         {
-          text: "자주 묻는 질문",
+          text: "서비스 과정을 한 눈에 확인하세요!",
           style: {
             display: "inline-block",
             position: "relative",
             color: colorExtended.black,
             fontWeight: String(800),
-            fontSize: String(37) + ea,
+            fontSize: String(36) + ea,
           }
         }
       ]
@@ -1982,7 +1987,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
       },
       children: [
         {
-          text: "FAQ",
+          text: "HOMELIAISON SERVICE PROCESS",
           style: {
             display: "inline-block",
             position: "relative",
@@ -1995,7 +2000,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
       ]
     });
 
-    [ leftBase, rightBase ] = createNode({
+    [ base0, base1, base2, base3 ] = createNode({
       mother: thirdBase,
       style: {
         display: "flex",
@@ -2003,46 +2008,96 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         justifyContent: "start",
         alignItems: "start",
         marginTop: String(64) + ea,
-        flexDirection: "row",
+        flexDirection: "column",
       },
       children: [
         {
           style: {
-            display: "inline-flex",
+            display: "flex",
             position: "relative",
-            marginRight: String(boxBetween) + ea,
-            width: "calc(calc(100% - " + String(boxBetween) + ea + ") / " + String(2) + ")",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
+            marginBottom: String(boxBetween) + ea,
+            width: withOut(0, ea),
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
           }
         },
         {
           style: {
-            display: "inline-flex",
+            display: "flex",
             position: "relative",
-            width: "calc(calc(100% - " + String(boxBetween) + ea + ") / " + String(2) + ")",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
+            marginBottom: String(boxBetween) + ea,
+            width: withOut(0, ea),
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          }
+        },
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            marginBottom: String(boxBetween) + ea,
+            width: withOut(0, ea),
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          }
+        },
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
           }
         },
       ]
     }).children;
 
-    // left
+    // 1
     createNode({
-      mother: leftBase,
+      mother: base0,
+      text: String(1),
       style: {
-        display: "flex",
+        display: "inline-block",
         position: "relative",
-        width: withOut(0, ea),
+        fontFamily: "graphik",
+        fontSize: String(72) + ea,
+        fontWeight: String(400),
+        color: colorExtended.warmGray2,
+        top: String(-18) + ea,
+        width: String(100) + ea,
+      }
+    });
+    createNode({
+      mother: base0,
+      text: "고객의 신청서를 바탕으로\n정보를 수집해요.",
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(25) + ea,
+        fontWeight: String(600),
+        color: colorExtended.black,
+        lineHeight: String(1.33),
+        top: String(1) + ea,
+        width: String(360) + ea,
+      }
+    });
+    createNode({
+      mother: base0,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: withOut(100 + 360, ea),
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(16) + "px",
-        border: "4px solid " + colorExtended.warmGray1,
+        border: "2px solid " + colorExtended.warmGray0,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
-        background: colorExtended.warmGray0,
+        background: colorExtended.warmGray1,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
@@ -2100,211 +2155,50 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             right: String(pinMargin) + ea,
           }
         },
-        {
-          text: "다른 플랫폼과 다른 점은 무엇인가요?",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(unitSize) + ea,
-            fontWeight: String(unitWeight),
-            color: colorExtended.black,
-          },
-          under: {
-            fontSize: String(unitSize) + ea,
-            fontWeight: String(400),
-            color: colorExtended.warmGray2,
-          }
-        }
-      ],
-    });
-    createNode({
-      mother: leftBase,
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        height: String(unitHeight) + ea,
-        marginBottom: String(middleBetween) + ea,
-        borderRadius: String(16) + "px",
-        border: "4px solid " + colorExtended.warmGray1,
-        boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
-        background: colorExtended.warmGray0,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      },
-      children: [
-        {
-          style: {
-            display: "inline-flex",
-            position: "absolute",
-            width: String(pinWidth) + ea,
-            height: String(pinWidth) + ea,
-            borderRadius: String(pinWidth) + ea,
-            border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
-            top: String(pinMargin) + ea,
-            left: String(pinMargin) + ea,
-          }
-        },
-        {
-          style: {
-            display: "inline-flex",
-            position: "absolute",
-            width: String(pinWidth) + ea,
-            height: String(pinWidth) + ea,
-            borderRadius: String(pinWidth) + ea,
-            border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
-            top: String(pinMargin) + ea,
-            right: String(pinMargin) + ea,
-          }
-        },
-        {
-          style: {
-            display: "inline-flex",
-            position: "absolute",
-            width: String(pinWidth) + ea,
-            height: String(pinWidth) + ea,
-            borderRadius: String(pinWidth) + ea,
-            border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
-            bottom: String(pinMargin) + ea,
-            left: String(pinMargin) + ea,
-          }
-        },
-        {
-          style: {
-            display: "inline-flex",
-            position: "absolute",
-            width: String(pinWidth) + ea,
-            height: String(pinWidth) + ea,
-            borderRadius: String(pinWidth) + ea,
-            border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
-            bottom: String(pinMargin) + ea,
-            right: String(pinMargin) + ea,
-          }
-        },
-        {
-          text: "홈리에종의 홈스타일링 서비스란?",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(unitSize) + ea,
-            fontWeight: String(unitWeight),
-            color: colorExtended.black,
-          },
-          under: {
-            fontSize: String(unitSize) + ea,
-            fontWeight: String(400),
-            color: colorExtended.warmGray2,
-          }
-        }
-      ],
-    });
-    createNode({
-      mother: leftBase,
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        height: String(unitHeight) + ea,
-        borderRadius: String(16) + "px",
-        border: "4px solid " + colorExtended.warmGray1,
-        boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
-        background: colorExtended.warmGray0,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      },
-      children: [
-        {
-          style: {
-            display: "inline-flex",
-            position: "absolute",
-            width: String(pinWidth) + ea,
-            height: String(pinWidth) + ea,
-            borderRadius: String(pinWidth) + ea,
-            border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
-            top: String(pinMargin) + ea,
-            left: String(pinMargin) + ea,
-          }
-        },
-        {
-          style: {
-            display: "inline-flex",
-            position: "absolute",
-            width: String(pinWidth) + ea,
-            height: String(pinWidth) + ea,
-            borderRadius: String(pinWidth) + ea,
-            border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
-            top: String(pinMargin) + ea,
-            right: String(pinMargin) + ea,
-          }
-        },
-        {
-          style: {
-            display: "inline-flex",
-            position: "absolute",
-            width: String(pinWidth) + ea,
-            height: String(pinWidth) + ea,
-            borderRadius: String(pinWidth) + ea,
-            border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
-            bottom: String(pinMargin) + ea,
-            left: String(pinMargin) + ea,
-          }
-        },
-        {
-          style: {
-            display: "inline-flex",
-            position: "absolute",
-            width: String(pinWidth) + ea,
-            height: String(pinWidth) + ea,
-            borderRadius: String(pinWidth) + ea,
-            border: "1px solid " + colorExtended.warmGray2,
-            background: colorExtended.warmGray1,
-            bottom: String(pinMargin) + ea,
-            right: String(pinMargin) + ea,
-          }
-        },
-        {
-          text: "직접 고객 유치를 하지 않아도 되나요?",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(unitSize) + ea,
-            fontWeight: String(unitWeight),
-            color: colorExtended.black,
-          },
-          under: {
-            fontSize: String(unitSize) + ea,
-            fontWeight: String(400),
-            color: colorExtended.warmGray2,
-          }
-        }
       ],
     });
 
-    // right
+    // 2
     createNode({
-      mother: rightBase,
+      mother: base1,
+      text: String(2),
       style: {
-        display: "flex",
+        display: "inline-block",
         position: "relative",
-        width: withOut(0, ea),
+        fontFamily: "graphik",
+        fontSize: String(72) + ea,
+        fontWeight: String(400),
+        color: colorExtended.warmGray2,
+        top: String(-18) + ea,
+        width: String(100) + ea,
+      }
+    });
+    createNode({
+      mother: base1,
+      text: "고객의 신청서를 바탕으로\n정보를 수집해요.",
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(25) + ea,
+        fontWeight: String(600),
+        color: colorExtended.black,
+        lineHeight: String(1.33),
+        top: String(1) + ea,
+        width: String(360) + ea,
+      }
+    });
+    createNode({
+      mother: base1,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: withOut(100 + 360, ea),
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(16) + "px",
-        border: "4px solid " + colorExtended.warmGray1,
+        border: "2px solid " + colorExtended.warmGray0,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
-        background: colorExtended.warmGray0,
+        background: colorExtended.warmGray1,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
@@ -2362,40 +2256,56 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             right: String(pinMargin) + ea,
           }
         },
-        {
-          text: "최소 활동 조건이 있나요?",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(unitSize) + ea,
-            fontWeight: String(unitWeight),
-            color: colorExtended.black,
-          },
-          under: {
-            fontSize: String(unitSize) + ea,
-            fontWeight: String(400),
-            color: colorExtended.warmGray2,
-          }
-        }
       ],
     });
+
+    
+
+    // 3
+
     createNode({
-      mother: rightBase,
+      mother: base2,
+      text: String(3),
       style: {
-        display: "flex",
+        display: "inline-block",
         position: "relative",
-        width: withOut(0, ea),
+        fontFamily: "graphik",
+        fontSize: String(72) + ea,
+        fontWeight: String(400),
+        color: colorExtended.warmGray2,
+        top: String(-18) + ea,
+        width: String(100) + ea,
+      }
+    });
+    createNode({
+      mother: base2,
+      text: "고객의 신청서를 바탕으로\n정보를 수집해요.",
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(25) + ea,
+        fontWeight: String(600),
+        color: colorExtended.black,
+        lineHeight: String(1.33),
+        top: String(1) + ea,
+        width: String(360) + ea,
+      }
+    });
+    createNode({
+      mother: base2,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: withOut(100 + 360, ea),
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(16) + "px",
-        border: "4px solid " + colorExtended.warmGray1,
+        border: "2px solid " + colorExtended.warmGray0,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
-        background: colorExtended.warmGray0,
+        background: colorExtended.warmGray1,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        textAlign: "center",
       },
       children: [
         {
@@ -2450,40 +2360,55 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             right: String(pinMargin) + ea,
           }
         },
-        {
-          text: "스타일링을 많이 해 본 건 아닌데\n저도 일할 수 있을까요?",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(unitSize) + ea,
-            fontWeight: String(unitWeight),
-            color: colorExtended.black,
-            textAlign: "center",
-          },
-          under: {
-            fontSize: String(unitSize) + ea,
-            fontWeight: String(400),
-            color: colorExtended.warmGray2,
-          }
-        }
       ],
     });
+
+
+    // 4
+
     createNode({
-      mother: rightBase,
+      mother: base3,
+      text: String(4),
       style: {
-        display: "flex",
+        display: "inline-block",
         position: "relative",
-        width: withOut(0, ea),
+        fontFamily: "graphik",
+        fontSize: String(72) + ea,
+        fontWeight: String(400),
+        color: colorExtended.warmGray2,
+        top: String(-18) + ea,
+        width: String(100) + ea,
+      }
+    });
+    createNode({
+      mother: base3,
+      text: "고객의 신청서를 바탕으로\n정보를 수집해요.",
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(25) + ea,
+        fontWeight: String(600),
+        color: colorExtended.black,
+        lineHeight: String(1.33),
+        top: String(1) + ea,
+        width: String(360) + ea,
+      }
+    });
+    createNode({
+      mother: base3,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: withOut(100 + 360, ea),
         height: String(unitHeight) + ea,
+        marginBottom: String(middleBetween) + ea,
         borderRadius: String(16) + "px",
-        border: "4px solid " + colorExtended.warmGray1,
+        border: "2px solid " + colorExtended.warmGray0,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
-        background: colorExtended.warmGray0,
+        background: colorExtended.warmGray1,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        textAlign: "center",
       },
       children: [
         {
@@ -2538,23 +2463,6 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             right: String(pinMargin) + ea,
           }
         },
-        {
-          text: "가능 일정이나 지역,시공사 유무에 관계없이\n파트너십이 가능한가요?",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(unitSize) + ea,
-            fontWeight: String(unitWeight),
-            color: colorExtended.black,
-            textAlign: "center",
-          },
-          under: {
-            fontSize: String(unitSize) + ea,
-            fontWeight: String(400),
-            color: colorExtended.warmGray2,
-          }
-        }
       ],
     });
 
