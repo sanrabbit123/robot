@@ -756,7 +756,9 @@ GeneralJs.prototype.generalCss = function (justTextMode = false) {
   @keyframes fadeout{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-30px);}}
   @keyframes fadein{from{opacity:0;transform:translateX(30px);}to{opacity:1;transform:translateX(0px);}}
   @keyframes fadeoutlite{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-20px);}}
+  @keyframes fadeoutlite2{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(20px);}}
   @keyframes fadeinlite{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0px);}}
+  @keyframes fadeinlite2{from{opacity:0;transform:translateX(-20px);}to{opacity:1;transform:translateX(0px);}}
   @keyframes loadingrotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
   @keyframes fadecancel{from{opacity:0}to{opacity:0.2}}
 

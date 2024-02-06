@@ -114,6 +114,8 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     let plusRatio;
     let plusWidth;
     let whitePopupWidth, whitePopupHeight;
+    let pinMargin;
+    let pinWidth;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -122,10 +124,13 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
 
     plusWidth = ((leftRightWidth * plusRatio) * 2) + standardWidth
 
-    titleHeight = 172;
+    titleHeight = 170;
 
     whitePopupWidth = 1200;
     whitePopupHeight = window.innerHeight - 72 - (72 * 2);
+
+    pinMargin = 16;
+    pinWidth = 6;
 
     this.totalContents = document.querySelector("#totalcontents");
     this.totalContents.style.overflow = "hidden";
@@ -276,11 +281,79 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
                 opacity: String(0),
                 zIndex: String(zIndex),
                 boxShadow: "0px 3px 15px -9px " + colorExtended.darkDarkShadow,
-              }
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(whitePopupWidth) + ea,
+                  height: String(whitePopupHeight) + ea,
+                  top: String(0),
+                  left: String(0),
+                },
+                children: [
+                  {
+                    style: {
+                      display: "inline-flex",
+                      position: "absolute",
+                      width: String(pinWidth) + ea,
+                      height: String(pinWidth) + ea,
+                      borderRadius: String(pinWidth) + ea,
+                      border: "1px solid " + colorExtended.warmGray2,
+                      background: colorExtended.gray0,
+                      top: String(pinMargin) + ea,
+                      left: String(pinMargin) + ea,
+                      zIndex: String(4),
+                    }
+                  },
+                  {
+                    style: {
+                      display: "inline-flex",
+                      position: "absolute",
+                      width: String(pinWidth) + ea,
+                      height: String(pinWidth) + ea,
+                      borderRadius: String(pinWidth) + ea,
+                      border: "1px solid " + colorExtended.warmGray2,
+                      background: colorExtended.gray0,
+                      top: String(pinMargin) + ea,
+                      right: String(pinMargin) + ea,
+                      zIndex: String(4),
+                    }
+                  },
+                  {
+                    style: {
+                      display: "inline-flex",
+                      position: "absolute",
+                      width: String(pinWidth) + ea,
+                      height: String(pinWidth) + ea,
+                      borderRadius: String(pinWidth) + ea,
+                      border: "1px solid " + colorExtended.warmGray2,
+                      background: colorExtended.gray0,
+                      bottom: String(pinMargin) + ea,
+                      left: String(pinMargin) + ea,
+                      zIndex: String(4),
+                    }
+                  },
+                  {
+                    style: {
+                      display: "inline-flex",
+                      position: "absolute",
+                      width: String(pinWidth) + ea,
+                      height: String(pinWidth) + ea,
+                      borderRadius: String(pinWidth) + ea,
+                      border: "1px solid " + colorExtended.warmGray2,
+                      background: colorExtended.gray0,
+                      bottom: String(pinMargin) + ea,
+                      right: String(pinMargin) + ea,
+                      zIndex: String(4),
+                    }
+                  },
+                ]
+              },
             })
   
             createNode({
-              mother: blockPrompt,
+              mother: blockPrompt.firstChild,
               mode: "iframe",
               attribute: {
                 src: "/middle/aspirantSubmit?cliid=c1801_aa01s&entire=true&normal=true&dataonly=true",
@@ -2806,6 +2879,18 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
   const { ea, media, baseTong, colorExtended, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const position0ReviewClassName = "position0ReviewClassName";
+  const position0DesignerClassName = "position0DesignerClassName";
+  const position0ImageClassName = "position0ImageClassName";
+  const position1ReviewClassName = "position1ReviewClassName";
+  const position1DesignerClassName = "position1DesignerClassName";
+  const position1ImageClassName = "position1ImageClassName";
+  const position2ReviewClassName = "position2ReviewClassName";
+  const position2DesignerClassName = "position2DesignerClassName";
+  const position2ImageClassName = "position2ImageClassName";
+  const firstDomClassName = "firstDomClassName";
+  const secondDomClassName = "secondDomClassName";
+  const thirdDomClassName = "thirdDomClassName";
   try {
     let mainHeight;
     let minusLeft;
@@ -2830,6 +2915,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
     let cardWidth;
     let imageHeight;
     let imageLeft;
+    let reviewContents;
 
     mainHeight = 900;
     minusLeft = window.innerWidth - standardWidth + 1;
@@ -2863,6 +2949,45 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
     imageHeight = 260;
     imageLeft = 25;
 
+    reviewContents = [
+      {
+        review: [
+          "오랜 회사 생활 이후 인생 2막을 준비하던 중이었어요.",
+          "주거 인테리어가 경력의 많은 부분을 차지하고 있기 때문에",
+          "이쪽으로 특화 시키면 좋겠다 생각했던 찰나,",
+          "홈리에종의 디자이너 리크루팅 소식을 접하게 되었어요.",
+          "그 후 일사천리로 일이 진행된 것 같아요.",
+          "홈리에종과 윈윈하는 관계가 되어 함께 성장해 나가고 싶어요.",
+        ],
+        designer: "/ 김경수 파트너 디자이너",
+        image: AspirantExplanationJs.binaryPath + "/peopleTarget0.png",
+      },
+      {
+        review: [
+          "인테리어만 할 때는, 수천만 원 들여서 깔끔히 시공을 해도",
+          "나중에 그 모습이 거의 없더라고요.",
+          "자식 같은 현장인데 아쉬움이 많이 남았어요.",
+          "그래서 홈스타일링 쪽으로 관심을 갖다 홈리에종을 만나서",
+          "홈스타일링 디자이너로 발돋움할 수 있었어요.",
+          "고객님들의 만족하고, 예쁜 현장을 보면 저도 같이 행복해져요!",
+        ],
+        designer: "/ 박주령 파트너 디자이너",
+        image: AspirantExplanationJs.binaryPath + "/peopleTarget1.png",
+      },
+      {
+        review: [
+          "홈리에종만의 특별한 점이 있어요.",
+          "다른 매칭 플랫폼과 확연히 다른 홈리에종만의 성격과 결이",
+          "정말 특별하다고 생각해요. 단순히 연계만 해주는 것이 아니라",
+          "홈리에종의 케어가 함께 한다는 점이 좋은 것 같아요! ",
+          "그리고 디자이너로서 새로운 그림을 그려볼 수 있는 기회가 ",
+          "많다는 점에서 확실한 특장점이 있고요.",
+        ],
+        designer: "/ 김소영 파트너 디자이너",
+        image: AspirantExplanationJs.binaryPath + "/peopleTarget2.png",
+      },
+    ]
+
     sixthBase = createNode({
       mother: baseTong,
       style: {
@@ -2888,6 +3013,10 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
     // 1
     createNode({
       mother: sixthBase,
+      attribute: {
+        index: String(0),
+      },
+      class: [ firstDomClassName ],
       style: {
         display: "flex",
         position: "absolute",
@@ -2898,6 +3027,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
         opacity: String(0.6),
         transform: "scale(0.8)",
         transformOrigin: "0% 50%",
+        cursor: "pointer",
       },
       child: {
         mother: contentsBase,
@@ -2967,14 +3097,8 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             }
           },
           {
-            text: [
-              "오랜 회사 생활 이후 인생 2막을 준비하던 중이었어요.",
-              "주거 인테리어가 경력의 많은 부분을 차지하고 있기 때문에",
-              "이쪽으로 특화 시키면 좋겠다 생각했던 찰나,",
-              "홈리에종의 디자이너 리크루팅 소식을 접하게 되었어요.",
-              "그 후 일사천리로 일이 진행된 것 같아요.",
-              "홈리에종과 윈윈하는 관계가 되어 함께 성장해 나가고 싶어요.",
-            ].join("\n"),
+            class: [ position0ReviewClassName ],
+            text: reviewContents[0].review.join("\n"),
             style: {
               display: "inline-flex",
               position: "relative",
@@ -2987,7 +3111,8 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             }
           },
           {
-            text: "/ 김경수 파트너 디자이너",
+            class: [ position0DesignerClassName ],
+            text: reviewContents[0].designer,
             style: {
               display: "inline-flex",
               position: "relative",
@@ -3001,8 +3126,9 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
           },
           {
             mode: "img",
+            class: [ position0ImageClassName ],
             attribute: {
-              src: AspirantExplanationJs.binaryPath + "/peopleTarget0.png",
+              src: reviewContents[0].image,
             },
             style: {
               left: String(imageLeft) + ea,
@@ -3017,6 +3143,10 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
     // 2
     createNode({
       mother: sixthBase,
+      attribute: {
+        index: String(2),
+      },
+      class: [ secondDomClassName ],
       style: {
         display: "flex",
         position: "absolute",
@@ -3027,6 +3157,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
         opacity: String(0.6),
         transform: "scale(0.8)",
         transformOrigin: "100% 50%",
+        cursor: "pointer",
       },
       child: {
         mother: contentsBase,
@@ -3096,14 +3227,8 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             }
           },
           {
-            text: [
-              "홈리에종만의 특별한 점이 있어요.",
-              "다른 매칭 플랫폼과 확연히 다른 홈리에종만의 성격과 결이",
-              "정말 특별하다고 생각해요. 단순히 연계만 해주는 것이 아니라",
-              "홈리에종의 케어가 함께 한다는 점이 좋은 것 같아요! ",
-              "그리고 디자이너로서 새로운 그림을 그려볼 수 있는 기회가 ",
-              "많다는 점에서 확실한 특장점이 있고요.",
-            ].join("\n"),
+            class: [ position2ReviewClassName ],
+            text: reviewContents[2].review.join("\n"),
             style: {
               display: "inline-flex",
               position: "relative",
@@ -3116,7 +3241,8 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             }
           },
           {
-            text: "/ 김소영 파트너 디자이너",
+            class: [ position2DesignerClassName ],
+            text: reviewContents[2].designer,
             style: {
               display: "inline-flex",
               position: "relative",
@@ -3129,9 +3255,10 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             }
           },
           {
+            class: [ position2ImageClassName ],
             mode: "img",
             attribute: {
-              src: AspirantExplanationJs.binaryPath + "/peopleTarget2.png",
+              src: reviewContents[2].image,
             },
             style: {
               left: String(imageLeft) + ea,
@@ -3146,12 +3273,289 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
     // 3
     createNode({
       mother: sixthBase,
+      attribute: {
+        index: String(1),
+      },
+      class: [ thirdDomClassName ],
+      event: {
+        click: function (e) {
+          const self = this;
+          const thisBox = self.getBoundingClientRect();
+          const leftUnit = ((thisBox.width - cardWidth) / 2);
+          const rightUnit = leftUnit + cardWidth;
+          const xPosition = e.x - thisBox.left;
+          const index = Number(self.getAttribute("index"));
+          const position0ReviewDom = document.querySelector(".position0ReviewClassName");
+          const position0DesignerDom = document.querySelector(".position0DesignerClassName");
+          const position0ImageDom = document.querySelector(".position0ImageClassName");
+          const position1ReviewDom = document.querySelector(".position1ReviewClassName");
+          const position1DesignerDom = document.querySelector(".position1DesignerClassName");
+          const position1ImageDom = document.querySelector(".position1ImageClassName");
+          const position2ReviewDom = document.querySelector(".position2ReviewClassName");
+          const position2DesignerDom = document.querySelector(".position2DesignerClassName");
+          const position2ImageDom = document.querySelector(".position2ImageClassName");
+          const firstDom = document.querySelector("." + firstDomClassName);
+          const secondDom = document.querySelector("." + secondDomClassName);
+          const thirdDom = document.querySelector("." + thirdDomClassName);
+
+          firstDom.style.transition = "all 0.5s ease";
+          secondDom.style.transition = "all 0.5s ease";
+          thirdDom.style.transition = "all 0.5s ease";
+
+          firstDom.style.opacity = String(0.3);
+          secondDom.style.opacity = String(0.3);
+          thirdDom.style.opacity = String(0.8);
+
+          if (xPosition <= leftUnit) {
+
+            position0ReviewDom.style.animation = "fadeoutlite 0.5s ease forwards";
+            position0DesignerDom.style.animation = "fadeoutlite 0.5s ease forwards";
+            position0ImageDom.style.animation = "fadeoutlite 0.5s ease forwards";
+  
+            position1ReviewDom.style.animation = "fadeoutlite 0.5s ease forwards";
+            position1DesignerDom.style.animation = "fadeoutlite 0.5s ease forwards";
+            position1ImageDom.style.animation = "fadeoutlite 0.5s ease forwards";
+  
+            position2ReviewDom.style.animation = "fadeoutlite 0.5s ease forwards";
+            position2DesignerDom.style.animation = "fadeoutlite 0.5s ease forwards";
+            position2ImageDom.style.animation = "fadeoutlite 0.5s ease forwards";
+
+            if (index === 1) {
+              setQueue(() => {
+                position0ReviewDom.textContent = "";
+                position0DesignerDom.textContent = "";
+                position0ReviewDom.insertAdjacentHTML("beforeend", reviewContents[1].review.join("<br>"));
+                position0DesignerDom.insertAdjacentHTML("beforeend", reviewContents[1].designer);
+                position0ImageDom.setAttribute("src", reviewContents[1].image);
+                position0ReviewDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position0DesignerDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position0ImageDom.style.animation = "fadeinlite 0.5s ease forwards";
+  
+                position1ReviewDom.textContent = "";
+                position1DesignerDom.textContent = "";
+                position1ReviewDom.insertAdjacentHTML("beforeend", reviewContents[2].review.join("<br>"));
+                position1DesignerDom.insertAdjacentHTML("beforeend", reviewContents[2].designer);
+                position1ImageDom.setAttribute("src", reviewContents[2].image);
+                position1ReviewDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position1DesignerDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position1ImageDom.style.animation = "fadeinlite 0.5s ease forwards";
+  
+                position2ReviewDom.textContent = "";
+                position2DesignerDom.textContent = "";
+                position2ReviewDom.insertAdjacentHTML("beforeend", reviewContents[0].review.join("<br>"));
+                position2DesignerDom.insertAdjacentHTML("beforeend", reviewContents[0].designer);
+                position2ImageDom.setAttribute("src", reviewContents[0].image);
+                position2ReviewDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position2DesignerDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position2ImageDom.style.animation = "fadeinlite 0.5s ease forwards";
+  
+                firstDom.style.opacity = String(0.6);
+                secondDom.style.opacity = String(0.6);
+                thirdDom.style.opacity = String(1);
+
+                self.setAttribute("index", String(2));
+              }, 500);
+            } else if (index === 2) {
+              setQueue(() => {
+                position0ReviewDom.textContent = "";
+                position0DesignerDom.textContent = "";
+                position0ReviewDom.insertAdjacentHTML("beforeend", reviewContents[2].review.join("<br>"));
+                position0DesignerDom.insertAdjacentHTML("beforeend", reviewContents[2].designer);
+                position0ImageDom.setAttribute("src", reviewContents[2].image);
+                position0ReviewDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position0DesignerDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position0ImageDom.style.animation = "fadeinlite 0.5s ease forwards";
+  
+                position1ReviewDom.textContent = "";
+                position1DesignerDom.textContent = "";
+                position1ReviewDom.insertAdjacentHTML("beforeend", reviewContents[0].review.join("<br>"));
+                position1DesignerDom.insertAdjacentHTML("beforeend", reviewContents[0].designer);
+                position1ImageDom.setAttribute("src", reviewContents[0].image);
+                position1ReviewDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position1DesignerDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position1ImageDom.style.animation = "fadeinlite 0.5s ease forwards";
+  
+                position2ReviewDom.textContent = "";
+                position2DesignerDom.textContent = "";
+                position2ReviewDom.insertAdjacentHTML("beforeend", reviewContents[1].review.join("<br>"));
+                position2DesignerDom.insertAdjacentHTML("beforeend", reviewContents[1].designer);
+                position2ImageDom.setAttribute("src", reviewContents[1].image);
+                position2ReviewDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position2DesignerDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position2ImageDom.style.animation = "fadeinlite 0.5s ease forwards";
+  
+                firstDom.style.opacity = String(0.6);
+                secondDom.style.opacity = String(0.6);
+                thirdDom.style.opacity = String(1);
+
+                self.setAttribute("index", String(0));
+              }, 500);
+            } else {
+              setQueue(() => {
+                position0ReviewDom.textContent = "";
+                position0DesignerDom.textContent = "";
+                position0ReviewDom.insertAdjacentHTML("beforeend", reviewContents[0].review.join("<br>"));
+                position0DesignerDom.insertAdjacentHTML("beforeend", reviewContents[0].designer);
+                position0ImageDom.setAttribute("src", reviewContents[0].image);
+                position0ReviewDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position0DesignerDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position0ImageDom.style.animation = "fadeinlite 0.5s ease forwards";
+  
+                position1ReviewDom.textContent = "";
+                position1DesignerDom.textContent = "";
+                position1ReviewDom.insertAdjacentHTML("beforeend", reviewContents[1].review.join("<br>"));
+                position1DesignerDom.insertAdjacentHTML("beforeend", reviewContents[1].designer);
+                position1ImageDom.setAttribute("src", reviewContents[1].image);
+                position1ReviewDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position1DesignerDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position1ImageDom.style.animation = "fadeinlite 0.5s ease forwards";
+  
+                position2ReviewDom.textContent = "";
+                position2DesignerDom.textContent = "";
+                position2ReviewDom.insertAdjacentHTML("beforeend", reviewContents[2].review.join("<br>"));
+                position2DesignerDom.insertAdjacentHTML("beforeend", reviewContents[2].designer);
+                position2ImageDom.setAttribute("src", reviewContents[2].image);
+                position2ReviewDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position2DesignerDom.style.animation = "fadeinlite 0.5s ease forwards";
+                position2ImageDom.style.animation = "fadeinlite 0.5s ease forwards";
+  
+                firstDom.style.opacity = String(0.6);
+                secondDom.style.opacity = String(0.6);
+                thirdDom.style.opacity = String(1);
+
+                self.setAttribute("index", String(1));
+              }, 500);
+            }
+          } else {
+
+            position0ReviewDom.style.animation = "fadeoutlite2 0.5s ease forwards";
+            position0DesignerDom.style.animation = "fadeoutlite2 0.5s ease forwards";
+            position0ImageDom.style.animation = "fadeoutlite2 0.5s ease forwards";
+  
+            position1ReviewDom.style.animation = "fadeoutlite2 0.5s ease forwards";
+            position1DesignerDom.style.animation = "fadeoutlite2 0.5s ease forwards";
+            position1ImageDom.style.animation = "fadeoutlite2 0.5s ease forwards";
+  
+            position2ReviewDom.style.animation = "fadeoutlite2 0.5s ease forwards";
+            position2DesignerDom.style.animation = "fadeoutlite2 0.5s ease forwards";
+            position2ImageDom.style.animation = "fadeoutlite2 0.5s ease forwards";
+
+            if (index === 1) {
+              setQueue(() => {
+                position0ReviewDom.textContent = "";
+                position0DesignerDom.textContent = "";
+                position0ReviewDom.insertAdjacentHTML("beforeend", reviewContents[2].review.join("<br>"));
+                position0DesignerDom.insertAdjacentHTML("beforeend", reviewContents[2].designer);
+                position0ImageDom.setAttribute("src", reviewContents[2].image);
+                position0ReviewDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position0DesignerDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position0ImageDom.style.animation = "fadeinlite2 0.5s ease forwards";
+  
+                position1ReviewDom.textContent = "";
+                position1DesignerDom.textContent = "";
+                position1ReviewDom.insertAdjacentHTML("beforeend", reviewContents[0].review.join("<br>"));
+                position1DesignerDom.insertAdjacentHTML("beforeend", reviewContents[0].designer);
+                position1ImageDom.setAttribute("src", reviewContents[0].image);
+                position1ReviewDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position1DesignerDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position1ImageDom.style.animation = "fadeinlite2 0.5s ease forwards";
+  
+                position2ReviewDom.textContent = "";
+                position2DesignerDom.textContent = "";
+                position2ReviewDom.insertAdjacentHTML("beforeend", reviewContents[1].review.join("<br>"));
+                position2DesignerDom.insertAdjacentHTML("beforeend", reviewContents[1].designer);
+                position2ImageDom.setAttribute("src", reviewContents[1].image);
+                position2ReviewDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position2DesignerDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position2ImageDom.style.animation = "fadeinlite2 0.5s ease forwards";
+  
+                firstDom.style.opacity = String(0.6);
+                secondDom.style.opacity = String(0.6);
+                thirdDom.style.opacity = String(1);
+
+                self.setAttribute("index", String(0));
+              }, 500);
+            } else if (index === 2) {
+              setQueue(() => {
+                position0ReviewDom.textContent = "";
+                position0DesignerDom.textContent = "";
+                position0ReviewDom.insertAdjacentHTML("beforeend", reviewContents[0].review.join("<br>"));
+                position0DesignerDom.insertAdjacentHTML("beforeend", reviewContents[0].designer);
+                position0ImageDom.setAttribute("src", reviewContents[0].image);
+                position0ReviewDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position0DesignerDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position0ImageDom.style.animation = "fadeinlite2 0.5s ease forwards";
+  
+                position1ReviewDom.textContent = "";
+                position1DesignerDom.textContent = "";
+                position1ReviewDom.insertAdjacentHTML("beforeend", reviewContents[1].review.join("<br>"));
+                position1DesignerDom.insertAdjacentHTML("beforeend", reviewContents[1].designer);
+                position1ImageDom.setAttribute("src", reviewContents[1].image);
+                position1ReviewDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position1DesignerDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position1ImageDom.style.animation = "fadeinlite2 0.5s ease forwards";
+  
+                position2ReviewDom.textContent = "";
+                position2DesignerDom.textContent = "";
+                position2ReviewDom.insertAdjacentHTML("beforeend", reviewContents[2].review.join("<br>"));
+                position2DesignerDom.insertAdjacentHTML("beforeend", reviewContents[2].designer);
+                position2ImageDom.setAttribute("src", reviewContents[2].image);
+                position2ReviewDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position2DesignerDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position2ImageDom.style.animation = "fadeinlite2 0.5s ease forwards";
+  
+                firstDom.style.opacity = String(0.6);
+                secondDom.style.opacity = String(0.6);
+                thirdDom.style.opacity = String(1);
+
+                self.setAttribute("index", String(1));
+              }, 500);
+            } else {
+              setQueue(() => {
+                position0ReviewDom.textContent = "";
+                position0DesignerDom.textContent = "";
+                position0ReviewDom.insertAdjacentHTML("beforeend", reviewContents[1].review.join("<br>"));
+                position0DesignerDom.insertAdjacentHTML("beforeend", reviewContents[1].designer);
+                position0ImageDom.setAttribute("src", reviewContents[1].image);
+                position0ReviewDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position0DesignerDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position0ImageDom.style.animation = "fadeinlite2 0.5s ease forwards";
+  
+                position1ReviewDom.textContent = "";
+                position1DesignerDom.textContent = "";
+                position1ReviewDom.insertAdjacentHTML("beforeend", reviewContents[2].review.join("<br>"));
+                position1DesignerDom.insertAdjacentHTML("beforeend", reviewContents[2].designer);
+                position1ImageDom.setAttribute("src", reviewContents[2].image);
+                position1ReviewDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position1DesignerDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position1ImageDom.style.animation = "fadeinlite2 0.5s ease forwards";
+  
+                position2ReviewDom.textContent = "";
+                position2DesignerDom.textContent = "";
+                position2ReviewDom.insertAdjacentHTML("beforeend", reviewContents[0].review.join("<br>"));
+                position2DesignerDom.insertAdjacentHTML("beforeend", reviewContents[0].designer);
+                position2ImageDom.setAttribute("src", reviewContents[0].image);
+                position2ReviewDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position2DesignerDom.style.animation = "fadeinlite2 0.5s ease forwards";
+                position2ImageDom.style.animation = "fadeinlite2 0.5s ease forwards";
+  
+                firstDom.style.opacity = String(0.6);
+                secondDom.style.opacity = String(0.6);
+                thirdDom.style.opacity = String(1);
+
+                self.setAttribute("index", String(2));
+              }, 500);
+            }
+          }
+        }
+      },
       style: {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
         justifyContent: "center",
         alignItems: "center",
+        cursor: "pointer",
       },
       child: {
         mother: contentsBase,
@@ -3221,14 +3625,8 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             }
           },
           {
-            text: [
-              "인테리어만 할 때는, 수천만 원 들여서 깔끔히 시공을 해도",
-              "나중에 그 모습이 거의 없더라고요.",
-              "자식 같은 현장인데 아쉬움이 많이 남았어요.",
-              "그래서 홈스타일링 쪽으로 관심을 갖다 홈리에종을 만나서",
-              "홈스타일링 디자이너로 발돋움할 수 있었어요.",
-              "고객님들의 만족하고, 예쁜 현장을 보면 저도 같이 행복해져요!",
-            ].join("\n"),
+            class: [ position1ReviewClassName ],
+            text: reviewContents[1].review.join("\n"),
             style: {
               display: "inline-flex",
               position: "relative",
@@ -3241,7 +3639,8 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             }
           },
           {
-            text: "/ 박주령 파트너 디자이너",
+            class: [ position1DesignerClassName ],
+            text: reviewContents[1].designer,
             style: {
               display: "inline-flex",
               position: "relative",
@@ -3254,9 +3653,10 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             }
           },
           {
+            class: [ position1ImageClassName ],
             mode: "img",
             attribute: {
-              src: AspirantExplanationJs.binaryPath + "/peopleTarget1.png",
+              src: reviewContents[1].image,
             },
             style: {
               left: String(imageLeft) + ea,
@@ -3270,6 +3670,10 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
 
     createNode({
       mother: sixthBase,
+      event: {
+        selectstart: (e) => { e.preventDefault() },
+        click: (e) => { GeneralJs.scrollTo(window, 0) }
+      },
       style: {
         display: "flex",
         position: "relative",
@@ -3288,9 +3692,13 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             borderRadius: String(50) + ea,
             justifyContent: "center",
             alignItems: "center",
+            cursor: "pointer",
           },
           child: {
             text: "TOP",
+            event: {
+              selectstart: (e) => { e.preventDefault() },
+            },
             style: {
               display: "inline-block",
               position: "relative",

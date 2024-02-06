@@ -524,9 +524,9 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   leftGrayType3 = <%% 164, 151, 130, 129, 30.5 %%>;
 
   widthGrayType0 = <%% 160, 140, 140, 140, 34 %%>;
-  widthGrayType1 = <%% 455, 272, 245, 178, 58.1 %%>;
+  widthGrayType1 = <%% 455, 312, 245, 178, 58.1 %%>;
   widthGrayType2 = <%% 757, 588, 503, 383, 53.4 %%>;
-  widthGrayType3 = <%% 392, 211, 193, 127, 45.6 %%>;
+  widthGrayType3 = <%% 392, 251, 193, 127, 45.6 %%>;
 
   addressWidth = <%% 54, 54, 46, 46, 11 %%>;
   addressSize = <%% 13, 13, 12, 12, 3 %%>;
@@ -1844,7 +1844,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     style: {
       display: "block",
       position: "relative",
-      paddingBottom: normalMode ? String(45) + ea : String(mainPaddingBottom) + ea,
+      paddingBottom: normalMode ? String(30) + ea : String(mainPaddingBottom) + ea,
     }
   });
 
@@ -1911,7 +1911,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             fontSize: String(15) + ea,
             fontWeight: String(400),
             color: colorChip.black,
-            marginBottom: String(25) + ea,
+            marginBottom: String(24) + ea,
             lineHeight: String(1.5),
             textAlign: "left",
           }
