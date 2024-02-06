@@ -22,6 +22,8 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
   const instance = this;
   const address = this.address;
   const back = this.back;
+  const calendar = this.calendar;
+  const { calendarName } = this;
   const { requestSystem, equalJson, dateToString, stringToDate, getHoliday } = this.mother;
   const targetDayNumbers = [ 3, 5 ];
   const safeNum = 1000;
@@ -29,17 +31,31 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
     try {
       const res = await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsCalendar", { mode: "get" }, { headers: { "Content-Type": "application/json" } });
       const targets = equalJson(JSON.stringify(res.data));
-      let realTargets;
+      let realTargets, realTargets2;
       let thisId;
+      let future;
+
+      future = new Date();
+      future.setDate(future.getDate() + 14);
+
       realTargets = [];
       for (let obj of targets) {
         thisId = obj.pid;
         realTargets.push({
+          id: obj.eventId,
           pid: thisId,
           date: stringToDate(dateToString(obj.date.start))
         });
       }
-      return realTargets;
+
+      realTargets2 = realTargets.filter((o) => {
+        return o.date.valueOf() <= future.valueOf();
+      })
+      realTargets = realTargets.filter((o) => {
+        return o.date.valueOf() > future.valueOf();
+      })
+
+      return { alreadyArr: realTargets2, futureArr: realTargets };
     } catch (e) {
       console.log(e);
       return null;
@@ -47,7 +63,7 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
   }
   try {
     const holidayArr = await getHoliday(true);
-    const alreadyArr = await returnGoogleCalendarArr();
+    const { alreadyArr, futureArr } = await returnGoogleCalendarArr();
     let contentsArr;
     let contentsArrPid;
     let foreContentsArr;
@@ -67,16 +83,22 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
     let cliidArr, desidArr;
     let targetClients, targetDesigners;
     let allDesigners;
+    let tempArr;
 
     if (!Array.isArray(alreadyArr)) {
       throw new Error("request fail");
     }
 
-    allDesigners = await back.getDesignersByQuery({}, { selfMongo });
+    allDesigners = await back.getDesignersByQuery({}, { selfMongo, toNormal: true });
 
     contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
     contentsArr = contentsArr.toNormal();
     contentsArrPid = contentsArr.map(({ contents: { portfolio: { pid } } }) => { return pid });
+
+    for (let designer of allDesigners) {
+      tempArr = contentsArr.filter((c) => { return c.desid === designer.desid });
+      designer.contents = equalJson(JSON.stringify(tempArr));
+    }
 
     foreContentsArr = (await requestSystem("https://" + address.contentsinfo.host + ":3000/foreContents", { mode: "get" }, { headers: { "Content-Type": "application/json" } })).data;
     foreContentsArrPid = foreContentsArr.map(({ pid }) => { return pid });
@@ -102,12 +124,9 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
       }
     }
 
-
-    console.log(resultTong);
-    console.log(alreadyArr);
-
-
-    // /*
+    for (let { id } of futureArr) {
+      await calendar.deleteSchedule(calendarName, id);
+    }
 
     projects = (await back.getProjectsByQuery({ $or: resultTong.map(({ proid }) => { return { proid } }) }, { selfMongo })).toNormal();
     for (let obj of resultTong) {
@@ -120,6 +139,25 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
       return !alreadyArr.map(({ pid }) => { return pid }).includes(o.pid);
     })
 
+    resultTong = resultTong.map((o) => {
+      const thisDesigner = allDesigners.find((d) => { return d.desid === o.project.desid });
+      let gradeNumber;
+      if (thisDesigner.analytics.grade === -1) {
+        gradeNumber = 1;
+      } else if (thisDesigner.analytics.grade === 1) {
+        gradeNumber = 2;
+      } else {
+        gradeNumber = 3;
+      }
+      gradeNumber = gradeNumber * 10000;
+      gradeNumber = gradeNumber + (thisDesigner.contents.length * 100);
+      gradeNumber = gradeNumber + Number(o.pid.replace(/[^0-9]/gi, ''))
+      o.gradeNumber = gradeNumber;
+      return o;
+    });
+
+    resultTong.sort((a, b) => { return a.gradeNumber - b.gradeNumber });
+    
     runner = new Date();
     number = 0;
     index = 0;
@@ -180,8 +218,6 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
     }
 
     return resultTong;
-    // */
-
 
   } catch (e) {
     if (logger !== null) {
