@@ -3,7 +3,7 @@ import pickle
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-from json import dumps
+from json import dumps, loads
 from os import path as osPath
 import datetime
 
@@ -99,4 +99,10 @@ class GoogleCalendar:
 
     def deleteSchedule(self, id, event):
         self.app.events().delete(calendarId=id, eventId=event).execute()
+        return dumps({ "message": "done" })
+
+    def deleteSchedules(self, id, eventIdArr):
+        targetArr = loads(eventIdArr)
+        for targetId in targetArr:
+            self.app.events().delete(calendarId=id, eventId=targetId).execute()
         return dumps({ "message": "done" })

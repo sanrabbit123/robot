@@ -124,9 +124,7 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
       }
     }
 
-    for (let { id } of futureArr) {
-      await calendar.deleteSchedule(calendarName, id);
-    }
+    await calendar.deleteSchedules(calendarName, futureArr.map(({ id }) => { return id; }));
 
     projects = (await back.getProjectsByQuery({ $or: resultTong.map(({ proid }) => { return { proid } }) }, { selfMongo })).toNormal();
     for (let obj of resultTong) {

@@ -333,4 +333,17 @@ GoogleCalendar.prototype.deleteSchedule = async function (from, id) {
   }
 }
 
+GoogleCalendar.prototype.deleteSchedules = async function (from, idArr) {
+  const instance = this;
+  const { pythonExecute, errorLog } = this.mother;
+  try {
+    let res;
+    await pythonExecute(this.pythonApp, [ "calendar", "deleteSchedules" ], { targetId: this.findCalendarId(from), eventId: JSON.stringify(idArr) });
+    res = { message: "done" };
+    return res;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = GoogleCalendar;

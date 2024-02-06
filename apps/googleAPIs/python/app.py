@@ -304,6 +304,11 @@ try:
         result = calendarApp.deleteSchedule(data["targetId"], data["eventId"])
         print(result)
 
+    elif argv[1] == 'calendar' and argv[2] == 'deleteSchedules':
+        calendarApp = GoogleCalendar()
+        result = calendarApp.deleteSchedules(data["targetId"], data["eventId"])
+        print(result)
+
     elif argv[1] == 'slides' and argv[2] == 'createSlides':
         slidsApp = GoogleSlides()
         id = slidsApp.createSlides(data["title"])
