@@ -264,6 +264,7 @@ GoogleCalendar.prototype.listEventsNonePast = async function (from, search = nul
 
     const items = await pythonExecute(this.pythonApp, [ "calendar", "listEventsNonePast" ], { targetId: this.findCalendarId(from), query: search === null ? "" : search });
     if (!Array.isArray(items)) {
+      console.log(items);
       throw new Error("google calendar error : python error(listEvents)");
     }
 

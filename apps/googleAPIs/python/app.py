@@ -284,6 +284,11 @@ try:
         result = calendarApp.listEvents(data["targetId"], data["query"])
         print(result)
 
+    elif argv[1] == 'calendar' and argv[2] == 'listEventsNonePast':
+        calendarApp = GoogleCalendar()
+        result = calendarApp.listEventsNonePast(data["targetId"], data["query"])
+        print(result)
+
     elif argv[1] == 'calendar' and argv[2] == 'makeSchedule':
         calendarApp = GoogleCalendar()
         result = calendarApp.makeSchedule(data["targetId"], data["body"])

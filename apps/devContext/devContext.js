@@ -175,8 +175,7 @@ DevContext.prototype.launching = async function () {
     const contents = new ContentsCalculator();
     await contents.forecastWebSchedule(this.MONGOC);
 
-
-
+    
 
     // const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
     // const app = new LiaisonCalendar();
