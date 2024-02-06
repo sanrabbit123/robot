@@ -232,6 +232,32 @@ GoogleCalendar.prototype.getSchedule = async function (from, id) {
   }
 }
 
+GoogleCalendar.prototype.getScheduleNonePast = async function (from, id) {
+  const instance = this;
+  const { pythonExecute, errorLog } = this.mother;
+  try {
+    let requestObj, resultObj;
+    let index;
+
+    const items = await pythonExecute(this.pythonApp, [ "calendar", "listEventsNonePast" ], { targetId: this.findCalendarId(from), query: "" });
+    if (!Array.isArray(items)) {
+      throw new Error("google calendar error : python error(getSchedule)");
+    }
+
+    index = items.findIndex((obj) => { return obj.id === id })
+    if (index === -1) {
+      return null;
+    } else {
+      return new CalendarEvent(items[index]);
+    }
+
+  } catch (e) {
+    await errorLog("google calendar api error(getSchedule) : " + e.message);
+    console.log(e);
+    return null;
+  }
+}
+
 GoogleCalendar.prototype.listEvents = async function (from, search = null) {
   const instance = this;
   const { pythonExecute, errorLog } = this.mother;

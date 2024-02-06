@@ -321,7 +321,7 @@ ContentsRouter.prototype.rou_post_contentsCalendar = function () {
       const selfCoreMongo = instance.mongo;
       const selfLocalMongo = instance.mongolocal;
       const collection = "foreContents";
-      const factors = await calendar.listEvents(calendarName);
+      const factors = await calendar.listEventsNonePast(calendarName);
       const targets = factors.filter((o) => { return /(Web|Blog|Instagram|Youtube)\([^\)]+\)/gi.test(o.title) });
       let thisId;
       let thisType;

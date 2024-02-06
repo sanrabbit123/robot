@@ -46,8 +46,7 @@ class GoogleCalendar:
                                                   showHiddenInvitations=True, singleEvents=True,
                                                   maxResults=250, orderBy='startTime', q=query,
                                                   pageToken=nextToken,
-                                                  timeZone='Asia/Seoul',
-                                                  timeMin=datetime.datetime.now().isoformat(timespec="microseconds")[0:19] + ".000Z").execute()
+                                                  timeZone='Asia/Seoul').execute()
             events = events_result.get('items', [])
             if not events:
                 tong.extend([])
@@ -60,6 +59,33 @@ class GoogleCalendar:
 
         return dumps(tong)
 
+    def listEventsNonePast(self, id, query):
+        tong = []
+        nextToken = None
+
+        minTime = datetime.datetime.now()
+        minTimeValue = ((int)(minTime.timestamp())) * 1000
+        minTimeValue = (minTimeValue + ((-14) * (1000 * 60 * 60 * 24))) / 1000
+        newMinTime = datetime.datetime.fromtimestamp(minTimeValue)
+
+        while True:
+            events_result = self.app.events().list(calendarId=id, showDeleted=False,
+                                                  showHiddenInvitations=True, singleEvents=True,
+                                                  maxResults=250, orderBy='startTime', q=query,
+                                                  pageToken=nextToken,
+                                                  timeZone='Asia/Seoul',
+                                                  timeMin=newMinTime.isoformat(timespec="microseconds")[0:19] + ".000Z").execute()
+            events = events_result.get('items', [])
+            if not events:
+                tong.extend([])
+            else:
+                tong.extend(events)
+            if "nextPageToken" in events_result:
+                nextToken = events_result["nextPageToken"]
+            else:
+                break
+
+        return dumps(tong)
 
     def makeSchedule(self, id, body):
         event = self.app.events().insert(calendarId=id, body=body).execute()
