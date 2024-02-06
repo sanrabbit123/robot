@@ -89,10 +89,10 @@ const AspirantExplanationJs = function () {
     blueDark: "#2a4866",
     ultimateBlack: "#000000",
     subYellow: "#ffd574",
-    warmGray0: "#faf7f2",
-    warmGray1: "#f3f0e9",
-    warmGray2: "#d6d3cb",
-    warmGrayMiddle: "#e5e2dc",
+    warmGray0: "#f2f2f2",
+    warmGray1: "#ececec",
+    warmGrayMiddle: "#dddddd",
+    warmGray2: "#cccccc",
     yellowLine: "#cc921f",
   }
 }
@@ -101,10 +101,11 @@ AspirantExplanationJs.binaryPath = "/middle/aspirant";
 
 AspirantExplanationJs.prototype.insertInitBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, baseTong, colorExtended, standardWidth } = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, colorExtended, standardWidth, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const submitBlockClassName = "submitBlockClassName";
   try {
     let minusLeft;
     let firstBase;
@@ -112,6 +113,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     let titleHeight;
     let plusRatio;
     let plusWidth;
+    let whitePopupWidth, whitePopupHeight;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -121,6 +123,9 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     plusWidth = ((leftRightWidth * plusRatio) * 2) + standardWidth
 
     titleHeight = 172;
+
+    whitePopupWidth = 1200;
+    whitePopupHeight = window.innerHeight - 72 - (72 * 2);
 
     this.totalContents = document.querySelector("#totalcontents");
     this.totalContents.style.overflow = "hidden";
@@ -231,6 +236,72 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
 
     createNode({
       mother: firstBase,
+      attribute: {
+        selectstart: (e) => { e.preventDefault() },
+      },
+      event: {
+        click: async function (e) {
+          try {
+            const zIndex = 4;
+            let cancelBack, blockPrompt;
+  
+            cancelBack = createNode({
+              mother: totalContents,
+              class: [ submitBlockClassName ],
+              event: (e) => { removeByClass(submitBlockClassName) },
+              style: {
+                display: "block",
+                position: "fixed",
+                top: String(0),
+                left: String(0),
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                zIndex: String(zIndex),
+              }
+            });
+
+            blockPrompt = createNode({
+              mother: totalContents,
+              class: [ submitBlockClassName ],
+              style: {
+                display: "flex",
+                position: "fixed",
+                top: "calc(calc(50% - " + String(whitePopupHeight / 2) + ea + ") + " + String(72 / 2) + "px" + ")",
+                left: "calc(50% - " + String(whitePopupWidth / 2) + ea + ")",
+                width: String(whitePopupWidth) + ea,
+                height: String(whitePopupHeight) + ea,
+                background: colorChip.white,
+                borderRadius: String(8) + "px",
+                animation: "0.4s ease 0s 1 normal forwards running fadeupdelay",
+                opacity: String(0),
+                zIndex: String(zIndex),
+                boxShadow: "0px 3px 15px -9px " + colorExtended.darkDarkShadow,
+              }
+            })
+  
+            createNode({
+              mother: blockPrompt,
+              mode: "iframe",
+              attribute: {
+                src: "/middle/aspirantSubmit?cliid=c1801_aa01s&entire=true&normal=true&dataonly=true",
+              },
+              style: {
+                position: "absolute",
+                top: String(0),
+                left: String(0) + ea,
+                width: String(whitePopupWidth) + ea,
+                height: String(whitePopupHeight) + ea,
+                border: String(0),
+                borderRadius: String(8) + "px",
+              }
+            })
+
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
       style: {
         display: "flex",
         position: "relative",
@@ -240,6 +311,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
         opacity: String(0),
         transform: "translateY(10px)",
         animation: "1.2s ease 0.4s 1 normal forwards running fadeupdelay",
+        cursor: "pointer",
       },
       children: [
         {
@@ -247,13 +319,16 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
             display: "inline-flex",
             position: "relative",    
             width: String(180) + ea,
-            height: String(54) + ea,
+            height: String(50) + ea,
             background: colorChip.black,
-            borderRadius: String(54) + ea,
+            borderRadius: String(50) + ea,
             justifyContent: "center",
             alignItems: "center",
           },
           child: {
+            attribute: {
+              selectstart: (e) => { e.preventDefault() },
+            },
             text: "파트너십 지원",
             style: {
               display: "inline-block",
@@ -391,7 +466,7 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
             marginRight: String(boxBetween) + ea,
             width: "calc(calc(100% - " + String(boxBetween) + ea + ") / " + String(2) + ")",
             height: withOut(0, ea),
-            borderRadius: String(16) + "px",
+            borderRadius: String(10) + "px",
             border: "1px solid " + colorExtended.darkShadow,
             boxShadow: "0px 5px 21px -9px " + colorExtended.ultimateBlack,
             background: colorExtended.black,
@@ -406,7 +481,7 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
             position: "relative",
             width: "calc(calc(100% - " + String(boxBetween) + ea + ") / " + String(2) + ")",
             height: withOut(0, ea),
-            borderRadius: String(16) + "px",
+            borderRadius: String(10) + "px",
             border: "1px solid " + colorExtended.darkShadow,
             boxShadow: "0px 5px 21px -9px " + colorExtended.ultimateBlack,
             background: colorExtended.black,
@@ -884,10 +959,11 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
 
 AspirantExplanationJs.prototype.insertThirdBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, baseTong, colorExtended, standardWidth } = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, equalJson, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, colorExtended, standardWidth, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const blackPopupClassName = "blackPopupClassName";
   try {
     let mainHeight;
     let minusLeft;
@@ -902,6 +978,8 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     let middleBetween;
     let unitHeight;
     let unitSize, unitWeight;
+    let contentsText;
+    let popupClickEvent;
 
     mainHeight = 900;
     minusLeft = window.innerWidth - standardWidth + 1;
@@ -922,6 +1000,134 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     unitSize = 22;
     unitWeight = 700;
 
+    contentsText = [
+      [
+        "많은 서비스가 있지만 유일한 시스템을 갖춘 서비스는 다릅니다.",
+        "홈리에종은 홈스타일링 전문 플랫폼으로 단순히 소비자 연결만 하지 않습니다.",
+        "고객 중심의 인테리어를 추구하며 IT 기반에서 체계적으로 프로젝트를 케어하고,",
+        "다양한 인프라 지원으로(직영 시공사, 성장지원 교육, 포트폴리오 개설)",
+        "디자이너와 함께 성장합니다.",
+      ],
+      [
+        "시공 중심이 아니라 고객 중심입니다. 고객의 예산, 제한 기간,",
+        "공간 상태, 취향을 고려하여 시공의 난이도를 정하고 스타일링까지 ",
+        "완료합니다. 모든 주거 공간은 도배나 욕실 뿐만 아니라 가구, 베딩, 커튼 등의",
+        "제품 세팅까지  일관성 있게 마무리할 때 인테리어가 잘 된 것입니다. ",
+        "현재 ‘인테리어’라는 단어는 ‘리모델링(=시공)’에 국한되고 있으나",
+        "진정한 인테리어는 시공과 스타일링을 포함합니다. ",
+        "홈리에종의 홈스타일링 서비스는 예산에 맞는 스타일링과 필요 시공을 의미합니다. ",
+        "공간의 노후도에 따라 필요 시공이 전체 영역일 수도 있고, 예산에 따라 하이엔드 시공을 ",
+        "기대하면서 전문가의 수준 높은 안목을 기대하는 고객님도 찾아오십니다.",
+      ],
+      [
+        "고객 유치는 홈리에종이 합니다. ",
+        "홈리에종의 방향성에 기대감을 가지신 고객님들을 유치하기 위해 노력하고 있습니다. ",
+        "디자이너님은 디자이너로서의 역량을 키워가는 것에 집중해주세요. ",
+        "커뮤니케이션 능력이 탁월하고 디자인 아이덴티티가 매력적이라면 좋은 고객을 꾸준히 ",
+        "만나는 것은 점점 쉬워집니다 :) 함께 즐겁게 성장해요!",
+      ],
+      [
+        "스타일링 경험 혹은 역량 확인이 필수입니다. ",
+        "1개 이상의 포트폴리오(실제 현장 사진)이 있거나 1개 이상의 홈퍼니싱",
+        "3D 작업 역량이 확인되어야 합니다.",
+        "홈리에종의 모든 프로젝트는 시공 위주의 견적 제출, 단순 견적 비교를 지양하고",
+        "고객의 예산 및 조건을 고려하여 시공의 난이도를 조정하면서 스타일링까지 완성해야 합니다.",
+        "시공 역량 수준에 맞추어 고객 매칭이 이루어지며",
+        "스타일링에 대한 최소 경험 혹은 역량은 필수입니다.",
+      ],
+      [
+        "네 :) 홈리에종은 인테리어 업계의 새로운 문화를 만들어가는 개척 기업입니다. ",
+        "3가지 모두 동의하시면 신청서를 남겨주세요.",
+        "",
+        "1. 주거 인테리어에 대한 새로운 접근 방법에 대한 공감",
+        "2. 최소한의 스타일링 역량 (포트폴리오 혹은 3D 역량)",
+        "3. 발전과 학습에 대한 강한 의지 및 관심",
+      ],
+      [
+        "홈리에종은 디자이너님의 역량과 상세 컨디션을 사전에 확인해 꼭 맞는 매칭을 해드립니다.",
+        "디자이너의 어려움을 교육 및 가이드 제공을 통해 개선하고, 시공사도 지원해드립니다.",
+        "디자이너의 가능 일정과 출발지역, 가능한 업무량을 파악하여",
+        "지속적인 성장을 할 수 있도록 지원합니다!",
+      ],
+    ];
+
+    popupClickEvent = (index) => {
+      return async function(e) {
+        try {
+          const self = this;
+          const targetContents = equalJson(JSON.stringify(contentsText[index])).join("\n");
+          const thisBox = self.getBoundingClientRect();
+          const zIndex = 4;
+          let cancelBack, blockPrompt;
+
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ blackPopupClassName ],
+            event: (e) => { removeByClass(blackPopupClassName) },
+            style: {
+              display: "block",
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              zIndex: String(zIndex),
+            }
+          });
+
+          blockPrompt = createNode({
+            mother: totalContents,
+            class: [ blackPopupClassName ],
+            style: {
+              display: "flex",
+              position: "absolute",
+              top: String(thisBox.top + window.scrollY + 190 + 18) + "px",
+              left: String(thisBox.left) + ea,
+              width: String(thisBox.width - (30 * 2)) + "px",
+              padding: String(30) + ea,
+              paddingTop: String(24) + ea,
+              paddingBottom: String(24) + ea,
+              background: colorChip.black,
+              borderRadius: String(8) + "px",
+              animation: "0.4s ease 0s 1 normal forwards running fadeupdelay",
+              opacity: String(0),
+              zIndex: String(zIndex),
+              boxShadow: "0px 3px 15px -9px " + colorExtended.realBlack,
+            },
+            child: {
+              mode: "svg",
+              source: svgMaker.commentTriangle("verticalLeft", colorExtended.black),
+              style: {
+                position: "absolute",
+                width: String(16) + ea,
+                top: String(-16) + ea,
+                right: String(0) + ea,
+                transform: "rotate(180deg)",
+              }
+            }
+          });
+
+          createNode({
+            mother: blockPrompt,
+            text: targetContents,
+            style: {
+              fontSize: String(16) + ea,
+              fontWeight: String(500),
+              color: colorChip.white,
+              lineHeight: String(1.6),
+            }
+          })
+
+
+
+
+          
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
     thirdBase = createNode({
       mother: baseTong,
       style: {
@@ -937,7 +1143,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
           position: "absolute",
           top: String(0),
           left: String(-1 * minusLeft) + ea,
-          background: colorExtended.warmGray2,
+          background: colorExtended.gray0,
           width: withOut(-1 * (minusLeft * 2), ea),
           height: withOut(1 * (-200 + 72), ea),
         }
@@ -1028,19 +1234,27 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     // left
     createNode({
       mother: leftBase,
+      attribute: {
+        index: String(0),
+      },
+      event: {
+        selectstart: (e) => { e.preventDefault() },
+        click: popupClickEvent(0),
+      },
       style: {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(16) + "px",
+        borderRadius: String(10) + "px",
         border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
-        background: colorExtended.warmGray0,
+        background: colorExtended.white,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        cursor: "pointer",
       },
       children: [
         {
@@ -1097,6 +1311,9 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         },
         {
           text: "다른 플랫폼과 다른 점은 무엇인가요?",
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
           style: {
             display: "inline-block",
             position: "relative",
@@ -1115,19 +1332,27 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     });
     createNode({
       mother: leftBase,
+      attribute: {
+        index: String(1),
+      },
+      event: {
+        selectstart: (e) => { e.preventDefault() },
+        click: popupClickEvent(1),
+      },
       style: {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(16) + "px",
+        borderRadius: String(10) + "px",
         border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
-        background: colorExtended.warmGray0,
+        background: colorExtended.white,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        cursor: "pointer",
       },
       children: [
         {
@@ -1184,6 +1409,9 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         },
         {
           text: "홈리에종의 홈스타일링 서비스란?",
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
           style: {
             display: "inline-block",
             position: "relative",
@@ -1202,18 +1430,26 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     });
     createNode({
       mother: leftBase,
+      attribute: {
+        index: String(2),
+      },
+      event: {
+        selectstart: (e) => { e.preventDefault() },
+        click: popupClickEvent(2),
+      },
       style: {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
-        borderRadius: String(16) + "px",
+        borderRadius: String(10) + "px",
         border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
-        background: colorExtended.warmGray0,
+        background: colorExtended.white,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        cursor: "pointer",
       },
       children: [
         {
@@ -1270,6 +1506,9 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         },
         {
           text: "직접 고객 유치를 하지 않아도 되나요?",
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
           style: {
             display: "inline-block",
             position: "relative",
@@ -1290,19 +1529,27 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     // right
     createNode({
       mother: rightBase,
+      attribute: {
+        index: String(3),
+      },
+      event: {
+        selectstart: (e) => { e.preventDefault() },
+        click: popupClickEvent(3),
+      },
       style: {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(16) + "px",
+        borderRadius: String(10) + "px",
         border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
-        background: colorExtended.warmGray0,
+        background: colorExtended.white,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        cursor: "pointer",
       },
       children: [
         {
@@ -1359,6 +1606,9 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         },
         {
           text: "최소 활동 조건이 있나요?",
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
           style: {
             display: "inline-block",
             position: "relative",
@@ -1377,20 +1627,28 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     });
     createNode({
       mother: rightBase,
+      attribute: {
+        index: String(4),
+      },
+      event: {
+        selectstart: (e) => { e.preventDefault() },
+        click: popupClickEvent(4),
+      },
       style: {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(16) + "px",
+        borderRadius: String(10) + "px",
         border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
-        background: colorExtended.warmGray0,
+        background: colorExtended.white,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
+        cursor: "pointer",
       },
       children: [
         {
@@ -1447,6 +1705,9 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         },
         {
           text: "스타일링을 많이 해 본 건 아닌데\n저도 일할 수 있을까요?",
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
           style: {
             display: "inline-block",
             position: "relative",
@@ -1466,19 +1727,27 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     });
     createNode({
       mother: rightBase,
+      attribute: {
+        index: String(5),
+      },
+      event: {
+        selectstart: (e) => { e.preventDefault() },
+        click: popupClickEvent(5),
+      },
       style: {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
-        borderRadius: String(16) + "px",
+        borderRadius: String(10) + "px",
         border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
-        background: colorExtended.warmGray0,
+        background: colorExtended.white,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
+        cursor: "pointer",
       },
       children: [
         {
@@ -1535,6 +1804,9 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         },
         {
           text: "가능 일정이나 지역,시공사 유무에 관계없이\n파트너십이 가능한가요?",
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
           style: {
             display: "inline-block",
             position: "relative",
@@ -1958,7 +2230,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
           position: "absolute",
           top: String(0),
           left: String(-1 * minusLeft) + ea,
-          background: colorExtended.warmGray0,
+          background: colorExtended.gray0,
           width: withOut(-1 * (minusLeft * 2), ea),
           height: withOut(1 * (-200 + 72), ea),
         }
@@ -2106,7 +2378,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         width: withOut(numberAreaWidth + titleAreaWidth, ea),
         height: String(140) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(16) + "px",
+        borderRadius: String(10) + "px",
         border: "2px solid " + colorExtended.warmGray0,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.warmGray1,
@@ -2175,7 +2447,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             fontSize: String(19) + ea,
             fontWeight: String(200),
             color: colorExtended.black,
-            lineHeight: String(1.5),
+            lineHeight: String(1.6),
             textAlign: "center",
           }
         },
@@ -2220,7 +2492,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         width: withOut(numberAreaWidth + titleAreaWidth, ea),
         height: String(140) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(16) + "px",
+        borderRadius: String(10) + "px",
         border: "2px solid " + colorExtended.warmGray0,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.warmGray1,
@@ -2289,16 +2561,14 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             fontSize: String(19) + ea,
             fontWeight: String(200),
             color: colorExtended.black,
-            lineHeight: String(1.5),
+            lineHeight: String(1.6),
             textAlign: "center",
           }
         },
       ],
     });
 
-    
     // 3
-
     createNode({
       mother: base2,
       text: String(3),
@@ -2336,7 +2606,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         width: withOut(numberAreaWidth + titleAreaWidth, ea),
         height: String(180) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(16) + "px",
+        borderRadius: String(10) + "px",
         border: "2px solid " + colorExtended.warmGray0,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.warmGray1,
@@ -2405,16 +2675,14 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             fontSize: String(19) + ea,
             fontWeight: String(200),
             color: colorExtended.black,
-            lineHeight: String(1.5),
+            lineHeight: String(1.6),
             textAlign: "center",
           }
         },
       ],
     });
 
-
     // 4
-
     createNode({
       mother: base3,
       text: String(4),
@@ -2451,7 +2719,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         width: withOut(numberAreaWidth + titleAreaWidth, ea),
         height: String(180) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(16) + "px",
+        borderRadius: String(10) + "px",
         border: "2px solid " + colorExtended.warmGray0,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.warmGray1,
@@ -2520,11 +2788,520 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             fontSize: String(19) + ea,
             fontWeight: String(200),
             color: colorExtended.black,
-            lineHeight: String(1.5),
+            lineHeight: String(1.6),
             textAlign: "center",
           }
         },
       ],
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+AspirantExplanationJs.prototype.insertSixthBox = async function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong, colorExtended, standardWidth } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  try {
+    let mainHeight;
+    let minusLeft;
+    let sixthBase;
+    let leftBase, rightBase;
+    let pinMargin;
+    let pinWidth;
+    let arrowMargin;
+    let arrowWidth;
+    let contentsSize;
+    let boxBetween;
+    let middleBetween;
+    let unitHeight;
+    let unitSize, unitWeight;
+    let base0, base1, base2, base3;
+    let firstWidth, secondWidth;
+    let titleSize;
+    let numberTop;
+    let numberAreaWidth;
+    let titleAreaWidth;
+    let contentsBase;
+    let cardWidth;
+    let imageHeight;
+    let imageLeft;
+
+    mainHeight = 900;
+    minusLeft = window.innerWidth - standardWidth + 1;
+  
+    pinMargin = 16;
+    pinWidth = 6;
+
+    arrowMargin = 29;
+    arrowWidth = 50;
+
+    contentsSize = 22;
+
+    boxBetween = 24;
+    middleBetween = 12;
+
+    unitHeight = 330;
+
+    unitSize = 23;
+    unitWeight = 700;
+
+    firstWidth = 88;
+    secondWidth = 372;
+
+    titleSize = 23;
+    numberTop = -17;
+
+    numberAreaWidth = 80;
+    titleAreaWidth = 320;
+
+    cardWidth = 660;
+    imageHeight = 260;
+    imageLeft = 25;
+
+    sixthBase = createNode({
+      mother: baseTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        paddingTop: String(180) + ea,
+        paddingBottom: String(210) + ea,
+        flexDirection: "column"
+      },
+      child: {
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(-1 * minusLeft) + ea,
+          background: colorExtended.mainBlue,
+          width: withOut(-1 * (minusLeft * 2), ea),
+          height: withOut(1 * (-200 + 72), ea),
+        }
+      }
+    });
+
+    // 1
+    createNode({
+      mother: sixthBase,
+      style: {
+        display: "flex",
+        position: "absolute",
+        top: String(180) + ea,
+        width: withOut(0, ea),
+        justifyContent: "start",
+        alignItems: "center",
+        opacity: String(0.6),
+        transform: "scale(0.8)",
+        transformOrigin: "0% 50%",
+      },
+      child: {
+        mother: contentsBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(cardWidth) + ea,
+          height: String(unitHeight) + ea,
+          borderRadius: String(10) + "px",
+          boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
+          background: colorExtended.gray0,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              width: String(pinWidth) + ea,
+              height: String(pinWidth) + ea,
+              borderRadius: String(pinWidth) + ea,
+              border: "1px solid " + colorExtended.warmGray2,
+              background: colorExtended.warmGray1,
+              top: String(pinMargin) + ea,
+              left: String(pinMargin) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              width: String(pinWidth) + ea,
+              height: String(pinWidth) + ea,
+              borderRadius: String(pinWidth) + ea,
+              border: "1px solid " + colorExtended.warmGray2,
+              background: colorExtended.warmGray1,
+              top: String(pinMargin) + ea,
+              right: String(pinMargin) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              width: String(pinWidth) + ea,
+              height: String(pinWidth) + ea,
+              borderRadius: String(pinWidth) + ea,
+              border: "1px solid " + colorExtended.warmGray2,
+              background: colorExtended.warmGray1,
+              bottom: String(pinMargin) + ea,
+              left: String(pinMargin) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              width: String(pinWidth) + ea,
+              height: String(pinWidth) + ea,
+              borderRadius: String(pinWidth) + ea,
+              border: "1px solid " + colorExtended.warmGray2,
+              background: colorExtended.warmGray1,
+              bottom: String(pinMargin) + ea,
+              right: String(pinMargin) + ea,
+            }
+          },
+          {
+            text: [
+              "오랜 회사 생활 이후 인생 2막을 준비하던 중이었어요.",
+              "주거 인테리어가 경력의 많은 부분을 차지하고 있기 때문에",
+              "이쪽으로 특화 시키면 좋겠다 생각했던 찰나,",
+              "홈리에종의 디자이너 리크루팅 소식을 접하게 되었어요.",
+              "그 후 일사천리로 일이 진행된 것 같아요.",
+              "홈리에종과 윈윈하는 관계가 되어 함께 성장해 나가고 싶어요.",
+            ].join("\n"),
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              fontSize: String(17) + ea,
+              fontWeight: String(300),
+              color: colorChip.black,
+              lineHeight: String(1.6),
+              marginLeft: String(170) + ea,
+              width: String(400) + ea,
+            }
+          },
+          {
+            text: "/ 김경수 파트너 디자이너",
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              fontSize: String(17) + ea,
+              fontWeight: String(700),
+              color: colorChip.black,
+              lineHeight: String(1.6),
+              marginTop: String(25) + ea,
+              marginLeft: String(406) + ea,
+            }
+          },
+          {
+            mode: "img",
+            attribute: {
+              src: AspirantExplanationJs.binaryPath + "/peopleTarget0.png",
+            },
+            style: {
+              left: String(imageLeft) + ea,
+              position: "absolute",
+              height: String(imageHeight) + ea,
+            }
+          },
+        ],
+      }
+    });
+
+    // 2
+    createNode({
+      mother: sixthBase,
+      style: {
+        display: "flex",
+        position: "absolute",
+        top: String(180) + ea,
+        width: withOut(0, ea),
+        justifyContent: "end",
+        alignItems: "center",
+        opacity: String(0.6),
+        transform: "scale(0.8)",
+        transformOrigin: "100% 50%",
+      },
+      child: {
+        mother: contentsBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(cardWidth) + ea,
+          height: String(unitHeight) + ea,
+          borderRadius: String(10) + "px",
+          boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
+          background: colorExtended.gray0,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              width: String(pinWidth) + ea,
+              height: String(pinWidth) + ea,
+              borderRadius: String(pinWidth) + ea,
+              border: "1px solid " + colorExtended.warmGray2,
+              background: colorExtended.warmGray1,
+              top: String(pinMargin) + ea,
+              left: String(pinMargin) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              width: String(pinWidth) + ea,
+              height: String(pinWidth) + ea,
+              borderRadius: String(pinWidth) + ea,
+              border: "1px solid " + colorExtended.warmGray2,
+              background: colorExtended.warmGray1,
+              top: String(pinMargin) + ea,
+              right: String(pinMargin) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              width: String(pinWidth) + ea,
+              height: String(pinWidth) + ea,
+              borderRadius: String(pinWidth) + ea,
+              border: "1px solid " + colorExtended.warmGray2,
+              background: colorExtended.warmGray1,
+              bottom: String(pinMargin) + ea,
+              left: String(pinMargin) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              width: String(pinWidth) + ea,
+              height: String(pinWidth) + ea,
+              borderRadius: String(pinWidth) + ea,
+              border: "1px solid " + colorExtended.warmGray2,
+              background: colorExtended.warmGray1,
+              bottom: String(pinMargin) + ea,
+              right: String(pinMargin) + ea,
+            }
+          },
+          {
+            text: [
+              "홈리에종만의 특별한 점이 있어요.",
+              "다른 매칭 플랫폼과 확연히 다른 홈리에종만의 성격과 결이",
+              "정말 특별하다고 생각해요. 단순히 연계만 해주는 것이 아니라",
+              "홈리에종의 케어가 함께 한다는 점이 좋은 것 같아요! ",
+              "그리고 디자이너로서 새로운 그림을 그려볼 수 있는 기회가 ",
+              "많다는 점에서 확실한 특장점이 있고요.",
+            ].join("\n"),
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              fontSize: String(17) + ea,
+              fontWeight: String(300),
+              color: colorChip.black,
+              lineHeight: String(1.6),
+              marginLeft: String(170) + ea,
+              width: String(400) + ea,
+            }
+          },
+          {
+            text: "/ 김소영 파트너 디자이너",
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              fontSize: String(17) + ea,
+              fontWeight: String(700),
+              color: colorChip.black,
+              lineHeight: String(1.6),
+              marginTop: String(25) + ea,
+              marginLeft: String(406) + ea,
+            }
+          },
+          {
+            mode: "img",
+            attribute: {
+              src: AspirantExplanationJs.binaryPath + "/peopleTarget2.png",
+            },
+            style: {
+              left: String(imageLeft) + ea,
+              position: "absolute",
+              height: String(imageHeight) + ea,
+            }
+          },
+        ],
+      }
+    });
+
+    // 3
+    createNode({
+      mother: sixthBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      child: {
+        mother: contentsBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(cardWidth) + ea,
+          height: String(unitHeight) + ea,
+          borderRadius: String(10) + "px",
+          boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
+          background: colorExtended.gray0,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              width: String(pinWidth) + ea,
+              height: String(pinWidth) + ea,
+              borderRadius: String(pinWidth) + ea,
+              border: "1px solid " + colorExtended.warmGray2,
+              background: colorExtended.warmGray1,
+              top: String(pinMargin) + ea,
+              left: String(pinMargin) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              width: String(pinWidth) + ea,
+              height: String(pinWidth) + ea,
+              borderRadius: String(pinWidth) + ea,
+              border: "1px solid " + colorExtended.warmGray2,
+              background: colorExtended.warmGray1,
+              top: String(pinMargin) + ea,
+              right: String(pinMargin) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              width: String(pinWidth) + ea,
+              height: String(pinWidth) + ea,
+              borderRadius: String(pinWidth) + ea,
+              border: "1px solid " + colorExtended.warmGray2,
+              background: colorExtended.warmGray1,
+              bottom: String(pinMargin) + ea,
+              left: String(pinMargin) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              width: String(pinWidth) + ea,
+              height: String(pinWidth) + ea,
+              borderRadius: String(pinWidth) + ea,
+              border: "1px solid " + colorExtended.warmGray2,
+              background: colorExtended.warmGray1,
+              bottom: String(pinMargin) + ea,
+              right: String(pinMargin) + ea,
+            }
+          },
+          {
+            text: [
+              "인테리어만 할 때는, 수천만 원 들여서 깔끔히 시공을 해도",
+              "나중에 그 모습이 거의 없더라고요.",
+              "자식 같은 현장인데 아쉬움이 많이 남았어요.",
+              "그래서 홈스타일링 쪽으로 관심을 갖다 홈리에종을 만나서",
+              "홈스타일링 디자이너로 발돋움할 수 있었어요.",
+              "고객님들의 만족하고, 예쁜 현장을 보면 저도 같이 행복해져요!",
+            ].join("\n"),
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              fontSize: String(17) + ea,
+              fontWeight: String(300),
+              color: colorChip.black,
+              lineHeight: String(1.6),
+              marginLeft: String(170) + ea,
+              width: String(400) + ea,
+            }
+          },
+          {
+            text: "/ 박주령 파트너 디자이너",
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              fontSize: String(17) + ea,
+              fontWeight: String(700),
+              color: colorChip.black,
+              lineHeight: String(1.6),
+              marginTop: String(25) + ea,
+              marginLeft: String(406) + ea,
+            }
+          },
+          {
+            mode: "img",
+            attribute: {
+              src: AspirantExplanationJs.binaryPath + "/peopleTarget1.png",
+            },
+            style: {
+              left: String(imageLeft) + ea,
+              position: "absolute",
+              height: String(imageHeight) + ea,
+            }
+          },
+        ],
+      }
+    });
+
+    createNode({
+      mother: sixthBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: String(54) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",    
+            width: String(110) + ea,
+            height: String(50) + ea,
+            background: colorChip.black,
+            borderRadius: String(50) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            text: "TOP",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(-1) + ea,
+              fontSize: String(20) + ea,
+              fontWeight: String(700),
+              color: colorExtended.white,
+            }
+          }
+        }
+      ]
     });
 
   } catch (e) {
@@ -2539,7 +3316,8 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
 
     const { returnGet, ajaxJson } = GeneralJs;
     const getObj = returnGet();
-
+    const entireMode = (getObj.entire === "true");
+    const normalMode = (entireMode && getObj.normal === "true");
     await this.mother.ghostClientLaunching({
       mode: "ghost",
       name: "aspirantExplanation",
@@ -2562,6 +3340,7 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
           await instance.insertThirdBox();
           await instance.insertFourthBox();
           await instance.insertFifthBox();
+          await instance.insertSixthBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "AspirantExplanationJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }

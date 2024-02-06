@@ -96,7 +96,7 @@ DevContext.prototype.launching = async function () {
 
     // await this.MONGOLOGC.connect();
     // const report = new LogReport(this.MONGOLOGC);
-    // await report.unknownCampaign(2023, 12, 8_800_485 - 7_926_458);
+    // await report.unknownCampaign(2024, 1, 8_503_115 - 7_733_040);
     // await this.MONGOLOGC.close();
 
     // =======================================================================================================================================================
@@ -114,7 +114,7 @@ DevContext.prototype.launching = async function () {
     // facebook token
     // const facebook = new FacebookAPIs();
     // await facebook.getAccessToken();
-    // // await facebook.dailyCampaign(this.MONGOLOCALC, 1, null);
+    // await facebook.dailyCampaign(this.MONGOLOCALC, 1, null);
 
     // =======================================================================================================================================================
 
@@ -6939,9 +6939,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "강지연",
-    //     designer: "박미연",
-    //     link: "https://drive.google.com/drive/folders/1AkzyK14ajY1Gp8K0t8Sccw20N2EoEOlH",
+    //     client: "황원정",
+    //     designer: "박주령",
+    //     link: "https://drive.google.com/drive/folders/10z639f-GdIBaQAcDK37G6XqDXsEgebgn",
     //     pay: true
     //   },
     // ]);
@@ -6952,8 +6952,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "강지연",
-    //     designer: "박미연",
+    //     client: "황원정",
+    //     designer: "박주령",
     //   },
     // ]);
 
@@ -7006,7 +7006,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "이효정", "2024-01-26" ],
+    //   [ "김윤지", "2024-01-12" ],
     // ]);
 
 

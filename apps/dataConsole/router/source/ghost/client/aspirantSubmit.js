@@ -232,7 +232,7 @@ AspirantSubmitJs.prototype.insertInitBox = function () {
 AspirantSubmitJs.prototype.insertAspirantBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson, cleanChildren } = GeneralJs;
-  const { ea, media, standardWidth, portfolioMode } = this;
+  const { ea, media, standardWidth, portfolioMode, normalMode, totalContents } = this;
   const generalMode = !portfolioMode;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1840,11 +1840,11 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   }
 
   mainBlock = createNode({
-    mother: this.baseTong,
+    mother: normalMode ? totalContents : this.baseTong,
     style: {
       display: "block",
       position: "relative",
-      paddingBottom: String(mainPaddingBottom) + ea,
+      paddingBottom: normalMode ? String(45) + ea : String(mainPaddingBottom) + ea,
     }
   });
 
@@ -1853,20 +1853,90 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     style: {
       display: "block",
       position: "relative",
-      width: String(100) + '%',
-      marginTop: String(contentsAreaMarginTop) + ea,
+      marginTop: normalMode ? "" : String(contentsAreaMarginTop) + ea,
       background: colorChip.white,
       borderRadius: String(5) + "px",
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      boxShadow: !normalMode ? "0px 3px 15px -9px " + colorChip.shadow : "",
       paddingTop: String(innerPadding) + ea,
-      paddingBottom: String(innerPadding) + ea,
+      paddingBottom: normalMode ? "" : String(innerPadding) + ea,
+      paddingLeft: normalMode ? String(innerPadding) + ea : "",
+      width: normalMode ? withOut(innerPadding, ea) : withOut(0, ea),
     }
   });
+
+  if (normalMode) {
+
+    createNode({
+      mother: contentsArea,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(innerPadding, ea),
+        justifyContent: "start",
+        alignItems: "start",
+      },
+      children: [
+        {
+          text: "신청서를 작성 후 제출하시면, 확인 후 연락을 드립니다.",
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(26) + ea,
+            fontWeight: String(800),
+            color: colorChip.black,
+            marginBottom: String(9) + ea,
+          }
+        }
+      ]
+    });
+
+    createNode({
+      mother: contentsArea,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(innerPadding, ea),
+        justifyContent: "start",
+        alignItems: "start",
+      },
+      children: [
+        {
+          text: [
+            "홈리에종의 파트너십 신청을 위해서는 다음과 같이 기본 정보가 필요합니다.",
+            "파트너십 신청서를 간단히 작성 후, 디자이너 활동을 시작해보세요!",
+          ].join("\n"),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(15) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            marginBottom: String(25) + ea,
+            lineHeight: String(1.5),
+            textAlign: "left",
+          }
+        }
+      ]
+    });
+
+    createNode({
+      mother: contentsArea,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(innerPadding, ea),
+        borderBottom: "1px solid " + colorChip.black,
+        marginBottom: String(innerPadding) + ea,
+      },
+    });
+
+
+  }
 
   leftBox = createNode({
     mother: contentsArea,
     style: {
-      display: desktop ? "inline-block" : "none",
+      display: normalMode ? "none" : (desktop ? "inline-block" : "none"),
       position: "relative",
       marginLeft: String(innerPadding) + ea,
       width: String(leftBoxWidth) + ea,
@@ -1909,7 +1979,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      width: withOut(leftBoxWidth + (innerPadding * 2), ea),
+      width: normalMode ? withOut((innerPadding * 1), ea) : withOut(leftBoxWidth + (innerPadding * 2), ea),
       verticalAlign: "top",
       marginLeft: desktop ? "" : String(innerPadding) + ea,
       paddingTop: desktop ? "" : String(1) + ea,
@@ -4117,7 +4187,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           }
         },
         {
-          text: "자기 소개",
+          text: "자신에 대해 서술해 주세요!",
           style: {
             display: "inline-block",
             position: "relative",
@@ -4309,8 +4379,8 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       marginTop: String(policyAreaMarginTop) + ea,
       background: colorChip.white,
       borderRadius: String(5) + "px",
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-      paddingTop: String(innerPadding) + ea,
+      boxShadow: !normalMode ? "0px 3px 15px -9px " + colorChip.shadow : "",
+      paddingTop: normalMode ? "" : String(innerPadding) + ea,
       paddingBottom: String(innerPadding) + ea,
     }
   });
@@ -4736,6 +4806,8 @@ AspirantSubmitJs.prototype.launching = async function (loading) {
 
     const { returnGet, ajaxJson, selfHref } = GeneralJs;
     const getObj = returnGet();
+    const entireMode = (getObj.entire === "true");
+    const normalMode = (entireMode && getObj.normal === "true");
 
     this.inputClassName = "consultingInput";
     if (typeof getObj.mode === "string" && getObj.mode === "portfolio") {
@@ -4744,26 +4816,36 @@ AspirantSubmitJs.prototype.launching = async function (loading) {
       this.portfolioMode = false;
     }
 
-    await this.mother.ghostClientLaunching({
-      mode: "front",
-      name: "aspirantSubmit",
-      client: null,
-      base: {
-        instance: this,
-        binaryPath: AspirantSubmitJs.binaryPath,
-        subTitle: "",
-        secondBackground: false,
-        backgroundType: 0,
-      },
-      local: async () => {
-        try {
-          instance.insertInitBox();
-          instance.insertAspirantBox();
-        } catch (e) {
-          await GeneralJs.ajaxJson({ message: "AspirantSubmitJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+    this.normalMode = normalMode;
+
+    if (!normalMode) {
+      await this.mother.ghostClientLaunching({
+        mode: "front",
+        name: "aspirantSubmit",
+        client: null,
+        base: {
+          instance: this,
+          binaryPath: AspirantSubmitJs.binaryPath,
+          subTitle: "",
+          secondBackground: false,
+          backgroundType: 0,
+        },
+        local: async () => {
+          try {
+            instance.insertAspirantBox();
+          } catch (e) {
+            await GeneralJs.ajaxJson({ message: "AspirantSubmitJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+          }
         }
-      }
-    });
+      });
+    } else {
+
+      GeneralJs.colorChip.green = "#9eb6d8";
+      GeneralJs.colorChip.gradientGreen = "#404040";
+
+      instance.insertInitBox();
+      instance.insertAspirantBox();
+    }
 
     loading.parentNode.removeChild(loading);
 
