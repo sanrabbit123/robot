@@ -565,21 +565,38 @@ ContentsRouter.prototype.rou_post_contentsSchedule = function () {
     try {
       const selfCoreMongo = instance.mongo;
       const timeConst = 10 * 1000;
-      calcaulator.settingWebSchedule(selfCoreMongo, logger).then((resultMessage) => {
+      const termConst = 5 * 1000;
+      const delta = 5;
+      let resultMessage;
+      let safeNum;
+
+      (async () => {
+
+        resultMessage = await calcaulator.settingWebSchedule(selfCoreMongo, logger);
+        safeNum = 0;
+        while (resultMessage.message !== "done"){
+          await sleep(termConst);
+          resultMessage = await calcaulator.settingWebSchedule(selfCoreMongo, logger);
+          if (safeNum > delta) {
+            break;
+          }
+        }
         if (resultMessage.message !== "done") {
           throw new Error("setting web schedule fail");
         }
-        return sleep(timeConst);
-      }).then(() => {
-        return calcaulator.syncWebSchedule(selfCoreMongo, logger);
-      }).then((resultMessage) => {
+
+        await sleep(timeConst);
+
+        resultMessage = await calcaulator.syncWebSchedule(selfCoreMongo, logger);
         if (resultMessage.message !== "done") {
           throw new Error("sync web schedule fail");
         }
-      }).catch((err) => {
+
+      })().catch((err) => {
         logger.error("Contents lounge 서버 문제 생김 (rou_post_contentsSchedule): " + err.message).catch((e) => { console.log(e); });
         console.log(err);
       });
+
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       logger.error("Contents lounge 서버 문제 생김 (rou_post_contentsSchedule): " + e.message).catch((e) => { console.log(e); });
