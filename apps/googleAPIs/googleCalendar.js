@@ -232,32 +232,6 @@ GoogleCalendar.prototype.getSchedule = async function (from, id) {
   }
 }
 
-GoogleCalendar.prototype.getScheduleNonePast = async function (from, id) {
-  const instance = this;
-  const { pythonExecute, errorLog } = this.mother;
-  try {
-    let requestObj, resultObj;
-    let index;
-
-    const items = await pythonExecute(this.pythonApp, [ "calendar", "listEventsNonePast" ], { targetId: this.findCalendarId(from), query: "" });
-    if (!Array.isArray(items)) {
-      throw new Error("google calendar error : python error(getSchedule)");
-    }
-
-    index = items.findIndex((obj) => { return obj.id === id })
-    if (index === -1) {
-      return null;
-    } else {
-      return new CalendarEvent(items[index]);
-    }
-
-  } catch (e) {
-    await errorLog("google calendar api error(getSchedule) : " + e.message);
-    console.log(e);
-    return null;
-  }
-}
-
 GoogleCalendar.prototype.listEvents = async function (from, search = null) {
   const instance = this;
   const { pythonExecute, errorLog } = this.mother;
@@ -281,6 +255,31 @@ GoogleCalendar.prototype.listEvents = async function (from, search = null) {
     return [];
   }
 }
+
+GoogleCalendar.prototype.listEventsNonePast = async function (from, search = null) {
+  const instance = this;
+  const { pythonExecute, errorLog } = this.mother;
+  try {
+    let requestObj, resultObj;
+
+    const items = await pythonExecute(this.pythonApp, [ "calendar", "listEventsNonePast" ], { targetId: this.findCalendarId(from), query: search === null ? "" : search });
+    if (!Array.isArray(items)) {
+      throw new Error("google calendar error : python error(listEvents)");
+    }
+
+    resultObj = new CalendarEvents();
+    if (items.length > 0) {
+      resultObj.setEvents(items);
+    }
+    return resultObj;
+
+  } catch (e) {
+    await errorLog("google calendar api error(listEvents) : " + e.message);
+    console.log(e);
+    return [];
+  }
+}
+
 
 GoogleCalendar.prototype.updateSchedule = async function (from, id, updateQuery) {
   const instance = this;
