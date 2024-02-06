@@ -18,7 +18,7 @@ const ContentsCalculator = function () {
   this.calendarName = "homeliaisonContents";
 }
 
-ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, logger) {
+ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, logger = null) {
   const instance = this;
   const address = this.address;
   const back = this.back;
@@ -66,10 +66,13 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
     let exceptionPids;
     let cliidArr, desidArr;
     let targetClients, targetDesigners;
+    let allDesigners;
 
     if (!Array.isArray(alreadyArr)) {
       throw new Error("request fail");
     }
+
+    allDesigners = await back.getDesignersByQuery({}, { selfMongo });
 
     contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
     contentsArr = contentsArr.toNormal();
@@ -98,6 +101,13 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
         }
       }
     }
+
+
+    console.log(resultTong);
+    console.log(alreadyArr);
+
+
+    // /*
 
     projects = (await back.getProjectsByQuery({ $or: resultTong.map(({ proid }) => { return { proid } }) }, { selfMongo })).toNormal();
     for (let obj of resultTong) {
@@ -170,9 +180,13 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
     }
 
     return resultTong;
+    // */
+
 
   } catch (e) {
-    logger.error("Contents calculator 문제 생김 (forecastWebSchedule): " + e.message).catch((e) => { console.log(e); });
+    if (logger !== null) {
+      logger.error("Contents calculator 문제 생김 (forecastWebSchedule): " + e.message).catch((e) => { console.log(e); });
+    }
     console.log(e);
     return null;
   }
@@ -198,7 +212,7 @@ ContentsCalculator.prototype.settingWebSchedule = async function (selfMongo, log
       if (num > safeNum) {
         break;
       }
-      await sleep(2000);
+      await sleep(3000);
       forecastSchedule = await this.forecastWebSchedule(selfMongo, logger);
       num++;
     }

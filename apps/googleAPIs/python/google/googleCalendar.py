@@ -5,6 +5,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from json import dumps
 from os import path as osPath
+import datetime
 
 class GoogleCalendar:
 
@@ -45,7 +46,8 @@ class GoogleCalendar:
                                                   showHiddenInvitations=True, singleEvents=True,
                                                   maxResults=250, orderBy='startTime', q=query,
                                                   pageToken=nextToken,
-                                                  timeZone='Asia/Seoul').execute()
+                                                  timeZone='Asia/Seoul',
+                                                  timeMin=datetime.datetime.now().isoformat(timespec="microseconds")[0:19] + ".000Z").execute()
             events = events_result.get('items', [])
             if not events:
                 tong.extend([])
