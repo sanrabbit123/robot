@@ -188,21 +188,11 @@ DevContext.prototype.launching = async function () {
 
 
     
-    await requestSystem("https://home-liaison.ddns.net/parseEmail", { key: "hlemail/00oen2dk0u06ejbgobmnbd7io8hp57d4vlvutk01" }, { headers: { "Content-Type": "application/json" } });
 
+    
     
 
     
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -6902,8 +6892,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-
+  
     // certbot
     // await this.certRefreshing();
 
@@ -6931,19 +6920,19 @@ DevContext.prototype.launching = async function () {
     //   host: "home-liaison.com",
     // });
 
+
     // raw photo to raw portfolio
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "황원정",
-    //     designer: "박주령",
-    //     link: "https://drive.google.com/drive/folders/10z639f-GdIBaQAcDK37G6XqDXsEgebgn",
+    //     client: "김효연",
+    //     designer: "김도현",
+    //     link: "https://drive.google.com/drive/folders/1YmvZ1HdWuu6g6MGYknnOkhjQT6rjionn",
     //     pay: true
     //   },
     // ]);
 
-  
-    
+
     // raw video
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
@@ -6952,7 +6941,6 @@ DevContext.prototype.launching = async function () {
     //     designer: "박주령",
     //   },
     // ]);
-
 
 
     // when rawtoraw fail

@@ -192,6 +192,10 @@ EmailJs.prototype.sendMailInputSetting = async function (scrollBox) {
     let inputIndent;
     let propertyAreaWidth;
     let teamInnerPadding;
+    let textareaTop, textareaLeft;
+    let grayLineBlockFontSize;
+    let grayLineBlockFontWeight;
+    let grayLineBlockFontTop;
 
     circleRadius = <%% 2.5, 2.5, 2, 2, 0.5 %%>;
     circleTop = 10;
@@ -228,6 +232,13 @@ EmailJs.prototype.sendMailInputSetting = async function (scrollBox) {
     teamInnerPadding = 8;
 
     marginRatio = <%% 1.2, 1.2, 1.1, 1.1, 0.8 %%>;
+    
+    textareaTop = <%% 10, 10, 10, 10, 2 %%>;
+    textareaLeft = <%% 15, 15, 15, 15, 2.5 %%>;
+
+    grayLineBlockFontSize = <%% 14, 12, 12, 12, 3 %%>;
+    grayLineBlockFontWeight = <%% 400, 400, 400, 300, 400 %%>;
+    grayLineBlockFontTop = <%% 15, 15, 15, 15, 15 %%>;
 
     // 1
     createNode({
@@ -635,8 +646,9 @@ EmailJs.prototype.sendMailInputSetting = async function (scrollBox) {
               fontSize: String(inputSize) + ea,
               fontWeight: String(inputWeight),
               color: colorChip.black,
-              textAlign: "center",
+              textAlign: "left",
               background: "transparent",
+              textIndent: String(inputIndent) + ea,
             }
           }
         },
@@ -787,6 +799,27 @@ EmailJs.prototype.sendMailInputSetting = async function (scrollBox) {
             paddingBottom: String(teamInnerPadding - 4) + ea,
             height: String(8000) + ea,
           },
+          child: {
+            mode: "textarea",
+            attribute: {
+              property: "etc",
+            },
+            style: {
+              position: "absolute",
+              top: String(grayTextAreaTop + textareaTop) + ea,
+              left: String(0 + textareaLeft) + ea,
+              width: withOut(textareaLeft * 2, ea),
+              height: withOut(textareaTop, ea),
+              fontSize: String(grayLineBlockFontSize) + ea,
+              fontWeight: String(grayLineBlockFontWeight),
+              border: String(0),
+              background: "transparent",
+              outline: String(0),
+              overflow: "scroll",
+              lineHeight: String(1.6),
+              color: colorChip.black,
+            }
+          }
         },
       ]
     });
@@ -893,7 +926,7 @@ EmailJs.prototype.sendMailInputSetting = async function (scrollBox) {
 EmailJs.prototype.baseMaker = async function () {
   const instance = this;
   const { ea, totalContents, valueAreaClassName, emailAddress, listTongClassName, bodyTongClassName, attachTongClassName, eventTargetClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, blankHref, cleanChildren, ajaxJson, equalJson, autoComma } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, blankHref, cleanChildren, ajaxJson, equalJson, autoComma, downloadFile } = GeneralJs;
   try {
     let totalMother;
     let columnAreaHeight;
@@ -1249,8 +1282,10 @@ EmailJs.prototype.baseMaker = async function () {
                               click: async function (e) {
                                 try {
                                   const hash = this.getAttribute("hash");
+                                  const loading = instance.mother.whiteProgressLoading(null, true, false, false);
                                   const { link } = await ajaxJson({ hash }, PARSERHOST + "/getFileLink", { equal: true });
-                                  blankHref(link);
+                                  await downloadFile(link);
+                                  loading.remove();
                                 } catch (e) {
                                   console.log(e);
                                 }
