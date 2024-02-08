@@ -126,37 +126,39 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     let buttonSize;
     let buttonTextTop;
     let buttonWeight;
+    let firstBasePaddingTop;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
-    plusRatio = 0.5;
-
+    plusRatio = <%% 0.5, 0.7, 0.8, 0.8, 0.5 %%>;
     plusWidth = ((leftRightWidth * plusRatio) * 2) + standardWidth
 
-    titleHeight = 170;
+    firstBasePaddingTop = <%% 72, 72, 68, 64, 48 %%>;
 
-    whitePopupWidth = 1200;
-    whitePopupHeight = window.innerHeight - 72 - (72 * 2);
+    titleHeight = <%% 170, 148, 160, 160, 160 %%>;
 
-    pinMargin = 16;
-    pinWidth = 6;
+    whitePopupWidth = <%% 1200, 1200, 1200, 1200, 1200 %%>;
+    whitePopupHeight = window.innerHeight - naviHeight - (naviHeight * 2);
 
-    firstBasePaddingBottom = 210;
-    blueTop = 200;
+    pinMargin = <%% 16, 16, 16, 16, 16 %%>;
+    pinWidth = <%% 6, 6, 6, 6, 6 %%>;
 
-    subTitleSize = 19;
-    subTitleWeight = 300;
-    subTitleMarginTop = 16;
+    firstBasePaddingBottom = <%% 210, 206, 200, 200, 200 %%>;
+    blueTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    illustMarginTop = 190;
+    subTitleSize = <%% 19, 19, 19, 19, 19 %%>;
+    subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
+    subTitleMarginTop = <%% 16, 16, 16, 16, 16 %%>;
 
-    buttonMarginTop = 8;
-    buttonWidth = 180;
-    buttonHeight = 50;
-    buttonSize = 20;
-    buttonTextTop = -1;
-    buttonWeight = 700;
+    illustMarginTop = <%% 190, 175, 180, 180, 180 %%>;
+
+    buttonMarginTop = <%% 8, 8, 8, 8, 8 %%>;
+    buttonWidth = <%% 180, 145, 180, 180, 180 %%>;
+    buttonHeight = <%% 50, 42, 50, 50, 50 %%>;
+    buttonSize = <%% 20, 17, 20, 20, 20 %%>;
+    buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     this.totalContents = document.getElementById("totalcontents");
     this.totalContents.style.overflow = "hidden";
@@ -169,7 +171,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        paddingTop: String(naviHeight) + ea,
+        paddingTop: String(firstBasePaddingTop) + ea,
         flexDirection: "column",
         paddingBottom: String(firstBasePaddingBottom) + ea,
       },
@@ -472,53 +474,53 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
     let descriptionBetween;
     let descriptionLineBottomBetween;
 
-    mainHeight = 480;
+    mainHeight = <%% 480, 440, 440, 440, 480 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
   
-    pinMargin = 20;
-    pinWidth = 9;
+    pinMargin = <%% 20, 20, 20, 20, 20 %%>;
+    pinWidth = <%% 9, 9, 9, 9, 9 %%>;
 
-    arrowMargin = 29;
-    arrowWidth = 50;
+    arrowMargin = <%% 29, 23, 29, 29, 29 %%>;
+    arrowWidth = <%% 50, 46, 50, 50, 50 %%>;
 
-    contentsSize = 21;
+    contentsSize = <%% 21, 19, 21, 21, 21 %%>;
 
-    boxBetween = 24;
+    boxBetween = <%% 24, 24, 24, 24, 24 %%>;
 
-    basePaddingTop = 180;
-    basePaddingBottom = 210;
+    basePaddingTop = <%% 180, 180, 180, 180, 180 %%>;
+    basePaddingBottom = <%% 210, 210, 210, 210, 210 %%>;
 
-    colorTop = 200;
+    colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = 35;
-    titleWeight = 800;
+    titleSize = <%% 35, 32, 35, 35, 35 %%>;
+    titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    subTitleSize = 19;
-    subTitleWeight = 300;
-    subTitleMarginTop = 6;
-    subTitleOpacity = 0.7;
+    subTitleSize = <%% 19, 17, 19, 19, 19 %%>;
+    subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
+    subTitleMarginTop = <%% 6, 6, 6, 6, 6 %%>;
+    subTitleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
 
-    contentsBaseMarginTop = 64;
+    contentsBaseMarginTop = <%% 64, 64, 64, 64, 64 %%>;
 
-    boxBorderRadius = 10;
+    boxBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
 
-    colorTitleSize = 29;
-    colorTitleWeight = 700;
-    colorTitleBoldWeight = 900;
+    colorTitleSize = <%% 29, 27, 25, 24, 29 %%>;
+    colorTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    colorTitleBoldWeight = <%% 900, 900, 900, 900, 900 %%>;
 
-    circleWidth = 6;
-    circleTop = -2;
+    circleWidth = <%% 6, 6, 6, 6, 6 %%>;
+    circleTop = <%% -2, -2, -2, -2, -2 %%>;
 
-    descriptionBetween = 12;
-    descriptionLineBottomBetween = 4;
+    descriptionBetween = <%% 12, 10, 12, 12, 12 %%>;
+    descriptionLineBottomBetween = <%% 4, 4, 4, 4, 4 %%>;
 
-    circleLeft0 = 149;
-    circleLeft1 = 173;
-    circleLeft2 = 149;
-    circleLeft3 = 181;
-    circleLeft4 = 204;
-    circleLeft5 = 238;
-    circleLeft6 = 262;
+    circleLeft0 = <%% 149, 149, 149, 149, 149 %%>;
+    circleLeft1 = <%% 173, 173, 173, 173, 173 %%>;
+    circleLeft2 = <%% 149, 149, 149, 149, 149 %%>;
+    circleLeft3 = <%% 181, 181, 181, 181, 181 %%>;
+    circleLeft4 = <%% 204, 204, 204, 204, 204 %%>;
+    circleLeft5 = <%% 238, 238, 238, 238, 238 %%>;
+    circleLeft6 = <%% 262, 262, 262, 262, 262 %%>;
 
     secondBase = createNode({
       mother: baseTong,
