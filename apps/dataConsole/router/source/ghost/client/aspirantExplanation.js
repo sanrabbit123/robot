@@ -158,7 +158,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     buttonTextTop = -1;
     buttonWeight = 700;
 
-    this.totalContents = document.querySelector("#totalcontents");
+    this.totalContents = document.getElementById("totalcontents");
     this.totalContents.style.overflow = "hidden";
     this.totalContents.style.background = colorExtended.mainBlue;
     document.body.style.background = colorExtended.mainBlue;
@@ -390,8 +390,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
                 border: String(0),
                 borderRadius: String(8) + "px",
               }
-            })
-
+            });
 
           } catch (e) {
             console.log(e);
@@ -1131,6 +1130,14 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     let basePaddingTop;
     let basePaddingBottom;
     let colorTop;
+    let unitTextTop;
+    let boxGroupMarginTop;
+    let unitBorderRadius;
+    let blackPromptMarginBetween;
+    let blackPromptPaddingLeft;
+    let blackPromptPaddingTop;
+    let commentTriangleWidth;
+    let blackPromptSize, blackPromptWeight, blackPromptLineHeight;
 
     mainHeight = 900;
     minusLeft = window.innerWidth - standardWidth + 1;
@@ -1148,6 +1155,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
 
     unitHeight = 184;
 
+    unitTextTop = -1;
     unitSize = 22;
     unitWeight = 700;
 
@@ -1163,6 +1171,21 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     subTitleWeight = 300;
     subTitleMarginTop = 6;
     subTitleOpacity = 0.7;
+
+    boxGroupMarginTop = 64;
+
+    unitBorderRadius = 10;
+
+    blackPromptMarginBetween = 20;
+
+    blackPromptPaddingLeft = 30;
+    blackPromptPaddingTop = 24;
+
+    commentTriangleWidth = 16;
+
+    blackPromptSize = 16;
+    blackPromptWeight = 500;
+    blackPromptLineHeight = 1.6;
 
     contentsText = [
       [
@@ -1245,12 +1268,12 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
             style: {
               display: "flex",
               position: "absolute",
-              top: String(thisBox.top + window.scrollY + 190 + 18) + "px",
+              top: String(thisBox.top + window.scrollY + unitHeight + blackPromptMarginBetween) + "px",
               left: String(thisBox.left) + ea,
-              width: String(thisBox.width - (30 * 2)) + "px",
-              padding: String(30) + ea,
-              paddingTop: String(24) + ea,
-              paddingBottom: String(24) + ea,
+              width: String(thisBox.width - (blackPromptPaddingLeft * 2)) + "px",
+              padding: String(blackPromptPaddingLeft) + ea,
+              paddingTop: String(blackPromptPaddingTop) + ea,
+              paddingBottom: String(blackPromptPaddingTop) + ea,
               background: colorChip.black,
               borderRadius: String(8) + "px",
               animation: "0.4s ease 0s 1 normal forwards running fadeupdelay",
@@ -1263,8 +1286,8 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
               source: svgMaker.commentTriangle("verticalLeft", colorExtended.black),
               style: {
                 position: "absolute",
-                width: String(16) + ea,
-                top: String(-16) + ea,
+                width: String(commentTriangleWidth) + ea,
+                top: String(-1 * commentTriangleWidth) + ea,
                 right: String(0) + ea,
                 transform: "rotate(180deg)",
               }
@@ -1275,10 +1298,10 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
             mother: blockPrompt,
             text: targetContents,
             style: {
-              fontSize: String(16) + ea,
-              fontWeight: String(500),
+              fontSize: String(blackPromptSize) + ea,
+              fontWeight: String(blackPromptWeight),
               color: colorChip.white,
-              lineHeight: String(1.6),
+              lineHeight: String(blackPromptLineHeight),
             }
           })
 
@@ -1363,7 +1386,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         position: "relative",
         justifyContent: "start",
         alignItems: "start",
-        marginTop: String(64) + ea,
+        marginTop: String(boxGroupMarginTop) + ea,
         flexDirection: "row",
       },
       children: [
@@ -1407,7 +1430,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(10) + "px",
+        borderRadius: String(unitBorderRadius) + "px",
         border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.white,
@@ -1477,7 +1500,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
           style: {
             display: "inline-block",
             position: "relative",
-            top: String(-1) + ea,
+            top: String(unitTextTop) + ea,
             fontSize: String(unitSize) + ea,
             fontWeight: String(unitWeight),
             color: colorExtended.black,
@@ -1505,7 +1528,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(10) + "px",
+        borderRadius: String(unitBorderRadius) + "px",
         border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.white,
@@ -1575,7 +1598,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
           style: {
             display: "inline-block",
             position: "relative",
-            top: String(-1) + ea,
+            top: String(unitTextTop) + ea,
             fontSize: String(unitSize) + ea,
             fontWeight: String(unitWeight),
             color: colorExtended.black,
@@ -1602,7 +1625,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         position: "relative",
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
-        borderRadius: String(10) + "px",
+        borderRadius: String(unitBorderRadius) + "px",
         border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.white,
@@ -1672,7 +1695,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
           style: {
             display: "inline-block",
             position: "relative",
-            top: String(-1) + ea,
+            top: String(unitTextTop) + ea,
             fontSize: String(unitSize) + ea,
             fontWeight: String(unitWeight),
             color: colorExtended.black,
@@ -1702,7 +1725,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(10) + "px",
+        borderRadius: String(unitBorderRadius) + "px",
         border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.white,
@@ -1772,7 +1795,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
           style: {
             display: "inline-block",
             position: "relative",
-            top: String(-1) + ea,
+            top: String(unitTextTop) + ea,
             fontSize: String(unitSize) + ea,
             fontWeight: String(unitWeight),
             color: colorExtended.black,
@@ -1800,7 +1823,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(10) + "px",
+        borderRadius: String(unitBorderRadius) + "px",
         border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.white,
@@ -1871,7 +1894,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
           style: {
             display: "inline-block",
             position: "relative",
-            top: String(-1) + ea,
+            top: String(unitTextTop) + ea,
             fontSize: String(unitSize) + ea,
             fontWeight: String(unitWeight),
             color: colorExtended.black,
@@ -1899,7 +1922,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         position: "relative",
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
-        borderRadius: String(10) + "px",
+        borderRadius: String(unitBorderRadius) + "px",
         border: "3px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.white,
@@ -1970,7 +1993,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
           style: {
             display: "inline-block",
             position: "relative",
-            top: String(-1) + ea,
+            top: String(unitTextTop) + ea,
             fontSize: String(unitSize) + ea,
             fontWeight: String(unitWeight),
             color: colorExtended.black,
@@ -1993,7 +2016,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
 AspirantExplanationJs.prototype.insertFourthBox = async function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, baseTong, colorExtended, standardWidth } = this;
+  const { ea, media, baseTong, colorExtended, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
   try {
@@ -2011,6 +2034,16 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
     let unitHeight;
     let unitSize, unitWeight;
     let yellowMargin;
+    let titleSize;
+    let titleWeight;
+    let titleLineHeight;
+    let processBlockMarginTop;
+    let unitBoxWidth;
+    let unitBoxWidthLong;
+    let basePaddingTop;
+    let basePaddingBottom;
+    let colorTop;
+    let unitTextTop;
 
     mainHeight = 900;
     minusLeft = window.innerWidth - standardWidth + 1;
@@ -2035,14 +2068,29 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
 
     yellowMargin = 10;
 
+    titleSize = 35;
+    titleWeight = 800;
+    titleLineHeight = 1.4;
+
+    processBlockMarginTop = 80;
+
+    unitBoxWidth = 190;
+    unitBoxWidthLong = 310;
+
+    basePaddingTop = 180;
+    basePaddingBottom = 210;
+    colorTop = 200;
+
+    unitTextTop = -1;
+
     thirdBase = createNode({
       mother: baseTong,
       style: {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        paddingTop: String(180) + ea,
-        paddingBottom: String(210) + ea,
+        paddingTop: String(basePaddingTop) + ea,
+        paddingBottom: String(basePaddingBottom) + ea,
         flexDirection: "column"
       },
       child: {
@@ -2052,7 +2100,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
           left: String(-1 * minusLeft) + ea,
           background: colorExtended.warmGray1,
           width: withOut(-1 * (minusLeft * 2), ea),
-          height: withOut(1 * (-200 + 72), ea),
+          height: withOut(1 * ((-1 * colorTop) + naviHeight), ea),
         }
       }
     });
@@ -2072,9 +2120,9 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
             display: "inline-block",
             position: "relative",
             color: colorExtended.black,
-            fontWeight: String(800),
-            fontSize: String(35) + ea,
-            lineHeight: String(1.4),
+            fontWeight: String(titleWeight),
+            fontSize: String(titleSize) + ea,
+            lineHeight: String(titleLineHeight),
           }
         }
       ]
@@ -2087,7 +2135,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
         position: "relative",
         justifyContent: "start",
         alignItems: "start",
-        marginTop: String(80) + ea,
+        marginTop: String(processBlockMarginTop) + ea,
         flexDirection: "row",
       },
       children: [
@@ -2105,7 +2153,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
               style: {
                 position: "absolute",
                 top: String(unitHeight / 2) + ea,
-                left: String(190) + ea,
+                left: String(unitBoxWidth) + ea,
                 width: String(unitBetween) + ea,
                 height: String(0),
                 opacity: String(0.2),
@@ -2116,7 +2164,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
               style: {
                 position: "absolute",
                 top: String(unitHeight / 2) + ea,
-                left: String(190 + unitBetween + 190) + ea,
+                left: String(unitBoxWidth + unitBetween + unitBoxWidth) + ea,
                 width: String(unitBetween) + ea,
                 height: String(0),
                 opacity: String(0.5),
@@ -2127,7 +2175,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
               style: {
                 position: "absolute",
                 top: String(unitHeight / 2) + ea,
-                left: String(190 + unitBetween + 190 + unitBetween + 190) + ea,
+                left: String(unitBoxWidth + unitBetween + unitBoxWidth + unitBetween + unitBoxWidth) + ea,
                 width: String(unitBetween) + ea,
                 height: String(0),
                 opacity: String(0.8),
@@ -2138,7 +2186,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
               style: {
                 position: "absolute",
                 top: String(unitHeight / 2) + ea,
-                left: String(190 + unitBetween + 190 + unitBetween + 190 + unitBetween + 310) + ea,
+                left: String(unitBoxWidth + unitBetween + unitBoxWidth + unitBetween + unitBoxWidth + unitBetween + unitBoxWidthLong) + ea,
                 width: String(160) + ea,
                 height: String(0),
                 opacity: String(1),
@@ -2150,7 +2198,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 display: "inline-flex",
                 position: "relative",
                 height: String(unitHeight) + ea,
-                width: String(190) + ea,
+                width: String(unitBoxWidth) + ea,
                 background: colorExtended.warmGray0,
                 borderRadius: String(unitHeight) + ea,
                 boxShadow: "0px 5px 19px -9px " + colorExtended.shadow,
@@ -2162,7 +2210,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 style: {
                   display: "inlnie-block",
                   position: "relative",
-                  top: String(-1) + ea,
+                  top: String(unitTextTop) + ea,
                   fontSize: String(unitSize) + ea,
                   fontWeight: String(unitWeight),
                   color: colorExtended.black,
@@ -2174,7 +2222,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 display: "inline-flex",
                 position: "relative",
                 height: String(unitHeight) + ea,
-                width: String(190) + ea,
+                width: String(unitBoxWidth) + ea,
                 background: colorExtended.warmGray0,
                 borderRadius: String(unitHeight) + ea,
                 boxShadow: "0px 5px 19px -9px " + colorExtended.shadow,
@@ -2187,7 +2235,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 style: {
                   display: "inlnie-block",
                   position: "relative",
-                  top: String(-1) + ea,
+                  top: String(unitTextTop) + ea,
                   fontSize: String(unitSize) + ea,
                   fontWeight: String(unitWeight),
                   color: colorExtended.black,
@@ -2199,7 +2247,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 display: "inline-flex",
                 position: "relative",
                 height: String(unitHeight) + ea,
-                width: String(190) + ea,
+                width: String(unitBoxWidth) + ea,
                 background: colorExtended.warmGray0,
                 borderRadius: String(unitHeight) + ea,
                 boxShadow: "0px 5px 19px -9px " + colorExtended.shadow,
@@ -2212,7 +2260,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 style: {
                   display: "inlnie-block",
                   position: "relative",
-                  top: String(-1) + ea,
+                  top: String(unitTextTop) + ea,
                   fontSize: String(unitSize) + ea,
                   fontWeight: String(unitWeight),
                   color: colorExtended.black,
@@ -2224,7 +2272,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 display: "inline-flex",
                 position: "relative",
                 height: String(unitHeight) + ea,
-                width: String(310) + ea,
+                width: String(unitBoxWidthLong) + ea,
                 background: colorExtended.warmGray0,
                 borderRadius: String(unitHeight) + ea,
                 boxShadow: "0px 5px 19px -9px " + colorExtended.shadow,
@@ -2237,7 +2285,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 style: {
                   display: "inlnie-block",
                   position: "relative",
-                  top: String(-1) + ea,
+                  top: String(unitTextTop) + ea,
                   fontSize: String(unitSize) + ea,
                   fontWeight: String(unitWeight),
                   color: colorExtended.black,
@@ -2301,7 +2349,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                   style: {
                     display: "inlnie-block",
                     position: "relative",
-                    top: String(-1) + ea,
+                    top: String(unitTextTop) + ea,
                     fontSize: String(unitSize) + ea,
                     fontWeight: String(unitWeight),
                     color: colorExtended.subYellow,
@@ -2323,7 +2371,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
 AspirantExplanationJs.prototype.insertFifthBox = async function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, baseTong, colorExtended, standardWidth } = this;
+  const { ea, media, baseTong, colorExtended, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
   try {
@@ -2346,6 +2394,23 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
     let numberTop;
     let numberAreaWidth;
     let titleAreaWidth;
+    let basePaddingTop;
+    let basePaddingBottom;
+    let colorTop;
+    let mainTitleSize;
+    let mainTitleWeight;
+    let subTitleSize;
+    let subTitleWeight;
+    let subTitleMarginTop;
+    let subTitleOpacity;
+    let boxGroupMarginTop;
+    let numberSize, numberWeight;
+    let numberLeft0, numberLeft1, numberLeft2, numberLeft3;
+    let titleWeight, titleLineHeight;
+    let titleVisualTop;
+    let descriptionSize, descriptionWeight, descriptionLineHeight;
+    let blockHeight0, blockHeight1;
+    let blockBorderRaidus;
 
     mainHeight = 900;
     minusLeft = window.innerWidth - standardWidth + 1;
@@ -2370,10 +2435,44 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
     secondWidth = 372;
 
     titleSize = 23;
+    titleWeight = 600;
+    titleLineHeight = 1.5;
+    titleVisualTop = 1;
+
     numberTop = -17;
 
     numberAreaWidth = 80;
     titleAreaWidth = 320;
+
+    basePaddingTop = 180;
+    basePaddingBottom = 210;
+
+    colorTop = 200;
+
+    mainTitleSize = 35;
+    mainTitleWeight = 800;
+
+    subTitleSize = 19;
+    subTitleWeight = 300;
+    subTitleMarginTop = 6;
+    subTitleOpacity = 0.7;
+
+    boxGroupMarginTop = 64;
+
+    numberSize = 72;
+    numberWeight = 400;
+    numberLeft0 = 7;
+    numberLeft1 = 2;
+    numberLeft2 = 1;
+    numberLeft3 = 0;
+
+    descriptionSize = 19;
+    descriptionWeight = 200;
+    descriptionLineHeight = 1.6;
+
+    blockHeight0 = 140;
+    blockHeight1 = 180;
+    blockBorderRaidus = 10;
 
     thirdBase = createNode({
       mother: baseTong,
@@ -2381,8 +2480,8 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        paddingTop: String(180) + ea,
-        paddingBottom: String(210) + ea,
+        paddingTop: String(basePaddingTop) + ea,
+        paddingBottom: String(basePaddingBottom) + ea,
         flexDirection: "column"
       },
       child: {
@@ -2392,7 +2491,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
           left: String(-1 * minusLeft) + ea,
           background: colorExtended.gray0,
           width: withOut(-1 * (minusLeft * 2), ea),
-          height: withOut(1 * (-200 + 72), ea),
+          height: withOut(1 * ((-1 * colorTop) + naviHeight), ea),
         }
       }
     });
@@ -2412,8 +2511,8 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             display: "inline-block",
             position: "relative",
             color: colorExtended.black,
-            fontWeight: String(800),
-            fontSize: String(35) + ea,
+            fontWeight: String(mainTitleWeight),
+            fontSize: String(mainTitleSize) + ea,
           }
         }
       ]
@@ -2426,7 +2525,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         position: "relative",
         justifyContent: "center",
         alignItems: "start",
-        marginTop: String(6) + ea,
+        marginTop: String(subTitleMarginTop) + ea,
       },
       children: [
         {
@@ -2435,9 +2534,9 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
             display: "inline-block",
             position: "relative",
             color: colorExtended.black,
-            fontWeight: String(300),
-            fontSize: String(19) + ea,
-            opacity: String(0.7),
+            fontWeight: String(subTitleWeight),
+            fontSize: String(subTitleSize) + ea,
+            opacity: String(subTitleOpacity),
           }
         }
       ]
@@ -2450,7 +2549,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         position: "relative",
         justifyContent: "start",
         alignItems: "start",
-        marginTop: String(64) + ea,
+        marginTop: String(boxGroupMarginTop) + ea,
         flexDirection: "column",
       },
       children: [
@@ -2508,12 +2607,12 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         display: "inline-block",
         position: "relative",
         fontFamily: "graphik",
-        fontSize: String(72) + ea,
-        fontWeight: String(400),
+        fontSize: String(numberSize) + ea,
+        fontWeight: String(numberWeight),
         color: colorExtended.warmGray2,
         top: String(numberTop) + ea,
         width: String(numberAreaWidth) + ea,
-        left: String(7) + ea,
+        left: String(numberLeft0) + ea,
       }
     });
     createNode({
@@ -2523,10 +2622,10 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         display: "inline-block",
         position: "relative",
         fontSize: String(titleSize) + ea,
-        fontWeight: String(600),
+        fontWeight: String(titleWeight),
         color: colorExtended.black,
-        lineHeight: String(1.5),
-        top: String(1) + ea,
+        lineHeight: String(titleLineHeight),
+        top: String(titleVisualTop) + ea,
         width: String(titleAreaWidth) + ea,
       }
     });
@@ -2536,9 +2635,9 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         display: "inline-flex",
         position: "relative",
         width: withOut(numberAreaWidth + titleAreaWidth, ea),
-        height: String(140) + ea,
+        height: String(blockHeight0) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(10) + "px",
+        borderRadius: String(blockBorderRaidus) + "px",
         border: "2px solid " + colorExtended.warmGray0,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.warmGray1,
@@ -2604,10 +2703,10 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
           style: {
             display: "block",
             position: "relative",
-            fontSize: String(19) + ea,
-            fontWeight: String(200),
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(descriptionWeight),
             color: colorExtended.black,
-            lineHeight: String(1.6),
+            lineHeight: String(descriptionLineHeight),
             textAlign: "center",
           }
         },
@@ -2622,12 +2721,12 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         display: "inline-block",
         position: "relative",
         fontFamily: "graphik",
-        fontSize: String(72) + ea,
-        fontWeight: String(400),
+        fontSize: String(numberSize) + ea,
+        fontWeight: String(numberWeight),
         color: colorExtended.warmGray2,
         top: String(numberTop) + ea,
         width: String(numberAreaWidth) + ea,
-        left: String(2) + ea,
+        left: String(numberLeft1) + ea,
       }
     });
     createNode({
@@ -2637,10 +2736,10 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         display: "inline-block",
         position: "relative",
         fontSize: String(titleSize) + ea,
-        fontWeight: String(600),
+        fontWeight: String(titleWeight),
         color: colorExtended.black,
-        lineHeight: String(1.5),
-        top: String(2) + ea,
+        lineHeight: String(titleLineHeight),
+        top: String(titleVisualTop) + ea,
         width: String(titleAreaWidth) + ea,
       }
     });
@@ -2650,9 +2749,9 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         display: "inline-flex",
         position: "relative",
         width: withOut(numberAreaWidth + titleAreaWidth, ea),
-        height: String(140) + ea,
+        height: String(blockHeight0) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(10) + "px",
+        borderRadius: String(blockBorderRaidus) + "px",
         border: "2px solid " + colorExtended.warmGray0,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.warmGray1,
@@ -2718,10 +2817,10 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
           style: {
             display: "block",
             position: "relative",
-            fontSize: String(19) + ea,
-            fontWeight: String(200),
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(descriptionWeight),
             color: colorExtended.black,
-            lineHeight: String(1.6),
+            lineHeight: String(descriptionLineHeight),
             textAlign: "center",
           }
         },
@@ -2736,12 +2835,12 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         display: "inline-block",
         position: "relative",
         fontFamily: "graphik",
-        fontSize: String(72) + ea,
-        fontWeight: String(400),
+        fontSize: String(numberSize) + ea,
+        fontWeight: String(numberWeight),
         color: colorExtended.warmGray2,
         top: String(numberTop) + ea,
         width: String(numberAreaWidth) + ea,
-        left: String(1) + ea,
+        left: String(numberLeft2) + ea,
       }
     });
     createNode({
@@ -2751,10 +2850,10 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         display: "inline-block",
         position: "relative",
         fontSize: String(titleSize) + ea,
-        fontWeight: String(600),
+        fontWeight: String(titleWeight),
         color: colorExtended.black,
-        lineHeight: String(1.5),
-        top: String(1) + ea,
+        lineHeight: String(titleLineHeight),
+        top: String(titleVisualTop) + ea,
         width: String(titleAreaWidth) + ea,
       }
     });
@@ -2764,9 +2863,9 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         display: "inline-flex",
         position: "relative",
         width: withOut(numberAreaWidth + titleAreaWidth, ea),
-        height: String(180) + ea,
+        height: String(blockHeight1) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(10) + "px",
+        borderRadius: String(blockBorderRaidus) + "px",
         border: "2px solid " + colorExtended.warmGray0,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.warmGray1,
@@ -2832,10 +2931,10 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
           style: {
             display: "block",
             position: "relative",
-            fontSize: String(19) + ea,
-            fontWeight: String(200),
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(descriptionWeight),
             color: colorExtended.black,
-            lineHeight: String(1.6),
+            lineHeight: String(descriptionLineHeight),
             textAlign: "center",
           }
         },
@@ -2850,11 +2949,12 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         display: "inline-block",
         position: "relative",
         fontFamily: "graphik",
-        fontSize: String(72) + ea,
-        fontWeight: String(400),
+        fontSize: String(numberSize) + ea,
+        fontWeight: String(numberWeight),
         color: colorExtended.warmGray2,
         top: String(numberTop) + ea,
         width: String(numberAreaWidth) + ea,
+        left: String(numberLeft3) + ea,
       }
     });
     createNode({
@@ -2864,10 +2964,10 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         display: "inline-block",
         position: "relative",
         fontSize: String(titleSize) + ea,
-        fontWeight: String(600),
+        fontWeight: String(titleWeight),
         color: colorExtended.black,
-        lineHeight: String(1.5),
-        top: String(1) + ea,
+        lineHeight: String(titleLineHeight),
+        top: String(titleVisualTop) + ea,
         width: String(titleAreaWidth) + ea,
       }
     });
@@ -2877,9 +2977,9 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
         display: "inline-flex",
         position: "relative",
         width: withOut(numberAreaWidth + titleAreaWidth, ea),
-        height: String(180) + ea,
+        height: String(blockHeight1) + ea,
         marginBottom: String(middleBetween) + ea,
-        borderRadius: String(10) + "px",
+        borderRadius: String(blockBorderRaidus) + "px",
         border: "2px solid " + colorExtended.warmGray0,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.warmGray1,
@@ -2945,10 +3045,10 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
           style: {
             display: "block",
             position: "relative",
-            fontSize: String(19) + ea,
-            fontWeight: String(200),
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(descriptionWeight),
             color: colorExtended.black,
-            lineHeight: String(1.6),
+            lineHeight: String(descriptionLineHeight),
             textAlign: "center",
           }
         },
@@ -2963,7 +3063,7 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
 AspirantExplanationJs.prototype.insertSixthBox = async function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, baseTong, colorExtended, standardWidth } = this;
+  const { ea, media, baseTong, colorExtended, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const position0ReviewClassName = "position0ReviewClassName";
@@ -3003,6 +3103,21 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
     let imageHeight;
     let imageLeft;
     let reviewContents;
+    let basePaddingTop;
+    let basePaddingBottom;
+    let colorTop;
+    let whiteBoxBorderRadius;
+    let reviewSize, reviewWeight, reviewLineHeight, reviewMarginLeft;
+    let reviewBoxWidth;
+    let reviewBoldWeight;
+    let nameAreaMarginTop;
+    let nameAreaMarginLeft;
+    let buttonBoxMarginTop;
+    let buttonWidth;
+    let buttonHeight;
+    let buttonTextTop;
+    let buttonSize;
+    let buttonWeight;
 
     mainHeight = 900;
     minusLeft = window.innerWidth - standardWidth + 1;
@@ -3035,6 +3150,29 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
     cardWidth = 660;
     imageHeight = 260;
     imageLeft = 25;
+
+    basePaddingTop = 180;
+    basePaddingBottom = 210;
+
+    colorTop = 200;
+
+    whiteBoxBorderRadius = 10;
+
+    reviewSize = 17;
+    reviewWeight = 300;
+    reviewBoldWeight = 700;
+    reviewLineHeight = 1.6;
+    reviewMarginLeft = 170;
+    reviewBoxWidth = 400;
+    nameAreaMarginTop = 25;
+    nameAreaMarginLeft = 406;
+
+    buttonBoxMarginTop = 54;
+    buttonWidth = 110;
+    buttonHeight = 50;
+    buttonTextTop = -1;
+    buttonSize = 20;
+    buttonWeight = 700;
 
     reviewContents = [
       {
@@ -3081,8 +3219,8 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        paddingTop: String(180) + ea,
-        paddingBottom: String(210) + ea,
+        paddingTop: String(basePaddingTop) + ea,
+        paddingBottom: String(basePaddingBottom) + ea,
         flexDirection: "column"
       },
       child: {
@@ -3092,7 +3230,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
           left: String(-1 * minusLeft) + ea,
           background: colorExtended.mainBlue,
           width: withOut(-1 * (minusLeft * 2), ea),
-          height: withOut(1 * (-200 + 72), ea),
+          height: withOut(1 * ((-1 * colorTop) + naviHeight), ea),
         }
       }
     });
@@ -3107,7 +3245,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
       style: {
         display: "flex",
         position: "absolute",
-        top: String(180) + ea,
+        top: String(basePaddingTop) + ea,
         width: withOut(0, ea),
         justifyContent: "start",
         alignItems: "center",
@@ -3123,7 +3261,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
           position: "relative",
           width: String(cardWidth) + ea,
           height: String(unitHeight) + ea,
-          borderRadius: String(10) + "px",
+          borderRadius: String(whiteBoxBorderRadius) + "px",
           boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
           background: colorExtended.gray0,
           flexDirection: "column",
@@ -3189,12 +3327,12 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             style: {
               display: "inline-flex",
               position: "relative",
-              fontSize: String(17) + ea,
-              fontWeight: String(300),
+              fontSize: String(reviewSize) + ea,
+              fontWeight: String(reviewWeight),
               color: colorChip.black,
-              lineHeight: String(1.6),
-              marginLeft: String(170) + ea,
-              width: String(400) + ea,
+              lineHeight: String(reviewLineHeight),
+              marginLeft: String(reviewMarginLeft) + ea,
+              width: String(reviewBoxWidth) + ea,
             }
           },
           {
@@ -3203,12 +3341,12 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             style: {
               display: "inline-flex",
               position: "relative",
-              fontSize: String(17) + ea,
-              fontWeight: String(700),
+              fontSize: String(reviewSize) + ea,
+              fontWeight: String(reviewBoldWeight),
               color: colorChip.black,
-              lineHeight: String(1.6),
-              marginTop: String(25) + ea,
-              marginLeft: String(406) + ea,
+              lineHeight: String(reviewLineHeight),
+              marginTop: String(nameAreaMarginTop) + ea,
+              marginLeft: String(nameAreaMarginLeft) + ea,
             }
           },
           {
@@ -3237,7 +3375,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
       style: {
         display: "flex",
         position: "absolute",
-        top: String(180) + ea,
+        top: String(basePaddingTop) + ea,
         width: withOut(0, ea),
         justifyContent: "end",
         alignItems: "center",
@@ -3253,7 +3391,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
           position: "relative",
           width: String(cardWidth) + ea,
           height: String(unitHeight) + ea,
-          borderRadius: String(10) + "px",
+          borderRadius: String(whiteBoxBorderRadius) + "px",
           boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
           background: colorExtended.gray0,
           flexDirection: "column",
@@ -3319,12 +3457,12 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             style: {
               display: "inline-flex",
               position: "relative",
-              fontSize: String(17) + ea,
-              fontWeight: String(300),
+              fontSize: String(reviewSize) + ea,
+              fontWeight: String(reviewWeight),
               color: colorChip.black,
-              lineHeight: String(1.6),
-              marginLeft: String(170) + ea,
-              width: String(400) + ea,
+              lineHeight: String(reviewLineHeight),
+              marginLeft: String(reviewMarginLeft) + ea,
+              width: String(reviewBoxWidth) + ea,
             }
           },
           {
@@ -3333,12 +3471,12 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             style: {
               display: "inline-flex",
               position: "relative",
-              fontSize: String(17) + ea,
-              fontWeight: String(700),
+              fontSize: String(reviewSize) + ea,
+              fontWeight: String(reviewBoldWeight),
               color: colorChip.black,
-              lineHeight: String(1.6),
-              marginTop: String(25) + ea,
-              marginLeft: String(406) + ea,
+              lineHeight: String(reviewLineHeight),
+              marginTop: String(nameAreaMarginTop) + ea,
+              marginLeft: String(nameAreaMarginLeft) + ea,
             }
           },
           {
@@ -3651,7 +3789,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
           position: "relative",
           width: String(cardWidth) + ea,
           height: String(unitHeight) + ea,
-          borderRadius: String(10) + "px",
+          borderRadius: String(whiteBoxBorderRadius) + "px",
           boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
           background: colorExtended.gray0,
           flexDirection: "column",
@@ -3717,12 +3855,12 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             style: {
               display: "inline-flex",
               position: "relative",
-              fontSize: String(17) + ea,
-              fontWeight: String(300),
+              fontSize: String(reviewSize) + ea,
+              fontWeight: String(reviewWeight),
               color: colorChip.black,
-              lineHeight: String(1.6),
-              marginLeft: String(170) + ea,
-              width: String(400) + ea,
+              lineHeight: String(reviewLineHeight),
+              marginLeft: String(reviewMarginLeft) + ea,
+              width: String(reviewBoxWidth) + ea,
             }
           },
           {
@@ -3731,12 +3869,12 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             style: {
               display: "inline-flex",
               position: "relative",
-              fontSize: String(17) + ea,
-              fontWeight: String(700),
+              fontSize: String(reviewSize) + ea,
+              fontWeight: String(reviewBoldWeight),
               color: colorChip.black,
-              lineHeight: String(1.6),
-              marginTop: String(25) + ea,
-              marginLeft: String(406) + ea,
+              lineHeight: String(reviewLineHeight),
+              marginTop: String(nameAreaMarginTop) + ea,
+              marginLeft: String(nameAreaMarginLeft) + ea,
             }
           },
           {
@@ -3755,6 +3893,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
       }
     });
 
+    // button
     createNode({
       mother: sixthBase,
       event: {
@@ -3766,17 +3905,17 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
         position: "relative",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: String(54) + ea,
+        marginTop: String(buttonBoxMarginTop) + ea,
       },
       children: [
         {
           style: {
             display: "inline-flex",
             position: "relative",    
-            width: String(110) + ea,
-            height: String(50) + ea,
+            width: String(buttonWidth) + ea,
+            height: String(buttonHeight) + ea,
             background: colorChip.black,
-            borderRadius: String(50) + ea,
+            borderRadius: String(buttonHeight) + ea,
             justifyContent: "center",
             alignItems: "center",
             cursor: "pointer",
@@ -3789,9 +3928,9 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              top: String(-1) + ea,
-              fontSize: String(20) + ea,
-              fontWeight: String(700),
+              top: String(buttonTextTop) + ea,
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
               color: colorExtended.white,
             }
           }
