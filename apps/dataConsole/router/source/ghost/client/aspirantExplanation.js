@@ -136,7 +136,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
 
     firstBasePaddingTop = <%% 72, 70, 68, 64, 48 %%>;
 
-    titleHeight = <%% 170, 148, 160, 160, 160 %%>;
+    titleHeight = <%% 170, 148, 125, 130, 160 %%>;
 
     whitePopupWidth = <%% 1200, 1200, 1200, 1200, 1200 %%>;
     whitePopupHeight = window.innerHeight - naviHeight - (naviHeight * 2);
@@ -147,16 +147,16 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     firstBasePaddingBottom = <%% 210, 200, 200, 200, 200 %%>;
     blueTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    subTitleSize = <%% 19, 19, 19, 19, 19 %%>;
+    subTitleSize = <%% 19, 19, 18, 18, 19 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
-    subTitleMarginTop = <%% 16, 16, 16, 16, 16 %%>;
+    subTitleMarginTop = <%% 16, 16, 12, 12, 16 %%>;
 
     illustMarginTop = <%% 190, 175, 180, 180, 180 %%>;
 
     buttonMarginTop = <%% 8, 8, 8, 8, 8 %%>;
-    buttonWidth = <%% 180, 145, 180, 180, 180 %%>;
-    buttonHeight = <%% 50, 42, 50, 50, 50 %%>;
-    buttonSize = <%% 20, 17, 20, 20, 20 %%>;
+    buttonWidth = <%% 180, 145, 140, 180, 180 %%>;
+    buttonHeight = <%% 50, 42, 42, 42, 50 %%>;
+    buttonSize = <%% 20, 17, 17, 20, 20 %%>;
     buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
