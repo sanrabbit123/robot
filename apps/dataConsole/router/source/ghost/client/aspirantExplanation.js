@@ -134,7 +134,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     plusRatio = <%% 0.5, 0.7, 0.8, 0.8, 0.5 %%>;
     plusWidth = ((leftRightWidth * plusRatio) * 2) + standardWidth
 
-    firstBasePaddingTop = <%% 72, 72, 68, 64, 48 %%>;
+    firstBasePaddingTop = <%% 72, 70, 68, 64, 48 %%>;
 
     titleHeight = <%% 170, 148, 160, 160, 160 %%>;
 
@@ -144,7 +144,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     pinMargin = <%% 16, 16, 16, 16, 16 %%>;
     pinWidth = <%% 6, 6, 6, 6, 6 %%>;
 
-    firstBasePaddingBottom = <%% 210, 206, 200, 200, 200 %%>;
+    firstBasePaddingBottom = <%% 210, 200, 200, 200, 200 %%>;
     blueTop = <%% 200, 200, 200, 200, 200 %%>;
 
     subTitleSize = <%% 19, 19, 19, 19, 19 %%>;
@@ -474,7 +474,7 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
     let descriptionBetween;
     let descriptionLineBottomBetween;
 
-    mainHeight = <%% 480, 440, 440, 440, 480 %%>;
+    mainHeight = <%% 480, 420, 440, 440, 480 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
   
     pinMargin = <%% 20, 20, 20, 20, 20 %%>;
@@ -483,7 +483,7 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
     arrowMargin = <%% 29, 23, 29, 29, 29 %%>;
     arrowWidth = <%% 50, 46, 50, 50, 50 %%>;
 
-    contentsSize = <%% 21, 19, 21, 21, 21 %%>;
+    contentsSize = <%% 21, 18, 21, 21, 21 %%>;
 
     boxBetween = <%% 24, 24, 24, 24, 24 %%>;
 
@@ -492,7 +492,7 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = <%% 35, 32, 35, 35, 35 %%>;
+    titleSize = <%% 35, 31, 35, 35, 35 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
     subTitleSize = <%% 19, 17, 19, 19, 19 %%>;
@@ -504,14 +504,14 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
 
     boxBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
 
-    colorTitleSize = <%% 29, 27, 25, 24, 29 %%>;
+    colorTitleSize = <%% 29, 26, 25, 24, 29 %%>;
     colorTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
     colorTitleBoldWeight = <%% 900, 900, 900, 900, 900 %%>;
 
     circleWidth = <%% 6, 6, 6, 6, 6 %%>;
     circleTop = <%% -2, -2, -2, -2, -2 %%>;
 
-    descriptionBetween = <%% 12, 10, 12, 12, 12 %%>;
+    descriptionBetween = <%% 12, 12, 12, 12, 12 %%>;
     descriptionLineBottomBetween = <%% 4, 4, 4, 4, 4 %%>;
 
     circleLeft0 = <%% 149, 149, 149, 149, 149 %%>;
@@ -1141,53 +1141,53 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     let commentTriangleWidth;
     let blackPromptSize, blackPromptWeight, blackPromptLineHeight;
 
-    mainHeight = 900;
+    mainHeight = <%% 900, 900, 900, 900, 900 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
   
-    pinMargin = 15;
-    pinWidth = 6;
+    pinMargin = <%% 15, 15, 15, 15, 15 %%>;
+    pinWidth = <%% 6, 6, 6, 6, 6 %%>;
 
-    arrowMargin = 29;
-    arrowWidth = 50;
+    arrowMargin = <%% 29, 29, 29, 29, 29 %%>;
+    arrowWidth = <%% 50, 50, 50, 50, 50 %%>;
 
-    contentsSize = 22;
+    contentsSize = <%% 22, 22, 22, 22, 22 %%>;
 
-    boxBetween = 24;
-    middleBetween = 16;
+    boxBetween = <%% 24, 24, 24, 24, 24 %%>;
+    middleBetween = <%% 16, 16, 16, 16, 16 %%>;
 
-    unitHeight = 184;
+    unitHeight = <%% 184, 150, 184, 184, 184 %%>;
 
-    unitTextTop = -1;
-    unitSize = 22;
-    unitWeight = 700;
+    unitTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    unitSize = <%% 22, 20, 22, 22, 22 %%>;
+    unitWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    basePaddingTop = 180;
-    basePaddingBottom = 210;
+    basePaddingTop = <%% 180, 180, 180, 180, 180 %%>;
+    basePaddingBottom = <%% 210, 210, 210, 210, 210 %%>;
 
-    colorTop = 200;
+    colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = 35;
-    titleWeight = 800;
+    titleSize = <%% 35, 30, 35, 35, 35 %%>;
+    titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    subTitleSize = 19;
-    subTitleWeight = 300;
-    subTitleMarginTop = 6;
-    subTitleOpacity = 0.7;
+    subTitleSize = <%% 19, 17, 19, 19, 19 %%>;
+    subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
+    subTitleMarginTop = <%% 6, 6, 6, 6, 6 %%>;
+    subTitleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
 
-    boxGroupMarginTop = 64;
+    boxGroupMarginTop = <%% 64, 64, 64, 64, 64 %%>;
 
-    unitBorderRadius = 10;
+    unitBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
 
-    blackPromptMarginBetween = 20;
+    blackPromptMarginBetween = <%% 20, 20, 20, 20, 20 %%>;
 
-    blackPromptPaddingLeft = 30;
-    blackPromptPaddingTop = 24;
+    blackPromptPaddingLeft = <%% 30, 20, 30, 30, 30 %%>;
+    blackPromptPaddingTop = <%% 24, 16, 24, 24, 24 %%>;
 
-    commentTriangleWidth = 16;
+    commentTriangleWidth = <%% 16, 16, 16, 16, 16 %%>;
 
-    blackPromptSize = 16;
-    blackPromptWeight = 500;
-    blackPromptLineHeight = 1.6;
+    blackPromptSize = <%% 16, 14, 13, 12, 16 %%>;
+    blackPromptWeight = <%% 500, 500, 500, 500, 500 %%>;
+    blackPromptLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
     contentsText = [
       [
@@ -1205,14 +1205,14 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         "현재 ‘인테리어’라는 단어는 ‘리모델링(=시공)’에 국한되고 있으나",
         "진정한 인테리어는 시공과 스타일링을 포함합니다. ",
         "홈리에종의 홈스타일링 서비스는 예산에 맞는 스타일링과 필요 시공을 의미합니다. ",
-        "공간의 노후도에 따라 필요 시공이 전체 영역일 수도 있고, 예산에 따라 하이엔드 시공을 ",
+        "공간 노후도에 따라 필요 시공이 전체 영역일 수도 있고, 예산에 따라 하이엔드 시공을",
         "기대하면서 전문가의 수준 높은 안목을 기대하는 고객님도 찾아오십니다.",
       ],
       [
-        "고객 유치는 홈리에종이 합니다. ",
-        "홈리에종의 방향성에 기대감을 가지신 고객님들을 유치하기 위해 노력하고 있습니다. ",
-        "디자이너님은 디자이너로서의 역량을 키워가는 것에 집중해주세요. ",
-        "커뮤니케이션 능력이 탁월하고 디자인 아이덴티티가 매력적이라면 좋은 고객을 꾸준히 ",
+        "고객 유치는 홈리에종이 합니다.",
+        "홈리에종의 방향성에 기대감을 가지신 고객님들을 유치하기 위해 노력하고 있습니다.",
+        "디자이너님은 디자이너로서의 역량을 키워가는 것에 집중해주세요.",
+        "커뮤니케이션 능력이 탁월하고 디자인 아이덴티티가 매력적이라면 좋은 고객을 꾸준히",
         "만나는 것은 점점 쉬워집니다 :) 함께 즐겁게 성장해요!",
       ],
       [
@@ -1220,7 +1220,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         "1개 이상의 포트폴리오(실제 현장 사진)이 있거나 1개 이상의 홈퍼니싱",
         "3D 작업 역량이 확인되어야 합니다.",
         "홈리에종의 모든 프로젝트는 시공 위주의 견적 제출, 단순 견적 비교를 지양하고",
-        "고객의 예산 및 조건을 고려하여 시공의 난이도를 조정하면서 스타일링까지 완성해야 합니다.",
+        "고객의 예산 및 조건을 고려하여 시공 난이도를 조정하면서 완성해야 합니다.",
         "시공 역량 수준에 맞추어 고객 매칭이 이루어지며",
         "스타일링에 대한 최소 경험 혹은 역량은 필수입니다.",
       ],
@@ -1233,7 +1233,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         "3. 발전과 학습에 대한 강한 의지 및 관심",
       ],
       [
-        "홈리에종은 디자이너님의 역량과 상세 컨디션을 사전에 확인해 꼭 맞는 매칭을 해드립니다.",
+        "홈리에종은 디자이너님의 역량과 상세 컨디션을 사전에 확인해 매칭을 해드립니다.",
         "디자이너의 어려움을 교육 및 가이드 제공을 통해 개선하고, 시공사도 지원해드립니다.",
         "디자이너의 가능 일정과 출발지역, 가능한 업무량을 파악하여",
         "지속적인 성장을 할 수 있도록 지원합니다!",
@@ -1433,7 +1433,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(unitBorderRadius) + "px",
-        border: "3px solid " + colorExtended.warmGray1,
+        border: "1px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.white,
         flexDirection: "column",
@@ -1531,7 +1531,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(unitBorderRadius) + "px",
-        border: "3px solid " + colorExtended.warmGray1,
+        border: "1px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.white,
         flexDirection: "column",
@@ -1628,7 +1628,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
         borderRadius: String(unitBorderRadius) + "px",
-        border: "3px solid " + colorExtended.warmGray1,
+        border: "1px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.white,
         flexDirection: "column",
@@ -1728,7 +1728,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(unitBorderRadius) + "px",
-        border: "3px solid " + colorExtended.warmGray1,
+        border: "1px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.white,
         flexDirection: "column",
@@ -1826,7 +1826,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         height: String(unitHeight) + ea,
         marginBottom: String(middleBetween) + ea,
         borderRadius: String(unitBorderRadius) + "px",
-        border: "3px solid " + colorExtended.warmGray1,
+        border: "1px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.white,
         flexDirection: "column",
@@ -1925,7 +1925,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         width: withOut(0, ea),
         height: String(unitHeight) + ea,
         borderRadius: String(unitBorderRadius) + "px",
-        border: "3px solid " + colorExtended.warmGray1,
+        border: "1px solid " + colorExtended.warmGray1,
         boxShadow: "0px 5px 18px -9px " + colorExtended.darkShadow,
         background: colorExtended.white,
         flexDirection: "column",
@@ -2047,43 +2047,42 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
     let colorTop;
     let unitTextTop;
 
-    mainHeight = 900;
+    mainHeight = <%% 900, 900, 900, 900, 900 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
   
-    pinMargin = 16;
-    pinWidth = 7;
+    pinMargin = <%% 16, 16, 16, 16, 16 %%>;
+    pinWidth = <%% 7, 7, 7, 7, 7 %%>;
 
-    arrowMargin = 29;
-    arrowWidth = 50;
+    arrowMargin = <%% 29, 29, 29, 29, 29 %%>;
+    arrowWidth = <%% 50, 50, 50, 50, 50 %%>;
 
-    contentsSize = 22;
+    contentsSize = <%% 22, 22, 22, 22, 22 %%>;
 
-    boxBetween = 24;
-    middleBetween = 16;
+    boxBetween = <%% 24, 24, 24, 24, 24 %%>;
+    middleBetween = <%% 16, 16, 16, 16, 16 %%>;
 
-    unitHeight = 60;
+    unitHeight = <%% 60, 48, 60, 60, 60 %%>;
 
-    unitSize = 20;
-    unitWeight = 700;
+    unitSize = <%% 20, 17, 17, 17, 20 %%>;
+    unitWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    unitBetween = 40;
+    yellowMargin = <%% 10, 10, 10, 10, 10 %%>;
 
-    yellowMargin = 10;
+    titleSize = <%% 35, 31, 35, 35, 35 %%>;
+    titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+    titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-    titleSize = 35;
-    titleWeight = 800;
-    titleLineHeight = 1.4;
+    processBlockMarginTop = <%% 80, 80, 80, 80, 80 %%>;
 
-    processBlockMarginTop = 80;
+    unitBoxWidth = <%% 190, 150, 190, 190, 190 %%>;
+    unitBoxWidthLong = <%% 310, 270, 310, 310, 310 %%>;
+    unitBetween = <%% 40, 20, 24, 24, 40 %%>;
 
-    unitBoxWidth = 190;
-    unitBoxWidthLong = 310;
+    basePaddingTop = <%% 180, 180, 180, 180, 180 %%>;
+    basePaddingBottom = <%% 210, 210, 210, 210, 210 %%>;
+    colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    basePaddingTop = 180;
-    basePaddingBottom = 210;
-    colorTop = 200;
-
-    unitTextTop = -1;
+    unitTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
     thirdBase = createNode({
       mother: baseTong,
@@ -2189,7 +2188,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 position: "absolute",
                 top: String(unitHeight / 2) + ea,
                 left: String(unitBoxWidth + unitBetween + unitBoxWidth + unitBetween + unitBoxWidth + unitBetween + unitBoxWidthLong) + ea,
-                width: String(160) + ea,
+                width: withOut((unitBoxWidth * 4) + unitBoxWidthLong + (unitBetween * 3) + (yellowMargin * 2), ea),
                 height: String(0),
                 opacity: String(1),
                 borderBottom: "1px dashed " + colorChip.darkShadow,
@@ -2299,10 +2298,10 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 display: "inline-flex",
                 position: "relative",
                 height: String(unitHeight) + ea,
-                width: String(190) + ea,
+                width: String(unitBoxWidth) + ea,
                 justifyContent: "center",
                 alignItems: "center",
-                marginLeft: String(170) + ea,
+                marginLeft: withOut((unitBoxWidth * 4) + unitBoxWidthLong + (unitBetween * 3) + (yellowMargin * 2), ea),
                 background: "transparent",
                 borderRadius: String(unitHeight) + ea,
                 overflow: "visible",
@@ -2414,67 +2413,67 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
     let blockHeight0, blockHeight1;
     let blockBorderRaidus;
 
-    mainHeight = 900;
+    mainHeight = <%% 900, 900, 900, 900, 900 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
   
-    pinMargin = 16;
-    pinWidth = 6;
+    pinMargin = <%% 16, 16, 16, 16, 16 %%>;
+    pinWidth = <%% 6, 6, 6, 6, 6 %%>;
 
-    arrowMargin = 29;
-    arrowWidth = 50;
+    arrowMargin = <%% 29, 29, 29, 29, 29 %%>;
+    arrowWidth = <%% 50, 50, 50, 50, 50 %%>;
 
-    contentsSize = 22;
+    contentsSize = <%% 22, 22, 22, 22, 22 %%>;
 
-    boxBetween = 24;
-    middleBetween = 12;
+    boxBetween = <%% 24, 16, 16, 12, 24 %%>;
+    middleBetween = <%% 12, 12, 12, 12, 12 %%>;
 
-    unitHeight = 192;
+    unitHeight = <%% 192, 192, 192, 192, 192 %%>;
 
-    unitSize = 23;
-    unitWeight = 700;
+    unitSize = <%% 23, 23, 23, 23, 23 %%>;
+    unitWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    firstWidth = 88;
-    secondWidth = 372;
+    firstWidth = <%% 88, 88, 88, 88, 88 %%>;
+    secondWidth = <%% 372, 372, 372, 372, 372 %%>;
 
-    titleSize = 23;
-    titleWeight = 600;
-    titleLineHeight = 1.5;
-    titleVisualTop = 1;
+    titleSize = <%% 23, 22, 23, 23, 23 %%>;
+    titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+    titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+    titleVisualTop = <%% 1, 1, 1, 1, 1 %%>;
 
-    numberTop = -17;
+    numberTop = <%% -17, -17, -17, -17, -17 %%>;
 
-    numberAreaWidth = 80;
-    titleAreaWidth = 320;
+    numberAreaWidth = <%% 80, 70, 80, 80, 80 %%>;
+    titleAreaWidth = <%% 320, 310, 320, 320, 320 %%>;
 
-    basePaddingTop = 180;
-    basePaddingBottom = 210;
+    basePaddingTop = <%% 180, 180, 180, 180, 180 %%>;
+    basePaddingBottom = <%% 210, 210, 210, 210, 210 %%>;
 
-    colorTop = 200;
+    colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    mainTitleSize = 35;
-    mainTitleWeight = 800;
+    mainTitleSize = <%% 35, 31, 35, 35, 35 %%>;
+    mainTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    subTitleSize = 19;
-    subTitleWeight = 300;
-    subTitleMarginTop = 6;
-    subTitleOpacity = 0.7;
+    subTitleSize = <%% 19, 17, 19, 19, 19 %%>;
+    subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
+    subTitleMarginTop = <%% 6, 6, 6, 6, 6 %%>;
+    subTitleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
 
-    boxGroupMarginTop = 64;
+    boxGroupMarginTop = <%% 64, 64, 64, 64, 64 %%>;
 
-    numberSize = 72;
-    numberWeight = 400;
-    numberLeft0 = 7;
-    numberLeft1 = 2;
-    numberLeft2 = 1;
-    numberLeft3 = 0;
+    numberSize = <%% 72, 70, 72, 72, 72 %%>;
+    numberWeight = <%% 400, 400, 400, 400, 400 %%>;
+    numberLeft0 = <%% 7, 7, 7, 7, 7 %%>;
+    numberLeft1 = <%% 2, 2, 2, 2, 2 %%>;
+    numberLeft2 = <%% 1, 1, 1, 1, 1 %%>;
+    numberLeft3 = <%% 0, 0, 0, 0, 0 %%>;
 
-    descriptionSize = 19;
-    descriptionWeight = 200;
-    descriptionLineHeight = 1.6;
+    descriptionSize = <%% 19, 18, 19, 19, 19 %%>;
+    descriptionWeight = <%% 200, 200, 200, 200, 200 %%>;
+    descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-    blockHeight0 = 140;
-    blockHeight1 = 180;
-    blockBorderRaidus = 10;
+    blockHeight0 = <%% 140, 120, 140, 140, 140 %%>;
+    blockHeight1 = <%% 180, 160, 180, 180, 180 %%>;
+    blockBorderRaidus = <%% 10, 10, 10, 10, 10 %%>;
 
     thirdBase = createNode({
       mother: baseTong,
@@ -3121,60 +3120,60 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
     let buttonSize;
     let buttonWeight;
 
-    mainHeight = 900;
+    mainHeight = <%% 900, 900, 900, 900, 900 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
   
-    pinMargin = 16;
-    pinWidth = 6;
+    pinMargin = <%% 16, 16, 16, 16, 16 %%>;
+    pinWidth = <%% 6, 6, 6, 6, 6 %%>;
 
-    arrowMargin = 29;
-    arrowWidth = 50;
+    arrowMargin = <%% 29, 29, 29, 29, 29 %%>;
+    arrowWidth = <%% 50, 50, 50, 50, 50 %%>;
 
-    contentsSize = 22;
+    contentsSize = <%% 22, 22, 22, 22, 22 %%>;
 
-    boxBetween = 24;
-    middleBetween = 12;
+    boxBetween = <%% 24, 24, 24, 24, 24 %%>;
+    middleBetween = <%% 12, 12, 12, 12, 12 %%>;
 
-    unitHeight = 330;
+    unitHeight = <%% 330, 310, 310, 310, 310 %%>;
 
-    unitSize = 23;
-    unitWeight = 700;
+    unitSize = <%% 23, 23, 23, 23, 23 %%>;
+    unitWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    firstWidth = 88;
-    secondWidth = 372;
+    firstWidth = <%% 88, 88, 88, 88, 88 %%>;
+    secondWidth = <%% 372, 372, 372, 372, 372 %%>;
 
-    titleSize = 23;
-    numberTop = -17;
+    titleSize = <%% 23, 23, 23, 23, 23 %%>;
+    numberTop = <%% -17, -17, -17, -17, -17 %%>;
 
-    numberAreaWidth = 80;
-    titleAreaWidth = 320;
+    numberAreaWidth = <%% 80, 80, 80, 80, 80 %%>;
+    titleAreaWidth = <%% 320, 320, 320, 320, 320 %%>;
 
-    cardWidth = 660;
-    imageHeight = 260;
-    imageLeft = 25;
+    cardWidth = <%% 660, 640, 660, 660, 660 %%>;
+    imageHeight = <%% 260, 250, 260, 260, 260 %%>;
+    imageLeft = <%% 25, 25, 25, 25, 25 %%>;
 
-    basePaddingTop = 180;
-    basePaddingBottom = 210;
+    basePaddingTop = <%% 180, 180, 180, 180, 180 %%>;
+    basePaddingBottom = <%% 210, 210, 210, 210, 210 %%>;
 
-    colorTop = 200;
+    colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    whiteBoxBorderRadius = 10;
+    whiteBoxBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
 
-    reviewSize = 17;
-    reviewWeight = 300;
-    reviewBoldWeight = 700;
-    reviewLineHeight = 1.6;
-    reviewMarginLeft = 170;
-    reviewBoxWidth = 400;
-    nameAreaMarginTop = 25;
-    nameAreaMarginLeft = 406;
+    reviewSize = <%% 17, 16, 15, 14, 17 %%>;
+    reviewWeight = <%% 300, 300, 300, 300, 300 %%>;
+    reviewBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+    reviewLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+    reviewMarginLeft = <%% 170, 185, 170, 170, 170 %%>;
+    reviewBoxWidth = <%% 400, 400, 400, 400, 400 %%>;
+    nameAreaMarginTop = <%% 25, 25, 25, 25, 25 %%>;
+    nameAreaMarginLeft = <%% 406, 386, 386, 386, 386 %%>;
 
-    buttonBoxMarginTop = 54;
-    buttonWidth = 110;
-    buttonHeight = 50;
-    buttonTextTop = -1;
-    buttonSize = 20;
-    buttonWeight = 700;
+    buttonBoxMarginTop = <%% 54, 48, 54, 54, 54 %%>;
+    buttonWidth = <%% 110, 90, 110, 110, 110 %%>;
+    buttonHeight = <%% 50, 42, 50, 50, 50 %%>;
+    buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    buttonSize = <%% 20, 17, 20, 20, 20 %%>;
+    buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     reviewContents = [
       {
