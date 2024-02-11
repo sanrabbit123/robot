@@ -127,16 +127,17 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     let buttonTextTop;
     let buttonWeight;
     let firstBasePaddingTop;
+    let mainIllust;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
-    plusRatio = <%% 0.5, 0.7, 0.8, 0.8, 0.5 %%>;
+    plusRatio = <%% 0.5, 0.7, 0, 0, 0 %%>;
     plusWidth = ((leftRightWidth * plusRatio) * 2) + standardWidth
 
     firstBasePaddingTop = <%% 72, 70, 68, 64, 48 %%>;
 
-    titleHeight = <%% 170, 148, 125, 130, 160 %%>;
+    titleHeight = <%% 170, 148, 128, 130, 160 %%>;
 
     whitePopupWidth = <%% 1200, 1200, 1200, 1200, 1200 %%>;
     whitePopupHeight = window.innerHeight - naviHeight - (naviHeight * 2);
@@ -144,21 +145,23 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     pinMargin = <%% 16, 16, 16, 16, 16 %%>;
     pinWidth = <%% 6, 6, 6, 6, 6 %%>;
 
-    firstBasePaddingBottom = <%% 210, 200, 200, 200, 200 %%>;
+    firstBasePaddingBottom = <%% 210, 200, 180, 170, 20 %%>;
     blueTop = <%% 200, 200, 200, 200, 200 %%>;
 
     subTitleSize = <%% 19, 19, 18, 18, 19 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
     subTitleMarginTop = <%% 16, 16, 12, 12, 16 %%>;
 
-    illustMarginTop = <%% 190, 175, 180, 180, 180 %%>;
+    illustMarginTop = <%% 190, 175, 125, 120, 10 %%>;
 
-    buttonMarginTop = <%% 8, 8, 8, 8, 8 %%>;
+    buttonMarginTop = <%% 8, 8, 24, 12, 8 %%>;
     buttonWidth = <%% 180, 145, 140, 180, 180 %%>;
     buttonHeight = <%% 50, 42, 42, 42, 50 %%>;
     buttonSize = <%% 20, 17, 17, 20, 20 %%>;
     buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+    mainIllust = <%% AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png" %%>;
 
     this.totalContents = document.getElementById("totalcontents");
     this.totalContents.style.overflow = "hidden";
@@ -253,7 +256,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
         {
           mode: "img",
           attribute: {
-            src: AspirantExplanationJs.binaryPath + "/mainIllust0.png",
+            src: mainIllust,
           },
           style: {
             display: "inline-flex",
@@ -474,28 +477,28 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
     let descriptionBetween;
     let descriptionLineBottomBetween;
 
-    mainHeight = <%% 480, 420, 440, 440, 480 %%>;
+    mainHeight = <%% 480, 420, 420, 420, 420 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
   
-    pinMargin = <%% 20, 20, 20, 20, 20 %%>;
-    pinWidth = <%% 9, 9, 9, 9, 9 %%>;
+    pinMargin = <%% 20, 20, 16, 12, 20 %%>;
+    pinWidth = <%% 9, 9, 8, 7, 9 %%>;
 
-    arrowMargin = <%% 29, 23, 29, 29, 29 %%>;
-    arrowWidth = <%% 50, 46, 50, 50, 50 %%>;
+    arrowMargin = <%% 29, 23, 21, 23, 29 %%>;
+    arrowWidth = <%% 50, 46, 42, 42, 46 %%>;
 
-    contentsSize = <%% 21, 18, 21, 21, 21 %%>;
+    contentsSize = <%% 21, 18, 18, 18, 18 %%>;
 
-    boxBetween = <%% 24, 24, 24, 24, 24 %%>;
+    boxBetween = <%% 24, 24, 20, 20, 20 %%>;
 
-    basePaddingTop = <%% 180, 180, 180, 180, 180 %%>;
-    basePaddingBottom = <%% 210, 210, 210, 210, 210 %%>;
+    basePaddingTop = <%% 180, 180, 160, 180, 180 %%>;
+    basePaddingBottom = <%% 210, 210, 190, 210, 210 %%>;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = <%% 35, 31, 35, 35, 35 %%>;
+    titleSize = <%% 35, 31, 30, 30, 31 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    subTitleSize = <%% 19, 17, 19, 19, 19 %%>;
+    subTitleSize = <%% 19, 17, 16, 17, 17 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
     subTitleMarginTop = <%% 6, 6, 6, 6, 6 %%>;
     subTitleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
@@ -508,19 +511,19 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
     colorTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
     colorTitleBoldWeight = <%% 900, 900, 900, 900, 900 %%>;
 
-    circleWidth = <%% 6, 6, 6, 6, 6 %%>;
+    circleWidth = <%% 6, 6, 5, 4, 6 %%>;
     circleTop = <%% -2, -2, -2, -2, -2 %%>;
 
     descriptionBetween = <%% 12, 12, 12, 12, 12 %%>;
     descriptionLineBottomBetween = <%% 4, 4, 4, 4, 4 %%>;
 
-    circleLeft0 = <%% 149, 149, 149, 149, 149 %%>;
-    circleLeft1 = <%% 173, 173, 173, 173, 173 %%>;
-    circleLeft2 = <%% 149, 149, 149, 149, 149 %%>;
-    circleLeft3 = <%% 181, 181, 181, 181, 181 %%>;
-    circleLeft4 = <%% 204, 204, 204, 204, 204 %%>;
-    circleLeft5 = <%% 238, 238, 238, 238, 238 %%>;
-    circleLeft6 = <%% 262, 262, 262, 262, 262 %%>;
+    circleLeft0 = <%% 149, 133, 149, 149, 149 %%>;
+    circleLeft1 = <%% 173, 155, 173, 173, 173 %%>;
+    circleLeft2 = <%% 149, 132, 149, 149, 149 %%>;
+    circleLeft3 = <%% 181, 161, 181, 181, 181 %%>;
+    circleLeft4 = <%% 204, 183, 204, 204, 204 %%>;
+    circleLeft5 = <%% 238, 212, 238, 238, 238 %%>;
+    circleLeft6 = <%% 262, 233, 262, 262, 262 %%>;
 
     secondBase = createNode({
       mother: baseTong,
