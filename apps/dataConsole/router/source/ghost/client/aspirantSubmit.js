@@ -1881,10 +1881,10 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           style: {
             display: "block",
             position: "relative",
-            fontSize: String(26) + ea,
+            fontSize: String(<&& 26 | 26 | 25 | 24 | 4 &&>) + ea,
             fontWeight: String(800),
             color: colorChip.black,
-            marginBottom: String(9) + ea,
+            marginBottom: String(<&& 9 | 9 | 8 | 7 | 1 &&>) + ea,
           }
         }
       ]
@@ -1908,10 +1908,10 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           style: {
             display: "block",
             position: "relative",
-            fontSize: String(15) + ea,
+            fontSize: String(<&& 15 | 15 | 14 | 13 | 3.2 &&>) + ea,
             fontWeight: String(400),
             color: colorChip.black,
-            marginBottom: String(24) + ea,
+            marginBottom: String(<&& 24 | 24 | 22 | 20 | 1 &&>) + ea,
             lineHeight: String(1.5),
             textAlign: "left",
           }

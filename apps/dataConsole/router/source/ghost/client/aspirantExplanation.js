@@ -139,18 +139,18 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
 
     titleHeight = <%% 170, 148, 126, 100, 160 %%>;
 
-    whitePopupWidth = <%% 1200, 1200, 1200, 1200, 1200 %%>;
+    whitePopupWidth = <%% 1200, 1000, 800, 780, 1200 %%>;
     whitePopupHeight = window.innerHeight - naviHeight - (naviHeight * 2);
 
-    pinMargin = <%% 16, 16, 16, 16, 16 %%>;
-    pinWidth = <%% 6, 6, 6, 6, 6 %%>;
+    pinMargin = <%% 16, 16, 14, 12, 16 %%>;
+    pinWidth = <%% 6, 6, 5, 4, 6 %%>;
 
     firstBasePaddingBottom = <%% 210, 200, 180, 150, 20 %%>;
     blueTop = <%% 200, 200, 200, 200, 200 %%>;
 
     subTitleSize = <%% 19, 19, 18, 16, 19 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
-    subTitleMarginTop = <%% 16, 16, 12, 12, 16 %%>;
+    subTitleMarginTop = <%% 16, 16, 12, 10, 16 %%>;
 
     illustMarginTop = <%% 190, 175, 125, 96, 10 %%>;
 
@@ -477,25 +477,25 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
     let descriptionBetween;
     let descriptionLineBottomBetween;
 
-    mainHeight = <%% 480, 420, 370, 370, 420 %%>;
+    mainHeight = <%% 480, 420, 370, 280, 420 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
   
     pinMargin = <%% 20, 20, 16, 12, 20 %%>;
     pinWidth = <%% 9, 9, 8, 7, 9 %%>;
 
-    arrowMargin = <%% 29, 23, 19, 17, 29 %%>;
-    arrowWidth = <%% 50, 46, 40, 38, 46 %%>;
+    arrowMargin = <%% 29, 23, 19, 12, 29 %%>;
+    arrowWidth = <%% 50, 46, 40, 32, 46 %%>;
 
     contentsSize = <%% 21, 18, 17, 15, 18 %%>;
 
     boxBetween = <%% 24, 24, 20, 20, 20 %%>;
 
-    basePaddingTop = <%% 180, 180, 160, 160, 18 %%>;
-    basePaddingBottom = <%% 210, 210, 190, 190, 21 %%>;
+    basePaddingTop = <%% 180, 180, 160, 140, 18 %%>;
+    basePaddingBottom = <%% 210, 210, 190, 170, 21 %%>;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = <%% 35, 31, 29, 27, 31 %%>;
+    titleSize = <%% 35, 31, 29, 25, 3.5 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
     subTitleSize = <%% 19, 17, 16, 15, 3 %%>;
@@ -503,11 +503,11 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
     subTitleMarginTop = <%% 6, 6, 5, 4, 6 %%>;
     subTitleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
 
-    contentsBaseMarginTop = <%% 64, 60, 50, 52, 64 %%>;
+    contentsBaseMarginTop = <%% 64, 60, 50, 48, 64 %%>;
 
     boxBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
 
-    colorTitleSize = <%% 29, 26, 24, 24, 29 %%>;
+    colorTitleSize = <%% 29, 26, 24, 20, 29 %%>;
     colorTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
     colorTitleBoldWeight = <%% 900, 900, 900, 900, 900 %%>;
 
@@ -517,13 +517,13 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
     descriptionBetween = <%% 12, 12, 9, 8, 12 %%>;
     descriptionLineBottomBetween = <%% 4, 4, 4, 4, 4 %%>;
 
-    circleLeft0 = <%% 149, 133, 123, 149, 149 %%>;
-    circleLeft1 = <%% 173, 155, 143, 173, 173 %%>;
-    circleLeft2 = <%% 149, 132, 123, 149, 149 %%>;
-    circleLeft3 = <%% 181, 161, 150, 181, 181 %%>;
-    circleLeft4 = <%% 204, 183, 169, 204, 204 %%>;
-    circleLeft5 = <%% 238, 212, 197, 238, 238 %%>;
-    circleLeft6 = <%% 262, 233, 216, 262, 262 %%>;
+    circleLeft0 = <%% 149, 133, 123, 101, 149 %%>;
+    circleLeft1 = <%% 173, 155, 143, 119, 173 %%>;
+    circleLeft2 = <%% 149, 132, 123, 101, 149 %%>;
+    circleLeft3 = <%% 181, 161, 150, 124, 181 %%>;
+    circleLeft4 = <%% 204, 183, 169, 141, 204 %%>;
+    circleLeft5 = <%% 238, 212, 197, 163, 238 %%>;
+    circleLeft6 = <%% 262, 233, 216, 179, 262 %%>;
 
     secondBase = createNode({
       mother: baseTong,
@@ -1158,18 +1158,18 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     boxBetween = <%% 24, 24, 12, 12, 24 %%>;
     middleBetween = <%% 16, 16, 12, 12, 16 %%>;
 
-    unitHeight = <%% 184, 150, 140, 140, 184 %%>;
+    unitHeight = <%% 184, 150, 140, 100, 184 %%>;
 
     unitTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    unitSize = <%% 22, 20, 18, 17, 3 %%>;
+    unitSize = <%% 22, 20, 18, 16, 3 %%>;
     unitWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    basePaddingTop = <%% 180, 180, 160, 160, 18 %%>;
-    basePaddingBottom = <%% 210, 210, 190, 190, 21 %%>;
+    basePaddingTop = <%% 180, 180, 160, 140, 18 %%>;
+    basePaddingBottom = <%% 210, 210, 190, 170, 21 %%>;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = <%% 35, 30, 29, 27, 35 %%>;
+    titleSize = <%% 35, 31, 29, 25, 3.5 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
     subTitleSize = <%% 19, 17, 16, 15, 3 %%>;
@@ -1177,18 +1177,18 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     subTitleMarginTop = <%% 6, 6, 5, 4, 6 %%>;
     subTitleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
 
-    boxGroupMarginTop = <%% 64, 60, 50, 52, 64 %%>;
+    boxGroupMarginTop = <%% 64, 60, 50, 48, 64 %%>;
 
     unitBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
 
     blackPromptMarginBetween = <%% 20, 20, 20, 20, 20 %%>;
 
-    blackPromptPaddingLeft = <%% 30, 20, 20, 20, 30 %%>;
-    blackPromptPaddingTop = <%% 24, 16, 16, 16, 24 %%>;
+    blackPromptPaddingLeft = <%% 30, 20, 20, 14, 30 %%>;
+    blackPromptPaddingTop = <%% 24, 16, 16, 10, 24 %%>;
 
-    commentTriangleWidth = <%% 16, 16, 16, 16, 16 %%>;
+    commentTriangleWidth = <%% 16, 16, 16, 12, 16 %%>;
 
-    blackPromptSize = <%% 16, 14, 12, 11, 16 %%>;
+    blackPromptSize = <%% 16, 14, 12, 10, 16 %%>;
     blackPromptWeight = <%% 500, 500, 500, 500, 500 %%>;
     blackPromptLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
@@ -2064,25 +2064,25 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
     boxBetween = <%% 24, 24, 24, 24, 24 %%>;
     middleBetween = <%% 16, 16, 16, 16, 16 %%>;
 
-    unitHeight = <%% 60, 48, 48, 40, 60 %%>;
+    unitHeight = <%% 60, 48, 48, 36, 60 %%>;
 
-    unitSize = <%% 20, 17, 15, 14, 20 %%>;
+    unitSize = <%% 20, 17, 15, 13, 20 %%>;
     unitWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     yellowMargin = <%% 10, 10, 10, 10, 10 %%>;
 
-    titleSize = <%% 35, 31, 28, 26, 35 %%>;
+    titleSize = <%% 35, 31, 28, 24, 35 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
     titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-    processBlockMarginTop = <%% 80, 72, 56, 56, 80 %%>;
+    processBlockMarginTop = <%% 80, 72, 56, 48, 80 %%>;
 
-    unitBoxWidth = <%% 190, 150, 130, 140, 190 %%>;
-    unitBoxWidthLong = <%% 310, 270, 230, 260, 310 %%>;
-    unitBetween = <%% 40, 20, 16, 24, 40 %%>;
+    unitBoxWidth = <%% 190, 150, 130, 110, 190 %%>;
+    unitBoxWidthLong = <%% 310, 270, 230, 190, 310 %%>;
+    unitBetween = <%% 40, 20, 16, 10, 40 %%>;
 
-    basePaddingTop = <%% 180, 180, 160, 160, 18 %%>;
-    basePaddingBottom = <%% 210, 210, 190, 190, 21 %%>;
+    basePaddingTop = <%% 180, 180, 160, 130, 18 %%>;
+    basePaddingBottom = <%% 210, 210, 190, 160, 21 %%>;
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
     unitTextTop = <%% -1, -1, -1, -1, -1 %%>;
@@ -2438,22 +2438,22 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
     firstWidth = <%% 88, 88, 88, 88, 88 %%>;
     secondWidth = <%% 372, 372, 360, 360, 372 %%>;
 
-    titleSize = <%% 23, 22, 21, 20, 23 %%>;
+    titleSize = <%% 23, 22, 21, 17, 23 %%>;
     titleWeight = <%% 600, 600, 600, 600, 600 %%>;
     titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
     titleVisualTop = <%% 1, 1, 1, 1, 1 %%>;
 
-    numberTop = <%% -17, -17, -15, -15, -17 %%>;
+    numberTop = <%% -17, -17, -15, -14, -17 %%>;
 
-    numberAreaWidth = <%% 80, 70, 64, 80, 80 %%>;
-    titleAreaWidth = <%% 320, 310, 275, 320, 320 %%>;
+    numberAreaWidth = <%% 80, 70, 64, 56, 80 %%>;
+    titleAreaWidth = <%% 320, 310, 275, 220, 320 %%>;
 
-    basePaddingTop = <%% 180, 180, 160, 160, 18 %%>;
-    basePaddingBottom = <%% 210, 210, 190, 190, 21 %%>;
+    basePaddingTop = <%% 180, 180, 160, 140, 18 %%>;
+    basePaddingBottom = <%% 210, 210, 190, 170, 21 %%>;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    mainTitleSize = <%% 35, 31, 29, 27, 31 %%>;
+    mainTitleSize = <%% 35, 31, 29, 25, 31 %%>;
     mainTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
     subTitleSize = <%% 19, 17, 16, 15, 3 %%>;
@@ -2461,21 +2461,21 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
     subTitleMarginTop = <%% 6, 6, 5, 4, 6 %%>;
     subTitleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
 
-    boxGroupMarginTop = <%% 64, 60, 50, 52, 64 %%>;
+    boxGroupMarginTop = <%% 64, 60, 50, 48, 64 %%>;
 
-    numberSize = <%% 72, 70, 65, 65, 72 %%>;
+    numberSize = <%% 72, 70, 65, 56, 72 %%>;
     numberWeight = <%% 400, 400, 400, 400, 400 %%>;
     numberLeft0 = <%% 7, 7, 7, 7, 7 %%>;
     numberLeft1 = <%% 2, 2, 2, 2, 2 %%>;
     numberLeft2 = <%% 1, 1, 1, 1, 1 %%>;
     numberLeft3 = <%% 0, 0, 0, 0, 0 %%>;
 
-    descriptionSize = <%% 19, 18, 16, 15, 19 %%>;
+    descriptionSize = <%% 19, 18, 16, 14, 19 %%>;
     descriptionWeight = <%% 200, 200, 200, 200, 200 %%>;
     descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-    blockHeight0 = <%% 140, 120, 110, 110, 14 %%>;
-    blockHeight1 = <%% 180, 160, 140, 140, 18 %%>;
+    blockHeight0 = <%% 140, 120, 110, 80, 14 %%>;
+    blockHeight1 = <%% 180, 160, 140, 110, 18 %%>;
     blockBorderRaidus = <%% 10, 10, 10, 10, 10 %%>;
 
     thirdBase = createNode({
@@ -3137,7 +3137,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
     boxBetween = <%% 24, 24, 24, 24, 24 %%>;
     middleBetween = <%% 12, 12, 12, 12, 12 %%>;
 
-    unitHeight = <%% 330, 310, 290, 270, 310 %%>;
+    unitHeight = <%% 330, 310, 290, 245, 310 %%>;
 
     unitSize = <%% 23, 23, 23, 23, 23 %%>;
     unitWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -3151,12 +3151,12 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
     numberAreaWidth = <%% 80, 80, 80, 80, 80 %%>;
     titleAreaWidth = <%% 320, 320, 320, 320, 320 %%>;
 
-    cardWidth = <%% 660, 640, 610, 600, 660 %%>;
-    imageHeight = <%% 260, 250, 230, 230, 260 %%>;
+    cardWidth = <%% 660, 640, 610, 570, 660 %%>;
+    imageHeight = <%% 260, 250, 230, 200, 260 %%>;
     imageLeft = <%% 25, 25, 25, 25, 25 %%>;
 
-    basePaddingTop = <%% 180, 180, 160, 160, 18 %%>;
-    basePaddingBottom = <%% 210, 210, 190, 190, 21 %%>;
+    basePaddingTop = <%% 180, 180, 160, 140, 18 %%>;
+    basePaddingBottom = <%% 210, 210, 190, 170, 21 %%>;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
@@ -3171,9 +3171,9 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
     nameAreaMarginTop = <%% 25, 25, 25, 25, 25 %%>;
     nameAreaMarginLeft = <%% 406, 386, 386, 386, 386 %%>;
 
-    buttonBoxMarginTop = <%% 54, 48, 36, 32, 54 %%>;
-    buttonWidth = <%% 110, 90, 80, 110, 110 %%>;
-    buttonHeight = <%% 50, 42, 40, 50, 50 %%>;
+    buttonBoxMarginTop = <%% 54, 48, 36, 28, 54 %%>;
+    buttonWidth = <%% 110, 90, 80, 80, 110 %%>;
+    buttonHeight = <%% 50, 42, 40, 40, 50 %%>;
     buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
     buttonSize = <%% 20, 17, 16, 15, 20 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -3947,6 +3947,38 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
   }
 }
 
+AspirantExplanationJs.prototype.resizeEvent = function () {
+  const instance = this;
+  this.resizeStack = 0;
+  this.resizeFrom = 0;
+  this.resizePopup = 0;
+  const resizeDebounceEvent = function () {
+    let timeout;
+    const reEvent = function () {
+      window.location.reload();
+      instance.resizeStack = 0;
+    }
+    let immediate = null;
+    return function (e) {
+      if (instance.resizeStack === 0) {
+        instance.resizeStack = 1;
+        instance.resizeFrom = window.innerWidth;
+      }
+      let context = this;
+      let args = arguments;
+      function later() {
+        timeout = null;
+        if (!immediate) { reEvent.apply(context, args); };
+      }
+      let callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, 250);
+      if (callNow) { reEvent.apply(context, args); };
+    }
+  }
+  window.addEventListener("resize", resizeDebounceEvent());
+}
+
 AspirantExplanationJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -3979,6 +4011,7 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
           await instance.insertFourthBox();
           await instance.insertFifthBox();
           await instance.insertSixthBox();
+          instance.resizeEvent();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "AspirantExplanationJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
