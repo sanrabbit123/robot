@@ -137,7 +137,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
 
     firstBasePaddingTop = <%% 72, 70, 68, 64, 48 %%>;
 
-    titleHeight = <%% 170, 148, 126, 130, 160 %%>;
+    titleHeight = <%% 170, 148, 128, 130, 160 %%>;
 
     whitePopupWidth = <%% 1200, 1200, 1200, 1200, 1200 %%>;
     whitePopupHeight = window.innerHeight - naviHeight - (naviHeight * 2);
@@ -490,20 +490,20 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
 
     boxBetween = <%% 24, 24, 20, 20, 20 %%>;
 
-    basePaddingTop = <%% 180, 180, 160, 180, 180 %%>;
-    basePaddingBottom = <%% 210, 210, 190, 210, 210 %%>;
+    basePaddingTop = <%% 180, 180, 160, 160, 18 %%>;
+    basePaddingBottom = <%% 210, 210, 190, 190, 21 %%>;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = <%% 35, 31, 30, 30, 31 %%>;
+    titleSize = <%% 35, 31, 29, 27, 31 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    subTitleSize = <%% 19, 17, 16, 17, 17 %%>;
+    subTitleSize = <%% 19, 17, 16, 15, 3 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
-    subTitleMarginTop = <%% 6, 6, 6, 6, 6 %%>;
+    subTitleMarginTop = <%% 6, 6, 5, 4, 6 %%>;
     subTitleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
 
-    contentsBaseMarginTop = <%% 64, 64, 64, 64, 64 %%>;
+    contentsBaseMarginTop = <%% 64, 64, 56, 52, 64 %%>;
 
     boxBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
 
@@ -1155,40 +1155,40 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
 
     contentsSize = <%% 22, 22, 22, 22, 22 %%>;
 
-    boxBetween = <%% 24, 24, 24, 24, 24 %%>;
-    middleBetween = <%% 16, 16, 16, 16, 16 %%>;
+    boxBetween = <%% 24, 24, 12, 12, 24 %%>;
+    middleBetween = <%% 16, 16, 12, 12, 16 %%>;
 
-    unitHeight = <%% 184, 150, 184, 184, 184 %%>;
+    unitHeight = <%% 184, 150, 140, 140, 184 %%>;
 
     unitTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    unitSize = <%% 22, 20, 22, 22, 22 %%>;
+    unitSize = <%% 22, 20, 19, 17, 3 %%>;
     unitWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    basePaddingTop = <%% 180, 180, 180, 180, 180 %%>;
-    basePaddingBottom = <%% 210, 210, 210, 210, 210 %%>;
+    basePaddingTop = <%% 180, 180, 160, 160, 18 %%>;
+    basePaddingBottom = <%% 210, 210, 190, 190, 21 %%>;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = <%% 35, 30, 35, 35, 35 %%>;
+    titleSize = <%% 35, 30, 29, 27, 35 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    subTitleSize = <%% 19, 17, 19, 19, 19 %%>;
+    subTitleSize = <%% 19, 17, 16, 15, 3 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
-    subTitleMarginTop = <%% 6, 6, 6, 6, 6 %%>;
+    subTitleMarginTop = <%% 6, 6, 5, 4, 6 %%>;
     subTitleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
 
-    boxGroupMarginTop = <%% 64, 64, 64, 64, 64 %%>;
+    boxGroupMarginTop = <%% 64, 64, 56, 52, 64 %%>;
 
     unitBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
 
     blackPromptMarginBetween = <%% 20, 20, 20, 20, 20 %%>;
 
-    blackPromptPaddingLeft = <%% 30, 20, 30, 30, 30 %%>;
-    blackPromptPaddingTop = <%% 24, 16, 24, 24, 24 %%>;
+    blackPromptPaddingLeft = <%% 30, 20, 20, 20, 30 %%>;
+    blackPromptPaddingTop = <%% 24, 16, 16, 16, 24 %%>;
 
     commentTriangleWidth = <%% 16, 16, 16, 16, 16 %%>;
 
-    blackPromptSize = <%% 16, 14, 13, 12, 16 %%>;
+    blackPromptSize = <%% 16, 14, 12, 11, 16 %%>;
     blackPromptWeight = <%% 500, 500, 500, 500, 500 %%>;
     blackPromptLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
