@@ -135,9 +135,9 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     plusRatio = <%% 0.5, 0.7, 0, 0, 0 %%>;
     plusWidth = ((leftRightWidth * plusRatio) * 2) + standardWidth
 
-    firstBasePaddingTop = <%% 72, 70, 68, 64, 48 %%>;
+    firstBasePaddingTop = <%% 72, 70, 68, 72, 48 %%>;
 
-    titleHeight = <%% 170, 148, 127, 125, 160 %%>;
+    titleHeight = <%% 170, 148, 126, 100, 160 %%>;
 
     whitePopupWidth = <%% 1200, 1200, 1200, 1200, 1200 %%>;
     whitePopupHeight = window.innerHeight - naviHeight - (naviHeight * 2);
@@ -145,23 +145,23 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     pinMargin = <%% 16, 16, 16, 16, 16 %%>;
     pinWidth = <%% 6, 6, 6, 6, 6 %%>;
 
-    firstBasePaddingBottom = <%% 210, 200, 180, 170, 20 %%>;
+    firstBasePaddingBottom = <%% 210, 200, 180, 150, 20 %%>;
     blueTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    subTitleSize = <%% 19, 19, 18, 18, 19 %%>;
+    subTitleSize = <%% 19, 19, 18, 16, 19 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
     subTitleMarginTop = <%% 16, 16, 12, 12, 16 %%>;
 
-    illustMarginTop = <%% 190, 175, 125, 120, 10 %%>;
+    illustMarginTop = <%% 190, 175, 125, 96, 10 %%>;
 
-    buttonMarginTop = <%% 8, 8, 24, 12, 8 %%>;
-    buttonWidth = <%% 180, 145, 140, 180, 180 %%>;
-    buttonHeight = <%% 50, 42, 42, 42, 50 %%>;
-    buttonSize = <%% 20, 17, 17, 20, 20 %%>;
+    buttonMarginTop = <%% 8, 8, 24, 20, 8 %%>;
+    buttonWidth = <%% 180, 145, 140, 130, 180 %%>;
+    buttonHeight = <%% 50, 42, 42, 40, 50 %%>;
+    buttonSize = <%% 20, 17, 17, 16, 20 %%>;
     buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    mainIllust = <%% AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png" %%>;
+    mainIllust = <%% AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png" %%>;
 
     this.totalContents = document.getElementById("totalcontents");
     this.totalContents.style.overflow = "hidden";
@@ -3151,7 +3151,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
     numberAreaWidth = <%% 80, 80, 80, 80, 80 %%>;
     titleAreaWidth = <%% 320, 320, 320, 320, 320 %%>;
 
-    cardWidth = <%% 660, 640, 620, 600, 660 %%>;
+    cardWidth = <%% 660, 640, 610, 600, 660 %%>;
     imageHeight = <%% 260, 250, 230, 230, 260 %%>;
     imageLeft = <%% 25, 25, 25, 25, 25 %%>;
 
