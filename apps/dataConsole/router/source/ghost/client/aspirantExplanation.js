@@ -129,6 +129,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     let firstBasePaddingTop;
     let mainIllust;
     let whitePopupMargin;
+    let mobileLeftPaddingVisual;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -136,9 +137,9 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     plusRatio = <%% 0.45, 0.7, 0, 0, 0 %%>;
     plusWidth = ((leftRightWidth * plusRatio) * 2) + standardWidth
 
-    firstBasePaddingTop = <%% 24, 24, 24, 24, 4 %%>;
+    firstBasePaddingTop = <%% 24, 24, 24, 24, 15.5 %%>;
 
-    titleHeight = <%% 120, 106, 98, 84, 16 %%>;
+    titleHeight = <%% 120, 106, 98, 84, 30.5 %%>;
 
     whitePopupWidth = <%% 1200, 1000, 800, 780, 80 %%>;
     whitePopupMargin = <%% 40, 40, 36, 32, 2 %%>;
@@ -147,23 +148,25 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     pinMargin = <%% 16, 16, 14, 12, 1 %%>;
     pinWidth = <%% 6, 6, 5, 4, 1 %%>;
 
-    firstBasePaddingBottom = <%% 170, 170, 160, 120, 20 %%>;
+    firstBasePaddingBottom = <%% 170, 170, 160, 120, 24.5 %%>;
     blueTop = <%% 200, 200, 200, 200, 20 %%>;
 
-    subTitleSize = <%% 18, 18, 17, 15, 3.5 %%>;
-    subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
-    subTitleMarginTop = <%% 16, 16, 12, 10, 1 %%>;
+    subTitleSize = <%% 18, 18, 17, 15, 3.8 %%>;
+    subTitleWeight = <%% 300, 300, 300, 300, 600 %%>;
+    subTitleMarginTop = <%% 16, 16, 12, 10, 2.5 %%>;
 
-    illustMarginTop = <%% 116, 110, 80, 80, 10 %%>;
+    illustMarginTop = <%% 116, 110, 80, 80, 11 %%>;
 
-    buttonMarginTop = <%% 4, 4, 24, 20, 8 %%>;
-    buttonWidth = <%% 160, 145, 140, 130, 180 %%>;
-    buttonHeight = <%% 42, 42, 42, 40, 50 %%>;
-    buttonSize = <%% 18, 17, 17, 16, 20 %%>;
-    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
+    buttonMarginTop = <%% 4, 4, 24, 20, 3.6 %%>;
+    buttonWidth = <%% 160, 145, 140, 130, 31 %%>;
+    buttonHeight = <%% 42, 42, 42, 40, 9 %%>;
+    buttonSize = <%% 18, 17, 17, 16, 3.5 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    mainIllust = <%% AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png" %%>;
+    mobileLeftPaddingVisual = 0.8;
+
+    mainIllust = <%% AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust2.png" %%>;
 
     if (media[0] && window.innerHeight > 1100) {
       firstBasePaddingTop = 60;
@@ -211,12 +214,13 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+        paddingLeft: mobile ? String(mobileLeftPaddingVisual) + ea : "",
       },
       children: [
         {
           mode: "img",
           attribute: {
-            src: AspirantExplanationJs.binaryPath + "/titleSvg0.svg",
+            src: desktop ? AspirantExplanationJs.binaryPath + "/titleSvg0.svg" : AspirantExplanationJs.binaryPath + "/titleSvg1.svg",
           },
           style: {
             display: "inline-flex",
@@ -237,6 +241,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+        paddingLeft: mobile ? String(mobileLeftPaddingVisual) + ea : "",
       },
       children: [
         {
@@ -503,8 +508,8 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
     mainHeight = <%% 440, 390, 370, 280, 420 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
   
-    pinMargin = <%% 20, 20, 16, 12, 20 %%>;
-    pinWidth = <%% 9, 9, 8, 7, 9 %%>;
+    pinMargin = <%% 20, 20, 16, 12, 1.6 %%>;
+    pinWidth = <%% 9, 9, 8, 7, 1.2 %%>;
 
     arrowMargin = <%% 29, 23, 19, 12, 2 %%>;
     arrowWidth = <%% 50, 46, 40, 32, 4 %%>;
@@ -513,25 +518,25 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
 
     boxBetween = <%% 24, 24, 20, 20, 20 %%>;
 
-    basePaddingTop = <%% 170, 170, 160, 140, 18 %%>;
-    basePaddingBottom = <%% 200, 200, 190, 170, 21 %%>;
+    basePaddingTop = <%% 170, 170, 160, 140, 23 %%>;
+    basePaddingBottom = <%% 200, 200, 190, 170, 26 %%>;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = <%% 32, 30, 29, 25, 3.5 %%>;
+    titleSize = <%% 32, 30, 29, 25, 5.6 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    subTitleSize = <%% 17, 17, 16, 15, 3 %%>;
+    subTitleSize = <%% 17, 17, 16, 15, 3.5 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
-    subTitleMarginTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 5 : 3), (isMac() ? 4 : 3), (isMac() ? 6 : 4) %%>;
+    subTitleMarginTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 5 : 3), (isMac() ? 4 : 3), 1.2 %%>;
 
     subTitleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
 
-    contentsBaseMarginTop = <%% 64, 60, 50, 48, 64 %%>;
+    contentsBaseMarginTop = <%% 64, 60, 50, 48, 12 %%>;
 
-    boxBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
+    boxBorderRadius = <%% 10, 10, 10, 10, 8 %%>;
 
-    colorTitleSize = <%% 28, 26, 24, 20, 4 %%>;
+    colorTitleSize = <%% 28, 26, 24, 20, 5 %%>;
     colorTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
     colorTitleBoldWeight = <%% 900, 900, 900, 900, 900 %%>;
 
@@ -626,7 +631,7 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
         alignItems: "start",
         marginTop: String(contentsBaseMarginTop) + ea,
         height: String(mainHeight) + ea,
-        flexDirection: "row",
+        flexDirection: desktop ? "row" : "column",
       },
       children: [
         {
@@ -634,7 +639,7 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
             display: "inline-flex",
             position: "relative",
             marginRight: String(boxBetween) + ea,
-            width: "calc(calc(100% - " + String(boxBetween) + ea + ") / " + String(2) + ")",
+            width: desktop ? "calc(calc(100% - " + String(boxBetween) + ea + ") / " + String(2) + ")" : withOut(0, ea),
             height: withOut(0, ea),
             borderRadius: String(boxBorderRadius) + "px",
             border: "1px solid " + colorExtended.darkShadow,
@@ -643,13 +648,14 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
+            marginBottom: desktop ? "" : String(boxBetween) + ea,
           }
         },
         {
           style: {
             display: "inline-flex",
             position: "relative",
-            width: "calc(calc(100% - " + String(boxBetween) + ea + ") / " + String(2) + ")",
+            width: desktop ? "calc(calc(100% - " + String(boxBetween) + ea + ") / " + String(2) + ")" : withOut(0, ea),
             height: withOut(0, ea),
             borderRadius: String(boxBorderRadius) + "px",
             border: "1px solid " + colorExtended.darkShadow,
