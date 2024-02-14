@@ -153,7 +153,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
 
     subTitleSize = <%% 18, 18, 17, 15, 3.8 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 600 %%>;
-    subTitleMarginTop = <%% 16, 16, 12, 10, 2.5 %%>;
+    subTitleMarginTop = <%% 16, 16, 12, 10, 2.2 %%>;
 
     illustMarginTop = <%% 116, 110, 80, 80, 11 %%>;
 
@@ -505,21 +505,21 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
     let descriptionBetween;
     let descriptionLineBottomBetween;
 
-    mainHeight = <%% 440, 390, 370, 280, 420 %%>;
+    mainHeight = <%% 440, 390, 370, 280, 132 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
   
     pinMargin = <%% 20, 20, 16, 12, 1.6 %%>;
     pinWidth = <%% 9, 9, 8, 7, 1.2 %%>;
 
-    arrowMargin = <%% 29, 23, 19, 12, 2 %%>;
-    arrowWidth = <%% 50, 46, 40, 32, 4 %%>;
+    arrowMargin = <%% 29, 23, 19, 12, 2.5 %%>;
+    arrowWidth = <%% 50, 46, 40, 32, 6 %%>;
 
     contentsSize = <%% 20, 18, 17, 15, 3.5 %%>;
 
-    boxBetween = <%% 24, 24, 20, 20, 20 %%>;
+    boxBetween = <%% 24, 24, 20, 20, 4 %%>;
 
-    basePaddingTop = <%% 170, 170, 160, 140, 23 %%>;
-    basePaddingBottom = <%% 200, 200, 190, 170, 26 %%>;
+    basePaddingTop = <%% 170, 170, 160, 140, 24 %%>;
+    basePaddingBottom = <%% 200, 200, 190, 170, 27 %%>;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
@@ -532,27 +532,27 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
 
     subTitleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
 
-    contentsBaseMarginTop = <%% 64, 60, 50, 48, 12 %%>;
+    contentsBaseMarginTop = <%% 64, 60, 50, 48, 10 %%>;
 
     boxBorderRadius = <%% 10, 10, 10, 10, 8 %%>;
 
-    colorTitleSize = <%% 28, 26, 24, 20, 5 %%>;
+    colorTitleSize = <%% 28, 26, 24, 20, 4.8 %%>;
     colorTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
     colorTitleBoldWeight = <%% 900, 900, 900, 900, 900 %%>;
 
     circleWidth = <%% 6, 6, 5, 4, 1 %%>;
-    circleTop = <%% (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4) %%>;
+    circleTop = <%% (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4), -0.5 %%>;
 
-    descriptionBetween = <%% 12, 12, 9, 8, 12 %%>;
-    descriptionLineBottomBetween = <%% 4, 4, 4, 4, 4 %%>;
+    descriptionBetween = <%% 12, 12, 9, 8, 2 %%>;
+    descriptionLineBottomBetween = <%% 4, 4, 4, 4, 1 %%>;
 
-    circleLeft0 = <%% 142, 133, 123, 101, 149 %%>;
-    circleLeft1 = <%% 168, 155, 143, 119, 173 %%>;
-    circleLeft2 = <%% 143, 132, 123, 101, 149 %%>;
-    circleLeft3 = <%% 174, 161, 150, 124, 181 %%>;
-    circleLeft4 = <%% 198, 183, 169, 141, 204 %%>;
-    circleLeft5 = <%% 229, 212, 197, 163, 238 %%>;
-    circleLeft6 = <%% 252, 233, 216, 179, 262 %%>;
+    circleLeft0 = <%% 142, 133, 123, 101, 24.2 %%>;
+    circleLeft1 = <%% 168, 155, 143, 119, 28.5 %%>;
+    circleLeft2 = <%% 143, 132, 123, 101, 24.3 %%>;
+    circleLeft3 = <%% 174, 161, 150, 124, 29.8 %%>;
+    circleLeft4 = <%% 198, 183, 169, 141, 33.6 %%>;
+    circleLeft5 = <%% 229, 212, 197, 163, 39.2 %%>;
+    circleLeft6 = <%% 252, 233, 216, 179, 43 %%>;
 
     secondBase = createNode({
       mother: baseTong,
@@ -4078,7 +4078,7 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, dateToString } = GeneralJs;
+    const { returnGet, ajaxJson, dateToString, homeliaisonAnalytics } = GeneralJs;
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
