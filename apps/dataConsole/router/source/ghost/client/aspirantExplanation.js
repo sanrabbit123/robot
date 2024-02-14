@@ -289,6 +289,18 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
             const zIndex = 4;
             let cancelBack, blockPrompt;
   
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "aspirantSubmitButtonClick",
+              data: {
+                delta: (new Date()).valueOf() - instance.firstPageViewTime.valueOf(),
+                date: new Date(),
+              },
+            }).catch((err) => {
+              console.log(err);
+            });
+
             cancelBack = createNode({
               mother: totalContents,
               class: [ submitBlockClassName ],
@@ -1155,6 +1167,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     let blackPromptPaddingTop;
     let commentTriangleWidth;
     let blackPromptSize, blackPromptWeight, blackPromptLineHeight;
+    let questions;
 
     mainHeight = <%% 900, 900, 900, 900, 900 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
@@ -1203,6 +1216,15 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     blackPromptSize = <%% 16, 14, 12, 10, 16 %%>;
     blackPromptWeight = <%% 500, 500, 500, 500, 500 %%>;
     blackPromptLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+    questions = [
+      "다른 플랫폼과 다른 점은 무엇인가요?",
+      "홈리에종의 홈스타일링 서비스란?",
+      "직접 고객 유치를 하지 않아도 되나요?",
+      "최소 활동 조건이 있나요?",
+      "스타일링을 많이 해 본 건 아닌데\n저도 일할 수 있을까요?",
+      "가능 일정이나 지역,시공사 유무에 관계없이\n파트너십이 가능한가요?",
+    ];
 
     contentsText = [
       [
@@ -1263,6 +1285,20 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
           const thisBox = self.getBoundingClientRect();
           const zIndex = 4;
           let cancelBack, blockPrompt;
+
+          homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "aspirantFaqUnitClick",
+            data: {
+              index: index,
+              delta: (new Date()).valueOf() - instance.firstPageViewTime.valueOf(),
+              date: new Date(),
+              question: questions[index],
+            },
+          }).catch((err) => {
+            console.log(err);
+          });
 
           cancelBack = createNode({
             mother: totalContents,
@@ -1510,7 +1546,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
           }
         },
         {
-          text: "다른 플랫폼과 다른 점은 무엇인가요?",
+          text: questions[0],
           event: {
             selectstart: (e) => { e.preventDefault() },
           },
@@ -1608,7 +1644,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
           }
         },
         {
-          text: "홈리에종의 홈스타일링 서비스란?",
+          text: questions[1],
           event: {
             selectstart: (e) => { e.preventDefault() },
           },
@@ -1705,7 +1741,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
           }
         },
         {
-          text: "직접 고객 유치를 하지 않아도 되나요?",
+          text: questions[2],
           event: {
             selectstart: (e) => { e.preventDefault() },
           },
@@ -1805,7 +1841,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
           }
         },
         {
-          text: "최소 활동 조건이 있나요?",
+          text: questions[3],
           event: {
             selectstart: (e) => { e.preventDefault() },
           },
@@ -1904,7 +1940,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
           }
         },
         {
-          text: "스타일링을 많이 해 본 건 아닌데\n저도 일할 수 있을까요?",
+          text: questions[4],
           event: {
             selectstart: (e) => { e.preventDefault() },
           },
@@ -2003,7 +2039,7 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
           }
         },
         {
-          text: "가능 일정이나 지역,시공사 유무에 관계없이\n파트너십이 가능한가요?",
+          text: questions[5],
           event: {
             selectstart: (e) => { e.preventDefault() },
           },
@@ -3538,6 +3574,18 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
           const secondDom = document.querySelector("." + secondDomClassName);
           const thirdDom = document.querySelector("." + thirdDomClassName);
 
+          homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "aspirantReviewBlockClick",
+            data: {
+              delta: (new Date()).valueOf() - instance.firstPageViewTime.valueOf(),
+              date: new Date(),
+            },
+          }).catch((err) => {
+            console.log(err);
+          });
+
           firstDom.style.transition = "all 0.5s ease";
           secondDom.style.transition = "all 0.5s ease";
           thirdDom.style.transition = "all 0.5s ease";
@@ -3913,7 +3961,21 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
       mother: sixthBase,
       event: {
         selectstart: (e) => { e.preventDefault() },
-        click: (e) => { GeneralJs.scrollTo(window, 0) }
+        click: (e) => {
+          homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "aspirantTopButtonClick",
+            data: {
+              delta: (new Date()).valueOf() - instance.firstPageViewTime.valueOf(),
+              date: new Date(),
+            },
+          }).then(() => {
+            GeneralJs.scrollTo(window, 0);
+          }).catch((err) => {
+            console.log(err);
+          });
+        }
       },
       style: {
         display: "flex",
@@ -3960,14 +4022,27 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
 
 AspirantExplanationJs.prototype.resizeEvent = function () {
   const instance = this;
+  const { homeliaisonAnalytics } = GeneralJs;
   this.resizeStack = 0;
   this.resizeFrom = 0;
   this.resizePopup = 0;
   const resizeDebounceEvent = function () {
     let timeout;
     const reEvent = function () {
-      window.location.reload();
-      instance.resizeStack = 0;
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "aspirantPageResize",
+        data: {
+          delta: (new Date()).valueOf() - instance.firstPageViewTime.valueOf(),
+          date: new Date(),
+        },
+      }).then(() => {
+        window.location.reload();
+        instance.resizeStack = 0;
+      }).catch((err) => {
+        console.log(err);
+      });
     }
     let immediate = null;
     return function (e) {
@@ -3984,7 +4059,9 @@ AspirantExplanationJs.prototype.resizeEvent = function () {
       let callNow = immediate && !timeout;
       clearTimeout(timeout);
       timeout = setTimeout(later, 250);
-      if (callNow) { reEvent.apply(context, args); };
+      if (callNow) {
+        reEvent.apply(context, args);
+      }
     }
   }
   window.addEventListener("resize", resizeDebounceEvent());
@@ -3995,7 +4072,7 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson } = GeneralJs;
+    const { returnGet, ajaxJson, dateToString } = GeneralJs;
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
@@ -4023,6 +4100,22 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
           await instance.insertFifthBox();
           await instance.insertSixthBox();
           instance.resizeEvent();
+
+          setInterval(() => {
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "readTimer",
+              data: {
+                cliid: "null",
+                href: window.encodeURIComponent(window.location.href),
+                date: dateToString(new Date(), true),
+              },
+            }).catch((err) => {
+              console.log(err);
+            });
+          }, 60 * 1000);
+
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "AspirantExplanationJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
