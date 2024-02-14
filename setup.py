@@ -106,7 +106,6 @@ class RobotInstall:
         self.ignoreDirs()
         self.moduleInstall(local=True)
         self.moveModules()
-        self.moduleInstall(local=False)
 
 try:
     installApps = RobotInstall()
