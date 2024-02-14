@@ -136,21 +136,21 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     plusRatio = <%% 0.45, 0.7, 0, 0, 0 %%>;
     plusWidth = ((leftRightWidth * plusRatio) * 2) + standardWidth
 
-    firstBasePaddingTop = <%% 24, 24, 24, 24, 48 %%>;
+    firstBasePaddingTop = <%% 24, 24, 24, 24, 4 %%>;
 
-    titleHeight = <%% 120, 106, 98, 84, 160 %%>;
+    titleHeight = <%% 120, 106, 98, 84, 16 %%>;
 
-    whitePopupWidth = <%% 1200, 1000, 800, 780, 1200 %%>;
-    whitePopupMargin = <%% 40, 40, 36, 32, 60 %%>;
+    whitePopupWidth = <%% 1200, 1000, 800, 780, 80 %%>;
+    whitePopupMargin = <%% 40, 40, 36, 32, 2 %%>;
     whitePopupHeight = window.innerHeight - naviHeight - (whitePopupMargin * 2);
 
     pinMargin = <%% 16, 16, 14, 12, 1 %%>;
     pinWidth = <%% 6, 6, 5, 4, 1 %%>;
 
     firstBasePaddingBottom = <%% 170, 170, 160, 120, 20 %%>;
-    blueTop = <%% 200, 200, 200, 200, 200 %%>;
+    blueTop = <%% 200, 200, 200, 200, 20 %%>;
 
-    subTitleSize = <%% 18, 18, 17, 15, 19 %%>;
+    subTitleSize = <%% 18, 18, 17, 15, 3.5 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
     subTitleMarginTop = <%% 16, 16, 12, 10, 1 %%>;
 
@@ -163,7 +163,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    mainIllust = <%% AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png" %%>;
+    mainIllust = <%% AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png" %%>;
 
     if (media[0] && window.innerHeight > 1100) {
       firstBasePaddingTop = 60;
@@ -494,10 +494,10 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
     pinMargin = <%% 20, 20, 16, 12, 20 %%>;
     pinWidth = <%% 9, 9, 8, 7, 9 %%>;
 
-    arrowMargin = <%% 29, 23, 19, 12, 29 %%>;
-    arrowWidth = <%% 50, 46, 40, 32, 46 %%>;
+    arrowMargin = <%% 29, 23, 19, 12, 2 %%>;
+    arrowWidth = <%% 50, 46, 40, 32, 4 %%>;
 
-    contentsSize = <%% 20, 18, 17, 15, 18 %%>;
+    contentsSize = <%% 20, 18, 17, 15, 3.5 %%>;
 
     boxBetween = <%% 24, 24, 20, 20, 20 %%>;
 
@@ -519,11 +519,11 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
 
     boxBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
 
-    colorTitleSize = <%% 28, 26, 24, 20, 29 %%>;
+    colorTitleSize = <%% 28, 26, 24, 20, 4 %%>;
     colorTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
     colorTitleBoldWeight = <%% 900, 900, 900, 900, 900 %%>;
 
-    circleWidth = <%% 6, 6, 5, 4, 6 %%>;
+    circleWidth = <%% 6, 6, 5, 4, 1 %%>;
     circleTop = <%% (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4) %%>;
 
     descriptionBetween = <%% 12, 12, 9, 8, 12 %%>;
