@@ -1178,48 +1178,48 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     mainHeight = <%% 900, 900, 900, 900, 900 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
   
-    pinMargin = <%% 15, 15, 14, 12, 15 %%>;
-    pinWidth = <%% 6, 6, 5, 4, 6 %%>;
+    pinMargin = <%% 15, 15, 14, 12, 1.6 %%>;
+    pinWidth = <%% 6, 6, 5, 4, 1.2 %%>;
 
     arrowMargin = <%% 29, 29, 29, 29, 29 %%>;
     arrowWidth = <%% 50, 50, 50, 50, 50 %%>;
 
     contentsSize = <%% 22, 22, 22, 22, 22 %%>;
 
-    boxBetween = <%% 24, 24, 12, 12, 24 %%>;
-    middleBetween = <%% 16, 16, 12, 12, 16 %%>;
+    boxBetween = <%% 24, 24, 12, 12, 1.5 %%>;
+    middleBetween = <%% 16, 16, 12, 12, 1.5 %%>;
 
-    unitHeight = <%% 160, 130, 130, 100, 184 %%>;
+    unitHeight = <%% 160, 130, 130, 100, 20 %%>;
 
-    unitTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
-    unitSize = <%% 21, 20, 18, 16, 3 %%>;
+    unitTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+    unitSize = <%% 21, 20, 18, 16, 3.5 %%>;
     unitWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    basePaddingTop = <%% 170, 170, 160, 140, 18 %%>;
-    basePaddingBottom = <%% 200, 200, 190, 170, 21 %%>;
+    basePaddingTop = <%% 170, 170, 160, 140, 24 %%>;
+    basePaddingBottom = <%% 200, 200, 190, 170, 27 %%>;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = <%% 32, 30, 29, 25, 3.5 %%>;
+    titleSize = <%% 32, 30, 29, 25, 5.6 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    subTitleSize = <%% 17, 17, 16, 15, 3 %%>;
+    subTitleSize = <%% 17, 17, 16, 15, 3.5 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
-    subTitleMarginTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 5 : 3), (isMac() ? 4 : 3), (isMac() ? 6 : 4) %%>;
+    subTitleMarginTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 5 : 3), (isMac() ? 4 : 3), 0.5 %%>;
     subTitleOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
 
-    boxGroupMarginTop = <%% 64, 60, 50, 48, 64 %%>;
+    boxGroupMarginTop = <%% 64, 60, 50, 48, 7.5 %%>;
 
-    unitBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
+    unitBorderRadius = <%% 10, 10, 10, 10, 6 %%>;
 
-    blackPromptMarginBetween = <%% 20, 20, 20, 20, 20 %%>;
+    blackPromptMarginBetween = <%% 20, 20, 20, 20, 3 %%>;
 
-    blackPromptPaddingLeft = <%% 30, 20, 20, 14, 30 %%>;
-    blackPromptPaddingTop = <%% 24, 16, 16, 10, 24 %%>;
+    blackPromptPaddingLeft = <%% 30, 20, 20, 14, 3.6 %%>;
+    blackPromptPaddingTop = <%% 24, 16, 16, 10, 3 %%>;
 
-    commentTriangleWidth = <%% 16, 16, 16, 12, 16 %%>;
+    commentTriangleWidth = <%% 16, 16, 16, 12, 3 %%>;
 
-    blackPromptSize = <%% 16, 14, 12, 10, 16 %%>;
+    blackPromptSize = <%% 16, 14, 12, 10, 3 %%>;
     blackPromptWeight = <%% 500, 500, 500, 500, 500 %%>;
     blackPromptLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
@@ -1229,55 +1229,43 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
       "직접 고객 유치를 하지 않아도 되나요?",
       "최소 활동 조건이 있나요?",
       "스타일링을 많이 해 본 건 아닌데\n저도 일할 수 있을까요?",
-      "가능 일정이나 지역,시공사 유무에 관계없이\n파트너십이 가능한가요?",
+      "가능 일정이나 지역, 시공사 유무에 관계없이\n파트너십이 가능한가요?",
     ];
 
     contentsText = [
       [
         "많은 서비스가 있지만 유일한 시스템을 갖춘 서비스는 다릅니다.",
-        "홈리에종은 홈스타일링 전문 플랫폼으로 단순히 소비자 연결만 하지 않습니다.",
-        "고객 중심의 인테리어를 추구하며 IT 기반에서 체계적으로 프로젝트를 케어하고,",
-        "다양한 인프라 지원으로(직영 시공사, 성장지원 교육, 포트폴리오 개설)",
-        "디자이너와 함께 성장합니다.",
+        "홈리에종은 홈스타일링 전문 플랫폼으로 단순 연결만 하지 않습니다.",
+        "고객 중심의 인테리어를 추구하며 체계적으로 프로젝트를 케어하고,",
+        "다양한 인프라 지원으로 디자이너와 함께 성장합니다.",
       ],
       [
-        "시공 중심이 아니라 고객 중심입니다. 고객의 예산, 제한 기간,",
-        "공간 상태, 취향을 고려하여 시공의 난이도를 정하고 스타일링까지 ",
-        "완료합니다. 모든 주거 공간은 도배나 욕실 뿐만 아니라 가구, 베딩, 커튼 등의",
-        "제품 세팅까지  일관성 있게 마무리할 때 인테리어가 잘 된 것입니다. ",
-        "현재 ‘인테리어’라는 단어는 ‘리모델링(=시공)’에 국한되고 있으나",
-        "진정한 인테리어는 시공과 스타일링을 포함합니다. ",
-        "홈리에종의 홈스타일링 서비스는 예산에 맞는 스타일링과 필요 시공을 의미합니다. ",
-        "공간 노후도에 따라 필요 시공이 전체 영역일 수도 있고, 예산에 따라 하이엔드 시공을",
-        "기대하면서 전문가의 수준 높은 안목을 기대하는 고객님도 찾아오십니다.",
+        "고객의 예산, 제한 기간, 공간 상태, 취향을 고려하여",
+        "시공부터 스타일링까지 완료합니다. 모든 공간은 가구, 패브릭 등의",
+        "제품 세팅까지 일관성 있게 마무리할 때 인테리어가 잘 된 것입니다.",
+        "현재 ‘인테리어’라는 단어는 ‘시공’에 국한되고 있으나",
+        "진정한 인테리어는 시공과 스타일링을 포함합니다.",
       ],
       [
-        "고객 유치는 홈리에종이 합니다.",
-        "홈리에종의 방향성에 기대감을 가지신 고객님들을 유치하기 위해 노력하고 있습니다.",
+        "고객 유치는 홈리에종이 합니다. 홈리에종의 방향성에 기대감을",
+        "가지신 고객님들을 유치하기 위해 노력하고 있습니다.",
         "디자이너님은 디자이너로서의 역량을 키워가는 것에 집중해주세요.",
-        "커뮤니케이션 능력이 탁월하고 디자인 아이덴티티가 매력적이라면 좋은 고객을 꾸준히",
-        "만나는 것은 점점 쉬워집니다 :) 함께 즐겁게 성장해요!",
+        "능력 있고 디자인이 매력적이라면 꾸준히 고객을 만날 수 있습니다.",
       ],
       [
-        "스타일링 경험 혹은 역량 확인이 필수입니다. ",
-        "1개 이상의 포트폴리오(실제 현장 사진)이 있거나 1개 이상의 홈퍼니싱",
+        "스타일링 경험 혹은 역량 확인이 필수입니다.",
+        "1개 이상의 실제 현장 사진이 있거나, 1개 이상의 홈퍼니싱",
         "3D 작업 역량이 확인되어야 합니다.",
-        "홈리에종의 모든 프로젝트는 시공 위주의 견적 제출, 단순 견적 비교를 지양하고",
-        "고객의 예산 및 조건을 고려하여 시공 난이도를 조정하면서 완성해야 합니다.",
-        "시공 역량 수준에 맞추어 고객 매칭이 이루어지며",
-        "스타일링에 대한 최소 경험 혹은 역량은 필수입니다.",
       ],
       [
-        "네 :) 홈리에종은 인테리어 업계의 새로운 문화를 만들어가는 개척 기업입니다. ",
-        "3가지 모두 동의하시면 신청서를 남겨주세요.",
-        "",
+        "3가지 모두 동의하시면 하실 수 있습니다.",
         "1. 주거 인테리어에 대한 새로운 접근 방법에 대한 공감",
         "2. 최소한의 스타일링 역량 (포트폴리오 혹은 3D 역량)",
         "3. 발전과 학습에 대한 강한 의지 및 관심",
       ],
       [
-        "홈리에종은 디자이너님의 역량과 상세 컨디션을 사전에 확인해 매칭을 해드립니다.",
-        "디자이너의 어려움을 교육 및 가이드 제공을 통해 개선하고, 시공사도 지원해드립니다.",
+        "홈리에종은 디자이너님의 컨디션을 사전에 확인해 매칭합니다.",
+        "디자이너의 어려움을 교육 및 가이드 제공을 통해 개선하고,",
         "디자이너의 가능 일정과 출발지역, 가능한 업무량을 파악하여",
         "지속적인 성장을 할 수 있도록 지원합니다!",
       ],
@@ -1327,9 +1315,9 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
             style: {
               display: "flex",
               position: "absolute",
-              top: String(thisBox.top + window.scrollY + unitHeight + blackPromptMarginBetween) + "px",
-              left: String(thisBox.left) + ea,
-              width: String(thisBox.width - (blackPromptPaddingLeft * 2)) + "px",
+              top: "calc(" + String(thisBox.top + window.scrollY) + "px" + " + " + String(unitHeight + blackPromptMarginBetween) + ea + ")",
+              left: String(thisBox.left) + "px",
+              width: "calc(" + String(thisBox.width) + "px" + " - " + String(blackPromptPaddingLeft * 2) + ea + ")",
               padding: String(blackPromptPaddingLeft) + ea,
               paddingTop: String(blackPromptPaddingTop) + ea,
               paddingBottom: String(blackPromptPaddingTop) + ea,
@@ -1446,25 +1434,26 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         justifyContent: "start",
         alignItems: "start",
         marginTop: String(boxGroupMarginTop) + ea,
-        flexDirection: "row",
+        flexDirection: desktop ? "row" : "column",
       },
       children: [
         {
           style: {
             display: "inline-flex",
             position: "relative",
-            marginRight: String(boxBetween) + ea,
-            width: "calc(calc(100% - " + String(boxBetween) + ea + ") / " + String(2) + ")",
+            marginRight: desktop ? String(boxBetween) + ea : "",
+            width: desktop ? "calc(calc(100% - " + String(boxBetween) + ea + ") / " + String(2) + ")" : withOut(0, ea),
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
+            paddingBottom: desktop ? "" : String(boxBetween) + ea,
           }
         },
         {
           style: {
             display: "inline-flex",
             position: "relative",
-            width: "calc(calc(100% - " + String(boxBetween) + ea + ") / " + String(2) + ")",
+            width: desktop ? "calc(calc(100% - " + String(boxBetween) + ea + ") / " + String(2) + ")" : withOut(0, ea),
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
