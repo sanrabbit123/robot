@@ -128,6 +128,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     let buttonWeight;
     let firstBasePaddingTop;
     let mainIllust;
+    let whitePopupMargin;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -140,7 +141,8 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     titleHeight = <%% 120, 106, 98, 84, 160 %%>;
 
     whitePopupWidth = <%% 1200, 1000, 800, 780, 1200 %%>;
-    whitePopupHeight = window.innerHeight - naviHeight - (naviHeight * 2);
+    whitePopupMargin = <%% 40, 40, 36, 32, 60 %%>;
+    whitePopupHeight = window.innerHeight - naviHeight - (whitePopupMargin * 2);
 
     pinMargin = <%% 16, 16, 14, 12, 1 %%>;
     pinWidth = <%% 6, 6, 5, 4, 1 %%>;
@@ -150,9 +152,9 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
 
     subTitleSize = <%% 18, 18, 17, 15, 19 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 300 %%>;
-    subTitleMarginTop = <%% 16, 16, 12, 10, 16 %%>;
+    subTitleMarginTop = <%% 16, 16, 12, 10, 1 %%>;
 
-    illustMarginTop = <%% 100, 110, 80, 80, 10 %%>;
+    illustMarginTop = <%% 116, 110, 80, 80, 10 %%>;
 
     buttonMarginTop = <%% 4, 4, 24, 20, 8 %%>;
     buttonWidth = <%% 160, 145, 140, 130, 180 %%>;
@@ -162,6 +164,15 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     mainIllust = <%% AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png" %%>;
+
+    if (media[0] && window.innerHeight > 1100) {
+      firstBasePaddingTop = 60;
+      titleHeight = 142;
+      subTitleSize = 19;
+      firstBasePaddingBottom = 200;
+      illustMarginTop = 180;
+      plusRatio = 0.8;
+    }
 
     this.totalContents = document.getElementById("totalcontents");
     this.totalContents.style.overflow = "hidden";

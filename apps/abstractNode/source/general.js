@@ -8388,7 +8388,7 @@ GeneralJs.prototype.greenTalk = function (input) {
 
   whitePopupWidthVisual = desktop ? 2 : 2;
 
-  backgroundWidth = desktop ? 800 : 80;
+  backgroundWidth = desktop ? 600 : 80;
 
   opacity = 0.95;
 
