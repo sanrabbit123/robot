@@ -4396,6 +4396,21 @@ AspirantExplanationJs.prototype.resizeEvent = function () {
   }
 }
 
+AspirantExplanationJs.prototype.postIframeEvent = function () {
+  const instance = this;
+  window.addEventListener("message", function (e) {
+    if (/^[\{\[]/.test(e.data)) {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type === "submitComplete") {
+          const aspid = data.aspid;
+          GeneralJs.selfHref(FRONTHOST + "/aspinformation.php?aspid=" + aspid);
+        }
+      } catch {}
+    }
+  });
+}
+
 AspirantExplanationJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -4429,6 +4444,7 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
           await instance.insertFifthBox();
           await instance.insertSixthBox();
           instance.resizeEvent();
+          instance.postIframeEvent();
 
           setInterval(() => {
             homeliaisonAnalytics({

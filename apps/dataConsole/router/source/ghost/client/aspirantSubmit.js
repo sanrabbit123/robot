@@ -3888,7 +3888,6 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             },
             event: {
               focus: greenLinkFocusEvent,
-              blur: greenLinkBlurEvent,
             },
             style: {
               position: "absolute",
@@ -3980,7 +3979,6 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             },
             event: {
               focus: greenLinkFocusEvent,
-              blur: greenLinkBlurEvent,
             },
             style: {
               position: "absolute",
@@ -4774,7 +4772,15 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
                   } else {
                     window.alert("전송이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
                   }
-                  selfHref(FRONTHOST + "/aspinformation.php?aspid=" + aspid);
+
+                  if (instance.normalMode) {
+                    globalThis.window.parent.postMessage(JSON.stringify({
+                      type: "submitComplete",
+                      aspid: aspid,
+                    }), "*");
+                  } else {
+                    selfHref(FRONTHOST + "/aspinformation.php?aspid=" + aspid);
+                  }
                 }).catch((err) => {
                   window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
                   window.location.reload();
@@ -4840,6 +4846,11 @@ AspirantSubmitJs.prototype.launching = async function (loading) {
 
       GeneralJs.colorChip.green = "#9eb6d8";
       GeneralJs.colorChip.gradientGreen = "#404040";
+      GeneralJs.colorChip.softGreen = "#9eb6d8";
+      GeneralJs.colorChip.darkGreen = "#9eb6d8";
+      GeneralJs.colorChip.whiteGreen = "#9eb6d8";
+      GeneralJs.colorChip.middleGreen = "#9eb6d8";
+      GeneralJs.colorChip.liteGreen = "#9eb6d8";
 
       instance.insertAspirantBox();
     }

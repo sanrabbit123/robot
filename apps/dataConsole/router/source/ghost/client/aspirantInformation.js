@@ -1536,7 +1536,7 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
               justifyContent: "center",
               alignItems: "center",
               position: "relative",
-              background: colorChip.green,
+              background: colorChip.black,
               borderRadius: String(5) + "px",
             },
             child: {
@@ -1558,7 +1558,7 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
               justifyContent: "center",
               alignItems: "center",
               position: "relative",
-              background: colorChip.green,
+              background: colorChip.greblacken,
               borderRadius: String(5) + "px",
             },
             child: {
@@ -2845,7 +2845,7 @@ AspirantInformationJs.prototype.insertAspirantBox = function () {
           display: "inline-flex",
           width: String(submitButtonWidth) + ea,
           height: String(submitButtonHeight) + ea,
-          background: colorChip.gradientGreen,
+          background: colorChip.gradientGray,
           borderRadius: String(5) + "px",
           justifyContent: "center",
           alignItems: "center",
