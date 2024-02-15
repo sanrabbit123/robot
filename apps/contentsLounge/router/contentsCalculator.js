@@ -36,7 +36,7 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
       let future;
 
       future = new Date();
-      future.setDate(future.getDate() + 14);
+      future.setDate(future.getDate() + 1);
 
       realTargets = [];
       for (let obj of targets) {
@@ -154,7 +154,7 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
       return o;
     });
 
-    resultTong.sort((a, b) => { return a.gradeNumber - b.gradeNumber });
+    // resultTong.sort((a, b) => { return a.gradeNumber - b.gradeNumber });
     
     runner = new Date();
     number = 0;
