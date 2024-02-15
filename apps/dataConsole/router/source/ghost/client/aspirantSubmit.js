@@ -524,9 +524,9 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   leftGrayType3 = <%% 164, 151, 130, 129, 30.5 %%>;
 
   widthGrayType0 = <%% 160, 140, 140, 140, 34 %%>;
-  widthGrayType1 = <%% 455, 312, 245, 178, 58.1 %%>;
+  widthGrayType1 = <%% 455, 312, 245, 178, 71.4 %%>;
   widthGrayType2 = <%% 757, 588, 503, 383, 53.4 %%>;
-  widthGrayType3 = <%% 392, 251, 193, 127, 45.6 %%>;
+  widthGrayType3 = <%% 392, 251, 193, 127, 58.9 %%>;
 
   addressWidth = <%% 54, 54, 46, 46, 11 %%>;
   addressSize = <%% 13, 13, 12, 12, 3 %%>;
@@ -633,7 +633,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
   mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 20 %%>;
 
-  innerPadding = <%% 60, 50, 45, 40, 6 %%>;
+  innerPadding = <%% 60, 50, 45, 40, (normalMode ? 5 : 6) %%>;
 
   imageWidthRatio = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
 
@@ -1844,7 +1844,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     style: {
       display: "block",
       position: "relative",
-      paddingBottom: normalMode ? String(30) + ea : String(mainPaddingBottom) + ea,
+      paddingBottom: normalMode ? String(desktop ? 30 : 7) + ea : String(mainPaddingBottom) + ea,
     }
   });
 
@@ -1860,42 +1860,42 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       paddingTop: String(innerPadding) + ea,
       paddingBottom: normalMode ? "" : String(innerPadding) + ea,
       paddingLeft: normalMode ? String(innerPadding) + ea : "",
-      width: normalMode ? withOut(innerPadding, ea) : withOut(0, ea),
+      width: normalMode ? withOut(innerPadding * 2, ea) : withOut(0, ea),
     }
   });
 
   if (normalMode) {
-
     createNode({
       mother: contentsArea,
       style: {
         display: "flex",
         position: "relative",
-        width: withOut(innerPadding, ea),
+        width: withOut(0, ea),
         justifyContent: "start",
         alignItems: "start",
+        lineHeight: desktop ? "" : String(1.4),
       },
       children: [
         {
-          text: "신청서를 작성 후 제출하시면, 확인 후 연락을 드립니다.",
+          text: desktop ? "신청서를 작성 후 제출하시면, 확인 후 연락을 드립니다." : "신청서를 작성 후 제출하시면,\n확인 후 연락을 드립니다.",
           style: {
             display: "block",
             position: "relative",
-            fontSize: String(<&& 26 | 26 | 25 | 24 | 4 &&>) + ea,
+            fontSize: String(<&& 26 | 26 | 25 | 23 | 4.5 &&>) + ea,
             fontWeight: String(800),
             color: colorChip.black,
-            marginBottom: String(<&& 9 | 9 | 8 | 7 | 1 &&>) + ea,
+            marginBottom: String(<&& 9 | 9 | 8 | 7 | 3 &&>) + ea,
+            marginTop: desktop ? "" : String(1.2) + ea,
           }
         }
       ]
     });
-
     createNode({
       mother: contentsArea,
       style: {
-        display: "flex",
+        display: desktop ? "flex" : "none",
         position: "relative",
-        width: withOut(innerPadding, ea),
+        width: withOut(0, ea),
         justifyContent: "start",
         alignItems: "start",
       },
@@ -1911,26 +1911,23 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             fontSize: String(<&& 15 | 15 | 14 | 13 | 3.2 &&>) + ea,
             fontWeight: String(400),
             color: colorChip.black,
-            marginBottom: String(<&& 24 | 24 | 22 | 20 | 1 &&>) + ea,
+            marginBottom: String(<&& 24 | 23 | 22 | 20 | 1 &&>) + ea,
             lineHeight: String(1.5),
             textAlign: "left",
           }
         }
       ]
     });
-
     createNode({
       mother: contentsArea,
       style: {
         display: "flex",
         position: "relative",
-        width: withOut(innerPadding, ea),
+        width: withOut(0, ea),
         borderBottom: "1px solid " + colorChip.black,
-        marginBottom: String(innerPadding) + ea,
+        marginBottom: String(desktop ? innerPadding : 6) + ea,
       },
     });
-
-
   }
 
   leftBox = createNode({
@@ -1979,9 +1976,9 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      width: normalMode ? withOut((innerPadding * 1), ea) : withOut(leftBoxWidth + (innerPadding * 2), ea),
+      width: normalMode ? withOut(0, ea) : withOut(leftBoxWidth + (innerPadding * 2), ea),
       verticalAlign: "top",
-      marginLeft: desktop ? "" : String(innerPadding) + ea,
+      marginLeft: desktop ? "" : (normalMode ? String(0) + ea : String(innerPadding) + ea),
       paddingTop: desktop ? "" : String(1) + ea,
     }
   });
@@ -4832,6 +4829,7 @@ AspirantSubmitJs.prototype.launching = async function (loading) {
         },
         local: async () => {
           try {
+            instance.insertInitBox();
             instance.insertAspirantBox();
           } catch (e) {
             await GeneralJs.ajaxJson({ message: "AspirantSubmitJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
@@ -4843,7 +4841,6 @@ AspirantSubmitJs.prototype.launching = async function (loading) {
       GeneralJs.colorChip.green = "#9eb6d8";
       GeneralJs.colorChip.gradientGreen = "#404040";
 
-      instance.insertInitBox();
       instance.insertAspirantBox();
     }
 
