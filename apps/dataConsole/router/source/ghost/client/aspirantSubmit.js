@@ -3855,7 +3855,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           }
         },
         {
-          text: "홈페이지",
+          text: "링크",
           style: {
             display: "inline-block",
             position: "relative",
@@ -4182,7 +4182,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           }
         },
         {
-          text: "자신에 대해 서술해 주세요!",
+          text: "지원 동기",
           style: {
             display: "inline-block",
             position: "relative",
@@ -4210,6 +4210,11 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           class: [ inputClassName ],
           attribute: {
             property: "etc",
+            placeholder: [
+              "예) 홈스타일링으로 경험 확대",
+              "예) 홈리에종에 대한 관심",
+              "예) 고객 영업 확대",
+            ].join("\n"),
           },
           style: {
             position: "absolute",

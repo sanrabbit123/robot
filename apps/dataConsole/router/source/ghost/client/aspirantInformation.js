@@ -1558,7 +1558,7 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
               justifyContent: "center",
               alignItems: "center",
               position: "relative",
-              background: colorChip.greblacken,
+              background: colorChip.black,
               borderRadius: String(5) + "px",
             },
             child: {

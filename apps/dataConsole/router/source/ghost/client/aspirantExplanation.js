@@ -2126,7 +2126,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
 
     processBlockMarginTop = <%% 80, 72, 56, 48, 7.5 %%>;
 
-    unitBoxWidth = <%% 190, 150, 130, 110, 48 %%>;
+    unitBoxWidth = <%% 190, 150, 130, 110, 32 %%>;
     unitBoxWidthLong = <%% 310, 270, 230, 190, 77 %%>;
     unitBetween = <%% 40, 20, 16, 10, 5 %%>;
 
@@ -2263,12 +2263,13 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 display: "inline-flex",
                 position: "relative",
                 height: String(unitHeight) + ea,
-                width: String(unitBoxWidth) + ea,
+                width: String(desktop ? unitBoxWidth : 54 - 7) + ea,
                 background: colorExtended.warmGray0,
                 borderRadius: String(unitHeight) + ea,
                 boxShadow: "0px 5px 19px -9px " + colorExtended.shadow,
-                justifyContent: "center",
+                justifyContent: desktop ? "center" : "start",
                 alignItems: "center",
+                paddingLeft: desktop ? "" : String(7) + ea,
               },
               child: {
                 text: "1차 유선 상담",
@@ -2314,7 +2315,19 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                       top: "calc(50% - " + String(mobileBlackCircleWidth / 2) + ea + ")",
                       left: String(mobileCircleLeft) + ea,
                     },
-                  }
+                    next: {
+                      text: String(1),
+                      style: {
+                        display: desktop ? "none" : "inlnie-block",
+                        position: "absolute",
+                        top: String(2.5) + ea,
+                        fontSize: String(unitSize) + ea,
+                        fontWeight: String(300),
+                        color: colorExtended.yellow,
+                        right: String(7) + ea,
+                      },
+                    },
+                  },
                 }
               }
             },
@@ -2323,14 +2336,15 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 display: "inline-flex",
                 position: "relative",
                 height: String(unitHeight) + ea,
-                width: String(unitBoxWidth) + ea,
+                width: String(desktop ? unitBoxWidth : 62 - 7) + ea,
                 background: colorExtended.warmGray0,
                 borderRadius: String(unitHeight) + ea,
                 boxShadow: "0px 5px 19px -9px " + colorExtended.shadow,
-                justifyContent: "center",
+                justifyContent: desktop ? "center" : "left",
                 alignItems: "center",
                 marginLeft: desktop ? String(unitBetween) + ea : "",
                 marginTop: desktop ? "" : String(unitBetween) + ea,
+                paddingLeft: desktop ? "" : String(7) + ea,
               },
               child: {
                 text: "포트폴리오 제출",
@@ -2376,6 +2390,18 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                       top: "calc(50% - " + String(mobileBlackCircleWidth / 2) + ea + ")",
                       left: String(mobileCircleLeft) + ea,
                     },
+                    next: {
+                      text: String(2),
+                      style: {
+                        display: desktop ? "none" : "inlnie-block",
+                        position: "absolute",
+                        top: String(2.5) + ea,
+                        fontSize: String(unitSize) + ea,
+                        fontWeight: String(300),
+                        color: colorExtended.yellow,
+                        right: String(7) + ea,
+                      },
+                    },
                   }
                 }
               }
@@ -2385,14 +2411,15 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 display: "inline-flex",
                 position: "relative",
                 height: String(unitHeight) + ea,
-                width: String(unitBoxWidth) + ea,
+                width: String(desktop ? unitBoxWidth : 70 - 7) + ea,
                 background: colorExtended.warmGray0,
                 borderRadius: String(unitHeight) + ea,
                 boxShadow: "0px 5px 19px -9px " + colorExtended.shadow,
-                justifyContent: "center",
+                justifyContent: desktop ? "center" : "left",
                 alignItems: "center",
                 marginLeft: desktop ? String(unitBetween) + ea : "",
                 marginTop: desktop ? "" : String(unitBetween) + ea,
+                paddingLeft: desktop ? "" : String(7) + ea,
               },
               child: {
                 text: "행정 서류 제출",
@@ -2438,6 +2465,18 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                       top: "calc(50% - " + String(mobileBlackCircleWidth / 2) + ea + ")",
                       left: String(mobileCircleLeft) + ea,
                     },
+                    next: {
+                      text: String(3),
+                      style: {
+                        display: desktop ? "none" : "inlnie-block",
+                        position: "absolute",
+                        top: String(2.5) + ea,
+                        fontSize: String(unitSize) + ea,
+                        fontWeight: String(300),
+                        color: colorExtended.yellow,
+                        right: String(7) + ea,
+                      },
+                    },
                   }
                 }
               }
@@ -2447,14 +2486,15 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 display: "inline-flex",
                 position: "relative",
                 height: String(unitHeight) + ea,
-                width: String(unitBoxWidthLong) + ea,
+                width: String(unitBoxWidthLong - (desktop ? 0 : 7)) + ea,
                 background: colorExtended.warmGray0,
                 borderRadius: String(unitHeight) + ea,
                 boxShadow: "0px 5px 19px -9px " + colorExtended.shadow,
-                justifyContent: "center",
+                justifyContent: desktop ? "center" : "left",
                 alignItems: "center",
                 marginLeft: desktop ? String(unitBetween) + ea : "",
                 marginTop: desktop ? "" : String(unitBetween) + ea,
+                paddingLeft: desktop ? "" : String(7) + ea,
               },
               child: {
                 text: "계약서 작성과 협업 매뉴얼 안내",
@@ -2510,6 +2550,18 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                       background: colorExtended.black,
                       top: "calc(50% - " + String(mobileBlackCircleWidth / 2) + ea + ")",
                       left: String(mobileCircleLeft) + ea,
+                    },
+                    next: {
+                      text: String(4),
+                      style: {
+                        display: desktop ? "none" : "inlnie-block",
+                        position: "absolute",
+                        top: String(2.5) + ea,
+                        fontSize: String(unitSize) + ea,
+                        fontWeight: String(300),
+                        color: colorExtended.yellow,
+                        right: String(7) + ea,
+                      },
                     },
                   }
                 }
