@@ -269,7 +269,7 @@ Alien.prototype.wssLaunching = async function () {
 
 Alien.prototype.smsLaunching = async function () {
   const instance = this;
-  const { fileSystem, dateToString, stringToDate, messageLog, messageSend, errorLog, equalJson, requestSystem } = this.mother;
+  const { fileSystem, dateToString, stringToDate, messageLog, messageSend, errorLog, equalJson, requestSystem, emergencyAlarm } = this.mother;
   const address = this.address;
   const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
   const sender = [ "15662566", "01027473403", "0220392252" ];
@@ -298,6 +298,7 @@ Alien.prototype.smsLaunching = async function () {
     let wsOpenEvent, wsMessageEvent, wsCloseEvent;
     let wsLaunching;
 
+    ws = {};
     Alien.stacks[telegramStackName] = "";
 
     app.use(useragent.express());
@@ -307,7 +308,7 @@ Alien.prototype.smsLaunching = async function () {
     wsLaunching = () => {}
     wsOpenEvent = async () => {
       try {
-        await errorLog("sms wss wake up");
+        await emergencyAlarm("sms wss wake up");
       } catch (e) {
         await errorLog(e.message);
         process.exit();
@@ -381,15 +382,14 @@ Alien.prototype.smsLaunching = async function () {
     }
     wsCloseEvent = async () => {
       try {
-        await errorLog("sms wss dead");
+        await emergencyAlarm("sms wss dead");
         ws = wsLaunching();
       } catch (e) {
-        await errorLog(e.message);
+        await emergencyAlarm(e.message);
         process.exit();
       }
     }
     wsLaunching = () => {
-      let ws;
       ws = new WebSocket(url);
       ws.on("open", wsOpenEvent);
       ws.on("message", wsMessageEvent);
