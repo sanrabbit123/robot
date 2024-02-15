@@ -97,7 +97,7 @@ const AspirantExplanationJs = function () {
   }
 }
 
-AspirantExplanationJs.binaryPath = "/middle/aspirant";
+AspirantExplanationJs.binaryPath = FRONTHOST + "/middle/aspirant";
 
 AspirantExplanationJs.prototype.insertInitBox = async function () {
   const instance = this;
@@ -137,7 +137,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     plusRatio = <%% 0.45, 0.7, 0, 0, 0 %%>;
     plusWidth = ((leftRightWidth * plusRatio) * 2) + standardWidth
 
-    firstBasePaddingTop = <%% 24, 24, 24, 24, 15.5 %%>;
+    firstBasePaddingTop = <%% 24, 24, 24, 24, 9 %%>;
 
     titleHeight = <%% 120, 106, 98, 84, 29 %%>;
 
@@ -148,14 +148,14 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     pinMargin = <%% 16, 16, 14, 12, 1.4 %%>;
     pinWidth = <%% 6, 6, 5, 4, 0.7 %%>;
 
-    firstBasePaddingBottom = <%% 170, 170, 160, 120, 24.5 %%>;
+    firstBasePaddingBottom = <%% 170, 170, 160, 120, 20 %%>;
     blueTop = <%% 200, 200, 200, 200, 20 %%>;
 
     subTitleSize = <%% 18, 18, 17, 15, 3.6 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 600 %%>;
     subTitleMarginTop = <%% 16, 16, 12, 10, 2.2 %%>;
 
-    illustMarginTop = <%% 116, 110, 80, 80, 12 %%>;
+    illustMarginTop = <%% 116, 110, 80, 80, 10 %%>;
 
     buttonMarginTop = <%% 4, 4, 24, 20, 3.6 %%>;
     buttonWidth = <%% 160, 145, 140, 130, 31 %%>;
@@ -412,7 +412,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
               mother: blockPrompt.firstChild,
               mode: "iframe",
               attribute: {
-                src: "/middle/aspirantSubmit?cliid=c1801_aa01s&entire=true&normal=true&dataonly=true",
+                src: FRONTHOST + "/aspirant.php?entire=true&normal=true&dataonly=true"
               },
               style: {
                 position: "absolute",
@@ -518,8 +518,8 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
 
     boxBetween = <%% 24, 24, 20, 20, 4 %%>;
 
-    basePaddingTop = <%% 170, 170, 160, 140, 24 %%>;
-    basePaddingBottom = <%% 200, 200, 190, 170, 27 %%>;
+    basePaddingTop = <%% 170, 170, 160, 140, 21 %%>;
+    basePaddingBottom = <%% 200, 200, 190, 170, 24 %%>;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
@@ -1195,8 +1195,8 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
     unitSize = <%% 21, 20, 18, 16, 3.5 %%>;
     unitWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    basePaddingTop = <%% 170, 170, 160, 140, 24 %%>;
-    basePaddingBottom = <%% 200, 200, 190, 170, 27 %%>;
+    basePaddingTop = <%% 170, 170, 160, 140, 20 %%>;
+    basePaddingBottom = <%% 200, 200, 190, 170, 24 %%>;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
@@ -2130,8 +2130,8 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
     unitBoxWidthLong = <%% 310, 270, 230, 190, 77 %%>;
     unitBetween = <%% 40, 20, 16, 10, 5 %%>;
 
-    basePaddingTop = <%% 170, 170, 160, 130, 24 %%>;
-    basePaddingBottom = <%% 200, 200, 190, 160, 27 %%>;
+    basePaddingTop = <%% 170, 170, 160, 130, 20 %%>;
+    basePaddingBottom = <%% 200, 200, 190, 160, 24 %%>;
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
     mobileUnitPaddingLeft = 10;
@@ -2676,8 +2676,8 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
     numberAreaWidth = <%% 80, 70, 64, 56, 8 %%>;
     titleAreaWidth = <%% 320, 310, 275, 220, 32 %%>;
 
-    basePaddingTop = <%% 170, 170, 160, 140, 24 %%>;
-    basePaddingBottom = <%% 200, 200, 190, 170, 27 %%>;
+    basePaddingTop = <%% 170, 170, 160, 140, 20 %%>;
+    basePaddingBottom = <%% 200, 200, 190, 170, 24 %%>;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
@@ -3503,8 +3503,8 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
     imageHeight = <%% 260, 250, 230, 200, 38 %%>;
     imageLeft = <%% 25, 25, 25, 25, 3 %%>;
 
-    basePaddingTop = <%% 170, 170, 160, 140, 24 %%>;
-    basePaddingBottom = <%% 200, 200, 190, 170, 27 %%>;
+    basePaddingTop = <%% 170, 170, 160, 140, 20 %%>;
+    basePaddingBottom = <%% 200, 200, 190, 170, 24 %%>;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
@@ -3618,7 +3618,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
       style: {
         display: "flex",
         position: desktop ? "absolute" : "absolute",
-        top: desktop ? String(basePaddingTop) + ea : String(36.5) + ea,
+        top: desktop ? String(basePaddingTop) + ea : String(32.5) + ea,
         width: withOut(0, ea),
         justifyContent: "start",
         alignItems: "center",
@@ -3748,7 +3748,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
       style: {
         display: "flex",
         position: desktop ? "absolute" : "absolute",
-        top: desktop ? String(basePaddingTop) + ea : String(30.5) + ea,
+        top: desktop ? String(basePaddingTop) + ea : String(26.5) + ea,
         width: withOut(0, ea),
         justifyContent: "end",
         alignItems: "center",
@@ -4345,48 +4345,55 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
 AspirantExplanationJs.prototype.resizeEvent = function () {
   const instance = this;
   const { homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong, colorExtended, standardWidth, totalContents, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+
   this.resizeStack = 0;
   this.resizeFrom = 0;
   this.resizePopup = 0;
-  const resizeDebounceEvent = function () {
-    let timeout;
-    const reEvent = function () {
-      homeliaisonAnalytics({
-        page: instance.pageName,
-        standard: instance.firstPageViewTime,
-        action: "aspirantPageResize",
-        data: {
-          delta: (new Date()).valueOf() - instance.firstPageViewTime.valueOf(),
-          date: new Date(),
-        },
-      }).then(() => {
-        window.location.reload();
-        instance.resizeStack = 0;
-      }).catch((err) => {
-        console.log(err);
-      });
+
+  if (desktop) {
+    const resizeDebounceEvent = function () {
+      let timeout;
+      const reEvent = function () {
+        homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "aspirantPageResize",
+          data: {
+            delta: (new Date()).valueOf() - instance.firstPageViewTime.valueOf(),
+            date: new Date(),
+          },
+        }).then(() => {
+          window.location.reload();
+          instance.resizeStack = 0;
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
+      let immediate = null;
+      return function (e) {
+        if (instance.resizeStack === 0) {
+          instance.resizeStack = 1;
+          instance.resizeFrom = window.innerWidth;
+        }
+        let context = this;
+        let args = arguments;
+        function later() {
+          timeout = null;
+          if (!immediate) { reEvent.apply(context, args); };
+        }
+        let callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, 250);
+        if (callNow) {
+          reEvent.apply(context, args);
+        }
+      }
     }
-    let immediate = null;
-    return function (e) {
-      if (instance.resizeStack === 0) {
-        instance.resizeStack = 1;
-        instance.resizeFrom = window.innerWidth;
-      }
-      let context = this;
-      let args = arguments;
-      function later() {
-        timeout = null;
-        if (!immediate) { reEvent.apply(context, args); };
-      }
-      let callNow = immediate && !timeout;
-      clearTimeout(timeout);
-      timeout = setTimeout(later, 250);
-      if (callNow) {
-        reEvent.apply(context, args);
-      }
-    }
+    window.addEventListener("resize", resizeDebounceEvent());
   }
-  window.addEventListener("resize", resizeDebounceEvent());
 }
 
 AspirantExplanationJs.prototype.launching = async function (loading) {
