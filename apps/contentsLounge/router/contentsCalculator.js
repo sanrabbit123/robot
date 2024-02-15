@@ -36,7 +36,7 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
       let future;
 
       future = new Date();
-      future.setDate(future.getDate() + 1);
+      future.setDate(future.getDate() + 14);
 
       realTargets = [];
       for (let obj of targets) {
