@@ -6926,9 +6926,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "정가희",
-    //     designer: "박미연",
-    //     link: "https://drive.google.com/drive/folders/1WbGTtNPXnoxyO-_8YUueN1HsxEWTxW9o",
+    //     client: null,
+    //     designer: "김윤지",
+    //     link: "https://drive.google.com/drive/folders/1I1kFaOaAgQ0FW2av-XJ1aBDXc5qYVTG4",
     //     pay: true
     //   },
     // ]);
@@ -6938,8 +6938,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "정가희",
-    //     designer: "박미연",
+    //     client: "이현아",
+    //     designer: "최지원",
     //   },
     // ]);
 
@@ -6956,8 +6956,8 @@ DevContext.prototype.launching = async function () {
     // let project;
     
     
-    // clientName = "송유진";
-    // designerName = "김윤진";
+    // clientName = "정가희";
+    // designerName = "박미연";
     
     // projects = await back.getProjectsByNames([ clientName, designerName ]);
     // if (projects.length > 0) {
@@ -6977,8 +6977,11 @@ DevContext.prototype.launching = async function () {
     //     designerObj = await back.getDesignerById(project.desid);
       
     //     if (clientObj !== null && designerObj !== null) {
+    //       await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid: clientObj.cliid, desid: designerObj.desid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
     //       await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, host: instance.address.frontinfo.host, path: "evaluation", proid: project.proid });
+    //       await sleep(2000);
     //       await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, host: instance.address.frontinfo.host, proid: project.proid });
+    //       await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
     //     }
     //   }
     // }
@@ -7000,16 +7003,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2401_aa01s", [
-    //   { porlid: "a125", index: 1 },
-    //   { porlid: "a125", index: 4 },
-    //   { porlid: "a125", index: 10 },
-    //   { porlid: "a125", index: 15 },
-    //   { porlid: "a125", index: 16 },
+    // await this.setProposalSettingForDesigner("d2402_aa01s", [
+    //   { porlid: "ghost", index: 7 },
+    //   { porlid: "ghost", index: 12 },
+    //   { porlid: "ghost", index: 2 },
+    //   { porlid: "ghost", index: 9 },
+    //   { porlid: "ghost", index: 15 },
+    //   { porlid: "ghost", index: 23 },
     // ], [
-    //   "가구와 조명을 공부한 미대 출신의 디자이너가 뻔하지 않은 특색있는 디자인을 제안해 드립니다.",
-    //   "보기에만 아름다운 집이 아닌 동선, 조도, 공간의 부피감을 세심하게 반영하여 편안한 공간으로 변화시켜드립니다!",
-    //   "실제와 가까운 느낌의 3D모델링과 영상으로 공간을 '미리' 만나볼 수 있습니다.",
+    //   "디스플레이 설계 출신으로 가구와 소품에 대한 지식이 풍부하며 스타일링에 능합니다.",
+    //   "모던하고 구조적으로 힘이 느껴지는 스타일로, 도시적이고 세련된 분위기를 잘 표현하십니다.",
+    //   "고객의 상황을 잘 고려하고, 그에 맞춰 최대한 작업하려고 노력하는 편입니다.",
     // ]);
 
 
