@@ -40,7 +40,6 @@
 const AspirantExplanationJs = function () {
   this.mother = new GeneralJs();
   this.colorExtended = {
-    mainBlue: "#9eb6d8",
     white: "#ffffff",
     whiteIcon: "#ffffff",
     whiteBlack: "#ffffff",
@@ -84,16 +83,20 @@ const AspirantExplanationJs = function () {
     yellow: "#ffbd3d",
     purple: "#ba7dd7",
     darkRed: "#d13939",
-    blue: "#5e9add",
-    blueMiddle: "#3273bb",
-    blueDark: "#2a4866",
+    mainBlue: "#a2bbc6",
+    blue: "#a2bbc6",
+    blueMiddle: "#97b8c9",
+    blueDark: "#7f9fb3",
+    blueLight: "#bed2d9",
+    blueWhite: "#dae5e9",
     ultimateBlack: "#000000",
-    subYellow: "#ffd574",
+    subRed: "#ee7e52",
+    subYellow: "#f5cc63",
+    yellowLine: "#cc921f",
     warmGray0: "#f2f2f2",
     warmGray1: "#ececec",
     warmGrayMiddle: "#dddddd",
     warmGray2: "#cccccc",
-    yellowLine: "#cc921f",
   }
 }
 
