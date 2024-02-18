@@ -4812,7 +4812,7 @@ AspirantSubmitJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, selfHref } = GeneralJs;
+    const { returnGet, ajaxJson, selfHref, colorExtended } = GeneralJs;
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
@@ -4849,13 +4849,13 @@ AspirantSubmitJs.prototype.launching = async function (loading) {
       });
     } else {
 
-      GeneralJs.colorChip.green = "#9eb6d8";
-      GeneralJs.colorChip.gradientGreen = "#404040";
-      GeneralJs.colorChip.softGreen = "#9eb6d8";
-      GeneralJs.colorChip.darkGreen = "#9eb6d8";
-      GeneralJs.colorChip.whiteGreen = "#9eb6d8";
-      GeneralJs.colorChip.middleGreen = "#9eb6d8";
-      GeneralJs.colorChip.liteGreen = "#9eb6d8";
+      GeneralJs.colorChip.green = colorExtended.mainBlue;
+      GeneralJs.colorChip.gradientGreen = colorExtended.black;
+      GeneralJs.colorChip.softGreen = colorExtended.mainBlue;
+      GeneralJs.colorChip.darkGreen = colorExtended.mainBlue;
+      GeneralJs.colorChip.whiteGreen = colorExtended.mainBlue;
+      GeneralJs.colorChip.middleGreen = colorExtended.mainBlue;
+      GeneralJs.colorChip.liteGreen = colorExtended.mainBlue;
 
       instance.insertAspirantBox();
     }
