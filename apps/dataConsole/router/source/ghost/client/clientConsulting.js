@@ -46,7 +46,7 @@ ClientConsultingJs.binaryPath = FRONTHOST + "/middle/consulting";
 
 ClientConsultingJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -226,7 +226,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
 ClientConsultingJs.prototype.insertConsultingBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson } = GeneralJs;
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -760,7 +760,6 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
 
   emailBlurEvent = function () {
     if (!/\@/.test(this.value) || !/\./.test(this.value)) {
-      window.alert("올바른 형태의 이메일로 적어주세요!");
       this.value = this.value.replace(/[\=\+\?\#\&\(\)]/gi, '');
     }
     instance.mother.setMemory({
@@ -968,7 +967,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
             position: "absolute",
             width: String(greenNoticeWidth1) + ea,
             left: "calc(50% - " + String((greenNoticeWidth1 / 2) + greenNoticePaddingLeft) + ea + ")",
-            background: colorChip.gradientGreen,
+            background: colorExtended.gradientBlue,
             fontSize: String(greenNoticeSize) + ea,
             fontWeight: String(greenNoticeWeight),
             color: colorChip.white,
@@ -1012,7 +1011,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
             position: "absolute",
             width: String(greenNoticeWidth3) + ea,
             left: "calc(50% - " + String((greenNoticeWidth3 / 2) + greenNoticePaddingLeft) + ea + ")",
-            background: colorChip.gradientGreen,
+            background: colorExtended.gradientBlue,
             fontSize: String(greenNoticeSize) + ea,
             fontWeight: String(greenNoticeWeight),
             color: colorChip.white,
@@ -1123,7 +1122,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
             position: "absolute",
             width: String(greenNoticeWidth0) + ea,
             left: "calc(50% - " + String((greenNoticeWidth0 / 2) + greenNoticePaddingLeft) + ea + ")",
-            background: colorChip.gradientGreen,
+            background: colorExtended.gradientBlue,
             fontSize: String(greenNoticeSize) + ea,
             fontWeight: String(greenNoticeWeight),
             color: colorChip.white,
@@ -1178,7 +1177,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
     //         position: "absolute",
     //         width: String(greenNoticeWidth1) + ea,
     //         left: "calc(50% - " + String((greenNoticeWidth1 / 2) + (greenNoticePaddingLeft / 2)) + ea + ")",
-    //         background: colorChip.gradientGreen,
+    //         background: colorExtended.gradientBlue,
     //         fontSize: String(greenNoticeSize) + ea,
     //         fontWeight: String(greenNoticeWeight),
     //         color: colorChip.white,
@@ -1222,7 +1221,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           dom.setAttribute("toggle", "on");
           dom.children[0].style.opacity = String(0);
           dom.children[1].style.opacity = String(1);
-          dom.children[2].style.color = colorChip.green;
+          dom.children[2].style.color = colorExtended.mainBlue;
           valueArr[index] = 1;
         } else {
           dom.setAttribute("toggle", "off");
@@ -1350,8 +1349,8 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       circle.setAttribute("toggle", "off");
       words.setAttribute("toggle", "off");
     } else {
-      circle.style.background = colorChip.green;
-      words.style.color = colorChip.green;
+      circle.style.background = colorExtended.mainBlue;
+      words.style.color = colorExtended.mainBlue;
       circle.setAttribute("toggle", "on");
       words.setAttribute("toggle", "on");
     }
@@ -1395,7 +1394,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   createNode({
     mother: leftBox,
     mode: "svg",
-    source: svgMaker.doubleQuote(colorChip.green),
+    source: svgMaker.doubleQuote(colorExtended.mainBlue),
     style: {
       display: "block",
       position: "relative",
@@ -1454,7 +1453,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -1531,7 +1530,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -1609,7 +1608,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -1687,7 +1686,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -1714,7 +1713,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           left: String(leftGrayType0) + ea,
           width: String(addressWidth) + ea,
           height: String(grayHeight) + ea,
-          background: colorChip.gradientGreen,
+          background: colorExtended.gradientBlue,
           borderRadius: String(3) + "px",
           cursor: "pointer",
         },
@@ -1725,7 +1724,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
               width: String(100) + '%',
               textAlign: "center",
               fontSize: String(addressSize) + ea,
-              fontWeight: String(addressWeight),
+              fontWeight: String(800),
               color: colorChip.white,
               position: "relative",
               top: String(addressTop) + ea,
@@ -1860,7 +1859,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -1939,7 +1938,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -1989,7 +1988,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           },
           {
             mode: "svg",
-            source: instance.mother.returnCheckBox(colorChip.green),
+            source: instance.mother.returnCheckBox(colorExtended.mainBlue),
             style: {
               position: "absolute",
               width: String(checkboxWidth) + ea,
@@ -2009,7 +2008,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
               top: String(mainTop) + ea,
               fontSize: String(mainSize) + ea,
               fontWeight: String(checkboxWeight),
-              color: colorChip.green,
+              color: colorExtended.mainBlue,
               verticalAlign: "top",
               cursor: "pointer",
             }
@@ -2049,7 +2048,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           },
           {
             mode: "svg",
-            source: instance.mother.returnCheckBox(colorChip.green),
+            source: instance.mother.returnCheckBox(colorExtended.mainBlue),
             style: {
               position: "absolute",
               width: String(checkboxWidth) + ea,
@@ -2098,7 +2097,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -2196,7 +2195,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -2246,7 +2245,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           },
           {
             mode: "svg",
-            source: instance.mother.returnCheckBox(colorChip.green),
+            source: instance.mother.returnCheckBox(colorExtended.mainBlue),
             style: {
               position: "absolute",
               width: String(checkboxWidth) + ea,
@@ -2266,7 +2265,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
               top: String(mainTop) + ea,
               fontSize: String(mainSize) + ea,
               fontWeight: String(checkboxWeight),
-              color: colorChip.green,
+              color: colorExtended.mainBlue,
               verticalAlign: "top",
               cursor: "pointer",
             }
@@ -2306,7 +2305,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           },
           {
             mode: "svg",
-            source: instance.mother.returnCheckBox(colorChip.green),
+            source: instance.mother.returnCheckBox(colorExtended.mainBlue),
             style: {
               position: "absolute",
               width: String(checkboxWidth) + ea,
@@ -2370,7 +2369,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -2422,7 +2421,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
             under: {
               fontSize: String(barDescriptionSubSize) + ea,
               fontWeight: String(descriptionWeight),
-              color: colorChip.green
+              color: colorExtended.mainBlue
             },
           },
           {
@@ -2587,7 +2586,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -2639,7 +2638,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
             under: {
               fontSize: String(barDescriptionSubSize) + ea,
               fontWeight: String(descriptionWeight),
-              color: colorChip.green
+              color: colorExtended.mainBlue
             },
           },
           {
@@ -2724,7 +2723,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                       top: String(barTop) + ea,
                       height: String(barHeight) + ea,
                       borderRadius: String(barHeight + 1) + ea,
-                      background: colorChip.gradientGreen,
+                      background: colorExtended.gradientBlue,
                       width: withOut(0, ea),
                       left: String(0) + ea,
                     }
@@ -2784,7 +2783,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -2955,7 +2954,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           position: "relative",
           fontSize: String(agreeSize) + ea,
           fontWeight: String(agreeWeight),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
           lineHeight: String(agreeLineHeight),
           cursor: "pointer",
         }
@@ -2974,7 +2973,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           width: String(agreeCircleRadius) + ea,
           height: String(agreeCircleRadius) + ea,
           borderRadius: String(agreeCircleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(agreeCircleTop) + ea,
           marginRight: String(agreeCircleMarginRight) + ea,
           cursor: "pointer",
@@ -3001,7 +3000,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           display: "inline-flex",
           width: String(submitButtonWidth) + ea,
           height: String(submitButtonHeight) + ea,
-          background: colorChip.gradientGreen,
+          background: colorExtended.gradientBlue,
           borderRadius: String(5) + "px",
           justifyContent: "center",
           alignItems: "center",
@@ -3010,12 +3009,12 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         },
         children: [
           {
-            text: "상담 신청하기",
+            text: "서비스 신청하기",
             style: {
               display: "inline-block",
               position: "relative",
               fontSize: String(submitSize) + ea,
-              fontWeight: String(submitWeight),
+              fontWeight: String(800),
               color: colorChip.white,
               lineHeight: String(submitLineHeight),
               top: String(submitTextTop) + ea,
@@ -3045,7 +3044,7 @@ ClientConsultingJs.prototype.finalSubmit = function () {
   const instance = this;
   const inputClassName = "inputClassName";
   const agreeTargetClassName = "agreeTargetClassName";
-  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue } = GeneralJs;
+  const { ajaxJson, colorChip, colorExtended, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue } = GeneralJs;
   return async function (e) {
     try {
       const property = "property";
@@ -3154,7 +3153,7 @@ ClientConsultingJs.prototype.finalSubmit = function () {
                 },
               });
               scrollTo(window, firstDom, visualSpecific);
-              firstDom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+              firstDom.previousElementSibling.style.border = "1px solid " + colorExtended.mainBlue;
               if (typeof firstDom.focus === "function") {
                 firstDom.focus();
               }
@@ -3264,7 +3263,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
   const { ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone } = GeneralJs;
   let whiteBlock;
   let style;
   let blockHeight, blockMarginBottom;
@@ -3472,7 +3471,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
           position: "relative",
           width: String(buttonWidth) + ea,
           height: String(100) + '%',
-          background: colorChip.gradientGreen,
+          background: colorExtended.gradientBlue,
           borderRadius: String(5) + "px",
           cursor: "pointer",
         },
@@ -3483,7 +3482,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
               position: "absolute",
               top: String(buttonTextTop) + ea,
               fontSize: String(buttonTextSize) + ea,
-              fontWeight: String(400),
+              fontWeight: String(800),
               color: colorChip.white,
               width: String(100) + '%',
               textAlign: "center",
@@ -3501,7 +3500,7 @@ ClientConsultingJs.prototype.insertPannelBox = function () {
 
 ClientConsultingJs.prototype.insertStrongBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -3688,7 +3687,7 @@ ClientConsultingJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson } = GeneralJs;
+    const { returnGet, ajaxJson, colorExtended } = GeneralJs;
     const getObj = returnGet();
 
     this.inputClassName = "consultingInput";

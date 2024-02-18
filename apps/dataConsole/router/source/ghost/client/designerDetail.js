@@ -74,7 +74,7 @@ DesignerDetailJs.prototype.generateGsArray = function (number) {
 
 DesignerDetailJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -114,7 +114,7 @@ DesignerDetailJs.prototype.insertInitBox = function () {
 
 DesignerDetailJs.prototype.designerBlock = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer, selfHref } = GeneralJs;
   const { ea, media } = this;
   const { designers, designerTong } = this;
   const mobile = media[4];
@@ -224,13 +224,13 @@ DesignerDetailJs.prototype.designerBlock = function () {
 
     if (toggle === "off") {
 
-      thisTarget.style.color = colorChip.green;
-      thisCircleBase.style.background = colorChip.green;
+      thisTarget.style.color = colorExtended.mainBlue;
+      thisCircleBase.style.background = colorExtended.mainBlue;
       thisCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
       thisTarget.setAttribute("toggle", "on");
 
-      oppositeTarget.style.color = colorChip.deactive;
-      oppositeCircleBase.style.background = colorChip.gray5;
+      oppositeTarget.style.color = colorExtended.deactive;
+      oppositeCircleBase.style.background = colorExtended.gray5;
       oppositeCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
       oppositeTarget.setAttribute("toggle", "off");
 
@@ -242,13 +242,13 @@ DesignerDetailJs.prototype.designerBlock = function () {
 
     } else {
 
-      thisTarget.style.color = colorChip.deactive;
-      thisCircleBase.style.background = colorChip.gray5;
+      thisTarget.style.color = colorExtended.deactive;
+      thisCircleBase.style.background = colorExtended.gray5;
       thisCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
       thisTarget.setAttribute("toggle", "off");
 
-      oppositeTarget.style.color = colorChip.green;
-      oppositeCircleBase.style.background = colorChip.green;
+      oppositeTarget.style.color = colorExtended.mainBlue;
+      oppositeCircleBase.style.background = colorExtended.mainBlue;
       oppositeCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
       oppositeTarget.setAttribute("toggle", "on");
 
@@ -349,7 +349,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
             position: "relative",
             fontSize: String(careerSize) + ea,
             fontWeight: String(careerWeight),
-            color: colorChip.green,
+            color: colorExtended.mainBlue,
             top: String(careerTextTop) + ea,
           },
           bold: {
@@ -428,7 +428,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
             position: "relative",
             fontSize: String(buttonSize) + ea,
             fontWeight: String(buttonWeight),
-            color: colorChip.green,
+            color: colorExtended.mainBlue,
             cursor: "pointer",
             transition: "all 0.5s ease",
           },
@@ -439,7 +439,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
                 position: "absolute",
                 width: String(buttonWidth) + ea,
                 height: String(buttonHeight) + ea,
-                background: colorChip.green,
+                background: colorExtended.mainBlue,
                 top: String(buttonTextTop) + ea,
                 left: String(buttonLeft) + ea,
                 borderRadius: String(buttonHeight) + ea,
@@ -558,7 +558,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
 
 DesignerDetailJs.prototype.insertPortfolioBase = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, baseTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -583,7 +583,7 @@ DesignerDetailJs.prototype.insertPortfolioBase = function () {
 
 DesignerDetailJs.prototype.portfolioBlock = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, baseTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -647,7 +647,7 @@ DesignerDetailJs.prototype.portfolioBlock = function () {
   photoMarginBottom = <%% (isMac() ? 20 : 22), (isMac() ? 18 : 20), (isMac() ? 18 : 20), (isMac() ? 18 : 20), 2.3 %%>;
 
   quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
 
   titleSize = <%% 21, 17, 17, 15, 3 %%>;
@@ -845,7 +845,7 @@ DesignerDetailJs.prototype.portfolioBlock = function () {
                 },
                 bold: {
                   fontWeight: String(subInfoWeight),
-                  color: colorChip.green,
+                  color: colorExtended.mainBlue,
                 }
               },
               {
@@ -897,7 +897,7 @@ DesignerDetailJs.prototype.portfolioBlock = function () {
             children: [
               {
                 mode: "svg",
-                source: svgMaker.doubleQuote(colorChip.green),
+                source: svgMaker.doubleQuote(colorExtended.mainBlue),
                 style: {
                   display: "inline-block",
                   height: String(quoteHeight) + ea,
@@ -940,7 +940,7 @@ DesignerDetailJs.prototype.portfolioBlock = function () {
 
 DesignerDetailJs.prototype.portfolioPhoto = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref, swipePatch } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref, swipePatch } = GeneralJs;
   const { ea, media, baseTong, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1242,7 +1242,7 @@ DesignerDetailJs.prototype.portfolioPhoto = function () {
 
 DesignerDetailJs.prototype.insertBelowButton = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, baseTong, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1333,7 +1333,7 @@ DesignerDetailJs.prototype.insertBelowButton = function () {
 
 DesignerDetailJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce, serviceParsing, setMetaData, homeliaisonAnalytics, dateToString } = GeneralJs;
+  const { returnGet, ajaxJson, setQueue, setDebounce, colorExtended, serviceParsing, setMetaData, homeliaisonAnalytics, dateToString } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 

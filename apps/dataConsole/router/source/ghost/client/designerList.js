@@ -46,7 +46,7 @@ DesignerListJs.binaryPath = FRONTHOST + "/middle/designer";
 
 DesignerListJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -217,13 +217,13 @@ DesignerListJs.prototype.insertInitBox = function () {
 
         if (toggle === "off") {
 
-          thisTarget.style.color = colorChip.green;
-          thisCircleBase.style.background = colorChip.green;
+          thisTarget.style.color = colorExtended.mainBlue;
+          thisCircleBase.style.background = colorExtended.mainBlue;
           thisCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
           thisTarget.setAttribute("toggle", "on");
 
-          oppositeTarget.style.color = colorChip.deactive;
-          oppositeCircleBase.style.background = colorChip.gray5;
+          oppositeTarget.style.color = colorExtended.deactive;
+          oppositeCircleBase.style.background = colorExtended.gray5;
           oppositeCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
           oppositeTarget.setAttribute("toggle", "off");
 
@@ -237,13 +237,13 @@ DesignerListJs.prototype.insertInitBox = function () {
 
         } else {
 
-          thisTarget.style.color = colorChip.deactive;
-          thisCircleBase.style.background = colorChip.gray5;
+          thisTarget.style.color = colorExtended.deactive;
+          thisCircleBase.style.background = colorExtended.gray5;
           thisCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
           thisTarget.setAttribute("toggle", "off");
 
-          oppositeTarget.style.color = colorChip.green;
-          oppositeCircleBase.style.background = colorChip.green;
+          oppositeTarget.style.color = colorExtended.mainBlue;
+          oppositeCircleBase.style.background = colorExtended.mainBlue;
           oppositeCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
           oppositeTarget.setAttribute("toggle", "on");
 
@@ -531,7 +531,7 @@ DesignerListJs.prototype.insertInitBox = function () {
           position: "relative",
           fontSize: String(buttonSize) + ea,
           fontWeight: String(buttonWeight),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
           cursor: "pointer",
           transition: "all 0.5s ease",
         },
@@ -542,7 +542,7 @@ DesignerListJs.prototype.insertInitBox = function () {
               position: "absolute",
               width: String(buttonWidth) + ea,
               height: String(buttonHeight) + ea,
-              background: colorChip.green,
+              background: colorExtended.mainBlue,
               top: String(buttonTextTop) + ea,
               left: String(buttonLeft) + ea,
               borderRadius: String(buttonHeight) + ea,
@@ -673,13 +673,13 @@ DesignerListJs.prototype.insertInitBox = function () {
             for (let dom of targets) {
               if (dom === this) {
                 dom.setAttribute("toggle", "on");
-                dom.firstChild.style.color = colorChip.black;
-                dom.firstChild.querySelector('b').style.color = colorChip.green;
+                dom.firstChild.style.color = colorExtended.black;
+                dom.firstChild.querySelector('b').style.color = colorExtended.mainBlue;
                 thisValue = dom.getAttribute("value");
               } else {
                 dom.setAttribute("toggle", "off");
-                dom.firstChild.style.color = colorChip.deactive;
-                dom.firstChild.querySelector('b').style.color = colorChip.deactive;
+                dom.firstChild.style.color = colorExtended.deactive;
+                dom.firstChild.querySelector('b').style.color = colorExtended.deactive;
               }
             }
 
@@ -760,7 +760,7 @@ DesignerListJs.prototype.insertInitBox = function () {
 
 DesignerListJs.prototype.designerList = function (search = null) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -863,7 +863,7 @@ DesignerListJs.prototype.designerList = function (search = null) {
 
 DesignerListJs.prototype.designerBlock = function (search = null) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer, designerMthParsing, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer, designerMthParsing, selfHref } = GeneralJs;
   const { ea, media } = this;
   const { designers, designerTong } = this;
   const mobile = media[4];
@@ -1034,8 +1034,8 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             borderRadius: String(photoWidth) + ea,
             width: String(photoWidth) + ea,
             height: String(photoWidth) + ea,
-            background: colorChip.gray1,
-            background: designer.analytics.grade === 1 ? colorChip.gradientGreen : colorChip.gray1,
+            background: colorExtended.gray1,
+            background: designer.analytics.grade === 1 ? colorExtended.gradientBlue : colorExtended.gray1,
             verticalAlign: "top",
             cursor: "pointer",
             justifyContent: "center",
@@ -1053,7 +1053,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
                 justifyContent: "center",
                 alignItems: "center",
                 textAlign: "center",
-                background: colorChip.white,
+                background: colorExtended.white,
               },
               children: [
                 {
@@ -1127,7 +1127,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             display: "inline-block",
             fontSize: String(titleSize) + ea,
             fontWeight: String(titleWeight),
-            color: colorChip.black,
+            color: colorExtended.black,
             marginRight: String(careerBetween) + ea,
           }
         },
@@ -1138,18 +1138,18 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             position: "relative",
             fontSize: String(careerSize) + ea,
             fontWeight: String(careerWeight),
-            color: colorChip.green,
+            color: colorExtended.mainBlue,
             top: String(careerTextTop) + ea,
           },
           bold: {
             fontSize: String(careerSize) + ea,
             fontWeight: String(careerWeight),
-            color: colorChip.deactive,
+            color: colorExtended.deactive,
           }
         },
         {
           mode: "svg",
-          source: instance.mother.returnMainMark(colorChip.green),
+          source: instance.mother.returnMainMark(colorExtended.mainBlue),
           style: {
             display: "none",
             display: designer.analytics.grade === 1 ? "inline-block" : "none",
@@ -1248,7 +1248,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
         mode: "svg",
         mother: tagTong,
         class: [ "hoverDefault_lite" ],
-        source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorChip.green),
+        source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorExtended.mainBlue),
         style: {
           position: "absolute",
           right: String(0) + ea,
@@ -1265,7 +1265,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
 DesignerListJs.prototype.designerListWithReview = function (search = null) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1364,7 +1364,7 @@ DesignerListJs.prototype.designerListWithReview = function (search = null) {
 
 DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer, designerMthParsing, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, cleanChildren, designerCareer, designerMthParsing, selfHref } = GeneralJs;
   const { ea, media } = this;
   const { designers, designerTong } = this;
   const mobile = media[4];
@@ -1494,7 +1494,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
   photoMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
 
   quoteHeight = <%% 9, 8, 8, 7, 1.6 %%>;
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
 
   reviewTitleSize = <%% 17, 17, 17, 15, 3 %%>;
@@ -1676,7 +1676,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
             display: "inline-block",
             fontSize: String(titleSize) + ea,
             fontWeight: String(titleWeight),
-            color: colorChip.black,
+            color: colorExtended.black,
             marginRight: String(careerBetween) + ea,
           }
         },
@@ -1687,13 +1687,13 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
             position: "relative",
             fontSize: String(careerSize) + ea,
             fontWeight: String(careerWeight),
-            color: colorChip.green,
+            color: colorExtended.mainBlue,
             top: String(careerTextTop) + ea,
           },
           bold: {
             fontSize: String(careerSize) + ea,
             fontWeight: String(careerWeight),
-            color: colorChip.deactive,
+            color: colorExtended.deactive,
           }
         },
       ]
@@ -1704,7 +1704,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
         display: "block",
         width: String(100) + '%',
         height: String(grayBarTop) + ea,
-        borderBottom: "1px solid " + colorChip.gray3,
+        borderBottom: "1px solid " + colorExtended.gray3,
       }
     });
     createNode({
@@ -1715,7 +1715,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
         marginTop: String(grayBarBottom) + ea,
         fontSize: String(descriptionSize) + ea,
         fontWeight: String(descriptionWeight),
-        color: colorChip.black,
+        color: colorExtended.black,
         lineHeight: String(descriptionLineHeight),
         height: desktop ? "" : String(contentsBlockHeight) + ea,
         overflow: desktop ? "" : "scroll",
@@ -1765,7 +1765,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
               position: "relative",
               fontSize: String(tagSize) + ea,
               fontWeight: String(tagWeight),
-              color: colorChip.black,
+              color: colorExtended.black,
               textAlign: "center",
             }
           }
@@ -1781,7 +1781,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
         mode: "svg",
         mother: tagTong,
         class: [ "hoverDefault_lite" ],
-        source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorChip.green),
+        source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorExtended.mainBlue),
         style: {
           position: "absolute",
           right: String(0) + ea,
@@ -1936,7 +1936,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
               children: [
                 {
                   mode: "svg",
-                  source: svgMaker.doubleQuote(colorChip.green),
+                  source: svgMaker.doubleQuote(colorExtended.mainBlue),
                   style: {
                     display: "inline-block",
                     height: String(quoteHeight) + ea,
@@ -1952,7 +1952,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
                     display: "inline-block",
                     fontSize: String(reviewTitleSize) + ea,
                     fontWeight: String(reviewTitleWeight),
-                    color: colorChip.black,
+                    color: colorExtended.black,
                     marginLeft: String(reviewTitleMarginLeft) + ea,
                     width: withOut(quoteWidth + reviewTitleMarginLeft, ea),
                     verticalAlign: "top",
@@ -2002,7 +2002,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
 
 DesignerListJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce, serviceParsing } = GeneralJs;
+  const { returnGet, ajaxJson, setQueue, colorExtended, setDebounce, serviceParsing } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 

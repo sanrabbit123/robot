@@ -45,7 +45,7 @@ ServiceDetailJs.binaryPath = FRONTHOST + "/middle/detail";
 
 ServiceDetailJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, mode } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -233,7 +233,7 @@ ServiceDetailJs.prototype.insertInitBox = function () {
 
 ServiceDetailJs.prototype.insertStartBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, svgMaker, serviceParsing } = GeneralJs;
   const { ea, media, baseTong, mode } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -443,7 +443,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   let contents;
   let middleTongPaddinngTop;
   let middleTongPaddingBottom;
@@ -682,7 +682,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
               left: String(numberLeft) + ea,
               fontSize: String(numberSize) + ea,
               fontWeight: String(numberWeight),
-              color: colorChip.green,
+              color: colorExtended.mainBlue,
               fontStyle: "italic",
               fontFamily: "graphik",
             }
@@ -781,7 +781,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
               left: String(numberLeft) + ea,
               fontSize: String(numberSize) + ea,
               fontWeight: String(numberWeight),
-              color: colorChip.green,
+              color: colorExtended.mainBlue,
               fontStyle: "italic",
               fontFamily: "graphik",
             }
@@ -877,7 +877,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
               left: String(numberLeft) + ea,
               fontSize: String(numberSize) + ea,
               fontWeight: String(numberWeight),
-              color: colorChip.green,
+              color: colorExtended.mainBlue,
               fontStyle: "italic",
               fontFamily: "graphik",
             }
@@ -898,7 +898,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
                   position: "relative",
                   fontSize: String(threeSize) + ea,
                   fontWeight: String(threeWeight),
-                  color: colorChip.green,
+                  color: colorExtended.mainBlue,
                 }
               },
             ]
@@ -941,7 +941,7 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   let whiteBlock;
   let bottomMargin;
   let slideTong;
@@ -1390,7 +1390,7 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
               width: withOut(0, ea),
               height: String(barHeight) + ea,
               borderRadius: String(5) + "px",
-              background: colorChip.green,
+              background: colorExtended.mainBlue,
               marginBottom: String(barMarginBottom) + ea,
             }
           },
@@ -1409,7 +1409,7 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
                 position: "relative",
                 fontSize: String(feeDescriptionSize) + ea,
                 fontWeight: String(feeDescriptionWeightBold),
-                color: colorChip.green,
+                color: colorExtended.mainBlue,
               }
             }
           }
@@ -1468,7 +1468,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   let whiteBlock;
   let bottomMargin;
   let slideTong;
@@ -1716,7 +1716,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
               fontWeight: String(diagramEnglishWeight),
               fontFamily: "graphik",
               fontStyle: "italic",
-              color: colorChip.green,
+              color: colorExtended.mainBlue,
             }
           },
           {
@@ -2006,7 +2006,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
               width: withOut(0, ea),
               height: String(barHeight) + ea,
               borderRadius: String(5) + "px",
-              background: colorChip.green,
+              background: colorExtended.mainBlue,
               marginBottom: String(barMarginBottom) + ea,
             }
           },
@@ -2025,7 +2025,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
                 position: "relative",
                 fontSize: String(feeDescriptionSize) + ea,
                 fontWeight: String(feeDescriptionWeightBold),
-                color: colorChip.green,
+                color: colorExtended.mainBlue,
               }
             }
           }
@@ -2125,7 +2125,7 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   const newBaseTong = pastBaseTong.cloneNode(false);
   let bottomMargin;
   let margin;
@@ -2390,7 +2390,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker, uniqueValue } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker, uniqueValue } = GeneralJs;
   const reviewBlockClassName = "reviewBlockClassName";
   const imageRatio = (210 / 297);
   let blankBlock;
@@ -2980,7 +2980,7 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   const newBaseTong = pastBaseTong.cloneNode(false);
   let topMargin;
   let bottomMargin;
@@ -3278,7 +3278,7 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
                   fontWeight: String(500),
                   fontFamily: "graphik",
                   fontStyle: "italic",
-                  color: colorChip.green
+                  color: colorExtended.mainBlue
                 }
               },
               {
@@ -3566,7 +3566,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   const newBaseTong = pastBaseTong.cloneNode(false);
   let topMargin;
   let bottomMargin;
@@ -3940,7 +3940,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
                   width: String(centerCircleWidth) + ea,
                   height: String(centerCircleWidth) + ea,
                   borderRadius: String(centerCircleWidth) + ea,
-                  background: colorChip.gradientGreen,
+                  background: colorChip.gradientBlue,
                   justifyContent: "center",
                   alignItems: "center",
                 },
@@ -4050,7 +4050,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
                   borderRadius: String(8) + "px",
                   alignItems: "center",
                   justifyContent: "center",
-                  background: colorChip.gradientGreen,
+                  background: colorChip.gradientBlue,
                 },
                 child: {
                   text: "after",
@@ -4189,7 +4189,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
                   width: String(centerCircleWidth) + ea,
                   height: String(centerCircleWidth) + ea,
                   borderRadius: String(centerCircleWidth) + ea,
-                  background: colorChip.gradientGreen,
+                  background: colorChip.gradientBlue,
                   justifyContent: "center",
                   alignItems: "center",
                 },
@@ -4299,7 +4299,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
                   borderRadius: String(8) + "px",
                   alignItems: "center",
                   justifyContent: "center",
-                  background: colorChip.gradientGreen,
+                  background: colorChip.gradientBlue,
                 },
                 child: {
                   text: "after",
@@ -4411,7 +4411,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   const newBaseTong = pastBaseTong.cloneNode(false);
   let topMargin;
   let bottomMargin;
@@ -5097,7 +5097,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
             style: {
               width: String(freeWidth) + ea,
               height: String(freeHeight) + ea,
-              background: colorChip.gradientGreen,
+              background: colorChip.gradientBlue,
               borderRadius: String(freeHeight) + ea,
               display: "inline-flex",
               justifyContent: "center",
@@ -5252,7 +5252,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
                             height: String(blackGrayFactorGreenHeight) + ea,
                             width: String(100 * number) + '%',
                             borderRadius: String(blackGrayFactorGreenHeight) + ea,
-                            background: colorChip.gradientGreen,
+                            background: colorChip.gradientBlue,
                           }
                         }
                       ]
@@ -5290,7 +5290,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
             style: {
               width: String(freeWidth) + ea,
               height: String(freeHeight) + ea,
-              background: colorChip.gradientGreen,
+              background: colorChip.gradientBlue,
               borderRadius: String(freeHeight) + ea,
               display: "inline-flex",
               justifyContent: "center",
@@ -5446,7 +5446,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
                             height: String(blackGrayFactorGreenHeight) + ea,
                             width: String(100 * number) + '%',
                             borderRadius: String(blackGrayFactorGreenHeight) + ea,
-                            background: colorChip.gradientGreen,
+                            background: colorChip.gradientBlue,
                           }
                         }
                       ]
@@ -5654,7 +5654,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
                     display: "flex",
                     flexDirection: "column",
                     borderRadius: String(8) + "px",
-                    background: greenBoo ? colorChip.gradientGreen : colorChip.black,
+                    background: greenBoo ? colorChip.gradientBlue : colorChip.black,
                     width: withOut(0, ea),
                     height: String(blackTongHeight2) + ea,
                     justifyContent: "center",
@@ -5700,7 +5700,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
                       fontSize: String(innerTitleSize) + ea,
                       fontWeight: String(500),
                       lineHeight: String(innerTitleLineHeight),
-                      color: /없음/gi.test(str) ? colorChip.deactive : (greenBoo ? colorChip.green : colorChip.black),
+                      color: /없음/gi.test(str) ? colorChip.deactive : (greenBoo ? colorExtended.mainBlue : colorChip.black),
                       position: "relative",
                       display: "block",
                     }
@@ -5813,7 +5813,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
                     display: "flex",
                     flexDirection: "column",
                     borderRadius: String(8) + "px",
-                    background: greenBoo ? colorChip.gradientGreen : colorChip.black,
+                    background: greenBoo ? colorChip.gradientBlue : colorChip.black,
                     width: withOut(0, ea),
                     height: String(blackTongHeight2) + ea,
                     justifyContent: "center",
@@ -5859,7 +5859,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
                       fontSize: String(2.5) + ea,
                       fontWeight: String(500),
                       lineHeight: String(innerTitleLineHeight),
-                      color: /없음/gi.test(str) ? colorChip.deactive : (greenBoo ? colorChip.green : colorChip.black),
+                      color: /없음/gi.test(str) ? colorChip.deactive : (greenBoo ? colorExtended.mainBlue : colorChip.black),
                       position: "relative",
                       display: "block",
                     }
@@ -5922,7 +5922,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   const newBaseTong = pastBaseTong.cloneNode(false);
   let topMargin;
   let bottomMargin;
@@ -6385,7 +6385,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
         style: {
           fontSize: String(box0Size) + ea,
           fontWeight: String(box0Weight),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
           position: "relative",
           top: String(box0TextTop) + ea,
         },
@@ -6396,7 +6396,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
             marginRight: String(box2LineMargin) + ea,
             width: String(box2LineWidth) + ea,
             height: String(0),
-            borderBottom: "1px dashed " + colorChip.green
+            borderBottom: "1px dashed " + colorExtended.mainBlue
           }
         }
       }
@@ -6414,7 +6414,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker, selfHref, cleanChildren } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker, selfHref, cleanChildren } = GeneralJs;
   const newBaseTong = pastBaseTong.cloneNode(false);
   const box1ButtonTargetsClassName = "box1ButtonTargetsClassName";
   let topMargin;
@@ -6718,7 +6718,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
       style: {
         fontSize: String(box0Size) + ea,
         fontWeight: String(box0Weight),
-        color: colorChip.green,
+        color: colorExtended.mainBlue,
         position: "relative",
         top: String(box0TextTop) + ea,
         display: "inline-block",
@@ -6750,7 +6750,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
               if (dom === this) {
                 dom.firstChild.firstChild.style.color = colorChip.white;
                 dom.firstChild.lastChild.style.color = colorChip.white;
-                dom.style.background = colorChip.softGreen;
+                dom.style.background = colorExtended.mainBlue;
               } else {
                 dom.firstChild.firstChild.style.color = colorChip.black;
                 dom.firstChild.lastChild.style.color = colorChip.black;
@@ -6904,7 +6904,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
                     fontWeight: String(box2NumberWeight),
                     fontFamily: "graphik",
                     fontStyle: "italic",
-                    color: colorChip.green,
+                    color: colorExtended.mainBlue,
                     width: String(box2NumberWidth) + ea,
                   }
                 },
@@ -6998,7 +6998,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
                     fontWeight: String(box2NumberWeight),
                     fontFamily: "graphik",
                     fontStyle: "italic",
-                    color: colorChip.green,
+                    color: colorExtended.mainBlue,
                     width: String(box2NumberWidth) + ea,
                   }
                 },
@@ -7092,7 +7092,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
                     fontWeight: String(box2NumberWeight),
                     fontFamily: "graphik",
                     fontStyle: "italic",
-                    color: colorChip.green,
+                    color: colorExtended.mainBlue,
                     width: String(box2NumberWidth) + ea,
                   }
                 },
@@ -7186,7 +7186,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
                     fontWeight: String(box2NumberWeight),
                     fontFamily: "graphik",
                     fontStyle: "italic",
-                    color: colorChip.green,
+                    color: colorExtended.mainBlue,
                     width: String(box2NumberWidth) + ea,
                   }
                 },
@@ -7235,7 +7235,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
         position: "relative",
         width: String(finalButtonWidth) + ea,
         height: String(finalButtonHeight) + ea,
-        background: colorChip.gradientGreen,
+        background: colorChip.gradientBlue,
         borderRadius: String(8) + "px",
         alignItems: "center",
         justifyContent: "center",
@@ -7265,7 +7265,7 @@ ServiceDetailJs.prototype.insertContextBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker, selfHref } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker, selfHref } = GeneralJs;
   let contents;
   let middleTongPaddinngTop;
   let middleTongPaddingBottom;
@@ -7384,7 +7384,7 @@ ServiceDetailJs.prototype.insertContextBox = function () {
           "인테리어 시공 없이 가구나 패브릭, 소품만",
           "우리 집 무드를 변화시켜주는 스타일링",
         ],
-        color: "#bfb8b0",
+        color: colorExtended.mainBlue,
         background: ServiceDetailJs.binaryPath + "/" + "startf0.jpg",
         href: FRONTHOST + "/service.php?mode=furnishing",
       },
@@ -7395,7 +7395,7 @@ ServiceDetailJs.prototype.insertContextBox = function () {
           "집 컨디션에 맞는 범위의 시공을 진행",
           "컨셉에 맞게 변화시켜주는 스타일링",
         ],
-        color: "#b1ae9d",
+        color: colorExtended.mainBlue,
         background: ServiceDetailJs.binaryPath + "/" + "starts0.jpg",
         href: FRONTHOST + "/service.php?mode=styling",
       },
@@ -7406,7 +7406,7 @@ ServiceDetailJs.prototype.insertContextBox = function () {
           "원하는 스타일과 라이프 패턴에 맞게 기획",
           "전체적인 구조를 변경하는 스타일링",
         ],
-        color: "#546d81",
+        color: colorExtended.mainBlue,
         background: ServiceDetailJs.binaryPath + "/" + "startt0.jpg",
         href: FRONTHOST + "/service.php?mode=total",
       },
@@ -7737,7 +7737,7 @@ ServiceDetailJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip, homeliaisonAnalytics, dateToString } = GeneralJs;
+    const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip, colorExtended, homeliaisonAnalytics, dateToString } = GeneralJs;
     const getObj = returnGet();
     let newBaseTong, baseTong;
     let mode;

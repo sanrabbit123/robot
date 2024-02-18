@@ -74,7 +74,7 @@ ReviewListJs.prototype.generateGsArray = function (number) {
 
 ReviewListJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -263,13 +263,13 @@ ReviewListJs.prototype.insertInitBox = function () {
 
         if (toggle === "off") {
 
-          thisTarget.style.color = colorChip.green;
-          thisCircleBase.style.background = colorChip.green;
+          thisTarget.style.color = colorExtended.mainBlue;
+          thisCircleBase.style.background = colorExtended.mainBlue;
           thisCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
           thisTarget.setAttribute("toggle", "on");
 
-          oppositeTarget.style.color = colorChip.deactive;
-          oppositeCircleBase.style.background = colorChip.gray5;
+          oppositeTarget.style.color = colorExtended.deactive;
+          oppositeCircleBase.style.background = colorExtended.gray5;
           oppositeCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
           oppositeTarget.setAttribute("toggle", "off");
 
@@ -286,13 +286,13 @@ ReviewListJs.prototype.insertInitBox = function () {
 
         } else {
 
-          thisTarget.style.color = colorChip.deactive;
-          thisCircleBase.style.background = colorChip.gray5;
+          thisTarget.style.color = colorExtended.deactive;
+          thisCircleBase.style.background = colorExtended.gray5;
           thisCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
           thisTarget.setAttribute("toggle", "off");
 
-          oppositeTarget.style.color = colorChip.green;
-          oppositeCircleBase.style.background = colorChip.green;
+          oppositeTarget.style.color = colorExtended.mainBlue;
+          oppositeCircleBase.style.background = colorExtended.mainBlue;
           oppositeCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
           oppositeTarget.setAttribute("toggle", "on");
 
@@ -551,7 +551,7 @@ ReviewListJs.prototype.insertInitBox = function () {
           position: "relative",
           fontSize: String(buttonSize) + ea,
           fontWeight: String(buttonWeight),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
           cursor: "pointer",
           transition: "all 0.5s ease",
         },
@@ -562,7 +562,7 @@ ReviewListJs.prototype.insertInitBox = function () {
               position: "absolute",
               width: String(buttonWidth) + ea,
               height: String(buttonHeight) + ea,
-              background: colorChip.green,
+              background: colorExtended.mainBlue,
               top: String(buttonTextTop) + ea,
               left: String(buttonLeft) + ea,
               borderRadius: String(buttonHeight) + ea,
@@ -586,7 +586,7 @@ ReviewListJs.prototype.insertInitBox = function () {
                       borderRadius: String(circleWidth) + ea,
                       top: String((buttonHeight - circleWidth) / 2) + ea,
                       left: String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea,
-                      background: colorChip.white,
+                      background: colorExtended.white,
                       position: "absolute",
                       transition: "all 0.5s ease",
                     }
@@ -693,13 +693,13 @@ ReviewListJs.prototype.insertInitBox = function () {
             for (let dom of targets) {
               if (dom === this) {
                 dom.setAttribute("toggle", "on");
-                dom.firstChild.style.color = colorChip.black;
-                dom.firstChild.querySelector('b').style.color = colorChip.green;
+                dom.firstChild.style.color = colorExtended.black;
+                dom.firstChild.querySelector('b').style.color = colorExtended.mainBlue;
                 thisValue = dom.getAttribute("value");
               } else {
                 dom.setAttribute("toggle", "off");
-                dom.firstChild.style.color = colorChip.deactive;
-                dom.firstChild.querySelector('b').style.color = colorChip.deactive;
+                dom.firstChild.style.color = colorExtended.deactive;
+                dom.firstChild.querySelector('b').style.color = colorExtended.deactive;
               }
             }
 
@@ -777,7 +777,7 @@ ReviewListJs.prototype.insertInitBox = function () {
 
 ReviewListJs.prototype.insertPortfolioBase = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, baseTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -804,7 +804,7 @@ ReviewListJs.prototype.insertPortfolioBase = function () {
 
 ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, sort = "key9") {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, baseTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -917,7 +917,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   photoMarginBottom = <%% (isMac() ? 18 : 20), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 2.5 %%>;
 
   quoteHeight = <%% 10, 8, 8, 7, 1.6 %%>;
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
 
   titleSize = <%% 21, 17, 17, 15, 3.2 %%>;
@@ -1045,7 +1045,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
               children: [
                 {
                   mode: "svg",
-                  source: svgMaker.doubleQuote(colorChip.green),
+                  source: svgMaker.doubleQuote(colorExtended.mainBlue),
                   style: {
                     display: "inline-block",
                     height: String(quoteHeight) + ea,
@@ -1061,7 +1061,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                     display: "inline-block",
                     fontSize: String(titleSize) + ea,
                     fontWeight: String(titleWeight),
-                    color: colorChip.black,
+                    color: colorExtended.black,
                     marginLeft: String(titleMarginLeft) + ea,
                     width: withOut(quoteWidth + titleMarginLeft, ea),
                     verticalAlign: "top",
@@ -1133,7 +1133,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
               height: String(photoHeight) + ea,
               borderRadius: String(5) + "px",
               marginBottom: String(photoMarginBottom) + ea,
-              background: colorChip.gray2,
+              background: colorExtended.gray2,
             }
           },
           {
@@ -1144,7 +1144,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
             children: [
               {
                 mode: "svg",
-                source: svgMaker.doubleQuote(colorChip.green),
+                source: svgMaker.doubleQuote(colorExtended.mainBlue),
                 style: {
                   display: "inline-block",
                   height: String(quoteHeight) + ea,
@@ -1160,7 +1160,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                   display: "inline-block",
                   fontSize: String(titleSize) + ea,
                   fontWeight: String(titleWeight),
-                  color: colorChip.black,
+                  color: colorExtended.black,
                   marginLeft: String(titleMarginLeft) + ea,
                   verticalAlign: "top",
                 }
@@ -1187,7 +1187,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
 
 ReviewListJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce } = GeneralJs;
+  const { returnGet, ajaxJson, setQueue, colorExtended, setDebounce } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 

@@ -46,7 +46,7 @@ PortfolioDetailJs.binaryPath = FRONTHOST + "/middle/portfolio";
 
 PortfolioDetailJs.prototype.portfolioMainBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, isMac, isIphone, setQueue, designerMthParsing, designerCareer, selfHref } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, setQueue, designerMthParsing, designerCareer, selfHref } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid } = this;
   const { contentsArr, designers } = this;
   const mobile = media[4];
@@ -640,7 +640,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
               top: String(contentsTitleButtonTextTop) + ea,
               fontSize: String(contentsTitleButtonSize) + ea,
               fontWeight: String(contentsTitleButtonWeight),
-              color: colorChip.green,
+              color: colorExtended.mainBlue,
             }
           }
         ]
@@ -652,7 +652,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
 PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid } = this;
   const { contentsArr, designers } = this;
   const mobile = media[4];
@@ -1499,7 +1499,7 @@ PortfolioDetailJs.prototype.relativeContents = function (contents, length) {
 
 PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref, serviceParsing, swipePatch, homeliaisonAnalytics, dateToString } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref, serviceParsing, swipePatch, homeliaisonAnalytics, dateToString } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
   const { contentsArr } = this;
   const mobile = media[4];
@@ -1636,7 +1636,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
   photoMarginBottom = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 13 : 15), 2.4 %%>;
 
   quoteHeight = <%% 8, 8, 8, 7, 1.4 %%>;
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), isIphone() ? 1.3 : 1.2 %%>;
 
   titleSize = <%% 17, 16, 17, 14, 3 %%>;
@@ -1984,7 +1984,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
         children: [
           {
             mode: "svg",
-            source: this.mother.returnBigArrow(colorChip.green),
+            source: this.mother.returnBigArrow(colorExtended.mainBlue),
             style: {
               position: "absolute",
               top: String(0),
@@ -2030,7 +2030,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
         children: [
           {
             mode: "svg",
-            source: this.mother.returnBigArrow(colorChip.green),
+            source: this.mother.returnBigArrow(colorExtended.mainBlue),
             style: {
               position: "absolute",
               top: String(0),
@@ -2284,7 +2284,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
                   },
                   bold: {
                     fontWeight: String(subInfoWeight),
-                    color: colorChip.green,
+                    color: colorExtended.mainBlue,
                   }
                 },
                 {
@@ -2622,7 +2622,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
 PortfolioDetailJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce, facebookSdkPatch, kakaoSdkPatch, homeliaisonAnalytics, dateToString } = GeneralJs;
+  const { returnGet, ajaxJson, setQueue, setDebounce, colorExtended, facebookSdkPatch, kakaoSdkPatch, homeliaisonAnalytics, dateToString } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 

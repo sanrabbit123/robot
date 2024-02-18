@@ -46,7 +46,7 @@ ClientEvaluationJs.binaryPath = FRONTHOST + "/middle/evaluation";
 
 ClientEvaluationJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -226,7 +226,7 @@ ClientEvaluationJs.prototype.insertInitBox = function () {
 
 ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson } = GeneralJs;
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -970,7 +970,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             position: "absolute",
             width: String(greenNoticeWidth1) + ea,
             left: "calc(50% - " + String((greenNoticeWidth1 / 2) + greenNoticePaddingLeft) + ea + ")",
-            background: colorChip.gradientGreen,
+            background: colorExtended.gradientBlue,
             fontSize: String(greenNoticeSize) + ea,
             fontWeight: String(greenNoticeWeight),
             color: colorChip.white,
@@ -1014,7 +1014,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             position: "absolute",
             width: String(greenNoticeWidth3) + ea,
             left: "calc(50% - " + String((greenNoticeWidth3 / 2) + greenNoticePaddingLeft) + ea + ")",
-            background: colorChip.gradientGreen,
+            background: colorExtended.gradientBlue,
             fontSize: String(greenNoticeSize) + ea,
             fontWeight: String(greenNoticeWeight),
             color: colorChip.white,
@@ -1115,7 +1115,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             position: "absolute",
             width: String(greenNoticeWidth0) + ea,
             left: "calc(50% - " + String((greenNoticeWidth0 / 2) + greenNoticePaddingLeft) + ea + ")",
-            background: colorChip.gradientGreen,
+            background: colorExtended.gradientBlue,
             fontSize: String(greenNoticeSize) + ea,
             fontWeight: String(greenNoticeWeight),
             color: colorChip.white,
@@ -1170,7 +1170,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     //         position: "absolute",
     //         width: String(greenNoticeWidth1) + ea,
     //         left: "calc(50% - " + String((greenNoticeWidth1 / 2) + (greenNoticePaddingLeft / 2)) + ea + ")",
-    //         background: colorChip.gradientGreen,
+    //         background: colorExtended.gradientBlue,
     //         fontSize: String(greenNoticeSize) + ea,
     //         fontWeight: String(greenNoticeWeight),
     //         color: colorChip.white,
@@ -1210,7 +1210,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             dom.setAttribute("toggle", "on");
             dom.children[0].style.opacity = String(0);
             dom.children[1].style.opacity = String(1);
-            dom.children[2].style.color = colorChip.green;
+            dom.children[2].style.color = colorExtended.mainBlue;
           } else {
             dom.setAttribute("toggle", "off");
             dom.children[0].style.opacity = String(1);
@@ -1313,8 +1313,8 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       circle.setAttribute("toggle", "off");
       words.setAttribute("toggle", "off");
     } else {
-      circle.style.background = colorChip.green;
-      words.style.color = colorChip.green;
+      circle.style.background = colorExtended.mainBlue;
+      words.style.color = colorExtended.mainBlue;
       circle.setAttribute("toggle", "on");
       words.setAttribute("toggle", "on");
     }
@@ -1351,7 +1351,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     createNode({
       mother: descriptionBox,
       mode: "svg",
-      source: svgMaker.doubleQuote(colorChip.green),
+      source: svgMaker.doubleQuote(colorExtended.mainBlue),
       style: {
         display: "block",
         position: "relative",
@@ -1409,7 +1409,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   createNode({
     mother: leftBox,
     mode: "svg",
-    source: svgMaker.doubleQuote(colorChip.green),
+    source: svgMaker.doubleQuote(colorExtended.mainBlue),
     style: {
       display: "block",
       position: "relative",
@@ -1466,7 +1466,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -1520,7 +1520,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             under: {
               fontSize: String(barDescriptionSubSize) + ea,
               fontWeight: String(descriptionWeight),
-              color: colorChip.green
+              color: colorExtended.mainBlue
             },
           },
           {
@@ -1568,7 +1568,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -1629,7 +1629,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -1689,7 +1689,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -1750,7 +1750,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -1804,7 +1804,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             under: {
               fontSize: String(barDescriptionSubSize) + ea,
               fontWeight: String(descriptionWeight),
-              color: colorChip.green
+              color: colorExtended.mainBlue
             },
           },
           {
@@ -1853,7 +1853,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -1915,7 +1915,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -1976,7 +1976,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -2037,7 +2037,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -2097,7 +2097,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -2158,7 +2158,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -2210,7 +2210,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             under: {
               fontSize: String(barDescriptionSubSize) + ea,
               fontWeight: String(descriptionWeight),
-              color: colorChip.green
+              color: colorExtended.mainBlue
             },
           },
           {
@@ -2373,7 +2373,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -2425,7 +2425,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             under: {
               fontSize: String(barDescriptionSubSize) + ea,
               fontWeight: String(descriptionWeight),
-              color: colorChip.green
+              color: colorExtended.mainBlue
             },
           },
           {
@@ -2588,7 +2588,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -2640,7 +2640,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             under: {
               fontSize: String(barDescriptionSubSize) + ea,
               fontWeight: String(descriptionWeight),
-              color: colorChip.green
+              color: colorExtended.mainBlue
             },
           },
           {
@@ -2726,7 +2726,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(barTop) + ea,
                       height: String(barHeight) + ea,
                       borderRadius: String(barHeight + 1) + ea,
-                      background: colorChip.gradientGreen,
+                      background: colorExtended.gradientBlue,
                       width: withOut(0, ea),
                       left: String(0) + ea,
                     }
@@ -2802,7 +2802,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -2856,7 +2856,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             under: {
               fontSize: String(barDescriptionSubSize) + ea,
               fontWeight: String(descriptionWeight),
-              color: colorChip.green
+              color: colorExtended.mainBlue
             },
           },
           {
@@ -2904,7 +2904,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -2965,7 +2965,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -3025,7 +3025,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -3086,7 +3086,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -3140,7 +3140,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             under: {
               fontSize: String(barDescriptionSubSize) + ea,
               fontWeight: String(descriptionWeight),
-              color: colorChip.green
+              color: colorExtended.mainBlue
             },
           },
           {
@@ -3189,7 +3189,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -3251,7 +3251,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -3312,7 +3312,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -3373,7 +3373,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -3433,7 +3433,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -3494,7 +3494,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -3546,7 +3546,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             under: {
               fontSize: String(barDescriptionSubSize) + ea,
               fontWeight: String(descriptionWeight),
-              color: colorChip.green
+              color: colorExtended.mainBlue
             },
           },
           {
@@ -3632,7 +3632,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(barTop) + ea,
                       height: String(barHeight) + ea,
                       borderRadius: String(barHeight + 1) + ea,
-                      background: colorChip.gradientGreen,
+                      background: colorExtended.gradientBlue,
                       width: withOut(0, ea),
                       left: String(0) + ea,
                     }
@@ -3708,7 +3708,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -3762,7 +3762,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             under: {
               fontSize: String(barDescriptionSubSize) + ea,
               fontWeight: String(descriptionWeight),
-              color: colorChip.green
+              color: colorExtended.mainBlue
             },
           },
           {
@@ -3810,7 +3810,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -3871,7 +3871,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -3891,7 +3891,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(mainTop) + ea,
                       fontSize: String(mainSize) + ea,
                       fontWeight: String(checkboxWeight),
-                      color: colorChip.green,
+                      color: colorExtended.mainBlue,
                       verticalAlign: "top",
                       cursor: "pointer",
                     }
@@ -3931,7 +3931,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -3992,7 +3992,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -4046,7 +4046,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             under: {
               fontSize: String(barDescriptionSubSize) + ea,
               fontWeight: String(descriptionWeight),
-              color: colorChip.green
+              color: colorExtended.mainBlue
             },
           },
           {
@@ -4094,7 +4094,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -4155,7 +4155,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -4175,7 +4175,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(mainTop) + ea,
                       fontSize: String(mainSize) + ea,
                       fontWeight: String(checkboxWeight),
-                      color: colorChip.green,
+                      color: colorExtended.mainBlue,
                       verticalAlign: "top",
                       cursor: "pointer",
                     }
@@ -4215,7 +4215,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -4276,7 +4276,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
           height: String(circleRadius * 2) + ea,
           marginRight: String(circleBetween) + ea,
           borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(circleTop) + ea,
           verticalAlign: "top",
         }
@@ -4330,7 +4330,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
             under: {
               fontSize: String(barDescriptionSubSize) + ea,
               fontWeight: String(descriptionWeight),
-              color: colorChip.green
+              color: colorExtended.mainBlue
             },
           },
           {
@@ -4378,7 +4378,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -4439,7 +4439,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -4459,7 +4459,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                       top: String(mainTop) + ea,
                       fontSize: String(mainSize) + ea,
                       fontWeight: String(checkboxWeight),
-                      color: colorChip.green,
+                      color: colorExtended.mainBlue,
                       verticalAlign: "top",
                       cursor: "pointer",
                     }
@@ -4499,7 +4499,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
                   },
                   {
                     mode: "svg",
-                    source: instance.mother.returnCheckBox(colorChip.green),
+                    source: instance.mother.returnCheckBox(colorExtended.mainBlue),
                     style: {
                       position: "absolute",
                       width: String(checkboxWidth) + ea,
@@ -4618,7 +4618,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
           position: "relative",
           fontSize: String(agreeSize) + ea,
           fontWeight: String(agreeWeight),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
           lineHeight: String(agreeLineHeight),
           cursor: "pointer",
         }
@@ -4637,7 +4637,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
           width: String(agreeCircleRadius) + ea,
           height: String(agreeCircleRadius) + ea,
           borderRadius: String(agreeCircleRadius) + ea,
-          background: colorChip.green,
+          background: colorExtended.mainBlue,
           top: String(agreeCircleTop) + ea,
           marginRight: String(agreeCircleMarginRight) + ea,
           cursor: "pointer",
@@ -4664,7 +4664,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
           display: "inline-flex",
           width: String(submitButtonWidth) + ea,
           height: String(submitButtonHeight) + ea,
-          background: colorChip.gradientGreen,
+          background: colorExtended.gradientBlue,
           borderRadius: String(5) + "px",
           justifyContent: "center",
           alignItems: "center",
@@ -4678,7 +4678,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
               display: "inline-block",
               position: "relative",
               fontSize: String(submitSize) + ea,
-              fontWeight: String(submitWeight),
+              fontWeight: String(800),
               color: colorChip.white,
               lineHeight: String(submitLineHeight),
               top: String(submitTextTop) + ea,
@@ -4711,7 +4711,7 @@ ClientEvaluationJs.prototype.finalSubmit = function () {
   const desktop = !mobile;
   const inputClassName = "inputClassName";
   const agreeTargetClassName = "agreeTargetClassName";
-  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue, downloadFile } = GeneralJs;
+  const { ajaxJson, colorChip, colorExtended, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue, downloadFile } = GeneralJs;
   return async function (e) {
     try {
       const property = "property";
@@ -4768,7 +4768,7 @@ ClientEvaluationJs.prototype.finalSubmit = function () {
               window.alert(e.message);
               boo = false;
               scrollTo(window, firstDom, visualSpecific);
-              firstDom.previousElementSibling.style.border = "1px solid " + colorChip.green;
+              firstDom.previousElementSibling.style.border = "1px solid " + colorExtended.mainBlue;
               if (typeof firstDom.focus === "function") {
                 firstDom.focus();
               }
@@ -4898,7 +4898,7 @@ ClientEvaluationJs.prototype.finalSubmit = function () {
 
 ClientEvaluationJs.prototype.preselectionEvaluation = function (data) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson } = GeneralJs;
   const { ea, media, standardWidth, domList } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -5033,7 +5033,7 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson } = GeneralJs;
+    const { returnGet, colorExtended, ajaxJson } = GeneralJs;
     const getObj = returnGet();
     let proid, projects, project;
     let evaluationRows;

@@ -45,7 +45,7 @@ ContractCautionJs.binaryPath = FRONTHOST + "/middle/console/possible";
 
 ContractCautionJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -229,7 +229,7 @@ ContractCautionJs.prototype.insertFirstBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
   let paddingTop;
   let whiteBlock, whiteTong;
   let bottomMargin;
@@ -387,7 +387,7 @@ ContractCautionJs.prototype.insertContextBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker } = GeneralJs;
   const contextButtonClassName = "contextButtonClassName";
   let paddingTop;
   let whiteBlock, whiteTong;
@@ -623,7 +623,7 @@ ContractCautionJs.prototype.insertContextBox = function () {
               position: "relative",
               fontSize: String(contentsSize) + ea,
               fontWeight: String(numberWeight),
-              color: colorChip.green,
+              color: colorExtended.mainBlue,
               verticalAlign: "top",
               width: String(numberWidth) + ea,
               top: String(textTop) + ea,
@@ -929,7 +929,7 @@ ContractCautionJs.prototype.whiteBlockRender = function (thisIndex, mainTitle, m
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   let paddingTop;
   let block;
@@ -1165,7 +1165,7 @@ ContractCautionJs.prototype.whiteBlockRender = function (thisIndex, mainTitle, m
               bold: {
                 fontSize: String(contentsWordingSize) + ea,
                 fontWeight: String(700),
-                color: colorChip.green,
+                color: colorExtended.mainBlue,
               },
             }
           ]
@@ -1190,7 +1190,7 @@ ContractCautionJs.prototype.whiteBlockRender = function (thisIndex, mainTitle, m
             let childrenNum, arr, childrenArr;
             arr = [
               {
-                text: `<div style="display:inline-block;position:relative;vertical-align:baseline;top:${String(checkBoxTongTop) + ea};width:${String(checkBoxWidth) + ea};margin-right:${String(checkBoxMarginRight) + ea};">${instance.mother.returnCheckBox(colorChip.green)}</div>${String(thisIndex + 1)}-${String(num2 + 1)}-${String(1 + index)}`,
+                text: `<div style="display:inline-block;position:relative;vertical-align:baseline;top:${String(checkBoxTongTop) + ea};width:${String(checkBoxWidth) + ea};margin-right:${String(checkBoxMarginRight) + ea};">${instance.mother.returnCheckBox(colorExtended.mainBlue)}</div>${String(thisIndex + 1)}-${String(num2 + 1)}-${String(1 + index)}`,
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -1220,12 +1220,12 @@ ContractCautionJs.prototype.whiteBlockRender = function (thisIndex, mainTitle, m
                   fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
                   fontWeight: String(700),
                   color: colorChip.black,
-                  background: colorChip.liteGreen,
+                  background: colorExtended.mainBlue,
                 },
                 under: {
                   fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
                   fontWeight: String(desktop ? 700 : 400),
-                  color: desktop ? colorChip.green : colorChip.deactive,
+                  color: desktop ? colorExtended.mainBlue : colorChip.deactive,
                 },
               }
             ];
@@ -1278,12 +1278,12 @@ ContractCautionJs.prototype.whiteBlockRender = function (thisIndex, mainTitle, m
                       fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
                       fontWeight: String(700),
                       color: colorChip.black,
-                      background: colorChip.liteGreen,
+                      background: colorExtended.mainBlue,
                     },
                     under: {
                       fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
                       fontWeight: String(desktop ? 700 : 400),
-                      color: desktop ? colorChip.green : colorChip.deactive,
+                      color: desktop ? colorExtended.mainBlue : colorChip.deactive,
                     },
                   }
                 ];
@@ -1368,7 +1368,7 @@ ContractCautionJs.prototype.injectServiceTable = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   let blockMarginBottom;
   let top;
   let bottom;
@@ -1660,7 +1660,7 @@ ContractCautionJs.prototype.injectServiceTable = function () {
         textAlign: "center",
         fontSize: String(contents3GrayWhiteSize) + ea,
         fontWeight: String(contents3GrayWhiteWeight),
-        color: colorChip.green,
+        color: colorExtended.mainBlue,
         lineHeight: String(contents3GrayWhiteLineHeight),
         background: colorChip.white,
         borderRadius: String(5) + "px",
@@ -1672,7 +1672,7 @@ ContractCautionJs.prototype.injectServiceTable = function () {
       },
       bold: {
         fontWeight: String(contents3GrayWhiteWeightBold),
-        color: colorChip.green,
+        color: colorExtended.mainBlue,
       }
     });
 
@@ -1680,10 +1680,9 @@ ContractCautionJs.prototype.injectServiceTable = function () {
 
 }
 
-
 ContractCautionJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, serviceParsing, colorChip } = GeneralJs;
+  const { returnGet, ajaxJson, serviceParsing, colorChip, colorExtended } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 

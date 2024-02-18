@@ -231,7 +231,7 @@ AspirantSubmitJs.prototype.insertInitBox = function () {
 
 AspirantSubmitJs.prototype.insertAspirantBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson, cleanChildren } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson, cleanChildren } = GeneralJs;
   const { ea, media, standardWidth, portfolioMode, normalMode, totalContents } = this;
   const generalMode = !portfolioMode;
   const mobile = media[4];
@@ -2605,7 +2605,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             left: String(leftGrayType0) + ea,
             width: String(addressWidth) + ea,
             height: String(grayHeight) + ea,
-            background: colorChip.gradientGreen,
+            background: colorExtended.gradientBlue,
             borderRadius: String(3) + "px",
             cursor: "pointer",
           },
@@ -2616,7 +2616,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
                 width: String(100) + '%',
                 textAlign: "center",
                 fontSize: String(addressSize) + ea,
-                fontWeight: String(addressWeight),
+                fontWeight: String(800),
                 color: colorChip.white,
                 position: "relative",
                 top: String(addressTop) + ea,
@@ -4512,7 +4512,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
               display: "inline-block",
               position: "relative",
               fontSize: String(submitSize) + ea,
-              fontWeight: String(submitWeight),
+              fontWeight: String(800),
               color: colorChip.white,
               lineHeight: String(submitLineHeight),
               top: String(submitTextTop) + ea,

@@ -46,7 +46,7 @@ ReviewDetailJs.binaryPath = FRONTHOST + "/middle/review";
 
 ReviewDetailJs.prototype.reviewMainBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, isMac, isIphone } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid } = this;
   const { contentsArr } = this;
   const mobile = media[4];
@@ -93,7 +93,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   photoRightMargin = <%% 50, 50, 45, 40, 50 %%>;
 
   quoteHeight = <%% 14, 14, 13, 11, 2 %%>;
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% 140, 135, 125, 80, 5 %%>;
   quotePaddingLeft = <%% 2, 2, 2, 2, 5.4 %%>;
 
@@ -212,7 +212,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         },
         {
           mode: "svg",
-          source: svgMaker.doubleQuote(colorChip.green),
+          source: svgMaker.doubleQuote(colorExtended.mainBlue),
           style: {
             position: "absolute",
             top: String(quoteTop) + ea,
@@ -274,7 +274,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         fontSize: String(topReviewSize) + ea,
         fontWeight: String(topReviewWeight),
         fontFamily: "graphik",
-        color: colorChip.green
+        color: colorExtended.mainBlue
       }
     });
 
@@ -289,7 +289,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       children: [
         {
           mode: "svg",
-          source: svgMaker.doubleQuote(colorChip.green),
+          source: svgMaker.doubleQuote(colorExtended.mainBlue),
           style: {
             display: "inline-block",
             height: String(quoteHeight) + ea,
@@ -361,7 +361,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
 ReviewDetailJs.prototype.reviewContentsBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid } = this;
   const { contentsArr, designers } = this;
   const mobile = media[4];
@@ -1251,7 +1251,7 @@ ReviewDetailJs.prototype.relativeContents = function (contents, length) {
 
 ReviewDetailJs.prototype.reviewRelativeBox = function () {
   const instance = this;
-  const { createNode, colorChip, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref, swipePatch, homeliaisonAnalytics, dateToString } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref, swipePatch, homeliaisonAnalytics, dateToString } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
   const { contentsArr } = this;
   const mobile = media[4];
@@ -1385,7 +1385,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   photoMarginBottom = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 13 : 15), 2.4 %%>;
 
   quoteHeight = <%% 8, 8, 8, 7, 1.4 %%>;
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), isIphone() ? 1.3 : 1.2 %%>;
 
   titleSize = <%% 17, 16, 17, 14, 2.7 %%>;
@@ -1732,7 +1732,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
         children: [
           {
             mode: "svg",
-            source: this.mother.returnBigArrow(colorChip.green),
+            source: this.mother.returnBigArrow(colorExtended.mainBlue),
             style: {
               position: "absolute",
               top: String(0),
@@ -1778,7 +1778,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
         children: [
           {
             mode: "svg",
-            source: this.mother.returnBigArrow(colorChip.green),
+            source: this.mother.returnBigArrow(colorExtended.mainBlue),
             style: {
               position: "absolute",
               top: String(0),
@@ -1966,7 +1966,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
                 children: [
                   {
                     mode: "svg",
-                    source: svgMaker.doubleQuote(colorChip.green),
+                    source: svgMaker.doubleQuote(colorExtended.mainBlue),
                     style: {
                       display: "inline-block",
                       height: String(quoteHeight) + ea,
@@ -2344,7 +2344,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
 
 ReviewDetailJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce, facebookSdkPatch, kakaoSdkPatch, setMetaData, homeliaisonAnalytics, dateToString } = GeneralJs;
+  const { returnGet, ajaxJson, colorExtended, setQueue, setDebounce, facebookSdkPatch, kakaoSdkPatch, setMetaData, homeliaisonAnalytics, dateToString } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 

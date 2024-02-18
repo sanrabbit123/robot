@@ -45,7 +45,7 @@ FrontAboutJs.binaryPath = FRONTHOST + "/middle/about";
 
 FrontAboutJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -225,7 +225,7 @@ FrontAboutJs.prototype.insertInitBox = function () {
 
 FrontAboutJs.prototype.insertPeopleBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, svgMaker, serviceParsing } = GeneralJs;
   const { ea, media, osException, testMode } = this;
   const mobileTitleToken = "<u%>%u>&nbsp;&nbsp;";
   const big = (media[0] || media[1] || media[2]);
@@ -434,7 +434,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
         under: {
           fontSize: String(titleFont) + ea,
           fontWeight: String(200),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
         }
       },
     ]
@@ -548,7 +548,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
         width: "calc(calc(calc(100% - " + String(plusWidth * 2) + ea + ") - " + String(pictureBetween * (4 - 1)) + ea + ") / " + String(4) + ")",
         height: String(subDescriptionColorBoxHeight) + ea,
         borderRadius: String(5) + "px",
-        background: colorChip.gradientGreen,
+        background: colorExtended.gradientBlue,
         marginBottom: String(pictureBetween) + ea,
         justifyContent: "center",
         alignItems: "center",
@@ -633,7 +633,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
               top: String(descriptionTextTop) + ea,
               fontSize: String(plusSize) + ea,
               fontWeight: String(800),
-              color: colorChip.green,
+              color: colorExtended.mainBlue,
             }
           }
         })
@@ -762,7 +762,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
           justifyContent: "center",
           alignItems: "center",
           verticalAlign: "top",
-          background: colorChip.gradientGreen,
+          background: colorExtended.gradientBlue,
         },
         child: {
           text: "가구까지 완벽한 홈스타일링",
@@ -809,7 +809,7 @@ FrontAboutJs.prototype.insertPeopleBox = function () {
 FrontAboutJs.prototype.insertMainContentsBox = function () {
   const instance = this;
   const { ea, media, baseTong } = this;
-  const { withOut, returnGet, createNode, colorChip, isIphone, isMac, svgMaker, serviceParsing, variableArray } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isIphone, isMac, svgMaker, serviceParsing, variableArray } = GeneralJs;
   const mobileTitleToken = "<u%>%u>&nbsp;&nbsp;";
   const mobile = media[4];
   const desktop = !mobile;
@@ -1064,7 +1064,7 @@ FrontAboutJs.prototype.insertMainContentsBox = function () {
           under: {
             fontSize: String(middleTitleSize) + ea,
             fontWeight: String(200),
-            color: colorChip.green,
+            color: colorExtended.mainBlue,
           }
         },
         {
@@ -1451,6 +1451,7 @@ FrontAboutJs.prototype.generateGsArray = function (number) {
     throw new Error("invaild input");
   }
   const instance = this;
+  const { colorExtended } = GeneralJs;
   const standard = [
     'g', 's', 's',
     's', 's', 's', 's',
@@ -1476,7 +1477,7 @@ FrontAboutJs.prototype.generateGsArray = function (number) {
 
 FrontAboutJs.prototype.portfolioBlock = function (baseBlock) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, baseTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1528,7 +1529,7 @@ FrontAboutJs.prototype.portfolioBlock = function (baseBlock) {
   photoMarginBottom = <%% (isMac() ? 18 : 20), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 2.5 %%>;
 
   quoteHeight = <%% 10, 8, 8, 7, 1.6 %%>;
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
 
   titleSize = <%% 21, 17, 17, 15, 3.4 %%>;
@@ -1638,7 +1639,7 @@ FrontAboutJs.prototype.portfolioBlock = function (baseBlock) {
             children: [
               {
                 mode: "svg",
-                source: svgMaker.doubleQuote(colorChip.green),
+                source: svgMaker.doubleQuote(colorExtended.mainBlue),
                 style: {
                   display: "inline-block",
                   height: String(quoteHeight) + ea,
@@ -1716,7 +1717,7 @@ FrontAboutJs.prototype.insertThreeBox = function (middleTong) {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker, selfHref } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker, selfHref } = GeneralJs;
   let contents;
   let middleTongPaddinngTop;
   let middleTongPaddingBottom;
@@ -1838,7 +1839,7 @@ FrontAboutJs.prototype.insertThreeBox = function (middleTong) {
           "인테리어 시공 없이 가구, 패브릭, 소품만",
           "집 무드를 변화시켜주는 스타일링",
         ],
-        color: "#bfb8b0",
+        color: colorExtended.mainBlue,
         background: FrontAboutJs.binaryPath + "/" + "s0.jpg",
         href: FRONTHOST + "/service.php?mode=furnishing",
       },
@@ -1850,7 +1851,7 @@ FrontAboutJs.prototype.insertThreeBox = function (middleTong) {
           "집 컨디션에 맞는 범위의 시공을 진행",
           "컨셉에 맞게 변화시켜주는 스타일링",
         ],
-        color: "#b1ae9d",
+        color: colorExtended.mainBlue,
         background: FrontAboutJs.binaryPath + "/" + "s1.jpg",
         href: FRONTHOST + "/service.php?mode=styling",
       },
@@ -1862,7 +1863,7 @@ FrontAboutJs.prototype.insertThreeBox = function (middleTong) {
           "원하는 스타일과 라이프 패턴에 맞게 기획",
           "전체적인 구조를 변경하는 스타일링",
         ],
-        color: "#546d81",
+        color: colorExtended.mainBlue,
         background: FrontAboutJs.binaryPath + "/" + "s3.jpg",
         href: FRONTHOST + "/service.php?mode=total",
       },
@@ -1936,7 +1937,7 @@ FrontAboutJs.prototype.insertThreeBox = function (middleTong) {
                 position: "absolute",
                 fontSize: String(threeSize) + ea,
                 fontWeight: String(600),
-                color: colorChip.green,
+                color: colorExtended.mainBlue,
                 top: String(smallTextTop) + ea,
                 right: String(threeTitlePaddingLeft - 2) + ea,
               },
@@ -2117,7 +2118,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
   const desktop = !mobile;
   const big = (media[0] || media[1]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac } = GeneralJs;
   let blockMarginBottom;
   let leftBox0, leftBox1, leftBox2, leftBox3, leftBox4;
   let rightBox0, rightBox1, rightBox2, rightBox3, rightBox4;
@@ -2349,7 +2350,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
         under: {
           fontSize: String(titleFont) + ea,
           fontWeight: String(200),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
         }
       }
     ]
@@ -2467,7 +2468,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
     createNode({
       mother: contents1UpBox,
       mode: "svg",
-      source: instance.mother.returnCheckIcon(colorChip.green),
+      source: instance.mother.returnCheckIcon(colorExtended.mainBlue),
       style: {
         display: "inline-block",
         position: desktop ? "relative" : "absolute",
@@ -2608,7 +2609,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
 
 FrontAboutJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip, homeliaisonAnalytics, dateToString } = GeneralJs;
+  const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip, colorExtended, homeliaisonAnalytics, dateToString } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 

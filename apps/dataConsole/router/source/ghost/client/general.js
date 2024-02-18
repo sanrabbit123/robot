@@ -157,7 +157,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
 GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   const instance = this;
   const { standardWidth, media, totalContents, naviHeight, frontPage } = this;
-  const { createNode, createNodes, colorChip, withOut, blankHref, selfHref, isMac, setQueue } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, blankHref, selfHref, isMac, setQueue } = GeneralJs;
   const touchStartConst = "mainNavigatorTouchStartConstName";
   let { ea } = this;
   let mobile = media[4];
@@ -184,14 +184,14 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   let specialMenu;
   let magazineSize;
 
-  iconHeight = <%% 21.5, 21.5, 19, 17, 16 %%>;
-  iconTop = <%% 21.5, 21.5, 19.5, 16, 20 %%>;
+  iconHeight = <%% 21, 21, 19, 17, 16 %%>;
+  iconTop = <%% 22, 22, 21, 18, 21 %%>;
   wordHeight = <%% 20, 20, 20, 20, 20 %%>;
   wordSize = <%% 15, 15, 15, 14, 13 %%>;
-  wordTop = <%% 24, 24, 21, 19, 18 %%>;
+  wordTop = <%% 24, 24, 21, 20, 18 %%>;
   mobileMargin = 6.1;
   wordingTop = <%% (isMac() ? 22 : 22), (isMac() ? 22 : 22), (isMac() ? 21 : 20), (isMac() ? 17 : 16), 10 %%>;
-  wordingSize = <%% 14.5, 14.5, 14, 13, 15 %%>;
+  wordingSize = <%% 15, 15, 14, 13, 15 %%>;
   wordingMarginRight = <%% 36, 36, 34, 24, 3 %%>;
   wordingMarginRightLast = <%% 9, 9, 4, 0, 1 %%>;
   hamburgerTop = 21;
@@ -229,7 +229,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
       focus: false,
     },
     {
-      title: "상담 신청",
+      title: "서비스 신청",
       href: FRONTHOST + "/consulting.php",
       green: [ "clientConsulting" ],
       focus: true,
@@ -261,10 +261,10 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
 
   naviBase = createNode({
     mother: totalContents,
-    class: [ "backblurdefault_lite" ],
+    class: [ (modeNumber !== 1 ? "backblurdefault_lite" : "backblurwhite_lite") ],
     style: {
       position: "fixed",
-      background: modeNumber !== 1 ? colorChip.gradientGray : colorChip.white,
+      background: modeNumber !== 1 ? colorExtended.gradientGray : colorExtended.gradientWhite,
       height: String(naviHeight) + "px",
       width: String(100) + '%',
       top: String(0),
@@ -276,7 +276,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   createNode({
     mother: naviBase,
     mode: "svg",
-    source: this.returnLogo(modeNumber !== 1 ? colorChip.white : colorChip.green, 0),
+    source: this.returnLogo(modeNumber !== 1 ? colorExtended.white : colorExtended.black, 0),
     class: [ desktop ? "hoverDefault" : "hoverDefault_mobile" ],
     event: {
       click: (e) => {
@@ -344,16 +344,12 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
             mouseenter: function (e) {
               const index = Number(this.getAttribute("index"));
               const modeNumber = Number(this.getAttribute("mode"));
-              if (index !== thisIndex) {
-                this.style.color = colorChip.green;
-              }
+              this.style.opacity = String(0.5);
             },
             mouseleave: function (e) {
               const index = Number(this.getAttribute("index"));
               const modeNumber = Number(this.getAttribute("mode"));
-              if (index !== thisIndex) {
-                this.style.color = (modeNumber === 1 ? colorChip.black : colorChip.white);
-              }
+              this.style.opacity = String(1);
             },
             click: function (e) {
               const index = Number(this.getAttribute("index"));
@@ -367,8 +363,8 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
             position: "relative",
             top: String(isMac() ? 0 : 2) + ea,
             fontSize: String(wordingSize) + ea,
-            fontWeight: String(600),
-            color: i === thisIndex ? colorChip.green : (modeNumber === 1 ? colorChip.black : colorChip.white),
+            fontWeight: String(700),
+            color: i === thisIndex ? colorExtended.black : (modeNumber === 1 ? colorChip.black : colorChip.white),
             marginRight: String(i === naviMenu.length - 1 ? wordingMarginRightLast : wordingMarginRight) + ea,
             cursor: "pointer",
             transition: "all 0.5s ease",
@@ -415,13 +411,14 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
         },
         children: [
           {
+            class: [ (modeNumber !== 1 ? "backblurdefault_lite" : "backblurwhite_lite") ],
             style: {
               position: "absolute",
               bottom: String(0),
               left: String(0),
               width: String(100) + '%',
               height: String(mobileMenuHeight) + "px",
-              background: modeNumber !== 1 ? colorChip.gradientGray : colorChip.white,
+              background: modeNumber !== 1 ? colorExtended.gradientGray : colorExtended.gradientWhite,
             },
             children: [
               {
@@ -469,7 +466,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
             position: "absolute",
             fontSize: String(wordingSize) + "px",
             fontWeight: String(600),
-            color: (i === thisIndex || naviMenu[i].focus) ? colorChip.green : (modeNumber === 1 ? colorChip.black : colorChip.white),
+            color: (i === thisIndex || naviMenu[i].focus) ? colorExtended.black : (modeNumber === 1 ? colorChip.black : colorChip.white),
             width: String(100) + '%',
             textAlign: "center",
             top: String(mobileFirstTop + (mobileVerticalBetween * i)) + "px",

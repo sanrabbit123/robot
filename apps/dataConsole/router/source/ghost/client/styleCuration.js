@@ -1259,7 +1259,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   const { client, ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, cleanChildren, isMac, sleep, ajaxJson, equalJson } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, cleanChildren, isMac, sleep, ajaxJson, equalJson } = GeneralJs;
   const { photos, contentsArr, designers } = this;
   const pictureBoxClassName = "pictureBoxClassName";
   const pictureWordingTargetClassName = "pictureWordingTargetClassName";
@@ -1591,7 +1591,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
                   borderRadius: String(3) + "px",
                   cursor: "pointer",
                   overflow: "hidden",
-                  background: colorChip.green,
+                  background: colorExtended.mainBlue,
                   "mix-blend-mode": "multiply",
                 }
               });
@@ -1707,7 +1707,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
       },
       {
         mode: "svg",
-        source: this.mother.returnArrow("left", colorChip.green),
+        source: this.mother.returnArrow("left", colorExtended.mainBlue),
         events: [
           {
             type: "click",
@@ -1727,7 +1727,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
       },
       {
         mode: "svg",
-        source: this.mother.returnArrow("right", colorChip.green),
+        source: this.mother.returnArrow("right", colorExtended.mainBlue),
         events: [
           {
             type: "click",
@@ -1753,8 +1753,8 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           position: "relative",
           textAlign: "center",
           fontSize: String(pannelWordsSize) + ea,
-          fontWeight: String(200),
-          color: colorChip.green,
+          fontWeight: String(300),
+          color: colorExtended.black,
           paddingRight: desktop ? String(pannelWordsPadding) + ea : "",
           paddingLeft: desktop ? String(pannelWordsPadding) + ea : "",
           paddingTop: desktop ? (isMac() ? "" : String(2) + ea) : "",
@@ -1763,12 +1763,12 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           top: mobile ? String(-0.3) + ea : "",
         },
         bold: {
-          fontWeight: String(600),
-          color: colorChip.green,
+          fontWeight: String(700),
+          color: colorExtended.black,
         },
         under: {
           fontWeight: String(600),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
         }
       }
     ]
@@ -1793,7 +1793,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, isMac, dateToString, stringToDate, ajaxJson, returnGet } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, isMac, dateToString, stringToDate, ajaxJson, returnGet } = GeneralJs;
   const token = '_';
   const listToken = '__list__';
   const getObj = returnGet();
@@ -2013,14 +2013,14 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
             position: "relative",
             width: withOut(qWidth, ea),
             fontSize: String(wordingSize) + ea,
-            fontWeight: String(300),
+            fontWeight: String(400),
             color: colorChip.black,
             verticalAlign: "top",
             lineHeight: String(lineHeight),
             paddingTop: mobile ? "" : (isMac() ? "" : String(1) + ea),
           },
           bold: {
-            fontWeight: String(600),
+            fontWeight: String(700),
             color: colorChip.black,
           }
         },
@@ -2255,7 +2255,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
             position: "relative",
             fontSize: String(addressWordingSize) + ea,
             fontWeight: String(200),
-            color: colorChip.green,
+            color: colorExtended.mainBlue,
             top: String(addressWordingTextTop) + ea,
             border: String(0),
             outline: String(0),
@@ -2316,14 +2316,14 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                           s.children[1].style.background = colorChip.gray3;
                           s.setAttribute("toggle", "off");
                         } else {
-                          this.children[0].style.color = colorChip.green;
-                          this.children[1].style.background = colorChip.green;
+                          this.children[0].style.color = colorExtended.mainBlue;
+                          this.children[1].style.background = colorExtended.mainBlue;
                           this.setAttribute("toggle", "on");
                         }
                       }
                     } else {
-                      this.children[0].style.color = colorChip.green;
-                      this.children[1].style.background = colorChip.green;
+                      this.children[0].style.color = colorExtended.mainBlue;
+                      this.children[1].style.background = colorExtended.mainBlue;
                       this.setAttribute("toggle", "on");
                     }
                   }
@@ -2964,7 +2964,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   text: '- ',
                   attribute: [
                     { deactive: colorChip.gray5 },
-                    { active: colorChip.green },
+                    { active: colorExtended.mainBlue },
                     { half: colorChip.purple }
                   ],
                   style: {
@@ -2980,7 +2980,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   text: obj2.name,
                   attribute: [
                     { deactive: colorChip.deactive },
-                    { active: colorChip.green },
+                    { active: colorExtended.mainBlue },
                     { half: colorChip.purple }
                   ],
                   style: {
@@ -3012,7 +3012,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   text: obj2.contents,
                   attribute: [
                     { deactive: colorChip.deactive },
-                    { active: colorChip.green },
+                    { active: colorExtended.mainBlue },
                     { half: colorChip.purple }
                   ],
                   style: {
@@ -3093,7 +3093,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   console.log(err);
                 });
                 for (let c of children) {
-                  c.style.color = colorChip.green;
+                  c.style.color = colorExtended.mainBlue;
                 }
                 for (let dom of removeTargets) {
                   targetMother.removeChild(dom);
@@ -3172,7 +3172,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
               position: "relative",
               fontSize: String(wordingSize) + ea,
               fontWeight: String(200),
-              color: colorChip[updateValue === null ? "deactive" : "green"],
+              color: colorExtended[updateValue === null ? "deactive" : "mainBlue"],
               verticalAlign: "top",
               lineHeight: String(lineHeight),
               marginRight: String(calendarMarginLeft) + ea,
@@ -3187,7 +3187,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
               position: "relative",
               fontSize: String(wordingSize) + ea,
               fontWeight: String((media[0] || media[4]) ? 400 : 200),
-              color: colorChip[updateValue === null ? "deactive" : "green"],
+              color: colorExtended[updateValue === null ? "deactive" : "mainBlue"],
               verticalAlign: "top",
               lineHeight: String(lineHeight),
               textAlign: "right",
@@ -3268,7 +3268,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
             position: "relative",
             fontSize: String(addressWordingSize) + ea,
             fontWeight: String(200),
-            color: colorChip.green,
+            color: colorExtended.mainBlue,
             top: String(addressWordingTextTop) + ea,
             border: String(0),
             outline: String(0),
@@ -3293,7 +3293,7 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
   const { client, ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, cleanChildren, isMac, sleep, ajaxJson } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, cleanChildren, isMac, sleep, ajaxJson } = GeneralJs;
   const { photos, contentsArr, designers } = this;
   const greenClassName = "greenRemoveTarget";
   const stackName = "styleCheckNum";
@@ -3451,8 +3451,8 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
           position: "relative",
           textAlign: "center",
           fontSize: String(pannelWordsSize) + ea,
-          fontWeight: String(200),
-          color: colorChip.green,
+          fontWeight: String(300),
+          color: colorExtended.black,
           paddingRight: desktop ? String(pannelWordsPadding) + ea : "",
           paddingLeft: desktop ? String(pannelWordsPadding) + ea : "",
           paddingTop: desktop ? (isMac() ? "" : String(2) + ea) : "",
@@ -3460,8 +3460,8 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
           width: desktop ? "" : String(100) + '%',
         },
         bold: {
-          fontWeight: String(600),
-          color: colorChip.green,
+          fontWeight: String(700),
+          color: colorExtended.black,
         }
       },
       {
@@ -3477,7 +3477,7 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
         },
         bold: {
           fontWeight: String(500),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
         }
       },
     ]
@@ -3662,7 +3662,7 @@ StyleCurationJs.prototype.parsingValues = function () {
 
 StyleCurationJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -3842,7 +3842,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
 
 StyleCurationJs.prototype.insertSecondInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -4022,7 +4022,7 @@ StyleCurationJs.prototype.insertSecondInitBox = function () {
 
 StyleCurationJs.prototype.insertPendingProposal = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing } = GeneralJs;
   const { ea, media, osException, testMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -4150,7 +4150,7 @@ StyleCurationJs.prototype.insertPendingProposal = function () {
         under: {
           fontSize: String(titleSize) + ea,
           fontWeight: String(200),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
           lineHeight: String(titleLineHeight),
         }
       }
@@ -4193,7 +4193,7 @@ StyleCurationJs.prototype.insertPendingProposal = function () {
             bold: {
               fontSize: String(descriptionSize) + ea,
               fontWeight: String(descriptionBoldWeight),
-              color: colorChip.green,
+              color: colorExtended.mainBlue,
             }
           }
         ]
@@ -4206,7 +4206,7 @@ StyleCurationJs.prototype.insertPendingProposal = function () {
 StyleCurationJs.prototype.insertMainContentsBox = function () {
   const instance = this;
   const { ea, media, baseTong } = this;
-  const { withOut, returnGet, createNode, colorChip, isIphone, isMac, svgMaker, serviceParsing, variableArray } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isIphone, isMac, svgMaker, serviceParsing, variableArray } = GeneralJs;
   const mobileTitleToken = "<u%>%u>&nbsp;&nbsp;";
   const mobile = media[4];
   const desktop = !mobile;
@@ -4414,7 +4414,7 @@ StyleCurationJs.prototype.insertMainContentsBox = function () {
           under: {
             fontSize: String(middleTitleSize) + ea,
             fontWeight: String(200),
-            color: colorChip.green,
+            color: colorExtended.mainBlue,
           }
         },
         {
@@ -4762,7 +4762,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
   let center;
   let wordings;
   let paddingTop;
@@ -4874,7 +4874,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
                 fontWeight: String(200),
                 background: desktop ? colorChip.white : colorChip.gray1,
                 paddingRight: String(numberRight) + ea,
-                color: desktop ? colorChip.black : colorChip.green,
+                color: desktop ? colorChip.black : colorExtended.mainBlue,
               }
             },
             {
@@ -4919,7 +4919,7 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -5118,7 +5118,7 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
               },
               {
                 mode: "svg",
-                source: instance.mother.returnCancel(colorChip.green),
+                source: instance.mother.returnCancel(colorExtended.mainBlue),
                 style: {
                   position: "absolute",
                   background: colorChip.white,
@@ -5254,7 +5254,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone } = GeneralJs;
   let whiteBlock;
   let style;
   let blockHeight, blockMarginBottom;
@@ -5490,7 +5490,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
           position: "relative",
           width: String(buttonWidth) + ea,
           height: String(100) + '%',
-          background: colorChip.green,
+          background: colorExtended.gradientBlue,
           borderRadius: String(3) + "px",
           cursor: "pointer",
         },
@@ -5501,7 +5501,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
               position: "absolute",
               top: String(buttonTextTop) + ea,
               fontSize: String(buttonTextSize) + ea,
-              fontWeight: String(400),
+              fontWeight: String(800),
               color: colorChip.white,
               width: String(100) + '%',
               textAlign: "center",
@@ -5525,7 +5525,7 @@ StyleCurationJs.prototype.insertRoleBox = function (whiteBlock) {
   const desktop = !mobile;
   const big = (media[0] || media[1]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac } = GeneralJs;
   let blockMarginBottom;
   let leftBox0, leftBox1, leftBox2, leftBox3, leftBox4;
   let rightBox0, rightBox1, rightBox2, rightBox3, rightBox4;
@@ -5773,7 +5773,7 @@ StyleCurationJs.prototype.insertRoleBox = function (whiteBlock) {
     createNode({
       mother: contents1UpBox,
       mode: "svg",
-      source: instance.mother.returnCheckIcon(colorChip.green),
+      source: instance.mother.returnCheckIcon(colorExtended.mainBlue),
       style: {
         display: "inline-block",
         position: desktop ? "relative" : "absolute",
@@ -5920,7 +5920,7 @@ StyleCurationJs.prototype.insertNoticeBox = function (whiteBlock) {
   const desktop = !mobile;
   const big = (media[0] || media[1]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac } = GeneralJs;
   let leftBox0, leftBox1, leftBox2, leftBox3, leftBox4;
   let rightBox0, rightBox1, rightBox2, rightBox3, rightBox4;
   let contents0, contents1, contents2, contents3, contents4;
@@ -6127,7 +6127,7 @@ StyleCurationJs.prototype.insertNoticeBox = function (whiteBlock) {
             lineHeight: desktop ? "" : String(1.3),
           },
           bold: {
-            color: colorChip.green,
+            color: colorExtended.mainBlue,
           }
         }
       ]
@@ -6141,7 +6141,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
   const instance = this;
   const { ea, baseTong } = this;
   const { backgroundImageBox, backgroundImageBox2 } = this.mother;
-  const { cleanChildren, ajaxJson, returnGet, setQueue, homeliaisonAnalytics } = GeneralJs;
+  const { cleanChildren, ajaxJson, colorExtended, returnGet, setQueue, homeliaisonAnalytics } = GeneralJs;
   const children = baseTong.children;
   try {
     await ajaxJson({
@@ -6183,7 +6183,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
 
 StyleCurationJs.prototype.forceConverting = async function () {
   const instance = this;
-  const { ajaxJson, returnGet } = GeneralJs;
+  const { ajaxJson, returnGet, colorExtended } = GeneralJs;
   const { client, clientHistory } = this;
   try {
     let firstBoo;
@@ -6248,7 +6248,7 @@ StyleCurationJs.prototype.forceConverting = async function () {
 
 StyleCurationJs.prototype.insertDescriptionBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing } = GeneralJs;
   const { ea, media, osException, testMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -6377,7 +6377,7 @@ StyleCurationJs.prototype.insertDescriptionBox = function () {
         under: {
           fontSize: String(titleSize) + ea,
           fontWeight: String(200),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
           lineHeight: String(titleLineHeight),
         }
       }
@@ -6432,7 +6432,7 @@ StyleCurationJs.prototype.insertDescriptionBox = function () {
             bold: {
               fontSize: String(descriptionSize) + ea,
               fontWeight: String(descriptionBoldWeight),
-              color: colorChip.green,
+              color: colorExtended.mainBlue,
             }
           }
         ]
@@ -6447,7 +6447,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, requestPromise, setDebounce } = GeneralJs;
+    const { returnGet, ajaxJson, requestPromise, setDebounce, colorExtended } = GeneralJs;
     const getObj = returnGet();
     let cliid;
     let clients, client;

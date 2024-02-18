@@ -20,7 +20,7 @@ GeneralJs.boos = {
 };
 
 GeneralJs.svgMaker = {
-  horizontalArrow: function (width, height, color = GeneralJs.colorChip.green) {
+  horizontalArrow: function (width, height, color = GeneralJs.colorExtended.mainBlue) {
     if (typeof width !== "number" || typeof height !== "number" || typeof color !== "string") {
       throw new Error("input must be { width, height, color }");
     }
@@ -34,7 +34,7 @@ GeneralJs.svgMaker = {
     const constValues = [ 3.095, 1.655, 3.626, 0.042 ];
     return `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${calcul(x)} ${calcul(y)}" xml:space="preserve"><path fill="${color}" d="M${calcul(x)},3.36c0-0.103-0.042-0.196-0.109-0.263c0,0,0-0.001-0.001-0.002L${calcul(x - constValues[0])},0.11c-0.146-0.146-0.385-0.146-0.531,0c-0.146,0.146-0.146,0.384,0,0.53l2.346,2.345H0.375C0.168,2.985,0,3.153,0,3.36s0.168,0.375,0.375,0.375h${calcul(x - constValues[1])}L${calcul(x - constValues[2])},6.08c-0.146,0.146-0.146,0.385,0,0.531c0.073,0.073,0.17,0.109,0.266,0.109s0.192-0.036,0.266-0.109l2.985-2.986c0,0,0-0.001,0.001-0.002C${calcul(x - constValues[3])},3.556,${calcul(x)},3.463,${calcul(x)},3.36z"/></svg>`;
   },
-  verticalArrow: function (width, height, color = GeneralJs.colorChip.green) {
+  verticalArrow: function (width, height, color = GeneralJs.colorExtended.mainBlue) {
     if (typeof width !== "number" || typeof height !== "number" || typeof color !== "string") {
       throw new Error("input must be { width, height, color }");
     }
@@ -48,7 +48,7 @@ GeneralJs.svgMaker = {
     const constValues = [ 1.655, 3.553, 3.456, 3.36, 0.042 ]
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${calcul(y)} ${calcul(x)}" xml:space="preserve"><path fill="${color}" d="M3.36,${calcul(x)}c0.103,0,0.196-0.042,0.263-0.109c0,0,0.001,0,0.002-0.001l2.985-2.985c0.146-0.146,0.146-0.385,0-0.531s-0.384-0.146-0.53,0l-2.345,2.346V0.375C3.735,0.168,3.567,0,3.36,0S2.985,0.168,2.985,0.375v${calcul(x - constValues[0])}l-2.345-2.346c-0.146-0.146-0.385-0.146-0.531,0C0.036,${calcul(x - constValues[1])},0,${calcul(x - constValues[2])},0,${calcul(x - constValues[3])}c0,0.096,0.036,0.192,0.109,0.266l2.986,2.985c0,0,0.001,0,0.002,0.001C3.164,${calcul(x - constValues[4])},3.257,${calcul(x)},3.36,${calcul(x)}z"/></svg>`;
   },
-  bentArrow: function (width, height, zMultiple = 1, color = GeneralJs.colorChip.green) {
+  bentArrow: function (width, height, zMultiple = 1, color = GeneralJs.colorExtended.mainBlue) {
     if (typeof width !== "number" || typeof height !== "number" || typeof zMultiple !== "number" || typeof color !== "string") {
       throw new Error("input must be { width, height, zMultiple, color }");
     }
@@ -63,7 +63,7 @@ GeneralJs.svgMaker = {
     const constYValues = [ 3.506, 5.862, 3.411, 3.461, 3.506 ];
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${calcul(x)} ${calcul(y)}" xml:space="preserve"><path d="M${calcul(x - constXValues[0])},${calcul(y - constYValues[0])}c-0.019-0.045-0.046-0.086-0.081-0.121l-2.983-2.984c-0.146-0.146-0.384-0.146-0.53,0s-0.146,0.384,0,0.53l2.344,2.344H2.876c-1.172,0-2.126-0.954-2.126-2.126V0H0v${calcul(y - constYValues[1])}c0,1.586,1.29,2.876,2.876,2.876h${calcul(x - constXValues[1])}l-2.344,2.343c-0.146,0.146-0.146,0.385,0,0.531c0.073,0.073,0.169,0.109,0.265,0.109s0.192-0.036,0.265-0.109l2.984-2.984c0.034-0.034,0.062-0.075,0.081-0.121c0.019-0.045,0.029-0.094,0.029-0.144C${calcul(x)},${calcul(y - constYValues[2])},${calcul(x - constXValues[2])},${calcul(y - constYValues[3])},${calcul(x - constXValues[3])},${calcul(y - constYValues[4])}z"/></svg>`;
   },
-  processArrow: function (width, height, color = GeneralJs.colorChip.green) {
+  processArrow: function (width, height, color = GeneralJs.colorExtended.mainBlue) {
     if (typeof width !== "number" || typeof height !== "number" || typeof color !== "string") {
       throw new Error("input must be { width, height, color }");
     }
@@ -170,24 +170,24 @@ GeneralJs.svgMaker = {
   },
   checkBox: function (color, back = null) {
     const uncheckColorList = [
-      GeneralJs.colorChip.gray3,
-      GeneralJs.colorChip.gray4,
-      GeneralJs.colorChip.gray2,
-      GeneralJs.colorChip.deactive,
-      GeneralJs.colorChip.gradientGray,
+      GeneralJs.colorExtended.gray3,
+      GeneralJs.colorExtended.gray4,
+      GeneralJs.colorExtended.gray2,
+      GeneralJs.colorExtended.deactive,
+      GeneralJs.colorExtended.gradientGray,
     ];
     const checkColorList = [
-      GeneralJs.colorChip.green,
-      GeneralJs.colorChip.black,
-      GeneralJs.colorChip.red,
-      GeneralJs.colorChip.gradientGreen,
+      GeneralJs.colorExtended.mainBlue,
+      GeneralJs.colorExtended.black,
+      GeneralJs.colorExtended.red,
+      GeneralJs.colorExtended.gradientBlue,
     ];
     let uncheck;
     let uncheckColor, checkColor;
     let whiteBack;
 
     if (back === null) {
-      whiteBack = GeneralJs.colorChip.white;
+      whiteBack = GeneralJs.colorExtended.white;
     } else {
       whiteBack = back;
     }
@@ -256,21 +256,21 @@ GeneralJs.colorSet = {
     black: "#404040",
     darkBlack: "#303030",
     realBlack: "#202020",
-    gradientGreen: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-    gradientGreen2: "linear-gradient(222deg, rgba(89, 175, 137, 0.8) 5%, rgba(0, 156, 106, 0.9) 100%)",
-    gradientGreen3: "linear-gradient(172deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-    gradientGreen4: "linear-gradient(222deg, rgba(89, 175, 137, 1) 5%, rgba(0, 156, 106, 1) 100%)",
-    gradientGreenWhite: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-    greenGray: "#2fa678",
-    greenWhite: "#2fa678",
-    greenBlack: "#2fa678",
+    gradientGreen: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+    gradientGreen2: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+    gradientGreen3: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+    gradientGreen4: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+    gradientGreenWhite: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+    greenGray: "#9bbdd1",
+    greenWhite: "#9bbdd1",
+    greenBlack: "#9bbdd1",
     cancelBlack: "#404040",
-    green: "#2fa678",
-    softGreen: "#59af89",
-    darkGreen: "#009b6a",
-    whiteGreen: "#bedacb",
-    middleGreen: "#83cea7",
-    liteGreen: "#f0f9f5",
+    green: "#9bbdd1",
+    softGreen: "#9bbdd1",
+    darkGreen: "#7f9fb3",
+    whiteGreen: "#bed0d9",
+    middleGreen: "#9bbdd1",
+    liteGreen: "#bed0d9",
     gradientGray: "linear-gradient(256deg, rgba(17, 17, 17, 0.8) 0%, rgba(20, 20, 20, 0.75) 100%)",
     gradientBlack: "linear-gradient(256deg, rgba(17, 17, 17, 0.9) 0%, rgba(20, 20, 20, 0.75) 100%)",
     red: "#ff5f57",
@@ -304,21 +304,21 @@ GeneralJs.colorSet = {
     black: "#ececec",
     darkBlack: "#f2f2f2",
     realBlack: "#ffffff",
-    gradientGreen: "linear-gradient(222deg, rgba(36, 36, 36, 1) 5%, rgba(32, 32, 32, 1) 100%)",
-    gradientGreen2: "linear-gradient(222deg, rgba(36, 36, 36, 1) 5%, rgba(32, 32, 32, 1) 100%)",
-    gradientGreen3: "linear-gradient(172deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-    gradientGreen4: "linear-gradient(222deg, rgba(36, 36, 36, 1) 5%, rgba(32, 32, 32, 1) 100%)",
-    gradientGreenWhite: "#dddddd",
-    greenGray: "#303030",
-    greenWhite: "#ececec",
-    greenBlack: "#0b0b0b",
-    cancelBlack: "#303030",
-    green: "#2fa678",
-    softGreen: "#59af89",
-    darkGreen: "#bedacb",
-    whiteGreen: "#009b6a",
-    middleGreen: "#83cea7",
-    liteGreen: "#1a221f",
+    gradientGreen: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+    gradientGreen2: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+    gradientGreen3: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+    gradientGreen4: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+    gradientGreenWhite: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+    greenGray: "#9bbdd1",
+    greenWhite: "#9bbdd1",
+    greenBlack: "#9bbdd1",
+    cancelBlack: "#404040",
+    green: "#9bbdd1",
+    softGreen: "#9bbdd1",
+    darkGreen: "#7f9fb3",
+    whiteGreen: "#bed0d9",
+    middleGreen: "#9bbdd1",
+    liteGreen: "#bed0d9",
     gradientGray: "linear-gradient(256deg, rgba(17, 17, 17, 0.8) 0%, rgba(20, 20, 20, 0.75) 100%)",
     gradientBlack: "linear-gradient(256deg, rgba(17, 17, 17, 0.9) 0%, rgba(20, 20, 20, 0.75) 100%)",
     red: "#ff5f57",
@@ -356,21 +356,21 @@ GeneralJs.colorChip = {
   black: "#404040",
   darkBlack: "#303030",
   realBlack: "#202020",
-  gradientGreen: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-  gradientGreen2: "linear-gradient(222deg, rgba(89, 175, 137, 0.8) 5%, rgba(0, 156, 106, 0.9) 100%)",
-  gradientGreen3: "linear-gradient(172deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-  gradientGreen4: "linear-gradient(222deg, rgba(89, 175, 137, 1) 5%, rgba(0, 156, 106, 1) 100%)",
-  gradientGreenWhite: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-  greenGray: "#2fa678",
-  greenWhite: "#2fa678",
-  greenBlack: "#2fa678",
+  gradientGreen: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+  gradientGreen2: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+  gradientGreen3: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+  gradientGreen4: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+  gradientGreenWhite: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
+  greenGray: "#9bbdd1",
+  greenWhite: "#9bbdd1",
+  greenBlack: "#9bbdd1",
   cancelBlack: "#404040",
-  green: "#2fa678",
-  softGreen: "#59af89",
-  darkGreen: "#009b6a",
-  whiteGreen: "#bedacb",
-  middleGreen: "#83cea7",
-  liteGreen: "#f0f9f5",
+  green: "#9bbdd1",
+  softGreen: "#9bbdd1",
+  darkGreen: "#7f9fb3",
+  whiteGreen: "#bed0d9",
+  middleGreen: "#9bbdd1",
+  liteGreen: "#bed0d9",
   gradientGray: "linear-gradient(256deg, rgba(17, 17, 17, 0.8) 0%, rgba(20, 20, 20, 0.75) 100%)",
   gradientBlack: "linear-gradient(256deg, rgba(17, 17, 17, 0.9) 0%, rgba(20, 20, 20, 0.75) 100%)",
   red: "#ff5f57",
@@ -422,6 +422,7 @@ GeneralJs.colorExtended = {
   liteGreen: "#f0f9f5",
   gradientGray: "linear-gradient(256deg, rgba(17, 17, 17, 0.8) 0%, rgba(20, 20, 20, 0.75) 100%)",
   gradientBlack: "linear-gradient(256deg, rgba(17, 17, 17, 0.9) 0%, rgba(20, 20, 20, 0.75) 100%)",
+  gradientWhite: "linear-gradient(256deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.85) 100%)",
   red: "#ff5f57",
   yellow: "#ffbd3d",
   purple: "#ba7dd7",
@@ -3772,7 +3773,7 @@ GeneralJs.generalCalendar = function (mother, date, callback, option = {}) {
           eventFunc = obj.eventFunc;
 
           if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === thisDate) {
-            svg_clone = SvgTong.stringParsing(instance.returnCircle("", GeneralJs.colorChip.green));
+            svg_clone = SvgTong.stringParsing(instance.returnCircle("", GeneralJs.colorExtended.mainBlue));
             for (let k in circleEventStyle) {
               svg_clone.style[k] = circleEventStyle[k];
             }
@@ -3869,7 +3870,7 @@ GeneralJs.generalCalendar = function (mother, date, callback, option = {}) {
           fontWeight: (i === 0) ? String(500) : String(200),
           width: "100%",
           textAlign: j === 0 ? "left" : (j === 6 ? "right" : "center"),
-          color: ((j < 5) ? GeneralJs.colorChip.black : GeneralJs.colorChip.green),
+          color: ((j < 5) ? GeneralJs.colorExtended.black : GeneralJs.colorExtended.mainBlue),
           cursor: "pointer",
           transition: "all 0.2s ease",
         };
@@ -3883,7 +3884,7 @@ GeneralJs.generalCalendar = function (mother, date, callback, option = {}) {
           div_clone3.textContent = (matrix[i - 1][j] !== null) ? String(matrix[i - 1][j].date) : '';
           if (matrix[i - 1][j] !== null) {
             if (thisDate === matrix[i - 1][j].date) {
-              div_clone3.style.color = GeneralJs.colorChip.green;
+              div_clone3.style.color = GeneralJs.colorExtended.mainBlue;
               div_clone3.style.fontWeight = String(400);
             }
           }
@@ -4010,7 +4011,7 @@ GeneralJs.generalCalendar = function (mother, date, callback, option = {}) {
   titleZone.appendChild(div_clone);
 
   //previous arrow
-  svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnArrow("left", GeneralJs.colorChip.green));
+  svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnArrow("left", GeneralJs.colorExtended.mainBlue));
   style = {
     position: "absolute",
     width: String(arrowWidth) + ea,
@@ -4065,7 +4066,7 @@ GeneralJs.generalCalendar = function (mother, date, callback, option = {}) {
   titleZone.appendChild(svg_zone);
 
   //next arrow
-  svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnArrow("right", GeneralJs.colorChip.green));
+  svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnArrow("right", GeneralJs.colorExtended.mainBlue));
   style = {
     position: "absolute",
     width: String(arrowWidth) + ea,
@@ -5492,7 +5493,7 @@ GeneralJs.confirm = function (message) {
 }
 
 GeneralJs.prompt = function (message, preValue = '') {
-  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, setQueue } = GeneralJs;
   const ea = "px";
   const promptAsideClassName = "promptAsideClassName";
   const mobile = window.innerWidth <= 900;
@@ -5588,7 +5589,7 @@ GeneralJs.prompt = function (message, preValue = '') {
     style: {
       fontSize: String(size0) + ea,
       fontWeight: String(400),
-      color: colorChip.green,
+      color: colorExtended.mainBlue,
       fontFamily: "graphik",
       position: "absolute",
       top: String(paddingTop) + ea,
@@ -5707,7 +5708,7 @@ GeneralJs.prompt = function (message, preValue = '') {
 }
 
 GeneralJs.promptLong = function (message, preValue = '') {
-  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, setQueue } = GeneralJs;
   const ea = "px";
   const promptAsideClassName = "promptAsideClassName";
   const mobile = window.innerWidth <= 900;
@@ -5822,7 +5823,7 @@ GeneralJs.promptLong = function (message, preValue = '') {
     style: {
       fontSize: String(size0) + ea,
       fontWeight: String(400),
-      color: colorChip.green,
+      color: colorExtended.mainBlue,
       fontFamily: "graphik",
       position: "absolute",
       top: String(paddingTop) + ea,
@@ -5968,7 +5969,7 @@ GeneralJs.promptLong = function (message, preValue = '') {
 }
 
 GeneralJs.promptWithButton = function (message, progressName = "NULL", preValue = '') {
-  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, setQueue } = GeneralJs;
   const ea = "px";
   const promptAsideClassName = "promptAsideClassName";
   const mobile = window.innerWidth <= 900;
@@ -6083,7 +6084,7 @@ GeneralJs.promptWithButton = function (message, progressName = "NULL", preValue 
     style: {
       fontSize: String(size0) + ea,
       fontWeight: String(400),
-      color: colorChip.green,
+      color: colorExtended.mainBlue,
       fontFamily: "graphik",
       position: "absolute",
       top: String(paddingTop) + ea,
@@ -6250,7 +6251,7 @@ GeneralJs.promptWithButton = function (message, progressName = "NULL", preValue 
 }
 
 GeneralJs.promptButtons = function (message, buttons) {
-  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, setQueue } = GeneralJs;
   const ea = "px";
   const promptAsideClassName = "promptAsideClassName";
   const mobile = window.innerWidth <= 900;
@@ -6359,7 +6360,7 @@ GeneralJs.promptButtons = function (message, buttons) {
     style: {
       fontSize: String(size0) + ea,
       fontWeight: String(400),
-      color: colorChip.green,
+      color: colorExtended.mainBlue,
       fontFamily: "graphik",
       position: "absolute",
       top: String(paddingTop) + ea,
@@ -6512,7 +6513,7 @@ GeneralJs.promptButtons = function (message, buttons) {
 }
 
 GeneralJs.promptLongButtons = function (message, buttons) {
-  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, setQueue } = GeneralJs;
   const ea = "px";
   const promptAsideClassName = "promptAsideClassName";
   const mobile = window.innerWidth <= 900;
@@ -6621,7 +6622,7 @@ GeneralJs.promptLongButtons = function (message, buttons) {
     style: {
       fontSize: String(size0) + ea,
       fontWeight: String(400),
-      color: colorChip.green,
+      color: colorExtended.mainBlue,
       fontFamily: "graphik",
       position: "absolute",
       top: String(paddingTop) + ea,
@@ -6721,7 +6722,7 @@ GeneralJs.promptLongButtons = function (message, buttons) {
 }
 
 GeneralJs.promptDate = function (message, progressPossible = false, progressName = "", standardDate = null) {
-  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, setQueue } = GeneralJs;
   const ea = "px";
   const promptAsideClassName = "promptAsideClassName";
   const mobile = window.innerWidth <= 900;
@@ -6850,7 +6851,7 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
     style: {
       fontSize: String(size0) + ea,
       fontWeight: String(400),
-      color: colorChip.green,
+      color: colorExtended.mainBlue,
       fontFamily: "graphik",
       position: "absolute",
       top: String(paddingTop) + ea,
@@ -7008,7 +7009,7 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
 }
 
 GeneralJs.promptYearMonth = function (message, progressPossible = false, progressName = "") {
-  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, setQueue } = GeneralJs;
   const ea = "px";
   const promptAsideClassName = "promptAsideClassName";
   const mobile = window.innerWidth <= 900;
@@ -7133,7 +7134,7 @@ GeneralJs.promptYearMonth = function (message, progressPossible = false, progres
     style: {
       fontSize: String(size0) + ea,
       fontWeight: String(400),
-      color: colorChip.green,
+      color: colorExtended.mainBlue,
       fontFamily: "graphik",
       position: "absolute",
       top: String(paddingTop) + ea,
@@ -7296,7 +7297,7 @@ GeneralJs.promptYearMonth = function (message, progressPossible = false, progres
 }
 
 GeneralJs.promptFile = function (message) {
-  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, setQueue } = GeneralJs;
   const ea = "px";
   const promptAsideClassName = "promptAsideClassName";
   const tempHiddenFileInputClassName = "tempHiddenFileInputClassName" + String(Math.round(Math.random() * 10000)) + String((new Date()).valueOf());
@@ -7425,7 +7426,7 @@ GeneralJs.promptFile = function (message) {
     style: {
       fontSize: String(size0) + ea,
       fontWeight: String(400),
-      color: colorChip.green,
+      color: colorExtended.mainBlue,
       fontFamily: "graphik",
       position: "absolute",
       top: String(paddingTop) + ea,

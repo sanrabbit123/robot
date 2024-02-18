@@ -74,7 +74,7 @@ FrontIndexJs.prototype.generateGsArray = function (number) {
 
 FrontIndexJs.prototype.insertSlideBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, totalContents } = this;
   const { indexArr } = this;
   const mobile = media[4];
@@ -120,20 +120,20 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   interval = <%% 2700, 2700, 2700, 2700, 2700 %%>;
 
   naviHeight = <%% 72, 72, 66, 60, 60 %%>;
-  mainHeight = <%% 746, 639, 560, 480, 73 %%>;
+  mainHeight = <%% 746, 639, 560, 480, 75 %%>;
 
   randomNumber = <%% 5, 5, 5, 5, 5 %%>;
   titlePadding = <%% 100, 75, 75, 90, 8 %%>;
   titleBottom = <%% 100, 75, 75, 60, 8 %%>;
-  titleSize = <%% 56, 45, 42, 36, 6 %%>;
+  titleSize = <%% 45, 42, 40, 35, 5.3 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  lineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
-  titleContents = "집을 디자인하는\n새로운 방법, 홈리에종";
+  lineHeight = <%% 1.2, 1.2, 1.2, 1.2, 1.2 %%>;
+  titleContents = "Connet me and\nmy house, HomeLiaison";
   photoLength = 5;
   photoSubLength = 4;
   subTextContents = desktop ? "디자이너의 <b%전문적인 홈스타일링, 홈리에종%b>과 함께 해보세요!" : "<b%전문적인 홈스타일링, 홈리에종%b>과 함께 해보세요!";
 
-  grayHeight = <%% 177, 152, 140, 120, 18 %%>;
+  grayHeight = <%% 72, 64, 60, 56, 8.8 %%>;
 
   circleBoxTop = <%% 78, 68, 62, 54, 9.8 %%>;
   circleBoxLeft = <%% 3, 3, 3, 3, 8 %%>;
@@ -257,8 +257,9 @@ FrontIndexJs.prototype.insertSlideBox = function () {
       {
         text: titleContents,
         style: {
+          fontFamily: "mont",
           fontSize: String(titleSize) + ea,
-          fontWeight: String(titleWeight),
+          fontWeight: String(500),
           color: colorChip.white,
           lineHeight: String(lineHeight),
         }
@@ -271,7 +272,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
     style: {
       display: "block",
       position: "relative",
-      background: colorChip.gray0,
+      background: colorChip.white,
       height: String(grayHeight) + ea,
       overflow: "hidden",
     },
@@ -280,13 +281,15 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   grayBlockTong = createNode({
     mother: grayTong,
     style: {
-      display: "block",
+      display: "flex",
       position: "relative",
       width: desktop ? String(standardWidth - (titlePadding * 2)) + ea : "",
       paddingLeft: desktop ? String(titlePadding) + ea : "",
       paddingRight: desktop ? String(titlePadding) + ea : "",
       left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : "",
       height: String(100) + '%',
+      justifyContent: "center",
+      alignItems: "center",
     }
   });
 
@@ -298,8 +301,6 @@ FrontIndexJs.prototype.insertSlideBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      top: String(circleBoxTop) + ea,
-      left: String(circleBoxLeft) + ea
     }
   })
 
@@ -311,61 +312,12 @@ FrontIndexJs.prototype.insertSlideBox = function () {
         width: String(circleRadius) + ea,
         height: String(circleRadius) + ea,
         borderRadius: String(circleRadius) + ea,
-        background: desktop ? (i === 0 ? colorChip.gray5 : colorChip.gray3) : colorChip.gray4,
+        background: (i === 0 ? colorChip.gray5 : colorChip.gray3),
         marginRight: String(circleMarginRight) + ea,
         transition: "all 0.5s ease",
       }
     });
-    if (mobile) {
-      if (i === 2) {
-        break;
-      }
-    }
   }
-
-  subTextBox = createNode({
-    mother: grayBlockTong,
-    class: [ "hoverDefault_lite" ],
-    event: {
-      click: (e) => { selfHref("/about.php"); }
-    },
-    style: {
-      position: "absolute",
-      top: String(subTextBoxTop) + ea,
-      right: String(titlePadding) + ea,
-      textAlign: "right",
-    }
-  });
-
-  createNode({
-    mother: subTextBox,
-    text: "About",
-    style: {
-      display: "block",
-      position: "relative",
-      fontSize: String(subTextAboutSize) + ea,
-      fontWeight: String(subTextAboutWeight),
-      fontFamily: "graphik",
-      color: colorChip.darkShadow,
-      marginBottom: String(subTextAboutMarginBottom) + ea,
-    }
-  });
-
-  createNode({
-    mother: subTextBox,
-    text: subTextContents,
-    style: {
-      display: "block",
-      position: "relative",
-      fontSize: String(subTextSize) + ea,
-      fontWeight: String(subTextWeight),
-      color: colorChip.darkShadow,
-    },
-    bold: {
-      fontWeight: String(subTextBoldWeight),
-      color: colorChip.darkShadow,
-    }
-  });
 
   setInterval(() => {
     const toggle = mainTong.getAttribute("toggle");
@@ -429,6 +381,11 @@ FrontIndexJs.prototype.insertSlideBox = function () {
         }
       }
 
+      circleIndex = offIndex === 0 ? offIndex : photoLength - offIndex;
+      for (let i = 0; i < circles.length; i++) {
+        circles[i].style.background = i === circleIndex ? colorChip.gray5 : colorChip.gray3;
+      }
+
     }
 
   }, interval);
@@ -437,7 +394,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
 
 FrontIndexJs.prototype.insertAboutBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -658,7 +615,7 @@ FrontIndexJs.prototype.insertAboutBox = function () {
         paddingLeft: String(buttonPaddingLeft) + ea,
         paddingRight: String(buttonPaddingLeft) + ea,
         borderRadius: String(buttonPaddingLeft) + ea,
-        background: colorChip.gradientGreen,
+        background: colorExtended.gradientBlue,
       }
     });
   }
@@ -667,7 +624,7 @@ FrontIndexJs.prototype.insertAboutBox = function () {
 
 FrontIndexJs.prototype.insertBlackBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -802,7 +759,7 @@ FrontIndexJs.prototype.insertBlackBox = function () {
 
 FrontIndexJs.prototype.insertSearchBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const { contentsArr, reviewArr } = this;
   const mobile = media[4];
@@ -871,12 +828,13 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let reviewSubTitleVisual;
   let subInfoTextTop;
   let subTitleMarginTopReview;
+  let subTitleWeight;
 
   mainPaddingTop = <%% 160, 140, 110, 95, 8 %%>;
   mainPaddingBottom = <%% 130, 110, 70, 65, 8 %%>;
 
   searchWordingSize = <%% 22, 21, 20, 18, 22 %%>;
-  searchWordingWeight = <%% 700, 700, 700, 700, 700 %%>;
+  searchWordingWeight = <%% 800, 800, 800, 800, 700 %%>;
   searchWordingMarginBottom = <%% (isMac() ? 20 : 17), (isMac() ? 17 : 15), (isMac() ? 16 : 14), (isMac() ? 15 : 13), 17 %%>;
 
   searchWordingCircleWidth = <%% 4, 4, 4, 3, 4 %%>;
@@ -920,16 +878,17 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   seroSliceLimit = <%% 30, 30, 30, 30, 30 %%>;
 
   quoteHeight = <%% 9, 8, 8, 7, 1.6 %%>;
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
 
-  titleSize = <%% 17, 17, 17, 15, 3 %%>;
-  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleSize = <%% 17, 17, 17, 15, 2.8 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleMarginLeft = <%% 5, 5, 5, 5, 1.1 %%>;
 
   subTitleMarginTop = <%% 3, 3, 3, 3, 0.5 %%>;
   subTitleMarginTopReview = <%% 3, 3, 3, 2, 0.2 %%>;
   subTitleSize = <%% 12, 12, 12, 12, 2.5 %%>;
+  subTitleWeight = <%% 400, 400, 400, 400, 300 %%>;
 
   subTitleOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
   tagTongOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
@@ -947,9 +906,9 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   portfolioBlockPaddingTop = <%% 50, 45, 35, 35, 7 %%>;
   reviewBlockPaddingTop = <%% 20, 0, 0, 0, 4 %%>;
 
-  blockTitleMarginBottom = <%% (isMac() ? 24 : 21), (isMac() ? 24 : 20), (isMac() ? 21 : 17), (isMac() ? 15 : 12), 3.2 %%>;
+  blockTitleMarginBottom = <%% (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 15 : 13), (isMac() ? 12 : 10), 3.2 %%>;
   blockTitleSize = <%% 20, 20, 19, 17, 4 %%>;
-  blockTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  blockTitleWeight = <%% 800, 800, 800, 800, 600 %%>;
   blockWhitePaddingRight = <%% 15, 15, 15, 15, 3 %%>;
 
   subInfoSize = <%% 8, 8, 7, 6, 2.5 %%>;
@@ -1004,7 +963,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
               width: String(searchWordingCircleWidth) + ea,
               height: String(searchWordingCircleWidth) + ea,
               borderRadius: String(searchWordingCircleWidth) + ea,
-              background: colorChip.green,
+              background: colorExtended.mainBlue,
             }
           }
         ]
@@ -1237,7 +1196,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
                     display: "block",
                     position: "relative",
                     fontSize: String(subTitleSize) + ea,
-                    fontWeight: String(titleWeight),
+                    fontWeight: String(subTitleWeight),
                     color: colorChip.gray5,
                     width: String(subTitleOverWidthRatio * 100) + '%',
                   },
@@ -1269,7 +1228,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
               },
               bold: {
                 fontWeight: String(subInfoWeight),
-                color: colorChip.green,
+                color: colorExtended.mainBlue,
               }
             },
             {
@@ -1425,7 +1384,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
           children: [
             {
               mode: "svg",
-              source: svgMaker.doubleQuote(colorChip.green),
+              source: svgMaker.doubleQuote(colorExtended.mainBlue),
               style: {
                 display: "inline-block",
                 height: String(quoteHeight) + ea,
@@ -1464,7 +1423,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
               style: {
                 display: "inline-block",
                 fontSize: String(subTitleSize) + ea,
-                fontWeight: String(titleWeight),
+                fontWeight: String(subTitleWeight),
                 color: colorChip.gray5,
               }
             },
@@ -1493,7 +1452,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
 
 FrontIndexJs.prototype.insertStrongBox = function (force = false) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1682,7 +1641,7 @@ FrontIndexJs.prototype.insertStrongBox = function (force = false) {
 
 FrontIndexJs.prototype.insertNewsBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, blankHref, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, blankHref, selfHref } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1918,7 +1877,7 @@ FrontIndexJs.prototype.insertNewsBox = function () {
               width: String(titleBarWidth) + ea,
               height: String(titleBarHeight) + ea,
               borderRadius: String(titleBarHeight) + ea,
-              background: colorChip.gradientGreen,
+              background: colorExtended.gradientBlue,
               zIndex: String(-1),
               opacity: String(0.65),
             }
@@ -2038,7 +1997,7 @@ FrontIndexJs.prototype.insertNewsBox = function () {
 
 FrontIndexJs.prototype.insertEndBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -2050,14 +2009,14 @@ FrontIndexJs.prototype.insertEndBox = function () {
   let menuBetween;
   let copyRightSize, copyRightWeight;
 
-  tongPaddingTop = <%% 54, 54, 48, 32, 4.5 %%>;
+  tongPaddingTop = <%% 54, 54, 48, 32, 5 %%>;
   tongPaddingBottom = <%% 66, 66, 55, 39, 5.5 %%>;
 
   fontSize = <%% 18, 17, 16, 14, 17 %%>;
-  fontWeight = <%% 600, 600, 600, 600, 600 %%>;
+  fontWeight = <%% 800, 800, 800, 800, 600 %%>;
   menuBetween = <%% 55, 48, 44, 32, 48 %%>;
 
-  copyRightSize = <%% 16, 15, 14, 12, 2.8 %%>;
+  copyRightSize = <%% 16, 15, 14, 12, 2.6 %%>;
   copyRightWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   mainTong = createNode({
@@ -2149,11 +2108,11 @@ FrontIndexJs.prototype.insertEndBox = function () {
     style: {
       display: "inline-block",
       position: desktop ? "absolute" : "relative",
-      top: desktop ? String(tongPaddingTop) + ea : "",
+      top: desktop ? String(tongPaddingTop + (<&& 3 | 3 | 3 | 3 | 0 &&>)) + ea : "",
       right: desktop ? String(0) : "",
       fontSize: String(copyRightSize) + ea,
       fontWeight: String(copyRightWeight),
-      fontFamily: "graphik",
+      fontFamily: "mont",
       color: colorChip.black,
       textAlign: desktop ? "" : "center",
       width: desktop ? "" : String(100) + '%',
@@ -2164,7 +2123,7 @@ FrontIndexJs.prototype.insertEndBox = function () {
 
 FrontIndexJs.prototype.popupLaunching = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref, blankHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref, blankHref } = GeneralJs;
   const { ea, media, totalContents, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -2313,7 +2272,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker, selfHref } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker, selfHref } = GeneralJs;
   let contents;
   let middleTongPaddinngTop;
   let middleTongPaddingBottom;
@@ -2347,6 +2306,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   let arrowBottom, arrowWidth, arrowHeight;
   let boxNumber;
   let mobileBlockPadding;
+  let mobileBlockPaddingTop;
   let mobilePhotoMarginBottom;
   let mobileTitleMarginBottom;
   let mobileContentsMarginBottom;
@@ -2358,10 +2318,10 @@ FrontIndexJs.prototype.insertThreeBox = function () {
 
   middleTitleLineTop = <%% 68, 65, 56, 49, 12 %%>;
 
-  middleTitleSize = <%% 22, 21, 20, 18, 3.9 %%>;
+  middleTitleSize = <%% 24, 23, 22, 18, 3.9 %%>;
   middleTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   middleTitlePadding = <%% 16, 16, 12, 10, 1.8 %%>;
-  middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+  middleTitleTextTop = <%% 0, 0, 0, 0, 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
   middleInfoSize = <%% 13, 13, 12, 12, 2.7 %%>;
@@ -2369,13 +2329,13 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   threeBetween = <%% 10, 10, 6, 4, 1 %%>;
   threeHeight = <%% 170, 120, 110, 84, 21 %%>;
   threeVisualPaddingBottom = <%% 2, 2, 2, 2, 0.5 %%>;
-  threeBlockMarginTop = <%% 48, 48, 45, 34, 0 %%>;
+  threeBlockMarginTop = <%% 42, 36, 28, 24, 0 %%>;
 
   threeWidth0 = <%% 525, 525, 525, 525, 525 %%>;
   threeWidth1 = <%% 330, 330, 330, 330, 330 %%>;
 
-  threeTitleSize = <%% 18, 17, 16, 14, 4 %%>;
-  threeTitleWeight = <%% 800, 800, 800, 800, 700 %%>;
+  threeTitleSize = <%% 18, 17, 16, 14, 3.8 %%>;
+  threeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   threeSize = <%% 13, 13, 12, 11, 2.6 %%>;
   threeWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -2410,6 +2370,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   arrowWidth = <%% 36, 36, 20, 12, 3 %%>;
   arrowHeight = <%% 10, 10, 8, 4, 1.5 %%>;
 
+  mobileBlockPaddingTop = 11;
   mobileBlockPadding = 14;
   mobilePhotoMarginBottom = 6;
   mobileTitleMarginBottom = 2.5;
@@ -2432,7 +2393,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
           "인테리어 시공 없이 가구, 패브릭, 소품만",
           "집 무드를 변화시켜주는 스타일링",
         ],
-        color: "#bfb8b0",
+        color: colorExtended.mainBlue,
         background: FrontIndexJs.binaryPath + "/" + "startf0.jpg",
         href: FRONTHOST + "/service.php?mode=furnishing",
       },
@@ -2443,7 +2404,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
           "집 컨디션에 맞는 범위의 시공을 진행",
           "컨셉에 맞게 변화시켜주는 스타일링",
         ],
-        color: "#b1ae9d",
+        color: colorExtended.mainBlue,
         background: FrontIndexJs.binaryPath + "/" + "starts0.jpg",
         href: FRONTHOST + "/service.php?mode=styling",
       },
@@ -2454,7 +2415,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
           "원하는 스타일과 라이프 패턴에 맞게 기획",
           "전체적인 구조를 변경하는 스타일링",
         ],
-        color: "#546d81",
+        color: colorExtended.mainBlue,
         background: FrontIndexJs.binaryPath + "/" + "startt0.jpg",
         href: FRONTHOST + "/service.php?mode=total",
       },
@@ -2480,7 +2441,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
       width: String(standardWidth) + ea,
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
       height: String(100) + '%',
-      paddingTop: desktop ? "" : String(mobileBlockPadding) + ea,
+      paddingTop: desktop ? "" : String(mobileBlockPaddingTop) + ea,
       paddingBottom: desktop ? "" : String(mobileBlockPadding) + ea,
       textAlign: desktop ? "" : "center",
     }
@@ -2509,13 +2470,15 @@ FrontIndexJs.prototype.insertThreeBox = function () {
       },
       children: [
         {
-          text: contents.title,
+          text: "HomeLiaison service",
           style: {
             display: "inline-block",
             position: "relative",
+            fontFamily: "mont",
             fontSize: String(middleTitleSize) + ea,
             fontWeight: String(middleTitleWeight),
             color: colorChip.black,
+            opacity: String(0.95),
             textAlign: "center",
             paddingLeft: String(middleTitlePadding) + ea,
             paddingRight: String(middleTitlePadding) + ea,
@@ -2523,22 +2486,6 @@ FrontIndexJs.prototype.insertThreeBox = function () {
             background: colorChip.white,
           }
         },
-        {
-          text: contents.description.join("\n"),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(middleInfoSize) + ea,
-            fontWeight: String(400),
-            lineHeight: String(1.6),
-            color: colorChip.black,
-            textAlign: "center",
-            paddingTop: String(middleTitlePadding) + ea,
-            paddingLeft: String(middleTitlePadding * 1.5) + ea,
-            paddingRight: String(middleTitlePadding * 1.5) + ea,
-            background: colorChip.white,
-          }
-        }
       ]
     });
   }
@@ -2653,11 +2600,11 @@ FrontIndexJs.prototype.insertThreeBox = function () {
                   style: {
                     display: "inline-block",
                     position: "relative",
-                    fontSize: String(2.7) + ea,
+                    fontSize: String(2.8) + ea,
                     fontWeight: String(500),
                     color: colorChip.gray3,
-                    fontFamily: "graphik",
-                    fontStyle: "italic",
+                    fontFamily: "mont",
+                    fontStyle: "normal",
                     marginLeft: String(1.2) + ea,
                   }
                 }
@@ -2771,7 +2718,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
 
 FrontIndexJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce, serviceParsing, facebookSdkPatch } = GeneralJs;
+  const { returnGet, ajaxJson, setQueue, colorExtended, setDebounce, serviceParsing, facebookSdkPatch } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 

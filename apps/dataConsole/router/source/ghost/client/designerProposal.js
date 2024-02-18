@@ -244,7 +244,7 @@ class WordsDictionary {
   colorMatching(str) {
     if (/\<b\%/gi.test(str)) {
       str = str.replace(/(\<b\%[^\%]+\%b\>)/gi, (match, p1, offset, string) => {
-        return `<b style="color:${GeneralJs.colorChip.green}">${p1.slice(3, -3)}</b>`;
+        return `<b style="color:${GeneralJs.colorExtended.mainBlue}">${p1.slice(3, -3)}</b>`;
       });
     }
     return str;
@@ -604,7 +604,7 @@ DesignerProposalJs.prototype.proposalMapGenerator = function (designer) {
 
 DesignerProposalJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -784,7 +784,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
 
 DesignerProposalJs.prototype.insertInfoBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, svgMaker, serviceParsing } = GeneralJs;
   const { client, ea, media, osException } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -933,7 +933,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
       children: [
         {
           mode: "svg",
-          source: svgMaker.serifAsterisk(colorChip.green),
+          source: svgMaker.serifAsterisk(colorExtended.mainBlue),
           style: {
             display: "inline-block",
             width: String(2.6) + ea,
@@ -959,7 +959,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
     bold: {
       fontSize: String(initWordingSize) + ea,
       fontWeight: String(700),
-      color: colorChip.green,
+      color: colorExtended.mainBlue,
     }
   });
 
@@ -981,7 +981,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
       bold: {
         fontSize: String(initWordingSize) + ea,
         fontWeight: String(700),
-        color: colorChip.green,
+        color: colorExtended.mainBlue,
       }
     });
   }
@@ -1028,7 +1028,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
         bold: {
           fontSize: String(factorSize) + ea,
           fontWeight: String(400),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
         }
       });
   
@@ -1064,7 +1064,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
       bold: {
         fontSize: String(factorSize) + ea,
         fontWeight: String(400),
-        color: colorChip.green,
+        color: colorExtended.mainBlue,
       }
     });
 
@@ -1115,7 +1115,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   const { ea, media, naviHeight, totalContents } = this;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   const { desid, designer, pictureSettings, description } = info;
-  const { createNode, colorChip, withOut, removeByClass, serviceParsing, dateToString, isMac } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, removeByClass, serviceParsing, dateToString, isMac } = GeneralJs;
   const { top, bottom, left } = this.subBoxMargin;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1211,7 +1211,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   } else {
     thisDesignerEndBoo = false;
   }
-  designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip[thisDesignerEndBoo ? "gray5" : "green"] + "\">" + this.abc[this.abcStatic] + (instance.updateMode ? " (" + designer + ")" : "") + "</b>" + (thisDesignerEndBoo ? "&nbsp;&nbsp;: 해당 디자이너는 마감되었습니다." : ""));
+  designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorExtended[thisDesignerEndBoo ? "gray5" : "mainBlue"] + "\">" + this.abc[this.abcStatic] + (instance.updateMode ? " (" + designer + ")" : "") + "</b>" + (thisDesignerEndBoo ? "&nbsp;&nbsp;: 해당 디자이너는 마감되었습니다." : ""));
   style = {
     position: "relative",
     marginLeft: String(desktop ? leftMargin : 0) + ea,
@@ -1374,7 +1374,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
     createNode({
       mother: designerTitle,
       mode: "svg",
-      source: instance.mother.returnMainMark(colorChip.green),
+      source: instance.mother.returnMainMark(colorExtended.mainBlue),
       style: {
         display: "inline-block",
         position: "relative",
@@ -1764,7 +1764,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
   const mobile = media[4];
   const desktop = !mobile;
   const { top, bottom, left } = this.subBoxMargin;
-  const { createNode, withOut, colorChip } = GeneralJs;
+  const { createNode, withOut, colorChip, colorExtended } = GeneralJs;
   const thisDesigner = this.designers.pick(desid);
   const map = this.proposalMapGenerator(thisDesigner);
   let propertyBox;
@@ -1881,7 +1881,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
 
     //circle
     if (desktop) {
-      pointClone = SvgTong.stringParsing(this.mother.returnPoint(String(pointRadius) + ea, GeneralJs.colorChip.green));
+      pointClone = SvgTong.stringParsing(this.mother.returnPoint(String(pointRadius) + ea, GeneralJs.colorExtended.mainBlue));
       style = {
         position: "absolute",
         width: String(pointRadius * 2) + ea,
@@ -1911,7 +1911,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
       bold: {
         fontSize: String(titleSize) + ea,
         fontWeight: String(200),
-        color: colorChip.green,
+        color: colorExtended.mainBlue,
       }
     })
 
@@ -1927,7 +1927,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
         wordSpacing: String(wordSpacing) + "px",
         left: String((pointRadius * 2) + valueIndent - checkBoxRadiusIntend) + ea,
         top: String(0) + ea,
-        color: GeneralJs.colorChip.green
+        color: GeneralJs.colorExtended.mainBlue
       };
       if (mobile) {
         delete style.left;
@@ -1975,7 +1975,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
           position: "relative",
           fontSize: "inherit",
           fontWeight: (map[i].value.includes(map[i].standard[z].replace(/[^가-힣]/gi, '')) ? String(400) : "inherit"),
-          color: (map[i].value.includes(map[i].standard[z].replace(/[^가-힣]/gi, '')) ? GeneralJs.colorChip.green : "inherit"),
+          color: (map[i].value.includes(map[i].standard[z].replace(/[^가-힣]/gi, '')) ? GeneralJs.colorExtended.mainBlue : "inherit"),
           wordSpacing: String(wordSpacing) + "px",
           marginRight: String(map[i].type === "checkbox" ? checkboxMarginRight : radioMarginRight) + ea,
           top: String(0) + ea,
@@ -1996,7 +1996,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
         }
 
         if (map[i].value.includes(map[i].standard[z].replace(/[^가-힣]/gi, ''))) {
-          valueDomCircle = SvgTong.stringParsing(this.mother.returnCheckBox(GeneralJs.colorChip.green));
+          valueDomCircle = SvgTong.stringParsing(this.mother.returnCheckBox(GeneralJs.colorExtended.mainBlue));
         } else {
           valueDomCircle = SvgTong.stringParsing(this.mother.returnCheckBox(GeneralJs.colorChip.gray3));
         }
@@ -2050,7 +2050,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
           height: String(tendencyHeight) + ea,
         };
         if (mobile) {
-          style.color = GeneralJs.colorChip.green;
+          style.color = GeneralJs.colorExtended.mainBlue;
         }
         for (let j in style) {
           valueDomText.style[j] = style[j];
@@ -2062,7 +2062,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
           position: "absolute",
           left: String(valueDomBarLeft) + ea,
           top: String(desktop ? -1 * (tendencyMargin / 2) : 0) + ea,
-          color: GeneralJs.colorChip.green,
+          color: GeneralJs.colorExtended.mainBlue,
           width: "calc(100% - " + String(valueDomBarLeft + valueDomValueWidth + valueDomValueMargin) + ea + ")",
           height: String(tendencyHeight * (desktop ? 0.8 : 0.7)) + ea,
           borderRadius: String(3) + "px",
@@ -2082,8 +2082,8 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
             boxSizing: "border-box",
           };
           if (y <= map[i].value[map[i].standard[z].column] - 1) {
-            style.background = GeneralJs.colorChip.green;
-            style.borderRight = "1px solid " + GeneralJs.colorChip.green;
+            style.background = GeneralJs.colorExtended.mainBlue;
+            style.borderRight = "1px solid " + GeneralJs.colorExtended.mainBlue;
           } else {
             style.background = GeneralJs.colorChip.gray1;
             style.borderRight = "1px solid " + GeneralJs.colorChip.white;
@@ -2114,7 +2114,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
           wordSpacing: String(wordSpacing) + ea,
           right: String(0) + ea,
           top: String(-1 * (tendencyMargin)) + ea,
-          color: GeneralJs.colorChip.green,
+          color: GeneralJs.colorExtended.mainBlue,
           width: String(valueDomValueWidth) + ea,
           height: String(tendencyHeight) + ea,
         };
@@ -2251,7 +2251,7 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
         fontWeight: String(400),
         right: String(portfolioRight) + ea,
         top: String(0) + ea,
-        color: GeneralJs.colorChip.green,
+        color: GeneralJs.colorExtended.mainBlue,
         wordSpacing: String(wordSpacing) + "px",
       };
       if (mobile) {
@@ -2293,7 +2293,7 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
           fontWeight: String(400),
           right: String(0) + ea,
           top: String(0) + ea,
-          color: (/re999/gi.test(link.review) ? GeneralJs.colorChip.gray4 : GeneralJs.colorChip.green),
+          color: (/re999/gi.test(link.review) ? GeneralJs.colorChip.gray4 : GeneralJs.colorExtended.mainBlue),
           wordSpacing: String(wordSpacing) + "px",
         };
         if (!/re999/gi.test(link.review)) {
@@ -2327,7 +2327,7 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
 
 DesignerProposalJs.prototype.designerTransfer = function (mother, desid) {
   const instance = this;
-  const { ajaxJson, colorChip, createNode, withOut, dateToString, blankHref } = GeneralJs;
+  const { ajaxJson, colorChip, colorExtended, createNode, withOut, dateToString, blankHref } = GeneralJs;
   const { ea, media, frontPage } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -2392,7 +2392,7 @@ DesignerProposalJs.prototype.designerTransfer = function (mother, desid) {
         style: {
           fontSize: String(buttonSize) + ea,
           fontWeight: String(300),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
           position: "relative",
           top: String(desktop ? textTop : -0.1) + ea,
         },
@@ -2416,7 +2416,7 @@ DesignerProposalJs.prototype.designerTransfer = function (mother, desid) {
 DesignerProposalJs.prototype.feeToString = function (fee) {
   const instance = this;
   const { ea, media } = this;
-  const { autoComma } = GeneralJs;
+  const { autoComma, colorExtended } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const blank = desktop ? "<b%&nbsp;&nbsp;/&nbsp;&nbsp;%b>" : "\n";
@@ -2456,7 +2456,7 @@ DesignerProposalJs.prototype.feeToString = function (fee) {
 DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   const instance = this;
   const { ea, media } = this;
-  const { withOut, createNode, colorChip, isMac } = GeneralJs;
+  const { withOut, createNode, colorChip, colorExtended, isMac } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   let arrowBox, arrowHead, moneyBox, vatBox;
@@ -2513,7 +2513,7 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
       fontSize: String(feeSize) + ea,
       fontWeight: String(500),
       paddingLeft: desktop ? String(barMargin) + ea : "",
-      color: colorChip.green,
+      color: colorExtended.black,
       background: colorChip.white,
       width: desktop ? "" : String(100) + '%',
       textAlign: desktop ? "" : "center",
@@ -2545,7 +2545,7 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
       fontWeight: String(200),
       lineHeight: desktop ? "" : String(1.5),
       marginTop: desktop ? "" : String(0.5) + ea,
-      color: colorChip.green
+      color: colorExtended.mainBlue
     }
   });
 
@@ -2554,7 +2554,7 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
 DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
   const instance = this;
   const { ea, media } = this;
-  const { dateToString, autoComma } = GeneralJs;
+  const { dateToString, autoComma, colorExtended } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const { top, bottom, left } = this.subBoxMargin;
@@ -2760,7 +2760,7 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
       fontWeight: String(400),
       right: String(0) + ea,
       top: String(0) + ea,
-      color: GeneralJs.colorChip.green,
+      color: GeneralJs.colorExtended.mainBlue,
       wordSpacing: String(wordSpacing) + "px",
     };
     if (mobile) {
@@ -2792,7 +2792,7 @@ DesignerProposalJs.prototype.insertWordBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson } = GeneralJs;
   const words = new WordsDictionary();
   const matrix = words.getMatrix();
   const subWords = words.getSubWording();
@@ -2909,7 +2909,7 @@ DesignerProposalJs.prototype.insertWordBox = function () {
         style.width = String(box1Size) + ea;
         style.marginRight = String(box1Margin) + ea;
         style.fontWeight = String(600);
-        style.color = GeneralJs.colorChip.green;
+        style.color = GeneralJs.colorExtended.mainBlue;
         style.textAlign = "right";
       } else {
         style.width = "calc(100% - " + String(box0Size + box1Size + box0Margin + box1Margin) + ea + ")";
@@ -2933,7 +2933,7 @@ DesignerProposalJs.prototype.insertWordBox = function () {
         }
         if (z === 1) {
           style.width = String(box0Size) + ea;
-          style.color = GeneralJs.colorChip.green;
+          style.color = GeneralJs.colorExtended.mainBlue;
         }
         if (z === 2) {
           style.width = GeneralJs.withOut(((this.subBoxMargin.left + 0.2) * 2) + box0Size, ea);
@@ -2944,7 +2944,7 @@ DesignerProposalJs.prototype.insertWordBox = function () {
         div_clone2.style[j] = style[j];
       }
       if (/\<b\%/gi.test(arr[z])) {
-        arr[z] = arr[z].replace(/\<b\%/gi, "<b style=\"color:" + GeneralJs.colorChip.green + "\">");
+        arr[z] = arr[z].replace(/\<b\%/gi, "<b style=\"color:" + GeneralJs.colorExtended.mainBlue + "\">");
         arr[z] = arr[z].replace(/\%b\>/gi, "</b>");
       }
       div_clone2.insertAdjacentHTML("beforeend", arr[z]);
@@ -2991,11 +2991,11 @@ DesignerProposalJs.prototype.insertWordBox = function () {
         },
         bold: {
           fontWeight: String(600),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
         },
         under: {
           "text-decoration": "underline",
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
         },
       });
     }
@@ -3125,7 +3125,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac } = GeneralJs;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac } = GeneralJs;
   const words = new WordsDictionary();
   const serviceObj = words.getServiceWording();
   let whiteBlock;
@@ -3333,11 +3333,11 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
       },
       bold: {
         fontWeight: String(600),
-        color: colorChip.green,
+        color: colorExtended.mainBlue,
       },
       under: {
         "text-decoration": "underline",
-        color: colorChip.green,
+        color: colorExtended.mainBlue,
       }
     });
   } else {
@@ -3375,11 +3375,11 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
       },
       bold: {
         fontWeight: String(600),
-        color: colorChip.green,
+        color: colorExtended.mainBlue,
       },
       under: {
         "text-decoration": "underline",
-        color: colorChip.green,
+        color: colorExtended.mainBlue,
       }
     });
   }
@@ -3487,7 +3487,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
         style: {
           fontSize: String(grayTextSize) + ea,
           fontWeight: String(400),
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
         }
       }
     ]);
@@ -3534,7 +3534,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
         bottom: String(mobileAllViewBottom) + ea,
         right: String(mobileAllViewRight) + ea,
         fontWeight: String(600),
-        color: colorChip.green,
+        color: colorExtended.mainBlue,
       }
     });
     tempTitle.addEventListener("click", function (e) {
@@ -3652,7 +3652,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
                 lineHeight: String(1.5),
                 top: String(amountTextTop) + ea,
                 right: mobile ? String(0) + ea : "",
-                color: colorChip.green,
+                color: colorExtended.mainBlue,
               }
             }
           ]
@@ -3704,7 +3704,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
           lineHeight: String(1.5),
         },
         bold: {
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
         }
       });
     }
@@ -3752,7 +3752,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
         bottom: String(mobileAllViewBottom) + ea,
         right: String(mobileAllViewRight) + ea,
         fontWeight: String(600),
-        color: colorChip.green,
+        color: colorExtended.mainBlue,
       }
     });
     tempTitle.addEventListener("click", function (e) {
@@ -3890,7 +3890,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
           lineHeight: String(1.5),
         },
         bold: {
-          color: colorChip.green,
+          color: colorExtended.mainBlue,
         }
       });
       if (j !== serviceObj.process.contents[i].contents.length - 1) {
@@ -3908,7 +3908,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
           children: [
             {
               mode: "svg",
-              source: instance.mother.returnLongArrow(colorChip.green),
+              source: instance.mother.returnLongArrow(colorExtended.mainBlue),
               style: {
                 position: "absolute",
                 width: String(processArrowWidth) + ea,
@@ -3929,7 +3929,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { isIphone, isMac } = GeneralJs;
+  const { isIphone, isMac, colorExtended } = GeneralJs;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   let whiteBlock;
   let style;
@@ -4060,7 +4060,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
     designerButton.addEventListener("click", function (e) {
       const toggle = this.getAttribute("toggle");
       const onStyle = {
-        background: GeneralJs.colorChip.softGreen,
+        background: GeneralJs.colorExtended.mainBlue,
         color: GeneralJs.colorChip.white
       };
       const offStyle = {
@@ -4115,7 +4115,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
     position: "relative",
     width: String(buttonWidth * 1.25) + ea,
     height: String(100) + '%',
-    background: GeneralJs.colorChip.gradientGreen,
+    background: GeneralJs.colorExtended.gradientBlue,
     borderRadius: String(5) + "px",
     cursor: "pointer",
   };
@@ -4194,7 +4194,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   informationArea.insertAdjacentHTML("beforeend", "* 디자이너를 선택 후,<br>위 버튼을 눌러주세요!");
   style = {
     fontSize: String(desktop ? (!media[3] ? 13 : 11) : 3) + ea,
-    color: GeneralJs.colorChip.green,
+    color: GeneralJs.colorExtended.mainBlue,
     wordSpacing: String(wordSpacing) + "px",
     lineHeight: String(desktop && !media[3] ? 1.5 : 1.4),
   };
@@ -4213,7 +4213,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
 DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
   const instance = this;
   const { frontPage } = this;
-  const { returnGet, ajaxJson, homeliaisonAnalytics, sleep, selfHref } = GeneralJs;
+  const { returnGet, ajaxJson, homeliaisonAnalytics, colorExtended, sleep, selfHref } = GeneralJs;
   const getObj = returnGet();
   let name, phone;
 
@@ -4264,7 +4264,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
 
 DesignerProposalJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, sleep, equalJson, requestPromise, homeliaisonAnalytics, dateToString } = GeneralJs;
+  const { returnGet, ajaxJson, sleep, equalJson, colorExtended, requestPromise, homeliaisonAnalytics, dateToString } = GeneralJs;
   try {
 
     this.mother.setGeneralProperties(this);

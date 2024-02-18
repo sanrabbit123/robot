@@ -58,7 +58,7 @@ UniversalEstimationJs.binaryPath = FRONTHOST + "/middle/estimation";
 UniversalEstimationJs.prototype.billWordings = function () {
   const instance = this;
   const { client, designer, project, media, bill, requestNumber } = this;
-  const { dateToString, autoComma } = GeneralJs;
+  const { dateToString, autoComma, colorExtended } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const { analytics, request } = client.requests[this.clientRequestNumber];
@@ -186,7 +186,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
 
 UniversalEstimationJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -369,7 +369,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
   const { client, designer, ea, baseTong, media, bill, request, completeMode, completeInfo } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, isMac, isIphone, setQueue, autoHypenPhone } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, isMac, isIphone, setQueue, autoHypenPhone } = GeneralJs;
   const wordings = this.billWordings();
   const cashTarget = "cashTarget";
   const businessTarget = "businessTarget";
@@ -761,7 +761,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
           fontSize: String(initWordingSize) + ea,
           fontWeight: String(initWordingWeight),
           textAlign: "center",
-          color: completeMode ? colorChip.green : colorChip.black
+          color: completeMode ? colorExtended.mainBlue : colorChip.black
         }
       });
     }
@@ -804,7 +804,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
                 textAlign: "right",
                 background: colorChip.white,
                 paddingLeft: String(sumBoxMainPaddingLeft) + ea,
-                color: colorChip.green,
+                color: colorExtended.mainBlue,
               }
             }
           ]
@@ -848,7 +848,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
                 textAlign: "right",
                 background: colorChip.white,
                 paddingLeft: String(sumBoxMainPaddingLeft) + ea,
-                color: colorChip.green,
+                color: colorExtended.mainBlue,
               }
             },
             {
@@ -917,7 +917,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
     bold: {
       fontSize: String(initWordingSize + (desktop ? 0 : 0.3)) + ea,
       fontWeight: String(600),
-      color: colorChip.green,
+      color: colorExtended.mainBlue,
     }
   });
 
@@ -941,7 +941,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
       under: {
         fontSize: String(initWordingSize) + ea,
         fontWeight: String(600),
-        color: colorChip.green,
+        color: colorExtended.mainBlue,
       }
     });
   }
@@ -1267,7 +1267,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
                 for (let dom of targets) {
                   dom.style.opacity = String(1);
                 }
-                [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.green;
+                [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorExtended.mainBlue;
 
                 greenNoticeMother = createNode({
                   mode: "aside",
@@ -1277,7 +1277,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
                     width: withOut((cashPaddingLeft * 2) + inputBaseVisual + cashSubmitButtonBetween + cashSubmitButtonWidth, ea),
                     top: String(cashInputTop + inputBaseHeight + cashSubmitButtonBetween) + ea,
                     left: String(cashPaddingLeft + inputBaseVisual) + ea,
-                    background: colorChip.gradientGreen,
+                    background: colorExtended.gradientBlue,
                     borderRadius: String(5) + "px",
                     animation: "fadeuplite 0.3s ease forwards",
                     paddingTop: String(greenNoticePaddingTop) + ea,
@@ -1450,7 +1450,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
                 for (let dom of targets) {
                   dom.style.opacity = String(1);
                 }
-                [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.green;
+                [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorExtended.mainBlue;
 
                 greenNoticeMother = createNode({
                   mode: "aside",
@@ -1460,7 +1460,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
                     width: withOut((cashPaddingLeft * 2) + inputBaseVisual + cashSubmitButtonBetween + cashSubmitButtonWidth, ea),
                     top: String(secondTop + cashInputTop + inputBaseHeight + cashSubmitButtonBetween) + ea,
                     left: String(cashPaddingLeft + inputBaseVisual) + ea,
-                    background: colorChip.gradientGreen,
+                    background: colorExtended.gradientBlue,
                     borderRadius: String(5) + "px",
                     animation: "fadeuplite 0.3s ease forwards",
                     paddingTop: String(greenNoticePaddingTop) + ea,
@@ -1693,7 +1693,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
         position: "relative",
         width: String(greenButtonWidth) + ea,
         height: String(greenButtonHeight) + ea,
-        background: colorChip.green,
+        background: colorExtended.mainBlue,
         textAlign: "center",
         borderRadius: String(3) + "px",
         marginRight: String(greenButtonBetween) + ea,
@@ -1730,7 +1730,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
         position: "relative",
         width: String(greenButtonWidth + 3) + ea,
         height: String(greenButtonHeight) + ea,
-        background: colorChip.green,
+        background: colorExtended.mainBlue,
         textAlign: "center",
         borderRadius: String(3) + "px",
         marginLeft: String(greenButtonBetween) + ea,
@@ -1768,7 +1768,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
         position: "relative",
         width: String(greenButtonWidth) + ea,
         height: String(greenButtonHeight) + ea,
-        background: colorChip.green,
+        background: colorExtended.mainBlue,
         textAlign: "center",
         borderRadius: String(3) + "px",
         marginLeft: String(greenButtonBetween) + ea,
@@ -1806,7 +1806,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
         position: "relative",
         width: String(greenButtonWidth) + ea,
         height: String(greenButtonHeight) + ea,
-        background: colorChip.green,
+        background: colorExtended.mainBlue,
         textAlign: "center",
         borderRadius: String(3) + "px",
         marginLeft: String(greenButtonBetween) + ea,
@@ -1836,7 +1836,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
 
 UniversalEstimationJs.prototype.payComplete = async function (data, pythonSend = true) {
   const instance = this;
-  const { ajaxJson, returnGet } = GeneralJs;
+  const { ajaxJson, returnGet, colorExtended } = GeneralJs;
   const { bill, requestNumber, completeInfo } = this;
   try {
     if (typeof data.MOID !== "string") {
