@@ -39,73 +39,14 @@
 
 const AspirantExplanationJs = function () {
   this.mother = new GeneralJs();
-  this.colorExtended = {
-    white: "#ffffff",
-    whiteIcon: "#ffffff",
-    whiteBlack: "#ffffff",
-    whiteGray: "#fbfbfb",
-    gray0: "#f7f7f7",
-    gray1: "#f2f2f2",
-    gray2: "#ececec",
-    gray3: "#dddddd",
-    gray4: "#cccccc",
-    gray5: "#aaaaaa",
-    gray6: "#e2e2e2",
-    grayDeactive: "#c2c2c2",
-    deactive: "#bbbbbb",
-    liteShadow: "#bbbbbb",
-    shadow: "#808080",
-    shadowWhite: "#808080",
-    darkShadow: "#606060",
-    darkDarkShadow: "#505050",
-    liteBlack: "#aaaaaa",
-    black: "#404040",
-    darkBlack: "#303030",
-    realBlack: "#202020",
-    gradientGreen: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-    gradientGreen2: "linear-gradient(222deg, rgba(89, 175, 137, 0.8) 5%, rgba(0, 156, 106, 0.9) 100%)",
-    gradientGreen3: "linear-gradient(172deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-    gradientGreen4: "linear-gradient(222deg, rgba(89, 175, 137, 1) 5%, rgba(0, 156, 106, 1) 100%)",
-    gradientGreenWhite: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
-    greenGray: "#2fa678",
-    greenWhite: "#2fa678",
-    greenBlack: "#2fa678",
-    cancelBlack: "#404040",
-    green: "#2fa678",
-    softGreen: "#59af89",
-    darkGreen: "#009b6a",
-    whiteGreen: "#bedacb",
-    middleGreen: "#83cea7",
-    liteGreen: "#f0f9f5",
-    gradientGray: "linear-gradient(256deg, rgba(17, 17, 17, 0.8) 0%, rgba(20, 20, 20, 0.75) 100%)",
-    gradientBlack: "linear-gradient(256deg, rgba(17, 17, 17, 0.9) 0%, rgba(20, 20, 20, 0.75) 100%)",
-    red: "#ff5f57",
-    yellow: "#ffbd3d",
-    purple: "#ba7dd7",
-    darkRed: "#d13939",
-    mainBlue: "#a2bbc6",
-    blue: "#a2bbc6",
-    blueMiddle: "#97b8c9",
-    blueDark: "#7f9fb3",
-    blueLight: "#bed2d9",
-    blueWhite: "#dae5e9",
-    ultimateBlack: "#000000",
-    subRed: "#ee7e52",
-    subYellow: "#f5cc63",
-    yellowLine: "#cc921f",
-    warmGray0: "#f2f2f2",
-    warmGray1: "#ececec",
-    warmGrayMiddle: "#dddddd",
-    warmGray2: "#cccccc",
-  }
 }
 
 AspirantExplanationJs.binaryPath = FRONTHOST + "/middle/aspirant";
 
 AspirantExplanationJs.prototype.insertInitBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
-  const { ea, media, baseTong, colorExtended, standardWidth, totalContents, naviHeight } = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const submitBlockClassName = "submitBlockClassName";
@@ -140,9 +81,9 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     plusRatio = <%% 0.45, 0.7, 0, 0, 0 %%>;
     plusWidth = ((leftRightWidth * plusRatio) * 2) + standardWidth
 
-    firstBasePaddingTop = <%% 24, 24, 24, 24, 9 %%>;
+    firstBasePaddingTop = <%% 24, 24, 24, 24, 8 %%>;
 
-    titleHeight = <%% 120, 106, 98, 84, 29 %%>;
+    titleHeight = <%% 120, 106, 102, 84, 28 %%>;
 
     whitePopupWidth = <%% 1200, 1000, 800, 780, 90 %%>;
     whitePopupMargin = <%% 40, 40, 36, 32, 5 %%>;
@@ -152,13 +93,13 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     pinWidth = <%% 6, 6, 5, 4, 0.7 %%>;
 
     firstBasePaddingBottom = <%% 170, 170, 160, 120, 20 %%>;
-    blueTop = <%% 200, 200, 200, 200, 20 %%>;
+    blueTop = <%% 200, 200, 200, 200, 28 %%>;
 
     subTitleSize = <%% 18, 18, 17, 15, 3.6 %%>;
     subTitleWeight = <%% 300, 300, 300, 300, 600 %%>;
     subTitleMarginTop = <%% 16, 16, 12, 10, 2.2 %%>;
 
-    illustMarginTop = <%% 116, 110, 80, 80, 10 %%>;
+    illustMarginTop = <%% 116, 110, 80, 80, 9 %%>;
 
     buttonMarginTop = <%% 4, 4, 24, 20, 3.6 %%>;
     buttonWidth = <%% 160, 145, 140, 130, 31 %%>;
@@ -198,11 +139,11 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
       child: {
         style: {
           position: "absolute",
-          top: String((-1 * blueTop) + naviHeight) + ea,
+          top: desktop ? String((-1 * blueTop) + naviHeight) + ea : "calc(calc(" + String(naviHeight) + "px" + ") - " + String(blueTop) + ea + ")",
           left: String(-1 * minusLeft) + ea,
-          background: colorExtended.mainBlue,
+          background: colorExtended.gradientBlue,
           width: withOut(-1 * (minusLeft * 2), ea),
-          height: withOut(1 * ((-1 * blueTop) + naviHeight), ea),
+          height: desktop ? withOut(1 * ((-1 * blueTop) + naviHeight), ea) : String(185) + ea,
         }
       }
     });
@@ -481,8 +422,8 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
 
 AspirantExplanationJs.prototype.insertSecondBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, baseTong, colorExtended, standardWidth, naviHeight } = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
   try {
@@ -1138,8 +1079,8 @@ AspirantExplanationJs.prototype.insertSecondBox = async function () {
 
 AspirantExplanationJs.prototype.insertThirdBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, equalJson, removeByClass } = GeneralJs;
-  const { ea, media, baseTong, colorExtended, standardWidth, totalContents, naviHeight } = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, equalJson, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const blackPopupClassName = "blackPopupClassName";
@@ -2066,8 +2007,8 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
 
 AspirantExplanationJs.prototype.insertFourthBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, baseTong, colorExtended, standardWidth, naviHeight } = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
   try {
@@ -2649,8 +2590,8 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
 
 AspirantExplanationJs.prototype.insertFifthBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, baseTong, colorExtended, standardWidth, naviHeight } = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
   try {
@@ -3469,8 +3410,8 @@ AspirantExplanationJs.prototype.insertFifthBox = async function () {
 
 AspirantExplanationJs.prototype.insertSixthBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, baseTong, colorExtended, standardWidth, naviHeight } = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const position0ReviewClassName = "position0ReviewClassName";
@@ -3561,7 +3502,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
     basePaddingTop = <%% 170, 170, 160, 140, 20 %%>;
     basePaddingBottom = <%% 200, 200, 190, 170, 24 %%>;
 
-    colorTop = <%% 200, 200, 200, 200, 200 %%>;
+    colorTop = <%% 200, 200, 200, 200, 160 %%>;
 
     whiteBoxBorderRadius = <%% 10, 10, 10, 10, 4 %%>;
 
@@ -3656,7 +3597,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
           position: "absolute",
           top: String(0),
           left: String(-1 * minusLeft) + ea,
-          background: colorExtended.mainBlue,
+          background: colorExtended.gradientBlue,
           width: withOut(-1 * (minusLeft * 2), ea),
           height: withOut(1 * ((-1 * colorTop) + naviHeight), ea),
         }
@@ -4399,8 +4340,8 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
 
 AspirantExplanationJs.prototype.resizeEvent = function () {
   const instance = this;
-  const { homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, baseTong, colorExtended, standardWidth, totalContents, naviHeight } = this;
+  const { homeliaisonAnalytics, colorExtended } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
 
@@ -4471,10 +4412,11 @@ AspirantExplanationJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, dateToString, homeliaisonAnalytics } = GeneralJs;
+    const { returnGet, ajaxJson, dateToString, homeliaisonAnalytics, colorExtended } = GeneralJs;
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
+    
     await this.mother.ghostClientLaunching({
       mode: "ghost",
       name: "aspirantExplanation",
