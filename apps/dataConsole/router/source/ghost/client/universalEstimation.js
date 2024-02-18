@@ -524,7 +524,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
   greenButtonWidth = <%% 122, 122, 122, 110, 20 %%>;
   greenButtonHeight = <%% 47, 47, 45, 40, 8.4 %%>;
   greenButtonFontSize = <%% 20, 20, 20, 16, 3.8 %%>;
-  greenButtonTextTop = <%% (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), 1.2 %%>;
+  greenButtonTextTop = <%% (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), 1.3 %%>;
   greenButtonBetween = <%% 4, 4, 4, 2, 0.6 %%>;
 
   greenBasePaddingTop = <%% 10, 10, 10, 10, 3.8 %%>;
@@ -1707,7 +1707,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
             width: String(100) + '%',
             left: String(0),
             fontSize: String(greenButtonFontSize) + ea,
-            fontWeight: String(400),
+            fontWeight: String(800),
             color: colorChip.white,
             textAlign: "center",
           }
@@ -1745,7 +1745,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
             width: String(100) + '%',
             left: String(0),
             fontSize: String(greenButtonFontSize) + ea,
-            fontWeight: String(400),
+            fontWeight: String(800),
             color: colorChip.white,
             textAlign: "center",
           }
@@ -1782,7 +1782,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
             width: String(100) + '%',
             left: String(0),
             fontSize: String(greenButtonFontSize) + ea,
-            fontWeight: String(400),
+            fontWeight: String(800),
             color: colorChip.white,
             textAlign: "center",
           }
@@ -1820,7 +1820,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
             width: String(100) + '%',
             left: String(0),
             fontSize: String(greenButtonFontSize) + ea,
-            fontWeight: String(400),
+            fontWeight: String(800),
             color: colorChip.white,
             textAlign: "center",
           }

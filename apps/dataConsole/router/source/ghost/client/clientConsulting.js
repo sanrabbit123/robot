@@ -468,7 +468,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   addressWidth = <%% 54, 54, 46, 46, 11 %%>;
   addressSize = <%% 13, 13, 12, 12, 3 %%>;
   addressWeight = <%% 600, 600, 600, 600, 600 %%>;
-  addressTop = <%% (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), 1.2 %%>;
+  addressTop = <%% (isMac() ? 6 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), 1.2 %%>;
 
   leftCheck0 = <%% 125, 112, 98, 98, 22.8 %%>;
   leftCheck1 = <%% 195, 176, 156, 152, 36.5 %%>;
@@ -1724,7 +1724,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
               width: String(100) + '%',
               textAlign: "center",
               fontSize: String(addressSize) + ea,
-              fontWeight: String(800),
+              fontWeight: String(700),
               color: colorChip.white,
               position: "relative",
               top: String(addressTop) + ea,

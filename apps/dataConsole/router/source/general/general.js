@@ -6798,7 +6798,7 @@ GeneralJs.prototype.consultingPopup = function () {
     addressWidth = <%% 54, 54, 46, 46, 11 %%>;
     addressSize = <%% 13, 13, 12, 12, 3 %%>;
     addressWeight = <%% 600, 600, 600, 600, 600 %%>;
-    addressTop = <%% (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), (isMac() ? 5 : 7), 1.2 %%>;
+    addressTop = <%% (isMac() ? 6 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), 1.2 %%>;
 
     marginRatio = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
 
@@ -7959,7 +7959,7 @@ GeneralJs.prototype.consultingPopup = function () {
                 width: String(100) + '%',
                 textAlign: "center",
                 fontSize: String(addressSize) + ea,
-                fontWeight: String(addressWeight),
+                fontWeight: String(700),
                 color: colorChip.white,
                 position: "relative",
                 top: String(addressTop) + ea,
