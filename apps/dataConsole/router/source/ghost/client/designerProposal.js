@@ -958,7 +958,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
     },
     bold: {
       fontSize: String(initWordingSize) + ea,
-      fontWeight: String(700),
+      fontWeight: String(800),
       color: colorExtended.mainBlue,
     }
   });
@@ -981,7 +981,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
       bold: {
         fontSize: String(initWordingSize) + ea,
         fontWeight: String(700),
-        color: colorExtended.mainBlue,
+        color: colorExtended.focusBlue,
       }
     });
   }
@@ -1028,7 +1028,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
         bold: {
           fontSize: String(factorSize) + ea,
           fontWeight: String(400),
-          color: colorExtended.mainBlue,
+          color: colorExtended.focusBlue,
         }
       });
   
@@ -1064,7 +1064,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
       bold: {
         fontSize: String(factorSize) + ea,
         fontWeight: String(400),
-        color: colorExtended.mainBlue,
+        color: colorExtended.focusBlue,
       }
     });
 
@@ -1911,7 +1911,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
       bold: {
         fontSize: String(titleSize) + ea,
         fontWeight: String(200),
-        color: colorExtended.mainBlue,
+        color: colorExtended.focusBlue,
       }
     })
 
@@ -1927,7 +1927,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
         wordSpacing: String(wordSpacing) + "px",
         left: String((pointRadius * 2) + valueIndent - checkBoxRadiusIntend) + ea,
         top: String(0) + ea,
-        color: GeneralJs.colorExtended.mainBlue
+        color: GeneralJs.colorExtended.focusBlue
       };
       if (mobile) {
         delete style.left;
@@ -1975,7 +1975,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
           position: "relative",
           fontSize: "inherit",
           fontWeight: (map[i].value.includes(map[i].standard[z].replace(/[^가-힣]/gi, '')) ? String(400) : "inherit"),
-          color: (map[i].value.includes(map[i].standard[z].replace(/[^가-힣]/gi, '')) ? GeneralJs.colorExtended.mainBlue : "inherit"),
+          color: (map[i].value.includes(map[i].standard[z].replace(/[^가-힣]/gi, '')) ? GeneralJs.colorExtended.focusBlue : "inherit"),
           wordSpacing: String(wordSpacing) + "px",
           marginRight: String(map[i].type === "checkbox" ? checkboxMarginRight : radioMarginRight) + ea,
           top: String(0) + ea,
@@ -1996,7 +1996,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
         }
 
         if (map[i].value.includes(map[i].standard[z].replace(/[^가-힣]/gi, ''))) {
-          valueDomCircle = SvgTong.stringParsing(this.mother.returnCheckBox(GeneralJs.colorExtended.mainBlue));
+          valueDomCircle = SvgTong.stringParsing(this.mother.returnCheckBox(GeneralJs.colorExtended.focusBlue));
         } else {
           valueDomCircle = SvgTong.stringParsing(this.mother.returnCheckBox(GeneralJs.colorChip.gray3));
         }
@@ -4115,7 +4115,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
     position: "relative",
     width: String(buttonWidth * 1.25) + ea,
     height: String(100) + '%',
-    background: GeneralJs.colorExtended.gradientBlue,
+    background: GeneralJs.colorExtended.gradientGray,
     borderRadius: String(5) + "px",
     cursor: "pointer",
   };

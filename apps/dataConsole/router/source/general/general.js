@@ -6539,7 +6539,7 @@ GeneralJs.prototype.insertMemory = async function (property, popupMode = false) 
               targets[i].setAttribute("toggle", "on");
               targets[i].children[0].style.opacity = String(0);
               targets[i].children[1].style.opacity = String(1);
-              targets[i].children[2].style.color = GeneralJs.colorExtended.mainBlue;
+              targets[i].children[2].style.color = GeneralJs.colorExtended.focusBlue;
             } else {
               targets[i].setAttribute("toggle", "off");
               targets[i].children[0].style.opacity = String(1);

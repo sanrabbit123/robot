@@ -620,7 +620,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   agreeCircleMarginRight = <%% 5, 5, 5, 5, 1 %%>;
 
   submitTongMarginTop = <%% 20, 20, 20, 20, 6 %%>;
-  submitButtonWidth = <%% 156, 156, 142, 130, 33 %%>;
+  submitButtonWidth = <%% 160, 160, 150, 136, 34 %%>;
   submitButtonHeight = <%% 47, 47, 42, 38, 10 %%>;
   submitSize = <%% 20, 20, 18, 16, 4 %%>;
   submitWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -1221,7 +1221,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           dom.setAttribute("toggle", "on");
           dom.children[0].style.opacity = String(0);
           dom.children[1].style.opacity = String(1);
-          dom.children[2].style.color = colorExtended.mainBlue;
+          dom.children[2].style.color = colorExtended.focusBlue;
           valueArr[index] = 1;
         } else {
           dom.setAttribute("toggle", "off");
@@ -1713,7 +1713,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           left: String(leftGrayType0) + ea,
           width: String(addressWidth) + ea,
           height: String(grayHeight) + ea,
-          background: colorExtended.gradientBlue,
+          background: colorExtended.gradientGray,
           borderRadius: String(3) + "px",
           cursor: "pointer",
         },
@@ -1988,7 +1988,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           },
           {
             mode: "svg",
-            source: instance.mother.returnCheckBox(colorExtended.mainBlue),
+            source: instance.mother.returnCheckBox(colorExtended.focusBlue),
             style: {
               position: "absolute",
               width: String(checkboxWidth) + ea,
@@ -2008,7 +2008,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
               top: String(mainTop) + ea,
               fontSize: String(mainSize) + ea,
               fontWeight: String(checkboxWeight),
-              color: colorExtended.mainBlue,
+              color: colorExtended.focusBlue,
               verticalAlign: "top",
               cursor: "pointer",
             }
@@ -2048,7 +2048,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           },
           {
             mode: "svg",
-            source: instance.mother.returnCheckBox(colorExtended.mainBlue),
+            source: instance.mother.returnCheckBox(colorExtended.focusBlue),
             style: {
               position: "absolute",
               width: String(checkboxWidth) + ea,
@@ -2245,7 +2245,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           },
           {
             mode: "svg",
-            source: instance.mother.returnCheckBox(colorExtended.mainBlue),
+            source: instance.mother.returnCheckBox(colorExtended.focusBlue),
             style: {
               position: "absolute",
               width: String(checkboxWidth) + ea,
@@ -2265,7 +2265,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
               top: String(mainTop) + ea,
               fontSize: String(mainSize) + ea,
               fontWeight: String(checkboxWeight),
-              color: colorExtended.mainBlue,
+              color: colorExtended.focusBlue,
               verticalAlign: "top",
               cursor: "pointer",
             }
@@ -2305,7 +2305,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           },
           {
             mode: "svg",
-            source: instance.mother.returnCheckBox(colorExtended.mainBlue),
+            source: instance.mother.returnCheckBox(colorExtended.focusBlue),
             style: {
               position: "absolute",
               width: String(checkboxWidth) + ea,
@@ -3000,7 +3000,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
           display: "inline-flex",
           width: String(submitButtonWidth) + ea,
           height: String(submitButtonHeight) + ea,
-          background: colorExtended.gradientBlue,
+          background: colorExtended.gradientGray,
           borderRadius: String(5) + "px",
           justifyContent: "center",
           alignItems: "center",

@@ -1591,7 +1591,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
                   borderRadius: String(3) + "px",
                   cursor: "pointer",
                   overflow: "hidden",
-                  background: colorExtended.mainBlue,
+                  background: colorExtended.focusBlue,
                   "mix-blend-mode": "multiply",
                 }
               });
@@ -1707,7 +1707,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
       },
       {
         mode: "svg",
-        source: this.mother.returnArrow("left", colorExtended.mainBlue),
+        source: this.mother.returnArrow("left", colorExtended.focusBlue),
         events: [
           {
             type: "click",
@@ -1727,7 +1727,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
       },
       {
         mode: "svg",
-        source: this.mother.returnArrow("right", colorExtended.mainBlue),
+        source: this.mother.returnArrow("right", colorExtended.focusBlue),
         events: [
           {
             type: "click",
@@ -1768,7 +1768,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
         },
         under: {
           fontWeight: String(600),
-          color: colorExtended.mainBlue,
+          color: colorExtended.focusBlue,
         }
       }
     ]
@@ -2255,7 +2255,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
             position: "relative",
             fontSize: String(addressWordingSize) + ea,
             fontWeight: String(200),
-            color: colorExtended.mainBlue,
+            color: colorExtended.focusBlue,
             top: String(addressWordingTextTop) + ea,
             border: String(0),
             outline: String(0),
@@ -2316,14 +2316,14 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                           s.children[1].style.background = colorChip.gray3;
                           s.setAttribute("toggle", "off");
                         } else {
-                          this.children[0].style.color = colorExtended.mainBlue;
-                          this.children[1].style.background = colorExtended.mainBlue;
+                          this.children[0].style.color = colorExtended.focusBlue;
+                          this.children[1].style.background = colorExtended.focusBlue;
                           this.setAttribute("toggle", "on");
                         }
                       }
                     } else {
-                      this.children[0].style.color = colorExtended.mainBlue;
-                      this.children[1].style.background = colorExtended.mainBlue;
+                      this.children[0].style.color = colorExtended.focusBlue;
+                      this.children[1].style.background = colorExtended.focusBlue;
                       this.setAttribute("toggle", "on");
                     }
                   }
@@ -2964,7 +2964,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   text: '- ',
                   attribute: [
                     { deactive: colorChip.gray5 },
-                    { active: colorExtended.mainBlue },
+                    { active: colorExtended.focusBlue },
                     { half: colorChip.purple }
                   ],
                   style: {
@@ -2980,7 +2980,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   text: obj2.name,
                   attribute: [
                     { deactive: colorChip.deactive },
-                    { active: colorExtended.mainBlue },
+                    { active: colorExtended.focusBlue },
                     { half: colorChip.purple }
                   ],
                   style: {
@@ -3012,7 +3012,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   text: obj2.contents,
                   attribute: [
                     { deactive: colorChip.deactive },
-                    { active: colorExtended.mainBlue },
+                    { active: colorExtended.focusBlue },
                     { half: colorChip.purple }
                   ],
                   style: {
@@ -3093,7 +3093,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   console.log(err);
                 });
                 for (let c of children) {
-                  c.style.color = colorExtended.mainBlue;
+                  c.style.color = colorExtended.focusBlue;
                 }
                 for (let dom of removeTargets) {
                   targetMother.removeChild(dom);
@@ -3172,7 +3172,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
               position: "relative",
               fontSize: String(wordingSize) + ea,
               fontWeight: String(200),
-              color: colorExtended[updateValue === null ? "deactive" : "mainBlue"],
+              color: colorExtended[updateValue === null ? "deactive" : "focusBlue"],
               verticalAlign: "top",
               lineHeight: String(lineHeight),
               marginRight: String(calendarMarginLeft) + ea,
@@ -3187,7 +3187,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
               position: "relative",
               fontSize: String(wordingSize) + ea,
               fontWeight: String((media[0] || media[4]) ? 400 : 200),
-              color: colorExtended[updateValue === null ? "deactive" : "mainBlue"],
+              color: colorExtended[updateValue === null ? "deactive" : "focusBlue"],
               verticalAlign: "top",
               lineHeight: String(lineHeight),
               textAlign: "right",
@@ -3268,7 +3268,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
             position: "relative",
             fontSize: String(addressWordingSize) + ea,
             fontWeight: String(200),
-            color: colorExtended.mainBlue,
+            color: colorExtended.focusBlue,
             top: String(addressWordingTextTop) + ea,
             border: String(0),
             outline: String(0),
@@ -3477,7 +3477,7 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
         },
         bold: {
           fontWeight: String(500),
-          color: colorExtended.mainBlue,
+          color: colorExtended.focusBlue,
         }
       },
     ]
@@ -4150,7 +4150,7 @@ StyleCurationJs.prototype.insertPendingProposal = function () {
         under: {
           fontSize: String(titleSize) + ea,
           fontWeight: String(200),
-          color: colorExtended.mainBlue,
+          color: colorExtended.focusBlue,
           lineHeight: String(titleLineHeight),
         }
       }
@@ -4193,7 +4193,7 @@ StyleCurationJs.prototype.insertPendingProposal = function () {
             bold: {
               fontSize: String(descriptionSize) + ea,
               fontWeight: String(descriptionBoldWeight),
-              color: colorExtended.mainBlue,
+              color: colorExtended.focusBlue,
             }
           }
         ]
@@ -4414,7 +4414,7 @@ StyleCurationJs.prototype.insertMainContentsBox = function () {
           under: {
             fontSize: String(middleTitleSize) + ea,
             fontWeight: String(200),
-            color: colorExtended.mainBlue,
+            color: colorExtended.focusBlue,
           }
         },
         {
@@ -4874,7 +4874,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
                 fontWeight: String(200),
                 background: desktop ? colorChip.white : colorChip.gray1,
                 paddingRight: String(numberRight) + ea,
-                color: desktop ? colorChip.black : colorExtended.mainBlue,
+                color: desktop ? colorChip.black : colorExtended.focusBlue,
               }
             },
             {
@@ -5118,7 +5118,7 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
               },
               {
                 mode: "svg",
-                source: instance.mother.returnCancel(colorExtended.mainBlue),
+                source: instance.mother.returnCancel(colorExtended.focusBlue),
                 style: {
                   position: "absolute",
                   background: colorChip.white,
@@ -5286,11 +5286,11 @@ StyleCurationJs.prototype.insertPannelBox = function () {
   buttonWidth = <%% 156, 156, 156, 126, 28 %%>;
   buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9, (isIphone() ? 1.1 : 1.3) %%>;
+  buttonTextTop = <%% 8, 8, 8, 8, (isIphone() ? 1.1 : 1.3) %%>;
   buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
 
   if (desktop) {
-    buttonTextTop = buttonTextTop + (isMac() ? 0 : 1);
+    buttonTextTop = buttonTextTop + (isMac() ? 0 : 2);
   }
 
   headWidth = <%% 10, 10, 10, 10, 2 %%>;
@@ -5490,7 +5490,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
           position: "relative",
           width: String(buttonWidth) + ea,
           height: String(100) + '%',
-          background: colorExtended.gradientBlue,
+          background: colorExtended.gradientGray,
           borderRadius: String(3) + "px",
           cursor: "pointer",
         },
@@ -5773,7 +5773,7 @@ StyleCurationJs.prototype.insertRoleBox = function (whiteBlock) {
     createNode({
       mother: contents1UpBox,
       mode: "svg",
-      source: instance.mother.returnCheckIcon(colorExtended.mainBlue),
+      source: instance.mother.returnCheckIcon(colorExtended.focusBlue),
       style: {
         display: "inline-block",
         position: desktop ? "relative" : "absolute",
@@ -6127,7 +6127,7 @@ StyleCurationJs.prototype.insertNoticeBox = function (whiteBlock) {
             lineHeight: desktop ? "" : String(1.3),
           },
           bold: {
-            color: colorExtended.mainBlue,
+            color: colorExtended.focusBlue,
           }
         }
       ]
@@ -6377,7 +6377,7 @@ StyleCurationJs.prototype.insertDescriptionBox = function () {
         under: {
           fontSize: String(titleSize) + ea,
           fontWeight: String(200),
-          color: colorExtended.mainBlue,
+          color: colorExtended.focusBlue,
           lineHeight: String(titleLineHeight),
         }
       }
