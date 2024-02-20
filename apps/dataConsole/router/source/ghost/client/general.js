@@ -55,7 +55,7 @@ GeneralJs.prototype.setGeneralProperties = function (instance) {
 GeneralJs.prototype.setBackground = function (binaryPath, second = false, random = 0) {
   const instance = this;
   const { ea, media, backHeight, totalContents } = this;
-  const { createNodes, colorChip, withOut } = GeneralJs;
+  const { createNodes, colorChip, withOut, colorExtended } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   let backgroundImageName, secondBackgroundImageName;
@@ -69,7 +69,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
   }
   secondBackgroundImageName = "back2.jpg";
 
-  if (this.backgroundType !== 9) {
+  if (this.backgroundType !== 9 && this.backgroundType !== 10) {
     if (!second) {
       [ backgroundGray, backgroundImageBox ] = createNodes([
         {
@@ -150,6 +150,40 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
       this.backgroundImageBox = backgroundImageBox;
       this.backgroundImageBox2 = backgroundImageBox2;
     }
+  }
+
+  if (this.backgroundType === 10) {
+    [ backgroundGray, backgroundImageBox ] = createNodes([
+      {
+        mother: totalContents,
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: desktop ? colorChip.gray0 : colorChip.gray1,
+          animation: "justfadeinoriginal 0.3s ease forwards",
+        }
+      },
+      {
+        mother: totalContents,
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(backHeight) + ea,
+          backgroundImage: "url('" + binaryPath + "/" + backgroundImageName + "')",
+          backgroundSize: "100% auto",
+          backgroundPosition: "top",
+          animation: "justfadeinoriginal 0.3s ease forwards",
+        }
+      }
+    ]);
+    this.backgroundGray = backgroundGray;
+    this.backgroundImageBox = backgroundImageBox;
+    this.backgroundImageBox2 = null;
   }
 
 }
@@ -364,7 +398,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
             top: String(isMac() ? 0 : 2) + ea,
             fontSize: String(wordingSize) + ea,
             fontWeight: String(700),
-            color: i === thisIndex ? colorExtended.black : (modeNumber === 1 ? colorChip.black : colorChip.white),
+            color: i === thisIndex ? colorExtended.blueDark : (modeNumber === 1 ? colorChip.black : colorChip.white),
             marginRight: String(i === naviMenu.length - 1 ? wordingMarginRightLast : wordingMarginRight) + ea,
             cursor: "pointer",
             transition: "all 0.5s ease",
@@ -466,7 +500,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
             position: "absolute",
             fontSize: String(wordingSize) + "px",
             fontWeight: String(600),
-            color: (i === thisIndex || naviMenu[i].focus) ? colorExtended.black : (modeNumber === 1 ? colorChip.black : colorChip.white),
+            color: (i === thisIndex) ? colorExtended.blueDark : (modeNumber === 1 ? colorChip.black : colorChip.white),
             width: String(100) + '%',
             textAlign: "center",
             top: String(mobileFirstTop + (mobileVerticalBetween * i)) + "px",
@@ -531,7 +565,12 @@ GeneralJs.prototype.setBaseTong = function (child) {
   let style;
   let baseTop;
 
-  baseTop = <%% 200, 200, 170, 140, 10 %%>;
+  if (this.backgroundType === 10) {
+    baseTop = <%% 180, 180, 164, 148, 10 %%>;
+  } else {
+    baseTop = <%% 200, 200, 170, 140, 10 %%>;
+  }
+
   baseTong = createNode({
     mother: totalContents,
     style: {
@@ -582,6 +621,9 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     this.backgroundType = base.backgroundType;
     if (base.backgroundType === 1) {
       this.backHeight = <%% 420, 420, 375, 320, 94 %%>;
+      base.instance.backHeight = this.backHeight;
+    } else if (base.backgroundType === 10) {
+      this.backHeight = <%% 346, 330, 310, 280, 58 %%>;
       base.instance.backHeight = this.backHeight;
     }
 

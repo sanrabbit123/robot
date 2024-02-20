@@ -149,7 +149,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
+  titleFontSize = <%% 37, 36, 34, 31, 5.5 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
@@ -163,7 +163,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 220, 220, 192, 164, 14 %%>;
+  searchBarPaddingTop = <%% 210, 190, 170, 156, 7 %%>;
   searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
   searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
 
@@ -184,12 +184,12 @@ PortfolioListJs.prototype.insertInitBox = function () {
   tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "디자이너 포트폴리오";
+  titleWording = "Home<b%-%b>styling portfolio<b%.%b>";
   subTitleContents = "포트폴리오로 찾는 나의 스타일";
 
-  mobileBlockTop = 4.5;
+  mobileBlockTop = 5;
 
-  mobileSearchWhiteBoxPaddingTop = 4.8;
+  mobileSearchWhiteBoxPaddingTop = 5;
   mobileSearchWhiteBoxPaddingBottom = 5;
   mobileSearchWhiteBoxMarginBottom = 5;
 
@@ -214,7 +214,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
 
   sortBoxRight = <%% 0, 0, 0, 0, 20 %%>;
 
-  mobileBackgroundHeight = isIphone() ? 75.5 : 73;
+  mobileBackgroundHeight = 58;
   mobileVisualPaddingLeft = 6;
 
   tagBoxRight = <%% 132, 128, 100, 100, 10 %%>;
@@ -334,31 +334,6 @@ PortfolioListJs.prototype.insertInitBox = function () {
     }
   });
 
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      height: String(quotoTongHeight) + ea,
-      opacity: String(0.6),
-    },
-    children: [
-      {
-        mode: "svg",
-        source: svgMaker.doubleQuote(colorChip.white),
-        style: {
-          display: "inline-block",
-          height: String(quoteHeight) + ea,
-          width: String(quoteWidth) + ea,
-        }
-      }
-    ]
-  });
-
   createNode({
     mother: whiteBlock,
     style: {
@@ -374,35 +349,18 @@ PortfolioListJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: mobile ? "" : String(titleTop) + ea,
           fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
           fontWeight: String(titleFontWeight),
           color: colorChip.white,
-        }
-      }
-    ]
-  });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: String(subTitleMarginTop) + ea,
-    },
-    children: [
-      {
-        text: subTitleContents,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: mobile ? "" : String(0) + ea,
-          fontSize: String(subTitleFontSize) + ea,
-          fontWeight: String(subTitleWeight),
+          wordSpacing: String(2) + "px",
+        },
+        bold: {
+          fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
+          fontWeight: String(titleFontWeight),
           color: colorChip.white,
+          opacity: String(0.4),
         }
       }
     ]
@@ -919,7 +877,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null,
   quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
 
   titleSize = <%% 21, 17, 17, 15, 3 %%>;
-  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
   titleSubSize = <%% 14, 12, 12, 11, 2.5 %%>;
@@ -1266,7 +1224,7 @@ PortfolioListJs.prototype.launching = async function (loading) {
         binaryPath: PortfolioListJs.binaryPath,
         subTitle: "",
         secondBackground: false,
-        backgroundType: 1,
+        backgroundType: 10,
       },
       local: async () => {
         try {

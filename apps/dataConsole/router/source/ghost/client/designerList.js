@@ -117,11 +117,11 @@ DesignerListJs.prototype.insertInitBox = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 25, 25, 25, 25, 4 %%>;
+  whiteBlockMarginBottom = <%% 25, 24, 24, 21, 4 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
+  titleFontSize = <%% 37, 36, 34, 31, 5.5 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
@@ -135,7 +135,7 @@ DesignerListJs.prototype.insertInitBox = function () {
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 220, 220, 192, 164, 14 %%>;
+  searchBarPaddingTop = <%% 210, 190, 170, 156, 7 %%>;
   searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
   searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
 
@@ -153,17 +153,19 @@ DesignerListJs.prototype.insertInitBox = function () {
   subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
-  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
+  tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "디자이너 리스트";
-  subTitleContents = "홈스타일링 전문 디자이너를 만나보세요!";
+  titleWording = "Designer list<b%.%b>";
+  subTitleContents = "포트폴리오로 찾는 나의 스타일";
 
-  mobileBlockTop = 4.5;
+  mobileBlockTop = 5;
 
-  mobileSearchWhiteBoxPaddingTop = 4.8;
+  mobileSearchWhiteBoxPaddingTop = 5;
   mobileSearchWhiteBoxPaddingBottom = 5;
-  mobileSearchWhiteBoxMarginBottom = 4;
+  mobileSearchWhiteBoxMarginBottom = 5;
+
+  placeholder = "새아파트";
 
   buttonSize = <%% 14, 14, 13, 13, 3.2 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -184,7 +186,7 @@ DesignerListJs.prototype.insertInitBox = function () {
 
   sortBoxRight = <%% 0, 0, 0, 0, 20 %%>;
 
-  mobileBackgroundHeight = isIphone() ? 75.5 : 73;
+  mobileBackgroundHeight = 58;
   mobileVisualPaddingLeft = 6;
 
   tagBoxRight = <%% 157, 153, 125, 125, 10 %%>;
@@ -314,31 +316,6 @@ DesignerListJs.prototype.insertInitBox = function () {
     }
   });
 
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      height: String(quotoTongHeight) + ea,
-      opacity: String(0.6),
-    },
-    children: [
-      {
-        mode: "svg",
-        source: svgMaker.doubleQuote(colorChip.white),
-        style: {
-          display: "inline-block",
-          height: String(quoteHeight) + ea,
-          width: String(quoteWidth) + ea,
-        }
-      }
-    ]
-  });
-
   createNode({
     mother: whiteBlock,
     style: {
@@ -354,35 +331,18 @@ DesignerListJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: mobile ? "" : String(titleTop) + ea,
           fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
           fontWeight: String(titleFontWeight),
           color: colorChip.white,
-        }
-      }
-    ]
-  });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: String(subTitleMarginTop) + ea,
-    },
-    children: [
-      {
-        text: subTitleContents,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: mobile ? "" : String(0) + ea,
-          fontSize: String(subTitleFontSize) + ea,
-          fontWeight: String(subTitleWeight),
+          wordSpacing: String(2) + "px",
+        },
+        bold: {
+          fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
+          fontWeight: String(titleFontWeight),
           color: colorChip.white,
+          opacity: String(0.4),
         }
       }
     ]
@@ -918,7 +878,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   photoMargin = <%% 30, 25, 30, 30, 4 %%>;
 
   titleSize = <%% 24, 23, 23, 23, 4 %%>;
-  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   careerSize = <%% 12, 12, 12, 12, 2.5 %%>;
   careerWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -1453,7 +1413,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
   photoMargin = <%% 30, 25, 30, 30, 4 %%>;
 
   titleSize = <%% 24, 23, 23, 23, 4 %%>;
-  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   careerSize = <%% 12, 12, 12, 12, 2.5 %%>;
   careerWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -1498,7 +1458,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
   quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
 
   reviewTitleSize = <%% 17, 17, 17, 15, 3 %%>;
-  reviewTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  reviewtitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   reviewTitleMarginLeft = <%% 5, 5, 5, 5, 1.1 %%>;
 
   subTitleMarginTop = <%% 3, 3, 3, 3, 0.5 %%>;
@@ -2069,7 +2029,7 @@ DesignerListJs.prototype.launching = async function (loading) {
         binaryPath: DesignerListJs.binaryPath,
         subTitle: "",
         secondBackground: false,
-        backgroundType: 1,
+        backgroundType: 10,
       },
       local: async () => {
         try {
