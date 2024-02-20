@@ -369,6 +369,10 @@ DataRouter.prototype.rou_get_First = function () {
           if (32 <= Number(ip.split('.')[1]) && 63 >= Number(ip.split('.')[1])) {
             pass = true;
           }
+        } else if (/^211\.234/.test(ip)) {
+          if (128 <= Number(ip.split('.')[2]) && 239 >= Number(ip.split('.')[2])) {
+            pass = true;
+          }
         } else if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
           pass = true;
         } else {
