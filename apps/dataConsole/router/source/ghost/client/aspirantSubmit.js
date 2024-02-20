@@ -1886,6 +1886,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             color: colorChip.black,
             marginBottom: String(<&& 9 | 9 | 8 | 7 | 3 &&>) + ea,
             marginTop: desktop ? "" : String(1.2) + ea,
+            height: desktop ? "" : String(11) + ea,
           }
         }
       ]
@@ -1893,7 +1894,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     createNode({
       mother: contentsArea,
       style: {
-        display: desktop ? "flex" : "none",
+        display: desktop ? "flex" : "flex",
         position: "relative",
         width: withOut(0, ea),
         justifyContent: "start",
@@ -1901,17 +1902,21 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       },
       children: [
         {
-          text: [
-            "홈리에종의 파트너십 신청을 위해서는 다음과 같이 기본 정보가 필요합니다.",
-            "파트너십 신청서를 간단히 작성 후, 디자이너 활동을 시작해보세요!",
-          ].join("\n"),
+          text: (desktop ? [
+            "파트너십 신청을 위해서, 완성 현장 포트폴리오 또는 3D 작업물이 필요합니다.",
+            "디자이너 페이지에 올릴 수 있는 현장 포트폴리오 세트가 있다면 전부 업로드해주세요!",
+          ].join("\n") : [
+            "파트너십 신청을 위해서, 완성 현장 포트폴리오",
+            "또는 3D 작업물이 필요합니다. 디자이너 페이지에 올릴 수 있는",
+            "현장 포트폴리오 세트가 있다면 전부 업로드해주세요!",
+          ].join("\n")),
           style: {
             display: "block",
             position: "relative",
             fontSize: String(<&& 15 | 15 | 14 | 13 | 3.2 &&>) + ea,
             fontWeight: String(400),
             color: colorChip.black,
-            marginBottom: String(<&& 24 | 23 | 22 | 20 | 1 &&>) + ea,
+            marginBottom: String(<&& 24 | 23 | 22 | 20 | 4 &&>) + ea,
             lineHeight: String(1.5),
             textAlign: "left",
           }
@@ -2605,7 +2610,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             left: String(leftGrayType0) + ea,
             width: String(addressWidth) + ea,
             height: String(grayHeight) + ea,
-            background: colorExtended.gradientBlue,
+            background: colorExtended.gradientGray,
             borderRadius: String(3) + "px",
             cursor: "pointer",
           },

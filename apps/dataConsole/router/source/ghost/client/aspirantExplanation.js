@@ -1181,20 +1181,22 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         "많은 서비스가 있지만 유일한 시스템을 갖춘 서비스는 다릅니다.",
         "홈리에종은 홈스타일링 전문 플랫폼으로 단순 연결만 하지 않습니다.",
         "고객 중심의 인테리어를 추구하며 체계적으로 프로젝트를 케어하고,",
-        "다양한 인프라 지원으로 디자이너와 함께 성장합니다.",
+        "다양한 인프라 지원(직영 시공사, 성장지원 교육, 포트폴리오 개설)으로",
+        "디자이너와 함께 성장합니다.",
       ],
       [
         "고객의 예산, 제한 기간, 공간 상태, 취향을 고려하여",
         "시공부터 스타일링까지 완료합니다. 모든 공간은 가구, 패브릭 등의",
         "제품 세팅까지 일관성 있게 마무리할 때 인테리어가 잘 된 것입니다.",
-        "현재 ‘인테리어’라는 단어는 ‘시공’에 국한되고 있으나",
+        "현재 ‘인테리어’라는 단어는 ‘시공’에 사용되고 있으나",
         "진정한 인테리어는 시공과 스타일링을 포함합니다.",
       ],
       [
         "고객 유치는 홈리에종이 합니다. 홈리에종의 방향성에 기대감을",
         "가지신 고객님들을 유치하기 위해 노력하고 있습니다.",
-        "디자이너님은 디자이너로서의 역량을 키워가는 것에 집중해주세요.",
-        "능력 있고 디자인이 매력적이라면 꾸준히 고객을 만날 수 있습니다.",
+        "디자이너는 디자이너로서의 역량을 키워가는 것에 집중해주세요.",
+        "커뮤니케이션 능력이 탁월하고 디자인 아이덴티티가 매력적이라면",
+        "좋은 고객을 꾸준히 만나는 게 쉬워집니다 :) 함께 성장해요!",
       ],
       [
         "스타일링 경험 혹은 역량 확인이 필수입니다.",
@@ -1202,13 +1204,14 @@ AspirantExplanationJs.prototype.insertThirdBox = async function () {
         "3D 작업 역량이 확인되어야 합니다.",
       ],
       [
-        "3가지 모두 동의하시면 하실 수 있습니다.",
+        "네 :) 홈리에종은 인테리어 업계의 새로운 문화를 만들어가는",
+        "개척 기업입니다. 3가지 모두 동의하시면 신청서를 남겨주세요!",
         "1. 주거 인테리어에 대한 새로운 접근 방법에 대한 공감",
         "2. 최소한의 스타일링 역량 (포트폴리오 혹은 3D 역량)",
         "3. 발전과 학습에 대한 강한 의지 및 관심",
       ],
       [
-        "홈리에종은 디자이너님의 컨디션을 사전에 확인해 매칭합니다.",
+        "홈리에종은 디자이너의 컨디션을 사전에 확인해 매칭합니다.",
         "디자이너의 어려움을 교육 및 가이드 제공을 통해 개선하고,",
         "디자이너의 가능 일정과 출발지역, 가능한 업무량을 파악하여",
         "지속적인 성장을 할 수 있도록 지원합니다!",
@@ -2119,7 +2122,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
       },
       children: [
         {
-          text: "디자이너 신청을 마치면\n해야할 것을 알려드릴게요.",
+          text: "파트너십 신청 후\n진행 순서를 알려드릴게요!",
           style: {
             display: "inline-block",
             position: "relative",
@@ -2269,6 +2272,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                         fontWeight: String(300),
                         color: colorExtended.yellow,
                         right: String(7) + ea,
+                        opacity: String(0),
                       },
                     },
                   },
@@ -2344,6 +2348,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                         fontWeight: String(300),
                         color: colorExtended.yellow,
                         right: String(7) + ea,
+                        opacity: String(0),
                       },
                     },
                   }
@@ -2419,6 +2424,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                         fontWeight: String(300),
                         color: colorExtended.yellow,
                         right: String(7) + ea,
+                        opacity: String(0),
                       },
                     },
                   }
@@ -2505,6 +2511,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                         fontWeight: String(300),
                         color: colorExtended.yellow,
                         right: String(7) + ea,
+                        opacity: String(0),
                       },
                     },
                   }

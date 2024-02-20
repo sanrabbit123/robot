@@ -6928,7 +6928,7 @@ DevContext.prototype.launching = async function () {
     //   {
     //     client: null,
     //     designer: "김윤지",
-    //     link: "https://drive.google.com/drive/folders/1I1kFaOaAgQ0FW2av-XJ1aBDXc5qYVTG4",
+    //     link: "https://drive.google.com/drive/folders/1KdW1GNJDgukntPkjLfTNmWNgqaDtQgvG",
     //     pay: true
     //   },
     // ]);
@@ -6938,8 +6938,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "이현아",
-    //     designer: "최지원",
+    //     client: "이슬아",
+    //     designer: "김우현",
     //   },
     // ]);
 
@@ -6999,7 +6999,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2310_aa07s" ]);
+    // await work.newDesignerToFront([ "d2402_aa02s" ]);
 
 
     // new designer set proposal setting
