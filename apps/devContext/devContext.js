@@ -7003,17 +7003,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2402_aa01s", [
-    //   { porlid: "ghost", index: 7 },
-    //   { porlid: "ghost", index: 12 },
-    //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 9 },
-    //   { porlid: "ghost", index: 15 },
-    //   { porlid: "ghost", index: 23 },
+    // await this.setProposalSettingForDesigner("d2402_aa02s", [
+    //   { porlid: "a128", index: 11 },
+    //   { porlid: "a127", index: 10 },
+    //   { porlid: "a128", index: 7 },
+    //   { porlid: "a127", index: 19 },
+    //   { porlid: "a128", index: 1 },
+    //   { porlid: "a128", index: 13 },
     // ], [
-    //   "디스플레이 설계 출신으로 가구와 소품에 대한 지식이 풍부하며 스타일링에 능합니다.",
-    //   "모던하고 구조적으로 힘이 느껴지는 스타일로, 도시적이고 세련된 분위기를 잘 표현하십니다.",
-    //   "고객의 상황을 잘 고려하고, 그에 맞춰 최대한 작업하려고 노력하는 편입니다.",
+    //   "다양한 설계 경험을 통해 개인에게 꼭 맞는 공간을 찾아드립니다.",
+    //   "완성도 높은 공간을 위해 클라이언트와의 소통을 최우선으로 생각합니다.",
+    //   "디테일한 3D를 통해 불안감과 스트레스 없이 꿈꾸던 집을 품에 안겨드리겠습니다.",
     // ]);
 
 
