@@ -2615,7 +2615,7 @@ FrontAboutJs.prototype.launching = async function (loading) {
         binaryPath: FrontAboutJs.binaryPath,
         subTitle: "홈리에종 서비스 설명",
         secondBackground: false,
-        backgroundType: 10,
+        backgroundType: 11,
         talk: {
           text: "실제 고객님들의 후기를 살펴보세요!",
           event: "review",
@@ -2654,7 +2654,10 @@ FrontAboutJs.prototype.launching = async function (loading) {
     
     this.totalContents.children[0].style.background = colorChip.gray1;
     this.totalContents.children[1].style.transition = "all 0s ease";
-    this.totalContents.children[1].style.height = String(<&& 500 | 440 | 400 | 360 | 66 &&>) + this.ea;
+    this.totalContents.children[1].style.height = String(<&& 670 | 650 | 570 | 480 | 70 &&>) + this.ea;
+    if (this.media[4]) {
+      this.totalContents.children[1].style.backgroundSize = "auto 100%";
+    }
 
   } catch (err) {
     console.log(err);

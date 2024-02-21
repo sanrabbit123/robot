@@ -6472,7 +6472,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
         binaryPath: StyleCurationJs.binaryPath,
         subTitle: (this.client.name + " 고객님 서비스 안내"),
         secondBackground: true,
-        backgroundType: 10,
+        backgroundType: 11,
         talk: {
           text: "하단 스타일 체크를 꼭 완료해주세요!",
           event: "channel",
@@ -6496,8 +6496,11 @@ StyleCurationJs.prototype.launching = async function (loading) {
 
     this.totalContents.children[0].style.background = colorExtended.gray1;
     this.totalContents.children[1].style.transition = "all 0s ease";
-    this.totalContents.children[1].style.height = String(<&& 500 | 440 | 400 | 360 | 66 &&>) + this.ea;
-
+    this.totalContents.children[1].style.height = String(<&& 670 | 650 | 570 | 480 | 70 &&>) + this.ea;
+    if (this.media[4]) {
+      this.totalContents.children[1].style.backgroundSize = "auto 100%";
+    }
+    
   } catch (err) {
     console.log(err);
     await GeneralJs.ajaxJson({ message: "StyleCurationJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");

@@ -7717,7 +7717,7 @@ ServiceDetailJs.prototype.launching = async function (loading) {
         binaryPath: ServiceDetailJs.binaryPath,
         subTitle: "",
         secondBackground: false,
-        backgroundType: 10,
+        backgroundType: 11,
       },
       local: async () => {
         try {

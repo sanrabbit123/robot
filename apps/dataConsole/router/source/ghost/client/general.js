@@ -69,7 +69,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
   }
   secondBackgroundImageName = "back2.jpg";
 
-  if (this.backgroundType !== 9 && this.backgroundType !== 10) {
+  if (this.backgroundType !== 9 && this.backgroundType !== 10 && this.backgroundType !== 11) {
     if (!second) {
       [ backgroundGray, backgroundImageBox ] = createNodes([
         {
@@ -152,7 +152,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
     }
   }
 
-  if (this.backgroundType === 10) {
+  if (this.backgroundType === 10 || this.backgroundType === 11) {
     [ backgroundGray, backgroundImageBox ] = createNodes([
       {
         mother: totalContents,
@@ -567,6 +567,8 @@ GeneralJs.prototype.setBaseTong = function (child) {
 
   if (this.backgroundType === 10) {
     baseTop = <%% 180, 180, 164, 148, 10 %%>;
+  } else if (this.backgroundType === 11) {
+    baseTop = <%% 206, 200, 174, 150, 11 %%>;
   } else {
     baseTop = <%% 200, 200, 170, 140, 10 %%>;
   }
@@ -622,7 +624,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     if (base.backgroundType === 1) {
       this.backHeight = <%% 420, 420, 375, 320, 94 %%>;
       base.instance.backHeight = this.backHeight;
-    } else if (base.backgroundType === 10) {
+    } else if (base.backgroundType === 10 || base.backgroundType === 11) {
       this.backHeight = <%% 346, 330, 310, 280, 58 %%>;
       base.instance.backHeight = this.backHeight;
     }

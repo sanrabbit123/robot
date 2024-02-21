@@ -3660,7 +3660,7 @@ ClientConsultingJs.prototype.launching = async function (loading) {
         binaryPath: ClientConsultingJs.binaryPath,
         subTitle: "",
         secondBackground: false,
-        backgroundType: 10,
+        backgroundType: 11,
       },
       local: async () => {
         try {
@@ -3676,7 +3676,10 @@ ClientConsultingJs.prototype.launching = async function (loading) {
 
     this.totalContents.children[0].style.background = colorExtended.gray1;
     this.totalContents.children[1].style.transition = "all 0s ease";
-    this.totalContents.children[1].style.height = String(<&& 500 | 440 | 400 | 360 | 66 &&>) + this.ea;
+    this.totalContents.children[1].style.height = String(<&& 670 | 650 | 570 | 480 | 70 &&>) + this.ea;
+    if (this.media[4]) {
+      this.totalContents.children[1].style.backgroundSize = "auto 100%";
+    }
 
   } catch (err) {
     console.log(err);
