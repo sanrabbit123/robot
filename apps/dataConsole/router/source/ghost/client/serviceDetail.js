@@ -90,27 +90,27 @@ ServiceDetailJs.prototype.insertInitBox = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 90, 80, 74, 60, 14.5 %%>;
+  whiteBlockMarginBottom = <%% 60, 56, 52, 50, 7 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
+  titleFontSize = <%% 35, 34, 32, 29, 5.3 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 13, 13, 13, 12, 2.2 %%>;
+  servicePaddingLeft = <%% 15, 15, 14, 13, 2.2 %%>;
   serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 13, 13, 13, 12, 3.3 %%>;
+  serviceSize = <%% 13.5, 13.5, 13, 12, 3.3 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 220, 220, 192, 164, 12.5 %%>;
+  searchBarPaddingTop = <%% 210, 190, 170, 156, 7 %%>;
   searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
+  searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
   searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
@@ -126,21 +126,21 @@ ServiceDetailJs.prototype.insertInitBox = function () {
   subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
-  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
+  tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
   if (mode === "furnishing") {
-    titleWording = "홈퍼니싱 소개";
+    titleWording = "Home<b%-%b>furnishing<b%.%b>";
     subTitleContents = "합리적이고 효과적인 무드 체인지";
   } else if (mode === "styling") {
-    titleWording = "홈스타일링 소개";
+    titleWording = "Home<b%-%b>styling<b%.%b>";
     subTitleContents = "부분 시공과 스타일링의 조합";
   } else if (mode === "total") {
-    titleWording = "토탈 스타일링 소개";
+    titleWording = "Total<b%-%b>styling<b%.%b>";
     subTitleContents = "전체 시공에서 시그니처가 느껴지는";
   }
 
-  mobileBlockTop = 4.5;
+  mobileBlockTop = 5.6;
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -153,31 +153,6 @@ ServiceDetailJs.prototype.insertInitBox = function () {
       top: String(-1 * boxTopVisual) + ea,
       paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
     }
-  });
-
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      height: String(quotoTongHeight) + ea,
-      opacity: String(0.6),
-    },
-    children: [
-      {
-        mode: "svg",
-        source: svgMaker.doubleQuote(colorChip.white),
-        style: {
-          display: "inline-block",
-          height: String(quoteHeight) + ea,
-          width: String(quoteWidth) + ea,
-        }
-      }
-    ]
   });
 
   createNode({
@@ -195,35 +170,18 @@ ServiceDetailJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: mobile ? "" : String(titleTop) + ea,
           fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
           fontWeight: String(titleFontWeight),
           color: colorChip.white,
-        }
-      }
-    ]
-  });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: String(subTitleMarginTop) + ea,
-    },
-    children: [
-      {
-        text: subTitleContents,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: mobile ? "" : String(0) + ea,
-          fontSize: String(subTitleFontSize) + ea,
-          fontWeight: String(subTitleWeight),
+          wordSpacing: String(2) + "px",
+        },
+        bold: {
+          fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
+          fontWeight: String(titleFontWeight),
           color: colorChip.white,
+          opacity: String(0.4),
         }
       }
     ]
@@ -7759,7 +7717,7 @@ ServiceDetailJs.prototype.launching = async function (loading) {
         binaryPath: ServiceDetailJs.binaryPath,
         subTitle: "",
         secondBackground: false,
-        backgroundType: 0,
+        backgroundType: 10,
       },
       local: async () => {
         try {
@@ -7828,10 +7786,7 @@ ServiceDetailJs.prototype.launching = async function (loading) {
 
     this.totalContents.children[0].style.background = colorChip.gray1;
     this.totalContents.children[1].style.transition = "all 0s ease";
-    this.totalContents.children[1].style.height = String(<&& 560 | 490 | 460 | 360 | 110 &&>) + this.ea;
-    if (this.media[3]) {
-      this.totalContents.children[1].style.backgroundSize = "100% auto";
-    }
+    this.totalContents.children[1].style.height = String(<&& 470 | 410 | 370 | 320 | 66 &&>) + this.ea;
 
   } catch (err) {
     console.log(err);

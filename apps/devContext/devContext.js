@@ -6928,7 +6928,7 @@ DevContext.prototype.launching = async function () {
     //   {
     //     client: null,
     //     designer: "김윤지",
-    //     link: "https://drive.google.com/drive/folders/1KdW1GNJDgukntPkjLfTNmWNgqaDtQgvG",
+    //     link: "https://drive.google.com/drive/folders/1aPaAhwiEVezfzYsS0hhZR3Z0iGE45sOD",
     //     pay: true
     //   },
     // ]);

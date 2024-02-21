@@ -121,7 +121,7 @@ DesignerListJs.prototype.insertInitBox = function () {
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 37, 36, 34, 31, 5.5 %%>;
+  titleFontSize = <%% 35, 34, 32, 29, 5.3 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
@@ -159,7 +159,7 @@ DesignerListJs.prototype.insertInitBox = function () {
   titleWording = "Designer list<b%.%b>";
   subTitleContents = "포트폴리오로 찾는 나의 스타일";
 
-  mobileBlockTop = 5;
+  mobileBlockTop = 5.6;
 
   mobileSearchWhiteBoxPaddingTop = 5;
   mobileSearchWhiteBoxPaddingBottom = 5;

@@ -3707,27 +3707,27 @@ StyleCurationJs.prototype.insertInitBox = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 90, 80, 74, 60, 14.5 %%>;
+  whiteBlockMarginBottom = <%% 60, 56, 52, 50, 7 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
+  titleFontSize = <%% 35, 34, 32, 29, 5.3 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 13, 13, 13, 12, 2.2 %%>;
+  servicePaddingLeft = <%% 15, 15, 14, 13, 2.2 %%>;
   serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 13, 13, 13, 12, 3.3 %%>;
+  serviceSize = <%% 13.5, 13.5, 13, 12, 3.3 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 220, 220, 192, 164, 12.5 %%>;
+  searchBarPaddingTop = <%% 210, 190, 170, 156, 7 %%>;
   searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
+  searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
   searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
@@ -3743,13 +3743,13 @@ StyleCurationJs.prototype.insertInitBox = function () {
   subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
-  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
+  tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "상세 큐레이션";
-  subTitleContents = "정확한 디자이너 매칭을 위해 꼭 작성해주세요!";
+  titleWording = "Service curation<b%.%b>";
+  subTitleContents = "홈리에종 서비스에 대한 상세한 안내";
 
-  mobileBlockTop = 4.5;
+  mobileBlockTop = 5.6;
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -3762,31 +3762,6 @@ StyleCurationJs.prototype.insertInitBox = function () {
       top: String(-1 * boxTopVisual) + ea,
       paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
     }
-  });
-
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      height: String(quotoTongHeight) + ea,
-      opacity: String(0.6),
-    },
-    children: [
-      {
-        mode: "svg",
-        source: svgMaker.doubleQuote(colorChip.white),
-        style: {
-          display: "inline-block",
-          height: String(quoteHeight) + ea,
-          width: String(quoteWidth) + ea,
-        }
-      }
-    ]
   });
 
   createNode({
@@ -3804,40 +3779,22 @@ StyleCurationJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: mobile ? "" : String(titleTop) + ea,
           fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
           fontWeight: String(titleFontWeight),
           color: colorChip.white,
-        }
-      }
-    ]
-  });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: String(subTitleMarginTop) + ea,
-    },
-    children: [
-      {
-        text: subTitleContents,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: mobile ? "" : String(0) + ea,
-          fontSize: String(subTitleFontSize) + ea,
-          fontWeight: String(subTitleWeight),
+          wordSpacing: String(2) + "px",
+        },
+        bold: {
+          fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
+          fontWeight: String(titleFontWeight),
           color: colorChip.white,
+          opacity: String(0.4),
         }
       }
     ]
   });
-
 }
 
 StyleCurationJs.prototype.insertSecondInitBox = function () {
@@ -3884,30 +3841,29 @@ StyleCurationJs.prototype.insertSecondInitBox = function () {
   let tagTongBottom;
   let boxTopVisual;
   let mobileBlockTop;
-
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 90, 80, 74, 60, 14.5 %%>;
+  whiteBlockMarginBottom = <%% 60, 56, 52, 50, 7 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
+  titleFontSize = <%% 35, 34, 32, 29, 5.3 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 13, 13, 13, 12, 2.2 %%>;
+  servicePaddingLeft = <%% 15, 15, 14, 13, 2.2 %%>;
   serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 13, 13, 13, 12, 3.3 %%>;
+  serviceSize = <%% 13.5, 13.5, 13, 12, 3.3 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 220, 220, 192, 164, 12.5 %%>;
+  searchBarPaddingTop = <%% 210, 190, 170, 156, 7 %%>;
   searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
+  searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
   searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
@@ -3923,13 +3879,13 @@ StyleCurationJs.prototype.insertSecondInitBox = function () {
   subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
-  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
+  tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "상담 신청 완료";
-  subTitleContents = "문의가 정상적으로 완료되었습니다!";
+  titleWording = "Complete request<b%.%b>";
+  subTitleContents = "홈리에종 서비스에 대한 상세한 안내";
 
-  mobileBlockTop = 4.5;
+  mobileBlockTop = 5.6;
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -3942,31 +3898,6 @@ StyleCurationJs.prototype.insertSecondInitBox = function () {
       top: String(-1 * boxTopVisual) + ea,
       paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
     }
-  });
-
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      height: String(quotoTongHeight) + ea,
-      opacity: String(0.6),
-    },
-    children: [
-      {
-        mode: "svg",
-        source: svgMaker.doubleQuote(colorChip.white),
-        style: {
-          display: "inline-block",
-          height: String(quoteHeight) + ea,
-          width: String(quoteWidth) + ea,
-        }
-      }
-    ]
   });
 
   createNode({
@@ -3984,35 +3915,18 @@ StyleCurationJs.prototype.insertSecondInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: mobile ? "" : String(titleTop) + ea,
           fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
           fontWeight: String(titleFontWeight),
           color: colorChip.white,
-        }
-      }
-    ]
-  });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: String(subTitleMarginTop) + ea,
-    },
-    children: [
-      {
-        text: subTitleContents,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: mobile ? "" : String(0) + ea,
-          fontSize: String(subTitleFontSize) + ea,
-          fontWeight: String(subTitleWeight),
+          wordSpacing: String(2) + "px",
+        },
+        bold: {
+          fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
+          fontWeight: String(titleFontWeight),
           color: colorChip.white,
+          opacity: String(0.4),
         }
       }
     ]
@@ -6150,8 +6064,6 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
       liteMode: (returnGet().mode === "lite"),
       cliid: instance.client.cliid,
     }, BACKHOST + "/ghostClient_updateAnalytics");
-    backgroundImageBox2.style.opacity = String(1);
-    backgroundImageBox.style.animation = "justfadeoutoriginal 1s ease forwards";
     baseTong.style.height = String(baseTong.getBoundingClientRect().height) + ea;
     baseTong.style.animation = "fadedownmiddle 0.4s ease forwards";
     setQueue(() => {
@@ -6560,7 +6472,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
         binaryPath: StyleCurationJs.binaryPath,
         subTitle: (this.client.name + " 고객님 서비스 안내"),
         secondBackground: true,
-        backgroundType: 0,
+        backgroundType: 10,
         talk: {
           text: "하단 스타일 체크를 꼭 완료해주세요!",
           event: "channel",
@@ -6569,7 +6481,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
-          instance.insertDescriptionBox();
+          // instance.insertDescriptionBox();
           instance.insertCenterBox();
           instance.insertPhotoBox();
           instance.insertPannelBox();
@@ -6581,6 +6493,10 @@ StyleCurationJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
+
+    this.totalContents.children[0].style.background = colorExtended.gray1;
+    this.totalContents.children[1].style.transition = "all 0s ease";
+    this.totalContents.children[1].style.height = String(<&& 500 | 440 | 400 | 360 | 66 &&>) + this.ea;
 
   } catch (err) {
     console.log(err);
