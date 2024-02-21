@@ -145,7 +145,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 45, 45, 45, 40, 4 %%>;
+  whiteBlockMarginBottom = <%% 45, 38, 35, 30, 4 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;

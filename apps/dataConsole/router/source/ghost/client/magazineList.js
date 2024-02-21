@@ -116,25 +116,25 @@ MagazineListJs.prototype.insertInitBox = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 25, 25, 25, 25, 4 %%>;
+  whiteBlockMarginBottom = <%% 45, 32, 30, 28, 4 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
+  titleFontSize = <%% 35, 34, 32, 29, 5.3 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
   servicePaddingLeft = <%% 15, 15, 14, 13, 2.2 %%>;
-  serviceMarginRight = <%% 6, 6, 6, 6, 1 %%>;
-  serviceSize = <%% 13.5, 13.5, 13, 12, 2.6 %%>;
+  serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
+  serviceSize = <%% 13.5, 13.5, 13, 12, 3.3 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 220, 220, 192, 164, 14 %%>;
+  searchBarPaddingTop = <%% 210, 190, 170, 156, 7 %%>;
   searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
   searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
 
@@ -152,23 +152,23 @@ MagazineListJs.prototype.insertInitBox = function () {
   subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
-  tagTongBottom = <%% 3, 3, 1, 1, 0.5 %%>;
+  tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "홈리에종 매거진";
-  subTitleContents = "홈스타일링에 대한 심도 있는 이야기";
+  titleWording = "HL magazine<b%.%b>";
+  subTitleContents = "홈리에종 서비스에 대한 상세한 안내";
 
-  mobileBlockTop = 4.5;
+  mobileBlockTop = 5.6;
 
-  mobileSearchWhiteBoxPaddingTop = 4.8;
+  mobileSearchWhiteBoxPaddingTop = 5;
   mobileSearchWhiteBoxPaddingBottom = 5;
-  mobileSearchWhiteBoxMarginBottom = 4;
+  mobileSearchWhiteBoxMarginBottom = 5;
 
   buttonSize = <%% 14, 14, 13, 13, 3.2 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
   buttonBetween = <%% 2, 2, 2, 2, 2 %%>;
 
-  buttonTongWidth = <%% 90, 90, 85, 85, 90 %%>;
+  buttonTongWidth = <%% 65, 65, 60, 60, 90 %%>;
 
   buttonWidth = <%% 26, 26, 26, 24, 5.6 %%>;
   buttonHeight = <%% 12, 12, 12, 12, 3 %%>;
@@ -183,10 +183,10 @@ MagazineListJs.prototype.insertInitBox = function () {
 
   sortBoxRight = <%% 0, 0, 0, 0, 20 %%>;
 
-  mobileBackgroundHeight = isIphone() ? 75.5 : 73;
+  mobileBackgroundHeight = 58;
   mobileVisualPaddingLeft = 6;
 
-  tagBoxRight = <%% 157, 153, 125, 125, 10 %%>;
+  tagBoxRight = <%% 132, 128, 100, 100, 10 %%>;
 
   searchTags = [];
   if (media[0]) {
@@ -218,9 +218,9 @@ MagazineListJs.prototype.insertInitBox = function () {
 
   serviceButtonClassName = "serviceButton";
 
-  if (mobile) {
-    instance.mother.backgroundImageBox.style.height = String(mobileBackgroundHeight) + ea;
-  }
+  // if (mobile) {
+  //   instance.mother.backgroundImageBox.style.height = String(mobileBackgroundHeight) + ea;
+  // }
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -233,31 +233,6 @@ MagazineListJs.prototype.insertInitBox = function () {
       top: String(-1 * boxTopVisual) + ea,
       paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
     }
-  });
-
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      height: String(quotoTongHeight) + ea,
-      opacity: String(0.6),
-    },
-    children: [
-      {
-        mode: "svg",
-        source: svgMaker.doubleQuote(colorChip.white),
-        style: {
-          display: "inline-block",
-          height: String(quoteHeight) + ea,
-          width: String(quoteWidth) + ea,
-        }
-      }
-    ]
   });
 
   createNode({
@@ -275,35 +250,18 @@ MagazineListJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: mobile ? "" : String(titleTop) + ea,
           fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
           fontWeight: String(titleFontWeight),
           color: colorChip.white,
-        }
-      }
-    ]
-  });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: String(subTitleMarginTop) + ea,
-    },
-    children: [
-      {
-        text: subTitleContents,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: mobile ? "" : String(0) + ea,
-          fontSize: String(subTitleFontSize) + ea,
-          fontWeight: String(subTitleWeight),
+          wordSpacing: String(2) + "px",
+        },
+        bold: {
+          fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
+          fontWeight: String(titleFontWeight),
           color: colorChip.white,
+          opacity: String(0.4),
         }
       }
     ]
@@ -888,7 +846,7 @@ MagazineListJs.prototype.launching = async function (loading) {
         binaryPath: MagazineListJs.binaryPath,
         subTitle: "",
         secondBackground: false,
-        backgroundType: 1,
+        backgroundType: 10,
       },
       local: async () => {
         try {

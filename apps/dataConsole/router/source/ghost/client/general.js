@@ -231,7 +231,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   hamburgerTop = 21;
   searchWidth = <%% 64, 64, 62, 60, 20 %%>;
   searchWidthMinus = <%% 63, 63, 61, 58.5, 2 %%>;
-  mobileMenuHeight = 243;
+  mobileMenuHeight = 203;
   mobileFirstTop = 11;
   mobileVerticalBetween = 37;
   magazineSize = <%% 14, 14, 14, 13, 3 %%>;
@@ -277,10 +277,6 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
     green: [ "magazineList", "magazineDetail" ],
     focus: false,
   };
-
-  if (mobile) {
-    naviMenu.splice(naviMenu.length - 1, 0, specialMenu);
-  }
 
   for (let i = 0; i < naviMenu.length; i++) {
     if (naviMenu[i].green.includes(name)) {
@@ -624,8 +620,11 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     if (base.backgroundType === 1) {
       this.backHeight = <%% 420, 420, 375, 320, 94 %%>;
       base.instance.backHeight = this.backHeight;
-    } else if (base.backgroundType === 10 || base.backgroundType === 11) {
+    } else if (base.backgroundType === 10) {
       this.backHeight = <%% 346, 330, 310, 280, 58 %%>;
+      base.instance.backHeight = this.backHeight;
+    } else if (base.backgroundType === 11) {
+      this.backHeight = <%% 670, 650, 570, 480, 70 %%>;
       base.instance.backHeight = this.backHeight;
     }
 
