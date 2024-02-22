@@ -3469,6 +3469,9 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
               method: "get",
               headers: { "Authorization": accessToken }
             });
+
+            console.log(paymentData)
+
             const { buyer_tel, paid_at } = paymentData;
             const today = new Date();
             messageSend({ text: JSON.stringify(paymentData, null, 2), channel: "#error_log" }).catch((e) => { console.log(e); });
@@ -3565,6 +3568,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
 
       res.send(JSON.stringify({ "message": "ok" }));
     } catch (e) {
+      console.log(e);
       logger.error("Console 서버 문제 생김 (rou_post_webHookPayment): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ "message": "error" }));
     }
