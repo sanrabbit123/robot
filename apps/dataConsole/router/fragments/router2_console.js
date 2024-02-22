@@ -3469,12 +3469,9 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
               method: "get",
               headers: { "Authorization": accessToken }
             });
-
-            console.log(paymentData)
-
             const { buyer_tel, paid_at } = paymentData;
             const today = new Date();
-            messageSend({ text: JSON.stringify(paymentData, null, 2), channel: "#error_log" }).catch((e) => { console.log(e); });
+            logger.alert(JSON.stringify(paymentData, null, 2)).catch((e) => { console.log(e); });
             const convertingData = {
               goodName: paymentData.name,
               goodsName: paymentData.name,
@@ -3499,7 +3496,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
             let requestNumber;
             if (clients.length > 0) {
               const [ client ] = clients;
-              const projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo })).toNormal();
+              const projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo })).toNormal().filter((p) => { return p.desid.trim() !== "" });
               if (projects.length > 0) {
                 projects.sort((a, b) => { return Math.abs((a.process.contract.remain.calculation.amount.consumer - a.process.contract.first.calculation.amount) - paymentData.amount) - Math.abs((b.process.contract.remain.calculation.amount.consumer - b.process.contract.first.calculation.amount) - paymentData.amount) });
                 const [ project ] = projects;
