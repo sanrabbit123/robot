@@ -6927,8 +6927,8 @@ DevContext.prototype.launching = async function () {
     // await filter.rawToRaw([
     //   {
     //     client: null,
-    //     designer: "김윤지",
-    //     link: "https://drive.google.com/drive/folders/1aPaAhwiEVezfzYsS0hhZR3Z0iGE45sOD",
+    //     designer: "정지수",
+    //     link: "https://drive.google.com/drive/folders/10LA_rqh_Fxr1I7EZnYDen4QzkcIFv3iR",
     //     pay: true
     //   },
     // ]);
