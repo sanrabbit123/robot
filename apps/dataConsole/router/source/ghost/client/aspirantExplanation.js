@@ -74,6 +74,8 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     let mainIllust;
     let whitePopupMargin;
     let mobileLeftPaddingVisual;
+    let closedButtonWidth;
+    let closedButtonMargin;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -107,6 +109,15 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
     buttonSize = <%% 18, 17, 17, 16, 3.5 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+    closedButtonWidth = <%% 14, 13, 12, 11, 2.7 %%>;
+
+    if (desktop) {
+      closedButtonMargin = pinMargin;
+    } else {
+      closedButtonMargin = 2.3;
+    }
+
 
     mobileLeftPaddingVisual = 0.8;
 
@@ -253,7 +264,21 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
             cancelBack = createNode({
               mother: totalContents,
               class: [ submitBlockClassName ],
-              event: (e) => { removeByClass(submitBlockClassName) },
+              event: (e) => {
+                homeliaisonAnalytics({
+                  page: instance.pageName,
+                  standard: instance.firstPageViewTime,
+                  action: "aspirantSubmitPopupOut",
+                  data: {
+                    delta: (new Date()).valueOf() - instance.firstPageViewTime.valueOf(),
+                    date: new Date(),
+                  },
+                }).then(() => {
+                  removeByClass(submitBlockClassName)
+                }).catch((err) => {
+                  console.log(err);
+                });
+              },
               style: {
                 display: "block",
                 position: "fixed",
@@ -307,17 +332,40 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
                     }
                   },
                   {
+                    event: (e) => {
+                      homeliaisonAnalytics({
+                        page: instance.pageName,
+                        standard: instance.firstPageViewTime,
+                        action: "aspirantSubmitPopupOut",
+                        data: {
+                          delta: (new Date()).valueOf() - instance.firstPageViewTime.valueOf(),
+                          date: new Date(),
+                        },
+                      }).then(() => {
+                        removeByClass(submitBlockClassName)
+                      }).catch((err) => {
+                        console.log(err);
+                      });
+                    },
                     style: {
                       display: "inline-flex",
                       position: "absolute",
-                      width: String(pinWidth) + ea,
-                      height: String(pinWidth) + ea,
-                      borderRadius: String(pinWidth) + ea,
-                      border: "1px solid " + colorExtended.warmGray2,
-                      background: colorExtended.gray0,
-                      top: String(pinMargin) + ea,
-                      right: String(pinMargin) + ea,
+                      width: String(closedButtonWidth) + ea,
+                      height: String(closedButtonWidth) + ea,
+                      top: String(closedButtonMargin) + ea,
+                      right: String(closedButtonMargin) + ea,
                       zIndex: String(4),
+                      cursor: "pointer",
+                    },
+                    child: {
+                      mode: "svg",
+                      source: svgMaker.closeIcon(colorExtended.blueDark),
+                      style: {
+                        display: "inline-flex",
+                        position: "relative",
+                        width: String(closedButtonWidth) + ea,
+                        height: String(closedButtonWidth) + ea,
+                      }
                     }
                   },
                   {
@@ -356,7 +404,7 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
               mother: blockPrompt.firstChild,
               mode: "iframe",
               attribute: {
-                src: FRONTHOST + "/aspirant.php?entire=true&normal=true&dataonly=true"
+                src: FRONTHOST + "/aspirant.php?entire=true&normal=true&dataonly=true",
               },
               style: {
                 position: "absolute",

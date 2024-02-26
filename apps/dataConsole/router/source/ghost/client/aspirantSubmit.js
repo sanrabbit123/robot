@@ -4852,6 +4852,9 @@ AspirantSubmitJs.prototype.launching = async function (loading) {
           }
         }
       });
+
+      window.location.href = FRONTHOST + "/aspiration.php";
+
     } else {
 
       GeneralJs.colorChip.green = colorExtended.mainBlue;
