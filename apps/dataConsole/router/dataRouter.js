@@ -4337,10 +4337,14 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
               P_FN_NM: paymentData.card_name,
             };
             const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo });
-            let requestNumber;
+            let requestNumber, projects;
             if (clients.length > 0) {
               const [ client ] = clients;
-              const projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo })).toNormal().filter((p) => { return p.desid.trim() !== "" });
+              if (/잔금/gi.test(paymentData.name)) {
+                projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo })).toNormal().filter((p) => { return p.desid.trim() !== "" });
+              } else {
+                projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo })).toNormal();
+              }
               if (projects.length > 0) {
                 projects.sort((a, b) => { return Math.abs((a.process.contract.remain.calculation.amount.consumer - a.process.contract.first.calculation.amount) - paymentData.amount) - Math.abs((b.process.contract.remain.calculation.amount.consumer - b.process.contract.first.calculation.amount) - paymentData.amount) });
                 const [ project ] = projects;
