@@ -66,6 +66,10 @@ const SecondGhost = function (mother = null, back = null, address = null) {
       channel: "D062B65SSNS",
     },
   };
+  this.slack_geminiToken = "xoxp-717757271335-6709850918257-6685498874183-996bafe2e93d6656aff877f8ca0589bb";
+  this.slack_geminiId = "U06LVR0T07K";
+  this.slack_geminiAppId = "A06L5DPDYR5";
+  this.slack_gemini = new WebClient(this.slack_geminiToken);
   this.telegram = {
     chat: {
       general: "-806575867",
@@ -100,7 +104,7 @@ SecondGhost.prototype.ghostConnect = async function () {
   const instance = this;
   const back = this.back;
   const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, equalJson, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
-  const { slack_userToken, slack_info, slack_fairy, slack_fairyToken, slack_fairyId, slack_fairyAppId, telegram } = this;
+  const { slack_userToken, slack_info, slack_fairy, slack_fairyToken, slack_fairyId, slack_fairyAppId, slack_gemini, slack_geminiToken, slack_geminiId, slack_geminiAppId, telegram } = this;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -196,7 +200,7 @@ SecondGhost.prototype.ghostConnect = async function () {
 
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
-    const router = new SecondRouter(this.slack_bot, this.slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairy, slack_fairyToken, slack_fairyId, slack_fairyAppId, telegram, kakaoInstance, humanInstance);
+    const router = new SecondRouter(this.slack_bot, this.slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairy, slack_fairyToken, slack_fairyId, slack_fairyAppId, slack_gemini, slack_geminiToken, slack_geminiId, slack_geminiAppId, telegram, kakaoInstance, humanInstance);
     await router.setMembers();
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);
