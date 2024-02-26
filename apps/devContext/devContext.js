@@ -185,13 +185,8 @@ DevContext.prototype.launching = async function () {
     // await app.weeklySummary();
 
 
-    const selfMongo = this.MONGOC;
-    const clients = await back.getClientsByQuery({ phone: "010-9887-8911" }, { selfMongo });
-    const [ client ] = clients
-    const projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo })).toNormal().filter((p) => { return p.desid.trim() !== "" });
 
-    console.log(projects)
-
+    
 
 
 
@@ -6924,9 +6919,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "정지수",
-    //     link: "https://drive.google.com/drive/folders/10LA_rqh_Fxr1I7EZnYDen4QzkcIFv3iR",
+    //     client: "임현석",
+    //     designer: "김우현",
+    //     link: "https://drive.google.com/drive/folders/1Ih6JkoYe81YKVOI1SyXyJ03b3Hm-udmF",
     //     pay: true
     //   },
     // ]);
