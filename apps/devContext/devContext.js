@@ -185,9 +185,12 @@ DevContext.prototype.launching = async function () {
     // await app.weeklySummary();
 
 
-    
+    const selfMongo = this.MONGOC;
+    const clients = await back.getClientsByQuery({ phone: "010-9887-8911" }, { selfMongo });
+    const [ client ] = clients
+    const projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo })).toNormal().filter((p) => { return p.desid.trim() !== "" });
 
-
+    console.log(projects)
 
 
 
