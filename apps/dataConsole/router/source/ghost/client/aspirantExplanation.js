@@ -273,11 +273,10 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
                     delta: (new Date()).valueOf() - instance.firstPageViewTime.valueOf(),
                     date: new Date(),
                   },
-                }).then(() => {
-                  removeByClass(submitBlockClassName)
                 }).catch((err) => {
                   console.log(err);
                 });
+                removeByClass(submitBlockClassName);
               },
               style: {
                 display: "block",
@@ -341,11 +340,10 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
                           delta: (new Date()).valueOf() - instance.firstPageViewTime.valueOf(),
                           date: new Date(),
                         },
-                      }).then(() => {
-                        removeByClass(submitBlockClassName)
                       }).catch((err) => {
                         console.log(err);
                       });
+                      removeByClass(submitBlockClassName);
                     },
                     style: {
                       display: "inline-flex",
