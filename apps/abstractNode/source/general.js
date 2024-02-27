@@ -168,6 +168,9 @@ GeneralJs.svgMaker = {
   downArrow: function (color) {
     return `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 295.5974 275.3"><path fill="${color}" d="M289.6034,121.5312h-45.1321V5.982c0-3.3038-2.6782-5.982-5.982-5.982H57.1081c-3.3038,0-5.982,2.6782-5.982,5.982v115.5493 H5.994c-5.3294,0-7.9984,6.4434-4.2299,10.2119l141.8047,141.8047c2.3361,2.3361,6.1237,2.3361,8.4598,0l141.8047-141.8047 C297.6017,127.9747,294.9328,121.5312,289.6034,121.5312z"/></svg>`;
   },
+  houseLine: function (color) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 566.9291 149.2332" xml:space="preserve"><path fill="${color}" d="M566.9291,149.2332H466.1548v-45.9778c0-4.8913-2.6993-9.3296-7.0432-11.5818L289.676,3.8755 c-3.7587-1.9478-8.2442-1.9454-12.0029,0L108.2364,91.6737c-4.3439,2.2522-7.042,6.6893-7.042,11.5818v45.9778H0v-2.4162h98.7782 v-43.5617c0-5.7985,3.1983-11.0579,8.3468-13.7266L276.5618,1.7307c4.4512-2.3064,9.7696-2.3088,14.2256,0l169.4355,87.7981 c5.1497,2.6686,8.348,7.9292,8.348,13.7266v43.5617h98.3582V149.2332z"/></svg>`;
+  },
   checkBox: function (color, back = null) {
     const uncheckColorList = [
       GeneralJs.colorExtended.gray3,
@@ -434,6 +437,8 @@ GeneralJs.colorExtended = {
   blueDark: "#7f9fb3",
   blueLight: "#bed0d9",
   blueWhite: "#dae5e9",
+  blueWhiteBack: "#d2dfe5",
+  blueDim: "#5a7890",
   ultimateBlack: "#000000",
   subRed: "#ff9062",
   subYellow: "#ffd874",

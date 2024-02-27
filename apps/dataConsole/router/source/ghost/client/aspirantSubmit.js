@@ -1905,10 +1905,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           text: (desktop ? [
             "파트너십 신청을 위해서, 완성 현장 포트폴리오 또는 3D 작업물이 필요합니다.",
             "디자이너 페이지에 올릴 수 있는 현장 포트폴리오 세트가 있다면 전부 업로드해주세요!",
+            "시공 역량에 따라 고객을 매칭하며, <b%스타일링에 대한 경험 및 제품 선택 역량을 확인%b>합니다."
           ].join("\n") : [
-            "파트너십 신청을 위해서, 완성 현장 포트폴리오",
-            "또는 3D 작업물이 필요합니다. 디자이너 페이지에 올릴 수 있는",
-            "현장 포트폴리오 세트가 있다면 전부 업로드해주세요!",
+            "파트너십 신청을 위해서, 완성 현장 포트폴리오 또는",
+            "3D 작업물이 필요합니다. 현장 포트폴리오 세트가 있다면",
+            "전부 업로드해주세요! 시공 역량에 따라 고객을 매칭하며,",
+            "<b%스타일링에 대한 경험 및 제품 선택 역량을 확인%b>합니다."
           ].join("\n")),
           style: {
             display: "block",
@@ -1919,6 +1921,11 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             marginBottom: String(<&& 24 | 23 | 22 | 20 | 4 &&>) + ea,
             lineHeight: String(1.5),
             textAlign: "left",
+          },
+          bold: {
+            fontSize: String(<&& 15 | 15 | 14 | 13 | 3.2 &&>) + ea,
+            fontWeight: String(800),
+            color: colorChip.black,
           }
         }
       ]

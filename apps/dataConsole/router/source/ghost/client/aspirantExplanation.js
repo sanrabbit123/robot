@@ -118,7 +118,6 @@ AspirantExplanationJs.prototype.insertInitBox = async function () {
       closedButtonMargin = 2.3;
     }
 
-
     mobileLeftPaddingVisual = 0.8;
 
     mainIllust = <%% AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust0.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust1.png", AspirantExplanationJs.binaryPath + "/mainIllust2.png" %%>;
@@ -2119,9 +2118,9 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
 
     processBlockMarginTop = <%% 80, 72, 56, 48, 7.5 %%>;
 
-    unitBoxWidth = <%% 190, 150, 130, 110, 32 %%>;
-    unitBoxWidthLong = <%% 310, 270, 230, 190, 77 %%>;
-    unitBetween = <%% 40, 20, 16, 10, 5 %%>;
+    unitBoxWidth = <%% 190, 150, 140, 116, 32 %%>;
+    unitBoxWidthLong = <%% 310, 270, 230, 170, 77 %%>;
+    unitBetween = <%% 40, 20, 10, 8, 5 %%>;
 
     basePaddingTop = <%% 170, 170, 160, 130, 20 %%>;
     basePaddingBottom = <%% 200, 200, 190, 160, 24 %%>;
@@ -2341,7 +2340,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 paddingLeft: desktop ? "" : String(7) + ea,
               },
               child: {
-                text: "포트폴리오 제출",
+                text: "추가 서류 제출",
                 style: {
                   display: "inlnie-block",
                   position: "relative",
@@ -2417,7 +2416,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 paddingLeft: desktop ? "" : String(7) + ea,
               },
               child: {
-                text: "행정 서류 제출",
+                text: "계약서 작성 및 납입",
                 style: {
                   display: "inlnie-block",
                   position: "relative",
@@ -2493,7 +2492,7 @@ AspirantExplanationJs.prototype.insertFourthBox = async function () {
                 paddingLeft: desktop ? "" : String(7) + ea,
               },
               child: {
-                text: "계약서 작성과 협업 매뉴얼 안내",
+                text: "공통 교육 및 협업 매뉴얼 안내",
                 style: {
                   display: "inlnie-block",
                   position: "relative",
