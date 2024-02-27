@@ -90,7 +90,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    titleSize = <%% 60, 50, 48, 40, 9 %%>;
+    titleSize = <%% 61, 50, 48, 40, 9 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% -2, -2, -2, -2, -0.5 %%>;
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
@@ -220,7 +220,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
         position: "absolute",
         right: String(0),
         top: String(30) + ea,
-        height: String(410) + ea,
+        height: String(404) + ea,
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0.2s 1 normal forwards running fadeupdelay2",
@@ -386,18 +386,18 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
 
     titleSize = 23;
     descriptionSize = 16;
-    descriptionMarginTop = 10;
+    descriptionMarginTop = 8;
 
     checkCircleWidth = 21;
 
     visualTop = 24;
 
     boxWidth = 290;
-    boxHeight = 230;
+    boxHeight = 228;
 
-    betweenMargin = 150;
+    betweenMargin = 152;
 
-    totalHeight = 340;
+    totalHeight = 344;
 
     textContent = [
       {
@@ -536,7 +536,7 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
           height: String(checkCircleWidth) + ea,
           background: textContent[index].focus ? colorExtended.focusBlue : colorExtended.white,
           borderRadius: String(checkCircleWidth) + ea,
-          marginTop: String(18) + ea,
+          marginTop: String(16) + ea,
         },
         child: {
           mode: "svg",
@@ -566,22 +566,42 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
   const mobile = media[4];
   const desktop = !mobile;
   try {
-    let mainHeight;
     let minusLeft;
-    let secondBase;
+    let thirdBase;
     let colorTop;
     let basePaddingTop;
     let basePaddingBottom;
+    let abc, designers;
+    let thisBase;
+    let designer;
+    let checkCircleWidth;
+    let thisCardBase;
+    let cardWidth, cardHeight, cardBetween;
+    let buttonCardWidth;
+    let shadowForm;
+    let cardLength;
 
-    mainHeight = <%% 440, 390, 370, 280, 136 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
-
-    basePaddingTop = <%% 170, 170, 160, 140, 21 %%>;
+    basePaddingTop = <%% 150, 150, 160, 140, 21 %%>;
     basePaddingBottom = <%% 200, 200, 190, 170, 24 %%>;
 
-    secondBase = createNode({
+    checkCircleWidth = 13;
+
+    cardLength = 5;
+
+    cardHeight = 420;
+    cardBetween = 8;
+    buttonCardWidth = 54;
+    cardWidth = "calc(" + withOut((cardBetween * cardLength) + buttonCardWidth, ea) + " / " + String(cardLength) + ")";
+
+    shadowForm = "0px 8px 18px -9px " + colorExtended.darkShadow;
+
+    abc = this.abc;
+    designers = this.designers;
+
+    thirdBase = createNode({
       mother: baseTong,
       style: {
         display: "flex",
@@ -590,10 +610,9 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         flexDirection: "column",
         paddingTop: String(basePaddingTop) + ea,
         paddingBottom: String(basePaddingBottom) + ea,
-        height: String(800) + ea,
         justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "row",
+        alignItems: "start",
+        flexDirection: "column",
       },
       child: {
         style: {
@@ -606,6 +625,224 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       }
     });
+    createNode({
+      mother: thirdBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        width: withOut(0, ea),
+        flexDirection: "column",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            left: String(0),
+            width: withOut(0, ea),
+            borderBottom: "1px dashed " + colorExtended.white,
+            opacity: String(0.5),
+            top: String(18) + ea,
+          }
+        },
+        {
+          text: "designers",
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            fontSize: String(30) + ea,
+            fontWeight: String(700),
+            color: colorExtended.white,
+            fontFamily: "mont",
+            background: colorExtended.blueDark,
+            paddingLeft: String(16) + ea,
+            paddingRight: String(16) + ea,
+          }
+        },
+      ]
+    })
+
+    for (let i = 0; i < designers.length; i++) {
+
+      designer = designers[i];
+
+      thisBase = createNode({
+        mother: thirdBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          justifyContent: "start",
+          alignItems: "start",
+          width: withOut(0, ea),
+          flexDirection: "column",
+          paddingBottom: String(6) + ea,
+        }
+      });
+
+      createNode({
+        mother: thisBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          justifyContent: "start",
+          alignItems: "center",
+          width: withOut(0, ea),
+          flexDirection: "row",
+          marginTop: String(30) + ea,
+          marginBottom: String(10) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              width: String(checkCircleWidth) + ea,
+              height: String(checkCircleWidth) + ea,
+              background: colorExtended.focusBlue,
+              borderRadius: String(checkCircleWidth) + ea,
+            },
+            child: {
+              mode: "svg",
+              source: svgMaker.checkCircle(colorExtended.white),
+              style: {
+                display: "flex",
+                position: "relative",
+                width: String(checkCircleWidth) + ea,
+              },
+            }
+          },
+          {
+            text: "designers " + abc[i],
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              fontSize: String(19) + ea,
+              fontWeight: String(700),
+              color: colorExtended.white,
+              fontFamily: "mont",
+              marginLeft: String(7) + ea,
+              opacity: String(0.5),
+            }
+          }
+        ]
+      });
+
+      thisCardBase = createNode({
+        mother: thisBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          justifyContent: "start",
+          alignItems: "center",
+          width: withOut(0, ea),
+          flexDirection: "row",
+        }
+      });
+
+      createNode({
+        mother: thisCardBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: cardWidth,
+          height: String(cardHeight) + ea,
+          borderRadius: String(8) + "px",
+          background: colorExtended.white,
+          marginRight: String(cardBetween) + ea,
+          boxShadow: shadowForm,
+          flexDirection: "column",
+          overflow: "hidden",
+        },
+        children: [
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(250) + ea,
+              backgroundImage: "url('" + designer.profile.link + "')",
+              backgroundSize: designer.profile.gs === 's' ? "100% auto" : "100% 100%",
+              backgroundPosition: designer.profile.position,
+              filter: "grayscale(100%)",
+            }
+          }
+        ]
+      });
+
+      createNode({
+        mother: thisCardBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: cardWidth,
+          height: String(cardHeight) + ea,
+          borderRadius: String(8) + "px",
+          background: colorExtended.white,
+          marginRight: String(cardBetween) + ea,
+          boxShadow: shadowForm,
+        }
+      });
+
+      createNode({
+        mother: thisCardBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: cardWidth,
+          height: String(cardHeight) + ea,
+          borderRadius: String(8) + "px",
+          background: colorExtended.white,
+          marginRight: String(cardBetween) + ea,
+          boxShadow: shadowForm,
+        }
+      });
+
+      createNode({
+        mother: thisCardBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: cardWidth,
+          height: String(cardHeight) + ea,
+          borderRadius: String(8) + "px",
+          background: colorExtended.white,
+          marginRight: String(cardBetween) + ea,
+          boxShadow: shadowForm,
+        }
+      });
+
+      createNode({
+        mother: thisCardBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: cardWidth,
+          height: String(cardHeight) + ea,
+          borderRadius: String(8) + "px",
+          background: colorExtended.white,
+          marginRight: String(cardBetween) + ea,
+          boxShadow: shadowForm,
+        }
+      });
+
+      createNode({
+        mother: thisCardBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(buttonCardWidth) + ea,
+          height: String(cardHeight) + ea,
+          borderRadius: String(8) + "px",
+          background: colorExtended.blueDarkButton,
+          opacity: String(0.7),
+          boxShadow: shadowForm,
+        }
+      });
+
+
+    }
+    
 
   } catch (e) {
     console.log(e);
@@ -671,11 +908,49 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, dateToString, homeliaisonAnalytics, colorExtended } = GeneralJs;
+    const { returnGet, ajaxJson, dateToString, homeliaisonAnalytics, colorExtended, stringToLink } = GeneralJs;
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
-    
+    let designers;
+    let alphabet, temp0, temp1;
+    let profileList;
+    let profileListFiltered;
+    let blankPhoto;
+
+    temp0 = 'A'.charCodeAt();
+    temp1 = 'Z'.charCodeAt();
+    alphabet = [];
+    for (let i = temp0; i < temp1 + 1; i++) {
+      alphabet.push(String.fromCharCode(i));
+    }
+
+    this.abc = [];
+    for (let i of alphabet) {
+      this.abc.push(i);
+    }
+
+    for (let i of alphabet) {
+      for (let j of alphabet) {
+        this.abc.push(i + j);
+      }
+    }
+
+    designers = await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": "협약 완료" } }, BACKHOST + "/getDesigners", { equal: true });
+    profileList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerProfileList", { equal: true });
+    blankPhoto = DesignerExplanationJs.binaryPath + "/blank.png";
+
+    for (let designer of designers) {
+      profileListFiltered = profileList.filter((o) => { return o.desid === designer.desid });
+      if (profileListFiltered.length === 0) {
+        designer.profile = { gs: "s", link: blankPhoto, position: "50% 50%" };
+      } else {
+        profileListFiltered.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        designer.profile = { gs: profileListFiltered[0].gs, link: stringToLink(profileListFiltered[0].link), position: `${String(profileListFiltered[0].position.x)}% ${String(profileListFiltered[0].position.y)}%` };
+      }
+    }
+    this.designers = designers;
+
     await this.mother.ghostClientLaunching({
       mode: "front",
       name: "designerExplanation",
@@ -720,9 +995,9 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
 
     loading.parentNode.removeChild(loading);
 
-    GeneralJs.setQueue(() => {
-      window.scrollTo(0, 0);
-    }, 400);
+    // GeneralJs.setQueue(() => {
+    //   window.scrollTo(0, 0);
+    // }, 400);
 
   } catch (err) {
     console.log(err);

@@ -439,6 +439,7 @@ GeneralJs.colorExtended = {
   blueWhite: "#dae5e9",
   blueWhiteBack: "#d2dfe5",
   blueDim: "#5a7890",
+  blueDarkButton: "#9bbdd1",
   ultimateBlack: "#000000",
   subRed: "#ff9062",
   subYellow: "#ffd874",
