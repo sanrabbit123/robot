@@ -76,7 +76,6 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
     firstBasePaddingTop = <%% 24, 24, 24, 24, 8 %%>;
-
     firstBasePaddingBottom = <%% 170, 170, 160, 120, 20 %%>;
     blueTop = <%% 200, 200, 200, 200, 28 %%>;
 
@@ -84,14 +83,14 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     subTitleMarginTop = <%% 6, 6, 6, 6, 2.2 %%>;
 
-    buttonMarginTop = <%% 156, 4, 24, 20, 3.6 %%>;
-    buttonWidth = <%% 200, 145, 140, 130, 31 %%>;
-    buttonHeight = <%% 35, 32, 32, 40, 9 %%>;
-    buttonSize = <%% 15, 15, 14, 14, 3.5 %%>;
+    buttonMarginTop = <%% 146, 4, 24, 20, 3.6 %%>;
+    buttonWidth = <%% 190, 145, 140, 130, 31 %%>;
+    buttonHeight = <%% 32, 32, 32, 40, 9 %%>;
+    buttonSize = <%% 14, 14, 14, 14, 3.5 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    titleSize = <%% 61, 50, 48, 40, 9 %%>;
+    titleSize = <%% 60, 50, 48, 40, 9 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% -2, -2, -2, -2, -0.5 %%>;
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
@@ -114,7 +113,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     if (media[0] && window.innerHeight > 1100) {
       firstBasePaddingTop = 60;
       subTitleSize = 19;
-      firstBasePaddingBottom = 236;
+      firstBasePaddingBottom = 230;
     }
 
     this.totalContents = document.getElementById("totalcontents");
@@ -220,8 +219,8 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
       style: {
         position: "absolute",
         right: String(0),
-        top: String(40) + ea,
-        height: String(413) + ea,
+        top: String(30) + ea,
+        height: String(410) + ea,
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0.2s 1 normal forwards running fadeupdelay2",
@@ -367,16 +366,68 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
     let mainHeight;
     let minusLeft;
     let secondBase;
-    let basePaddingTop, basePaddingBottom;
     let colorTop;
+    let serviceBase;
+    let textContent;
+    let descriptionSize;
+    let checkCircleWidth;
+    let visualTop;
+    let createServiceBlock;
+    let titleSize;
+    let descriptionMarginTop;
+    let boxWidth, boxHeight;
+    let betweenMargin;
+    let totalHeight;
 
     mainHeight = <%% 440, 390, 370, 280, 136 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    basePaddingTop = <%% 170, 170, 160, 140, 21 %%>;
-    basePaddingBottom = <%% 200, 200, 190, 170, 24 %%>;
-
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
+
+    titleSize = 23;
+    descriptionSize = 16;
+    descriptionMarginTop = 10;
+
+    checkCircleWidth = 21;
+
+    visualTop = 24;
+
+    boxWidth = 290;
+    boxHeight = 230;
+
+    betweenMargin = 150;
+
+    totalHeight = 340;
+
+    textContent = [
+      {
+        title: "홈퍼니싱",
+        description: [
+          "<b%시공 없이 스타일링만%b>",
+          "가구와 소품, 그리고 패브릭으로 진행",
+        ],
+        margin: false,
+        focus: false,
+      },
+      {
+        title: "홈스타일링",
+        description: [
+          "<b%부분 시공과 스타일링%b>",
+          "집 컨디션에 맞는 범위의 시공을 진행",
+        ],
+        margin: true,
+        focus: true,
+      },
+      {
+        title: "토탈 스타일링",
+        description: [
+          "<b%전체 시공과 스타일링%b>",
+          "전체 시공과 스타일링까지 전부 진행"
+        ],
+        margin: false,
+        focus: false,
+      },
+    ]
 
     secondBase = createNode({
       mother: baseTong,
@@ -384,9 +435,11 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        paddingTop: String(basePaddingTop) + ea,
-        paddingBottom: String(basePaddingBottom) + ea,
-        flexDirection: "column"
+        flexDirection: "column",
+        height: String(totalHeight) + ea,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
       },
       child: {
         style: {
@@ -400,6 +453,159 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
       }
     });
 
+    createServiceBlock = (index) => {
+      serviceBase = createNode({
+        mother: secondBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(boxWidth) + ea,
+          height: String(boxHeight) + ea,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          top: String(visualTop) + ea,
+          opacity: textContent[index].focus ? String(1) : String(0.4),
+          marginLeft: textContent[index].margin ? String(betweenMargin) + ea : "",
+          marginRight: textContent[index].margin ? String(betweenMargin) + ea : "",
+        }
+      });
+      createNode({
+        mother: serviceBase,
+        mode: "svg",
+        source: svgMaker.houseLine(colorExtended.focusBlue),
+        style: {
+          display: "flex",
+          position: "absolute",
+          width: String(boxWidth) + ea,
+          top: String(0),
+          left: String(0),
+        }
+      });
+      createNode({
+        mother: serviceBase,
+        text: textContent[index].title,
+        style: {
+          display: "flex",
+          position: "relative",
+          fontFamily: "gmarket",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(700),
+          color: colorExtended.black,
+        }
+      });
+      createNode({
+        mother: serviceBase,
+        text: textContent[index].description[0],
+        style: {
+          display: "flex",
+          position: "relative",
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(400),
+          color: colorExtended.black,
+          marginTop: String(descriptionMarginTop) + ea,
+          marginBottom: String(0) + ea,
+        },
+        bold: {
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(800),
+          color: colorExtended.black,
+        }
+      });
+      createNode({
+        mother: serviceBase,
+        text: textContent[index].description[1],
+        style: {
+          display: "flex",
+          position: "relative",
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(400),
+          color: colorExtended.black,
+        },
+        bold: {
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(800),
+          color: colorExtended.black,
+        }
+      });
+      createNode({
+        mother: serviceBase,
+        style: {
+          display: "flex",
+          width: String(checkCircleWidth) + ea,
+          height: String(checkCircleWidth) + ea,
+          background: textContent[index].focus ? colorExtended.focusBlue : colorExtended.white,
+          borderRadius: String(checkCircleWidth) + ea,
+          marginTop: String(18) + ea,
+        },
+        child: {
+          mode: "svg",
+          source: svgMaker.checkCircle(colorExtended.white),
+          style: {
+            display: "flex",
+            position: "relative",
+            width: String(checkCircleWidth) + ea,
+          },
+        }
+      });
+    }
+
+    for (let i = 0; i < textContent.length; i++) {
+      createServiceBlock(i);
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DesignerExplanationJs.prototype.insertThirdBox = async function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  try {
+    let mainHeight;
+    let minusLeft;
+    let secondBase;
+    let colorTop;
+    let basePaddingTop;
+    let basePaddingBottom;
+
+    mainHeight = <%% 440, 390, 370, 280, 136 %%>;
+    minusLeft = window.innerWidth - standardWidth + 1;
+
+    colorTop = <%% 200, 200, 200, 200, 200 %%>;
+
+    basePaddingTop = <%% 170, 170, 160, 140, 21 %%>;
+    basePaddingBottom = <%% 200, 200, 190, 170, 24 %%>;
+
+    secondBase = createNode({
+      mother: baseTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        flexDirection: "column",
+        paddingTop: String(basePaddingTop) + ea,
+        paddingBottom: String(basePaddingBottom) + ea,
+        height: String(800) + ea,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+      },
+      child: {
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(-1 * minusLeft) + ea,
+          background: colorExtended.blueDark,
+          width: withOut(-1 * (minusLeft * 2), ea),
+          height: withOut(1 * ((-1 * colorTop) + naviHeight), ea),
+        }
+      }
+    });
 
   } catch (e) {
     console.log(e);
@@ -489,6 +695,7 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
         try {
           await instance.insertInitBox();
           await instance.insertSecondBox();
+          await instance.insertThirdBox();
           instance.resizeEvent();
           setInterval(() => {
             homeliaisonAnalytics({
