@@ -3072,9 +3072,6 @@ Mother.prototype.linkToString = function (link) {
   if (typeof link !== "string") {
     throw new Error("invalid input");
   }
-  if (!/^http/.test(link)) {
-    throw new Error("it is not link");
-  }
   const nameToToken = (name) => { return `_____${name}_____` } 
   const tokens = {
     equal: nameToToken("equal"),
@@ -3099,33 +3096,43 @@ Mother.prototype.linkToString = function (link) {
   let getObj;
   let filteredLink;
 
-  linkArr = link.split("/");
-  if (linkArr.length < 3) {
-    throw new Error("invalid link");
-  }
-  protocol = linkArr[0].replace(/[\:]/gi, '');
-  host = linkArr[2];
-  pathName = "/" + linkArr.slice(3).join("/");
+  if (!/^http/.test(link)) {
 
-  if (/[\?]/gi.test(pathName)) {
-    search = pathName.split("?")[1];
-    pathName = pathName.split("?")[0];
+    pathName = link;
+    pathName = pathName.split("/").map((str) => { return globalThis.encodeURIComponent(str) }).join("/");
+    filteredLink = pathName;
+
   } else {
-    search = "";
-  }
 
-  if (search !== "") {
-    getObj = search.split("&").map((str) => { return { key: globalThis.encodeURIComponent(str.split("=")[0]), value: globalThis.encodeURIComponent(str.split("=")[1]) } });
-  } else {
-    getObj = [];
-  }
+    linkArr = link.split("/");
+    if (linkArr.length < 3) {
+      throw new Error("invalid link");
+    }
+    protocol = linkArr[0].replace(/[\:]/gi, '');
+    host = linkArr[2];
+    pathName = "/" + linkArr.slice(3).join("/");
+  
+    if (/[\?]/gi.test(pathName)) {
+      search = pathName.split("?")[1];
+      pathName = pathName.split("?")[0];
+    } else {
+      search = "";
+    }
+  
+    if (search !== "") {
+      getObj = search.split("&").map((str) => { return { key: str.split("=")[0], value: str.split("=")[1] } });
+    } else {
+      getObj = [];
+    }
+  
+    pathName = pathName.split("/").map((str) => { return globalThis.encodeURIComponent(str) }).join("/");
+  
+    if (getObj.map((obj) => { return `${obj.key}=${obj.value}` }).join("&") === '') {
+      filteredLink = protocol + "://" + host + pathName;
+    } else {
+      filteredLink = protocol + "://" + host + pathName + "?" + getObj.map((obj) => { return `${obj.key}=${obj.value}` }).join("&");
+    }
 
-  pathName = pathName.split("/").map((str) => { return globalThis.encodeURIComponent(str) }).join("/");
-
-  if (getObj.map((obj) => { return `${obj.key}=${obj.value}` }).join("&") === '') {
-    filteredLink = protocol + "://" + host + pathName;
-  } else {
-    filteredLink = protocol + "://" + host + pathName + "?" + getObj.map((obj) => { return `${obj.key}=${obj.value}` }).join("&");
   }
 
   filteredLink = filteredLink.replace(/[\=]/gi, tokens.equal);
