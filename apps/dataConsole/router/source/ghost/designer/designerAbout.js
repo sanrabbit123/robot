@@ -8308,9 +8308,9 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
         width: String(100) + '%',
         background: desktop ? colorChip.white : "",
         paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
-        paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
+        paddingBottom: normalMode ? "" : (desktop ? String(whiteBottomMargin) + ea : ""),
         marginBottom: String(bottomMargin) + ea,
-        boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+        boxShadow: normalMode ? "" : (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : ""),
       },
       children: [
         {
@@ -11321,6 +11321,7 @@ DesignerAboutJs.prototype.insertRepresentativePhotosBox = async function () {
     let photoRatio;
     let photoBetween;
     let photoColumnlength;
+    let positionData;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -11356,7 +11357,7 @@ DesignerAboutJs.prototype.insertRepresentativePhotosBox = async function () {
     secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
     
     contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
-    contentsMarginBottom1 = <%% 36, 36, 34, 32, 3 %%>;
+    contentsMarginBottom1 = <%% 36, 36, 34, 32, 2 %%>;
   
     lineTop = <%% 10, 10, 10, 10, 10 %%>;
     linePadding = <%% 12, 12, 12, 12, 12 %%>;
@@ -11373,15 +11374,16 @@ DesignerAboutJs.prototype.insertRepresentativePhotosBox = async function () {
 
     cardRatio = (261 / 420);
     photoRatio = (210 / 297);
+
     cardLength = 5;
-    cardBetween = 8;
 
-    outerMargin = 30;
-    innerMargin = 30;
-  
-    photoBetween = 6;
+    cardBetween = <%% 8, 6, 5, 4, 0.5 %%>;
+    outerMargin = <%% 30, 30, 24, 20, 7 %%>;
+    innerMargin = <%% 30, 30, 24, 20, 3 %%>;
+    photoBetween = <%% 6, 5, 4, 3, 0.5 %%>;
+    photoColumnlength = <%% 6, 6, 5, 4, 3 %%>;
 
-    photoColumnlength = 6;
+    positionData = (await ajaxJson({ mode: "get", desid: instance.designer.desid }, BRIDGEHOST + "/designerRepresentativePhotos", { equal: true })).data.position;
 
     contentsSelectViewPopup = (index) => {
       return async function (e) {
@@ -11519,7 +11521,6 @@ DesignerAboutJs.prototype.insertRepresentativePhotosBox = async function () {
       }
     }
 
-
     whiteBlock = createNode({
       mother: entireMode ? totalContents : baseTong,
       style: {
@@ -11528,9 +11529,9 @@ DesignerAboutJs.prototype.insertRepresentativePhotosBox = async function () {
         width: String(100) + '%',
         background: desktop ? colorChip.white : "",
         paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
-        paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
+        paddingBottom: normalMode ? "" : (desktop ? String(whiteBottomMargin) + ea : ""),
         marginBottom: String(bottomMargin) + ea,
-        boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+        boxShadow: normalMode ? "" : (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : ""),
       },
       children: [
         {
@@ -11738,9 +11739,10 @@ DesignerAboutJs.prototype.insertRepresentativePhotosBox = async function () {
           aspectRatio: String(cardRatio),
           marginRight: String(i === cardLength - 1 ? 0 : cardBetween) + ea,
           background: colorExtended.blue,
-          borderRadius: String(5) + "px",
+          borderRadius: String(desktop ? 5 : 3) + "px",
           backgroundPosition: "50% 50%",
           backgroundSize: "auto 100%",
+          backgroundImage: (positionData[i] === undefined || positionData[i] === 0 || positionData[i] === "0") ? "" : "url('" + "https://" + FILEHOST + stringToLink(positionData[i]) + "')",
           cursor: "pointer",
         }
       });
@@ -11760,8 +11762,10 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const veryBig = (media[0] || media[1]);
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, isIphone, removeByClass, homeliaisonAnalytics, downloadFile } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, isIphone, removeByClass, homeliaisonAnalytics, downloadFile, linkToString, stringToLink } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
+  const selectPopupClassName = "selectPopupClassName";
+  const positionPhotoClassName = "positionPhotoClassName_";
   try {
     const mainContents = [
       {
@@ -11796,6 +11800,17 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
     let lineTop, linePadding;
     let contentsTextTop;
     let textTop;
+    let cardRatio;
+    let imageCardsTong;
+    let cardLength;
+    let cardBetween;
+    let contentsSelectViewPopup;
+    let outerMargin;
+    let innerMargin;
+    let photoRatio;
+    let photoBetween;
+    let photoColumnlength;
+    let positionData;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -11831,7 +11846,7 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
     secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
     
     contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
-    contentsMarginBottom1 = <%% 36, 36, 34, 32, 3 %%>;
+    contentsMarginBottom1 = <%% 36, 36, 34, 32, 2 %%>;
   
     lineTop = <%% 10, 10, 10, 10, 10 %%>;
     linePadding = <%% 12, 12, 12, 12, 12 %%>;
@@ -11845,7 +11860,156 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
     textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
   
     this.whiteMargin = (desktop ? margin : 0);
-  
+
+    cardRatio = (261 / 420);
+    photoRatio = (210 / 297);
+
+    cardLength = 5;
+
+    cardBetween = <%% 8, 6, 5, 4, 0.5 %%>;
+    outerMargin = <%% 30, 30, 24, 20, 7 %%>;
+    innerMargin = <%% 30, 30, 24, 20, 3 %%>;
+    photoBetween = <%% 6, 5, 4, 3, 0.5 %%>;
+    photoColumnlength = <%% 6, 6, 5, 4, 3 %%>;
+
+    positionData = (await ajaxJson({ mode: "get", desid: instance.designer.desid }, BRIDGEHOST + "/designerRepresentativePhotos", { equal: true })).data.position;
+
+    contentsSelectViewPopup = (index) => {
+      return async function (e) {
+        try {
+          const loading = await instance.mother.loadingRun();
+          const zIndex = 4;
+          const designer = instance.designer;
+          const desid = designer.desid;
+          const { data: thisDesignerContents } = await ajaxJson({ mode: "get", desid: desid, sero: true }, SECONDHOST + "/designerContentsInfo", { equal: true });
+          let cancelBack, whitePrompt;
+          let whiteScroll;
+
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ selectPopupClassName ],
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  removeByClass(selectPopupClassName);
+                }
+              }
+            ],
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: String(100) + '%',
+              height: String(100) + '%',
+              background: colorChip.black,
+              zIndex: String(zIndex),
+              animation: "justfadeineight 0.2s ease forwards",
+            }
+          });
+
+          whitePrompt = createNode({
+            mother: totalContents,
+            class: [ selectPopupClassName ],
+            style: {
+              display: "inline-flex",
+              position: "fixed",
+              width: withOut((outerMargin * 2) + (innerMargin * 2) - photoBetween, ea),
+              height: "calc(calc(100% - " + String(naviHeight) + "px" + ") - " + String((outerMargin * 2) + (innerMargin * 2)) + ea + ")",
+              top: "calc(" + String(naviHeight) + "px" + " + " + String(outerMargin) + ea + ")",
+              left: String(outerMargin) + ea,
+              zIndex: String(zIndex),
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              animation: "fadeuplite 0.3s ease forwards",
+              padding: String(innerMargin) + ea,
+              paddingRight: String(innerMargin - photoBetween) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+            }
+          });
+
+          whiteScroll = createNode({
+            mother: whitePrompt,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              overflow: "scroll",
+              justifyContent: "start",
+              alignItems: "start",
+            },
+            child: {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                paddingBottom: String(1200) + ea,
+              }
+            }
+          }).firstChild;
+
+          for (let obj of thisDesignerContents) {
+
+            createNode({
+              mother: whiteScroll,
+              event: {
+                mouseenter: function (e) {
+                  this.style.opacity = String(0.7);
+                },
+                mouseleave: function (e) {
+                  this.style.opacity = String(1);
+                },
+                click: async function (e) {
+                  const linkPath = this.getAttribute("source");
+                  const position = Number(this.getAttribute("position"));
+                  const targetArea = document.querySelector('.' + positionPhotoClassName + String(position));
+                  const desid = this.getAttribute("desid");
+                  targetArea.style.backgroundImage = "url('" + "https://" + FILEHOST + stringToLink(linkPath) + "')";
+
+                  await ajaxJson({
+                    mode: "save",
+                    desid,
+                    position,
+                    path: linkPath,
+                  }, BRIDGEHOST + "/designerRepresentativePhotos");
+
+                  removeByClass(selectPopupClassName);
+                }
+              },
+              attribute: {
+                source: linkToString(obj.link),
+                position: String(index),
+                desid: desid,
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: "calc(calc(100% - " + String(photoBetween * photoColumnlength) + ea + ") / " + String(photoColumnlength) + ")",
+                height: "auto",
+                aspectRatio: String(photoRatio),
+                borderRadius: String(3) + "px",
+                backgroundImage: "url('" + "https://" + FILEHOST + obj.link + "')",
+                backgroundPosition: "50% 50%",
+                backgroundSize: "101% 101%",
+                marginBottom: String(photoBetween) + ea,
+                marginRight: String(photoBetween) + ea,
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            });
+
+          }
+
+          loading.parentElement.removeChild(loading);
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
     whiteBlock = createNode({
       mother: entireMode ? totalContents : baseTong,
       style: {
@@ -11854,9 +12018,9 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
         width: String(100) + '%',
         background: desktop ? colorChip.white : "",
         paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
-        paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
+        paddingBottom: normalMode ? "" : (desktop ? String(whiteBottomMargin) + ea : ""),
         marginBottom: String(bottomMargin) + ea,
-        boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+        boxShadow: normalMode ? "" : (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : ""),
       },
       children: [
         {
@@ -11902,7 +12066,7 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
               }
             },
             {
-              text: "대표 페이퍼 워크 구성",
+              text: "대표 세로 사진 구성",
               style: {
                 position: "relative",
                 display: "inline-block",
@@ -12038,6 +12202,41 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
       num++;
     }
 
+    // image cards
+    imageCardsTong = createNode({
+      mother: whiteTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        flexDirection: "row",
+      }
+    });
+
+    for (let i = 0; i < cardLength; i++) {
+      createNode({
+        mother: imageCardsTong,
+        class: [ positionPhotoClassName + String(i) ],
+        attribute: { index: String(i) },
+        event: {
+          click: contentsSelectViewPopup(i),
+        },
+        style: {
+          display: "inline-flex",
+          width: "calc(calc(100% - " + String(cardBetween * (cardLength - 1)) + ea + ") / " + String(cardLength) + ")",
+          height: "auto",
+          aspectRatio: String(cardRatio),
+          marginRight: String(i === cardLength - 1 ? 0 : cardBetween) + ea,
+          background: colorExtended.blue,
+          borderRadius: String(desktop ? 5 : 3) + "px",
+          backgroundPosition: "50% 50%",
+          backgroundSize: "auto 100%",
+          backgroundImage: (positionData[i] === undefined || positionData[i] === 0 || positionData[i] === "0") ? "" : "url('" + "https://" + FILEHOST + stringToLink(positionData[i]) + "')",
+          cursor: "pointer",
+        }
+      });
+    }
+
   } catch (e) {
     console.log(e);
   }
@@ -12123,7 +12322,7 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
     secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
     
     contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
-    contentsMarginBottom1 = <%% 36, 36, 34, 32, 3 %%>;
+    contentsMarginBottom1 = <%% 36, 36, 34, 32, 2 %%>;
   
     lineTop = <%% 10, 10, 10, 10, 10 %%>;
     linePadding = <%% 12, 12, 12, 12, 12 %%>;
@@ -12148,7 +12347,7 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
         paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
         paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
         marginBottom: String(bottomMargin) + ea,
-        boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+        boxShadow: normalMode ? "" : (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : ""),
       },
       children: [
         {

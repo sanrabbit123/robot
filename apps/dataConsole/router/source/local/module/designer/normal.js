@@ -525,6 +525,18 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           },
         ],
       },
+      {
+        title: "협업 시공사",
+        width: 150,
+        name: "partner",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+        ],
+      },
     ];
 
     values = {};
@@ -698,7 +710,10 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         value: designer.analytics.project.living ? "가능" : "불가능",
         name: "living",
       });
-
+      values[designer.desid].push({
+        value: designer.analytics.construct.partner,
+        name: "partner",
+      });
     }
 
     return { standards, columns, values };
