@@ -12295,6 +12295,8 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
     let contentsTextTop;
     let textTop;
     let naviHeight;
+    let wordsCardsTong;
+    let positionData;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -12345,6 +12347,10 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
     contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
     textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
   
+    positionData = (await ajaxJson({ mode: "get", desid: instance.designer.desid }, BRIDGEHOST + "/designerRepresentativeKeywords", { equal: true })).data;
+
+    console.log(positionData)
+
     this.whiteMargin = (desktop ? margin : 0);
   
     whiteBlock = createNode({
@@ -12538,6 +12544,17 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
       }
       num++;
     }
+
+    // words cards
+    wordsCardsTong = createNode({
+      mother: whiteTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+      }
+    });
+
 
   } catch (e) {
     console.log(e);

@@ -3258,7 +3258,7 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
       const { mode } = req.body;
       const selfCoreMongo = instance.mongo;
       const selfMongo = instance.mongolocal;
-      const collection = "designerRepresentativePaper";
+      const collection = "designerRepresentativeKeywords";
       const positionLength = 12;
       let rows;
       let jsonModel;
