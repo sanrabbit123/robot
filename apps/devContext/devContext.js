@@ -188,12 +188,18 @@ DevContext.prototype.launching = async function () {
     
 
 
-
-    
-    
+    let res;
     
 
-    
+    res = await requestSystem("https://home-liaison.serveftp.com:3000/listDesignProposal", { mode: "pick", desid: "d1701_aa01s" }, {
+      headers: { "Content-Type": "application/json" }
+    })
+
+
+
+    console.log(res.data);
+
+
     /*
 
     await this.MONGOCONSOLEC.connect();

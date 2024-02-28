@@ -342,7 +342,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
         if (arr.length !== 1) { reject("second argument must be length 1 array"); }
         fs.readdir(arr[0], function (err, filelist) {
           if (err) { reject(err); }
-          else { resolve(Array.from(filelist).filter((str) => { return str !== ".DS_Store"; })); }
+          else { resolve(Array.from(filelist).filter((str) => { return str !== ".DS_Store" && str !== "._.DS_Store"; })); }
         });
       });
       break;
