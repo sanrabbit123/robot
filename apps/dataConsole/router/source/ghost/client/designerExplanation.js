@@ -90,7 +90,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    titleSize = <%% 61, 50, 48, 40, 9 %%>;
+    titleSize = <%% 60, 50, 48, 40, 9 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% -2, -2, -2, -2, -0.5 %%>;
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
@@ -219,8 +219,8 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
       style: {
         position: "absolute",
         right: String(0),
-        top: String(30) + ea,
-        height: String(404) + ea,
+        top: String(32) + ea,
+        height: String(400) + ea,
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0.2s 1 normal forwards running fadeupdelay2",
@@ -385,15 +385,15 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
     titleSize = 23;
-    descriptionSize = 16;
-    descriptionMarginTop = 8;
+    descriptionSize = 15;
+    descriptionMarginTop = 9;
 
     checkCircleWidth = 21;
 
     visualTop = 24;
 
     boxWidth = 290;
-    boxHeight = 228;
+    boxHeight = 227;
 
     betweenMargin = 152;
 

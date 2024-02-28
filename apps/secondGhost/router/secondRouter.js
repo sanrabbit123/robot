@@ -3254,6 +3254,65 @@ SecondRouter.prototype.rou_post_designerCareerSync = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_designerContentsInfo = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, messageSend, uniqueValue, dateToString, sleep, requestSystem, emergencyAlarm } = this.mother;
+  let obj = {};
+  obj.link = [ "/designerContentsInfo" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const { mode } = req.body;
+      const selfMongo = instance.mongo;
+      let thisDesigner, thisContents;
+      let targetContents;
+
+      if (mode === "get") {
+        const { desid } = req.body;
+
+      thisDesigner = await back.getDesignerById(desid, { selfMongo, toNormal: true });
+      thisContents = await back.getContentsArrByQuery({ desid }, { selfMongo, toNormal: true })
+      targetContents = thisDesigner.setting.ghost.concat(thisContents.map((c) => {
+        const pid = c.contents.portfolio.pid;
+        let newResult;
+        newResult = [];
+        for (let { index, gs } of c.photos.detail) {  
+          newResult.push({
+            link: `/corePortfolio/listImage/${pid}/t${String(index)}${pid}.jpg`,
+            sgTrue: gs,
+          })
+        }
+        return newResult
+      }).flat());
+
+      if (req.body.sero === "true" || req.body.sero === true) {
+        targetContents = targetContents.filter((o) => { return o.sgTrue === 's' });
+
+      }
+
+      res.send(JSON.stringify({ data: targetContents }));
+
+      } else {
+        throw new Error("invalid mode");
+      }
+    } catch (e) {
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_designerContentsInfo): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_voice = function () {
   const instance = this;
   const address = this.address;

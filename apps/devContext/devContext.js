@@ -185,11 +185,12 @@ DevContext.prototype.launching = async function () {
     // await app.weeklySummary();
 
 
+    
+
 
 
     
     
-
     
 
     
@@ -6917,9 +6918,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "장문혜",
-    //     designer: "송수현",
-    //     link: "https://drive.google.com/drive/folders/1nPngd6fD0F7tZ5Gc0hraCXf2_itcvog7",
+    //     client: "최정은",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/1VXMN-XtOw45Olgl2-9Z7BNJZyF2osM61",
     //     pay: true
     //   },
     // ]);
@@ -6929,8 +6930,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "장문혜",
-    //     designer: "송수현",
+    //     client: "최정은",
+    //     designer: "이정아",
     //   },
     // ]);
 
