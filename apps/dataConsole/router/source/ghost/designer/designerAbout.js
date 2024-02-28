@@ -11881,7 +11881,7 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
           const zIndex = 4;
           const designer = instance.designer;
           const desid = designer.desid;
-          const { data: thisDesignerContents } = await ajaxJson({ mode: "get", desid: desid, sero: true }, SECONDHOST + "/designerContentsInfo", { equal: true });
+          const { data: thisDesignerContents } = await ajaxJson({ mode: "get", desid: desid }, SECONDHOST + "/designerPaperInfo", { equal: true });
           let cancelBack, whitePrompt;
           let whiteScroll;
 
@@ -11999,6 +11999,8 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
                 opacity: String(1),
               }
             });
+
+            console.log("https://" + FILEHOST + obj.link );
 
           }
 

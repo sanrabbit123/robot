@@ -6394,7 +6394,7 @@ StaticRouter.prototype.rou_post_listDesignProposal = function () {
           res.send(JSON.stringify({ data: [] }));
         } else {
           rows = await fileSystem("readFolder", [ targetRoot + "/" + desid ]);
-          rows = rows.map((str) => { return linkToString(`${targetPath}/${str}`) });
+          rows = rows.map((str) => { return linkToString(`${targetPath}/${desid}/${str}`) });
           res.send(JSON.stringify({ data: objectDeepCopy(rows) }));
         }
 
