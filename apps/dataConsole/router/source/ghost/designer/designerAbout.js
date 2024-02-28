@@ -11267,7 +11267,7 @@ DesignerAboutJs.prototype.insertCalendarBox = function (standardIndex = 0) {
 DesignerAboutJs.prototype.insertRepresentativePhotosBox = async function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project, targetHref, totalContents, entireMode, normalMode, naviHeight } = this;
+  const { client, ea, baseTong, media, project, targetHref, totalContents, entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -11322,6 +11322,7 @@ DesignerAboutJs.prototype.insertRepresentativePhotosBox = async function () {
     let photoBetween;
     let photoColumnlength;
     let positionData;
+    let naviHeight;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -11329,10 +11330,12 @@ DesignerAboutJs.prototype.insertRepresentativePhotosBox = async function () {
       margin = 24;
       paddingTop = 52;
       whiteBottomMargin = 48;
+      naviHeight = 0;
     } else {
       margin = <%% 55, 55, 47, 39, 4.7 %%>;
       paddingTop = <%% 52, 52, 44, 36, 4.7 %%>;
       whiteBottomMargin = <%% 56, 54, 46, 38, 4.7 %%>;
+      naviHeight = instance.naviHeight;
     }
   
     titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
@@ -11756,7 +11759,7 @@ DesignerAboutJs.prototype.insertRepresentativePhotosBox = async function () {
 DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project, targetHref, totalContents, entireMode, normalMode, naviHeight } = this;
+  const { client, ea, baseTong, media, project, targetHref, totalContents, entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -11812,6 +11815,7 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
     let photoColumnlength;
     let positionData;
     let cardModuleLength;
+    let naviHeight;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -11819,10 +11823,12 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
       margin = 24;
       paddingTop = 52;
       whiteBottomMargin = 48;
+      naviHeight = 0;
     } else {
       margin = <%% 55, 55, 47, 39, 4.7 %%>;
       paddingTop = <%% 52, 52, 44, 36, 4.7 %%>;
       whiteBottomMargin = <%% 56, 54, 46, 38, 4.7 %%>;
+      naviHeight = instance.naviHeight;
     }
   
     titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
@@ -12288,6 +12294,7 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
     let lineTop, linePadding;
     let contentsTextTop;
     let textTop;
+    let naviHeight;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -12295,10 +12302,12 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
       margin = 24;
       paddingTop = 52;
       whiteBottomMargin = 48;
+      naviHeight = 0;
     } else {
       margin = <%% 55, 55, 47, 39, 4.7 %%>;
       paddingTop = <%% 52, 52, 44, 36, 4.7 %%>;
       whiteBottomMargin = <%% 56, 54, 46, 38, 4.7 %%>;
+      naviHeight = instance.naviHeight;
     }
   
     titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
