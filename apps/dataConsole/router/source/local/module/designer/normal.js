@@ -711,7 +711,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         name: "living",
       });
       values[designer.desid].push({
-        value: designer.analytics.construct.partnerName,
+        value: designer.analytics.construct.partner ? "있음" : "없음",
         name: "partner",
       });
     }
