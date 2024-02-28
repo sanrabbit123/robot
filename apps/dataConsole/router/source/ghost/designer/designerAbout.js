@@ -11874,6 +11874,8 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
     photoBetween = <%% 6, 5, 4, 3, 0.5 %%>;
     photoColumnlength = <%% 6, 6, 5, 4, 3 %%>;
 
+    positionData = (await ajaxJson({ mode: "get", desid: instance.designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true })).data.position;
+
     contentsSelectViewPopup = (index) => {
       return async function (e) {
         try {
@@ -12230,6 +12232,7 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
           borderRadius: String(desktop ? 5 : 3) + "px",
           backgroundPosition: "50% 50%",
           backgroundSize: "auto 100%",
+          backgroundImage: (positionData[i] === undefined || positionData[i] === 0 || positionData[i] === "0") ? "" : "url('" + "https://" + FILEHOST + stringToLink(positionData[i]) + "')",
           cursor: "pointer",
         }
       });
@@ -12689,7 +12692,6 @@ DesignerAboutJs.prototype.launching = async function (loading) {
             instance.contentsCenter();
             await instance.insertRepresentativeBox();
             await instance.insertRepresentativePhotosBox();
-            await instance.insertRepresentativePaperBox();
             await instance.insertRepresentativeWordsBox();
             // instance.insertPossibleNoticeBox();
             // instance.calendarChain();

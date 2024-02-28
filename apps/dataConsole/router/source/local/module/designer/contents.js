@@ -109,7 +109,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
     photographer: {
       title: "포토",
       position: "contents.photo.info.photographer",
-      values: [ '미정', '정경일', '이현익', '김다현', '디자이너', '고객', '박혜연', '배창규', '해당 없음' ],
+      values: [ '미정', '정경일', '한정구', '김태호', '이현익', '김다현', '디자이너', '고객', '박혜연', '배창규', '해당 없음' ],
       chain: null
     },
     interviewer: {
