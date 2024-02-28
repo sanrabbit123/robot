@@ -711,7 +711,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         name: "living",
       });
       values[designer.desid].push({
-        value: designer.analytics.construct.partner,
+        value: designer.analytics.construct.partnerName,
         name: "partner",
       });
     }
