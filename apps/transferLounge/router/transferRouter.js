@@ -3135,6 +3135,107 @@ TransferRouter.prototype.rou_post_designerRepresentativePhotos = function () {
   return obj;
 }
 
+TransferRouter.prototype.rou_post_designerRepresentativePaper = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, equalJson, objectDeepCopy, messageSend, linkToString, stringToLink } = this.mother;
+  const back = this.back;
+  const address = this.address;
+  let obj;
+  obj = {};
+  obj.link = [ "/designerRepresentativePaper" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const { mode } = req.body;
+      const selfMongo = instance.mongolocal;
+      const collection = "designerRepresentativePaper";
+      const positionLength = 12;
+      let rows;
+      let jsonModel;
+      let targetData;
+
+      if (mode === "save") {
+        const { desid, position: positionRaw, path: pathRaw } = equalJson(req.body);
+        const position = Number(positionRaw);
+
+        rows = await back.mongoRead(collection, { desid: desid }, { selfMongo });
+        if (rows.length === 0) {
+
+          jsonModel = {
+            date: new Date(),
+            desid,
+            position: (new Array(positionLength)).fill(0, 0),
+          }
+          if (jsonModel.position[position] === undefined) {
+            throw new Error("invalid position");
+          }
+          jsonModel.position[position] = pathRaw;
+          await back.mongoCreate(collection, objectDeepCopy(jsonModel), { selfMongo });
+
+        } else {
+
+          [ jsonModel ] = rows;
+          if (!Array.isArray(jsonModel.position)) {
+            await back.mongoDelete(collection, { desid }, { selfMongo });
+            jsonModel = {
+              date: new Date(),
+              desid,
+              position: (new Array(positionLength)).fill(0, 0),
+            }
+            if (jsonModel.position[position] === undefined) {
+              throw new Error("invalid position");
+            }
+            jsonModel.position[position] = pathRaw;
+            await back.mongoCreate(collection, objectDeepCopy(jsonModel), { selfMongo });
+          } else {
+            if (jsonModel.position[position] === undefined) {
+              throw new Error("invalid position");
+            }
+            jsonModel.position[position] = pathRaw;
+            await back.mongoUpdate(collection, [ { desid }, { "date": new Date(), "position": objectDeepCopy(jsonModel.position) } ], { selfMongo });
+          }
+        }
+
+        res.send(JSON.stringify({ message: "done" }));
+
+      } else if (mode === "get") {
+
+        const { desid } = equalJson(req.body);
+
+        rows = await back.mongoRead(collection, { desid: desid }, { selfMongo });
+        if (rows.length === 0) {
+          jsonModel = {
+            date: new Date(),
+            desid,
+            position: (new Array(positionLength)).fill(0, 0),
+          }
+          await back.mongoCreate(collection, objectDeepCopy(jsonModel), { selfMongo });
+          res.send(JSON.stringify({ data: jsonModel }));
+        } else {
+          [ targetData ] = rows;
+          res.send(JSON.stringify({ data: targetData }));
+        }
+
+      } else {
+        throw new Error("invalid post");
+      }
+
+    } catch (e) {
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerRepresentativePaper): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 TransferRouter.prototype.getAll = function () {

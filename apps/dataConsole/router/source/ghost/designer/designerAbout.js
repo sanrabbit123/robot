@@ -11954,6 +11954,7 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
 
             createNode({
               mother: whiteScroll,
+              mode: "img",
               event: {
                 mouseenter: function (e) {
                   this.style.opacity = String(0.7);
@@ -11973,7 +11974,7 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
                     desid,
                     position,
                     path: linkPath,
-                  }, BRIDGEHOST + "/designerRepresentativePhotos");
+                  }, BRIDGEHOST + "/designerRepresentativePaper");
 
                   removeByClass(selectPopupClassName);
                 }
@@ -11982,25 +11983,21 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
                 source: linkToString(obj.link),
                 position: String(index),
                 desid: desid,
+                src: "https://" + FILEHOST + obj.link,
               },
               style: {
                 display: "inline-block",
                 position: "relative",
                 width: "calc(calc(100% - " + String(photoBetween * photoColumnlength) + ea + ") / " + String(photoColumnlength) + ")",
                 height: "auto",
-                aspectRatio: String(photoRatio),
                 borderRadius: String(3) + "px",
-                backgroundImage: "url('" + "https://" + FILEHOST + obj.link + "')",
-                backgroundPosition: "50% 50%",
-                backgroundSize: "101% 101%",
                 marginBottom: String(photoBetween) + ea,
                 marginRight: String(photoBetween) + ea,
                 cursor: "pointer",
                 opacity: String(1),
+                verticalAlign: "top",
               }
             });
-
-            console.log("https://" + FILEHOST + obj.link );
 
           }
 
