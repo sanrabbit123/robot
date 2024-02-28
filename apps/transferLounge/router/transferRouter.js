@@ -3236,6 +3236,128 @@ TransferRouter.prototype.rou_post_designerRepresentativePaper = function () {
   return obj;
 }
 
+TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, equalJson, requestSystem, objectDeepCopy, messageSend, linkToString, stringToLink } = this.mother;
+  const back = this.back;
+  const address = this.address;
+  let obj;
+  obj = {};
+  obj.link = [ "/designerRepresentativeKeywords" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const { mode } = req.body;
+      const selfCoreMongo = instance.mongo;
+      const selfMongo = instance.mongolocal;
+      const collection = "designerRepresentativePaper";
+      const positionLength = 12;
+      let rows;
+      let jsonModel;
+      let targetData;
+      let thisDesigner, introduction;
+      let tempResponse;
+      let keywords;
+
+      if (mode === "select") {
+
+        // dev
+
+        res.send(JSON.stringify({ message: "done" }));
+
+      } else if (mode === "get") {
+
+        const { desid } = equalJson(req.body);
+
+        rows = await back.mongoRead(collection, { desid: desid }, { selfMongo });
+        if (rows.length === 0) {
+
+          thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo });
+          introduction = thisDesigner.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.description.join("\n");
+          introduction = introduction.trim();
+
+          if (/NULL/g.test(introduction)) {
+            introduction = "";
+            jsonModel = {
+              date: new Date(),
+              desid,
+              introduction,
+              keywords: [],
+              selected: [],
+            }
+          } else {
+            tempResponse = await requestSystem("https://" + address.officeinfo.parser.host + "/extractKeywords", { sentence: introduction }, { headers: { "Content-Type": "application/json" } });
+            keywords = objectDeepCopy(tempResponse.data.keywords).map((str) => { return str.trim(); }).map((str) => {
+              return str.replace(/홈 스타일링/gi, "홈스타일링");
+            }).filter((str) => {
+              return str !== "홈스타일링" && str !== "인테리어" && str !== "스타일링" && str !== "인테리어 디자인" && str !== "디자인" && str !== "시공" && str !== "인테리어 디자이너" && str !== "디자이너" && str !== "안녕하세요" && str !== "경험" && str !== "디자인" && str !== "스타일" && str !== "디자인 스타일" && str !== "인테리어 설계";
+            }).filter((str) => {
+              return str.length < 15 && str.length > 2;
+            })
+            jsonModel = {
+              date: new Date(),
+              desid,
+              introduction,
+              keywords,
+              selected: [],
+            }
+          }
+
+          await back.mongoCreate(collection, objectDeepCopy(jsonModel), { selfMongo });
+
+          res.send(JSON.stringify({ data: jsonModel }));
+        } else {
+          [ targetData ] = rows;
+
+          if (targetData.keywords.length > 0) {
+            res.send(JSON.stringify({ data: targetData }));
+          } else {
+
+            thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo });
+            introduction = thisDesigner.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.description.join("\n");
+            introduction = introduction.trim();
+
+            if (/NULL/g.test(introduction)) {
+              res.send(JSON.stringify({ data: targetData }));
+            } else {
+              tempResponse = await requestSystem("https://" + address.officeinfo.parser.host + "/extractKeywords", { sentence: introduction }, { headers: { "Content-Type": "application/json" } });
+              keywords = objectDeepCopy(tempResponse.data.keywords).map((str) => { return str.trim(); }).map((str) => {
+                return str.replace(/홈 스타일링/gi, "홈스타일링");
+              }).filter((str) => {
+                return str !== "홈스타일링" && str !== "인테리어" && str !== "스타일링" && str !== "인테리어 디자인" && str !== "디자인" && str !== "시공" && str !== "인테리어 디자이너" && str !== "디자이너" && str !== "안녕하세요" && str !== "경험" && str !== "디자인" && str !== "스타일" && str !== "디자인 스타일" && str !== "인테리어 설계";
+              }).filter((str) => {
+                return str.length < 15 && str.length > 2;
+              })
+
+              await back.mongoUpdate(collection, [ { desid }, { "date": new Date(), "introduction": introduction, "keywords": objectDeepCopy(keywords), "selected": [] } ], { selfMongo })
+              rows = await back.mongoRead(collection, { desid: desid }, { selfMongo });
+              [ targetData ] = rows;
+              res.send(JSON.stringify({ data: targetData }));
+            }
+  
+          }
+        }
+
+      } else {
+        throw new Error("invalid post");
+      }
+
+    } catch (e) {
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerRepresentativeKeywords): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 TransferRouter.prototype.getAll = function () {
