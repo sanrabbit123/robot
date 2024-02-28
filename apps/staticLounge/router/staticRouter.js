@@ -6361,6 +6361,68 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_listDesignProposal = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, dateToString, stringToDate, requestSystem, mysqlQuery, sleep, fileSystem, objectDeepCopy, shellExec, shellLink, linkToString } = this.mother;
+  const { staticConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/listDesignProposal" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const { mode } = req.body;
+      const targetPath = "/designProposal/image";
+      const targetRoot = staticConst + targetPath;
+      let rows;
+      let resultObj;
+      let targetDesidArr;
+
+      if (mode === "pick" || mode === "get") {
+        const { desid } = equalJson(req.body);
+        if (!(await fileSystem("exist", [ targetRoot + "/" + desid ]))) {
+          res.send(JSON.stringify({ data: [] }));
+        } else {
+          rows = await fileSystem("readFolder", [ targetRoot + "/" + desid ]);
+          rows = rows.map((str) => { return linkToString(`${targetPath}/${str}`) });
+          res.send(JSON.stringify({ data: objectDeepCopy(rows) }));
+        }
+
+      } else if (mode === "all") {
+
+        resultObj = {};
+        targetDesidArr = await fileSystem("readFolder", [ targetRoot ]);
+
+        for (let desid of targetDesidArr) {
+          resultObj[desid] = [];
+          rows = await fileSystem("readFolder", [ targetRoot + "/" + desid ]);
+          rows = rows.map((str) => { return linkToString(`${targetPath}/${str}`) });
+          resultObj[desid] = objectDeepCopy(rows);
+        }
+
+        res.send(JSON.stringify({ data: resultObj }));
+
+      } else {
+        throw new Error("invalid post");
+      }      
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_listDesignProposal): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_imageTransfer = function () {
   const instance = this;
   const back = this.back;

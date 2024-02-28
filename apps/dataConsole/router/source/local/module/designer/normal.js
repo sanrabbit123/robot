@@ -527,7 +527,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
       },
       {
         title: "협업 시공사",
-        width: 150,
+        width: 100,
         name: "partner",
         type: "string",
         menu: [

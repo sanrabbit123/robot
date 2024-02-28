@@ -11756,7 +11756,7 @@ DesignerAboutJs.prototype.insertRepresentativePhotosBox = async function () {
 DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project, targetHref, totalContents, entireMode, normalMode } = this;
+  const { client, ea, baseTong, media, project, targetHref, totalContents, entireMode, normalMode, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -11765,7 +11765,7 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
   const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, isIphone, removeByClass, homeliaisonAnalytics, downloadFile, linkToString, stringToLink } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const selectPopupClassName = "selectPopupClassName";
-  const positionPhotoClassName = "positionPhotoClassName_";
+  const positionPaperClassName = "positionPaperClassName_";
   try {
     const mainContents = [
       {
@@ -11811,6 +11811,7 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
     let photoBetween;
     let photoColumnlength;
     let positionData;
+    let cardModuleLength;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -11861,18 +11862,17 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
   
     this.whiteMargin = (desktop ? margin : 0);
 
-    cardRatio = (261 / 420);
+    cardRatio = (297 / 210);
     photoRatio = (210 / 297);
 
-    cardLength = 5;
+    cardLength = 12;
+    cardModuleLength = 4;
 
     cardBetween = <%% 8, 6, 5, 4, 0.5 %%>;
     outerMargin = <%% 30, 30, 24, 20, 7 %%>;
     innerMargin = <%% 30, 30, 24, 20, 3 %%>;
     photoBetween = <%% 6, 5, 4, 3, 0.5 %%>;
     photoColumnlength = <%% 6, 6, 5, 4, 3 %%>;
-
-    positionData = (await ajaxJson({ mode: "get", desid: instance.designer.desid }, BRIDGEHOST + "/designerRepresentativePhotos", { equal: true })).data.position;
 
     contentsSelectViewPopup = (index) => {
       return async function (e) {
@@ -11964,7 +11964,7 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
                 click: async function (e) {
                   const linkPath = this.getAttribute("source");
                   const position = Number(this.getAttribute("position"));
-                  const targetArea = document.querySelector('.' + positionPhotoClassName + String(position));
+                  const targetArea = document.querySelector('.' + positionPaperClassName + String(position));
                   const desid = this.getAttribute("desid");
                   targetArea.style.backgroundImage = "url('" + "https://" + FILEHOST + stringToLink(linkPath) + "')";
 
@@ -12206,32 +12206,31 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
     imageCardsTong = createNode({
       mother: whiteTong,
       style: {
-        display: "flex",
+        display: "block",
         position: "relative",
         width: withOut(0, ea),
-        flexDirection: "row",
       }
     });
 
     for (let i = 0; i < cardLength; i++) {
       createNode({
         mother: imageCardsTong,
-        class: [ positionPhotoClassName + String(i) ],
+        class: [ positionPaperClassName + String(i) ],
         attribute: { index: String(i) },
         event: {
           click: contentsSelectViewPopup(i),
         },
         style: {
           display: "inline-flex",
-          width: "calc(calc(100% - " + String(cardBetween * (cardLength - 1)) + ea + ") / " + String(cardLength) + ")",
+          width: "calc(calc(100% - " + String(cardBetween * (cardModuleLength - 1)) + ea + ") / " + String(cardModuleLength) + ")",
           height: "auto",
           aspectRatio: String(cardRatio),
-          marginRight: String(i === cardLength - 1 ? 0 : cardBetween) + ea,
+          marginRight: String((i % cardModuleLength) === cardModuleLength - 1 ? 0 : cardBetween) + ea,
+          marginBottom: String(cardBetween) + ea,
           background: colorExtended.blue,
           borderRadius: String(desktop ? 5 : 3) + "px",
           backgroundPosition: "50% 50%",
           backgroundSize: "auto 100%",
-          backgroundImage: (positionData[i] === undefined || positionData[i] === 0 || positionData[i] === "0") ? "" : "url('" + "https://" + FILEHOST + stringToLink(positionData[i]) + "')",
           cursor: "pointer",
         }
       });
