@@ -3334,6 +3334,7 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
 
         const { desid, selected } = equalJson(req.body);
         await back.mongoUpdate(collection, [ { desid }, { "date": new Date(), "selected": selected } ], { selfMongo })
+        res.send(JSON.stringify({ message: "done" }));
 
       } else if (mode === "get") {
 
