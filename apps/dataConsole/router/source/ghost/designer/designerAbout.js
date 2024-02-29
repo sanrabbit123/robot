@@ -12258,8 +12258,9 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const veryBig = (media[0] || media[1]);
-  const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, isIphone, removeByClass, homeliaisonAnalytics, downloadFile } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, objectDeepCopy, cleanChildren, isMac, autoComma, isIphone, removeByClass, homeliaisonAnalytics, downloadFile } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
+  const keywordsFactorClassName = "keywordsFactorClassName";
   try {
     const mainContents = [
       {
@@ -12298,6 +12299,15 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
     let wordsCardsTong;
     let positionData;
     let keywordsSelectEvent;
+    let selectedData;
+    let rawData;
+    let factorHeight;
+    let factorBetween;
+    let factorPadding;
+    let factorTextTop;
+    let factorSize;
+    let factorWeight;
+    let maxFactorOnLength;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -12348,32 +12358,83 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
     contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
     textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
   
-    positionData = (await ajaxJson({ mode: "get", desid: instance.designer.desid }, BRIDGEHOST + "/designerRepresentativeKeywords", { equal: true })).data.keywords;
+    factorHeight = <%% 32, 30, 28, 24, 5.4 %%>;
+    factorBetween = <%% 5, 5, 4, 3, 0.8 %%>;
+    factorPadding = <%% 16, 14, 13, 12, 2.6 %%>;
+    factorTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+    factorSize = <%% 14, 13, 12, 11, 2.5 %%>;
+    factorWeight = <%% 600, 600, 600, 600, 600 %%>;
+
+    maxFactorOnLength = 5;
+
+    rawData = (await ajaxJson({ mode: "get", desid: instance.designer.desid }, BRIDGEHOST + "/designerRepresentativeKeywords", { equal: true })).data;
+    positionData = rawData.keywords;
+    selectedData = rawData.selected;
 
     keywordsSelectEvent = (words) => {
       return async function (e) {
         try {
+          const factors = [ ...document.querySelectorAll('.' + keywordsFactorClassName) ];
+          const onFactors = factors.filter((d) => { return d.getAttribute("toggle") === "on" });
           const thisWords = words;
           const desid = this.getAttribute("desid");
           const toggle = this.getAttribute("toggle");
+          let currentStatus;
+          let newSelected;
 
           if (toggle === "off") {
 
+            if (onFactors.length < maxFactorOnLength) {
+              await ajaxJson({
+                mode: "select",
+                subMode: "add",
+                desid,
+                words: thisWords,
+              }, BRIDGEHOST + "/designerRepresentativeKeywords");
+    
+              this.style.background = colorExtended.mainBlue;
+              this.firstChild.style.color = colorExtended.white;
+              this.setAttribute("toggle", "on");
+            } else {
+
+              currentStatus = onFactors.map((d) => { return d.getAttribute("words") });
+              currentStatus.sort((a, b) => { return b.length - a.length });
+
+              newSelected = objectDeepCopy(currentStatus.slice(0, maxFactorOnLength - 1))
+              newSelected.push(thisWords);
+              newSelected = [ ...new Set(newSelected) ];
+
+              await ajaxJson({
+                mode: "convert",
+                desid,
+                selected: newSelected,
+              }, BRIDGEHOST + "/designerRepresentativeKeywords");
+
+              for (let dom of factors) {
+                if (newSelected.includes(dom.getAttribute("words"))) {
+                  dom.style.background = colorExtended.mainBlue;
+                  dom.firstChild.style.color = colorExtended.white;
+                  dom.setAttribute("toggle", "on");
+                } else {
+                  dom.style.background = colorExtended.gray2;
+                  dom.firstChild.style.color = colorExtended.shadow;
+                  dom.setAttribute("toggle", "off");
+                }
+              }
+
+            }
+
+          } else {
             await ajaxJson({
               mode: "select",
-              subMode: "add",
+              subMode: "subtract",
               desid,
               words: thisWords,
             }, BRIDGEHOST + "/designerRepresentativeKeywords");
-  
-            this.style.background = colorExtended.mainBlue;
-            this.style.color = colorExtended.white;
-            this.setAttribute("toggle", "on");
 
-          } else {
-
-
-
+            this.style.background = colorExtended.gray2;
+            this.firstChild.style.color = colorExtended.shadow;
+            this.setAttribute("toggle", "off");
           }
 
         } catch (e) {
@@ -12599,23 +12660,25 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
           },
           click: keywordsSelectEvent(words),
         },
+        class: [ keywordsFactorClassName ],
         attribute: {
           desid: instance.designer.desid,
-          toggle: "off",
+          toggle: selectedData.includes(words) ? "on" : "off",
+          words: words,
         },
         style: {
           display: "inline-flex",
           position: "relative",
-          height: String(32) + ea,
+          height: String(factorHeight) + ea,
           width: "auto",
-          marginRight: String(5) + ea,
-          marginBottom: String(5) + ea,
+          marginRight: String(factorBetween) + ea,
+          marginBottom: String(factorBetween) + ea,
           justifyContent: "center",
           alignItems: "center",
-          background: colorExtended.gray3,
-          borderRadius: String(32) + ea,
-          paddingLeft: String(16) + ea,
-          paddingRight: String(16) + ea,
+          background: selectedData.includes(words) ? colorExtended.mainBlue : colorExtended.gray2,
+          borderRadius: String(factorHeight) + ea,
+          paddingLeft: String(factorPadding) + ea,
+          paddingRight: String(factorPadding) + ea,
           cursor: "pointer",
         },
         child: {
@@ -12623,10 +12686,10 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
           style: {
             display: "inline-block",
             position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(14) + ea,
-            fontWeight: String(700),
-            color: colorExtended.shadow,
+            top: String(factorTextTop) + ea,
+            fontSize: String(factorSize) + ea,
+            fontWeight: String(factorWeight),
+            color: selectedData.includes(words) ? colorExtended.white : colorExtended.shadow,
           }
         }
       })

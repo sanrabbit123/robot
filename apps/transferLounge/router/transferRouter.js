@@ -3330,6 +3330,11 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
 
         res.send(JSON.stringify({ message: "done" }));
 
+      } else if (mode === "convert") {
+
+        const { desid, selected } = equalJson(req.body);
+        await back.mongoUpdate(collection, [ { desid }, { "date": new Date(), "selected": selected } ], { selfMongo })
+
       } else if (mode === "get") {
 
         const { desid } = equalJson(req.body);
