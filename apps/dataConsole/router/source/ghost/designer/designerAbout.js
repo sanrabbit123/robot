@@ -12858,7 +12858,6 @@ DesignerAboutJs.prototype.launching = async function (loading) {
             instance.contentsCenter();
             await instance.insertRepresentativeBox();
             await instance.insertRepresentativePhotosBox();
-            await instance.insertRepresentativeWordsBox();
             // instance.insertPossibleNoticeBox();
             // instance.calendarChain();
           } catch (e) {
