@@ -561,7 +561,7 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
 
 DesignerExplanationJs.prototype.insertThirdBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -580,6 +580,8 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     let buttonCardWidth;
     let shadowForm;
     let cardLength;
+    let keywords;
+    let representative;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -667,6 +669,8 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     for (let i = 0; i < designers.length; i++) {
 
       designer = designers[i];
+      keywords = designer.keywords;
+      representative = designer.representative;
 
       thisBase = createNode({
         mother: thirdBase,
@@ -781,6 +785,9 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           background: colorExtended.white,
           marginRight: String(cardBetween) + ea,
           boxShadow: shadowForm,
+          backgroundImage: typeof representative[0] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[0]) + "')" : "",
+          backgroundSize: "auto 100%",
+          backgroundPosition: "50% 50%",
         }
       });
 
@@ -795,6 +802,9 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           background: colorExtended.white,
           marginRight: String(cardBetween) + ea,
           boxShadow: shadowForm,
+          backgroundImage: typeof representative[1] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[1]) + "')" : "",
+          backgroundSize: "auto 100%",
+          backgroundPosition: "50% 50%",
         }
       });
 
@@ -809,6 +819,9 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           background: colorExtended.white,
           marginRight: String(cardBetween) + ea,
           boxShadow: shadowForm,
+          backgroundImage: typeof representative[2] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[2]) + "')" : "",
+          backgroundSize: "auto 100%",
+          backgroundPosition: "50% 50%",
         }
       });
 
@@ -823,6 +836,9 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           background: colorExtended.white,
           marginRight: String(cardBetween) + ea,
           boxShadow: shadowForm,
+          backgroundImage: typeof representative[3] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[3]) + "')" : "",
+          backgroundSize: "auto 100%",
+          backgroundPosition: "50% 50%",
         }
       });
 
@@ -840,10 +856,8 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       });
 
-
     }
     
-
   } catch (e) {
     console.log(e);
   }
@@ -918,7 +932,8 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     let profileListFiltered;
     let blankPhoto;
     let desidArr;
-    let keywordsList;
+    let keywordsList, photosList;
+    let keywordsListFiltered, photosListFiltered;
 
     temp0 = 'A'.charCodeAt();
     temp1 = 'Z'.charCodeAt();
@@ -943,19 +958,33 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     blankPhoto = DesignerExplanationJs.binaryPath + "/blank.png";
     desidArr = objectDeepCopy(designers).map((d) => { return d.desid });
 
-    keywordsList = await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativeKeywords"), { equal: true };
-    photosList = await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativePhotos"), { equal: true };
-
-
+    keywordsList = (await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativeKeywords", { equal: true })).data;
+    photosList = (await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativePhotos", { equal: true })).data;
 
     for (let designer of designers) {
       profileListFiltered = profileList.filter((o) => { return o.desid === designer.desid });
+      keywordsListFiltered = keywordsList.filter((o) => { return o.desid === designer.desid });
+      photosListFiltered = photosList.filter((o) => { return o.desid === designer.desid });
+
       if (profileListFiltered.length === 0) {
         designer.profile = { gs: "s", link: blankPhoto, position: "50% 50%" };
       } else {
         profileListFiltered.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
         designer.profile = { gs: profileListFiltered[0].gs, link: stringToLink(profileListFiltered[0].link), position: `${String(profileListFiltered[0].position.x)}% ${String(profileListFiltered[0].position.y)}%` };
       }
+
+      if (keywordsListFiltered.length === 0) {
+        designer.keywords = [];
+      } else {
+        designer.keywords = keywordsListFiltered[0].selected;
+      }
+
+      if (photosListFiltered.length === 0) {
+        designer.representative = [ 0, 0, 0, 0, 0 ];
+      } else {
+        designer.representative = photosListFiltered[0].position;
+      }
+
     }
     this.designers = designers;
 
