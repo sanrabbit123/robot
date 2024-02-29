@@ -3105,6 +3105,17 @@ TransferRouter.prototype.rou_post_designerRepresentativePhotos = function () {
 
         res.send(JSON.stringify({ message: "done" }));
 
+      } else if (mode === "proposal") {
+
+        const { desidArr } = equalJson(req.body);
+        whereQuery = {};
+        whereQuery["$or"] = [];
+        for (let thisDesid of desidArr) {
+          whereQuery["$or"].push({ desid: thisDesid });
+        }
+        rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        res.send(JSON.stringify({ data: rows }));
+
       } else if (mode === "get") {
 
         const { desid } = equalJson(req.body);
@@ -3267,6 +3278,7 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
       let keywords;
       let selected;
       let newSelected;
+      let whereQuery;
 
       if (mode === "select") {
 
@@ -3329,6 +3341,17 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
         }
 
         res.send(JSON.stringify({ message: "done" }));
+
+      } else if (mode === "proposal") {
+
+        const { desidArr } = equalJson(req.body);
+        whereQuery = {};
+        whereQuery["$or"] = [];
+        for (let thisDesid of desidArr) {
+          whereQuery["$or"].push({ desid: thisDesid });
+        }
+        rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        res.send(JSON.stringify({ data: rows }));
 
       } else if (mode === "convert") {
 

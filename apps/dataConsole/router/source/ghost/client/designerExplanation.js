@@ -908,7 +908,7 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, dateToString, homeliaisonAnalytics, colorExtended, stringToLink } = GeneralJs;
+    const { returnGet, ajaxJson, dateToString, homeliaisonAnalytics, colorExtended, stringToLink, objectDeepCopy } = GeneralJs;
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
@@ -917,6 +917,8 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     let profileList;
     let profileListFiltered;
     let blankPhoto;
+    let desidArr;
+    let keywordsList;
 
     temp0 = 'A'.charCodeAt();
     temp1 = 'Z'.charCodeAt();
@@ -939,6 +941,12 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     designers = await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": "협약 완료" } }, BACKHOST + "/getDesigners", { equal: true });
     profileList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerProfileList", { equal: true });
     blankPhoto = DesignerExplanationJs.binaryPath + "/blank.png";
+    desidArr = objectDeepCopy(designers).map((d) => { return d.desid });
+
+    keywordsList = await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativeKeywords"), { equal: true };
+    photosList = await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativePhotos"), { equal: true };
+
+
 
     for (let designer of designers) {
       profileListFiltered = profileList.filter((o) => { return o.desid === designer.desid });
