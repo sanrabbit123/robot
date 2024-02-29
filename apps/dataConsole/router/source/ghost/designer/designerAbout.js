@@ -12258,7 +12258,7 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const veryBig = (media[0] || media[1]);
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, isIphone, removeByClass, homeliaisonAnalytics, downloadFile } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, isIphone, removeByClass, homeliaisonAnalytics, downloadFile } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   try {
     const mainContents = [
@@ -12347,9 +12347,7 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
     contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
     textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
   
-    positionData = (await ajaxJson({ mode: "get", desid: instance.designer.desid }, BRIDGEHOST + "/designerRepresentativeKeywords", { equal: true })).data;
-
-    console.log(positionData)
+    positionData = (await ajaxJson({ mode: "get", desid: instance.designer.desid }, BRIDGEHOST + "/designerRepresentativeKeywords", { equal: true })).data.keywords;
 
     this.whiteMargin = (desktop ? margin : 0);
   
@@ -12554,6 +12552,48 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
         width: withOut(0, ea),
       }
     });
+
+    for (let words of positionData) {
+
+      createNode({
+        mother: wordsCardsTong,
+        event: {
+          mouseenter: function (e) {
+            this.style.opacity = String(0.7);
+          },
+          mouseleave: function (e) {
+            this.style.opacity = String(1);
+          },
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          height: String(32) + ea,
+          width: "auto",
+          marginRight: String(5) + ea,
+          marginBottom: String(5) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          background: colorExtended.gray3,
+          borderRadius: String(32) + ea,
+          paddingLeft: String(16) + ea,
+          paddingRight: String(16) + ea,
+          cursor: "pointer",
+        },
+        child: {
+          text: words,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(-1) + ea,
+            fontSize: String(14) + ea,
+            fontWeight: String(700),
+            color: colorExtended.shadow,
+          }
+        }
+      })
+
+    }
 
 
   } catch (e) {
