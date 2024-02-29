@@ -728,7 +728,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
       });
       values[designer.desid].push({
         value: designer.analytics.construct.own ? "있음" : "없음",
-        name: "partner",
+        name: "own",
       });
     }
 
