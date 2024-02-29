@@ -537,6 +537,18 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           },
         ],
       },
+      {
+        title: "자체 시공사",
+        width: 100,
+        name: "own",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+        ],
+      },
     ];
 
     values = {};
@@ -712,6 +724,10 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
       });
       values[designer.desid].push({
         value: designer.analytics.construct.partner ? "있음" : "없음",
+        name: "partner",
+      });
+      values[designer.desid].push({
+        value: designer.analytics.construct.own ? "있음" : "없음",
         name: "partner",
       });
     }
