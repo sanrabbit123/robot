@@ -12297,6 +12297,7 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
     let naviHeight;
     let wordsCardsTong;
     let positionData;
+    let keywordsSelectEvent;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -12348,6 +12349,38 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
     textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
   
     positionData = (await ajaxJson({ mode: "get", desid: instance.designer.desid }, BRIDGEHOST + "/designerRepresentativeKeywords", { equal: true })).data.keywords;
+
+    keywordsSelectEvent = (words) => {
+      return async function (e) {
+        try {
+          const thisWords = words;
+          const desid = this.getAttribute("desid");
+          const toggle = this.getAttribute("toggle");
+
+          if (toggle === "off") {
+
+            await ajaxJson({
+              mode: "select",
+              subMode: "add",
+              desid,
+              words: thisWords,
+            }, BRIDGEHOST + "/designerRepresentativeKeywords");
+  
+            this.style.background = colorExtended.mainBlue;
+            this.style.color = colorExtended.white;
+            this.setAttribute("toggle", "on");
+
+          } else {
+
+
+
+          }
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
 
     this.whiteMargin = (desktop ? margin : 0);
   
@@ -12564,6 +12597,11 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
           mouseleave: function (e) {
             this.style.opacity = String(1);
           },
+          click: keywordsSelectEvent(words),
+        },
+        attribute: {
+          desid: instance.designer.desid,
+          toggle: "off",
         },
         style: {
           display: "inline-flex",
@@ -12594,7 +12632,6 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
       })
 
     }
-
 
   } catch (e) {
     console.log(e);

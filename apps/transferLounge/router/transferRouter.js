@@ -3259,17 +3259,74 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
       const selfCoreMongo = instance.mongo;
       const selfMongo = instance.mongolocal;
       const collection = "designerRepresentativeKeywords";
-      const positionLength = 12;
       let rows;
       let jsonModel;
       let targetData;
       let thisDesigner, introduction;
       let tempResponse;
       let keywords;
+      let selected;
+      let newSelected;
 
       if (mode === "select") {
 
-        // dev
+        const { desid, words, subMode } = equalJson(req.body);
+
+        rows = await back.mongoRead(collection, { desid: desid }, { selfMongo });
+        if (rows.length === 0) {
+          thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo });
+          introduction = thisDesigner.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.description.join("\n");
+          introduction = introduction.trim();
+          if (/NULL/g.test(introduction)) {
+            introduction = "";
+            jsonModel = {
+              date: new Date(),
+              desid,
+              introduction,
+              keywords: [],
+              selected: [],
+            }
+          } else {
+            tempResponse = await requestSystem("https://" + address.officeinfo.parser.host + "/extractKeywords", { sentence: introduction }, { headers: { "Content-Type": "application/json" } });
+            keywords = objectDeepCopy(tempResponse.data.keywords).map((str) => { return str.trim(); }).map((str) => {
+              return str.replace(/홈 스타일링/gi, "홈스타일링");
+            }).filter((str) => {
+              return str !== "홈스타일링" && str !== "인테리어" && str !== "스타일링" && str !== "인테리어 디자인" && str !== "디자인" && str !== "시공" && str !== "인테리어 디자이너" && str !== "디자이너" && str !== "안녕하세요" && str !== "경험" && str !== "디자인" && str !== "스타일" && str !== "디자인 스타일" && str !== "인테리어 설계";
+            }).filter((str) => {
+              return str.length < 15 && str.length > 2;
+            })
+            jsonModel = {
+              date: new Date(),
+              desid,
+              introduction,
+              keywords,
+              selected: [],
+            }
+          }
+          await back.mongoCreate(collection, objectDeepCopy(jsonModel), { selfMongo });
+          rows = await back.mongoRead(collection, { desid: desid }, { selfMongo });
+        }
+        [ targetData ] = rows;
+
+        if (subMode === "add") {
+          if (targetData.keywords.includes(words)) {
+            selected = objectDeepCopy(targetData.selected);
+            selected.push(words);
+            selected = [ ...new Set(selected) ];
+            await back.mongoUpdate(collection, [ { desid }, { "date": new Date(), "selected": selected } ], { selfMongo })
+          }
+        } else {
+          if (targetData.selected.includes(words)) {
+            newSelected = [];
+            for (let w of targetData.selected) {
+              if (w !== words) {
+                newSelected.push(w);
+              }
+            }
+            newSelected = [ ...new Set(newSelected) ];
+            await back.mongoUpdate(collection, [ { desid }, { "date": new Date(), "selected": newSelected } ], { selfMongo })
+          }
+        }
 
         res.send(JSON.stringify({ message: "done" }));
 
