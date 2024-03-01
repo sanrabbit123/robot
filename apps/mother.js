@@ -4555,6 +4555,60 @@ Mother.prototype.designerCareer = function (designer, wordingMode = false) {
   }
 }
 
+Mother.prototype.chromeOpen = async function (url) {
+  const instance = this;
+  const { exec } = require(`child_process`);
+  const os = require(`os`);
+  const thisOs = os.type();
+  let targetOs;
+  let finalUrl;
+
+  if (/Linux/gi.test(thisOs)) {
+    targetOs = "linux";
+  } else if (/Darwin/gi.test(thisOs)) {
+    targetOs = "mac";
+  } else if (/Windows/gi.test(thisOs)) {
+    targetOs = "windows";
+  } else {
+    throw new Error("unknown os");
+  }
+
+  finalUrl = url.replace(/\?/gi, "\\?");
+  finalUrl = finalUrl.replace(/\&/gi, "\\&");
+  finalUrl = finalUrl.replace(/\=/gi, "\\=");
+  finalUrl = finalUrl.replace(/\+/gi, "\\+");
+
+  if (targetOs === "linux") {
+    return new Promise((resolve, reject) => {
+      exec(`google-chrome ${finalUrl} --start-maximized`, (error, stdout, stderr) => {
+        setTimeout(() => {
+          resolve(stdout);
+        }, 0);
+      });
+    });
+  } else if (targetOs === "windows") {
+    const path = require("path");
+    const { sep, normalize } = path;
+    const { exec, execFile } = require("child_process");
+    const chrome = "C:/Program Files/Google/Chrome/Application/chrome.exe";
+    return new Promise((resolve, reject) => {
+      execFile(normalize(chrome), [ "--start-maximized", finalUrl ], (error, stdout, stderr) => {
+        setTimeout(() => {
+          resolve(stdout);
+        }, 0);
+      });
+    });
+  } else if (targetOs === "mac") {
+    return new Promise((resolve, reject) => {
+      exec(`/Applications/'Google Chrome.app'/Contents/MacOS/'Google Chrome' --start-maximized ${finalUrl}`, (error, stdout, stderr) => {
+        setTimeout(() => {
+          resolve(stdout);
+        }, 0);
+      });
+    });
+  }
+}
+
 Mother.prototype.homeliaisonAnalytics = async function (obj, infoName = "backinfo") {
   const axios = require("axios");
   const crypto = require("crypto");

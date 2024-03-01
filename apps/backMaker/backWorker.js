@@ -378,6 +378,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
 
 BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { selfMongo: null }) {
   const instance = this;
+  const { requestSystem } = this.mother;
   try {
     if (!Array.isArray(desidArr)) {
       throw new Error(`arguments must be desid array => [ desid, desid, desid... ]`);
@@ -659,7 +660,7 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
     for (let desid of desidArr) {
       await front.renderDesigner(await this.back.getDesignerById(desid, option), true);
     }
-
+    await requestSystem("https://" + instance.address.testinfo.host + ":" + String(3000) + "/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
   } catch (e) {
     console.log(e);
   }

@@ -847,7 +847,7 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
 ResourceMaker.prototype.launching = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, mongo, mongoinfo, mongocontentsinfo, shellExec, shellLink, headRequest, binaryRequest, ghostFileUpload, requestSystem } = this.mother;
+  const { fileSystem, mongo, mongoinfo, mongocontentsinfo, shellExec, shellLink, headRequest, binaryRequest, ghostFileUpload, requestSystem, chromeOpen } = this.mother;
   const MONGOC = new mongo(mongoinfo);
   const MONGOCONTENTSC = new mongo(mongocontentsinfo);
   const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
@@ -1030,6 +1030,7 @@ ResourceMaker.prototype.launching = async function () {
       await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
       await back.mongoDelete("foreContents", { pid: this.p_id }, { selfMongo: MONGOCONTENTSC });
       await requestSystem("https://" + instance.address.testinfo.host + ":" + String(3000) + "/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
+      await chromeOpen("https://" + instance.address.backinfo.host + "/designer?mode=normal&desid=" + this.result.designer)
     }
 
     await shellExec(`rm -rf ${shellLink(process.env.HOME)}/${tempFolderName}`);
