@@ -6309,7 +6309,7 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
             date: thisDate,
           }
         })
-        thisFolderContents.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        thisFolderContents.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
         thisFolderContents = thisFolderContents.map((obj, index) => {
           obj.index = index;
           return obj;
