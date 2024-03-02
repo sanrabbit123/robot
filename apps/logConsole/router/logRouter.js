@@ -58,8 +58,6 @@ LogRouter.prototype.dailyAnalytics = async function () {
     date.setDate(date.getDate() - 1);
     date.setDate(date.getDate() - 1);
     date.setDate(date.getDate() - 1);
-    date.setDate(date.getDate() - 1);
-    date.setDate(date.getDate() - 1);
 
     requestString = '';
     requestString += dateToString(date);
@@ -69,13 +67,7 @@ LogRouter.prototype.dailyAnalytics = async function () {
     requestString += ',';
     date.setDate(date.getDate() + 1);
     requestString += dateToString(date);
-    requestString += ',';
-    date.setDate(date.getDate() + 1);
-    requestString += dateToString(date);
-    requestString += ',';
-    date.setDate(date.getDate() + 1);
-    requestString += dateToString(date);
-
+    
     await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/analyticsDaily", { date: requestString }, { headers: { "Content-Type": "application/json" } });
 
   } catch (e) {
