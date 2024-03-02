@@ -1224,7 +1224,7 @@ DataConsole.prototype.connect = async function () {
       return fileSystem("readFolder", [ process.env.HOME ]);
     }).then((homeFolderList) => {
       if (homeFolderList.some((str) => { return (new RegExp("^" + processDoingKeywords, "i")).test(str) })) {
-        sleep(1000).then(() => {
+        sleep(500).then(() => {
           return this.renderStatic(staticFolder, address, DataPatch);
         }).then(() => {
           return instance.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, false, false);
