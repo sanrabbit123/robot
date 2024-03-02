@@ -60,6 +60,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
     }
 
     if (thisPerson === null || thisPerson === undefined) {
+      console.log(thisPerson);
       throw new Error("invaild person");
     }
 

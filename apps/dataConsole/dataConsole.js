@@ -1009,10 +1009,10 @@ DataConsole.prototype.connect = async function () {
     let MONGOC, MONGOLOCALC;
     if (/localhost/gi.test(address.host) || address.host === this.address.officeinfo.ghost.host || isTest) {
       isLocal = true;
-      MONGOC = new mongo(mongolocalinfo);
-      console.log(`\x1b[33m%s\x1b[0m`, `set DB server => 127.0.0.1`);
-      MONGOLOCALC = new mongo(mongolocalinfo);
-      console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => 127.0.0.1`);
+      MONGOC = new mongo(mongoinfo);
+      console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
+      MONGOLOCALC = new mongo(mongoconsoleinfo);
+      console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => ${this.address.backinfo.host}`);
     } else {
       await this.back.setInfoObj({ getMode: false });
       isLocal = false;
@@ -1224,7 +1224,15 @@ DataConsole.prototype.connect = async function () {
       return fileSystem("readFolder", [ process.env.HOME ]);
     }).then((homeFolderList) => {
       if (homeFolderList.some((str) => { return (new RegExp("^" + processDoingKeywords, "i")).test(str) })) {
-        // pass
+        sleep(1000).then(() => {
+          return this.renderStatic(staticFolder, address, DataPatch);
+        }).then(() => {
+          return instance.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, false, false);
+        }).then(() => {
+          console.log(`static done`);
+        }).catch((err) => {
+          console.log(err);
+        })
       } else {
         fileSystem("writeString", [ process.env.HOME + "/" + tempProcessName, String(1) ]).then(() => {
           return this.renderStatic(staticFolder, address, DataPatch);
