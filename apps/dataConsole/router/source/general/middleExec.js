@@ -16,5 +16,5 @@ document.addEventListener("error", function (e) {
     message: "middleExec : " + e.message + " (" + appName + ")",
     channel: "#error_log"
   }, "/sendSlack").catch((err) => { console.log(err); });
-  window.location.href = "https://home-liaison.com";
+  // window.location.href = "https://home-liaison.com";
 });
