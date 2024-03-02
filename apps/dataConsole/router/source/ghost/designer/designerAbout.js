@@ -12727,14 +12727,14 @@ DesignerAboutJs.prototype.launching = async function (loading) {
 
     if (getObj.desid === undefined) {
       window.alert("잘못된 접근입니다!");
-      window.location.href = this.frontPage;
+      // window.location.href = this.frontPage;
     }
 
     desid = getObj.desid;
     designers = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
     if (designers.length === 0) {
       window.alert("잘못된 접근입니다!");
-      window.location.href = this.frontPage;
+      // window.location.href = this.frontPage;
     }
     [ designer ] = designers;
     this.designer = designer;
