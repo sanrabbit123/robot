@@ -899,6 +899,12 @@ FileJs.prototype.imagePreviewBox = function () {
         return obj;
       });
 
+      if (images.every((o) => { return /____index____/gi.test(o.name) && /^[0-9]/gi.test(o.name) })) {
+        images.sort((a, b) => {
+          return Number(b.name.split("____index____")[0]) - Number(a.name.split("____index____")[0])
+        })
+      }
+      
       for (let dom of targets) {
         dom.parentNode.removeChild(dom);
       }
