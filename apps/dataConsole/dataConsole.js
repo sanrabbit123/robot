@@ -21,7 +21,7 @@ const DataConsole = function () {
 
 DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch) {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, sleep, mediaQuery } = this.mother;
+  const { fileSystem, shellExec, shellLink, sleep, mediaQuery, uniqueValue } = this.mother;
   const S3HOST = "https://" + this.address.officeinfo.ghost.host;
   const SSEHOST = address.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
@@ -36,7 +36,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const CONSTRUCTHOST = "https://" + this.address.officeinfo.construct.host + "";
   const NUMBERSHOST = "https://" + this.address.officeinfo.numbers.host + "";
   const PARSERHOST = "https://" + this.address.officeinfo.parser.host + "";
-
   const classException = {
     proposal: [ "designer.js" ],
     bill: [ "designer.js" ],
@@ -88,7 +87,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       await shellExec(`rm -rf ${shellLink(staticFolder)}/${shellLink(moduleName)}`);
     }
     await shellExec(`mkdir ${shellLink(staticFolder)}/${shellLink(moduleName)}`);
-
     if (staticFolderList.includes(workerName)) {
       await shellExec(`rm -rf ${shellLink(staticFolder)}/${shellLink(workerName)}`);
     }
@@ -960,7 +958,7 @@ DataConsole.prototype.readGhostPatch = async function () {
 
 DataConsole.prototype.connect = async function () {
   const instance = this;
-  const { fileSystem, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog, expressLog, dateToString, aliveLog, cronLog, emergencyAlarm, alertLog, shellExec, shellLink } = this.mother;
+  const { fileSystem, sleep, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, uniqueValue, errorLog, expressLog, dateToString, aliveLog, cronLog, emergencyAlarm, alertLog, shellExec, shellLink } = this.mother;
   const PORT = 3000;
   const https = require("https");
   const os = require("os");
@@ -977,6 +975,8 @@ DataConsole.prototype.connect = async function () {
   const topFolder = process.env.HOME + "/server/top";
   const thisLogFile = `${logFolder}/${logKeyword}_${(new Date()).valueOf()}.log`;
   const serverName = "back";
+  const processDoingKeywords = "processDoing_";
+  const tempProcessName = processDoingKeywords + uniqueValue("hex") + ".temp";
 
   app.use(useragent.express());
   app.use(express.json({ limit : "50mb" }));
@@ -1220,24 +1220,26 @@ DataConsole.prototype.connect = async function () {
     console.log(`set router`);
 
     //set static
-    this.renderStatic(staticFolder, address, DataPatch).then(() => {
-      return instance.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, false, false);
-    }).then(() => {
-      console.log(`static done`);
+    sleep(1000 * Math.random()).then(() => {
+      return fileSystem("readFolder", [ process.env.HOME ]);
+    }).then((homeFolderList) => {
+      if (homeFolderList.some((str) => { return (new RegExp("^" + processDoingKeywords, "i")).test(str) })) {
+        // pass
+      } else {
+        fileSystem("writeString", [ process.env.HOME + "/" + tempProcessName, String(1) ]).then(() => {
+          return this.renderStatic(staticFolder, address, DataPatch);
+        }).then(() => {
+          return instance.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, false, false);
+        }).then(() => {
+          console.log(`static done`);
+          return shellExec("rm", [ "-rf", process.env.HOME + "/" + tempProcessName ]);
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
     }).catch((err) => {
       console.log(err);
     });
-
-    //set top log
-    if (!/Darwin/gi.test(os.type())) {
-      setTimeout(() => {
-        setInterval(() => {
-          shellExec(`top -n 1 -b > ${shellLink(`${topFolder}/top.out`)}`).catch((err) => {
-            console.log(err);
-          });
-        }, 3 * 1000);
-      }, 1000);
-    }
 
     //server on
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
