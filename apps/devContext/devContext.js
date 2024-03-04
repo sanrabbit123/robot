@@ -7000,9 +7000,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "최정은",
-    //     designer: "이정아",
-    //     link: "https://drive.google.com/drive/folders/1VXMN-XtOw45Olgl2-9Z7BNJZyF2osM61",
+    //     client: "안은빈",
+    //     designer: "김보하",
+    //     link: "https://drive.google.com/drive/folders/1VtKertkUXxowOWNZWomePEAXSuVFH8rK",
     //     pay: true
     //   },
     // ]);
@@ -7012,8 +7012,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "최정은",
-    //     designer: "이정아",
+    //     client: "안은빈",
+    //     designer: "김보하",
     //   },
     // ]);
 
