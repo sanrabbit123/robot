@@ -4420,6 +4420,10 @@ DataPatch.prototype.projectStandard = function () {
       name: "소비자가",
       width: 100,
     },
+    pyeong: {
+      name: "평형",
+      width: 80,
+    },
     firstAmount: {
       name: "계약금",
       width: 100,
@@ -7739,6 +7743,9 @@ DataPatch.prototype.projectMap = function () {
     paymentsRemainRefund: { name: "잔금 환수액", position: "process.calculation.payments.remain.refund", type: "number", searchBoo: true, moneyBoo: true },
     photoStatus: { name: "촬영 상태", position: "contents.photo.status", type: "string", items: [ '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ], searchBoo: true, },
     contentsPhotoDate: { name: "촬영일", position: "contents.photo.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
+    address: { name: "고객 주소", position: "null", type: "constant", searchBoo: false },
+    spaceContract: { name: "계약 상태", position: "null", type: "constant", searchBoo: false },
+    pyeong: { name: "평형", position: "null", type: "constant", searchBoo: false },
   };
   return map;
 }

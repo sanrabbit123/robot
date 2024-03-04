@@ -97,8 +97,8 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
     titleLineHeight = <%% 1.11, 1.11, 1.11, 1.11, 1.07 %%>;
 
-    mainImageTop = 40;
-    mainImageHeight = 390;
+    mainImageTop = 43;
+    mainImageHeight = 386;
 
     descriptionSize = 15;
     descriptionLineHeight = 1.8;
@@ -401,7 +401,7 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
 
     betweenMargin = 152;
 
-    totalHeight = 356;
+    totalHeight = 350;
 
     textContent = [
       {
@@ -586,6 +586,11 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     let cardLength;
     let keywords;
     let representative;
+    let buttonArrowWdith;
+    let designerProfileBase;
+    let profileHeight;
+    let designerCardGroupBetween;
+    let designerCardGroupBetweenFirst;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -597,12 +602,18 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     cardLength = 5;
 
-    cardHeight = 420;
+    cardHeight = 450;
+    profileHeight = 250;
     cardBetween = 8;
-    buttonCardWidth = 54;
+    buttonCardWidth = 50;
     cardWidth = "calc(" + withOut((cardBetween * cardLength) + buttonCardWidth, ea) + " / " + String(cardLength) + ")";
 
-    shadowForm = "0px 8px 18px -9px " + colorExtended.darkShadow;
+    buttonArrowWdith = 14;
+
+    designerCardGroupBetween = 64;
+    designerCardGroupBetweenFirst = 50;
+
+    shadowForm = "0px 8px 20px -9px " + colorExtended.darkDarkShadow;
 
     abc = this.abc;
     designers = this.designers;
@@ -625,7 +636,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           position: "absolute",
           top: String(0),
           left: String(-1 * minusLeft) + ea,
-          background: colorExtended.blueDark,
+          background: colorExtended.blueBlack,
           width: withOut(-1 * (minusLeft * 2), ea),
           height: withOut(1 * ((-1 * colorTop) + naviHeight), ea),
         }
@@ -650,7 +661,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
             width: withOut(0, ea),
             borderBottom: "1px dashed " + colorExtended.white,
             opacity: String(0.5),
-            top: String(18) + ea,
+            top: String(17) + ea,
           }
         },
         {
@@ -658,11 +669,11 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           style: {
             display: "inline-flex",
             position: "relative",
-            fontSize: String(30) + ea,
+            fontSize: String(29) + ea,
             fontWeight: String(700),
             color: colorExtended.white,
             fontFamily: "mont",
-            background: colorExtended.blueDark,
+            background: colorExtended.blueBlack,
             paddingLeft: String(16) + ea,
             paddingRight: String(16) + ea,
           }
@@ -698,7 +709,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           alignItems: "center",
           width: withOut(0, ea),
           flexDirection: "row",
-          marginTop: String(30) + ea,
+          marginTop: String(i === 0 ? designerCardGroupBetweenFirst : designerCardGroupBetween) + ea,
           marginBottom: String(10) + ea,
         },
         children: [
@@ -748,7 +759,8 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       });
 
-      createNode({
+      // designer profile
+      designerProfileBase = createNode({
         mother: thisCardBase,
         style: {
           display: "inline-flex",
@@ -768,16 +780,184 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
               display: "flex",
               position: "relative",
               width: withOut(0, ea),
-              height: String(250) + ea,
+              height: String(profileHeight) + ea,
               backgroundImage: "url('" + designer.profile.link + "')",
               backgroundSize: designer.profile.gs === 's' ? "100% auto" : "100% 100%",
               backgroundPosition: designer.profile.position,
               filter: "grayscale(100%)",
             }
+          },
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(250, ea),
+              background: colorExtended.white,
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }
+          },
+          {
+            style: {
+              position: "absolute",
+              top: String(6) + ea,
+              left: String(6) + ea,
+              width: withOut(6 * 2, ea),
+              height: withOut(6 * 2, ea),
+              borderRadius: String(5) + "px",
+              border: "1px solid " + colorExtended.blue,
+              "mix-blend-mode": "multiply",
+              "box-sizing": "border-box",
+            }
           }
         ]
+      }).children[1];
+
+      createNode({
+        mother: designerProfileBase,
+        text: designer.designer.split("").join(" "),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(26) + ea,
+          fontWeight: String(800),
+          color: colorExtended.black,
+          wordSpacing: String(1) + "px",
+          borderBottom: "1px solid " + colorExtended.blue,
+          paddingBottom: String(1) + ea,
+          marginBottom: String(15) + ea,
+        }
+      });
+      
+      createNode({
+        mother: designerProfileBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(40) + ea,
+          height: String(18) + ea,
+          borderRadius: String(18) + ea,
+          background: colorExtended.blueDark,
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: String(0) + ea,
+        },
+        child: {
+          text: "경력",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(-1) + ea,
+            fontSize: String(11) + ea,
+            fontWeight: String(700),
+            color: colorExtended.white,
+          }
+        }
       });
 
+      createNode({
+        mother: designerProfileBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(23) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: String(4) + ea,
+        },
+        child: {
+          text: "3년 6개월",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(-1) + ea,
+            fontSize: String(12) + ea,
+            fontWeight: String(400),
+            color: colorExtended.black,
+          }
+        }
+      });
+
+      createNode({
+        mother: designerProfileBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(92) + ea,
+          height: String(18) + ea,
+          borderRadius: String(18) + ea,
+          background: colorExtended.blueDark,
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: String(0) + ea,
+        },
+        child: {
+          text: "자신 있는 스타일",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(-1) + ea,
+            fontSize: String(11) + ea,
+            fontWeight: String(700),
+            color: colorExtended.white,
+          }
+        }
+      });
+
+      createNode({
+        mother: designerProfileBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(23) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          paddingBottom: String(11) + ea,
+        },
+        child: {
+          text: [
+            "내추럴",
+            "모던",
+            "빈티지"
+          ].join("&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(-1) + ea,
+            fontSize: String(12) + ea,
+            fontWeight: String(400),
+            color: colorExtended.black,
+          },
+          under: {
+            fontSize: String(12) + ea,
+            fontWeight: String(400),
+            color: colorExtended.blue,
+          }
+        }
+      });
+
+      createNode({
+        mother: designerProfileBase,
+        mode: "svg",
+        source: svgMaker.horizontalArrow(24, 9, colorExtended.focusBlue),
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          width: String(24) + ea,
+          bottom: String(21) + ea,
+          right: String(20) + ea,
+        }
+      })
+
+
+
+      // ----------------------------------------------------------------------------------------------------------------
+
+      // photo 0
       createNode({
         mother: thisCardBase,
         style: {
@@ -795,6 +975,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       });
 
+      // photo 1
       createNode({
         mother: thisCardBase,
         style: {
@@ -812,6 +993,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       });
 
+      // photo 2
       createNode({
         mother: thisCardBase,
         style: {
@@ -829,6 +1011,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       });
 
+      // photo 3
       createNode({
         mother: thisCardBase,
         style: {
@@ -846,6 +1029,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       });
 
+      // button arrow
       createNode({
         mother: thisCardBase,
         style: {
@@ -855,8 +1039,19 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           height: String(cardHeight) + ea,
           borderRadius: String(8) + "px",
           background: colorExtended.blueDarkButton,
-          opacity: String(0.7),
           boxShadow: shadowForm,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        child: {
+          mode: "svg",
+          source: svgMaker.buttonLineArrow(colorExtended.white),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(buttonArrowWdith) + ea,
+            opacity: String(0.85),
+          }
         }
       });
 

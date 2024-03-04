@@ -847,7 +847,7 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
 DataRouter.prototype.rou_post_getDocuments = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, dateToString, serviceParsing, db } = this.mother;
+  const { equalJson, dateToString, serviceParsing, db, stringToDate } = this.mother;
   let obj = {};
   obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders" ];
   obj.func = async function (req, res, logger) {
@@ -875,6 +875,9 @@ DataRouter.prototype.rou_post_getDocuments = function () {
       let dailySalesArr;
       let thisRequestIndex;
       let thisSalesDate;
+      let allClients;
+      let thisRequestNumber;
+      let thisRequest;
       if (req.body.where === undefined && req.body.whereQuery !== undefined) {
         req.body.where = req.body.whereQuery;
       }
@@ -1069,6 +1072,30 @@ DataRouter.prototype.rou_post_getDocuments = function () {
               obj.info.standardDate = dateToString(thisSalesDate);
               }
             }
+          }
+
+        } else if (req.url === "/getProjects") {
+
+          thisCliids = data.map((obj) => { return obj.middle.cliid });
+          historyWhereQuery = {};
+          historyWhereQuery["$or"] = thisCliids.map((cliid) => { return { cliid } });
+
+          allClients = await back.mongoRead("client", historyWhereQuery, { selfMongo: selfCoreMongo });
+
+          for (let obj of data) {
+            thisHistory = allClients.find((o) => { return o.cliid === obj.middle.cliid });
+            thisRequestNumber = 0;
+            for (let i = 0; i < thisHistory.requests.length; i++) {
+              if (thisHistory.requests[i].request.timeline.valueOf() <= stringToDate(obj.info.proposalDate).valueOf()) {
+                thisRequestNumber = i;
+                break;
+              }
+            }
+            thisRequest = thisHistory.requests[thisRequestNumber].request;
+            obj.info.name = thisHistory.name;
+            obj.info.address = thisRequest.space.address;
+            obj.info.spaceContract = thisRequest.space.contract;
+            obj.info.pyeong = thisRequest.space.pyeong;
           }
 
         }
