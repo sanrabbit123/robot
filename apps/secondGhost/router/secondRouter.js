@@ -527,11 +527,7 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
             if (builders.length > 0) {
               text = `${builders[0].builder} 시공 소장님께 ${method}가 왔습니다!`;
             } else {
-              if (String(phoneNumber.replace(/[^0-9]/gi, '')) === "01034560774") {
-                text = `안광길이(땍땍거리는 롯데리아 사장, 안효진 아빠)한테서 ${method}가 왔습니다!`;
-              } else {
-                text = `알 수 없는 사람(${phoneNumber})으로부터 ${method}가 왔습니다!`
-              }
+              text = `알 수 없는 사람(${phoneNumber})으로부터 ${method}가 왔습니다!`
             }
             if (/^알 수 없는/gi.test(text)) {
               rows = await back.getAspirantsByQuery({ phone: phoneNumber }, { selfMongo });
