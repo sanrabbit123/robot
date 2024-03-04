@@ -1720,7 +1720,7 @@ ReceiptRouter.prototype.rou_post_accountTimeUpdate = function () {
       if (/^010/.test(phone)) {
         logger.log(`현금영수증 번호 업데이트 감지 => \n${JSON.stringify(whereQuery, null, 2)}\n${JSON.stringify(updateQuery, null, 2)}`).catch((err) => { throw new Error(err.message); });
       } else {
-        await messageSend({ text: `${name} 고객님이 ${phone} 번호로 세금 계산서 신청을 하셨습니다!`, channel: "#400_customer", voice: true });
+        await messageSend({ text: `${name} 고객님이 ${phone} 번호로 세금 계산서 신청을 하셨습니다!`, channel: "#700_operation", voice: true });
       }
       await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
 
