@@ -71,6 +71,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     let descriptionContents;
     let descriptionSize, descriptionLineHeight;
     let descriptionMarginTop;
+    let mainImageTop, mainImageHeight;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -90,11 +91,14 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    titleSize = <%% 60, 50, 48, 40, 9 %%>;
+    titleSize = <%% 59, 50, 48, 40, 9 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% -2, -2, -2, -2, -0.5 %%>;
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
     titleLineHeight = <%% 1.11, 1.11, 1.11, 1.11, 1.07 %%>;
+
+    mainImageTop = 40;
+    mainImageHeight = 390;
 
     descriptionSize = 15;
     descriptionLineHeight = 1.8;
@@ -219,8 +223,8 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
       style: {
         position: "absolute",
         right: String(0),
-        top: String(32) + ea,
-        height: String(400) + ea,
+        top: String(mainImageTop) + ea,
+        height: String(mainImageHeight) + ea,
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0.2s 1 normal forwards running fadeupdelay2",
