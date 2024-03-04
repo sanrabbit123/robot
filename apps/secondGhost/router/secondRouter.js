@@ -527,7 +527,8 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
             if (builders.length > 0) {
               text = `${builders[0].builder} 시공 소장님께 ${method}가 왔습니다!`;
             } else {
-              text = `알 수 없는 사람(${phoneNumber})으로부터 ${method}가 왔습니다!`
+              console.log(new Date(), phoneNumber, "알 수 없는 사람");
+              text = `알 수 없는 사람(전화번호 비공개)으로부터 ${method}가 왔습니다!`
             }
             if (/^알 수 없는/gi.test(text)) {
               rows = await back.getAspirantsByQuery({ phone: phoneNumber }, { selfMongo });
@@ -545,7 +546,7 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
             }
           }
 
-          await messageSend({ text, channel: "#call", voice: true, fairy: true });
+          await messageSend({ text, channel: "#call", voice: false, fairy: true });
         }
         res.send(JSON.stringify({ message: "success" }));
       }
