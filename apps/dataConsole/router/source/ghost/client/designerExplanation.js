@@ -401,7 +401,7 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
 
     betweenMargin = 152;
 
-    totalHeight = 344;
+    totalHeight = 356;
 
     textContent = [
       {
