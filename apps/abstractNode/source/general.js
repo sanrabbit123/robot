@@ -454,6 +454,8 @@ GeneralJs.colorExtended = {
   warmGray2: "#cccccc",
   gradientBlue: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,1) 25%, rgba(190,208,217,1) 100%)",
   gradientBlue2: "linear-gradient(349deg, rgba(151,184,201,1) 0%, rgba(162,187,198,1) 21%, rgba(218,229,233,1) 100%)",
+  gradientBlue3: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,0.8) 25%, rgba(190,208,217,0.2) 100%)",
+  gradientBlue4: "linear-gradient(15deg, rgba(155,189,209,0.9) 0%, rgba(127,159,179,1) 100%)",
 };
 
 GeneralJs.colorParsing = function (str) {

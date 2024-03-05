@@ -37,6 +37,293 @@
   ]
 } %/%/g
 
+class WordsDictionary {
+  constructor() {
+    class Words extends Array {
+      allChildren() {
+        let arr = [];
+        for (let i of this) {
+          for (let j of i.children) {
+            arr.push(j);
+          }
+        }
+        return arr;
+      }
+    }
+    class WordString extends String {
+      constructor(str) {
+        super(str);
+      }
+      setChildren(arr) {
+        Object.defineProperty(this, "children", {
+            enumerable: false,
+            value: arr
+        });
+      }
+    }
+    let arr = new Words();
+    let targets = [
+      {
+        mother: "커뮤니케이션 & 컨설팅",
+        children: [
+          "디자이너와 카톡(문자) / 전화 / 메일 등의 채널을 통해 커뮤니케이션합니다. 적극적으로 참여해주실 때 더 좋은 결과물을 얻으실 수 있습니다.",
+          "집 상태, 기간, 예산, 취향, 생활 방식 등을 고려하여 진행해드립니다."
+        ]
+      },
+      {
+        mother: "스타일링 범주",
+        children: [
+          "기존에 사용하시는 가구들 중 가져갈 가구와 버릴 가구 선택 및 활용 방안을 제안드립니다.",
+          "새로 구매하실 가구, 조명, 패브릭(커튼, 베딩, 러그, 쿠션), 소품(식물, 액자, 시계 등)을 제안해드립니다.",
+          "디자이너의 제안에 따라 패브릭 및 가구의 맞춤 제작이 가능합니다.",
+          "가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 디자인 옵션(컬러 등) 등에 대해서 의논할 수 있습니다.",
+          "생활 용품과 식기의 경우는 제안하지 않습니다.",
+        ]
+      },
+      {
+        mother: "시공 범주",
+        children: [
+          "시공 진행시 홈리에종 시공사, 디자이너 시공사, 고객님께서 별도로 알아보신 시공사(홈스타일링 서비스일 경우) 중 진행이 가능합니다.",
+        ]
+      },
+      {
+        mother: "구매 안내",
+        children: [
+          "제품 구매는 고객님이 직접 진행합니다.",
+          "최종 구매는 고객님이 직접 내용 확인 후 결정하셔야 합니다. 리뷰 확인이 정말 중요합니다!"
+        ]
+      },
+      {
+        mother: "배송 및 설치 안내",
+        children: [
+          "배송된 제품의 수령, 언박싱, 조립, 1차 배치는 고객님께서 진행하시게 됩니다.",
+          "제품 구매에 소요되는 배송비, 조립 및 설치비는 고객님께서 부담하시게 됩니다."
+        ]
+      },
+      {
+        mother: "결제 및 증빙 안내",
+        children: [
+          "디자이너를 선택하고 계약금을 지불하면 디자이너와의 현장 미팅이 진행됩니다.",
+          "현장 미팅 후에는 계약금을 환불하지 않습니다.",
+        ]
+      },
+      {
+        mother: "추가 금액 안내",
+        children: [
+          "계약한 서비스의 유형에서 <b%서비스 유형 변경(시공 범위 추가)%b> 및 <b%기간 연장%b>이 되고 있는 경우 <b%디자인비가 추가%b>됩니다.",
+          "디자이너와 고객의 기본 거리를 초과하는 지방 고객님의 경우 출장비가 발생하며 (1일 왕복 교통비 + 출장비) * 적용 일수로 계산합니다."
+        ]
+      }
+    ];
+    let temp;
+    for (let { mother, children } of targets) {
+      temp = new WordString(mother);
+      temp.setChildren(children);
+      arr.push(temp);
+    }
+    this.words = arr;
+  }
+
+  getWords() {
+    return this.words;
+  }
+
+  getMatrix() {
+    let result, num, past;
+    let temp;
+    let target;
+
+    target = this.words;
+
+    result = [];
+    num = 1;
+    past = "";
+
+    for (let i = 0; i < target.length; i++) {
+      for (let j = 0; j < target[i].children.length; j++) {
+        temp = new Array(3);
+        if (past !== String(target[i])) {
+          temp[0] = String(target[i]);
+        } else {
+          temp[0] = "";
+        }
+        temp[1] = String(num);
+        temp[2] = target[i].children[j];
+        result.push(temp);
+        past = String(target[i]);
+        num++;
+      }
+    }
+    return result;
+  }
+
+  getCaution() {
+    let result, num, past;
+    let temp;
+    let target;
+
+    target = this.words;
+    target = [ target.pop() ];
+    result = [];
+    num = 1;
+    past = "";
+
+    for (let i = 0; i < target.length; i++) {
+      for (let j = 0; j < target[i].children.length; j++) {
+        temp = new Array(3);
+        if (past !== String(target[i])) {
+          temp[0] = String(target[i]);
+        } else {
+          temp[0] = "";
+        }
+        temp[1] = String(num);
+        temp[2] = target[i].children[j];
+        result.push(temp);
+        past = String(target[i]);
+        num++;
+      }
+    }
+    return result;
+  }
+
+  colorMatching(str) {
+    if (/\<b\%/gi.test(str)) {
+      str = str.replace(/(\<b\%[^\%]+\%b\>)/gi, (match, p1, offset, string) => {
+        return `<b style="color:${GeneralJs.colorExtended.mainBlue}">${p1.slice(3, -3)}</b>`;
+      });
+    }
+    return str;
+  }
+
+  getSubWording() {
+    let arr = [
+      "<b%* 홈리에종%b>의 모든 서비스는 ‘인테리어의 완성된 상태’를 <u%가구/패브릭/조명/소품이 다 자리 잡은 상태%u>라고 정의합니다.",
+      "<b%*%b> 홈리에종은 ‘디자인비’를 먼저 받는 방식으로 진행됩니다. <b%디자이너의 시간과 경험의 전문성%b>에 대한 <b%무형 서비스%b>의 특징상 미리 <u%디자이너의 작업 기간을 확보%u>하고 홈리에종은 <u%마무리 단계를 확인하고 최종 정산함%u>으로써 끝까지 책임감 있는 디자인 프로세스가 유지되도록 케어합니다.",
+      "<b%*%b> 턴키 공사 업체를 통해 리모델링을 하는 경우 소요되는 예산, 기간, 정성에 비해 기대하는 결과를 얻기 어렵습니다. 바탕 공사만 진행하고 가구/패브릭/조명/소품 등의 내부 스타일링은 전부 고객님의 몫입니다. 그리고 턴키 디자인 업체의 경우에는 가격이 매우 높은 편이고, 일정을 잡기 어렵습니다.",
+      "<b%* 한 명의 디자이너%b>와 함께 <u%적합한 시공과 스타일링을 끝까지 함께 하여%u>, 합리적인 예산 운영과 높은 디자인적 완성도로 아늑하게 누릴 수 있는 주거를 완성하는 것이 가장 좋은 방법입니다."
+    ];
+    return arr;
+  }
+
+  getServiceWording() {
+    let obj;
+    obj = {
+      name: "홈리에종 서비스",
+      contents: "디자이너와 새로운 방법으로 집을 꾸며보세요. 일단 시공부터 시작하고 보는 것이 아니라 공간, 시간, 예산을 어떻게 사용할지 <b%디자이너와 함께%b> 계획해서 <u%여건에 맞는 시공 범위%u>를 정하고, <u%스타일링까지 마무리%u>하여 오롯이 쉴 수 있는 나만의 공간 경험을 전해드립니다.",
+      items: {
+        name: "제공 서비스",
+        contents: [
+          "전체 컨셉 설정",
+          "공간 배치",
+          "시공 범위 제안",
+          "마감재 선택",
+          "디자인 감리",
+          "가구, 패브릭, 소품 제안",
+          "세팅 및 촬영",
+          "부가서비스 (입주 청소, 정리 수납 등)",
+          "디자이너 중재",
+          "프로젝트 케어",
+          "프로젝트 검수"
+        ]
+      },
+      methods: {
+        name: "서비스 종류",
+        contents: [
+          {
+            name: "홈퍼니싱",
+            contents: "시공은 전혀 없이 기성 가구, 패브릭, 소품 등으로 제안",
+            children: [
+              "위치 변동 없는 조명 공사 포함",
+              "빌트인 가구 제작은 시공에 포함, 빌트인 가구 제작 시 홈스타일링 유형"
+            ],
+            amount: 30,
+            mobileLeft: 10.6,
+          },
+          {
+            name: "홈스타일링",
+            contents: "욕실, 싱크대 교체를 제외한 최소 시공에 스타일링 마무리",
+            children: [
+              "철거 제외 5가지 이하의 공정이 포함되는 경우",
+              "공정 예시 : 도배, 필름, 중문, 조명 공사, 붙박이장, 타일 덧방 등",
+              "홈리에종 시공사 / 디자이너 시공사 / 고객님께서 별도로 알아보신 시공사 중 선택",
+            ],
+            amount: 45,
+            mobileLeft: 13.2,
+          },
+          {
+            name: "토탈 스타일링",
+            contents: "욕실, 싱크대 교체를 포함한 전체 시공에 스타일링 마무리",
+            children: [
+              "욕실 혹은 싱크대 교체 중 한 가지라도 해당하는 경우",
+              "철거 제외 6가지 이상의 공정이 포함되는 경우",
+              "공정 예시 : 목공사, 도배, 필름, 중문, 조명 공사, 붙박이장, 타일, 금속 등",
+              "홈리에종 시공사 / 디자이너 시공사 중 매칭되는 시공사와 진행"
+            ],
+            amount: 60,
+            mobileLeft: 16.1,
+          },
+          {
+            name: "엑스트라 스타일링",
+            contents: "설계 변경을 포함한 전체 시공에 스타일링 마무리",
+            children: [
+              "주방 구조 변경, 알파룸 혹은 발코니 디자인, 게이트 등 공간에 따른 디자인 시공",
+              "홈리에종 시공사 / 디자이너 시공사 중 매칭되는 시공사와 진행"
+            ],
+            amount: 75,
+            mobileLeft: 20.9,
+          },
+        ]
+      },
+      process: {
+        name: "전체 프로세스",
+        contents: [
+          {
+            name: "계약 프로세스",
+            contents: [
+              "신청서 접수",
+              "HL 전화 상담",
+              "디자이너 추천 및 선택",
+              "계약금 입금",
+              "디자이너와 현장 미팅",
+              "계약서 서명 및 잔금 입금"
+            ],
+          },
+          {
+            name: "디자인 프로세스",
+            contents: [
+              "디자인 (2주 ~ 3주)",
+              "고객 피드백",
+              "수정 제안",
+            ]
+          },
+          {
+            name: "시공 프로세스",
+            contents: [
+              "시공 범위 지정",
+              "시공 견적",
+              "시공 계약",
+              "시공 금액 입금 (4회 분할)",
+              "마감재 선택",
+              "시공 진행",
+            ]
+          },
+          {
+            name: "구매 프로세스",
+            contents: [
+              "구매 진행",
+              "구매 상황 체크",
+              "추가 항목 점검",
+            ]
+          },
+        ]
+      }
+    };
+
+    return obj;
+  }
+
+}
+
 const DesignerExplanationJs = function () {
   this.mother = new GeneralJs();
 }
@@ -591,18 +878,20 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     let profileHeight;
     let designerCardGroupBetween;
     let designerCardGroupBetweenFirst;
+    let nameTitleSize;
+    let selectionBase;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
     basePaddingTop = <%% 150, 150, 160, 140, 21 %%>;
-    basePaddingBottom = <%% 200, 200, 190, 170, 24 %%>;
+    basePaddingBottom = <%% 160, 160, 160, 160, 24 %%>;
 
     checkCircleWidth = 13;
 
     cardLength = 5;
 
-    cardHeight = 440;
+    cardHeight = 445;
     profileHeight = 250;
     cardBetween = 8;
     buttonCardWidth = 50;
@@ -610,8 +899,10 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     buttonArrowWdith = 14;
 
-    designerCardGroupBetween = 75;
+    designerCardGroupBetween = 70;
     designerCardGroupBetweenFirst = 50;
+
+    nameTitleSize = 25;
 
     shadowForm = "0px 8px 20px -9px " + colorExtended.darkDarkShadow;
 
@@ -759,6 +1050,25 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       });
 
+      // click me
+      if (i === 0) {
+        createNode({
+          mother: thisCardBase,
+          mode: "img",
+          attribute: {
+            src: DesignerExplanationJs.binaryPath + "/clickMe.svg",
+          },
+          style: {
+            display: "inline-block",
+            position: "absolute",
+            top: String(-92) + ea,
+            left: String(200) + ea,
+            width: String(124) + ea,
+            height: "auto",
+          }
+        })
+      }
+
       // designer profile
       designerProfileBase = createNode({
         mother: thisCardBase,
@@ -821,7 +1131,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(26) + ea,
+          fontSize: String(nameTitleSize) + ea,
           fontWeight: String(800),
           color: colorExtended.black,
           wordSpacing: String(1) + "px",
@@ -1057,6 +1367,1284 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     }
     
+    selectionBase = createNode({
+      mother: thirdBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        width: withOut(0, ea),
+        height: String(96) + ea,
+        flexDirection: "row",
+        marginTop: String(96) + ea,
+      },
+      children: [
+        {
+          style: {
+            position: "absolute",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            borderRadius: String(10) + "px",
+            boxShadow: "0px 3px 12px -9px " + colorExtended.darkDarkShadow,
+            overflow: "hidden",
+          },
+          child: {
+            style: {
+              position: "absolute",
+              width: String(standardWidth * 1.2) + ea,
+              height: String(standardWidth * 1.2) + ea,
+              background: colorExtended.gradientBlue3,
+              opacity: String(0.7),
+              animation: "rotateProgress 5s linear infinite",
+              transformOrigin: "50% 50%",
+              left: String(-1 * standardWidth * 0.1) + ea,
+              top: String(-1 * standardWidth * 0.6) + ea,
+            }
+          }
+        }
+      ]
+    });
+    createNode({
+      mother: selectionBase,
+      text: "해당 디자이너를 선택하고 현장 미팅을 예약합니다.",
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(18) + ea,
+        fontWeight: String(800),
+        color: colorExtended.white,
+      }
+    });
+    createNode({
+      mother: selectionBase,
+      mode: "svg",
+      source: svgMaker.horizontalArrow(832, 12, colorExtended.white),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(832) + ea,
+        marginLeft: String(16) + ea,
+        marginRight: String(16) + ea,
+        opacity: String(0.6),
+      }
+    })
+    createNode({
+      mother: selectionBase,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(124) + ea,
+        height: String(38) + ea,
+        borderRadius: String(5) + "px",
+        background: colorExtended.white,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        opacity: String(0.9),
+        boxShadow: "0px 3px 14px -9px " + colorExtended.darkDarkShadow,
+      },
+      child: {
+        text: "디자이너 선택",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(-1) + ea,
+          fontSize: String(16) + ea,
+          fontWeight: String(800),
+          color: colorExtended.blueDark,
+        }
+      }
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DesignerExplanationJs.prototype.insertServiceBox = function (thisBase) {
+  const instance = this;
+  const { ea, media } = this;
+  const baseTong = this.baseTong;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac } = GeneralJs;
+  const words = new WordsDictionary();
+  const serviceObj = words.getServiceWording();
+  let topMargin, leftMargin;
+  let whiteBlock;
+  let blockHeight, blockMarginBottom;
+  let wordsTable;
+  let marginBottom;
+  let nodeArr;
+  let wordSize, wordSpacing;
+  let box0Size, box1Size, box0Margin, box1Margin;
+  let top, bottom;
+  let grayHeight, grayTop, grayTong, grayTextScroll, grayTextTong, grayTextTop, grayTextLeft, grayTextSize;
+  let buttonTong, buttonHeight, buttonTongHeight;
+  let buttonOff = {}, buttonOn = {};
+  let finalBottom;
+  let tempBlock, tempChild, tempDom, tempTitle;
+  let whiteBlockHeight, whiteBlockMargin, whiteBlockPaddingTop, whiteBlockPaddingLeft, whiteBlockVisual;
+  let methodsTongTop, methodsTongBottom, methodsTongLeft, methodsBlockBottom;
+  let methodsTitleWidth;
+  let methodsBlockPaddingBottom;
+  let methodsSecondBlockWidth;
+  let methodsTongClassName;
+  let methodsThirdBlockBottom;
+  let methodsSecondBlockRight;
+  let methodsTextVisual;
+  let mobileTitleSize;
+  let processTongClassName;
+  let processBlockMarginLeft;
+  let processArrowWidth;
+  let processArrowTop;
+  let processBlockHeight;
+  let processBlockPaddingBottom;
+  let processThirdBlockBottom;
+  let amountTextVisual, amountTextTop;
+  let mobileAllViewBottom, mobileAllViewRight;
+  let mobileAllViewInitialHeight;
+  let mobileAllViewClassNameService, mobileAllViewClassNameProcess;
+  let titleFontWeight;
+
+  topMargin = 44;
+  leftMargin = 48;
+
+  titleFontWeight = 800;
+
+  top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2, 5 %%>;
+  bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2, 4 %%>;
+
+  blockHeight = <%% 400, 400, 400, 400, 400 %%>;
+  blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
+  marginBottom = <%% 13, 13, 13, 13, 3 %%>;
+
+  mobileTitleSize = 3.5;
+  wordSize = <%% 15, 15, 15, 13, 2.8 %%>;
+  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+
+  box0Size = <%% 140, 120, 120, 82, 12 %%>;
+  box1Size = <%% 25, 0, 0, 0, 3 %%>;
+  box0Margin = <%% 55, 55, 55, 45, 3 %%>;
+  box1Margin = <%% 18, 18, 0, 0, 3 %%>;
+
+  grayHeight = <%% 180, 180, 180, 180, 42 %%>;
+  grayTop = <%% 4, 4, 4, 4, 0 %%>;
+  grayTextTop = <%% 12, 12, 10, 9, 1.8 %%>;
+  grayTextLeft = <%% 12, 12, 10, 9, 1.8 %%>;
+  grayTextSize = <%% 14, 14, 13, 11, 2.3 %%>;
+
+  buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
+  buttonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
+
+  finalBottom = <%% -3, -4, -7, -9, 0 %%>;
+
+  whiteBlockHeight = <%% (isMac() ? 26 : 25), (isMac() ? 26 : 25), (isMac() ? 24 : 23), (isMac() ? 20 : 19), 4.6 %%>;
+  whiteBlockMargin = <%% 6, 6, 6, 4, 1 %%>;
+  whiteBlockPaddingTop = <%% 6, 6, 6, 4, 1 %%>;
+  whiteBlockPaddingLeft = <%% 11, 11, 11, 9, 2 %%>;
+  whiteBlockVisual = <%% 1, 1, 1, 1, 0 %%>;
+
+  methodsTongTop = <%% 18, 18, 18, 18, 3.2 %%>;
+  methodsTongBottom = <%% 1, 1, 1, 1, 0 %%>;
+  methodsTongLeft = <%% 24, 24, 22, 22, 4 %%>;
+  methodsTitleWidth = <%% 155, 140, 128, 110, 20 %%>;
+  methodsBlockPaddingBottom = <%% 20, 20, 20, 16, 1.5 %%>;
+  methodsBlockBottom = <%% 16, 16, 16, 16, 3.5 %%>;
+  if (desktop) {
+    if (!isMac()) {
+      if (media[3]) {
+        methodsBlockPaddingBottom = methodsBlockPaddingBottom - 2;
+        methodsBlockBottom = methodsBlockBottom + 1;
+      } else {
+        methodsBlockPaddingBottom = methodsBlockPaddingBottom - 4;
+        methodsBlockBottom = methodsBlockBottom + 2;
+      }
+    }
+  }
+  methodsSecondBlockWidth = <%% 370, 170, 170, 116, 80 %%>;
+  methodsSecondBlockRight = <%% 0, 32, 28, 28, 10 %%>;
+  methodsTongClassName = "methodsDetailTong";
+  processTongClassName = "processDetailTong";
+  methodsThirdBlockBottom = <%% 9, 9, 9, 9, 1 %%>;
+  methodsTextVisual = <%% 0, 0, 1, 1, 0 %%>;
+
+  processBlockMarginLeft = <%% 8, 8, 8, 7, 1.5 %%>;
+  processBlockHeight = <%% 22, 22, 22, 18, 3 %%>;
+  processArrowWidth = <%% 25, 25, 25, 24, 5 %%>;
+  processArrowTop = <%% 7, 7, 7, 5, 1.3 %%>;
+  processThirdBlockBottom = <%% 4, 4, 4, 2, 0.5 %%>;
+  if (desktop) {
+    if (!isMac()) {
+      processThirdBlockBottom = processThirdBlockBottom - 2;
+      processArrowTop = processArrowTop - 2;
+    }
+  }
+  processBlockPaddingBottom = <%% 16, 16, 16, 16, 0.5 %%>;
+
+  amountTextVisual = <%% 3, 3, 3, 3, 0.8 %%>;
+  amountTextTop = <%% 20, 20, 20, 18, 0.1 %%>;
+
+  mobileAllViewBottom = 0.3;
+  mobileAllViewRight = 0.3;
+  mobileAllViewInitialHeight = 20;
+
+  mobileAllViewClassNameService = "mobileAllViewClassNameService";
+  mobileAllViewClassNameProcess = "mobileAllViewClassNameProcess";
+
+  [ whiteBlock, wordsTable ] = createNodes([
+    {
+      mother: thisBase,
+      style: {
+        position: "relative",
+        borderRadius: String(desktop ? 8 : 3) + "px",
+        width: String(100) + '%',
+        background: colorChip.white,
+        boxShadow: "0px 5px 18px -9px " + colorChip.darkDarkShadow,
+        marginBottom: String(blockMarginBottom) + ea,
+        paddingTop: String(top) + ea,
+        paddingBottom: String(bottom) + ea,
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        position: "relative",
+        marginLeft: String(desktop ? leftMargin : 0) + ea,
+        width: desktop ? withOut(leftMargin * 2, ea) : String(100) + '%',
+      }
+    }
+  ]);
+
+  //main service
+  nodeArr = [
+    {
+      mother: wordsTable,
+      style: {
+        position: "relative",
+        marginBottom: String(marginBottom) + ea,
+      }
+    }
+  ];
+
+  if (desktop) {
+    nodeArr.push({
+      mother: -1,
+      text: serviceObj.name,
+      style: {
+        display: "inline-block",
+        fontSize: String(wordSize) + ea,
+        wordSpacing: String(wordSpacing) + "px",
+        position: "relative",
+        top: String(0) + ea,
+        verticalAlign: "top",
+        lineHeight: String(1.6),
+        width: String(box0Size) + ea,
+        marginRight: String(box0Margin) + ea,
+        fontWeight: String(titleFontWeight),
+        textAlign: "left",
+        color: colorChip.black,
+      }
+    });
+    nodeArr.push({
+      mother: -2,
+      text: '0',
+      style: {
+        display: "inline-block",
+        fontSize: String(wordSize) + ea,
+        wordSpacing: String(wordSpacing) + "px",
+        position: "relative",
+        top: String(0) + ea,
+        verticalAlign: "top",
+        lineHeight: String(1.6),
+        width: String(box1Size) + ea,
+        marginRight: String(box1Margin) + ea,
+        fontWeight: String(titleFontWeight),
+        color: colorChip.white,
+        textAlign: "right",
+      }
+    });
+    nodeArr.push({
+      mother: -3,
+      text: serviceObj.contents,
+      style: {
+        display: "inline-block",
+        fontSize: String(wordSize) + ea,
+        wordSpacing: String(wordSpacing) + "px",
+        position: "relative",
+        top: String(0) + ea,
+        verticalAlign: "top",
+        lineHeight: String(1.6),
+        width: "calc(100% - " + String(box0Size + box1Size + box0Margin + box1Margin) + ea + ")",
+        fontWeight: String(300),
+        textAlign: "left",
+        color: colorChip.black,
+      },
+      bold: {
+        fontWeight: String(titleFontWeight),
+        color: colorExtended.mainBlue,
+      },
+      under: {
+        "text-decoration": "underline",
+        color: colorExtended.mainBlue,
+      }
+    });
+  } else {
+    nodeArr.push({
+      mother: -1,
+      text: serviceObj.name,
+      style: {
+        display: "block",
+        fontSize: String(mobileTitleSize) + ea,
+        wordSpacing: String(wordSpacing) + "px",
+        position: "relative",
+        top: String(0) + ea,
+        verticalAlign: "top",
+        lineHeight: String(1.6),
+        left: String((this.subBoxMargin.left + 0.2)) + ea,
+        width: withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
+        fontWeight: String(titleFontWeight),
+        color: colorChip.black,
+        marginBottom: String(marginBottom / 2) + ea,
+      }
+    });
+    nodeArr.push({
+      mother: -2,
+      text: serviceObj.contents,
+      style: {
+        display: "block",
+        fontSize: String(wordSize) + ea,
+        wordSpacing: String(wordSpacing) + "px",
+        position: "relative",
+        top: String(0) + ea,
+        verticalAlign: "top",
+        lineHeight: String(1.6),
+        left: String((this.subBoxMargin.left + 0.2)) + ea,
+        width: withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
+      },
+      bold: {
+        fontWeight: String(titleFontWeight),
+        color: colorExtended.mainBlue,
+      },
+      under: {
+        "text-decoration": "underline",
+        color: colorExtended.mainBlue,
+      }
+    });
+  }
+
+  createNodes(nodeArr);
+
+  //items
+
+  tempBlock = createNode({
+    mother: wordsTable,
+    style: {
+      position: "relative",
+      marginBottom: String(marginBottom) + ea,
+    }
+  });
+
+  createNode({
+    mother: tempBlock,
+    text: serviceObj.items.name,
+    style: {
+      display: desktop ? "inline-block" : "block",
+      fontSize: String(desktop ? wordSize : mobileTitleSize) + ea,
+      wordSpacing: String(wordSpacing) + "px",
+      position: "relative",
+      top: String(0) + ea,
+      verticalAlign: "top",
+      lineHeight: String(1.6),
+      left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
+      width: desktop ? String(box0Size) + ea : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
+      marginRight: desktop ? String(box0Margin) + ea : "",
+      marginBottom: desktop ? "" : String(marginBottom / 2) + ea,
+      fontWeight: String(titleFontWeight),
+      textAlign: "left",
+      color: colorChip.black,
+    }
+  });
+
+  if (desktop) {
+    createNode({
+      mother: tempBlock,
+      text: '0',
+      style: {
+        display: "inline-block",
+        fontSize: String(wordSize) + ea,
+        wordSpacing: String(wordSpacing) + "px",
+        position: "relative",
+        top: String(0) + ea,
+        verticalAlign: "top",
+        lineHeight: String(1.6),
+        width: String(box1Size) + ea,
+        marginRight: String(box1Margin) + ea,
+        fontWeight: String(titleFontWeight),
+        color: colorChip.white,
+        textAlign: "right",
+      }
+    });
+  }
+
+  [ grayTong, grayTextTong ] = createNodes([
+    {
+      mother: tempBlock,
+      style: {
+        display: desktop ? "inline-block" : "block",
+        position: "relative",
+        left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
+        width: desktop ? withOut(box0Size + box1Size + box0Margin + box1Margin, ea) : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
+        marginTop: String(grayTop) + ea,
+        marginBottom: String(desktop ? 6 : 2.5) + ea,
+        paddingTop: String(grayTextTop) + ea,
+        paddingBottom: String(grayTextTop - whiteBlockMargin + whiteBlockVisual) + ea,
+        background: colorChip.gray1,
+        borderRadius: String(3) + "px",
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        position: "relative",
+        marginLeft: String(grayTextLeft) + ea,
+        width: withOut(grayTextLeft * 2, ea),
+      }
+    },
+  ]);
+
+  for (let i = 0; i < serviceObj.items.contents.length; i++) {
+    createNodes([
+      {
+        mother: grayTextTong,
+        style: {
+          display: "inline-block",
+          background: colorChip.white,
+          borderRadius: String(3) + "px",
+          position: "relative",
+          height: String(whiteBlockHeight) + ea,
+          marginRight: String(whiteBlockMargin) + ea,
+          marginBottom: String(whiteBlockMargin) + ea,
+          paddingTop: String(whiteBlockPaddingTop) + ea,
+          paddingLeft: String(whiteBlockPaddingLeft) + ea,
+          paddingRight: String(whiteBlockPaddingLeft) + ea,
+        }
+      },
+      {
+        mother: -1,
+        text: serviceObj.items.contents[i],
+        style: {
+          fontSize: String(grayTextSize) + ea,
+          fontWeight: String(400),
+          color: colorExtended.mainBlue,
+        }
+      }
+    ]);
+  }
+
+  //methods
+  tempBlock = createNode({
+    mother: wordsTable,
+    style: {
+      position: "relative",
+      marginBottom: String(marginBottom) + ea,
+    }
+  });
+
+  tempTitle = createNode({
+    mother: tempBlock,
+    text: serviceObj.methods.name,
+    style: {
+      display: desktop ? "inline-block" : "block",
+      fontSize: String(desktop ? wordSize : mobileTitleSize) + ea,
+      wordSpacing: String(wordSpacing) + "px",
+      position: "relative",
+      top: String(0) + ea,
+      verticalAlign: "top",
+      lineHeight: String(1.6),
+      left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
+      width: desktop ? String(box0Size) + ea : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
+      marginRight: desktop ? String(box0Margin) + ea : "",
+      marginBottom: desktop ? "" : String(marginBottom / 2) + ea,
+      fontWeight: String(titleFontWeight),
+      textAlign: "left",
+      color: colorChip.black,
+      cursor: "pointer",
+    }
+  });
+
+  if (mobile) {
+    createNode({
+      mother: tempTitle,
+      text: "전체 보기",
+      style: {
+        fontSize: String(wordSize - methodsTextVisual - amountTextVisual) + ea,
+        position: "absolute",
+        bottom: String(mobileAllViewBottom) + ea,
+        right: String(mobileAllViewRight) + ea,
+        fontWeight: String(titleFontWeight),
+        color: colorExtended.mainBlue,
+      }
+    });
+    tempTitle.addEventListener("click", function (e) {
+      const target = document.querySelector('.' + mobileAllViewClassNameService);
+      const toggle = target.getAttribute("toggle");
+      const height = target.getAttribute("height");
+      if (toggle === "off") {
+        target.style.overflow = "";
+        target.style.height = "auto";
+        target.setAttribute("toggle", "on");
+      } else {
+        target.style.overflow = "hidden";
+        target.style.height = height;
+        target.setAttribute("toggle", "off");
+      }
+    });
+  }
+
+  if (desktop) {
+    createNode({
+      mother: tempBlock,
+      text: '0',
+      style: {
+        display: "inline-block",
+        fontSize: String(wordSize) + ea,
+        wordSpacing: String(wordSpacing) + "px",
+        position: "relative",
+        top: String(0) + ea,
+        verticalAlign: "top",
+        lineHeight: String(1.6),
+        width: String(box1Size) + ea,
+        marginRight: String(box1Margin) + ea,
+        fontWeight: String(titleFontWeight),
+        color: colorChip.white,
+        textAlign: "right",
+      }
+    });
+  }
+
+  [ grayTong, grayTextTong ] = createNodes([
+    {
+      mother: tempBlock,
+      attribute: [
+        { toggle: "off" },
+        { height: String(mobileAllViewInitialHeight) + ea }
+      ],
+      class: [ mobileAllViewClassNameService ],
+      style: {
+        display: desktop ? "inline-block" : "block",
+        position: "relative",
+        left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
+        width: desktop ? withOut(box0Size + box1Size + box0Margin + box1Margin, ea) : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
+        marginTop: String(grayTop) + ea,
+        marginBottom: String(desktop ? 6 : 2.5) + ea,
+        paddingTop: String(methodsTongTop) + ea,
+        paddingBottom: String(methodsTongBottom) + ea,
+        borderRadius: String(3) + "px",
+        border: "1px solid " + colorChip.gray3,
+        boxSizing: "border-box",
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        position: "relative",
+        marginLeft: String(methodsTongLeft) + ea,
+        width: withOut(methodsTongLeft * 2, ea),
+      }
+    },
+  ]);
+
+  if (mobile) {
+    grayTong.style.overflow = "hidden";
+    grayTong.style.height = String(mobileAllViewInitialHeight) + ea;
+  }
+
+  for (let i = 0; i < serviceObj.methods.contents.length; i++) {
+    tempChild = createNode({
+      mother: grayTextTong,
+      style: {
+        position: "relative",
+        display: "block",
+        marginBottom: String(i === serviceObj.methods.contents.length - 1 ? 0 : methodsBlockBottom) + ea,
+        paddingBottom: String(methodsBlockPaddingBottom) + ea,
+        borderBottom: (i === serviceObj.methods.contents.length - 1) ? "" : "1px solid " + colorChip.gray3,
+      },
+      children: [
+        {
+          style: {
+            display: desktop ? "inline-block" : "block",
+            position: "relative",
+            width: desktop ? String(methodsTitleWidth) + ea : "",
+            verticalAlign: "top",
+            marginBottom: desktop ? "" : String(1) + ea,
+          },
+          children: [
+            {
+              text: serviceObj.methods.contents[i].name,
+              style: {
+                position: "relative",
+                left: String(desktop ? 1 : 0) + ea,
+                fontSize: String(wordSize - methodsTextVisual) + ea,
+                fontWeight: String(titleFontWeight),
+                lineHeight: String(1.5),
+                color: colorChip.black,
+              }
+            },
+            {
+              text: "약 " + String(serviceObj.methods.contents[i].amount) + "일 소요",
+              style: {
+                position: "absolute",
+                left: desktop ? String(1) + ea : "",
+                fontSize: String(wordSize - methodsTextVisual - amountTextVisual) + ea,
+                fontWeight: String(400),
+                lineHeight: String(1.5),
+                top: String(amountTextTop) + ea,
+                right: mobile ? String(0) + ea : "",
+                color: colorExtended.mainBlue,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: desktop ? "inline-block" : "block",
+            position: "relative",
+            width: desktop ? String(methodsSecondBlockWidth) + ea : "",
+            verticalAlign: "top",
+            marginRight: desktop ? String(methodsSecondBlockRight) + ea : "",
+            marginBottom: desktop ? "" : String(2.5) + ea,
+          },
+          children: [
+            {
+              text: serviceObj.methods.contents[i].contents,
+              style: {
+                fontSize: String(wordSize - methodsTextVisual) + ea,
+                fontWeight: String(300),
+                lineHeight: String(1.5),
+                color: colorChip.black,
+              }
+            }
+          ]
+        },
+        {
+          class: [ methodsTongClassName ],
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: desktop ? withOut(methodsTitleWidth + methodsSecondBlockWidth + methodsSecondBlockRight, ea) : "",
+            marginBottom: desktop ? "" : String(serviceObj.methods.contents[i].children.length !== 0 ? 2.5 : 0) + ea,
+          },
+        }
+      ]
+    });
+    tempDom = tempChild.querySelector('.' + methodsTongClassName);
+    for (let j = 0; j < serviceObj.methods.contents[i].children.length; j++) {
+      createNode({
+        mother: tempDom,
+        text: "<b%-%b> " + serviceObj.methods.contents[i].children[j],
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(wordSize - methodsTextVisual) + ea,
+          fontWeight: String(300),
+          color: colorChip.black,
+          marginBottom: String(j === serviceObj.methods.contents[i].children.length - 1 ? 0 : methodsThirdBlockBottom) + ea,
+          lineHeight: String(1.5),
+        },
+        bold: {
+          color: colorExtended.mainBlue,
+        }
+      });
+    }
+  }
+
+  //process
+
+  tempBlock = createNode({
+    mother: wordsTable,
+    style: {
+      position: "relative",
+      marginBottom: String(marginBottom) + ea,
+    }
+  });
+
+  tempTitle = createNode({
+    mother: tempBlock,
+    text: serviceObj.process.name,
+    style: {
+      display: desktop ? "inline-block" : "block",
+      fontSize: String(desktop ? wordSize : mobileTitleSize) + ea,
+      wordSpacing: String(wordSpacing) + "px",
+      position: "relative",
+      top: String(0) + ea,
+      verticalAlign: "top",
+      lineHeight: String(1.6),
+      left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
+      width: desktop ? String(box0Size) + ea : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
+      marginRight: desktop ? String(box0Margin) + ea : "",
+      marginBottom: desktop ? "" : String(marginBottom / 2) + ea,
+      fontWeight: String(titleFontWeight),
+      textAlign: "left",
+      color: colorChip.black,
+      cursor: "pointer",
+    }
+  });
+
+  if (mobile) {
+    createNode({
+      mother: tempTitle,
+      text: "전체 보기",
+      style: {
+        fontSize: String(wordSize - methodsTextVisual - amountTextVisual) + ea,
+        position: "absolute",
+        bottom: String(mobileAllViewBottom) + ea,
+        right: String(mobileAllViewRight) + ea,
+        fontWeight: String(titleFontWeight),
+        color: colorExtended.mainBlue,
+      }
+    });
+    tempTitle.addEventListener("click", function (e) {
+      const target = document.querySelector('.' + mobileAllViewClassNameProcess);
+      const toggle = target.getAttribute("toggle");
+      const height = target.getAttribute("height");
+      if (toggle === "off") {
+        target.style.overflow = "";
+        target.style.height = "auto";
+        target.setAttribute("toggle", "on");
+      } else {
+        target.style.overflow = "hidden";
+        target.style.height = height;
+        target.setAttribute("toggle", "off");
+      }
+    });
+  }
+
+  if (desktop) {
+    createNode({
+      mother: tempBlock,
+      text: '0',
+      style: {
+        display: "inline-block",
+        fontSize: String(wordSize) + ea,
+        wordSpacing: String(wordSpacing) + "px",
+        position: "relative",
+        top: String(0) + ea,
+        verticalAlign: "top",
+        lineHeight: String(1.6),
+        width: String(box1Size) + ea,
+        marginRight: String(box1Margin) + ea,
+        fontWeight: String(titleFontWeight),
+        color: colorChip.white,
+        textAlign: "right",
+      }
+    });
+  }
+
+  [ grayTong, grayTextTong ] = createNodes([
+    {
+      mother: tempBlock,
+      attribute: [
+        { toggle: "off" },
+        { height: String(mobileAllViewInitialHeight) + ea }
+      ],
+      class: [ mobileAllViewClassNameProcess ],
+      style: {
+        display: desktop ? "inline-block" : "block",
+        position: "relative",
+        left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
+        width: desktop ? withOut(box0Size + box1Size + box0Margin + box1Margin, ea) : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
+        marginTop: String(grayTop) + ea,
+        marginBottom: String(desktop ? 6 : 2.5) + ea,
+        paddingTop: String(methodsTongTop) + ea,
+        paddingBottom: String(methodsTongBottom) + ea,
+        borderRadius: String(3) + "px",
+        border: "1px solid " + colorChip.gray3,
+        boxSizing: "border-box",
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        position: "relative",
+        marginLeft: String(methodsTongLeft) + ea,
+        width: withOut(methodsTongLeft * 2, ea),
+      }
+    },
+  ]);
+
+  if (mobile) {
+    grayTong.style.overflow = "hidden";
+    grayTong.style.height = String(mobileAllViewInitialHeight) + ea;
+  }
+
+  for (let i = 0; i < serviceObj.process.contents.length; i++) {
+    tempChild = createNode({
+      mother: grayTextTong,
+      style: {
+        position: "relative",
+        display: "block",
+        marginBottom: String(i === serviceObj.process.contents.length - 1 ? 0 : methodsBlockBottom) + ea,
+        paddingBottom: String(processBlockPaddingBottom) + ea,
+        borderBottom: (i === serviceObj.process.contents.length - 1) ? "" : "1px solid " + colorChip.gray3,
+      },
+      children: [
+        {
+          style: {
+            display: desktop ? "inline-block" : "block",
+            position: "relative",
+            width: desktop ? String(methodsTitleWidth) + ea : "",
+            verticalAlign: "top",
+            marginBottom: desktop ? "" : String(1) + ea,
+          },
+          children: [
+            {
+              text: serviceObj.process.contents[i].name,
+              style: {
+                position: "relative",
+                left: String(desktop ? 1 : 0) + ea,
+                fontSize: String(wordSize - methodsTextVisual) + ea,
+                fontWeight: String(titleFontWeight),
+                lineHeight: String(1.5),
+                color: colorChip.black,
+              }
+            }
+          ]
+        },
+        {
+          class: [ processTongClassName ],
+          style: {
+            display: desktop ? "inline-block" : "block",
+            position: "relative",
+            width: desktop ? withOut(methodsTitleWidth, ea) : "",
+            verticalAlign: "top",
+            marginBottom: desktop ? "" : String(2.5) + ea,
+          },
+        },
+      ]
+    });
+    tempDom = tempChild.querySelector('.' + processTongClassName);
+    for (let j = 0; j < serviceObj.process.contents[i].contents.length; j++) {
+      createNode({
+        mother: tempDom,
+        text: serviceObj.process.contents[i].contents[j],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(wordSize - methodsTextVisual) + ea,
+          fontWeight: String(300),
+          color: colorChip.black,
+          marginRight: String(processBlockMarginLeft) + ea,
+          marginBottom: String(processThirdBlockBottom) + ea,
+          lineHeight: String(1.5),
+        },
+        bold: {
+          color: colorExtended.mainBlue,
+        }
+      });
+      if (j !== serviceObj.process.contents[i].contents.length - 1) {
+        createNode({
+          mother: tempDom,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(processArrowWidth) + ea,
+            height: String(processBlockHeight) + ea,
+            marginRight: String(processBlockMarginLeft) + ea,
+            verticalAlign: "top",
+            marginBottom: String(processThirdBlockBottom) + ea,
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnLongArrow(colorExtended.mainBlue),
+              style: {
+                position: "absolute",
+                width: String(processArrowWidth) + ea,
+                top: String(processArrowTop) + ea,
+                left: String(0),
+              }
+            }
+          ]
+        });
+      }
+    }
+  }
+
+}
+
+DesignerExplanationJs.prototype.insertWordBox = function (thisBase) {
+  const instance = this;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson } = GeneralJs;
+  const words = new WordsDictionary();
+  const matrix = words.getMatrix();
+  const subWords = words.getSubWording();
+  let top, bottom;
+  let whiteBlock;
+  let wordsTable;
+  let div_clone, div_clone2;
+  let style;
+  let blockHeight, blockMarginBottom;
+  let wordSpacing;
+  let box0Size, box1Size;
+  let box0Margin, box1Margin;
+  let marginBottom;
+  let wordSize;
+  let grayBar;
+  let wordBlock;
+  let num;
+  let grayHeight;
+  let grayTop;
+  let grayTextTop;
+  let grayTextLeft;
+  let grayTextSize;
+  let buttonTongHeight;
+  let buttonHeight;
+  let finalBottom;
+  let buttonTong;
+  let topMargin, leftMargin;
+  let titleFontWeight;
+
+  topMargin = 44;
+  leftMargin = 48;
+
+  titleFontWeight = 800;
+
+  top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2, 5 %%>;
+  bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2, 4 %%>;
+
+  blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
+  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+
+  box0Size = <%% 140, 140, 140, 120, 4.5 %%>;
+  box1Size = <%% 25, 25, 25, 25, 3 %%>;
+  box0Margin = <%% 55, 55, 55, 55, 3 %%>;
+  box1Margin = <%% 18, 18, 18, 18, 3 %%>;
+
+  marginBottom = <%% 3, 3, 3, 3, 1.8 %%>;
+  wordSize = <%% 15, 15, 15, 13, 2.8 %%>;
+
+  grayHeight = <%% 180, 180, 180, 180, 42 %%>;
+  grayTop = <%% topMargin + 2, topMargin + 2, topMargin + 2, topMargin + 2, 5 %%>;
+  grayTextTop = <%% 22, 22, 20, 20, 3 %%>;
+  grayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
+  grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
+
+  buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
+  buttonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
+
+  finalBottom = <%% -3, -4, -7, -9, 0 %%>;
+
+  whiteBlock = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    borderRadius: String(desktop ? 8 : 3) + "px",
+    width: String(100) + '%',
+    background: GeneralJs.colorExtended.white,
+    boxShadow: "0px 5px 18px -9px " + GeneralJs.colorExtended.darkDarkShadow,
+    marginBottom: String(blockMarginBottom) + ea,
+    paddingTop: String(top) + ea,
+    paddingBottom: String(bottom) + ea,
+  };
+  for (let i in style) {
+    whiteBlock.style[i] = style[i];
+  }
+  thisBase.appendChild(whiteBlock);
+
+  wordsTable = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    marginLeft: String(desktop ? leftMargin : 0) + ea,
+    width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
+  };
+  for (let i in style) {
+    wordsTable.style[i] = style[i];
+  }
+
+  num = 0;
+  for (let arr of matrix) {
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "relative",
+      marginBottom: String(marginBottom) + ea,
+    };
+    for (let j in style) {
+      div_clone.style[j] = style[j];
+    }
+    if (desktop) {
+      if (num !== matrix.length - 1) {
+        if (matrix[num + 1][0] !== '' && matrix[num][0] === '') {
+          div_clone.style.marginBottom = String(marginBottom * 6) + ea;
+        }
+      }
+    }
+
+    for (let z = 0; z < arr.length; z++) {
+      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        display: "inline-block",
+        fontSize: String(wordSize) + ea,
+        wordSpacing: String(wordSpacing) + "px",
+        position: "relative",
+        top: String(0) + ea,
+        verticalAlign: "top",
+        lineHeight: String(1.6),
+      };
+      if (z === 0) {
+        style.width = String(box0Size) + ea;
+        style.marginRight = String(box0Margin) + ea;
+        style.fontWeight = String(titleFontWeight);
+        style.textAlign = "left";
+      } else if (z === 1) {
+        style.width = String(box1Size) + ea;
+        style.marginRight = String(box1Margin) + ea;
+        style.fontWeight = String(titleFontWeight);
+        style.color = GeneralJs.colorExtended.mainBlue;
+        style.textAlign = "right";
+      } else {
+        style.width = "calc(100% - " + String(box0Size + box1Size + box0Margin + box1Margin) + ea + ")";
+        style.fontWeight = String(300);
+        style.textAlign = "left";
+      }
+      if (mobile) {
+        style = {
+          display: "inline-block",
+          fontSize: String(wordSize) + ea,
+          wordSpacing: String(wordSpacing) + "px",
+          position: "relative",
+          top: String(0) + ea,
+          verticalAlign: "top",
+          lineHeight: String(1.6),
+          left: String((this.subBoxMargin.left + 0.2)) + ea,
+          width: GeneralJs.withOut((this.subBoxMargin.left + 0.2) * 2, ea),
+        };
+        if (z === 0) {
+          continue;
+        }
+        if (z === 1) {
+          style.width = String(box0Size) + ea;
+          style.color = GeneralJs.colorExtended.mainBlue;
+        }
+        if (z === 2) {
+          style.width = GeneralJs.withOut(((this.subBoxMargin.left + 0.2) * 2) + box0Size, ea);
+          style.left = String(box0Size) + ea;
+        }
+      }
+      for (let j in style) {
+        div_clone2.style[j] = style[j];
+      }
+      if (/\<b\%/gi.test(arr[z])) {
+        arr[z] = arr[z].replace(/\<b\%/gi, "<b style=\"color:" + GeneralJs.colorExtended.mainBlue + "\">");
+        arr[z] = arr[z].replace(/\%b\>/gi, "</b>");
+      }
+      div_clone2.insertAdjacentHTML("beforeend", arr[z]);
+      div_clone.appendChild(div_clone2);
+    }
+
+    wordsTable.appendChild(div_clone);
+
+    num++;
+  }
+
+  whiteBlock.appendChild(wordsTable);
+
+  if (desktop) {
+    grayBar = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "relative",
+      borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
+      left: String(desktop ? leftMargin : 0) + ea,
+      width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + ea,
+      marginTop: String(desktop ? top : 0) + ea,
+      marginBottom: String(desktop ? top : 0) + ea,
+    };
+    for (let i in style) {
+      grayBar.style[i] = style[i];
+    }
+    whiteBlock.appendChild(grayBar);
+
+    for (let z = 0; z < subWords.length; z++) {
+      wordBlock = createNode({
+        mother: whiteBlock,
+        text: subWords[z],
+        style: {
+          position: "relative",
+          left: String(desktop ? leftMargin : 0) + ea,
+          width: mobile ? String(100) + '%' : "calc(100% - " + String(leftMargin * 2) + ea + ")",
+          fontSize: String(wordSize) + ea,
+          fontWeight: String(400),
+          wordSpacing: String(wordSpacing) + "px",
+          verticalAlign: "top",
+          lineHeight: String(1.6),
+          marginBottom: String(marginBottom * 1.5) + ea,
+          color: colorChip.black,
+        },
+        bold: {
+          fontWeight: String(titleFontWeight),
+          color: colorExtended.mainBlue,
+        },
+        under: {
+          "text-decoration": "underline",
+          color: colorExtended.mainBlue,
+        },
+      });
+    }
+
+  }
+}
+
+DesignerExplanationJs.prototype.insertFourthBox = async function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  try {
+    let minusLeft;
+    let fourthBase;
+    let colorTop;
+    let basePaddingTop;
+    let basePaddingBottom;
+    let abc, designers;
+    let thisBase;
+    let designer;
+    let checkCircleWidth;
+    let thisCardBase;
+    let cardWidth, cardHeight, cardBetween;
+    let buttonCardWidth;
+    let shadowForm;
+    let cardLength;
+    let keywords;
+    let representative;
+    let buttonArrowWdith;
+    let designerProfileBase;
+    let profileHeight;
+    let designerCardGroupBetween;
+    let designerCardGroupBetweenFirst;
+    let nameTitleSize;
+    let selectionBase;
+    let buttonBoxMarginTop;
+    let buttonWidth;
+    let buttonHeight;
+    let buttonTextTop;
+    let buttonSize;
+    let buttonWeight;
+
+    minusLeft = window.innerWidth - standardWidth + 1;
+
+    colorTop = <%% 200, 200, 200, 200, 200 %%>;
+    basePaddingTop = <%% 160, 160, 160, 140, 21 %%>;
+    basePaddingBottom = <%% 200, 200, 190, 170, 24 %%>;
+
+    checkCircleWidth = 13;
+
+    cardLength = 5;
+
+    cardHeight = 445;
+    profileHeight = 250;
+    cardBetween = 8;
+    buttonCardWidth = 50;
+    cardWidth = "calc(" + withOut((cardBetween * cardLength) + buttonCardWidth, ea) + " / " + String(cardLength) + ")";
+
+    buttonArrowWdith = 14;
+
+    designerCardGroupBetween = 70;
+    designerCardGroupBetweenFirst = 50;
+
+    nameTitleSize = 25;
+
+    buttonBoxMarginTop = <%% 54, 48, 36, 28, 14 %%>;
+    buttonWidth = <%% 110, 90, 80, 80, 15 %%>;
+    buttonHeight = <%% 44, 42, 40, 40, 9 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+    buttonSize = <%% 20, 17, 16, 15, 3.5 %%>;
+    buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+    shadowForm = "0px 8px 20px -9px " + colorExtended.darkDarkShadow;
+
+    abc = this.abc;
+    designers = this.designers;
+
+    fourthBase = createNode({
+      mother: baseTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        flexDirection: "column",
+        paddingTop: String(basePaddingTop) + ea,
+        paddingBottom: String(basePaddingBottom) + ea,
+        justifyContent: "center",
+        alignItems: "start",
+        flexDirection: "column",
+      },
+      child: {
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(-1 * minusLeft) + ea,
+          background: colorExtended.gradientBlue4,
+          width: withOut(-1 * (minusLeft * 2), ea),
+          height: withOut(0, ea),
+        }
+      }
+    });
+
+    this.insertServiceBox(fourthBase);
+    this.insertWordBox(fourthBase);
+
+    // button
+    createNode({
+      mother: fourthBase,
+      event: {
+        selectstart: (e) => { e.preventDefault() },
+        click: (e) => {
+          GeneralJs.scrollTo(window, 0);
+        }
+      },
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        width: withOut(0, ea),
+        marginTop: String(28) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",    
+            width: String(buttonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            background: colorChip.black,
+            borderRadius: String(buttonHeight) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          },
+          child: {
+            text: "TOP",
+            event: {
+              selectstart: (e) => { e.preventDefault() },
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(buttonTextTop) + ea,
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorExtended.white,
+            }
+          }
+        }
+      ]
+    });
+
   } catch (e) {
     console.log(e);
   }
@@ -1245,6 +2833,7 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
           await instance.insertInitBox();
           await instance.insertSecondBox();
           await instance.insertThirdBox();
+          await instance.insertFourthBox();
           instance.resizeEvent();
           setInterval(() => {
             homeliaisonAnalytics({

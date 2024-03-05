@@ -3569,7 +3569,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
 
     buttonBoxMarginTop = <%% 54, 48, 36, 28, 14 %%>;
     buttonWidth = <%% 110, 90, 80, 80, 15 %%>;
-    buttonHeight = <%% 50, 42, 40, 40, 9 %%>;
+    buttonHeight = <%% 44, 42, 40, 40, 9 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     buttonSize = <%% 20, 17, 16, 15, 3.5 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -4352,6 +4352,7 @@ AspirantExplanationJs.prototype.insertSixthBox = async function () {
         position: "relative",
         justifyContent: "center",
         alignItems: "center",
+        width: withOut(0, ea),
         marginTop: String(buttonBoxMarginTop) + ea,
       },
       children: [
