@@ -97,8 +97,8 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
     titleLineHeight = <%% 1.11, 1.11, 1.11, 1.11, 1.07 %%>;
 
-    mainImageTop = 43;
-    mainImageHeight = 386;
+    mainImageTop = 42;
+    mainImageHeight = 390;
 
     descriptionSize = 15;
     descriptionLineHeight = 1.8;
@@ -602,7 +602,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     cardLength = 5;
 
-    cardHeight = 450;
+    cardHeight = 440;
     profileHeight = 250;
     cardBetween = 8;
     buttonCardWidth = 50;
@@ -610,7 +610,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     buttonArrowWdith = 14;
 
-    designerCardGroupBetween = 64;
+    designerCardGroupBetween = 75;
     designerCardGroupBetweenFirst = 50;
 
     shadowForm = "0px 8px 20px -9px " + colorExtended.darkDarkShadow;
@@ -940,6 +940,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       });
 
+      // detail arrow
       createNode({
         mother: designerProfileBase,
         mode: "svg",
@@ -952,7 +953,6 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           right: String(20) + ea,
         }
       })
-
 
 
       // ----------------------------------------------------------------------------------------------------------------
@@ -1125,7 +1125,10 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
-    let designers;
+    let proid, cliid;
+    let projects, project;
+    let clients, client;
+    let designers, designer;
     let alphabet, temp0, temp1;
     let profileList;
     let profileListFiltered;
@@ -1133,6 +1136,10 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     let desidArr;
     let keywordsList, photosList;
     let keywordsListFiltered, photosListFiltered;
+    let whereQuery;
+    let belowTarget, removeTargets;
+    let proposalHistory;
+    let isOffice;
 
     temp0 = 'A'.charCodeAt();
     temp1 = 'Z'.charCodeAt();
@@ -1152,10 +1159,33 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
       }
     }
 
-    designers = await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": "협약 완료" } }, BACKHOST + "/getDesigners", { equal: true });
+    if (getObj.proid !== undefined) {
+      proid = getObj.proid;
+    } else {
+      window.alert("잘못된 접근입니다!");
+      throw new Error("invaild get object");
+    }
+
+    projects = await ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects", { equal: true });
+    projects.sort((a, b) => { return b.proposal.date.valueOf() - a.proposal.date.valueOf(); });
+    project = projects[0];
+    clients = await ajaxJson({ whereQuery: { cliid: project.cliid } }, SECONDHOST + "/getClients", { equal: true });
+    client = clients[0];
+
+    if (projects.length === 0) {
+      window.alert("아직 제안서가 만들어지지 않았습니다! 잠시만 기다려주세요 :)");
+      window.location.href = this.frontPage;
+    }
+
+    this.project = project;
+    this.client = client;
+
+    proposalHistory = await ajaxJson({ proid: project.proid }, BACKHOST + "/proposalLog", { equal: true });
+    desidArr = projects.map((p) => { return p.proposal.detail.map((p) => { return p.desid }) }).flat();
+
+    designers = await ajaxJson({ noFlat: true, whereQuery: { "$or": desidArr.map((desid) => { return { desid } }) } }, BACKHOST + "/getDesigners", { equal: true });
     profileList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerProfileList", { equal: true });
     blankPhoto = DesignerExplanationJs.binaryPath + "/blank.png";
-    desidArr = objectDeepCopy(designers).map((d) => { return d.desid });
 
     keywordsList = (await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativeKeywords", { equal: true })).data;
     photosList = (await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativePhotos", { equal: true })).data;
@@ -1185,6 +1215,14 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
       }
 
     }
+
+    // TEST Center ==================================================================================================
+    if (proid === "p1801_aa01s") {
+      for (let d of designers) {
+        d.end = false;
+      }
+    }
+    // TEST Center ==================================================================================================
     this.designers = designers;
 
     await this.mother.ghostClientLaunching({
@@ -1231,9 +1269,9 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
 
     loading.parentNode.removeChild(loading);
 
-    // GeneralJs.setQueue(() => {
-    //   window.scrollTo(0, 0);
-    // }, 400);
+    GeneralJs.setQueue(() => {
+      window.scrollTo(0, 0);
+    }, 400);
 
   } catch (err) {
     console.log(err);
