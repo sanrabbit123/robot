@@ -2264,9 +2264,9 @@ StaticRouter.prototype.rou_post_textToVoice = function () {
       if (typeof req.body.text !== "string") {
         throw new Error("invalid post");
       }
-      // audio.textToVoice(req.body.text).catch((err) => {
-      //   console.log(err);
-      // })
+      audio.textToVoice(req.body.text).catch((err) => {
+        console.log(err);
+      })
       res.send(JSON.stringify({ message: "will do" }));
 
     } catch (e) {
