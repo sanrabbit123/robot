@@ -3286,7 +3286,7 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
 
         rows = await back.mongoRead(collection, { desid: desid }, { selfMongo });
         if (rows.length === 0) {
-          thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo });
+          thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo, toNormal: true });
           introduction = thisDesigner.setting.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.description.join("\n");
           introduction = introduction.trim();
           if (/NULL/g.test(introduction)) {
@@ -3366,10 +3366,7 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
         rows = await back.mongoRead(collection, { desid: desid }, { selfMongo });
         if (rows.length === 0) {
 
-          thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo });
-
-          console.log(thisDesigner.setting.front.introduction);
-
+          thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo, toNormal: true });
           introduction = thisDesigner.setting.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.description.join("\n");
           introduction = introduction.trim();
 
@@ -3410,7 +3407,7 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
             res.send(JSON.stringify({ data: targetData }));
           } else {
 
-            thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo });
+            thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo, toNormal: true });
             introduction = thisDesigner.setting.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.description.join("\n");
             introduction = introduction.trim();
 
