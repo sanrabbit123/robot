@@ -3287,7 +3287,7 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
         rows = await back.mongoRead(collection, { desid: desid }, { selfMongo });
         if (rows.length === 0) {
           thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo, toNormal: true });
-          introduction = thisDesigner.setting.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.description.join("\n");
+          introduction = thisDesigner.setting.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.setting.description.join("\n");
           introduction = introduction.trim();
           if (/NULL/g.test(introduction)) {
             introduction = "";
@@ -3367,7 +3367,7 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
         if (rows.length === 0) {
 
           thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo, toNormal: true });
-          introduction = thisDesigner.setting.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.description.join("\n");
+          introduction = thisDesigner.setting.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.setting.description.join("\n");
           introduction = introduction.trim();
 
           if (/NULL/g.test(introduction)) {
@@ -3408,7 +3408,7 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
           } else {
 
             thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo, toNormal: true });
-            introduction = thisDesigner.setting.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.description.join("\n");
+            introduction = thisDesigner.setting.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.setting.description.join("\n");
             introduction = introduction.trim();
 
             if (/NULL/g.test(introduction)) {
