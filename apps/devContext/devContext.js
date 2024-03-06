@@ -7005,9 +7005,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "안은빈",
-    //     designer: "김보하",
-    //     link: "https://drive.google.com/drive/folders/1VtKertkUXxowOWNZWomePEAXSuVFH8rK",
+    //     client: "곽예슬",
+    //     designer: "김도희",
+    //     link: "https://drive.google.com/drive/folders/1vx-fTlYOm3uhRMDccFFl3pbvXPb0yqR-",
     //     pay: true
     //   },
     // ]);
@@ -7073,7 +7073,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "김윤지", "2024-01-12" ],
+    //   [ "김효진", "2024-03-05" ],
     // ]);
 
 
