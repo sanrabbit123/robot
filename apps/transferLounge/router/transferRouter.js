@@ -3367,6 +3367,7 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
         if (rows.length === 0) {
 
           thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo });
+          console.log(thisDesigner, desid);
           introduction = thisDesigner.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.description.join("\n");
           introduction = introduction.trim();
 
