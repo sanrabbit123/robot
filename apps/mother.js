@@ -3155,6 +3155,7 @@ Mother.prototype.linkToString = function (link) {
 
 Mother.prototype.stringToLink = function (string) {
   if (typeof string !== "string") {
+    console.log(string);
     throw new Error("invalid input");
   }
   const nameToToken = (name) => { return `_____${name}_____` } 

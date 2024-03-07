@@ -3256,6 +3256,7 @@ TransferRouter.prototype.rou_post_designerRepresentativePaper = function () {
           });
 
           thisPosition = [];
+          console.log(targetData.position)
           for (let rawName of targetData.position) {
             tempName = stringToLink(rawName).split("/");
             if (tempName.length > 4 && (new RegExp(indexToken, "gi")).test(tempName[4])) {
