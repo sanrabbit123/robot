@@ -4341,7 +4341,7 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     proposalHistory = await ajaxJson({ proid: project.proid }, BACKHOST + "/proposalLog", { equal: true });
     desidArr = projects.map((p) => { return p.proposal.detail.map((p) => { return p.desid }) }).flat();
 
-    designers = await ajaxJson({ noFlat: true, whereQuery: { "$or": desidArr.map((desid) => { return { desid } }) } }, BACKHOST + "/getDesigners", { equal: true });
+    designers = await ajaxJson({ proid: project.proid, whereQuery: { "$or": desidArr.map((desid) => { return { desid } }) } }, BACKHOST + "/designerProposal_getDesigners", { equal: true });
     profileList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerProfileList", { equal: true });
     blankPhoto = DesignerExplanationJs.binaryPath + "/blank.png";
     this.blankPhoto = blankPhoto;
