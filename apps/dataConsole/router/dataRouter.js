@@ -8605,14 +8605,17 @@ DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
         throw new Error("invaild post");
       }
       const { whereQuery, proid } = equalJson(req.body);
+      const thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
       const designers = await back.getDesignersByQuery(whereQuery, { withTools: true, selfMongo: instance.mongo });
       let designersNormal;
       let designerNormal;
       let realtime;
+      let thisDesigner;
       designersNormal = [];
-      for (let designer of designers) {
-        realtime = await work.realtimeDesignerMatch(designer.desid, proid, { selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal });
-        designerNormal = designer.toNormal();
+      for (let desid of thisProject.proposal.detail) {
+        thisDesigner = designers.find((d) => { return d.desid === desid });
+        realtime = await work.realtimeDesignerMatch(desid, proid, { selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal });
+        designerNormal = thisDesigner.toNormal();
         designerNormal.end = !realtime.result;
         designersNormal.push(designerNormal);
       }
