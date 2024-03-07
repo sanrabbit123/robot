@@ -20,6 +20,9 @@ const SecondGhost = function (mother = null, back = null, address = null) {
   this.slack_fairyToken = "xoxp-717757271335-6253548571781-6337284288178-c87ebd41bc1e5f620d9619ca53644de8";
   this.slack_fairyId = "U067FG4GTNZ";
   this.slack_fairyAppId = "A04GQKWAQF6";
+  this.slack_uragenToken = "xoxp-717757271335-5166005860961-6752069028278-3af6086b14dde6cb44fadb21201440be";
+  this.slack_uragenId = "U054W05RAU9";
+  this.slack_uragenAppId = "A06NPAEMLQZ";
   this.slack_fairy = new WebClient(this.slack_fairyToken);
   this.slack_info = {
     endPoint: "https://slack.com/api",
@@ -104,7 +107,7 @@ SecondGhost.prototype.ghostConnect = async function () {
   const instance = this;
   const back = this.back;
   const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, equalJson, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
-  const { slack_userToken, slack_info, slack_fairy, slack_fairyToken, slack_fairyId, slack_fairyAppId, slack_gemini, slack_geminiToken, slack_geminiId, slack_geminiAppId, telegram } = this;
+  const { slack_userToken, slack_info, slack_fairy, slack_fairyToken, slack_fairyId, slack_fairyAppId, slack_gemini, slack_geminiToken, slack_geminiId, slack_geminiAppId, telegram, slack_uragenToken, slack_uragenId, slack_uragenAppId } = this;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -200,7 +203,7 @@ SecondGhost.prototype.ghostConnect = async function () {
 
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
-    const router = new SecondRouter(this.slack_bot, this.slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairy, slack_fairyToken, slack_fairyId, slack_fairyAppId, slack_gemini, slack_geminiToken, slack_geminiId, slack_geminiAppId, telegram, kakaoInstance, humanInstance);
+    const router = new SecondRouter(this.slack_bot, this.slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairy, slack_fairyToken, slack_fairyId, slack_fairyAppId, slack_uragenToken, slack_uragenId, slack_uragenAppId, slack_gemini, slack_geminiToken, slack_geminiId, slack_geminiAppId, telegram, kakaoInstance, humanInstance);
     await router.setMembers();
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);

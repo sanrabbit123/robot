@@ -1109,19 +1109,19 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
               alignItems: "center",
             }
           },
-          // {
-          //   style: {
-          //     position: "absolute",
-          //     top: String(6) + ea,
-          //     left: String(6) + ea,
-          //     width: withOut(6 * 2, ea),
-          //     height: withOut(6 * 2, ea),
-          //     borderRadius: String(5) + "px",
-          //     border: "1px solid " + colorExtended.blue,
-          //     "mix-blend-mode": "multiply",
-          //     "box-sizing": "border-box",
-          //   }
-          // }
+          {
+            style: {
+              position: "absolute",
+              top: String(6) + ea,
+              left: String(6) + ea,
+              width: withOut(6 * 2, ea),
+              height: withOut(6 * 2, ea),
+              borderRadius: String(5) + "px",
+              border: "1px solid " + colorExtended.blue,
+              "mix-blend-mode": "multiply",
+              "box-sizing": "border-box",
+            }
+          }
         ]
       }).children[1];
       createNode({
@@ -1360,96 +1360,6 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
       });
 
     }
-    
-    selectionBase = createNode({
-      mother: thirdBase,
-      style: {
-        display: "flex",
-        position: "relative",
-        justifyContent: "center",
-        alignItems: "center",
-        width: withOut(0, ea),
-        height: String(96) + ea,
-        flexDirection: "row",
-        marginTop: String(96) + ea,
-      },
-      children: [
-        {
-          style: {
-            position: "absolute",
-            width: withOut(0, ea),
-            height: withOut(0, ea),
-            borderRadius: String(10) + "px",
-            boxShadow: "0px 3px 12px -9px " + colorExtended.darkDarkShadow,
-            overflow: "hidden",
-          },
-          child: {
-            style: {
-              position: "absolute",
-              width: String(standardWidth * 1.2) + ea,
-              height: String(standardWidth * 1.2) + ea,
-              background: colorExtended.gradientBlue3,
-              opacity: String(0.7),
-              animation: "rotateProgress 5s linear infinite",
-              transformOrigin: "50% 50%",
-              left: String(-1 * standardWidth * 0.1) + ea,
-              top: String(-1 * standardWidth * 0.6) + ea,
-            }
-          }
-        }
-      ]
-    });
-    createNode({
-      mother: selectionBase,
-      text: "해당 디자이너를 선택하고 현장 미팅을 예약합니다.",
-      style: {
-        display: "inline-block",
-        position: "relative",
-        fontSize: String(18) + ea,
-        fontWeight: String(800),
-        color: colorExtended.white,
-      }
-    });
-    createNode({
-      mother: selectionBase,
-      mode: "svg",
-      source: svgMaker.horizontalArrow(832, 12, colorExtended.white),
-      style: {
-        display: "inline-block",
-        position: "relative",
-        width: String(832) + ea,
-        marginLeft: String(16) + ea,
-        marginRight: String(16) + ea,
-        opacity: String(0.6),
-      }
-    })
-    createNode({
-      mother: selectionBase,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: String(124) + ea,
-        height: String(38) + ea,
-        borderRadius: String(5) + "px",
-        background: colorExtended.white,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        opacity: String(0.9),
-        boxShadow: "0px 3px 14px -9px " + colorExtended.darkDarkShadow,
-      },
-      child: {
-        text: "디자이너 선택",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(-1) + ea,
-          fontSize: String(16) + ea,
-          fontWeight: String(800),
-          color: colorExtended.blueDark,
-        }
-      }
-    });
 
   } catch (e) {
     console.log(e);
@@ -1737,6 +1647,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           }
         }
       });
+
       // detail arrow
       createNode({
         mother: designerProfileBase,
@@ -1749,8 +1660,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           bottom: String(21) + ea,
           right: String(20) + ea,
         }
-      })
-
+      });
       createNode({
         mother: thisCardBase,
         style: {
@@ -1768,20 +1678,127 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           zIndex: String(1),
         }
       });
-
       createNode({
         mother: thisCardBase,
         style: {
           display: "flex",
           position: "relative",
           width: withOut(0, ea),
-          height: String(600) + ea,
-          background: colorExtended.blueDark,
+          background: colorExtended.blueBlack,
           borderRadius: String(8) + "px",
-        }
-      })
+          borderTopLeftRadius: String(0) + "px",
+          borderTopRightRadius: String(0) + "px",
+          justifyContent: "center",
+          alignItems: "center",
+          paddingTop: String(18) + ea,
+          paddingBottom: String(18) + ea,
+        },
+        children: [
+          {
+            mode: "img",
+            attribute: {
+              src: DesignerExplanationJs.binaryPath + "/sample.svg",
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: withOut(16 * 2, ea),
+            }
+          },
 
+        ],
+      });
     }
+
+    selectionBase = createNode({
+      mother: thirdBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        width: withOut(0, ea),
+        height: String(96) + ea,
+        flexDirection: "row",
+        marginTop: String(-1 * 96) + ea,
+      },
+      children: [
+        {
+          style: {
+            position: "absolute",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            borderRadius: String(10) + "px",
+            boxShadow: "0px 3px 12px -9px " + colorExtended.darkDarkShadow,
+            overflow: "hidden",
+          },
+          child: {
+            style: {
+              position: "absolute",
+              width: String(standardWidth * 1.2) + ea,
+              height: String(standardWidth * 1.2) + ea,
+              background: colorExtended.gradientBlue,
+              opacity: String(1),
+              animation: "rotateProgress 5s linear infinite",
+              transformOrigin: "50% 50%",
+              left: String(-1 * standardWidth * 0.1) + ea,
+              top: String(-1 * standardWidth * 0.6) + ea,
+            }
+          }
+        }
+      ]
+    });
+    createNode({
+      mother: selectionBase,
+      text: "해당 디자이너를 선택하고 현장 미팅을 예약합니다.",
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(18) + ea,
+        fontWeight: String(800),
+        color: colorExtended.white,
+      }
+    });
+    createNode({
+      mother: selectionBase,
+      mode: "svg",
+      source: svgMaker.horizontalArrow(832, 12, colorExtended.white),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(832) + ea,
+        marginLeft: String(16) + ea,
+        marginRight: String(16) + ea,
+        opacity: String(0.6),
+      }
+    })
+    createNode({
+      mother: selectionBase,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(124) + ea,
+        height: String(38) + ea,
+        borderRadius: String(5) + "px",
+        background: colorExtended.white,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        opacity: String(0.9),
+        boxShadow: "0px 3px 14px -9px " + colorExtended.darkDarkShadow,
+      },
+      child: {
+        text: "디자이너 선택",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(-1) + ea,
+          fontSize: String(16) + ea,
+          fontWeight: String(800),
+          color: colorExtended.blueDark,
+        }
+      }
+    });
 
   } catch (e) {
     console.log(e);

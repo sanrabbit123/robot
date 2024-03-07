@@ -1,4 +1,4 @@
-const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairy, slack_fairyToken, slack_fairyId, slack_fairyAppId, slack_gemini, slack_geminiToken, slack_geminiId, slack_geminiAppId, telegram, kakao, human) {
+const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairy, slack_fairyToken, slack_fairyId, slack_fairyAppId, slack_uragenToken, slack_uragenId, slack_uragenAppId, slack_gemini, slack_geminiToken, slack_geminiId, slack_geminiAppId, telegram, kakao, human) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
@@ -29,6 +29,9 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
   this.slack_geminiToken = slack_geminiToken;
   this.slack_geminiId = slack_geminiId;
   this.slack_geminiAppId = slack_geminiAppId;
+  this.slack_uragenToken = slack_uragenToken;
+  this.slack_uragenId = slack_uragenId;
+  this.slack_uragenAppId = slack_uragenAppId;
 
   this.kakao = kakao;
   this.human = human;
@@ -4399,6 +4402,49 @@ SecondRouter.prototype.rou_post_fairySlack = function () {
     } catch (e) {
       console.log(e);
       logger.error("Second Ghost 서버 문제 생김 (rou_post_fairySlack): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+SecondRouter.prototype.rou_post_uragenSlack = function () {
+  const instance = this;
+  const { requestSystem, stringToLink } = this.mother;
+  const { slack_uragenToken, slack_info } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/uragenSlack" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.channel === undefined || req.body.text === undefined) {
+        throw new Error("invalid post");
+      }
+      const { channel } = req.body;
+      const url = slack_info.endPoint + "/chat.postMessage";
+      let text;
+
+      text = req.body.text;
+      text = stringToLink(text);
+
+      await requestSystem(url, { channel, text }, {
+        headers: {
+          "Authorization": "Bearer " + slack_uragenToken,
+          "Content-Type": "application/x-www-form-urlencoded",
+        }
+      });
+
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      console.log(e);
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_uragenSlack): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
