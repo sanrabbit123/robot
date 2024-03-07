@@ -3328,7 +3328,7 @@ Mother.prototype.s3FileUpload = function (fromArr, toArr) {
   const fs = require(`fs`);
   const shell = require(`shelljs`);
 
-  let target = process.cwd() + "/apps/mother.py";
+  let target = process.cwd() + "/apps/bridge.py";
   let targetLink, targetArr;
 
   //shellLink and make target path
@@ -3389,7 +3389,7 @@ Mother.prototype.s3FileList = function (query = "all") {
   const fs = require(`fs`);
   const shell = require(`shelljs`);
 
-  let target = process.cwd() + "/apps/mother.py";
+  let target = process.cwd() + "/apps/bridge.py";
   let targetLink, targetArr;
 
   //shellLink and make target path
@@ -3436,7 +3436,7 @@ Mother.prototype.s3FileDelete = function (key) {
   const fs = require(`fs`);
   const shell = require(`shelljs`);
 
-  let target = process.cwd() + "/apps/mother.py";
+  let target = process.cwd() + "/apps/bridge.py";
   let targetLink, targetArr;
 
   //shellLink and make target path

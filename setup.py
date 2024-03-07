@@ -1,17 +1,22 @@
 import subprocess
 import time
 import sys
+import os
+import shutil
 from pathlib import Path
 from os import path as osPath
 
 class RobotInstall:
     def __init__(self):
         self.install = [
-            [ "notion" ],
+            [ "quart" ],
+            [ "quart-uploads" ],
+            [ "motor" ],
             [ "pymongo" ],
             [ "argparse" ],
             [ "cryptography" ],
             [ "requests" ],
+            [ "requests-toolbelt" ],
             [ "boto3" ],
             [ "bs4" ],
             [ "html5lib" ],
@@ -19,6 +24,8 @@ class RobotInstall:
             [ "wheel" ],
             [ "apscheduler" ],
             [ "aiohttp" ],
+            [ "aiofiles" ],
+            [ "aiomysql" ],
             [ "cloudconvert" ],
             [ "psutil" ],
             [ "getmac" ],
@@ -34,6 +41,11 @@ class RobotInstall:
             [ "colour-science" ],
             [ "opencv-python" ],
             [ "opencv-contrib-python" ],
+            [ "hypercorn" ],
+            [ "google.ads" ],
+            [ "binascii" ],
+            [ "google-generativeai" ],
+            [ "openai" ],
         ]
 
         self.upgrade = [
@@ -41,6 +53,8 @@ class RobotInstall:
             [ "google-api-python-client", "google-auth-httplib2", "google-auth-oauthlib" ],
             [ "oauth2client" ],
             [ "google-analytics-data" ],
+            [ "google-generativeai" ],
+            [ "openai" ],
         ]
 
         self.homeDir = str(Path.home())
@@ -49,16 +63,13 @@ class RobotInstall:
         tempDirName = "pythonModuleInstall" + str(now.tm_year) + str(now.tm_mon) + str(now.tm_mday) + str(now.tm_hour) + str(now.tm_min) + str(now.tm_sec)
         self.tempDir = self.homeDir + "/" + tempDirName
 
-        thisFile = osPath.abspath(__file__)
-        thisFileArr = thisFile.split('/')
-        thisFileArr.pop()
+        thisFileArr = os.getcwd().split('/')
         self.robotPath = '/'.join(thisFileArr)
         self.moduleFolder = "python_modules"
         self.modulePath = self.robotPath + "/" + self.moduleFolder
-        self.pythonCloudPath = self.robotPath + "/apps/pythonCloud/python/tool"
 
     def setTempDir(self):
-        subprocess.run([ "mkdir", self.tempDir ], shell=False, encoding='utf8')
+        os.makedirs(self.tempDir)
 
     def moduleInstall(self, local=True):
         target = "--target=" + self.tempDir
@@ -88,8 +99,8 @@ class RobotInstall:
 
     def moveModules(self):
         bridge = self.homeDir + "/" + self.moduleFolder
-        subprocess.run([ "mv", self.tempDir, bridge ], shell=False, encoding='utf8')
-        subprocess.run([ "mv", bridge, self.modulePath ], shell=False, encoding='utf8')
+        os.rename(self.tempDir, bridge)
+        shutil.move(bridge, self.robotPath)
 
     def ignoreDirs(self):
         targetList = [
@@ -97,9 +108,6 @@ class RobotInstall:
         ]
         for dir in targetList:
             subprocess.run([ "mkdir", (self.robotPath + dir) ], shell=False, encoding='utf8')
-
-    def returnPath(self):
-        return { "robotPath": self.robotPath, "modulePath": self.modulePath, "pythonCloudPath": self.pythonCloudPath }
 
     def installServer(self):
         self.setTempDir()

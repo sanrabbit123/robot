@@ -970,7 +970,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           }
         },
       ]
-    })
+    });
 
     for (let i = 0; i < designers.length; i++) {
 
@@ -1397,6 +1397,16 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     let nameTitleSize;
     let selectionBase;
     let columnBetween;
+    let factorTextTop;
+    let factorPadding;
+    let factorHeight;
+    let factorSize;
+    let factorTitleWeight;
+    let factorValueWeight;
+    let factorMaker;
+    let barMaker;
+    let barPadding;
+    let selectionMaker;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -1423,10 +1433,127 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
 
     nameTitleSize = 25;
 
+    factorTextTop = isMac() ? -1 : 1;
+    factorPadding = 22;
+    factorHeight = 45;
+    factorSize = 18;
+    factorTitleWeight = 400;
+    factorValueWeight = 300;
+
+    barPadding = 18;
+
     shadowForm = "0px 8px 20px -9px " + colorExtended.darkDarkShadow;
 
     abc = this.abc;
     designers = this.designers;
+
+    factorMaker = (title, value) => {
+      return {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(factorPadding * 2, ea),
+          height: String(factorHeight) + ea,
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "center",
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(factorSize) + ea,
+              fontWeight: String(factorTitleWeight),
+              color: colorExtended.mainBlue,
+              top: String(factorTextTop) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              height: withOut(0, ea),
+              top: String(0),
+              right: String(0),
+              justifyContent: "end",
+              alignItems: "center",
+            },
+            child: {
+              text: value,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(factorSize) + ea,
+                fontWeight: String(factorValueWeight),
+                color: colorExtended.black,
+                top: String(factorTextTop) + ea,
+              }
+            },
+          }
+        ]
+      }
+    }
+    selectionMaker = (title, value) => {
+      return {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(factorPadding * 2, ea),
+          height: String(factorHeight) + ea,
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "center",
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(factorSize) + ea,
+              fontWeight: String(factorTitleWeight),
+              color: colorExtended.mainBlue,
+              top: String(factorTextTop) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              height: withOut(0, ea),
+              top: String(0),
+              right: String(0),
+              justifyContent: "end",
+              alignItems: "center",
+            },
+            child: {
+              text: value,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(factorSize) + ea,
+                fontWeight: String(factorValueWeight),
+                color: colorExtended.black,
+                top: String(factorTextTop) + ea,
+              }
+            },
+          }
+        ]
+      }
+    }
+    barMaker = () => {
+      return {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(barPadding * 2, ea),
+          height: String(0) + ea,
+          borderBottom: "1px dashed " + colorExtended.blueLight,
+        },
+      }
+    }
 
     thirdBase = createNode({
       mother: baseTong,
@@ -1481,6 +1608,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           position: "relative",
           width: String(cardWidth * 2) + ea,
           marginRight: String(columnBetween) + ea,
+          verticalAlign: "top",
         }
       });
 
@@ -1525,6 +1653,19 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               alignItems: "center",
             }
           },
+          {
+            style: {
+              position: "absolute",
+              top: String(6) + ea,
+              left: String(6) + ea,
+              width: withOut(6 * 2, ea),
+              height: withOut(6 * 2, ea),
+              borderRadius: String(5) + "px",
+              border: "1px solid " + colorExtended.blue,
+              "mix-blend-mode": "multiply",
+              "box-sizing": "border-box",
+            }
+          }
         ]
       }).children[1];
       createNode({
@@ -1678,36 +1819,95 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           zIndex: String(1),
         }
       });
-      createNode({
-        mother: thisCardBase,
-        style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          background: colorExtended.blueBlack,
-          borderRadius: String(8) + "px",
-          borderTopLeftRadius: String(0) + "px",
-          borderTopRightRadius: String(0) + "px",
-          justifyContent: "center",
-          alignItems: "center",
-          paddingTop: String(18) + ea,
-          paddingBottom: String(18) + ea,
-        },
-        children: [
-          {
-            mode: "img",
-            attribute: {
-              src: DesignerExplanationJs.binaryPath + "/sample.svg",
-            },
-            style: {
-              display: "inline-block",
-              position: "relative",
-              width: withOut(16 * 2, ea),
-            }
-          },
 
-        ],
-      });
+
+      // info area
+      if (i === 0) {
+        createNode({
+          mother: thisCardBase,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            background: colorExtended.blueBlack,
+            borderRadius: String(8) + "px",
+            borderTopLeftRadius: String(0) + "px",
+            borderTopRightRadius: String(0) + "px",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: String(18) + ea,
+            paddingBottom: String(18) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                borderRadius: String(8) + "px",
+                background: colorExtended.white,
+                width: withOut(16 * 2, ea),
+                height: String(563) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+              },
+              children: [
+                factorMaker("유관 경력", "0년 0개월"),
+                barMaker(),
+                factorMaker("홈리에종 소속 기간", "0년 0개월"),
+                barMaker(),
+                factorMaker("1차 제안 받는 시점", "2주 이내"),
+                barMaker(),
+                factorMaker("제안 방식", "0년 0개월"),
+                barMaker(),
+                factorMaker("CAD 도면", "0년 0개월"),
+                barMaker(),
+                factorMaker("3D", "0년 0개월"),
+                barMaker(),
+                factorMaker("콜라주", "0년 0개월"),
+                barMaker(),
+                factorMaker("빌트인 가구 제작", "0년 0개월"),
+                barMaker(),
+                factorMaker("디자인 가구 제작", "0년 0개월"),
+                barMaker(),
+                factorMaker("패브릭 제작", "0년 0개월"),
+                barMaker(),
+                factorMaker("디자이너 역량 범위", "0년 0개월"),
+              ]
+            }
+          ]
+        });
+      } else {
+        createNode({
+          mother: thisCardBase,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            background: colorExtended.blueBlack,
+            borderRadius: String(8) + "px",
+            borderTopLeftRadius: String(0) + "px",
+            borderTopRightRadius: String(0) + "px",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: String(18) + ea,
+            paddingBottom: String(18) + ea,
+          },
+          children: [
+            {
+              mode: "img",
+              attribute: {
+                src: DesignerExplanationJs.binaryPath + "/sample.svg",
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: withOut(16 * 2, ea),
+              }
+            },
+          ],
+        });
+      }
     }
 
     selectionBase = createNode({
@@ -1771,7 +1971,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         marginRight: String(16) + ea,
         opacity: String(0.6),
       }
-    })
+    });
     createNode({
       mother: selectionBase,
       style: {
