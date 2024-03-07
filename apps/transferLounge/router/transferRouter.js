@@ -3148,7 +3148,7 @@ TransferRouter.prototype.rou_post_designerRepresentativePhotos = function () {
 
 TransferRouter.prototype.rou_post_designerRepresentativePaper = function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, equalJson, objectDeepCopy, messageSend, linkToString, stringToLink } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson, requestSystem, objectDeepCopy, messageSend, linkToString, stringToLink } = this.mother;
   const back = this.back;
   const address = this.address;
   let obj;
@@ -3260,6 +3260,7 @@ TransferRouter.prototype.rou_post_designerRepresentativePaper = function () {
       }
 
     } catch (e) {
+      console.log(e);
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerRepresentativePaper): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
