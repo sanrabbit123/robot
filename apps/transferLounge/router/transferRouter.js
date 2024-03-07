@@ -3169,11 +3169,17 @@ TransferRouter.prototype.rou_post_designerRepresentativePaper = function () {
       const selfMongo = instance.mongolocal;
       const collection = "designerRepresentativePaper";
       const positionLength = 12;
-      const rootPath = "__samba__/designProposal/image"
+      const rootPath = "__samba__/designProposal/image";
+      const indexToken = "____index____";
       let rows;
       let jsonModel;
       let targetData;
       let thisDesignerRootFolder;
+      let thisPosition;
+      let tempName;
+      let thisName;
+      let findTarget;
+      let newPath;
 
       if (mode === "save") {
         const { desid, position: positionRaw, path: pathRaw } = equalJson(req.body);
@@ -3242,15 +3248,31 @@ TransferRouter.prototype.rou_post_designerRepresentativePaper = function () {
               "Content-Type": "application/json"
             }
           });
-          thisDesignerRootFolder = thisDesignerRootFolder.data;
+          thisDesignerRootFolder = thisDesignerRootFolder.data.map((str) => {
+            return {
+              original: str,
+              name: str.split(indexToken)[1],
+            }
+          });
 
-
-          
-          console.log(targetData.position)
-          console.log(thisDesignerRootFolder);
-
-
-
+          thisPosition = [];
+          for (let rawName of targetData.position) {
+            tempName = stringToLink(rawName).split("/");
+            if (tempName.length > 4 && (new RegExp(indexToken, "gi")).test(tempName[4])) {
+              thisName = tempName[4].split(indexToken)[1];
+              findTarget = thisDesignerRootFolder.find((o) => { return o.name === thisName });
+              if (findTarget === undefined) {
+                thisPosition.push(rawName);
+              } else {
+                newPath = rootPath + "/" + desid + "/" + findTarget.original;
+                newPath = newPath.replace(/^__samba__/gi, '');
+                thisPosition.push(linkToString(newPath));
+              }
+            } else {
+              thisPosition.push(rawName);
+            }
+          }
+          targetData.position = objectDeepCopy(thisPosition);
 
           res.send(JSON.stringify({ data: targetData }));
         }
