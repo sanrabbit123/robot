@@ -3232,6 +3232,15 @@ TransferRouter.prototype.rou_post_designerRepresentativePaper = function () {
           res.send(JSON.stringify({ data: jsonModel }));
         } else {
           [ targetData ] = rows;
+
+
+
+          console.log(targetData)
+
+
+
+
+
           res.send(JSON.stringify({ data: targetData }));
         }
 
