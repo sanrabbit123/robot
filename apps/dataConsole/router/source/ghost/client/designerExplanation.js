@@ -409,8 +409,8 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
 
     this.totalContents = document.getElementById("totalcontents");
     this.totalContents.style.overflow = "hidden";
-    this.totalContents.style.background = colorExtended.gray5;
-    document.body.style.background = colorExtended.gray5;
+    this.totalContents.style.background = colorExtended.mainBlue;
+    document.body.style.background = colorExtended.mainBlue;
 
     firstBase = createNode({
       mother: baseTong,
@@ -1368,10 +1368,13 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
 DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, autoComma, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight, blankPhoto } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const cardMoveTargetClassName = "cardMoveTargetClassName";
+  const arrowLeftClassName = "arrowLeftClassName";
+  const arrowRightClassName = "arrowRightClassName";
   try {
     let minusLeft;
     let thirdBase;
@@ -1407,6 +1410,35 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     let barMaker;
     let barPadding;
     let selectionMaker;
+    let selectionBarWeight, selectionBarMargin;
+    let valueLinePadding;
+    let selectionBarLongMargin;
+    let factorLongHeight;
+    let whiteBoxBetween;
+    let outerMargin;
+    let outerMargin2;
+    let moneyMaker;
+    let subFactorSize;
+    let subFactorTextTop;
+    let visualWhitePadding;
+    let dotWidth;
+    let dotMargin;
+    let subTitleMargin, vatMargin;
+    let percentMaker;
+    let finalMoneyBlocks;
+    let moneyWhiteBoxBetween;
+    let moneyBlockHeight;
+    let finalBlockVatMargin;
+    let finalArrowCicleWidth;
+    let finalArrowWidth, finalArrowHeight;
+    let finalMoneySize, finalMoneyWeight, finalMoneyBoldWeight;
+    let thisBaseMother;
+    let widthRatio;
+    let loopNumber, safeLoopNumber;
+    let arrowCircleWidth;
+    let arrowMargin;
+    let viewNumber;
+    let renderDesigneresCard;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -1414,7 +1446,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     basePaddingTop = <%% 150, 150, 160, 140, 21 %%>;
     basePaddingBottom = <%% 160, 160, 160, 160, 24 %%>;
 
-    checkCircleWidth = 13;
+    checkCircleWidth = 18;
 
     cardLength = 5;
 
@@ -1434,15 +1466,60 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     nameTitleSize = 25;
 
     factorTextTop = isMac() ? -1 : 1;
-    factorPadding = 22;
-    factorHeight = 45;
-    factorSize = 18;
-    factorTitleWeight = 400;
-    factorValueWeight = 300;
+    subFactorTextTop = isMac() ? 1 : 3;
+    factorPadding = 20;
+    factorHeight = 48;
+    factorSize = 17;
+    subFactorSize = 12;
+    factorTitleWeight = 500;
+    factorValueWeight = 400;
+    factorLongHeight = 78;
 
     barPadding = 18;
 
+    selectionBarWeight = 300;
+    selectionBarMargin = 8;
+    selectionBarLongMargin = 17;
+
+    valueLinePadding = 1;
+
+    whiteBoxBetween = 12;
+    moneyWhiteBoxBetween = 6;
+
+    outerMargin = 12;
+    outerMargin2 = 14;
+
     shadowForm = "0px 8px 20px -9px " + colorExtended.darkDarkShadow;
+
+    visualWhitePadding = 3;
+
+    dotWidth = 5;
+    dotMargin = 5;
+
+    subTitleMargin = 4;
+    vatMargin = 6;
+
+    moneyBlockHeight = 46;
+    finalBlockVatMargin = 10;
+
+    finalArrowCicleWidth = 30;
+    finalArrowWidth = 11;
+    finalArrowHeight = 16;
+
+    finalMoneySize = 21;
+    finalMoneyWeight = 300;
+    finalMoneyBoldWeight = 700;
+
+    safeLoopNumber = 3;
+    loopNumber = 4;
+
+    arrowCircleWidth = 44;
+
+    arrowMargin = 70;
+
+    viewNumber = 3;
+
+    widthRatio = standardWidth / ((cardWidth * 2 * viewNumber) + (columnBetween * (viewNumber - 1)));
 
     abc = this.abc;
     designers = this.designers;
@@ -1495,16 +1572,16 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         ]
       }
     }
-    selectionMaker = (title, value) => {
+    selectionMaker = (title, menu, values) => {
       return {
         style: {
           display: "flex",
           position: "relative",
           width: withOut(factorPadding * 2, ea),
-          height: String(factorHeight) + ea,
-          flexDirection: "row",
-          justifyContent: "start",
-          alignItems: "center",
+          height: menu.length <= 3 ? String(factorHeight) + ea : String(factorLongHeight) + ea,
+          flexDirection: menu.length <= 3 ? "row" : "column",
+          justifyContent: menu.length <= 3 ? "start" : "center",
+          alignItems: menu.length <= 3 ? "center" : "start",
         },
         children: [
           {
@@ -1520,6 +1597,103 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           },
           {
             style: {
+              display: menu.length <= 3 ? "inline-flex" : "flex",
+              position: menu.length <= 3 ? "absolute" : "relative",
+              height: menu.length <= 3 ? withOut(0, ea) : "", 
+              width: menu.length <= 3 ? "" : withOut(0, ea),
+              top: String(0),
+              right: String(0),
+              justifyContent: menu.length <= 3 ? "end" : "start",
+              alignItems: menu.length <= 3 ? "center" : "start",
+              flexDirection: "row",
+              marginTop: menu.length <= 3 ? "" : String(5) + ea,
+            },
+            children: menu.map((str, index, arr) => {
+              return [
+                {
+                  text: str,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(factorSize) + ea,
+                    fontWeight: String(factorValueWeight),
+                    color: values[index] === 1 ? colorExtended.black : colorExtended.deactive,
+                    top: String(factorTextTop) + ea,
+                    paddingTop: String(valueLinePadding) + ea,
+                    paddingBottom: String(valueLinePadding) + ea,
+                    boxSizing: "border-box",
+                    borderBottom: values[index] === 1 ? "1px solid " + colorExtended.mainBlue : "",
+                    wordSpacing: String(-2) + ea,
+                  }
+                },
+                {
+                  text: "|",
+                  style: {
+                    display: (arr.length - 1 === index) ? "none" : "inline-block",
+                    position: "relative",
+                    fontSize: String(factorSize) + ea,
+                    fontWeight: String(selectionBarWeight),
+                    color: colorExtended.mainBlue,
+                    top: String(factorTextTop) + ea,
+                    marginLeft: String(menu.length <= 3 ? selectionBarMargin : selectionBarLongMargin) + ea,
+                    marginRight: String(menu.length <= 3 ? selectionBarMargin : selectionBarLongMargin) + ea,
+                    wordSpacing: String(-2) + ea,
+                  }
+                }
+              ]
+            }).flat(),
+          }
+        ]
+      }
+    }
+    moneyMaker = (title, subTitle, value) => {
+      return {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(factorPadding * 2, ea),
+          height: String(factorHeight) + ea,
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(dotWidth) + ea,
+              height: String(dotWidth) + ea,
+              borderRadius: String(dotWidth) + ea,
+              background: colorExtended.mainBlue,
+              marginRight: String(dotMargin) + ea,
+            }
+          },
+          {
+            text: title,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(factorSize) + ea,
+              fontWeight: String(factorTitleWeight),
+              color: colorExtended.black,
+              top: String(factorTextTop) + ea,
+            }
+          },
+          {
+            text: subTitle,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(subFactorSize) + ea,
+              fontWeight: String(factorTitleWeight),
+              color: colorExtended.black,
+              marginLeft: String(subTitleMargin) + ea,
+              top: String(subFactorTextTop) + ea,
+            }
+          },
+          {
+            style: {
               display: "inline-flex",
               position: "absolute",
               height: withOut(0, ea),
@@ -1528,17 +1702,31 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               justifyContent: "end",
               alignItems: "center",
             },
-            child: {
-              text: value,
-              style: {
-                display: "inline-block",
-                position: "relative",
-                fontSize: String(factorSize) + ea,
-                fontWeight: String(factorValueWeight),
-                color: colorExtended.black,
-                top: String(factorTextTop) + ea,
-              }
-            },
+            children: [
+              {
+                text: "* vat 별도",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(subFactorSize) + ea,
+                  fontWeight: String(factorTitleWeight),
+                  color: colorExtended.black,
+                  marginRight: String(vatMargin) + ea,
+                  top: String(subFactorTextTop) + ea,
+                }
+              },
+              {
+                text: value,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(factorSize) + ea,
+                  fontWeight: String(factorValueWeight),
+                  color: colorExtended.blueDark,
+                  top: String(factorTextTop) + ea,
+                }
+              },
+            ]
           }
         ]
       }
@@ -1553,6 +1741,179 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           borderBottom: "1px dashed " + colorExtended.blueLight,
         },
       }
+    }
+    percentMaker = (title, subTitle, percent, value) => {
+      return {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(factorPadding * 2, ea),
+          height: String(factorHeight) + ea,
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(dotWidth) + ea,
+              height: String(dotWidth) + ea,
+              borderRadius: String(dotWidth) + ea,
+              background: colorExtended.mainBlue,
+              marginRight: String(dotMargin) + ea,
+            }
+          },
+          {
+            text: title,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(factorSize) + ea,
+              fontWeight: String(factorTitleWeight),
+              color: colorExtended.black,
+              top: String(factorTextTop) + ea,
+            }
+          },
+          {
+            text: subTitle,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(subFactorSize) + ea,
+              fontWeight: String(factorTitleWeight),
+              color: colorExtended.black,
+              marginLeft: String(subTitleMargin) + ea,
+              top: String(subFactorTextTop) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              height: withOut(0, ea),
+              top: String(0),
+              right: String(0),
+              justifyContent: "end",
+              alignItems: "center",
+            },
+            children: [
+              {
+                text: `${String(percent)}% (${value})`,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(factorSize) + ea,
+                  fontWeight: String(factorValueWeight),
+                  color: colorExtended.blueDark,
+                  top: String(factorTextTop) + ea,
+                }
+              },
+            ]
+          }
+        ]
+      }
+    }
+    finalMoneyBlocks = (matrix) => {
+      let resultArr, num;
+
+      num = 0;
+      resultArr = [];
+      for (let [ kind, before, after ] of matrix) {
+        resultArr.push({
+          style: {
+            display: "flex",
+            position: "relative",
+            height: String(moneyBlockHeight) + ea,
+            borderRadius: String(8) + ea,
+            background: colorExtended.white,
+            width: withOut(outerMargin * 2, ea),
+            justifyContent: "start",
+            alignItems: "center",
+            flexDirection: "row",
+            marginTop: num !== 0 ? String(moneyWhiteBoxBetween) + ea : "",
+          },
+          children: [
+            {
+              style: {
+                display: "flex",
+                position: "relative",    
+                width: String(96) + ea,
+                height: withOut(0, ea),
+                borderRadius: String(8) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                background: colorExtended.blueDim,
+                boxShadow: "3px 0px 15px -9px " + colorExtended.darkDarkShadow,
+              },
+              child: {
+                text: kind,
+                style: {
+                  display: "inline-block",
+                  position: "relative",    
+                  fontSize: String(16) + ea,
+                  fontWeight: String(800),
+                  color: colorExtended.white,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(factorPadding) + ea,
+                justifyContent: "end",
+                alignItems: "center",
+              },
+              children: [
+                {
+                  text: "* vat 별도",
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(subFactorSize) + ea,
+                    fontWeight: String(factorTitleWeight),
+                    color: colorExtended.black,
+                    marginRight: String(finalBlockVatMargin) + ea,
+                    top: String(subFactorTextTop) + ea,
+                  }
+                },
+                {
+                  text: before,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(finalMoneySize) + ea,
+                    fontWeight: String(finalMoneyWeight),
+                    color: colorExtended.deactive,
+                    top: String(factorTextTop) + ea,
+                    marginRight: String(finalBlockVatMargin) + ea,
+                    textDecoration: "line-through",
+                  }
+                },
+                {
+                  text: after,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(finalMoneySize) + ea,
+                    fontWeight: String(finalMoneyBoldWeight),
+                    color: colorExtended.blueDim,
+                    top: String(factorTextTop) + ea,
+                  }
+                },
+              ]
+            }
+          ]
+        });
+        num++;
+      }
+      return resultArr;
     }
 
     thirdBase = createNode({
@@ -1580,249 +1941,380 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
       }
     });
 
-    thisBase = createNode({
+    thisBaseMother = createNode({
       mother: thirdBase,
       style: {
         display: "block",
         position: "relative",
-        justifyContent: "start",
-        alignItems: "start",
-        width: String(8000) + ea,
-        flexDirection: "row",
+        width: "calc(100% * " + String(1 / widthRatio) + ")",
         paddingBottom: String(6) + ea,
         transformOrigin: "0% 0%",
-        transform: "scale(0.87)",
+        transform: "scale(" + String(widthRatio) + ")",
+        overflow: "visible",
+      },
+      children: [
+        {
+          class: [ arrowLeftClassName ],
+          event: {
+            click: function (e) {
+              const moveTarget = document.querySelector('.' + cardMoveTargetClassName);
+              const arrowLeft = document.querySelector('.' + arrowLeftClassName);
+              const arrowRight = document.querySelector('.' + arrowRightClassName);
+              const moveLength = Number(moveTarget.getAttribute("length"));
+              const newMoveLength = moveLength - 1;
+              if (arrowLeft.getAttribute("toggle") === "on") {
+                moveTarget.style.transform = "translateX(" + String(-1 * ((cardWidth * 2) + columnBetween) * newMoveLength) + ea + ")";
+                moveTarget.setAttribute("length", String(newMoveLength));
+                if (newMoveLength <= 0) {
+                  arrowLeft.style.opacity = String(0.5);
+                  arrowLeft.setAttribute("toggle", "off");
+                }
+                if (newMoveLength < ((designers.length * safeLoopNumber) - viewNumber)) {
+                  arrowRight.style.opacity = String(1);
+                  arrowRight.setAttribute("toggle", "on");
+                }
+              }
+            }
+          },
+          attribute: {
+            toggle: "off"
+          },
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            transition: "all 0.5s ease",
+            top: "calc(50% - " + String(arrowCircleWidth / 2) + ea + ")",
+            left: String(-1 * arrowMargin) + ea,
+            width: String(arrowCircleWidth) + ea,
+            height: String(arrowCircleWidth) + ea,
+            borderRadius: String(arrowCircleWidth) + ea,
+            background: colorExtended.blueDark,
+            justifyContent: "center",
+            alignItems: "center",
+            boxShadow: "0px 3px 15px -9px " + colorExtended.blueBlack,
+            cursor: "pointer",
+            opacity: String(0.4),
+          },
+          child: {
+            mode: "svg",
+            source: svgMaker.buttonLineArrow(colorExtended.white),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(11) + ea,
+              transform: "rotate(180deg)",
+              left: String(-1) + ea,
+            }
+          }
+        },
+        {
+          class: [ arrowRightClassName ],
+          event: {
+            click: function (e) {
+              const moveTarget = document.querySelector('.' + cardMoveTargetClassName);
+              const arrowLeft = document.querySelector('.' + arrowLeftClassName);
+              const arrowRight = document.querySelector('.' + arrowRightClassName);
+              const moveLength = Number(moveTarget.getAttribute("length"));
+              const newMoveLength = moveLength + 1;
+
+              if (arrowRight.getAttribute("toggle") === "on") {
+                moveTarget.style.transform = "translateX(" + String(-1 * ((cardWidth * 2) + columnBetween) * newMoveLength) + ea + ")";
+                moveTarget.setAttribute("length", String(newMoveLength));
+                if (newMoveLength > 0) {
+                  arrowLeft.style.opacity = String(1);
+                  arrowLeft.setAttribute("toggle", "on");
+                }
+                if (newMoveLength >= ((designers.length * safeLoopNumber) - viewNumber)) {
+                  arrowRight.style.opacity = String(0.5);
+                  arrowRight.setAttribute("toggle", "off");
+                }
+              }
+
+            }
+          },
+          attribute: {
+            toggle: viewNumber < designers.length ? "on" : "off",
+          },
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            transition: "all 0.5s ease",
+            top: "calc(50% - " + String(arrowCircleWidth / 2) + ea + ")",
+            right: String(-1 * arrowMargin) + ea,
+            width: String(arrowCircleWidth) + ea,
+            height: String(arrowCircleWidth) + ea,
+            borderRadius: String(arrowCircleWidth) + ea,
+            background: colorExtended.blueDark,
+            justifyContent: "center",
+            alignItems: "center",
+            boxShadow: "0px 3px 15px -9px " + colorExtended.blueBlack,
+            cursor: "pointer",
+            opacity: viewNumber < designers.length ? String(1) : String(0.5),
+          },
+          child: {
+            mode: "svg",
+            source: svgMaker.buttonLineArrow(colorExtended.white),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(11) + ea,
+              left: String(1) + ea,
+            }
+          }
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            overflow: "hidden",
+          }
+        }
+      ]
+    }).lastChild;
+
+    thisBase = createNode({
+      mother: thisBaseMother,
+      class: [ cardMoveTargetClassName ],
+      attribute: {
+        length: String(0),
+      },
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(((cardWidth * 2) + cardBetween) * (designers.length * loopNumber) * 2) + ea,
+        transformOrigin: "0% 0%",
+        transform: "translateX(0px)",
       }
     });
 
-    for (let i = 0; i < designers.length; i++) {
-
-      designer = designers[i];
-      keywords = designer.keywords;
-      representative = designer.representative;
-
-      thisCardBase = createNode({
-        mother: thisBase,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(cardWidth * 2) + ea,
-          marginRight: String(columnBetween) + ea,
-          verticalAlign: "top",
-        }
-      });
-
-      // designer profile
-      designerProfileBase = createNode({
-        mother: thisCardBase,
-        style: {
-          display: "inline-flex",
-          verticalAlign: "top",
-          position: "relative",
-          width: String(cardWidth) + ea,
-          height: String(cardHeight) + ea,
-          borderRadius: String(8) + "px",
-          background: colorExtended.white,
-          boxShadow: shadowForm,
-          flexDirection: "column",
-          overflow: "hidden",
-          zIndex: String(2),
-        },
-        children: [
-          {
-            style: {
-              display: "flex",
-              position: "relative",
-              width: withOut(0, ea),
-              height: String(profileHeight) + ea,
-              backgroundImage: "url('" + designer.profile.link + "')",
-              backgroundSize: designer.profile.gs === 's' ? "100% auto" : "100% 100%",
-              backgroundPosition: designer.profile.position,
-              filter: "grayscale(100%)",
-            }
-          },
-          {
-            style: {
-              display: "flex",
-              position: "relative",
-              width: withOut(0, ea),
-              height: withOut(250, ea),
-              background: colorExtended.white,
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }
-          },
-          {
-            style: {
-              position: "absolute",
-              top: String(6) + ea,
-              left: String(6) + ea,
-              width: withOut(6 * 2, ea),
-              height: withOut(6 * 2, ea),
-              borderRadius: String(5) + "px",
-              border: "1px solid " + colorExtended.blue,
-              "mix-blend-mode": "multiply",
-              "box-sizing": "border-box",
-            }
-          }
-        ]
-      }).children[1];
-      createNode({
-        mother: designerProfileBase,
-        text: designer.designer.split("").join(" "),
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(nameTitleSize) + ea,
-          fontWeight: String(800),
-          color: colorExtended.black,
-          wordSpacing: String(1) + "px",
-          borderBottom: "1px solid " + colorExtended.blue,
-          paddingBottom: String(1) + ea,
-          marginBottom: String(15) + ea,
-        }
-      });
-      createNode({
-        mother: designerProfileBase,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: String(40) + ea,
-          height: String(18) + ea,
-          borderRadius: String(18) + ea,
-          background: colorExtended.blueDark,
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: String(0) + ea,
-        },
-        child: {
-          text: "경력",
+    renderDesigneresCard = (blankInjection = false) => {
+      for (let i = 0; i < designers.length; i++) {
+  
+        designer = designers[i];
+        keywords = designer.keywords;
+        representative = designer.representative;
+  
+        thisCardBase = createNode({
+          mother: thisBase,
           style: {
             display: "inline-block",
             position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(11) + ea,
-            fontWeight: String(700),
-            color: colorExtended.white,
+            width: String(cardWidth * 2) + ea,
+            marginRight: String(columnBetween) + ea,
+            verticalAlign: "top",
           }
-        }
-      });
-      createNode({
-        mother: designerProfileBase,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: withOut(0, ea),
-          height: String(23) + ea,
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: String(4) + ea,
-        },
-        child: {
-          text: "3년 6개월",
+        });
+  
+        // designer profile
+        designerProfileBase = createNode({
+          mother: thisCardBase,
+          style: {
+            display: "inline-flex",
+            verticalAlign: "top",
+            position: "relative",
+            width: String(cardWidth) + ea,
+            height: String(cardHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorExtended.white,
+            boxShadow: shadowForm,
+            flexDirection: "column",
+            overflow: "hidden",
+            zIndex: String(2),
+          },
+          children: [
+            {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+                height: String(profileHeight) + ea,
+                backgroundImage: "url('" + designer.profile.link + "')",
+                backgroundSize: designer.profile.gs === 's' ? "100% auto" : "100% 100%",
+                backgroundPosition: designer.profile.position,
+                filter: "grayscale(100%)",
+              }
+            },
+            {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+                height: withOut(250, ea),
+                background: colorExtended.white,
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }
+            },
+            {
+              style: {
+                position: "absolute",
+                top: String(6) + ea,
+                left: String(6) + ea,
+                width: withOut(6 * 2, ea),
+                height: withOut(6 * 2, ea),
+                borderRadius: String(5) + "px",
+                border: "1px solid " + colorExtended.blue,
+                "mix-blend-mode": "multiply",
+                "box-sizing": "border-box",
+              }
+            }
+          ]
+        }).children[1];
+        createNode({
+          mother: designerProfileBase,
+          text: designer.designer.split("").join(" "),
           style: {
             display: "inline-block",
             position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(12) + ea,
-            fontWeight: String(400),
+            fontSize: String(nameTitleSize) + ea,
+            fontWeight: String(800),
             color: colorExtended.black,
+            wordSpacing: String(1) + "px",
+            borderBottom: "1px solid " + colorExtended.blue,
+            paddingBottom: String(1) + ea,
+            marginBottom: String(15) + ea,
           }
-        }
-      });
-      createNode({
-        mother: designerProfileBase,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: String(92) + ea,
-          height: String(18) + ea,
-          borderRadius: String(18) + ea,
-          background: colorExtended.blueDark,
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: String(0) + ea,
-        },
-        child: {
-          text: "자신 있는 스타일",
+        });
+        createNode({
+          mother: designerProfileBase,
           style: {
-            display: "inline-block",
+            display: "inline-flex",
             position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(11) + ea,
-            fontWeight: String(700),
-            color: colorExtended.white,
-          }
-        }
-      });
-      createNode({
-        mother: designerProfileBase,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: withOut(0, ea),
-          height: String(23) + ea,
-          justifyContent: "center",
-          alignItems: "center",
-          paddingBottom: String(11) + ea,
-        },
-        child: {
-          text: [
-            "내추럴",
-            "모던",
-            "빈티지"
-          ].join("&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;"),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(12) + ea,
-            fontWeight: String(400),
-            color: colorExtended.black,
+            width: String(40) + ea,
+            height: String(18) + ea,
+            borderRadius: String(18) + ea,
+            background: colorExtended.blueDark,
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: String(0) + ea,
           },
-          under: {
-            fontSize: String(12) + ea,
-            fontWeight: String(400),
-            color: colorExtended.blue,
+          child: {
+            text: "경력",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(-1) + ea,
+              fontSize: String(11) + ea,
+              fontWeight: String(700),
+              color: colorExtended.white,
+            }
           }
-        }
-      });
-
-      // detail arrow
-      createNode({
-        mother: designerProfileBase,
-        mode: "svg",
-        source: svgMaker.horizontalArrow(24, 9, colorExtended.focusBlue),
-        style: {
-          display: "inline-block",
-          position: "absolute",
-          width: String(24) + ea,
-          bottom: String(21) + ea,
-          right: String(20) + ea,
-        }
-      });
-      createNode({
-        mother: thisCardBase,
-        style: {
-          display: "inline-flex",
-          verticalAlign: "top",
-          position: "relative",
-          width: String(cardWidth) + ea,
-          height: String(cardHeight) + ea,
-          borderRadius: String(8) + "px",
-          background: colorExtended.white,
-          boxShadow: shadowForm,
-          backgroundImage: typeof representative[0] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[0]) + "')" : "",
-          backgroundSize: "auto 100%",
-          backgroundPosition: "50% 50%",
-          zIndex: String(1),
-        }
-      });
-
-
-      // info area
-      if (i === 0) {
+        });
+        createNode({
+          mother: designerProfileBase,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: withOut(0, ea),
+            height: String(23) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: String(4) + ea,
+          },
+          child: {
+            text: "3년 6개월",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(-1) + ea,
+              fontSize: String(12) + ea,
+              fontWeight: String(400),
+              color: colorExtended.black,
+            }
+          }
+        });
+        createNode({
+          mother: designerProfileBase,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(92) + ea,
+            height: String(18) + ea,
+            borderRadius: String(18) + ea,
+            background: colorExtended.blueDark,
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: String(0) + ea,
+          },
+          child: {
+            text: "자신 있는 스타일",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(-1) + ea,
+              fontSize: String(11) + ea,
+              fontWeight: String(700),
+              color: colorExtended.white,
+            }
+          }
+        });
+        createNode({
+          mother: designerProfileBase,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: withOut(0, ea),
+            height: String(23) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingBottom: String(11) + ea,
+          },
+          child: {
+            text: [
+              "내추럴",
+              "모던",
+              "빈티지"
+            ].join("&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;"),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(-1) + ea,
+              fontSize: String(12) + ea,
+              fontWeight: String(400),
+              color: colorExtended.black,
+            },
+            under: {
+              fontSize: String(12) + ea,
+              fontWeight: String(400),
+              color: colorExtended.blue,
+            }
+          }
+        });
+  
+        // detail arrow
+        createNode({
+          mother: designerProfileBase,
+          mode: "svg",
+          source: svgMaker.horizontalArrow(24, 9, colorExtended.focusBlue),
+          style: {
+            display: "inline-block",
+            position: "absolute",
+            width: String(24) + ea,
+            bottom: String(21) + ea,
+            right: String(20) + ea,
+          }
+        });
+        createNode({
+          mother: thisCardBase,
+          style: {
+            display: "inline-flex",
+            verticalAlign: "top",
+            position: "relative",
+            width: String(cardWidth) + ea,
+            height: String(cardHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorExtended.white,
+            boxShadow: shadowForm,
+            backgroundImage: typeof representative[0] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[0]) + "')" : "",
+            backgroundSize: "auto 100%",
+            backgroundPosition: "50% 50%",
+            zIndex: String(1),
+          }
+        });
+  
+        // info area
         createNode({
           mother: thisCardBase,
           style: {
@@ -1835,21 +2327,25 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             borderTopRightRadius: String(0) + "px",
             justifyContent: "center",
             alignItems: "center",
-            paddingTop: String(18) + ea,
-            paddingBottom: String(18) + ea,
+            top: String(-1 * 8) + "px",
+            paddingTop: "calc(" + String(outerMargin2) + ea + " + " + String(8) + "px" + ")",
+            paddingBottom: String(outerMargin2) + ea,
+            flexDirection: "column",
+            boxShadow: "0px 3px 12px -9px " + colorExtended.darkDarkShadow,
           },
           children: [
             {
               style: {
-                display: "inline-flex",
+                display: "flex",
                 position: "relative",
                 borderRadius: String(8) + "px",
                 background: colorExtended.white,
-                width: withOut(16 * 2, ea),
-                height: String(563) + ea,
+                width: withOut(outerMargin * 2, ea),
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "column",
+                paddingTop: String(visualWhitePadding) + ea,
+                paddingBottom: String(visualWhitePadding) + ea,
               },
               children: [
                 factorMaker("유관 경력", "0년 0개월"),
@@ -1858,56 +2354,587 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 barMaker(),
                 factorMaker("1차 제안 받는 시점", "2주 이내"),
                 barMaker(),
-                factorMaker("제안 방식", "0년 0개월"),
+                selectionMaker("제안 방식", [ "순차 제안", "한 번에 제안" ], [ 0, 1 ]),
                 barMaker(),
-                factorMaker("CAD 도면", "0년 0개월"),
+                selectionMaker("CAD 도면", [ "가능", "불가능" ], [ 1, 0 ]),
                 barMaker(),
-                factorMaker("3D", "0년 0개월"),
+                selectionMaker("3D", [ "가능", "불가능" ], [ 1, 0 ]),
                 barMaker(),
-                factorMaker("콜라주", "0년 0개월"),
+                selectionMaker("콜라주", [ "가능", "불가능" ], [ 1, 0 ]),
                 barMaker(),
-                factorMaker("빌트인 가구 제작", "0년 0개월"),
+                selectionMaker("빌트인 가구 제작", [ "가능", "불가능" ], [ 1, 0 ]),
                 barMaker(),
-                factorMaker("디자인 가구 제작", "0년 0개월"),
+                selectionMaker("디자인 가구 제작", [ "가능", "불가능" ], [ 1, 0 ]),
                 barMaker(),
-                factorMaker("패브릭 제작", "0년 0개월"),
+                selectionMaker("패브릭 제작", [ "가능", "불가능" ], [ 1, 0 ]),
                 barMaker(),
-                factorMaker("디자이너 역량 범위", "0년 0개월"),
+                selectionMaker("디자이너 역량 범위", serviceParsing().name, [ 0, 1, 0, 0 ]),
               ]
-            }
+            },
+            {
+              style: {
+                display: "flex",
+                position: "relative",
+                borderRadius: String(8) + "px",
+                background: colorExtended.white,
+                width: withOut(outerMargin * 2, ea),
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                marginTop: String(whiteBoxBetween) + ea,
+                paddingTop: String(visualWhitePadding) + ea,
+                paddingBottom: String(visualWhitePadding) + ea,
+              },
+              children: [
+                moneyMaker("디자인비", "(오프라인)", autoComma(2276000) + "원"),
+                barMaker(),
+                moneyMaker("디자인비", "(온라인)", autoComma(1935000) + "원"),
+                barMaker(),
+                moneyMaker("출장비", "", "(거리 : 0km / 시간 : 0시간 0분 / 1회당) " + autoComma(0) + "원"),
+                barMaker(),
+                percentMaker("오프라인 디자인비 할인율", "(할인 금액)", 7, autoComma(129570) + "원"),
+                barMaker(),
+                percentMaker("온라인 디자인비 할인율", "(할인 금액)", 5, autoComma(78700) + "원"),
+              ]
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(outerMargin * 2, ea),
+                height: String(whiteBoxBetween) + ea,
+                zIndex: String(1),
+              },
+              child: {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(finalArrowCicleWidth) + ea,
+                  height: String(finalArrowCicleWidth) + ea,
+                  borderRadius: String(finalArrowCicleWidth) + ea,
+                  top: "calc(50% - " + String(finalArrowCicleWidth / 2) + ea + ")",
+                  left: "calc(50% - " + String(finalArrowCicleWidth / 2) + ea + ")",
+                  background: colorExtended.mainBlue,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  boxShadow: "0px 4px 18px -9px " + colorExtended.darkShadow,
+                },
+                child: {
+                  mode: "svg",
+                  source: svgMaker.verticalArrow(finalArrowWidth, finalArrowHeight, colorExtended.white),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(finalArrowWidth) + ea,
+                  }
+                }
+              }
+            },
+            ...finalMoneyBlocks([
+              [ "오프라인", autoComma(1851000) + "원", autoComma(1721430) + "원" ],
+              [ "온라인", autoComma(1574000) + "원", autoComma(1495300) + "원" ],
+            ]),
           ]
         });
-      } else {
+  
+        // designer selection
         createNode({
           mother: thisCardBase,
           style: {
             display: "flex",
             position: "relative",
-            width: withOut(0, ea),
-            background: colorExtended.blueBlack,
-            borderRadius: String(8) + "px",
-            borderTopLeftRadius: String(0) + "px",
-            borderTopRightRadius: String(0) + "px",
             justifyContent: "center",
             alignItems: "center",
-            paddingTop: String(18) + ea,
-            paddingBottom: String(18) + ea,
+            width: withOut(0, ea),
+            flexDirection: "row",
+            marginTop: String(18) + ea,
+            marginBottom: String(4) + ea,
           },
           children: [
             {
-              mode: "img",
-              attribute: {
-                src: DesignerExplanationJs.binaryPath + "/sample.svg",
+              style: {
+                display: "inline-flex",
+                width: String(checkCircleWidth) + ea,
+                height: String(checkCircleWidth + 1) + ea,
+                background: colorExtended.focusBlue,
+                borderRadius: String(checkCircleWidth + 1) + ea,
               },
+              child: {
+                mode: "svg",
+                source: svgMaker.checkCircle(colorExtended.white),
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(checkCircleWidth) + ea,
+                  height: String(checkCircleWidth + 1) + ea,
+                },
+              }
+            },
+            {
+              text: "designers " + abc[i],
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                fontSize: String(23) + ea,
+                fontWeight: String(700),
+                color: colorExtended.white,
+                fontFamily: "mont",
+                marginLeft: String(7) + ea,
+                opacity: String(0.9),
+                top: String(1) + ea,
+              }
+            }
+          ]
+        });
+        createNode({
+          mother: thisCardBase,
+          style: {
+            display: "flex",
+            position: "relative",
+            justifyContent: "center",
+            alignItems: "center",
+            width: withOut(0, ea),
+            flexDirection: "row",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: svgMaker.buttonLineArrow(colorExtended.white),
               style: {
                 display: "inline-block",
                 position: "relative",
-                width: withOut(16 * 2, ea),
+                width: String(buttonArrowWdith) + ea,
+                opacity: String(0.6),
+                transform: "rotate(90deg)",
               }
             },
-          ],
+          ]
         });
+  
       }
+      if (blankInjection) {
+        for (let i = 0; i < viewNumber - designers.length; i++) {
+    
+          thisCardBase = createNode({
+            mother: thisBase,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(cardWidth * 2) + ea,
+              marginRight: String(columnBetween) + ea,
+              verticalAlign: "top",
+              opacity: String(0.35),
+            }
+          });
+    
+          // designer profile
+          designerProfileBase = createNode({
+            mother: thisCardBase,
+            style: {
+              display: "inline-flex",
+              verticalAlign: "top",
+              position: "relative",
+              width: String(cardWidth) + ea,
+              height: String(cardHeight) + ea,
+              borderRadius: String(8) + "px",
+              background: colorExtended.white,
+              boxShadow: shadowForm,
+              flexDirection: "column",
+              overflow: "hidden",
+              zIndex: String(2),
+            },
+            children: [
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  height: String(profileHeight) + ea,
+                  background: colorExtended.blueBlack,
+                }
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  height: withOut(250, ea),
+                  background: colorExtended.white,
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }
+              },
+              {
+                style: {
+                  position: "absolute",
+                  top: String(6) + ea,
+                  left: String(6) + ea,
+                  width: withOut(6 * 2, ea),
+                  height: withOut(6 * 2, ea),
+                  borderRadius: String(5) + "px",
+                  border: "1px solid " + colorExtended.blue,
+                  "mix-blend-mode": "multiply",
+                  "box-sizing": "border-box",
+                }
+              }
+            ]
+          }).children[1];
+          createNode({
+            mother: designerProfileBase,
+            text: "-",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(nameTitleSize) + ea,
+              fontWeight: String(800),
+              color: colorExtended.black,
+              wordSpacing: String(1) + "px",
+              borderBottom: "1px solid " + colorExtended.blue,
+              paddingBottom: String(1) + ea,
+              marginBottom: String(15) + ea,
+            }
+          });
+          createNode({
+            mother: designerProfileBase,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(40) + ea,
+              height: String(18) + ea,
+              borderRadius: String(18) + ea,
+              background: colorExtended.blueDark,
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: String(0) + ea,
+            },
+            child: {
+              text: "경력",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(-1) + ea,
+                fontSize: String(11) + ea,
+                fontWeight: String(700),
+                color: colorExtended.white,
+              }
+            }
+          });
+          createNode({
+            mother: designerProfileBase,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(23) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: String(4) + ea,
+            },
+            child: {
+              text: "-",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(-1) + ea,
+                fontSize: String(12) + ea,
+                fontWeight: String(400),
+                color: colorExtended.black,
+              }
+            }
+          });
+          createNode({
+            mother: designerProfileBase,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(92) + ea,
+              height: String(18) + ea,
+              borderRadius: String(18) + ea,
+              background: colorExtended.blueDark,
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: String(0) + ea,
+            },
+            child: {
+              text: "자신 있는 스타일",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(-1) + ea,
+                fontSize: String(11) + ea,
+                fontWeight: String(700),
+                color: colorExtended.white,
+              }
+            }
+          });
+          createNode({
+            mother: designerProfileBase,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(23) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              paddingBottom: String(11) + ea,
+            },
+            child: {
+              text: [
+                "-",
+              ].join("&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;"),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(-1) + ea,
+                fontSize: String(12) + ea,
+                fontWeight: String(400),
+                color: colorExtended.black,
+              },
+              under: {
+                fontSize: String(12) + ea,
+                fontWeight: String(400),
+                color: colorExtended.blue,
+              }
+            }
+          });
+    
+          // detail arrow
+          createNode({
+            mother: designerProfileBase,
+            mode: "svg",
+            source: svgMaker.horizontalArrow(24, 9, colorExtended.deactive),
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              width: String(24) + ea,
+              bottom: String(21) + ea,
+              right: String(20) + ea,
+            }
+          });
+          createNode({
+            mother: thisCardBase,
+            style: {
+              display: "inline-flex",
+              verticalAlign: "top",
+              position: "relative",
+              width: String(cardWidth) + ea,
+              height: String(cardHeight) + ea,
+              borderRadius: String(8) + "px",
+              background: colorExtended.blueBlack,
+              boxShadow: shadowForm,
+              zIndex: String(1),
+            }
+          });
+    
+          // info area
+          createNode({
+            mother: thisCardBase,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              background: colorExtended.blueBlack,
+              borderRadius: String(8) + "px",
+              borderTopLeftRadius: String(0) + "px",
+              borderTopRightRadius: String(0) + "px",
+              justifyContent: "center",
+              alignItems: "center",
+              top: String(-1 * 8) + "px",
+              paddingTop: "calc(" + String(outerMargin2) + ea + " + " + String(8) + "px" + ")",
+              paddingBottom: String(outerMargin2) + ea,
+              flexDirection: "column",
+              boxShadow: "0px 3px 12px -9px " + colorExtended.darkDarkShadow,
+            },
+            children: [
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  borderRadius: String(8) + "px",
+                  background: colorExtended.white,
+                  width: withOut(outerMargin * 2, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  paddingTop: String(visualWhitePadding) + ea,
+                  paddingBottom: String(visualWhitePadding) + ea,
+                },
+                children: [
+                  factorMaker("유관 경력", "0년 0개월"),
+                  barMaker(),
+                  factorMaker("홈리에종 소속 기간", "0년 0개월"),
+                  barMaker(),
+                  factorMaker("1차 제안 받는 시점", "2주 이내"),
+                  barMaker(),
+                  selectionMaker("제안 방식", [ "순차 제안", "한 번에 제안" ], [ 0, 1 ]),
+                  barMaker(),
+                  selectionMaker("CAD 도면", [ "가능", "불가능" ], [ 1, 0 ]),
+                  barMaker(),
+                  selectionMaker("3D", [ "가능", "불가능" ], [ 1, 0 ]),
+                  barMaker(),
+                  selectionMaker("콜라주", [ "가능", "불가능" ], [ 1, 0 ]),
+                  barMaker(),
+                  selectionMaker("빌트인 가구 제작", [ "가능", "불가능" ], [ 1, 0 ]),
+                  barMaker(),
+                  selectionMaker("디자인 가구 제작", [ "가능", "불가능" ], [ 1, 0 ]),
+                  barMaker(),
+                  selectionMaker("패브릭 제작", [ "가능", "불가능" ], [ 1, 0 ]),
+                  barMaker(),
+                  selectionMaker("디자이너 역량 범위", serviceParsing().name, [ 0, 1, 0, 0 ]),
+                ]
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  borderRadius: String(8) + "px",
+                  background: colorExtended.white,
+                  width: withOut(outerMargin * 2, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  marginTop: String(whiteBoxBetween) + ea,
+                  paddingTop: String(visualWhitePadding) + ea,
+                  paddingBottom: String(visualWhitePadding) + ea,
+                },
+                children: [
+                  moneyMaker("디자인비", "(오프라인)", autoComma(0) + "원"),
+                  barMaker(),
+                  moneyMaker("디자인비", "(온라인)", autoComma(0) + "원"),
+                  barMaker(),
+                  moneyMaker("출장비", "", "(거리 : 0km / 시간 : 0시간 0분 / 1회당) " + autoComma(0) + "원"),
+                  barMaker(),
+                  percentMaker("오프라인 디자인비 할인율", "(할인 금액)", 0, autoComma(0) + "원"),
+                  barMaker(),
+                  percentMaker("온라인 디자인비 할인율", "(할인 금액)", 0, autoComma(0) + "원"),
+                ]
+              },
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(outerMargin * 2, ea),
+                  height: String(whiteBoxBetween) + ea,
+                  zIndex: String(1),
+                },
+                child: {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    width: String(finalArrowCicleWidth) + ea,
+                    height: String(finalArrowCicleWidth) + ea,
+                    borderRadius: String(finalArrowCicleWidth) + ea,
+                    top: "calc(50% - " + String(finalArrowCicleWidth / 2) + ea + ")",
+                    left: "calc(50% - " + String(finalArrowCicleWidth / 2) + ea + ")",
+                    background: colorExtended.mainBlue,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    boxShadow: "0px 4px 18px -9px " + colorExtended.darkShadow,
+                  },
+                  child: {
+                    mode: "svg",
+                    source: svgMaker.verticalArrow(finalArrowWidth, finalArrowHeight, colorExtended.white),
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      width: String(finalArrowWidth) + ea,
+                    }
+                  }
+                }
+              },
+              ...finalMoneyBlocks([
+                [ "오프라인", autoComma(0) + "원", autoComma(0) + "원" ],
+                [ "온라인", autoComma(0) + "원", autoComma(0) + "원" ],
+              ]),
+            ]
+          });
+    
+          // designer selection
+          createNode({
+            mother: thisCardBase,
+            style: {
+              display: "flex",
+              position: "relative",
+              justifyContent: "center",
+              alignItems: "center",
+              width: withOut(0, ea),
+              flexDirection: "row",
+              marginTop: String(18) + ea,
+              marginBottom: String(4) + ea,
+            },
+            children: [
+              {
+                style: {
+                  display: "inline-flex",
+                  width: String(checkCircleWidth) + ea,
+                  height: String(checkCircleWidth + 1) + ea,
+                  background: colorExtended.focusBlue,
+                  borderRadius: String(checkCircleWidth + 1) + ea,
+                },
+                child: {
+                  mode: "svg",
+                  source: svgMaker.checkCircle(colorExtended.white),
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: String(checkCircleWidth) + ea,
+                    height: String(checkCircleWidth + 1) + ea,
+                  },
+                }
+              },
+              {
+                text: "designers " + "-",
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  fontSize: String(23) + ea,
+                  fontWeight: String(700),
+                  color: colorExtended.white,
+                  fontFamily: "mont",
+                  marginLeft: String(7) + ea,
+                  opacity: String(0.9),
+                  top: String(1) + ea,
+                }
+              }
+            ]
+          });
+          createNode({
+            mother: thisCardBase,
+            style: {
+              display: "flex",
+              position: "relative",
+              justifyContent: "center",
+              alignItems: "center",
+              width: withOut(0, ea),
+              flexDirection: "row",
+            },
+            children: [
+              {
+                mode: "svg",
+                source: svgMaker.buttonLineArrow(colorExtended.white),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: String(buttonArrowWdith) + ea,
+                  opacity: String(0.6),
+                  transform: "rotate(90deg)",
+                }
+              },
+            ]
+          });
+    
+        }
+      }
+    }
+    if (viewNumber <= designers.length) {
+      for (let z = 0; z < loopNumber; z++) {
+        renderDesigneresCard(false);
+      }
+    } else {
+      renderDesigneresCard(true);
     }
 
     selectionBase = createNode({
@@ -1920,7 +2947,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         width: withOut(0, ea),
         height: String(96) + ea,
         flexDirection: "row",
-        marginTop: String(-1 * 96) + ea,
+        marginTop: String(-1 * 140) + ea,
       },
       children: [
         {
@@ -2144,7 +3171,7 @@ DesignerExplanationJs.prototype.insertServiceBox = function (thisBase) {
         borderRadius: String(desktop ? 8 : 3) + "px",
         width: String(100) + '%',
         background: colorChip.white,
-        boxShadow: "0px 5px 18px -9px " + colorChip.darkDarkShadow,
+        boxShadow: "0px 5px 18px -9px " + GeneralJs.colorExtended.blueDim,
         marginBottom: String(blockMarginBottom) + ea,
         paddingTop: String(top) + ea,
         paddingBottom: String(bottom) + ea,
@@ -2888,7 +3915,7 @@ DesignerExplanationJs.prototype.insertWordBox = function (thisBase) {
     borderRadius: String(desktop ? 8 : 3) + "px",
     width: String(100) + '%',
     background: GeneralJs.colorExtended.white,
-    boxShadow: "0px 5px 18px -9px " + GeneralJs.colorExtended.darkDarkShadow,
+    boxShadow: "0px 5px 18px -9px " + GeneralJs.colorExtended.blueDim,
     marginBottom: String(blockMarginBottom) + ea,
     paddingTop: String(top) + ea,
     paddingBottom: String(bottom) + ea,
@@ -3107,7 +4134,7 @@ DesignerExplanationJs.prototype.insertFourthBox = async function () {
     buttonSize = <%% 20, 17, 16, 15, 3.5 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    shadowForm = "0px 8px 20px -9px " + colorExtended.darkDarkShadow;
+    shadowForm = "0px 8px 20px -9px " + colorExtended.blueDim;
 
     abc = this.abc;
     designers = this.designers;
@@ -3164,7 +4191,7 @@ DesignerExplanationJs.prototype.insertFourthBox = async function () {
             position: "relative",    
             width: String(buttonWidth) + ea,
             height: String(buttonHeight) + ea,
-            background: colorChip.black,
+            background: colorExtended.blueDim,
             borderRadius: String(buttonHeight) + ea,
             justifyContent: "center",
             alignItems: "center",
@@ -3317,6 +4344,7 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     designers = await ajaxJson({ noFlat: true, whereQuery: { "$or": desidArr.map((desid) => { return { desid } }) } }, BACKHOST + "/getDesigners", { equal: true });
     profileList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerProfileList", { equal: true });
     blankPhoto = DesignerExplanationJs.binaryPath + "/blank.png";
+    this.blankPhoto = blankPhoto;
 
     keywordsList = (await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativeKeywords", { equal: true })).data;
     photosList = (await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativePhotos", { equal: true })).data;
