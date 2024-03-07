@@ -8612,7 +8612,7 @@ DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
       let realtime;
       let thisDesigner;
       designersNormal = [];
-      for (let desid of thisProject.proposal.detail) {
+      for (let { desid } of thisProject.proposal.detail) {
         thisDesigner = designers.find((d) => { return d.desid === desid });
         realtime = await work.realtimeDesignerMatch(desid, proid, { selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal });
         designerNormal = thisDesigner.toNormal();
