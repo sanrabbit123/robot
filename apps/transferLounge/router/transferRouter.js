@@ -3169,9 +3169,11 @@ TransferRouter.prototype.rou_post_designerRepresentativePaper = function () {
       const selfMongo = instance.mongolocal;
       const collection = "designerRepresentativePaper";
       const positionLength = 12;
+      const rootPath = "__samba__/designProposal/image"
       let rows;
       let jsonModel;
       let targetData;
+      let thisDesignerRootFolder;
 
       if (mode === "save") {
         const { desid, position: positionRaw, path: pathRaw } = equalJson(req.body);
@@ -3233,10 +3235,19 @@ TransferRouter.prototype.rou_post_designerRepresentativePaper = function () {
         } else {
           [ targetData ] = rows;
 
+          thisDesignerRootFolder = await requestSystem("https://" + address.officeinfo.ghost.host + "/readFolder", {
+            path: rootPath + "/" + desid
+          }, {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          });
+          thisDesignerRootFolder = thisDesignerRootFolder.data;
 
 
-          console.log(targetData)
-
+          
+          console.log(targetData.position)
+          console.log(thisDesignerRootFolder);
 
 
 
