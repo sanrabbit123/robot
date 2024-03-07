@@ -3256,18 +3256,21 @@ TransferRouter.prototype.rou_post_designerRepresentativePaper = function () {
           });
 
           thisPosition = [];
-          console.log(targetData.position)
           for (let rawName of targetData.position) {
-            tempName = stringToLink(rawName).split("/");
-            if (tempName.length > 4 && (new RegExp(indexToken, "gi")).test(tempName[4])) {
-              thisName = tempName[4].split(indexToken)[1];
-              findTarget = thisDesignerRootFolder.find((o) => { return o.name === thisName });
-              if (findTarget === undefined) {
-                thisPosition.push(rawName);
+            if (typeof rawName === "string") {
+              tempName = stringToLink(rawName).split("/");
+              if (tempName.length > 4 && (new RegExp(indexToken, "gi")).test(tempName[4])) {
+                thisName = tempName[4].split(indexToken)[1];
+                findTarget = thisDesignerRootFolder.find((o) => { return o.name === thisName });
+                if (findTarget === undefined) {
+                  thisPosition.push(rawName);
+                } else {
+                  newPath = rootPath + "/" + desid + "/" + findTarget.original;
+                  newPath = newPath.replace(/^__samba__/gi, '');
+                  thisPosition.push(linkToString(newPath));
+                }
               } else {
-                newPath = rootPath + "/" + desid + "/" + findTarget.original;
-                newPath = newPath.replace(/^__samba__/gi, '');
-                thisPosition.push(linkToString(newPath));
+                thisPosition.push(rawName);
               }
             } else {
               thisPosition.push(rawName);
