@@ -1072,6 +1072,12 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
       // designer profile
       designerProfileBase = createNode({
         mother: thisCardBase,
+        event: {
+          click: instance.insertWhiteCardEvent(designer.desid, abc[i]),
+        },
+        attribute: {
+          desid: designer.desid,
+        },
         style: {
           display: "inline-flex",
           position: "relative",
@@ -1083,6 +1089,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           boxShadow: shadowForm,
           flexDirection: "column",
           overflow: "hidden",
+          cursor: "pointer",
         },
         children: [
           {
@@ -1244,8 +1251,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           }
         }
       });
-
-      // detail arrow
+      // detail arrow in profile card
       createNode({
         mother: designerProfileBase,
         mode: "svg",
@@ -1257,7 +1263,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           bottom: String(21) + ea,
           right: String(20) + ea,
         }
-      })
+      });
 
       // ----------------------------------------------------------------------------------------------------------------
 
@@ -1279,6 +1285,8 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       });
 
+      // ----------------------------------------------------------------------------------------------------------------
+
       // photo 1
       createNode({
         mother: thisCardBase,
@@ -1296,6 +1304,8 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           backgroundPosition: "50% 50%",
         }
       });
+
+      // ----------------------------------------------------------------------------------------------------------------
 
       // photo 2
       createNode({
@@ -1315,6 +1325,8 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       });
 
+      // ----------------------------------------------------------------------------------------------------------------
+
       // photo 3
       createNode({
         mother: thisCardBase,
@@ -1333,9 +1345,17 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       });
 
+      // ----------------------------------------------------------------------------------------------------------------
+
       // button arrow
       createNode({
         mother: thisCardBase,
+        event: {
+          click: instance.insertWhiteCardEvent(designer.desid, abc[i]),
+        },
+        attribute: {
+          desid: designer.desid,
+        },
         style: {
           display: "inline-flex",
           position: "relative",
@@ -1346,6 +1366,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           boxShadow: shadowForm,
           justifyContent: "center",
           alignItems: "center",
+          cursor: "pointer",
         },
         child: {
           mode: "svg",
@@ -4217,6 +4238,204 @@ DesignerExplanationJs.prototype.insertFourthBox = async function () {
 
   } catch (e) {
     console.log(e);
+  }
+}
+
+DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const whitePopupClassName = "whitePopupClassName";
+  const totalContents = document.getElementById("totalcontents");
+  return async function (e) {
+    try {
+      const project = instance.project;
+      const designer = instance.designers.find((d) => { return d.desid === desid });
+      const proposal = project.proposal.detail.find((p) => { return p.desid === desid });
+      const zIndex = 4;
+      let cancelBack, whiteBase;
+      let whiteMargin;
+      let innerMargin;
+      let contentsTong;
+      let titleArea;
+      let titleHeight;
+      let titleSize;
+      let titleWeight;
+      let titleLineHeight;
+      let titleTop;
+      let scrollTong;
+      let firstTong;
+      let profileHeight;
+      let profileLineWidth;
+      let profileDescriptionTong;
+      let profileMargin;
+
+      whiteMargin = 30;
+      innerMargin = 52;
+
+      titleHeight = <%% 41, 39, 37, 28, 8 %%>;  
+      titleSize = 40;
+      titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+      titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+      titleTop = -6;
+
+      profileHeight = 200;
+      profileLineWidth = 10;
+      profileMargin = 24;
+  
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ whitePopupClassName ],
+        event: {
+          click: (e) => {
+            removeByClass(whitePopupClassName);
+          }
+        },
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          width: withOut(0),
+          height: withOut(0),
+          opacity: String(0.4),
+          background: colorChip.black,
+          zIndex: String(zIndex),
+        }
+      });
+
+      whiteBase = createNode({
+        mother: totalContents,
+        class: [ whitePopupClassName ],
+        style: {
+          position: "fixed",
+          width: String(standardWidth) + ea,
+          height: "calc(calc(100% - " + String(naviHeight) + "px" + ") - " + String((whiteMargin * 2) + innerMargin) + ea + ")",
+          top: "calc(" + String(naviHeight) + "px" + " + " + String(whiteMargin) + ea + ")",
+          left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+          borderRadius: String(5) + "px",
+          background: colorChip.white,
+          boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+          animation: "fadeuporiginal 0.3s ease forwards",
+          paddingTop: String(innerMargin) + ea,
+          zIndex: String(zIndex),
+        }
+      });
+
+      scrollTong = createNode({
+        mother: whiteBase,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(innerMargin * 2, ea),
+          height: withOut(innerMargin, ea),
+          marginLeft: String(innerMargin) + ea,
+          marginRight: String(innerMargin) + ea,
+          overflow: "scroll",
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            height: "auto",
+          }
+        }
+      }).firstChild;
+
+      firstTong = createNode({
+        mother: scrollTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          flexDirection: "row",
+          height: String(profileHeight) + ea,
+        }
+      });
+
+      createNode({
+        mother: firstTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(profileHeight + profileLineWidth) + ea,
+          height: String(profileHeight) + ea,
+          borderRadius: String(8) + "px",
+          background: colorExtended.gradientBlue4,
+          justifyContent: "end",
+          alignItems: "end",
+          overflow: "hidden",
+        },
+        child: {
+          style: {
+            display: "flex",
+            position: "relative",
+            width: String(profileHeight) + ea,
+            height: String(profileHeight) + ea,
+            backgroundImage: "url('" + designer.profile.link + "')",
+            backgroundSize: designer.profile.gs === 's' ? "100% auto" : "100% 100%",
+            backgroundPosition: designer.profile.position,
+            filter: "grayscale(100%)",
+          }
+        }
+      });
+
+      profileDescriptionTong = createNode({
+        mother: firstTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(800) + ea,
+          height: String(profileHeight) + ea,
+          justifyContent: "end",
+          alignItems: "start",
+          overflow: "hidden",
+          flexDirection: "column",
+          marginLeft: String(profileMargin) + ea,
+        },
+      });
+
+      createNode({
+        mother: profileDescriptionTong,
+        text: designer.designer.split("").join(" "),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(32) + ea,
+          fontWeight: String(800),
+          color: colorExtended.black,
+          wordSpacing: String(1) + "px",
+          paddingBottom: String(1) + ea,
+          marginBottom: String(8) + ea,
+        }
+      });
+
+      createNode({
+        mother: profileDescriptionTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+        },
+        child: {
+          text: designer.setting.front.introduction.desktop.join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(16) + ea,
+            lineHeight: String(1.6),
+            fontWeight: String(400),
+            color: colorExtended.black,
+          }
+        }
+      })
+
+
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 
