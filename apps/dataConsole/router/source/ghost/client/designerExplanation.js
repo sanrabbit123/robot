@@ -4271,9 +4271,18 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let profileLineWidth;
       let profileDescriptionTong;
       let profileMargin;
+      let secondTong;
+      let styleButtonMarginBottom;
+      let profilePhotoTong;
+      let profileDescriptionTongWidth;
+      let profileKeywordsTong;
+      let nameMargin;
+      let num;
+      let nameTitlesize;
+      let words;
 
       whiteMargin = 30;
-      innerMargin = 52;
+      innerMargin = 60;
 
       titleHeight = <%% 41, 39, 37, 28, 8 %%>;  
       titleSize = 40;
@@ -4283,7 +4292,14 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       profileHeight = 200;
       profileLineWidth = 10;
-      profileMargin = 24;
+      profileMargin = 30;
+
+      profileDescriptionTongWidth = 800;
+
+      styleButtonMarginBottom = 4;
+
+      nameTitlesize = 32;
+      nameMargin = 12;
   
       cancelBack = createNode({
         mother: totalContents,
@@ -4328,21 +4344,24 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         style: {
           display: "block",
           position: "relative",
-          width: withOut(innerMargin * 2, ea),
+          width: withOut(0 * 2, ea),
           height: withOut(innerMargin, ea),
-          marginLeft: String(innerMargin) + ea,
-          marginRight: String(innerMargin) + ea,
           overflow: "scroll",
         },
         child: {
           style: {
             display: "block",
             position: "relative",
-            width: withOut(0, ea),
+            width: withOut(innerMargin * 2, ea),
             height: "auto",
+            marginLeft: String(innerMargin) + ea,
+            marginRight: String(innerMargin) + ea,
+            overflow: "visible",
           }
         }
       }).firstChild;
+
+      // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
       firstTong = createNode({
         mother: scrollTong,
@@ -4355,7 +4374,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         }
       });
 
-      createNode({
+      // first : photo tong
+      profilePhotoTong = createNode({
         mother: firstTong,
         style: {
           display: "inline-flex",
@@ -4382,12 +4402,13 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         }
       });
 
+      // first : description tong
       profileDescriptionTong = createNode({
         mother: firstTong,
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(800) + ea,
+          width: String(profileDescriptionTongWidth) + ea,
           height: String(profileHeight) + ea,
           justifyContent: "end",
           alignItems: "start",
@@ -4396,22 +4417,122 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           marginLeft: String(profileMargin) + ea,
         },
       });
-
       createNode({
         mother: profileDescriptionTong,
-        text: designer.designer.split("").join(" "),
         style: {
-          display: "inline-block",
+          display: "flex",
           position: "relative",
-          fontSize: String(32) + ea,
-          fontWeight: String(800),
-          color: colorExtended.black,
-          wordSpacing: String(1) + "px",
-          paddingBottom: String(1) + ea,
-          marginBottom: String(8) + ea,
-        }
+          height: String(50) + ea,
+          width: withOut(0, ea),
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "end",
+          marginBottom: String(nameMargin) + ea,
+        },
+        children: [
+          {
+            text: designer.designer.split("").join(" "),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(nameTitlesize) + ea,
+              fontWeight: String(800),
+              color: colorExtended.black,
+              wordSpacing: String(1) + "px",
+            }
+          },
+          {
+            text: "디자이너",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(14) + ea,
+              fontWeight: String(400),
+              color: colorExtended.black,
+              marginLeft: String(10) + ea,
+              paddingBottom: String(5) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              height: String(20) + ea,
+              borderRadius: String(20) + ea,
+              background: colorExtended.blueDim,
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: String(styleButtonMarginBottom) + ea,
+              paddingLeft: String(8) + ea,
+              paddingRight: String(8) + ea,
+              marginLeft: String(14) + ea,
+            },
+            child: {
+              text: "내추럴",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(-1) + ea,
+                fontSize: String(11) + ea,
+                fontWeight: String(700),
+                color: colorExtended.white,
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              height: String(20) + ea,
+              borderRadius: String(20) + ea,
+              background: colorExtended.blueDim,
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: String(styleButtonMarginBottom) + ea,
+              paddingLeft: String(8) + ea,
+              paddingRight: String(8) + ea,
+              marginLeft: String(3) + ea,
+            },
+            child: {
+              text: "모던",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(-1) + ea,
+                fontSize: String(11) + ea,
+                fontWeight: String(700),
+                color: colorExtended.white,
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              height: String(20) + ea,
+              borderRadius: String(20) + ea,
+              background: colorExtended.blueDim,
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: String(styleButtonMarginBottom) + ea,
+              paddingLeft: String(8) + ea,
+              paddingRight: String(8) + ea,
+              marginLeft: String(3) + ea,
+            },
+            child: {
+              text: "빈티지",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(-1) + ea,
+                fontSize: String(11) + ea,
+                fontWeight: String(700),
+                color: colorExtended.white,
+              }
+            }
+          },
+        ]
       });
-
       createNode({
         mother: profileDescriptionTong,
         style: {
@@ -4425,12 +4546,112 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             display: "inline-block",
             position: "relative",
             fontSize: String(16) + ea,
-            lineHeight: String(1.6),
+            lineHeight: String(1.66),
             fontWeight: String(400),
             color: colorExtended.black,
           }
         }
-      })
+      });
+
+      // first : keywords
+      profileKeywordsTong = createNode({
+        mother: firstTong,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: withOut(profileDescriptionTongWidth + profileMargin + profileHeight + profileLineWidth, ea),
+          height: String(profileHeight) + ea,
+          justifyContent: "start",
+          alignItems: "end",
+          overflow: "hidden",
+          flexDirection: "column",
+        },
+      });
+      createNode({
+        mother: profileKeywordsTong,
+        text: "Designer " + char,
+        style: {
+          display: "flex",
+          position: "relative",
+          fontSize: String(27) + ea,
+          fontWeight: String(700),
+          color: colorExtended.blueDim,
+          fontFamily: "mont",
+          width: withOut(0, ea),
+          justifyContent: "end",
+          top: String(-5) + ea,
+          marginBottom: String(24) + ea,
+        }
+      });
+
+      for (let i = 0; i < 4; i++) {
+        words = designer.keywords[i];
+        createNode({
+          mother: profileKeywordsTong,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            background: colorExtended.blueDark,
+            paddingLeft: String(6) + ea,
+            paddingRight: String(12) + ea,
+            height: String(32) + ea,
+            borderRadius: String(4) + "px",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: i === 4 - 1 ? "" : String(4) + ea,
+          },
+          child: {
+            text: words,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(14) + ea,
+              fontWeight: String(700),
+              color: colorExtended.white,
+              top: String(-1) + ea,
+            },
+            previous: {
+              mode: "svg",
+              source: svgMaker.boxTag(colorExtended.blueDark),
+              style: {
+                position: "absolute",
+                height: String(32) + ea,
+                top: String(0),
+                left: String(-18) + ea,
+              }
+            }
+          }
+        });
+      }
+
+
+      // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+      secondTong = createNode({
+        mother: scrollTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          flexDirection: "row",
+          height: String(360) + ea,
+          marginTop: String(innerMargin) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "absolute",
+              width: "calc(100% + " + String(innerMargin * 2) + ea + ")",
+              left: String(-1 * innerMargin) + ea,
+              height: withOut(0, ea),
+              background: colorExtended.gradientBlue5,
+            }
+          }
+        ]
+      });
+
+
 
 
     } catch (e) {
