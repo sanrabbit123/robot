@@ -4,6 +4,8 @@ __pycache__/
 apps/infoObj.js
 apps/infoObj_bak.js
 apps/memberObj.js
+apps/infoObj.py
+apps/memberObj.py
 binary/
 temp/
 dist/

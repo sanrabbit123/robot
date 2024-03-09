@@ -1,0 +1,2 @@
+#!/bin/bash
+hypercorn entry.human_imageParser:app -b 0.0.0.0:8000 -w 4 --certfile ./pems/home-liaison.onthewifi.com/cert/cert1.pem --keyfile ./pems/home-liaison.onthewifi.com/key/privkey1.pem --ca-certs ./pems/home-liaison.onthewifi.com/ca/chain1.pem --ca-certs ./pems/home-liaison.onthewifi.com/ca/fullchain1.pem

@@ -1,0 +1,2 @@
+#!/bin/bash
+hypercorn entry.human_constructLounge:app -b 0.0.0.0:8000 -w 2 --certfile ./pems/home-liaison.co.kr/cert/cert1.pem --keyfile ./pems/home-liaison.co.kr/key/privkey1.pem --ca-certs ./pems/home-liaison.co.kr/ca/chain1.pem --ca-certs ./pems/home-liaison.co.kr/ca/fullchain1.pem
