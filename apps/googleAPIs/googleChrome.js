@@ -207,7 +207,22 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
   const { equalJson, fileSystem, mediaQuery } = this.mother;
   const { puppeteer } = this;
   const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-  const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ] });
+  const browser = await puppeteer.launch({ headless: "shell", args: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-accelerated-2d-canvas",
+    "--disable-gl-drawing-for-tests",
+    "--disable-backgrounding-occluded-windows",
+    "--disable-renderer-backgrounding",
+    "--disable-canvas-aa",
+    "--disable-2d-canvas-clip-aa",
+    "--hide-scrollbars",
+    "--no-first-run",
+    "--no-zygote",
+    "--single-process",
+    "--disable-gpu",
+  ] });
   try {
     const page = await browser.newPage();
     let funcScript, generalString, frontResponse;
@@ -250,7 +265,22 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong =
   if (noHeadlessMode) {
     browser = await puppeteer.launch({ headless: false, args: [ "--no-sandbox" ] });
   } else {
-    browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ] });
+    browser = await puppeteer.launch({ headless: "shell", args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-accelerated-2d-canvas",
+      "--disable-gl-drawing-for-tests",
+      "--disable-backgrounding-occluded-windows",
+      "--disable-renderer-backgrounding",
+      "--disable-canvas-aa",
+      "--disable-2d-canvas-clip-aa",
+      "--hide-scrollbars",
+      "--no-first-run",
+      "--no-zygote",
+      "--single-process",
+      "--disable-gpu",
+    ] });
   }
   try {
     const page = await browser.newPage();
