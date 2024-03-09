@@ -566,6 +566,170 @@ GeneralJs.prototype.generalCss = function (justTextMode = false) {
   }
 
   @font-face {
+    font-family: 'josseline';
+    src: url('/designSource/font/josseline/Josseline-Regular.woff2') format('woff2'),
+        url('/designSource/font/josseline/Josseline-Regular.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'josseline';
+    src: url('/designSource/font/josseline/Josseline-Regular.woff2') format('woff2'),
+        url('/designSource/font/josseline/Josseline-Regular.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'josseline';
+    src: url('/designSource/font/josseline/Josseline-Regular.woff2') format('woff2'),
+        url('/designSource/font/josseline/Josseline-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'josseline';
+    src: url('/designSource/font/josseline/Josseline-Regular.woff2') format('woff2'),
+        url('/designSource/font/josseline/Josseline-Regular.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'josseline';
+    src: url('/designSource/font/josseline/Josseline-Regular.woff2') format('woff2'),
+        url('/designSource/font/josseline/Josseline-Regular.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'josseline';
+    src: url('/designSource/font/josseline/Josseline-Regular.woff2') format('woff2'),
+        url('/designSource/font/josseline/Josseline-Regular.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'josseline';
+    src: url('/designSource/font/josseline/Josseline-Regular.woff2') format('woff2'),
+        url('/designSource/font/josseline/Josseline-Regular.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'happiness';
+    src: url('/designSource/font/happiness/Happiness-Sans-Print-Regular00.woff2') format('woff2'),
+        url('/designSource/font/happiness/Happiness-Sans-Print-Regular00.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'happiness';
+    src: url('/designSource/font/happiness/Happiness-Sans-Print-Regular00.woff2') format('woff2'),
+        url('/designSource/font/happiness/Happiness-Sans-Print-Regular00.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'happiness';
+    src: url('/designSource/font/happiness/Happiness-Sans-Print-Bold00.woff2') format('woff2'),
+        url('/designSource/font/happiness/Happiness-Sans-Print-Bold00.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'happiness';
+    src: url('/designSource/font/happiness/Happiness-Sans-Print-Title00.woff2') format('woff2'),
+        url('/designSource/font/happiness/Happiness-Sans-Print-Title00.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'happiness';
+    src: url('/designSource/font/happiness/Happiness-Sans-Print-Title00.woff2') format('woff2'),
+        url('/designSource/font/happiness/Happiness-Sans-Print-Title00.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'happiness';
+    src: url('/designSource/font/happiness/Happiness-Sans-Print-Title00.woff2') format('woff2'),
+        url('/designSource/font/happiness/Happiness-Sans-Print-Title00.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'happiness';
+    src: url('/designSource/font/happiness/Happiness-Sans-Print-Title00.woff2') format('woff2'),
+        url('/designSource/font/happiness/Happiness-Sans-Print-Title00.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'score';
+    src: url('/designSource/font/score/S-CoreDream-1Thin.woff2') format('woff2'),
+        url('/designSource/font/score/S-CoreDream-1Thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'score';
+    src: url('/designSource/font/score/S-CoreDream-2ExtraLight.woff2') format('woff2'),
+        url('/designSource/font/score/S-CoreDream-2ExtraLight.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'score';
+    src: url('/designSource/font/score/S-CoreDream-3Light.woff2') format('woff2'),
+        url('/designSource/font/score/S-CoreDream-3Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'score';
+    src: url('/designSource/font/score/S-CoreDream-4Regular.woff2') format('woff2'),
+        url('/designSource/font/score/S-CoreDream-4Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'score';
+    src: url('/designSource/font/score/S-CoreDream-5Medium.woff2') format('woff2'),
+        url('/designSource/font/score/S-CoreDream-5Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'score';
+    src: url('/designSource/font/score/S-CoreDream-6Bold.woff2') format('woff2'),
+        url('/designSource/font/score/S-CoreDream-6Bold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'score';
+    src: url('/designSource/font/score/S-CoreDream-7ExtraBold.woff2') format('woff2'),
+        url('/designSource/font/score/S-CoreDream-7ExtraBold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'score';
+    src: url('/designSource/font/score/S-CoreDream-8Heavy.woff2') format('woff2'),
+        url('/designSource/font/score/S-CoreDream-8Heavy.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'score';
+    src: url('/designSource/font/score/S-CoreDream-9Black.woff2') format('woff2'),
+        url('/designSource/font/score/S-CoreDream-9Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+  }
+
+  @font-face {
       font-family: 'graphik';
       src: url('/designSource/font/graphik/Graphik-Light.woff2') format('woff2'),
           url('/designSource/font/graphik/Graphik-Light.woff') format('woff');
