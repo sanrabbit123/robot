@@ -7,14 +7,14 @@
     <key>RunAtLoad</key>
     <true/>
     <key>Label</key>
-    <string>com.human.server</string>
+    <string>com.robot.server</string>
     <key>ProgramArguments</key>
     <array>
       <string>/opt/homebrew/bin/hypercorn</string>
-      <string>/Users/baechang-gyu/human/entry/human_localLounge:app</string>
+      <string>/Users/baechang-gyu/robot/entry/human_localLounge:app</string>
       <string>-b=0.0.0.0:8000</string>
     </array>
     <key>WorkingDirectory</key>
-    <string>/Users/baechang-gyu/human</string>
+    <string>/Users/baechang-gyu/robot</string>
   </dict>
 </plist>
