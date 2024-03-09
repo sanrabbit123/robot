@@ -186,9 +186,7 @@ DevContext.prototype.launching = async function () {
     // await app.weeklySummary();
 
 
-    const res = await requestSystem("https://home-liaison.serveftp.com/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application" } });
-    
-    console.log(res);
+
     
 
     
