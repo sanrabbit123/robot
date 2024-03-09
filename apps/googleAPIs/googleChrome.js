@@ -199,6 +199,22 @@ GoogleChrome.prototype.getHtml = async function (link) {
   }
 }
 
+GoogleChrome.prototype.killAllChrome = async function () {
+  const instance = this;
+  const os = require(`os`);
+  const thisOs = os.type();
+  const { exec } = require(`child_process`);
+  try {
+    if (thisOs === "linux") {
+      exec(`killall chrome-headless-shell`);
+    } else if (thisOs === "mac") {
+      exec(`killall 'chrome-headless-shell'`);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GoogleChrome.prototype.frontScript = async function (link, func) {
   if (!/^http/.test(link)) {
     throw new Error("invalid link");
@@ -249,11 +265,17 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
   } catch (e) {
     console.log(e);
     await browser.close();
+    process.exit();
     return { message: "error : " + e.message };
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
+    instance.killAllChrome();
   }
 }
 
-GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong = {}, noHeadlessMode = false) {
+GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong = {}) {
   if (!Array.isArray(map)) {
     throw new Error("invalid input => [ { link, async func } ]");
   }
@@ -261,27 +283,22 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong =
   const { equalJson, fileSystem, sleep, mediaQuery } = this.mother;
   const { puppeteer } = this;
   const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-  let browser;
-  if (noHeadlessMode) {
-    browser = await puppeteer.launch({ headless: false, args: [ "--no-sandbox" ] });
-  } else {
-    browser = await puppeteer.launch({ headless: "shell", args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-accelerated-2d-canvas",
-      "--disable-gl-drawing-for-tests",
-      "--disable-backgrounding-occluded-windows",
-      "--disable-renderer-backgrounding",
-      "--disable-canvas-aa",
-      "--disable-2d-canvas-clip-aa",
-      "--hide-scrollbars",
-      "--no-first-run",
-      "--no-zygote",
-      "--single-process",
-      "--disable-gpu",
-    ] });
-  }
+  const browser = await puppeteer.launch({ headless: "shell", args: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-accelerated-2d-canvas",
+    "--disable-gl-drawing-for-tests",
+    "--disable-backgrounding-occluded-windows",
+    "--disable-renderer-backgrounding",
+    "--disable-canvas-aa",
+    "--disable-2d-canvas-clip-aa",
+    "--hide-scrollbars",
+    "--no-first-run",
+    "--no-zygote",
+    "--single-process",
+    "--disable-gpu",
+  ] });
   try {
     const page = await browser.newPage();
     let funcScript, generalString, frontResponse, frontResponses;
@@ -308,7 +325,13 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong =
   } catch (e) {
     console.log(e);
     await browser.close();
+    process.exit();
     return { message: "error : " + e.message };
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
+    instance.killAllChrome();
   }
 }
 
