@@ -2206,7 +2206,7 @@ StaticRouter.prototype.rou_post_killAllChrome = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      chrome.killAllChrome();
+      await chrome.killAllChrome();
       res.send(JSON.stringify({ success: 1 }));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_killAllChrome): " + e.message).catch((e) => { console.log(e); });

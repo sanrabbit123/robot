@@ -203,12 +203,12 @@ GoogleChrome.prototype.killAllChrome = async function () {
   const instance = this;
   const os = require(`os`);
   const thisOs = os.type();
-  const { exec } = require(`child_process`);
+  const { shellExec } = this.mother;
   try {
-    if (thisOs === "linux") {
-      exec(`killall chrome-headless-shell`);
-    } else if (thisOs === "mac") {
-      exec(`killall 'chrome-headless-shell'`);
+    if (/Linux/gi.test(thisOs)) {
+      await shellExec(`killall chrome-headless-shell`);
+    } else if (/Darwin/gi.test(thisOs)) {
+      await shellExec(`killall 'chrome-headless-shell'`);
     }
   } catch (e) {
     console.log(e);
@@ -256,6 +256,7 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
     frontResponse = await page.evaluate(new AsyncFunction(funcScript));
 
     await browser.close();
+    await instance.killAllChrome();
 
     try {
       return equalJson(frontResponse);
@@ -271,7 +272,7 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
     if (browser) {
       await browser.close();
     }
-    instance.killAllChrome();
+    await instance.killAllChrome();
   }
 }
 
@@ -320,6 +321,7 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong =
     }
 
     await browser.close();
+    await instance.killAllChrome();
 
     return frontResponses;
   } catch (e) {
@@ -331,7 +333,7 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong =
     if (browser) {
       await browser.close();
     }
-    instance.killAllChrome();
+    await instance.killAllChrome();
   }
 }
 
