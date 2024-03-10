@@ -4546,7 +4546,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                             position: "relative",
                             top: String(factorTextTop) + ea,
                             fontSize: String(factorSize) + ea,
-                            fontWeight: String(200),
+                            fontWeight: String(200),.'[]]
                             color: colorExtended.black,
                             textAlign: "right",
                           },
@@ -5262,6 +5262,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           })
         }
       ]);
+
 
     } catch (e) {
       console.log(e);
