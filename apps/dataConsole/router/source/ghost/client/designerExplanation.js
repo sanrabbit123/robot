@@ -4243,7 +4243,7 @@ DesignerExplanationJs.prototype.insertFourthBox = async function () {
 
 DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, ajaxJson, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -4280,6 +4280,14 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let num;
       let nameTitlesize;
       let words;
+      let positionData;
+      let blockInnerPadding;
+      let paperWorksHeight;
+      let paperBetween;
+      let blockTitleSize;
+      let blockTitleBlockHeight;
+      let arrowLeftMargin;
+      let blockTitleMarginBottom;
 
       whiteMargin = 30;
       innerMargin = 60;
@@ -4300,7 +4308,19 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       nameTitlesize = 32;
       nameMargin = 12;
+
+      blockTitleBlockHeight = 30;
+      blockTitleSize = 21;
+      blockInnerPadding = 54;
+      paperWorksHeight = 260;
   
+      paperBetween = 6;
+      arrowLeftMargin = 30;
+
+      blockTitleMarginBottom = 11;
+
+      ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
+
       cancelBack = createNode({
         mother: totalContents,
         class: [ whitePopupClassName ],
@@ -4457,9 +4477,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             style: {
               display: "inline-flex",
               position: "relative",
-              height: String(20) + ea,
-              borderRadius: String(20) + ea,
-              background: colorExtended.blueDim,
+              height: String(21) + ea,
+              borderRadius: String(21) + ea,
+              background: colorExtended.mainBlue,
               justifyContent: "center",
               alignItems: "center",
               marginBottom: String(styleButtonMarginBottom) + ea,
@@ -4483,9 +4503,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             style: {
               display: "inline-flex",
               position: "relative",
-              height: String(20) + ea,
-              borderRadius: String(20) + ea,
-              background: colorExtended.blueDim,
+              height: String(21) + ea,
+              borderRadius: String(21) + ea,
+              background: colorExtended.mainBlue,
               justifyContent: "center",
               alignItems: "center",
               marginBottom: String(styleButtonMarginBottom) + ea,
@@ -4509,9 +4529,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             style: {
               display: "inline-flex",
               position: "relative",
-              height: String(20) + ea,
-              borderRadius: String(20) + ea,
-              background: colorExtended.blueDim,
+              height: String(21) + ea,
+              borderRadius: String(21) + ea,
+              background: colorExtended.mainBlue,
               justifyContent: "center",
               alignItems: "center",
               marginBottom: String(styleButtonMarginBottom) + ea,
@@ -4575,7 +4595,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           position: "relative",
           fontSize: String(27) + ea,
           fontWeight: String(700),
-          color: colorExtended.blueDim,
+          color: colorExtended.blueDark,
           fontFamily: "mont",
           width: withOut(0, ea),
           justifyContent: "end",
@@ -4591,7 +4611,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           style: {
             display: "inline-flex",
             position: "relative",
-            background: colorExtended.blueDark,
+            background: colorExtended.mainBlue,
             paddingLeft: String(6) + ea,
             paddingRight: String(12) + ea,
             height: String(32) + ea,
@@ -4612,7 +4632,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             },
             previous: {
               mode: "svg",
-              source: svgMaker.boxTag(colorExtended.blueDark),
+              source: svgMaker.boxTag(colorExtended.mainBlue),
               style: {
                 position: "absolute",
                 height: String(32) + ea,
@@ -4627,15 +4647,17 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+
       secondTong = createNode({
         mother: scrollTong,
         style: {
           display: "flex",
           position: "relative",
           width: withOut(0, ea),
-          flexDirection: "row",
-          height: String(360) + ea,
-          marginTop: String(innerMargin) + ea,
+          flexDirection: "column",
+          marginTop: String(blockInnerPadding) + ea,
+          paddingTop: String(blockInnerPadding) + ea,
+          paddingBottom: String(blockInnerPadding) + ea,
         },
         children: [
           {
@@ -4643,6 +4665,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               display: "block",
               position: "absolute",
               width: "calc(100% + " + String(innerMargin * 2) + ea + ")",
+              top: String(0),
               left: String(-1 * innerMargin) + ea,
               height: withOut(0, ea),
               background: colorExtended.gradientBlue5,
@@ -4650,6 +4673,121 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           }
         ]
       });
+
+
+      createNode({
+        mother: secondTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(blockTitleBlockHeight) + ea,
+          alignItems: "start",
+          justifyContent: "start",
+        },
+        child: {
+          text: "PAPER WORKS",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(blockTitleSize) + ea,
+            fontWeight: String(700),
+            color: colorExtended.white,
+            fontFamily: "mont",
+          }
+        }
+      });
+
+      createNode({
+        mother: secondTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(paperWorksHeight) + ea,
+          overflow: "visible",
+          marginTop: String(blockTitleMarginBottom) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "absolute",
+              top: "calc(50% - " + String(24 / 2) + ea + ")",
+              width: String(12) + ea,
+              height: String(24) + ea,
+              left: String(-1 * arrowLeftMargin) + ea,
+            },
+            child: {
+              mode: "svg",
+              source: svgMaker.buttonLineArrow(colorExtended.white),
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(24) + ea,
+                transform: "rotate(180deg)",
+              }
+            }
+          },
+          {
+            style: {
+              display: "block",
+              position: "absolute",
+              top: "calc(50% - " + String(24 / 2) + ea + ")",
+              width: String(12) + ea,
+              height: String(24) + ea,
+              right: String(-1 * arrowLeftMargin) + ea,
+            },
+            child: {
+              mode: "svg",
+              source: svgMaker.buttonLineArrow(colorExtended.white),
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(24) + ea,
+              }
+            }
+          },
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              overflow: "scroll",
+            },
+            child: {
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(8000) + ea,
+                height: withOut(0, ea),
+              },
+              children: positionData.filter((raw, i) => {
+                return positionData[i] !== undefined && positionData[i] !== 0 && positionData[i] !== "0"
+              }).map((raw, i) => {
+                return {
+                  mode: "img",
+                  attribute: {
+                    src: "https://" + FILEHOST + stringToLink(positionData[i]),
+                  },
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    height: String(paperWorksHeight) + ea,
+                    borderRadius: String(5) + "px",
+                    marginRight: String(paperBetween) + ea,
+                  }
+                }
+              })
+            }
+          }
+        ]
+      })
+
+
+
+
 
 
 
