@@ -4241,6 +4241,35 @@ DesignerExplanationJs.prototype.insertFourthBox = async function () {
   }
 }
 
+DesignerExplanationJs.prototype.styleTextParsing = function (text) {
+  const cssArr = text.split(';');
+  let filterArr;
+  let tempArr, finalObj;
+  finalObj = {};
+
+  filterArr = [];
+  for (let i of cssArr) {
+    if (/\:/.test(i)) {
+      filterArr.push(i.trim());
+    }
+  }
+
+  for (let i of filterArr) {
+    tempArr = i.split(':');
+    if (tempArr.length !== 2) {
+      console.log(cssArr, filterArr);
+      throw new Error("invaild css string");
+    }
+    if (/url\(/gi.test(tempArr[1].trim())) {
+      finalObj[tempArr[0].trim()] = "url(\"" + BRIDGEHOST.replace(/\:3000$/gi, '') + tempArr[1].trim().replace(/^url\([\"\']/gi, '').replace(/[\"\']\)$/gi, '') + "\")";
+    } else {
+      finalObj[tempArr[0].trim()] = tempArr[1].trim();
+    }
+  }
+
+  return finalObj;
+}
+
 DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, ajaxJson, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
@@ -4288,9 +4317,28 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let blockTitleBlockHeight;
       let arrowLeftMargin;
       let blockTitleMarginBottom;
+      let thirdTong;
+      let styleObject;
+      let pictureBase;
+      let whiteStandardWidth;
+      let pictureBaseHeight;
+      let fourthTong;
+      let infoTong;
+      let factorHeight;
+      let factorWidth;
+      let factorSize, factorBoldWeight, factorWeight;
+      let factorTextTop;
+      let factorBetween;
+      let infoMiddleBase;
+      let infoMiddleMother;
+      let whiteBlockMarginBottom;
+      let whiteBlockOuterMargin;
+      let titleTextIndent;
+      let factorLightWeight;
+      let insertWhiteBlock;
 
       whiteMargin = 30;
-      innerMargin = 60;
+      innerMargin = 52;
 
       titleHeight = <%% 41, 39, 37, 28, 8 %%>;  
       titleSize = 40;
@@ -4302,7 +4350,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       profileLineWidth = 10;
       profileMargin = 30;
 
-      profileDescriptionTongWidth = 800;
+      profileDescriptionTongWidth = 700;
 
       styleButtonMarginBottom = 4;
 
@@ -4311,7 +4359,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       blockTitleBlockHeight = 30;
       blockTitleSize = 21;
-      blockInnerPadding = 54;
+      blockInnerPadding = 52;
       paperWorksHeight = 260;
   
       paperBetween = 6;
@@ -4319,7 +4367,221 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       blockTitleMarginBottom = 11;
 
+      whiteStandardWidth = <%% 1300, 1050, 900, 720, 88 %%>;
+
+      pictureBaseHeight = 828;
+      factorHeight = 38;
+      factorWidth = 292;
+
+      factorTextTop = -0.5;
+      factorSize = 14.5;
+      factorBoldWeight = 800;
+      factorWeight = 700;
+      factorBetween = 5;
+
+      whiteBlockMarginBottom = 4;
+      whiteBlockOuterMargin = 10;
+
+      titleTextIndent = 24;
+
+      factorLightWeight = 500;
+
       ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
+
+      insertWhiteBlock = (infoMiddleMother, values) => {
+        let infoMiddleBase, num;
+
+        infoMiddleBase = createNode({
+          mother: infoMiddleMother,
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            boxSizing: "border-box",
+            borderRadius: String(5) + "px",
+            background: colorExtended.white,
+            marginBottom: String(whiteBlockMarginBottom) + ea,
+            boxShadow: "0px 4px 15px -9px " + colorExtended.darkDarkShadow,
+            overflow: "hidden",
+          }
+        });
+
+        num = 0;
+        for (let { type, title, value } of values) {
+          if (type === "string") {
+            createNode({
+              mother: infoMiddleBase,
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                height: String(factorHeight) + ea,
+                width: "calc(100% / " + String(4) + ")",
+                flexDirection: "row",
+                overflow: "hidden",
+                boxSizing: "border-box",
+              },
+              children: [
+                {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    width: "calc(100% / " + String(2) + ")",
+                    height: withOut(0, ea),
+                    justifyContent: "start",
+                    alignItems: "center",
+                    background: colorExtended.white,
+                  },
+                  child: {
+                    text: title,
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(factorTextTop) + ea,
+                      fontSize: String(factorSize) + ea,
+                      fontWeight: String(factorBoldWeight),
+                      color: colorExtended.mainBlue,
+                      textAlign: "left",
+                      left: String(titleTextIndent) + ea,
+                    }
+                  }
+                },
+                {
+                  style: {
+                    display: "inline-flex",
+                    position: "absolute",
+                    top: String(0),
+                    right: String(0),
+                    height: withOut(0, ea),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    background: colorExtended.white,
+                    borderRight: num === values.length - 1 ? "" : "1px dashed " + colorExtended.mainBlue,
+                    paddingRight: String(titleTextIndent) + ea,
+                  },
+                  child: {
+                    text: value,
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(factorTextTop) + ea,
+                      fontSize: String(factorSize) + ea,
+                      fontWeight: String(factorLightWeight),
+                      color: colorExtended.black,
+                      textAlign: "right",
+                    }
+                  }
+                },
+              ]
+            });
+          } else {
+            createNode({
+              mother: infoMiddleBase,
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                height: String(factorHeight) + ea,
+                width: "calc(100% / " + String(4) + ")",
+                flexDirection: "row",
+                overflow: "hidden",
+                boxSizing: "border-box",
+              },
+              children: [
+                {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    width: "calc(100% / " + String(2) + ")",
+                    height: withOut(0, ea),
+                    justifyContent: "start",
+                    alignItems: "center",
+                    background: colorExtended.white,
+                  },
+                  child: {
+                    text: title,
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(factorTextTop) + ea,
+                      fontSize: String(factorSize) + ea,
+                      fontWeight: String(factorBoldWeight),
+                      color: colorExtended.mainBlue,
+                      textAlign: "left",
+                      left: String(titleTextIndent) + ea,
+                    }
+                  }
+                },
+                {
+                  style: {
+                    display: "inline-flex",
+                    position: "absolute",
+                    top: String(0),
+                    right: String(0),
+                    height: withOut(0, ea),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    background: colorExtended.white,
+                    borderRight: num === values.length - 1 ? "" : "1px dashed " + colorExtended.mainBlue,
+                    paddingRight: String(titleTextIndent) + ea,
+                  },
+                  children: value.map(({ title, value: valueNumber }, index) => {
+                    if (index !== value.length - 1) {
+                      return [
+                        {
+                          text: title,
+                          style: {
+                            display: "inline-block",
+                            position: "relative",
+                            top: String(factorTextTop) + ea,
+                            fontSize: String(factorSize) + ea,
+                            fontWeight: String(factorLightWeight),
+                            color: valueNumber === 1 ? colorExtended.black : colorExtended.deactive,
+                            textAlign: "right",
+                            borderBottom: valueNumber === 1 ? "1px solid " + colorExtended.mainBlue : "",
+                          }
+                        },
+                        {
+                          text: "&nbsp;&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;&nbsp;",
+                          style: {
+                            display: "inline-block",
+                            position: "relative",
+                            top: String(factorTextTop) + ea,
+                            fontSize: String(factorSize) + ea,
+                            fontWeight: String(200),
+                            color: colorExtended.black,
+                            textAlign: "right",
+                          },
+                          bold: {
+                            fontSize: String(factorSize) + ea,
+                            fontWeight: String(300),
+                            color: colorExtended.mainBlue,
+                          }
+                        },
+                      ]
+                    } else {
+                      return [
+                        {
+                          text: title,
+                          style: {
+                            display: "inline-block",
+                            position: "relative",
+                            top: String(factorTextTop) + ea,
+                            fontSize: String(factorSize) + ea,
+                            fontWeight: String(factorLightWeight),
+                            color: valueNumber === 1 ? colorExtended.black : colorExtended.deactive,
+                            textAlign: "right",
+                            borderBottom: valueNumber === 1 ? "1px solid " + colorExtended.mainBlue : "",
+                          }
+                        },
+                      ]
+                    }
+                  }).flat()
+                },
+              ]
+            });
+          }
+          num++;
+        }
+      }
 
       cancelBack = createNode({
         mother: totalContents,
@@ -4346,15 +4608,14 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         class: [ whitePopupClassName ],
         style: {
           position: "fixed",
-          width: String(standardWidth) + ea,
-          height: "calc(calc(100% - " + String(naviHeight) + "px" + ") - " + String((whiteMargin * 2) + innerMargin) + ea + ")",
+          width: String(whiteStandardWidth) + ea,
+          height: "calc(calc(100% - " + String(naviHeight) + "px" + ") - " + String((whiteMargin * 2)) + ea + ")",
           top: "calc(" + String(naviHeight) + "px" + " + " + String(whiteMargin) + ea + ")",
-          left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+          left: "calc(50% - " + String(whiteStandardWidth / 2) + ea + ")",
           borderRadius: String(5) + "px",
           background: colorChip.white,
           boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
           animation: "fadeuporiginal 0.3s ease forwards",
-          paddingTop: String(innerMargin) + ea,
           zIndex: String(zIndex),
         }
       });
@@ -4365,18 +4626,20 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           display: "block",
           position: "relative",
           width: withOut(0 * 2, ea),
-          height: withOut(innerMargin, ea),
+          height: withOut(0, ea),
           overflow: "scroll",
         },
         child: {
           style: {
             display: "block",
             position: "relative",
+            paddingTop: String(innerMargin) + ea,
             width: withOut(innerMargin * 2, ea),
             height: "auto",
             marginLeft: String(innerMargin) + ea,
             marginRight: String(innerMargin) + ea,
             overflow: "visible",
+            paddingBottom: String(800) + ea,
           }
         }
       }).firstChild;
@@ -4647,7 +4910,6 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
       secondTong = createNode({
         mother: scrollTong,
         style: {
@@ -4673,8 +4935,6 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           }
         ]
       });
-
-
       createNode({
         mother: secondTong,
         style: {
@@ -4697,7 +4957,6 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           }
         }
       });
-
       createNode({
         mother: secondTong,
         style: {
@@ -4783,12 +5042,246 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             }
           }
         ]
+      });
+
+      // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+      thirdTong = createNode({
+        mother: scrollTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          flexDirection: "column",
+          paddingTop: String(blockInnerPadding) + ea,
+          paddingBottom: String(58) + ea,
+          borderBottom: "1px dashed " + colorExtended.mainBlue,
+        },
+      });
+      createNode({
+        mother: thirdTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(blockTitleBlockHeight) + ea,
+          alignItems: "start",
+          justifyContent: "start",
+        },
+        child: {
+          text: "INTERIOR",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(blockTitleSize) + ea,
+            fontWeight: String(700),
+            color: colorExtended.black,
+            fontFamily: "mont",
+          }
+        }
+      });
+      pictureBase = createNode({
+        mother: thirdTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(pictureBaseHeight) + ea,
+          overflow: "visible",
+          marginTop: String(blockTitleMarginBottom) + ea,
+        },
+      });
+      for (let obj of proposal.pictureSettings) {
+        styleObject = instance.styleTextParsing(obj.styleText);
+        createNode({
+          mother: pictureBase,
+          style: {
+            display: "inline-block",
+            position: "absolute",
+            borderRadius: String(5) + "px",
+            backgroundSize: "100% auto",
+            backgroundPosition: "50% 50%",
+            ...styleObject,
+          }
+        });
+      }
+
+      // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+      fourthTong = createNode({
+        mother: scrollTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          flexDirection: "column",
+          paddingTop: String(blockInnerPadding) + ea,
+          paddingBottom: String(blockInnerPadding) + ea,
+        },
+      });
+      createNode({
+        mother: fourthTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(blockTitleBlockHeight) + ea,
+          alignItems: "start",
+          justifyContent: "start",
+        },
+        child: {
+          text: "INFO",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(blockTitleSize) + ea,
+            fontWeight: String(700),
+            color: colorExtended.black,
+            fontFamily: "mont",
+          }
+        }
+      });
+
+      infoTong = createNode({
+        mother: fourthTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(pictureBaseHeight) + ea,
+          overflow: "visible",
+          marginTop: String(blockTitleMarginBottom) + ea,
+        },
+      });
+
+      infoMiddleMother = createNode({
+        mother: infoTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(whiteBlockOuterMargin * 2, ea),
+          borderRadius: String(5) + "px",
+          padding: String(whiteBlockOuterMargin) + ea,
+          paddingBottom: String(whiteBlockOuterMargin - whiteBlockMarginBottom) + ea,
+          background: colorExtended.gradientBlue,
+        }
       })
 
+      insertWhiteBlock(infoMiddleMother, [
+        {
+          title: "유관 경력",
+          type: "string",
+          value: "0년 0개월",
+        },
+        {
+          title: "빌트인 가구 제작",
+          type: "selection",
+          value: [
+            { title: "가능", value: 1 },
+            { title: "불가능", value: 0 },
+          ],
+        },
+        {
+          title: "CAD 도면",
+          type: "selection",
+          value: [
+            { title: "가능", value: 1 },
+            { title: "불가능", value: 0 },
+          ],
+        },
+        {
+          title: "1차 제안 받는 시점",
+          type: "string",
+          value: "2주 이내",
+        },
+      ]);
 
+      insertWhiteBlock(infoMiddleMother, [
+        {
+          title: "유관 경력",
+          type: "string",
+          value: "0년 0개월",
+        },
+        {
+          title: "빌트인 가구 제작",
+          type: "selection",
+          value: [
+            { title: "가능", value: 1 },
+            { title: "불가능", value: 0 },
+          ],
+        },
+        {
+          title: "CAD 도면",
+          type: "selection",
+          value: [
+            { title: "가능", value: 1 },
+            { title: "불가능", value: 0 },
+          ],
+        },
+        {
+          title: "1차 제안 받는 시점",
+          type: "string",
+          value: "2주 이내",
+        },
+      ]);
 
+      insertWhiteBlock(infoMiddleMother, [
+        {
+          title: "유관 경력",
+          type: "string",
+          value: "0년 0개월",
+        },
+        {
+          title: "빌트인 가구 제작",
+          type: "selection",
+          value: [
+            { title: "가능", value: 1 },
+            { title: "불가능", value: 0 },
+          ],
+        },
+        {
+          title: "CAD 도면",
+          type: "selection",
+          value: [
+            { title: "가능", value: 1 },
+            { title: "불가능", value: 0 },
+          ],
+        },
+        {
+          title: "1차 제안 받는 시점",
+          type: "string",
+          value: "2주 이내",
+        },
+      ]);
 
-
+      insertWhiteBlock(infoMiddleMother, [
+        {
+          title: "유관 경력",
+          type: "string",
+          value: "0년 0개월",
+        },
+        {
+          title: "빌트인 가구 제작",
+          type: "selection",
+          value: [
+            { title: "가능", value: 1 },
+            { title: "불가능", value: 0 },
+          ],
+        },
+        {
+          title: "CAD 도면",
+          type: "selection",
+          value: [
+            { title: "가능", value: 1 },
+            { title: "불가능", value: 0 },
+          ],
+        },
+        {
+          title: "1차 제안 받는 시점",
+          type: "string",
+          value: "2주 이내",
+        },
+      ]);
 
 
 
