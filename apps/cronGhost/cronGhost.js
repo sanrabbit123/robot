@@ -197,19 +197,6 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
       return requestSystem("https://" + address.secondinfo.host + ":" + String(generalPort) + "/designerCareerSync", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/metaAccountCheck", { data: null }, { headers: { "Content-Type": "application/json" } });
-    }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/killAllChrome", { data: null }, { headers: { "Content-Type": "application/json" } });
-    }).then(() => {
-      setTimeout(() => {
-        requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/killAllChrome", { data: null }, { headers: { "Content-Type": "application/json" } }).catch((e) => {
-          throw new Error(e);
-        });
-      }, 1 * 5 * 60 * 1000);
-      setTimeout(() => {
-        requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/killAllChrome", { data: null }, { headers: { "Content-Type": "application/json" } }).catch((e) => {
-          throw new Error(e);
-        });
-      }, 1 * 10 * 60 * 1000);
     }).catch((e) => {
       throw new Error(e);
     });
