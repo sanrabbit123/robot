@@ -4407,7 +4407,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         });
 
         num = 0;
-        for (let { type, title, value } of values) {
+        for (let { type, title, double, value } of values) {
           if (type === "string") {
             createNode({
               mother: infoMiddleBase,
@@ -4415,7 +4415,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 display: "inline-flex",
                 position: "relative",
                 height: String(factorHeight) + ea,
-                width: "calc(100% / " + String(4) + ")",
+                width: double ? "calc(100% / " + String(2) + ")" : "calc(100% / " + String(4) + ")",
                 flexDirection: "row",
                 overflow: "hidden",
                 boxSizing: "border-box",
@@ -4480,7 +4480,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 display: "inline-flex",
                 position: "relative",
                 height: String(factorHeight) + ea,
-                width: "calc(100% / " + String(4) + ")",
+                width: double ? "calc(100% / " + String(2) + ")" : "calc(100% / " + String(4) + ")",
                 flexDirection: "row",
                 overflow: "hidden",
                 boxSizing: "border-box",
@@ -4540,7 +4540,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                           }
                         },
                         {
-                          text: "&nbsp;&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;&nbsp;",
+                          text: double ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;&nbsp;",
                           style: {
                             display: "inline-block",
                             position: "relative",
@@ -5171,40 +5171,39 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         {
           title: "유관 경력",
           type: "string",
+          double: false,
+          value: "0년 0개월",
+        },
+        {
+          title: "홈리에종 소속 기간",
+          type: "string",
+          double: false,
           value: "0년 0개월",
         },
         {
           title: "빌트인 가구 제작",
           type: "selection",
+          double: false,
           value: [
             { title: "가능", value: 1 },
             { title: "불가능", value: 0 },
           ],
         },
         {
-          title: "CAD 도면",
+          title: "디자인 가구 제작",
           type: "selection",
+          double: false,
           value: [
             { title: "가능", value: 1 },
             { title: "불가능", value: 0 },
           ],
-        },
-        {
-          title: "1차 제안 받는 시점",
-          type: "string",
-          value: "2주 이내",
         },
       ]);
-
       insertWhiteBlock(infoMiddleMother, [
         {
-          title: "유관 경력",
-          type: "string",
-          value: "0년 0개월",
-        },
-        {
-          title: "빌트인 가구 제작",
+          title: "3D",
           type: "selection",
+          double: false,
           value: [
             { title: "가능", value: 1 },
             { title: "불가능", value: 0 },
@@ -5213,77 +5212,56 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         {
           title: "CAD 도면",
           type: "selection",
+          double: false,
           value: [
             { title: "가능", value: 1 },
             { title: "불가능", value: 0 },
           ],
         },
         {
-          title: "1차 제안 받는 시점",
-          type: "string",
-          value: "2주 이내",
+          title: "콜라주",
+          type: "selection",
+          double: false,
+          value: [
+            { title: "가능", value: 1 },
+            { title: "불가능", value: 0 },
+          ],
+        },
+        {
+          title: "패브릭 제작",
+          type: "selection",
+          double: false,
+          value: [
+            { title: "가능", value: 1 },
+            { title: "불가능", value: 0 },
+          ],
         },
       ]);
-
       insertWhiteBlock(infoMiddleMother, [
         {
-          title: "유관 경력",
-          type: "string",
-          value: "0년 0개월",
-        },
-        {
-          title: "빌트인 가구 제작",
-          type: "selection",
-          value: [
-            { title: "가능", value: 1 },
-            { title: "불가능", value: 0 },
-          ],
-        },
-        {
-          title: "CAD 도면",
-          type: "selection",
-          value: [
-            { title: "가능", value: 1 },
-            { title: "불가능", value: 0 },
-          ],
-        },
-        {
           title: "1차 제안 받는 시점",
           type: "string",
+          double: false,
           value: "2주 이내",
         },
-      ]);
-
-      insertWhiteBlock(infoMiddleMother, [
         {
-          title: "유관 경력",
-          type: "string",
-          value: "0년 0개월",
-        },
-        {
-          title: "빌트인 가구 제작",
+          title: "제안 방식",
           type: "selection",
+          double: false,
           value: [
-            { title: "가능", value: 1 },
-            { title: "불가능", value: 0 },
+            { title: "순차 제안", value: 1 },
+            { title: "한 번에 제안", value: 0 },
           ],
         },
         {
-          title: "CAD 도면",
+          title: "역량 범위",
           type: "selection",
-          value: [
-            { title: "가능", value: 1 },
-            { title: "불가능", value: 0 },
-          ],
-        },
-        {
-          title: "1차 제안 받는 시점",
-          type: "string",
-          value: "2주 이내",
-        },
+          double: true,
+          value: serviceParsing().name.map((str, index) => {
+            return { title: str, value: index === 0 ? 1 : 0 }
+          })
+        }
       ]);
-
-
 
     } catch (e) {
       console.log(e);
