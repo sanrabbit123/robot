@@ -287,7 +287,7 @@ CronGhost.prototype.cronServer = async function () {
   const instance = this;
   const address = this.address;
   const { shellExec, fileSystem, messageSend, requestSystem, pureServer, dateToString, mongo, mongolocalinfo, mongoinfo, mongoconsoleinfo, errorLog } = this.mother;
-  const port = 8080;
+  const port = 3000;
   const interval = (10 * 60 * 1000);
   const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
   const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num) }
@@ -461,7 +461,7 @@ CronGhost.prototype.cronServer = async function () {
 
     // set pem key
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + address.officeinfo.ghost.host;
+    pemsLink = process.cwd() + "/pems/" + address.aliveinfo.host;
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
     caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
