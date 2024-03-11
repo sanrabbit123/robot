@@ -4261,8 +4261,8 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             vivid: { name: "비비드", value: designer.analytics.styling.tendency.color.vivid },
             white: { name: "화이트", value: designer.analytics.styling.tendency.color.white },
             mono: { name: "모노톤", value: designer.analytics.styling.tendency.color.mono },
-            bright: { name: "밝은톤", value: designer.analytics.styling.tendency.color.bright },
-            dark: { name: "어두운톤", value: designer.analytics.styling.tendency.color.dark },
+            bright: { name: "밝은 톤", value: designer.analytics.styling.tendency.color.bright },
+            dark: { name: "어두운 톤", value: designer.analytics.styling.tendency.color.dark },
             __order__: [
               "darkWood",
               "whiteWood",

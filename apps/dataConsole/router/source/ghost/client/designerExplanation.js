@@ -4280,10 +4280,16 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
   const totalContents = document.getElementById("totalcontents");
   return async function (e) {
     try {
+      const loading = instance.mother.grayLoading();
       const project = instance.project;
       const designer = instance.designers.find((d) => { return d.desid === desid });
       const proposal = project.proposal.detail.find((p) => { return p.desid === desid });
       const zIndex = 4;
+      const web = {
+        portfolio: FRONTHOST + "/portdetail.php?pid=",
+        review: FRONTHOST + "/revdetail.php?pid="
+      };
+      const { contentsArr } = await ajaxJson({ mode: "designer", desid }, LOGHOST + "/getContents", { equal: true });
       let cancelBack, whiteBase;
       let whiteMargin;
       let innerMargin;
@@ -4336,6 +4342,20 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let titleTextIndent;
       let factorLightWeight;
       let insertWhiteBlock;
+      let leftTendency, rightTendency;
+      let tendencyMotherHeight;
+      let tendencyNameAreaWidth;
+      let tendencyBarHeight;
+      let tendencySize, tendencyTextTop, tendencyWeight;
+      let tendencyNum;
+      let tendencyBoxPaddingTop;
+      let fifthTong;
+      let largePaddingBottom;
+      let portfolioTong;
+      let portfolioMiddleMother;
+      let contentsNum;
+      let sourceArr;
+      let sixthTong;
 
       whiteMargin = 30;
       innerMargin = 52;
@@ -4367,10 +4387,10 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       blockTitleMarginBottom = 11;
 
-      whiteStandardWidth = <%% 1300, 1050, 900, 720, 88 %%>;
+      whiteStandardWidth = <%% 1320, 1050, 900, 720, 88 %%>;
 
       pictureBaseHeight = 828;
-      factorHeight = 38;
+      factorHeight = 42;
       factorWidth = 292;
 
       factorTextTop = -0.5;
@@ -4379,16 +4399,33 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       factorWeight = 700;
       factorBetween = 5;
 
-      whiteBlockMarginBottom = 4;
+      whiteBlockMarginBottom = 5;
       whiteBlockOuterMargin = 10;
 
       titleTextIndent = 24;
 
       factorLightWeight = 500;
+      tendencyMotherHeight = 21;
+      tendencyNameAreaWidth = 64;
+      tendencyBarHeight = 14;
+
+      tendencySize = 13;
+      tendencyTextTop = -1;
+      tendencyWeight = 600;
+      tendencyBoxPaddingTop = 16;
+
+      largePaddingBottom = 58;
 
       ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
 
-      insertWhiteBlock = (infoMiddleMother, values) => {
+      sourceArr = [];
+      for (let { contents } of contentsArr) {
+        sourceArr.push({ date: contents.portfolio.date, title: { portfolio: contents.portfolio.title.main, review: contents.review.title.main }, link: { portfolio: web.portfolio + contents.portfolio.pid, review: web.review + contents.portfolio.pid } });
+      }
+      sourceArr.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+      sourceArr = sourceArr.slice(0, 20);
+
+      insertWhiteBlock = (infoMiddleMother, values, last = false) => {
         let infoMiddleBase, num;
 
         infoMiddleBase = createNode({
@@ -4400,7 +4437,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             boxSizing: "border-box",
             borderRadius: String(5) + "px",
             background: colorExtended.white,
-            marginBottom: String(whiteBlockMarginBottom) + ea,
+            marginBottom: String(!last ? whiteBlockMarginBottom : whiteBlockMarginBottom) + ea,
             boxShadow: "0px 4px 15px -9px " + colorExtended.darkDarkShadow,
             overflow: "hidden",
           }
@@ -4546,7 +4583,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                             position: "relative",
                             top: String(factorTextTop) + ea,
                             fontSize: String(factorSize) + ea,
-                            fontWeight: String(200),.'[]]
+                            fontWeight: String(200),
                             color: colorExtended.black,
                             textAlign: "right",
                           },
@@ -4639,7 +4676,6 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             marginLeft: String(innerMargin) + ea,
             marginRight: String(innerMargin) + ea,
             overflow: "visible",
-            paddingBottom: String(800) + ea,
           }
         }
       }).firstChild;
@@ -5054,7 +5090,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           width: withOut(0, ea),
           flexDirection: "column",
           paddingTop: String(blockInnerPadding) + ea,
-          paddingBottom: String(58) + ea,
+          paddingBottom: String(largePaddingBottom) + ea,
           borderBottom: "1px dashed " + colorExtended.mainBlue,
         },
       });
@@ -5116,7 +5152,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           width: withOut(0, ea),
           flexDirection: "column",
           paddingTop: String(blockInnerPadding) + ea,
-          paddingBottom: String(blockInnerPadding) + ea,
+          paddingBottom: String(largePaddingBottom) + ea,
+          borderBottom: "1px dashed " + colorExtended.mainBlue,
         },
       });
       createNode({
@@ -5148,12 +5185,10 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           display: "block",
           position: "relative",
           width: withOut(0, ea),
-          height: String(pictureBaseHeight) + ea,
           overflow: "visible",
           marginTop: String(blockTitleMarginBottom) + ea,
         },
       });
-
       infoMiddleMother = createNode({
         mother: infoTong,
         style: {
@@ -5165,7 +5200,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           paddingBottom: String(whiteBlockOuterMargin - whiteBlockMarginBottom) + ea,
           background: colorExtended.gradientBlue,
         }
-      })
+      });
 
       insertWhiteBlock(infoMiddleMother, [
         {
@@ -5198,7 +5233,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             { title: "불가능", value: 0 },
           ],
         },
-      ]);
+      ], false);
       insertWhiteBlock(infoMiddleMother, [
         {
           title: "3D",
@@ -5236,7 +5271,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             { title: "불가능", value: 0 },
           ],
         },
-      ]);
+      ], false);
       insertWhiteBlock(infoMiddleMother, [
         {
           title: "1차 제안 받는 시점",
@@ -5261,8 +5296,369 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             return { title: str, value: index === 0 ? 1 : 0 }
           })
         }
-      ]);
+      ], true);
 
+      infoMiddleBase = createNode({
+        mother: infoMiddleMother,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          boxSizing: "border-box",
+          borderRadius: String(5) + "px",
+          background: colorExtended.white,
+          marginBottom: String(whiteBlockMarginBottom) + ea,
+          boxShadow: "0px 4px 15px -9px " + colorExtended.darkDarkShadow,
+          overflow: "hidden",
+        }
+      });
+      leftTendency = createNode({
+        mother: infoMiddleBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          paddingTop: String(tendencyBoxPaddingTop) + ea,
+          paddingBottom: String(tendencyBoxPaddingTop) + ea,
+          width: "calc(100% / " + String(2) + ")",
+          flexDirection: "column",
+          overflow: "hidden",
+          boxSizing: "border-box",
+          verticalAlign: "top",
+          borderRight: "1px dashed " + colorExtended.mainBlue,
+        },
+      });
+      rightTendency = createNode({
+        mother: infoMiddleBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          paddingTop: String(tendencyBoxPaddingTop) + ea,
+          paddingBottom: String(tendencyBoxPaddingTop) + ea,
+          width: "calc(100% / " + String(2) + ")",
+          flexDirection: "column",
+          overflow: "hidden",
+          boxSizing: "border-box",
+          verticalAlign: "top",
+        },
+      });
+      
+      tendencyNum = 0;
+      for (let t of designer.styleTendency) {
+        createNode({
+          mother: leftTendency,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(titleTextIndent * 2, ea),
+            marginLeft: String(titleTextIndent) + ea,
+            flexDirection: "row",
+            height: String(tendencyMotherHeight) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(tendencyNameAreaWidth) + ea,
+                height: withOut(0, ea),
+                justifyContent: "start",
+                alignItems: "center",
+              },
+              child: {
+                text: t.name,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(tendencyTextTop) + ea,
+                  fontSize: String(tendencySize) + ea,
+                  fontWeight: String(tendencyWeight),
+                  color: tendencyNum < 3 ? colorExtended.focusBlue : colorExtended.black,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: withOut(tendencyNameAreaWidth, ea),
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  height: String(tendencyBarHeight) + ea,
+                  borderRadius: String(tendencyBarHeight) + ea,
+                  background: colorExtended.gray2,
+                },
+                child: {
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: String(100 * (t.value / 10)) + '%',
+                    height: withOut(0, ea),
+                    height: String(tendencyBarHeight) + ea,
+                    borderRadius: String(tendencyBarHeight) + ea,
+                    background: colorExtended.gradientBlue1,
+                  },
+                }
+              }
+            }
+          ]
+        });
+        tendencyNum++;
+      }
+
+      tendencyNum = 0;
+      for (let t of designer.toneTendency) {
+        createNode({
+          mother: rightTendency,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(titleTextIndent * 2, ea),
+            marginLeft: String(titleTextIndent) + ea,
+            flexDirection: "row",
+            height: String(tendencyMotherHeight) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(tendencyNameAreaWidth) + ea,
+                height: withOut(0, ea),
+                justifyContent: "start",
+                alignItems: "center",
+              },
+              child: {
+                text: t.name,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(tendencyTextTop) + ea,
+                  fontSize: String(tendencySize) + ea,
+                  fontWeight: String(tendencyWeight),
+                  color: tendencyNum < 3 ? colorExtended.focusBlue : colorExtended.black,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: withOut(tendencyNameAreaWidth, ea),
+                height: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  height: String(tendencyBarHeight) + ea,
+                  borderRadius: String(tendencyBarHeight) + ea,
+                  background: colorExtended.gray2,
+                },
+                child: {
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: String(100 * (t.value / 10)) + '%',
+                    height: withOut(0, ea),
+                    height: String(tendencyBarHeight) + ea,
+                    borderRadius: String(tendencyBarHeight) + ea,
+                    background: colorExtended.gradientBlue1,
+                  },
+                }
+              }
+            }
+          ]
+        });
+        tendencyNum++;
+      }
+
+      // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+      fifthTong = createNode({
+        mother: scrollTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          flexDirection: "column",
+          paddingTop: String(blockInnerPadding) + ea,
+          paddingBottom: String(blockInnerPadding) + ea,
+        },
+      });
+      createNode({
+        mother: fifthTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(blockTitleBlockHeight) + ea,
+          alignItems: "start",
+          justifyContent: "start",
+        },
+        child: {
+          text: "PORTFOLIO",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(blockTitleSize) + ea,
+            fontWeight: String(700),
+            color: colorExtended.black,
+            fontFamily: "mont",
+          }
+        }
+      });
+
+      portfolioTong = createNode({
+        mother: fifthTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          overflow: "visible",
+          marginTop: String(blockTitleMarginBottom) + ea,
+        },
+      });
+      portfolioMiddleMother = createNode({
+        mother: portfolioTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0 * 2, ea),
+          borderRadius: String(5) + "px",
+          background: colorExtended.white,
+          border: "1px solid " + colorExtended.mainBlue,
+          boxSizing: "border-box",
+        },
+      });
+
+      contentsNum = 0;
+      for (let { date, title, link } of sourceArr) {
+
+        createNode({
+          mother: portfolioMiddleMother,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(18 * 2, ea),
+            marginLeft: String(18) + ea,
+            height: String(50) + ea,
+            boxSizing: "border-box",
+            justifyContent: "start",
+            alignItems: "center",
+            borderBottom: contentsNum !== sourceArr.length - 1 ? "1px dashed " + colorExtended.mainBlue : "",
+          },
+          children: [
+            {
+              text: title.portfolio,
+              style: {
+                fontSize: String(16) + ea,
+                fontWeight: String(700),
+                color: colorExtended.blueDark,
+                display: "inline-flex",
+                position: "relative",
+                top: String(-1) + ea,
+              }
+            },
+            {
+              style: {
+                position: "absolute",
+                width: String(100) + ea,
+                height: withOut(0, ea),
+                display: "inline-flex",
+                right: String(0),
+                top: String(0),
+                justifyContent: "end",
+                alignItems: "center",
+              },
+              child: {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(18) + ea,
+                  height: String(18) + ea,
+                  borderRadius: String(5) + "px",
+                  background: colorExtended.blueDark,
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  mode: "svg",
+                  source: svgMaker.horizontalArrow(12, 10, colorExtended.white),
+                  style: {
+                    width: String(12) + ea,
+                  }
+                }
+              }
+            }
+          ]
+        });
+
+        contentsNum++;
+      }
+
+      // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+      sixthTong = createNode({
+        mother: scrollTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          flexDirection: "column",
+          paddingTop: String(blockInnerPadding) + ea,
+          paddingBottom: String(blockInnerPadding) + ea,
+        },
+        child: {
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(-1 * innerMargin) + ea,
+            width: "calc(100% + " + String(innerMargin * 2) + ea + ")",
+            height: withOut(0, ea),
+            background: colorExtended.blueLight,
+            borderBottomLeftRadius: String(5) + "px",
+            borderBottomRightRadius: String(5) + "px",
+          }
+        }
+      });
+      createNode({
+        mother: sixthTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(blockTitleBlockHeight) + ea,
+          alignItems: "start",
+          justifyContent: "start",
+        },
+        child: {
+          text: "PRICE",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(blockTitleSize) + ea,
+            fontWeight: String(700),
+            color: colorExtended.black,
+            fontFamily: "mont",
+          }
+        }
+      });
+
+      loading.remove();
 
     } catch (e) {
       console.log(e);
@@ -5348,6 +5744,8 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     let belowTarget, removeTargets;
     let proposalHistory;
     let isOffice;
+    let thisStyleTendency;
+    let thisToneTendency;
 
     temp0 = 'A'.charCodeAt();
     temp1 = 'Z'.charCodeAt();
@@ -5396,6 +5794,27 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     blankPhoto = DesignerExplanationJs.binaryPath + "/blank.png";
     this.blankPhoto = blankPhoto;
 
+    this.tendencyStandards = [
+      { column: "classic", name: "클래식" },
+      { column: "exotic", name: "엑조틱" },
+      { column: "mixmatch", name: "믹스매치" },
+      { column: "modern", name: "모던" },
+      { column: "natural", name: "내추럴" },
+      { column: "oriental", name: "동양" },
+      { column: "scandinavian", name: "북유럽" },
+      { column: "vintage", name: "빈티지" }
+    ]
+    this.tendencyTone = [
+      { column: "darkWood", name: "다크 우드" },
+      { column: "whiteWood", name: "밝은 우드" },
+      { column: "highContrast", name: "고대비" },
+      { column: "vivid", name: "비비드" },
+      { column: "white", name: "화이트" },
+      { column: "mono", name: "모노톤" },
+      { column: "bright", name: "밝은 톤" },
+      { column: "dark", name: "어두운 톤" }
+    ]
+
     keywordsList = (await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativeKeywords", { equal: true })).data;
     photosList = (await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativePhotos", { equal: true })).data;
 
@@ -5423,6 +5842,19 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
         designer.representative = photosListFiltered[0].position;
       }
 
+      thisStyleTendency = objectDeepCopy(this.tendencyStandards);
+      for (let obj of thisStyleTendency) {
+        obj.value = designer.analytics.styling.tendency.style[obj["column"]]
+      }
+      thisStyleTendency.sort((a, b) => { return b.value - a.value });
+      designer.styleTendency = thisStyleTendency;
+
+      thisToneTendency = objectDeepCopy(this.tendencyTone);
+      for (let obj of thisToneTendency) {
+        obj.value = designer.analytics.styling.tendency.color[obj["column"]]
+      }
+      thisToneTendency.sort((a, b) => { return b.value - a.value });
+      designer.toneTendency = thisToneTendency;
     }
 
     // TEST Center ==================================================================================================

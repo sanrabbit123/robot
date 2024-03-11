@@ -194,16 +194,14 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-    
-
-
-
     
     
 
 
 
+    
+
+    
     
 
 
@@ -7024,7 +7022,7 @@ DevContext.prototype.launching = async function () {
     // ]);
 
 
-
+    
     
     // raw video
     // const filter = new PortfolioFilter();
@@ -7086,7 +7084,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "김효진", "2024-03-05" ],
+    //   [ "정유정", "2024-03-11" ],
     // ]);
 
 
@@ -7728,7 +7726,7 @@ DevContext.prototype.findCode = async function (str) {
   }
   const instance = this;
   const { treeParsing, fileSystem, shellExec, shellLink } = this.mother;
-  const entryPoints = [ "robot.js", "ghost.js", "alien.js", "setup.py", "koala.js", "clown.js" ];
+  const entryPoints = [ "robot.js", "setup.py" ];
   const escapeReg = function (s) {
     s = s.replace(/\*/gi, "\\*");
     s = s.replace(/\+/gi, "\\+");
