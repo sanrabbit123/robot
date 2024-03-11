@@ -4272,7 +4272,7 @@ DesignerExplanationJs.prototype.styleTextParsing = function (text) {
 
 DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, ajaxJson, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, autoComma, ajaxJson, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -4356,6 +4356,32 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let contentsNum;
       let sourceArr;
       let sixthTong;
+      let dashLineIndent;
+      let priceTong;
+      let priceMiddleMother;
+      let unitBlockHeight, unitBlockIndent;
+      let unitBlockHeightSmall;
+      let moneyTitleSize, moneyValueSize;
+      let moneyVatSize;
+      let moneyTitleWeight;
+      let moneyVatWeight;
+      let moneyValueWeight;
+      let moneyTitleTextTop;
+      let moneyVatTextTop;
+      let moneyValueTextTop;
+      let moneyVatMarginRight;
+      let moneyCircleWidth, moneyCircleMargin;
+      let insertMoneyBlock;
+      let moneyBoxPaddingTopVisual;
+      let unitBlockHeightBig;
+      let finalPriceTong, finalPriceMiddleMother;
+      let finalBlockBetween;
+      let finalBlockMarginLeft;
+      let seventhTong;
+      let finalSelectionTong;
+      let finalSelectionMiddleMother;
+      let buttonArrowWdith;
+      let buttonArrowHeight;
 
       whiteMargin = 30;
       innerMargin = 52;
@@ -4387,9 +4413,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       blockTitleMarginBottom = 11;
 
-      whiteStandardWidth = <%% 1320, 1050, 900, 720, 88 %%>;
+      whiteStandardWidth = <%% 1400, 1050, 900, 720, 88 %%>;
 
-      pictureBaseHeight = 828;
+      pictureBaseHeight = 880;
       factorHeight = 42;
       factorWidth = 292;
 
@@ -4399,10 +4425,10 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       factorWeight = 700;
       factorBetween = 5;
 
-      whiteBlockMarginBottom = 5;
+      whiteBlockMarginBottom = 6;
       whiteBlockOuterMargin = 10;
 
-      titleTextIndent = 24;
+      titleTextIndent = 21;
 
       factorLightWeight = 500;
       tendencyMotherHeight = 21;
@@ -4415,6 +4441,37 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       tendencyBoxPaddingTop = 16;
 
       largePaddingBottom = 58;
+
+      dashLineIndent = 8;
+
+      unitBlockHeight = 50;
+      unitBlockIndent = 18;
+      unitBlockHeightSmall = 46;
+      unitBlockHeightBig = 44;
+
+      moneyTitleSize = 16;
+      moneyVatSize = 11;
+      moneyValueSize = 18;
+
+      moneyTitleWeight = 700;
+      moneyVatWeight = 500;
+      moneyValueWeight = 700;
+
+      moneyTitleTextTop = -1;
+      moneyVatTextTop = 1;
+      moneyValueTextTop = -1;
+      moneyVatMarginRight = 6;
+
+      moneyCircleWidth = 6;
+      moneyCircleMargin = 6;
+
+      moneyBoxPaddingTopVisual = 3;
+
+      finalBlockBetween = 10;
+      finalBlockMarginLeft = 430;
+
+      buttonArrowWdith = 16;
+      buttonArrowHeight = 30;
 
       ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
 
@@ -4431,15 +4488,19 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         infoMiddleBase = createNode({
           mother: infoMiddleMother,
           style: {
-            display: "block",
+            display: "flex",
             position: "relative",
             width: withOut(0, ea),
+            height: String(factorHeight) + ea,
             boxSizing: "border-box",
-            borderRadius: String(5) + "px",
+            borderRadius: String(8) + "px",
             background: colorExtended.white,
             marginBottom: String(!last ? whiteBlockMarginBottom : whiteBlockMarginBottom) + ea,
-            boxShadow: "0px 4px 15px -9px " + colorExtended.darkDarkShadow,
+            boxShadow: "0px 2px 15px -9px " + colorExtended.blueDim,
             overflow: "hidden",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
           }
         });
 
@@ -4451,7 +4512,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               style: {
                 display: "inline-flex",
                 position: "relative",
-                height: String(factorHeight) + ea,
+                height: String(factorHeight - (dashLineIndent * 2)) + ea,
                 width: double ? "calc(100% / " + String(2) + ")" : "calc(100% / " + String(4) + ")",
                 flexDirection: "row",
                 overflow: "hidden",
@@ -4516,7 +4577,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               style: {
                 display: "inline-flex",
                 position: "relative",
-                height: String(factorHeight) + ea,
+                height: String(factorHeight - (dashLineIndent * 2)) + ea,
                 width: double ? "calc(100% / " + String(2) + ")" : "calc(100% / " + String(4) + ")",
                 flexDirection: "row",
                 overflow: "hidden",
@@ -4620,6 +4681,84 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         }
       }
 
+      insertMoneyBlock = (priceMiddleMother, title, vatBoo, value, last = false) => {
+        createNode({
+          mother: priceMiddleMother,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(unitBlockIndent * 2, ea),
+            marginLeft: String(unitBlockIndent) + ea,
+            height: String(unitBlockHeightSmall) + ea,
+            boxSizing: "border-box",
+            justifyContent: "start",
+            alignItems: "center",
+            borderBottom: last ? "" : "1px dashed " + colorExtended.mainBlue,
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(moneyCircleWidth) + ea,
+                height: String(moneyCircleWidth) + ea,
+                borderRadius: String(moneyCircleWidth) + ea,
+                background: colorExtended.mainBlue,
+                marginRight: String(moneyCircleMargin) + ea,
+              }
+            },
+            {
+              text: title,
+              style: {
+                fontSize: String(moneyTitleSize) + ea,
+                fontWeight: String(moneyTitleWeight),
+                color: colorExtended.black,
+                display: "inline-flex",
+                position: "relative",
+                top: String(moneyTitleTextTop) + ea,
+              }
+            },
+            {
+              style: {
+                position: "absolute",
+                width: String(50) + '%',
+                height: withOut(0, ea),
+                display: "inline-flex",
+                right: String(0),
+                top: String(0),
+                justifyContent: "end",
+                alignItems: "center",
+              },
+              children: [
+                {
+                  text: "*vat 별도",
+                  style: {
+                    fontSize: String(moneyVatSize) + ea,
+                    fontWeight: String(moneyVatWeight),
+                    color: colorExtended.black,
+                    display: vatBoo ? "inline-flex" : "none",
+                    position: "relative",
+                    top: String(moneyVatTextTop) + ea,
+                    marginRight: String(moneyVatMarginRight) + ea,
+                  }
+                },
+                {
+                  text: value,
+                  style: {
+                    fontSize: String(moneyValueSize) + ea,
+                    fontWeight: String(moneyValueWeight),
+                    color: colorExtended.blueDark,
+                    display: "inline-flex",
+                    position: "relative",
+                    top: String(moneyValueTextTop) + ea,
+                  }
+                },
+              ]
+            }
+          ]
+        });
+      }
+
       cancelBack = createNode({
         mother: totalContents,
         class: [ whitePopupClassName ],
@@ -4654,8 +4793,59 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
           animation: "fadeuporiginal 0.3s ease forwards",
           zIndex: String(zIndex),
+        },
+        child: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          overflow: "visible",
         }
-      });
+      }).firstChild;
+
+      // createNode({
+      //   mother: whiteBase,
+      //   style: {
+      //     display: "inline-block",
+      //     position: "absolute",
+      //     top: "calc(50% - " + String(buttonArrowHeight / 2) + ea + ")",
+      //     left: String(-48) + ea,
+      //   },
+      //   children: [
+      //     {
+      //       mode: "svg",
+      //       source: svgMaker.buttonLineArrow(colorExtended.blueLight),
+      //       style: {
+      //         display: "inline-block",
+      //         position: "relative",
+      //         height: String(buttonArrowHeight) + ea,
+      //         opacity: String(1),
+      //         transform: "rotate(180deg)",
+      //       }
+      //     },
+      //   ]
+      // });
+      // createNode({
+      //   mother: whiteBase,
+      //   style: {
+      //     display: "inline-block",
+      //     position: "absolute",
+      //     top: "calc(50% - " + String(buttonArrowHeight / 2) + ea + ")",
+      //     right: String(-48) + ea,
+      //   },
+      //   children: [
+      //     {
+      //       mode: "svg",
+      //       source: svgMaker.buttonLineArrow(colorExtended.blueLight),
+      //       style: {
+      //         display: "inline-block",
+      //         position: "relative",
+      //         height: String(buttonArrowHeight) + ea,
+      //         opacity: String(1),
+      //       }
+      //     },
+      //   ]
+      // });
 
       scrollTong = createNode({
         mother: whiteBase,
@@ -5195,10 +5385,10 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           display: "block",
           position: "relative",
           width: withOut(whiteBlockOuterMargin * 2, ea),
-          borderRadius: String(5) + "px",
+          borderRadius: String(8) + "px",
           padding: String(whiteBlockOuterMargin) + ea,
           paddingBottom: String(whiteBlockOuterMargin - whiteBlockMarginBottom) + ea,
-          background: colorExtended.gradientBlue,
+          background: colorExtended.blueLight,
         }
       });
 
@@ -5305,11 +5495,13 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           position: "relative",
           width: withOut(0, ea),
           boxSizing: "border-box",
-          borderRadius: String(5) + "px",
+          borderRadius: String(8) + "px",
           background: colorExtended.white,
           marginBottom: String(whiteBlockMarginBottom) + ea,
-          boxShadow: "0px 4px 15px -9px " + colorExtended.darkDarkShadow,
+          boxShadow: "0px 2px 15px -9px " + colorExtended.blueDim,
           overflow: "hidden",
+          paddingTop: String(dashLineIndent) + ea,
+          paddingBottom: String(dashLineIndent) + ea,
         }
       });
       leftTendency = createNode({
@@ -5317,8 +5509,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         style: {
           display: "inline-flex",
           position: "relative",
-          paddingTop: String(tendencyBoxPaddingTop) + ea,
-          paddingBottom: String(tendencyBoxPaddingTop) + ea,
+          paddingTop: String(tendencyBoxPaddingTop - dashLineIndent) + ea,
+          paddingBottom: String(tendencyBoxPaddingTop - dashLineIndent) + ea,
           width: "calc(100% / " + String(2) + ")",
           flexDirection: "column",
           overflow: "hidden",
@@ -5332,8 +5524,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         style: {
           display: "inline-flex",
           position: "relative",
-          paddingTop: String(tendencyBoxPaddingTop) + ea,
-          paddingBottom: String(tendencyBoxPaddingTop) + ea,
+          paddingTop: String(tendencyBoxPaddingTop - dashLineIndent) + ea,
+          paddingBottom: String(tendencyBoxPaddingTop - dashLineIndent) + ea,
           width: "calc(100% / " + String(2) + ")",
           flexDirection: "column",
           overflow: "hidden",
@@ -5538,7 +5730,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           display: "block",
           position: "relative",
           width: withOut(0 * 2, ea),
-          borderRadius: String(5) + "px",
+          borderRadius: String(8) + "px",
           background: colorExtended.white,
           border: "1px solid " + colorExtended.mainBlue,
           boxSizing: "border-box",
@@ -5553,9 +5745,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           style: {
             display: "flex",
             position: "relative",
-            width: withOut(18 * 2, ea),
-            marginLeft: String(18) + ea,
-            height: String(50) + ea,
+            width: withOut(unitBlockIndent * 2, ea),
+            marginLeft: String(unitBlockIndent) + ea,
+            height: String(unitBlockHeight) + ea,
             boxSizing: "border-box",
             justifyContent: "start",
             alignItems: "center",
@@ -5630,8 +5822,6 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             width: "calc(100% + " + String(innerMargin * 2) + ea + ")",
             height: withOut(0, ea),
             background: colorExtended.blueLight,
-            borderBottomLeftRadius: String(5) + "px",
-            borderBottomRightRadius: String(5) + "px",
           }
         }
       });
@@ -5656,6 +5846,320 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             fontFamily: "mont",
           }
         }
+      });
+
+      priceTong = createNode({
+        mother: sixthTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          overflow: "visible",
+          marginTop: String(blockTitleMarginBottom) + ea,
+        },
+      });
+      priceMiddleMother = createNode({
+        mother: priceTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0 * 2, ea),
+          borderRadius: String(8) + "px",
+          background: colorExtended.white,
+          boxSizing: "border-box",
+          paddingTop: String(moneyBoxPaddingTopVisual) + ea,
+          paddingBottom: String(moneyBoxPaddingTopVisual) + ea,
+        },
+      });
+
+      insertMoneyBlock(priceMiddleMother, "디자인비 (오프라인)", true, autoComma(2276000) + "원", false);
+      insertMoneyBlock(priceMiddleMother, "디자인비 (온라인)", true, autoComma(1935000) + "원", false);
+      insertMoneyBlock(priceMiddleMother, "출장비", true, "(거리 : 0km / 시간 : 0시간 0분 / 1회당) 0원", false);
+      insertMoneyBlock(priceMiddleMother, "오프라인 디자인비 할인율 (할인 금액)", false, "7% (129,570원)", false);
+      insertMoneyBlock(priceMiddleMother, "온라인 디자인비 할인율 (할인 금액)", false, "5% (78,700원)", true);
+
+      finalPriceTong = createNode({
+        mother: sixthTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          overflow: "visible",
+          marginTop: String(16) + ea,
+        },
+      });
+      createNode({
+        mother: finalPriceTong,
+        style: {
+          display: "block",
+          position: "absolute",
+          top: String(21) + ea,
+          left: String(0),
+          width: String(finalBlockMarginLeft - finalBlockBetween) + ea,
+          height: String(0) + ea,
+          borderBottom: "1px dashed " + colorExtended.blueDim,
+        },
+      });
+      finalPriceMiddleMother = createNode({
+        mother: finalPriceTong,
+        style: {
+          display: "block",
+          position: "relative",
+          marginLeft: String(finalBlockMarginLeft) + ea,
+          width: withOut(finalBlockMarginLeft, ea),
+          height: String(unitBlockHeightBig) + ea,
+          borderRadius: String(8) + "px",
+        },
+      });
+      createNode({
+        mother: finalPriceMiddleMother,
+        style: {
+          display: "inline-flex",
+          verticalAlign: "top",
+          flexDirection: "row",
+          position: "relative",
+          width: "calc(calc(100% - " + String(finalBlockBetween) + ea + ") / 2)",
+          height: String(unitBlockHeightBig) + ea,
+          borderRadius: String(unitBlockHeightBig) + ea,
+          background: colorExtended.white,
+          justifyContent: "end",
+          alignItems: "center",
+          marginRight: String(finalBlockBetween) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              flexDirection: "row",
+              position: "absolute",
+              top: String(0),
+              left: String(0),
+              justifyContent: "center",
+              alignItems: "center",
+              height: String(unitBlockHeightBig) + ea,
+              borderRadius: String(unitBlockHeightBig) + ea,
+              width: String(110) + ea,
+              background: colorExtended.blueDim,
+            },
+            child: {
+              text: "온라인",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(-1) + ea,
+                fontSize: String(18) + ea,
+                fontWeight: String(800),
+                color: colorExtended.white,
+              }
+            }
+          },
+          {
+            text: "*vat 별도",
+            style: {
+              fontSize: String(12) + ea,
+              fontWeight: String(moneyVatWeight),
+              color: colorExtended.black,
+              display: "inline-flex",
+              position: "relative",
+              top: String(moneyVatTextTop) + ea,
+              marginRight: String(8) + ea,
+            }
+          },
+          {
+            text: "1,851,000원",
+            style: {
+              fontSize: String(20) + ea,
+              fontWeight: String(300),
+              color: colorExtended.deactive,
+              display: "inline-flex",
+              position: "relative",
+              top: String(moneyValueTextTop) + ea,
+              marginRight: String(8) + ea,
+              textDecoration: "line-through",
+            }
+          },
+          {
+            text: "1,721,430원",
+            style: {
+              fontSize: String(21) + ea,
+              fontWeight: String(moneyValueWeight),
+              color: colorExtended.blueDark,
+              display: "inline-flex",
+              position: "relative",
+              top: String(moneyValueTextTop) + ea,
+              marginRight: String(24) + ea,
+            }
+          },
+        ]
+      });
+      createNode({
+        mother: finalPriceMiddleMother,
+        style: {
+          display: "inline-flex",
+          verticalAlign: "top",
+          flexDirection: "row",
+          position: "relative",
+          width: "calc(calc(100% - " + String(finalBlockBetween) + ea + ") / 2)",
+          height: String(unitBlockHeightBig) + ea,
+          borderRadius: String(unitBlockHeightBig) + ea,
+          background: colorExtended.white,
+          justifyContent: "end",
+          alignItems: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              flexDirection: "row",
+              position: "absolute",
+              top: String(0),
+              left: String(0),
+              justifyContent: "center",
+              alignItems: "center",
+              height: String(unitBlockHeightBig) + ea,
+              borderRadius: String(unitBlockHeightBig) + ea,
+              width: String(110) + ea,
+              background: colorExtended.blueDim,
+            },
+            child: {
+              text: "오프라인",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(-1) + ea,
+                fontSize: String(18) + ea,
+                fontWeight: String(800),
+                color: colorExtended.white,
+              }
+            }
+          },
+          {
+            text: "*vat 별도",
+            style: {
+              fontSize: String(12) + ea,
+              fontWeight: String(moneyVatWeight),
+              color: colorExtended.black,
+              display: "inline-flex",
+              position: "relative",
+              top: String(moneyVatTextTop) + ea,
+              marginRight: String(8) + ea,
+            }
+          },
+          {
+            text: "1,851,000원",
+            style: {
+              fontSize: String(20) + ea,
+              fontWeight: String(300),
+              color: colorExtended.deactive,
+              display: "inline-flex",
+              position: "relative",
+              top: String(moneyValueTextTop) + ea,
+              marginRight: String(8) + ea,
+              textDecoration: "line-through",
+            }
+          },
+          {
+            text: "1,721,430원",
+            style: {
+              fontSize: String(21) + ea,
+              fontWeight: String(moneyValueWeight),
+              color: colorExtended.blueDark,
+              display: "inline-flex",
+              position: "relative",
+              top: String(moneyValueTextTop) + ea,
+              marginRight: String(24) + ea,
+            }
+          },
+        ]
+      });
+
+
+      // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+      seventhTong = createNode({
+        mother: scrollTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          flexDirection: "column",
+          paddingTop: String(44) + ea,
+          paddingBottom: String(44) + ea,
+        },
+        child: {
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(-1 * innerMargin) + ea,
+            width: "calc(100% + " + String(innerMargin * 2) + ea + ")",
+            height: withOut(0, ea),
+            background: colorExtended.gradientBlue5,
+            borderBottomLeftRadius: String(5) + "px",
+            borderBottomRightRadius: String(5) + "px",
+          }
+        }
+      });
+
+      finalSelectionTong = createNode({
+        mother: seventhTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          overflow: "visible",
+        },
+      });
+      createNode({
+        mother: finalSelectionTong,
+        style: {
+          display: "block",
+          position: "absolute",
+          top: String(21) + ea,
+          left: String(0),
+          width: String(1150 - finalBlockBetween) + ea,
+          height: String(0) + ea,
+          opacity: String(1),
+          borderBottom: "1px dashed " + colorExtended.blueLight,
+        },
+      });
+      finalSelectionMiddleMother = createNode({
+        mother: finalSelectionTong,
+        style: {
+          display: "block",
+          position: "relative",
+          marginLeft: String(1150) + ea,
+          width: withOut(1150, ea),
+          height: String(unitBlockHeightBig) + ea,
+          borderRadius: String(8) + "px",
+        },
+      });
+      createNode({
+        mother: finalSelectionMiddleMother,
+        style: {
+          display: "inline-flex",
+          verticalAlign: "top",
+          flexDirection: "row",
+          position: "relative",
+          width: "calc(calc(100% - " + String(0) + ea + ") / 1)",
+          height: String(unitBlockHeightBig) + ea,
+          borderRadius: String(unitBlockHeightBig) + ea,
+          background: colorExtended.white,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        children: [
+          {
+            text: "디자이너 선택",
+            style: {
+              fontSize: String(19) + ea,
+              fontWeight: String(900),
+              color: colorExtended.blueDark,
+              display: "inline-flex",
+              position: "relative",
+              top: String(moneyValueTextTop) + ea,
+            }
+          },
+        ]
       });
 
       loading.remove();
