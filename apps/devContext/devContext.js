@@ -7113,7 +7113,7 @@ DevContext.prototype.launching = async function () {
 
     
     // // send sms
-    // const name = "김도희";
+    // const name = "배창규";
     // const amount = 165_000;
     // await human.sendSms({
     //   to: "01055432039",
