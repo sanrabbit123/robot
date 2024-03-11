@@ -191,12 +191,20 @@ DevContext.prototype.launching = async function () {
     // console.log(res);
     
 
-    
+
+
+
 
     
 
 
 
+    
+    
+
+
+
+    
 
 
     
@@ -7008,14 +7016,16 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "곽예슬",
-    //     designer: "김도희",
-    //     link: "https://drive.google.com/drive/folders/1vx-fTlYOm3uhRMDccFFl3pbvXPb0yqR-",
+    //     client: "이혜진",
+    //     designer: "박미연",
+    //     link: "https://drive.google.com/drive/folders/1MDjlmJv1FQ3_5hXzsbs4zhfZaQ0Y1vdm",
     //     pay: true
     //   },
     // ]);
 
 
+
+    
     // raw video
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
