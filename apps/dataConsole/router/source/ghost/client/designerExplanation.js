@@ -5343,6 +5343,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           flexDirection: "column",
           paddingTop: String(blockInnerPadding) + ea,
           paddingBottom: String(largePaddingBottom) + ea,
+          background: colorExtended.blueLight,
           borderBottom: "1px dashed " + colorExtended.mainBlue,
         },
       });
