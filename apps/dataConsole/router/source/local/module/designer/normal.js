@@ -549,6 +549,66 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           },
         ],
       },
+      {
+        title: "시공 역량",
+        width: 100,
+        name: "constructLevel",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+        ],
+      },
+      {
+        title: "스타일링",
+        width: 100,
+        name: "stylingLevel",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+        ],
+      },
+      {
+        title: "3D",
+        width: 100,
+        name: "modeling",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+        ],
+      },
+      {
+        title: "CAD",
+        width: 100,
+        name: "cad",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+        ],
+      },
+      {
+        title: "콜라주",
+        width: 100,
+        name: "collage",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+        ],
+      },
     ];
 
     values = {};
@@ -730,6 +790,27 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         value: designer.analytics.construct.own ? "있음" : "없음",
         name: "own",
       });
+      values[designer.desid].push({
+        value: [ "없", "하", "중", "상" ][designer.analytics.construct.level],
+        name: "constructLevel",
+      });
+      values[designer.desid].push({
+        value: [ "없", "하", "중", "상" ][designer.analytics.styling.level],
+        name: "stylingLevel",
+      });
+      values[designer.desid].push({
+        value: [ "불가능", "하", "중", "상" ][designer.analytics.project.modeling],
+        name: "modeling",
+      });
+      values[designer.desid].push({
+        value: designer.analytics.project.cad ? "가능" : "불가능",
+        name: "cad",
+      });
+      values[designer.desid].push({
+        value: designer.analytics.project.collage ? "가능" : "불가능",
+        name: "collage",
+      });
+
     }
 
     return { standards, columns, values };
