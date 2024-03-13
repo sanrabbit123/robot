@@ -4278,6 +4278,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       const project = instance.project;
       const designer = instance.designers.find((d) => { return d.desid === desid });
       const proposal = project.proposal.detail.find((p) => { return p.desid === desid });
+      const { analytics } = designer;
+      const { construct: { case: constructCase }, styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { level: fabricLevel, curtain, bedding } }, purchase: { setting: { install, storage } }, project: { time: { first }, matrix, cad: cadBoo, collage: collageBoo, modeling: modelingBoo } } = analytics;
       const zIndex = 4;
       const web = {
         portfolio: FRONTHOST + "/portdetail.php?pid=",
