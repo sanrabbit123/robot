@@ -557,6 +557,11 @@ CalculationJs.prototype.baseMaker = function () {
       requestSumRefund = 0;
       requestSumIncome = 0;
       requestArr = [];
+
+      if (project.bill === undefined) {
+        console.log(project);
+      }
+
       for (let z = 0; z < project.bill.requests.length; z++) {
         thisRequest = project.bill.requests[z];
 
