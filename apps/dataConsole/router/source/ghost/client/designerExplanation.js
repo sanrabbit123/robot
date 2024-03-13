@@ -852,7 +852,7 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
 
 DesignerExplanationJs.prototype.insertThirdBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, stringToDate, designerCareer, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1183,7 +1183,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           marginBottom: String(4) + ea,
         },
         child: {
-          text: "3년 6개월",
+          text: designerCareer(designer, true, true),
           style: {
             display: "inline-block",
             position: "relative",
@@ -1231,11 +1231,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           paddingBottom: String(11) + ea,
         },
         child: {
-          text: [
-            "내추럴",
-            "모던",
-            "빈티지"
-          ].join("&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;"),
+          text: designer.styleTendency.map((o) => { return o.name }).slice(0, 3).join("&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;"),
           style: {
             display: "inline-block",
             position: "relative",
@@ -1389,7 +1385,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
 DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, autoComma, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, autoComma, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, designerCareer, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight, blankPhoto } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -2235,7 +2231,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             marginBottom: String(4) + ea,
           },
           child: {
-            text: "3년 6개월",
+            text: designerCareer(designer, true, true),
             style: {
               display: "inline-block",
               position: "relative",
@@ -2283,11 +2279,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             paddingBottom: String(11) + ea,
           },
           child: {
-            text: [
-              "내추럴",
-              "모던",
-              "빈티지"
-            ].join("&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;"),
+            text: designer.styleTendency.map((o) => { return o.name }).slice(0, 3).join("&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;"),
             style: {
               display: "inline-block",
               position: "relative",
@@ -4278,6 +4270,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
   const desktop = !mobile;
   const whitePopupClassName = "whitePopupClassName";
   const totalContents = document.getElementById("totalcontents");
+  const paperWorksTongClassName = "paperWorksTongClassName";
+  const paperWorksFactorWidthClassName = "paperWorksFactorWidthClassName";
   return async function (e) {
     try {
       const loading = instance.mother.grayLoading();
@@ -4382,6 +4376,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let finalSelectionMiddleMother;
       let buttonArrowWdith;
       let buttonArrowHeight;
+      let paperMove;
 
       whiteMargin = 30;
       innerMargin = 52;
@@ -4472,6 +4467,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       buttonArrowWdith = 16;
       buttonArrowHeight = 30;
+
+      paperMove = 240;
 
       ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
 
@@ -4803,50 +4800,6 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         }
       }).firstChild;
 
-      // createNode({
-      //   mother: whiteBase,
-      //   style: {
-      //     display: "inline-block",
-      //     position: "absolute",
-      //     top: "calc(50% - " + String(buttonArrowHeight / 2) + ea + ")",
-      //     left: String(-48) + ea,
-      //   },
-      //   children: [
-      //     {
-      //       mode: "svg",
-      //       source: svgMaker.buttonLineArrow(colorExtended.blueLight),
-      //       style: {
-      //         display: "inline-block",
-      //         position: "relative",
-      //         height: String(buttonArrowHeight) + ea,
-      //         opacity: String(1),
-      //         transform: "rotate(180deg)",
-      //       }
-      //     },
-      //   ]
-      // });
-      // createNode({
-      //   mother: whiteBase,
-      //   style: {
-      //     display: "inline-block",
-      //     position: "absolute",
-      //     top: "calc(50% - " + String(buttonArrowHeight / 2) + ea + ")",
-      //     right: String(-48) + ea,
-      //   },
-      //   children: [
-      //     {
-      //       mode: "svg",
-      //       source: svgMaker.buttonLineArrow(colorExtended.blueLight),
-      //       style: {
-      //         display: "inline-block",
-      //         position: "relative",
-      //         height: String(buttonArrowHeight) + ea,
-      //         opacity: String(1),
-      //       }
-      //     },
-      //   ]
-      // });
-
       scrollTong = createNode({
         mother: whiteBase,
         style: {
@@ -4962,84 +4915,34 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               paddingBottom: String(5) + ea,
             }
           },
-          {
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              height: String(21) + ea,
-              borderRadius: String(21) + ea,
-              background: colorExtended.mainBlue,
-              justifyContent: "center",
-              alignItems: "center",
-              marginBottom: String(styleButtonMarginBottom) + ea,
-              paddingLeft: String(8) + ea,
-              paddingRight: String(8) + ea,
-              marginLeft: String(14) + ea,
-            },
-            child: {
-              text: "내추럴",
+          ...designer.styleTendency.map((o) => { return o.name }).slice(0, 3).map((styleName, index) => {
+            return {
               style: {
-                display: "inline-block",
+                display: "inline-flex",
                 position: "relative",
-                top: String(-1) + ea,
-                fontSize: String(11) + ea,
-                fontWeight: String(700),
-                color: colorExtended.white,
+                height: String(21) + ea,
+                borderRadius: String(21) + ea,
+                background: colorExtended.mainBlue,
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: String(styleButtonMarginBottom) + ea,
+                paddingLeft: String(8) + ea,
+                paddingRight: String(8) + ea,
+                marginLeft: String(index === 0 ? 14 : 3) + ea,
+              },
+              child: {
+                text: styleName,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(-1) + ea,
+                  fontSize: String(11) + ea,
+                  fontWeight: String(700),
+                  color: colorExtended.white,
+                }
               }
             }
-          },
-          {
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              height: String(21) + ea,
-              borderRadius: String(21) + ea,
-              background: colorExtended.mainBlue,
-              justifyContent: "center",
-              alignItems: "center",
-              marginBottom: String(styleButtonMarginBottom) + ea,
-              paddingLeft: String(8) + ea,
-              paddingRight: String(8) + ea,
-              marginLeft: String(3) + ea,
-            },
-            child: {
-              text: "모던",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                top: String(-1) + ea,
-                fontSize: String(11) + ea,
-                fontWeight: String(700),
-                color: colorExtended.white,
-              }
-            }
-          },
-          {
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              height: String(21) + ea,
-              borderRadius: String(21) + ea,
-              background: colorExtended.mainBlue,
-              justifyContent: "center",
-              alignItems: "center",
-              marginBottom: String(styleButtonMarginBottom) + ea,
-              paddingLeft: String(8) + ea,
-              paddingRight: String(8) + ea,
-              marginLeft: String(3) + ea,
-            },
-            child: {
-              text: "빈티지",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                top: String(-1) + ea,
-                fontSize: String(11) + ea,
-                fontWeight: String(700),
-                color: colorExtended.white,
-              }
-            }
-          },
+          })
         ]
       });
       createNode({
@@ -5133,8 +5036,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         });
       }
 
-
       // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+      // second : paper works
 
       secondTong = createNode({
         mother: scrollTong,
@@ -5163,6 +5067,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       });
       createNode({
         mother: secondTong,
+        event: {
+          selectstart: (e) => { e.preventDefault() },
+        },
         style: {
           display: "flex",
           position: "relative",
@@ -5173,6 +5080,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         },
         child: {
           text: "PAPER WORKS",
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
           style: {
             display: "inline-block",
             position: "relative",
@@ -5185,6 +5095,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       });
       createNode({
         mother: secondTong,
+        event: {
+          selectstart: (e) => { e.preventDefault() },
+        },
         style: {
           display: "flex",
           position: "relative",
@@ -5195,6 +5108,21 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         },
         children: [
           {
+            event: {
+              click: function (e) {
+                const targetTong = document.querySelector('.' + paperWorksTongClassName);
+                const thisPosition = Number(targetTong.getAttribute("position"));
+                let newPosition;
+                newPosition = thisPosition + paperMove;
+                if (newPosition > 0) {
+                  // pass
+                } else {
+                  targetTong.style.transform = "translate(" + String(newPosition) + "px)";
+                  targetTong.setAttribute("position", String(newPosition));
+                }
+              },
+              selectstart: (e) => { e.preventDefault() },
+            },
             style: {
               display: "block",
               position: "absolute",
@@ -5215,6 +5143,29 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             }
           },
           {
+            event: {
+              click: function (e) {
+                const factors = [ ...document.querySelectorAll('.' + paperWorksFactorWidthClassName) ];
+                const targetTong = document.querySelector('.' + paperWorksTongClassName);
+                const thisPosition = Number(targetTong.getAttribute("position"));
+                let newPosition;
+                let totalWidth;
+
+                newPosition = thisPosition - paperMove;
+                totalWidth = factors.map((dom) => { return dom.getBoundingClientRect().width + paperBetween }).reduce((acc, curr) => { return acc + curr }, 0);
+                standard = (totalWidth - targetTong.parentElement.getBoundingClientRect().width + (largePaddingBottom * 2)) * -1;
+                if (newPosition < standard) {
+                  newPosition = (totalWidth - targetTong.parentElement.getBoundingClientRect().width) * -1;
+                  targetTong.style.transform = "translate(" + String(newPosition) + "px)";
+                  targetTong.setAttribute("position", String(newPosition));
+                } else {
+                  targetTong.style.transform = "translate(" + String(newPosition) + "px)";
+                  targetTong.setAttribute("position", String(newPosition));
+                }
+
+              },
+              selectstart: (e) => { e.preventDefault() },
+            },
             style: {
               display: "block",
               position: "absolute",
@@ -5234,6 +5185,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             }
           },
           {
+            event: {
+              selectstart: (e) => { e.preventDefault() },
+            },
             style: {
               display: "block",
               position: "relative",
@@ -5242,19 +5196,33 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               overflow: "scroll",
             },
             child: {
+              class: [ paperWorksTongClassName ],
+              attribute: {
+                position: String(0),
+              },
+              event: {
+                selectstart: (e) => { e.preventDefault() },
+              },
               style: {
                 display: "block",
                 position: "relative",
                 width: String(8000) + ea,
                 height: withOut(0, ea),
+                transformOrigin: "0% 0%",
+                transform: "traslate(0px)",
+                transition: "all 0.3s ease",
               },
               children: positionData.filter((raw, i) => {
                 return positionData[i] !== undefined && positionData[i] !== 0 && positionData[i] !== "0"
               }).map((raw, i) => {
                 return {
+                  class: [ paperWorksFactorWidthClassName ],
                   mode: "img",
                   attribute: {
                     src: "https://" + FILEHOST + stringToLink(positionData[i]),
+                  },
+                  event: {
+                    selectstart: (e) => { e.preventDefault() },
                   },
                   style: {
                     display: "inline-block",
@@ -5271,6 +5239,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       });
 
       // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+      // third : photo settings
 
       thirdTong = createNode({
         mother: scrollTong,
@@ -5334,6 +5304,134 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+      // fourth : portfolio
+
+      fifthTong = createNode({
+        mother: scrollTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          flexDirection: "column",
+          paddingTop: String(blockInnerPadding) + ea,
+          paddingBottom: String(blockInnerPadding) + ea,
+        },
+      });
+      createNode({
+        mother: fifthTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(blockTitleBlockHeight) + ea,
+          alignItems: "start",
+          justifyContent: "start",
+        },
+        child: {
+          text: "PORTFOLIO",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(blockTitleSize) + ea,
+            fontWeight: String(700),
+            color: colorExtended.black,
+            fontFamily: "mont",
+          }
+        }
+      });
+
+      portfolioTong = createNode({
+        mother: fifthTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          overflow: "visible",
+          marginTop: String(blockTitleMarginBottom) + ea,
+        },
+      });
+      portfolioMiddleMother = createNode({
+        mother: portfolioTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0 * 2, ea),
+          borderRadius: String(8) + "px",
+          background: colorExtended.white,
+          border: "1px solid " + colorExtended.mainBlue,
+          boxSizing: "border-box",
+        },
+      });
+
+      contentsNum = 0;
+      for (let { date, title, link } of sourceArr) {
+
+        createNode({
+          mother: portfolioMiddleMother,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(unitBlockIndent * 2, ea),
+            marginLeft: String(unitBlockIndent) + ea,
+            height: String(unitBlockHeight) + ea,
+            boxSizing: "border-box",
+            justifyContent: "start",
+            alignItems: "center",
+            borderBottom: contentsNum !== sourceArr.length - 1 ? "1px dashed " + colorExtended.mainBlue : "",
+          },
+          children: [
+            {
+              text: title.portfolio,
+              style: {
+                fontSize: String(16) + ea,
+                fontWeight: String(700),
+                color: colorExtended.blueDark,
+                display: "inline-flex",
+                position: "relative",
+                top: String(-1) + ea,
+              }
+            },
+            {
+              style: {
+                position: "absolute",
+                width: String(100) + ea,
+                height: withOut(0, ea),
+                display: "inline-flex",
+                right: String(0),
+                top: String(0),
+                justifyContent: "end",
+                alignItems: "center",
+              },
+              child: {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(18) + ea,
+                  height: String(18) + ea,
+                  borderRadius: String(5) + "px",
+                  background: colorExtended.blueDark,
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  mode: "svg",
+                  source: svgMaker.horizontalArrow(12, 10, colorExtended.white),
+                  style: {
+                    width: String(12) + ea,
+                  }
+                }
+              }
+            }
+          ]
+        });
+
+        contentsNum++;
+      }
+
+      // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+      // fifth : info
+
       fourthTong = createNode({
         mother: scrollTong,
         style: {
@@ -5343,9 +5441,30 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           flexDirection: "column",
           paddingTop: String(blockInnerPadding) + ea,
           paddingBottom: String(largePaddingBottom) + ea,
-          background: colorExtended.blueLight,
-          borderBottom: "1px dashed " + colorExtended.mainBlue,
+          boxSizing: "border-box",
+          overflow: "visible",
         },
+        child: {
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(-1 * innerMargin) + ea,
+            width: "calc(100% + " + String(innerMargin * 2) + ea + ")",
+            height: withOut(-2, "px"),
+            background: colorExtended.blueLight,
+          },
+          next: {
+            style: {
+              position: "absolute",
+              top: String(0),
+              left: String(0) + ea,
+              width: withOut(0, ea),
+              height: withOut(-1, "px"),
+              borderBottom: "1px dashed " + colorExtended.blueDim,
+              zIndex: String(1),
+            }
+          }
+        }
       });
       createNode({
         mother: fourthTong,
@@ -5385,10 +5504,10 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         style: {
           display: "block",
           position: "relative",
-          width: withOut(whiteBlockOuterMargin * 2, ea),
+          width: withOut(0 * 2, ea),
           borderRadius: String(8) + "px",
-          padding: String(whiteBlockOuterMargin) + ea,
-          paddingBottom: String(whiteBlockOuterMargin - whiteBlockMarginBottom) + ea,
+          padding: String(0) + ea,
+          paddingBottom: String(0) + ea,
           background: colorExtended.blueLight,
         }
       });
@@ -5606,7 +5725,6 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         });
         tendencyNum++;
       }
-
       tendencyNum = 0;
       for (let t of designer.toneTendency) {
         createNode({
@@ -5681,129 +5799,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-      fifthTong = createNode({
-        mother: scrollTong,
-        style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          flexDirection: "column",
-          paddingTop: String(blockInnerPadding) + ea,
-          paddingBottom: String(blockInnerPadding) + ea,
-        },
-      });
-      createNode({
-        mother: fifthTong,
-        style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          height: String(blockTitleBlockHeight) + ea,
-          alignItems: "start",
-          justifyContent: "start",
-        },
-        child: {
-          text: "PORTFOLIO",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(blockTitleSize) + ea,
-            fontWeight: String(700),
-            color: colorExtended.black,
-            fontFamily: "mont",
-          }
-        }
-      });
-
-      portfolioTong = createNode({
-        mother: fifthTong,
-        style: {
-          display: "block",
-          position: "relative",
-          width: withOut(0, ea),
-          overflow: "visible",
-          marginTop: String(blockTitleMarginBottom) + ea,
-        },
-      });
-      portfolioMiddleMother = createNode({
-        mother: portfolioTong,
-        style: {
-          display: "block",
-          position: "relative",
-          width: withOut(0 * 2, ea),
-          borderRadius: String(8) + "px",
-          background: colorExtended.white,
-          border: "1px solid " + colorExtended.mainBlue,
-          boxSizing: "border-box",
-        },
-      });
-
-      contentsNum = 0;
-      for (let { date, title, link } of sourceArr) {
-
-        createNode({
-          mother: portfolioMiddleMother,
-          style: {
-            display: "flex",
-            position: "relative",
-            width: withOut(unitBlockIndent * 2, ea),
-            marginLeft: String(unitBlockIndent) + ea,
-            height: String(unitBlockHeight) + ea,
-            boxSizing: "border-box",
-            justifyContent: "start",
-            alignItems: "center",
-            borderBottom: contentsNum !== sourceArr.length - 1 ? "1px dashed " + colorExtended.mainBlue : "",
-          },
-          children: [
-            {
-              text: title.portfolio,
-              style: {
-                fontSize: String(16) + ea,
-                fontWeight: String(700),
-                color: colorExtended.blueDark,
-                display: "inline-flex",
-                position: "relative",
-                top: String(-1) + ea,
-              }
-            },
-            {
-              style: {
-                position: "absolute",
-                width: String(100) + ea,
-                height: withOut(0, ea),
-                display: "inline-flex",
-                right: String(0),
-                top: String(0),
-                justifyContent: "end",
-                alignItems: "center",
-              },
-              child: {
-                style: {
-                  display: "inline-flex",
-                  position: "relative",
-                  width: String(18) + ea,
-                  height: String(18) + ea,
-                  borderRadius: String(5) + "px",
-                  background: colorExtended.blueDark,
-                  justifyContent: "center",
-                  alignItems: "center",
-                },
-                child: {
-                  mode: "svg",
-                  source: svgMaker.horizontalArrow(12, 10, colorExtended.white),
-                  style: {
-                    width: String(12) + ea,
-                  }
-                }
-              }
-            }
-          ]
-        });
-
-        contentsNum++;
-      }
-
-      // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      // fifth : price
 
       sixthTong = createNode({
         mother: scrollTong,
@@ -6077,6 +6073,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+      // fifth : designer selection
+
       seventhTong = createNode({
         mother: scrollTong,
         style: {
@@ -6100,7 +6098,6 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           }
         }
       });
-
       finalSelectionTong = createNode({
         mother: seventhTong,
         style: {
@@ -6108,19 +6105,6 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           position: "relative",
           width: withOut(0, ea),
           overflow: "visible",
-        },
-      });
-      createNode({
-        mother: finalSelectionTong,
-        style: {
-          display: "block",
-          position: "absolute",
-          top: String(21) + ea,
-          left: String(0),
-          width: String(1150 - finalBlockBetween) + ea,
-          height: String(0) + ea,
-          opacity: String(1),
-          borderBottom: "1px dashed " + colorExtended.blueLight,
         },
       });
       finalSelectionMiddleMother = createNode({
@@ -6152,8 +6136,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           {
             text: "디자이너 선택",
             style: {
-              fontSize: String(19) + ea,
-              fontWeight: String(900),
+              fontSize: String(18) + ea,
+              fontWeight: String(800),
               color: colorExtended.blueDark,
               display: "inline-flex",
               position: "relative",

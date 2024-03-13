@@ -5157,7 +5157,7 @@ GeneralJs.designerMthParsing = function (methods) {
   });
 }
 
-GeneralJs.designerCareer = function (designer, wordingMode = false) {
+GeneralJs.designerCareer = function (designer, wordingMode = false, justNumbers = false) {
   const today = new Date();
   let careerSubtract;
   let year, month;
@@ -5175,7 +5175,11 @@ GeneralJs.designerCareer = function (designer, wordingMode = false) {
   finalMonth = (sumCareer % 12);
 
   if (wordingMode) {
-    return `경력&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;${String(finalYear)}년 ${String(finalMonth)}개월`;
+    if (justNumbers) {
+      return `${String(finalYear)}년 ${String(finalMonth)}개월`;
+    } else {
+      return `경력&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;${String(finalYear)}년 ${String(finalMonth)}개월`;
+    }
   } else {
     return [ finalYear, finalMonth ];
   }
