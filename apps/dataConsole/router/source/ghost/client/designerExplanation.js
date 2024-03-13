@@ -4264,7 +4264,7 @@ DesignerExplanationJs.prototype.styleTextParsing = function (text) {
 
 DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, autoComma, ajaxJson, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, designerCareer, isMac, isIphone, svgMaker, autoComma, ajaxJson, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -4278,14 +4278,19 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       const project = instance.project;
       const designer = instance.designers.find((d) => { return d.desid === desid });
       const proposal = project.proposal.detail.find((p) => { return p.desid === desid });
-      const { analytics } = designer;
-      const { construct: { case: constructCase }, styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { level: fabricLevel, curtain, bedding } }, purchase: { setting: { install, storage } }, project: { time: { first }, matrix, cad: cadBoo, collage: collageBoo, modeling: modelingBoo } } = analytics;
+      const { analytics, information } = designer;
+      const { business: { career: { startY, startM } } } = information;
+      const { construct: { level: constructLevel, case: constructCase }, styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { level: fabricLevel, curtain, bedding } }, purchase: { setting: { install, storage } }, project: { time: { first }, matrix, cad: cadBoo, collage: collageBoo, modeling: modelingBoo } } = analytics;
       const zIndex = 4;
       const web = {
         portfolio: FRONTHOST + "/portdetail.php?pid=",
         review: FRONTHOST + "/revdetail.php?pid="
       };
       const { contentsArr } = await ajaxJson({ mode: "designer", desid }, LOGHOST + "/getContents", { equal: true });
+      const today = new Date();
+      const careerSubtract = ((today.getFullYear() * 12) + (today.getMonth() + 1)) - ((startY * 12) + startM);
+      const year = Math.floor(careerSubtract / 12);
+      const month = (careerSubtract % 12);
       let cancelBack, whiteBase;
       let whiteMargin;
       let innerMargin;
@@ -4379,6 +4384,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let buttonArrowWdith;
       let buttonArrowHeight;
       let paperMove;
+      let offlineFeeTarget, onlineFeeTarget;
+      let deactiveOpacity;
 
       whiteMargin = 30;
       innerMargin = 52;
@@ -4472,7 +4479,20 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       paperMove = 240;
 
+      deactiveOpacity = 0.4;
+
       ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
+
+      console.log(proposal);
+
+      offlineFeeTarget = proposal.fee.find((o) => { return o.method === "offline" });
+      onlineFeeTarget = proposal.fee.find((o) => { return o.method !== "offline" });
+      if (offlineFeeTarget === undefined) {
+        offlineFeeTarget = null;
+      }
+      if (onlineFeeTarget === undefined) {
+        onlineFeeTarget = null;
+      }
 
       sourceArr = [];
       for (let { contents } of contentsArr) {
@@ -4680,7 +4700,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         }
       }
 
-      insertMoneyBlock = (priceMiddleMother, title, vatBoo, value, last = false) => {
+      insertMoneyBlock = (priceMiddleMother, title, vatBoo, value, last = false, blur = false) => {
         createNode({
           mother: priceMiddleMother,
           style: {
@@ -4704,6 +4724,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 borderRadius: String(moneyCircleWidth) + ea,
                 background: colorExtended.mainBlue,
                 marginRight: String(moneyCircleMargin) + ea,
+                opacity: blur ? String(deactiveOpacity) : String(1),
               }
             },
             {
@@ -4715,6 +4736,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 display: "inline-flex",
                 position: "relative",
                 top: String(moneyTitleTextTop) + ea,
+                opacity: blur ? String(deactiveOpacity) : String(1),
               }
             },
             {
@@ -4727,6 +4749,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 top: String(0),
                 justifyContent: "end",
                 alignItems: "center",
+                opacity: blur ? String(deactiveOpacity) : String(1),
               },
               children: [
                 {
@@ -5519,21 +5542,21 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           title: "유관 경력",
           type: "string",
           double: false,
-          value: "0년 0개월",
+          value: designerCareer(designer, true, true),
         },
         {
           title: "홈리에종 소속 기간",
           type: "string",
           double: false,
-          value: "0년 0개월",
+          value: String(year) + "년 " + String(month) + "개월",
         },
         {
           title: "빌트인 가구 제작",
           type: "selection",
           double: false,
           value: [
-            { title: "가능", value: 1 },
-            { title: "불가능", value: 0 },
+            { title: "가능", value: builtin > 0 ? 1 : 0 },
+            { title: "불가능", value: builtin === 0 ? 1 : 0 },
           ],
         },
         {
@@ -5541,8 +5564,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           type: "selection",
           double: false,
           value: [
-            { title: "가능", value: 1 },
-            { title: "불가능", value: 0 },
+            { title: "가능", value: design > 0 ? 1 : 0 },
+            { title: "불가능", value: design === 0 ? 1 : 0 },
           ],
         },
       ], false);
@@ -5552,8 +5575,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           type: "selection",
           double: false,
           value: [
-            { title: "가능", value: 1 },
-            { title: "불가능", value: 0 },
+            { title: "가능", value: modelingBoo > 0 ? 1 : 0 },
+            { title: "불가능", value: modelingBoo === 0 ? 1 : 0 },
           ],
         },
         {
@@ -5561,8 +5584,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           type: "selection",
           double: false,
           value: [
-            { title: "가능", value: 1 },
-            { title: "불가능", value: 0 },
+            { title: "가능", value: cadBoo ? 1 : 0 },
+            { title: "불가능", value: cadBoo ? 0 : 1 },
           ],
         },
         {
@@ -5570,8 +5593,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           type: "selection",
           double: false,
           value: [
-            { title: "가능", value: 1 },
-            { title: "불가능", value: 0 },
+            { title: "가능", value: collageBoo ? 1 : 0 },
+            { title: "불가능", value: collageBoo ? 0 : 1 },
           ],
         },
         {
@@ -5579,8 +5602,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           type: "selection",
           double: false,
           value: [
-            { title: "가능", value: 1 },
-            { title: "불가능", value: 0 },
+            { title: "가능", value: fabricLevel > 0 ? 1 : 0 },
+            { title: "불가능", value: fabricLevel === 0 ? 1 : 0 },
           ],
         },
       ], false);
@@ -5589,15 +5612,15 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           title: "1차 제안 받는 시점",
           type: "string",
           double: false,
-          value: "2주 이내",
+          value: String(first) + "일 이내",
         },
         {
           title: "제안 방식",
           type: "selection",
           double: false,
           value: [
-            { title: "순차 제안", value: 1 },
-            { title: "한 번에 제안", value: 0 },
+            { title: "순차 제안", value: (method === "순차 제안" ? 1 : 0) },
+            { title: "한 번에 제안", value: (method !== "순차 제안" ? 1 : 0) },
           ],
         },
         {
@@ -5605,7 +5628,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           type: "selection",
           double: true,
           value: serviceParsing().name.map((str, index) => {
-            return { title: str, value: index === 0 ? 1 : 0 }
+            return { title: str, value: index <= constructLevel ? 1 : 0 }
           })
         }
       ], true);
@@ -5871,9 +5894,42 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         },
       });
 
-      insertMoneyBlock(priceMiddleMother, "디자인비 (오프라인)", true, autoComma(2276000) + "원", false);
-      insertMoneyBlock(priceMiddleMother, "디자인비 (온라인)", true, autoComma(1935000) + "원", false);
-      insertMoneyBlock(priceMiddleMother, "출장비", true, "(거리 : 0km / 시간 : 0시간 0분 / 1회당) 0원", false);
+      if (offlineFeeTarget === null) {
+        insertMoneyBlock(priceMiddleMother, "디자인비 (오프라인)", true, autoComma(0) + "원", false, true);
+      } else {
+        insertMoneyBlock(priceMiddleMother, "디자인비 (오프라인)", true, autoComma(offlineFeeTarget.amount) + "원", false, false);
+      }
+      if (onlineFeeTarget === null) {
+        insertMoneyBlock(priceMiddleMother, "디자인비 (온라인)", true, autoComma(0) + "원", false, true);
+      } else {
+        insertMoneyBlock(priceMiddleMother, "디자인비 (온라인)", true, autoComma(onlineFeeTarget.amount) + "원", false, false);
+      }
+      if (offlineFeeTarget === null) {
+        insertMoneyBlock(priceMiddleMother, "출장비", true, "(거리 : 0km / 시간 : 0시간 0분 / 1회당) 0원", false, true);
+      } else {
+        if (offlineFeeTarget.distance.amount === 0) {
+          insertMoneyBlock(priceMiddleMother, "출장비", true, "(거리 : 0km / 시간 : 0시간 0분 / 1회당) 0원", false, true);
+        } else {
+          insertMoneyBlock(priceMiddleMother, "출장비", true, `(거리 : ${offlineFeeTarget.distance.distance} / 시간 : ${offlineFeeTarget.distance.time} / 1회당) ${autoComma(offlineFeeTarget.distance.amount)}원`, false, false);
+        }
+      }
+
+
+
+
+
+
+
+
+      
+
+
+
+
+
+
+
+
       insertMoneyBlock(priceMiddleMother, "오프라인 디자인비 할인율 (할인 금액)", false, "7% (129,570원)", false);
       insertMoneyBlock(priceMiddleMother, "온라인 디자인비 할인율 (할인 금액)", false, "5% (78,700원)", true);
 
