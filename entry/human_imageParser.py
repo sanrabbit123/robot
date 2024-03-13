@@ -12,7 +12,7 @@ def returnModulepath():
     num = 0
     index = 0
     for path in rawPathArr:
-        if path == "human":
+        if path == "robot":
             index = num
         num = num + 1
     resultPath = ''
@@ -20,13 +20,13 @@ def returnModulepath():
         resultPath += rawPathArr[i] + '/'
     humanPath = resultPath[0:-1]
     modulPath = resultPath + "python_modules"
-    return { "human": humanPath, "module": modulPath }
+    return { "robot": humanPath, "module": modulPath }
 
 # append human in module pathes
 try:
-    os.chdir(str(Path.home()) + "/human")
+    os.chdir(str(Path.home()) + "/robot")
     pathDic = returnModulepath()
-    path.insert(0, pathDic["human"])
+    path.insert(0, pathDic["robot"])
     path.insert(0, pathDic["module"])
 except Exception as e:
     print(e)
