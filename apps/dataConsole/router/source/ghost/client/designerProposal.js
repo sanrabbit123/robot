@@ -4214,7 +4214,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
       window.alert("오류가 일어났습니다! 다시 시도해주세요!");
       window.localStorage.clear();
       window.location.reload();
-    })
+    });
 
   }
 

@@ -6688,19 +6688,95 @@ DesignerExplanationJs.prototype.designerFinalSelection = function (fromCard = fa
 
 DesignerExplanationJs.prototype.finalSubmit = async function (desid) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, autoComma, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, designerCareer, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, autoComma, ajaxJson, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, designerCareer, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight, blankPhoto } = this;
   const mobile = media[4];
   const desktop = !mobile;
   try {
+    const getObj = returnGet();
     const designer = instance.designers.find((d) => { return d.desid === desid });
+    const project = instance.project;
+    const proposal = project.proposal.detail.find((p) => { return p.desid === designer.desid });
+    const fee = proposal.fee;
+    let offlineFeeTarget, onlineFeeTarget;
+    let method;
+    let name, phone;
+    if (designer.end) {
+      window.alert("해당 디자이너는 일정이 마감되었습니다!");
+    } else {
 
+      offlineFeeTarget = fee.find((o) => { return o.method === "offline" });
+      onlineFeeTarget = fee.find((o) => { return o.method !== "offline" });
+  
+      if (offlineFeeTarget === undefined) {
+        offlineFeeTarget = null;
+      }
+      if (onlineFeeTarget === undefined) {
+        onlineFeeTarget = null;
+      }
+  
+      if (offlineFeeTarget !== null && onlineFeeTarget !== null) {
+        method = await GeneralJs.promptButtons("서비스 유형을 선택해주세요!", [ "오프라인", "온라인" ]);
+        while (method === null) {
+          method = await GeneralJs.promptButtons("서비스 유형을 선택해주세요!", [ "오프라인", "온라인" ]);
+        }
+        if (/오프라인/gi.test(method)) {
+          method = "offline";
+        } else {
+          method = "online";
+        }
+      }
+  
+      if (offlineFeeTarget === null && onlineFeeTarget !== null) {
+        method = "online";
+      }
+      if (offlineFeeTarget !== null && onlineFeeTarget === null) {
+        method = "offline";
+      }
+  
+      if (getObj.mode === "test") {
+        window.alert("검수 모드입니다!");
+      } else {
 
-    console.log(designer);
+        name = instance.client.name;
+        phone = instance.client.phone;
 
+        window.localStorage.clear();
 
+        await ajaxJson({
+          cliid: instance.client.cliid,
+          proid: instance.project.proid,
+          desid: desid,
+          name: name,
+          phone: phone,
+          designer: designer.designer,
+          method: method,
+        }, BACKHOST + "/designerProposal_submit");
+        
+        await homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "designerSelect",
+          data: {
+            cliid: instance.client.cliid,
+            proid: instance.project.proid,
+            desid: desid,
+            name: name,
+            phone: phone,
+            designer: designer.designer,
+            method: method,
+          },
+        });
+        
+        window.localStorage.clear();
+        selfHref(FRONTHOST + "/estimation.php?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method);
+      }
+    }
   } catch (e) {
     console.log(e);
+    window.alert("오류가 일어났습니다! 다시 시도해주세요!");
+    window.localStorage.clear();
+    window.location.reload();
   }
 }
 
