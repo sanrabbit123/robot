@@ -856,6 +856,9 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const designerSelectionButtonClassNameButton = "designerSelectionButtonClassNameButton";
+  const designerSelectionButtonClassNameString = "designerSelectionButtonClassNameString";
+  const designerSelectionButtonClassNameButtonPlus = "designerSelectionButtonClassNameButtonPlus";
   try {
     let minusLeft;
     let thirdBase;
@@ -881,6 +884,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     let nameTitleSize;
     let selectionBase;
     let endBoo;
+    let designerSelectionEvent;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -909,6 +913,125 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     abc = this.abc;
     designers = this.designers;
+
+    designerSelectionEvent = (designer, end, index, mode = "button") => {
+      return function (e) {
+        const buttonFriends = [ ...document.querySelectorAll('.' + designerSelectionButtonClassNameButton) ];
+        const stringFriends = [ ...document.querySelectorAll('.' + designerSelectionButtonClassNameString) ];
+        let self, sibling, toggle;
+        let matrix;
+
+        matrix = [];
+        for (let i = 0; i < buttonFriends.length; i++) {
+          matrix.push([
+            document.querySelector('.' + designerSelectionButtonClassNameButton + "_" + String(i)),
+            document.querySelector('.' + designerSelectionButtonClassNameString + "_" + String(i)),
+            document.querySelector('.' + designerSelectionButtonClassNameButtonPlus + "_" + String(i)),
+          ]);
+        }
+
+        if (mode === "button") {
+
+          sibling = document.querySelector('.' + designerSelectionButtonClassNameString + "_" + String(index));
+          self = this;
+          toggle = self.getAttribute("toggle");
+
+          if (toggle === "off") {
+            if (end) {
+              window.alert("해당 디자이너는 마감되었습니다!");
+            } else {
+              for (let [ first, second, third ] of matrix) {
+                if (first === self) {
+                  self.children[self.children.length - 1].style.opacity = String(0);
+                  sibling.style.color = colorExtended.white;
+                  sibling.style.opacity = String(1);
+                  third.children[0].children[1].style.opacity = String(0);
+                  third.children[1].style.opacity = String(1);
+                  
+                  self.setAttribute("toggle", "on");
+                  sibling.setAttribute("toggle", "on");
+                  third.setAttribute("toggle", "on");
+                } else {
+                  first.children[first.children.length - 1].style.opacity = String(1);
+                  second.style.color = colorExtended.blueLight;
+                  second.style.opacity = String(0.8);
+                  third.children[0].children[1].style.opacity = String(1);
+                  third.children[1].style.opacity = String(0.6);
+
+                  first.setAttribute("toggle", "off");
+                  second.setAttribute("toggle", "off");
+                  third.setAttribute("toggle", "off");
+                }
+              }
+            }
+          } else {
+            for (let [ first, second, third ] of matrix) {
+              if (first === self) {
+                first.children[first.children.length - 1].style.opacity = String(1);
+                second.style.color = colorExtended.blueLight;
+                second.style.opacity = String(0.8);
+                third.children[0].children[1].style.opacity = String(1);
+                third.children[1].style.opacity = String(0.6);
+      
+                first.setAttribute("toggle", "off");
+                second.setAttribute("toggle", "off");
+                third.setAttribute("toggle", "off");
+              }
+            }
+          }
+
+        } else {
+
+          sibling = document.querySelector('.' + designerSelectionButtonClassNameButton + "_" + String(index));
+          self = this;
+          toggle = self.getAttribute("toggle");
+
+          if (toggle === "off") {
+            if (end) {
+              window.alert("해당 디자이너는 마감되었습니다!");
+            } else {
+              for (let [ first, second, third ] of matrix) {
+                if (second === self) {
+                  sibling.children[sibling.children.length - 1].style.opacity = String(0);
+                  self.style.color = colorExtended.white;
+                  self.style.opacity = String(1);
+                  third.children[0].children[1].style.opacity = String(0);
+                  third.children[1].style.opacity = String(1);
+                  self.setAttribute("toggle", "on");
+                  sibling.setAttribute("toggle", "on");
+                  third.setAttribute("toggle", "on");
+                } else {
+                  first.children[first.children.length - 1].style.opacity = String(1);
+                  second.style.color = colorExtended.blueLight;
+                  second.style.opacity = String(0.8);
+                  third.children[0].children[1].style.opacity = String(1);
+                  third.children[1].style.opacity = String(0.6);
+                  first.setAttribute("toggle", "off");
+                  second.setAttribute("toggle", "off");
+                  third.setAttribute("toggle", "off");
+                }
+              }
+            }
+          } else {
+            for (let [ first, second, third ] of matrix) {
+              if (second === self) {
+                first.children[first.children.length - 1].style.opacity = String(1);
+                second.style.color = colorExtended.blueLight;
+                second.style.opacity = String(0.8);
+                third.children[0].children[1].style.opacity = String(1);
+                third.children[1].style.opacity = String(0.6);
+      
+                first.setAttribute("toggle", "off");
+                second.setAttribute("toggle", "off");
+                third.setAttribute("toggle", "off");
+              }
+            }
+          }
+
+        }
+
+      }
+    }
 
     thirdBase = createNode({
       mother: baseTong,
@@ -995,6 +1118,9 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
       createNode({
         mother: thisBase,
+        event: {
+          selectstart: (e) => { e.preventDefault() },
+        },
         style: {
           display: "flex",
           position: "relative",
@@ -1007,6 +1133,14 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         },
         children: [
           {
+            class: [ designerSelectionButtonClassNameButton + "_" + String(i), designerSelectionButtonClassNameButton ],
+            event: {
+              click: designerSelectionEvent(designer, endBoo, i, "button"),
+              selectstart: (e) => { e.preventDefault() },
+            },
+            attribute: {
+              toggle: "off",
+            },
             style: {
               display: "inline-flex",
               position: "relative",
@@ -1015,6 +1149,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
               background: colorExtended.focusBlue,
               borderRadius: String(checkCircleWidth) + ea,
               opacity: endBoo ? String(0.4) : String(1),
+              cursor: "pointer",
             },
             child: {
               mode: "svg",
@@ -1037,24 +1172,36 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
             }
           },
           {
+            class: [ designerSelectionButtonClassNameString + "_" + String(i), designerSelectionButtonClassNameString ],
+            event: {
+              click: designerSelectionEvent(designer, endBoo, i, "string"),
+              selectstart: (e) => { e.preventDefault() },
+            },
+            attribute: {
+              toggle: "off",
+            },
             text: "designers " + abc[i],
             style: {
               display: "inline-flex",
               position: "relative",
               fontSize: String(19) + ea,
               fontWeight: String(700),
-              color: colorExtended.white,
+              color: colorExtended.blueLight,
               fontFamily: "mont",
               marginLeft: String(7) + ea,
-              opacity: endBoo ? String(0.3) : String(0.7),
+              opacity: endBoo ? String(0.4) : String(0.8),
+              cursor: "pointer",
             }
           },
           {
             text: "해당 디자이너는 마감되었습니다.",
+            event: {
+              selectstart: (e) => { e.preventDefault() },
+            },
             style: {
               display: endBoo ? "inline-flex" : "none",
               position: "relative",
-              fontSize: String(19) + ea,
+              fontSize: String(18) + ea,
               fontWeight: String(800),
               color: colorExtended.white,
               marginLeft: String(9) + ea,
@@ -1419,6 +1566,9 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
   const cardMoveTargetClassName = "cardMoveTargetClassName";
   const arrowLeftClassName = "arrowLeftClassName";
   const arrowRightClassName = "arrowRightClassName";
+  const designerSelectionButtonClassNameButton = "designerSelectionButtonClassNameButton";
+  const designerSelectionButtonClassNameString = "designerSelectionButtonClassNameString";
+  const designerSelectionButtonClassNameButtonPlus = "designerSelectionButtonClassNameButtonPlus";
   const today = new Date();
   try {
     let minusLeft;
@@ -1513,6 +1663,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     let onlineFeeTarget;
     let moneyArr;
     let endBoo;
+    let designerSelectionEventPlus;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -1520,7 +1671,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     basePaddingTop = <%% 150, 150, 160, 140, 21 %%>;
     basePaddingBottom = <%% 160, 160, 160, 160, 24 %%>;
 
-    checkCircleWidth = 18;
+    checkCircleWidth = 15;
 
     cardLength = 5;
 
@@ -1584,7 +1735,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     finalMoneyWeight = 300;
     finalMoneyBoldWeight = 700;
 
-    safeLoopNumber = 3;
+    safeLoopNumber = 1;
     loopNumber = 4;
 
     arrowCircleWidth = 44;
@@ -1996,6 +2147,68 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
       }
       return resultArr;
     }
+    designerSelectionEventPlus = (designer, end, index) => {
+      return function (e) {
+        const self = this;
+        const buttonFriends = [ ...document.querySelectorAll('.' + designerSelectionButtonClassNameButton) ];
+        let matrix, toggle;
+
+        matrix = [];
+        for (let i = 0; i < buttonFriends.length; i++) {
+          matrix.push([
+            document.querySelector('.' + designerSelectionButtonClassNameButton + "_" + String(i)),
+            document.querySelector('.' + designerSelectionButtonClassNameString + "_" + String(i)),
+            document.querySelector('.' + designerSelectionButtonClassNameButtonPlus + "_" + String(i)),
+          ]);
+        }
+
+        toggle = self.getAttribute("toggle");
+        if (toggle === "off") {
+          if (end) {
+            window.alert("해당 디자이너는 마감되었습니다!");
+          } else {
+            for (let [ first, second, third ] of matrix) {
+              if (third === self) {
+                first.children[first.children.length - 1].style.opacity = String(0);
+                second.style.color = colorExtended.white;
+                second.style.opacity = String(1);
+                third.children[0].children[1].style.opacity = String(0);
+                third.children[1].style.opacity = String(1);
+                
+                first.setAttribute("toggle", "on");
+                second.setAttribute("toggle", "on");
+                third.setAttribute("toggle", "on");
+              } else {
+                first.children[first.children.length - 1].style.opacity = String(1);
+                second.style.color = colorExtended.blueLight;
+                second.style.opacity = String(0.8);
+                third.children[0].children[1].style.opacity = String(1);
+                third.children[1].style.opacity = String(0.6);
+  
+                first.setAttribute("toggle", "off");
+                second.setAttribute("toggle", "off");
+                third.setAttribute("toggle", "off");
+              }
+            }
+          }
+        } else {
+          for (let [ first, second, third ] of matrix) {
+            if (third === self) {
+              first.children[first.children.length - 1].style.opacity = String(1);
+              second.style.color = colorExtended.blueLight;
+              second.style.opacity = String(0.8);
+              third.children[0].children[1].style.opacity = String(1);
+              third.children[1].style.opacity = String(0.6);
+    
+              first.setAttribute("toggle", "off");
+              second.setAttribute("toggle", "off");
+              third.setAttribute("toggle", "off");
+            }
+          }
+        }
+
+      }
+    }
 
     thirdBase = createNode({
       mother: baseTong,
@@ -2163,7 +2376,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
       style: {
         display: "block",
         position: "relative",
-        width: String(((cardWidth * 2) + cardBetween) * (designers.length * loopNumber) * 2) + ea,
+        width: String(((cardWidth * 2) + cardBetween) * (designers.length) * 2) + ea,
         transformOrigin: "0% 0%",
         transform: "translateX(0px)",
       }
@@ -2602,6 +2815,14 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         // designer selection
         createNode({
           mother: thisCardBase,
+          class: [ designerSelectionButtonClassNameButtonPlus, designerSelectionButtonClassNameButtonPlus + "_" + String(i) ],
+          attribute: {
+            toggle: "off",
+          },
+          event: {
+            click: designerSelectionEventPlus(designer, endBoo, i),
+            selectstart: (e) => { e.preventDefault() },
+          },
           style: {
             display: "flex",
             position: "relative",
@@ -2611,6 +2832,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             flexDirection: "row",
             marginTop: String(18) + ea,
             marginBottom: String(4) + ea,
+            cursor: "pointer",
           },
           children: [
             {
@@ -2646,6 +2868,9 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               }
             },
             {
+              event: {
+                selectstart: (e) => { e.preventDefault() },
+              },
               text: "designers " + abc[i],
               style: {
                 display: "inline-flex",
@@ -2655,7 +2880,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 color: colorExtended.white,
                 fontFamily: "mont",
                 marginLeft: String(7) + ea,
-                opacity: String(0.9),
+                opacity: String(0.6),
                 top: String(1) + ea,
               }
             }
@@ -3073,7 +3298,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                   color: colorExtended.white,
                   fontFamily: "mont",
                   marginLeft: String(7) + ea,
-                  opacity: String(0.9),
+                  opacity: String(0.8),
                   top: String(1) + ea,
                 }
               }
@@ -3108,9 +3333,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
       }
     }
     if (viewNumber <= designers.length) {
-      for (let z = 0; z < loopNumber; z++) {
-        renderDesigneresCard(false);
-      }
+      renderDesigneresCard(false);
     } else {
       renderDesigneresCard(true);
     }
@@ -3189,7 +3412,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        opacity: String(0.9),
+        opacity: String(0.8),
         boxShadow: "0px 3px 14px -9px " + colorExtended.darkDarkShadow,
       },
       child: {
