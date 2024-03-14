@@ -6918,11 +6918,11 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     }
 
     // TEST Center ==================================================================================================
-    // if (proid === "p1801_aa01s") {
-    //   for (let d of designers) {
-    //     d.end = false;
-    //   }
-    // }
+    if (proid === "p1801_aa01s") {
+      for (let d of designers) {
+        d.end = false;
+      }
+    }
     // TEST Center ==================================================================================================
     this.designers = designers;
 
