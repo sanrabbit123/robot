@@ -6688,7 +6688,7 @@ DesignerExplanationJs.prototype.designerFinalSelection = function (fromCard = fa
 
 DesignerExplanationJs.prototype.finalSubmit = async function (desid) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, autoComma, ajaxJson, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, designerCareer, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, autoComma, selfHref, ajaxJson, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, designerCareer, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight, blankPhoto } = this;
   const mobile = media[4];
   const desktop = !mobile;
