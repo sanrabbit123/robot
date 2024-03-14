@@ -5634,7 +5634,7 @@ GeneralJs.prompt = function (message, preValue = '') {
       position: "relative",
       marginLeft: String(marginLeft) + ea,
       fontSize: String(size1) + ea,
-      fontWeight: String(500),
+      fontWeight: String(700),
       color: colorChip.black,
       lineHeight: String(lineHeight),
       top: String(wordingVisual) + ea,
@@ -5868,7 +5868,7 @@ GeneralJs.promptLong = function (message, preValue = '') {
       position: "relative",
       marginLeft: String(marginLeft) + ea,
       fontSize: String(size1) + ea,
-      fontWeight: String(500),
+      fontWeight: String(700),
       color: colorChip.black,
       lineHeight: String(lineHeight),
       top: String(wordingVisual) + ea,
@@ -6129,7 +6129,7 @@ GeneralJs.promptWithButton = function (message, progressName = "NULL", preValue 
       position: "relative",
       marginLeft: String(marginLeft) + ea,
       fontSize: String(size1) + ea,
-      fontWeight: String(500),
+      fontWeight: String(700),
       color: colorChip.black,
       lineHeight: String(lineHeight),
       top: String(wordingVisual) + ea,
@@ -6311,7 +6311,7 @@ GeneralJs.promptButtons = function (message, buttons) {
   let buttonsBaseTongMarginTop;
   let buttonPaddingLeft;
 
-  whiteWidth = 320;
+  whiteWidth = 360;
   whiteHeight = 150;
   paddingTop = 17;
   paddingLeft = 23;
@@ -6319,10 +6319,10 @@ GeneralJs.promptButtons = function (message, buttons) {
   size0 = 14;
   size1 = 15;
   inputSize = 13;
-  buttonSize = 12;
+  buttonSize = 14;
   marginLeft = 18;
   bottomVisual = 7;
-  inputBoxHeight = 26;
+  inputBoxHeight = 32;
   inputIndent = 9;
   inputBottomVisual = 0;
   lineHeight = 1.5;
@@ -6330,7 +6330,7 @@ GeneralJs.promptButtons = function (message, buttons) {
   textTop = GeneralJs.isMac() ? -1 : 1;
   buttonBetween = 4;
   buttonsBaseTongMarginTop = 10;
-  buttonPaddingLeft = 10;
+  buttonPaddingLeft = 12;
 
   greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
   if (Number.isNaN(greenBarHeight)) {
@@ -6405,7 +6405,7 @@ GeneralJs.promptButtons = function (message, buttons) {
       position: "relative",
       marginLeft: String(marginLeft) + ea,
       fontSize: String(size1) + ea,
-      fontWeight: String(500),
+      fontWeight: String(700),
       color: colorChip.black,
       lineHeight: String(lineHeight),
       top: String(wordingVisual) + ea,
@@ -6444,7 +6444,7 @@ GeneralJs.promptButtons = function (message, buttons) {
           width: "calc(calc(100% - " + String(buttonBetween * (buttons.length - 1)) + ea + ") / " + String(buttons.length) + ")",
           height: String(inputBoxHeight) + ea,
           marginRight: num === buttons.length - 1 ? "" : String(buttonBetween) + ea,
-          background: colorChip.softGreen,
+          background: GeneralJs.colorExtended.blueDark,
           borderRadius: String(5) + "px",
         },
         child: {
@@ -6489,7 +6489,7 @@ GeneralJs.promptButtons = function (message, buttons) {
           height: String(inputBoxHeight) + ea,
           marginRight: String(buttonBetween) + ea,
           marginBottom: String(buttonBetween) + ea,
-          background: colorChip.softGreen,
+          background: GeneralJs.colorExtended.blueDark,
           borderRadius: String(5) + "px",
           paddingLeft: String(buttonPaddingLeft) + ea,
           paddingRight: String(buttonPaddingLeft) + ea,
@@ -6498,7 +6498,7 @@ GeneralJs.promptButtons = function (message, buttons) {
           text,
           style: {
             fontSize: String(buttonSize) + ea,
-            fontWeight: String(600),
+            fontWeight: String(700),
             color: colorChip.white,
             position: "relative",
             top: String(textTop) + ea,
@@ -6573,7 +6573,7 @@ GeneralJs.promptLongButtons = function (message, buttons) {
   let buttonsBaseTongMarginTop;
   let buttonPaddingLeft;
 
-  whiteWidth = 320;
+  whiteWidth = 360;
   whiteHeight = 150;
   paddingTop = 17;
   paddingLeft = 23;
@@ -6581,10 +6581,10 @@ GeneralJs.promptLongButtons = function (message, buttons) {
   size0 = 14;
   size1 = 15;
   inputSize = 13;
-  buttonSize = 12;
+  buttonSize = 14;
   marginLeft = 18;
   bottomVisual = 7;
-  inputBoxHeight = 26;
+  inputBoxHeight = 32;
   inputIndent = 9;
   inputBottomVisual = 0;
   lineHeight = 1.5;
@@ -6592,7 +6592,7 @@ GeneralJs.promptLongButtons = function (message, buttons) {
   textTop = GeneralJs.isMac() ? -1 : 1;
   buttonBetween = 4;
   buttonsBaseTongMarginTop = 10;
-  buttonPaddingLeft = 10;
+  buttonPaddingLeft = 12;
 
   greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
   if (Number.isNaN(greenBarHeight)) {
@@ -6667,7 +6667,7 @@ GeneralJs.promptLongButtons = function (message, buttons) {
       position: "relative",
       marginLeft: String(marginLeft) + ea,
       fontSize: String(size1) + ea,
-      fontWeight: String(500),
+      fontWeight: String(700),
       color: colorChip.black,
       lineHeight: String(lineHeight),
       top: String(wordingVisual) + ea,
@@ -6700,7 +6700,7 @@ GeneralJs.promptLongButtons = function (message, buttons) {
         height: String(inputBoxHeight) + ea,
         width: withOut(buttonPaddingLeft * 2, ea),
         marginBottom: String(buttonBetween) + ea,
-        background: colorChip.softGreen,
+        background: GeneralJs.colorExtended.blueDark,
         borderRadius: String(5) + "px",
         paddingLeft: String(buttonPaddingLeft) + ea,
         paddingRight: String(buttonPaddingLeft) + ea,
@@ -6709,7 +6709,7 @@ GeneralJs.promptLongButtons = function (message, buttons) {
         text,
         style: {
           fontSize: String(buttonSize) + ea,
-          fontWeight: String(600),
+          fontWeight: String(700),
           color: colorChip.white,
           position: "relative",
           top: String(textTop) + ea,
@@ -6896,7 +6896,7 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
       position: "relative",
       marginLeft: String(marginLeft) + ea,
       fontSize: String(size1) + ea,
-      fontWeight: String(500),
+      fontWeight: String(700),
       color: colorChip.black,
       lineHeight: String(lineHeight),
       top: String(wordingVisual) + ea,
@@ -7179,7 +7179,7 @@ GeneralJs.promptYearMonth = function (message, progressPossible = false, progres
       position: "relative",
       marginLeft: String(marginLeft) + ea,
       fontSize: String(size1) + ea,
-      fontWeight: String(500),
+      fontWeight: String(700),
       color: colorChip.black,
       lineHeight: String(lineHeight),
       top: String(wordingVisual) + ea,
@@ -7471,7 +7471,7 @@ GeneralJs.promptFile = function (message) {
       position: "relative",
       marginLeft: String(marginLeft) + ea,
       fontSize: String(size1) + ea,
-      fontWeight: String(500),
+      fontWeight: String(700),
       color: colorChip.black,
       lineHeight: String(lineHeight),
       top: String(wordingVisual) + ea,

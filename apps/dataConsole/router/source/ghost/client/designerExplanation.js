@@ -956,7 +956,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
                   second.style.color = colorExtended.blueLight;
                   second.style.opacity = String(0.8);
                   third.children[0].children[1].style.opacity = String(1);
-                  third.children[1].style.opacity = String(0.6);
+                  third.children[1].style.opacity = String(0.4);
 
                   first.setAttribute("toggle", "off");
                   second.setAttribute("toggle", "off");
@@ -971,7 +971,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
                 second.style.color = colorExtended.blueLight;
                 second.style.opacity = String(0.8);
                 third.children[0].children[1].style.opacity = String(1);
-                third.children[1].style.opacity = String(0.6);
+                third.children[1].style.opacity = String(0.4);
       
                 first.setAttribute("toggle", "off");
                 second.setAttribute("toggle", "off");
@@ -1005,7 +1005,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
                   second.style.color = colorExtended.blueLight;
                   second.style.opacity = String(0.8);
                   third.children[0].children[1].style.opacity = String(1);
-                  third.children[1].style.opacity = String(0.6);
+                  third.children[1].style.opacity = String(0.4);
                   first.setAttribute("toggle", "off");
                   second.setAttribute("toggle", "off");
                   third.setAttribute("toggle", "off");
@@ -1019,7 +1019,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
                 second.style.color = colorExtended.blueLight;
                 second.style.opacity = String(0.8);
                 third.children[0].children[1].style.opacity = String(1);
-                third.children[1].style.opacity = String(0.6);
+                third.children[1].style.opacity = String(0.4);
       
                 first.setAttribute("toggle", "off");
                 second.setAttribute("toggle", "off");
@@ -1140,6 +1140,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
             },
             attribute: {
               toggle: "off",
+              desid: designer.desid,
             },
             style: {
               display: "inline-flex",
@@ -1179,6 +1180,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
             },
             attribute: {
               toggle: "off",
+              desid: designer.desid,
             },
             text: "designers " + abc[i],
             style: {
@@ -2183,7 +2185,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 second.style.color = colorExtended.blueLight;
                 second.style.opacity = String(0.8);
                 third.children[0].children[1].style.opacity = String(1);
-                third.children[1].style.opacity = String(0.6);
+                third.children[1].style.opacity = String(0.4);
   
                 first.setAttribute("toggle", "off");
                 second.setAttribute("toggle", "off");
@@ -2198,7 +2200,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               second.style.color = colorExtended.blueLight;
               second.style.opacity = String(0.8);
               third.children[0].children[1].style.opacity = String(1);
-              third.children[1].style.opacity = String(0.6);
+              third.children[1].style.opacity = String(0.4);
     
               first.setAttribute("toggle", "off");
               second.setAttribute("toggle", "off");
@@ -2818,6 +2820,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           class: [ designerSelectionButtonClassNameButtonPlus, designerSelectionButtonClassNameButtonPlus + "_" + String(i) ],
           attribute: {
             toggle: "off",
+            desid: designer.desid,
           },
           event: {
             click: designerSelectionEventPlus(designer, endBoo, i),
@@ -2880,7 +2883,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 color: colorExtended.white,
                 fontFamily: "mont",
                 marginLeft: String(7) + ea,
-                opacity: String(0.6),
+                opacity: String(0.4),
                 top: String(1) + ea,
               }
             }
@@ -3340,6 +3343,9 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
 
     selectionBase = createNode({
       mother: thirdBase,
+      event: {
+        selectstart: (e) => { e.preventDefault() },
+      },
       style: {
         display: "flex",
         position: "relative",
@@ -3378,6 +3384,9 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     });
     createNode({
       mother: selectionBase,
+      event: {
+        selectstart: (e) => { e.preventDefault() },
+      },
       text: "해당 디자이너를 선택하고 현장 미팅을 예약합니다.",
       style: {
         display: "inline-block",
@@ -3402,6 +3411,18 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     });
     createNode({
       mother: selectionBase,
+      event: {
+        selectstart: (e) => { e.preventDefault() },
+        mouseenter: function (e) {
+          this.style.transform = "scale(1.03)";
+          this.style.opacity = String(0.8);
+        },
+        mouseleave: function (e) {
+          this.style.transform = "scale(1)";
+          this.style.opacity = String(1);
+        },
+        click: instance.designerFinalSelection(),
+      },
       style: {
         display: "inline-flex",
         position: "relative",
@@ -3412,10 +3433,16 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        opacity: String(0.8),
+        opacity: String(1),
         boxShadow: "0px 3px 14px -9px " + colorExtended.darkDarkShadow,
+        cursor: "pointer",
+        transformOrigin: "50% 50%",
+        transition: "all 0.4s ease",
       },
       child: {
+        event: {
+          selectstart: (e) => { e.preventDefault() },
+        },
         text: "디자이너 선택",
         style: {
           display: "inline-block",
@@ -6497,6 +6524,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       });
       finalSelectionTong = createNode({
         mother: seventhTong,
+        event: {
+          selectstart: (e) => { e.preventDefault() },
+        },
         style: {
           display: "block",
           position: "relative",
@@ -6506,6 +6536,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       });
       finalSelectionMiddleMother = createNode({
         mother: finalSelectionTong,
+        event: {
+          selectstart: (e) => { e.preventDefault() },
+        },
         style: {
           display: "block",
           position: "relative",
@@ -6517,6 +6550,10 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       });
       createNode({
         mother: finalSelectionMiddleMother,
+        event: {
+          selectstart: (e) => { e.preventDefault() },
+          click: instance.designerFinalSelection(true, designer.desid),
+        },
         style: {
           display: "inline-flex",
           verticalAlign: "top",
@@ -6531,6 +6568,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         },
         children: [
           {
+            event: {
+              selectstart: (e) => { e.preventDefault() },
+            },
             text: designer.end ? "디자이너 마감" : "디자이너 선택",
             style: {
               fontSize: String(18) + ea,
@@ -6603,6 +6643,64 @@ DesignerExplanationJs.prototype.resizeEvent = function () {
       }
     }
     window.addEventListener("resize", resizeDebounceEvent());
+  }
+}
+
+DesignerExplanationJs.prototype.designerFinalSelection = function (fromCard = false, thisDesid = null) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, autoComma, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, designerCareer, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight, blankPhoto } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const designerSelectionButtonClassNameButton = "designerSelectionButtonClassNameButton";
+  const designerSelectionButtonClassNameString = "designerSelectionButtonClassNameString";
+  const designerSelectionButtonClassNameButtonPlus = "designerSelectionButtonClassNameButtonPlus";
+  return async function (e) {
+    try {
+      if (fromCard) {
+        const desid = thisDesid;
+        const designer = instance.designers.find((d) => { return d.desid === desid });
+        await instance.finalSubmit(desid);
+      } else {
+        const selectionButtons = [ ...document.querySelectorAll('.' + designerSelectionButtonClassNameButton) ];
+        const selectedDesignerRaw = selectionButtons.filter((d) => { return d.getAttribute("toggle") === "on" });
+        if (selectedDesignerRaw.length === 0) {
+          const desidRaw = await GeneralJs.promptLongButtons("디자이너를 선택해주세요!", instance.designers.map(({ designer }, index) => {
+            return "Designer " + instance.abc[index] + " : " + designer;  
+          }))
+          if (desidRaw !== null) {
+            const designer = instance.designers[instance.abc.findIndex((a) => { return a === desidRaw.split(" ")[1].trim() })];
+            const desid = designer.desid;
+            await instance.finalSubmit(desid);
+          }
+        } else {
+          const [ selectedDesigner ] = selectedDesignerRaw;
+          const desid = selectedDesigner.getAttribute("desid");
+          const designer = instance.designers.find((d) => { return d.desid === desid });
+          await instance.finalSubmit(desid);
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+DesignerExplanationJs.prototype.finalSubmit = async function (desid) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, autoComma, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, designerCareer, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight, blankPhoto } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  try {
+    const designer = instance.designers.find((d) => { return d.desid === desid });
+
+
+    console.log(designer);
+
+
+  } catch (e) {
+    console.log(e);
   }
 }
 
