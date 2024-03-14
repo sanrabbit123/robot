@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('홈리에종 디자이너 신청 | 홈리에종');"
+      "return ('홈리에종 디자이너 추천 제안서 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return ('홈리에종 디자이너 신청 설명 페이지 입니다! | 홈리에종');"
+      "return ('홈리에종 디자이너 추천 제안 페이지입니다.');"
     ],
     "image": [
       "thisPerson",
@@ -31,7 +31,7 @@
     "module": false
   },
   "name": "designerExplanation",
-  "hangul": "디자이너 신청",
+  "hangul": "디자이너 추천",
   "route": [
     "designerExplanation"
   ]
