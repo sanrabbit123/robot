@@ -6701,10 +6701,11 @@ DesignerExplanationJs.prototype.finalSubmit = async function (desid) {
     let offlineFeeTarget, onlineFeeTarget;
     let method;
     let name, phone;
+    let loading;
     if (designer.end) {
       window.alert("해당 디자이너는 일정이 마감되었습니다!");
     } else {
-
+      
       offlineFeeTarget = fee.find((o) => { return o.method === "offline" });
       onlineFeeTarget = fee.find((o) => { return o.method !== "offline" });
   
@@ -6738,6 +6739,8 @@ DesignerExplanationJs.prototype.finalSubmit = async function (desid) {
         window.alert("검수 모드입니다!");
       } else {
 
+        loading = instance.mother.grayLoading();
+
         name = instance.client.name;
         phone = instance.client.phone;
 
@@ -6768,6 +6771,8 @@ DesignerExplanationJs.prototype.finalSubmit = async function (desid) {
           },
         });
         
+        loading.remove();
+
         window.localStorage.clear();
         selfHref(FRONTHOST + "/estimation.php?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method);
       }
