@@ -880,6 +880,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     let designerCardGroupBetweenFirst;
     let nameTitleSize;
     let selectionBase;
+    let endBoo;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -977,6 +978,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
       designer = designers[i];
       keywords = designer.keywords;
       representative = designer.representative;
+      endBoo = designer.end;
 
       thisBase = createNode({
         mother: thirdBase,
@@ -1007,10 +1009,12 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           {
             style: {
               display: "inline-flex",
+              position: "relative",
               width: String(checkCircleWidth) + ea,
               height: String(checkCircleWidth) + ea,
               background: colorExtended.focusBlue,
               borderRadius: String(checkCircleWidth) + ea,
+              opacity: endBoo ? String(0.4) : String(1),
             },
             child: {
               mode: "svg",
@@ -1020,6 +1024,16 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
                 position: "relative",
                 width: String(checkCircleWidth) + ea,
               },
+              next: {
+                display: "inline-flex",
+                position: "absolute",
+                top: String(0),
+                left: String(0),
+                width: String(checkCircleWidth) + ea,
+                height: String(checkCircleWidth) + ea,
+                background: colorExtended.white,
+                borderRadius: String(checkCircleWidth) + ea,
+              }
             }
           },
           {
@@ -1032,9 +1046,21 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
               color: colorExtended.white,
               fontFamily: "mont",
               marginLeft: String(7) + ea,
-              opacity: String(0.5),
+              opacity: endBoo ? String(0.3) : String(0.7),
             }
-          }
+          },
+          {
+            text: "해당 디자이너는 마감되었습니다.",
+            style: {
+              display: endBoo ? "inline-flex" : "none",
+              position: "relative",
+              fontSize: String(19) + ea,
+              fontWeight: String(800),
+              color: colorExtended.white,
+              marginLeft: String(9) + ea,
+              top: String(-2) + ea,
+            }
+          },
         ]
       });
 
@@ -1047,6 +1073,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           alignItems: "center",
           width: withOut(0, ea),
           flexDirection: "row",
+          opacity: endBoo ? String(0.4) : String(1),
         }
       });
 
@@ -1059,7 +1086,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
             src: DesignerExplanationJs.binaryPath + "/clickMe.svg",
           },
           style: {
-            display: "inline-block",
+            display: endBoo ? "none" : "inline-block",
             position: "absolute",
             top: String(-92) + ea,
             left: String(200) + ea,
@@ -1485,6 +1512,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     let offlineFeeTarget;
     let onlineFeeTarget;
     let moneyArr;
+    let endBoo;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -2157,6 +2185,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         month = (careerSubtract % 12);
         offlineFeeTarget = proposal.fee.find((o) => { return o.method === "offline" });
         onlineFeeTarget = proposal.fee.find((o) => { return o.method !== "offline" });
+        endBoo = designer.end;
+
         if (offlineFeeTarget === undefined) {
           offlineFeeTarget = null;
         } else {
@@ -2240,12 +2270,16 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             width: String(cardWidth * 2) + ea,
             marginRight: String(columnBetween) + ea,
             verticalAlign: "top",
+            opacity: endBoo ? String(0.4) : String(1),
           }
         });
   
         // designer profile
         designerProfileBase = createNode({
           mother: thisCardBase,
+          event: {
+            click: instance.insertWhiteCardEvent(designer.desid, instance.abc[i]),
+          },
           style: {
             display: "inline-flex",
             verticalAlign: "top",
@@ -2258,6 +2292,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             flexDirection: "column",
             overflow: "hidden",
             zIndex: String(2),
+            cursor: "pointer",
           },
           children: [
             {
@@ -2415,8 +2450,6 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             }
           }
         });
-  
-        // detail arrow
         createNode({
           mother: designerProfileBase,
           mode: "svg",
@@ -2429,8 +2462,12 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             right: String(20) + ea,
           }
         });
+
         createNode({
           mother: thisCardBase,
+          event: {
+            click: instance.insertWhiteCardEvent(designer.desid, instance.abc[i]),
+          },
           style: {
             display: "inline-flex",
             verticalAlign: "top",
@@ -2444,6 +2481,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             backgroundSize: "auto 100%",
             backgroundPosition: "50% 50%",
             zIndex: String(1),
+            cursor: "pointer",
           }
         });
   
@@ -2578,6 +2616,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             {
               style: {
                 display: "inline-flex",
+                position: "relative",
                 width: String(checkCircleWidth) + ea,
                 height: String(checkCircleWidth + 1) + ea,
                 background: colorExtended.focusBlue,
@@ -2592,6 +2631,18 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                   width: String(checkCircleWidth) + ea,
                   height: String(checkCircleWidth + 1) + ea,
                 },
+                next: {
+                  style: {
+                    display: "inline-flex",
+                    position: "absolute",
+                    top: String(0),
+                    left: String(0),
+                    width: String(checkCircleWidth) + ea,
+                    height: String(checkCircleWidth + 1) + ea,
+                    background: colorExtended.white,
+                    borderRadius: String(checkCircleWidth + 1) + ea,
+                  },
+                }
               }
             },
             {
@@ -2612,6 +2663,9 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         });
         createNode({
           mother: thisCardBase,
+          event: {
+            click: instance.insertWhiteCardEvent(designer.desid, instance.abc[i]),
+          },
           style: {
             display: "flex",
             position: "relative",
@@ -2619,6 +2673,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             alignItems: "center",
             width: withOut(0, ea),
             flexDirection: "row",
+            cursor: "pointer",
           },
           children: [
             {
@@ -6253,11 +6308,11 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         },
         children: [
           {
-            text: "디자이너 선택",
+            text: designer.end ? "디자이너 마감" : "디자이너 선택",
             style: {
               fontSize: String(18) + ea,
               fontWeight: String(800),
-              color: colorExtended.blueDark,
+              color: designer.end ? colorExtended.deactive : colorExtended.blueDark,
               display: "inline-flex",
               position: "relative",
               top: String(moneyValueTextTop) + ea,
@@ -6466,11 +6521,11 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     }
 
     // TEST Center ==================================================================================================
-    if (proid === "p1801_aa01s") {
-      for (let d of designers) {
-        d.end = false;
-      }
-    }
+    // if (proid === "p1801_aa01s") {
+    //   for (let d of designers) {
+    //     d.end = false;
+    //   }
+    // }
     // TEST Center ==================================================================================================
     this.designers = designers;
 
