@@ -698,7 +698,7 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
           "가구와 소품, 그리고 패브릭으로 진행",
         ],
         margin: false,
-        focus: false,
+        focus: /aa01/gi.test(instance.project.service.serid),
       },
       {
         title: "홈스타일링",
@@ -707,7 +707,7 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
           "집 컨디션에 맞는 범위의 시공을 진행",
         ],
         margin: true,
-        focus: true,
+        focus: /aa02/gi.test(instance.project.service.serid),
       },
       {
         title: "토탈 스타일링",
@@ -716,7 +716,7 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
           "전체 시공과 스타일링까지 전부 진행"
         ],
         margin: false,
-        focus: false,
+        focus: (/aa03/gi.test(instance.project.service.serid) || /aa04/gi.test(instance.project.service.serid)),
       },
     ]
 
@@ -1392,6 +1392,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
   const cardMoveTargetClassName = "cardMoveTargetClassName";
   const arrowLeftClassName = "arrowLeftClassName";
   const arrowRightClassName = "arrowRightClassName";
+  const today = new Date();
   try {
     let minusLeft;
     let thirdBase;
@@ -1456,6 +1457,34 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     let arrowMargin;
     let viewNumber;
     let renderDesigneresCard;
+    let project;
+    let proposal;
+    let analytics;
+    let information;
+    let startY;
+    let startM;
+    let constructLevel;
+    let constructCase;
+    let styleTendency;
+    let method;
+    let builtin;
+    let design;
+    let fabricLevel;
+    let curtain;
+    let bedding;
+    let install;
+    let storage;
+    let first;
+    let matrix;
+    let cadBoo;
+    let collageBoo;
+    let modelingBoo;
+    let careerSubtract;
+    let year;
+    let month;
+    let offlineFeeTarget;
+    let onlineFeeTarget;
+    let moneyArr;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -1487,7 +1516,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     factorPadding = 20;
     factorHeight = 48;
     factorSize = 17;
-    subFactorSize = 12;
+    subFactorSize = 11;
     factorTitleWeight = 500;
     factorValueWeight = 400;
     factorLongHeight = 78;
@@ -1663,7 +1692,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         ]
       }
     }
-    moneyMaker = (title, subTitle, value) => {
+    moneyMaker = (title, subTitle, value, blur = false) => {
       return {
         style: {
           display: "flex",
@@ -1673,6 +1702,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           flexDirection: "row",
           justifyContent: "start",
           alignItems: "center",
+          opacity: blur ? String(0.3) : String(1),
         },
         children: [
           {
@@ -1740,6 +1770,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                   fontSize: String(factorSize) + ea,
                   fontWeight: String(factorValueWeight),
                   color: colorExtended.blueDark,
+                  wordSpacing: String(-2) + ea,
                   top: String(factorTextTop) + ea,
                 }
               },
@@ -1759,7 +1790,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         },
       }
     }
-    percentMaker = (title, subTitle, percent, value) => {
+    percentMaker = (title, subTitle, percent, value, blur = false) => {
       return {
         style: {
           display: "flex",
@@ -1769,6 +1800,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           flexDirection: "row",
           justifyContent: "start",
           alignItems: "center",
+          opacity: blur ? String(0.3) : String(1),
         },
         children: [
           {
@@ -1874,6 +1906,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                   fontWeight: String(800),
                   color: colorExtended.white,
                   top: String(-1) + ea,
+                  opacity: Number(after.replace(/[^0-9]/gi, '')) === 0 ? String(0.3) : String(1),
                 }
               }
             },
@@ -1898,12 +1931,13 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                     color: colorExtended.black,
                     marginRight: String(finalBlockVatMargin) + ea,
                     top: String(subFactorTextTop) + ea,
+                    opacity: Number(after.replace(/[^0-9]/gi, '')) === 0 ? String(0.3) : String(1),
                   }
                 },
                 {
                   text: before,
                   style: {
-                    display: "inline-block",
+                    display: after === before ? "none" : "inline-block",
                     position: "relative",
                     fontSize: String(finalMoneySize) + ea,
                     fontWeight: String(finalMoneyWeight),
@@ -1911,6 +1945,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                     top: String(factorTextTop) + ea,
                     marginRight: String(finalBlockVatMargin) + ea,
                     textDecoration: "line-through",
+                    opacity: Number(after.replace(/[^0-9]/gi, '')) === 0 ? String(0.3) : String(1),
                   }
                 },
                 {
@@ -1922,6 +1957,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                     fontWeight: String(finalMoneyBoldWeight),
                     color: colorExtended.blueDim,
                     top: String(factorTextTop) + ea,
+                    opacity: Number(after.replace(/[^0-9]/gi, '')) === 0 ? String(0.3) : String(1),
                   }
                 },
               ]
@@ -2108,10 +2144,94 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     renderDesigneresCard = (blankInjection = false) => {
       for (let i = 0; i < designers.length; i++) {
   
+        project = instance.project;
         designer = designers[i];
         keywords = designer.keywords;
         representative = designer.representative;
+        proposal = project.proposal.detail.find((p) => { return p.desid === designer.desid });
+        ({ analytics, information } = designer);
+        ({ business: { career: { startY, startM } } } = information);
+        ({ construct: { level: constructLevel, case: constructCase }, styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { level: fabricLevel, curtain, bedding } }, purchase: { setting: { install, storage } }, project: { time: { first }, matrix, cad: cadBoo, collage: collageBoo, modeling: modelingBoo } } = analytics);
+        careerSubtract = ((today.getFullYear() * 12) + (today.getMonth() + 1)) - ((startY * 12) + startM);
+        year = Math.floor(careerSubtract / 12);
+        month = (careerSubtract % 12);
+        offlineFeeTarget = proposal.fee.find((o) => { return o.method === "offline" });
+        onlineFeeTarget = proposal.fee.find((o) => { return o.method !== "offline" });
+        if (offlineFeeTarget === undefined) {
+          offlineFeeTarget = null;
+        } else {
+          offlineFeeTarget.amount = Math.round(offlineFeeTarget.amount)
+          if (offlineFeeTarget.discount === 0) {
+            offlineFeeTarget.original = offlineFeeTarget.amount;
+          } else {
+            offlineFeeTarget.original = Math.round((offlineFeeTarget.amount / (1 - offlineFeeTarget.discount)));
+          }
+        }
+        if (onlineFeeTarget === undefined) {
+          onlineFeeTarget = null;
+        } else {
+          onlineFeeTarget.amount = Math.round(onlineFeeTarget.amount)
+          if (onlineFeeTarget.discount === 0) {
+            onlineFeeTarget.original = onlineFeeTarget.amount;
+          } else {
+            onlineFeeTarget.original = Math.round((onlineFeeTarget.amount / (1 - onlineFeeTarget.discount)));
+          }
+        }
   
+        moneyArr = [];
+        if (offlineFeeTarget === null) {
+          moneyArr.push(moneyMaker("디자인비", "(오프라인)", autoComma(0) + "원", true));
+          moneyArr.push(barMaker());
+        } else {
+          moneyArr.push(moneyMaker("디자인비", "(오프라인)", autoComma(offlineFeeTarget.amount) + "원", false));
+          moneyArr.push(barMaker());
+        }
+        if (onlineFeeTarget === null) {
+          moneyArr.push(moneyMaker("디자인비", "(온라인)", autoComma(0) + "원", true));
+          moneyArr.push(barMaker());
+        } else {
+          moneyArr.push(moneyMaker("디자인비", "(온라인)", autoComma(onlineFeeTarget.amount) + "원", false));
+          moneyArr.push(barMaker());
+        }
+        if (offlineFeeTarget === null) {
+          moneyArr.push(moneyMaker("출장비", "", "(거리 : 0km / 시간 : 0시간 0분) " + autoComma(0) + "원", true));
+          moneyArr.push(barMaker());
+        } else {
+          if (offlineFeeTarget.distance.amount === 0) {
+            moneyArr.push(moneyMaker("출장비", "", "(거리 : 0km / 시간 : 0시간 0분) " + autoComma(0) + "원", true));
+            moneyArr.push(barMaker());
+          } else {
+            moneyArr.push(moneyMaker("출장비", "", `(거리 : ${offlineFeeTarget.distance.distance} / 시간 : ${offlineFeeTarget.distance.time}) ${autoComma(offlineFeeTarget.distance.amount)}원`, false));
+            moneyArr.push(barMaker());
+          }
+        }
+        if (offlineFeeTarget !== null) {
+          if (offlineFeeTarget.discount !== 0) {
+            moneyArr.push(percentMaker("오프라인 디자인비 할인율", "(할인 금액)", offlineFeeTarget.discount * 100, autoComma(offlineFeeTarget.original - offlineFeeTarget.amount) + "원", false));
+            moneyArr.push(barMaker());
+          } else {
+            moneyArr.push(percentMaker("오프라인 디자인비 할인율", "(할인 금액)", 0, autoComma(0) + "원", true));
+            moneyArr.push(barMaker());
+          }
+        } else {
+          moneyArr.push(percentMaker("오프라인 디자인비 할인율", "(할인 금액)", 0, autoComma(0) + "원", true));
+          moneyArr.push(barMaker());
+        }
+        if (onlineFeeTarget !== null) {
+          if (onlineFeeTarget.discount !== 0) {
+            moneyArr.push(percentMaker("온라인 디자인비 할인율", "(할인 금액)", onlineFeeTarget.discount * 100, autoComma(onlineFeeTarget.original - onlineFeeTarget.amount) + "원", false));
+            moneyArr.push(barMaker());
+          } else {
+            moneyArr.push(percentMaker("온라인 디자인비 할인율", "(할인 금액)", 0, autoComma(0) + "원", true));
+            moneyArr.push(barMaker());
+          }
+        } else {
+          moneyArr.push(percentMaker("온라인 디자인비 할인율", "(할인 금액)", 0, autoComma(0) + "원", true));
+          moneyArr.push(barMaker());
+        }
+          
+        moneyArr.pop();
+
         thisCardBase = createNode({
           mother: thisBase,
           style: {
@@ -2361,27 +2481,27 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 paddingBottom: String(visualWhitePadding) + ea,
               },
               children: [
-                factorMaker("유관 경력", "0년 0개월"),
+                factorMaker("유관 경력", designerCareer(designer, true, true)),
                 barMaker(),
-                factorMaker("홈리에종 소속 기간", "0년 0개월"),
+                factorMaker("홈리에종 소속 기간", String(year) + "년 " + String(month) + "개월"),
                 barMaker(),
-                factorMaker("1차 제안 받는 시점", "2주 이내"),
+                factorMaker("1차 제안 받는 시점", String(first) + "일 이내"),
                 barMaker(),
-                selectionMaker("제안 방식", [ "순차 제안", "한 번에 제안" ], [ 0, 1 ]),
+                selectionMaker("제안 방식", [ "순차 제안", "한 번에 제안" ], [ (method === "순차 제안" ? 1 : 0), (method === "순차 제안" ? 0 : 1) ]),
                 barMaker(),
-                selectionMaker("CAD 도면", [ "가능", "불가능" ], [ 1, 0 ]),
+                selectionMaker("CAD 도면", [ "가능", "불가능" ], [ cadBoo ? 1 : 0, cadBoo ? 0 : 1 ]),
                 barMaker(),
-                selectionMaker("3D", [ "가능", "불가능" ], [ 1, 0 ]),
+                selectionMaker("3D", [ "가능", "불가능" ], [ modelingBoo > 0 ? 1 : 0, modelingBoo === 0 ? 1 : 0 ]),
                 barMaker(),
-                selectionMaker("콜라주", [ "가능", "불가능" ], [ 1, 0 ]),
+                selectionMaker("콜라주", [ "가능", "불가능" ], [ collageBoo ? 1 : 0, collageBoo ? 0 : 1 ]),
                 barMaker(),
-                selectionMaker("빌트인 가구 제작", [ "가능", "불가능" ], [ 1, 0 ]),
+                selectionMaker("빌트인 가구 제작", [ "가능", "불가능" ], [ builtin > 0 ? 1 : 0, builtin === 0 ? 1 : 0 ]),
                 barMaker(),
-                selectionMaker("디자인 가구 제작", [ "가능", "불가능" ], [ 1, 0 ]),
+                selectionMaker("디자인 가구 제작", [ "가능", "불가능" ], [ design > 0 ? 1 : 0, design === 0 ? 1 : 0 ]),
                 barMaker(),
-                selectionMaker("패브릭 제작", [ "가능", "불가능" ], [ 1, 0 ]),
+                selectionMaker("패브릭 제작", [ "가능", "불가능" ], [ fabricLevel > 0 ? 1 : 0, fabricLevel === 0 ? 1 : 0 ]),
                 barMaker(),
-                selectionMaker("디자이너 역량 범위", serviceParsing().name, [ 0, 1, 0, 0 ]),
+                selectionMaker("디자이너 역량 범위", serviceParsing().name, [ (constructLevel < 0 ? 0 : 1), (constructLevel < 1 ? 0 : 1), (constructLevel < 2 ? 0 : 1), (constructLevel < 3 ? 0 : 1) ]),
               ]
             },
             {
@@ -2398,17 +2518,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 paddingTop: String(visualWhitePadding) + ea,
                 paddingBottom: String(visualWhitePadding) + ea,
               },
-              children: [
-                moneyMaker("디자인비", "(오프라인)", autoComma(2276000) + "원"),
-                barMaker(),
-                moneyMaker("디자인비", "(온라인)", autoComma(1935000) + "원"),
-                barMaker(),
-                moneyMaker("출장비", "", "(거리 : 0km / 시간 : 0시간 0분 / 1회당) " + autoComma(0) + "원"),
-                barMaker(),
-                percentMaker("오프라인 디자인비 할인율", "(할인 금액)", 7, autoComma(129570) + "원"),
-                barMaker(),
-                percentMaker("온라인 디자인비 할인율", "(할인 금액)", 5, autoComma(78700) + "원"),
-              ]
+              children: moneyArr
             },
             {
               style: {
@@ -2445,8 +2555,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               }
             },
             ...finalMoneyBlocks([
-              [ "오프라인", autoComma(1851000) + "원", autoComma(1721430) + "원" ],
-              [ "온라인", autoComma(1574000) + "원", autoComma(1495300) + "원" ],
+              [ "오프라인", autoComma(offlineFeeTarget === null ? 0 : offlineFeeTarget.original) + "원", autoComma(offlineFeeTarget === null ? 0 : offlineFeeTarget.amount) + "원" ],
+              [ "온라인", autoComma(onlineFeeTarget === null ? 0 : onlineFeeTarget.original) + "원", autoComma(onlineFeeTarget === null ? 0 : onlineFeeTarget.amount) + "원" ],
             ]),
           ]
         });
@@ -4386,6 +4496,12 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let paperMove;
       let offlineFeeTarget, onlineFeeTarget;
       let deactiveOpacity;
+      let insertFinalMoneyBlock;
+      let variableLastBlock;
+      let noDiscountOffline;
+      let noDiscountOnline;
+      let onoffLineMarkWidth;
+      let vatPadding;
 
       whiteMargin = 30;
       innerMargin = 52;
@@ -4481,17 +4597,32 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       deactiveOpacity = 0.4;
 
-      ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
+      onoffLineMarkWidth = 110;
+      vatPadding = 16;
 
-      console.log(proposal);
+      ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
 
       offlineFeeTarget = proposal.fee.find((o) => { return o.method === "offline" });
       onlineFeeTarget = proposal.fee.find((o) => { return o.method !== "offline" });
       if (offlineFeeTarget === undefined) {
         offlineFeeTarget = null;
+      } else {
+        offlineFeeTarget.amount = Math.round(offlineFeeTarget.amount)
+        if (offlineFeeTarget.discount === 0) {
+          offlineFeeTarget.original = offlineFeeTarget.amount;
+        } else {
+          offlineFeeTarget.original = Math.round((offlineFeeTarget.amount / (1 - offlineFeeTarget.discount)));
+        }
       }
       if (onlineFeeTarget === undefined) {
         onlineFeeTarget = null;
+      } else {
+        onlineFeeTarget.amount = Math.round(onlineFeeTarget.amount)
+        if (onlineFeeTarget.discount === 0) {
+          onlineFeeTarget.original = onlineFeeTarget.amount;
+        } else {
+          onlineFeeTarget.original = Math.round((onlineFeeTarget.amount / (1 - onlineFeeTarget.discount)));
+        }
       }
 
       sourceArr = [];
@@ -4698,10 +4829,12 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           }
           num++;
         }
+
+        return infoMiddleBase;
       }
 
       insertMoneyBlock = (priceMiddleMother, title, vatBoo, value, last = false, blur = false) => {
-        createNode({
+        return createNode({
           mother: priceMiddleMother,
           style: {
             display: "flex",
@@ -4777,6 +4910,90 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 },
               ]
             }
+          ]
+        });
+      }
+
+      insertFinalMoneyBlock = (finalPriceMiddleMother, method, original, amount, last = false, noDiscount = false) => {
+        return createNode({
+          mother: finalPriceMiddleMother,
+          style: {
+            display: "inline-flex",
+            verticalAlign: "top",
+            flexDirection: "row",
+            position: "relative",
+            height: String(unitBlockHeightBig) + ea,
+            borderRadius: String(unitBlockHeightBig) + ea,
+            background: colorExtended.white,
+            justifyContent: "end",
+            alignItems: "center",
+            marginRight: !last ? String(finalBlockBetween) + ea : "",
+            paddingLeft: String(onoffLineMarkWidth + vatPadding) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                flexDirection: "row",
+                position: "absolute",
+                top: String(0),
+                left: String(0),
+                justifyContent: "center",
+                alignItems: "center",
+                height: String(unitBlockHeightBig) + ea,
+                borderRadius: String(unitBlockHeightBig) + ea,
+                width: String(onoffLineMarkWidth) + ea,
+                background: colorExtended.blueDim,
+              },
+              child: {
+                text: method === "online" ? "온라인" : "오프라인",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(-1) + ea,
+                  fontSize: String(18) + ea,
+                  fontWeight: String(800),
+                  color: colorExtended.white,
+                }
+              }
+            },
+            {
+              text: "*vat 별도",
+              style: {
+                display: "inline-flex",
+                position: "relaive",
+                fontSize: String(12) + ea,
+                fontWeight: String(moneyVatWeight),
+                color: colorExtended.black,
+                top: String(moneyVatTextTop) + ea,
+                marginRight: String(8) + ea,
+              }
+            },
+            {
+              text: autoComma(original) + "원",
+              style: {
+                display: noDiscount ? "none" : "inline-flex",
+                position: "relaive",
+                fontSize: String(20) + ea,
+                fontWeight: String(300),
+                color: colorExtended.deactive,
+                top: String(moneyValueTextTop) + ea,
+                marginRight: String(8) + ea,
+                textDecoration: "line-through",
+              }
+            },
+            {
+              text: autoComma(amount) + "원",
+              style: {
+                display: "inline-flex",
+                position: "relaive",
+                fontSize: String(21) + ea,
+                fontWeight: String(moneyValueWeight),
+                color: colorExtended.blueDark,
+                top: String(moneyValueTextTop) + ea,
+                marginRight: String(24) + ea,
+              }
+            },
           ]
         });
       }
@@ -5905,42 +6122,41 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         insertMoneyBlock(priceMiddleMother, "디자인비 (온라인)", true, autoComma(onlineFeeTarget.amount) + "원", false, false);
       }
       if (offlineFeeTarget === null) {
-        insertMoneyBlock(priceMiddleMother, "출장비", true, "(거리 : 0km / 시간 : 0시간 0분 / 1회당) 0원", false, true);
+        variableLastBlock = insertMoneyBlock(priceMiddleMother, "출장비", true, "(거리 : 0km / 시간 : 0시간 0분 / 1회당) 0원", false, true);
       } else {
         if (offlineFeeTarget.distance.amount === 0) {
-          insertMoneyBlock(priceMiddleMother, "출장비", true, "(거리 : 0km / 시간 : 0시간 0분 / 1회당) 0원", false, true);
+          variableLastBlock = insertMoneyBlock(priceMiddleMother, "출장비", true, "(거리 : 0km / 시간 : 0시간 0분 / 1회당) 0원", false, true);
         } else {
-          insertMoneyBlock(priceMiddleMother, "출장비", true, `(거리 : ${offlineFeeTarget.distance.distance} / 시간 : ${offlineFeeTarget.distance.time} / 1회당) ${autoComma(offlineFeeTarget.distance.amount)}원`, false, false);
+          variableLastBlock = insertMoneyBlock(priceMiddleMother, "출장비", true, `(거리 : ${offlineFeeTarget.distance.distance} / 시간 : ${offlineFeeTarget.distance.time} / 1회당) ${autoComma(offlineFeeTarget.distance.amount)}원`, false, false);
+        }
+      }
+      noDiscountOffline = true;
+      if (offlineFeeTarget !== null) {
+        if (offlineFeeTarget.discount !== 0) {
+          variableLastBlock = insertMoneyBlock(priceMiddleMother, "오프라인 디자인비 할인율 (할인 금액)", false, `${String(offlineFeeTarget.discount * 100)}% (${autoComma(offlineFeeTarget.original - offlineFeeTarget.amount)}원)`, false);
+          noDiscountOffline = false;
+        }
+      }
+      noDiscountOnline = true;
+      if (onlineFeeTarget !== null) {
+        if (onlineFeeTarget.discount !== 0) {
+          variableLastBlock = insertMoneyBlock(priceMiddleMother, "온라인 디자인비 할인율 (할인 금액)", false, `${String(onlineFeeTarget.discount * 100)}% (${autoComma(onlineFeeTarget.original - onlineFeeTarget.amount)}원)`, true);
+          noDiscountOnline = false;
         }
       }
 
-
-
-
-
-
-
-
-      
-
-
-
-
-
-
-
-
-      insertMoneyBlock(priceMiddleMother, "오프라인 디자인비 할인율 (할인 금액)", false, "7% (129,570원)", false);
-      insertMoneyBlock(priceMiddleMother, "온라인 디자인비 할인율 (할인 금액)", false, "5% (78,700원)", true);
+      variableLastBlock.style.borderBottom = "";
 
       finalPriceTong = createNode({
         mother: sixthTong,
         style: {
-          display: "block",
+          display: "flex",
           position: "relative",
           width: withOut(0, ea),
           overflow: "visible",
           marginTop: String(16) + ea,
+          justifyContent: "end",
+          alignItems: "end",
         },
       });
       createNode({
@@ -5950,7 +6166,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           position: "absolute",
           top: String(21) + ea,
           left: String(0),
-          width: String(finalBlockMarginLeft - finalBlockBetween) + ea,
+          width: withOut(0, ea),
           height: String(0) + ea,
           borderBottom: "1px dashed " + colorExtended.blueDim,
         },
@@ -5960,174 +6176,19 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         style: {
           display: "block",
           position: "relative",
-          marginLeft: String(finalBlockMarginLeft) + ea,
-          width: withOut(finalBlockMarginLeft, ea),
+          paddingLeft: String(finalBlockBetween) + ea,
           height: String(unitBlockHeightBig) + ea,
           borderRadius: String(8) + "px",
+          background: colorExtended.blueLight,
         },
-      });
-      createNode({
-        mother: finalPriceMiddleMother,
-        style: {
-          display: "inline-flex",
-          verticalAlign: "top",
-          flexDirection: "row",
-          position: "relative",
-          width: "calc(calc(100% - " + String(finalBlockBetween) + ea + ") / 2)",
-          height: String(unitBlockHeightBig) + ea,
-          borderRadius: String(unitBlockHeightBig) + ea,
-          background: colorExtended.white,
-          justifyContent: "end",
-          alignItems: "center",
-          marginRight: String(finalBlockBetween) + ea,
-        },
-        children: [
-          {
-            style: {
-              display: "inline-flex",
-              flexDirection: "row",
-              position: "absolute",
-              top: String(0),
-              left: String(0),
-              justifyContent: "center",
-              alignItems: "center",
-              height: String(unitBlockHeightBig) + ea,
-              borderRadius: String(unitBlockHeightBig) + ea,
-              width: String(110) + ea,
-              background: colorExtended.blueDim,
-            },
-            child: {
-              text: "온라인",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                top: String(-1) + ea,
-                fontSize: String(18) + ea,
-                fontWeight: String(800),
-                color: colorExtended.white,
-              }
-            }
-          },
-          {
-            text: "*vat 별도",
-            style: {
-              fontSize: String(12) + ea,
-              fontWeight: String(moneyVatWeight),
-              color: colorExtended.black,
-              display: "inline-flex",
-              position: "relative",
-              top: String(moneyVatTextTop) + ea,
-              marginRight: String(8) + ea,
-            }
-          },
-          {
-            text: "1,851,000원",
-            style: {
-              fontSize: String(20) + ea,
-              fontWeight: String(300),
-              color: colorExtended.deactive,
-              display: "inline-flex",
-              position: "relative",
-              top: String(moneyValueTextTop) + ea,
-              marginRight: String(8) + ea,
-              textDecoration: "line-through",
-            }
-          },
-          {
-            text: "1,721,430원",
-            style: {
-              fontSize: String(21) + ea,
-              fontWeight: String(moneyValueWeight),
-              color: colorExtended.blueDark,
-              display: "inline-flex",
-              position: "relative",
-              top: String(moneyValueTextTop) + ea,
-              marginRight: String(24) + ea,
-            }
-          },
-        ]
-      });
-      createNode({
-        mother: finalPriceMiddleMother,
-        style: {
-          display: "inline-flex",
-          verticalAlign: "top",
-          flexDirection: "row",
-          position: "relative",
-          width: "calc(calc(100% - " + String(finalBlockBetween) + ea + ") / 2)",
-          height: String(unitBlockHeightBig) + ea,
-          borderRadius: String(unitBlockHeightBig) + ea,
-          background: colorExtended.white,
-          justifyContent: "end",
-          alignItems: "center",
-        },
-        children: [
-          {
-            style: {
-              display: "inline-flex",
-              flexDirection: "row",
-              position: "absolute",
-              top: String(0),
-              left: String(0),
-              justifyContent: "center",
-              alignItems: "center",
-              height: String(unitBlockHeightBig) + ea,
-              borderRadius: String(unitBlockHeightBig) + ea,
-              width: String(110) + ea,
-              background: colorExtended.blueDim,
-            },
-            child: {
-              text: "오프라인",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                top: String(-1) + ea,
-                fontSize: String(18) + ea,
-                fontWeight: String(800),
-                color: colorExtended.white,
-              }
-            }
-          },
-          {
-            text: "*vat 별도",
-            style: {
-              fontSize: String(12) + ea,
-              fontWeight: String(moneyVatWeight),
-              color: colorExtended.black,
-              display: "inline-flex",
-              position: "relative",
-              top: String(moneyVatTextTop) + ea,
-              marginRight: String(8) + ea,
-            }
-          },
-          {
-            text: "1,851,000원",
-            style: {
-              fontSize: String(20) + ea,
-              fontWeight: String(300),
-              color: colorExtended.deactive,
-              display: "inline-flex",
-              position: "relative",
-              top: String(moneyValueTextTop) + ea,
-              marginRight: String(8) + ea,
-              textDecoration: "line-through",
-            }
-          },
-          {
-            text: "1,721,430원",
-            style: {
-              fontSize: String(21) + ea,
-              fontWeight: String(moneyValueWeight),
-              color: colorExtended.blueDark,
-              display: "inline-flex",
-              position: "relative",
-              top: String(moneyValueTextTop) + ea,
-              marginRight: String(24) + ea,
-            }
-          },
-        ]
       });
 
+      if (offlineFeeTarget !== null) {
+        insertFinalMoneyBlock(finalPriceMiddleMother, "offline", offlineFeeTarget.original, offlineFeeTarget.amount, (onlineFeeTarget === null), noDiscountOffline);
+      }
+      if (onlineFeeTarget !== null) {
+        insertFinalMoneyBlock(finalPriceMiddleMother, "online", onlineFeeTarget.original, onlineFeeTarget.amount, true, noDiscountOnline);
+      }
 
       // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
