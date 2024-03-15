@@ -374,16 +374,16 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
 
     subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% 6, 6, 6, 6, 2.2 %%>;
+    subTitleMarginTop = <%% 6, 5, 4, 3, 2.2 %%>;
 
     buttonMarginTop = <%% 146, 146, 146, 146, 3.6 %%>;
-    buttonWidth = <%% 190, 190, 140, 130, 31 %%>;
+    buttonWidth = <%% 190, 194, 140, 130, 31 %%>;
     buttonHeight = <%% 32, 32, 32, 40, 9 %%>;
     buttonSize = <%% 14, 14, 14, 14, 3.5 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    titleSize = <%% 59, 50, 48, 40, 9 %%>;
+    titleSize = <%% 59, 51, 48, 40, 9 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% -2, -2, -2, -2, -0.5 %%>;
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
@@ -391,7 +391,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
 
     pointOpacity = 0.4;
 
-    mainImageTop = <%% 42, 32, 32, 32, 32 %%>;
+    mainImageTop = <%% 42, 31, 32, 32, 32 %%>;
     mainImageHeight = <%% 390, 372, 380, 380, 39 %%>;
 
     descriptionSize = <%% 15, 14, 14, 12, 15 %%>;
@@ -414,8 +414,8 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     ];
 
     if (window.innerHeight > 1100) {
-      firstBasePaddingTop = <%% 60, 50, 50, 50, 50 %%>;
-      subTitleSize = <%% 19, 19, 19, 19, 19 %%>;
+      firstBasePaddingTop = <%% 60, 48, 45, 40, 50 %%>;
+      subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
       firstBasePaddingBottom = <%% 230, 210, 210, 210, 210 %%>;
     }
 
@@ -681,26 +681,29 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
     let boxWidth, boxHeight;
     let betweenMargin;
     let totalHeight;
+    let circleMarginTop;
 
     mainHeight = <%% 440, 390, 370, 280, 136 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = 23;
-    descriptionSize = 15;
-    descriptionMarginTop = 9;
+    titleSize = <%% 23, 22, 21, 20, 23 %%>;
+    descriptionSize = <%% 15, 14, 13, 12, 15 %%>;
+    descriptionMarginTop = <%% 9, 9, 9, 9, 9 %%>;
 
-    checkCircleWidth = 21;
+    checkCircleWidth = <%% 21, 21, 21, 21, 21 %%>;
 
-    visualTop = 24;
+    visualTop = <%% 24, 24, 24, 24, 24 %%>;
 
-    boxWidth = 290;
-    boxHeight = 227;
+    boxWidth = <%% 290, 280, 280, 270, 25 %%>;
+    boxHeight = <%% 227, 218, 218, 218, 210 %%>;
 
-    betweenMargin = 152;
+    betweenMargin = <%% 152, 90, 90, 90, 90 %%>;
 
-    totalHeight = 350;
+    totalHeight = <%% 350, 350, 350, 350, 350 %%>;
+
+    circleMarginTop = <%% 16, 16, 16, 16, 16 %%>;
 
     textContent = [
       {
@@ -839,7 +842,7 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
           height: String(checkCircleWidth) + ea,
           background: textContent[index].focus ? colorExtended.focusBlue : colorExtended.white,
           borderRadius: String(checkCircleWidth) + ea,
-          marginTop: String(16) + ea,
+          marginTop: String(circleMarginTop) + ea,
         },
         child: {
           mode: "svg",
@@ -906,7 +909,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     checkCircleWidth = 13;
 
-    cardLength = 5;
+    cardLength = <%% 5, 4, 3, 3, 2 %%>;
 
     cardHeight = 445;
     profileHeight = 250;
@@ -1512,22 +1515,24 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
       // ----------------------------------------------------------------------------------------------------------------
 
       // photo 3
-      createNode({
-        mother: thisCardBase,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: cardWidth,
-          height: String(cardHeight) + ea,
-          borderRadius: String(8) + "px",
-          background: colorExtended.white,
-          marginRight: String(cardBetween) + ea,
-          boxShadow: shadowForm,
-          backgroundImage: typeof representative[3] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[3]) + "')" : "",
-          backgroundSize: "auto 100%",
-          backgroundPosition: "50% 50%",
-        }
-      });
+      if (media[0]) {
+        createNode({
+          mother: thisCardBase,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: cardWidth,
+            height: String(cardHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorExtended.white,
+            marginRight: String(cardBetween) + ea,
+            boxShadow: shadowForm,
+            backgroundImage: typeof representative[3] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[3]) + "')" : "",
+            backgroundSize: "auto 100%",
+            backgroundPosition: "50% 50%",
+          }
+        });
+      }
 
       // ----------------------------------------------------------------------------------------------------------------
 
@@ -2393,6 +2398,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         width: String(((cardWidth * 2) + cardBetween) * (designers.length) * 2) + ea,
         transformOrigin: "0% 0%",
         transform: "translateX(0px)",
+        transition: "all 0.4s ease",
       }
     });
 
