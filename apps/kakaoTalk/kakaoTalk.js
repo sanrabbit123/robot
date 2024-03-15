@@ -4751,7 +4751,6 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
       "Authorization": "Bearer " + token,
     }
     thisResult = await this.campaignsIdMap();
-
     campaigns = thisResult.campaigns;
 
     for (let i = 0; i < dayNumber; i++) {
@@ -4796,18 +4795,22 @@ KakaoTalk.prototype.kakaoComplex = async function (selfMongo, dayNumber = 3, log
         await sleep(500);
         targets = campaign.adGroups.map((o) => { return o.ads.map((o) => { return o.id }); }).flat();
         if (targets.slice(0, 100).length > 0) {
+          await sleep(15 * 1000);
           try {
             response = await requestSystem(url, { creativeId: targets.slice(0, 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
             reportResult = [].concat(equalJson(JSON.stringify(response.data.data)));
-          } catch {
+          } catch (e) {
+            console.log(e.response.data);
             reportResult = [];
           }
           for (let i = 0; i < Math.floor(targets.length / 100); i++) {
             if (targets.slice((i + 1) * 100, (i + 2) * 100).length > 0) {
+              await sleep(15 * 1000);
               try {
                 response = await requestSystem(url, { creativeId: targets.slice((i + 1) * 100, (i + 2) * 100), start: dateToString(from).replace(/\-/gi, ''), end: dateToString(from).replace(/\-/gi, ''), timeUnit: "DAY", metricsGroup: "BASIC" }, { method: "get", headers: { ...defaultHeaders, adAccountId: adsId } });
                 reportResult = reportResult.concat(equalJson(JSON.stringify(response.data.data)));  
-              } catch {
+              } catch (e) {
+                console.log(e.response.data);
                 reportResult = reportResult.concat([]);
               }
             }

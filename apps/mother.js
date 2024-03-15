@@ -2840,6 +2840,26 @@ Mother.prototype.dateToString = function (date, detail = false, dayOption = fals
   }
 }
 
+Mother.prototype.dateToHangul = function (date, shortYear = false) {
+  if (!(date instanceof Date)) {
+    console.log(date);
+    throw new Error("invaild input");
+  }
+  const emptyDateValue = (new Date(1900, 0, 1)).valueOf();
+  const futureDateValue = (new Date(3000, 0, 1)).valueOf();
+  if (date.valueOf() <= emptyDateValue) {
+    return "해당 없음";
+  } else if (date.valueOf() >= futureDateValue) {
+    return "예정";
+  } else {
+    if (shortYear) {
+      return `${String(date.getFullYear()).slice(2)}년 ${String(date.getMonth() + 1)}월 ${String(date.getDate())}일`;
+    } else {
+      return `${String(date.getFullYear())}년 ${String(date.getMonth() + 1)}월 ${String(date.getDate())}일`;
+    }
+  }
+}
+
 Mother.prototype.stringToDate = function (str) {
   if (str instanceof Date) {
     return str;

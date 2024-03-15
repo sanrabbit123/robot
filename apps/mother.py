@@ -368,6 +368,17 @@ def dateToString(dateObject, detail: bool = False):
     else:
         return dateObject.strftime("%Y-%m-%d %H:%M:%S")
 
+def dateToHangul(dateObject, shortYear: bool = False):
+    if not isinstance(dateObject, datetime.datetime):
+        raise TypeError("dateObject must be time object")
+    middle = dateObject.strftime("%Y-%m-%d")
+    middleArr = middle.split("-")
+    finalString = middleArr[0] + "년 " + middleArr[1] + "월 " + middleArr[2] + "일"
+    if shortYear:
+        return finalString[2:]
+    else:
+        return finalString
+
 def stringToDate(dateString: str):
     if type(dateString) is not str:
         raise TypeError("dateString must be string")

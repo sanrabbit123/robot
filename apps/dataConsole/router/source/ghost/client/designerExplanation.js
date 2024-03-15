@@ -332,7 +332,7 @@ DesignerExplanationJs.binaryPath = "/middle/proposal";
 
 DesignerExplanationJs.prototype.insertInitBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
   const { ea, media, baseTong, standardWidth, totalContents, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -359,6 +359,11 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     let descriptionSize, descriptionLineHeight;
     let descriptionMarginTop;
     let mainImageTop, mainImageHeight;
+    let pointOpacity;
+    let descriptionPointBoldPaddingLeft;
+    let descriptionPointBoldPaddingTop;
+    let descriptionPointBoldPaddingBottom;
+    let descriptionPointBoldMargin;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -371,8 +376,8 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     subTitleMarginTop = <%% 6, 6, 6, 6, 2.2 %%>;
 
-    buttonMarginTop = <%% 146, 4, 24, 20, 3.6 %%>;
-    buttonWidth = <%% 190, 145, 140, 130, 31 %%>;
+    buttonMarginTop = <%% 146, 146, 146, 146, 3.6 %%>;
+    buttonWidth = <%% 190, 190, 140, 130, 31 %%>;
     buttonHeight = <%% 32, 32, 32, 40, 9 %%>;
     buttonSize = <%% 14, 14, 14, 14, 3.5 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
@@ -384,27 +389,34 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
     titleLineHeight = <%% 1.11, 1.11, 1.11, 1.11, 1.07 %%>;
 
-    mainImageTop = 42;
-    mainImageHeight = 390;
+    pointOpacity = 0.4;
 
-    descriptionSize = 15;
-    descriptionLineHeight = 1.8;
+    mainImageTop = <%% 42, 32, 32, 32, 32 %%>;
+    mainImageHeight = <%% 390, 372, 380, 380, 39 %%>;
 
-    mobileLeftPaddingVisual = 0.8;
+    descriptionSize = <%% 15, 14, 14, 12, 15 %%>;
+    descriptionLineHeight = <%% 1.8, 1.8, 1.8, 1.8, 1.8 %%>;
 
-    descriptionMarginTop = 40;
+    mobileLeftPaddingVisual = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
 
-    mainIllust = <%% DesignerExplanationJs.binaryPath + "/mainIllust0.png", DesignerExplanationJs.binaryPath + "/mainIllust0.png", DesignerExplanationJs.binaryPath + "/mainIllust1.png", DesignerExplanationJs.binaryPath + "/mainIllust1.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png" %%>;
+    descriptionMarginTop = <%% 40, 40, 40, 40, 40 %%>;
+
+    mainIllust = <%% DesignerExplanationJs.binaryPath + "/mainIllust0.png", DesignerExplanationJs.binaryPath + "/mainIllust1.png", DesignerExplanationJs.binaryPath + "/mainIllust1.png", DesignerExplanationJs.binaryPath + "/mainIllust1.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png" %%>;
+
+    descriptionPointBoldPaddingLeft = <%% 8, 8, 8, 8, 8 %%>;
+    descriptionPointBoldPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
+    descriptionPointBoldPaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
+    descriptionPointBoldMargin = <%% 2, 2, 2, 2, 2 %%>;
 
     descriptionContents = [
-      "고객님게 <b%오프라인 홈스타일링 basic 서비스%b>와 그에 맞는 디자이너를 제안드립니다.",
-      "선택된 디자이너는 고객님의 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.",
+      `고객님게 <b%${serviceParsing(instance.project.service)}%b>와 그에 맞는 디자이너를 제안드립니다.`,
+      `선택된 디자이너는 고객님의 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.`,
     ];
 
-    if (media[0] && window.innerHeight > 1100) {
-      firstBasePaddingTop = 60;
-      subTitleSize = 19;
-      firstBasePaddingBottom = 230;
+    if (window.innerHeight > 1100) {
+      firstBasePaddingTop = <%% 60, 50, 50, 50, 50 %%>;
+      subTitleSize = <%% 19, 19, 19, 19, 19 %%>;
+      firstBasePaddingBottom = <%% 230, 210, 210, 210, 210 %%>;
     }
 
     this.totalContents = document.getElementById("totalcontents");
@@ -466,7 +478,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
             fontWeight: String(titleWeight),
             color: colorExtended.mainBlue,
             fontFamily: "mont",
-            opacity: String(0.4),
+            opacity: String(pointOpacity),
           }
         }
       ]
@@ -548,11 +560,11 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
             fontSize: String(descriptionSize) + ea,
             lineHeight: String(descriptionLineHeight),
             background: colorExtended.gradientBlue,
-            padding: String(8) + ea,
-            paddingTop: String(2) + ea,
-            paddingBottom: String(4) + ea,
+            padding: String(descriptionPointBoldPaddingLeft) + ea,
+            paddingTop: String(descriptionPointBoldPaddingTop) + ea,
+            paddingBottom: String(descriptionPointBoldPaddingBottom) + ea,
             "border-radius": String(5) + "px",
-            margin: String(2) + ea,
+            margin: String(descriptionPointBoldMargin) + ea,
           }
         }
       ]
@@ -591,7 +603,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
             attribute: {
               selectstart: (e) => { e.preventDefault() },
             },
-            text: "예상 시작일&nbsp;&nbsp;|&nbsp;&nbsp;<b%24년 1월 17일%b>",
+            text: `예상 시작일&nbsp;&nbsp;|&nbsp;&nbsp;<b%${dateToHangul(instance.project.process.contract.form.date.from, true)}%b>`,
             style: {
               display: "inline-block",
               position: "relative",
@@ -623,7 +635,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
             attribute: {
               selectstart: (e) => { e.preventDefault() },
             },
-            text: "예상 종료일&nbsp;&nbsp;|&nbsp;&nbsp;<b%24년 1월 17일%b>",
+            text: `예상 종료일&nbsp;&nbsp;|&nbsp;&nbsp;<b%${dateToHangul(instance.project.process.contract.form.date.to, true)}%b>`,
             style: {
               display: "inline-block",
               position: "relative",
@@ -6923,11 +6935,11 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     }
 
     // TEST Center ==================================================================================================
-    if (proid === "p1801_aa01s") {
-      for (let d of designers) {
-        d.end = false;
-      }
-    }
+    // if (proid === "p1801_aa01s") {
+    //   for (let d of designers) {
+    //     d.end = false;
+    //   }
+    // }
     // TEST Center ==================================================================================================
     this.designers = designers;
 

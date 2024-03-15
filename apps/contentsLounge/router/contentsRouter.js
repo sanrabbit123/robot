@@ -715,6 +715,64 @@ ContentsRouter.prototype.rou_post_metaComplex = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_kakaoComplex = function () {
+  const instance = this;
+  const kakao = this.kakao;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/kakaoComplex" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolocal;
+      const defaultDay = 30;
+      const dayConst = req.body.day === undefined ? defaultDay : (Number.isNaN(Number(req.body.day)) ? defaultDay : Number(req.body.day));
+      let boo;
+
+      (async () => {
+        try {
+
+          boo = await kakao.kakaoComplex(selfMongo, dayConst, logger);
+          if (!boo) {
+            await sleep(3000);
+            boo = await kakao.kakaoComplex(selfMongo, dayConst, logger);
+            if (!boo) {
+              await sleep(3000);
+              boo = await kakao.kakaoComplex(selfMongo, dayConst, logger);
+              if (!boo) {
+                await sleep(3000);
+                await kakao.kakaoComplex(selfMongo, dayConst, logger);
+              }
+            }
+          }
+
+          await sleep(500);
+
+        } catch (e) {
+          console.log(e);
+          logger.error("Contents lounge 서버 문제 생김 (rou_post_kakaoComplex): " + e.message).catch((e) => { console.log(e); });
+          return false;
+        }
+      })().catch((err) => {
+        console.log(err);
+        logger.error("Contents lounge 서버 문제 생김 (rou_post_kakaoComplex): " + err.message).catch((e) => { console.log(e); });
+      });
+
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_kakaoComplex): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 ContentsRouter.prototype.rou_post_getAdsComplex = function () {
   const instance = this;
   const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
