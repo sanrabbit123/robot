@@ -3346,7 +3346,7 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
               selected: [],
             }
           } else {
-            tempResponse = await requestSystem("https://" + address.officeinfo.parser.host + "/extractKeywords", { sentence: introduction }, { headers: { "Content-Type": "application/json" } });
+            tempResponse = await requestSystem("https://" + address.aliveinfo.host + "/extractKeywords", { sentence: introduction }, { headers: { "Content-Type": "application/json" } });
             keywords = objectDeepCopy(tempResponse.data.keywords).map((str) => { return str.trim(); }).map((str) => {
               return str.replace(/홈 스타일링/gi, "홈스타일링");
             }).filter((str) => {
@@ -3427,7 +3427,7 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
               selected: [],
             }
           } else {
-            tempResponse = await requestSystem("https://" + address.officeinfo.parser.host + "/extractKeywords", { sentence: introduction }, { headers: { "Content-Type": "application/json" } });
+            tempResponse = await requestSystem("https://" + address.aliveinfo.host + "/extractKeywords", { sentence: introduction }, { headers: { "Content-Type": "application/json" } });
             keywords = objectDeepCopy(tempResponse.data.keywords).map((str) => { return str.trim(); }).map((str) => {
               return str.replace(/홈 스타일링/gi, "홈스타일링");
             }).filter((str) => {
@@ -3461,7 +3461,7 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
             if (/NULL/g.test(introduction)) {
               res.send(JSON.stringify({ data: targetData }));
             } else {
-              tempResponse = await requestSystem("https://" + address.officeinfo.parser.host + "/extractKeywords", { sentence: introduction }, { headers: { "Content-Type": "application/json" } });
+              tempResponse = await requestSystem("https://" + address.aliveinfo.host + "/extractKeywords", { sentence: introduction }, { headers: { "Content-Type": "application/json" } });
               keywords = objectDeepCopy(tempResponse.data.keywords).map((str) => { return str.trim(); }).map((str) => {
                 return str.replace(/홈 스타일링/gi, "홈스타일링");
               }).filter((str) => {

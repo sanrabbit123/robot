@@ -35,7 +35,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const CONTENTSHOST = "https://" + this.address.contentsinfo.host + ":3000";
   const CONSTRUCTHOST = "https://" + this.address.officeinfo.construct.host + "";
   const NUMBERSHOST = "https://" + this.address.officeinfo.numbers.host + "";
-  const PARSERHOST = "https://" + this.address.officeinfo.parser.host + "";
+  const PARSERHOST = "https://" + this.address.aliveinfo.host + "";
   const classException = {
     proposal: [ "designer.js" ],
     bill: [ "designer.js" ],
@@ -257,7 +257,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const CONTENTSHOST = "https://" + this.address.contentsinfo.host + ":3000";
   const CONSTRUCTHOST = "https://" + this.address.officeinfo.construct.host + "";
   const NUMBERSHOST = "https://" + this.address.officeinfo.numbers.host + "";
-  const PARSERHOST = "https://" + this.address.officeinfo.parser.host + "";
+  const PARSERHOST = "https://" + this.address.aliveinfo.host + "";
   try {
 
     //module transform function
@@ -660,7 +660,7 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
       generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
-      generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.officeinfo.parser.host + ":8000");
+      generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.aliveinfo.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
       generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
       generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
@@ -691,7 +691,7 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
       generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
-      generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.officeinfo.parser.host + ":8000");
+      generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.aliveinfo.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
       generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
       generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
@@ -814,7 +814,7 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
       generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
-      generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.officeinfo.parser.host + ":8000");
+      generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.aliveinfo.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
       generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
       generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
@@ -837,7 +837,7 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
       generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
-      generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.officeinfo.parser.host + ":8000");
+      generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.aliveinfo.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
       generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
       generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
