@@ -333,7 +333,7 @@ DesignerExplanationJs.binaryPath = "/middle/proposal";
 DesignerExplanationJs.prototype.insertInitBox = async function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, totalContents, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const submitBlockClassName = "submitBlockClassName";
@@ -342,7 +342,6 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     let firstBase;
     let leftRightWidth;
     let firstBasePaddingBottom;
-    let blueTop;
     let subTitleSize, subTitleWeight, subTitleMarginTop;
     let buttonMarginTop;
     let buttonWidth;
@@ -364,24 +363,25 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     let descriptionPointBoldPaddingTop;
     let descriptionPointBoldPaddingBottom;
     let descriptionPointBoldMargin;
+    let buttonBetween;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
     firstBasePaddingTop = <%% 24, 24, 24, 24, 8 %%>;
     firstBasePaddingBottom = <%% 170, 170, 160, 120, 20 %%>;
-    blueTop = <%% 200, 200, 200, 200, 28 %%>;
 
     subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% 6, 5, 4, 3, 2.2 %%>;
+    subTitleMarginTop = <%% 6, 5, 3, 3, 2.2 %%>;
 
-    buttonMarginTop = <%% 146, 146, 146, 146, 3.6 %%>;
-    buttonWidth = <%% 190, 194, 140, 130, 31 %%>;
-    buttonHeight = <%% 32, 32, 32, 40, 9 %%>;
-    buttonSize = <%% 14, 14, 14, 14, 3.5 %%>;
+    buttonMarginTop = <%% 146, 146, 132, 124, 3.6 %%>;
+    buttonWidth = <%% 190, 194, 186, 186, 31 %%>;
+    buttonHeight = <%% 32, 32, 30, 40, 9 %%>;
+    buttonSize = <%% 14, 14, 13, 14, 3.5 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+    buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
 
     titleSize = <%% 59, 51, 48, 40, 9 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -391,17 +391,17 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
 
     pointOpacity = 0.4;
 
-    mainImageTop = <%% 42, 31, 32, 32, 32 %%>;
-    mainImageHeight = <%% 390, 372, 380, 380, 39 %%>;
+    mainImageTop = <%% 42, 32, 18, 18, 32 %%>;
+    mainImageHeight = <%% 390, 372, 338, 350, 39 %%>;
 
     descriptionSize = <%% 15, 14, 14, 12, 15 %%>;
     descriptionLineHeight = <%% 1.8, 1.8, 1.8, 1.8, 1.8 %%>;
 
     mobileLeftPaddingVisual = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
 
-    descriptionMarginTop = <%% 40, 40, 40, 40, 40 %%>;
+    descriptionMarginTop = <%% 40, 40, 36, 32, 40 %%>;
 
-    mainIllust = <%% DesignerExplanationJs.binaryPath + "/mainIllust0.png", DesignerExplanationJs.binaryPath + "/mainIllust1.png", DesignerExplanationJs.binaryPath + "/mainIllust1.png", DesignerExplanationJs.binaryPath + "/mainIllust1.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png" %%>;
+    mainIllust = <%% DesignerExplanationJs.binaryPath + "/mainIllust0.png", DesignerExplanationJs.binaryPath + "/mainIllust1.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png" %%>;
 
     descriptionPointBoldPaddingLeft = <%% 8, 8, 8, 8, 8 %%>;
     descriptionPointBoldPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
@@ -414,9 +414,9 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     ];
 
     if (window.innerHeight > 1100) {
-      firstBasePaddingTop = <%% 60, 48, 45, 40, 50 %%>;
+      firstBasePaddingTop = <%% 60, 48, 30, 40, 50 %%>;
       subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
-      firstBasePaddingBottom = <%% 230, 210, 210, 210, 210 %%>;
+      firstBasePaddingBottom = <%% 230, 210, 160, 150, 210 %%>;
     }
 
     this.totalContents = document.getElementById("totalcontents");
@@ -437,11 +437,11 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
       child: {
         style: {
           position: "absolute",
-          top: desktop ? String((-1 * blueTop) + naviHeight) + ea : "calc(calc(" + String(naviHeight) + "px" + ") - " + String(blueTop) + ea + ")",
+          top: desktop ? String((-1 * baseTop) + naviHeight) + ea : "calc(calc(" + String(naviHeight) + "px" + ") - " + String(baseTop) + ea + ")",
           left: String(-1 * minusLeft) + ea,
           background: colorExtended.white,
           width: withOut(-1 * (minusLeft * 2), ea),
-          height: desktop ? withOut(1 * ((-1 * blueTop) + naviHeight), ea) : String(185) + ea,
+          height: desktop ? withOut(1 * ((-1 * baseTop) + naviHeight), ea) : String(185) + ea,
         }
       }
     });
@@ -629,7 +629,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
             borderRadius: String(buttonHeight) + ea,
             justifyContent: "center",
             alignItems: "center",
-            marginLeft: String(8) + ea,
+            marginLeft: String(buttonBetween) + ea,
           },
           child: {
             attribute: {
@@ -688,22 +688,22 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = <%% 23, 21, 20, 19, 23 %%>;
+    titleSize = <%% 23, 21, 19, 19, 23 %%>;
     descriptionSize = <%% 15, 14, 13, 12, 15 %%>;
-    descriptionMarginTop = <%% 9, 9, 9, 9, 9 %%>;
+    descriptionMarginTop = <%% 9, 9, 7, 6, 9 %%>;
 
     checkCircleWidth = <%% 21, 21, 21, 21, 21 %%>;
 
     visualTop = <%% 24, 24, 24, 24, 24 %%>;
 
-    boxWidth = <%% 290, 270, 280, 270, 25 %%>;
-    boxHeight = <%% 227, 214, 218, 218, 210 %%>;
+    boxWidth = <%% 290, 270, 240, 210, 25 %%>;
+    boxHeight = <%% 227, 214, 192, 190, 210 %%>;
 
     betweenMargin = <%% 152, 90, 90, 90, 90 %%>;
 
-    totalHeight = <%% 350, 350, 350, 350, 350 %%>;
+    totalHeight = <%% 350, 350, 320, 300, 350 %%>;
 
-    circleMarginTop = <%% 16, 16, 16, 16, 16 %%>;
+    circleMarginTop = <%% 16, 16, 14, 12, 16 %%>;
 
     textContent = [
       {
@@ -921,8 +921,8 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
-    basePaddingTop = <%% 150, 150, 160, 140, 21 %%>;
-    basePaddingBottom = <%% 160, 160, 160, 160, 24 %%>;
+    basePaddingTop = <%% 150, 150, 140, 140, 21 %%>;
+    basePaddingBottom = <%% 160, 160, 140, 160, 24 %%>;
 
     checkCircleWidth = 13;
 
@@ -939,7 +939,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     designerCardGroupBetween = <%% 70, 70, 70, 70, 70 %%>;
     designerCardGroupBetweenFirst = <%% 50, 50, 50, 50, 50 %%>;
 
-    designerTitleSize = <%% 29, 25, 25, 24, 29 %%>;
+    designerTitleSize = <%% 29, 25, 23, 22, 29 %%>;
     designerTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
     designerTitleLineTop = <%% 17, 13, 12, 15, 17 %%>;
     designerTitleLinePadding = <%% 16, 16, 16, 16, 16 %%>;
@@ -1772,8 +1772,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
-    basePaddingTop = <%% 150, 150, 160, 140, 21 %%>;
-    basePaddingBottom = <%% 160, 160, 160, 160, 24 %%>;
+    basePaddingTop = <%% 150, 150, 140, 140, 21 %%>;
+    basePaddingBottom = <%% 160, 160, 140, 160, 24 %%>;
 
     checkCircleWidth = <%% 15, 15, 15, 15, 15 %%>;
 
@@ -4673,8 +4673,8 @@ DesignerExplanationJs.prototype.insertFourthBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
-    basePaddingTop = <%% 160, 160, 160, 140, 21 %%>;
-    basePaddingBottom = <%% 200, 200, 190, 170, 24 %%>;
+    basePaddingTop = <%% 160, 160, 140, 140, 21 %%>;
+    basePaddingBottom = <%% 200, 200, 170, 170, 24 %%>;
 
     checkCircleWidth = 13;
 
@@ -4885,7 +4885,6 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let fourthTong;
       let infoTong;
       let factorHeight;
-      let factorWidth;
       let factorSize, factorBoldWeight, factorWeight;
       let factorTextTop;
       let factorBetween;
@@ -4960,9 +4959,21 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let designerKeywordsTagHeight;
       let designerKeywordsBetween;
       let designerKeywordsSize, designerKeywordsWeight, designerKeywordsTextTop, designerKeywordsSvgLeft;
+      let paperWorkArrowWidth;
+      let paperWorkArrowHeight;
+      let portfolioSize, portfolioWeight, portfolioTextTop;
+      let portfolioDetailBoxWidth, portfolioDetailArrowWidth, portfolioDetailArrowHeight;
+      let finalPriceTongMarginTop;
+      let finalPriceDashedLineTop;
+      let designerSelectionMotherPadding;
+      let designerSelectionMarginLeft;
+      let designerSelectionSize, designerSelectionWeight;
+      let onoffKindTextTop, onoffKindSize, onoffKindWeight;
+      let finalMoneyOriginalSize, finalMoneyOriginalWeight, finalMoneyOriginalMarginRight;
+      let finalMoneyAmountSize, finalMoneyAmountMarginRight;
 
       whiteMargin = <%% 30, 30, 30, 30, 30 %%>;
-      innerMargin = <%% 52, 52, 52, 52, 52 %%>;
+      innerMargin = <%% 52, 48, 44, 40, 52 %%>;
 
       titleHeight = <%% 41, 39, 37, 28, 8 %%>;  
       titleSize = <%% 40, 40, 40, 40, 40 %%>;
@@ -4970,16 +4981,16 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
       titleTop = <%% -6, -6, -6, -6, -6 %%>;
 
-      profileHeight = <%% 200, 200, 200, 200, 200 %%>;
+      profileHeight = <%% 200, 192, 180, 170, 200 %%>;
       profileLineWidth = <%% 10, 10, 10, 10, 10 %%>;
-      profileMargin = <%% 30, 30, 30, 30, 30 %%>;
+      profileMargin = <%% 30, 24, 20, 16, 30 %%>;
 
-      profileDescriptionTongWidth = <%% 700, 700, 700, 700, 700 %%>;
+      profileDescriptionTongWidth = <%% 700, 560, 500, 400, 70 %%>;
 
       styleButtonMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
 
-      nameTitlesize = <%% 32, 32, 32, 32, 32 %%>;
-      nameMargin = <%% 12, 12, 12, 12, 12 %%>;
+      nameTitlesize = <%% 32, 30, 28, 26, 32 %%>;
+      nameMargin = <%% 12, 10, 9, 8, 12 %%>;
 
       designerNameTongHeight = <%% 50, 50, 50, 50, 50 %%>;
       nameTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -4987,6 +4998,10 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       designerWordsWeight = <%% 400, 400, 400, 400, 400 %%>;
       designerWordsMarginLeft = <%% 10, 10, 10, 10, 10 %%>;
       designerWordsPaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
+
+      introducetionSize = <%% 16, 15, 14, 13, 16 %%>;
+      introducetionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+      introducetionWeight = <%% 400, 400, 400, 400, 400 %%>;
 
       styleBlockHeight = <%% 21, 21, 21, 21, 21 %%>;
       styleBlockPadding = <%% 8, 8, 8, 8, 8 %%>;
@@ -4996,41 +5011,36 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       styleBlockSize = <%% 11, 11, 11, 11, 11 %%>;
       styleBlockWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-      designerCharSize = <%% 27, 27, 27, 27, 27 %%>;
+      designerCharSize = <%% 27, 24, 24, 23, 27 %%>;
       designerCharWeight = <%% 700, 700, 700, 700, 700 %%>;
-      designerCharTop = <%% -5, -5, -5, -5, -5 %%>;
-      designerCharMarginBottom = <%% 24, 24, 24, 24, 24 %%>;
+      designerCharTop = <%% -5, -4, -4, -3, -5 %%>;
+      designerCharMarginBottom = <%% 24, 35, 20, 18, 24 %%>;
 
-      introducetionSize = <%% 16, 16, 16, 16, 16 %%>;
-      introducetionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
-      introducetionWeight = <%% 400, 400, 400, 400, 400 %%>;
+      blockTitleBlockHeight = <%% 30, 24, 24, 24, 30 %%>;
+      blockTitleSize = <%% 21, 20, 19, 21, 21 %%>;
+      blockInnerPadding = <%% 52, 48, 44, 40, 52 %%>;
 
-      blockTitleBlockHeight = <%% 30, 30, 30, 30, 30 %%>;
-      blockTitleSize = <%% 21, 21, 21, 21, 21 %%>;
-      blockInnerPadding = <%% 52, 52, 52, 52, 52 %%>;
-      paperWorksHeight = <%% 260, 260, 260, 260, 260 %%>;
-  
-      paperBetween = <%% 6, 6, 6, 6, 6 %%>;
+      paperWorksHeight = <%% 260, 200, 240, 260, 260 %%>;
+      paperBetween = <%% 6, 5, 4, 3, 6 %%>;
       arrowLeftMargin = <%% 30, 30, 30, 30, 30 %%>;
 
       blockTitleMarginBottom = <%% 11, 11, 11, 11, 11 %%>;
 
       whiteStandardWidth = <%% 1400, 1050, 900, 720, 88 %%>;
 
-      pictureBaseHeight = <%% 880, 880, 880, 880, 880 %%>;
-      factorHeight = <%% 42, 42, 42, 42, 42 %%>;
-      factorWidth = <%% 292, 292, 292, 292, 292 %%>;
+      pictureBaseHeight = <%% 880, 650, 650, 650, 650 %%>;
+      factorHeight = <%% 42, 40, 38, 36, 42 %%>;
 
       factorTextTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
-      factorSize = <%% 14.5, 14.5, 14.5, 14.5, 14.5 %%>;
+      factorSize = <%% 14.5, 13, 12, 11, 14.5 %%>;
       factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
       factorWeight = <%% 700, 700, 700, 700, 700 %%>;
       factorBetween = <%% 5, 5, 5, 5, 5 %%>;
 
-      whiteBlockMarginBottom = <%% 6, 6, 6, 6, 6 %%>;
+      whiteBlockMarginBottom = <%% 6, 5, 4, 3, 6 %%>;
       whiteBlockOuterMargin = <%% 10, 10, 10, 10, 10 %%>;
 
-      titleTextIndent = <%% 21, 21, 21, 21, 21 %%>;
+      titleTextIndent = <%% 21, 18, 15, 12, 21 %%>;
 
       factorLightWeight = <%% 500, 500, 500, 500, 500 %%>;
       tendencyMotherHeight = <%% 21, 21, 21, 21, 21 %%>;
@@ -5042,18 +5052,18 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       tendencyWeight = <%% 600, 600, 600, 600, 600 %%>;
       tendencyBoxPaddingTop = <%% 16, 16, 16, 16, 16 %%>;
 
-      largePaddingBottom = <%% 58, 58, 58, 58, 58 %%>;
+      largePaddingBottom = <%% 58, 54, 50, 46, 58 %%>;
 
       dashLineIndent = <%% 8, 8, 8, 8, 8 %%>;
 
-      unitBlockHeight = <%% 50, 50, 50, 50, 50 %%>;
-      unitBlockIndent = <%% 18, 18, 18, 18, 18 %%>;
-      unitBlockHeightSmall = <%% 46, 46, 46, 46, 46 %%>;
-      unitBlockHeightBig = <%% 44, 44, 44, 44, 44 %%>;
+      unitBlockHeight = <%% 50, 48, 45, 42, 50 %%>;
+      unitBlockIndent = <%% 18, 16, 12, 10, 18 %%>;
+      unitBlockHeightSmall = <%% 46, 42, 38, 36, 46 %%>;
+      unitBlockHeightBig = <%% 44, 40, 40, 38, 44 %%>;
 
-      moneyTitleSize = <%% 16, 16, 16, 16, 16 %%>;
-      moneyVatSize = <%% 11, 11, 11, 11, 11 %%>;
-      moneyValueSize = <%% 18, 18, 18, 18, 18 %%>;
+      moneyTitleSize = <%% 16, 15, 14, 13, 16 %%>;
+      moneyVatSize = <%% 11, 11, 10, 10, 11 %%>;
+      moneyValueSize = <%% 18, 16, 15, 15, 18 %%>;
 
       moneyTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
       moneyVatWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -5064,12 +5074,12 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       moneyValueTextTop = <%% -1, -1, -1, -1, -1 %%>;
       moneyVatMarginRight = <%% 6, 6, 6, 6, 6 %%>;
 
-      moneyCircleWidth = <%% 6, 6, 6, 6, 6 %%>;
-      moneyCircleMargin = <%% 6, 6, 6, 6, 6 %%>;
+      moneyCircleWidth = <%% 6, 5, 4, 3, 6 %%>;
+      moneyCircleMargin = <%% 6, 5, 4, 3, 6 %%>;
 
       moneyBoxPaddingTopVisual = <%% 3, 3, 3, 3, 3 %%>;
 
-      finalBlockBetween = <%% 10, 10, 10, 10, 10 %%>;
+      finalBlockBetween = <%% 10, 8, 6, 4, 1 %%>;
       finalBlockMarginLeft = <%% 430, 430, 430, 430, 430 %%>;
 
       buttonArrowWdith = <%% 16, 16, 16, 16, 16 %%>;
@@ -5082,15 +5092,45 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       onoffLineMarkWidth = <%% 110, 110, 110, 110, 110 %%>;
       vatPadding = <%% 16, 16, 16, 16, 16 %%>;
 
-      designerKeywordsLength = <%% 4, 4, 4, 4, 2 %%>;
+      designerKeywordsLength = <%% 4, 4, 3, 3, 2 %%>;
       designerKeywordsPaddingLeft = <%% 6, 6, 6, 6, 6 %%>;
       designerKeywordsPaddingRight = <%% 12, 12, 12, 12, 12 %%>;
-      designerKeywordsTagHeight = <%% 32, 32, 32, 32, 32 %%>;
-      designerKeywordsBetween = <%% 4, 4, 4, 4, 4 %%>;
-      designerKeywordsSize = <%% 14, 14, 14, 14, 14 %%>;
+      designerKeywordsTagHeight = <%% 32, 28, 28, 28, 32 %%>;
+      designerKeywordsBetween = <%% 4, 3, 3, 2, 4 %%>;
+      designerKeywordsSize = <%% 14, 13, 12, 12, 14 %%>;
       designerKeywordsWeight = <%% 700, 700, 700, 700, 700 %%>;
       designerKeywordsTextTop = <%% -1, -1, -1, -1, -1 %%>;
       designerKeywordsSvgLeft = <%% -18, -18, -18, -18, -18 %%>;
+
+      paperWorkArrowWidth = <%% 12, 12, 12, 12, 12 %%>;
+      paperWorkArrowHeight = <%% 24, 24, 24, 24, 24 %%>;
+
+      portfolioSize = <%% 16, 15, 14, 13, 16 %%>;
+      portfolioWeight = <%% 700, 700, 700, 700, 700 %%>;
+      portfolioTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+      portfolioDetailBoxWidth = <%% 18, 18, 18, 18, 18 %%>;
+      portfolioDetailArrowWidth = <%% 12, 12, 12, 12, 12 %%>;
+      portfolioDetailArrowHeight = <%% 10, 10, 10, 10, 10 %%>;
+
+      finalPriceTongMarginTop = <%% 16, 12, 10, 8, 16 %%>;
+      finalPriceDashedLineTop = <%% 21, 21, 21, 21, 21 %%>;
+
+      designerSelectionMotherPadding = <%% 44, 42, 40, 38, 44 %%>;
+
+      designerSelectionMarginLeft = <%% 1150, 810, 800, 800, 1150 %%>;
+      designerSelectionSize = <%% 18, 17, 16, 15, 18 %%>;
+      designerSelectionWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+      onoffKindTextTop = <%% -1, -1, -1, -1, -1 %%>;
+      onoffKindSize = <%% 18, 16, 16, 15, 18 %%>;
+      onoffKindWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+      finalMoneyOriginalSize = <%% 20, 18, 17, 16, 20 %%>;
+      finalMoneyOriginalWeight = <%% 300, 300, 300, 300, 300 %%>;
+      finalMoneyOriginalMarginRight = <%% 8, 8, 8, 8, 8 %%>;
+      finalMoneyAmountSize = <%% 21, 19, 18, 17, 21 %%>;
+      finalMoneyAmountMarginRight = <%% 24, 24, 24, 24, 24 %%>;
 
       ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
 
@@ -5442,9 +5482,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  top: String(-1) + ea,
-                  fontSize: String(18) + ea,
-                  fontWeight: String(800),
+                  top: String(onoffKindTextTop) + ea,
+                  fontSize: String(onoffKindSize) + ea,
+                  fontWeight: String(onoffKindWeight),
                   color: colorExtended.white,
                 }
               }
@@ -5453,7 +5493,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               text: "*vat 별도",
               style: {
                 display: "inline-flex",
-                position: "relaive",
+                position: "relative",
                 fontSize: String(12) + ea,
                 fontWeight: String(moneyVatWeight),
                 color: colorExtended.black,
@@ -5465,12 +5505,12 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               text: autoComma(original) + "원",
               style: {
                 display: noDiscount ? "none" : "inline-flex",
-                position: "relaive",
-                fontSize: String(20) + ea,
-                fontWeight: String(300),
+                position: "relative",
+                fontSize: String(finalMoneyOriginalSize) + ea,
+                fontWeight: String(finalMoneyOriginalWeight),
                 color: colorExtended.deactive,
                 top: String(moneyValueTextTop) + ea,
-                marginRight: String(8) + ea,
+                marginRight: String(finalMoneyOriginalMarginRight) + ea,
                 textDecoration: "line-through",
               }
             },
@@ -5478,12 +5518,12 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               text: autoComma(amount) + "원",
               style: {
                 display: "inline-flex",
-                position: "relaive",
-                fontSize: String(21) + ea,
+                position: "relative",
+                fontSize: String(finalMoneyAmountSize) + ea,
                 fontWeight: String(moneyValueWeight),
                 color: colorExtended.blueDark,
                 top: String(moneyValueTextTop) + ea,
-                marginRight: String(24) + ea,
+                marginRight: String(finalMoneyAmountMarginRight) + ea,
               }
             },
           ]
@@ -5860,9 +5900,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             style: {
               display: "block",
               position: "absolute",
-              top: "calc(50% - " + String(24 / 2) + ea + ")",
-              width: String(12) + ea,
-              height: String(24) + ea,
+              top: "calc(50% - " + String(paperWorkArrowHeight / 2) + ea + ")",
+              width: String(paperWorkArrowWidth) + ea,
+              height: String(paperWorkArrowHeight) + ea,
               left: String(-1 * arrowLeftMargin) + ea,
             },
             child: {
@@ -5871,7 +5911,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               style: {
                 display: "block",
                 position: "relative",
-                height: String(24) + ea,
+                height: String(paperWorkArrowHeight) + ea,
                 transform: "rotate(180deg)",
               }
             }
@@ -5903,9 +5943,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             style: {
               display: "block",
               position: "absolute",
-              top: "calc(50% - " + String(24 / 2) + ea + ")",
-              width: String(12) + ea,
-              height: String(24) + ea,
+              top: "calc(50% - " + String(paperWorkArrowHeight / 2) + ea + ")",
+              width: String(paperWorkArrowWidth) + ea,
+              height: String(paperWorkArrowHeight) + ea,
               right: String(-1 * arrowLeftMargin) + ea,
             },
             child: {
@@ -5914,7 +5954,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               style: {
                 display: "block",
                 position: "relative",
-                height: String(24) + ea,
+                height: String(paperWorkArrowHeight) + ea,
               }
             }
           },
@@ -6117,12 +6157,12 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             {
               text: title.portfolio,
               style: {
-                fontSize: String(16) + ea,
-                fontWeight: String(700),
+                fontSize: String(portfolioSize) + ea,
+                fontWeight: String(portfolioWeight),
                 color: colorExtended.blueDark,
                 display: "inline-flex",
                 position: "relative",
-                top: String(-1) + ea,
+                top: String(portfolioTextTop) + ea,
               }
             },
             {
@@ -6140,8 +6180,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 style: {
                   display: "inline-flex",
                   position: "relative",
-                  width: String(18) + ea,
-                  height: String(18) + ea,
+                  width: String(portfolioDetailBoxWidth) + ea,
+                  height: String(portfolioDetailBoxWidth) + ea,
                   borderRadius: String(5) + "px",
                   background: colorExtended.blueDark,
                   justifyContent: "center",
@@ -6149,9 +6189,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 },
                 child: {
                   mode: "svg",
-                  source: svgMaker.horizontalArrow(12, 10, colorExtended.white),
+                  source: svgMaker.horizontalArrow(portfolioDetailArrowWidth, portfolioDetailArrowHeight, colorExtended.white),
                   style: {
-                    width: String(12) + ea,
+                    width: String(portfolioDetailArrowWidth) + ea,
                   }
                 }
               }
@@ -6646,7 +6686,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           position: "relative",
           width: withOut(0, ea),
           overflow: "visible",
-          marginTop: String(16) + ea,
+          marginTop: String(finalPriceTongMarginTop) + ea,
           justifyContent: "end",
           alignItems: "end",
         },
@@ -6656,7 +6696,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         style: {
           display: "block",
           position: "absolute",
-          top: String(21) + ea,
+          top: String(finalPriceDashedLineTop) + ea,
           left: String(0),
           width: withOut(0, ea),
           height: String(0) + ea,
@@ -6693,8 +6733,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           position: "relative",
           width: withOut(0, ea),
           flexDirection: "column",
-          paddingTop: String(44) + ea,
-          paddingBottom: String(44) + ea,
+          paddingTop: String(designerSelectionMotherPadding) + ea,
+          paddingBottom: String(designerSelectionMotherPadding) + ea,
         },
         child: {
           style: {
@@ -6729,8 +6769,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         style: {
           display: "block",
           position: "relative",
-          marginLeft: String(1150) + ea,
-          width: withOut(1150, ea),
+          marginLeft: String(designerSelectionMarginLeft) + ea,
+          width: withOut(designerSelectionMarginLeft, ea),
           height: String(unitBlockHeightBig) + ea,
           borderRadius: String(8) + "px",
         },
@@ -6760,8 +6800,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             },
             text: designer.end ? "디자이너 마감" : "디자이너 선택",
             style: {
-              fontSize: String(18) + ea,
-              fontWeight: String(800),
+              fontSize: String(designerSelectionSize) + ea,
+              fontWeight: String(designerSelectionWeight),
               color: designer.end ? colorExtended.deactive : colorExtended.blueDark,
               display: "inline-flex",
               position: "relative",
