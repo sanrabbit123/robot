@@ -926,12 +926,12 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     checkCircleWidth = 13;
 
-    cardLength = <%% 5, 4, 3, 3, 2 %%>;
+    cardLength = <%% 5, 4, 4, 3, 2 %%>;
 
-    cardHeight = <%% 445, 411, 411, 411, 41 %%>;
+    cardHeight = <%% 445, 411, 355, 411, 41 %%>;
     profileHeight = <%% 250, 231, 231, 231, 25 %%>;
-    cardBetween = <%% 8, 8, 8, 8, 8 %%>;
-    buttonCardWidth = <%% 50, 48, 45, 40, 4 %%>;
+    cardBetween = <%% 8, 8, 6, 4, 8 %%>;
+    buttonCardWidth = <%% 50, 48, 40, 40, 4 %%>;
     cardWidth = "calc(" + withOut((cardBetween * cardLength) + buttonCardWidth, ea) + " / " + String(cardLength) + ")";
 
     buttonArrowWdith = <%% 14, 14, 14, 14, 14 %%>;
