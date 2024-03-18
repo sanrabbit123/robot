@@ -10,7 +10,7 @@ const AbstractRouter = function (MONGOC, localTargets, metaFunctions, staticDir)
   this.sourceDir = this.dir + "/router/source";
   this.localDir = `${this.sourceDir}/local`;
   this.staticDir = staticDir;
-  this.host = "abstract-rabbit.com";
+  this.host = this.address.abstractinfo.host;
   this.localTargets = localTargets;
   this.metaFunctions = metaFunctions;
 }

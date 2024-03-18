@@ -9,7 +9,7 @@
     descriptionString = "Abstart world for abstract ideal by abstract rabbit";
     hiddenHtml = ``;
     imagePath = "/index/og_image.jpg";
-    fullLink = "https://" + host + "/index";
+    fullLink = "https://" + host + "/abstractIndex";
 
     return {
       name: pageName,
@@ -39,7 +39,7 @@ AbstractIndexJs.prototype.launching = async function (loading) {
 
 
     
-    
+
 
 
 
