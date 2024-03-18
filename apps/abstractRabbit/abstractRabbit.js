@@ -160,6 +160,7 @@ AbstractRabbit.prototype.readMeta = async function () {
 
 AbstractRabbit.prototype.connect = async function () {
   const instance = this;
+  const address = this.address;
   const { fileSystem, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog, expressLog, dateToString, aliveLog, cronLog, emergencyAlarm, alertLog } = this.mother;
   const PORT = 3000;
   const https = require("https");
@@ -190,15 +191,8 @@ AbstractRabbit.prototype.connect = async function () {
   });
 
   try {
-    // set address info
-    const { name, rawObj: address } = await this.mother.ipCheck();
-    const isLocal = (/localhost/gi.test(address.host) || address.host === this.address.officeinfo.ghost.host);
-    if (name === "unknown") {
-      throw new Error("invalid address");
-    }
-
     console.log(``);
-    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching rabbit in ${name} ==============`);
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching rabbit ==============`);
     console.log(``);
 
     // set mongo connetion
@@ -210,7 +204,7 @@ AbstractRabbit.prototype.connect = async function () {
     let certDir, keyDir, caDir;
 
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + address.host;
+    pemsLink = process.cwd() + "/pems/" + address.abstractinfo.host;
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
