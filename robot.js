@@ -864,6 +864,16 @@ Robot.prototype.designerTendencySync = async function () {
   }
 }
 
+Robot.prototype.abstractRabbit = async function () {
+  try {
+    const AbstractRabbit = require(`${process.cwd()}/apps/abstractRabbit/abstractRabbit.js`);
+    const rabbit = new AbstractRabbit();
+    await rabbit.connect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
@@ -1372,7 +1382,14 @@ const MENU = {
     } catch (e) {
       console.log(e);
     }
-  }
+  },
+  rabbit: async function () {
+    try {
+      await robot.abstractRabbit();
+    } catch (e) {
+      console.log(e);
+    }
+  },
 };
 let launchingFunc;
 
