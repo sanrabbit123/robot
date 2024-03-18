@@ -7011,22 +7011,22 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김수연",
+    //     client: "안순영",
     //     designer: "박주령",
-    //     link: "https://drive.google.com/drive/folders/1msKRZNouKz6g1lzLOiykA9G2ubGZm0Y3",
+    //     link: "https://drive.google.com/drive/folders/1fsMD58Om_EwvYDAIb61i8gB5gYBC_usg",
     //     pay: true
     //   },
     // ]);
 
 
-    
+
     
     // raw video
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "안은빈",
-    //     designer: "김보하",
+    //     client: "안순영",
+    //     designer: "박주령",
     //   },
     // ]);
 

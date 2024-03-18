@@ -688,7 +688,7 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = <%% 23, 22, 21, 20, 23 %%>;
+    titleSize = <%% 23, 21, 20, 19, 23 %%>;
     descriptionSize = <%% 15, 14, 13, 12, 15 %%>;
     descriptionMarginTop = <%% 9, 9, 9, 9, 9 %%>;
 
@@ -696,8 +696,8 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
 
     visualTop = <%% 24, 24, 24, 24, 24 %%>;
 
-    boxWidth = <%% 290, 280, 280, 270, 25 %%>;
-    boxHeight = <%% 227, 218, 218, 218, 210 %%>;
+    boxWidth = <%% 290, 270, 280, 270, 25 %%>;
+    boxHeight = <%% 227, 214, 218, 218, 210 %%>;
 
     betweenMargin = <%% 152, 90, 90, 90, 90 %%>;
 
@@ -900,6 +900,23 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     let selectionBase;
     let endBoo;
     let designerSelectionEvent;
+    let designerTitleSize, designerTitleWeight;
+    let designerTitleLineTop, designerTitleLinePadding;
+    let designerBoxVisualPaddingBottom;
+    let designerSubTitleBlockMarginBottom;
+    let designerSubTitleSize, designerSubTitleWeight;
+    let designerSubTitleMarginLeft;
+    let designerEndTextSize, designerEndTextWeight, designerEndTextMarginLeft, designerEndTextTop;
+    let clickMeTop, clickMeLeft, clickMeWidth;
+    let profileLineIndent;
+    let nameTitleWeight, nameTitlePaddingBottom, nameTitleMarginBottom;
+    let careerBoxWidth, careerBoxHeight, careerBoxMarginBottom;
+    let careerTextTop, careerTextSize, careerTextWeight;
+    let careerValueBoxHeight, careerValueBoxMarginBottom, careerValueTextTop, careerValueSize, careerValueWeight;
+    let styleBoxWidth, styleBoxHeight, styleBoxTextTop, styleBoxSize, styleBoxWeight;
+    let styleValueHeight, styleValuePaddingBottom, styleValueTextTop, styleValueSize, styleValueWeight;
+    let detailArrowWidth, detailArrowBottom, detailArrowRight;
+    let detailArrowHeight;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -911,18 +928,74 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     cardLength = <%% 5, 4, 3, 3, 2 %%>;
 
-    cardHeight = 445;
-    profileHeight = 250;
-    cardBetween = 8;
-    buttonCardWidth = 50;
+    cardHeight = <%% 445, 411, 411, 411, 41 %%>;
+    profileHeight = <%% 250, 231, 231, 231, 25 %%>;
+    cardBetween = <%% 8, 8, 8, 8, 8 %%>;
+    buttonCardWidth = <%% 50, 48, 45, 40, 4 %%>;
     cardWidth = "calc(" + withOut((cardBetween * cardLength) + buttonCardWidth, ea) + " / " + String(cardLength) + ")";
 
-    buttonArrowWdith = 14;
+    buttonArrowWdith = <%% 14, 14, 14, 14, 14 %%>;
 
-    designerCardGroupBetween = 70;
-    designerCardGroupBetweenFirst = 50;
+    designerCardGroupBetween = <%% 70, 70, 70, 70, 70 %%>;
+    designerCardGroupBetweenFirst = <%% 50, 50, 50, 50, 50 %%>;
 
-    nameTitleSize = 25;
+    designerTitleSize = <%% 29, 25, 25, 24, 29 %%>;
+    designerTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    designerTitleLineTop = <%% 17, 13, 12, 15, 17 %%>;
+    designerTitleLinePadding = <%% 16, 16, 16, 16, 16 %%>;
+
+    designerBoxVisualPaddingBottom = <%% 6, 6, 6, 6, 6 %%>;
+    designerSubTitleBlockMarginBottom = <%% 10, 10, 10, 10, 10 %%>;
+
+    designerSubTitleSize = <%% 19, 19, 19, 19, 19 %%>;
+    designerSubTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    designerSubTitleMarginLeft = <%% 7, 7, 7, 7, 7 %%>;
+
+    designerEndTextSize = <%% 18, 18, 18, 18, 18 %%>;
+    designerEndTextWeight = <%% 800, 800, 800, 800, 800 %%>;
+    designerEndTextMarginLeft = <%% 9, 9, 9, 9, 9 %%>;
+    designerEndTextTop = <%% -2, -2, -2, -2, -2 %%>;
+
+    clickMeTop = <%% -92, -87, -87, -87, -9 %%>;
+    clickMeLeft = <%% 200, 180, 180, 180, 180 %%>;
+    clickMeWidth = <%% 124, 116, 110, 100, 124 %%>;
+
+    profileLineIndent = <%% 6, 5, 5, 4, 6 %%>;
+
+    nameTitleSize = <%% 25, 24, 23, 22, 25 %%>;
+    nameTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+    nameTitlePaddingBottom = <%% 1, 1, 1, 1, 1 %%>;
+    nameTitleMarginBottom = <%% 15, 12, 12, 12, 9 %%>;
+
+    careerBoxWidth = <%% 40, 40, 40, 40, 40 %%>;
+    careerBoxHeight = <%% 18, 18, 18, 18, 18 %%>;
+    careerBoxMarginBottom = <%% 0, 0, 0, 0, 0 %%>;
+    careerTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    careerTextSize = <%% 11, 11, 11, 11, 11 %%>;
+    careerTextWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+    careerValueBoxHeight = <%% 23, 23, 23, 23, 23 %%>;
+    careerValueBoxMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
+    careerValueTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    careerValueSize = <%% 12, 12, 12, 12, 12 %%>;
+    careerValueWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+    styleBoxWidth = <%% 92, 92, 92, 92, 92 %%>;
+    styleBoxHeight = <%% 18, 18, 18, 18, 18 %%>;
+    styleBoxTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    styleBoxSize = <%% 11, 11, 11, 11, 11 %%>;
+    styleBoxWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+    styleValueHeight = <%% 23, 23, 23, 23, 23 %%>;
+    styleValuePaddingBottom = <%% 11, 11, 11, 11, 11 %%>;
+    styleValueTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    styleValueSize = <%% 12, 12, 12, 12, 12 %%>;
+    styleValueWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+    detailArrowWidth = <%% 24, 22, 24, 24, 24 %%>;
+    detailArrowHeight = <%% 9, 9, 8, 7, 1 %%>;
+    detailArrowBottom = <%% 21, 20, 20, 20, 21 %%>;
+    detailArrowRight = <%% 20, 19, 19, 19, 20 %%>;
 
     shadowForm = "0px 8px 20px -9px " + colorExtended.darkDarkShadow;
 
@@ -1042,9 +1115,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
               }
             }
           }
-
         }
-
       }
     }
 
@@ -1091,7 +1162,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
             width: withOut(0, ea),
             borderBottom: "1px dashed " + colorExtended.white,
             opacity: String(0.5),
-            top: String(17) + ea,
+            top: String(designerTitleLineTop) + ea,
           }
         },
         {
@@ -1099,13 +1170,13 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           style: {
             display: "inline-flex",
             position: "relative",
-            fontSize: String(29) + ea,
-            fontWeight: String(700),
+            fontSize: String(designerTitleSize) + ea,
+            fontWeight: String(designerTitleWeight),
             color: colorExtended.white,
             fontFamily: "mont",
             background: colorExtended.blueBlack,
-            paddingLeft: String(16) + ea,
-            paddingRight: String(16) + ea,
+            paddingLeft: String(designerTitleLinePadding) + ea,
+            paddingRight: String(designerTitleLinePadding) + ea,
           }
         },
       ]
@@ -1127,7 +1198,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           alignItems: "start",
           width: withOut(0, ea),
           flexDirection: "column",
-          paddingBottom: String(6) + ea,
+          paddingBottom: String(designerBoxVisualPaddingBottom) + ea,
         }
       });
 
@@ -1144,7 +1215,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           width: withOut(0, ea),
           flexDirection: "row",
           marginTop: String(i === 0 ? designerCardGroupBetweenFirst : designerCardGroupBetween) + ea,
-          marginBottom: String(10) + ea,
+          marginBottom: String(designerSubTitleBlockMarginBottom) + ea,
         },
         children: [
           {
@@ -1201,11 +1272,11 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
             style: {
               display: "inline-flex",
               position: "relative",
-              fontSize: String(19) + ea,
-              fontWeight: String(700),
+              fontSize: String(designerSubTitleSize) + ea,
+              fontWeight: String(designerSubTitleWeight),
               color: colorExtended.blueLight,
               fontFamily: "mont",
-              marginLeft: String(7) + ea,
+              marginLeft: String(designerSubTitleMarginLeft) + ea,
               opacity: endBoo ? String(0.4) : String(0.8),
               cursor: "pointer",
             }
@@ -1218,11 +1289,11 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
             style: {
               display: endBoo ? "inline-flex" : "none",
               position: "relative",
-              fontSize: String(18) + ea,
-              fontWeight: String(800),
+              fontSize: String(designerEndTextSize) + ea,
+              fontWeight: String(designerEndTextWeight),
               color: colorExtended.white,
-              marginLeft: String(9) + ea,
-              top: String(-2) + ea,
+              marginLeft: String(designerEndTextMarginLeft) + ea,
+              top: String(designerEndTextTop) + ea,
             }
           },
         ]
@@ -1252,9 +1323,9 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           style: {
             display: endBoo ? "none" : "inline-block",
             position: "absolute",
-            top: String(-92) + ea,
-            left: String(200) + ea,
-            width: String(124) + ea,
+            top: String(clickMeTop) + ea,
+            left: String(clickMeLeft) + ea,
+            width: String(clickMeWidth) + ea,
             height: "auto",
           }
         })
@@ -1300,7 +1371,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
               display: "flex",
               position: "relative",
               width: withOut(0, ea),
-              height: withOut(250, ea),
+              height: withOut(profileHeight, ea),
               background: colorExtended.white,
               flexDirection: "column",
               justifyContent: "center",
@@ -1310,10 +1381,10 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           {
             style: {
               position: "absolute",
-              top: String(6) + ea,
-              left: String(6) + ea,
-              width: withOut(6 * 2, ea),
-              height: withOut(6 * 2, ea),
+              top: String(profileLineIndent) + ea,
+              left: String(profileLineIndent) + ea,
+              width: withOut(profileLineIndent * 2, ea),
+              height: withOut(profileLineIndent * 2, ea),
               borderRadius: String(5) + "px",
               border: "1px solid " + colorExtended.blue,
               "mix-blend-mode": "multiply",
@@ -1329,12 +1400,12 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           display: "inline-block",
           position: "relative",
           fontSize: String(nameTitleSize) + ea,
-          fontWeight: String(800),
+          fontWeight: String(nameTitleWeight),
           color: colorExtended.black,
           wordSpacing: String(1) + "px",
           borderBottom: "1px solid " + colorExtended.blue,
-          paddingBottom: String(1) + ea,
-          marginBottom: String(15) + ea,
+          paddingBottom: String(nameTitlePaddingBottom) + ea,
+          marginBottom: String(nameTitleMarginBottom) + ea,
         }
       });
       createNode({
@@ -1342,22 +1413,22 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(40) + ea,
-          height: String(18) + ea,
-          borderRadius: String(18) + ea,
+          width: String(careerBoxWidth) + ea,
+          height: String(careerBoxHeight) + ea,
+          borderRadius: String(careerBoxHeight) + ea,
           background: colorExtended.blueDark,
           justifyContent: "center",
           alignItems: "center",
-          marginBottom: String(0) + ea,
+          marginBottom: String(careerBoxMarginBottom) + ea,
         },
         child: {
           text: "경력",
           style: {
             display: "inline-block",
             position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(11) + ea,
-            fontWeight: String(700),
+            top: String(careerTextTop) + ea,
+            fontSize: String(careerTextSize) + ea,
+            fontWeight: String(careerTextWeight),
             color: colorExtended.white,
           }
         }
@@ -1368,19 +1439,19 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           display: "inline-flex",
           position: "relative",
           width: withOut(0, ea),
-          height: String(23) + ea,
+          height: String(careerValueBoxHeight) + ea,
           justifyContent: "center",
           alignItems: "center",
-          marginBottom: String(4) + ea,
+          marginBottom: String(careerValueBoxMarginBottom) + ea,
         },
         child: {
           text: designerCareer(designer, true, true),
           style: {
             display: "inline-block",
             position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(12) + ea,
-            fontWeight: String(400),
+            top: String(careerValueTextTop) + ea,
+            fontSize: String(careerValueSize) + ea,
+            fontWeight: String(careerValueWeight),
             color: colorExtended.black,
           }
         }
@@ -1390,9 +1461,9 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(92) + ea,
-          height: String(18) + ea,
-          borderRadius: String(18) + ea,
+          width: String(styleBoxWidth) + ea,
+          height: String(styleBoxHeight) + ea,
+          borderRadius: String(styleBoxHeight) + ea,
           background: colorExtended.blueDark,
           justifyContent: "center",
           alignItems: "center",
@@ -1403,9 +1474,9 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           style: {
             display: "inline-block",
             position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(11) + ea,
-            fontWeight: String(700),
+            top: String(styleBoxTextTop) + ea,
+            fontSize: String(styleBoxSize) + ea,
+            fontWeight: String(styleBoxWeight),
             color: colorExtended.white,
           }
         }
@@ -1416,24 +1487,24 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           display: "inline-flex",
           position: "relative",
           width: withOut(0, ea),
-          height: String(23) + ea,
+          height: String(styleValueHeight) + ea,
           justifyContent: "center",
           alignItems: "center",
-          paddingBottom: String(11) + ea,
+          paddingBottom: String(styleValuePaddingBottom) + ea,
         },
         child: {
           text: designer.styleTendency.map((o) => { return o.name }).slice(0, 3).join("&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;"),
           style: {
             display: "inline-block",
             position: "relative",
-            top: String(-1) + ea,
-            fontSize: String(12) + ea,
-            fontWeight: String(400),
+            top: String(styleValueTextTop) + ea,
+            fontSize: String(styleValueSize) + ea,
+            fontWeight: String(styleValueWeight),
             color: colorExtended.black,
           },
           under: {
-            fontSize: String(12) + ea,
-            fontWeight: String(400),
+            fontSize: String(styleValueSize) + ea,
+            fontWeight: String(styleValueWeight),
             color: colorExtended.blue,
           }
         }
@@ -1442,13 +1513,13 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
       createNode({
         mother: designerProfileBase,
         mode: "svg",
-        source: svgMaker.horizontalArrow(24, 9, colorExtended.focusBlue),
+        source: svgMaker.horizontalArrow(detailArrowWidth, detailArrowHeight, colorExtended.focusBlue),
         style: {
           display: "inline-block",
           position: "absolute",
-          width: String(24) + ea,
-          bottom: String(21) + ea,
-          right: String(20) + ea,
+          width: String(detailArrowWidth) + ea,
+          bottom: String(detailArrowBottom) + ea,
+          right: String(detailArrowRight) + ea,
         }
       });
 
@@ -1683,6 +1754,20 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     let moneyArr;
     let endBoo;
     let designerSelectionEventPlus;
+    let menuMarginTop;
+    let onoffKindBlockWidth;
+    let onoffKindSize, onoffKindWeight, onoffKindTextTop;
+    let baseMotherVisualPaddingBottom;
+    let detailPlusArrowWidth, detailPlusArrowVisualLeft;
+    let profileLineIndent;
+    let designerSelectionAreaMarginTop;
+    let designerSelectionAreaMarginBottom;
+    let designerSelectionSize, designerSelectionWeight, designerSelectionMarginLeft, designerSelectionTextTop;
+    let selectionBaseHeight, selectionBaseMarginTop;
+    let selectionBaseDescriptionSize, selectionBaseDescriptionWeight;
+    let selectionBaseArrowWidth, selectionBaseArrowHeight, selectionBaseArrowMargin;
+    let selectionBaseFinalButtonWidth, selectionBaseFinalButtonHeight;
+    let selectionBaseFinalButtonTextTop, selectionBaseFinalButtonSize, selectionBaseFinalButtonWeight;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -1690,80 +1775,114 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     basePaddingTop = <%% 150, 150, 160, 140, 21 %%>;
     basePaddingBottom = <%% 160, 160, 160, 160, 24 %%>;
 
-    checkCircleWidth = 15;
+    checkCircleWidth = <%% 15, 15, 15, 15, 15 %%>;
 
-    cardLength = 5;
+    cardLength = <%% 5, 5, 5, 5, 5 %%>;
+    cardHeight = <%% 445, 445, 445, 445, 445 %%>;
+    profileHeight = <%% 250, 250, 250, 250, 250 %%>;
+    cardBetween = <%% 8, 8, 8, 8, 8 %%>;
+    buttonCardWidth = <%% 50, 50, 50, 50, 50 %%>;
+    cardWidth = <%% 262, 262, 262, 262, 262 %%>;
 
-    cardHeight = 445;
-    profileHeight = 250;
-    cardBetween = 8;
-    buttonCardWidth = 50;
-    cardWidth = 262;
+    buttonArrowWdith = <%% 14, 14, 14, 14, 14 %%>;
 
-    columnBetween = 20;
+    designerCardGroupBetween = <%% 70, 70, 70, 70, 70 %%>;
+    designerCardGroupBetweenFirst = <%% 50, 50, 50, 50, 50 %%>;
 
-    buttonArrowWdith = 14;
+    nameTitleSize = <%% 25, 25, 25, 25, 25 %%>;
 
-    designerCardGroupBetween = 70;
-    designerCardGroupBetweenFirst = 50;
+    factorTextTop = <%% isMac() ? -1 : 1, isMac() ? -1 : 1, isMac() ? -1 : 1, isMac() ? -1 : 1, isMac() ? -1 : 1 %%>;
+    subFactorTextTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3 %%>;
+    factorPadding = <%% 20, 20, 20, 20, 20 %%>;
+    factorHeight = <%% 48, 48, 48, 48, 48 %%>;
+    factorSize = <%% 17, 17, 17, 17, 17 %%>;
+    subFactorSize = <%% 11, 11, 11, 11, 11 %%>;
+    factorTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+    factorValueWeight = <%% 400, 400, 400, 400, 400 %%>;
+    factorLongHeight = <%% 78, 78, 78, 78, 78 %%>;
 
-    nameTitleSize = 25;
+    barPadding = <%% 18, 18, 18, 18, 18 %%>;
 
-    factorTextTop = isMac() ? -1 : 1;
-    subFactorTextTop = isMac() ? 1 : 3;
-    factorPadding = 20;
-    factorHeight = 48;
-    factorSize = 17;
-    subFactorSize = 11;
-    factorTitleWeight = 500;
-    factorValueWeight = 400;
-    factorLongHeight = 78;
+    selectionBarWeight = <%% 300, 300, 300, 300, 300 %%>;
+    selectionBarMargin = <%% 8, 8, 8, 8, 8 %%>;
+    selectionBarLongMargin = <%% 17, 17, 17, 17, 17 %%>;
 
-    barPadding = 18;
+    valueLinePadding = <%% 1, 1, 1, 1, 1 %%>;
 
-    selectionBarWeight = 300;
-    selectionBarMargin = 8;
-    selectionBarLongMargin = 17;
+    whiteBoxBetween = <%% 12, 12, 12, 12, 12 %%>;
+    moneyWhiteBoxBetween = <%% 6, 6, 6, 6, 6 %%>;
 
-    valueLinePadding = 1;
-
-    whiteBoxBetween = 12;
-    moneyWhiteBoxBetween = 6;
-
-    outerMargin = 12;
-    outerMargin2 = 14;
+    outerMargin = <%% 12, 12, 12, 12, 12 %%>;
+    outerMargin2 = <%% 14, 14, 14, 14, 14 %%>;
 
     shadowForm = "0px 8px 20px -9px " + colorExtended.darkDarkShadow;
 
-    visualWhitePadding = 3;
+    visualWhitePadding = <%% 3, 3, 3, 3, 3 %%>;
 
-    dotWidth = 5;
-    dotMargin = 5;
+    dotWidth = <%% 5, 5, 5, 5, 5 %%>;
+    dotMargin = <%% 5, 5, 5, 5, 5 %%>;
 
-    subTitleMargin = 4;
-    vatMargin = 6;
+    subTitleMargin = <%% 4, 4, 4, 4, 4 %%>;
+    vatMargin = <%% 6, 6, 6, 6, 6 %%>;
 
-    moneyBlockHeight = 46;
-    finalBlockVatMargin = 10;
+    moneyBlockHeight = <%% 46, 46, 46, 46, 46 %%>;
+    finalBlockVatMargin = <%% 10, 10, 10, 10, 10 %%>;
 
-    finalArrowCicleWidth = 30;
-    finalArrowWidth = 11;
-    finalArrowHeight = 16;
+    finalArrowCicleWidth = <%% 30, 30, 30, 30, 30 %%>;
+    finalArrowWidth = <%% 11, 11, 11, 11, 11 %%>;
+    finalArrowHeight = <%% 16, 16, 16, 16, 16 %%>;
 
-    finalMoneySize = 21;
-    finalMoneyWeight = 300;
-    finalMoneyBoldWeight = 700;
+    finalMoneySize = <%% 21, 21, 21, 21, 21 %%>;
+    finalMoneyWeight = <%% 300, 300, 300, 300, 300 %%>;
+    finalMoneyBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    safeLoopNumber = 1;
-    loopNumber = 4;
+    safeLoopNumber = <%% 1, 1, 1, 1, 1 %%>;
+    loopNumber = <%% 4, 4, 4, 4, 4 %%>;
 
-    arrowCircleWidth = 44;
+    arrowCircleWidth = <%% 44, 44, 44, 44, 44 %%>;
 
-    arrowMargin = 70;
+    arrowMargin = <%% 70, 70, 70, 70, 70 %%>;
 
-    viewNumber = 3;
-
+    columnBetween = <%% 20, 12, 8, 4, 1 %%>;
+    viewNumber = <%% 3, 3, 2, 2, 3 %%>;
     widthRatio = standardWidth / ((cardWidth * 2 * viewNumber) + (columnBetween * (viewNumber - 1)));
+
+    menuMarginTop = <%% 5, 5, 5, 5, 1 %%>;
+
+    onoffKindBlockWidth = <%% 96, 96, 96, 96, 96 %%>;
+    onoffKindSize = <%% 16, 16, 16, 16, 16 %%>;
+    onoffKindWeight = <%% 800, 800, 800, 800, 800 %%>;
+    onoffKindTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+    baseMotherVisualPaddingBottom = <%% 6, 6, 6, 6, 6 %%>;
+
+    detailPlusArrowWidth = <%% 11, 11, 11, 11, 11 %%>;
+    detailPlusArrowVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
+
+    profileLineIndent = <%% 6, 5, 5, 4, 6 %%>;
+
+    designerSelectionAreaMarginTop = <%% 18, 18, 18, 18, 18 %%>;
+    designerSelectionAreaMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
+    designerSelectionSize = <%% 23, 26, 30, 27, 23 %%>;
+    designerSelectionWeight = <%% 700, 700, 700, 700, 700 %%>;
+    designerSelectionMarginLeft = <%% 7, 7, 7, 7, 7 %%>;
+    designerSelectionTextTop = <%% 1, 1, 1, 1, 1 %%>;
+
+    selectionBaseHeight = <%% 96, 84, 72, 96, 96 %%>;
+    selectionBaseMarginTop = <%% 140, 472, 472, 472, 140 %%>;
+
+    selectionBaseDescriptionSize = <%% 18, 17, 15, 14, 18 %%>;
+    selectionBaseDescriptionWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+    selectionBaseArrowWidth = <%% 832, 516, 500, 400, 832 %%>;
+    selectionBaseArrowHeight = <%% 12, 12, 12, 12, 12 %%>;
+    selectionBaseArrowMargin = <%% 16, 16, 16, 16, 16 %%>;
+
+    selectionBaseFinalButtonWidth = <%% 124, 120, 124, 124, 124 %%>;
+    selectionBaseFinalButtonHeight = <%% 38, 36, 32, 38, 38 %%>;
+    selectionBaseFinalButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    selectionBaseFinalButtonSize = <%% 16, 15, 14, 13, 16 %%>;
+    selectionBaseFinalButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
 
     abc = this.abc;
     designers = this.designers;
@@ -1850,7 +1969,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               justifyContent: menu.length <= 3 ? "end" : "start",
               alignItems: menu.length <= 3 ? "center" : "start",
               flexDirection: "row",
-              marginTop: menu.length <= 3 ? "" : String(5) + ea,
+              marginTop: menu.length <= 3 ? "" : String(menuMarginTop) + ea,
             },
             children: menu.map((str, index, arr) => {
               return [
@@ -2086,9 +2205,9 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               style: {
                 display: "flex",
                 position: "relative",    
-                width: String(96) + ea,
+                width: String(onoffKindBlockWidth) + ea,
                 height: withOut(0, ea),
-                borderRadius: String(8) + ea,
+                borderRadius: String(8) + "px",
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "row",
@@ -2100,10 +2219,10 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 style: {
                   display: "inline-block",
                   position: "relative",    
-                  fontSize: String(16) + ea,
-                  fontWeight: String(800),
+                  fontSize: String(onoffKindSize) + ea,
+                  fontWeight: String(onoffKindWeight),
                   color: colorExtended.white,
-                  top: String(-1) + ea,
+                  top: String(onoffKindTextTop) + ea,
                   opacity: Number(after.replace(/[^0-9]/gi, '')) === 0 ? String(0.3) : String(1),
                 }
               }
@@ -2260,7 +2379,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         display: "block",
         position: "relative",
         width: "calc(100% * " + String(1 / widthRatio) + ")",
-        paddingBottom: String(6) + ea,
+        paddingBottom: String(baseMotherVisualPaddingBottom) + ea,
         transformOrigin: "0% 0%",
         transform: "scale(" + String(widthRatio) + ")",
         overflow: "visible",
@@ -2314,9 +2433,9 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              width: String(11) + ea,
+              width: String(detailPlusArrowWidth) + ea,
               transform: "rotate(180deg)",
-              left: String(-1) + ea,
+              left: String(detailPlusArrowVisualLeft * -1) + ea,
             }
           }
         },
@@ -2370,8 +2489,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              width: String(11) + ea,
-              left: String(1) + ea,
+              width: String(detailPlusArrowWidth) + ea,
+              left: String(detailPlusArrowVisualLeft) + ea,
             }
           }
         },
@@ -2545,7 +2664,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 display: "flex",
                 position: "relative",
                 width: withOut(0, ea),
-                height: withOut(250, ea),
+                height: withOut(profileHeight, ea),
                 background: colorExtended.white,
                 flexDirection: "column",
                 justifyContent: "center",
@@ -2555,10 +2674,10 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             {
               style: {
                 position: "absolute",
-                top: String(6) + ea,
-                left: String(6) + ea,
-                width: withOut(6 * 2, ea),
-                height: withOut(6 * 2, ea),
+                top: String(profileLineIndent) + ea,
+                left: String(profileLineIndent) + ea,
+                width: withOut(profileLineIndent * 2, ea),
+                height: withOut(profileLineIndent * 2, ea),
                 borderRadius: String(5) + "px",
                 border: "1px solid " + colorExtended.blue,
                 "mix-blend-mode": "multiply",
@@ -2851,8 +2970,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             alignItems: "center",
             width: withOut(0, ea),
             flexDirection: "row",
-            marginTop: String(18) + ea,
-            marginBottom: String(4) + ea,
+            marginTop: String(designerSelectionAreaMarginTop) + ea,
+            marginBottom: String(designerSelectionAreaMarginBottom) + ea,
             cursor: "pointer",
           },
           children: [
@@ -2896,13 +3015,13 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               style: {
                 display: "inline-flex",
                 position: "relative",
-                fontSize: String(23) + ea,
-                fontWeight: String(700),
+                fontSize: String(designerSelectionSize) + ea,
+                fontWeight: String(designerSelectionWeight),
                 color: colorExtended.white,
                 fontFamily: "mont",
-                marginLeft: String(7) + ea,
+                marginLeft: String(designerSelectionMarginLeft) + ea,
                 opacity: String(0.4),
-                top: String(1) + ea,
+                top: String(designerSelectionTextTop) + ea,
               }
             }
           ]
@@ -3286,8 +3405,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               alignItems: "center",
               width: withOut(0, ea),
               flexDirection: "row",
-              marginTop: String(18) + ea,
-              marginBottom: String(4) + ea,
+              marginTop: String(designerSelectionAreaMarginTop) + ea,
+              marginBottom: String(designerSelectionAreaMarginBottom) + ea,
             },
             children: [
               {
@@ -3314,13 +3433,13 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 style: {
                   display: "inline-flex",
                   position: "relative",
-                  fontSize: String(23) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(designerSelectionSize) + ea,
+                  fontWeight: String(designerSelectionWeight),
                   color: colorExtended.white,
                   fontFamily: "mont",
-                  marginLeft: String(7) + ea,
-                  opacity: String(0.8),
-                  top: String(1) + ea,
+                  marginLeft: String(designerSelectionMarginLeft) + ea,
+                  opacity: String(0.4),
+                  top: String(designerSelectionTextTop) + ea,
                 }
               }
             ]
@@ -3370,9 +3489,9 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         justifyContent: "center",
         alignItems: "center",
         width: withOut(0, ea),
-        height: String(96) + ea,
+        height: String(selectionBaseHeight) + ea,
         flexDirection: "row",
-        marginTop: String(-1 * 140) + ea,
+        marginTop: String(-1 * selectionBaseMarginTop) + ea,
       },
       children: [
         {
@@ -3409,21 +3528,21 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
       style: {
         display: "inline-block",
         position: "relative",
-        fontSize: String(18) + ea,
-        fontWeight: String(800),
+        fontSize: String(selectionBaseDescriptionSize) + ea,
+        fontWeight: String(selectionBaseDescriptionWeight),
         color: colorExtended.white,
       }
     });
     createNode({
       mother: selectionBase,
       mode: "svg",
-      source: svgMaker.horizontalArrow(832, 12, colorExtended.white),
+      source: svgMaker.horizontalArrow(selectionBaseArrowWidth, selectionBaseArrowHeight, colorExtended.white),
       style: {
         display: "inline-block",
         position: "relative",
-        width: String(832) + ea,
-        marginLeft: String(16) + ea,
-        marginRight: String(16) + ea,
+        width: String(selectionBaseArrowWidth) + ea,
+        marginLeft: String(selectionBaseArrowMargin) + ea,
+        marginRight: String(selectionBaseArrowMargin) + ea,
         opacity: String(0.6),
       }
     });
@@ -3444,8 +3563,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
       style: {
         display: "inline-flex",
         position: "relative",
-        width: String(124) + ea,
-        height: String(38) + ea,
+        width: String(selectionBaseFinalButtonWidth) + ea,
+        height: String(selectionBaseFinalButtonHeight) + ea,
         borderRadius: String(5) + "px",
         background: colorExtended.white,
         flexDirection: "column",
@@ -3465,9 +3584,9 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(-1) + ea,
-          fontSize: String(16) + ea,
-          fontWeight: String(800),
+          top: String(selectionBaseFinalButtonTextTop) + ea,
+          fontSize: String(selectionBaseFinalButtonSize) + ea,
+          fontWeight: String(selectionBaseFinalButtonWeight),
           color: colorExtended.blueDark,
         }
       }
@@ -4549,6 +4668,7 @@ DesignerExplanationJs.prototype.insertFourthBox = async function () {
     let buttonTextTop;
     let buttonSize;
     let buttonWeight;
+    let buttonBaseMarginTop;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -4573,9 +4693,9 @@ DesignerExplanationJs.prototype.insertFourthBox = async function () {
 
     nameTitleSize = 25;
 
-    buttonBoxMarginTop = <%% 54, 48, 36, 28, 14 %%>;
+    buttonBoxMarginTop = <%% 28, 26, 24, 20, 4 %%>;
     buttonWidth = <%% 110, 90, 80, 80, 15 %%>;
-    buttonHeight = <%% 44, 42, 40, 40, 9 %%>;
+    buttonHeight = <%% 44, 40, 40, 40, 9 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     buttonSize = <%% 20, 17, 16, 15, 3.5 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -4628,7 +4748,7 @@ DesignerExplanationJs.prototype.insertFourthBox = async function () {
         justifyContent: "center",
         alignItems: "center",
         width: withOut(0, ea),
-        marginTop: String(28) + ea,
+        marginTop: String(buttonBoxMarginTop) + ea,
       },
       children: [
         {
@@ -4825,103 +4945,152 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let noDiscountOnline;
       let onoffLineMarkWidth;
       let vatPadding;
+      let designerNameTongHeight;
+      let nameTitleWeight;
+      let designerWordsSize;
+      let designerWordsWeight;
+      let designerWordsMarginLeft;
+      let designerWordsPaddingBottom;
+      let styleBlockHeight, styleBlockPadding, styleBlockTextTop, styleBlockSize, styleBlockWeight;
+      let styleBlockMarginLeftLong, styleBlockMarginLeftShort;
+      let introducetionSize, introducetionLineHeight, introducetionWeight;
+      let designerCharSize, designerCharWeight, designerCharTop, designerCharMarginBottom;
+      let designerKeywordsLength;
+      let designerKeywordsPaddingLeft, designerKeywordsPaddingRight;
+      let designerKeywordsTagHeight;
+      let designerKeywordsBetween;
+      let designerKeywordsSize, designerKeywordsWeight, designerKeywordsTextTop, designerKeywordsSvgLeft;
 
-      whiteMargin = 30;
-      innerMargin = 52;
+      whiteMargin = <%% 30, 30, 30, 30, 30 %%>;
+      innerMargin = <%% 52, 52, 52, 52, 52 %%>;
 
       titleHeight = <%% 41, 39, 37, 28, 8 %%>;  
-      titleSize = 40;
+      titleSize = <%% 40, 40, 40, 40, 40 %%>;
       titleWeight = <%% 700, 700, 700, 700, 700 %%>;
       titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
-      titleTop = -6;
+      titleTop = <%% -6, -6, -6, -6, -6 %%>;
 
-      profileHeight = 200;
-      profileLineWidth = 10;
-      profileMargin = 30;
+      profileHeight = <%% 200, 200, 200, 200, 200 %%>;
+      profileLineWidth = <%% 10, 10, 10, 10, 10 %%>;
+      profileMargin = <%% 30, 30, 30, 30, 30 %%>;
 
-      profileDescriptionTongWidth = 700;
+      profileDescriptionTongWidth = <%% 700, 700, 700, 700, 700 %%>;
 
-      styleButtonMarginBottom = 4;
+      styleButtonMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
 
-      nameTitlesize = 32;
-      nameMargin = 12;
+      nameTitlesize = <%% 32, 32, 32, 32, 32 %%>;
+      nameMargin = <%% 12, 12, 12, 12, 12 %%>;
 
-      blockTitleBlockHeight = 30;
-      blockTitleSize = 21;
-      blockInnerPadding = 52;
-      paperWorksHeight = 260;
+      designerNameTongHeight = <%% 50, 50, 50, 50, 50 %%>;
+      nameTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+      designerWordsSize = <%% 14, 14, 14, 14, 14 %%>;
+      designerWordsWeight = <%% 400, 400, 400, 400, 400 %%>;
+      designerWordsMarginLeft = <%% 10, 10, 10, 10, 10 %%>;
+      designerWordsPaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
+
+      styleBlockHeight = <%% 21, 21, 21, 21, 21 %%>;
+      styleBlockPadding = <%% 8, 8, 8, 8, 8 %%>;
+      styleBlockMarginLeftLong = <%% 14, 14, 14, 14, 14 %%>;
+      styleBlockMarginLeftShort = <%% 3, 3, 3, 3, 3 %%>;
+      styleBlockTextTop = <%% -1, -1, -1, -1, -1 %%>;
+      styleBlockSize = <%% 11, 11, 11, 11, 11 %%>;
+      styleBlockWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+      designerCharSize = <%% 27, 27, 27, 27, 27 %%>;
+      designerCharWeight = <%% 700, 700, 700, 700, 700 %%>;
+      designerCharTop = <%% -5, -5, -5, -5, -5 %%>;
+      designerCharMarginBottom = <%% 24, 24, 24, 24, 24 %%>;
+
+      introducetionSize = <%% 16, 16, 16, 16, 16 %%>;
+      introducetionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+      introducetionWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+      blockTitleBlockHeight = <%% 30, 30, 30, 30, 30 %%>;
+      blockTitleSize = <%% 21, 21, 21, 21, 21 %%>;
+      blockInnerPadding = <%% 52, 52, 52, 52, 52 %%>;
+      paperWorksHeight = <%% 260, 260, 260, 260, 260 %%>;
   
-      paperBetween = 6;
-      arrowLeftMargin = 30;
+      paperBetween = <%% 6, 6, 6, 6, 6 %%>;
+      arrowLeftMargin = <%% 30, 30, 30, 30, 30 %%>;
 
-      blockTitleMarginBottom = 11;
+      blockTitleMarginBottom = <%% 11, 11, 11, 11, 11 %%>;
 
       whiteStandardWidth = <%% 1400, 1050, 900, 720, 88 %%>;
 
-      pictureBaseHeight = 880;
-      factorHeight = 42;
-      factorWidth = 292;
+      pictureBaseHeight = <%% 880, 880, 880, 880, 880 %%>;
+      factorHeight = <%% 42, 42, 42, 42, 42 %%>;
+      factorWidth = <%% 292, 292, 292, 292, 292 %%>;
 
-      factorTextTop = -0.5;
-      factorSize = 14.5;
-      factorBoldWeight = 800;
-      factorWeight = 700;
-      factorBetween = 5;
+      factorTextTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
+      factorSize = <%% 14.5, 14.5, 14.5, 14.5, 14.5 %%>;
+      factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
+      factorWeight = <%% 700, 700, 700, 700, 700 %%>;
+      factorBetween = <%% 5, 5, 5, 5, 5 %%>;
 
-      whiteBlockMarginBottom = 6;
-      whiteBlockOuterMargin = 10;
+      whiteBlockMarginBottom = <%% 6, 6, 6, 6, 6 %%>;
+      whiteBlockOuterMargin = <%% 10, 10, 10, 10, 10 %%>;
 
-      titleTextIndent = 21;
+      titleTextIndent = <%% 21, 21, 21, 21, 21 %%>;
 
-      factorLightWeight = 500;
-      tendencyMotherHeight = 21;
-      tendencyNameAreaWidth = 64;
-      tendencyBarHeight = 14;
+      factorLightWeight = <%% 500, 500, 500, 500, 500 %%>;
+      tendencyMotherHeight = <%% 21, 21, 21, 21, 21 %%>;
+      tendencyNameAreaWidth = <%% 64, 64, 64, 64, 64 %%>;
+      tendencyBarHeight = <%% 14, 14, 14, 14, 14 %%>;
 
-      tendencySize = 13;
-      tendencyTextTop = -1;
-      tendencyWeight = 600;
-      tendencyBoxPaddingTop = 16;
+      tendencySize = <%% 13, 13, 13, 13, 13 %%>;
+      tendencyTextTop = <%% -1, -1, -1, -1, -1 %%>;
+      tendencyWeight = <%% 600, 600, 600, 600, 600 %%>;
+      tendencyBoxPaddingTop = <%% 16, 16, 16, 16, 16 %%>;
 
-      largePaddingBottom = 58;
+      largePaddingBottom = <%% 58, 58, 58, 58, 58 %%>;
 
-      dashLineIndent = 8;
+      dashLineIndent = <%% 8, 8, 8, 8, 8 %%>;
 
-      unitBlockHeight = 50;
-      unitBlockIndent = 18;
-      unitBlockHeightSmall = 46;
-      unitBlockHeightBig = 44;
+      unitBlockHeight = <%% 50, 50, 50, 50, 50 %%>;
+      unitBlockIndent = <%% 18, 18, 18, 18, 18 %%>;
+      unitBlockHeightSmall = <%% 46, 46, 46, 46, 46 %%>;
+      unitBlockHeightBig = <%% 44, 44, 44, 44, 44 %%>;
 
-      moneyTitleSize = 16;
-      moneyVatSize = 11;
-      moneyValueSize = 18;
+      moneyTitleSize = <%% 16, 16, 16, 16, 16 %%>;
+      moneyVatSize = <%% 11, 11, 11, 11, 11 %%>;
+      moneyValueSize = <%% 18, 18, 18, 18, 18 %%>;
 
-      moneyTitleWeight = 700;
-      moneyVatWeight = 500;
-      moneyValueWeight = 700;
+      moneyTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+      moneyVatWeight = <%% 500, 500, 500, 500, 500 %%>;
+      moneyValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-      moneyTitleTextTop = -1;
-      moneyVatTextTop = 1;
-      moneyValueTextTop = -1;
-      moneyVatMarginRight = 6;
+      moneyTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
+      moneyVatTextTop = <%% 1, 1, 1, 1, 1 %%>;
+      moneyValueTextTop = <%% -1, -1, -1, -1, -1 %%>;
+      moneyVatMarginRight = <%% 6, 6, 6, 6, 6 %%>;
 
-      moneyCircleWidth = 6;
-      moneyCircleMargin = 6;
+      moneyCircleWidth = <%% 6, 6, 6, 6, 6 %%>;
+      moneyCircleMargin = <%% 6, 6, 6, 6, 6 %%>;
 
-      moneyBoxPaddingTopVisual = 3;
+      moneyBoxPaddingTopVisual = <%% 3, 3, 3, 3, 3 %%>;
 
-      finalBlockBetween = 10;
-      finalBlockMarginLeft = 430;
+      finalBlockBetween = <%% 10, 10, 10, 10, 10 %%>;
+      finalBlockMarginLeft = <%% 430, 430, 430, 430, 430 %%>;
 
-      buttonArrowWdith = 16;
-      buttonArrowHeight = 30;
+      buttonArrowWdith = <%% 16, 16, 16, 16, 16 %%>;
+      buttonArrowHeight = <%% 30, 30, 30, 30, 30 %%>;
 
-      paperMove = 240;
+      paperMove = <%% 240, 240, 240, 240, 240 %%>;
 
-      deactiveOpacity = 0.4;
+      deactiveOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
-      onoffLineMarkWidth = 110;
-      vatPadding = 16;
+      onoffLineMarkWidth = <%% 110, 110, 110, 110, 110 %%>;
+      vatPadding = <%% 16, 16, 16, 16, 16 %%>;
+
+      designerKeywordsLength = <%% 4, 4, 4, 4, 2 %%>;
+      designerKeywordsPaddingLeft = <%% 6, 6, 6, 6, 6 %%>;
+      designerKeywordsPaddingRight = <%% 12, 12, 12, 12, 12 %%>;
+      designerKeywordsTagHeight = <%% 32, 32, 32, 32, 32 %%>;
+      designerKeywordsBetween = <%% 4, 4, 4, 4, 4 %%>;
+      designerKeywordsSize = <%% 14, 14, 14, 14, 14 %%>;
+      designerKeywordsWeight = <%% 700, 700, 700, 700, 700 %%>;
+      designerKeywordsTextTop = <%% -1, -1, -1, -1, -1 %%>;
+      designerKeywordsSvgLeft = <%% -18, -18, -18, -18, -18 %%>;
 
       ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
 
@@ -5449,7 +5618,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         style: {
           display: "flex",
           position: "relative",
-          height: String(50) + ea,
+          height: String(designerNameTongHeight) + ea,
           width: withOut(0, ea),
           flexDirection: "row",
           justifyContent: "start",
@@ -5463,7 +5632,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               display: "inline-block",
               position: "relative",
               fontSize: String(nameTitlesize) + ea,
-              fontWeight: String(800),
+              fontWeight: String(nameTitleWeight),
               color: colorExtended.black,
               wordSpacing: String(1) + "px",
             }
@@ -5473,11 +5642,11 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(14) + ea,
-              fontWeight: String(400),
+              fontSize: String(designerWordsSize) + ea,
+              fontWeight: String(designerWordsWeight),
               color: colorExtended.black,
-              marginLeft: String(10) + ea,
-              paddingBottom: String(5) + ea,
+              marginLeft: String(designerWordsMarginLeft) + ea,
+              paddingBottom: String(designerWordsPaddingBottom) + ea,
             }
           },
           ...designer.styleTendency.map((o) => { return o.name }).slice(0, 3).map((styleName, index) => {
@@ -5485,24 +5654,24 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               style: {
                 display: "inline-flex",
                 position: "relative",
-                height: String(21) + ea,
-                borderRadius: String(21) + ea,
+                height: String(styleBlockHeight) + ea,
+                borderRadius: String(styleBlockHeight) + ea,
                 background: colorExtended.mainBlue,
                 justifyContent: "center",
                 alignItems: "center",
                 marginBottom: String(styleButtonMarginBottom) + ea,
-                paddingLeft: String(8) + ea,
-                paddingRight: String(8) + ea,
-                marginLeft: String(index === 0 ? 14 : 3) + ea,
+                paddingLeft: String(styleBlockPadding) + ea,
+                paddingRight: String(styleBlockPadding) + ea,
+                marginLeft: String(index === 0 ? styleBlockMarginLeftLong : styleBlockMarginLeftShort) + ea,
               },
               child: {
                 text: styleName,
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  top: String(-1) + ea,
-                  fontSize: String(11) + ea,
-                  fontWeight: String(700),
+                  top: String(styleBlockTextTop) + ea,
+                  fontSize: String(styleBlockSize) + ea,
+                  fontWeight: String(styleBlockWeight),
                   color: colorExtended.white,
                 }
               }
@@ -5522,9 +5691,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           style: {
             display: "inline-block",
             position: "relative",
-            fontSize: String(16) + ea,
-            lineHeight: String(1.66),
-            fontWeight: String(400),
+            fontSize: String(introducetionSize) + ea,
+            lineHeight: String(introducetionLineHeight),
+            fontWeight: String(introducetionWeight),
             color: colorExtended.black,
           }
         }
@@ -5550,18 +5719,18 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         style: {
           display: "flex",
           position: "relative",
-          fontSize: String(27) + ea,
-          fontWeight: String(700),
+          fontSize: String(designerCharSize) + ea,
+          fontWeight: String(designerCharWeight),
           color: colorExtended.blueDark,
           fontFamily: "mont",
           width: withOut(0, ea),
           justifyContent: "end",
-          top: String(-5) + ea,
-          marginBottom: String(24) + ea,
+          top: String(designerCharTop) + ea,
+          marginBottom: String(designerCharMarginBottom) + ea,
         }
       });
 
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < designerKeywordsLength; i++) {
         words = designer.keywords[i];
         createNode({
           mother: profileKeywordsTong,
@@ -5569,32 +5738,32 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             display: "inline-flex",
             position: "relative",
             background: colorExtended.mainBlue,
-            paddingLeft: String(6) + ea,
-            paddingRight: String(12) + ea,
-            height: String(32) + ea,
+            paddingLeft: String(designerKeywordsPaddingLeft) + ea,
+            paddingRight: String(designerKeywordsPaddingRight) + ea,
+            height: String(designerKeywordsTagHeight) + ea,
             borderRadius: String(4) + "px",
             justifyContent: "center",
             alignItems: "center",
-            marginBottom: i === 4 - 1 ? "" : String(4) + ea,
+            marginBottom: i === designerKeywordsLength - 1 ? "" : String(designerKeywordsBetween) + ea,
           },
           child: {
             text: words,
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(14) + ea,
-              fontWeight: String(700),
+              fontSize: String(designerKeywordsSize) + ea,
+              fontWeight: String(designerKeywordsWeight),
               color: colorExtended.white,
-              top: String(-1) + ea,
+              top: String(designerKeywordsTextTop) + ea,
             },
             previous: {
               mode: "svg",
               source: svgMaker.boxTag(colorExtended.mainBlue),
               style: {
                 position: "absolute",
-                height: String(32) + ea,
+                height: String(designerKeywordsTagHeight) + ea,
                 top: String(0),
-                left: String(-18) + ea,
+                left: String(designerKeywordsSvgLeft) + ea,
               }
             }
           }
@@ -6994,6 +7163,8 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
+
+    document.querySelector("style").insertAdjacentHTML("beforeend", "*{transition:all 0.3s ease}");
 
     GeneralJs.setQueue(() => {
       window.scrollTo(0, 0);
