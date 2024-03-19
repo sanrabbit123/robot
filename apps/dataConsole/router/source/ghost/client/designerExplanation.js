@@ -336,6 +336,8 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
   const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const submitBlockClassName = "submitBlockClassName";
   try {
     let minusLeft;
@@ -371,19 +373,19 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     firstBasePaddingTop = <%% 24, 24, 24, 24, 8 %%>;
     firstBasePaddingBottom = <%% 170, 170, 160, 120, 20 %%>;
 
-    subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
+    subTitleSize = <%% 19, 18, 17, 16, 3.6 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     subTitleMarginTop = <%% 6, 5, 3, 3, 2.2 %%>;
 
-    buttonMarginTop = <%% 146, 146, 132, 124, 3.6 %%>;
-    buttonWidth = <%% 190, 194, 186, 186, 31 %%>;
-    buttonHeight = <%% 32, 32, 30, 40, 9 %%>;
-    buttonSize = <%% 14, 14, 13, 14, 3.5 %%>;
+    buttonMarginTop = <%% 146, 146, 132, 110, 3.6 %%>;
+    buttonWidth = <%% 190, 194, 186, 168, 31 %%>;
+    buttonHeight = <%% 32, 32, 30, 28, 9 %%>;
+    buttonSize = <%% 14, 14, 13, 12, 3.5 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
     buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
 
-    titleSize = <%% 59, 51, 48, 40, 9 %%>;
+    titleSize = <%% 59, 51, 48, 39, 9 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% -2, -2, -2, -2, -0.5 %%>;
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
@@ -391,15 +393,15 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
 
     pointOpacity = 0.4;
 
-    mainImageTop = <%% 42, 32, 18, 18, 32 %%>;
-    mainImageHeight = <%% 390, 372, 338, 350, 39 %%>;
+    mainImageTop = <%% 42, 32, 18, 8, 32 %%>;
+    mainImageHeight = <%% 390, 372, 338, 314, 39 %%>;
 
-    descriptionSize = <%% 15, 14, 14, 12, 15 %%>;
-    descriptionLineHeight = <%% 1.8, 1.8, 1.8, 1.8, 1.8 %%>;
+    descriptionSize = <%% 15, 14, 14, 13, 15 %%>;
+    descriptionLineHeight = <%% 1.8, 1.8, 1.8, 1.7, 1.8 %%>;
 
     mobileLeftPaddingVisual = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
 
-    descriptionMarginTop = <%% 40, 40, 36, 32, 40 %%>;
+    descriptionMarginTop = <%% 40, 40, 36, 30, 40 %%>;
 
     mainIllust = <%% DesignerExplanationJs.binaryPath + "/mainIllust0.png", DesignerExplanationJs.binaryPath + "/mainIllust1.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png" %%>;
 
@@ -408,15 +410,23 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     descriptionPointBoldPaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
     descriptionPointBoldMargin = <%% 2, 2, 2, 2, 2 %%>;
 
-    descriptionContents = [
-      `고객님게 <b%${serviceParsing(instance.project.service)}%b>와 그에 맞는 디자이너를 제안드립니다.`,
-      `선택된 디자이너는 고객님의 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.`,
-    ];
+    if (big) {
+      descriptionContents = [
+        `고객님께 <b%${serviceParsing(instance.project.service)}%b>와 그에 맞는 디자이너를 제안드립니다.`,
+        `선택된 디자이너는 고객님의 예산을 현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.`,
+      ];
+    } else {
+      descriptionContents = [
+        `고객님께 <b%${serviceParsing(instance.project.service)}%b>와 그에 맞는`,
+        `디자이너를 제안드립니다. 선택된 디자이너는 고객님의 예산을`,
+        `현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.`,
+      ];
+    }
 
     if (window.innerHeight > 1100) {
-      firstBasePaddingTop = <%% 60, 48, 30, 40, 50 %%>;
+      firstBasePaddingTop = <%% 60, 48, 30, 20, 50 %%>;
       subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
-      firstBasePaddingBottom = <%% 230, 210, 160, 150, 210 %%>;
+      firstBasePaddingBottom = <%% 230, 210, 160, 130, 210 %%>;
     }
 
     this.totalContents = document.getElementById("totalcontents");
@@ -688,20 +698,20 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = <%% 23, 21, 19, 19, 23 %%>;
+    titleSize = <%% 23, 21, 19, 17, 23 %%>;
     descriptionSize = <%% 15, 14, 13, 12, 15 %%>;
     descriptionMarginTop = <%% 9, 9, 7, 6, 9 %%>;
 
-    checkCircleWidth = <%% 21, 21, 21, 21, 21 %%>;
+    checkCircleWidth = <%% 21, 21, 20, 18, 21 %%>;
 
-    visualTop = <%% 24, 24, 24, 24, 24 %%>;
+    visualTop = <%% 24, 24, 22, 17, 24 %%>;
 
-    boxWidth = <%% 290, 270, 240, 210, 25 %%>;
-    boxHeight = <%% 227, 214, 192, 190, 210 %%>;
+    boxWidth = <%% 290, 270, 240, 200, 25 %%>;
+    boxHeight = <%% 227, 214, 192, 163, 210 %%>;
 
-    betweenMargin = <%% 152, 90, 90, 90, 90 %%>;
+    betweenMargin = <%% 152, 90, 90, 60, 90 %%>;
 
-    totalHeight = <%% 350, 350, 320, 300, 350 %%>;
+    totalHeight = <%% 350, 340, 320, 254, 350 %%>;
 
     circleMarginTop = <%% 16, 16, 14, 12, 16 %%>;
 
@@ -871,6 +881,8 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const designerSelectionButtonClassNameButton = "designerSelectionButtonClassNameButton";
   const designerSelectionButtonClassNameString = "designerSelectionButtonClassNameString";
   const designerSelectionButtonClassNameButtonPlus = "designerSelectionButtonClassNameButtonPlus";
@@ -921,81 +933,81 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
-    basePaddingTop = <%% 150, 150, 140, 140, 21 %%>;
-    basePaddingBottom = <%% 160, 160, 140, 160, 24 %%>;
+    basePaddingTop = <%% 150, 150, 140, 110, 21 %%>;
+    basePaddingBottom = <%% 160, 160, 140, 110, 24 %%>;
 
-    checkCircleWidth = 13;
+    checkCircleWidth = <%% 13, 13, 10, 9, 1 %%>;
 
     cardLength = <%% 5, 4, 4, 3, 2 %%>;
 
-    cardHeight = <%% 445, 411, 355, 411, 41 %%>;
-    profileHeight = <%% 250, 231, 231, 231, 25 %%>;
-    cardBetween = <%% 8, 8, 6, 4, 8 %%>;
+    cardHeight = <%% 445, 411, 355, 355, 41 %%>;
+    profileHeight = <%% 250, 231, 199, 199, 25 %%>;
+    cardBetween = <%% 8, 8, 6, 6, 8 %%>;
     buttonCardWidth = <%% 50, 48, 40, 40, 4 %%>;
     cardWidth = "calc(" + withOut((cardBetween * cardLength) + buttonCardWidth, ea) + " / " + String(cardLength) + ")";
 
-    buttonArrowWdith = <%% 14, 14, 14, 14, 14 %%>;
+    buttonArrowWdith = <%% 14, 14, 12, 10, 1 %%>;
 
-    designerCardGroupBetween = <%% 70, 70, 70, 70, 70 %%>;
-    designerCardGroupBetweenFirst = <%% 50, 50, 50, 50, 50 %%>;
+    designerCardGroupBetween = <%% 70, 70, 64, 56, 70 %%>;
+    designerCardGroupBetweenFirst = <%% 50, 50, 42, 36, 50 %%>;
 
-    designerTitleSize = <%% 29, 25, 23, 22, 29 %%>;
+    designerTitleSize = <%% 29, 25, 23, 21, 29 %%>;
     designerTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-    designerTitleLineTop = <%% 17, 13, 12, 15, 17 %%>;
-    designerTitleLinePadding = <%% 16, 16, 16, 16, 16 %%>;
+    designerTitleLineTop = <%% 17, 13, 12, 10, 17 %%>;
+    designerTitleLinePadding = <%% 16, 16, 16, 12, 16 %%>;
 
     designerBoxVisualPaddingBottom = <%% 6, 6, 6, 6, 6 %%>;
     designerSubTitleBlockMarginBottom = <%% 10, 10, 10, 10, 10 %%>;
 
-    designerSubTitleSize = <%% 19, 19, 19, 19, 19 %%>;
+    designerSubTitleSize = <%% 19, 19, 18, 16, 3 %%>;
     designerSubTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-    designerSubTitleMarginLeft = <%% 7, 7, 7, 7, 7 %%>;
+    designerSubTitleMarginLeft = <%% 7, 7, 6, 5, 7 %%>;
 
-    designerEndTextSize = <%% 18, 18, 18, 18, 18 %%>;
+    designerEndTextSize = <%% 18, 18, 17, 16, 18 %%>;
     designerEndTextWeight = <%% 800, 800, 800, 800, 800 %%>;
     designerEndTextMarginLeft = <%% 9, 9, 9, 9, 9 %%>;
     designerEndTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
-    clickMeTop = <%% -92, -87, -87, -87, -9 %%>;
-    clickMeLeft = <%% 200, 180, 180, 180, 180 %%>;
-    clickMeWidth = <%% 124, 116, 110, 100, 124 %%>;
+    clickMeTop = <%% -92, -87, -78, -70, -9 %%>;
+    clickMeLeft = <%% 200, 180, 160, 150, 180 %%>;
+    clickMeWidth = <%% 124, 116, 100, 90, 124 %%>;
 
-    profileLineIndent = <%% 6, 5, 5, 4, 6 %%>;
+    profileLineIndent = <%% 6, 5, 4, 3, 6 %%>;
 
-    nameTitleSize = <%% 25, 24, 23, 22, 25 %%>;
+    nameTitleSize = <%% 25, 24, 20, 18, 25 %%>;
     nameTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     nameTitlePaddingBottom = <%% 1, 1, 1, 1, 1 %%>;
-    nameTitleMarginBottom = <%% 15, 12, 12, 12, 9 %%>;
+    nameTitleMarginBottom = <%% 15, 12, 10, 9, 9 %%>;
 
-    careerBoxWidth = <%% 40, 40, 40, 40, 40 %%>;
-    careerBoxHeight = <%% 18, 18, 18, 18, 18 %%>;
+    careerBoxWidth = <%% 40, 40, 32, 32, 40 %%>;
+    careerBoxHeight = <%% 18, 18, 16, 16, 18 %%>;
     careerBoxMarginBottom = <%% 0, 0, 0, 0, 0 %%>;
     careerTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    careerTextSize = <%% 11, 11, 11, 11, 11 %%>;
+    careerTextSize = <%% 11, 11, 10, 10, 11 %%>;
     careerTextWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    careerValueBoxHeight = <%% 23, 23, 23, 23, 23 %%>;
-    careerValueBoxMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
+    careerValueBoxHeight = <%% 23, 23, 19, 19, 23 %%>;
+    careerValueBoxMarginBottom = <%% 4, 4, 2, 1, 4 %%>;
     careerValueTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    careerValueSize = <%% 12, 12, 12, 12, 12 %%>;
+    careerValueSize = <%% 12, 12, 11, 11, 12 %%>;
     careerValueWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-    styleBoxWidth = <%% 92, 92, 92, 92, 92 %%>;
-    styleBoxHeight = <%% 18, 18, 18, 18, 18 %%>;
+    styleBoxWidth = <%% 92, 92, 84, 84, 92 %%>;
+    styleBoxHeight = <%% 18, 18, 16, 16, 18 %%>;
     styleBoxTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    styleBoxSize = <%% 11, 11, 11, 11, 11 %%>;
+    styleBoxSize = <%% 11, 11, 10, 10, 11 %%>;
     styleBoxWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    styleValueHeight = <%% 23, 23, 23, 23, 23 %%>;
+    styleValueHeight = <%% 23, 23, 19, 19, 23 %%>;
     styleValuePaddingBottom = <%% 11, 11, 11, 11, 11 %%>;
     styleValueTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    styleValueSize = <%% 12, 12, 12, 12, 12 %%>;
+    styleValueSize = <%% 12, 12, 11, 11, 12 %%>;
     styleValueWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-    detailArrowWidth = <%% 24, 22, 24, 24, 24 %%>;
+    detailArrowWidth = <%% 24, 22, 20, 18, 24 %%>;
     detailArrowHeight = <%% 9, 9, 8, 7, 1 %%>;
-    detailArrowBottom = <%% 21, 20, 20, 20, 21 %%>;
-    detailArrowRight = <%% 20, 19, 19, 19, 20 %%>;
+    detailArrowBottom = <%% 21, 20, 18, 18, 21 %%>;
+    detailArrowRight = <%% 20, 19, 18, 18, 20 %%>;
 
     shadowForm = "0px 8px 20px -9px " + colorExtended.darkDarkShadow;
 
@@ -1566,27 +1578,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
       // ----------------------------------------------------------------------------------------------------------------
 
       // photo 2
-      createNode({
-        mother: thisCardBase,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: cardWidth,
-          height: String(cardHeight) + ea,
-          borderRadius: String(8) + "px",
-          background: colorExtended.white,
-          marginRight: String(cardBetween) + ea,
-          boxShadow: shadowForm,
-          backgroundImage: typeof representative[2] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[2]) + "')" : "",
-          backgroundSize: "auto 100%",
-          backgroundPosition: "50% 50%",
-        }
-      });
-
-      // ----------------------------------------------------------------------------------------------------------------
-
-      // photo 3
-      if (media[0]) {
+      if (big) {
         createNode({
           mother: thisCardBase,
           style: {
@@ -1598,11 +1590,34 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
             background: colorExtended.white,
             marginRight: String(cardBetween) + ea,
             boxShadow: shadowForm,
-            backgroundImage: typeof representative[3] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[3]) + "')" : "",
+            backgroundImage: typeof representative[2] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[2]) + "')" : "",
             backgroundSize: "auto 100%",
             backgroundPosition: "50% 50%",
           }
         });
+
+        // ----------------------------------------------------------------------------------------------------------------
+
+        // photo 3
+        if (media[0]) {
+          createNode({
+            mother: thisCardBase,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: cardWidth,
+              height: String(cardHeight) + ea,
+              borderRadius: String(8) + "px",
+              background: colorExtended.white,
+              marginRight: String(cardBetween) + ea,
+              boxShadow: shadowForm,
+              backgroundImage: typeof representative[3] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[3]) + "')" : "",
+              backgroundSize: "auto 100%",
+              backgroundPosition: "50% 50%",
+            }
+          });
+        }
+
       }
 
       // ----------------------------------------------------------------------------------------------------------------
@@ -1772,10 +1787,10 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
-    basePaddingTop = <%% 150, 150, 140, 140, 21 %%>;
-    basePaddingBottom = <%% 160, 160, 140, 160, 24 %%>;
+    basePaddingTop = <%% 150, 150, 140, 120, 21 %%>;
+    basePaddingBottom = <%% 160, 160, 140, 120, 24 %%>;
 
-    checkCircleWidth = <%% 15, 15, 15, 15, 15 %%>;
+    checkCircleWidth = <%% 15, 15, 12, 11, 15 %%>;
 
     cardLength = <%% 5, 5, 5, 5, 5 %%>;
     cardHeight = <%% 445, 445, 445, 445, 445 %%>;
@@ -1784,7 +1799,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     buttonCardWidth = <%% 50, 50, 50, 50, 50 %%>;
     cardWidth = <%% 262, 262, 262, 262, 262 %%>;
 
-    buttonArrowWdith = <%% 14, 14, 14, 14, 14 %%>;
+    buttonArrowWdith = <%% 14, 14, 12, 12, 14 %%>;
 
     designerCardGroupBetween = <%% 70, 70, 70, 70, 70 %%>;
     designerCardGroupBetweenFirst = <%% 50, 50, 50, 50, 50 %%>;
@@ -1839,11 +1854,12 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     safeLoopNumber = <%% 1, 1, 1, 1, 1 %%>;
     loopNumber = <%% 4, 4, 4, 4, 4 %%>;
 
-    arrowCircleWidth = <%% 44, 44, 44, 44, 44 %%>;
+    arrowCircleWidth = <%% 44, 44, 36, 28, 44 %%>;
+    arrowMargin = <%% 70, 70, 50, 45, 70 %%>;
+    detailPlusArrowWidth = <%% 11, 11, 10, 6, 11 %%>;
+    detailPlusArrowVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
 
-    arrowMargin = <%% 70, 70, 70, 70, 70 %%>;
-
-    columnBetween = <%% 20, 12, 8, 4, 1 %%>;
+    columnBetween = <%% 20, 12, 12, 12, 1 %%>;
     viewNumber = <%% 3, 3, 2, 2, 3 %%>;
     widthRatio = standardWidth / ((cardWidth * 2 * viewNumber) + (columnBetween * (viewNumber - 1)));
 
@@ -1856,30 +1872,27 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
 
     baseMotherVisualPaddingBottom = <%% 6, 6, 6, 6, 6 %%>;
 
-    detailPlusArrowWidth = <%% 11, 11, 11, 11, 11 %%>;
-    detailPlusArrowVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
-
     profileLineIndent = <%% 6, 5, 5, 4, 6 %%>;
 
-    designerSelectionAreaMarginTop = <%% 18, 18, 18, 18, 18 %%>;
+    designerSelectionAreaMarginTop = <%% 18, 18, 14, 12, 18 %%>;
     designerSelectionAreaMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
-    designerSelectionSize = <%% 23, 26, 30, 27, 23 %%>;
+    designerSelectionSize = <%% 23, 26, 23, 23, 23 %%>;
     designerSelectionWeight = <%% 700, 700, 700, 700, 700 %%>;
     designerSelectionMarginLeft = <%% 7, 7, 7, 7, 7 %%>;
     designerSelectionTextTop = <%% 1, 1, 1, 1, 1 %%>;
 
-    selectionBaseHeight = <%% 96, 84, 72, 96, 96 %%>;
-    selectionBaseMarginTop = <%% 140, 472, 472, 472, 140 %%>;
+    selectionBaseHeight = <%% 96, 84, 70, 64, 96 %%>;
+    selectionBaseMarginTop = <%% 140, 472, 180, 180, 140 %%>;
 
-    selectionBaseDescriptionSize = <%% 18, 17, 15, 14, 18 %%>;
+    selectionBaseDescriptionSize = <%% 18, 17, 16, 15, 18 %%>;
     selectionBaseDescriptionWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    selectionBaseArrowWidth = <%% 832, 516, 500, 400, 832 %%>;
+    selectionBaseArrowWidth = <%% 832, 516, 395, 400, 832 %%>;
     selectionBaseArrowHeight = <%% 12, 12, 12, 12, 12 %%>;
     selectionBaseArrowMargin = <%% 16, 16, 16, 16, 16 %%>;
 
-    selectionBaseFinalButtonWidth = <%% 124, 120, 124, 124, 124 %%>;
-    selectionBaseFinalButtonHeight = <%% 38, 36, 32, 38, 38 %%>;
+    selectionBaseFinalButtonWidth = <%% 124, 120, 114, 110, 124 %%>;
+    selectionBaseFinalButtonHeight = <%% 38, 36, 32, 30, 38 %%>;
     selectionBaseFinalButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
     selectionBaseFinalButtonSize = <%% 16, 15, 14, 13, 16 %%>;
     selectionBaseFinalButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -4673,8 +4686,8 @@ DesignerExplanationJs.prototype.insertFourthBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
-    basePaddingTop = <%% 160, 160, 140, 140, 21 %%>;
-    basePaddingBottom = <%% 200, 200, 170, 170, 24 %%>;
+    basePaddingTop = <%% 160, 160, 140, 120, 21 %%>;
+    basePaddingBottom = <%% 200, 200, 170, 150, 24 %%>;
 
     checkCircleWidth = 13;
 
@@ -4695,9 +4708,9 @@ DesignerExplanationJs.prototype.insertFourthBox = async function () {
 
     buttonBoxMarginTop = <%% 28, 26, 24, 20, 4 %%>;
     buttonWidth = <%% 110, 90, 80, 80, 15 %%>;
-    buttonHeight = <%% 44, 40, 40, 40, 9 %%>;
+    buttonHeight = <%% 44, 38, 38, 36, 9 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
-    buttonSize = <%% 20, 17, 16, 15, 3.5 %%>;
+    buttonSize = <%% 20, 17, 17, 16, 3.5 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     shadowForm = "0px 8px 20px -9px " + colorExtended.blueDim;
@@ -4973,7 +4986,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let finalMoneyAmountSize, finalMoneyAmountMarginRight;
 
       whiteMargin = <%% 30, 30, 30, 30, 30 %%>;
-      innerMargin = <%% 52, 48, 44, 40, 52 %%>;
+      innerMargin = <%% 52, 48, 40, 32, 52 %%>;
 
       titleHeight = <%% 41, 39, 37, 28, 8 %%>;  
       titleSize = <%% 40, 40, 40, 40, 40 %%>;
@@ -4982,24 +4995,24 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       titleTop = <%% -6, -6, -6, -6, -6 %%>;
 
       profileHeight = <%% 200, 192, 180, 170, 200 %%>;
-      profileLineWidth = <%% 10, 10, 10, 10, 10 %%>;
+      profileLineWidth = <%% 10, 10, 8, 8, 10 %%>;
       profileMargin = <%% 30, 24, 20, 16, 30 %%>;
 
-      profileDescriptionTongWidth = <%% 700, 560, 500, 400, 70 %%>;
+      profileDescriptionTongWidth = <%% 700, 560, 450, 400, 70 %%>;
 
       styleButtonMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
 
-      nameTitlesize = <%% 32, 30, 28, 26, 32 %%>;
+      nameTitlesize = <%% 32, 30, 28, 25, 32 %%>;
       nameMargin = <%% 12, 10, 9, 8, 12 %%>;
 
       designerNameTongHeight = <%% 50, 50, 50, 50, 50 %%>;
       nameTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-      designerWordsSize = <%% 14, 14, 14, 14, 14 %%>;
+      designerWordsSize = <%% 14, 14, 14, 13, 14 %%>;
       designerWordsWeight = <%% 400, 400, 400, 400, 400 %%>;
       designerWordsMarginLeft = <%% 10, 10, 10, 10, 10 %%>;
       designerWordsPaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
 
-      introducetionSize = <%% 16, 15, 14, 13, 16 %%>;
+      introducetionSize = <%% 16, 15, 13, 12, 16 %%>;
       introducetionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
       introducetionWeight = <%% 400, 400, 400, 400, 400 %%>;
 
@@ -5011,25 +5024,25 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       styleBlockSize = <%% 11, 11, 11, 11, 11 %%>;
       styleBlockWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-      designerCharSize = <%% 27, 24, 24, 23, 27 %%>;
+      designerCharSize = <%% 27, 24, 21, 19, 27 %%>;
       designerCharWeight = <%% 700, 700, 700, 700, 700 %%>;
-      designerCharTop = <%% -5, -4, -4, -3, -5 %%>;
-      designerCharMarginBottom = <%% 24, 35, 20, 18, 24 %%>;
+      designerCharTop = <%% -5, -4, -3, -3, -5 %%>;
+      designerCharMarginBottom = <%% 24, 35, 30, 40, 24 %%>;
 
-      blockTitleBlockHeight = <%% 30, 24, 24, 24, 30 %%>;
-      blockTitleSize = <%% 21, 20, 19, 21, 21 %%>;
-      blockInnerPadding = <%% 52, 48, 44, 40, 52 %%>;
+      blockTitleBlockHeight = <%% 30, 24, 20, 18, 30 %%>;
+      blockTitleSize = <%% 21, 20, 17, 16, 21 %%>;
+      blockInnerPadding = <%% 52, 48, 40, 32, 52 %%>;
 
-      paperWorksHeight = <%% 260, 200, 240, 260, 260 %%>;
+      paperWorksHeight = <%% 260, 200, 200, 200, 260 %%>;
       paperBetween = <%% 6, 5, 4, 3, 6 %%>;
-      arrowLeftMargin = <%% 30, 30, 30, 30, 30 %%>;
+      arrowLeftMargin = <%% 30, 30, 25, 30, 30 %%>;
 
       blockTitleMarginBottom = <%% 11, 11, 11, 11, 11 %%>;
 
       whiteStandardWidth = <%% 1400, 1050, 900, 720, 88 %%>;
 
-      pictureBaseHeight = <%% 880, 650, 650, 650, 650 %%>;
-      factorHeight = <%% 42, 40, 38, 36, 42 %%>;
+      pictureBaseHeight = <%% 880, 650, 570, 520, 650 %%>;
+      factorHeight = <%% 42, 40, 36, 36, 42 %%>;
 
       factorTextTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
       factorSize = <%% 14.5, 13, 12, 11, 14.5 %%>;
@@ -5047,19 +5060,19 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       tendencyNameAreaWidth = <%% 64, 64, 64, 64, 64 %%>;
       tendencyBarHeight = <%% 14, 14, 14, 14, 14 %%>;
 
-      tendencySize = <%% 13, 13, 13, 13, 13 %%>;
+      tendencySize = <%% 13, 13, 12, 11, 13 %%>;
       tendencyTextTop = <%% -1, -1, -1, -1, -1 %%>;
       tendencyWeight = <%% 600, 600, 600, 600, 600 %%>;
-      tendencyBoxPaddingTop = <%% 16, 16, 16, 16, 16 %%>;
+      tendencyBoxPaddingTop = <%% 16, 16, 14, 12, 16 %%>;
 
-      largePaddingBottom = <%% 58, 54, 50, 46, 58 %%>;
+      largePaddingBottom = <%% 58, 54, 45, 40, 58 %%>;
 
       dashLineIndent = <%% 8, 8, 8, 8, 8 %%>;
 
-      unitBlockHeight = <%% 50, 48, 45, 42, 50 %%>;
-      unitBlockIndent = <%% 18, 16, 12, 10, 18 %%>;
+      unitBlockHeight = <%% 50, 48, 44, 40, 50 %%>;
+      unitBlockIndent = <%% 18, 16, 14, 10, 18 %%>;
       unitBlockHeightSmall = <%% 46, 42, 38, 36, 46 %%>;
-      unitBlockHeightBig = <%% 44, 40, 40, 38, 44 %%>;
+      unitBlockHeightBig = <%% 44, 40, 36, 32, 44 %%>;
 
       moneyTitleSize = <%% 16, 15, 14, 13, 16 %%>;
       moneyVatSize = <%% 11, 11, 10, 10, 11 %%>;
@@ -5089,21 +5102,21 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       deactiveOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
-      onoffLineMarkWidth = <%% 110, 110, 110, 110, 110 %%>;
+      onoffLineMarkWidth = <%% 110, 110, 90, 80, 110 %%>;
       vatPadding = <%% 16, 16, 16, 16, 16 %%>;
 
-      designerKeywordsLength = <%% 4, 4, 3, 3, 2 %%>;
+      designerKeywordsLength = <%% 4, 4, 4, 3, 2 %%>;
       designerKeywordsPaddingLeft = <%% 6, 6, 6, 6, 6 %%>;
       designerKeywordsPaddingRight = <%% 12, 12, 12, 12, 12 %%>;
-      designerKeywordsTagHeight = <%% 32, 28, 28, 28, 32 %%>;
-      designerKeywordsBetween = <%% 4, 3, 3, 2, 4 %%>;
-      designerKeywordsSize = <%% 14, 13, 12, 12, 14 %%>;
+      designerKeywordsTagHeight = <%% 32, 28, 26, 21, 32 %%>;
+      designerKeywordsBetween = <%% 4, 3, 5, 2, 4 %%>;
+      designerKeywordsSize = <%% 14, 13, 12, 11, 14 %%>;
       designerKeywordsWeight = <%% 700, 700, 700, 700, 700 %%>;
       designerKeywordsTextTop = <%% -1, -1, -1, -1, -1 %%>;
-      designerKeywordsSvgLeft = <%% -18, -18, -18, -18, -18 %%>;
+      designerKeywordsSvgLeft = <%% -18, -18, -16, -12, -18 %%>;
 
-      paperWorkArrowWidth = <%% 12, 12, 12, 12, 12 %%>;
-      paperWorkArrowHeight = <%% 24, 24, 24, 24, 24 %%>;
+      paperWorkArrowWidth = <%% 12, 12, 10, 10, 12 %%>;
+      paperWorkArrowHeight = <%% 24, 24, 20, 20, 24 %%>;
 
       portfolioSize = <%% 16, 15, 14, 13, 16 %%>;
       portfolioWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -5114,23 +5127,23 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       portfolioDetailArrowHeight = <%% 10, 10, 10, 10, 10 %%>;
 
       finalPriceTongMarginTop = <%% 16, 12, 10, 8, 16 %%>;
-      finalPriceDashedLineTop = <%% 21, 21, 21, 21, 21 %%>;
+      finalPriceDashedLineTop = <%% 21, 21, 17, 15, 21 %%>;
 
-      designerSelectionMotherPadding = <%% 44, 42, 40, 38, 44 %%>;
+      designerSelectionMotherPadding = <%% 44, 42, 32, 28, 44 %%>;
 
-      designerSelectionMarginLeft = <%% 1150, 810, 800, 800, 1150 %%>;
-      designerSelectionSize = <%% 18, 17, 16, 15, 18 %%>;
+      designerSelectionMarginLeft = <%% 1150, 810, 690, 500, 1150 %%>;
+      designerSelectionSize = <%% 18, 17, 15, 14, 18 %%>;
       designerSelectionWeight = <%% 800, 800, 800, 800, 800 %%>;
 
       onoffKindTextTop = <%% -1, -1, -1, -1, -1 %%>;
-      onoffKindSize = <%% 18, 16, 16, 15, 18 %%>;
+      onoffKindSize = <%% 18, 16, 14, 12, 18 %%>;
       onoffKindWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-      finalMoneyOriginalSize = <%% 20, 18, 17, 16, 20 %%>;
+      finalMoneyOriginalSize = <%% 20, 18, 16, 14, 20 %%>;
       finalMoneyOriginalWeight = <%% 300, 300, 300, 300, 300 %%>;
       finalMoneyOriginalMarginRight = <%% 8, 8, 8, 8, 8 %%>;
-      finalMoneyAmountSize = <%% 21, 19, 18, 17, 21 %%>;
-      finalMoneyAmountMarginRight = <%% 24, 24, 24, 24, 24 %%>;
+      finalMoneyAmountSize = <%% 21, 19, 17, 15, 21 %%>;
+      finalMoneyAmountMarginRight = <%% 24, 24, 18, 14, 24 %%>;
 
       ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
 
