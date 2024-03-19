@@ -940,8 +940,8 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     cardLength = <%% 5, 4, 4, 3, 2 %%>;
 
-    cardHeight = <%% 445, 411, 355, 355, 41 %%>;
-    profileHeight = <%% 250, 231, 199, 199, 25 %%>;
+    cardHeight = <%% 445, 411, 355, 375, 41 %%>;
+    profileHeight = <%% 250, 231, 199, 211, 25 %%>;
     cardBetween = <%% 8, 8, 6, 6, 8 %%>;
     buttonCardWidth = <%% 50, 48, 40, 40, 4 %%>;
     cardWidth = "calc(" + withOut((cardBetween * cardLength) + buttonCardWidth, ea) + " / " + String(cardLength) + ")";
@@ -959,27 +959,27 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     designerBoxVisualPaddingBottom = <%% 6, 6, 6, 6, 6 %%>;
     designerSubTitleBlockMarginBottom = <%% 10, 10, 10, 10, 10 %%>;
 
-    designerSubTitleSize = <%% 19, 19, 18, 16, 3 %%>;
+    designerSubTitleSize = <%% 19, 19, 18, 17, 3 %%>;
     designerSubTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-    designerSubTitleMarginLeft = <%% 7, 7, 6, 5, 7 %%>;
+    designerSubTitleMarginLeft = <%% 7, 7, 6, 6, 7 %%>;
 
     designerEndTextSize = <%% 18, 18, 17, 16, 18 %%>;
     designerEndTextWeight = <%% 800, 800, 800, 800, 800 %%>;
     designerEndTextMarginLeft = <%% 9, 9, 9, 9, 9 %%>;
     designerEndTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
-    clickMeTop = <%% -92, -87, -78, -70, -9 %%>;
+    clickMeTop = <%% -92, -87, -78, -72, -9 %%>;
     clickMeLeft = <%% 200, 180, 160, 150, 180 %%>;
-    clickMeWidth = <%% 124, 116, 100, 90, 124 %%>;
+    clickMeWidth = <%% 124, 116, 100, 96, 124 %%>;
 
-    profileLineIndent = <%% 6, 5, 4, 3, 6 %%>;
+    profileLineIndent = <%% 6, 5, 4, 5, 6 %%>;
 
-    nameTitleSize = <%% 25, 24, 20, 18, 25 %%>;
+    nameTitleSize = <%% 25, 24, 20, 22, 25 %%>;
     nameTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     nameTitlePaddingBottom = <%% 1, 1, 1, 1, 1 %%>;
-    nameTitleMarginBottom = <%% 15, 12, 10, 9, 9 %%>;
+    nameTitleMarginBottom = <%% 15, 12, 10, 11, 9 %%>;
 
-    careerBoxWidth = <%% 40, 40, 32, 32, 40 %%>;
+    careerBoxWidth = <%% 40, 40, 32, 34, 40 %%>;
     careerBoxHeight = <%% 18, 18, 16, 16, 18 %%>;
     careerBoxMarginBottom = <%% 0, 0, 0, 0, 0 %%>;
     careerTextTop = <%% -1, -1, -1, -1, -1 %%>;
@@ -987,7 +987,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     careerTextWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     careerValueBoxHeight = <%% 23, 23, 19, 19, 23 %%>;
-    careerValueBoxMarginBottom = <%% 4, 4, 2, 1, 4 %%>;
+    careerValueBoxMarginBottom = <%% 4, 4, 2, 3, 4 %%>;
     careerValueTextTop = <%% -1, -1, -1, -1, -1 %%>;
     careerValueSize = <%% 12, 12, 11, 11, 12 %%>;
     careerValueWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -1004,8 +1004,8 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     styleValueSize = <%% 12, 12, 11, 11, 12 %%>;
     styleValueWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-    detailArrowWidth = <%% 24, 22, 20, 18, 24 %%>;
-    detailArrowHeight = <%% 9, 9, 8, 7, 1 %%>;
+    detailArrowWidth = <%% 24, 22, 20, 20, 24 %%>;
+    detailArrowHeight = <%% 9, 9, 8, 8, 1 %%>;
     detailArrowBottom = <%% 21, 20, 18, 18, 21 %%>;
     detailArrowRight = <%% 20, 19, 18, 18, 20 %%>;
 
