@@ -185,10 +185,6 @@ DevContext.prototype.launching = async function () {
     // const app = new LiaisonCalendar();
     // await app.weeklySummary();
 
-
-    // const res = await requestSystem("https://home-liaison.serveftp.com/killAllChrome", { data: null }, { headers: { "Content-Type": "application" } });
-    
-    // console.log(res);
     
 
 
@@ -196,8 +192,9 @@ DevContext.prototype.launching = async function () {
 
     
 
+
     
-    
+
     
     
 
@@ -7112,6 +7109,7 @@ DevContext.prototype.launching = async function () {
     //   subject: "안녕하세요!",
     //   contents: "안녕하세요.",
     // }));
+
 
     
     // // send sms

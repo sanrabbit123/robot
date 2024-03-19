@@ -2188,34 +2188,6 @@ StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
   return obj;
 }
 
-StaticRouter.prototype.rou_post_killAllChrome = function () {
-  const instance = this;
-  const { equalJson, sleep } = this.mother;
-  const chrome = this.chrome;
-  let obj;
-  obj = {};
-  obj.link = [ "/killAllChrome" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      await chrome.killAllChrome();
-      res.send(JSON.stringify({ success: 1 }));
-    } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_killAllChrome): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
 StaticRouter.prototype.rou_post_issueCashReceipt = function () {
   const instance = this;
   const { equalJson, sleep } = this.mother;

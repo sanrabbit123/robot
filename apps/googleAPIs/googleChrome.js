@@ -2,94 +2,13 @@ const GoogleChrome = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const { chromium } = require("playwright");
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/googleAPIs";
   this.module = this.dir + "/module";
-  this.puppeteer = require("puppeteer");
-}
-
-GoogleChrome.prototype.frontRender = async function (func) {
-  if (typeof func !== "function") {
-    throw new Error("invaild input");
-  }
-  const instance = this;
-  const { fileSystem } = this.mother;
-  try {
-    let generalString;
-    let finalFunc;
-
-    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
-    finalFunc = generalString;
-    finalFunc += "\n\n";
-    finalFunc += "const print = function (input) {\n";
-    finalFunc += "if (typeof input === 'object') { console.log(JSON.stringify(input, null, 2) + '\\n'); }\n";
-    finalFunc += "else if (typeof input === 'function') { console.log(input.toString() + '\\n'); }\n";
-    finalFunc += "else { console.log(String(input) + '\\n'); }\n";
-    finalFunc += "}\n"
-    finalFunc += "\n\n";
-    finalFunc += "const printHtml = " + '() => { console.log("<html><head>" + document.head.innerHTML + "</head><body>" + document.body.innerHTML + "</body></html>\\n"); }\n';
-    finalFunc += "\n\n";
-    finalFunc += "const main = async function () {\n";
-    finalFunc += "\n\n";
-    finalFunc += func.toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '');
-    finalFunc += "\n\n";
-    finalFunc += "}\n"
-    finalFunc += "main();";
-
-    return finalFunc;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-GoogleChrome.prototype.scriptRequest = async function (url, frontCodeArr) {
-  if (typeof url !== "string" || !Array.isArray(frontCodeArr)) {
-    throw new Error("invaild input");
-  }
-  if (!frontCodeArr.every((obj) => { return typeof obj === "function" })) {
-    throw new Error("invaild input 2");
-  }
-
-  const instance = this;
-  const { sleep } = this.mother;
-  const { chromeLauncher, chromeRemote } = require(this.module + "/index.js");
-  try {
-    // const chrome = await chromeLauncher.launch({ chromeFlags: [] });
-    const chrome = await chromeLauncher.launch({ chromeFlags: [ "--no-sandbox", "--headless", "--disable-gpu", "--headless=new" ] });
-    const protocol = await chromeRemote({ port: chrome.port });
-    const { Network, Page, DOM, Emulation, Runtime, Console } = protocol;
-    let result;
-
-    await Network.enable();
-    await Page.enable();
-    await DOM.enable();
-    await Runtime.enable();
-    await Console.enable();
-    await Page.navigate({ url });
-    await Page.loadEventFired();
-
-    result = '';
-    Console.messageAdded((obj) => {
-      result += String(obj.message.text);
-    });
-
-    for (let frontCode of frontCodeArr) {
-      await Runtime.evaluate({ expression: (await instance.frontRender(frontCode)) });
-      await sleep(2000);
-    }
-
-    console.log(result);
-    await sleep(500);
-
-    await protocol.close();
-    await chrome.kill();
-
-    return result;
-  } catch (e) {
-    console.log(e);
-  }
+  this.chromium = chromium;
 }
 
 GoogleChrome.prototype.pdfPrint = async function (link, filePath = null, openMode = false) {
@@ -106,23 +25,26 @@ GoogleChrome.prototype.pdfPrint = async function (link, filePath = null, openMod
   }
   const instance = this;
   const { shellLink, shellExec, uniqueValue } = this.mother;
-  const { puppeteer } = this;
+  const { chromium } = this;
   const tempDir = process.cwd() + "/temp";
   try {
     if (filePath === null) {
       filePath = tempDir + "/" + uniqueValue("hex") + ".pdf";
     }
-    const browser = await puppeteer.launch({
-      args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ],
-    });
-    const page = await browser.newPage();
-    await page.goto(link, { waitUntil: "networkidle2" });
+    const browser = await chromium.launch({ headless: true, args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--hide-scrollbars",
+      "--disable-gpu",
+    ] });
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto(link, { waitUntil: "domcontentloaded" });
     await page.evaluateHandle("document.fonts.ready");
     await page.pdf({
       path: filePath,
       format: "a4",
       printBackground: true,
-      timeout: 0,
       scale: 0.8,
       margin: {
         top: 30,
@@ -145,23 +67,25 @@ GoogleChrome.prototype.pdfPrint = async function (link, filePath = null, openMod
 GoogleChrome.prototype.pageToPng = async function (link, filePath = null, tabletMode = false) {
   const instance = this;
   const { shellLink, shellExec, uniqueValue } = this.mother;
-  const { puppeteer } = this;
+  const { chromium } = this;
   const tempDir = process.cwd() + "/temp";
   try {
     if (filePath === null) {
       filePath = tempDir + "/" + uniqueValue("hex") + ".png";
     }
-    const browser = await puppeteer.launch({
-      args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ],
-    });
-    const page = await browser.newPage();
-    await page.setViewport({
+    const browser = await chromium.launch({ headless: true, args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--hide-scrollbars",
+      "--disable-gpu",
+    ] });
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.setViewportSize({
       width: !tabletMode ? 1920 : 1200,
       height: 1080,
-      deviceScaleFactor: 2,
     });
-
-    await page.goto(link, { waitUntil: "networkidle2" });
+    await page.goto(link, { waitUntil: "domcontentloaded" });
     await page.evaluateHandle("document.fonts.ready");
     await page.screenshot({ path: filePath, fullPage: true });
 
@@ -181,14 +105,18 @@ GoogleChrome.prototype.getHtml = async function (link) {
     throw new Error("invalid link");
   }
   const instance = this;
-  const { puppeteer, fileSystem } = this;
+  const { chromium, fileSystem } = this;
   try {
-    const browser = await puppeteer.launch({
-      args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ],
-    });
-    const page = await browser.newPage();
-    await page.goto(link, { waitUntil: "networkidle2" });
-    const frontHtml = await page.evaluate(() => {
+    const browser = await chromium.launch({ headless: true, args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--hide-scrollbars",
+      "--disable-gpu",
+    ] });
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto(link, { waitUntil: "domcontentloaded" });
+    const frontHtml = await page.evaluate(async () => {
       return `<html><head>${document.head.innerHTML}</head><body>${document.body.innerHTML}</body></html>`;
     });
     await browser.close();
@@ -199,51 +127,26 @@ GoogleChrome.prototype.getHtml = async function (link) {
   }
 }
 
-GoogleChrome.prototype.killAllChrome = async function () {
-  const instance = this;
-  const os = require(`os`);
-  const thisOs = os.type();
-  const { shellExec } = this.mother;
-  try {
-    if (/Linux/gi.test(thisOs)) {
-      await shellExec(`killall chrome-headless-shell`);
-    } else if (/Darwin/gi.test(thisOs)) {
-      await shellExec(`killall 'chrome-headless-shell'`);
-    }
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 GoogleChrome.prototype.frontScript = async function (link, func) {
   if (!/^http/.test(link)) {
     throw new Error("invalid link");
   }
   const instance = this;
   const { equalJson, fileSystem, mediaQuery } = this.mother;
-  const { puppeteer } = this;
-  const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-  const browser = await puppeteer.launch({ headless: "shell", args: [
+  const { chromium } = this;
+  const AsyncFunction = Object.getPrototypeOf(async function() {}).constructor;
+  const browser = await chromium.launch({ headless: true, args: [
     "--no-sandbox",
     "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage",
-    "--disable-accelerated-2d-canvas",
-    "--disable-gl-drawing-for-tests",
-    "--disable-backgrounding-occluded-windows",
-    "--disable-renderer-backgrounding",
-    "--disable-canvas-aa",
-    "--disable-2d-canvas-clip-aa",
     "--hide-scrollbars",
-    "--no-first-run",
-    "--no-zygote",
-    "--single-process",
     "--disable-gpu",
   ] });
   try {
-    const page = await browser.newPage();
+    const context = await browser.newContext();
+    const page = await context.newPage();
     let funcScript, generalString, frontResponse;
 
-    await page.goto(link, { waitUntil: "networkidle2" });
+    await page.goto(link, { waitUntil: "domcontentloaded" });
 
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
     if (typeof func === "function") {
@@ -256,7 +159,6 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
     frontResponse = await page.evaluate(new AsyncFunction(funcScript));
 
     await browser.close();
-    await instance.killAllChrome();
 
     try {
       return equalJson(frontResponse);
@@ -266,42 +168,27 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
   } catch (e) {
     console.log(e);
     await browser.close();
-    process.exit();
     return { message: "error : " + e.message };
-  } finally {
-    if (browser) {
-      await browser.close();
-    }
-    await instance.killAllChrome();
   }
 }
 
-GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong = {}) {
+GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong = {}, noHeadlessMode = false) {
   if (!Array.isArray(map)) {
     throw new Error("invalid input => [ { link, async func } ]");
   }
   const instance = this;
   const { equalJson, fileSystem, sleep, mediaQuery } = this.mother;
-  const { puppeteer } = this;
-  const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-  const browser = await puppeteer.launch({ headless: "shell", args: [
+  const { chromium } = this;
+  const AsyncFunction = Object.getPrototypeOf(async function() {}).constructor;
+  const browser = await chromium.launch({ headless: !noHeadlessMode, args: [
     "--no-sandbox",
     "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage",
-    "--disable-accelerated-2d-canvas",
-    "--disable-gl-drawing-for-tests",
-    "--disable-backgrounding-occluded-windows",
-    "--disable-renderer-backgrounding",
-    "--disable-canvas-aa",
-    "--disable-2d-canvas-clip-aa",
     "--hide-scrollbars",
-    "--no-first-run",
-    "--no-zygote",
-    "--single-process",
     "--disable-gpu",
   ] });
   try {
-    const page = await browser.newPage();
+    const context = await browser.newContext();
+    const page = await context.newPage();
     let funcScript, generalString, frontResponse, frontResponses;
 
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
@@ -314,26 +201,19 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong =
 
     frontResponses = [];
     for (let { link, func } of map) {
-      await page.goto(link, { waitUntil: "networkidle2" });
+      await page.goto(link, { waitUntil: "domcontentloaded" });
       frontResponse = await page.evaluate(new AsyncFunction(returnScript(func)));
       frontResponses.push(frontResponse);
       await sleep(between);
     }
 
     await browser.close();
-    await instance.killAllChrome();
 
     return frontResponses;
   } catch (e) {
     console.log(e);
     await browser.close();
-    process.exit();
     return { message: "error : " + e.message };
-  } finally {
-    if (browser) {
-      await browser.close();
-    }
-    await instance.killAllChrome();
   }
 }
 
