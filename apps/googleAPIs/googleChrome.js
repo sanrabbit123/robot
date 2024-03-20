@@ -141,8 +141,8 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
     "--hide-scrollbars",
     "--disable-gpu",
   ] });
+  const context = await browser.newContext();
   try {
-    const context = await browser.newContext();
     const page = await context.newPage();
     let funcScript, generalString, frontResponse;
 
@@ -158,6 +158,7 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
     }
     frontResponse = await page.evaluate(new AsyncFunction(funcScript));
 
+    await context.close();
     await browser.close();
 
     try {
@@ -167,6 +168,7 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
     }
   } catch (e) {
     console.log(e);
+    await context.close();
     await browser.close();
     return { message: "error : " + e.message };
   }
@@ -186,8 +188,8 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong =
     "--hide-scrollbars",
     "--disable-gpu",
   ] });
+  const context = await browser.newContext();
   try {
-    const context = await browser.newContext();
     const page = await context.newPage();
     let funcScript, generalString, frontResponse, frontResponses;
 
@@ -207,11 +209,13 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong =
       await sleep(between);
     }
 
+    await context.close();
     await browser.close();
 
     return frontResponses;
   } catch (e) {
     console.log(e);
+    await context.close();
     await browser.close();
     return { message: "error : " + e.message };
   }
