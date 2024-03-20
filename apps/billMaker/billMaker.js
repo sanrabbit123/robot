@@ -6563,17 +6563,28 @@ BillMaker.prototype.issueCashReceipt = async function (amount, phone) {
         link: "https://www.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/comm/a/b/UTXPPABA01.xml&w2xHome=/ui/pp/&w2xDocumentRoot=",
         func: async function () {
           try {
+            const waitSleep = function (time) {
+              let timeoutId = null;
+              return new Promise(function (resolve, reject) {
+                timeoutId = setTimeout(function () {
+                  resolve('awake');
+                  clearTimeout(timeoutId);
+                }, time);
+              });
+            }
             const idLoginButtonId = "anchor15";
             const returnButtonId = "anchor25";
             const inputs = {
               id: "iptUserId",
               pwd: "iptUserPw"
             };
-            while (document.getElementById(idLoginButtonId) === null) {
-              await sleep(500);
-            }
+
+            await waitSleep(500);
+
             document.getElementById(idLoginButtonId).click();
-  
+
+            await waitSleep(2000);
+
             document.getElementById(inputs.id).value = INFO.officeinfo.hometax.user;
             document.getElementById(inputs.pwd).value = INFO.officeinfo.hometax.password;
             document.getElementById(returnButtonId).click();
@@ -6588,6 +6599,15 @@ BillMaker.prototype.issueCashReceipt = async function (amount, phone) {
         link: "https://tecr.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/cr/c/b/UTECRCB041.xml",
         func: async function () {
           try {
+            const waitSleep = function (time) {
+              let timeoutId = null;
+              return new Promise(function (resolve, reject) {
+                timeoutId = setTimeout(function () {
+                  resolve('awake');
+                  clearTimeout(timeoutId);
+                }, time);
+              });
+            }
             const actionId = "ATECRCBA003C01";
             const screenId = "UTECRCB041";
             const txprDscmNo = INFO.officeinfo.hometax.business.replace(/[^0-9]/gi, '');
@@ -6612,6 +6632,8 @@ BillMaker.prototype.issueCashReceipt = async function (amount, phone) {
             let time, date;
             let now;
             let tip;
+
+            await waitSleep(1000);
 
             amount = TONG.amount;
             supply = Math.ceil(amount / 1.1);
@@ -6645,13 +6667,16 @@ BillMaker.prototype.issueCashReceipt = async function (amount, phone) {
               <cshptIsnMmoCntn></cshptIsnMmoCntn></map></map>`
             });
             const text = await res.text();
-            return (/발급/gi.test(text) && /완료/gi.test(text));
+            return text
+            // return (/발급/gi.test(text) && /완료/gi.test(text));
           } catch (e) {
             console.log(e);
           }
         }
       }
-    ], 2500, { amount, phone });
+    ], 2500, { amount, phone }, true);
+
+    console.log(frontResult);
 
     if (!Array.isArray(frontResult)) {
       throw new Error("issue cash receipt fail");
