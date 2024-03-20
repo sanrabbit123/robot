@@ -6667,16 +6667,13 @@ BillMaker.prototype.issueCashReceipt = async function (amount, phone) {
               <cshptIsnMmoCntn></cshptIsnMmoCntn></map></map>`
             });
             const text = await res.text();
-            return text
-            // return (/발급/gi.test(text) && /완료/gi.test(text));
+            return (/발급/gi.test(text) && /완료/gi.test(text));
           } catch (e) {
             console.log(e);
           }
         }
       }
-    ], 2500, { amount, phone }, true);
-
-    console.log(frontResult);
+    ], 2500, { amount, phone });
 
     if (!Array.isArray(frontResult)) {
       throw new Error("issue cash receipt fail");

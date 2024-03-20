@@ -39,7 +39,7 @@ GoogleChrome.prototype.pdfPrint = async function (link, filePath = null, openMod
     ] });
     const context = await browser.newContext();
     const page = await context.newPage();
-    await page.goto(link, { waitUntil: "domcontentloaded" });
+    await page.goto(link, { waitUntil: "networkidle" });
     await page.evaluateHandle("document.fonts.ready");
     await page.pdf({
       path: filePath,
@@ -85,7 +85,7 @@ GoogleChrome.prototype.pageToPng = async function (link, filePath = null, tablet
       width: !tabletMode ? 1920 : 1200,
       height: 1080,
     });
-    await page.goto(link, { waitUntil: "domcontentloaded" });
+    await page.goto(link, { waitUntil: "networkidle" });
     await page.evaluateHandle("document.fonts.ready");
     await page.screenshot({ path: filePath, fullPage: true });
 
@@ -115,7 +115,7 @@ GoogleChrome.prototype.getHtml = async function (link) {
     ] });
     const context = await browser.newContext();
     const page = await context.newPage();
-    await page.goto(link, { waitUntil: "domcontentloaded" });
+    await page.goto(link, { waitUntil: "networkidle" });
     const frontHtml = await page.evaluate(async () => {
       return `<html><head>${document.head.innerHTML}</head><body>${document.body.innerHTML}</body></html>`;
     });
@@ -146,7 +146,7 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
     const page = await context.newPage();
     let funcScript, generalString, frontResponse;
 
-    await page.goto(link, { waitUntil: "domcontentloaded" });
+    await page.goto(link, { waitUntil: "networkidle" });
 
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
     if (typeof func === "function") {
@@ -203,7 +203,7 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong =
 
     frontResponses = [];
     for (let { link, func } of map) {
-      await page.goto(link, { waitUntil: "domcontentloaded" });
+      await page.goto(link, { waitUntil: "networkidle" });
       frontResponse = await page.evaluate(new AsyncFunction(returnScript(func)));
       frontResponses.push(frontResponse);
       await sleep(between);
