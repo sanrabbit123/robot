@@ -50,6 +50,7 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
     "172.30.1.90:3000",
     "172.30.1.37:3000",
     "192.168.0.90:3000",
+    "192.168.0.20:3000",
   ];
 
   this.telegram = telegram;
