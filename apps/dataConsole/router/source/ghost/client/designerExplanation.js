@@ -5029,7 +5029,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       designerWordsMarginLeft = <%% 10, 10, 10, 8, 10 %%>;
       designerWordsPaddingBottom = <%% 5, 5, 4, (isMac() ? 4 : 3), 5 %%>;
 
-      introducetionSize = <%% 16, 15, 13, 12, 16 %%>;
+      introducetionSize = <%% 16, 15, 13, 12, 3 %%>;
       introducetionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
       introducetionWeight = <%% 400, 400, 400, 400, 400 %%>;
 
@@ -5059,16 +5059,16 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       whiteStandardWidth = <%% 1400, 1050, 900, 720, 88 %%>;
 
       pictureBaseHeight = <%% 880, 650, 570, 460, 650 %%>;
-      factorHeight = <%% 42, 40, 36, 33, 42 %%>;
+      factorHeight = <%% 42, 40, 36, 33, 6 %%>;
 
       factorTextTop = <%% (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), -0.5 %%>;
-      factorSize = <%% 14.5, 13, 12, 11, 14.5 %%>;
+      factorSize = <%% 14.5, 13, 12, 11, 3.5 %%>;
       factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
       factorWeight = <%% 700, 700, 700, 700, 700 %%>;
       factorBetween = <%% 5, 5, 5, 5, 5 %%>;
 
-      whiteBlockMarginBottom = <%% 6, 5, 4, 3, 6 %%>;
-      whiteBlockOuterMargin = <%% 10, 10, 10, 10, 10 %%>;
+      whiteBlockMarginBottom = <%% 6, 5, 4, 3, 1 %%>;
+      whiteBlockOuterMargin = <%% 10, 10, 10, 10, 1 %%>;
 
       titleTextIndent = <%% 21, 18, 15, 11, 21 %%>;
 
