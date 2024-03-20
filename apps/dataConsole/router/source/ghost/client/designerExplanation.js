@@ -370,14 +370,14 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
-    firstBasePaddingTop = <%% 24, 24, 24, 24, 8 %%>;
-    firstBasePaddingBottom = <%% 170, 170, 160, 120, 20 %%>;
+    firstBasePaddingTop = <%% 26, 24, 24, 24, 8 %%>;
+    firstBasePaddingBottom = <%% 180, 170, 160, 120, 20 %%>;
 
-    subTitleSize = <%% 19, 18, 17, 16, 3.6 %%>;
+    subTitleSize = <%% 18, 18, 17, 16, 3.6 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% 6, 5, 3, 3, 2.2 %%>;
+    subTitleMarginTop = <%% (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 3 : 6), (isMac() ? 3 : 6), 2.2 %%>;
 
-    buttonMarginTop = <%% 146, 146, 132, 110, 3.6 %%>;
+    buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 194, 186, 168, 31 %%>;
     buttonHeight = <%% 32, 32, 30, 28, 9 %%>;
     buttonSize = <%% 14, 14, 13, 12, 3.5 %%>;
@@ -385,16 +385,16 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
     buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
 
-    titleSize = <%% 59, 51, 48, 39, 9 %%>;
+    titleSize = <%% 57, 51, 48, 39, 9 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
-    titleVisualTop = <%% -2, -2, -2, -2, -0.5 %%>;
+    titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
     titleLineHeight = <%% 1.11, 1.11, 1.11, 1.11, 1.07 %%>;
 
     pointOpacity = 0.4;
 
-    mainImageTop = <%% 42, 32, 18, 16, 32 %%>;
-    mainImageHeight = <%% 390, 372, 338, 314, 39 %%>;
+    mainImageTop = <%% 27, 24, 18, 16, 32 %%>;
+    mainImageHeight = <%% 390, 370, 338, 314, 39 %%>;
 
     descriptionSize = <%% 15, 14, 14, 13, 15 %%>;
     descriptionLineHeight = <%% 1.8, 1.8, 1.8, 1.7, 1.8 %%>;
@@ -406,8 +406,8 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     mainIllust = <%% DesignerExplanationJs.binaryPath + "/mainIllust0.png", DesignerExplanationJs.binaryPath + "/mainIllust1.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png" %%>;
 
     descriptionPointBoldPaddingLeft = <%% 8, 8, 8, 8, 8 %%>;
-    descriptionPointBoldPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
-    descriptionPointBoldPaddingBottom = <%% 4, 4, 4, 4, 4 %%>;
+    descriptionPointBoldPaddingTop = <%% (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 3), (isMac() ? 2 : 3), 2 %%>;
+    descriptionPointBoldPaddingBottom = <%% (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 4 %%>;
     descriptionPointBoldMargin = <%% 2, 2, 2, 2, 2 %%>;
 
     if (big) {
@@ -424,9 +424,14 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     }
 
     if (window.innerHeight > 1100) {
+      titleSize = <%% 59, 51, 48, 39, 9 %%>;
+      subTitleSize = <%% 19, 18, 17, 16, 3.6 %%>;
       firstBasePaddingTop = <%% 60, 48, 30, 28, 50 %%>;
       subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
       firstBasePaddingBottom = <%% 230, 210, 160, 130, 210 %%>;
+      mainImageTop = <%% 42, 32, 18, 16, 32 %%>;
+      mainImageHeight = <%% 390, 372, 338, 314, 39 %%>;
+      buttonMarginTop = <%% 146, 146, 132, 110, 3.6 %%>;
     }
 
     this.totalContents = document.getElementById("totalcontents");
@@ -976,31 +981,31 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     nameTitleSize = <%% 25, 24, 20, 21, 25 %%>;
     nameTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    nameTitlePaddingBottom = <%% 1, 1, 1, 1, 1 %%>;
+    nameTitlePaddingBottom = <%% (isMac() ? 1 : -1), (isMac() ? 1 : -1), (isMac() ? 1 : -1), (isMac() ? 1 : -1), 1 %%>;
     nameTitleMarginBottom = <%% 15, 12, 10, 11, 9 %%>;
 
     careerBoxWidth = <%% 40, 40, 32, 34, 40 %%>;
     careerBoxHeight = <%% 18, 18, 16, 16, 18 %%>;
     careerBoxMarginBottom = <%% 0, 0, 0, 0, 0 %%>;
-    careerTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    careerTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     careerTextSize = <%% 11, 11, 10, 10, 11 %%>;
     careerTextWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     careerValueBoxHeight = <%% 23, 23, 19, 19, 23 %%>;
     careerValueBoxMarginBottom = <%% 4, 4, 2, 3, 4 %%>;
-    careerValueTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    careerValueTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     careerValueSize = <%% 12, 12, 11, 11, 12 %%>;
     careerValueWeight = <%% 400, 400, 400, 400, 400 %%>;
 
     styleBoxWidth = <%% 92, 92, 84, 84, 92 %%>;
     styleBoxHeight = <%% 18, 18, 16, 16, 18 %%>;
-    styleBoxTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    styleBoxTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     styleBoxSize = <%% 11, 11, 10, 10, 11 %%>;
     styleBoxWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     styleValueHeight = <%% 23, 23, 19, 19, 23 %%>;
     styleValuePaddingBottom = <%% 11, 11, 11, 11, 11 %%>;
-    styleValueTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    styleValueTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     styleValueSize = <%% 12, 12, 11, 11, 12 %%>;
     styleValueWeight = <%% 400, 400, 400, 400, 400 %%>;
 
@@ -1783,6 +1788,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     let selectionBaseArrowWidth, selectionBaseArrowHeight, selectionBaseArrowMargin;
     let selectionBaseFinalButtonWidth, selectionBaseFinalButtonHeight;
     let selectionBaseFinalButtonTextTop, selectionBaseFinalButtonSize, selectionBaseFinalButtonWeight;
+    let circleVisualTop;
+    let selectionBaseDescriptionTop;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -1868,7 +1875,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     onoffKindBlockWidth = <%% 96, 96, 96, 96, 96 %%>;
     onoffKindSize = <%% 16, 16, 16, 16, 16 %%>;
     onoffKindWeight = <%% 800, 800, 800, 800, 800 %%>;
-    onoffKindTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    onoffKindTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
     baseMotherVisualPaddingBottom = <%% 6, 6, 6, 6, 6 %%>;
 
@@ -1884,6 +1891,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     selectionBaseHeight = <%% 96, 84, 70, 64, 96 %%>;
     selectionBaseMarginTop = <%% 140, 472, 180, 446, 140 %%>;
 
+    selectionBaseDescriptionTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
     selectionBaseDescriptionSize = <%% 18, 17, 16, 15, 18 %%>;
     selectionBaseDescriptionWeight = <%% 800, 800, 800, 800, 800 %%>;
 
@@ -1893,9 +1901,11 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
 
     selectionBaseFinalButtonWidth = <%% 124, 120, 114, 100, 124 %%>;
     selectionBaseFinalButtonHeight = <%% 38, 36, 32, 30, 38 %%>;
-    selectionBaseFinalButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    selectionBaseFinalButtonTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     selectionBaseFinalButtonSize = <%% 16, 15, 14, 13, 16 %%>;
     selectionBaseFinalButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+    circleVisualTop = <%% (isMac() ? 0 : -1.5), (isMac() ? 0 : -1), (isMac() ? 0 : -1), (isMac() ? 0 : -1), -0.2 %%>;
 
     abc = this.abc;
     designers = this.designers;
@@ -2044,6 +2054,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               borderRadius: String(dotWidth) + ea,
               background: colorExtended.mainBlue,
               marginRight: String(dotMargin) + ea,
+              top: String(circleVisualTop) + ea,
             }
           },
           {
@@ -2710,7 +2721,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             color: colorExtended.black,
             wordSpacing: String(1) + "px",
             borderBottom: "1px solid " + colorExtended.blue,
-            paddingBottom: String(1) + ea,
+            paddingBottom: String(isMac() ? 1 : -1) + ea,
             marginBottom: String(15) + ea,
           }
         });
@@ -2732,7 +2743,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              top: String(-1) + ea,
+              top: String(isMac() ? -1 : 1) + ea,
               fontSize: String(11) + ea,
               fontWeight: String(700),
               color: colorExtended.white,
@@ -2755,7 +2766,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              top: String(-1) + ea,
+              top: String(isMac() ? -1 : 1) + ea,
               fontSize: String(12) + ea,
               fontWeight: String(400),
               color: colorExtended.black,
@@ -2780,7 +2791,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              top: String(-1) + ea,
+              top: String(isMac() ? -1 : 1) + ea,
               fontSize: String(11) + ea,
               fontWeight: String(700),
               color: colorExtended.white,
@@ -2803,7 +2814,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              top: String(-1) + ea,
+              top: String(isMac() ? -1 : 1) + ea,
               fontSize: String(12) + ea,
               fontWeight: String(400),
               color: colorExtended.black,
@@ -3543,6 +3554,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         position: "relative",
         fontSize: String(selectionBaseDescriptionSize) + ea,
         fontWeight: String(selectionBaseDescriptionWeight),
+        top: String(selectionBaseDescriptionTop) + ea,
         color: colorExtended.white,
       }
     });
@@ -4987,6 +4999,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let finalMoneyOriginalSize, finalMoneyOriginalWeight, finalMoneyOriginalMarginRight;
       let finalMoneyAmountSize, finalMoneyAmountMarginRight;
       let finalVatSize, finalVatMarginRight;
+      let nameTitleVisualTop;
+      let priceCircleVisualTop;
 
       whiteMargin = <%% 30, 30, 30, 30, 30 %%>;
       innerMargin = <%% 52, 48, 40, 24, 52 %%>;
@@ -5013,7 +5027,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       designerWordsSize = <%% 14, 14, 14, 12, 14 %%>;
       designerWordsWeight = <%% 400, 400, 400, 400, 400 %%>;
       designerWordsMarginLeft = <%% 10, 10, 10, 8, 10 %%>;
-      designerWordsPaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
+      designerWordsPaddingBottom = <%% 5, 5, 4, (isMac() ? 4 : 3), 5 %%>;
 
       introducetionSize = <%% 16, 15, 13, 12, 16 %%>;
       introducetionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
@@ -5023,14 +5037,14 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       styleBlockPadding = <%% 8, 8, 8, 7, 8 %%>;
       styleBlockMarginLeftLong = <%% 14, 14, 14, 9, 14 %%>;
       styleBlockMarginLeftShort = <%% 3, 3, 3, 2, 3 %%>;
-      styleBlockTextTop = <%% -1, -1, -1, -1, -1 %%>;
+      styleBlockTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -1 %%>;
       styleBlockSize = <%% 11, 11, 11, 10, 11 %%>;
       styleBlockWeight = <%% 700, 700, 700, 700, 700 %%>;
 
       designerCharSize = <%% 27, 24, 21, 17, 27 %%>;
       designerCharWeight = <%% 700, 700, 700, 700, 700 %%>;
       designerCharTop = <%% -5, -4, -3, -1, -5 %%>;
-      designerCharMarginBottom = <%% 24, 35, 30, 18, 24 %%>;
+      designerCharMarginBottom = <%% 22, 35, 30, 18, 24 %%>;
 
       blockTitleBlockHeight = <%% 30, 24, 20, 18, 30 %%>;
       blockTitleSize = <%% 21, 20, 17, 16, 21 %%>;
@@ -5047,7 +5061,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       pictureBaseHeight = <%% 880, 650, 570, 460, 650 %%>;
       factorHeight = <%% 42, 40, 36, 33, 42 %%>;
 
-      factorTextTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
+      factorTextTop = <%% (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), -0.5 %%>;
       factorSize = <%% 14.5, 13, 12, 11, 14.5 %%>;
       factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
       factorWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -5064,7 +5078,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       tendencyBarHeight = <%% 14, 14, 14, 12, 14 %%>;
 
       tendencySize = <%% 13, 13, 12, 11, 13 %%>;
-      tendencyTextTop = <%% -1, -1, -1, -1, -1 %%>;
+      tendencyTextTop = <%% (isMac() ? -1 : 1.5), (isMac() ? -1 : 1.5), (isMac() ? -1 : 1.5), (isMac() ? -1 : 1), -1 %%>;
       tendencyWeight = <%% 600, 600, 600, 600, 600 %%>;
       tendencyBoxPaddingTop = <%% 16, 16, 14, 8, 16 %%>;
 
@@ -5085,9 +5099,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       moneyVatWeight = <%% 500, 500, 500, 500, 500 %%>;
       moneyValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-      moneyTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
-      moneyVatTextTop = <%% 1, 1, 1, 1, 1 %%>;
-      moneyValueTextTop = <%% -1, -1, -1, -1, -1 %%>;
+      moneyTitleTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1 %%>;
+      moneyVatTextTop = <%% (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), 1 %%>;
+      moneyValueTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1 %%>;
       moneyVatMarginRight = <%% 6, 6, 6, 6, 6 %%>;
 
       moneyCircleWidth = <%% 6, 5, 4, 4, 6 %%>;
@@ -5115,7 +5129,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       designerKeywordsBetween = <%% 4, 3, 5, 4, 4 %%>;
       designerKeywordsSize = <%% 14, 13, 12, 11, 14 %%>;
       designerKeywordsWeight = <%% 700, 700, 700, 700, 700 %%>;
-      designerKeywordsTextTop = <%% -1, -1, -1, -1, -1 %%>;
+      designerKeywordsTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -1 %%>;
       designerKeywordsSvgLeft = <%% -18, -18, -16, -14, -18 %%>;
 
       paperWorkArrowWidth = <%% 12, 12, 10, 8, 12 %%>;
@@ -5123,7 +5137,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       portfolioSize = <%% 16, 15, 14, 12, 16 %%>;
       portfolioWeight = <%% 700, 700, 700, 700, 700 %%>;
-      portfolioTextTop = <%% -1, -1, -1, -1, -1 %%>;
+      portfolioTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.4 %%>;
 
       portfolioDetailBoxWidth = <%% 18, 18, 18, 16, 18 %%>;
       portfolioDetailArrowWidth = <%% 12, 12, 12, 10, 12 %%>;
@@ -5138,7 +5152,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       designerSelectionSize = <%% 18, 17, 15, 13, 18 %%>;
       designerSelectionWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-      onoffKindTextTop = <%% -1, -1, -1, -1, -1 %%>;
+      onoffKindTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1 %%>;
       onoffKindSize = <%% 18, 16, 14, 11, 18 %%>;
       onoffKindWeight = <%% 800, 800, 800, 800, 800 %%>;
 
@@ -5149,6 +5163,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       finalMoneyAmountMarginRight = <%% 24, 24, 18, 12, 24 %%>;
       finalVatSize = <%% 12, 12, 11, 10, 3 %%>;
       finalVatMarginRight = <%% 8, 8, 8, 5, 1 %%>;
+
+      nameTitleVisualTop = <%% (isMac() ? 0 : 3), (isMac() ? 0 : 3), (isMac() ? 0 : 3), (isMac() ? 0 : 2), 0 %%>;
+      priceCircleVisualTop = <%% (isMac() ? 0 : -1), (isMac() ? 0 : -1), (isMac() ? 0 : -1), (isMac() ? 0 : -1), 0 %%>;
 
       ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
 
@@ -5408,6 +5425,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 background: colorExtended.mainBlue,
                 marginRight: String(moneyCircleMargin) + ea,
                 opacity: blur ? String(deactiveOpacity) : String(1),
+                top: String(priceCircleVisualTop) + ea,
               }
             },
             {
@@ -5693,6 +5711,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               fontWeight: String(nameTitleWeight),
               color: colorExtended.black,
               wordSpacing: String(1) + "px",
+              top: String(nameTitleVisualTop) + ea,
             }
           },
           {

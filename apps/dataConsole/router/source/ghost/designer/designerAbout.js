@@ -11772,7 +11772,7 @@ DesignerAboutJs.prototype.insertRepresentativePaperBox = async function () {
   try {
     const mainContents = [
       {
-        title: "대표 페이퍼 워크 세팅",
+        title: "대표 페이퍼 워크 구성",
         contents: [
           "디자이너님의 스타일을 가장 잘 보여주고 어필할 수 있는 페이퍼 워크가 필요합니다! 가장 자신 있는 페이퍼로 구성해주세요!",
         ],
