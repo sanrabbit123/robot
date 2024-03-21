@@ -366,6 +366,8 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     let descriptionPointBoldPaddingBottom;
     let descriptionPointBoldMargin;
     let buttonBetween;
+    let mobileImageRight;
+    let mobileSubImageMarginTop;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -373,9 +375,9 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     firstBasePaddingTop = <%% 26, 24, 24, 24, 8 %%>;
     firstBasePaddingBottom = <%% 180, 170, 160, 120, 20 %%>;
 
-    subTitleSize = <%% 18, 18, 17, 16, 3.6 %%>;
+    subTitleSize = <%% 18, 18, 17, 16, 3.7 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 3 : 6), (isMac() ? 3 : 6), 2.2 %%>;
+    subTitleMarginTop = <%% (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 3 : 6), (isMac() ? 3 : 6), 0.6 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 194, 186, 168, 31 %%>;
@@ -385,7 +387,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
     buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
 
-    titleSize = <%% 57, 51, 48, 39, 9 %%>;
+    titleSize = <%% 57, 51, 48, 39, 8.2 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
@@ -393,22 +395,25 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
 
     pointOpacity = 0.4;
 
-    mainImageTop = <%% 27, 24, 18, 16, 32 %%>;
+    mainImageTop = <%% 27, 24, 18, 16, 33 %%>;
     mainImageHeight = <%% 390, 370, 338, 314, 39 %%>;
 
-    descriptionSize = <%% 15, 14, 14, 13, 15 %%>;
+    descriptionSize = <%% 15, 14, 14, 13, 3.2 %%>;
     descriptionLineHeight = <%% 1.8, 1.8, 1.8, 1.7, 1.8 %%>;
 
-    mobileLeftPaddingVisual = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
+    mobileLeftPaddingVisual = 1;
 
-    descriptionMarginTop = <%% 40, 40, 36, 30, 40 %%>;
+    descriptionMarginTop = <%% 40, 40, 36, 30, 81.5 %%>;
 
-    mainIllust = <%% DesignerExplanationJs.binaryPath + "/mainIllust0.png", DesignerExplanationJs.binaryPath + "/mainIllust1.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png" %%>;
+    descriptionPointBoldPaddingLeft = <%% 8, 8, 8, 8, 1.6 %%>;
+    descriptionPointBoldPaddingTop = <%% (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 3), (isMac() ? 2 : 3), 0.4 %%>;
+    descriptionPointBoldPaddingBottom = <%% (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 0.8 %%>;
+    descriptionPointBoldMargin = <%% 2, 2, 2, 2, 1 %%>;
 
-    descriptionPointBoldPaddingLeft = <%% 8, 8, 8, 8, 8 %%>;
-    descriptionPointBoldPaddingTop = <%% (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 3), (isMac() ? 2 : 3), 2 %%>;
-    descriptionPointBoldPaddingBottom = <%% (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 4 %%>;
-    descriptionPointBoldMargin = <%% 2, 2, 2, 2, 2 %%>;
+    mobileImageRight = 5;
+    mobileSubImageMarginTop = 7.5;
+
+    mainIllust = <%% DesignerExplanationJs.binaryPath + "/mainIllust0.png", DesignerExplanationJs.binaryPath + "/mainIllust1.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png", DesignerExplanationJs.binaryPath + "/mainIllust2.png", DesignerExplanationJs.binaryPath + "/mainIllust1.png" %%>;
 
     if (big) {
       descriptionContents = [
@@ -423,7 +428,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
       ];
     }
 
-    if (window.innerHeight > 1100) {
+    if (desktop && window.innerHeight > 1100) {
       titleSize = <%% 59, 51, 48, 39, 9 %%>;
       subTitleSize = <%% 19, 18, 17, 16, 3.6 %%>;
       firstBasePaddingTop = <%% 60, 48, 30, 28, 50 %%>;
@@ -452,7 +457,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
       child: {
         style: {
           position: "absolute",
-          top: desktop ? String((-1 * baseTop) + naviHeight) + ea : "calc(calc(" + String(naviHeight) + "px" + ") - " + String(baseTop) + ea + ")",
+          top: desktop ? String((-1 * baseTop) + naviHeight) + ea : "calc(calc(" + String(naviHeight - naviHeight) + "px" + ") - " + String(baseTop) + ea + ")",
           left: String(-1 * minusLeft) + ea,
           background: colorExtended.white,
           width: withOut(-1 * (minusLeft * 2), ea),
@@ -467,8 +472,8 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
       style: {
         display: "flex",
         position: "relative",
-        justifyContent: "start",
-        alignItems: "start",
+        justifyContent: desktop ? "start" : "center",
+        alignItems: desktop ? "start" : "center",
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
@@ -476,7 +481,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
       },
       children: [
         {
-          text: (desktop ? "Designer selection<b%.%b>" : "Designer\nselection<b%.%b>"),
+          text: (desktop ? "Designer selection<b%.%b>" : "Designer selection<b%.%b>"),
           style: {
             display: "inline-block",
             position: "relative",
@@ -484,8 +489,8 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
             fontWeight: String(titleWeight),
             color: colorExtended.mainBlue,
             fontFamily: "mont",
-            top: String(titleVisualTop) + ea,
-            left: String(titleVisualLeft) + ea,
+            top: desktop ? String(titleVisualTop) + ea : "",
+            left: desktop ? String(titleVisualLeft) + ea : "",
             lineHeight: String(titleLineHeight),
           },
           bold: {
@@ -505,13 +510,12 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
       style: {
         display: "flex",
         position: "relative",
-        justifyContent: "start",
-        alignItems: "start",
+        justifyContent: desktop ? "start" : "center",
+        alignItems: desktop ? "start" : "center",
         marginTop: String(subTitleMarginTop) + ea,
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
-        paddingLeft: mobile ? String(mobileLeftPaddingVisual) + ea : "",
       },
       children: [
         {
@@ -536,9 +540,10 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
       },
       style: {
         position: "absolute",
-        right: String(0),
+        right: desktop ? String(0) : String(mobileImageRight) + ea,
         top: String(mainImageTop) + ea,
-        height: String(mainImageHeight) + ea,
+        width: desktop ? "" : withOut(mobileImageRight * 2, ea),
+        height: desktop ? String(mainImageHeight) + ea : "",
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0.2s 1 normal forwards running fadeupdelay2",
@@ -551,12 +556,14 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
       style: {
         display: "flex",
         position: "relative",
-        justifyContent: "start",
-        alignItems: "start",
+        justifyContent: desktop ? "start" : "center",
+        alignItems: desktop ? "start" : "center",
         marginTop: String(descriptionMarginTop) + ea,
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.5s ease 0s 1 normal forwards running fadeupdelay2",
+        textAlign: desktop ? "left" : "center",
+        flexDirection: desktop ? "row" : "column",
       },
       children: [
         {
@@ -581,93 +588,110 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
             "border-radius": String(5) + "px",
             margin: String(descriptionPointBoldMargin) + ea,
           }
+        },
+        {
+          mode: "img",
+          attribute: {
+            src: DesignerExplanationJs.binaryPath + "/mainIllust4.png"
+          },
+          style: {
+            display: desktop ? "none" : "relative",
+            position: "relative",
+            marginTop: String(mobileSubImageMarginTop) + ea,
+            width: desktop ? "" : withOut(mobileImageRight * 2, ea),
+            opacity: String(0),
+            transform: "translateY(30px)",
+            animation: "1.2s ease 0.2s 1 normal forwards running fadeupdelay2",
+          }
         }
       ]
     })
 
     // black buttons
-    createNode({
-      mother: firstBase,
-      attribute: {
-        selectstart: (e) => { e.preventDefault() },
-      },
-      style: {
-        display: "flex",
-        position: "relative",
-        justifyContent: "start",
-        alignItems: "center",
-        marginTop: String(buttonMarginTop) + ea,
-        opacity: String(0),
-        transform: "translateY(10px)",
-        animation: "1.2s ease 0.4s 1 normal forwards running fadeupdelay",
-        cursor: "pointer",
-      },
-      children: [
-        {
-          style: {
-            display: "inline-flex",
-            position: "relative",    
-            width: String(buttonWidth) + ea,
-            height: String(buttonHeight) + ea,
-            background: colorExtended.darkDarkShadow,
-            borderRadius: String(buttonHeight) + ea,
-            justifyContent: "center",
-            alignItems: "center",
-          },
-          child: {
-            attribute: {
-              selectstart: (e) => { e.preventDefault() },
-            },
-            text: `예상 시작일&nbsp;&nbsp;|&nbsp;&nbsp;<b%${dateToHangul(instance.project.process.contract.form.date.from, true)}%b>`,
-            style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(buttonTextTop) + ea,
-              fontSize: String(buttonSize) + ea,
-              fontWeight: String(300),
-              color: colorExtended.white,
-            },
-            bold: {
-              fontSize: String(buttonSize) + ea,
-              fontWeight: String(700),
-              color: colorExtended.white,
-            }
-          }
+    if (desktop) {
+      createNode({
+        mother: firstBase,
+        attribute: {
+          selectstart: (e) => { e.preventDefault() },
         },
-        {
-          style: {
-            display: "inline-flex",
-            position: "relative",    
-            width: String(buttonWidth) + ea,
-            height: String(buttonHeight) + ea,
-            background: colorExtended.darkDarkShadow,
-            borderRadius: String(buttonHeight) + ea,
-            justifyContent: "center",
-            alignItems: "center",
-            marginLeft: String(buttonBetween) + ea,
-          },
-          child: {
-            attribute: {
-              selectstart: (e) => { e.preventDefault() },
-            },
-            text: `예상 종료일&nbsp;&nbsp;|&nbsp;&nbsp;<b%${dateToHangul(instance.project.process.contract.form.date.to, true)}%b>`,
-            style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(buttonTextTop) + ea,
-              fontSize: String(buttonSize) + ea,
-              fontWeight: String(300),
-              color: colorExtended.white,
-            },
-            bold: {
-              fontSize: String(buttonSize) + ea,
-              fontWeight: String(700),
-              color: colorExtended.white,
-            }
-          }
+        style: {
+          display: "flex",
+          position: "relative",
+          justifyContent: "start",
+          alignItems: "center",
+          marginTop: String(buttonMarginTop) + ea,
+          opacity: String(0),
+          transform: "translateY(10px)",
+          animation: "1.2s ease 0.4s 1 normal forwards running fadeupdelay",
+          cursor: "pointer",
         },
-      ]
-    });
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",    
+              width: String(buttonWidth) + ea,
+              height: String(buttonHeight) + ea,
+              background: colorExtended.darkDarkShadow,
+              borderRadius: String(buttonHeight) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              attribute: {
+                selectstart: (e) => { e.preventDefault() },
+              },
+              text: `예상 시작일&nbsp;&nbsp;|&nbsp;&nbsp;<b%${dateToHangul(instance.project.process.contract.form.date.from, true)}%b>`,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(buttonTextTop) + ea,
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(300),
+                color: colorExtended.white,
+              },
+              bold: {
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(700),
+                color: colorExtended.white,
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",    
+              width: String(buttonWidth) + ea,
+              height: String(buttonHeight) + ea,
+              background: colorExtended.darkDarkShadow,
+              borderRadius: String(buttonHeight) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              marginLeft: String(buttonBetween) + ea,
+            },
+            child: {
+              attribute: {
+                selectstart: (e) => { e.preventDefault() },
+              },
+              text: `예상 종료일&nbsp;&nbsp;|&nbsp;&nbsp;<b%${dateToHangul(instance.project.process.contract.form.date.to, true)}%b>`,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(buttonTextTop) + ea,
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(300),
+                color: colorExtended.white,
+              },
+              bold: {
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(700),
+                color: colorExtended.white,
+              }
+            }
+          },
+        ]
+      });
+    }
 
   } catch (e) {
     console.log(e);
@@ -703,22 +727,22 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = <%% 23, 21, 19, 17, 23 %%>;
-    descriptionSize = <%% 15, 14, 13, 12, 15 %%>;
+    titleSize = <%% 23, 21, 19, 17, 4 %%>;
+    descriptionSize = <%% 15, 14, 13, 12, 3.5 %%>;
     descriptionMarginTop = <%% 9, 9, 7, 6, 9 %%>;
 
-    checkCircleWidth = <%% 21, 21, 20, 18, 21 %%>;
+    checkCircleWidth = <%% 21, 21, 20, 18, 6 %%>;
 
-    visualTop = <%% 24, 24, 22, 17, 24 %%>;
+    visualTop = <%% 24, 24, 22, 17, 2 %%>;
 
     boxWidth = <%% 290, 270, 240, 200, 25 %%>;
-    boxHeight = <%% 227, 214, 192, 163, 210 %%>;
+    boxHeight = <%% 227, 214, 192, 163, 40 %%>;
 
-    betweenMargin = <%% 152, 90, 90, 60, 90 %%>;
+    betweenMargin = <%% 152, 90, 90, 60, 9 %%>;
 
-    totalHeight = <%% 350, 340, 320, 254, 350 %%>;
+    totalHeight = <%% 350, 340, 320, 254, 88 %%>;
 
-    circleMarginTop = <%% 16, 16, 14, 12, 16 %%>;
+    circleMarginTop = <%% 16, 16, 14, 12, 1 %%>;
 
     textContent = [
       {
@@ -947,72 +971,72 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     cardHeight = <%% 445, 411, 355, 375, 41 %%>;
     profileHeight = <%% 250, 231, 199, 211, 25 %%>;
-    cardBetween = <%% 8, 8, 6, 6, 8 %%>;
+    cardBetween = <%% 8, 8, 6, 6, 1 %%>;
     buttonCardWidth = <%% 50, 48, 40, 40, 4 %%>;
     cardWidth = "calc(" + withOut((cardBetween * cardLength) + buttonCardWidth, ea) + " / " + String(cardLength) + ")";
 
     buttonArrowWdith = <%% 14, 14, 12, 10, 1 %%>;
 
-    designerCardGroupBetween = <%% 70, 70, 64, 56, 70 %%>;
-    designerCardGroupBetweenFirst = <%% 50, 50, 42, 36, 50 %%>;
+    designerCardGroupBetween = <%% 70, 70, 64, 56, 7 %%>;
+    designerCardGroupBetweenFirst = <%% 50, 50, 42, 36, 5 %%>;
 
-    designerTitleSize = <%% 29, 25, 23, 21, 29 %%>;
+    designerTitleSize = <%% 29, 25, 23, 21, 4 %%>;
     designerTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-    designerTitleLineTop = <%% 17, 13, 12, 10, 17 %%>;
-    designerTitleLinePadding = <%% 16, 16, 16, 12, 16 %%>;
+    designerTitleLineTop = <%% 17, 13, 12, 10, 1 %%>;
+    designerTitleLinePadding = <%% 16, 16, 16, 12, 1 %%>;
 
-    designerBoxVisualPaddingBottom = <%% 6, 6, 6, 6, 6 %%>;
-    designerSubTitleBlockMarginBottom = <%% 10, 10, 10, 10, 10 %%>;
+    designerBoxVisualPaddingBottom = <%% 6, 6, 6, 6, 2 %%>;
+    designerSubTitleBlockMarginBottom = <%% 10, 10, 10, 10, 2 %%>;
 
     designerSubTitleSize = <%% 19, 19, 18, 17, 3 %%>;
     designerSubTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
     designerSubTitleMarginLeft = <%% 7, 7, 6, 6, 7 %%>;
 
-    designerEndTextSize = <%% 18, 18, 17, 16, 18 %%>;
+    designerEndTextSize = <%% 18, 18, 17, 16, 3.3 %%>;
     designerEndTextWeight = <%% 800, 800, 800, 800, 800 %%>;
     designerEndTextMarginLeft = <%% 9, 9, 9, 9, 9 %%>;
     designerEndTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
-    clickMeTop = <%% -92, -87, -78, -72, -9 %%>;
-    clickMeLeft = <%% 200, 180, 160, 150, 180 %%>;
-    clickMeWidth = <%% 124, 116, 100, 96, 124 %%>;
+    clickMeTop = <%% -92, -87, -78, -72, -1 %%>;
+    clickMeLeft = <%% 200, 180, 160, 150, 18 %%>;
+    clickMeWidth = <%% 124, 116, 100, 96, 12 %%>;
 
-    profileLineIndent = <%% 6, 5, 4, 5, 6 %%>;
+    profileLineIndent = <%% 6, 5, 4, 5, 1 %%>;
 
-    nameTitleSize = <%% 25, 24, 20, 21, 25 %%>;
+    nameTitleSize = <%% 25, 24, 20, 21, 3 %%>;
     nameTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     nameTitlePaddingBottom = <%% (isMac() ? 1 : -1), (isMac() ? 1 : -1), (isMac() ? 1 : -1), (isMac() ? 1 : -1), 1 %%>;
     nameTitleMarginBottom = <%% 15, 12, 10, 11, 9 %%>;
 
-    careerBoxWidth = <%% 40, 40, 32, 34, 40 %%>;
-    careerBoxHeight = <%% 18, 18, 16, 16, 18 %%>;
+    careerBoxWidth = <%% 40, 40, 32, 34, 4 %%>;
+    careerBoxHeight = <%% 18, 18, 16, 16, 2 %%>;
     careerBoxMarginBottom = <%% 0, 0, 0, 0, 0 %%>;
     careerTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
-    careerTextSize = <%% 11, 11, 10, 10, 11 %%>;
+    careerTextSize = <%% 11, 11, 10, 10, 2.5 %%>;
     careerTextWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     careerValueBoxHeight = <%% 23, 23, 19, 19, 23 %%>;
     careerValueBoxMarginBottom = <%% 4, 4, 2, 3, 4 %%>;
     careerValueTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
-    careerValueSize = <%% 12, 12, 11, 11, 12 %%>;
+    careerValueSize = <%% 12, 12, 11, 11, 2.5 %%>;
     careerValueWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-    styleBoxWidth = <%% 92, 92, 84, 84, 92 %%>;
+    styleBoxWidth = <%% 92, 92, 84, 84, 10 %%>;
     styleBoxHeight = <%% 18, 18, 16, 16, 18 %%>;
     styleBoxTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
-    styleBoxSize = <%% 11, 11, 10, 10, 11 %%>;
+    styleBoxSize = <%% 11, 11, 10, 10, 2.5 %%>;
     styleBoxWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     styleValueHeight = <%% 23, 23, 19, 19, 23 %%>;
     styleValuePaddingBottom = <%% 11, 11, 11, 11, 11 %%>;
     styleValueTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
-    styleValueSize = <%% 12, 12, 11, 11, 12 %%>;
+    styleValueSize = <%% 12, 12, 11, 11, 2.5 %%>;
     styleValueWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-    detailArrowWidth = <%% 24, 22, 20, 20, 24 %%>;
+    detailArrowWidth = <%% 24, 22, 20, 20, 2 %%>;
     detailArrowHeight = <%% 9, 9, 8, 8, 1 %%>;
-    detailArrowBottom = <%% 21, 20, 18, 18, 21 %%>;
-    detailArrowRight = <%% 20, 19, 18, 18, 20 %%>;
+    detailArrowBottom = <%% 21, 20, 18, 18, 2 %%>;
+    detailArrowRight = <%% 20, 19, 18, 18, 2 %%>;
 
     shadowForm = "0px 8px 20px -9px " + colorExtended.darkDarkShadow;
 

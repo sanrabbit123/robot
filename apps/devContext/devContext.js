@@ -7008,14 +7008,12 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "안순영",
-    //     designer: "박주령",
-    //     link: "https://drive.google.com/drive/folders/1fsMD58Om_EwvYDAIb61i8gB5gYBC_usg",
+    //     client: "신혜선",
+    //     designer: "정민재",
+    //     link: "https://drive.google.com/drive/folders/1edx0umD825DgjQRYppeZGZLfzkvlWCbu",
     //     pay: true
     //   },
     // ]);
-
-
 
     
     // raw video
