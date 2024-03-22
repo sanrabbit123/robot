@@ -377,7 +377,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
 
     subTitleSize = <%% 18, 18, 17, 16, 3.7 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 3 : 6), (isMac() ? 3 : 6), 0.6 %%>;
+    subTitleMarginTop = <%% (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 3 : 6), (isMac() ? 3 : 6), 0.5 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 194, 186, 168, 31 %%>;
@@ -387,7 +387,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
     buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
 
-    titleSize = <%% 57, 51, 48, 39, 8.2 %%>;
+    titleSize = <%% 57, 51, 48, 39, 8 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
@@ -700,7 +700,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
 
 DesignerExplanationJs.prototype.insertSecondBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -721,28 +721,44 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
     let betweenMargin;
     let totalHeight;
     let circleMarginTop;
+    let mobileStartEndText;
+    let mobileBasePaddingTop;
+    let mobileWhiteBase;
+    let num;
+    let startEndSize;
+    let startEndValueSize;
+    let whiteInnerPadding;
+    let whiteInnerVisualPaddingTop;
+    let mobileServicePaddingTop;
 
     mainHeight = <%% 440, 390, 370, 280, 136 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = <%% 23, 21, 19, 17, 4 %%>;
+    titleSize = <%% 23, 21, 19, 17, 4.6 %%>;
     descriptionSize = <%% 15, 14, 13, 12, 3.5 %%>;
-    descriptionMarginTop = <%% 9, 9, 7, 6, 9 %%>;
+    descriptionMarginTop = <%% 9, 9, 7, 6, 2.5 %%>;
 
-    checkCircleWidth = <%% 21, 21, 20, 18, 6 %%>;
+    checkCircleWidth = <%% 21, 21, 20, 18, 4.6 %%>;
 
     visualTop = <%% 24, 24, 22, 17, 2 %%>;
 
-    boxWidth = <%% 290, 270, 240, 200, 25 %%>;
+    boxWidth = <%% 290, 270, 240, 200, 56 %%>;
     boxHeight = <%% 227, 214, 192, 163, 40 %%>;
 
     betweenMargin = <%% 152, 90, 90, 60, 9 %%>;
 
     totalHeight = <%% 350, 340, 320, 254, 88 %%>;
 
-    circleMarginTop = <%% 16, 16, 14, 12, 1 %%>;
+    circleMarginTop = <%% 16, 16, 14, 12, 2.2 %%>;
+
+    mobileBasePaddingTop = 7.2;
+    startEndSize = 3.3;
+    startEndValueSize = 3.6;
+    whiteInnerPadding = 4.8;
+    whiteInnerVisualPaddingTop = 2.1;
+    mobileServicePaddingTop = 5;
 
     textContent = [
       {
@@ -774,6 +790,21 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
       },
     ]
 
+    mobileStartEndText = [
+      [
+        "예상 시작일",
+        dateToHangul(instance.project.process.contract.form.date.from, true),
+      ],
+      [
+        "예상 종료일",
+        dateToHangul(instance.project.process.contract.form.date.to, true),
+      ],
+    ]
+
+    if (mobile) {
+      textContent = textContent.find((o) => { return o.focus });
+    }
+
     secondBase = createNode({
       mother: baseTong,
       style: {
@@ -781,10 +812,12 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
         position: "relative",
         width: withOut(0, ea),
         flexDirection: "column",
-        height: String(totalHeight) + ea,
+        height: desktop ? String(totalHeight) + ea : "",
         justifyContent: "center",
         alignItems: "center",
-        flexDirection: "row",
+        flexDirection: desktop ? "row" : "column",
+        paddingTop: desktop ? "" : String(mobileBasePaddingTop) + ea,
+        paddingBottom: desktop ? "" : String(mobileBasePaddingTop) + ea,
       },
       child: {
         style: {
@@ -793,26 +826,32 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
           left: String(-1 * minusLeft) + ea,
           background: colorExtended.blueWhiteBack,
           width: withOut(-1 * (minusLeft * 2), ea),
-          height: withOut(1 * ((-1 * colorTop) + naviHeight), ea),
+          height: desktop ? withOut(1 * ((-1 * colorTop) + naviHeight), ea) : withOut(0, ea),
         }
       }
     });
 
-    createServiceBlock = (index) => {
+    createServiceBlock = (index, thisMother = secondBase) => {
+      let target;
+      if (typeof index === "number") {
+        target = textContent[index];
+      } else {
+        target = objectDeepCopy(index);
+      }
       serviceBase = createNode({
-        mother: secondBase,
+        mother: thisMother,
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(boxWidth) + ea,
+          width: desktop ? String(boxWidth) + ea : withOut(0, ea),
           height: String(boxHeight) + ea,
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           top: String(visualTop) + ea,
-          opacity: textContent[index].focus ? String(1) : String(0.4),
-          marginLeft: textContent[index].margin ? String(betweenMargin) + ea : "",
-          marginRight: textContent[index].margin ? String(betweenMargin) + ea : "",
+          opacity: target.focus ? String(1) : String(0.4),
+          marginLeft: (desktop && target.margin) ? String(betweenMargin) + ea : "",
+          marginRight: (desktop && target.margin) ? String(betweenMargin) + ea : "",
         }
       });
       createNode({
@@ -824,12 +863,12 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
           position: "absolute",
           width: String(boxWidth) + ea,
           top: String(0),
-          left: String(0),
+          left: desktop ? String(0) : withOut(50, boxWidth / 2, ea),
         }
       });
       createNode({
         mother: serviceBase,
-        text: textContent[index].title,
+        text: target.title,
         style: {
           display: "flex",
           position: "relative",
@@ -837,11 +876,12 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
           fontSize: String(titleSize) + ea,
           fontWeight: String(700),
           color: colorExtended.black,
+          marginTop: desktop ? "" : String(5.6) + ea,
         }
       });
       createNode({
         mother: serviceBase,
-        text: textContent[index].description[0],
+        text: target.description[0],
         style: {
           display: "flex",
           position: "relative",
@@ -859,7 +899,7 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
       });
       createNode({
         mother: serviceBase,
-        text: textContent[index].description[1],
+        text: target.description[1],
         style: {
           display: "flex",
           position: "relative",
@@ -879,9 +919,10 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
           display: "flex",
           width: String(checkCircleWidth) + ea,
           height: String(checkCircleWidth) + ea,
-          background: textContent[index].focus ? colorExtended.focusBlue : colorExtended.white,
+          background: target.focus ? colorExtended.focusBlue : colorExtended.white,
           borderRadius: String(checkCircleWidth) + ea,
           marginTop: String(circleMarginTop) + ea,
+          border: "1px solid " + colorExtended.focusBlue,
         },
         child: {
           mode: "svg",
@@ -895,8 +936,109 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
       });
     }
 
-    for (let i = 0; i < textContent.length; i++) {
-      createServiceBlock(i);
+    if (desktop) {
+      for (let i = 0; i < textContent.length; i++) {
+        createServiceBlock(i);
+      }
+    } else {
+
+      mobileWhiteBase = createNode({
+        mother: secondBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          borderRadius: String(8) + "px",
+          background: colorExtended.white,
+          boxShadow: "0px 3px 13px -9px " + colorExtended.blueDim,
+          paddingTop: String(whiteInnerVisualPaddingTop) + ea,
+          paddingBottom: String(whiteInnerVisualPaddingTop) + ea,
+          flexDirection: "column",
+          marginBottom: String(2) + ea,
+        }
+      });
+
+      num = 0;
+      for (let [ black, white ] of mobileStartEndText) {
+        createNode({
+          mother: mobileWhiteBase,
+          style: {
+            display: "flex",
+            position: "relative",
+            marginLeft: String(whiteInnerPadding) + ea,
+            width: withOut(whiteInnerPadding * 2, ea),
+            height: String(12) + ea,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "start",
+            borderBottom: num === 0 ? "1px dashed " + colorExtended.black : "",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(21.6) + ea,
+                height: String(7.2) + ea,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: String(8) + "px",
+                background: colorExtended.black,
+              },
+              child: {
+                text: black,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontWeight: String(800),
+                  fontSize: String(startEndSize) + ea,
+                  color: colorExtended.white,
+                  top: String(-0.2) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                right: String(0),
+                top: String(0),
+                width: String(40) + ea,
+                height: withOut(0, ea),
+                alignItems: "center",
+                justifyContent: "end",
+              },
+              child: {
+                text: white,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontWeight: String(500),
+                  fontSize: String(startEndValueSize) + ea,
+                  color: colorExtended.black,
+                  top: String(-0.4) + ea,
+                }
+              }
+            },
+          ]
+        });
+        num++;
+      }
+
+      createServiceBlock(textContent, createNode({
+        mother: secondBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          borderRadius: String(8) + "px",
+          background: colorExtended.white,
+          boxShadow: "0px 3px 13px -9px " + colorExtended.blueDim,
+          paddingTop: String(mobileServicePaddingTop) + ea,
+          paddingBottom: String(mobileServicePaddingTop) + ea,
+          flexDirection: "column",
+        }
+      }));
     }
 
   } catch (e) {
@@ -962,28 +1104,33 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
-    basePaddingTop = <%% 150, 150, 140, 110, 21 %%>;
-    basePaddingBottom = <%% 160, 160, 140, 110, 24 %%>;
+    basePaddingTop = <%% 150, 150, 140, 110, 19 %%>;
+    basePaddingBottom = <%% 160, 160, 140, 110, 20 %%>;
 
     checkCircleWidth = <%% 13, 13, 10, 9, 1 %%>;
 
-    cardLength = <%% 5, 4, 4, 3, 2 %%>;
-
-    cardHeight = <%% 445, 411, 355, 375, 41 %%>;
-    profileHeight = <%% 250, 231, 199, 211, 25 %%>;
+    cardLength = <%% 5, 4, 4, 3, 1 %%>;
     cardBetween = <%% 8, 8, 6, 6, 1 %%>;
     buttonCardWidth = <%% 50, 48, 40, 40, 4 %%>;
-    cardWidth = "calc(" + withOut((cardBetween * cardLength) + buttonCardWidth, ea) + " / " + String(cardLength) + ")";
+    if (desktop) {
+      profileHeight = <%% 250, 231, 199, 211, 25 %%>;
+      cardHeight = <%% 445, 411, 355, 375, 41 %%>;
+      cardWidth = "calc(" + withOut((cardBetween * cardLength) + buttonCardWidth, ea) + " / " + String(cardLength) + ")";
+    } else {
+      profileHeight = 52;
+      cardHeight = 86;
+      cardWidth = String(56) + ea;
+    }
 
     buttonArrowWdith = <%% 14, 14, 12, 10, 1 %%>;
 
-    designerCardGroupBetween = <%% 70, 70, 64, 56, 7 %%>;
-    designerCardGroupBetweenFirst = <%% 50, 50, 42, 36, 5 %%>;
+    designerCardGroupBetween = <%% 70, 70, 64, 56, 20 %%>;
+    designerCardGroupBetweenFirst = <%% 50, 50, 42, 36, 16 %%>;
 
-    designerTitleSize = <%% 29, 25, 23, 21, 4 %%>;
+    designerTitleSize = <%% 29, 25, 23, 21, 4.6 %%>;
     designerTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-    designerTitleLineTop = <%% 17, 13, 12, 10, 1 %%>;
-    designerTitleLinePadding = <%% 16, 16, 16, 12, 1 %%>;
+    designerTitleLineTop = <%% 17, 13, 12, 10, 2.4 %%>;
+    designerTitleLinePadding = <%% 16, 16, 16, 12, 3 %%>;
 
     designerBoxVisualPaddingBottom = <%% 6, 6, 6, 6, 2 %%>;
     designerSubTitleBlockMarginBottom = <%% 10, 10, 10, 10, 2 %%>;
@@ -1003,10 +1150,10 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     profileLineIndent = <%% 6, 5, 4, 5, 1 %%>;
 
-    nameTitleSize = <%% 25, 24, 20, 21, 3 %%>;
+    nameTitleSize = <%% 25, 24, 20, 21, 5 %%>;
     nameTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     nameTitlePaddingBottom = <%% (isMac() ? 1 : -1), (isMac() ? 1 : -1), (isMac() ? 1 : -1), (isMac() ? 1 : -1), 1 %%>;
-    nameTitleMarginBottom = <%% 15, 12, 10, 11, 9 %%>;
+    nameTitleMarginBottom = <%% 15, 12, 10, 11, 2 %%>;
 
     careerBoxWidth = <%% 40, 40, 32, 34, 4 %%>;
     careerBoxHeight = <%% 18, 18, 16, 16, 2 %%>;
@@ -1015,7 +1162,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     careerTextSize = <%% 11, 11, 10, 10, 2.5 %%>;
     careerTextWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    careerValueBoxHeight = <%% 23, 23, 19, 19, 23 %%>;
+    careerValueBoxHeight = <%% 23, 23, 19, 19, 4 %%>;
     careerValueBoxMarginBottom = <%% 4, 4, 2, 3, 4 %%>;
     careerValueTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     careerValueSize = <%% 12, 12, 11, 11, 2.5 %%>;
@@ -1027,8 +1174,8 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     styleBoxSize = <%% 11, 11, 10, 10, 2.5 %%>;
     styleBoxWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    styleValueHeight = <%% 23, 23, 19, 19, 23 %%>;
-    styleValuePaddingBottom = <%% 11, 11, 11, 11, 11 %%>;
+    styleValueHeight = <%% 23, 23, 19, 19, 4 %%>;
+    styleValuePaddingBottom = <%% 11, 11, 11, 11, 2 %%>;
     styleValueTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     styleValueSize = <%% 12, 12, 11, 11, 2.5 %%>;
     styleValueWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -1345,7 +1492,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         style: {
           display: "flex",
           position: "relative",
-          justifyContent: "start",
+          justifyContent: desktop ? "start" : "center",
           alignItems: "center",
           width: withOut(0, ea),
           flexDirection: "row",
@@ -1354,7 +1501,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
       });
 
       // click me
-      if (i === 0) {
+      if (desktop && i === 0) {
         createNode({
           mother: thisCardBase,
           mode: "img",
@@ -1369,7 +1516,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
             width: String(clickMeWidth) + ea,
             height: "auto",
           }
-        })
+        });
       }
 
       // designer profile
@@ -1388,11 +1535,12 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
           height: String(cardHeight) + ea,
           borderRadius: String(8) + "px",
           background: colorExtended.white,
-          marginRight: String(cardBetween) + ea,
+          marginRight: desktop ? String(cardBetween) + ea : "",
           boxShadow: shadowForm,
           flexDirection: "column",
           overflow: "hidden",
           cursor: "pointer",
+          zIndex: desktop ? "" : String(1),
         },
         children: [
           {
@@ -1564,50 +1712,11 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       });
 
-      // ----------------------------------------------------------------------------------------------------------------
+      if (desktop) {
 
-      // photo 0
-      createNode({
-        mother: thisCardBase,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: cardWidth,
-          height: String(cardHeight) + ea,
-          borderRadius: String(8) + "px",
-          background: colorExtended.white,
-          marginRight: String(cardBetween) + ea,
-          boxShadow: shadowForm,
-          backgroundImage: typeof representative[0] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[0]) + "')" : "",
-          backgroundSize: "auto 100%",
-          backgroundPosition: "50% 50%",
-        }
-      });
+        // ----------------------------------------------------------------------------------------------------------------
 
-      // ----------------------------------------------------------------------------------------------------------------
-
-      // photo 1
-      createNode({
-        mother: thisCardBase,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: cardWidth,
-          height: String(cardHeight) + ea,
-          borderRadius: String(8) + "px",
-          background: colorExtended.white,
-          marginRight: String(cardBetween) + ea,
-          boxShadow: shadowForm,
-          backgroundImage: typeof representative[1] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[1]) + "')" : "",
-          backgroundSize: "auto 100%",
-          backgroundPosition: "50% 50%",
-        }
-      });
-
-      // ----------------------------------------------------------------------------------------------------------------
-
-      // photo 2
-      if (big) {
+        // photo 0
         createNode({
           mother: thisCardBase,
           style: {
@@ -1619,7 +1728,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
             background: colorExtended.white,
             marginRight: String(cardBetween) + ea,
             boxShadow: shadowForm,
-            backgroundImage: typeof representative[2] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[2]) + "')" : "",
+            backgroundImage: typeof representative[0] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[0]) + "')" : "",
             backgroundSize: "auto 100%",
             backgroundPosition: "50% 50%",
           }
@@ -1627,8 +1736,28 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
         // ----------------------------------------------------------------------------------------------------------------
 
-        // photo 3
-        if (media[0]) {
+        // photo 1
+        createNode({
+          mother: thisCardBase,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: cardWidth,
+            height: String(cardHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorExtended.white,
+            marginRight: String(cardBetween) + ea,
+            boxShadow: shadowForm,
+            backgroundImage: typeof representative[1] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[1]) + "')" : "",
+            backgroundSize: "auto 100%",
+            backgroundPosition: "50% 50%",
+          }
+        });
+
+        // ----------------------------------------------------------------------------------------------------------------
+
+        // photo 2
+        if (big) {
           createNode({
             mother: thisCardBase,
             style: {
@@ -1640,49 +1769,164 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
               background: colorExtended.white,
               marginRight: String(cardBetween) + ea,
               boxShadow: shadowForm,
-              backgroundImage: typeof representative[3] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[3]) + "')" : "",
+              backgroundImage: typeof representative[2] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[2]) + "')" : "",
               backgroundSize: "auto 100%",
               backgroundPosition: "50% 50%",
             }
           });
+
+          // ----------------------------------------------------------------------------------------------------------------
+
+          // photo 3
+          if (media[0]) {
+            createNode({
+              mother: thisCardBase,
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: cardWidth,
+                height: String(cardHeight) + ea,
+                borderRadius: String(8) + "px",
+                background: colorExtended.white,
+                marginRight: String(cardBetween) + ea,
+                boxShadow: shadowForm,
+                backgroundImage: typeof representative[3] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[3]) + "')" : "",
+                backgroundSize: "auto 100%",
+                backgroundPosition: "50% 50%",
+              }
+            });
+          }
+
         }
+
+        // ----------------------------------------------------------------------------------------------------------------
+
+        // button arrow
+        createNode({
+          mother: thisCardBase,
+          event: {
+            click: instance.insertWhiteCardEvent(designer.desid, abc[i]),
+          },
+          attribute: {
+            desid: designer.desid,
+          },
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(buttonCardWidth) + ea,
+            height: String(cardHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorExtended.blueDarkButton,
+            boxShadow: shadowForm,
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          },
+          child: {
+            mode: "svg",
+            source: svgMaker.buttonLineArrow(colorExtended.white),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(buttonArrowWdith) + ea,
+              opacity: String(0.85),
+            }
+          }
+        });
+
+      } else {
+
+        createNode({
+          mother: thisCardBase,
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            width: cardWidth,
+            height: String(cardHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorExtended.blueDim,
+            boxShadow: shadowForm,
+            flexDirection: "column",
+            overflow: "hidden",
+            cursor: "pointer",
+            top: String(0),
+            left: String(0),
+            transformOrigin: "0% 50%",
+            transform: "scale(0.9)",
+            backgroundImage: typeof representative[0] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[0]) + "')" : "",
+            backgroundSize: "auto 100%",
+            backgroundPosition: "50% 50%",
+            opacity: String(0.9),
+          }
+        });
+        createNode({
+          mother: thisCardBase,
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            width: cardWidth,
+            height: String(cardHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorExtended.black,
+            boxShadow: shadowForm,
+            flexDirection: "column",
+            overflow: "hidden",
+            cursor: "pointer",
+            top: String(0),
+            left: String(0),
+            transformOrigin: "0% 50%",
+            transform: "scale(0.9)",
+            opacity: String(0.3),
+            "mix-blend-mode": "multiply",
+          }
+        });
+
+        createNode({
+          mother: thisCardBase,
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            width: cardWidth,
+            height: String(cardHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorExtended.blueDim,
+            boxShadow: shadowForm,
+            flexDirection: "column",
+            overflow: "hidden",
+            cursor: "pointer",
+            top: String(0),
+            right: String(0),
+            transformOrigin: "100% 50%",
+            transform: "scale(0.9)",
+            backgroundImage: typeof representative[1] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[1]) + "')" : "",
+            backgroundSize: "auto 100%",
+            backgroundPosition: "50% 50%",
+            opacity: String(0.9),
+          }
+        });
+        createNode({
+          mother: thisCardBase,
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            width: cardWidth,
+            height: String(cardHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorExtended.black,
+            boxShadow: shadowForm,
+            flexDirection: "column",
+            overflow: "hidden",
+            cursor: "pointer",
+            top: String(0),
+            right: String(0),
+            transformOrigin: "100% 50%",
+            transform: "scale(0.9)",
+            opacity: String(0.3),
+            "mix-blend-mode": "multiply",
+          }
+        });
 
       }
-
-      // ----------------------------------------------------------------------------------------------------------------
-
-      // button arrow
-      createNode({
-        mother: thisCardBase,
-        event: {
-          click: instance.insertWhiteCardEvent(designer.desid, abc[i]),
-        },
-        attribute: {
-          desid: designer.desid,
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: String(buttonCardWidth) + ea,
-          height: String(cardHeight) + ea,
-          borderRadius: String(8) + "px",
-          background: colorExtended.blueDarkButton,
-          boxShadow: shadowForm,
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-        },
-        child: {
-          mode: "svg",
-          source: svgMaker.buttonLineArrow(colorExtended.white),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(buttonArrowWdith) + ea,
-            opacity: String(0.85),
-          }
-        }
-      });
 
     }
 
@@ -1818,8 +2062,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
-    basePaddingTop = <%% 150, 150, 140, 110, 21 %%>;
-    basePaddingBottom = <%% 160, 160, 140, 110, 24 %%>;
+    basePaddingTop = <%% 150, 150, 140, 110, 19 %%>;
+    basePaddingBottom = <%% 160, 160, 140, 110, 20 %%>;
 
     checkCircleWidth = <%% 15, 15, 12, 15, 15 %%>;
 
@@ -4722,7 +4966,7 @@ DesignerExplanationJs.prototype.insertFourthBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
-    basePaddingTop = <%% 160, 160, 140, 110, 21 %%>;
+    basePaddingTop = <%% 160, 160, 140, 110, 19 %%>;
     basePaddingBottom = <%% 200, 200, 170, 150, 24 %%>;
 
     checkCircleWidth = 13;
