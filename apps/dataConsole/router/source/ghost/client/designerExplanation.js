@@ -5593,7 +5593,7 @@ DesignerExplanationJs.prototype.styleTextParsing = function (text) {
 
 DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, designerCareer, isMac, isIphone, svgMaker, autoComma, ajaxJson, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, swipePatch } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, designerCareer, isMac, isIphone, svgMaker, autoComma, ajaxJson, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, swipePatch, tempScrollBan, tempScrollRelease } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -5756,63 +5756,63 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let mobileWhiteTopMargin;
       let whiteCloseEvent;
 
-      whiteMargin = <%% 30, 30, 30, 30, 30 %%>;
-      innerMargin = <%% 52, 48, 40, 24, 52 %%>;
+      whiteMargin = <%% 30, 30, 30, 30, 3 %%>;
+      innerMargin = <%% 52, 48, 40, 24, 5 %%>;
 
       titleHeight = <%% 41, 39, 37, 28, 8 %%>;  
-      titleSize = <%% 40, 40, 40, 40, 40 %%>;
+      titleSize = <%% 40, 40, 40, 40, 4 %%>;
       titleWeight = <%% 700, 700, 700, 700, 700 %%>;
       titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
-      titleTop = <%% -6, -6, -6, -6, -6 %%>;
+      titleTop = <%% -6, -6, -6, -6, -1 %%>;
 
-      profileHeight = <%% 200, 192, 180, 150, 200 %%>;
-      profileLineWidth = <%% 10, 10, 8, 8, 10 %%>;
-      profileMargin = <%% 30, 24, 20, 16, 30 %%>;
+      profileHeight = <%% 200, 192, 180, 150, 20 %%>;
+      profileLineWidth = <%% 10, 10, 8, 8, 1 %%>;
+      profileMargin = <%% 30, 24, 20, 16, 3 %%>;
 
       profileDescriptionTongWidth = <%% 700, 560, 450, 320, 70 %%>;
 
       styleButtonMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
 
-      nameTitlesize = <%% 32, 30, 28, 23, 32 %%>;
-      nameMargin = <%% 12, 10, 9, 7, 12 %%>;
+      nameTitlesize = <%% 32, 30, 28, 23, 4 %%>;
+      nameMargin = <%% 12, 10, 9, 7, 1 %%>;
 
-      designerNameTongHeight = <%% 50, 50, 50, 50, 50 %%>;
+      designerNameTongHeight = <%% 50, 50, 50, 50, 10 %%>;
       nameTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-      designerWordsSize = <%% 14, 14, 14, 12, 14 %%>;
+      designerWordsSize = <%% 14, 14, 14, 12, 2.5 %%>;
       designerWordsWeight = <%% 400, 400, 400, 400, 400 %%>;
-      designerWordsMarginLeft = <%% 10, 10, 10, 8, 10 %%>;
-      designerWordsPaddingBottom = <%% 5, 5, 4, (isMac() ? 4 : 3), 5 %%>;
+      designerWordsMarginLeft = <%% 10, 10, 10, 8, 1 %%>;
+      designerWordsPaddingBottom = <%% 5, 5, 4, (isMac() ? 4 : 3), 1 %%>;
 
       introducetionSize = <%% 16, 15, 13, 12, 3 %%>;
       introducetionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
       introducetionWeight = <%% 400, 400, 400, 400, 400 %%>;
 
       styleBlockHeight = <%% 21, 21, 21, 18, 21 %%>;
-      styleBlockPadding = <%% 8, 8, 8, 7, 8 %%>;
-      styleBlockMarginLeftLong = <%% 14, 14, 14, 9, 14 %%>;
-      styleBlockMarginLeftShort = <%% 3, 3, 3, 2, 3 %%>;
+      styleBlockPadding = <%% 8, 8, 8, 7, 1 %%>;
+      styleBlockMarginLeftLong = <%% 14, 14, 14, 9, 1 %%>;
+      styleBlockMarginLeftShort = <%% 3, 3, 3, 2, 1 %%>;
       styleBlockTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -1 %%>;
-      styleBlockSize = <%% 11, 11, 11, 10, 11 %%>;
+      styleBlockSize = <%% 11, 11, 11, 10, 3 %%>;
       styleBlockWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-      designerCharSize = <%% 27, 24, 21, 17, 27 %%>;
+      designerCharSize = <%% 27, 24, 21, 17, 3 %%>;
       designerCharWeight = <%% 700, 700, 700, 700, 700 %%>;
-      designerCharTop = <%% -5, -4, -3, -1, -5 %%>;
-      designerCharMarginBottom = <%% 22, 35, 30, 18, 24 %%>;
+      designerCharTop = <%% -5, -4, -3, -1, -1 %%>;
+      designerCharMarginBottom = <%% 22, 35, 30, 18, 2 %%>;
 
       blockTitleBlockHeight = <%% 30, 24, 20, 18, 30 %%>;
       blockTitleSize = <%% 21, 20, 17, 16, 21 %%>;
       blockInnerPadding = <%% 52, 48, 40, 24, 52 %%>;
 
-      paperWorksHeight = <%% 260, 200, 200, 170, 260 %%>;
-      paperBetween = <%% 6, 5, 4, 3, 6 %%>;
-      arrowLeftMargin = <%% 30, 30, 25, 16, 30 %%>;
+      paperWorksHeight = <%% 260, 200, 200, 170, 26 %%>;
+      paperBetween = <%% 6, 5, 4, 3, 1 %%>;
+      arrowLeftMargin = <%% 30, 30, 25, 16, 3 %%>;
 
       blockTitleMarginBottom = <%% 11, 11, 11, 11, 11 %%>;
 
       whiteStandardWidth = <%% 1400, 1050, 900, 720, 100 %%>;
 
-      pictureBaseHeight = <%% 880, 650, 570, 460, 650 %%>;
+      pictureBaseHeight = <%% 880, 650, 570, 460, 65 %%>;
       factorHeight = <%% 42, 40, 36, 33, 6 %%>;
 
       factorTextTop = <%% (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), -0.5 %%>;
@@ -5827,54 +5827,54 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       titleTextIndent = <%% 21, 18, 15, 11, 21 %%>;
 
       factorLightWeight = <%% 500, 500, 500, 500, 500 %%>;
-      tendencyMotherHeight = <%% 21, 21, 21, 18, 21 %%>;
-      tendencyNameAreaWidth = <%% 64, 64, 64, 64, 64 %%>;
-      tendencyBarHeight = <%% 14, 14, 14, 12, 14 %%>;
+      tendencyMotherHeight = <%% 21, 21, 21, 18, 8 %%>;
+      tendencyNameAreaWidth = <%% 64, 64, 64, 64, 12 %%>;
+      tendencyBarHeight = <%% 14, 14, 14, 12, 1 %%>;
 
       tendencySize = <%% 13, 13, 12, 11, 13 %%>;
       tendencyTextTop = <%% (isMac() ? -1 : 1.5), (isMac() ? -1 : 1.5), (isMac() ? -1 : 1.5), (isMac() ? -1 : 1), -1 %%>;
       tendencyWeight = <%% 600, 600, 600, 600, 600 %%>;
       tendencyBoxPaddingTop = <%% 16, 16, 14, 8, 16 %%>;
 
-      largePaddingBottom = <%% 58, 54, 45, 34, 58 %%>;
+      largePaddingBottom = <%% 58, 54, 45, 34, 12 %%>;
 
-      dashLineIndent = <%% 8, 8, 8, 8, 8 %%>;
+      dashLineIndent = <%% 8, 8, 8, 8, 1 %%>;
 
-      unitBlockHeight = <%% 50, 48, 44, 36, 50 %%>;
-      unitBlockIndent = <%% 18, 16, 14, 14, 18 %%>;
-      unitBlockHeightSmall = <%% 46, 42, 38, 34, 46 %%>;
-      unitBlockHeightBig = <%% 44, 40, 36, 30, 44 %%>;
+      unitBlockHeight = <%% 50, 48, 44, 36, 5 %%>;
+      unitBlockIndent = <%% 18, 16, 14, 14, 1 %%>;
+      unitBlockHeightSmall = <%% 46, 42, 38, 34, 4 %%>;
+      unitBlockHeightBig = <%% 44, 40, 36, 30, 4 %%>;
 
-      moneyTitleSize = <%% 16, 15, 14, 13, 16 %%>;
-      moneyVatSize = <%% 11, 11, 10, 10, 11 %%>;
-      moneyValueSize = <%% 18, 16, 15, 14, 18 %%>;
+      moneyTitleSize = <%% 16, 15, 14, 13, 3 %%>;
+      moneyVatSize = <%% 11, 11, 10, 10, 3 %%>;
+      moneyValueSize = <%% 18, 16, 15, 14, 3 %%>;
 
       moneyTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
       moneyVatWeight = <%% 500, 500, 500, 500, 500 %%>;
       moneyValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-      moneyTitleTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1 %%>;
-      moneyVatTextTop = <%% (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), 1 %%>;
-      moneyValueTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1 %%>;
-      moneyVatMarginRight = <%% 6, 6, 6, 6, 6 %%>;
+      moneyTitleTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+      moneyVatTextTop = <%% (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), 0.1 %%>;
+      moneyValueTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+      moneyVatMarginRight = <%% 6, 6, 6, 6, 1 %%>;
 
-      moneyCircleWidth = <%% 6, 5, 4, 4, 6 %%>;
-      moneyCircleMargin = <%% 6, 5, 4, 3, 6 %%>;
+      moneyCircleWidth = <%% 6, 5, 4, 4, 1 %%>;
+      moneyCircleMargin = <%% 6, 5, 4, 3, 1 %%>;
 
       moneyBoxPaddingTopVisual = <%% 3, 3, 3, 3, 3 %%>;
 
       finalBlockBetween = <%% 10, 8, 6, 4, 1 %%>;
       finalBlockMarginLeft = <%% 430, 430, 430, 430, 430 %%>;
 
-      buttonArrowWdith = <%% 16, 16, 16, 16, 16 %%>;
-      buttonArrowHeight = <%% 30, 30, 30, 30, 30 %%>;
+      buttonArrowWdith = <%% 16, 16, 16, 16, 1 %%>;
+      buttonArrowHeight = <%% 30, 30, 30, 30, 3 %%>;
 
-      paperMove = <%% 240, 240, 240, 240, 240 %%>;
+      paperMove = <%% 240, 240, 240, 240, 24 %%>;
 
       deactiveOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
-      onoffLineMarkWidth = <%% 110, 110, 90, 60, 110 %%>;
-      vatPadding = <%% 16, 16, 16, 8, 16 %%>;
+      onoffLineMarkWidth = <%% 110, 110, 90, 60, 11 %%>;
+      vatPadding = <%% 16, 16, 16, 8, 1 %%>;
 
       designerKeywordsLength = <%% 4, 4, 4, 4, 2 %%>;
       designerKeywordsPaddingLeft = <%% 6, 6, 6, 6, 6 %%>;
@@ -5889,7 +5889,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       paperWorkArrowWidth = <%% 12, 12, 10, 8, 12 %%>;
       paperWorkArrowHeight = <%% 24, 24, 20, 16, 24 %%>;
 
-      portfolioSize = <%% 16, 15, 14, 12, 16 %%>;
+      portfolioSize = <%% 16, 15, 14, 12, 3 %%>;
       portfolioWeight = <%% 700, 700, 700, 700, 700 %%>;
       portfolioTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.4 %%>;
 
@@ -5903,14 +5903,14 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       designerSelectionMotherPadding = <%% 44, 42, 32, 24, 44 %%>;
 
       designerSelectionMarginLeft = <%% 1150, 810, 690, 570, 1150 %%>;
-      designerSelectionSize = <%% 18, 17, 15, 13, 18 %%>;
+      designerSelectionSize = <%% 18, 17, 15, 13, 3 %%>;
       designerSelectionWeight = <%% 800, 800, 800, 800, 800 %%>;
 
       onoffKindTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1 %%>;
-      onoffKindSize = <%% 18, 16, 14, 11, 18 %%>;
+      onoffKindSize = <%% 18, 16, 14, 11, 3 %%>;
       onoffKindWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-      finalMoneyOriginalSize = <%% 20, 18, 16, 13, 20 %%>;
+      finalMoneyOriginalSize = <%% 20, 18, 16, 13, 3 %%>;
       finalMoneyOriginalWeight = <%% 300, 300, 300, 300, 300 %%>;
       finalMoneyOriginalMarginRight = <%% 8, 8, 8, 6, 8 %%>;
       finalMoneyAmountSize = <%% 21, 19, 17, 14, 21 %%>;
@@ -5954,6 +5954,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       }
       sourceArr.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
       sourceArr = sourceArr.slice(0, 20);
+
+      cancelBack = {};
 
       insertWhiteBlock = (infoMiddleMother, values, last = false) => {
         let infoMiddleBase, num;
@@ -6330,6 +6332,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             const [ cancel, whiteBase ] = [ ...document.querySelectorAll('.' + whitePopupClassName) ];
             cancel.style.animation = "justfadeoutsmall 0.5s ease forwards";
             whiteBase.style.animation = "fadedownentire 0.5s ease forwards";
+            tempScrollRelease(cancelBack);
             setQueue(() => {
               removeByClass(whitePopupClassName);
             }, 500);
@@ -6404,7 +6407,16 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       }).firstChild;
 
       if (mobile) {
-        swipePatch("down", whiteCloseEvent(), whiteBase.parentElement, "swipeStack_whiteBlock_", baseTong);  
+        swipePatch("down", whiteCloseEvent(), whiteBase.parentElement, "swipeStack_whiteBlock_", baseTong, () => {
+          return whiteBase.firstChild.scrollTop === 0;
+        });
+        tempScrollBan(cancelBack);
+        
+        whiteBase.addEventListener("wheel", function (e) {
+          console.log(whiteBase.firstChild.scrollTop);
+          console.log(whiteBase.firstChild.firstChild.getBoundingClientRect().top);
+          console.log(whiteBase.firstChild.firstChild.getBoundingClientRect().height);
+        });
       }
 
       scrollTong = createNode({

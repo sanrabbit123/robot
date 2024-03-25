@@ -5267,7 +5267,7 @@ GeneralJs.findByAttribute = function (dom, attributeName, attributeValue) {
   }
 }
 
-GeneralJs.swipePatch = function (direction, callback = function (e) {}, dom = document, stackConst = "swipeStack_", scrollBanTarget = null) {
+GeneralJs.swipePatch = function (direction, callback = function (e) {}, dom = document, stackConst = "swipeStack_", scrollBanTarget = null, conditionFunc = () => { return true }) {
   const xDown = "xDown";
   const yDown = "yDown";
   const xDiff = "xDiff";
@@ -5305,7 +5305,7 @@ GeneralJs.swipePatch = function (direction, callback = function (e) {}, dom = do
       if (typeof direction[i] !== "function") {
         throw new Error("must be function input");
       }
-      GeneralJs.stacks[stackConst + i] = direction[i];
+      GeneralJs.stacks[stackConst + i] = direction[i].bind(dom);
     }
   } else {
     throw new Error("invaild input");
@@ -5329,99 +5329,129 @@ GeneralJs.swipePatch = function (direction, callback = function (e) {}, dom = do
   GeneralJs.stacks[stackConst + startElement] = null;
 
   GeneralJs.stacks[stackConst + handleTouchStart] = function (e) {
-    GeneralJs.stacks[stackConst + startElement] = e.target;
-    GeneralJs.stacks[stackConst + timeDown] = Date.now();
-    GeneralJs.stacks[stackConst + xDown] = e.touches[0].clientX;
-    GeneralJs.stacks[stackConst + yDown] = e.touches[0].clientY;
-    GeneralJs.stacks[stackConst + xDiff] = 0;
-    GeneralJs.stacks[stackConst + yDiff] = 0;
-
-    if (scrollBanTarget !== null) {
-      scrollBanTarget.addEventListener("DOMMouseScroll", GeneralJs.stacks.__temporaryPreventDefaultEvent);
-      scrollBanTarget.addEventListener("wheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
-      scrollBanTarget.addEventListener("mousewheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
-      scrollBanTarget.addEventListener("touchmove", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+    if (conditionFunc()) {
+      GeneralJs.stacks[stackConst + startElement] = e.target;
+      GeneralJs.stacks[stackConst + timeDown] = Date.now();
+      GeneralJs.stacks[stackConst + xDown] = e.touches[0].clientX;
+      GeneralJs.stacks[stackConst + yDown] = e.touches[0].clientY;
+      GeneralJs.stacks[stackConst + xDiff] = 0;
+      GeneralJs.stacks[stackConst + yDiff] = 0;
+  
+      if (scrollBanTarget !== null) {
+        scrollBanTarget.addEventListener("DOMMouseScroll", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+        scrollBanTarget.addEventListener("wheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+        scrollBanTarget.addEventListener("mousewheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+        scrollBanTarget.addEventListener("touchmove", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+      }
+      dom.addEventListener("DOMMouseScroll", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+      dom.addEventListener("wheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+      dom.addEventListener("mousewheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+      dom.addEventListener("touchmove", GeneralJs.stacks.__temporaryPreventDefaultEvent);
     }
-    dom.addEventListener("DOMMouseScroll", GeneralJs.stacks.__temporaryPreventDefaultEvent);
-    dom.addEventListener("wheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
-    dom.addEventListener("mousewheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
-    dom.addEventListener("touchmove", GeneralJs.stacks.__temporaryPreventDefaultEvent);
   }
   GeneralJs.stacks[stackConst + handleTouchMove] = function (e) {
-    if (!GeneralJs.stacks[stackConst + xDown] || !GeneralJs.stacks[stackConst + yDown]) {
-      return;
+    if (conditionFunc()) {
+      if (!GeneralJs.stacks[stackConst + xDown] || !GeneralJs.stacks[stackConst + yDown]) {
+        return;
+      }
+      GeneralJs.stacks[stackConst + xDiff] = GeneralJs.stacks[stackConst + xDown] - e.touches[0].clientX;
+      GeneralJs.stacks[stackConst + yDiff] = GeneralJs.stacks[stackConst + yDown] - e.touches[0].clientY;
     }
-    GeneralJs.stacks[stackConst + xDiff] = GeneralJs.stacks[stackConst + xDown] - e.touches[0].clientX;
-    GeneralJs.stacks[stackConst + yDiff] = GeneralJs.stacks[stackConst + yDown] - e.touches[0].clientY;
   }
   GeneralJs.stacks[stackConst + handleTouchEnd] = function (e) {
-
-    if (scrollBanTarget !== null) {
-      scrollBanTarget.removeEventListener("DOMMouseScroll", GeneralJs.stacks.__temporaryPreventDefaultEvent);
-      scrollBanTarget.removeEventListener("wheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
-      scrollBanTarget.removeEventListener("mousewheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
-      scrollBanTarget.removeEventListener("touchmove", GeneralJs.stacks.__temporaryPreventDefaultEvent);
-    }
-    dom.removeEventListener("DOMMouseScroll", GeneralJs.stacks.__temporaryPreventDefaultEvent);
-    dom.removeEventListener("wheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
-    dom.removeEventListener("mousewheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
-    dom.removeEventListener("touchmove", GeneralJs.stacks.__temporaryPreventDefaultEvent);
-
-    if (GeneralJs.stacks[stackConst + startElement] !== e.target) {
-      return;
-    }
-    const thresholdKey = "data-swipe-threshold";
-    const timeoutKey = "data-swipe-timeout";
-    const thresholdValue = 20;
-    const timeoutValue = 500;
-    let swipeThreshold, swipeTimeout;
-    let timeDiff;
-    let direction;
-    let changedTouches;
-    let eventData;
-
-    swipeThreshold = parseInt(getNearestAttribute(GeneralJs.stacks[stackConst + startElement], thresholdKey, String(thresholdValue)), 10);
-    swipeTimeout = parseInt(getNearestAttribute(GeneralJs.stacks[stackConst + startElement], timeoutKey, String(timeoutValue)), 10);
-
-    timeDiff = Date.now() - GeneralJs.stacks[stackConst + timeDown];
-    changedTouches = e.changedTouches || e.touches || [];
-
-    direction = null;
-    if (Math.abs(GeneralJs.stacks[stackConst + xDiff]) > Math.abs(GeneralJs.stacks[stackConst + yDiff])) {
-      if (Math.abs(GeneralJs.stacks[stackConst + xDiff]) > swipeThreshold && timeDiff < swipeTimeout) {
-        if (GeneralJs.stacks[stackConst + xDiff] > 0) {
-          direction = "left";
+    if (conditionFunc()) {
+      if (scrollBanTarget !== null) {
+        scrollBanTarget.removeEventListener("DOMMouseScroll", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+        scrollBanTarget.removeEventListener("wheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+        scrollBanTarget.removeEventListener("mousewheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+        scrollBanTarget.removeEventListener("touchmove", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+      }
+      dom.removeEventListener("DOMMouseScroll", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+      dom.removeEventListener("wheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+      dom.removeEventListener("mousewheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+      dom.removeEventListener("touchmove", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+  
+      if (GeneralJs.stacks[stackConst + startElement] !== e.target) {
+        return;
+      }
+      const thresholdKey = "data-swipe-threshold";
+      const timeoutKey = "data-swipe-timeout";
+      const thresholdValue = 20;
+      const timeoutValue = 500;
+      let swipeThreshold, swipeTimeout;
+      let timeDiff;
+      let direction;
+      let changedTouches;
+      let eventData;
+  
+      swipeThreshold = parseInt(getNearestAttribute(GeneralJs.stacks[stackConst + startElement], thresholdKey, String(thresholdValue)), 10);
+      swipeTimeout = parseInt(getNearestAttribute(GeneralJs.stacks[stackConst + startElement], timeoutKey, String(timeoutValue)), 10);
+  
+      timeDiff = Date.now() - GeneralJs.stacks[stackConst + timeDown];
+      changedTouches = e.changedTouches || e.touches || [];
+  
+      direction = null;
+      if (Math.abs(GeneralJs.stacks[stackConst + xDiff]) > Math.abs(GeneralJs.stacks[stackConst + yDiff])) {
+        if (Math.abs(GeneralJs.stacks[stackConst + xDiff]) > swipeThreshold && timeDiff < swipeTimeout) {
+          if (GeneralJs.stacks[stackConst + xDiff] > 0) {
+            direction = "left";
+          } else {
+            direction = "right";
+          }
+        }
+      } else if (Math.abs(GeneralJs.stacks[stackConst + yDiff]) > swipeThreshold && timeDiff < swipeTimeout) {
+        if (GeneralJs.stacks[stackConst + yDiff] > 0) {
+          direction = "up";
         } else {
-          direction = "right";
+          direction = "down";
         }
       }
-    } else if (Math.abs(GeneralJs.stacks[stackConst + yDiff]) > swipeThreshold && timeDiff < swipeTimeout) {
-      if (GeneralJs.stacks[stackConst + yDiff] > 0) {
-        direction = "up";
-      } else {
-        direction = "down";
+  
+      if (direction !== null) {
+        eventData = {
+          direction,
+          start: [ parseInt(GeneralJs.stacks[stackConst + xDown], 10), parseInt(GeneralJs.stacks[stackConst + yDown], 10) ],
+          end: [ parseInt((changedTouches[0] || {}).clientX || -1, 10), parseInt((changedTouches[0] || {}).clientY || -1, 10) ],
+        };
+        if (typeof GeneralJs.stacks[stackConst + direction] === "function") {
+          (GeneralJs.stacks[stackConst + direction])(eventData);
+        } else {
+          window.scroll({
+            top: GeneralJs.stacks[stackConst + yDiff] - scrollBanTarget.getBoundingClientRect().top,
+            left: GeneralJs.stacks[stackConst + xDiff] - scrollBanTarget.getBoundingClientRect().left,
+            behavior: "smooth"
+          });
+        }
       }
+      GeneralJs.stacks[stackConst + xDown] = null;
+      GeneralJs.stacks[stackConst + yDown] = null;
+      GeneralJs.stacks[stackConst + timeDown] = null;
     }
-
-    if (direction !== null) {
-      eventData = {
-        direction,
-        start: [ parseInt(GeneralJs.stacks[stackConst + xDown], 10), parseInt(GeneralJs.stacks[stackConst + yDown], 10) ],
-        end: [ parseInt((changedTouches[0] || {}).clientX || -1, 10), parseInt((changedTouches[0] || {}).clientY || -1, 10) ],
-      };
-      if (typeof GeneralJs.stacks[stackConst + direction] === "function") {
-        (GeneralJs.stacks[stackConst + direction])(eventData);
-      }
-    }
-
-    GeneralJs.stacks[stackConst + xDown] = null;
-    GeneralJs.stacks[stackConst + yDown] = null;
-    GeneralJs.stacks[stackConst + timeDown] = null;
   }
 
   dom.addEventListener("touchstart", GeneralJs.stacks[stackConst + handleTouchStart], false);
   dom.addEventListener("touchmove", GeneralJs.stacks[stackConst + handleTouchMove], false);
   dom.addEventListener("touchend", GeneralJs.stacks[stackConst + handleTouchEnd], false);
+}
+
+GeneralJs.tempScrollBan = function (scrollBanTarget = null) {
+  if (scrollBanTarget === null) {
+    throw new Error("invalid input");
+  }
+  scrollBanTarget.addEventListener("DOMMouseScroll", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+  scrollBanTarget.addEventListener("wheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+  scrollBanTarget.addEventListener("mousewheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+  scrollBanTarget.addEventListener("touchmove", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+}
+
+GeneralJs.tempScrollRelease = function (scrollBanTarget = null) {
+  if (scrollBanTarget === null) {
+    throw new Error("invalid input");
+  }
+  scrollBanTarget.removeEventListener("DOMMouseScroll", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+  scrollBanTarget.removeEventListener("wheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+  scrollBanTarget.removeEventListener("mousewheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+  scrollBanTarget.removeEventListener("touchmove", GeneralJs.stacks.__temporaryPreventDefaultEvent);
 }
 
 GeneralJs.xyConverting = function (original) {
