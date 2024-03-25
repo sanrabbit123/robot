@@ -737,15 +737,15 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
     titleSize = <%% 23, 21, 19, 17, 4.6 %%>;
-    descriptionSize = <%% 15, 14, 13, 12, 3.5 %%>;
-    descriptionMarginTop = <%% 9, 9, 7, 6, 2.5 %%>;
+    descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
+    descriptionMarginTop = <%% 9, 9, 7, 6, 2.6 %%>;
 
     checkCircleWidth = <%% 21, 21, 20, 18, 4.6 %%>;
 
     visualTop = <%% 24, 24, 22, 17, 2 %%>;
 
     boxWidth = <%% 290, 270, 240, 200, 56 %%>;
-    boxHeight = <%% 227, 214, 192, 163, 40 %%>;
+    boxHeight = <%% 227, 214, 192, 163, 39.8 %%>;
 
     betweenMargin = <%% 152, 90, 90, 60, 9 %%>;
 
@@ -1048,7 +1048,7 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
 
 DesignerExplanationJs.prototype.insertThirdBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, stringToDate, designerCareer, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, stringToDate, designerCareer, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, swipePatch } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1057,6 +1057,11 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
   const designerSelectionButtonClassNameButton = "designerSelectionButtonClassNameButton";
   const designerSelectionButtonClassNameString = "designerSelectionButtonClassNameString";
   const designerSelectionButtonClassNameButtonPlus = "designerSelectionButtonClassNameButtonPlus";
+  const cardPositionFirstClassName = "cardPositionFirstClassName";
+  const cardPositionSecondClassName = "cardPositionSecondClassName";
+  const cardPositionThirdClassName = "cardPositionThirdClassName";
+  const realContentsAreaClassName = "realContentsAreaClassName";
+  const blackGlassAreaClassName = "blackGlassAreaClassName";
   try {
     let minusLeft;
     let thirdBase;
@@ -1100,14 +1105,25 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     let styleValueHeight, styleValuePaddingBottom, styleValueTextTop, styleValueSize, styleValueWeight;
     let detailArrowWidth, detailArrowBottom, detailArrowRight;
     let detailArrowHeight;
+    let checkCircleTop;
+    let mobileDetailButtonWidth;
+    let mobileDetailButtonMargin;
+    let mobileDetailButtonHeight;
+    let mobileDetailAreaMarginTop;
+    let firstMove, firstScale;
+    let secondMove, secondScale;
+    let thirdMove, thirdScale;
+    let showContents, showShadow;
+    let hideContents, hideShadow;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
     basePaddingTop = <%% 150, 150, 140, 110, 19 %%>;
-    basePaddingBottom = <%% 160, 160, 140, 110, 20 %%>;
+    basePaddingBottom = <%% 160, 160, 140, 110, 17 %%>;
 
-    checkCircleWidth = <%% 13, 13, 10, 9, 1 %%>;
+    checkCircleWidth = <%% 13, 13, 10, 9, 2.2 %%>;
+    checkCircleTop = -0;
 
     cardLength = <%% 5, 4, 4, 3, 1 %%>;
     cardBetween = <%% 8, 8, 6, 6, 1 %%>;
@@ -1117,15 +1133,15 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
       cardHeight = <%% 445, 411, 355, 375, 41 %%>;
       cardWidth = "calc(" + withOut((cardBetween * cardLength) + buttonCardWidth, ea) + " / " + String(cardLength) + ")";
     } else {
-      profileHeight = 52;
-      cardHeight = 86;
-      cardWidth = String(56) + ea;
+      profileHeight = 50;
+      cardHeight = 87;
+      cardWidth = String(52) + ea;
     }
 
     buttonArrowWdith = <%% 14, 14, 12, 10, 1 %%>;
 
-    designerCardGroupBetween = <%% 70, 70, 64, 56, 20 %%>;
-    designerCardGroupBetweenFirst = <%% 50, 50, 42, 36, 16 %%>;
+    designerCardGroupBetween = <%% 70, 70, 64, 56, 16 %%>;
+    designerCardGroupBetweenFirst = <%% 50, 50, 42, 36, 9 %%>;
 
     designerTitleSize = <%% 29, 25, 23, 21, 4.6 %%>;
     designerTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -1135,14 +1151,14 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     designerBoxVisualPaddingBottom = <%% 6, 6, 6, 6, 2 %%>;
     designerSubTitleBlockMarginBottom = <%% 10, 10, 10, 10, 2 %%>;
 
-    designerSubTitleSize = <%% 19, 19, 18, 17, 3 %%>;
+    designerSubTitleSize = <%% 19, 19, 18, 17, 3.8 %%>;
     designerSubTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-    designerSubTitleMarginLeft = <%% 7, 7, 6, 6, 7 %%>;
+    designerSubTitleMarginLeft = <%% 7, 7, 6, 6, 1.3 %%>;
 
-    designerEndTextSize = <%% 18, 18, 17, 16, 3.3 %%>;
+    designerEndTextSize = <%% 18, 18, 17, 16, 3.5 %%>;
     designerEndTextWeight = <%% 800, 800, 800, 800, 800 %%>;
-    designerEndTextMarginLeft = <%% 9, 9, 9, 9, 9 %%>;
-    designerEndTextTop = <%% -2, -2, -2, -2, -2 %%>;
+    designerEndTextMarginLeft = <%% 9, 9, 9, 9, 1.6 %%>;
+    designerEndTextTop = <%% -2, -2, -2, -2, -0.3 %%>;
 
     clickMeTop = <%% -92, -87, -78, -72, -1 %%>;
     clickMeLeft = <%% 200, 180, 160, 150, 18 %%>;
@@ -1150,32 +1166,32 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     profileLineIndent = <%% 6, 5, 4, 5, 1 %%>;
 
-    nameTitleSize = <%% 25, 24, 20, 21, 5 %%>;
+    nameTitleSize = <%% 25, 24, 20, 21, 5.1 %%>;
     nameTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    nameTitlePaddingBottom = <%% (isMac() ? 1 : -1), (isMac() ? 1 : -1), (isMac() ? 1 : -1), (isMac() ? 1 : -1), 1 %%>;
-    nameTitleMarginBottom = <%% 15, 12, 10, 11, 2 %%>;
+    nameTitlePaddingBottom = <%% (isMac() ? 1 : -1), (isMac() ? 1 : -1), (isMac() ? 1 : -1), (isMac() ? 1 : -1), 0 %%>;
+    nameTitleMarginBottom = <%% 15, 12, 10, 11, 3 %%>;
 
-    careerBoxWidth = <%% 40, 40, 32, 34, 4 %%>;
-    careerBoxHeight = <%% 18, 18, 16, 16, 2 %%>;
+    careerBoxWidth = <%% 40, 40, 32, 34, 8 %%>;
+    careerBoxHeight = <%% 18, 18, 16, 16, 4.2 %%>;
     careerBoxMarginBottom = <%% 0, 0, 0, 0, 0 %%>;
     careerTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     careerTextSize = <%% 11, 11, 10, 10, 2.5 %%>;
     careerTextWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    careerValueBoxHeight = <%% 23, 23, 19, 19, 4 %%>;
-    careerValueBoxMarginBottom = <%% 4, 4, 2, 3, 4 %%>;
+    careerValueBoxHeight = <%% 23, 23, 19, 19, 4.3 %%>;
+    careerValueBoxMarginBottom = <%% 4, 4, 2, 3, 0.7 %%>;
     careerValueTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     careerValueSize = <%% 12, 12, 11, 11, 2.5 %%>;
     careerValueWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-    styleBoxWidth = <%% 92, 92, 84, 84, 10 %%>;
-    styleBoxHeight = <%% 18, 18, 16, 16, 18 %%>;
+    styleBoxWidth = <%% 92, 92, 84, 84, 21 %%>;
+    styleBoxHeight = <%% 18, 18, 16, 16, 4.2 %%>;
     styleBoxTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     styleBoxSize = <%% 11, 11, 10, 10, 2.5 %%>;
     styleBoxWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    styleValueHeight = <%% 23, 23, 19, 19, 4 %%>;
-    styleValuePaddingBottom = <%% 11, 11, 11, 11, 2 %%>;
+    styleValueHeight = <%% 23, 23, 19, 19, 4.3 %%>;
+    styleValuePaddingBottom = <%% 11, 11, 11, 11, 1.4 %%>;
     styleValueTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     styleValueSize = <%% 12, 12, 11, 11, 2.5 %%>;
     styleValueWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -1185,7 +1201,28 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
     detailArrowBottom = <%% 21, 20, 18, 18, 2 %%>;
     detailArrowRight = <%% 20, 19, 18, 18, 2 %%>;
 
-    shadowForm = "0px 8px 20px -9px " + colorExtended.darkDarkShadow;
+    mobileDetailButtonWidth = 36;
+    mobileDetailButtonMargin = 2;
+    mobileDetailButtonHeight = 8.8;
+    mobileDetailAreaMarginTop = 5;
+
+    firstMove = 35.9;
+    firstScale = 1;
+    secondMove = 11;
+    secondScale = 0.93;
+    thirdMove = 0;
+    thirdScale = 0.83;
+
+    showContents = 1;
+    showShadow = 0;
+    hideContents = 0.8;
+    hideShadow = 0.3;
+
+    if (desktop) {
+      shadowForm = "0px 8px 20px -9px " + colorExtended.darkDarkShadow;
+    } else {
+      shadowForm = "5px 5px 22px -9px " + colorExtended.black;
+    }
 
     abc = this.abc;
     designers = this.designers;
@@ -1390,6 +1427,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       });
 
+      // abc area
       createNode({
         mother: thisBase,
         event: {
@@ -1425,6 +1463,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
               borderRadius: String(checkCircleWidth) + ea,
               opacity: endBoo ? String(0.4) : String(1),
               cursor: "pointer",
+              top: desktop ? "" : String(checkCircleTop) + ea,
             },
             child: {
               mode: "svg",
@@ -1465,7 +1504,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
               color: colorExtended.blueLight,
               fontFamily: "mont",
               marginLeft: String(designerSubTitleMarginLeft) + ea,
-              opacity: endBoo ? String(0.4) : String(0.8),
+              opacity: endBoo ? String(0.4) : (desktop ? String(0.8) : String(1)),
               cursor: "pointer",
             }
           },
@@ -1487,18 +1526,99 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         ]
       });
 
+      // main area
       thisCardBase = createNode({
         mother: thisBase,
+        attribute: {
+          index: String(i),
+          desid: designer.desid,
+          move: String(0),
+          process: "stop",
+        },
         style: {
           display: "flex",
           position: "relative",
-          justifyContent: desktop ? "start" : "center",
+          justifyContent: desktop ? "start" : "start",
           alignItems: "center",
           width: withOut(0, ea),
+          height: desktop ? "" : String(cardHeight) + ea,
           flexDirection: "row",
           opacity: endBoo ? String(0.4) : String(1),
         }
       });
+      if (mobile) {
+        swipePatch("left", function (e) {
+          const self = this;
+          const index = Number(this.getAttribute("index"));
+          const desid = this.getAttribute("desid");
+          const move = Number(this.getAttribute("move"));
+          const process = this.getAttribute("process");
+          let first, second, third;
+          let firstContents, firstShadow;
+          let secondContents, secondShadow;
+          let thirdContents, thirdShadow;
+          if (process === "stop") {
+            self.setAttribute("process", "doing");
+            if (move === 0) {
+              first = this.querySelector("." + cardPositionFirstClassName);
+              second = this.querySelector("." + cardPositionSecondClassName);
+              third = this.querySelector("." + cardPositionThirdClassName);
+            } else if (move === 1) {
+              first = this.querySelector("." + cardPositionSecondClassName);
+              second = this.querySelector("." + cardPositionThirdClassName);
+              third = this.querySelector("." + cardPositionFirstClassName);
+            } else {
+              first = this.querySelector("." + cardPositionThirdClassName);
+              second = this.querySelector("." + cardPositionFirstClassName);
+              third = this.querySelector("." + cardPositionSecondClassName);
+            }
+
+            firstContents = first.querySelector("." + realContentsAreaClassName);
+            firstShadow = first.querySelector("." + blackGlassAreaClassName);
+            secondContents = second.querySelector("." + realContentsAreaClassName);
+            secondShadow = second.querySelector("." + blackGlassAreaClassName);
+            thirdContents = third.querySelector("." + realContentsAreaClassName);
+            thirdShadow = third.querySelector("." + blackGlassAreaClassName);
+
+            first.style.transition = "all 0s ease";
+            firstContents.style.transition = "all 0s ease";
+            firstShadow.style.transition = "all 0s ease";
+            first.style.animation = "justfadeoutoriginal 0.3s ease";
+  
+            second.style.right = String(firstMove) + ea;
+            second.style.transform = "scale(" + String(firstScale) + ")";
+            second.style.zIndex = String(2);
+            secondContents.style.opacity = String(showContents);
+            secondShadow.style.opacity = String(showShadow);
+  
+            third.style.right = String(secondMove) + ea;
+            third.style.transform = "scale(" + String(secondScale) + ")";
+            third.style.zIndex = String(1);
+            thirdContents.style.opacity = String(showContents);
+            thirdShadow.style.opacity = String(showShadow);
+  
+            setQueue(() => {
+              first.style.right = String(thirdMove) + ea;
+              first.style.transform = "scale(" + String(thirdScale) + ")";
+              first.style.zIndex = String(0);
+              firstContents.style.opacity = String(hideContents);
+              firstShadow.style.opacity = String(hideShadow);
+              first.style.animation = "justfadeinoriginal 0.3s ease";
+              setQueue(() => {
+                first.style.transition = "all 0.3s ease";
+                firstContents.style.transition = "all 0.3s ease";
+                firstShadow.style.transition = "all 0.3s ease";
+                if (move === 2) {
+                  self.setAttribute("move", String(0));
+                } else {
+                  self.setAttribute("move", String(move + 1));
+                }
+                self.setAttribute("process", "stop");
+              }, 300);  
+            }, 290);
+          }
+        }, thisCardBase, "swipeStack_" + designer.desid + "_" + String(i) + "_");
+      }
 
       // click me
       if (desktop && i === 0) {
@@ -1519,200 +1639,205 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         });
       }
 
-      // designer profile
-      designerProfileBase = createNode({
-        mother: thisCardBase,
-        event: {
-          click: instance.insertWhiteCardEvent(designer.desid, abc[i]),
-        },
-        attribute: {
-          desid: designer.desid,
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: cardWidth,
-          height: String(cardHeight) + ea,
-          borderRadius: String(8) + "px",
-          background: colorExtended.white,
-          marginRight: desktop ? String(cardBetween) + ea : "",
-          boxShadow: shadowForm,
-          flexDirection: "column",
-          overflow: "hidden",
-          cursor: "pointer",
-          zIndex: desktop ? "" : String(1),
-        },
-        children: [
-          {
-            style: {
-              display: "flex",
-              position: "relative",
-              width: withOut(0, ea),
-              height: String(profileHeight) + ea,
-              backgroundImage: "url('" + designer.profile.link + "')",
-              backgroundSize: designer.profile.gs === 's' ? "100% auto" : "100% 100%",
-              backgroundPosition: designer.profile.position,
-              filter: "grayscale(100%)",
-            }
-          },
-          {
-            style: {
-              display: "flex",
-              position: "relative",
-              width: withOut(0, ea),
-              height: withOut(profileHeight, ea),
-              background: colorExtended.white,
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }
-          },
-          {
-            style: {
-              position: "absolute",
-              top: String(profileLineIndent) + ea,
-              left: String(profileLineIndent) + ea,
-              width: withOut(profileLineIndent * 2, ea),
-              height: withOut(profileLineIndent * 2, ea),
-              borderRadius: String(5) + "px",
-              border: "1px solid " + colorExtended.blue,
-              "mix-blend-mode": "multiply",
-              "box-sizing": "border-box",
-            }
-          }
-        ]
-      }).children[1];
-      createNode({
-        mother: designerProfileBase,
-        text: designer.designer.split("").join(" "),
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(nameTitleSize) + ea,
-          fontWeight: String(nameTitleWeight),
-          color: colorExtended.black,
-          wordSpacing: String(1) + "px",
-          borderBottom: "1px solid " + colorExtended.blue,
-          paddingBottom: String(nameTitlePaddingBottom) + ea,
-          marginBottom: String(nameTitleMarginBottom) + ea,
-        }
-      });
-      createNode({
-        mother: designerProfileBase,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: String(careerBoxWidth) + ea,
-          height: String(careerBoxHeight) + ea,
-          borderRadius: String(careerBoxHeight) + ea,
-          background: colorExtended.blueDark,
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: String(careerBoxMarginBottom) + ea,
-        },
-        child: {
-          text: "경력",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(careerTextTop) + ea,
-            fontSize: String(careerTextSize) + ea,
-            fontWeight: String(careerTextWeight),
-            color: colorExtended.white,
-          }
-        }
-      });
-      createNode({
-        mother: designerProfileBase,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: withOut(0, ea),
-          height: String(careerValueBoxHeight) + ea,
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: String(careerValueBoxMarginBottom) + ea,
-        },
-        child: {
-          text: designerCareer(designer, true, true),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(careerValueTextTop) + ea,
-            fontSize: String(careerValueSize) + ea,
-            fontWeight: String(careerValueWeight),
-            color: colorExtended.black,
-          }
-        }
-      });
-      createNode({
-        mother: designerProfileBase,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: String(styleBoxWidth) + ea,
-          height: String(styleBoxHeight) + ea,
-          borderRadius: String(styleBoxHeight) + ea,
-          background: colorExtended.blueDark,
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: String(0) + ea,
-        },
-        child: {
-          text: "자신 있는 스타일",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(styleBoxTextTop) + ea,
-            fontSize: String(styleBoxSize) + ea,
-            fontWeight: String(styleBoxWeight),
-            color: colorExtended.white,
-          }
-        }
-      });
-      createNode({
-        mother: designerProfileBase,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: withOut(0, ea),
-          height: String(styleValueHeight) + ea,
-          justifyContent: "center",
-          alignItems: "center",
-          paddingBottom: String(styleValuePaddingBottom) + ea,
-        },
-        child: {
-          text: designer.styleTendency.map((o) => { return o.name }).slice(0, 3).join("&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;"),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(styleValueTextTop) + ea,
-            fontSize: String(styleValueSize) + ea,
-            fontWeight: String(styleValueWeight),
-            color: colorExtended.black,
-          },
-          under: {
-            fontSize: String(styleValueSize) + ea,
-            fontWeight: String(styleValueWeight),
-            color: colorExtended.blue,
-          }
-        }
-      });
-      // detail arrow in profile card
-      createNode({
-        mother: designerProfileBase,
-        mode: "svg",
-        source: svgMaker.horizontalArrow(detailArrowWidth, detailArrowHeight, colorExtended.focusBlue),
-        style: {
-          display: "inline-block",
-          position: "absolute",
-          width: String(detailArrowWidth) + ea,
-          bottom: String(detailArrowBottom) + ea,
-          right: String(detailArrowRight) + ea,
-        }
-      });
+      // main area in photos ================================================================================================
 
       if (desktop) {
+
+        // designer profile
+
+        designerProfileBase = createNode({
+          mother: thisCardBase,
+          event: {
+            click: instance.insertWhiteCardEvent(designer.desid, abc[i]),
+          },
+          attribute: {
+            desid: designer.desid,
+          },
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: cardWidth,
+            height: String(cardHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorExtended.white,
+            marginRight: desktop ? String(cardBetween) + ea : "",
+            boxShadow: shadowForm,
+            flexDirection: "column",
+            overflow: "hidden",
+            cursor: "pointer",
+            zIndex: desktop ? "" : String(1),
+          },
+          children: [
+            {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+                height: String(profileHeight) + ea,
+                backgroundImage: "url('" + designer.profile.link + "')",
+                backgroundSize: designer.profile.gs === 's' ? "100% auto" : "100% 100%",
+                backgroundPosition: designer.profile.position,
+                filter: "grayscale(100%)",
+              }
+            },
+            {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+                height: withOut(profileHeight, ea),
+                background: colorExtended.white,
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }
+            },
+            {
+              style: {
+                position: "absolute",
+                top: String(profileLineIndent) + ea,
+                left: String(profileLineIndent) + ea,
+                width: withOut(profileLineIndent * 2, ea),
+                height: withOut(profileLineIndent * 2, ea),
+                borderRadius: String(5) + "px",
+                border: "1px solid " + colorExtended.blue,
+                "mix-blend-mode": "multiply",
+                "box-sizing": "border-box",
+              }
+            }
+          ]
+        }).children[1];
+        createNode({
+          mother: designerProfileBase,
+          text: designer.designer.split("").join(" "),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(nameTitleSize) + ea,
+            fontWeight: String(nameTitleWeight),
+            color: colorExtended.black,
+            wordSpacing: String(1) + "px",
+            borderBottom: "1px solid " + colorExtended.blue,
+            paddingBottom: String(nameTitlePaddingBottom) + ea,
+            marginBottom: String(nameTitleMarginBottom) + ea,
+          }
+        });
+        createNode({
+          mother: designerProfileBase,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(careerBoxWidth) + ea,
+            height: String(careerBoxHeight) + ea,
+            borderRadius: String(careerBoxHeight) + ea,
+            background: colorExtended.blueDark,
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: String(careerBoxMarginBottom) + ea,
+          },
+          child: {
+            text: "경력",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(careerTextTop) + ea,
+              fontSize: String(careerTextSize) + ea,
+              fontWeight: String(careerTextWeight),
+              color: colorExtended.white,
+            }
+          }
+        });
+        createNode({
+          mother: designerProfileBase,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: withOut(0, ea),
+            height: String(careerValueBoxHeight) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: String(careerValueBoxMarginBottom) + ea,
+          },
+          child: {
+            text: designerCareer(designer, true, true),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(careerValueTextTop) + ea,
+              fontSize: String(careerValueSize) + ea,
+              fontWeight: String(careerValueWeight),
+              color: colorExtended.black,
+            }
+          }
+        });
+        createNode({
+          mother: designerProfileBase,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(styleBoxWidth) + ea,
+            height: String(styleBoxHeight) + ea,
+            borderRadius: String(styleBoxHeight) + ea,
+            background: colorExtended.blueDark,
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: String(0) + ea,
+          },
+          child: {
+            text: "자신 있는 스타일",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(styleBoxTextTop) + ea,
+              fontSize: String(styleBoxSize) + ea,
+              fontWeight: String(styleBoxWeight),
+              color: colorExtended.white,
+            }
+          }
+        });
+        createNode({
+          mother: designerProfileBase,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: withOut(0, ea),
+            height: String(styleValueHeight) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingBottom: String(styleValuePaddingBottom) + ea,
+          },
+          child: {
+            text: designer.styleTendency.map((o) => { return o.name }).slice(0, 3).join("&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;"),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(styleValueTextTop) + ea,
+              fontSize: String(styleValueSize) + ea,
+              fontWeight: String(styleValueWeight),
+              color: colorExtended.black,
+            },
+            under: {
+              fontSize: String(styleValueSize) + ea,
+              fontWeight: String(styleValueWeight),
+              color: colorExtended.blue,
+            }
+          }
+        });
+        if (desktop) {
+          // detail arrow in profile card
+          createNode({
+            mother: designerProfileBase,
+            mode: "svg",
+            source: svgMaker.horizontalArrow(detailArrowWidth, detailArrowHeight, colorExtended.focusBlue),
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              width: String(detailArrowWidth) + ea,
+              bottom: String(detailArrowBottom) + ea,
+              right: String(detailArrowRight) + ea,
+            }
+          });
+        }
 
         // ----------------------------------------------------------------------------------------------------------------
 
@@ -1835,97 +1960,437 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         });
 
       } else {
-
+        // first
         createNode({
           mother: thisCardBase,
+          class: [ cardPositionFirstClassName ],
           style: {
             display: "inline-flex",
             position: "absolute",
             width: cardWidth,
             height: String(cardHeight) + ea,
             borderRadius: String(8) + "px",
-            background: colorExtended.blueDim,
             boxShadow: shadowForm,
-            flexDirection: "column",
             overflow: "hidden",
             cursor: "pointer",
             top: String(0),
-            left: String(0),
-            transformOrigin: "0% 50%",
-            transform: "scale(0.9)",
-            backgroundImage: typeof representative[0] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[0]) + "')" : "",
-            backgroundSize: "auto 100%",
-            backgroundPosition: "50% 50%",
-            opacity: String(0.9),
-          }
-        });
-        createNode({
-          mother: thisCardBase,
-          style: {
-            display: "inline-flex",
-            position: "absolute",
-            width: cardWidth,
-            height: String(cardHeight) + ea,
-            borderRadius: String(8) + "px",
-            background: colorExtended.black,
-            boxShadow: shadowForm,
-            flexDirection: "column",
-            overflow: "hidden",
-            cursor: "pointer",
-            top: String(0),
-            left: String(0),
-            transformOrigin: "0% 50%",
-            transform: "scale(0.9)",
-            opacity: String(0.3),
-            "mix-blend-mode": "multiply",
-          }
-        });
-
-        createNode({
-          mother: thisCardBase,
-          style: {
-            display: "inline-flex",
-            position: "absolute",
-            width: cardWidth,
-            height: String(cardHeight) + ea,
-            borderRadius: String(8) + "px",
-            background: colorExtended.blueDim,
-            boxShadow: shadowForm,
-            flexDirection: "column",
-            overflow: "hidden",
-            cursor: "pointer",
-            top: String(0),
-            right: String(0),
+            right: String(firstMove) + ea,
             transformOrigin: "100% 50%",
-            transform: "scale(0.9)",
-            backgroundImage: typeof representative[1] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[1]) + "')" : "",
-            backgroundSize: "auto 100%",
-            backgroundPosition: "50% 50%",
-            opacity: String(0.9),
+            transform: "scale(" + String(firstScale) + ")",
+            zIndex: String(2),
+          },
+          child: {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+            },
+            children: [
+              {
+                class: [ realContentsAreaClassName ],
+                style: {
+                  display: "inline-flex",
+                  position: "absolute",
+                  width: cardWidth,
+                  height: String(cardHeight) + ea,
+                  borderRadius: String(8) + "px",
+                  background: colorExtended.white,
+                  flexDirection: "column",
+                  overflow: "hidden",
+                  cursor: "pointer",
+                  top: String(0),
+                  left: String(0),
+                  opacity: String(showContents),
+                },
+                children: [
+                  {
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      width: withOut(0, ea),
+                      height: String(profileHeight) + ea,
+                      backgroundImage: "url('" + designer.profile.link + "')",
+                      backgroundSize: designer.profile.gs === 's' ? "100% auto" : "100% 100%",
+                      backgroundPosition: designer.profile.position,
+                      filter: "grayscale(100%)",
+                    }
+                  },
+                  {
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      width: withOut(0, ea),
+                      height: withOut(profileHeight, ea),
+                      background: colorExtended.white,
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    children: [
+                      {
+                        text: designer.designer.split("").join(" "),
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          fontSize: String(nameTitleSize) + ea,
+                          fontWeight: String(nameTitleWeight),
+                          color: colorExtended.black,
+                          wordSpacing: String(1) + "px",
+                          borderBottom: "1px solid " + colorExtended.blue,
+                          paddingBottom: String(nameTitlePaddingBottom) + ea,
+                          marginBottom: String(nameTitleMarginBottom) + ea,
+                        }
+                      },
+                      {
+                        style: {
+                          display: "inline-flex",
+                          position: "relative",
+                          width: String(careerBoxWidth) + ea,
+                          height: String(careerBoxHeight) + ea,
+                          borderRadius: String(careerBoxHeight) + ea,
+                          background: colorExtended.blueDark,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          marginBottom: String(careerBoxMarginBottom) + ea,
+                        },
+                        child: {
+                          text: "경력",
+                          style: {
+                            display: "inline-block",
+                            position: "relative",
+                            top: String(careerTextTop) + ea,
+                            fontSize: String(careerTextSize) + ea,
+                            fontWeight: String(careerTextWeight),
+                            color: colorExtended.white,
+                          }
+                        }
+                      },
+                      {
+                        style: {
+                          display: "inline-flex",
+                          position: "relative",
+                          width: withOut(0, ea),
+                          height: String(careerValueBoxHeight) + ea,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          marginBottom: String(careerValueBoxMarginBottom) + ea,
+                        },
+                        child: {
+                          text: designerCareer(designer, true, true),
+                          style: {
+                            display: "inline-block",
+                            position: "relative",
+                            top: String(careerValueTextTop) + ea,
+                            fontSize: String(careerValueSize) + ea,
+                            fontWeight: String(careerValueWeight),
+                            color: colorExtended.black,
+                          }
+                        }
+                      },
+                      {
+                        style: {
+                          display: "inline-flex",
+                          position: "relative",
+                          width: String(styleBoxWidth) + ea,
+                          height: String(styleBoxHeight) + ea,
+                          borderRadius: String(styleBoxHeight) + ea,
+                          background: colorExtended.blueDark,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          marginBottom: String(0) + ea,
+                        },
+                        child: {
+                          text: "자신 있는 스타일",
+                          style: {
+                            display: "inline-block",
+                            position: "relative",
+                            top: String(styleBoxTextTop) + ea,
+                            fontSize: String(styleBoxSize) + ea,
+                            fontWeight: String(styleBoxWeight),
+                            color: colorExtended.white,
+                          }
+                        }
+                      },
+                      {
+                        style: {
+                          display: "inline-flex",
+                          position: "relative",
+                          width: withOut(0, ea),
+                          height: String(styleValueHeight) + ea,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          paddingBottom: String(styleValuePaddingBottom) + ea,
+                        },
+                        child: {
+                          text: designer.styleTendency.map((o) => { return o.name }).slice(0, 3).join("&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;"),
+                          style: {
+                            display: "inline-block",
+                            position: "relative",
+                            top: String(styleValueTextTop) + ea,
+                            fontSize: String(styleValueSize) + ea,
+                            fontWeight: String(styleValueWeight),
+                            color: colorExtended.black,
+                          },
+                          under: {
+                            fontSize: String(styleValueSize) + ea,
+                            fontWeight: String(styleValueWeight),
+                            color: colorExtended.blue,
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    style: {
+                      position: "absolute",
+                      top: String(profileLineIndent) + ea,
+                      left: String(profileLineIndent) + ea,
+                      width: withOut(profileLineIndent * 2, ea),
+                      height: withOut(profileLineIndent * 2, ea),
+                      borderRadius: String(5) + "px",
+                      border: "1px solid " + colorExtended.blue,
+                      "mix-blend-mode": "multiply",
+                      "box-sizing": "border-box",
+                    }
+                  }
+                ]
+              },
+              {
+                event: {
+                  click: instance.insertWhiteCardEvent(designer.desid, abc[i]),
+                },
+                attribute: {
+                  desid: designer.desid,
+                },
+                class: [ blackGlassAreaClassName ],
+                style: {
+                  display: "inline-flex",
+                  position: "absolute",
+                  width: cardWidth,
+                  height: String(cardHeight) + ea,
+                  background: colorExtended.black,
+                  flexDirection: "column",
+                  top: String(0),
+                  left: String(0) + ea,
+                  opacity: String(showShadow),
+                  "mix-blend-mode": "multiply",
+                }
+              }
+            ]
           }
         });
+        // second
         createNode({
           mother: thisCardBase,
+          class: [ cardPositionSecondClassName ],
           style: {
             display: "inline-flex",
             position: "absolute",
             width: cardWidth,
             height: String(cardHeight) + ea,
             borderRadius: String(8) + "px",
-            background: colorExtended.black,
             boxShadow: shadowForm,
-            flexDirection: "column",
             overflow: "hidden",
             cursor: "pointer",
             top: String(0),
-            right: String(0),
+            right: String(secondMove) + ea,
             transformOrigin: "100% 50%",
-            transform: "scale(0.9)",
-            opacity: String(0.3),
-            "mix-blend-mode": "multiply",
+            transform: "scale(" + String(secondScale) + ")",
+            zIndex: String(1),
+          },
+          child: {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+            },
+            children: [
+              {
+                class: [ realContentsAreaClassName ],
+                style: {
+                  display: "inline-flex",
+                  position: "absolute",
+                  width: cardWidth,
+                  height: String(cardHeight) + ea,
+                  background: colorExtended.blueDim,
+                  flexDirection: "column",
+                  top: String(0),
+                  left: String(0) + ea,
+                  backgroundImage: typeof representative[1] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[1]) + "')" : "",
+                  backgroundSize: "auto 100%",
+                  backgroundPosition: "50% 50%",
+                  opacity: String(showContents),
+                }
+              },
+              {
+                class: [ blackGlassAreaClassName ],
+                style: {
+                  display: "inline-flex",
+                  position: "absolute",
+                  width: cardWidth,
+                  height: String(cardHeight) + ea,
+                  background: colorExtended.black,
+                  flexDirection: "column",
+                  top: String(0),
+                  left: String(0) + ea,
+                  opacity: String(showShadow),
+                  "mix-blend-mode": "multiply",
+                }
+              }
+            ]
           }
         });
+        // third
+        createNode({
+          mother: thisCardBase,
+          class: [ cardPositionThirdClassName ],
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            width: cardWidth,
+            height: String(cardHeight) + ea,
+            borderRadius: String(8) + "px",
+            boxShadow: shadowForm,
+            overflow: "hidden",
+            cursor: "pointer",
+            top: String(0),
+            right: String(thirdMove) + ea,
+            transformOrigin: "100% 50%",
+            transform: "scale(" + String(thirdScale) + ")",
+            zIndex: String(0),
+          },
+          child: {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+            },
+            children: [
+              {
+                class: [ realContentsAreaClassName ],
+                style: {
+                  display: "inline-flex",
+                  position: "absolute",
+                  width: cardWidth,
+                  height: String(cardHeight) + ea,
+                  background: colorExtended.blueDim,
+                  flexDirection: "column",
+                  top: String(0),
+                  left: String(0) + ea,
+                  backgroundImage: typeof representative[0] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[0]) + "')" : "",
+                  backgroundSize: "auto 100%",
+                  backgroundPosition: "50% 50%",
+                  opacity: String(hideContents),
+                }
+              },
+              {
+                class: [ blackGlassAreaClassName ],
+                style: {
+                  display: "inline-flex",
+                  position: "absolute",
+                  width: cardWidth,
+                  height: String(cardHeight) + ea,
+                  background: colorExtended.black,
+                  flexDirection: "column",
+                  top: String(0),
+                  left: String(0) + ea,
+                  opacity: String(hideShadow),
+                  "mix-blend-mode": "multiply",
+                }
+              }
+            ]
+          }
+        });
+      }
 
+      // =====================================================================================================================
+
+      // detail view button area
+      if (mobile) {
+        createNode({
+          mother: thisBase,
+          event: {
+            click: instance.insertWhiteCardEvent(designer.desid, abc[i]),
+            selectstart: (e) => { e.preventDefault() },
+          },
+          attribute: {
+            desid: designer.desid,
+          },
+          style: {
+            display: "flex",
+            position: "relative",
+            justifyContent: "end",
+            alignItems: "center",
+            width: withOut(0, ea),
+            flexDirection: "row",
+            marginTop: String(mobileDetailAreaMarginTop) + ea,
+            opacity: endBoo ? String(0.4) : String(1),
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: withOut(mobileDetailButtonWidth + mobileDetailButtonMargin, ea),
+                height: String(mobileDetailButtonHeight) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  height: String(0),
+                  boxSizing: "border-box",
+                  width: withOut(0, ea),
+                  borderBottom: "1px dashed " + colorExtended.white,
+                  opacity: String(0.3),
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(mobileDetailButtonWidth) + ea,
+                height: String(mobileDetailButtonHeight) + ea,
+                borderRadius: String(5) + "px",
+                background: colorExtended.blueDarkButton,
+                boxShadow: "0px 5px 18px -7px " + colorExtended.blueDim,
+                marginLeft: String(mobileDetailButtonMargin) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              children: [
+                {
+                  text: "디자이너 상세 보기",
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(3.3) + ea,
+                    fontWeight: String(700),
+                    color: colorExtended.white,
+                    top: String(-0.2) + ea,
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: svgMaker.horizontalArrow(3.4, 2, colorExtended.white),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(3.4) + ea,
+                    marginLeft: String(1) + ea,
+                    top: String(-0.2) + ea,
+                  }
+                }
+              ],
+            },
+          ]
+        });
       }
 
     }
@@ -1947,6 +2412,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
   const designerSelectionButtonClassNameButton = "designerSelectionButtonClassNameButton";
   const designerSelectionButtonClassNameString = "designerSelectionButtonClassNameString";
   const designerSelectionButtonClassNameButtonPlus = "designerSelectionButtonClassNameButtonPlus";
+  const px = "px";
   const today = new Date();
   try {
     let minusLeft;
@@ -2058,6 +2524,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     let selectionBaseFinalButtonTextTop, selectionBaseFinalButtonSize, selectionBaseFinalButtonWeight;
     let circleVisualTop;
     let selectionBaseDescriptionTop;
+    let mobileBaseMargin;
+    let scaleRatio;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -2068,21 +2536,21 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     checkCircleWidth = <%% 15, 15, 12, 15, 15 %%>;
 
     cardLength = <%% 5, 5, 5, 5, 5 %%>;
-    cardHeight = <%% 445, 445, 445, 445, 445 %%>;
+    cardHeight = <%% 445, 445, 445, 445, 74.73 %%>;
     profileHeight = <%% 250, 250, 250, 250, 250 %%>;
     cardBetween = <%% 8, 8, 8, 8, 8 %%>;
     buttonCardWidth = <%% 50, 50, 50, 50, 50 %%>;
-    cardWidth = <%% 262, 262, 262, 262, 262 %%>;
+    cardWidth = <%% 262, 262, 262, 262, 44 %%>;
 
     buttonArrowWdith = <%% 14, 14, 12, 12, 14 %%>;
 
     designerCardGroupBetween = <%% 70, 70, 70, 70, 70 %%>;
     designerCardGroupBetweenFirst = <%% 50, 50, 50, 50, 50 %%>;
 
-    nameTitleSize = <%% 25, 25, 25, 25, 25 %%>;
+    nameTitleSize = <%% 25, 25, 25, 25, 4.5 %%>;
 
-    factorTextTop = <%% isMac() ? -1 : 1, isMac() ? -1 : 1, isMac() ? -1 : 1, isMac() ? -1 : 1, isMac() ? -1 : 1 %%>;
-    subFactorTextTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3 %%>;
+    factorTextTop = <%% isMac() ? -1 : 1, isMac() ? -1 : 1, isMac() ? -1 : 1, isMac() ? -1 : 1, -0.2 %%>;
+    subFactorTextTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, -0.2 %%>;
     factorPadding = <%% 20, 20, 20, 20, 20 %%>;
     factorHeight = <%% 48, 48, 48, 48, 48 %%>;
     factorSize = <%% 17, 17, 17, 17, 17 %%>;
@@ -2099,11 +2567,11 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
 
     valueLinePadding = <%% 1, 1, 1, 1, 1 %%>;
 
-    whiteBoxBetween = <%% 12, 12, 12, 12, 12 %%>;
+    whiteBoxBetween = <%% 12, 12, 12, 12, 1.6 %%>;
     moneyWhiteBoxBetween = <%% 6, 6, 6, 6, 6 %%>;
 
-    outerMargin = <%% 12, 12, 12, 12, 12 %%>;
-    outerMargin2 = <%% 14, 14, 14, 14, 14 %%>;
+    outerMargin = <%% 12, 12, 12, 12, 1.6 %%>;
+    outerMargin2 = <%% 14, 14, 14, 14, 1.6 %%>;
 
     shadowForm = "0px 8px 20px -9px " + colorExtended.darkDarkShadow;
 
@@ -2134,9 +2602,13 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     detailPlusArrowWidth = <%% 11, 11, 10, 11, 11 %%>;
     detailPlusArrowVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
 
-    columnBetween = <%% 20, 12, 12, 12, 1 %%>;
-    viewNumber = <%% 3, 3, 2, 2, 3 %%>;
-    widthRatio = standardWidth / ((cardWidth * 2 * viewNumber) + (columnBetween * (viewNumber - 1)));
+    columnBetween = <%% 20, 12, 12, 12, 10 %%>;
+    viewNumber = <%% 3, 3, 2, 2, 1 %%>;
+    if (desktop) {
+      widthRatio = standardWidth / ((cardWidth * 2 * viewNumber) + (columnBetween * (viewNumber - 1)));
+    } else {
+      widthRatio = standardWidth / ((262 * 2 * 1) + (10 * (1 - 1)));
+    }
 
     menuMarginTop = <%% 5, 5, 5, 5, 1 %%>;
 
@@ -2154,26 +2626,30 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
     designerSelectionSize = <%% 23, 26, 23, 26, 23 %%>;
     designerSelectionWeight = <%% 700, 700, 700, 700, 700 %%>;
     designerSelectionMarginLeft = <%% 7, 7, 7, 8, 7 %%>;
-    designerSelectionTextTop = <%% 1, 1, 1, 1, 1 %%>;
+    designerSelectionTextTop = <%% 1, 1, 1, 1, 0.1 %%>;
 
-    selectionBaseHeight = <%% 96, 84, 70, 64, 96 %%>;
-    selectionBaseMarginTop = <%% 140, 472, 180, 446, 140 %%>;
+    selectionBaseHeight = <%% 96, 84, 70, 64, 15.4 %%>;
+    selectionBaseMarginTop = <%% 140, 472, 180, 446, -2 %%>;
 
     selectionBaseDescriptionTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
-    selectionBaseDescriptionSize = <%% 18, 17, 16, 15, 18 %%>;
+    selectionBaseDescriptionSize = <%% 18, 17, 16, 15, 3.5 %%>;
     selectionBaseDescriptionWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    selectionBaseArrowWidth = <%% 832, 516, 395, 254, 832 %%>;
-    selectionBaseArrowHeight = <%% 12, 12, 12, 12, 12 %%>;
-    selectionBaseArrowMargin = <%% 16, 16, 16, 16, 16 %%>;
+    selectionBaseArrowWidth = <%% 832, 516, 395, 254, 26 %%>;
+    selectionBaseArrowHeight = <%% 12, 12, 12, 12, 3 %%>;
+    selectionBaseArrowMargin = <%% 16, 16, 16, 16, 2.5 %%>;
 
-    selectionBaseFinalButtonWidth = <%% 124, 120, 114, 100, 124 %%>;
-    selectionBaseFinalButtonHeight = <%% 38, 36, 32, 30, 38 %%>;
+    selectionBaseFinalButtonWidth = <%% 124, 120, 114, 100, 23 %%>;
+    selectionBaseFinalButtonHeight = <%% 38, 36, 32, 30, 6.8 %%>;
     selectionBaseFinalButtonTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
-    selectionBaseFinalButtonSize = <%% 16, 15, 14, 13, 16 %%>;
+    selectionBaseFinalButtonSize = <%% 16, 15, 14, 13, 3 %%>;
     selectionBaseFinalButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
 
     circleVisualTop = <%% (isMac() ? 0 : -1.5), (isMac() ? 0 : -1), (isMac() ? 0 : -1), (isMac() ? 0 : -1), -0.2 %%>;
+
+    mobileBaseMargin = (100 - standardWidth) / 2;
+
+    scaleRatio = desktop ? 1 : widthRatio;
 
     abc = this.abc;
     designers = this.designers;
@@ -2183,8 +2659,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         style: {
           display: "flex",
           position: "relative",
-          width: withOut(factorPadding * 2, ea),
-          height: String(factorHeight) + ea,
+          width: withOut(factorPadding * 2 * scaleRatio, ea),
+          height: String(factorHeight * scaleRatio) + ea,
           flexDirection: "row",
           justifyContent: "start",
           alignItems: "center",
@@ -2195,7 +2671,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(factorSize) + ea,
+              fontSize: String(factorSize * scaleRatio) + ea,
               fontWeight: String(factorTitleWeight),
               color: colorExtended.mainBlue,
               top: String(factorTextTop) + ea,
@@ -2216,7 +2692,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               style: {
                 display: "inline-block",
                 position: "relative",
-                fontSize: String(factorSize) + ea,
+                fontSize: String(factorSize * scaleRatio) + ea,
                 fontWeight: String(factorValueWeight),
                 color: colorExtended.black,
                 top: String(factorTextTop) + ea,
@@ -2231,8 +2707,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         style: {
           display: "flex",
           position: "relative",
-          width: withOut(factorPadding * 2, ea),
-          height: menu.length <= 3 ? String(factorHeight) + ea : String(factorLongHeight) + ea,
+          width: withOut(factorPadding * 2 * scaleRatio, ea),
+          height: menu.length <= 3 ? String(factorHeight * scaleRatio) + ea : String(factorLongHeight * scaleRatio) + ea,
           flexDirection: menu.length <= 3 ? "row" : "column",
           justifyContent: menu.length <= 3 ? "start" : "center",
           alignItems: menu.length <= 3 ? "center" : "start",
@@ -2243,7 +2719,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(factorSize) + ea,
+              fontSize: String(factorSize * scaleRatio) + ea,
               fontWeight: String(factorTitleWeight),
               color: colorExtended.mainBlue,
               top: String(factorTextTop) + ea,
@@ -2260,7 +2736,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               justifyContent: menu.length <= 3 ? "end" : "start",
               alignItems: menu.length <= 3 ? "center" : "start",
               flexDirection: "row",
-              marginTop: menu.length <= 3 ? "" : String(menuMarginTop) + ea,
+              marginTop: menu.length <= 3 ? "" : String(menuMarginTop * scaleRatio) + ea,
             },
             children: menu.map((str, index, arr) => {
               return [
@@ -2269,15 +2745,15 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                   style: {
                     display: "inline-block",
                     position: "relative",
-                    fontSize: String(factorSize) + ea,
+                    fontSize: String(factorSize * scaleRatio) + ea,
                     fontWeight: String(factorValueWeight),
                     color: values[index] === 1 ? colorExtended.black : colorExtended.deactive,
                     top: String(factorTextTop) + ea,
-                    paddingTop: String(valueLinePadding) + ea,
-                    paddingBottom: String(valueLinePadding) + ea,
+                    paddingTop: String(valueLinePadding * scaleRatio) + ea,
+                    paddingBottom: String(valueLinePadding * scaleRatio) + ea,
                     boxSizing: "border-box",
-                    borderBottom: values[index] === 1 ? "1px solid " + colorExtended.mainBlue : "",
-                    wordSpacing: String(-2) + ea,
+                    borderBottom: values[index] === 1 ? "1" + px + " solid " + colorExtended.mainBlue : "",
+                    wordSpacing: String(-2) + px,
                   }
                 },
                 {
@@ -2285,12 +2761,12 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                   style: {
                     display: (arr.length - 1 === index) ? "none" : "inline-block",
                     position: "relative",
-                    fontSize: String(factorSize) + ea,
+                    fontSize: String(factorSize * scaleRatio) + ea,
                     fontWeight: String(selectionBarWeight),
                     color: colorExtended.mainBlue,
                     top: String(factorTextTop) + ea,
-                    marginLeft: String(menu.length <= 3 ? selectionBarMargin : selectionBarLongMargin) + ea,
-                    marginRight: String(menu.length <= 3 ? selectionBarMargin : selectionBarLongMargin) + ea,
+                    marginLeft: String(menu.length <= 3 ? selectionBarMargin * scaleRatio : selectionBarLongMargin * scaleRatio) + ea,
+                    marginRight: String(menu.length <= 3 ? selectionBarMargin * scaleRatio : selectionBarLongMargin * scaleRatio) + ea,
                     wordSpacing: String(-2) + ea,
                   }
                 }
@@ -2305,8 +2781,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         style: {
           display: "flex",
           position: "relative",
-          width: withOut(factorPadding * 2, ea),
-          height: String(factorHeight) + ea,
+          width: withOut(factorPadding * 2 * scaleRatio, ea),
+          height: String(factorHeight * scaleRatio) + ea,
           flexDirection: "row",
           justifyContent: "start",
           alignItems: "center",
@@ -2317,11 +2793,11 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              width: String(dotWidth) + ea,
-              height: String(dotWidth) + ea,
-              borderRadius: String(dotWidth) + ea,
+              width: String(dotWidth * scaleRatio) + ea,
+              height: String(dotWidth * scaleRatio) + ea,
+              borderRadius: String(dotWidth * scaleRatio) + ea,
               background: colorExtended.mainBlue,
-              marginRight: String(dotMargin) + ea,
+              marginRight: String(dotMargin * scaleRatio) + ea,
               top: String(circleVisualTop) + ea,
             }
           },
@@ -2330,7 +2806,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(factorSize) + ea,
+              fontSize: String(factorSize * scaleRatio) + ea,
               fontWeight: String(factorTitleWeight),
               color: colorExtended.black,
               top: String(factorTextTop) + ea,
@@ -2341,10 +2817,10 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(subFactorSize) + ea,
+              fontSize: String(subFactorSize * scaleRatio) + ea,
               fontWeight: String(factorTitleWeight),
               color: colorExtended.black,
-              marginLeft: String(subTitleMargin) + ea,
+              marginLeft: String(subTitleMargin * scaleRatio) + ea,
               top: String(subFactorTextTop) + ea,
             }
           },
@@ -2364,10 +2840,10 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(subFactorSize) + ea,
+                  fontSize: String(subFactorSize * scaleRatio) + ea,
                   fontWeight: String(factorTitleWeight),
                   color: colorExtended.black,
-                  marginRight: String(vatMargin) + ea,
+                  marginRight: String(vatMargin * scaleRatio) + ea,
                   top: String(subFactorTextTop) + ea,
                 }
               },
@@ -2376,10 +2852,10 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(factorSize) + ea,
+                  fontSize: String(factorSize * scaleRatio) + ea,
                   fontWeight: String(factorValueWeight),
                   color: colorExtended.blueDark,
-                  wordSpacing: String(-2) + ea,
+                  wordSpacing: String(-2) + px,
                   top: String(factorTextTop) + ea,
                 }
               },
@@ -2393,9 +2869,9 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         style: {
           display: "flex",
           position: "relative",
-          width: withOut(barPadding * 2, ea),
+          width: withOut(barPadding * 2 * scaleRatio, ea),
           height: String(0) + ea,
-          borderBottom: "1px dashed " + colorExtended.blueLight,
+          borderBottom: "1" + px + " dashed " + colorExtended.blueLight,
         },
       }
     }
@@ -2404,8 +2880,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         style: {
           display: "flex",
           position: "relative",
-          width: withOut(factorPadding * 2, ea),
-          height: String(factorHeight) + ea,
+          width: withOut(factorPadding * 2 * scaleRatio, ea),
+          height: String(factorHeight * scaleRatio) + ea,
           flexDirection: "row",
           justifyContent: "start",
           alignItems: "center",
@@ -2416,11 +2892,11 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              width: String(dotWidth) + ea,
-              height: String(dotWidth) + ea,
-              borderRadius: String(dotWidth) + ea,
+              width: String(dotWidth * scaleRatio) + ea,
+              height: String(dotWidth * scaleRatio) + ea,
+              borderRadius: String(dotWidth * scaleRatio) + ea,
               background: colorExtended.mainBlue,
-              marginRight: String(dotMargin) + ea,
+              marginRight: String(dotMargin * scaleRatio) + ea,
             }
           },
           {
@@ -2428,7 +2904,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(factorSize) + ea,
+              fontSize: String(factorSize * scaleRatio) + ea,
               fontWeight: String(factorTitleWeight),
               color: colorExtended.black,
               top: String(factorTextTop) + ea,
@@ -2439,10 +2915,10 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(subFactorSize) + ea,
+              fontSize: String(subFactorSize * scaleRatio) + ea,
               fontWeight: String(factorTitleWeight),
               color: colorExtended.black,
-              marginLeft: String(subTitleMargin) + ea,
+              marginLeft: String(subTitleMargin * scaleRatio) + ea,
               top: String(subFactorTextTop) + ea,
             }
           },
@@ -2462,7 +2938,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(factorSize) + ea,
+                  fontSize: String(factorSize * scaleRatio) + ea,
                   fontWeight: String(factorValueWeight),
                   color: colorExtended.blueDark,
                   top: String(factorTextTop) + ea,
@@ -2483,23 +2959,23 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           style: {
             display: "flex",
             position: "relative",
-            height: String(moneyBlockHeight) + ea,
+            height: String(moneyBlockHeight * scaleRatio) + ea,
             borderRadius: String(8) + ea,
             background: colorExtended.white,
             width: withOut(outerMargin * 2, ea),
             justifyContent: "start",
             alignItems: "center",
             flexDirection: "row",
-            marginTop: num !== 0 ? String(moneyWhiteBoxBetween) + ea : "",
+            marginTop: num !== 0 ? String(moneyWhiteBoxBetween * scaleRatio) + ea : "",
           },
           children: [
             {
               style: {
                 display: "flex",
                 position: "relative",    
-                width: String(onoffKindBlockWidth) + ea,
+                width: String(onoffKindBlockWidth * scaleRatio) + ea,
                 height: withOut(0, ea),
-                borderRadius: String(8) + "px",
+                borderRadius: String(8) + ea,
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "row",
@@ -2511,7 +2987,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 style: {
                   display: "inline-block",
                   position: "relative",    
-                  fontSize: String(onoffKindSize) + ea,
+                  fontSize: String(onoffKindSize * scaleRatio) + ea,
                   fontWeight: String(onoffKindWeight),
                   color: colorExtended.white,
                   top: String(onoffKindTextTop) + ea,
@@ -2525,7 +3001,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 position: "absolute",
                 height: withOut(0, ea),
                 top: String(0),
-                right: String(factorPadding) + ea,
+                right: String(factorPadding * scaleRatio) + ea,
                 justifyContent: "end",
                 alignItems: "center",
               },
@@ -2535,10 +3011,10 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                   style: {
                     display: "inline-block",
                     position: "relative",
-                    fontSize: String(subFactorSize) + ea,
+                    fontSize: String(subFactorSize * scaleRatio) + ea,
                     fontWeight: String(factorTitleWeight),
                     color: colorExtended.black,
-                    marginRight: String(finalBlockVatMargin) + ea,
+                    marginRight: String(finalBlockVatMargin * scaleRatio) + ea,
                     top: String(subFactorTextTop) + ea,
                     opacity: Number(after.replace(/[^0-9]/gi, '')) === 0 ? String(0.3) : String(1),
                   }
@@ -2548,11 +3024,11 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                   style: {
                     display: after === before ? "none" : "inline-block",
                     position: "relative",
-                    fontSize: String(finalMoneySize) + ea,
+                    fontSize: String(finalMoneySize * scaleRatio) + ea,
                     fontWeight: String(finalMoneyWeight),
                     color: colorExtended.deactive,
                     top: String(factorTextTop) + ea,
-                    marginRight: String(finalBlockVatMargin) + ea,
+                    marginRight: String(finalBlockVatMargin * scaleRatio) + ea,
                     textDecoration: "line-through",
                     opacity: Number(after.replace(/[^0-9]/gi, '')) === 0 ? String(0.3) : String(1),
                   }
@@ -2562,7 +3038,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                   style: {
                     display: "inline-block",
                     position: "relative",
-                    fontSize: String(finalMoneySize) + ea,
+                    fontSize: String(finalMoneySize * scaleRatio) + ea,
                     fontWeight: String(finalMoneyBoldWeight),
                     color: colorExtended.blueDim,
                     top: String(factorTextTop) + ea,
@@ -2645,7 +3121,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
       style: {
         display: "flex",
         position: "relative",
-        width: withOut(0, ea),
+        width: desktop ? withOut(0, ea) : "calc(100% + " + String(mobileBaseMargin * 2) + ea + ")",
+        left: desktop ? "" : String(-1 * mobileBaseMargin) + ea,
         flexDirection: "column",
         paddingTop: String(basePaddingTop) + ea,
         paddingBottom: String(basePaddingBottom) + ea,
@@ -2670,10 +3147,10 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
       style: {
         display: "block",
         position: "relative",
-        width: "calc(100% * " + String(1 / widthRatio) + ")",
+        width: desktop ? "calc(100% * " + String(1 / widthRatio) + ")" : withOut(0, ea),
         paddingBottom: String(baseMotherVisualPaddingBottom) + ea,
         transformOrigin: "0% 0%",
-        transform: "scale(" + String(widthRatio) + ")",
+        transform: desktop ? "scale(" + String(widthRatio) + ")" : "",
         overflow: "visible",
       },
       children: [
@@ -2704,7 +3181,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             toggle: "off"
           },
           style: {
-            display: "inline-flex",
+            display: desktop ? "inline-flex" : "none",
             position: "absolute",
             transition: "all 0.5s ease",
             top: "calc(50% - " + String(arrowCircleWidth / 2) + ea + ")",
@@ -2760,7 +3237,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             toggle: viewNumber < designers.length ? "on" : "off",
           },
           style: {
-            display: "inline-flex",
+            display: desktop ? "inline-flex" : "none",
             position: "absolute",
             transition: "all 0.5s ease",
             top: "calc(50% - " + String(arrowCircleWidth / 2) + ea + ")",
@@ -2791,7 +3268,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             display: "block",
             position: "relative",
             width: withOut(0, ea),
-            overflow: "hidden",
+            overflow: desktop ? "hidden" : "scroll",
           }
         }
       ]
@@ -2912,9 +3389,10 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             display: "inline-block",
             position: "relative",
             width: String(cardWidth * 2) + ea,
-            marginRight: String(columnBetween) + ea,
+            marginRight: String(columnBetween * scaleRatio) + ea,
             verticalAlign: "top",
             opacity: endBoo ? String(0.4) : String(1),
+            marginLeft: (i === 0 && mobile ? String(mobileBaseMargin) + ea : ""),
           }
         });
   
@@ -2930,7 +3408,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             position: "relative",
             width: String(cardWidth) + ea,
             height: String(cardHeight) + ea,
-            borderRadius: String(8) + "px",
+            borderRadius: String(8) + px,
             background: colorExtended.white,
             boxShadow: shadowForm,
             flexDirection: "column",
@@ -2944,7 +3422,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 display: "flex",
                 position: "relative",
                 width: withOut(0, ea),
-                height: String(profileHeight) + ea,
+                height: String(profileHeight * scaleRatio) + ea,
                 backgroundImage: "url('" + designer.profile.link + "')",
                 backgroundSize: designer.profile.gs === 's' ? "100% auto" : "100% 100%",
                 backgroundPosition: designer.profile.position,
@@ -2956,7 +3434,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 display: "flex",
                 position: "relative",
                 width: withOut(0, ea),
-                height: withOut(profileHeight, ea),
+                height: withOut(profileHeight * scaleRatio, ea),
                 background: colorExtended.white,
                 flexDirection: "column",
                 justifyContent: "center",
@@ -2966,12 +3444,12 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             {
               style: {
                 position: "absolute",
-                top: String(profileLineIndent) + ea,
-                left: String(profileLineIndent) + ea,
-                width: withOut(profileLineIndent * 2, ea),
-                height: withOut(profileLineIndent * 2, ea),
-                borderRadius: String(5) + "px",
-                border: "1px solid " + colorExtended.blue,
+                top: String(profileLineIndent * scaleRatio) + ea,
+                left: String(profileLineIndent * scaleRatio) + ea,
+                width: withOut(profileLineIndent * scaleRatio * 2, ea),
+                height: withOut(profileLineIndent * scaleRatio * 2, ea),
+                borderRadius: String(5) + px,
+                border: "1" + px + " solid " + colorExtended.blue,
                 "mix-blend-mode": "multiply",
                 "box-sizing": "border-box",
               }
@@ -2988,9 +3466,9 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             fontWeight: String(800),
             color: colorExtended.black,
             wordSpacing: String(1) + "px",
-            borderBottom: "1px solid " + colorExtended.blue,
-            paddingBottom: String(isMac() ? 1 : -1) + ea,
-            marginBottom: String(15) + ea,
+            borderBottom: "1" + px + " solid " + colorExtended.blue,
+            paddingBottom: String(desktop ? (isMac() ? 1 : -1) * scaleRatio : 0) + ea,
+            marginBottom: String(15 * scaleRatio) + ea,
           }
         });
         createNode({
@@ -2998,9 +3476,9 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           style: {
             display: "inline-flex",
             position: "relative",
-            width: String(40) + ea,
-            height: String(18) + ea,
-            borderRadius: String(18) + ea,
+            width: String(desktop ? 40 * scaleRatio : 8) + ea,
+            height: String(desktop ? 18 * scaleRatio : 4) + ea,
+            borderRadius: String(desktop ? 18 * scaleRatio : 4) + ea,
             background: colorExtended.blueDark,
             justifyContent: "center",
             alignItems: "center",
@@ -3011,8 +3489,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              top: String(isMac() ? -1 : 1) + ea,
-              fontSize: String(11) + ea,
+              top: String(desktop ? (isMac() ? -1 : 1) * scaleRatio : -0.2) + ea,
+              fontSize: String(desktop ? 11 * scaleRatio : 2.3) + ea,
               fontWeight: String(700),
               color: colorExtended.white,
             }
@@ -3024,18 +3502,18 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             display: "inline-flex",
             position: "relative",
             width: withOut(0, ea),
-            height: String(23) + ea,
+            height: String(desktop ? 23 * scaleRatio : 4.3) + ea,
             justifyContent: "center",
             alignItems: "center",
-            marginBottom: String(4) + ea,
+            marginBottom: String(desktop ? 4 * scaleRatio : 0.7) + ea,
           },
           child: {
             text: designerCareer(designer, true, true),
             style: {
               display: "inline-block",
               position: "relative",
-              top: String(isMac() ? -1 : 1) + ea,
-              fontSize: String(12) + ea,
+              top: String(desktop ? (isMac() ? -1 : 1) * scaleRatio : -0.2) + ea,
+              fontSize: String(desktop ? 12 * scaleRatio : 2.3) + ea,
               fontWeight: String(400),
               color: colorExtended.black,
             }
@@ -3046,9 +3524,9 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           style: {
             display: "inline-flex",
             position: "relative",
-            width: String(92) + ea,
-            height: String(18) + ea,
-            borderRadius: String(18) + ea,
+            width: String(desktop ? 92 * scaleRatio : 21) + ea,
+            height: String(desktop ? 18 * scaleRatio : 4) + ea,
+            borderRadius: String(desktop ? 18 * scaleRatio : 4) + ea,
             background: colorExtended.blueDark,
             justifyContent: "center",
             alignItems: "center",
@@ -3059,8 +3537,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              top: String(isMac() ? -1 : 1) + ea,
-              fontSize: String(11) + ea,
+              top: String(desktop ? (isMac() ? -1 : 1) * scaleRatio : -0.2) + ea,
+              fontSize: String(desktop ? 11 * scaleRatio : 2.3) + ea,
               fontWeight: String(700),
               color: colorExtended.white,
             }
@@ -3072,23 +3550,23 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             display: "inline-flex",
             position: "relative",
             width: withOut(0, ea),
-            height: String(23) + ea,
+            height: String(desktop ? 23 * scaleRatio : 4.3) + ea,
             justifyContent: "center",
             alignItems: "center",
-            paddingBottom: String(11) + ea,
+            paddingBottom: String(desktop ? 11 * scaleRatio : 1.4) + ea,
           },
           child: {
             text: designer.styleTendency.map((o) => { return o.name }).slice(0, 3).join("&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;"),
             style: {
               display: "inline-block",
               position: "relative",
-              top: String(isMac() ? -1 : 1) + ea,
-              fontSize: String(12) + ea,
+              top: String(desktop ? (isMac() ? -1 : 1) * scaleRatio : -0.2) + ea,
+              fontSize: String(desktop ? 12 * scaleRatio : 2.3) + ea,
               fontWeight: String(400),
               color: colorExtended.black,
             },
             under: {
-              fontSize: String(12) + ea,
+              fontSize: String(desktop ? 12 * scaleRatio : 2.3) + ea,
               fontWeight: String(400),
               color: colorExtended.blue,
             }
@@ -3099,7 +3577,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           mode: "svg",
           source: svgMaker.horizontalArrow(24, 9, colorExtended.focusBlue),
           style: {
-            display: "inline-block",
+            display: desktop ? "inline-block" : "none",
             position: "absolute",
             width: String(24) + ea,
             bottom: String(21) + ea,
@@ -3118,7 +3596,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             position: "relative",
             width: String(cardWidth) + ea,
             height: String(cardHeight) + ea,
-            borderRadius: String(8) + "px",
+            borderRadius: String(8) + px,
             background: colorExtended.white,
             boxShadow: shadowForm,
             backgroundImage: typeof representative[0] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[0]) + "')" : "",
@@ -3137,13 +3615,13 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             position: "relative",
             width: withOut(0, ea),
             background: colorExtended.blueBlack,
-            borderRadius: String(8) + "px",
-            borderTopLeftRadius: String(0) + "px",
-            borderTopRightRadius: String(0) + "px",
+            borderRadius: String(8) + px,
+            borderTopLeftRadius: String(0) + px,
+            borderTopRightRadius: String(0) + px,
             justifyContent: "center",
             alignItems: "center",
-            top: String(-1 * 8) + "px",
-            paddingTop: "calc(" + String(outerMargin2) + ea + " + " + String(8) + "px" + ")",
+            top: String(-1 * 8 * scaleRatio) + ea,
+            paddingTop: "calc(" + String(outerMargin2) + ea + " + " + String(8 * scaleRatio) + ea + ")",
             paddingBottom: String(outerMargin2) + ea,
             flexDirection: "column",
             boxShadow: "0px 3px 12px -9px " + colorExtended.darkDarkShadow,
@@ -3153,14 +3631,14 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               style: {
                 display: "flex",
                 position: "relative",
-                borderRadius: String(8) + "px",
+                borderRadius: String(8) + px,
                 background: colorExtended.white,
                 width: withOut(outerMargin * 2, ea),
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "column",
-                paddingTop: String(visualWhitePadding) + ea,
-                paddingBottom: String(visualWhitePadding) + ea,
+                paddingTop: String(visualWhitePadding * scaleRatio) + ea,
+                paddingBottom: String(visualWhitePadding * scaleRatio) + ea,
               },
               children: [
                 factorMaker("유관 경력", designerCareer(designer, true, true)),
@@ -3190,15 +3668,15 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               style: {
                 display: "flex",
                 position: "relative",
-                borderRadius: String(8) + "px",
+                borderRadius: String(8) + px,
                 background: colorExtended.white,
                 width: withOut(outerMargin * 2, ea),
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "column",
                 marginTop: String(whiteBoxBetween) + ea,
-                paddingTop: String(visualWhitePadding) + ea,
-                paddingBottom: String(visualWhitePadding) + ea,
+                paddingTop: String(visualWhitePadding * scaleRatio) + ea,
+                paddingBottom: String(visualWhitePadding * scaleRatio) + ea,
               },
               children: moneyArr
             },
@@ -3214,11 +3692,11 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 style: {
                   display: "inline-flex",
                   position: "relative",
-                  width: String(finalArrowCicleWidth) + ea,
-                  height: String(finalArrowCicleWidth) + ea,
-                  borderRadius: String(finalArrowCicleWidth) + ea,
-                  top: "calc(50% - " + String(finalArrowCicleWidth / 2) + ea + ")",
-                  left: "calc(50% - " + String(finalArrowCicleWidth / 2) + ea + ")",
+                  width: String(finalArrowCicleWidth * scaleRatio) + ea,
+                  height: String(finalArrowCicleWidth * scaleRatio) + ea,
+                  borderRadius: String(finalArrowCicleWidth * scaleRatio) + ea,
+                  top: "calc(50% - " + String(finalArrowCicleWidth * scaleRatio / 2) + ea + ")",
+                  left: "calc(50% - " + String(finalArrowCicleWidth * scaleRatio / 2) + ea + ")",
                   background: colorExtended.mainBlue,
                   justifyContent: "center",
                   alignItems: "center",
@@ -3227,11 +3705,11 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 },
                 child: {
                   mode: "svg",
-                  source: svgMaker.verticalArrow(finalArrowWidth, finalArrowHeight, colorExtended.white),
+                  source: svgMaker.verticalArrow(finalArrowWidth * scaleRatio, finalArrowHeight * scaleRatio, colorExtended.white),
                   style: {
                     display: "inline-block",
                     position: "relative",
-                    width: String(finalArrowWidth) + ea,
+                    width: String(finalArrowWidth * scaleRatio) + ea,
                   }
                 }
               }
@@ -3262,8 +3740,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
             alignItems: "center",
             width: withOut(0, ea),
             flexDirection: "row",
-            marginTop: String(designerSelectionAreaMarginTop) + ea,
-            marginBottom: String(designerSelectionAreaMarginBottom) + ea,
+            marginTop: String(designerSelectionAreaMarginTop * scaleRatio) + ea,
+            marginBottom: String(designerSelectionAreaMarginBottom * scaleRatio) + ea,
             cursor: "pointer",
           },
           children: [
@@ -3271,10 +3749,10 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               style: {
                 display: "inline-flex",
                 position: "relative",
-                width: String(checkCircleWidth) + ea,
-                height: String(checkCircleWidth + 1) + ea,
+                width: String(checkCircleWidth * scaleRatio) + ea,
+                height: String((checkCircleWidth + 1) * scaleRatio) + ea,
                 background: colorExtended.focusBlue,
-                borderRadius: String(checkCircleWidth + 1) + ea,
+                borderRadius: String((checkCircleWidth + 1) * scaleRatio) + ea,
               },
               child: {
                 mode: "svg",
@@ -3282,8 +3760,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                 style: {
                   display: "flex",
                   position: "relative",
-                  width: String(checkCircleWidth) + ea,
-                  height: String(checkCircleWidth + 1) + ea,
+                  width: String(checkCircleWidth * scaleRatio) + ea,
+                  height: String((checkCircleWidth + 1) * scaleRatio) + ea,
                 },
                 next: {
                   style: {
@@ -3291,10 +3769,10 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
                     position: "absolute",
                     top: String(0),
                     left: String(0),
-                    width: String(checkCircleWidth) + ea,
-                    height: String(checkCircleWidth + 1) + ea,
+                    width: String(checkCircleWidth * scaleRatio) + ea,
+                    height: String((checkCircleWidth + 1) * scaleRatio) + ea,
                     background: colorExtended.white,
-                    borderRadius: String(checkCircleWidth + 1) + ea,
+                    borderRadius: String((checkCircleWidth + 1) * scaleRatio) + ea,
                   },
                 }
               }
@@ -3307,11 +3785,11 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               style: {
                 display: "inline-flex",
                 position: "relative",
-                fontSize: String(designerSelectionSize) + ea,
+                fontSize: String(designerSelectionSize * scaleRatio) + ea,
                 fontWeight: String(designerSelectionWeight),
                 color: colorExtended.white,
                 fontFamily: "mont",
-                marginLeft: String(designerSelectionMarginLeft) + ea,
+                marginLeft: String(designerSelectionMarginLeft * scaleRatio) + ea,
                 opacity: String(0.4),
                 top: String(designerSelectionTextTop) + ea,
               }
@@ -3339,7 +3817,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
               style: {
                 display: "inline-block",
                 position: "relative",
-                width: String(buttonArrowWdith) + ea,
+                width: String(buttonArrowWdith * scaleRatio) + ea,
                 opacity: String(0.6),
                 transform: "rotate(90deg)",
               }
@@ -3764,10 +4242,14 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         }
       }
     }
-    if (viewNumber <= designers.length) {
-      renderDesigneresCard(false);
+    if (desktop) {
+      if (viewNumber <= designers.length) {
+        renderDesigneresCard(false);
+      } else {
+        renderDesigneresCard(true);
+      }
     } else {
-      renderDesigneresCard(true);
+      renderDesigneresCard(false);
     }
 
     selectionBase = createNode({
@@ -3780,7 +4262,8 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
         position: "relative",
         justifyContent: "center",
         alignItems: "center",
-        width: withOut(0, ea),
+        width: desktop ? withOut(0, ea) : withOut(mobileBaseMargin * 2, ea),
+        marginLeft: desktop ? "" : String(mobileBaseMargin) + ea,
         height: String(selectionBaseHeight) + ea,
         flexDirection: "row",
         marginTop: String(-1 * selectionBaseMarginTop) + ea,
@@ -3798,14 +4281,14 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
           child: {
             style: {
               position: "absolute",
-              width: String(standardWidth * 1.2) + ea,
-              height: String(standardWidth * 1.2) + ea,
+              width: desktop ? String(standardWidth * 1.2) + ea : String(standardWidth * 1.5) + ea,
+              height: desktop ? String(standardWidth * 1.2) + ea : String(standardWidth * 1.5) + ea,
               background: colorExtended.gradientBlue,
               opacity: String(1),
               animation: "rotateProgress 5s linear infinite",
               transformOrigin: "50% 50%",
               left: String(-1 * standardWidth * 0.1) + ea,
-              top: String(-1 * standardWidth * 0.6) + ea,
+              top: desktop ? String(-1 * standardWidth * 0.6) + ea : String(-1 * standardWidth * 0.75) + ea,
             }
           }
         }
@@ -3816,7 +4299,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
       event: {
         selectstart: (e) => { e.preventDefault() },
       },
-      text: "해당 디자이너를 선택하고 현장 미팅을 예약합니다.",
+      text: desktop ? "해당 디자이너를 선택하고 현장 미팅을 예약합니다." : "해당 디자이너 선택",
       style: {
         display: "inline-block",
         position: "relative",
@@ -4988,7 +5471,7 @@ DesignerExplanationJs.prototype.insertFourthBox = async function () {
 
     buttonBoxMarginTop = <%% 28, 26, 24, 20, 4 %%>;
     buttonWidth = <%% 110, 90, 80, 80, 15 %%>;
-    buttonHeight = <%% 44, 38, 38, 36, 9 %%>;
+    buttonHeight = <%% 44, 38, 38, 36, 7.5 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     buttonSize = <%% 20, 17, 17, 16, 3.5 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;

@@ -5263,7 +5263,7 @@ GeneralJs.findByAttribute = function (dom, attributeName, attributeValue) {
   }
 }
 
-GeneralJs.swipePatch = function (direction, callback = function () {}, dom = document, stackConst = "swipeStack_") {
+GeneralJs.swipePatch = function (direction, callback = function (e) {}, dom = document, stackConst = "swipeStack_") {
   const xDown = "xDown";
   const yDown = "yDown";
   const xDiff = "xDiff";
@@ -5292,7 +5292,7 @@ GeneralJs.swipePatch = function (direction, callback = function () {}, dom = doc
     if (typeof callback !== "function") {
       throw new Error("must be function input");
     }
-    GeneralJs.stacks[stackConst + direction] = callback;
+    GeneralJs.stacks[stackConst + direction] = callback.bind(dom);
   } else if (typeof direction === "object") {
     for (let i in direction) {
       if (!([ "up", "down", "left", "right" ].includes(i))) {
@@ -8429,7 +8429,7 @@ GeneralJs.prototype.greenTalk = function (input) {
   const redDotTimeOutEventName = "redDotTimeOutEventName";
   const secondPopupClassName = "secondPopupClassName";
   const touchStartConst = "greenTalkTouchStartConstName";
-  const zIndex = 1;
+  const zIndex = 3;
   let baseWidth, right, bottom;
   let iconWidth;
   let greenBase;
