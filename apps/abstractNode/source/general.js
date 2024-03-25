@@ -11,7 +11,11 @@ GeneralJs.universalLink = "/list_image/universal";
 
 GeneralJs.events = {};
 
-GeneralJs.stacks = {};
+GeneralJs.stacks = {
+  __temporaryPreventDefaultEvent: function (e) {
+    e.preventDefault();
+  }
+};
 
 GeneralJs.timeouts = {};
 
@@ -5263,7 +5267,7 @@ GeneralJs.findByAttribute = function (dom, attributeName, attributeValue) {
   }
 }
 
-GeneralJs.swipePatch = function (direction, callback = function (e) {}, dom = document, stackConst = "swipeStack_") {
+GeneralJs.swipePatch = function (direction, callback = function (e) {}, dom = document, stackConst = "swipeStack_", scrollBanTarget = null) {
   const xDown = "xDown";
   const yDown = "yDown";
   const xDiff = "xDiff";
@@ -5331,6 +5335,17 @@ GeneralJs.swipePatch = function (direction, callback = function (e) {}, dom = do
     GeneralJs.stacks[stackConst + yDown] = e.touches[0].clientY;
     GeneralJs.stacks[stackConst + xDiff] = 0;
     GeneralJs.stacks[stackConst + yDiff] = 0;
+
+    if (scrollBanTarget !== null) {
+      scrollBanTarget.addEventListener("DOMMouseScroll", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+      scrollBanTarget.addEventListener("wheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+      scrollBanTarget.addEventListener("mousewheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+      scrollBanTarget.addEventListener("touchmove", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+    }
+    dom.addEventListener("DOMMouseScroll", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+    dom.addEventListener("wheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+    dom.addEventListener("mousewheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+    dom.addEventListener("touchmove", GeneralJs.stacks.__temporaryPreventDefaultEvent);
   }
   GeneralJs.stacks[stackConst + handleTouchMove] = function (e) {
     if (!GeneralJs.stacks[stackConst + xDown] || !GeneralJs.stacks[stackConst + yDown]) {
@@ -5340,6 +5355,18 @@ GeneralJs.swipePatch = function (direction, callback = function (e) {}, dom = do
     GeneralJs.stacks[stackConst + yDiff] = GeneralJs.stacks[stackConst + yDown] - e.touches[0].clientY;
   }
   GeneralJs.stacks[stackConst + handleTouchEnd] = function (e) {
+
+    if (scrollBanTarget !== null) {
+      scrollBanTarget.removeEventListener("DOMMouseScroll", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+      scrollBanTarget.removeEventListener("wheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+      scrollBanTarget.removeEventListener("mousewheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+      scrollBanTarget.removeEventListener("touchmove", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+    }
+    dom.removeEventListener("DOMMouseScroll", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+    dom.removeEventListener("wheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+    dom.removeEventListener("mousewheel", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+    dom.removeEventListener("touchmove", GeneralJs.stacks.__temporaryPreventDefaultEvent);
+
     if (GeneralJs.stacks[stackConst + startElement] !== e.target) {
       return;
     }
@@ -8429,7 +8456,7 @@ GeneralJs.prototype.greenTalk = function (input) {
   const redDotTimeOutEventName = "redDotTimeOutEventName";
   const secondPopupClassName = "secondPopupClassName";
   const touchStartConst = "greenTalkTouchStartConstName";
-  const zIndex = 3;
+  const zIndex = 2;
   let baseWidth, right, bottom;
   let iconWidth;
   let greenBase;

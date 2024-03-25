@@ -1583,7 +1583,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
             first.style.transition = "all 0s ease";
             firstContents.style.transition = "all 0s ease";
             firstShadow.style.transition = "all 0s ease";
-            first.style.animation = "justfadeoutoriginal 0.3s ease";
+            first.style.animation = "justfadeoutoriginal 0.3s ease forwards";
   
             second.style.right = String(firstMove) + ea;
             second.style.transform = "scale(" + String(firstScale) + ")";
@@ -1603,7 +1603,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
               first.style.zIndex = String(0);
               firstContents.style.opacity = String(hideContents);
               firstShadow.style.opacity = String(hideShadow);
-              first.style.animation = "justfadeinoriginal 0.3s ease";
+              first.style.animation = "justfadeinoriginal 0.3s ease forwards";
               setQueue(() => {
                 first.style.transition = "all 0.3s ease";
                 firstContents.style.transition = "all 0.3s ease";
@@ -1617,7 +1617,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
               }, 300);  
             }, 290);
           }
-        }, thisCardBase, "swipeStack_" + designer.desid + "_" + String(i) + "_");
+        }, thisCardBase, "swipeStack_" + designer.desid + "_" + String(i) + "_", baseTong);
       }
 
       // click me
@@ -2218,7 +2218,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
                   flexDirection: "column",
                   top: String(0),
                   left: String(0) + ea,
-                  backgroundImage: typeof representative[1] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[1]) + "')" : "",
+                  backgroundImage: typeof representative[0] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[0]) + "')" : "",
                   backgroundSize: "auto 100%",
                   backgroundPosition: "50% 50%",
                   opacity: String(showContents),
@@ -2280,7 +2280,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
                   flexDirection: "column",
                   top: String(0),
                   left: String(0) + ea,
-                  backgroundImage: typeof representative[0] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[0]) + "')" : "",
+                  backgroundImage: typeof representative[1] === "string" ?  "url('" + "https://" + FILEHOST + stringToLink(representative[1]) + "')" : "",
                   backgroundSize: "auto 100%",
                   backgroundPosition: "50% 50%",
                   opacity: String(hideContents),
@@ -5593,7 +5593,7 @@ DesignerExplanationJs.prototype.styleTextParsing = function (text) {
 
 DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, designerCareer, isMac, isIphone, svgMaker, autoComma, ajaxJson, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, designerCareer, isMac, isIphone, svgMaker, autoComma, ajaxJson, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, swipePatch } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -5605,7 +5605,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
   const paperWorksFactorWidthClassName = "paperWorksFactorWidthClassName";
   return async function (e) {
     try {
-      const loading = instance.mother.grayLoading();
+      const loading = instance.mother.grayLoading(null, mobile);
       const project = instance.project;
       const designer = instance.designers.find((d) => { return d.desid === desid });
       const proposal = project.proposal.detail.find((p) => { return p.desid === desid });
@@ -5622,6 +5622,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       const careerSubtract = ((today.getFullYear() * 12) + (today.getMonth() + 1)) - ((startY * 12) + startM);
       const year = Math.floor(careerSubtract / 12);
       const month = (careerSubtract % 12);
+      const px = "px";
       let cancelBack, whiteBase;
       let whiteMargin;
       let innerMargin;
@@ -5752,6 +5753,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let finalVatSize, finalVatMarginRight;
       let nameTitleVisualTop;
       let priceCircleVisualTop;
+      let mobileWhiteTopMargin;
+      let whiteCloseEvent;
 
       whiteMargin = <%% 30, 30, 30, 30, 30 %%>;
       innerMargin = <%% 52, 48, 40, 24, 52 %%>;
@@ -5807,7 +5810,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       blockTitleMarginBottom = <%% 11, 11, 11, 11, 11 %%>;
 
-      whiteStandardWidth = <%% 1400, 1050, 900, 720, 88 %%>;
+      whiteStandardWidth = <%% 1400, 1050, 900, 720, 100 %%>;
 
       pictureBaseHeight = <%% 880, 650, 570, 460, 650 %%>;
       factorHeight = <%% 42, 40, 36, 33, 6 %%>;
@@ -5917,6 +5920,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       nameTitleVisualTop = <%% (isMac() ? 0 : 3), (isMac() ? 0 : 3), (isMac() ? 0 : 3), (isMac() ? 0 : 2), 0 %%>;
       priceCircleVisualTop = <%% (isMac() ? 0 : -1), (isMac() ? 0 : -1), (isMac() ? 0 : -1), (isMac() ? 0 : -1), 0 %%>;
+
+      mobileWhiteTopMargin = 8;
 
       ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
 
@@ -6317,13 +6322,28 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         });
       }
 
+      whiteCloseEvent = () => {
+        return function (e) {
+          if (desktop) {
+            removeByClass(whitePopupClassName);
+          } else {
+            const [ cancel, whiteBase ] = [ ...document.querySelectorAll('.' + whitePopupClassName) ];
+            cancel.style.animation = "justfadeoutsmall 0.5s ease forwards";
+            whiteBase.style.animation = "fadedownentire 0.5s ease forwards";
+            setQueue(() => {
+              removeByClass(whitePopupClassName);
+            }, 500);
+          }
+        }
+      }
+
+      // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
       cancelBack = createNode({
         mother: totalContents,
         class: [ whitePopupClassName ],
         event: {
-          click: (e) => {
-            removeByClass(whitePopupClassName);
-          }
+          click: whiteCloseEvent(),
         },
         style: {
           position: "fixed",
@@ -6331,7 +6351,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           left: String(0),
           width: withOut(0),
           height: withOut(0),
-          opacity: String(0.4),
+          transition: "all 0.3s ease",
+          opacity: String(0),
+          animation: "justfadeinsmall 0.5s ease forwards",
           background: colorChip.black,
           zIndex: String(zIndex),
         }
@@ -6343,23 +6365,47 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         style: {
           position: "fixed",
           width: String(whiteStandardWidth) + ea,
-          height: "calc(calc(100% - " + String(naviHeight) + "px" + ") - " + String((whiteMargin * 2)) + ea + ")",
-          top: "calc(" + String(naviHeight) + "px" + " + " + String(whiteMargin) + ea + ")",
+          height: desktop ? "calc(calc(100% - " + String(naviHeight) + px + ") - " + String((whiteMargin * 2)) + ea + ")" : "calc(calc(100% - " + String(naviHeight) + px + ") - " + String(mobileWhiteTopMargin) + ea + ")",
+          top: desktop ? "calc(" + String(naviHeight) + px + " + " + String(whiteMargin) + ea + ")" : "calc(" + String(naviHeight) + px + " + " + String(mobileWhiteTopMargin) + ea + ")",
           left: "calc(50% - " + String(whiteStandardWidth / 2) + ea + ")",
-          borderRadius: String(5) + "px",
+          borderTopLeftRadius: desktop ? String(5) + px : String(1.6) + ea,
+          borderTopRightRadius: desktop ? String(5) + px : String(1.6) + ea,
+          borderBottomLeftRadius: desktop ? String(5) + px : String(0) + ea,
+          borderBottomRightRadius: desktop ? String(5) + px : String(0) + ea,
           background: colorChip.white,
           boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
-          animation: "fadeuporiginal 0.3s ease forwards",
+          animation: desktop ? "fadeuporiginal 0.3s ease forwards" : "fadeupentire 0.5s ease forwards",
           zIndex: String(zIndex),
         },
         child: {
-          display: "block",
-          position: "relative",
-          width: withOut(0, ea),
-          height: withOut(0, ea),
-          overflow: "visible",
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            overflow: "visible",
+          },
+          next: {
+            event: {
+              click: whiteCloseEvent(),
+            },
+            style: {
+              display: mobile ? "flex" : "none",
+              position: "absolute",
+              width: String(12) + ea,
+              height: String(1) + ea,
+              borderRadius: String(1) + ea,
+              background: colorExtended.mainBlue,
+              top: String(3) + ea,
+              left: withOut(50, 12 / 2, ea),
+            }
+          }
         }
       }).firstChild;
+
+      if (mobile) {
+        swipePatch("down", whiteCloseEvent(), whiteBase.parentElement, "swipeStack_whiteBlock_", baseTong);  
+      }
 
       scrollTong = createNode({
         mother: whiteBase,
