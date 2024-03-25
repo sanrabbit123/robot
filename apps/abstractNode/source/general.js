@@ -5378,6 +5378,7 @@ GeneralJs.swipePatch = function (direction, callback = function (e) {}, dom = do
       const timeoutKey = "data-swipe-timeout";
       const thresholdValue = 20;
       const timeoutValue = 500;
+      const delta = 1.2;
       let swipeThreshold, swipeTimeout;
       let timeDiff;
       let direction;
@@ -5412,15 +5413,21 @@ GeneralJs.swipePatch = function (direction, callback = function (e) {}, dom = do
           direction,
           start: [ parseInt(GeneralJs.stacks[stackConst + xDown], 10), parseInt(GeneralJs.stacks[stackConst + yDown], 10) ],
           end: [ parseInt((changedTouches[0] || {}).clientX || -1, 10), parseInt((changedTouches[0] || {}).clientY || -1, 10) ],
+          y: GeneralJs.stacks[stackConst + yDiff],
+          x: GeneralJs.stacks[stackConst + xDiff],
+          top: GeneralJs.stacks[stackConst + yDiff],
+          left: GeneralJs.stacks[stackConst + xDiff],
         };
         if (typeof GeneralJs.stacks[stackConst + direction] === "function") {
           (GeneralJs.stacks[stackConst + direction])(eventData);
         } else {
-          window.scroll({
-            top: GeneralJs.stacks[stackConst + yDiff] - scrollBanTarget.getBoundingClientRect().top,
-            left: GeneralJs.stacks[stackConst + xDiff] - scrollBanTarget.getBoundingClientRect().left,
-            behavior: "smooth"
-          });
+          if (scrollBanTarget !== null) {
+            window.scroll({
+              top: (GeneralJs.stacks[stackConst + yDiff] - scrollBanTarget.getBoundingClientRect().top) * delta,
+              left: (GeneralJs.stacks[stackConst + xDiff] - scrollBanTarget.getBoundingClientRect().left) * delta,
+              behavior: "smooth"
+            });
+          }
         }
       }
       GeneralJs.stacks[stackConst + xDown] = null;

@@ -6407,16 +6407,46 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       }).firstChild;
 
       if (mobile) {
-        swipePatch("down", whiteCloseEvent(), whiteBase.parentElement, "swipeStack_whiteBlock_", baseTong, () => {
+        swipePatch({
+          down: whiteCloseEvent(),
+          up: function (e) {
+            whiteBase.firstChild.scroll({
+              top: (e.top - whiteBase.firstChild.getBoundingClientRect().top) * 3.2,
+              left: 0,
+              behavior: "smooth"
+            });
+          },
+          left: function (e) {
+            // pass
+          },
+          right: function (e) {
+            // pass
+          },
+        }, null, whiteBase.parentElement, "swipeStack_whiteBlock_top_", whiteBase.firstChild, () => {
           return whiteBase.firstChild.scrollTop === 0;
         });
-        tempScrollBan(cancelBack);
-        
-        whiteBase.addEventListener("wheel", function (e) {
-          console.log(whiteBase.firstChild.scrollTop);
-          console.log(whiteBase.firstChild.firstChild.getBoundingClientRect().top);
-          console.log(whiteBase.firstChild.firstChild.getBoundingClientRect().height);
+
+        swipePatch({
+          up: function (e) {
+            // pass
+          },
+          down: function (e) {
+            whiteBase.firstChild.scroll({
+              top: whiteBase.firstChild.getBoundingClientRect().height + (whiteBase.firstChild.getBoundingClientRect().top - e.top),
+              left: 0,
+              behavior: "smooth"
+            });
+          },
+          left: function (e) {
+            // pass
+          },
+          right: function (e) {
+            // pass
+          },
+        }, null, whiteBase.parentElement, "swipeStack_whiteBlock_bottom_", whiteBase.firstChild, () => {
+          return (Math.floor(Math.abs(whiteBase.firstChild.firstChild.getBoundingClientRect().height - window.innerHeight)) - 1 <= Math.floor(Math.abs(whiteBase.firstChild.firstChild.getBoundingClientRect().top)));
         });
+        tempScrollBan(cancelBack);
       }
 
       scrollTong = createNode({
