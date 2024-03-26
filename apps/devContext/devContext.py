@@ -46,7 +46,11 @@ class DevContext:
         gpt = OpenAiAPIs()
         try:
 
-
+            standard = numbersToDate(2024, 2, 10)
+            selfMongo = mongo
+            rows = await back.mongoRead("client", { "requests": { "$elemMatch": { "request.timeline": { "$gte": standard } } } }, { "selfMongo": selfMongo })
+            consoleLog(rows)
+            consoleLog(len(rows))
 
 
 
