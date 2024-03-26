@@ -191,15 +191,62 @@ DevContext.prototype.launching = async function () {
     // console.log(await requestSystem("https://home-liaison.link:3000/kakaoComplex", { day: 30 }, { headers: { "Content-Type": "application/json" } }));
 
 
-    
-
-    
-
-    
-    
 
 
     
+    // promotion start ============================================================================================================================================================
+    /*
+
+    const promotion = {
+      id: "promotion_342087238572035",
+      date: new Date(),
+      key: "from_239857239875_to_239857239875",
+      lifespan: {
+        from: new Date(),
+        to: new Date(),
+      },
+      name: "샘플 프로모션_test",
+      contents: {
+        description: [
+          "이것은 샘플 프로모션에 대한 설명입니다."
+        ],
+        filter: {
+          js_json: async (mother, client, designer, project) => {
+            const { ajaxJson, equalJson } = mother;
+            try {
+              const from = new Date(2024, 3, 20);
+              const to = new Date(2024, 3, 24);
+              let result;
+  
+              result = 0;
+              if (client.requests[0].request.timeline.valueOf() >= from.valueOf() && client.requests[0].request.timeline.valueOf() < to.valueOf()) {
+                result = 1;
+              }
+  
+              return 0.3;
+            } catch (e) {
+              return 0;
+            }
+          },
+          js_sql: "<<<sfrvgaergvawrgvawegwagwegweg4g4g4gagv>>>",
+          python_json: "<<<w3eofhqo3248gq0243gh2q4gq24jp0g9jq24g>>>",
+          python_sql: "<<<eafrbdcxvwdvawrgvaergvrddaefweaddfawef>>>",
+        },
+        values: [ 0, 0.1, 0.3 ]
+      },
+    }
+
+    const obj0 = ((await hexaJson(promotion)));
+    const obj1 = (await hexaJson(await hexaJson(promotion)));
+
+    console.log(obj0);
+    console.log(obj1);
+
+    */
+    // promotion end ==============================================================================================================================================================
+
+
+
 
 
     /*
