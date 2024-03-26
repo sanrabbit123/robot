@@ -5379,6 +5379,7 @@ GeneralJs.swipePatch = function (direction, callback = function (e) {}, dom = do
       const thresholdValue = 20;
       const timeoutValue = 500;
       const delta = 1.2;
+      const gamma = 0.8;
       let swipeThreshold, swipeTimeout;
       let timeDiff;
       let direction;
@@ -5423,8 +5424,8 @@ GeneralJs.swipePatch = function (direction, callback = function (e) {}, dom = do
         } else {
           if (scrollBanTarget !== null) {
             window.scroll({
-              top: (GeneralJs.stacks[stackConst + yDiff] - scrollBanTarget.getBoundingClientRect().top) * delta,
-              left: (GeneralJs.stacks[stackConst + xDiff] - scrollBanTarget.getBoundingClientRect().left) * delta,
+              top: (GeneralJs.stacks[stackConst + yDiff] - scrollBanTarget.getBoundingClientRect().top) * (GeneralJs.stacks[stackConst + yDiff] >= 0 ? delta : gamma),
+              left: (GeneralJs.stacks[stackConst + xDiff] - scrollBanTarget.getBoundingClientRect().left) * (GeneralJs.stacks[stackConst + xDiff] >= 0 ? delta : gamma),
               behavior: "smooth"
             });
           }

@@ -1547,77 +1547,153 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
         }
       });
       if (mobile) {
-        swipePatch("left", function (e) {
-          const self = this;
-          const index = Number(this.getAttribute("index"));
-          const desid = this.getAttribute("desid");
-          const move = Number(this.getAttribute("move"));
-          const process = this.getAttribute("process");
-          let first, second, third;
-          let firstContents, firstShadow;
-          let secondContents, secondShadow;
-          let thirdContents, thirdShadow;
-          if (process === "stop") {
-            self.setAttribute("process", "doing");
-            if (move === 0) {
-              first = this.querySelector("." + cardPositionFirstClassName);
-              second = this.querySelector("." + cardPositionSecondClassName);
-              third = this.querySelector("." + cardPositionThirdClassName);
-            } else if (move === 1) {
-              first = this.querySelector("." + cardPositionSecondClassName);
-              second = this.querySelector("." + cardPositionThirdClassName);
-              third = this.querySelector("." + cardPositionFirstClassName);
-            } else {
-              first = this.querySelector("." + cardPositionThirdClassName);
-              second = this.querySelector("." + cardPositionFirstClassName);
-              third = this.querySelector("." + cardPositionSecondClassName);
-            }
-
-            firstContents = first.querySelector("." + realContentsAreaClassName);
-            firstShadow = first.querySelector("." + blackGlassAreaClassName);
-            secondContents = second.querySelector("." + realContentsAreaClassName);
-            secondShadow = second.querySelector("." + blackGlassAreaClassName);
-            thirdContents = third.querySelector("." + realContentsAreaClassName);
-            thirdShadow = third.querySelector("." + blackGlassAreaClassName);
-
-            first.style.transition = "all 0s ease";
-            firstContents.style.transition = "all 0s ease";
-            firstShadow.style.transition = "all 0s ease";
-            first.style.animation = "justfadeoutoriginal 0.3s ease forwards";
+        swipePatch({
+          left: function (e) {
+            const self = this;
+            const index = Number(this.getAttribute("index"));
+            const desid = this.getAttribute("desid");
+            const move = Number(this.getAttribute("move"));
+            const process = this.getAttribute("process");
+            let first, second, third;
+            let firstContents, firstShadow;
+            let secondContents, secondShadow;
+            let thirdContents, thirdShadow;
+            if (process === "stop") {
+              self.setAttribute("process", "doing");
+              if (move === 0) {
+                first = this.querySelector("." + cardPositionFirstClassName);
+                second = this.querySelector("." + cardPositionSecondClassName);
+                third = this.querySelector("." + cardPositionThirdClassName);
+              } else if (move === 1) {
+                first = this.querySelector("." + cardPositionSecondClassName);
+                second = this.querySelector("." + cardPositionThirdClassName);
+                third = this.querySelector("." + cardPositionFirstClassName);
+              } else {
+                first = this.querySelector("." + cardPositionThirdClassName);
+                second = this.querySelector("." + cardPositionFirstClassName);
+                third = this.querySelector("." + cardPositionSecondClassName);
+              }
   
-            second.style.right = String(firstMove) + ea;
-            second.style.transform = "scale(" + String(firstScale) + ")";
-            second.style.zIndex = String(2);
-            secondContents.style.opacity = String(showContents);
-            secondShadow.style.opacity = String(showShadow);
+              firstContents = first.querySelector("." + realContentsAreaClassName);
+              firstShadow = first.querySelector("." + blackGlassAreaClassName);
+              secondContents = second.querySelector("." + realContentsAreaClassName);
+              secondShadow = second.querySelector("." + blackGlassAreaClassName);
+              thirdContents = third.querySelector("." + realContentsAreaClassName);
+              thirdShadow = third.querySelector("." + blackGlassAreaClassName);
   
-            third.style.right = String(secondMove) + ea;
-            third.style.transform = "scale(" + String(secondScale) + ")";
-            third.style.zIndex = String(1);
-            thirdContents.style.opacity = String(showContents);
-            thirdShadow.style.opacity = String(showShadow);
-  
-            setQueue(() => {
-              first.style.right = String(thirdMove) + ea;
-              first.style.transform = "scale(" + String(thirdScale) + ")";
-              first.style.zIndex = String(0);
-              firstContents.style.opacity = String(hideContents);
-              firstShadow.style.opacity = String(hideShadow);
-              first.style.animation = "justfadeinoriginal 0.3s ease forwards";
+              first.style.transition = "all 0s ease";
+              firstContents.style.transition = "all 0s ease";
+              firstShadow.style.transition = "all 0s ease";
+              first.style.animation = "justfadeoutoriginal 0.3s ease forwards";
+    
+              second.style.right = String(firstMove) + ea;
+              second.style.transform = "scale(" + String(firstScale) + ")";
+              second.style.zIndex = String(2);
+              secondContents.style.opacity = String(showContents);
+              secondShadow.style.opacity = String(showShadow);
+    
+              third.style.right = String(secondMove) + ea;
+              third.style.transform = "scale(" + String(secondScale) + ")";
+              third.style.zIndex = String(1);
+              thirdContents.style.opacity = String(showContents);
+              thirdShadow.style.opacity = String(showShadow);
+    
               setQueue(() => {
-                first.style.transition = "all 0.3s ease";
-                firstContents.style.transition = "all 0.3s ease";
-                firstShadow.style.transition = "all 0.3s ease";
-                if (move === 2) {
-                  self.setAttribute("move", String(0));
-                } else {
-                  self.setAttribute("move", String(move + 1));
-                }
-                self.setAttribute("process", "stop");
-              }, 300);  
-            }, 290);
-          }
-        }, thisCardBase, "swipeStack_" + designer.desid + "_" + String(i) + "_", baseTong);
+                first.style.right = String(thirdMove) + ea;
+                first.style.transform = "scale(" + String(thirdScale) + ")";
+                first.style.zIndex = String(0);
+                firstContents.style.opacity = String(hideContents);
+                firstShadow.style.opacity = String(hideShadow);
+                first.style.animation = "justfadeinoriginal 0.3s ease forwards";
+                setQueue(() => {
+                  first.style.transition = "all 0.3s ease";
+                  firstContents.style.transition = "all 0.3s ease";
+                  firstShadow.style.transition = "all 0.3s ease";
+                  if (move === 2) {
+                    self.setAttribute("move", String(0));
+                  } else {
+                    self.setAttribute("move", String(move + 1));
+                  }
+                  self.setAttribute("process", "stop");
+                }, 300);  
+              }, 290);
+            }
+          },
+          right: function (e) {
+            const self = this;
+            const index = Number(this.getAttribute("index"));
+            const desid = this.getAttribute("desid");
+            const move = Number(this.getAttribute("move"));
+            const process = this.getAttribute("process");
+            let first, second, third;
+            let firstContents, firstShadow;
+            let secondContents, secondShadow;
+            let thirdContents, thirdShadow;
+            if (process === "stop") {
+              self.setAttribute("process", "doing");
+              if (move === 0) {
+                first = this.querySelector("." + cardPositionFirstClassName);
+                second = this.querySelector("." + cardPositionSecondClassName);
+                third = this.querySelector("." + cardPositionThirdClassName);
+              } else if (move === 1) {
+                first = this.querySelector("." + cardPositionSecondClassName);
+                second = this.querySelector("." + cardPositionThirdClassName);
+                third = this.querySelector("." + cardPositionFirstClassName);
+              } else {
+                first = this.querySelector("." + cardPositionThirdClassName);
+                second = this.querySelector("." + cardPositionFirstClassName);
+                third = this.querySelector("." + cardPositionSecondClassName);
+              }
+  
+              firstContents = first.querySelector("." + realContentsAreaClassName);
+              firstShadow = first.querySelector("." + blackGlassAreaClassName);
+              secondContents = second.querySelector("." + realContentsAreaClassName);
+              secondShadow = second.querySelector("." + blackGlassAreaClassName);
+              thirdContents = third.querySelector("." + realContentsAreaClassName);
+              thirdShadow = third.querySelector("." + blackGlassAreaClassName);
+  
+              third.style.transition = "all 0s ease";
+              thirdContents.style.transition = "all 0s ease";
+              thirdShadow.style.transition = "all 0s ease";
+              third.style.animation = "justfadeoutoriginal 0.3s ease forwards";
+    
+              setQueue(() => {
+                second.style.right = String(thirdMove) + ea;
+                second.style.transform = "scale(" + String(thirdScale) + ")";
+                second.style.zIndex = String(0);
+                secondContents.style.opacity = String(hideContents);
+                secondShadow.style.opacity = String(hideShadow);
+  
+                first.style.right = String(secondMove) + ea;
+                first.style.transform = "scale(" + String(secondScale) + ")";
+                first.style.zIndex = String(1);
+                firstContents.style.opacity = String(showContents);
+                firstShadow.style.opacity = String(showShadow);
+      
+                setQueue(() => {
+                  third.style.right = String(firstMove) + ea;
+                  third.style.transform = "scale(" + String(firstScale) + ")";
+                  third.style.zIndex = String(2);
+                  thirdContents.style.opacity = String(showContents);
+                  thirdShadow.style.opacity = String(showShadow);
+                  third.style.animation = "justfadeinoriginal 0.3s ease forwards";
+                  setQueue(() => {
+                    third.style.transition = "all 0.3s ease";
+                    thirdContents.style.transition = "all 0.3s ease";
+                    thirdShadow.style.transition = "all 0.3s ease";
+                    if (move === 0) {
+                      self.setAttribute("move", String(2));
+                    } else {
+                      self.setAttribute("move", String(move - 1));
+                    }
+                    self.setAttribute("process", "stop");
+                  }, 300);  
+                }, 290);
+              }, 200);
+
+            }
+          },
+        }, null, thisCardBase, "swipeStack_third_" + designer.desid + "_" + String(i) + "_", baseTong);
       }
 
       // click me
@@ -5593,7 +5669,7 @@ DesignerExplanationJs.prototype.styleTextParsing = function (text) {
 
 DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, designerCareer, isMac, isIphone, svgMaker, autoComma, ajaxJson, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, swipePatch, tempScrollBan, tempScrollRelease } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, designerCareer, isMac, isIphone, svgMaker, autoComma, ajaxJson, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, swipePatch, tempScrollBan, tempScrollRelease, setDebounce } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -5603,6 +5679,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
   const totalContents = document.getElementById("totalcontents");
   const paperWorksTongClassName = "paperWorksTongClassName";
   const paperWorksFactorWidthClassName = "paperWorksFactorWidthClassName";
+  const mobileBlueBarClassName = "mobileBlueBarClassName";
   return async function (e) {
     try {
       const loading = instance.mother.grayLoading(null, mobile);
@@ -5755,9 +5832,11 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let priceCircleVisualTop;
       let mobileWhiteTopMargin;
       let whiteCloseEvent;
+      let mobileDesignerProfileTong;
+      let mobileProfileSeroMargin;
 
       whiteMargin = <%% 30, 30, 30, 30, 3 %%>;
-      innerMargin = <%% 52, 48, 40, 24, 5 %%>;
+      innerMargin = <%% 52, 48, 40, 24, 6 %%>;
 
       titleHeight = <%% 41, 39, 37, 28, 8 %%>;  
       titleSize = <%% 40, 40, 40, 40, 4 %%>;
@@ -5765,54 +5844,54 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
       titleTop = <%% -6, -6, -6, -6, -1 %%>;
 
-      profileHeight = <%% 200, 192, 180, 150, 20 %%>;
-      profileLineWidth = <%% 10, 10, 8, 8, 1 %%>;
+      profileHeight = <%% 200, 192, 180, 150, 40 %%>;
+      profileLineWidth = <%% 10, 10, 8, 8, 1.5 %%>;
       profileMargin = <%% 30, 24, 20, 16, 3 %%>;
 
       profileDescriptionTongWidth = <%% 700, 560, 450, 320, 70 %%>;
 
-      styleButtonMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
+      styleButtonMarginBottom = <%% 4, 4, 4, 4, 0.8 %%>;
 
-      nameTitlesize = <%% 32, 30, 28, 23, 4 %%>;
-      nameMargin = <%% 12, 10, 9, 7, 1 %%>;
+      nameTitlesize = <%% 32, 30, 28, 23, 6 %%>;
+      nameMargin = <%% 12, 10, 9, 7, 2 %%>;
 
       designerNameTongHeight = <%% 50, 50, 50, 50, 10 %%>;
       nameTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-      designerWordsSize = <%% 14, 14, 14, 12, 2.5 %%>;
+      designerWordsSize = <%% 14, 14, 14, 12, 3 %%>;
       designerWordsWeight = <%% 400, 400, 400, 400, 400 %%>;
-      designerWordsMarginLeft = <%% 10, 10, 10, 8, 1 %%>;
-      designerWordsPaddingBottom = <%% 5, 5, 4, (isMac() ? 4 : 3), 1 %%>;
+      designerWordsMarginLeft = <%% 10, 10, 10, 8, 1.8 %%>;
+      designerWordsPaddingBottom = <%% 5, 5, 4, (isMac() ? 4 : 3), 1.3 %%>;
 
-      introducetionSize = <%% 16, 15, 13, 12, 3 %%>;
-      introducetionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+      introducetionSize = <%% 16, 15, 13, 12, 3.3 %%>;
+      introducetionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.6 %%>;
       introducetionWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-      styleBlockHeight = <%% 21, 21, 21, 18, 21 %%>;
-      styleBlockPadding = <%% 8, 8, 8, 7, 1 %%>;
-      styleBlockMarginLeftLong = <%% 14, 14, 14, 9, 1 %%>;
-      styleBlockMarginLeftShort = <%% 3, 3, 3, 2, 1 %%>;
-      styleBlockTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -1 %%>;
-      styleBlockSize = <%% 11, 11, 11, 10, 3 %%>;
+      styleBlockHeight = <%% 21, 21, 21, 18, 4.8 %%>;
+      styleBlockPadding = <%% 8, 8, 8, 7, 2 %%>;
+      styleBlockMarginLeftLong = <%% 14, 14, 14, 9, 0 %%>;
+      styleBlockMarginLeftShort = <%% 3, 3, 3, 2, 0.8 %%>;
+      styleBlockTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.2 %%>;
+      styleBlockSize = <%% 11, 11, 11, 10, 2.6 %%>;
       styleBlockWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-      designerCharSize = <%% 27, 24, 21, 17, 3 %%>;
+      designerCharSize = <%% 27, 24, 21, 17, 4.7 %%>;
       designerCharWeight = <%% 700, 700, 700, 700, 700 %%>;
       designerCharTop = <%% -5, -4, -3, -1, -1 %%>;
-      designerCharMarginBottom = <%% 22, 35, 30, 18, 2 %%>;
+      designerCharMarginBottom = <%% 22, 35, 30, 18, 3.5 %%>;
 
-      blockTitleBlockHeight = <%% 30, 24, 20, 18, 30 %%>;
-      blockTitleSize = <%% 21, 20, 17, 16, 21 %%>;
-      blockInnerPadding = <%% 52, 48, 40, 24, 52 %%>;
+      blockTitleBlockHeight = <%% 30, 24, 20, 18, 6.4 %%>;
+      blockTitleSize = <%% 21, 20, 17, 16, 4 %%>;
+      blockInnerPadding = <%% 52, 48, 40, 24, 7.5 %%>;
 
-      paperWorksHeight = <%% 260, 200, 200, 170, 26 %%>;
+      paperWorksHeight = <%% 260, 200, 200, 170, 42 %%>;
       paperBetween = <%% 6, 5, 4, 3, 1 %%>;
       arrowLeftMargin = <%% 30, 30, 25, 16, 3 %%>;
 
-      blockTitleMarginBottom = <%% 11, 11, 11, 11, 11 %%>;
+      blockTitleMarginBottom = <%% 11, 11, 11, 11, 1 %%>;
 
       whiteStandardWidth = <%% 1400, 1050, 900, 720, 100 %%>;
 
-      pictureBaseHeight = <%% 880, 650, 570, 460, 65 %%>;
+      pictureBaseHeight = <%% 880, 650, 570, 460, 61 %%>;
       factorHeight = <%% 42, 40, 36, 33, 6 %%>;
 
       factorTextTop = <%% (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), -0.5 %%>;
@@ -5831,12 +5910,12 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       tendencyNameAreaWidth = <%% 64, 64, 64, 64, 12 %%>;
       tendencyBarHeight = <%% 14, 14, 14, 12, 1 %%>;
 
-      tendencySize = <%% 13, 13, 12, 11, 13 %%>;
+      tendencySize = <%% 13, 13, 12, 11, 2.5 %%>;
       tendencyTextTop = <%% (isMac() ? -1 : 1.5), (isMac() ? -1 : 1.5), (isMac() ? -1 : 1.5), (isMac() ? -1 : 1), -1 %%>;
       tendencyWeight = <%% 600, 600, 600, 600, 600 %%>;
-      tendencyBoxPaddingTop = <%% 16, 16, 14, 8, 16 %%>;
+      tendencyBoxPaddingTop = <%% 16, 16, 14, 8, 1 %%>;
 
-      largePaddingBottom = <%% 58, 54, 45, 34, 12 %%>;
+      largePaddingBottom = <%% 58, 54, 45, 34, 9 %%>;
 
       dashLineIndent = <%% 8, 8, 8, 8, 1 %%>;
 
@@ -5881,13 +5960,13 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       designerKeywordsPaddingRight = <%% 12, 12, 12, 10, 12 %%>;
       designerKeywordsTagHeight = <%% 32, 28, 26, 24, 32 %%>;
       designerKeywordsBetween = <%% 4, 3, 5, 4, 4 %%>;
-      designerKeywordsSize = <%% 14, 13, 12, 11, 14 %%>;
+      designerKeywordsSize = <%% 14, 13, 12, 11, 3 %%>;
       designerKeywordsWeight = <%% 700, 700, 700, 700, 700 %%>;
       designerKeywordsTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -1 %%>;
-      designerKeywordsSvgLeft = <%% -18, -18, -16, -14, -18 %%>;
+      designerKeywordsSvgLeft = <%% -18, -18, -16, -14, -1 %%>;
 
-      paperWorkArrowWidth = <%% 12, 12, 10, 8, 12 %%>;
-      paperWorkArrowHeight = <%% 24, 24, 20, 16, 24 %%>;
+      paperWorkArrowWidth = <%% 12, 12, 10, 8, 1 %%>;
+      paperWorkArrowHeight = <%% 24, 24, 20, 16, 2 %%>;
 
       portfolioSize = <%% 16, 15, 14, 12, 3 %%>;
       portfolioWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -5900,9 +5979,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       finalPriceTongMarginTop = <%% 16, 12, 10, 8, 16 %%>;
       finalPriceDashedLineTop = <%% 21, 21, 17, 13, 21 %%>;
 
-      designerSelectionMotherPadding = <%% 44, 42, 32, 24, 44 %%>;
+      designerSelectionMotherPadding = <%% 44, 42, 32, 24, 4 %%>;
 
-      designerSelectionMarginLeft = <%% 1150, 810, 690, 570, 1150 %%>;
+      designerSelectionMarginLeft = <%% 1150, 810, 690, 570, 115 %%>;
       designerSelectionSize = <%% 18, 17, 15, 13, 3 %%>;
       designerSelectionWeight = <%% 800, 800, 800, 800, 800 %%>;
 
@@ -5912,9 +5991,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       finalMoneyOriginalSize = <%% 20, 18, 16, 13, 3 %%>;
       finalMoneyOriginalWeight = <%% 300, 300, 300, 300, 300 %%>;
-      finalMoneyOriginalMarginRight = <%% 8, 8, 8, 6, 8 %%>;
-      finalMoneyAmountSize = <%% 21, 19, 17, 14, 21 %%>;
-      finalMoneyAmountMarginRight = <%% 24, 24, 18, 12, 24 %%>;
+      finalMoneyOriginalMarginRight = <%% 8, 8, 8, 6, 1 %%>;
+      finalMoneyAmountSize = <%% 21, 19, 17, 14, 3 %%>;
+      finalMoneyAmountMarginRight = <%% 24, 24, 18, 12, 1 %%>;
       finalVatSize = <%% 12, 12, 11, 10, 3 %%>;
       finalVatMarginRight = <%% 8, 8, 8, 5, 1 %%>;
 
@@ -5922,6 +6001,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       priceCircleVisualTop = <%% (isMac() ? 0 : -1), (isMac() ? 0 : -1), (isMac() ? 0 : -1), (isMac() ? 0 : -1), 0 %%>;
 
       mobileWhiteTopMargin = 8;
+      mobileProfileSeroMargin = 5;
 
       ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
 
@@ -6332,7 +6412,6 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             const [ cancel, whiteBase ] = [ ...document.querySelectorAll('.' + whitePopupClassName) ];
             cancel.style.animation = "justfadeoutsmall 0.5s ease forwards";
             whiteBase.style.animation = "fadedownentire 0.5s ease forwards";
-            tempScrollRelease(cancelBack);
             setQueue(() => {
               removeByClass(whitePopupClassName);
             }, 500);
@@ -6389,6 +6468,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             overflow: "visible",
           },
           next: {
+            class: [ mobileBlueBarClassName ],
+            attribute: { toggle: "on" },
             event: {
               click: whiteCloseEvent(),
             },
@@ -6415,6 +6496,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               left: 0,
               behavior: "smooth"
             });
+            document.querySelector('.' + mobileBlueBarClassName).style.animation = "justfadeoutoriginal 0.3s ease forwards";
+            document.querySelector('.' + mobileBlueBarClassName).setAttribute("toggle", "off");
           },
           left: function (e) {
             // pass
@@ -6425,14 +6508,13 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         }, null, whiteBase.parentElement, "swipeStack_whiteBlock_top_", whiteBase.firstChild, () => {
           return whiteBase.firstChild.scrollTop === 0;
         });
-
         swipePatch({
           up: function (e) {
             // pass
           },
           down: function (e) {
             whiteBase.firstChild.scroll({
-              top: whiteBase.firstChild.getBoundingClientRect().height + (whiteBase.firstChild.getBoundingClientRect().top - e.top),
+              top: whiteBase.firstChild.firstChild.getBoundingClientRect().height - whiteBase.firstChild.getBoundingClientRect().height + (e.top * 1.5),
               left: 0,
               behavior: "smooth"
             });
@@ -6444,9 +6526,26 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             // pass
           },
         }, null, whiteBase.parentElement, "swipeStack_whiteBlock_bottom_", whiteBase.firstChild, () => {
-          return (Math.floor(Math.abs(whiteBase.firstChild.firstChild.getBoundingClientRect().height - window.innerHeight)) - 1 <= Math.floor(Math.abs(whiteBase.firstChild.firstChild.getBoundingClientRect().top)));
+          return (Math.floor(Math.abs(whiteBase.firstChild.firstChild.getBoundingClientRect().height - window.innerHeight)) - 2 <= Math.floor(Math.abs(whiteBase.firstChild.firstChild.getBoundingClientRect().top)));
         });
-        tempScrollBan(cancelBack);
+        setQueue(() => {
+          whiteBase.firstChild.addEventListener("scroll", (e) => {
+            setDebounce(() => {
+              if (whiteBase.firstChild.scrollTop <= 10) {
+                if (document.querySelector('.' + mobileBlueBarClassName).getAttribute("toggle") === "off") {
+                  document.querySelector('.' + mobileBlueBarClassName).style.animation = "justfadeinoriginal 0.3s ease forwards";
+                  document.querySelector('.' + mobileBlueBarClassName).setAttribute("toggle", "on");
+                  whiteBase.firstChild.scroll({ top: 0, left: 0, behavior: "smooth" });
+                }
+              } else {
+                if (document.querySelector('.' + mobileBlueBarClassName).getAttribute("toggle") === "on") {
+                  document.querySelector('.' + mobileBlueBarClassName).style.animation = "justfadeoutoriginal 0.3s ease forwards";
+                  document.querySelector('.' + mobileBlueBarClassName).setAttribute("toggle", "off");
+                }
+              }
+            }, "__whiteBaseScrollDebounce__", 100);
+          });
+        });
       }
 
       scrollTong = createNode({
@@ -6462,7 +6561,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           style: {
             display: "block",
             position: "relative",
-            paddingTop: String(innerMargin) + ea,
+            paddingTop: String(desktop ? innerMargin : innerMargin + 2) + ea,
             width: withOut(innerMargin * 2, ea),
             height: "auto",
             marginLeft: String(innerMargin) + ea,
@@ -6480,207 +6579,433 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           display: "flex",
           position: "relative",
           width: withOut(0, ea),
-          flexDirection: "row",
-          height: String(profileHeight) + ea,
+          flexDirection: desktop ? "row" : "column",
+          height: desktop ? String(profileHeight) + ea : "",
         }
       });
 
-      // first : photo tong
-      profilePhotoTong = createNode({
-        mother: firstTong,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: String(profileHeight + profileLineWidth) + ea,
-          height: String(profileHeight) + ea,
-          borderRadius: String(8) + "px",
-          background: colorExtended.gradientBlue4,
-          justifyContent: "end",
-          alignItems: "end",
-          overflow: "hidden",
-        },
-        child: {
-          style: {
-            display: "flex",
-            position: "relative",
-            width: String(profileHeight) + ea,
-            height: String(profileHeight) + ea,
-            backgroundImage: "url('" + designer.profile.link + "')",
-            backgroundSize: designer.profile.gs === 's' ? "100% auto" : "100% 100%",
-            backgroundPosition: designer.profile.position,
-            filter: "grayscale(100%)",
-          }
-        }
-      });
+      if (desktop) {
 
-      // first : description tong
-      profileDescriptionTong = createNode({
-        mother: firstTong,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: String(profileDescriptionTongWidth) + ea,
-          height: String(profileHeight) + ea,
-          justifyContent: "end",
-          alignItems: "start",
-          overflow: "hidden",
-          flexDirection: "column",
-          marginLeft: String(profileMargin) + ea,
-        },
-      });
-      createNode({
-        mother: profileDescriptionTong,
-        style: {
-          display: "flex",
-          position: "relative",
-          height: String(designerNameTongHeight) + ea,
-          width: withOut(0, ea),
-          flexDirection: "row",
-          justifyContent: "start",
-          alignItems: "end",
-          marginBottom: String(nameMargin) + ea,
-        },
-        children: [
-          {
-            text: designer.designer.split("").join(" "),
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(nameTitlesize) + ea,
-              fontWeight: String(nameTitleWeight),
-              color: colorExtended.black,
-              wordSpacing: String(1) + "px",
-              top: String(nameTitleVisualTop) + ea,
-            }
-          },
-          {
-            text: "디자이너",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(designerWordsSize) + ea,
-              fontWeight: String(designerWordsWeight),
-              color: colorExtended.black,
-              marginLeft: String(designerWordsMarginLeft) + ea,
-              paddingBottom: String(designerWordsPaddingBottom) + ea,
-            }
-          },
-          ...designer.styleTendency.map((o) => { return o.name }).slice(0, 3).map((styleName, index) => {
-            return {
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                height: String(styleBlockHeight) + ea,
-                borderRadius: String(styleBlockHeight) + ea,
-                background: colorExtended.mainBlue,
-                justifyContent: "center",
-                alignItems: "center",
-                marginBottom: String(styleButtonMarginBottom) + ea,
-                paddingLeft: String(styleBlockPadding) + ea,
-                paddingRight: String(styleBlockPadding) + ea,
-                marginLeft: String(index === 0 ? styleBlockMarginLeftLong : styleBlockMarginLeftShort) + ea,
-              },
-              child: {
-                text: styleName,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  top: String(styleBlockTextTop) + ea,
-                  fontSize: String(styleBlockSize) + ea,
-                  fontWeight: String(styleBlockWeight),
-                  color: colorExtended.white,
-                }
-              }
-            }
-          })
-        ]
-      });
-      createNode({
-        mother: profileDescriptionTong,
-        style: {
-          display: "block",
-          position: "relative",
-          width: withOut(0, ea),
-        },
-        child: {
-          text: designer.setting.front.introduction.desktop.join("\n"),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(introducetionSize) + ea,
-            lineHeight: String(introducetionLineHeight),
-            fontWeight: String(introducetionWeight),
-            color: colorExtended.black,
-          }
-        }
-      });
-
-      // first : keywords
-      profileKeywordsTong = createNode({
-        mother: firstTong,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: withOut(profileDescriptionTongWidth + profileMargin + profileHeight + profileLineWidth, ea),
-          height: String(profileHeight) + ea,
-          justifyContent: "start",
-          alignItems: "end",
-          overflow: "hidden",
-          flexDirection: "column",
-        },
-      });
-      createNode({
-        mother: profileKeywordsTong,
-        text: "Designer " + char,
-        style: {
-          display: "flex",
-          position: "relative",
-          fontSize: String(designerCharSize) + ea,
-          fontWeight: String(designerCharWeight),
-          color: colorExtended.blueDark,
-          fontFamily: "mont",
-          width: withOut(0, ea),
-          justifyContent: "end",
-          top: String(designerCharTop) + ea,
-          marginBottom: String(designerCharMarginBottom) + ea,
-        }
-      });
-
-      for (let i = 0; i < designerKeywordsLength; i++) {
-        words = designer.keywords[i];
-        createNode({
-          mother: profileKeywordsTong,
+        // first : photo tong
+        profilePhotoTong = createNode({
+          mother: firstTong,
           style: {
             display: "inline-flex",
             position: "relative",
-            background: colorExtended.mainBlue,
-            paddingLeft: String(designerKeywordsPaddingLeft) + ea,
-            paddingRight: String(designerKeywordsPaddingRight) + ea,
-            height: String(designerKeywordsTagHeight) + ea,
-            borderRadius: String(4) + "px",
-            justifyContent: "center",
-            alignItems: "center",
-            marginBottom: i === designerKeywordsLength - 1 ? "" : String(designerKeywordsBetween) + ea,
+            width: String(profileHeight + profileLineWidth) + ea,
+            height: String(profileHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorExtended.gradientBlue4,
+            justifyContent: "end",
+            alignItems: "end",
+            overflow: "hidden",
           },
           child: {
-            text: words,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: String(profileHeight) + ea,
+              height: String(profileHeight) + ea,
+              backgroundImage: "url('" + designer.profile.link + "')",
+              backgroundSize: designer.profile.gs === 's' ? "100% auto" : "100% 100%",
+              backgroundPosition: designer.profile.position,
+              filter: "grayscale(100%)",
+            }
+          }
+        });
+
+        // first : description tong
+        profileDescriptionTong = createNode({
+          mother: firstTong,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(profileDescriptionTongWidth) + ea,
+            height: String(profileHeight) + ea,
+            justifyContent: "end",
+            alignItems: "start",
+            overflow: "hidden",
+            flexDirection: "column",
+            marginLeft: String(profileMargin) + ea,
+          },
+        });
+        createNode({
+          mother: profileDescriptionTong,
+          style: {
+            display: "flex",
+            position: "relative",
+            height: String(designerNameTongHeight) + ea,
+            width: withOut(0, ea),
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "end",
+            marginBottom: String(nameMargin) + ea,
+          },
+          children: [
+            {
+              text: designer.designer.split("").join(" "),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(nameTitlesize) + ea,
+                fontWeight: String(nameTitleWeight),
+                color: colorExtended.black,
+                wordSpacing: String(1) + "px",
+                top: String(nameTitleVisualTop) + ea,
+              }
+            },
+            {
+              text: "디자이너",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(designerWordsSize) + ea,
+                fontWeight: String(designerWordsWeight),
+                color: colorExtended.black,
+                marginLeft: String(designerWordsMarginLeft) + ea,
+                paddingBottom: String(designerWordsPaddingBottom) + ea,
+              }
+            },
+            ...designer.styleTendency.map((o) => { return o.name }).slice(0, 3).map((styleName, index) => {
+              return {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  height: String(styleBlockHeight) + ea,
+                  borderRadius: String(styleBlockHeight) + ea,
+                  background: colorExtended.mainBlue,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: String(styleButtonMarginBottom) + ea,
+                  paddingLeft: String(styleBlockPadding) + ea,
+                  paddingRight: String(styleBlockPadding) + ea,
+                  marginLeft: String(index === 0 ? styleBlockMarginLeftLong : styleBlockMarginLeftShort) + ea,
+                },
+                child: {
+                  text: styleName,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(styleBlockTextTop) + ea,
+                    fontSize: String(styleBlockSize) + ea,
+                    fontWeight: String(styleBlockWeight),
+                    color: colorExtended.white,
+                  }
+                }
+              }
+            })
+          ]
+        });
+        createNode({
+          mother: profileDescriptionTong,
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+          },
+          child: {
+            text: designer.setting.front.introduction.desktop.join("\n"),
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(designerKeywordsSize) + ea,
-              fontWeight: String(designerKeywordsWeight),
-              color: colorExtended.white,
-              top: String(designerKeywordsTextTop) + ea,
+              fontSize: String(introducetionSize) + ea,
+              lineHeight: String(introducetionLineHeight),
+              fontWeight: String(introducetionWeight),
+              color: colorExtended.black,
+            }
+          }
+        });
+
+        // first : keywords
+        profileKeywordsTong = createNode({
+          mother: firstTong,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: withOut(profileDescriptionTongWidth + profileMargin + profileHeight + profileLineWidth, ea),
+            height: String(profileHeight) + ea,
+            justifyContent: "start",
+            alignItems: "end",
+            overflow: "hidden",
+            flexDirection: "column",
+          },
+        });
+        createNode({
+          mother: profileKeywordsTong,
+          text: "Designer " + char,
+          style: {
+            display: "flex",
+            position: "relative",
+            fontSize: String(designerCharSize) + ea,
+            fontWeight: String(designerCharWeight),
+            color: colorExtended.blueDark,
+            fontFamily: "mont",
+            width: withOut(0, ea),
+            justifyContent: "end",
+            top: String(designerCharTop) + ea,
+            marginBottom: String(designerCharMarginBottom) + ea,
+          }
+        });
+        for (let i = 0; i < designerKeywordsLength; i++) {
+          words = designer.keywords[i];
+          createNode({
+            mother: profileKeywordsTong,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              background: colorExtended.mainBlue,
+              paddingLeft: String(designerKeywordsPaddingLeft) + ea,
+              paddingRight: String(designerKeywordsPaddingRight) + ea,
+              height: String(designerKeywordsTagHeight) + ea,
+              borderRadius: String(4) + "px",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: i === designerKeywordsLength - 1 ? "" : String(designerKeywordsBetween) + ea,
             },
-            previous: {
-              mode: "svg",
-              source: svgMaker.boxTag(colorExtended.mainBlue),
+            child: {
+              text: words,
               style: {
-                position: "absolute",
-                height: String(designerKeywordsTagHeight) + ea,
-                top: String(0),
-                left: String(designerKeywordsSvgLeft) + ea,
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(designerKeywordsSize) + ea,
+                fontWeight: String(designerKeywordsWeight),
+                color: colorExtended.white,
+                top: String(designerKeywordsTextTop) + ea,
+              },
+              previous: {
+                mode: "svg",
+                source: svgMaker.boxTag(colorExtended.mainBlue),
+                style: {
+                  position: "absolute",
+                  height: String(designerKeywordsTagHeight) + ea,
+                  top: String(0),
+                  left: String(designerKeywordsSvgLeft) + ea,
+                }
               }
+            }
+          });
+        }
+
+      } else {
+
+        // designer char
+        createNode({
+          mother: firstTong,
+          style: {
+            display: "flex",
+            position: "relative",
+            justifyContent: "start",
+            alignItems: "start",
+            paddingTop: String(2) + ea,
+            marginBottom: String(designerCharMarginBottom) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "block",
+                position: "absolute",
+                height: String(0),
+                width: withOut(0, ea),
+                top: String(4.3) + ea,
+                left: String(0),
+                borderBottom: "1px dashed " + colorExtended.gray3,
+              }
+            },
+            {
+              text: "Designer " + char,
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                fontSize: String(designerCharSize) + ea,
+                fontWeight: String(designerCharWeight),
+                color: colorExtended.mainBlue,
+                fontFamily: "mont",
+                background: colorExtended.white,
+                paddingRight: String(3) + ea,
+              }
+            }
+          ]
+        });
+
+        // profile
+        mobileDesignerProfileTong = createNode({
+          mother: firstTong,
+          style: {
+            display: "flex",
+            position: "relative",
+            justifyContent: "start",
+            alignItems: "start",
+            height: String(profileHeight) + ea,
+            flexDirection: "row",
+          }
+        });
+        createNode({
+          mother: mobileDesignerProfileTong,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(profileHeight + profileLineWidth) + ea,
+            height: String(profileHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorExtended.gradientBlue4,
+            justifyContent: "end",
+            alignItems: "end",
+            overflow: "hidden",
+            marginRight: String(mobileProfileSeroMargin) + ea,
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: String(profileHeight) + ea,
+              height: String(profileHeight) + ea,
+              backgroundImage: "url('" + designer.profile.link + "')",
+              backgroundSize: designer.profile.gs === 's' ? "100% auto" : "100% 100%",
+              backgroundPosition: designer.profile.position,
+              filter: "grayscale(100%)",
+            }
+          }
+        });
+        createNode({
+          mother: mobileDesignerProfileTong,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: withOut(profileHeight + profileLineWidth + mobileProfileSeroMargin, ea),
+            height: String(profileHeight) + ea,
+            flexDirection: "column",
+            alignItems: "start",
+            justifyContent: "end",
+          },
+          children: [
+            {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "end",
+              },
+              children: [
+                {
+                  text: designer.designer.split("").join(" "),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(nameTitlesize) + ea,
+                    fontWeight: String(nameTitleWeight),
+                    color: colorExtended.black,
+                    wordSpacing: String(1) + "px",
+                    top: String(nameTitleVisualTop) + ea,
+                  }
+                },
+                {
+                  text: "디자이너",
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(designerWordsSize) + ea,
+                    fontWeight: String(designerWordsWeight),
+                    color: colorExtended.black,
+                    marginLeft: String(designerWordsMarginLeft) + ea,
+                    paddingBottom: String(designerWordsPaddingBottom) + ea,
+                  }
+                },
+              ]
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                paddingTop: String(1.6) + ea,
+                paddingBottom: String(-1 * styleButtonMarginBottom) + ea,
+              },
+              children: [
+                ...designer.styleTendency.map((o) => { return o.name }).slice(0, 3).map((styleName, index) => {
+                  return {
+                    style: {
+                      display: "inline-flex",
+                      position: "relative",
+                      height: String(styleBlockHeight) + ea,
+                      borderRadius: desktop ? String(styleBlockHeight) + ea : String(4) + "px",
+                      background: colorExtended.mainBlue,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginBottom: String(styleButtonMarginBottom) + ea,
+                      paddingLeft: String(styleBlockPadding) + ea,
+                      paddingRight: String(styleBlockPadding) + ea,
+                      marginRight: String(styleBlockMarginLeftShort) + ea,
+                    },
+                    child: {
+                      text: styleName,
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        top: String(styleBlockTextTop) + ea,
+                        fontSize: String(styleBlockSize) + ea,
+                        fontWeight: String(styleBlockWeight),
+                        color: colorExtended.white,
+                      }
+                    }
+                  }
+                }),
+                ...designer.keywords.slice(0, 2).map((words, index) => {
+                  return {
+                    style: {
+                      display: "inline-flex",
+                      position: "relative",
+                      height: String(styleBlockHeight) + ea,
+                      borderRadius: desktop ? String(styleBlockHeight) + ea : String(4) + "px",
+                      background: colorExtended.blueDark,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginBottom: String(styleButtonMarginBottom) + ea,
+                      paddingLeft: String(styleBlockPadding) + ea,
+                      paddingRight: String(styleBlockPadding) + ea,
+                      marginRight: String(styleBlockMarginLeftShort) + ea,
+                    },
+                    child: {
+                      text: words,
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        top: String(styleBlockTextTop) + ea,
+                        fontSize: String(styleBlockSize) + ea,
+                        fontWeight: String(styleBlockWeight),
+                        color: colorExtended.white,
+                      }
+                    }
+                  }
+                })
+              ]
+            },
+          ]
+        });
+
+        // introduction
+        createNode({
+          mother: firstTong,
+          style: {
+            display: "flex",
+            position: "relative",
+            justifyContent: "start",
+            alignItems: "start",
+            flexDirection: "column",
+            width: withOut(0, ea),
+            marginTop: String(4.3) + ea,
+            paddingBottom: String(1.2) + ea,
+          },
+          child: {
+            text: designer.setting.front.introduction.desktop.join(" "),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(introducetionSize) + ea,
+              lineHeight: String(introducetionLineHeight),
+              fontWeight: String(introducetionWeight),
+              color: colorExtended.black,
             }
           }
         });
@@ -6751,7 +7076,9 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         style: {
           display: "flex",
           position: "relative",
-          width: withOut(0, ea),
+          width: desktop ? withOut(0, ea) : "calc(100% + " + String(6 * 2) + ea + ")",
+          left: desktop ? "" : String(-6) + ea,
+          paddingBottom: desktop ? "" : String(1.5) + ea,
           height: String(paperWorksHeight) + ea,
           overflow: "visible",
           marginTop: String(blockTitleMarginBottom) + ea,
@@ -6774,7 +7101,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               selectstart: (e) => { e.preventDefault() },
             },
             style: {
-              display: "block",
+              display: desktop ? "block" : "none",
               position: "absolute",
               top: "calc(50% - " + String(paperWorkArrowHeight / 2) + ea + ")",
               width: String(paperWorkArrowWidth) + ea,
@@ -6817,7 +7144,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               selectstart: (e) => { e.preventDefault() },
             },
             style: {
-              display: "block",
+              display: desktop ? "block" : "none",
               position: "absolute",
               top: "calc(50% - " + String(paperWorkArrowHeight / 2) + ea + ")",
               width: String(paperWorkArrowWidth) + ea,
@@ -6861,6 +7188,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 transformOrigin: "0% 0%",
                 transform: "traslate(0px)",
                 transition: "all 0.3s ease",
+                marginLeft: mobile ? String(6) + ea : "",
               },
               children: positionData.filter((raw, i) => {
                 return positionData[i] !== undefined && positionData[i] !== 0 && positionData[i] !== "0"
