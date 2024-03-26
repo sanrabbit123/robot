@@ -5689,7 +5689,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       const { analytics, information } = designer;
       const { business: { career: { startY, startM } } } = information;
       const { construct: { level: constructLevel, case: constructCase }, styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { level: fabricLevel, curtain, bedding } }, purchase: { setting: { install, storage } }, project: { time: { first }, matrix, cad: cadBoo, collage: collageBoo, modeling: modelingBoo } } = analytics;
-      const zIndex = 4;
+      const zIndex = 104;
       const web = {
         portfolio: FRONTHOST + "/portdetail.php?pid=",
         review: FRONTHOST + "/revdetail.php?pid="
@@ -5834,6 +5834,18 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let whiteCloseEvent;
       let mobileDesignerProfileTong;
       let mobileProfileSeroMargin;
+      let factorMaker;
+      let selectionMaker;
+      let factorPadding;
+      let factorTitleWeight;
+      let factorValueWeight;
+      let factorLongHeight;
+      let menuMarginTop;
+      let valueLinePadding;
+      let selectionBarWeight;
+      let selectionBarMargin;
+      let selectionBarLongMargin;
+      let infoMiddleMiddle;
 
       whiteMargin = <%% 30, 30, 30, 30, 3 %%>;
       innerMargin = <%% 52, 48, 40, 24, 6 %%>;
@@ -5881,7 +5893,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       blockTitleBlockHeight = <%% 30, 24, 20, 18, 6.4 %%>;
       blockTitleSize = <%% 21, 20, 17, 16, 4 %%>;
-      blockInnerPadding = <%% 52, 48, 40, 24, 7.5 %%>;
+      blockInnerPadding = <%% 52, 48, 40, 24, 8 %%>;
 
       paperWorksHeight = <%% 260, 200, 200, 170, 42 %%>;
       paperBetween = <%% 6, 5, 4, 3, 1 %%>;
@@ -5892,13 +5904,22 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       whiteStandardWidth = <%% 1400, 1050, 900, 720, 100 %%>;
 
       pictureBaseHeight = <%% 880, 650, 570, 460, 61 %%>;
-      factorHeight = <%% 42, 40, 36, 33, 6 %%>;
 
-      factorTextTop = <%% (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), -0.5 %%>;
-      factorSize = <%% 14.5, 13, 12, 11, 3.5 %%>;
+      factorHeight = <%% 42, 40, 36, 33, 8.8 %%>;
+      factorTextTop = <%% (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), -0.2 %%>;
+      factorSize = <%% 14.5, 13, 12, 11, 3.3 %%>;
       factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
       factorWeight = <%% 700, 700, 700, 700, 700 %%>;
       factorBetween = <%% 5, 5, 5, 5, 5 %%>;
+      factorPadding = 3.2;
+      factorTitleWeight = 800;
+      factorValueWeight = 500;
+      factorLongHeight = 16;
+      menuMarginTop = 0.4;
+      valueLinePadding = 1;
+      selectionBarWeight = 300;
+      selectionBarMargin = 1;
+      selectionBarLongMargin = 2;
 
       whiteBlockMarginBottom = <%% 6, 5, 4, 3, 1 %%>;
       whiteBlockOuterMargin = <%% 10, 10, 10, 10, 1 %%>;
@@ -5907,11 +5928,11 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       factorLightWeight = <%% 500, 500, 500, 500, 500 %%>;
       tendencyMotherHeight = <%% 21, 21, 21, 18, 8 %%>;
-      tendencyNameAreaWidth = <%% 64, 64, 64, 64, 12 %%>;
-      tendencyBarHeight = <%% 14, 14, 14, 12, 1 %%>;
+      tendencyNameAreaWidth = <%% 64, 64, 64, 64, 15 %%>;
+      tendencyBarHeight = <%% 14, 14, 14, 12, 2.7 %%>;
 
-      tendencySize = <%% 13, 13, 12, 11, 2.5 %%>;
-      tendencyTextTop = <%% (isMac() ? -1 : 1.5), (isMac() ? -1 : 1.5), (isMac() ? -1 : 1.5), (isMac() ? -1 : 1), -1 %%>;
+      tendencySize = <%% 13, 13, 12, 11, 3.2 %%>;
+      tendencyTextTop = <%% (isMac() ? -1 : 1.5), (isMac() ? -1 : 1.5), (isMac() ? -1 : 1.5), (isMac() ? -1 : 1), -0 %%>;
       tendencyWeight = <%% 600, 600, 600, 600, 600 %%>;
       tendencyBoxPaddingTop = <%% 16, 16, 14, 8, 1 %%>;
 
@@ -5919,28 +5940,28 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       dashLineIndent = <%% 8, 8, 8, 8, 1 %%>;
 
-      unitBlockHeight = <%% 50, 48, 44, 36, 5 %%>;
-      unitBlockIndent = <%% 18, 16, 14, 14, 1 %%>;
-      unitBlockHeightSmall = <%% 46, 42, 38, 34, 4 %%>;
-      unitBlockHeightBig = <%% 44, 40, 36, 30, 4 %%>;
+      unitBlockHeight = <%% 50, 48, 44, 36, 8.7 %%>;
+      unitBlockIndent = <%% 18, 16, 14, 14, 3.2 %%>;
+      unitBlockHeightSmall = <%% 46, 42, 38, 34, 9 %%>;
+      unitBlockHeightBig = <%% 44, 40, 36, 30, 8.2 %%>;
 
-      moneyTitleSize = <%% 16, 15, 14, 13, 3 %%>;
-      moneyVatSize = <%% 11, 11, 10, 10, 3 %%>;
-      moneyValueSize = <%% 18, 16, 15, 14, 3 %%>;
+      moneyTitleSize = <%% 16, 15, 14, 13, 3.2 %%>;
+      moneyVatSize = <%% 11, 11, 10, 10, 2 %%>;
+      moneyValueSize = <%% 18, 16, 15, 14, 3.3 %%>;
 
       moneyTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
       moneyVatWeight = <%% 500, 500, 500, 500, 500 %%>;
       moneyValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
       moneyTitleTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
-      moneyVatTextTop = <%% (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), 0.1 %%>;
+      moneyVatTextTop = <%% (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), 0.3 %%>;
       moneyValueTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
       moneyVatMarginRight = <%% 6, 6, 6, 6, 1 %%>;
 
       moneyCircleWidth = <%% 6, 5, 4, 4, 1 %%>;
       moneyCircleMargin = <%% 6, 5, 4, 3, 1 %%>;
 
-      moneyBoxPaddingTopVisual = <%% 3, 3, 3, 3, 3 %%>;
+      moneyBoxPaddingTopVisual = <%% 3, 3, 3, 3, 0.6 %%>;
 
       finalBlockBetween = <%% 10, 8, 6, 4, 1 %%>;
       finalBlockMarginLeft = <%% 430, 430, 430, 430, 430 %%>;
@@ -5952,7 +5973,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       deactiveOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
-      onoffLineMarkWidth = <%% 110, 110, 90, 60, 11 %%>;
+      onoffLineMarkWidth = <%% 110, 110, 90, 60, 20 %%>;
       vatPadding = <%% 16, 16, 16, 8, 1 %%>;
 
       designerKeywordsLength = <%% 4, 4, 4, 4, 2 %%>;
@@ -5968,40 +5989,42 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       paperWorkArrowWidth = <%% 12, 12, 10, 8, 1 %%>;
       paperWorkArrowHeight = <%% 24, 24, 20, 16, 2 %%>;
 
-      portfolioSize = <%% 16, 15, 14, 12, 3 %%>;
+      portfolioSize = <%% 16, 15, 14, 12, 3.2 %%>;
       portfolioWeight = <%% 700, 700, 700, 700, 700 %%>;
-      portfolioTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.4 %%>;
+      portfolioTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
-      portfolioDetailBoxWidth = <%% 18, 18, 18, 16, 18 %%>;
-      portfolioDetailArrowWidth = <%% 12, 12, 12, 10, 12 %%>;
-      portfolioDetailArrowHeight = <%% 10, 10, 10, 8, 10 %%>;
+      portfolioDetailBoxWidth = <%% 18, 18, 18, 16, 4.2 %%>;
+      portfolioDetailArrowWidth = <%% 12, 12, 12, 10, 2.2 %%>;
+      portfolioDetailArrowHeight = <%% 10, 10, 10, 8, 2 %%>;
 
-      finalPriceTongMarginTop = <%% 16, 12, 10, 8, 16 %%>;
-      finalPriceDashedLineTop = <%% 21, 21, 17, 13, 21 %%>;
+      finalPriceTongMarginTop = <%% 16, 12, 10, 8, 0.8 %%>;
+      finalPriceDashedLineTop = <%% 21, 21, 17, 13, 2 %%>;
 
-      designerSelectionMotherPadding = <%% 44, 42, 32, 24, 4 %%>;
+      designerSelectionMotherPadding = <%% 44, 42, 32, 24, 7 %%>;
 
-      designerSelectionMarginLeft = <%% 1150, 810, 690, 570, 115 %%>;
-      designerSelectionSize = <%% 18, 17, 15, 13, 3 %%>;
+      designerSelectionMarginLeft = <%% 1150, 810, 690, 570, 60 %%>;
+      designerSelectionSize = <%% 18, 17, 15, 13, 3.5 %%>;
       designerSelectionWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-      onoffKindTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1 %%>;
-      onoffKindSize = <%% 18, 16, 14, 11, 3 %%>;
+      onoffKindTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+      onoffKindSize = <%% 18, 16, 14, 11, 3.3 %%>;
       onoffKindWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-      finalMoneyOriginalSize = <%% 20, 18, 16, 13, 3 %%>;
+      finalMoneyOriginalSize = <%% 20, 18, 16, 13, 3.3 %%>;
       finalMoneyOriginalWeight = <%% 300, 300, 300, 300, 300 %%>;
       finalMoneyOriginalMarginRight = <%% 8, 8, 8, 6, 1 %%>;
-      finalMoneyAmountSize = <%% 21, 19, 17, 14, 3 %%>;
-      finalMoneyAmountMarginRight = <%% 24, 24, 18, 12, 1 %%>;
-      finalVatSize = <%% 12, 12, 11, 10, 3 %%>;
+      finalMoneyAmountSize = <%% 21, 19, 17, 14, 3.3 %%>;
+      finalMoneyAmountMarginRight = <%% 24, 24, 18, 12, 0 %%>;
+      finalVatSize = <%% 12, 12, 11, 10, 2 %%>;
       finalVatMarginRight = <%% 8, 8, 8, 5, 1 %%>;
 
       nameTitleVisualTop = <%% (isMac() ? 0 : 3), (isMac() ? 0 : 3), (isMac() ? 0 : 3), (isMac() ? 0 : 2), 0 %%>;
       priceCircleVisualTop = <%% (isMac() ? 0 : -1), (isMac() ? 0 : -1), (isMac() ? 0 : -1), (isMac() ? 0 : -1), 0 %%>;
 
-      mobileWhiteTopMargin = 8;
+      mobileWhiteTopMargin = 0;
       mobileProfileSeroMargin = 5;
+
+      window.history.pushState({ mode: "white", desid: designer.desid, char: char }, "");
 
       ({ data: { position: positionData } } = await ajaxJson({ mode: "get", desid: designer.desid }, BRIDGEHOST + "/designerRepresentativePaper", { equal: true }));
 
@@ -6030,7 +6053,18 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
 
       sourceArr = [];
       for (let { contents } of contentsArr) {
-        sourceArr.push({ date: contents.portfolio.date, title: { portfolio: contents.portfolio.title.main, review: contents.review.title.main }, link: { portfolio: web.portfolio + contents.portfolio.pid, review: web.review + contents.portfolio.pid } });
+        sourceArr.push({
+          date: contents.portfolio.date,
+          title: {
+            portfolio: contents.portfolio.title.main,
+            review: contents.review.title.main,
+            mobile: contents.portfolio.title.sub.split(' ').slice(0, -1).join(' '),
+          },
+          link: {
+            portfolio: web.portfolio + contents.portfolio.pid,
+            review: web.review + contents.portfolio.pid
+          } 
+        });
       }
       sourceArr.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
       sourceArr = sourceArr.slice(0, 20);
@@ -6281,7 +6315,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             {
               style: {
                 position: "absolute",
-                width: String(50) + '%',
+                width: desktop ? String(50) + '%' : withOut(0, ea),
                 height: withOut(0, ea),
                 display: "inline-flex",
                 right: String(0),
@@ -6324,17 +6358,20 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         return createNode({
           mother: finalPriceMiddleMother,
           style: {
-            display: "inline-flex",
+            display: desktop ? "inline-flex" : "flex",
             verticalAlign: "top",
             flexDirection: "row",
             position: "relative",
             height: String(unitBlockHeightBig) + ea,
-            borderRadius: String(unitBlockHeightBig) + ea,
+            borderRadius: desktop ? String(unitBlockHeightBig) + ea : String(8) + "px",
             background: colorExtended.white,
             justifyContent: "end",
             alignItems: "center",
-            marginRight: !last ? String(finalBlockBetween) + ea : "",
-            paddingLeft: String(onoffLineMarkWidth + vatPadding) + ea,
+            marginRight: desktop ? (!last ? String(finalBlockBetween) + ea : "") : "",
+            paddingLeft: desktop ? String(onoffLineMarkWidth + vatPadding) + ea : "",
+            marginTop: desktop ? "" : String(1.2) + ea,
+            width: desktop ? "" : withOut(factorPadding, ea),
+            paddingRight: desktop ? "" : String(factorPadding) + ea,
           },
           children: [
             {
@@ -6347,7 +6384,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 justifyContent: "center",
                 alignItems: "center",
                 height: String(unitBlockHeightBig) + ea,
-                borderRadius: String(unitBlockHeightBig) + ea,
+                borderRadius: desktop ? String(unitBlockHeightBig) + ea : String(8) + "px",
                 width: String(onoffLineMarkWidth) + ea,
                 background: colorExtended.blueDim,
               },
@@ -6409,14 +6446,150 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           if (desktop) {
             removeByClass(whitePopupClassName);
           } else {
-            const [ cancel, whiteBase ] = [ ...document.querySelectorAll('.' + whitePopupClassName) ];
-            cancel.style.animation = "justfadeoutsmall 0.5s ease forwards";
-            whiteBase.style.animation = "fadedownentire 0.5s ease forwards";
-            setQueue(() => {
-              removeByClass(whitePopupClassName);
-            }, 500);
+            const motherArr = [ ...document.querySelectorAll('.' + whitePopupClassName) ];
+            if (motherArr.length > 1) {
+              const [ cancel, whiteBase ] = motherArr;
+              cancel.style.animation = "justfadeoutsmall 0.5s ease forwards";
+              whiteBase.style.animation = "fadedownentire 0.5s ease forwards";
+              setQueue(() => {
+                removeByClass(whitePopupClassName);
+              }, 500);
+            }
           }
+          window.history.pushState({ mode: "base" }, "");
+          instance.mobileCardStack = 0;
         }
+      }
+      instance.whiteCloseEvent = whiteCloseEvent;
+
+      factorMaker = (mother, title, value, lastBoo = false) => {
+        createNode({
+          mother,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(factorPadding * 2, ea),
+            height: String(factorHeight) + ea,
+            marginLeft: String(factorPadding) + ea,
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "center",
+            borderBottom: !lastBoo ? "1px dashed " + colorExtended.blueLight : "",
+          },
+          children: [
+            {
+              text: title,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(factorSize) + ea,
+                fontWeight: String(factorTitleWeight),
+                color: colorExtended.blueDark,
+                top: String(factorTextTop) + ea,
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(0),
+                justifyContent: "end",
+                alignItems: "center",
+              },
+              child: {
+                text: value,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(factorSize) + ea,
+                  fontWeight: String(factorValueWeight),
+                  color: colorExtended.black,
+                  top: String(factorTextTop) + ea,
+                }
+              },
+            }
+          ]
+        });
+      }
+
+      selectionMaker = (mother, title, menu, values, lastBoo = false) => {
+        createNode({
+          mother,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(factorPadding * 2, ea),
+            height: menu.length <= 3 ? String(factorHeight) + ea : String(factorLongHeight) + ea,
+            marginLeft: String(factorPadding) + ea,
+            flexDirection: menu.length <= 3 ? "row" : "column",
+            justifyContent: menu.length <= 3 ? "start" : "center",
+            alignItems: menu.length <= 3 ? "center" : "start",
+            borderBottom: !lastBoo ? "1px dashed " + colorExtended.blueLight : "",
+          },
+          children: [
+            {
+              text: title,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(factorSize) + ea,
+                fontWeight: String(factorTitleWeight),
+                color: colorExtended.blueDark,
+                top: String(factorTextTop) + ea,
+              }
+            },
+            {
+              style: {
+                display: menu.length <= 3 ? "inline-flex" : "flex",
+                position: menu.length <= 3 ? "absolute" : "relative",
+                height: menu.length <= 3 ? withOut(0, ea) : "", 
+                width: menu.length <= 3 ? "" : withOut(0, ea),
+                top: String(0),
+                right: String(0),
+                justifyContent: menu.length <= 3 ? "end" : "start",
+                alignItems: menu.length <= 3 ? "center" : "start",
+                flexDirection: "row",
+                marginTop: menu.length <= 3 ? "" : String(menuMarginTop) + ea,
+              },
+              children: menu.map((str, index, arr) => {
+                return [
+                  {
+                    text: str,
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      fontSize: String(factorSize) + ea,
+                      fontWeight: String(factorValueWeight),
+                      color: values[index] === 1 ? colorExtended.black : colorExtended.deactive,
+                      top: String(factorTextTop) + ea,
+                      paddingTop: String(0.5) + ea,
+                      paddingBottom: String(0.5) + ea,
+                      boxSizing: "border-box",
+                      borderBottom: values[index] === 1 ? "1" + px + " solid " + colorExtended.mainBlue : "",
+                      wordSpacing: String(-2) + px,
+                    }
+                  },
+                  {
+                    text: "|",
+                    style: {
+                      display: (arr.length - 1 === index) ? "none" : "inline-block",
+                      position: "relative",
+                      fontSize: String(factorSize) + ea,
+                      fontWeight: String(selectionBarWeight),
+                      color: colorExtended.mainBlue,
+                      top: String(factorTextTop) + ea,
+                      marginLeft: String(menu.length <= 3 ? selectionBarMargin : selectionBarLongMargin) + ea,
+                      marginRight: String(menu.length <= 3 ? selectionBarMargin : selectionBarLongMargin) + ea,
+                      wordSpacing: String(-2) + ea,
+                    }
+                  }
+                ]
+              }).flat(),
+            }
+          ]
+        })
       }
 
       // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -6490,41 +6663,24 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       if (mobile) {
         swipePatch({
           down: whiteCloseEvent(),
-          up: function (e) {
-            whiteBase.firstChild.scroll({
-              top: (e.top - whiteBase.firstChild.getBoundingClientRect().top) * 3.2,
-              left: 0,
-              behavior: "smooth"
-            });
-            document.querySelector('.' + mobileBlueBarClassName).style.animation = "justfadeoutoriginal 0.3s ease forwards";
-            document.querySelector('.' + mobileBlueBarClassName).setAttribute("toggle", "off");
-          },
-          left: function (e) {
-            // pass
-          },
-          right: function (e) {
-            // pass
-          },
         }, null, whiteBase.parentElement, "swipeStack_whiteBlock_top_", whiteBase.firstChild, () => {
-          return whiteBase.firstChild.scrollTop === 0;
+          return whiteBase.firstChild.scrollTop <= 0;
+        });
+        swipePatch({
+          right: whiteCloseEvent(),
+        }, null, whiteBase.parentElement, "swipeStack_whiteBlock_right_", whiteBase.firstChild, () => {
+          return (whiteBase.firstChild.scrollTop > 0) && (Math.floor(Math.abs(whiteBase.firstChild.firstChild.getBoundingClientRect().height - window.innerHeight)) - 2 > Math.floor(Math.abs(whiteBase.firstChild.firstChild.getBoundingClientRect().top)));
         });
         swipePatch({
           up: function (e) {
-            // pass
+            if (instance.mobileCardStack === 0) {
+              instance.mobileCardStack = instance.mobileCardStack + 1;
+            } else {
+              whiteCloseEvent().call(this);
+              instance.mobileCardStack = 0;
+            }
           },
-          down: function (e) {
-            whiteBase.firstChild.scroll({
-              top: whiteBase.firstChild.firstChild.getBoundingClientRect().height - whiteBase.firstChild.getBoundingClientRect().height + (e.top * 1.5),
-              left: 0,
-              behavior: "smooth"
-            });
-          },
-          left: function (e) {
-            // pass
-          },
-          right: function (e) {
-            // pass
-          },
+          right: whiteCloseEvent(),
         }, null, whiteBase.parentElement, "swipeStack_whiteBlock_bottom_", whiteBase.firstChild, () => {
           return (Math.floor(Math.abs(whiteBase.firstChild.firstChild.getBoundingClientRect().height - window.innerHeight)) - 2 <= Math.floor(Math.abs(whiteBase.firstChild.firstChild.getBoundingClientRect().top)));
         });
@@ -6806,7 +6962,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 position: "absolute",
                 height: String(0),
                 width: withOut(0, ea),
-                top: String(4.3) + ea,
+                top: String(4.4) + ea,
                 left: String(0),
                 borderBottom: "1px dashed " + colorExtended.gray3,
               }
@@ -7292,7 +7448,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           width: withOut(0, ea),
           flexDirection: "column",
           paddingTop: String(blockInnerPadding) + ea,
-          paddingBottom: String(blockInnerPadding) + ea,
+          paddingBottom: desktop ? String(blockInnerPadding) + ea : String(blockInnerPadding + 0.5) + ea,
         },
       });
       createNode({
@@ -7335,8 +7491,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           position: "relative",
           width: withOut(0 * 2, ea),
           borderRadius: String(8) + "px",
-          background: colorExtended.white,
-          border: "1px solid " + colorExtended.mainBlue,
+          background: desktop ? colorExtended.white : "transparent",
+          border: desktop ? "1px solid " + colorExtended.mainBlue : "",
           boxSizing: "border-box",
         },
       });
@@ -7349,21 +7505,26 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           style: {
             display: "flex",
             position: "relative",
-            width: withOut(unitBlockIndent * 2, ea),
-            marginLeft: String(unitBlockIndent) + ea,
+            width: desktop ? withOut(unitBlockIndent * 2, ea) : "",
+            marginLeft: desktop ? String(unitBlockIndent) + ea : "",
+            paddingLeft: desktop ? "" : String(unitBlockIndent) + ea,
+            paddingRight: desktop ? "" : String(unitBlockIndent) + ea,
+            marginBottom: desktop ? "" : String(1) + ea,
             height: String(unitBlockHeight) + ea,
             boxSizing: "border-box",
             justifyContent: "start",
             alignItems: "center",
-            borderBottom: contentsNum !== sourceArr.length - 1 ? "1px dashed " + colorExtended.mainBlue : "",
+            borderBottom: desktop ? (contentsNum !== sourceArr.length - 1 ? "1px dashed " + colorExtended.mainBlue : "") : "",
+            background: desktop ? "" : colorExtended.blueDark,
+            borderRadius: desktop ? "" : String(5) + "px",
           },
           children: [
             {
-              text: title.portfolio,
+              text: desktop ? title.portfolio : title.mobile,
               style: {
                 fontSize: String(portfolioSize) + ea,
                 fontWeight: String(portfolioWeight),
-                color: colorExtended.blueDark,
+                color: desktop ? colorExtended.blueDark : colorExtended.white,
                 display: "inline-flex",
                 position: "relative",
                 top: String(portfolioTextTop) + ea,
@@ -7372,10 +7533,10 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             {
               style: {
                 position: "absolute",
-                width: String(100) + ea,
+                width: desktop ? String(100) + ea : "",
                 height: withOut(0, ea),
                 display: "inline-flex",
-                right: String(0),
+                right: desktop ? String(0) : String(unitBlockIndent) + ea,
                 top: String(0),
                 justifyContent: "end",
                 alignItems: "center",
@@ -7387,13 +7548,13 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
                   width: String(portfolioDetailBoxWidth) + ea,
                   height: String(portfolioDetailBoxWidth) + ea,
                   borderRadius: String(5) + "px",
-                  background: colorExtended.blueDark,
+                  background: desktop ? colorExtended.blueDark : colorExtended.white,
                   justifyContent: "center",
                   alignItems: "center",
                 },
                 child: {
                   mode: "svg",
-                  source: svgMaker.horizontalArrow(portfolioDetailArrowWidth, portfolioDetailArrowHeight, colorExtended.white),
+                  source: svgMaker.horizontalArrow(portfolioDetailArrowWidth, portfolioDetailArrowHeight, (desktop ? colorExtended.white : colorExtended.blueDark)),
                   style: {
                     width: String(portfolioDetailArrowWidth) + ea,
                   }
@@ -7485,299 +7646,399 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           width: withOut(0 * 2, ea),
           borderRadius: String(8) + "px",
           padding: String(0) + ea,
-          paddingBottom: String(0) + ea,
-          background: colorExtended.blueLight,
+          background: desktop ? colorExtended.blueLight : colorExtended.white,
+          paddingTop: desktop ? String(0) + ea : String(0.6) + ea,
+          paddingBottom: desktop ? String(0) + ea : String(0.6) + ea,
         }
       });
 
-      insertWhiteBlock(infoMiddleMother, [
-        {
-          title: "유관 경력",
-          type: "string",
-          double: false,
-          value: designerCareer(designer, true, true),
-        },
-        {
-          title: "홈리에종 소속 기간",
-          type: "string",
-          double: false,
-          value: String(year) + "년 " + String(month) + "개월",
-        },
-        {
-          title: "빌트인 가구 제작",
-          type: "selection",
-          double: false,
-          value: [
-            { title: "가능", value: builtin > 0 ? 1 : 0 },
-            { title: "불가능", value: builtin === 0 ? 1 : 0 },
-          ],
-        },
-        {
-          title: "디자인 가구 제작",
-          type: "selection",
-          double: false,
-          value: [
-            { title: "가능", value: design > 0 ? 1 : 0 },
-            { title: "불가능", value: design === 0 ? 1 : 0 },
-          ],
-        },
-      ], false);
-      insertWhiteBlock(infoMiddleMother, [
-        {
-          title: "3D",
-          type: "selection",
-          double: false,
-          value: [
-            { title: "가능", value: modelingBoo > 0 ? 1 : 0 },
-            { title: "불가능", value: modelingBoo === 0 ? 1 : 0 },
-          ],
-        },
-        {
-          title: "CAD 도면",
-          type: "selection",
-          double: false,
-          value: [
-            { title: "가능", value: cadBoo ? 1 : 0 },
-            { title: "불가능", value: cadBoo ? 0 : 1 },
-          ],
-        },
-        {
-          title: "콜라주",
-          type: "selection",
-          double: false,
-          value: [
-            { title: "가능", value: collageBoo ? 1 : 0 },
-            { title: "불가능", value: collageBoo ? 0 : 1 },
-          ],
-        },
-        {
-          title: "패브릭 제작",
-          type: "selection",
-          double: false,
-          value: [
-            { title: "가능", value: fabricLevel > 0 ? 1 : 0 },
-            { title: "불가능", value: fabricLevel === 0 ? 1 : 0 },
-          ],
-        },
-      ], false);
-      insertWhiteBlock(infoMiddleMother, [
-        {
-          title: big ? "1차 제안 받는 시점" : "1차 제안 시점",
-          type: "string",
-          double: false,
-          value: String(first) + "일 이내",
-        },
-        {
-          title: big ? "제안 방식" : "방식",
-          type: "selection",
-          double: false,
-          value: [
-            { title: "순차 제안", value: (method === "순차 제안" ? 1 : 0) },
-            { title: "한 번에 제안", value: (method !== "순차 제안" ? 1 : 0) },
-          ],
-        },
-        {
-          title: big ? "역량 범위" : "역량 범위",
-          type: "selection",
-          double: true,
-          value: serviceParsing().name.map((str, index) => {
-            if (!big) {
-              if (/엑스트라/gi.test(str)) {
-                str = "엑스트라";
-              }
-            }
-            return { title: str, value: index <= constructLevel ? 1 : 0 }
-          })
-        }
-      ], true);
-
-      infoMiddleBase = createNode({
-        mother: infoMiddleMother,
-        style: {
-          display: "block",
-          position: "relative",
-          width: withOut(0, ea),
-          boxSizing: "border-box",
-          borderRadius: String(8) + "px",
-          background: colorExtended.white,
-          marginBottom: String(whiteBlockMarginBottom) + ea,
-          boxShadow: "0px 2px 15px -9px " + colorExtended.blueDim,
-          overflow: "hidden",
-          paddingTop: String(dashLineIndent) + ea,
-          paddingBottom: String(dashLineIndent) + ea,
-        }
-      });
-      leftTendency = createNode({
-        mother: infoMiddleBase,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          paddingTop: String(tendencyBoxPaddingTop - dashLineIndent) + ea,
-          paddingBottom: String(tendencyBoxPaddingTop - dashLineIndent) + ea,
-          width: "calc(100% / " + String(2) + ")",
-          flexDirection: "column",
-          overflow: "hidden",
-          boxSizing: "border-box",
-          verticalAlign: "top",
-          borderRight: "1px dashed " + colorExtended.mainBlue,
-        },
-      });
-      rightTendency = createNode({
-        mother: infoMiddleBase,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          paddingTop: String(tendencyBoxPaddingTop - dashLineIndent) + ea,
-          paddingBottom: String(tendencyBoxPaddingTop - dashLineIndent) + ea,
-          width: "calc(100% / " + String(2) + ")",
-          flexDirection: "column",
-          overflow: "hidden",
-          boxSizing: "border-box",
-          verticalAlign: "top",
-        },
-      });
-      
-      tendencyNum = 0;
-      for (let t of designer.styleTendency) {
-        createNode({
-          mother: leftTendency,
-          style: {
-            display: "flex",
-            position: "relative",
-            width: withOut(titleTextIndent * 2, ea),
-            marginLeft: String(titleTextIndent) + ea,
-            flexDirection: "row",
-            height: String(tendencyMotherHeight) + ea,
-            justifyContent: "center",
-            alignItems: "center",
+      if (desktop) {
+        insertWhiteBlock(infoMiddleMother, [
+          {
+            title: "유관 경력",
+            type: "string",
+            double: false,
+            value: designerCareer(designer, true, true),
           },
-          children: [
-            {
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: String(tendencyNameAreaWidth) + ea,
-                height: withOut(0, ea),
-                justifyContent: "start",
-                alignItems: "center",
-              },
-              child: {
-                text: t.name,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  top: String(tendencyTextTop) + ea,
-                  fontSize: String(tendencySize) + ea,
-                  fontWeight: String(tendencyWeight),
-                  color: tendencyNum < 3 ? colorExtended.focusBlue : colorExtended.black,
+          {
+            title: "홈리에종 소속 기간",
+            type: "string",
+            double: false,
+            value: String(year) + "년 " + String(month) + "개월",
+          },
+          {
+            title: "빌트인 가구 제작",
+            type: "selection",
+            double: false,
+            value: [
+              { title: "가능", value: builtin > 0 ? 1 : 0 },
+              { title: "불가능", value: builtin === 0 ? 1 : 0 },
+            ],
+          },
+          {
+            title: "디자인 가구 제작",
+            type: "selection",
+            double: false,
+            value: [
+              { title: "가능", value: design > 0 ? 1 : 0 },
+              { title: "불가능", value: design === 0 ? 1 : 0 },
+            ],
+          },
+        ], false);
+        insertWhiteBlock(infoMiddleMother, [
+          {
+            title: "3D",
+            type: "selection",
+            double: false,
+            value: [
+              { title: "가능", value: modelingBoo > 0 ? 1 : 0 },
+              { title: "불가능", value: modelingBoo === 0 ? 1 : 0 },
+            ],
+          },
+          {
+            title: "CAD 도면",
+            type: "selection",
+            double: false,
+            value: [
+              { title: "가능", value: cadBoo ? 1 : 0 },
+              { title: "불가능", value: cadBoo ? 0 : 1 },
+            ],
+          },
+          {
+            title: "콜라주",
+            type: "selection",
+            double: false,
+            value: [
+              { title: "가능", value: collageBoo ? 1 : 0 },
+              { title: "불가능", value: collageBoo ? 0 : 1 },
+            ],
+          },
+          {
+            title: "패브릭 제작",
+            type: "selection",
+            double: false,
+            value: [
+              { title: "가능", value: fabricLevel > 0 ? 1 : 0 },
+              { title: "불가능", value: fabricLevel === 0 ? 1 : 0 },
+            ],
+          },
+        ], false);
+        insertWhiteBlock(infoMiddleMother, [
+          {
+            title: big ? "1차 제안 받는 시점" : "1차 제안 시점",
+            type: "string",
+            double: false,
+            value: String(first) + "일 이내",
+          },
+          {
+            title: big ? "제안 방식" : "방식",
+            type: "selection",
+            double: false,
+            value: [
+              { title: "순차 제안", value: (method === "순차 제안" ? 1 : 0) },
+              { title: "한 번에 제안", value: (method !== "순차 제안" ? 1 : 0) },
+            ],
+          },
+          {
+            title: big ? "역량 범위" : "역량 범위",
+            type: "selection",
+            double: true,
+            value: serviceParsing().name.map((str, index) => {
+              if (!big) {
+                if (/엑스트라/gi.test(str)) {
+                  str = "엑스트라";
                 }
               }
+              return { title: str, value: index <= constructLevel ? 1 : 0 }
+            })
+          }
+        ], true);
+  
+        infoMiddleBase = createNode({
+          mother: infoMiddleMother,
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            boxSizing: "border-box",
+            borderRadius: String(8) + "px",
+            background: colorExtended.white,
+            marginBottom: String(whiteBlockMarginBottom) + ea,
+            boxShadow: "0px 2px 15px -9px " + colorExtended.blueDim,
+            overflow: "hidden",
+            paddingTop: String(dashLineIndent) + ea,
+            paddingBottom: String(dashLineIndent) + ea,
+          }
+        });
+        leftTendency = createNode({
+          mother: infoMiddleBase,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            paddingTop: String(tendencyBoxPaddingTop - dashLineIndent) + ea,
+            paddingBottom: String(tendencyBoxPaddingTop - dashLineIndent) + ea,
+            width: "calc(100% / " + String(2) + ")",
+            flexDirection: "column",
+            overflow: "hidden",
+            boxSizing: "border-box",
+            verticalAlign: "top",
+            borderRight: "1px dashed " + colorExtended.mainBlue,
+          },
+        });
+        rightTendency = createNode({
+          mother: infoMiddleBase,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            paddingTop: String(tendencyBoxPaddingTop - dashLineIndent) + ea,
+            paddingBottom: String(tendencyBoxPaddingTop - dashLineIndent) + ea,
+            width: "calc(100% / " + String(2) + ")",
+            flexDirection: "column",
+            overflow: "hidden",
+            boxSizing: "border-box",
+            verticalAlign: "top",
+          },
+        });
+        tendencyNum = 0;
+        for (let t of designer.styleTendency) {
+          createNode({
+            mother: leftTendency,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(titleTextIndent * 2, ea),
+              marginLeft: String(titleTextIndent) + ea,
+              flexDirection: "row",
+              height: String(tendencyMotherHeight) + ea,
+              justifyContent: "center",
+              alignItems: "center",
             },
-            {
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: withOut(tendencyNameAreaWidth, ea),
-                height: withOut(0, ea),
-                justifyContent: "center",
-                alignItems: "center",
-              },
-              child: {
+            children: [
+              {
                 style: {
-                  display: "flex",
+                  display: "inline-flex",
                   position: "relative",
-                  width: withOut(0, ea),
-                  height: String(tendencyBarHeight) + ea,
-                  borderRadius: String(tendencyBarHeight) + ea,
-                  background: colorExtended.gray2,
+                  width: String(tendencyNameAreaWidth) + ea,
+                  height: withOut(0, ea),
+                  justifyContent: "start",
+                  alignItems: "center",
+                },
+                child: {
+                  text: t.name,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(tendencyTextTop) + ea,
+                    fontSize: String(tendencySize) + ea,
+                    fontWeight: String(tendencyWeight),
+                    color: tendencyNum < 3 ? colorExtended.focusBlue : colorExtended.black,
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: withOut(tendencyNameAreaWidth, ea),
+                  height: withOut(0, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
                 },
                 child: {
                   style: {
                     display: "flex",
                     position: "relative",
-                    width: String(100 * (t.value / 10)) + '%',
-                    height: withOut(0, ea),
+                    width: withOut(0, ea),
                     height: String(tendencyBarHeight) + ea,
                     borderRadius: String(tendencyBarHeight) + ea,
-                    background: colorExtended.gradientBlue1,
+                    background: colorExtended.gray2,
                   },
+                  child: {
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      width: String(100 * (t.value / 10)) + '%',
+                      height: withOut(0, ea),
+                      height: String(tendencyBarHeight) + ea,
+                      borderRadius: String(tendencyBarHeight) + ea,
+                      background: colorExtended.gradientBlue1,
+                    },
+                  }
                 }
               }
-            }
-          ]
-        });
-        tendencyNum++;
-      }
-      tendencyNum = 0;
-      for (let t of designer.toneTendency) {
-        createNode({
-          mother: rightTendency,
-          style: {
-            display: "flex",
-            position: "relative",
-            width: withOut(titleTextIndent * 2, ea),
-            marginLeft: String(titleTextIndent) + ea,
-            flexDirection: "row",
-            height: String(tendencyMotherHeight) + ea,
-            justifyContent: "center",
-            alignItems: "center",
-          },
-          children: [
-            {
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: String(tendencyNameAreaWidth) + ea,
-                height: withOut(0, ea),
-                justifyContent: "start",
-                alignItems: "center",
-              },
-              child: {
-                text: t.name,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  top: String(tendencyTextTop) + ea,
-                  fontSize: String(tendencySize) + ea,
-                  fontWeight: String(tendencyWeight),
-                  color: tendencyNum < 3 ? colorExtended.focusBlue : colorExtended.black,
-                }
-              }
+            ]
+          });
+          tendencyNum++;
+        }
+        tendencyNum = 0;
+        for (let t of designer.toneTendency) {
+          createNode({
+            mother: rightTendency,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(titleTextIndent * 2, ea),
+              marginLeft: String(titleTextIndent) + ea,
+              flexDirection: "row",
+              height: String(tendencyMotherHeight) + ea,
+              justifyContent: "center",
+              alignItems: "center",
             },
-            {
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: withOut(tendencyNameAreaWidth, ea),
-                height: withOut(0, ea),
-                justifyContent: "center",
-                alignItems: "center",
-              },
-              child: {
+            children: [
+              {
                 style: {
-                  display: "flex",
+                  display: "inline-flex",
                   position: "relative",
-                  width: withOut(0, ea),
-                  height: String(tendencyBarHeight) + ea,
-                  borderRadius: String(tendencyBarHeight) + ea,
-                  background: colorExtended.gray2,
+                  width: String(tendencyNameAreaWidth) + ea,
+                  height: withOut(0, ea),
+                  justifyContent: "start",
+                  alignItems: "center",
+                },
+                child: {
+                  text: t.name,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(tendencyTextTop) + ea,
+                    fontSize: String(tendencySize) + ea,
+                    fontWeight: String(tendencyWeight),
+                    color: tendencyNum < 3 ? colorExtended.focusBlue : colorExtended.black,
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: withOut(tendencyNameAreaWidth, ea),
+                  height: withOut(0, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
                 },
                 child: {
                   style: {
                     display: "flex",
                     position: "relative",
-                    width: String(100 * (t.value / 10)) + '%',
-                    height: withOut(0, ea),
+                    width: withOut(0, ea),
                     height: String(tendencyBarHeight) + ea,
                     borderRadius: String(tendencyBarHeight) + ea,
-                    background: colorExtended.gradientBlue1,
+                    background: colorExtended.gray2,
                   },
+                  child: {
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      width: String(100 * (t.value / 10)) + '%',
+                      height: withOut(0, ea),
+                      height: String(tendencyBarHeight) + ea,
+                      borderRadius: String(tendencyBarHeight) + ea,
+                      background: colorExtended.gradientBlue1,
+                    },
+                  }
                 }
               }
-            }
-          ]
+            ]
+          });
+          tendencyNum++;
+        }
+      } else {
+        factorMaker(infoMiddleMother, "유관 경력", designerCareer(designer, true, true));
+        factorMaker(infoMiddleMother, "홈리에종 소속 기간", String(year) + "년 " + String(month) + "개월");
+        factorMaker(infoMiddleMother, "1차 제안 받는 시점", String(first) + "일 이내");
+        selectionMaker(infoMiddleMother, "제안 방식", [ "순차 제안", "한 번에 제안" ], [ (method === "순차 제안" ? 1 : 0), (method === "순차 제안" ? 0 : 1) ]);
+        selectionMaker(infoMiddleMother, "CAD 도면", [ "가능", "불가능" ], [ cadBoo ? 1 : 0, cadBoo ? 0 : 1 ]);
+        selectionMaker(infoMiddleMother, "3D", [ "가능", "불가능" ], [ modelingBoo > 0 ? 1 : 0, modelingBoo === 0 ? 1 : 0 ]);
+        selectionMaker(infoMiddleMother, "콜라주", [ "가능", "불가능" ], [ collageBoo ? 1 : 0, collageBoo ? 0 : 1 ]);
+        selectionMaker(infoMiddleMother, "빌트인 가구 제작", [ "가능", "불가능" ], [ builtin > 0 ? 1 : 0, builtin === 0 ? 1 : 0 ]);
+        selectionMaker(infoMiddleMother, "디자인 가구 제작", [ "가능", "불가능" ], [ design > 0 ? 1 : 0, design === 0 ? 1 : 0 ]);
+        selectionMaker(infoMiddleMother, "패브릭 제작", [ "가능", "불가능" ], [ fabricLevel > 0 ? 1 : 0, fabricLevel === 0 ? 1 : 0 ]);
+        selectionMaker(infoMiddleMother, "디자이너 역량 범위", serviceParsing().name, [ (constructLevel < 0 ? 0 : 1), (constructLevel < 1 ? 0 : 1), (constructLevel < 2 ? 0 : 1), (constructLevel < 3 ? 0 : 1) ], true);
+
+        infoMiddleMiddle = createNode({
+          mother: infoTong,
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0 * 2, ea),
+            borderRadius: String(8) + "px",
+            padding: String(0) + ea,
+            background: colorExtended.white,
+            paddingTop: String(2.2) + ea,
+            paddingBottom: String(2.2) + ea,
+            marginTop: String(2) + ea,
+          }
         });
-        tendencyNum++;
+        tendencyNum = 0;
+        for (let t of designer.styleTendency) {
+          createNode({
+            mother: infoMiddleMiddle,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(factorPadding * 2, ea),
+              marginLeft: String(factorPadding) + ea,
+              flexDirection: "row",
+              height: String(5.3) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            children: [
+              {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(tendencyNameAreaWidth) + ea,
+                  justifyContent: "start",
+                  alignItems: "center",
+                },
+                child: {
+                  text: t.name,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(tendencyTextTop) + ea,
+                    fontSize: String(tendencySize) + ea,
+                    fontWeight: String(factorTitleWeight),
+                    color: tendencyNum < 3 ? colorExtended.blueDark : colorExtended.blueLight,
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: withOut(tendencyNameAreaWidth, ea),
+                  height: withOut(0, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: withOut(0, ea),
+                    height: String(tendencyBarHeight) + ea,
+                    borderRadius: String(tendencyBarHeight) + ea,
+                    background: colorExtended.gray2,
+                  },
+                  child: {
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      width: String(100 * (t.value / 10)) + '%',
+                      height: withOut(0, ea),
+                      height: String(tendencyBarHeight) + ea,
+                      borderRadius: String(tendencyBarHeight) + ea,
+                      background: colorExtended.gradientBlue1,
+                    },
+                  }
+                }
+              }
+            ]
+          });
+          tendencyNum++;
+        }
+
       }
 
       // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -7863,12 +8124,12 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         insertMoneyBlock(priceMiddleMother, "디자인비 (온라인)", true, autoComma(onlineFeeTarget.amount) + "원", false, false);
       }
       if (offlineFeeTarget === null) {
-        variableLastBlock = insertMoneyBlock(priceMiddleMother, "출장비", true, "(거리 : 0km / 시간 : 0시간 0분 / 1회당) 0원", false, true);
+        variableLastBlock = insertMoneyBlock(priceMiddleMother, "출장비", true, "(거리 : 0km / 1회당) 0원", false, true);
       } else {
         if (offlineFeeTarget.distance.amount === 0) {
-          variableLastBlock = insertMoneyBlock(priceMiddleMother, "출장비", true, "(거리 : 0km / 시간 : 0시간 0분 / 1회당) 0원", false, true);
+          variableLastBlock = insertMoneyBlock(priceMiddleMother, "출장비", true, "(거리 : 0km / 1회당) 0원", false, true);
         } else {
-          variableLastBlock = insertMoneyBlock(priceMiddleMother, "출장비", true, `(거리 : ${offlineFeeTarget.distance.distance} / 시간 : ${offlineFeeTarget.distance.time} / 1회당) ${autoComma(offlineFeeTarget.distance.amount)}원`, false, false);
+          variableLastBlock = insertMoneyBlock(priceMiddleMother, "출장비", true, `(거리 : ${offlineFeeTarget.distance.distance} / 1회당) ${autoComma(offlineFeeTarget.distance.amount)}원`, false, false);
         }
       }
       noDiscountOffline = true;
@@ -7903,7 +8164,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       createNode({
         mother: finalPriceTong,
         style: {
-          display: "block",
+          display: desktop ? "block" : "none",
           position: "absolute",
           top: String(finalPriceDashedLineTop) + ea,
           left: String(0),
@@ -7917,10 +8178,11 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         style: {
           display: "block",
           position: "relative",
-          paddingLeft: String(finalBlockBetween) + ea,
-          height: String(unitBlockHeightBig) + ea,
+          paddingLeft: desktop ? String(finalBlockBetween) + ea : "",
+          height: desktop ? String(unitBlockHeightBig) + ea : "",
           borderRadius: String(8) + "px",
           background: colorExtended.blueLight,
+          width: desktop ? "" : withOut(0, ea),
         },
       });
 
@@ -7953,8 +8215,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
             width: "calc(100% + " + String(innerMargin * 2) + ea + ")",
             height: withOut(0, ea),
             background: colorExtended.gradientBlue5,
-            borderBottomLeftRadius: String(5) + "px",
-            borderBottomRightRadius: String(5) + "px",
+            borderBottomLeftRadius: desktop ? String(5) + "px" : "",
+            borderBottomRightRadius: desktop ? String(5) + "px" : "",
           }
         }
       });
@@ -8315,6 +8577,7 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
       { column: "bright", name: "밝은 톤" },
       { column: "dark", name: "어두운 톤" }
     ]
+    this.mobileCardStack = 0;
 
     keywordsList = (await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativeKeywords", { equal: true })).data;
     photosList = (await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativePhotos", { equal: true })).data;
@@ -8407,6 +8670,24 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
 
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignerExplanationJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+        }
+      }
+    });
+
+    this.whiteCloseEvent = null;
+    window.history.replaceState({ mode: "base" }, "");
+    window.addEventListener("popstate", async (e) => {
+      if (e.state === null) {
+        if (typeof instance.whiteCloseEvent === "function") {
+          instance.whiteCloseEvent().call(window);
+        }
+      } else if (typeof e.state === "object") {
+        if (e.state.mode === "base") {
+          if (typeof instance.whiteCloseEvent === "function") {
+            instance.whiteCloseEvent().call(window);
+          }
+        } else if (e.state.mode === "white") {
+          await instance.insertWhiteCardEvent(e.state.desid, e.state.char).call(document.getElementById("totalcontents"), new Event("click", { bubbles: true }));
         }
       }
     });
