@@ -5638,33 +5638,293 @@ DesignerExplanationJs.prototype.insertFourthBox = async function () {
   }
 }
 
-DesignerExplanationJs.prototype.styleTextParsing = function (text) {
-  const cssArr = text.split(';');
-  let filterArr;
-  let tempArr, finalObj;
-  finalObj = {};
-
-  filterArr = [];
-  for (let i of cssArr) {
-    if (/\:/.test(i)) {
-      filterArr.push(i.trim());
+DesignerExplanationJs.prototype.styleTextParsing = function (text, sourceMode = false) {
+  try {
+    const cssArr = text.split(';');
+    let filterArr;
+    let tempArr, finalObj;
+    let imageSource;
+    
+    finalObj = {};
+  
+    filterArr = [];
+    for (let i of cssArr) {
+      if (/\:/.test(i)) {
+        filterArr.push(i.trim());
+      }
     }
-  }
-
-  for (let i of filterArr) {
-    tempArr = i.split(':');
-    if (tempArr.length !== 2) {
-      console.log(cssArr, filterArr);
-      throw new Error("invaild css string");
+  
+    imageSource = null;
+    for (let i of filterArr) {
+      tempArr = i.split(':');
+      if (tempArr.length !== 2) {
+        console.log(cssArr, filterArr);
+        throw new Error("invaild css string");
+      }
+      if (/url\(/gi.test(tempArr[1].trim())) {
+        imageSource = BRIDGEHOST.replace(/\:3000$/gi, '') + tempArr[1].trim().replace(/^url\([\"\']/gi, '').replace(/[\"\']\)$/gi, '');
+        finalObj[tempArr[0].trim()] = "url(\"" + imageSource + "\")";
+      } else {
+        finalObj[tempArr[0].trim()] = tempArr[1].trim();
+      }
     }
-    if (/url\(/gi.test(tempArr[1].trim())) {
-      finalObj[tempArr[0].trim()] = "url(\"" + BRIDGEHOST.replace(/\:3000$/gi, '') + tempArr[1].trim().replace(/^url\([\"\']/gi, '').replace(/[\"\']\)$/gi, '') + "\")";
+    
+    if (sourceMode) {
+      return imageSource;
     } else {
-      finalObj[tempArr[0].trim()] = tempArr[1].trim();
+      return finalObj;
+    }
+
+  } catch (e) {
+    return null;
+  }
+}
+
+DesignerExplanationJs.prototype.imageViewing = function (images, convertMode = true) {
+  const instance = this;
+  const { ea, totalContents, media } = this;
+  const { createNode, withOut, colorChip, equalJson, downloadFile, removeByClass, sleep, swipePatch } = GeneralJs;
+  const className = "photoSelectedTarget";
+  const zIndex = 204;
+  const px = "px";
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  return async function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    try {
+      let img, height, imgBox;
+      let title, titleSize, bottom;
+      let titleBox;
+      let leftArrow, rightArrow;
+      let leftArrowBox, rightArrowBox;
+      let arrowMargin;
+      let index, src;
+      let convertEvent;
+      let length;
+      let totalImages;
+      let arrowWidth;
+      let convertEventGenerator;
+  
+      totalImages = equalJson(JSON.stringify(images));
+  
+      if (convertMode) {
+        src = this.getAttribute("src");
+        length = Number(this.getAttribute("length"));
+        index = Number(this.getAttribute("index"));
+      } else {
+        src = totalImages[0];
+      }
+  
+      convertEvent = () => {};
+  
+      height = <%% 95, 95, 95, 95, 95 %%>;
+      arrowMargin = <%% 56, 52, 36, 24, 16 %%>;
+      arrowWidth = <%% 16, 15, 14, 12, 8 %%>;
+
+      createNode({
+        mother: totalContents,
+        class: [ className ],
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              removeByClass(className);
+            }
+          }
+        ],
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: colorChip.darkDarkShadow,
+          zIndex: String(zIndex),
+          animation: "justfadeineight 0.3s ease forwards",
+        }
+      });
+  
+      img = createNode({
+        mother: totalContents,
+        class: [ className ],
+        mode: "img",
+        attribute: [
+          { src },
+          { direction: "right" },
+          { draggable: "false" },
+        ],
+        style: {
+          opacity: String(0),
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          height: String(height) + '%',
+          width: "auto",
+          zIndex: String(zIndex),
+          borderRadius: String(3) + "px",
+          transition: "all 0s ease",
+          transform: "translateY(20px)",
+        }
+      });
+      imgBox = img.getBoundingClientRect();
+      while (imgBox.width === 0) {
+        await sleep(100);
+        imgBox = img.getBoundingClientRect();
+      }
+      if (imgBox.width + (arrowMargin * 2) + (arrowWidth * 2) + (arrowMargin * 2) >= window.innerWidth) {
+        img.style.width = String(window.innerWidth - ((arrowMargin * 2) + (arrowWidth * 2) + (arrowMargin * 0))) + px;
+        img.style.height = "auto";
+        imgBox = img.getBoundingClientRect();
+        while (imgBox.width === 0) {
+          await sleep(100);
+          imgBox = img.getBoundingClientRect();
+        }
+        img.style.top = withOut(50, imgBox.height / 2, px);
+        img.style.left = withOut(50, imgBox.width / 2, px);
+        img.style.animation = "fadeuporiginal 0.3s ease forwards";
+      } else {
+        img.style.top = withOut(50, imgBox.height / 2, px);
+        img.style.left = withOut(50, imgBox.width / 2, px);
+        img.style.animation = "fadeuporiginal 0.3s ease forwards";
+      }
+
+      if (convertMode) {
+        leftArrow = createNode({
+          mother: totalContents,
+          events: [
+            {
+              type: [ "dblclick", "selectstart" ],
+              event: (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+              }
+            }
+          ],
+          attribute: [
+            { direction: "left" }
+          ],
+          class: [ className ],
+          mode: "svg",
+          source: instance.mother.returnArrow("left", colorChip.whiteBlack),
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: String(arrowWidth) + px,
+            height: String(arrowWidth) + px,
+            zIndex: String(zIndex),
+            transition: "all 0s ease",
+            animation: "fadeuplite 0.2s ease forwards",
+            cursor: "pointer"
+          }
+        });
+        leftArrowBox = leftArrow.getBoundingClientRect();
+        leftArrow.style.top = withOut(50, leftArrowBox.height / 2, px);
+        leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, px);
+    
+        rightArrow = createNode({
+          mother: totalContents,
+          events: [
+            {
+              type: [ "dblclick", "selectstart" ],
+              event: (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+              }
+            }
+          ],
+          attribute: [
+            { direction: "right" }
+          ],
+          class: [ className ],
+          mode: "svg",
+          source: instance.mother.returnArrow("right", colorChip.whiteBlack),
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: String(arrowWidth) + px,
+            height: String(arrowWidth) + px,
+            zIndex: String(zIndex),
+            transition: "all 0s ease",
+            animation: "fadeuplite 0.2s ease forwards",
+            cursor: "pointer"
+          }
+        });
+        rightArrowBox = rightArrow.getBoundingClientRect();
+        rightArrow.style.top = withOut(50, rightArrowBox.height / 2, px);
+        rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, px);
+    
+        convertEventGenerator = (direction = null) => {
+          return async function (e) {
+            if (typeof e.stopPropagation === "function") {
+              e.stopPropagation();
+            }
+            if (typeof e.preventDefault === "function") {
+              e.preventDefault();
+            }
+            if (direction === null) {
+              direction = this.getAttribute("direction");
+            }
+            let targetIndex, targetImage;
+            if (direction === "left") {
+              targetIndex = index - 1;
+              if (totalImages[targetIndex] === undefined) {
+                targetIndex = length - 1;
+              }
+            } else {
+              targetIndex = index + 1;
+              if (totalImages[targetIndex] === undefined) {
+                targetIndex = 0;
+              }
+            }
+            targetImage = totalImages[targetIndex];
+            img.setAttribute("src", targetImage);
+            img.style.top = "";
+            img.style.width = "auto";
+            img.style.height = String(height) + '%';
+            imgBox = img.getBoundingClientRect();
+            while (imgBox.width === 0) {
+              await sleep(100);
+              imgBox = img.getBoundingClientRect();
+            }
+            if (imgBox.width + (arrowMargin * 2) + (arrowWidth * 2) + (arrowMargin * 2) >= window.innerWidth) {
+              img.style.width = String(window.innerWidth - ((arrowMargin * 2) + (arrowWidth * 2) + (arrowMargin * 0))) + px;
+              img.style.height = "auto";
+              imgBox = img.getBoundingClientRect();
+              while (imgBox.width === 0) {
+                await sleep(100);
+                imgBox = img.getBoundingClientRect();
+              }
+              img.style.top = withOut(50, imgBox.height / 2, px);
+              img.style.left = withOut(50, imgBox.width / 2, px);
+            } else {
+              img.style.top = withOut(50, imgBox.height / 2, px);
+              img.style.left = withOut(50, imgBox.width / 2, px);
+            }
+            leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, px);
+            rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, px);
+      
+            index = targetIndex;
+            src = targetImage.image;
+          }
+        }
+        convertEvent = convertEventGenerator(null);
+        swipePatch({
+          left: convertEventGenerator("right"),
+          right: convertEventGenerator("left"),
+        }, null, img, "bigPhoto_view_");
+        leftArrow.addEventListener("click", convertEvent);
+        rightArrow.addEventListener("click", convertEvent);
+        img.addEventListener("click", convertEvent);
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
-
-  return finalObj;
 }
 
 DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
@@ -5689,7 +5949,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       const { analytics, information } = designer;
       const { business: { career: { startY, startM } } } = information;
       const { construct: { level: constructLevel, case: constructCase }, styling: { tendency: { style: styleTendency }, method, furniture: { builtin, design }, fabric: { level: fabricLevel, curtain, bedding } }, purchase: { setting: { install, storage } }, project: { time: { first }, matrix, cad: cadBoo, collage: collageBoo, modeling: modelingBoo } } = analytics;
-      const zIndex = 104;
+      const zIndex = desktop ? 3 : 104;
       const web = {
         portfolio: FRONTHOST + "/portdetail.php?pid=",
         review: FRONTHOST + "/revdetail.php?pid="
@@ -5846,7 +6106,8 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let selectionBarMargin;
       let selectionBarLongMargin;
       let infoMiddleMiddle;
-      let paperWorkBigView;
+      let sourceTong;
+      let pictureNumber;
 
       whiteMargin = <%% 30, 30, 30, 30, 3 %%>;
       innerMargin = <%% 52, 48, 40, 24, 6 %%>;
@@ -6462,21 +6723,6 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         }
       }
       instance.whiteCloseEvent = whiteCloseEvent;
-
-      paperWorkBigView = (index, original) => {
-        const zIndex = 200;
-        return function (e) {
-          const self = this;
-          const positionData = equalJson(original);
-          const length = positionData.length;
-
-          
-
-          console.log(positionData);
-          console.log(index);
-
-        }
-      }
 
       factorMaker = (mother, title, value, lastBoo = false) => {
         createNode({
@@ -7365,18 +7611,18 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               children: positionData.filter((raw, i) => {
                 return positionData[i] !== undefined && positionData[i] !== 0 && positionData[i] !== "0"
               }).map((raw, i, filteredArr) => {
-                const original = JSON.stringify(filteredArr);
+                const original = filteredArr.map((r) => { return "https://" + FILEHOST + stringToLink(r) });
                 return {
                   class: [ paperWorksFactorWidthClassName ],
                   mode: "img",
                   attribute: {
                     src: "https://" + FILEHOST + stringToLink(raw),
                     index: String(i),
-                    original,
+                    length: String(original.length),
                   },
                   event: {
                     selectstart: (e) => { e.preventDefault() },
-                    click: paperWorkBigView(i, original),
+                    click: instance.imageViewing(original),
                   },
                   style: {
                     display: "inline-block",
@@ -7441,19 +7687,35 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
           marginTop: String(blockTitleMarginBottom) + ea,
         },
       });
+      sourceTong = [];
       for (let obj of proposal.pictureSettings) {
-        styleObject = instance.styleTextParsing(obj.styleText);
+        sourceTong.push(instance.styleTextParsing(obj.styleText, true))
+      }
+      pictureNumber = 0;
+      for (let obj of proposal.pictureSettings) {
+        styleObject = instance.styleTextParsing(obj.styleText, false);
         createNode({
           mother: pictureBase,
+          attribute: {
+            src: sourceTong[pictureNumber],
+            index: String(pictureNumber),
+            length: String(sourceTong.length),
+          },
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+            click: instance.imageViewing(sourceTong),
+          },
           style: {
             display: "inline-block",
             position: "absolute",
             borderRadius: String(5) + "px",
             backgroundSize: "100% auto",
             backgroundPosition: "50% 50%",
+            cursor: "pointer",
             ...styleObject,
           }
         });
+        pictureNumber++;
       }
 
       // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
