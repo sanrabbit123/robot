@@ -328,7 +328,7 @@ const DesignerExplanationJs = function () {
   this.mother = new GeneralJs();
 }
 
-DesignerExplanationJs.binaryPath = "/middle/proposal";
+DesignerExplanationJs.binaryPath = FRONTHOST + "/middle/proposal";
 
 DesignerExplanationJs.prototype.insertInitBox = async function () {
   const instance = this;
