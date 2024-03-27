@@ -5669,7 +5669,7 @@ DesignerExplanationJs.prototype.styleTextParsing = function (text) {
 
 DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, designerCareer, isMac, isIphone, svgMaker, autoComma, ajaxJson, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, swipePatch, tempScrollBan, tempScrollRelease, setDebounce } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, designerCareer, isMac, isIphone, svgMaker, autoComma, ajaxJson, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, swipePatch, tempScrollBan, tempScrollRelease, setDebounce, equalJson } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -5846,6 +5846,7 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
       let selectionBarMargin;
       let selectionBarLongMargin;
       let infoMiddleMiddle;
+      let paperWorkBigView;
 
       whiteMargin = <%% 30, 30, 30, 30, 3 %%>;
       innerMargin = <%% 52, 48, 40, 24, 6 %%>;
@@ -6461,6 +6462,21 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
         }
       }
       instance.whiteCloseEvent = whiteCloseEvent;
+
+      paperWorkBigView = (index, original) => {
+        const zIndex = 200;
+        return function (e) {
+          const self = this;
+          const positionData = equalJson(original);
+          const length = positionData.length;
+
+          
+
+          console.log(positionData);
+          console.log(index);
+
+        }
+      }
 
       factorMaker = (mother, title, value, lastBoo = false) => {
         createNode({
@@ -7348,15 +7364,19 @@ DesignerExplanationJs.prototype.insertWhiteCardEvent = function (desid, char) {
               },
               children: positionData.filter((raw, i) => {
                 return positionData[i] !== undefined && positionData[i] !== 0 && positionData[i] !== "0"
-              }).map((raw, i) => {
+              }).map((raw, i, filteredArr) => {
+                const original = JSON.stringify(filteredArr);
                 return {
                   class: [ paperWorksFactorWidthClassName ],
                   mode: "img",
                   attribute: {
-                    src: "https://" + FILEHOST + stringToLink(positionData[i]),
+                    src: "https://" + FILEHOST + stringToLink(raw),
+                    index: String(i),
+                    original,
                   },
                   event: {
                     selectstart: (e) => { e.preventDefault() },
+                    click: paperWorkBigView(i, original),
                   },
                   style: {
                     display: "inline-block",
