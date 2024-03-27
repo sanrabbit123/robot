@@ -164,7 +164,7 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
           position: "absolute",
           top: desktop ? String((-1 * baseTop) + naviHeight) + ea : "calc(calc(" + String(naviHeight - naviHeight) + "px" + ") - " + String(baseTop) + ea + ")",
           left: String(-1 * minusLeft) + ea,
-          background: colorExtended.realBlack,
+          background: colorExtended.darkDarkBlack,
           width: withOut(-1 * (minusLeft * 2), ea),
           height: desktop ? withOut(1 * ((-1 * baseTop) + naviHeight), ea) : String(185) + ea,
         }
@@ -278,7 +278,7 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
             lineHeight: String(descriptionLineHeight),
           },
           bold: {
-            color: colorExtended.realBlack,
+            color: colorExtended.darkDarkBlack,
             fontWeight: String(700),
             fontSize: String(descriptionSize) + ea,
             lineHeight: String(descriptionLineHeight),

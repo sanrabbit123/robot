@@ -417,6 +417,7 @@ GeneralJs.colorExtended = {
   liteBlack: "#aaaaaa",
   black: "#404040",
   darkBlack: "#303030",
+  darkDarkBlack: "#252525",
   realBlack: "#202020",
   gradientGreen: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
   gradientGreen2: "linear-gradient(222deg, rgba(89, 175, 137, 0.8) 5%, rgba(0, 156, 106, 0.9) 100%)",
