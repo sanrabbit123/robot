@@ -443,6 +443,7 @@ GeneralJs.colorExtended = {
   gradientGray: "linear-gradient(256deg, rgba(17, 17, 17, 0.8) 0%, rgba(20, 20, 20, 0.75) 100%)",
   gradientBlack: "linear-gradient(256deg, rgba(17, 17, 17, 0.9) 0%, rgba(20, 20, 20, 0.75) 100%)",
   gradientWhite: "linear-gradient(256deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.85) 100%)",
+  gradientWhite2: "linear-gradient(200deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.75) 100%)",
   red: "#ff5f57",
   yellow: "#ffbd3d",
   purple: "#ba7dd7",
