@@ -110,6 +110,9 @@ GeneralJs.svgMaker = {
       return `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 10 20" xml:space="preserve"><path fill="${color}" d="M 10, 0L 0, 0L 0, 20l 10, -10L 10, 0z"/></svg>`;
     }
   },
+  generalTriangle: function (color) {
+    return `<svg shape-rendering="geometricPrecision" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 425.197 373.954" xml:space="preserve"><path fill="${color}" d="M2.922,32.348l191.001,330.823c8.301,14.377,29.052,14.377,37.353,0l191-330.823C430.576,17.971,420.2,0,403.599,0H21.598 C4.997,0-5.379,17.971,2.922,32.348z"/></svg>`;
+  },
   buttonArrow: function (direction, color) {
     if (direction !== undefined && color === undefined) {
       color = direction;

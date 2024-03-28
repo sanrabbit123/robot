@@ -811,7 +811,6 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        flexDirection: "column",
         height: desktop ? String(totalHeight) + ea : "",
         justifyContent: "center",
         alignItems: "center",

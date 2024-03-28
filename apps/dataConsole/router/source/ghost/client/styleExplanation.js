@@ -319,105 +319,64 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
   const mobile = media[4];
   const desktop = !mobile;
   try {
-    let mainHeight;
     let minusLeft;
     let secondBase;
-    let colorTop;
     let serviceBase;
     let textContent;
     let descriptionSize;
-    let checkCircleWidth;
-    let visualTop;
     let createServiceBlock;
     let titleSize;
     let descriptionMarginTop;
-    let boxWidth, boxHeight;
+    let boxWidth;
     let betweenMargin;
-    let totalHeight;
-    let circleMarginTop;
-    let mobileStartEndText;
-    let mobileBasePaddingTop;
-    let mobileWhiteBase;
-    let num;
-    let startEndSize;
-    let startEndValueSize;
-    let whiteInnerPadding;
-    let whiteInnerVisualPaddingTop;
-    let mobileServicePaddingTop;
+    let serviceMother;
+    let target;
 
-    mainHeight = <%% 440, 390, 370, 280, 136 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    colorTop = <%% 200, 200, 200, 200, 200 %%>;
-
-    titleSize = <%% 23, 21, 19, 17, 4.6 %%>;
+    titleSize = 28;
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
-    descriptionMarginTop = <%% 9, 9, 7, 6, 2.6 %%>;
+    descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
 
-    checkCircleWidth = <%% 21, 21, 20, 18, 4.6 %%>;
-
-    visualTop = <%% 24, 24, 22, 17, 2 %%>;
-
-    boxWidth = <%% 290, 270, 240, 200, 56 %%>;
-    boxHeight = <%% 227, 214, 192, 163, 39.8 %%>;
-
-    betweenMargin = <%% 152, 90, 90, 60, 9 %%>;
-
-    totalHeight = <%% 350, 340, 320, 254, 88 %%>;
-
-    circleMarginTop = <%% 16, 16, 14, 12, 2.2 %%>;
-
-    mobileBasePaddingTop = 7.2;
-    startEndSize = 3.3;
-    startEndValueSize = 3.6;
-    whiteInnerPadding = 4.8;
-    whiteInnerVisualPaddingTop = 2.1;
-    mobileServicePaddingTop = 5;
+    betweenMargin = 26;
 
     textContent = [
       {
         title: "홈퍼니싱",
         description: [
-          "<b%시공 없이 스타일링만%b>",
-          "가구와 소품, 그리고 패브릭으로 진행",
+          "시공 없이 스타일링만!",
+          "가구 소품 패브릭 조명으로 진행",
         ],
+        source: StyleExplanationJs.binaryPath + "/service_f.svg",
+        plus: false,
+        default: false,
         margin: false,
-        focus: true,
       },
       {
         title: "홈스타일링",
         description: [
-          "<b%부분 시공과 스타일링%b>",
-          "집 컨디션에 맞는 범위의 시공을 진행",
+          "부분 시공 (빌트인 제작 가구 포함)",
+          "스타일링 (가구 소품 패브릭)",
         ],
+        source: StyleExplanationJs.binaryPath + "/service_s.svg",
+        plus: true,
+        default: true,
         margin: true,
-        focus: true,
       },
       {
         title: "토탈 스타일링",
         description: [
-          "<b%전체 시공과 스타일링%b>",
-          "전체 시공과 스타일링까지 전부 진행"
+          "전체 시공 (주방 혹은 화장실 설비 교체 포함)",
+          "스타일링 (가구 소품 패브릭)",
         ],
+        source: StyleExplanationJs.binaryPath + "/service_t.svg",
+        plus: true,
+        default: false,
         margin: false,
-        focus: true,
       },
     ]
 
-    mobileStartEndText = [
-      [
-        "예상 시작일",
-        "2020-01-01",
-      ],
-      [
-        "예상 종료일",
-        "2020-01-01",
-      ],
-    ]
-
-    if (mobile) {
-      textContent = textContent.find((o) => { return o.focus });
-    }
+    boxWidth = (standardWidth - (betweenMargin * (textContent.length - 1))) / textContent.length;
 
     secondBase = createNode({
       mother: baseTong,
@@ -425,13 +384,9 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
+        justifyContent: "start",
+        alignItems: "start",
         flexDirection: "column",
-        height: desktop ? String(totalHeight) + ea : "",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: desktop ? "row" : "column",
-        paddingTop: desktop ? "" : String(mobileBasePaddingTop) + ea,
-        paddingBottom: desktop ? "" : String(mobileBasePaddingTop) + ea,
       },
       child: {
         style: {
@@ -440,13 +395,123 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           left: String(-1 * minusLeft) + ea,
           background: colorExtended.gradientBlue,
           width: withOut(-1 * (minusLeft * 2), ea),
-          height: desktop ? withOut(1 * ((-1 * colorTop) + naviHeight), ea) : withOut(0, ea),
+          height: withOut(0, ea),
         }
       }
     });
 
-    createServiceBlock = (index, thisMother = secondBase) => {
-      let target;
+    createNode({
+      mother: secondBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        marginTop: String(100) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+            borderBottom: "1.5px solid " + colorExtended.blueDark,
+          },
+          children: [
+            {
+              text: "1",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontFamily: "mont",
+                fontSize: String(29) + ea,
+                fontWeight: String(700),
+                color: colorExtended.white,
+              }
+            },
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                height: String(28) + ea,
+                width: String(0),
+                borderRight: "2px solid " + colorExtended.white,
+                transform: "rotate(25deg)",
+                marginLeft: String(12) + ea,
+                marginRight: String(12) + ea,
+                top: String(-1) + ea,
+              }
+            },
+            {
+              text: "6",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontFamily: "mont",
+                fontSize: String(29) + ea,
+                fontWeight: String(700),
+                color: colorExtended.white,
+                opacity: String(0.4),
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            marginTop: String(25) + ea,
+          },
+          children: [
+            {
+              text: "생각하는 서비스 유형을 선택해 주세요!",
+              style: {
+                display: "flex",
+                position: "relative",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(800),
+                color: colorExtended.black,
+              }
+            },
+            {
+              text: "*스타일링 없는 단순 시공은 제공하지 않습니다.",
+              style: {
+                display: "flex",
+                position: "relative",
+                fontSize: String(descriptionSize) + ea,
+                fontWeight: String(500),
+                color: colorExtended.black,
+                marginTop: String(descriptionMarginTop) + ea,
+                left: String(-1) + ea,
+              }
+            },
+          ]
+        },
+      ]
+    })
+
+    serviceMother = createNode({
+      mother: secondBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+        paddingTop: String(100) + ea,
+        paddingBottom: String(120) + ea,
+      }
+    });
+    createServiceBlock = (index, thisMother = serviceMother) => {
       if (typeof index === "number") {
         target = textContent[index];
       } else {
@@ -458,201 +523,175 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           display: "inline-flex",
           position: "relative",
           width: desktop ? String(boxWidth) + ea : withOut(0, ea),
-          height: String(boxHeight) + ea,
           flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
-          top: String(visualTop) + ea,
-          opacity: target.focus ? String(1) : String(0.4),
+          justifyContent: "start",
+          opacity: String(1),
           marginLeft: (desktop && target.margin) ? String(betweenMargin) + ea : "",
           marginRight: (desktop && target.margin) ? String(betweenMargin) + ea : "",
         }
       });
+
       createNode({
         mother: serviceBase,
-        mode: "svg",
-        source: svgMaker.houseLine(colorExtended.focusBlue),
         style: {
-          display: "flex",
-          position: "absolute",
+          display: "inline-flex",
+          position: "relative",
+          width: String(156) + ea,
+          height: String(40) + ea,
+          borderRadius: String(40) + ea,
+          background: colorExtended.white,
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: "0px 2px 12px -9px " + colorExtended.darkShadow,
+        },
+        child: {
+          text: target.title,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(17) + ea,
+            fontWeight: String(800),
+            color: colorExtended.black,
+            top: String(-0.5) + ea,
+          }
+        }
+      });
+
+      createNode({
+        mother: serviceBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(8) + ea,
+          height: String(8) + ea,
+          borderRadius: String(8) + ea,
+          background: colorExtended.white,
+          marginTop: String(11) + ea,
+        }
+      });
+      createNode({
+        mother: serviceBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(6) + ea,
+          height: String(6) + ea,
+          borderRadius: String(6) + ea,
+          background: colorExtended.white,
+          marginTop: String(6) + ea,
+          opacity: String(0.7),
+        }
+      });
+      createNode({
+        mother: serviceBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(4) + ea,
+          height: String(4) + ea,
+          borderRadius: String(4) + ea,
+          background: colorExtended.white,
+          marginTop: String(6) + ea,
+          opacity: String(0.4),
+        }
+      });
+
+      createNode({
+        mother: serviceBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
           width: String(boxWidth) + ea,
-          top: String(0),
-          left: desktop ? String(0) : withOut(50, boxWidth / 2, ea),
-        }
-      });
-      createNode({
-        mother: serviceBase,
-        text: target.title,
-        style: {
-          display: "flex",
-          position: "relative",
-          fontFamily: "gmarket",
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(700),
-          color: colorExtended.black,
-          marginTop: desktop ? "" : String(5.6) + ea,
-        }
-      });
-      createNode({
-        mother: serviceBase,
-        text: target.description[0],
-        style: {
-          display: "flex",
-          position: "relative",
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(400),
-          color: colorExtended.black,
-          marginTop: String(descriptionMarginTop) + ea,
-          marginBottom: String(0) + ea,
+          height: String(boxWidth) + ea,
+          borderRadius: String(8) + "px",
+          background: colorExtended.white,
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: "0px 3px 15px -9px " + colorExtended.darkShadow,
+          marginTop: String(12) + ea,
         },
-        bold: {
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(800),
-          color: colorExtended.black,
+        child: {
+          mode: "img",
+          attribute: {
+            src: target.source,
+          },
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(75) + '%',
+          }
         }
       });
+
       createNode({
         mother: serviceBase,
-        text: target.description[1],
         style: {
           display: "flex",
           position: "relative",
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(400),
-          color: colorExtended.black,
-        },
-        bold: {
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(800),
-          color: colorExtended.black,
-        }
-      });
-      createNode({
-        mother: serviceBase,
-        style: {
-          display: "flex",
-          width: String(checkCircleWidth) + ea,
-          height: String(checkCircleWidth) + ea,
-          background: target.focus ? colorExtended.focusBlue : colorExtended.white,
-          borderRadius: String(checkCircleWidth) + ea,
-          marginTop: String(circleMarginTop) + ea,
-          border: "1px solid " + colorExtended.focusBlue,
+          width: withOut(0, ea),
+          height: String(50) + ea,
+          alignItems: "center",
+          justifyContent: "center",
         },
         child: {
           mode: "svg",
-          source: svgMaker.checkCircle(colorExtended.white),
+          source: svgMaker.generalTriangle(colorExtended.blueDark),
           style: {
-            display: "flex",
+            display: "inline-flex",
             position: "relative",
-            width: String(checkCircleWidth) + ea,
-          },
+            width: String(12) + ea,
+          }
         }
       });
+
+      createNode({
+        mother: serviceBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(boxWidth) + ea,
+          height: String(98) + ea,
+          borderRadius: String(8) + "px",
+          background: colorExtended.blueDark,
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: "0px 2px 12px -9px " + colorExtended.blueDim,
+        },
+        child: {
+          text: target.description.join(target.plus ? "\n<b%+%b>" : "\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(16) + ea,
+            fontWeight: String(700),
+            color: colorExtended.darkBlack,
+            textAlign: "center",
+            lineHeight: String(1.52),
+            top: String(-1) + ea,
+          },
+          bold: {
+            display: "inline-flex",
+            position: "relative",
+            "justify-content": "center",
+            "align-items": "center",
+            color: colorExtended.mainBlue,
+            fontWeight: String(700),
+            fontSize: String(15) + ea,
+            background: colorExtended.white,
+            padding: String(3) + ea,
+            paddingTop: String(0) + ea,
+            paddingBottom: String(2) + ea,
+            height: String(11) + ea,
+            "border-radius": String(8) + ea,
+            marginRight: String(4.5) + ea,
+          }
+        }
+      });
+
     }
-
-    if (desktop) {
-      for (let i = 0; i < textContent.length; i++) {
-        createServiceBlock(i);
-      }
-    } else {
-
-      mobileWhiteBase = createNode({
-        mother: secondBase,
-        style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          borderRadius: String(8) + "px",
-          background: colorExtended.white,
-          boxShadow: "0px 3px 13px -9px " + colorExtended.blueDim,
-          paddingTop: String(whiteInnerVisualPaddingTop) + ea,
-          paddingBottom: String(whiteInnerVisualPaddingTop) + ea,
-          flexDirection: "column",
-          marginBottom: String(2) + ea,
-        }
-      });
-
-      num = 0;
-      for (let [ black, white ] of mobileStartEndText) {
-        createNode({
-          mother: mobileWhiteBase,
-          style: {
-            display: "flex",
-            position: "relative",
-            marginLeft: String(whiteInnerPadding) + ea,
-            width: withOut(whiteInnerPadding * 2, ea),
-            height: String(12) + ea,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "start",
-            borderBottom: num === 0 ? "1px dashed " + colorExtended.black : "",
-          },
-          children: [
-            {
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: String(21.6) + ea,
-                height: String(7.2) + ea,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: String(8) + "px",
-                background: colorExtended.black,
-              },
-              child: {
-                text: black,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontWeight: String(800),
-                  fontSize: String(startEndSize) + ea,
-                  color: colorExtended.white,
-                  top: String(-0.2) + ea,
-                }
-              }
-            },
-            {
-              style: {
-                display: "inline-flex",
-                position: "absolute",
-                right: String(0),
-                top: String(0),
-                width: String(40) + ea,
-                height: withOut(0, ea),
-                alignItems: "center",
-                justifyContent: "end",
-              },
-              child: {
-                text: white,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontWeight: String(500),
-                  fontSize: String(startEndValueSize) + ea,
-                  color: colorExtended.black,
-                  top: String(-0.4) + ea,
-                }
-              }
-            },
-          ]
-        });
-        num++;
-      }
-
-      createServiceBlock(textContent, createNode({
-        mother: secondBase,
-        style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          borderRadius: String(8) + "px",
-          background: colorExtended.white,
-          boxShadow: "0px 3px 13px -9px " + colorExtended.blueDim,
-          paddingTop: String(mobileServicePaddingTop) + ea,
-          paddingBottom: String(mobileServicePaddingTop) + ea,
-          flexDirection: "column",
-        }
-      }));
+    for (let i = 0; i < textContent.length; i++) {
+      createServiceBlock(i);
     }
 
   } catch (e) {
