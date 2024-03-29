@@ -1299,8 +1299,8 @@ StyleExplanationJs.prototype.firstConverting = function () {
       let blackScrollTop;
       let numbersAreaMarginTop;
 
-      blackScrollTop = -642;
-      numbersAreaMarginTop = 100;
+      blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
+      numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
 
       blackTarget.style.transition = "all 0.6s ease";
       scrollTo(window, 0, 0, true);
@@ -1340,8 +1340,8 @@ StyleExplanationJs.prototype.secondConverting = function () {
       let blackScrollTop;
       let numbersAreaMarginTop;
 
-      blackScrollTop = -642;
-      numbersAreaMarginTop = 100;
+      blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
+      numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
 
       scrollTo(window, 0, 0, true);
       removeTarget.remove();
@@ -1387,27 +1387,27 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
     let commentTriangleWidth;
     let commentSize, commentWeight, commentTextTop;
 
-    radius = 5;
+    radius = <%% 5, 5, 5, 5, 5 %%>;
 
-    x = 2;
-    y = 5;
-    z = 8;
+    x = <%% 2, 2, 2, 2, 2 %%>;
+    y = <%% 5, 5, 5, 5, 5 %%>;
+    z = <%% 8, 8, 8, 8, 8 %%>;
 
-    barAreaHeight = 270;
-    flagWidth = 23;
-    flagRight = -19;
-    flagTop = -34;
+    barAreaHeight = <%% 270, 270, 270, 270, 270 %%>;
+    flagWidth = <%% 23, 23, 23, 23, 23 %%>;
+    flagRight = <%% -19, -19, -19, -19, -19 %%>;
+    flagTop = <%% -34, -34, -34, -34, -34 %%>;
 
-    commentAreaTop = -52;
-    commentAreaLeft = 2;
-    commentAreaWidth = 286;
-    commentAreaHeight = 32;
+    commentAreaTop = <%% -52, -52, -52, -52, -52 %%>;
+    commentAreaLeft = <%% 2, 2, 2, 2, 2 %%>;
+    commentAreaWidth = <%% 286, 286, 286, 286, 286 %%>;
+    commentAreaHeight = <%% 32, 32, 32, 32, 32 %%>;
 
-    commentTriangleWidth = 8;
+    commentTriangleWidth = <%% 8, 8, 8, 8, 8 %%>;
 
-    commentSize = 14;
-    commentWeight = 700;
-    commentTextTop = -1;
+    commentSize = <%% 14, 14, 14, 14, 14 %%>;
+    commentWeight = <%% 700, 700, 700, 700, 700 %%>;
+    commentTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -1579,27 +1579,27 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function () {
     let commentTriangleWidth;
     let commentSize, commentWeight, commentTextTop;
 
-    radius = 5;
+    radius = <%% 5, 5, 5, 5, 5 %%>;
 
-    x = 2;
-    y = 5;
-    z = 8;
+    x = <%% 2, 2, 2, 2, 2 %%>;
+    y = <%% 5, 5, 5, 5, 5 %%>;
+    z = <%% 8, 8, 8, 8, 8 %%>;
 
-    barAreaHeight = 270;
-    flagWidth = 23;
-    flagRight = -19;
-    flagTop = -34;
+    barAreaHeight = <%% 270, 270, 270, 270, 270 %%>;
+    flagWidth = <%% 23, 23, 23, 23, 23 %%>;
+    flagRight = <%% -19, -19, -19, -19, -19 %%>;
+    flagTop = <%% -34, -34, -34, -34, -34 %%>;
 
-    commentAreaTop = -52;
-    commentAreaLeft = 2;
-    commentAreaWidth = 286;
-    commentAreaHeight = 32;
+    commentAreaTop = <%% -52, -52, -52, -52, -52 %%>;
+    commentAreaLeft = <%% 2, 2, 2, 2, 2 %%>;
+    commentAreaWidth = <%% 286, 286, 286, 286, 286 %%>;
+    commentAreaHeight = <%% 32, 32, 32, 32, 32 %%>;
 
-    commentTriangleWidth = 8;
+    commentTriangleWidth = <%% 8, 8, 8, 8, 8 %%>;
 
-    commentSize = 14;
-    commentWeight = 700;
-    commentTextTop = -1;
+    commentSize = <%% 14, 14, 14, 14, 14 %%>;
+    commentWeight = <%% 700, 700, 700, 700, 700 %%>;
+    commentTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -1883,7 +1883,6 @@ StyleExplanationJs.prototype.launching = async function (loading) {
               console.log(err);
             });
           }, 60 * 1000);
-
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "StyleExplanationJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
