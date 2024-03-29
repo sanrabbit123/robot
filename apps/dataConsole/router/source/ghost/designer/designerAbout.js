@@ -12857,7 +12857,7 @@ DesignerAboutJs.prototype.launching = async function (loading) {
             instance.insertThreeStrongBox();
             instance.contentsCenter();
             await instance.insertRepresentativeBox();
-            // await instance.insertRepresentativePhotosBox();
+            await instance.insertRepresentativePhotosBox();
             // await instance.insertRepresentativePaperBox();
             // instance.insertPossibleNoticeBox();
             // instance.calendarChain();

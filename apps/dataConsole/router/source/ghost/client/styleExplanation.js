@@ -167,7 +167,7 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
           left: String(-1 * minusLeft) + ea,
           background: colorExtended.darkDarkBlack,
           width: withOut(-1 * (minusLeft * 2), ea),
-          height: desktop ? withOut(1 * ((-1 * baseTop) + naviHeight), ea) : String(185) + ea,
+          height: withOut(1 * ((-1 * baseTop) + naviHeight), ea),
         }
       }
     });
@@ -335,16 +335,102 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     let target;
     let checkCircleWidth;
     let buttonHeight;
+    let wordsMother, buttonMother;
+    let wordsMotherMarginTop;
+    let numberSize, numberWeight;
+    let numberBarHeight, numberBarMarginLeft;
+    let numberBarTop;
+    let titleMarginTop, titleWeight;
+    let descriptionWeight, descriptionVisualLeft;
+    let serviceAreMarginTop, serviceAreMarginBottom;
+    let serviceNameBoxWidth;
+    let serviceNameBoxHeight;
+    let serviceNameSize;
+    let serviceNameWeight;
+    let serviceNameTop;
+    let circleWidth0, circleWidth1, circleWidth2;
+    let circleBetween;
+    let circleGroupMarginTop;
+    let circleGroupMarginBottom;
+    let imageRatio;
+    let triangleZoneHeight;
+    let triangleWidth;
+    let serviceDescriptionHeight;
+    let serviceDescriptionSize, serviceDescriptionWeight;
+    let serviceDescriptionLineHeight;
+    let serviceDescriptionTextTop;
+    let plusSize, plusWeight, plusPaddingLeft, plusPaddingTop, plusPaddingBottom;
+    let plusBoxHeight, plusBoxMarginRight;
+    let checkCircleAreaHeight;
+    let buttonMotherMarginBottom;
+    let buttonWidth, buttonSize, buttonWeight, buttonTextTop;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
+    titleMarginTop = 25;
     titleSize = 27;
+    titleWeight = 800;
+
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
     descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
+    descriptionWeight = 500;
+    descriptionVisualLeft = -1;
 
     betweenMargin = 26;
+
+    wordsMotherMarginTop = 120;
+
+    numberSize = 29;
+    numberWeight = 700;
+    numberBarHeight = 28;
+    numberBarMarginLeft = 12;
+    numberBarTop = -1;
+
+    serviceAreMarginTop = 100;
+    serviceAreMarginBottom = 100;
+
+    serviceNameBoxWidth = 156;
+    serviceNameBoxHeight = 40;
+    serviceNameSize = 17;
+    serviceNameWeight = 800;
+    serviceNameTop = -0.5;
+
+    circleWidth0 = 8;
+    circleWidth1 = 6;
+    circleWidth2 = 4;
+    circleBetween = 6;
+
+    circleGroupMarginTop = 11;
+    circleGroupMarginBottom = 13;
+
+    imageRatio = 75;
+
+    triangleZoneHeight = 50;
+    triangleWidth = 12;
+
+    serviceDescriptionHeight = 98;
+    serviceDescriptionSize = 16;
+    serviceDescriptionWeight = 700;
+    serviceDescriptionLineHeight = 1.52;
+    serviceDescriptionTextTop = -1;
+
+    plusSize = 15;
+    plusWeight = 700;
+    plusPaddingLeft = 3;
+    plusPaddingTop = 0;
+    plusPaddingBottom = 2;
+    plusBoxHeight = 11;
+    plusBoxMarginRight = 4.5;
+
+    checkCircleAreaHeight = 80;
     checkCircleWidth = 23;
+
+    buttonMotherMarginBottom = 140;
     buttonHeight = 45;
+    buttonWidth = 130;
+    buttonSize = 18;
+    buttonWeight = 700;
+    buttonTextTop = -1;
 
     textContent = [
       {
@@ -418,7 +504,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
       }
     });
 
-    createNode({
+    wordsMother = createNode({
       mother: secondBase,
       class: [ firstFadeOutTargetClassName ],
       style: {
@@ -428,7 +514,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        marginTop: String(120) + ea,
+        marginTop: String(wordsMotherMarginTop) + ea,
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
@@ -450,8 +536,8 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
                 display: "inline-block",
                 position: "relative",
                 fontFamily: "mont",
-                fontSize: String(29) + ea,
-                fontWeight: String(700),
+                fontSize: String(numberSize) + ea,
+                fontWeight: String(numberWeight),
                 color: colorExtended.white,
               }
             },
@@ -459,13 +545,13 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
               style: {
                 display: "inline-block",
                 position: "relative",
-                height: String(28) + ea,
+                height: String(numberBarHeight) + ea,
                 width: String(0),
                 borderRight: "2px solid " + colorExtended.white,
                 transform: "rotate(25deg)",
-                marginLeft: String(12) + ea,
-                marginRight: String(12) + ea,
-                top: String(-1) + ea,
+                marginLeft: String(numberBarMarginLeft) + ea,
+                marginRight: String(numberBarMarginLeft) + ea,
+                top: String(numberBarTop) + ea,
               }
             },
             {
@@ -474,8 +560,8 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
                 display: "inline-block",
                 position: "relative",
                 fontFamily: "mont",
-                fontSize: String(29) + ea,
-                fontWeight: String(700),
+                fontSize: String(numberSize) + ea,
+                fontWeight: String(numberWeight),
                 color: colorExtended.white,
                 opacity: String(0.4),
               }
@@ -490,7 +576,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "column",
-            marginTop: String(25) + ea,
+            marginTop: String(titleMarginTop) + ea,
           },
           children: [
             {
@@ -499,7 +585,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
                 display: "flex",
                 position: "relative",
                 fontSize: String(titleSize) + ea,
-                fontWeight: String(800),
+                fontWeight: String(titleWeight),
                 color: colorExtended.black,
               }
             },
@@ -509,10 +595,10 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
                 display: "flex",
                 position: "relative",
                 fontSize: String(descriptionSize) + ea,
-                fontWeight: String(500),
+                fontWeight: String(descriptionWeight),
                 color: colorExtended.black,
                 marginTop: String(descriptionMarginTop) + ea,
-                left: String(-1) + ea,
+                left: String(descriptionVisualLeft) + ea,
               }
             },
           ]
@@ -530,8 +616,8 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "row",
-        paddingTop: String(100) + ea,
-        paddingBottom: String(100) + ea,
+        paddingTop: String(serviceAreMarginTop) + ea,
+        paddingBottom: String(serviceAreMarginBottom) + ea,
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
@@ -563,9 +649,9 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(156) + ea,
-          height: String(40) + ea,
-          borderRadius: String(40) + ea,
+          width: String(serviceNameBoxWidth) + ea,
+          height: String(serviceNameBoxHeight) + ea,
+          borderRadius: String(serviceNameBoxHeight) + ea,
           background: colorExtended.white,
           alignItems: "center",
           justifyContent: "center",
@@ -576,10 +662,10 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           style: {
             display: "inline-block",
             position: "relative",
-            fontSize: String(17) + ea,
-            fontWeight: String(800),
+            fontSize: String(serviceNameSize) + ea,
+            fontWeight: String(serviceNameWeight),
             color: colorExtended.black,
-            top: String(-0.5) + ea,
+            top: String(serviceNameTop) + ea,
           }
         }
       });
@@ -589,11 +675,11 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(8) + ea,
-          height: String(8) + ea,
-          borderRadius: String(8) + ea,
+          width: String(circleWidth0) + ea,
+          height: String(circleWidth0) + ea,
+          borderRadius: String(circleWidth0) + ea,
           background: colorExtended.white,
-          marginTop: String(11) + ea,
+          marginTop: String(circleGroupMarginTop) + ea,
         }
       });
       createNode({
@@ -601,11 +687,11 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(6) + ea,
-          height: String(6) + ea,
-          borderRadius: String(6) + ea,
+          width: String(circleWidth1) + ea,
+          height: String(circleWidth1) + ea,
+          borderRadius: String(circleWidth1) + ea,
           background: colorExtended.white,
-          marginTop: String(6) + ea,
+          marginTop: String(circleBetween) + ea,
           opacity: String(0.7),
         }
       });
@@ -614,11 +700,11 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(4) + ea,
-          height: String(4) + ea,
-          borderRadius: String(4) + ea,
+          width: String(circleWidth2) + ea,
+          height: String(circleWidth2) + ea,
+          borderRadius: String(circleWidth2) + ea,
           background: colorExtended.white,
-          marginTop: String(6) + ea,
+          marginTop: String(circleBetween) + ea,
           opacity: String(0.4),
         }
       });
@@ -635,7 +721,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           alignItems: "center",
           justifyContent: "center",
           boxShadow: "0px 3px 15px -9px " + colorExtended.darkShadow,
-          marginTop: String(13) + ea,
+          marginTop: String(circleGroupMarginBottom) + ea,
         },
         child: {
           mode: "img",
@@ -645,7 +731,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           style: {
             display: "inline-flex",
             position: "relative",
-            width: String(75) + '%',
+            width: String(imageRatio) + '%',
           }
         }
       });
@@ -656,7 +742,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           display: "flex",
           position: "relative",
           width: withOut(0, ea),
-          height: String(50) + ea,
+          height: String(triangleZoneHeight) + ea,
           alignItems: "center",
           justifyContent: "center",
         },
@@ -666,7 +752,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           style: {
             display: "inline-flex",
             position: "relative",
-            width: String(12) + ea,
+            width: String(triangleWidth) + ea,
           }
         }
       });
@@ -677,7 +763,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           display: "inline-flex",
           position: "relative",
           width: String(boxWidth) + ea,
-          height: String(98) + ea,
+          height: String(serviceDescriptionHeight) + ea,
           borderRadius: String(8) + "px",
           background: colorExtended.blueDark,
           alignItems: "center",
@@ -689,12 +775,12 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           style: {
             display: "inline-block",
             position: "relative",
-            fontSize: String(16) + ea,
-            fontWeight: String(700),
+            fontSize: String(serviceDescriptionSize) + ea,
+            fontWeight: String(serviceDescriptionWeight),
             color: colorExtended.darkBlack,
             textAlign: "center",
-            lineHeight: String(1.52),
-            top: String(-1) + ea,
+            lineHeight: String(serviceDescriptionLineHeight),
+            top: String(serviceDescriptionTextTop) + ea,
           },
           bold: {
             display: "inline-flex",
@@ -702,15 +788,15 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
             "justify-content": "center",
             "align-items": "center",
             color: colorExtended.mainBlue,
-            fontWeight: String(700),
-            fontSize: String(15) + ea,
+            fontWeight: String(plusWeight),
+            fontSize: String(plusSize) + ea,
             background: colorExtended.white,
-            padding: String(3) + ea,
-            paddingTop: String(0) + ea,
-            paddingBottom: String(2) + ea,
-            height: String(11) + ea,
+            padding: String(plusPaddingLeft) + ea,
+            paddingTop: String(plusPaddingTop) + ea,
+            paddingBottom: String(plusPaddingBottom) + ea,
+            height: String(plusBoxHeight) + ea,
             "border-radius": String(8) + ea,
-            marginRight: String(4.5) + ea,
+            marginRight: String(plusBoxMarginRight) + ea,
           }
         }
       });
@@ -721,7 +807,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           display: "flex",
           position: "relative",
           width: withOut(0, ea),
-          height: String(80) + ea,
+          height: String(checkCircleAreaHeight) + ea,
           alignItems: "center",
           justifyContent: "center",
         },
@@ -762,7 +848,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
       createServiceBlock(i);
     }
 
-    createNode({
+    buttonMother = createNode({
       mother: secondBase,
       class: [ firstFadeOutTargetClassName ],
       style: {
@@ -773,7 +859,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
         alignItems: "center",
         flexDirection: "row",
         height: String(buttonHeight) + ea,
-        marginBottom: String(140) + ea,
+        marginBottom: String(buttonMotherMarginBottom) + ea,
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
@@ -785,7 +871,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(130) + ea,
+          width: String(buttonWidth) + ea,
           height: String(buttonHeight) + ea,
           borderRadius: String(10) + "px",
           background: colorExtended.darkBlack,
@@ -799,10 +885,10 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           style: {
             display: "inline-flex",
             position: "relative",
-            fontSize: String(18) + ea,
-            fontWeight: String(700),
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(buttonWeight),
             color: colorExtended.white,
-            top: String(-1) + ea,
+            top: String(buttonTextTop) + ea,
           }
         }
       }
@@ -830,16 +916,71 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
     let checkCircleWidth;
     let buttonHeight;
     let ghostBase;
+    let wordsMotherMarginTop;
+    let numberSize;
+    let numberWeight;
+    let numberBarHeight;
+    let numberBarMarginLeft;
+    let numberBarTop;
+    let numbersAreaMarginTop;
+    let titleMarginTop;
+    let titleWeight;
+    let titleSquareWidth, titleSquareMarginRight, titleSquareTop;
+    let imageAreaMarginTop, imageAreaMarginBottom;
+    let imageWidth;
+    let yesButtonAreaMarginTop;
+    let yesButtonWidth;
+    let yesButtonHeight;
+    let yesButtonBetween;
+    let yesButtonTextTop;
+    let yesButtonSize;
+    let yesButtonWeight;
+    let completeButtonWidth, completeButtonAreaMarginBottom;
+    let completeButtonSize, completeButtonWeight, completeButtonTextTop;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
+    titleMarginTop = 25;
     titleSize = 27;
+    titleWeight = 800;
+    titleSquareWidth = 8;
+    titleSquareMarginRight = 9;
+    titleSquareTop = 1;
+
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
     descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
 
     betweenMargin = 26;
     checkCircleWidth = 23;
     buttonHeight = 45;
+
+    wordsMotherMarginTop = 120;
+
+    numberSize = 29;
+    numberWeight = 700;
+    numberBarHeight = 28;
+    numberBarMarginLeft = 12;
+    numberBarTop = -1;
+
+    numbersAreaMarginTop = 100;
+
+    imageAreaMarginTop = 70;
+    imageAreaMarginBottom = 110;
+    imageWidth = 510;
+
+    yesButtonAreaMarginTop = 50;
+    yesButtonWidth = 160;
+    yesButtonHeight = 40;
+    yesButtonBetween = 12;
+    yesButtonTextTop = -1;
+    yesButtonSize = 17;
+    yesButtonWeight = 700;
+
+    completeButtonWidth = 130;
+    completeButtonAreaMarginBottom = 150;
+    completeButtonSize = 18;
+    completeButtonWeight = 700;
+    completeButtonTextTop = -1;
 
     ghostBase = {};
 
@@ -877,7 +1018,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        marginTop: String(100) + ea,
+        marginTop: String(numbersAreaMarginTop) + ea,
       },
       children: [
         {
@@ -896,8 +1037,8 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
                 display: "inline-block",
                 position: "relative",
                 fontFamily: "mont",
-                fontSize: String(29) + ea,
-                fontWeight: String(700),
+                fontSize: String(numberSize) + ea,
+                fontWeight: String(numberWeight),
                 color: colorExtended.mainBlue,
               }
             },
@@ -905,13 +1046,13 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
               style: {
                 display: "inline-block",
                 position: "relative",
-                height: String(28) + ea,
+                height: String(numberBarHeight) + ea,
                 width: String(0),
                 borderRight: "2px solid " + colorExtended.mainBlue,
                 transform: "rotate(25deg)",
-                marginLeft: String(12) + ea,
-                marginRight: String(12) + ea,
-                top: String(-1) + ea,
+                marginLeft: String(numberBarMarginLeft) + ea,
+                marginRight: String(numberBarMarginLeft) + ea,
+                top: String(numberBarTop) + ea,
               }
             },
             {
@@ -920,8 +1061,8 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
                 display: "inline-block",
                 position: "relative",
                 fontFamily: "mont",
-                fontSize: String(29) + ea,
-                fontWeight: String(700),
+                fontSize: String(numberSize) + ea,
+                fontWeight: String(numberWeight),
                 color: colorExtended.mainBlue,
                 opacity: String(0.4),
               }
@@ -935,7 +1076,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
             width: withOut(0, ea),
             justifyContent: "center",
             alignItems: "center",
-            marginTop: String(25) + ea,
+            marginTop: String(titleMarginTop) + ea,
             flexDirection: "row",
           },
           children: [
@@ -943,12 +1084,12 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
               style: {
                 display: "inline-flex",
                 position: "relative",
-                width: String(8) + ea,
-                height: String(8) + ea,
+                width: String(titleSquareWidth) + ea,
+                height: String(titleSquareWidth) + ea,
                 borderRadius: String(2) + "px",
                 background: colorExtended.mainBlue,
-                marginRight: String(9) + ea,
-                top: String(1) + ea,
+                marginRight: String(titleSquareMarginRight) + ea,
+                top: String(titleSquareTop) + ea,
               }
             },
             {
@@ -957,7 +1098,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
                 display: "inline-flex",
                 position: "relative",
                 fontSize: String(titleSize) + ea,
-                fontWeight: String(800),
+                fontWeight: String(titleWeight),
                 color: colorExtended.black,
               }
             },
@@ -971,8 +1112,8 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
       style: {
         display: "flex",
         position: "relative",
-        marginTop: String(70) + ea,
-        marginBottom: String(110) + ea,
+        marginTop: String(imageAreaMarginTop) + ea,
+        marginBottom: String(imageAreaMarginBottom) + ea,
         borderRadius: String(8) + "px",
         width: withOut(0, ea),
         flexDirection: "column",
@@ -988,7 +1129,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
           style: {
             display: "inline-flex",
             position: "relative",
-            width: String(510) + ea,
+            width: String(imageWidth) + ea,
           }
         },
         {
@@ -999,31 +1140,31 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
-            marginTop: String(50) + ea,
+            marginTop: String(yesButtonAreaMarginTop) + ea,
           },
           children: [
             {
               style: {
                 display: "inline-flex",
                 position: "relative",
-                width: String(160) + ea,
-                height: String(40) + ea,
-                borderRadius: String(40) + ea,
+                width: String(yesButtonWidth) + ea,
+                height: String(yesButtonHeight) + ea,
+                borderRadius: String(yesButtonHeight) + ea,
                 border: "1.5px solid " + colorExtended.mainBlue,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                marginRight: String(12) + ea,
+                marginRight: String(yesButtonBetween) + ea,
               },
               child: {
                 text: "아니요",
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  top: String(-1) + ea,
-                  fontSize: String(17) + ea,
-                  fontWeight: String(700),
+                  top: String(yesButtonTextTop) + ea,
+                  fontSize: String(yesButtonSize) + ea,
+                  fontWeight: String(yesButtonWeight),
                   color: colorExtended.blueDark,
                 }
               }
@@ -1032,9 +1173,9 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
               style: {
                 display: "inline-flex",
                 position: "relative",
-                width: String(160) + ea,
-                height: String(40) + ea,
-                borderRadius: String(40) + ea,
+                width: String(yesButtonWidth) + ea,
+                height: String(yesButtonHeight) + ea,
+                borderRadius: String(yesButtonHeight) + ea,
                 border: "1.5px solid " + colorExtended.darkBlack,
                 boxSizing: "border-box",
                 flexDirection: "row",
@@ -1048,9 +1189,9 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  top: String(-1) + ea,
-                  fontSize: String(17) + ea,
-                  fontWeight: String(700),
+                  top: String(yesButtonTextTop) + ea,
+                  fontSize: String(yesButtonSize) + ea,
+                  fontWeight: String(yesButtonWeight),
                   color: colorExtended.darkBlack,
                 }
               }
@@ -1070,13 +1211,13 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
         alignItems: "center",
         flexDirection: "row",
         height: String(buttonHeight) + ea,
-        marginBottom: String(150) + ea,
+        marginBottom: String(completeButtonAreaMarginBottom) + ea,
       },
       child: {
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(130) + ea,
+          width: String(completeButtonWidth) + ea,
           height: String(buttonHeight) + ea,
           borderRadius: String(10) + "px",
           background: colorExtended.darkBlack,
@@ -1090,10 +1231,10 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
           style: {
             display: "inline-flex",
             position: "relative",
-            fontSize: String(18) + ea,
-            fontWeight: String(700),
+            fontSize: String(completeButtonSize) + ea,
+            fontWeight: String(completeButtonWeight),
             color: colorExtended.white,
-            top: String(-1) + ea,
+            top: String(completeButtonTextTop) + ea,
           }
         }
       }
@@ -1116,12 +1257,19 @@ StyleExplanationJs.prototype.firstConverting = function () {
       const blackTarget = document.querySelector('.' + initAreaClassName);
       const fadeOutTargets = [ ...document.querySelectorAll('.' + firstFadeOutTargetClassName) ];
       const removeTarget = document.querySelector('.' + firstBarTargetClassName);
+      let blackScrollTop;
+      let numbersAreaMarginTop;
+
+      blackScrollTop = -642;
+      numbersAreaMarginTop = 100;
+
       blackTarget.style.transition = "all 0.6s ease";
       scrollTo(window, 0, 0, true);
       removeTarget.remove();
+
       setQueue(() => {
-        blackTarget.style.marginTop = String(-642) + ea;
-        fadeOutTargets[0].style.marginTop = String(100) + ea;
+        blackTarget.style.marginTop = String(blackScrollTop) + ea;
+        fadeOutTargets[0].style.marginTop = String(numbersAreaMarginTop) + ea;
         setQueue(() => {
           for (let dom of fadeOutTargets) {
             dom.style.animation = "fadeoutlite 0.6s ease forwards";
@@ -1151,12 +1299,38 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
     let minusLeft;
     let x, y, z;
     let radius;
+    let barAreaHeight;
+    let flagWidth;
+    let flagRight;
+    let flagTop;
+    let commentAreaTop;
+    let commentAreaLeft;
+    let commentAreaWidth;
+    let commentAreaHeight;
+    let commentTriangleWidth;
+    let commentSize, commentWeight, commentTextTop;
 
     radius = 5;
 
     x = 2;
     y = 5;
     z = 8;
+
+    barAreaHeight = 270;
+    flagWidth = 23;
+    flagRight = -19;
+    flagTop = -34;
+
+    commentAreaTop = -52;
+    commentAreaLeft = 2;
+    commentAreaWidth = 286;
+    commentAreaHeight = 32;
+
+    commentTriangleWidth = 8;
+
+    commentSize = 14;
+    commentWeight = 700;
+    commentTextTop = -1;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -1170,7 +1344,7 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        height: String(270) + ea,
+        height: String(barAreaHeight) + ea,
       },
       child: {
         style: {
@@ -1246,19 +1420,19 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
           source: svgMaker.goalFlag(colorExtended.white, colorExtended.mainBlue),
           style: {
             position: "absolute",
-            right: String(-19) + ea,
-            top: String(-34) + ea,
-            width: String(23) + ea,
+            right: String(flagRight) + ea,
+            top: String(flagTop) + ea,
+            width: String(flagWidth) + ea,
           }
         },
         {
           style: {
             display: "inline-flex",
             position: "absolute",
-            top: String(-52) + ea,
-            left: String(2) + ea,
-            width: String(286) + ea,
-            height: String(32) + ea,
+            top: String(commentAreaTop) + ea,
+            left: String(commentAreaLeft) + ea,
+            width: String(commentAreaWidth) + ea,
+            height: String(commentAreaHeight) + ea,
             borderRadius: String(8) + "px",
             background: colorExtended.mainBlue,
             borderBottomLeftRadius: String(0) + "px",
@@ -1278,8 +1452,8 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
                 source: svgMaker.commentTriangle("verticalLeft", colorExtended.mainBlue),
                 style: {
                   position: "absolute",
-                  width: String(8) + ea,
-                  bottom: String(-8) + ea,
+                  width: String(commentTriangleWidth) + ea,
+                  bottom: String(-1 * commentTriangleWidth) + ea,
                   left: String(0),
                 }
               },
@@ -1288,10 +1462,10 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(14) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(commentSize) + ea,
+                  fontWeight: String(commentWeight),
                   color: colorExtended.white,
-                  top: String(-1) + ea,
+                  top: String(commentTextTop) + ea,
                 }
               }
             ]
@@ -1317,12 +1491,38 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function () {
     let minusLeft;
     let x, y, z;
     let radius;
+    let barAreaHeight;
+    let flagWidth;
+    let flagRight;
+    let flagTop;
+    let commentAreaTop;
+    let commentAreaLeft;
+    let commentAreaWidth;
+    let commentAreaHeight;
+    let commentTriangleWidth;
+    let commentSize, commentWeight, commentTextTop;
 
     radius = 5;
 
     x = 2;
     y = 5;
     z = 8;
+
+    barAreaHeight = 270;
+    flagWidth = 23;
+    flagRight = -19;
+    flagTop = -34;
+
+    commentAreaTop = -52;
+    commentAreaLeft = 2;
+    commentAreaWidth = 286;
+    commentAreaHeight = 32;
+
+    commentTriangleWidth = 8;
+
+    commentSize = 14;
+    commentWeight = 700;
+    commentTextTop = -1;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -1335,7 +1535,7 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function () {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        height: String(270) + ea,
+        height: String(barAreaHeight) + ea,
       },
       child: {
         style: {
@@ -1426,19 +1626,19 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function () {
           source: svgMaker.goalFlag(colorExtended.white, colorExtended.blueDark),
           style: {
             position: "absolute",
-            right: String(-19) + ea,
-            top: String(-34) + ea,
-            width: String(23) + ea,
+            right: String(flagRight) + ea,
+            top: String(flagTop) + ea,
+            width: String(flagWidth) + ea,
           }
         },
         {
           style: {
             display: "inline-flex",
             position: "absolute",
-            top: String(-52) + ea,
-            left: String(2) + ea,
-            width: String(286) + ea,
-            height: String(32) + ea,
+            top: String(commentAreaTop) + ea,
+            left: String(commentAreaLeft) + ea,
+            width: String(commentAreaWidth) + ea,
+            height: String(commentAreaHeight) + ea,
             borderRadius: String(8) + "px",
             background: colorExtended.blueDark,
             borderBottomLeftRadius: String(0) + "px",
@@ -1458,8 +1658,8 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function () {
                 source: svgMaker.commentTriangle("verticalLeft", colorExtended.blueDark),
                 style: {
                   position: "absolute",
-                  width: String(8) + ea,
-                  bottom: String(-8) + ea,
+                  width: String(commentTriangleWidth) + ea,
+                  bottom: String(-1 * commentTriangleWidth) + ea,
                   left: String(0),
                 }
               },
@@ -1468,10 +1668,10 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(14) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(commentSize) + ea,
+                  fontWeight: String(commentWeight),
                   color: colorExtended.white,
-                  top: String(-1) + ea,
+                  top: String(commentTextTop) + ea,
                 }
               }
             ]

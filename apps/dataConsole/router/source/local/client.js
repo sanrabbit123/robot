@@ -4007,6 +4007,10 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       } else {
         textAreas[textAreas.length - 1].value = "요청 사항 : " + thisCase["comment"];
       }
+    } else {
+      if (dataArr[dataArr.length - 1].trim().replace(/요청 사항 : /gi, "").trim() !== thisCase["comment"]) {
+        textAreas[textAreas.length - 1].value = "요청 사항 : " + thisCase["comment"];
+      }
     }
   });
 
