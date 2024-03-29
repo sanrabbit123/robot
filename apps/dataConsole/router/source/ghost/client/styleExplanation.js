@@ -1213,31 +1213,61 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
         height: String(buttonHeight) + ea,
         marginBottom: String(completeButtonAreaMarginBottom) + ea,
       },
-      child: {
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: String(completeButtonWidth) + ea,
-          height: String(buttonHeight) + ea,
-          borderRadius: String(10) + "px",
-          background: colorExtended.darkBlack,
-          justifyContent: "center",
-          alignItems: "center",
-          border: "1px solid " + colorExtended.blueDark,
-          cursor: "pointer",
-        },
-        child: {
-          text: "선택 완료",
+      children: [
+        {
           style: {
             display: "inline-flex",
             position: "relative",
-            fontSize: String(completeButtonSize) + ea,
-            fontWeight: String(completeButtonWeight),
-            color: colorExtended.white,
-            top: String(completeButtonTextTop) + ea,
+            width: String(buttonHeight) + ea,
+            height: String(buttonHeight) + ea,
+            borderRadius: String(buttonHeight) + ea,
+            marginRight: String(12) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            boxSizing: "border-box",
+            border: "1.5px solid " + colorExtended.mainBlue,
+          },
+          child: {
+            mode: "svg",
+            source: svgMaker.buttonLineArrow(colorExtended.mainBlue),
+            style: {
+              position: "relative",
+              width: String(10) + ea,
+              transformOrigin: "50% 50%",
+              transform: "rotate(180deg)",
+              left: String(-1.5) + ea,
+            }
+          }
+        },
+        {
+          event: {
+            click: instance.secondConverting(),
+          },
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(completeButtonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            borderRadius: String(10) + "px",
+            background: colorExtended.darkBlack,
+            justifyContent: "center",
+            alignItems: "center",
+            border: "1px solid " + colorExtended.blueDark,
+            cursor: "pointer",
+          },
+          child: {
+            text: "선택 완료",
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              fontSize: String(completeButtonSize) + ea,
+              fontWeight: String(completeButtonWeight),
+              color: colorExtended.white,
+              top: String(completeButtonTextTop) + ea,
+            }
           }
         }
-      }
+      ]
     });
 
   } catch (e) {
@@ -1270,6 +1300,48 @@ StyleExplanationJs.prototype.firstConverting = function () {
       setQueue(() => {
         blackTarget.style.marginTop = String(blackScrollTop) + ea;
         fadeOutTargets[0].style.marginTop = String(numbersAreaMarginTop) + ea;
+        setQueue(() => {
+          for (let dom of fadeOutTargets) {
+            dom.style.animation = "fadeoutlite 0.6s ease forwards";
+          }
+          setQueue(() => {
+            instance.insertThirdBox(document.querySelector('.' + secondBaseClassName)).catch((err) => {
+              console.log(err);
+            });
+          }, 450);
+        }, 600);
+      }, 300);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+StyleExplanationJs.prototype.secondConverting = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { initAreaClassName, firstFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName } = this;
+  return async function (e) {
+    try {
+      const fadeOutTargets = [ ...document.querySelectorAll('.' + firstFadeOutTargetClassName) ];
+      const removeTarget = document.querySelector('.' + firstBarTargetClassName);
+      let blackScrollTop;
+      let numbersAreaMarginTop;
+
+      blackScrollTop = -642;
+      numbersAreaMarginTop = 100;
+
+      scrollTo(window, 0, 0, true);
+      removeTarget.remove();
+
+      setQueue(() => {
+
+
+
+
         setQueue(() => {
           for (let dom of fadeOutTargets) {
             dom.style.animation = "fadeoutlite 0.6s ease forwards";
