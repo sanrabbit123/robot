@@ -367,70 +367,70 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = 25;
-    titleSize = 27;
-    titleWeight = 800;
+    titleMarginTop = <%% 25, 25, 25, 25, 25 %%>;
+    titleSize = <%% 27, 27, 27, 27, 27 %%>;
+    titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
     descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
-    descriptionWeight = 500;
-    descriptionVisualLeft = -1;
+    descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
+    descriptionVisualLeft = <%% -1, -1, -1, -1, -1 %%>;
 
-    betweenMargin = 26;
+    betweenMargin = <%% 26, 26, 26, 26, 26 %%>;
 
-    wordsMotherMarginTop = 120;
+    wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
-    numberSize = 29;
-    numberWeight = 700;
-    numberBarHeight = 28;
-    numberBarMarginLeft = 12;
-    numberBarTop = -1;
+    numberSize = <%% 29, 29, 29, 29, 29 %%>;
+    numberWeight = <%% 700, 700, 700, 700, 700 %%>;
+    numberBarHeight = <%% 28, 28, 28, 28, 28 %%>;
+    numberBarMarginLeft = <%% 12, 12, 12, 12, 12 %%>;
+    numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    serviceAreMarginTop = 100;
-    serviceAreMarginBottom = 100;
+    serviceAreMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+    serviceAreMarginBottom = <%% 100, 100, 100, 100, 100 %%>;
 
-    serviceNameBoxWidth = 156;
-    serviceNameBoxHeight = 40;
-    serviceNameSize = 17;
-    serviceNameWeight = 800;
-    serviceNameTop = -0.5;
+    serviceNameBoxWidth = <%% 156, 156, 156, 156, 156 %%>;
+    serviceNameBoxHeight = <%% 40, 40, 40, 40, 40 %%>;
+    serviceNameSize = <%% 17, 17, 17, 17, 17 %%>;
+    serviceNameWeight = <%% 800, 800, 800, 800, 800 %%>;
+    serviceNameTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
 
-    circleWidth0 = 8;
-    circleWidth1 = 6;
-    circleWidth2 = 4;
-    circleBetween = 6;
+    circleWidth0 = <%% 8, 8, 8, 8, 8 %%>;
+    circleWidth1 = <%% 6, 6, 6, 6, 6 %%>;
+    circleWidth2 = <%% 4, 4, 4, 4, 4 %%>;
+    circleBetween = <%% 6, 6, 6, 6, 6 %%>;
 
-    circleGroupMarginTop = 11;
-    circleGroupMarginBottom = 13;
+    circleGroupMarginTop = <%% 11, 11, 11, 11, 11 %%>;
+    circleGroupMarginBottom = <%% 13, 13, 13, 13, 13 %%>;
 
-    imageRatio = 75;
+    imageRatio = <%% 75, 75, 75, 75, 75 %%>;
 
-    triangleZoneHeight = 50;
-    triangleWidth = 12;
+    triangleZoneHeight = <%% 50, 50, 50, 50, 50 %%>;
+    triangleWidth = <%% 12, 12, 12, 12, 12 %%>;
 
-    serviceDescriptionHeight = 98;
-    serviceDescriptionSize = 16;
-    serviceDescriptionWeight = 700;
-    serviceDescriptionLineHeight = 1.52;
-    serviceDescriptionTextTop = -1;
+    serviceDescriptionHeight = <%% 98, 98, 98, 98, 98 %%>;
+    serviceDescriptionSize = <%% 16, 16, 16, 16, 16 %%>;
+    serviceDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
+    serviceDescriptionLineHeight = <%% 1.52, 1.52, 1.52, 1.52, 1.52 %%>;
+    serviceDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    plusSize = 15;
-    plusWeight = 700;
-    plusPaddingLeft = 3;
-    plusPaddingTop = 0;
-    plusPaddingBottom = 2;
-    plusBoxHeight = 11;
-    plusBoxMarginRight = 4.5;
+    plusSize = <%% 15, 15, 15, 15, 15 %%>;
+    plusWeight = <%% 700, 700, 700, 700, 700 %%>;
+    plusPaddingLeft = <%% 3, 3, 3, 3, 3 %%>;
+    plusPaddingTop = <%% 0, 0, 0, 0, 0 %%>;
+    plusPaddingBottom = <%% 2, 2, 2, 2, 2 %%>;
+    plusBoxHeight = <%% 11, 11, 11, 11, 11 %%>;
+    plusBoxMarginRight = <%% 4.5, 4.5, 4.5, 4.5, 4.5 %%>;
 
-    checkCircleAreaHeight = 80;
-    checkCircleWidth = 23;
+    checkCircleAreaHeight = <%% 80, 80, 80, 80, 80 %%>;
+    checkCircleWidth = <%% 23, 23, 23, 23, 23 %%>;
 
-    buttonMotherMarginBottom = 140;
-    buttonHeight = 45;
-    buttonWidth = 130;
-    buttonSize = 18;
-    buttonWeight = 700;
-    buttonTextTop = -1;
+    buttonMotherMarginBottom = <%% 140, 140, 140, 140, 140 %%>;
+    buttonHeight = <%% 45, 45, 45, 45, 45 %%>;
+    buttonWidth = <%% 130, 130, 130, 130, 130 %%>;
+    buttonSize = <%% 18, 18, 18, 18, 18 %%>;
+    buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+    buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
     textContent = [
       {
@@ -937,50 +937,58 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
     let yesButtonWeight;
     let completeButtonWidth, completeButtonAreaMarginBottom;
     let completeButtonSize, completeButtonWeight, completeButtonTextTop;
+    let returnCircleWidth;
+    let returnCircleMarginRight;
+    let returnCicleArrowWidth, returnCicleArrowLeft;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = 25;
-    titleSize = 27;
-    titleWeight = 800;
-    titleSquareWidth = 8;
-    titleSquareMarginRight = 9;
-    titleSquareTop = 1;
+    titleMarginTop = <%% 25, 25, 25, 25, 25 %%>;
+    titleSize = <%% 27, 27, 27, 27, 27 %%>;
+    titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+    titleSquareWidth = <%% 8, 8, 8, 8, 8 %%>;
+    titleSquareMarginRight = <%% 9, 9, 9, 9, 9 %%>;
+    titleSquareTop = <%% 1, 1, 1, 1, 1 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
     descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
 
-    betweenMargin = 26;
-    checkCircleWidth = 23;
-    buttonHeight = 45;
+    betweenMargin = <%% 26, 26, 26, 26, 26 %%>;
+    checkCircleWidth = <%% 23, 23, 23, 23, 23 %%>;
+    buttonHeight = <%% 45, 45, 45, 45, 45 %%>;
 
-    wordsMotherMarginTop = 120;
+    wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
-    numberSize = 29;
-    numberWeight = 700;
-    numberBarHeight = 28;
-    numberBarMarginLeft = 12;
-    numberBarTop = -1;
+    numberSize = <%% 29, 29, 29, 29, 29 %%>;
+    numberWeight = <%% 700, 700, 700, 700, 700 %%>;
+    numberBarHeight = <%% 28, 28, 28, 28, 28 %%>;
+    numberBarMarginLeft = <%% 12, 12, 12, 12, 12 %%>;
+    numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    numbersAreaMarginTop = 100;
+    numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
 
-    imageAreaMarginTop = 70;
-    imageAreaMarginBottom = 110;
-    imageWidth = 510;
+    imageAreaMarginTop = <%% 70, 70, 70, 70, 70 %%>;
+    imageAreaMarginBottom = <%% 110, 110, 110, 110, 110 %%>;
+    imageWidth = <%% 510, 510, 510, 510, 510 %%>;
 
-    yesButtonAreaMarginTop = 50;
-    yesButtonWidth = 160;
-    yesButtonHeight = 40;
-    yesButtonBetween = 12;
-    yesButtonTextTop = -1;
-    yesButtonSize = 17;
-    yesButtonWeight = 700;
+    yesButtonAreaMarginTop = <%% 50, 50, 50, 50, 50 %%>;
+    yesButtonWidth = <%% 160, 160, 160, 160, 160 %%>;
+    yesButtonHeight = <%% 40, 40, 40, 40, 40 %%>;
+    yesButtonBetween = <%% 12, 12, 12, 12, 12 %%>;
+    yesButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    yesButtonSize = <%% 17, 17, 17, 17, 17 %%>;
+    yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    completeButtonWidth = 130;
-    completeButtonAreaMarginBottom = 150;
-    completeButtonSize = 18;
-    completeButtonWeight = 700;
-    completeButtonTextTop = -1;
+    completeButtonWidth = <%% 130, 130, 130, 130, 130 %%>;
+    completeButtonAreaMarginBottom = <%% 150, 150, 150, 150, 150 %%>;
+    completeButtonSize = <%% 18, 18, 18, 18, 18 %%>;
+    completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
+    completeButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+    returnCircleWidth = <%% 36, 36, 36, 36, 36 %%>;
+    returnCircleMarginRight = <%% 11, 11, 11, 11, 11 %%>;
+    returnCicleArrowWidth = <%% 9, 9, 9, 9, 9 %%>;
+    returnCicleArrowLeft = <%% -1.5, -1.5, -1.5, -1.5, -1.5 %%>;
 
     ghostBase = {};
 
@@ -1218,24 +1226,25 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
           style: {
             display: "inline-flex",
             position: "relative",
-            width: String(buttonHeight) + ea,
-            height: String(buttonHeight) + ea,
-            borderRadius: String(buttonHeight) + ea,
-            marginRight: String(12) + ea,
+            width: String(returnCircleWidth) + ea,
+            height: String(returnCircleWidth) + ea,
+            borderRadius: String(returnCircleWidth) + ea,
+            marginRight: String(returnCircleMarginRight) + ea,
             justifyContent: "center",
             alignItems: "center",
             boxSizing: "border-box",
             border: "1.5px solid " + colorExtended.mainBlue,
+            cursor: "pointer",
           },
           child: {
             mode: "svg",
             source: svgMaker.buttonLineArrow(colorExtended.mainBlue),
             style: {
               position: "relative",
-              width: String(10) + ea,
+              width: String(returnCicleArrowWidth) + ea,
               transformOrigin: "50% 50%",
               transform: "rotate(180deg)",
-              left: String(-1.5) + ea,
+              left: String(returnCicleArrowLeft) + ea,
             }
           }
         },
@@ -1338,10 +1347,6 @@ StyleExplanationJs.prototype.secondConverting = function () {
       removeTarget.remove();
 
       setQueue(() => {
-
-
-
-
         setQueue(() => {
           for (let dom of fadeOutTargets) {
             dom.style.animation = "fadeoutlite 0.6s ease forwards";
