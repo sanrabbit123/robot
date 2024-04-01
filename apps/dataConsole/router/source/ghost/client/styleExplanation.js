@@ -43,6 +43,683 @@ const StyleExplanationJs = function () {
 
 StyleExplanationJs.binaryPath = "/middle/style";
 
+StyleExplanationJs.randomPick = function (photos, contentsArr, pictureNumber, roomsIntersection = false) {
+  if (typeof photos !== "object" || typeof contentsArr !== "object" || typeof pictureNumber !== "number" || typeof roomsIntersection !== "boolean") {
+    throw new Error("invaild input");
+  }
+  const photoLength = photos.length;
+  const conidArr = Array.from(new Set(photos.map((obj) => { return obj.conid })));
+  const standard = 50;
+  const stackName = "styleCheckNum";
+  const limit = 1;
+  let randoms;
+  let randomPick, randomPick_raw, contentsPick;
+  let randomPickFiles, randomPickFiles_new;
+  let temp, temp2, tempArr;
+  let rooms, room;
+  let accumulation;
+  let num, num2;
+  let length0, length1;
+
+  if (typeof GeneralJs.stacks[stackName] !== "number") {
+    throw new Error("stack first");
+  }
+
+  num2 = 0;
+  do {
+    if (num >= standard) {
+      break;
+    }
+    do {
+      temp = [];
+      num = 0;
+      while (num < standard + pictureNumber) {
+        if (temp.length === pictureNumber) {
+          break;
+        }
+        temp2 = Math.floor(Math.random() * conidArr.length);
+        if (num < standard) {
+          if (!temp.includes(temp2) && conidArr.length >= temp2) {
+            temp.push(temp2);
+          }
+        } else {
+          if (conidArr.length >= temp2) {
+            temp.push(temp2);
+          }
+        }
+        num++;
+      }
+      temp.sort((a, b) => { return a - b; });
+      randoms = [];
+      for (let n of temp) {
+        randoms.push(conidArr[n]);
+      }
+      contentsPick = [];
+      for (let conid of randoms) {
+        for (let obj of contentsArr) {
+          if (conid === obj.conid) {
+            contentsPick.push(obj);
+          }
+        }
+      }
+      rooms = [];
+      for (let obj of contentsPick) {
+        tempArr = [];
+        for (let { title } of obj.contents.portfolio.contents.detail) {
+          if (title !== "init") {
+            tempArr.push(title);
+          }
+        }
+        rooms.push(tempArr);
+      }
+      accumulation = [];
+      for (let arr of rooms) {
+        tempArr = [];
+        for (let a of arr) {
+          if (roomsIntersection) {
+            if (!accumulation.includes(a)) {
+              tempArr.push(a);
+            }
+          } else {
+            tempArr.push(a);
+          }
+        }
+        if (tempArr.length > 0) {
+          room = tempArr[Math.floor(Math.random() * tempArr.length)];
+          accumulation.push(room);
+        }
+      }
+    } while (accumulation.length !== randoms.length);
+    randomPick_raw = [];
+    for (let i = 0; i < randoms.length; i++) {
+      for (let obj of photos) {
+        if (obj.conid === randoms[i] && obj.room === accumulation[i] && obj.gs === 'g') {
+          randomPick_raw.push(obj);
+          break;
+        }
+      }
+    }
+
+    randomPickFiles = randomPick_raw.map((obj) => { return obj.file; });
+    randomPick = [];
+    for (let obj of randomPick_raw) {
+      randomPickFiles_new = [];
+      length0 = randomPickFiles.length;
+      for (let file of randomPickFiles) {
+        if (obj.file !== file) {
+          randomPickFiles_new.push(file);
+        }
+      }
+      randomPickFiles = JSON.parse(JSON.stringify(randomPickFiles_new));
+      length1 = randomPickFiles.length;
+      if (length0 !== length1) {
+        randomPick.push(obj);
+      }
+    }
+
+    num2++;
+  } while (randomPick.length !== pictureNumber);
+
+  if (randomPick.length !== pictureNumber || GeneralJs.stacks[stackName] > limit) {
+    return { complete: true, photos };
+  } else {
+    return randomPick;
+  }
+}
+
+StyleExplanationJs.photoFilter = function (photos, picks) {
+  if (typeof photos !== "object" || !Array.isArray(picks)) {
+    throw new Error("invaild input");
+  }
+  if (picks.length < 3) {
+    throw new Error("invaild picks");
+  }
+  const ratio = 0.7;
+  const [ pick0, pick1, pick2 ] = picks;
+  let threePick;
+  let set0, set1, set2;
+  let tendencyMatrix;
+  let files;
+
+  files = [];
+  for (let obj of picks) {
+    files.push(obj.file);
+  }
+
+  set0 = new Set(pick0.keywords);
+  set1 = new Set(pick1.keywords);
+  set2 = new Set(pick2.keywords);
+
+  threePick = Array.from(set0.intersection(set1).union(set0.intersection(set2)).union(set1.intersection(set2)));
+  if (threePick.length < 5) {
+    threePick = Array.from(set0.intersection(set1).union(set0.intersection(set2)).union(set1.intersection(set2)).union(set0));
+  }
+  if (threePick.length < 5) {
+    threePick = Array.from(set0.intersection(set1).union(set0.intersection(set2)).union(set1.intersection(set2)).union(set1));
+  }
+  if (threePick.length < 5) {
+    threePick = Array.from(set0.intersection(set1).union(set0.intersection(set2)).union(set1.intersection(set2)).union(set2));
+  }
+
+  photos = photos.filter((obj) => { return obj.keywords.some((s) => { return threePick.includes(s); }) });
+  photos = photos.filter((obj) => { return !files.includes(obj.file); });
+
+  tendencyMatrix = new Array(pick0.tendency.length);
+  for (let i = 0; i < tendencyMatrix.length; i++) {
+    tendencyMatrix[i] = Math.round(((pick0.tendency[i] + pick1.tendency[i] + pick2.tendency[i]) / 3) * 100) / 100;
+  }
+
+  photos.sort((a, b) => {
+    const length = tendencyMatrix.length;
+    let sum0, sum1;
+    sum0 = 0;
+    sum1 = 0;
+    for (let i = 0; i < length; i++) {
+      sum0 += Math.abs(a.tendency[i] - tendencyMatrix[i]);
+      sum1 += Math.abs(b.tendency[i] - tendencyMatrix[i]);
+    }
+    sum0 = sum0 / length;
+    sum1 = sum1 / length;
+    return sum0 - sum1;
+  });
+
+  return photos.slice(0, Math.floor(photos.length * ratio));
+}
+
+StyleExplanationJs.prototype.styleCheck = function (mother) {
+  const instance = this;
+  const { client, ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, colorExtended, cleanChildren, isMac, sleep, ajaxJson, equalJson } = GeneralJs;
+  const { photos, contentsArr, designers } = this;
+  const pictureBoxClassName = "pictureBoxClassName";
+  const pictureWordingTargetClassName = "pictureWordingTargetClassName";
+  const greenClassName = "greenRemoveTarget";
+  const stackName = "styleCheckNum";
+  const loadingName = "loading";
+  let pictureNumber, columnNumber;
+  let randomPick, targetPhotos;
+  let pictureBox;
+  let innerMargin;
+  let pictureMargin;
+  let pannelHeight;
+  let pannelWordsSize;
+  let pannelWordsPadding;
+  let pannelLineTop;
+  let arrowTop, arrowWidth;
+  let tempDom;
+  let photoHeight, photoWidth, photoWidthCss, photoHeightCss;
+  let resetEvent;
+  let arrowEvent;
+  let pickupDesigners;
+  let image;
+  let firstPhoto;
+  let questionBlock;
+  let whiteMargin;
+  let arrowZoneHeight;
+
+  GeneralJs.stacks[stackName] = 0;
+  GeneralJs.stacks[loadingName] = false;
+
+  pictureNumber = <%% 15, 12, 12, 12, 8 %%>;
+  columnNumber = <%% 5, 4, 4, 4, 2 %%>;
+
+  innerMargin = 20;
+  pictureMargin = <%% 6, 6, 6, 4, 1 %%>;
+
+  pannelHeight = <%% 114, 114, 114, 90, 18 %%>;
+  pannelPaddingTop = <%% 32, 32, 32, 22, 0 %%>;
+  pannelWordsSize = <%% 23, 23, 23, 21, 4 %%>;
+  pannelWordsPadding = <%% 10, 10, 10, 10, 10 %%>;
+  pannelLineTop = <%% 25, 25, 25, 25, 25 %%>;
+
+  arrowTop = <%% 21, 21, 21, 21, 2 %%>;
+  arrowWidth = <%% 10, 10, 10, 8, 2 %%>;
+
+  arrowZoneHeight = <%% 28, 28, 28, 28, 28 %%>;
+
+  whiteMargin = 0;
+
+  image = [];
+
+  firstPhoto = <&& [ "t22p18.jpg", "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t1a79.jpg", "t5p122.jpg", "t6p94.jpg", "t14p47.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p102.jpg", "t3p41.jpg", "t6p18.jpg" ] | [ "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t1a79.jpg", "t5p122.jpg", "t6p94.jpg", "t14p47.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p18.jpg" ] | [ "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t1a79.jpg", "t5p122.jpg", "t6p94.jpg", "t14p47.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p18.jpg" ] | [ "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t1a79.jpg", "t5p122.jpg", "t6p94.jpg", "t14p47.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p18.jpg" ] | [ "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p18.jpg" ] &&>;
+
+  if (Math.random() < 0.5) {
+    randomPick = photos.filter((obj) => { return firstPhoto.includes(obj.file) }).reverse();
+  } else {
+    randomPick = photos.filter((obj) => { return firstPhoto.includes(obj.file) });
+  }
+
+  this.randomPick = randomPick;
+  targetPhotos = randomPick.map((obj) => { return BRIDGEHOST.replace(/\:3000$/gi, '') + obj.path; });
+  this.photoPosition = [];
+
+  mother.style.paddingTop = desktop ? String(innerMargin) + ea : String(0) + ea;
+  if (mobile) {
+    mother.style.background = "";
+    mother.style.boxShadow = "";
+  }
+
+  if (desktop) {
+    photoWidth = (this.mother.standardWidth - (whiteMargin * 2) - (innerMargin * 2) - (pictureMargin * (columnNumber - 1))) / columnNumber;
+  } else {
+    photoWidth = (this.mother.standardWidth - (whiteMargin * 2) - (0 * 2) - (pictureMargin * (columnNumber - 1))) / columnNumber;
+  }
+  photoWidthCss = "calc(calc(100% - " + String(pictureMargin * (columnNumber - 1)) + ea + ") / " + String(columnNumber) + ")";
+  photoHeight = (205 / 297) * (photoWidth);
+  photoHeightCss = String(photoHeight) + ea;
+
+  pickupDesigners = function () {
+    const photos = instance.photos;
+    if (photos.length !== 0) {
+      let tendencyAverage, designers, average;
+      designers = JSON.parse(JSON.stringify(instance.designers));
+      tendencyAverage = (new Array(photos[0].tendency.length)).fill(0, 0);
+      for (let { tendency } of photos) {
+        for (let i = 0; i < tendency.length; i++) {
+          tendencyAverage[i] += tendency[i];
+        }
+      }
+      tendencyAverage = tendencyAverage.map((n) => { return Math.round((n / photos.length) * 100) / 100; });
+
+      for (let designer of designers) {
+        average = 0;
+        for (let i = 0; i < tendencyAverage.length; i++) {
+          average += Math.abs(tendencyAverage[i] - designer.tendency[i]);
+        }
+        designer.tendencyLength = average;
+      }
+
+      designers.sort((a, b) => { return a.tendencyLength - b.tendencyLength });
+      designers = designers.filter((d) => { return /완료/gi.test(d.information.contract.status); });
+      designers = designers.map((obj) => { return obj.desid; });
+
+      ajaxJson({
+        page: "styleCuration",
+        mode: "update",
+        cliid: instance.client.cliid,
+        update: { x: "style", y: 0, value: designers }
+      }, BACKHOST + "/ghostClient_updateAnalytics").then(() => {
+        return ajaxJson({
+          page: "styleCuration",
+          mode: "image",
+          cliid: instance.client.cliid,
+          image: image
+        }, BACKHOST + "/ghostClient_updateAnalytics");
+      }).then(() => {
+        return ajaxJson({
+          cliid: instance.client.cliid,
+          name: instance.client.name,
+          image: image,
+        }, BACKHOST + "/styleCuration_styleCheckComplete");
+      }).then(() => {
+        return GeneralJs.homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "styleCheck",
+          data: {
+            cliid: instance.client.cliid,
+            name: instance.client.name,
+            image: image,
+          },
+        });
+      }).catch((err) => {
+        GeneralJs.ajaxJson({ message: "StyleExplanationJs.styleCheck.pickupDesigners : " + err.message }, BACKHOST + "/errorLog").catch((e) => {});
+      });
+
+    }
+  }
+
+  resetEvent = function (forceQuit = false) {
+    let rowLength, thisTime;
+    let greenTargets;
+    let style;
+    let loading;
+    let loadingWidth, completePaddingTop;
+    let animationTime, delayTime, animationTimes, animationTimesTemp;
+    let targetPhotos;
+
+    loadingWidth = <%% 40, 40, 36, 30, 10 %%>;
+    completePaddingTop = <%% 10, 10, 9, 8, 0 %%>;
+    animationTime = 0.2;
+    delayTime = 0.1;
+    animationTimes = [];
+
+    greenTargets = mother.querySelectorAll('.' + greenClassName);
+    for (let dom of greenTargets) {
+      dom.style.animation = "justfadeoutnine " + String(animationTime * 2) + "s ease forwards";
+    }
+
+    rowLength = Math.round(pictureNumber / columnNumber);
+    animationTimesTemp = [];
+    for (let i = 0; i < instance.photoPosition.length; i++) {
+      animationTimesTemp.push(animationTime + ((i % rowLength) * delayTime));
+      if (animationTimesTemp.length === columnNumber) {
+        animationTimes.push(animationTimesTemp);
+        animationTimesTemp = [];
+      }
+    }
+    if (Math.random() > 0.5) {
+      animationTimes = animationTimes.map((arr) => { return arr.reverse(); });
+    }
+    animationTimes = animationTimes.flat();
+
+    for (let i = 0; i < instance.photoPosition.length; i++) {
+      thisTime = String(animationTimes[i]) + 's';
+      instance.photoPosition[i].style.animation = "fadedownlite " + String(animationTime) + "s ease " + thisTime + " forwards";
+    }
+
+    animationTimes.sort((a, b) => { return b - a; });
+
+    loading = instance.mother.returnLoadingIcon();
+    style = {
+      position: "absolute",
+      width: String(loadingWidth) + ea,
+      height: String(loadingWidth) + ea,
+      top: withOut(50, loadingWidth * (desktop ? (3 / 4) : 0.55), ea),
+      left: withOut(50, loadingWidth * (1 / 2), ea),
+    };
+    for (let i in style) {
+      loading.style[i] = style[i];
+    }
+    mother.querySelector("." + pictureBoxClassName).appendChild(loading);
+
+    instance.randomPick = StyleExplanationJs.randomPick(instance.photos, contentsArr, pictureNumber);
+    if (!Array.isArray(instance.randomPick) || forceQuit === true) {
+      sleep((animationTimes[0] * 1000) + 100).then(async () => {
+        try {
+          for (let i = 0; i < instance.photoPosition.length; i++) {
+            instance.photoPosition[i].style.backgroundImage = "";
+            instance.photoPosition[i].style.height = String(0);
+            instance.photoPosition[i].setAttribute("complete", "true");
+          }
+          mother.style.paddingTop = String(completePaddingTop) + ea;
+          mother.querySelector("." + pictureBoxClassName).removeChild(loading);
+          for (let dom of greenTargets) {
+            dom.remove();
+          }
+          await sleep(100);
+          for (let i = 0; i < instance.photoPosition.length; i++) {
+            instance.photoPosition[i].style.display = "none";
+          }
+          GeneralJs.stacks[loadingName] = false;
+
+          if (forceQuit !== true) {
+            pickupDesigners();
+          }
+
+        } catch (e) {
+          await GeneralJs.ajaxJson({ message: "StyleExplanationJs.resetEvent.sleep.true : " + e.message }, BACKHOST + "/errorLog");
+        }
+      });
+    } else {
+      targetPhotos = instance.randomPick.map((obj) => { return BRIDGEHOST.replace(/\:3000$/gi, '') + obj.path; });
+      sleep((animationTimes[0] * 1000) + (animationTime * 1000)).then(async () => {
+        try {
+          for (let i = 0; i < instance.photoPosition.length; i++) {
+            instance.photoPosition[i].style.backgroundImage = "url('" + targetPhotos[i] + "')";
+          }
+          await sleep(animationTime * 1000);
+          mother.querySelector("." + pictureBoxClassName).removeChild(loading);
+          for (let dom of greenTargets) {
+            dom.remove();
+          }
+          await sleep(100);
+          for (let i = 0; i < instance.photoPosition.length; i++) {
+            instance.photoPosition[i].style.animation = "fadeupmiddle " + String(animationTime) + "s ease forwards";
+          }
+          GeneralJs.stacks[loadingName] = false;
+        } catch (e) {
+          await GeneralJs.ajaxJson({ message: "StyleExplanationJs.resetEvent.sleep.false : " + e.message }, BACKHOST + "/errorLog");
+        }
+      });
+    }
+  }
+
+  arrowEvent = function () {
+    instance.selectPhotos = [];
+    GeneralJs.stacks[loadingName] = true;
+    GeneralJs.setTimeout(() => {
+      resetEvent(false);
+    }, 201);
+  }
+
+  pictureBox = createNode({
+    mother,
+    class: [ pictureBoxClassName ],
+    style: {
+      display: "block",
+      position: "relative",
+      marginLeft: desktop ? String(innerMargin) + ea : "",
+      width: desktop ? withOut(innerMargin * 2, ea) : "",
+    }
+  });
+
+  for (let i = 0; i < pictureNumber; i++) {
+    tempDom = createNode({
+      mother: pictureBox,
+      class: [ "hoverDefault_lite" ],
+      attribute: [
+        { index: String(i) },
+        { complete: "false" },
+      ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            if (this.getAttribute("complete") === "false" && !GeneralJs.stacks[loadingName]) {
+              const index = Number(this.getAttribute("index"));
+              const mother = this.parentNode;
+              let radius, circleVisual;
+              let greenTop, greenLeft;
+
+              radius = <%% 22, 18, 17, 14, 4 %%>;
+              circleVisual = <%% 4, 3, 3, 2, 0.5 %%>;
+
+              greenTop = this.getBoundingClientRect().top - this.parentNode.getBoundingClientRect().top;
+              greenLeft = this.getBoundingClientRect().left - this.parentNode.getBoundingClientRect().left;
+              
+              createNode({
+                mother,
+                class: [ greenClassName, greenClassName + "_" + String(index) ],
+                attribute: [
+                  { file: instance.randomPick[index].file },
+                  { index: String(index) }
+                ],
+                events: [
+                  {
+                    type: "click",
+                    event: function (e) {
+                      e.stopPropagation();
+                      const file = this.getAttribute("file");
+                      const thisIndex = this.getAttribute("index");
+                      let index, removeTargets;
+                      index = null;
+                      for (let i = 0; i < instance.selectPhotos.length; i++) {
+                        if (instance.selectPhotos[i].file === file) {
+                          index = i;
+                          break;
+                        }
+                      }
+                      if (index !== null) {
+                        instance.selectPhotos.splice(index, 1);
+                      }
+                      removeTargets = mother.querySelectorAll('.' + greenClassName + "_" + thisIndex);
+                      for (let dom of removeTargets) {
+                        mother.removeChild(dom);
+                      }
+                    },
+                  }
+                ],
+                style: {
+                  position: "absolute",
+                  width: photoWidthCss,
+                  height: photoHeightCss,
+                  top: String(greenTop) + ea,
+                  left: String(greenLeft) + ea,
+                  borderRadius: String(3) + "px",
+                  cursor: "pointer",
+                  overflow: "hidden",
+                  background: colorExtended.focusBlue,
+                  "mix-blend-mode": "multiply",
+                }
+              });
+              createNode({
+                mother,
+                class: [ greenClassName, greenClassName + "_" + String(index) ],
+                attribute: [
+                  { file: instance.randomPick[index].file },
+                  { index: String(index) }
+                ],
+                events: [
+                  {
+                    type: "click",
+                    event: function (e) {
+                      e.stopPropagation();
+                      const file = this.getAttribute("file");
+                      const thisIndex = this.getAttribute("index");
+                      let index, removeTargets;
+                      index = null;
+                      for (let i = 0; i < instance.selectPhotos.length; i++) {
+                        if (instance.selectPhotos[i].file === file) {
+                          index = i;
+                          break;
+                        }
+                      }
+                      if (index !== null) {
+                        instance.selectPhotos.splice(index, 1);
+                      }
+                      removeTargets = mother.querySelectorAll('.' + greenClassName + "_" + thisIndex);
+                      for (let dom of removeTargets) {
+                        mother.removeChild(dom);
+                      }
+                    },
+                  }
+                ],
+                mode: "svg",
+                source: instance.mother.returnCheckCircle(colorChip.white),
+                style: {
+                  position: "absolute",
+                  width: String(radius * 2) + ea,
+                  top: String(greenTop + (photoHeight / 2) - (radius + circleVisual)) + ea,
+                  left: String(greenLeft + (photoWidth / 2) - radius) + ea,
+                  cursor: "pointer",
+                },
+              });
+
+              instance.selectPhotos.push(instance.randomPick[index]);
+              image.push(instance.randomPick[index].file);
+
+              ajaxJson({ cliid: client.cliid, name: client.name, phone: client.phone, photos: equalJson(JSON.stringify(instance.selectPhotos)) }, BACKHOST + "/styleCuration_styleChecking").catch((err) => {
+                console.log(err);
+              });
+
+              if (instance.selectPhotos.length >= 3) {
+                instance.photos = StyleExplanationJs.photoFilter(instance.photos, instance.selectPhotos);
+                instance.selectPhotos = [];
+                GeneralJs.stacks[loadingName] = true;
+                GeneralJs.stacks[stackName] = GeneralJs.stacks[stackName] + 1;
+                resetEvent(false);
+              }
+
+            }
+          }
+        }
+      ],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: photoWidthCss,
+        height: photoHeightCss,
+        borderRadius: String(3) + "px",
+        marginRight: String(i % columnNumber === (columnNumber - 1) ? 0 : pictureMargin) + ea,
+        marginBottom: String(pictureMargin) + ea,
+        overflow: "hidden",
+        background: colorChip.gray2
+      }
+    });
+    this.photoPosition.push(tempDom);
+  }
+
+  for (let i = 0; i < pictureNumber; i++) {
+    this.photoPosition[i].style.backgroundImage = "url('" + targetPhotos[i] + "')";
+    this.photoPosition[i].style.backgroundPosition = "50% 50%";
+    this.photoPosition[i].style.backgroundSize = "100% auto";
+  }
+
+  questionBlock = createNode({
+    mother,
+    style: {
+      display: desktop ? "block" : "flex",
+      position: "relative",
+      width: String(100) + '%',
+      height: String(arrowZoneHeight) + ea,
+      paddingTop: desktop ? String(pannelPaddingTop) + ea : "",
+      textAlign: "center",
+      boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+      background: mobile ? colorChip.white : "",
+      borderRadius: mobile ? String(5) + "px" : "",
+      justifyContent: mobile ? "center" : "",
+      alignItems: mobile ? "center" : ""
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "block" : "none",
+          position: "absolute",
+          width: withOut(innerMargin * 2, ea),
+          left: String(innerMargin) + ea,
+          top: String(0) + ea,
+          height: String(pannelLineTop) + ea,
+          borderBottom: "1px dashed " + colorChip.gray3,
+        }
+      },
+      {
+        mode: "svg",
+        source: this.mother.returnArrow("left", colorExtended.focusBlue),
+        events: [
+          {
+            type: "click",
+            event: arrowEvent
+          }
+        ],
+        style: {
+          display: desktop ? "block" : "none",
+          position: "absolute",
+          left: String(innerMargin) + ea,
+          top: String(arrowTop) + ea,
+          width: String(arrowWidth) + ea,
+          paddingRight: String(pannelWordsPadding) + ea,
+          background: colorChip.white,
+          cursor: "pointer"
+        }
+      },
+      {
+        mode: "svg",
+        source: this.mother.returnArrow("right", colorExtended.focusBlue),
+        events: [
+          {
+            type: "click",
+            event: arrowEvent
+          }
+        ],
+        style: {
+          display: desktop ? "block" : "none",
+          position: "absolute",
+          right: String(innerMargin) + ea,
+          top: String(arrowTop) + ea,
+          width: String(arrowWidth) + ea,
+          paddingLeft: String(pannelWordsPadding) + ea,
+          background: colorChip.white,
+          cursor: "pointer"
+        }
+      },
+    ]
+  });
+
+}
+
 StyleExplanationJs.prototype.insertInitBox = async function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
@@ -3781,6 +4458,514 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
   }
 }
 
+StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { fourthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName } = this;
+  try {
+    const fadeOutTargets = [ ...document.querySelectorAll('.' + fourthFadeOutTargetClassName) ];
+    let minusLeft;
+    let descriptionSize;
+    let titleSize;
+    let descriptionMarginTop;
+    let betweenMargin;
+    let checkCircleWidth;
+    let buttonHeight;
+    let ghostBase;
+    let wordsMotherMarginTop;
+    let numberSize;
+    let numberWeight;
+    let numberBarHeight;
+    let numberBarMarginLeft;
+    let numberBarTop;
+    let numbersAreaMarginTop;
+    let titleMarginTop;
+    let titleWeight;
+    let titleSquareWidth, titleSquareMarginRight, titleSquareTop;
+    let imageAreaMarginTop, imageAreaMarginBottom;
+    let imageWidth;
+    let yesButtonAreaMarginTop;
+    let yesButtonWidth, yesButtonWidth2;
+    let yesButtonHeight;
+    let yesButtonBetween;
+    let yesButtonTextTop;
+    let yesButtonSize;
+    let yesButtonWeight;
+    let completeButtonWidth, completeButtonAreaMarginBottom;
+    let completeButtonSize, completeButtonWeight, completeButtonTextTop;
+    let returnCircleWidth;
+    let returnCircleMarginRight;
+    let returnCicleArrowWidth, returnCicleArrowLeft;
+    let constructItems;
+    let statusItems;
+    let blueBoxHeight, blueBoxHeight2;
+    let middleLineMarginBottom;
+    let middleLinePaddingTop;
+    let blueDescriptionSize, blueDescriptionWeight, blueDescriptionBoldWeight, blueDescriptionTextTop;
+    let fabricItems;
+    let yesButtonWidthNoMargin;
+    let processBarHeight;
+    let defaultBudgetValue;
+    let blueWhiteFactorsAreaMarginTop;
+    let blueWhiteFactorLineWidth, blueWhiteFactorLineMarginRight;
+    let blueWhiteFactorWidth, blueWhiteFactorHeight;
+    let blueWhiteFactorTextTop, blueWhiteFactorSize, blueWhiteFactorWeight;
+    let blueWhitePlusCircleWidth, blueWhitePlusCircleSize, blueWhitePlusCircleWeight, blueWhitePlusCircleTextTop;
+    let blueWhitePlusCircleMargin;
+    let processValuesRatio;
+    let processValueSize, processValueWeight;
+    let convertingBaseHeight;
+    let ageItems;
+    let yesButtonWidth3;
+    let descriptionWeight;
+    let descriptionVisualLeft;
+    let styleCheckBaseMother;
+
+    minusLeft = window.innerWidth - standardWidth + 1;
+
+    titleMarginTop = <%% 25, 25, 25, 25, 25 %%>;
+    titleSize = <%% 26, 26, 26, 26, 26 %%>;
+    titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+    titleSquareWidth = <%% 8, 8, 8, 8, 8 %%>;
+    titleSquareMarginRight = <%% 9, 9, 9, 9, 9 %%>;
+    titleSquareTop = <%% 1, 1, 1, 1, 1 %%>;
+
+    descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
+    descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
+    descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
+    descriptionVisualLeft = <%% -1, -1, -1, -1, -1 %%>;
+
+    betweenMargin = <%% 26, 26, 26, 26, 26 %%>;
+    checkCircleWidth = <%% 23, 23, 23, 23, 23 %%>;
+    buttonHeight = <%% 42, 42, 42, 42, 42 %%>;
+
+    wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
+
+    numberSize = <%% 28, 28, 28, 28, 28 %%>;
+    numberWeight = <%% 700, 700, 700, 700, 700 %%>;
+    numberBarHeight = <%% 28, 28, 28, 28, 28 %%>;
+    numberBarMarginLeft = <%% 12, 12, 12, 12, 12 %%>;
+    numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
+
+    numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+
+    imageAreaMarginTop = <%% 45, 45, 45, 45, 45 %%>;
+    imageAreaMarginBottom = <%% 110, 110, 110, 110, 110 %%>;
+    imageWidth = <%% 510, 510, 510, 510, 510 %%>;
+
+    yesButtonAreaMarginTop = <%% 25, 25, 25, 25, 25 %%>;
+    yesButtonWidth = <%% 160, 160, 160, 160, 160 %%>;
+    yesButtonHeight = <%% 40, 40, 40, 40, 40 %%>;
+    yesButtonBetween = <%% 12, 12, 12, 12, 12 %%>;
+    yesButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    yesButtonSize = <%% 16, 16, 16, 16, 16 %%>;
+    yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+    completeButtonWidth = <%% 120, 120, 120, 120, 120 %%>;
+    completeButtonAreaMarginBottom = <%% 129, 129, 129, 129, 129 %%>;
+    completeButtonSize = <%% 17, 17, 17, 17, 17 %%>;
+    completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
+    completeButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+    returnCircleWidth = <%% 34, 34, 34, 34, 34 %%>;
+    returnCircleMarginRight = <%% 11, 11, 11, 11, 11 %%>;
+    returnCicleArrowWidth = <%% 9, 9, 9, 9, 9 %%>;
+    returnCicleArrowLeft = <%% -1.5, -1.5, -1.5, -1.5, -1.5 %%>;
+
+    middleLineMarginBottom = <%% 100, 100, 100, 100, 100 %%>;
+    middleLinePaddingTop = <%% 80, 80, 80, 80, 80 %%>;
+
+    blueBoxHeight = <%% 130, 130, 130, 130, 120 %%>;
+    blueBoxHeight2 = <%% 70, 70, 70, 70, 70 %%>;
+    blueDescriptionSize = <%% 16, 16, 15, 15, 15 %%>;
+    blueDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
+    blueDescriptionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
+    blueDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+    processBarHeight = <%% 24, 24, 24, 24, 24 %%>;
+    defaultBudgetValue = <%% 2, 2, 2, 2, 2 %%>;
+    blueWhiteFactorsAreaMarginTop = <%% 11, 11, 11, 11, 11 %%>;
+    blueWhiteFactorLineWidth = <%% 352, 352, 352, 352, 352 %%>;
+    blueWhiteFactorLineMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+    blueWhiteFactorWidth = <%% 180, 180, 180, 180, 180 %%>;
+    blueWhiteFactorHeight = <%% 36, 36, 36, 36, 36 %%>;
+    blueWhiteFactorTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    blueWhiteFactorSize = <%% 15, 15, 15, 15, 15 %%>;
+    blueWhiteFactorWeight = <%% 700, 700, 700, 700, 700 %%>;
+    blueWhitePlusCircleWidth = <%% 22, 22, 22, 22, 22 %%>;
+    blueWhitePlusCircleSize = <%% 20, 20, 20, 20, 20 %%>;
+    blueWhitePlusCircleWeight = <%% 800, 800, 800, 800, 800 %%>;
+    blueWhitePlusCircleTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    blueWhitePlusCircleMargin = <%% 8, 8, 8, 8, 8 %%>;
+
+    processValueSize = <%% 15, 15, 15, 15, 15 %%>;
+    processValueWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+    convertingBaseHeight = <%% 1808, 1808, 1808, 1808, 1808 %%>;
+
+    processValuesRatio = 99.4;
+
+    statusItems = [
+      { title: "9:30 - 11:00" },
+      { title: "11:00 - 12:30" },
+      { title: "13:30 - 16:30" },
+      { title: "16:30 - 18:30" },
+    ];
+
+    yesButtonWidth = (standardWidth - (yesButtonBetween * ((statusItems.length / 1) - 1))) / (statusItems.length / 1);
+
+    ghostBase = {};
+
+    fifthBase.children[1].style.opacity = String(0);
+    await instance.insertSecondBarBox(91);
+    fifthBase.style.transition = "all 0.6s ease";
+    fifthBase.style.height = "";
+    setQueue(() => {
+      for (let dom of fadeOutTargets) {
+        dom.remove();
+      }
+      ghostBase.style.position = "relative";
+    }, 600);
+
+    ghostBase = createNode({
+      mother: fifthBase,
+      class: [ ghostBaseClassName ],
+      style: {
+        display: "flex",
+        position: "absolute",
+        flexDirection: "column",
+        top: String(0) + ea,
+        paddingTop: String(0),
+        width: withOut(0, ea),
+        animation: "fadeinlite 0.6s ease forwards",
+        opacity: String(0),
+        transform: "translateX(20px)",
+        alignItems: "center",
+      }
+    });
+
+    createNode({
+      mother: ghostBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        marginTop: String(numbersAreaMarginTop) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+            borderBottom: "1.5px solid " + colorExtended.blueDark,
+          },
+          children: [
+            {
+              text: "6",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontFamily: "mont",
+                fontSize: String(numberSize) + ea,
+                fontWeight: String(numberWeight),
+                color: colorExtended.mainBlue,
+              }
+            },
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                height: String(numberBarHeight) + ea,
+                width: String(0),
+                borderRight: "2px solid " + colorExtended.mainBlue,
+                transform: "rotate(25deg)",
+                marginLeft: String(numberBarMarginLeft) + ea,
+                marginRight: String(numberBarMarginLeft) + ea,
+                top: String(numberBarTop) + ea,
+              }
+            },
+            {
+              text: "6",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontFamily: "mont",
+                fontSize: String(numberSize) + ea,
+                fontWeight: String(numberWeight),
+                color: colorExtended.mainBlue,
+                opacity: String(0.4),
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: String(titleMarginTop) + ea,
+            flexDirection: "row",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(titleSquareWidth) + ea,
+                height: String(titleSquareWidth) + ea,
+                borderRadius: String(2) + "px",
+                background: colorExtended.mainBlue,
+                marginRight: String(titleSquareMarginRight) + ea,
+                top: String(titleSquareTop) + ea,
+              }
+            },
+            {
+              text: "가능한 상담 시간을 모두 체크해 주세요.",
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorExtended.black,
+              }
+            },
+          ]
+        },
+      ]
+    });
+    createNode({
+      mother: ghostBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        marginTop: String(imageAreaMarginTop) + ea,
+        marginBottom: String(imageAreaMarginBottom) + ea,
+        borderRadius: String(8) + "px",
+        width: withOut(0, ea),
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            marginTop: String(yesButtonAreaMarginTop) + ea,
+          },
+          children: statusItems.map((o, index) => {
+            return {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(yesButtonWidth) + ea,
+                height: String(yesButtonHeight) + ea,
+                borderRadius: String(yesButtonHeight) + ea,
+                border: "1.5px solid " + colorExtended.mainBlue,
+                boxSizing: "border-box",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                marginRight: String(index % (statusItems.length / 1) === (statusItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea,
+                marginBottom: String(yesButtonBetween) + ea,
+              },
+              child: {
+                text: o.title,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(yesButtonTextTop) + ea,
+                  fontSize: String(yesButtonSize) + ea,
+                  fontWeight: String(yesButtonWeight),
+                  color: colorExtended.blueDark,
+                }
+              }
+            }
+          })
+        }
+      ]
+    });
+
+    createNode({
+      mother: ghostBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        paddingTop: String(middleLinePaddingTop) + ea,
+        borderTop: "3px dotted " + colorExtended.blueWhite,
+      },
+      children: [
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: String(titleMarginTop) + ea,
+            flexDirection: "row",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(titleSquareWidth) + ea,
+                height: String(titleSquareWidth) + ea,
+                borderRadius: String(2) + "px",
+                background: colorExtended.mainBlue,
+                marginRight: String(titleSquareMarginRight) + ea,
+                top: String(titleSquareTop) + ea,
+              }
+            },
+            {
+              text: "마음에 드는 사진을 3장씩 선택해주세요.",
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorExtended.black,
+              }
+            },
+          ]
+        },
+        {
+          text: "인공지능을 통해 컨셉에 맞는 디자이너를 추천해 드릴게요.",
+          style: {
+            display: "flex",
+            position: "relative",
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(descriptionWeight),
+            color: colorExtended.black,
+            marginTop: String(descriptionMarginTop) + ea,
+          }
+        },
+      ]
+    });
+    styleCheckBaseMother = createNode({
+      mother: ghostBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        marginTop: String(imageAreaMarginTop) + ea,
+        marginBottom: String(middleLineMarginBottom) + ea,
+        borderRadius: String(8) + "px",
+        width: withOut(0, ea),
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            borderRadius: String(10) + "px",
+            overflow: "hidden",
+            boxSizing: "border-box",
+            border: "1.5px solid " + colorExtended.mainBlue,
+          },
+        },
+      ]
+    });
+    instance.styleCheck(styleCheckBaseMother.firstChild);
+
+    createNode({
+      mother: ghostBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+        height: String(buttonHeight) + ea,
+        marginBottom: String(completeButtonAreaMarginBottom) + ea,
+      },
+      children: [
+        {
+          event: {
+            click: instance.firstReturn(),
+          },
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(returnCircleWidth) + ea,
+            height: String(returnCircleWidth) + ea,
+            borderRadius: String(returnCircleWidth) + ea,
+            marginRight: String(returnCircleMarginRight) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            boxSizing: "border-box",
+            border: "1.5px solid " + colorExtended.mainBlue,
+            cursor: "pointer",
+          },
+          child: {
+            mode: "svg",
+            source: svgMaker.buttonLineArrow(colorExtended.mainBlue),
+            style: {
+              position: "relative",
+              width: String(returnCicleArrowWidth) + ea,
+              transformOrigin: "50% 50%",
+              transform: "rotate(180deg)",
+              left: String(returnCicleArrowLeft) + ea,
+            }
+          }
+        },
+        {
+          event: {
+            click: instance.secondConverting(),
+          },
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(completeButtonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            borderRadius: String(10) + "px",
+            background: colorExtended.darkBlack,
+            justifyContent: "center",
+            alignItems: "center",
+            border: "1px solid " + colorExtended.blueDark,
+            cursor: "pointer",
+          },
+          child: {
+            text: "선택 완료",
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              fontSize: String(completeButtonSize) + ea,
+              fontWeight: String(completeButtonWeight),
+              color: colorExtended.white,
+              top: String(completeButtonTextTop) + ea,
+            }
+          }
+        }
+      ]
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 StyleExplanationJs.prototype.firstConverting = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
@@ -4480,6 +5665,7 @@ StyleExplanationJs.prototype.launching = async function (loading) {
     const normalMode = (entireMode && getObj.normal === "true");
     let cliid;
     let clients, client;
+    let contentsPhotoObj;
 
     if (getObj.cliid !== undefined) {
       cliid = getObj.cliid;
@@ -4495,7 +5681,15 @@ StyleExplanationJs.prototype.launching = async function (loading) {
     }
     client = clients[0];
 
+    contentsPhotoObj = await ajaxJson({}, BACKHOST + "/styleCuration_getPhotos", { equal: true });
+    this.selectPhotos = [];
+    this.randomPick = [];
+    this.photos = contentsPhotoObj.photos;
+    this.contentsArr = contentsPhotoObj.contentsArr;
+    this.designers = contentsPhotoObj.designers;
     this.client = client;
+    this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, BACKHOST + "/getClientHistory", { equal: true });
+
     this.initAreaClassName = "initAreaClassName";
     this.firstFadeOutTargetClassName = "firstFadeOutTargetClassName";
     this.secondBaseClassName = "secondBaseClassName";
@@ -4532,25 +5726,14 @@ StyleExplanationJs.prototype.launching = async function (loading) {
 
 
 
-
-
-
-          // GeneralJs.setQueue(() => {
-          //   const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
-          //   for (let dom of fadeOutTargets) {
-          //     dom.remove();
-          //   }
-          // }, 0);
-          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-642) + "px";
-          // await instance.insertSixthBox(secondBase);
-
-
-
-
-
-
-
-
+          GeneralJs.setQueue(() => {
+            const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
+            for (let dom of fadeOutTargets) {
+              dom.remove();
+            }
+          }, 0);
+          document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-642) + "px";
+          await instance.insertSeventhBox(secondBase);
 
 
 

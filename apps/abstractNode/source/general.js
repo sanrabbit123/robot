@@ -5,6 +5,24 @@ const GeneralJs = function () {
   this.talkIcon = null;
 }
 
+Set.prototype.intersection = function(setB) {
+  let intersection = new Set();
+  for (let elem of setB) {
+    if (this.has(elem)) {
+      intersection.add(elem);
+    }
+  }
+  return intersection;
+}
+
+Set.prototype.union = function(setB) {
+  let union = new Set(this);
+  for (let elem of setB) {
+    union.add(elem);
+  }
+  return union;
+}
+
 GeneralJs.sourceLink = "/list_image/general";
 
 GeneralJs.universalLink = "/list_image/universal";
