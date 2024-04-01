@@ -97,7 +97,7 @@ DevContext.prototype.launching = async function () {
 
     // await this.MONGOLOGC.connect();
     // const report = new LogReport(this.MONGOLOGC);
-    // await report.unknownCampaign(2024, 2, 8_836_742 - 8_066_742);
+    // await report.unknownCampaign(2024, 3, 9080999 - 8_376_293);
     // await this.MONGOLOGC.close();
 
     // =======================================================================================================================================================
@@ -7070,13 +7070,15 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "배유나",
-    //     designer: "박정훈",
-    //     link: "https://drive.google.com/drive/folders/1Zp3drbwqLfHvQ2j3y9wsTmv30ukwe5_2",
+    //     client: "박태웅",
+    //     designer: "권미정",
+    //     link: "https://drive.google.com/drive/folders/1CYHWCBt6EuKy-G-d3lkIiyPxNpeJWT6K",
     //     pay: true
     //   },
     // ]);
 
+
+    
     
     // raw video
     // const filter = new PortfolioFilter();
@@ -7173,8 +7175,8 @@ DevContext.prototype.launching = async function () {
 
     
     // // send sms
-    // const name = "장수정";
-    // const amount = 655_600;
+    // const name = "안나래";
+    // const amount = 2_009_601;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
