@@ -7050,26 +7050,6 @@ StyleExplanationJs.prototype.launching = async function (loading) {
           await instance.insertInitBox();
           const secondBase = await instance.insertSecondBox();
           await instance.insertBarBox();
-
-
-
-
-
-
-          // GeneralJs.setQueue(() => {
-          //   const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
-          //   for (let dom of fadeOutTargets) {
-          //     dom.remove();
-          //   }
-          // }, 0);
-          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-642) + "px";
-          // await instance.insertEighthBox(secondBase);
-
-
-
-
-
-
           instance.resizeEvent();
           setInterval(() => {
             homeliaisonAnalytics({
