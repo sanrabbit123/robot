@@ -3555,7 +3555,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { fourthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName } = this;
+  const { fourthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName, fifthFadeOutTargetClassName } = this;
   try {
     const fadeOutTargets = [ ...document.querySelectorAll('.' + fourthFadeOutTargetClassName) ];
     let minusLeft;
@@ -3771,7 +3771,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
 
     ghostBase = createNode({
       mother: fifthBase,
-      class: [ ghostBaseClassName ],
+      class: [ ghostBaseClassName, fifthFadeOutTargetClassName ],
       style: {
         display: "flex",
         position: "absolute",
@@ -4456,7 +4456,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
         },
         {
           event: {
-            click: instance.secondConverting(),
+            click: instance.fifthConverting(),
           },
           style: {
             display: "inline-flex",
@@ -4678,9 +4678,9 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { fourthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName, fileTongClassName } = this;
+  const { fifthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName, fileTongClassName, sixthFadeOutTargetClassName } = this;
   try {
-    const fadeOutTargets = [ ...document.querySelectorAll('.' + fourthFadeOutTargetClassName) ];
+    const fadeOutTargets = [ ...document.querySelectorAll('.' + fifthFadeOutTargetClassName) ];
     let minusLeft;
     let descriptionSize;
     let titleSize;
@@ -4823,7 +4823,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     processValueSize = <%% 15, 15, 15, 15, 15 %%>;
     processValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    convertingBaseHeight = <%% 1808, 1808, 1808, 1808, 1808 %%>;
+    convertingBaseHeight = <%% 2000, 2000, 2000, 2000, 2000 %%>;
 
     fileUploadBoxHeight = <%% 180, 180, 180, 180, 180 %%>;
     fileUploadBoxSize = <%% 24, 24, 24, 24, 24 %%>;
@@ -4851,7 +4851,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     fifthBase.children[1].style.opacity = String(0);
     await instance.insertSecondBarBox(91);
     fifthBase.style.transition = "all 0.6s ease";
-    fifthBase.style.height = "";
+    fifthBase.style.height = String(convertingBaseHeight) + ea;
     setQueue(() => {
       for (let dom of fadeOutTargets) {
         dom.remove();
@@ -4861,7 +4861,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
 
     ghostBase = createNode({
       mother: fifthBase,
-      class: [ ghostBaseClassName ],
+      class: [ ghostBaseClassName, sixthFadeOutTargetClassName ],
       style: {
         display: "flex",
         position: "absolute",
@@ -5329,7 +5329,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
         },
         {
           event: {
-            click: instance.secondConverting(),
+            click: instance.sixthConverting(),
             selectstart: (e) => { e.preventDefault() }
           },
           style: {
@@ -5359,6 +5359,812 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
         }
       ]
     });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, setDebounce } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight, baseTop, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const submitBlockClassName = "submitBlockClassName";
+  const { sixthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName, fileTongClassName, secondBarBoxMotherClassName, blurFixedBelowBarClassName, greenTalkEventClassName } = this;
+  try {
+    const fadeOutTargets = [ ...document.querySelectorAll('.' + sixthFadeOutTargetClassName) ];
+    let ghostBase;
+    let minusLeft;
+    let firstBase;
+    let leftRightWidth;
+    let firstBasePaddingBottom;
+    let subTitleSize, subTitleWeight, subTitleMarginTop;
+    let buttonMarginTop;
+    let buttonWidth;
+    let buttonHeight;
+    let buttonSize;
+    let buttonTextTop;
+    let buttonWeight;
+    let firstBasePaddingTop;
+    let mainIllust;
+    let mobileLeftPaddingVisual;
+    let titleSize, titleWeight, titleVisualTop, titleVisualLeft;
+    let titleLineHeight;
+    let descriptionContents;
+    let descriptionSize, descriptionLineHeight;
+    let descriptionMarginTop;
+    let mainImageTop, mainImageHeight;
+    let pointOpacity;
+    let descriptionPointBoldPaddingLeft;
+    let descriptionPointBoldPaddingTop;
+    let descriptionPointBoldPaddingBottom;
+    let descriptionPointBoldMargin;
+    let buttonBetween;
+    let mobileImageRight;
+    let mobileSubImageMarginTop;
+    let barBase;
+    let barBaseMarginTop;
+    let initAreaPaddingBottom;
+    let secondWhite;
+    let thirdEtc;
+    let hangulTitleSize, hangulTitleWeight;
+    let etcNotice;
+    let noticeTong;
+    let tempBlock;
+    let noticeBlockBetween;
+    let noticeBlockTitleWidth;
+    let noticeBlockHeight;
+    let blockPaddingTop;
+    let blockPaddingBottom;
+    let noticeTitleSize, noticeTitleWeight, noticeTitleTextTop;
+    let noticeDescriptionIndent;
+    let noticeDescriptionSize, noticeDescriptionWeight, noticeDescriptionLineHeight, noticeDescriptionTextTop;
+    let noticeBlockMarginTop;
+    let thirdDescriptionMarginTop, thirdDescriptionWeight, thirdDescriptionSize, thirdDescriptionLineHeight;
+    let processDiagramHeight;
+    let totalHeight;
+
+    minusLeft = window.innerWidth - standardWidth + 1;
+    leftRightWidth = (window.innerWidth - standardWidth) / 2;
+
+    totalHeight = <%% 2588, 2588, 2578, 2578, 2578 %%>;
+
+    firstBasePaddingTop = <%% 26, 24, 24, 24, 8 %%>;
+    firstBasePaddingBottom = <%% 180, 170, 160, 120, 20 %%>;
+
+    subTitleSize = <%% 18, 18, 17, 16, 3.7 %%>;
+    subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+    subTitleMarginTop = <%% (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 3 : 6), (isMac() ? 3 : 6), 0.5 %%>;
+
+    buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
+    buttonWidth = <%% 205, 194, 186, 168, 31 %%>;
+    buttonHeight = <%% 32, 32, 30, 28, 9 %%>;
+    buttonSize = <%% 14, 14, 13, 12, 3.5 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+    buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+    buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
+
+    titleSize = <%% 57, 51, 48, 39, 8 %%>;
+    titleWeight = <%% 500, 500, 500, 500, 500 %%>;
+    titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
+    titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
+    titleLineHeight = <%% 1.11, 1.11, 1.11, 1.11, 1.07 %%>;
+
+    pointOpacity = 0.4;
+
+    mainImageTop = <%% 27, 24, 18, 16, 33 %%>;
+    mainImageHeight = <%% 390, 370, 338, 314, 39 %%>;
+
+    descriptionSize = <%% 15, 14, 14, 13, 3.2 %%>;
+    descriptionLineHeight = <%% 1.8, 1.8, 1.8, 1.7, 1.8 %%>;
+
+    mobileLeftPaddingVisual = 1;
+
+    descriptionMarginTop = <%% 40, 40, 36, 30, 81.5 %%>;
+
+    descriptionPointBoldPaddingLeft = <%% 8, 8, 8, 8, 1.6 %%>;
+    descriptionPointBoldPaddingTop = <%% (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 3), (isMac() ? 2 : 3), 0.4 %%>;
+    descriptionPointBoldPaddingBottom = <%% (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 0.8 %%>;
+    descriptionPointBoldMargin = <%% 2, 2, 2, 2, 1 %%>;
+
+    mobileImageRight = 5;
+    mobileSubImageMarginTop = 7.5;
+
+    barBaseMarginTop = <%% 80, 80, 80, 80, 80 %%>;
+
+    initAreaPaddingBottom = <%% 200, 200, 200, 200, 200 %%>;
+
+    hangulTitleSize = <%% 32, 32, 32, 32, 32 %%>;
+    hangulTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+    noticeBlockBetween = 10;
+    noticeBlockTitleWidth = 280;
+    noticeBlockHeight = 108;
+
+    blockPaddingTop = 170;
+    blockPaddingBottom = 200;
+
+    noticeBlockMarginTop = <%% 50, 50, 50, 50, 50 %%>;
+
+    noticeTitleSize = <%% 21, 21, 21, 21, 21 %%>;
+    noticeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+    noticeTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    noticeDescriptionIndent = <%% 24, 24, 24, 24, 24 %%>;
+    noticeDescriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+    noticeDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+    noticeDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+    noticeDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+    thirdDescriptionMarginTop = <%% 10, 10, 10, 10, 10 %%>;
+    thirdDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+    thirdDescriptionSize = <%% 16, 16, 16, 16, 16 %%>;
+    thirdDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+    processDiagramHeight = <%% 420, 420, 420, 420, 420 %%>;
+
+    mainIllust = <%% StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg" %%>;
+
+    descriptionContents = [
+      `홈리에종의 서비스 신청을 진행해주셔서 감사합니다!`,
+      `신청서를 검토한 후, 고객님께 <b%1차 응대 전화%b>를 드릴 예정입니다!`,
+    ];
+
+    etcNotice = [
+      {
+        title: "예산과 기간",
+        description: [
+          "홈리에종의 인테리어 예산은 크게 시공 비용, 가구 구매, 디자이너 비용으로 구분됩니다.",
+          "프로젝트 소요기간은 서비스 종류에 따라 다르며 홈퍼니싱, 홈스타일링, 토탈/엑스트라 스타일링 평균 소요 기간은 각 30일, 45일, 60일입니다.",
+        ]
+      },
+      {
+        title: "디자이너의 제공물",
+        description: [
+          "디자이너 기본 작업물로는 일정표, 디자인 제안서, 배치도 (콜라주, 3D 모델링), 예산 구성안 및 제품 리스트 등이 있습니다.",
+          "시공을 진행할 경우 시공 의뢰서가 추가 제공됩니다.",
+        ]
+      },
+      {
+        title: "시공사 선택권",
+        description: [
+          "홈리에종은 시공 업체 선택을 고객에게 부여하고 있습니다.",
+          "최저가 제안을 보장해드릴 수 없기 때문에 업체의 신뢰도와 견적을 비교하여 선택하실 수 있으며 홈리에종 시공사와 디자이너 시공사 선택 시 책임 시공합니다.",
+          "고객님께서 직접 선택하신 외부 시공사를 이용할 수 있으며 이 경우에는 시공 감리를 진행하지 않습니다.",
+        ]
+      },
+    ]
+
+    if (desktop && window.innerHeight > 1100) {
+      titleSize = <%% 59, 51, 48, 39, 9 %%>;
+      subTitleSize = <%% 19, 18, 17, 16, 3.6 %%>;
+      firstBasePaddingTop = <%% 60, 48, 30, 28, 50 %%>;
+      subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
+      firstBasePaddingBottom = <%% 230, 210, 160, 130, 210 %%>;
+      mainImageTop = <%% 36, 32, 18, 16, 32 %%>;
+      mainImageHeight = <%% 500, 508, 508, 508, 39 %%>;
+      buttonMarginTop = <%% 248, 146, 132, 110, 3.6 %%>;
+    }
+
+    ghostBase = {};
+
+    fifthBase.children[1].style.opacity = String(1);
+    await instance.insertSecondBarBox(100);
+    fifthBase.style.transition = "all 0.6s ease";
+    fifthBase.style.height = String(totalHeight) + ea;
+    document.querySelector('.' + secondBarBoxMotherClassName)?.remove();
+    setQueue(() => {
+      for (let dom of fadeOutTargets) {
+        dom.remove();
+      }
+      ghostBase.style.position = "relative";
+    }, 600);
+    window.addEventListener("scroll", (e) => {
+      setDebounce(() => {
+        if (window.scrollY === 0) {
+          document.querySelector('.' + greenTalkEventClassName).style.animation = "justfadeinoriginal 0.6s ease forwards";
+          document.querySelector('.' + blurFixedBelowBarClassName).style.transform = "translateY(" + String(96) + ea + ")";
+        } else {
+          document.querySelector('.' + greenTalkEventClassName).style.animation = "justfadeoutoriginal 0.6s ease forwards";
+          document.querySelector('.' + blurFixedBelowBarClassName).style.transform = "translateY(" + String(0) + ea + ")";
+        }
+      }, "__blurFixedPopupOpenEvent__");
+    })
+    
+    ghostBase = createNode({
+      mother: fifthBase,
+      class: [ ghostBaseClassName ],
+      style: {
+        display: "flex",
+        position: "absolute",
+        flexDirection: "column",
+        top: String(0) + ea,
+        marginTop: String(baseTop - naviHeight) + ea,
+        paddingTop: String(firstBasePaddingTop) + ea,
+        paddingBottom: String(firstBasePaddingBottom) + ea,
+        width: withOut(0, ea),
+        animation: "fadeinlite 0.6s ease forwards",
+        opacity: String(0),
+        transform: "translateX(20px)",
+      }
+    });
+
+    // main title
+    createNode({
+      mother: ghostBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: desktop ? "start" : "center",
+        alignItems: desktop ? "start" : "center",
+        opacity: String(0),
+        transform: "translateY(30px)",
+        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+        paddingLeft: mobile ? String(mobileLeftPaddingVisual) + ea : "",
+      },
+      children: [
+        {
+          text: (desktop ? "Request completed<b%.%b>" : "Request completed<b%.%b>"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorExtended.darkBlack,
+            fontFamily: "mont",
+            top: desktop ? String(titleVisualTop) + ea : "",
+            left: desktop ? String(titleVisualLeft) + ea : "",
+            lineHeight: String(titleLineHeight),
+          },
+          bold: {
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorExtended.darkBlack,
+            fontFamily: "mont",
+            opacity: String(pointOpacity),
+          }
+        }
+      ]
+    });
+
+    // sub title
+    createNode({
+      mother: ghostBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: desktop ? "start" : "center",
+        alignItems: desktop ? "start" : "center",
+        marginTop: String(subTitleMarginTop) + ea,
+        opacity: String(0),
+        transform: "translateY(30px)",
+        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+      },
+      children: [
+        {
+          text: "홈리에종 서비스 신청 완료",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            color: colorExtended.black,
+            fontWeight: String(subTitleWeight),
+            fontSize: String(subTitleSize) + ea,
+          }
+        }
+      ]
+    });
+
+    // main illust
+    createNode({
+      mother: ghostBase,
+      mode: "img",
+      attribute: {
+        src: mainIllust
+      },
+      style: {
+        position: "absolute",
+        right: desktop ? String(0) : String(mobileImageRight) + ea,
+        top: String(mainImageTop) + ea,
+        width: desktop ? "" : withOut(mobileImageRight * 2, ea),
+        height: desktop ? String(mainImageHeight) + ea : "",
+        opacity: String(0),
+        transform: "translateY(30px)",
+        animation: "1.2s ease 0.2s 1 normal forwards running fadeupdelay2",
+      }
+    });
+
+    // description
+    createNode({
+      mother: ghostBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: desktop ? "start" : "center",
+        alignItems: desktop ? "start" : "center",
+        marginTop: String(descriptionMarginTop) + ea,
+        opacity: String(0),
+        transform: "translateY(30px)",
+        animation: "1.5s ease 0s 1 normal forwards running fadeupdelay2",
+        textAlign: desktop ? "left" : "center",
+        flexDirection: desktop ? "row" : "column",
+      },
+      children: [
+        {
+          text: descriptionContents.join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            color: colorExtended.black,
+            fontWeight: String(400),
+            fontSize: String(descriptionSize) + ea,
+            lineHeight: String(descriptionLineHeight),
+          },
+          bold: {
+            color: colorExtended.white,
+            fontWeight: String(800),
+            fontSize: String(descriptionSize) + ea,
+            lineHeight: String(descriptionLineHeight),
+            background: colorExtended.blueDark,
+            padding: String(descriptionPointBoldPaddingLeft) + ea,
+            paddingTop: String(descriptionPointBoldPaddingTop) + ea,
+            paddingBottom: String(descriptionPointBoldPaddingBottom) + ea,
+            "border-radius": String(5) + "px",
+            margin: String(descriptionPointBoldMargin) + ea,
+          }
+        },
+      ]
+    })
+
+    // black button
+    createNode({
+      mother: ghostBase,
+      attribute: {
+        selectstart: (e) => { e.preventDefault() },
+      },
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "start",
+        alignItems: "center",
+        marginTop: String(buttonMarginTop) + ea,
+        opacity: String(0),
+        transform: "translateY(10px)",
+        animation: "1.2s ease 0.4s 1 normal forwards running fadeupdelay",
+        cursor: "pointer",
+        flexDirection: "row",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",    
+            width: String(180) + ea,
+            height: String(38) + ea,
+            background: colorExtended.blueDark,
+            borderRadius: String(38) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            marginRight: String(8) + ea,
+          },
+          child: {
+            attribute: {
+              selectstart: (e) => { e.preventDefault() },
+            },
+            text: `추천부터 받고 싶어요!`,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(buttonTextTop) + ea,
+              fontSize: String(16) + ea,
+              fontWeight: String(700),
+              color: colorExtended.white,
+            },
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",    
+            width: String(180) + ea,
+            height: String(38) + ea,
+            background: colorExtended.darkBlack,
+            borderRadius: String(38) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            attribute: {
+              selectstart: (e) => { e.preventDefault() },
+            },
+            text: `상담부터 원해요.`,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(buttonTextTop) + ea,
+              fontSize: String(16) + ea,
+              fontWeight: String(700),
+              color: colorExtended.white,
+            },
+          }
+        },
+      ]
+    });
+
+    barBase = createNode({
+      mother: ghostBase,
+      attribute: {
+        selectstart: (e) => { e.preventDefault() },
+      },
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: String(barBaseMarginTop) + ea,
+        opacity: String(0),
+        transform: "translateY(10px)",
+        animation: "1.2s ease 0.6s 1 normal forwards running fadeupdelay",
+      },
+    });
+    await instance.insertSecondBarBox(100, barBase);
+
+
+    // second white
+    secondWhite = createNode({
+      mother: ghostBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        marginTop: String(initAreaPaddingBottom) + ea,
+        justifyContent: "start",
+        alignItems: "start",
+        flexDirection: "column",
+        paddingTop: String(blockPaddingTop) + ea,
+        paddingBottom: String(blockPaddingBottom) + ea,
+      },
+      child: {
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(-1 * minusLeft) + ea,
+          background: colorExtended.white,
+          width: withOut(-1 * (minusLeft * 2), ea),
+          height: withOut(0, ea),
+        },
+      }
+    });
+
+    // main title
+    createNode({
+      mother: secondWhite,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: desktop ? "start" : "center",
+        alignItems: desktop ? "start" : "center",
+      },
+      children: [
+        {
+          text: "서비스 과정을\n한눈에 확인해 보세요.",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(hangulTitleSize) + ea,
+            fontWeight: String(hangulTitleWeight),
+            lineHeight: String(1.36),
+            color: colorExtended.darkBlack,
+            top: desktop ? String(titleVisualTop) + ea : "",
+            left: desktop ? String(titleVisualLeft) + ea : "",
+          },
+        }
+      ]
+    });
+
+    // sub title
+    createNode({
+      mother: secondWhite,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: desktop ? "start" : "center",
+        alignItems: desktop ? "start" : "center",
+        marginTop: String(45) + ea,
+      },
+      children: [
+        {
+          text: [
+            "문의 및 응대 이후,",
+            "",
+            "홈리에종은 디자이너 추천서를 제공하며",
+            "고객의 디자이너 선택 및 계약금 결제로 계약이 성립됩니다.",
+            "",
+            "계약 체결 후 매칭된 디자이너와 현장 미팅이 이루어지고,",
+            "본격적인 디자인, 시공, 가구 구매가 시작됩니다.",
+          ].join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            color: colorExtended.black,
+            fontWeight: String(400),
+            fontSize: String(16) + ea,
+            lineHeight: String(1.6),
+          }
+        }
+      ]
+    });
+
+    createNode({
+      mother: secondWhite,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: desktop ? "start" : "center",
+        alignItems: desktop ? "start" : "center",
+        marginTop: String(102) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(96) + ea,
+            height: String(6) + ea,
+            borderRadius: String(6) + ea,
+            background: colorExtended.gradientBlue,
+            opacity: String(0.7),
+          }
+        }
+      ]
+    });
+
+    createNode({
+      mother: secondWhite,
+      mode: "img",
+      attribute: {
+        src: StyleExplanationJs.binaryPath + "/diagram.svg",
+      },
+      style: {
+        position: "absolute",
+        right: desktop ? String(0) : String(mobileImageRight) + ea,
+        top: String(blockPaddingTop) + ea,
+        width: desktop ? "" : withOut(mobileImageRight * 2, ea),
+        height: desktop ? String(processDiagramHeight) + ea : "",
+      }
+    });
+
+    // third etc
+    thirdEtc = createNode({
+      mother: ghostBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        justifyContent: "start",
+        alignItems: "center",
+        flexDirection: "column",
+        paddingTop: String(blockPaddingTop) + ea,
+        paddingBottom: String(blockPaddingBottom) + ea,
+      },
+      child: {
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(-1 * minusLeft) + ea,
+          background: colorExtended.blueWhiteBack,
+          width: withOut(-1 * (minusLeft * 2), ea),
+          height: withOut(0, ea),
+        },
+      }
+    });
+
+    createNode({
+      mother: thirdEtc,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: desktop ? "center" : "center",
+        alignItems: desktop ? "center" : "center",
+      },
+      children: [
+        {
+          text: "기타 안내 사항",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(hangulTitleSize) + ea,
+            fontWeight: String(hangulTitleWeight),
+            lineHeight: String(1.36),
+            color: colorExtended.darkBlack,
+            top: desktop ? String(titleVisualTop) + ea : "",
+            left: desktop ? String(titleVisualLeft) + ea : "",
+          },
+        }
+      ]
+    });
+
+    createNode({
+      mother: thirdEtc,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: desktop ? "center" : "center",
+        alignItems: desktop ? "center" : "center",
+        marginTop: String(thirdDescriptionMarginTop) + ea,
+      },
+      children: [
+        {
+          text: "더 자세한 내용은 홈리에종 카카오 채널 혹은 유선 전화를 통해 확인하실 수 있습니다.",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            color: colorExtended.black,
+            fontWeight: String(thirdDescriptionWeight),
+            fontSize: String(thirdDescriptionSize) + ea,
+            lineHeight: String(thirdDescriptionLineHeight),
+          }
+        }
+      ]
+    });
+
+    noticeTong = createNode({
+      mother: thirdEtc,
+      style: {
+        display: "flex",
+        position: "relative",
+        flexDirection: "column",
+        marginTop: String(noticeBlockMarginTop) + ea,
+        width: withOut(0, ea),
+      },
+    })
+    for (let obj of etcNotice) {
+      tempBlock = createNode({
+        mother: noticeTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "row",
+          width: withOut(0, ea),
+          height: String(noticeBlockHeight) + ea,
+          marginBottom: String(noticeBlockBetween) + ea,
+        }
+      });
+
+      createNode({
+        mother: tempBlock,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          justifyContent: "center",
+          alignItems: "center",
+          width: String(noticeBlockTitleWidth) + ea,
+          height: withOut(0, ea),
+          marginRight: String(noticeBlockBetween) + ea,
+          borderRadius: String(10) + "px",
+          background: colorExtended.blueDark,
+        },
+        child: {
+          text: obj.title,
+          style: {
+            fontSize: String(noticeTitleSize) + ea,
+            fontWeight: String(noticeTitleWeight),
+            color: colorExtended.white,
+            display: "inline-block",
+            position: "relative",
+            top: String(noticeTitleTextTop) + ea,
+          }
+        }
+      })
+
+      createNode({
+        mother: tempBlock,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          alignItems: "center",
+          justifyContent: "start",
+          paddingLeft: String(noticeDescriptionIndent) + ea,
+          width: withOut(noticeBlockTitleWidth + noticeBlockBetween + 24, ea),
+          borderRadius: String(10) + "px",
+          background: colorExtended.white,
+        },
+        child: {
+          text: obj.description.join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(noticeDescriptionSize) + ea,
+            fontWeight: String(noticeDescriptionWeight),
+            color: colorExtended.black,
+            lineHeight: String(noticeDescriptionLineHeight),
+            top: String(noticeDescriptionTextTop) + ea,
+          }
+        }
+      });
+    }
+
+    // fixed below bar
+    createNode({
+      mother: totalContents,
+      class: [ "backblurwhite", blurFixedBelowBarClassName ],
+      style: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "fixed",
+        bottom: String(0),
+        left: String(0),
+        width: withOut(0, ea),
+        height: String(96) + ea,
+        zIndex: String(4),
+        boxShadow: "0px -3px 19px -9px " + colorExtended.darkShadow,
+        transformOrigin: "100% 0%",
+        transform: "translateY(" + String(96) + ea + ")",
+        transition: "all 0.6s ease",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",    
+            width: String(180) + ea,
+            height: String(38) + ea,
+            background: colorExtended.gradientBlue4,
+            borderRadius: String(38) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            marginRight: String(8) + ea,
+            marginLeft: String(1037) + ea,
+          },
+          child: {
+            attribute: {
+              selectstart: (e) => { e.preventDefault() },
+            },
+            text: `추천부터 받고 싶어요!`,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(buttonTextTop) + ea,
+              fontSize: String(16) + ea,
+              fontWeight: String(700),
+              color: colorExtended.white,
+            },
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",    
+            width: String(180) + ea,
+            height: String(38) + ea,
+            background: colorExtended.darkBlack,
+            borderRadius: String(38) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            attribute: {
+              selectstart: (e) => { e.preventDefault() },
+            },
+            text: `상담부터 원해요.`,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(buttonTextTop) + ea,
+              fontSize: String(16) + ea,
+              fontWeight: String(700),
+              color: colorExtended.white,
+            },
+          }
+        },
+      ]
+    })
+
+
 
   } catch (e) {
     console.log(e);
@@ -5511,6 +6317,74 @@ StyleExplanationJs.prototype.fourthConverting = function () {
         }
         setQueue(() => {
           instance.insertSixthBox(document.querySelector('.' + secondBaseClassName)).catch((err) => {
+            console.log(err);
+          });
+        }, 450);
+      }, 0);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+StyleExplanationJs.prototype.fifthConverting = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { initAreaClassName, fifthFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName } = this;
+  return async function (e) {
+    try {
+      const fadeOutTargets = [ ...document.querySelectorAll('.' + fifthFadeOutTargetClassName) ];
+      let blackScrollTop;
+      let numbersAreaMarginTop;
+
+      blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
+      numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+
+      scrollTo(window, 0, 0);
+
+      setQueue(() => {
+        for (let dom of fadeOutTargets) {
+          dom.style.animation = "fadeoutlite 0.6s ease forwards";
+        }
+        setQueue(() => {
+          instance.insertSeventhBox(document.querySelector('.' + secondBaseClassName)).catch((err) => {
+            console.log(err);
+          });
+        }, 450);
+      }, 0);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+StyleExplanationJs.prototype.sixthConverting = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { initAreaClassName, sixthFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName } = this;
+  return async function (e) {
+    try {
+      const fadeOutTargets = [ ...document.querySelectorAll('.' + sixthFadeOutTargetClassName) ];
+      let blackScrollTop;
+      let numbersAreaMarginTop;
+
+      blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
+      numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+
+      scrollTo(window, 0, 0);
+
+      setQueue(() => {
+        for (let dom of fadeOutTargets) {
+          dom.style.animation = "fadeoutlite 0.6s ease forwards";
+        }
+        setQueue(() => {
+          instance.insertEighthBox(document.querySelector('.' + secondBaseClassName)).catch((err) => {
             console.log(err);
           });
         }, 450);
@@ -5714,7 +6588,7 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
   }
 }
 
-StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20) {
+StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20, barMother = null) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, removeByClass } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
@@ -5761,78 +6635,82 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20) {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    if (document.querySelector('.' + secondBarBoxMotherClassName) === null) {
-      document.querySelector('.' + instance.firstBarTargetClassName).remove();
-      thirdBase = createNode({
-        mother: baseTong,
-        class: [ secondBarBoxMotherClassName ],
-        style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          height: String(barAreaHeight) + ea,
-        },
-        child: {
+    if (barMother === null) {
+      if (document.querySelector('.' + secondBarBoxMotherClassName) === null) {
+        document.querySelector('.' + instance.firstBarTargetClassName).remove();
+        thirdBase = createNode({
+          mother: baseTong,
+          class: [ secondBarBoxMotherClassName ],
           style: {
-            position: "absolute",
-            top: String(0),
-            left: String(-1 * minusLeft) + ea,
-            background: colorExtended.blueDark,
-            width: withOut(-1 * (minusLeft * 2), ea),
-            height: withOut(0, ea),
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            height: String(barAreaHeight) + ea,
           },
-          next: {
+          child: {
             style: {
               position: "absolute",
               top: String(0),
               left: String(-1 * minusLeft) + ea,
-              background: colorExtended.gradientBlue,
+              background: colorExtended.blueDark,
               width: withOut(-1 * (minusLeft * 2), ea),
               height: withOut(0, ea),
-              opacity: String(0),
-              animation: "justfadeinoriginal 0.4s ease forwards",
             },
+            next: {
+              style: {
+                position: "absolute",
+                top: String(0),
+                left: String(-1 * minusLeft) + ea,
+                background: colorExtended.gradientBlue,
+                width: withOut(-1 * (minusLeft * 2), ea),
+                height: withOut(0, ea),
+                opacity: String(0),
+                animation: "justfadeinoriginal 0.4s ease forwards",
+              },
+            }
           }
-        }
-      });
+        });
+      } else {
+        removeByClass(secondBarBoxMotherClassName);
+        thirdBase = createNode({
+          mother: baseTong,
+          class: [ secondBarBoxMotherClassName ],
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            height: String(barAreaHeight) + ea,
+          },
+          child: {
+            style: {
+              position: "absolute",
+              top: String(0),
+              left: String(-1 * minusLeft) + ea,
+              background: colorExtended.white,
+              width: withOut(-1 * (minusLeft * 2), ea),
+              height: withOut(0, ea),
+            },
+            next: {
+              style: {
+                position: "absolute",
+                top: String(0),
+                left: String(-1 * minusLeft) + ea,
+                background: colorExtended.gradientBlue,
+                width: withOut(-1 * (minusLeft * 2), ea),
+                height: withOut(0, ea),
+              },
+            }
+          }
+        });
+      }
     } else {
-      removeByClass(secondBarBoxMotherClassName);
-      thirdBase = createNode({
-        mother: baseTong,
-        class: [ secondBarBoxMotherClassName ],
-        style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          height: String(barAreaHeight) + ea,
-        },
-        child: {
-          style: {
-            position: "absolute",
-            top: String(0),
-            left: String(-1 * minusLeft) + ea,
-            background: colorExtended.white,
-            width: withOut(-1 * (minusLeft * 2), ea),
-            height: withOut(0, ea),
-          },
-          next: {
-            style: {
-              position: "absolute",
-              top: String(0),
-              left: String(-1 * minusLeft) + ea,
-              background: colorExtended.gradientBlue,
-              width: withOut(-1 * (minusLeft * 2), ea),
-              height: withOut(0, ea),
-            },
-          }
-        }
-      });
+      thirdBase = barMother;
     }
 
     createNode({
@@ -5876,7 +6754,7 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20) {
             height: String(radius + (z * 2)) + ea,
             borderRadius: String(radius + (z * 2)) + ea,
             background: colorExtended.white,
-            opacity: String(0.2),
+            opacity: String(ratio === 100 ? 0.1 : 0.2),
           }
         },
         {
@@ -5888,7 +6766,7 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20) {
             height: String(radius + (y * 2)) + ea,
             borderRadius: String(radius + (y * 2)) + ea,
             background: colorExtended.white,
-            opacity: String(0.6),
+            opacity: String(ratio === 100 ? 0.3 : 0.6),
           }
         },
         {
@@ -5900,7 +6778,7 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20) {
             height: String(radius + (x * 2)) + ea,
             borderRadius: String(radius + (x * 2)) + ea,
             background: colorExtended.white,
-            opacity: String(1),
+            opacity: String(ratio === 100 ? 0.8 : 1),
           }
         },
         {
@@ -5916,7 +6794,7 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20) {
         },
         {
           mode: "svg",
-          source: svgMaker.goalFlag(colorExtended.white, colorExtended.blueDark),
+          source: svgMaker.goalFlag(colorExtended.white, (ratio === 100 ? colorExtended.white : colorExtended.blueDark)),
           style: {
             position: "absolute",
             right: String(flagRight) + ea,
@@ -5924,7 +6802,7 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20) {
             width: String(flagWidth) + ea,
           }
         },
-        {
+        (ratio < 90 ? {
           style: {
             display: "inline-flex",
             position: "absolute",
@@ -5969,10 +6847,58 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20) {
               }
             ]
           }
-        }
+        } : (ratio === 100 ? {
+          style: {
+            display: "none"
+          }
+        } : {
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(commentAreaTop) + ea,
+            left: "calc(" + String(ratio) + "% - " + String(commentAreaWidth - commentAreaLeft - commentAreaLeft) + ea + ")",
+            width: String(commentAreaWidth) + ea,
+            height: String(commentAreaHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorExtended.blueDark,
+            borderBottomRightRadius: String(0) + "px",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            children: [
+              {
+                mode: "svg",
+                source: svgMaker.commentTriangle("verticalRight", colorExtended.blueDark),
+                style: {
+                  position: "absolute",
+                  width: String(commentTriangleWidth) + ea,
+                  bottom: String(-1 * commentTriangleWidth) + ea,
+                  right: String(0),
+                }
+              },
+              {
+                text: "답변을 분석해 정확한 서비스를 제공해드릴게요!",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(commentSize) + ea,
+                  fontWeight: String(commentWeight),
+                  color: colorExtended.white,
+                  top: String(commentTextTop) + ea,
+                }
+              }
+            ]
+          }
+        }))
       ]
-    })
-
+    });
 
   } catch (e) {
     console.log(e);
@@ -6098,7 +7024,11 @@ StyleExplanationJs.prototype.launching = async function (loading) {
     this.secondFadeOutTargetClassName = "secondFadeOutTargetClassName";
     this.thirdFadeOutTargetClassName = "thirdFadeOutTargetClassName";
     this.fourthFadeOutTargetClassName = "fourthFadeOutTargetClassName";
+    this.fifthFadeOutTargetClassName = "fifthFadeOutTargetClassName";
+    this.sixthFadeOutTargetClassName = "sixthFadeOutTargetClassName";
+    this.blurFixedBelowBarClassName = "blurFixedBelowBarClassName";
     this.fileTongClassName = "fileTongClassName";
+    this.greenTalkEventClassName = "greenTalkEventClassName";
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",
@@ -6126,14 +7056,14 @@ StyleExplanationJs.prototype.launching = async function (loading) {
 
 
 
-          GeneralJs.setQueue(() => {
-            const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
-            for (let dom of fadeOutTargets) {
-              dom.remove();
-            }
-          }, 0);
-          document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-642) + "px";
-          await instance.insertSeventhBox(secondBase);
+          // GeneralJs.setQueue(() => {
+          //   const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
+          //   for (let dom of fadeOutTargets) {
+          //     dom.remove();
+          //   }
+          // }, 0);
+          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-642) + "px";
+          // await instance.insertEighthBox(secondBase);
 
 
 

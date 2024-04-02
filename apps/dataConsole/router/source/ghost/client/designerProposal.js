@@ -4441,6 +4441,6 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     console.log(e);
     window.localStorage.clear();
     await ajaxJson({ message: "DesignerProposalJs.launching : " + (e.message === undefined ? JSON.stringify(e) : e.message) }, BACKHOST + "/errorLog");
-    window.location.href = FRONTHOST;
+    // window.location.href = FRONTHOST;
   }
 }
