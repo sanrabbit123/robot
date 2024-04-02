@@ -258,6 +258,8 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
   let questionBlock;
   let whiteMargin;
   let arrowZoneHeight;
+  let questionWording;
+  let completeWording;
 
   GeneralJs.stacks[stackName] = 0;
   GeneralJs.stacks[loadingName] = false;
@@ -265,21 +267,24 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
   pictureNumber = <%% 15, 12, 12, 12, 8 %%>;
   columnNumber = <%% 5, 4, 4, 4, 2 %%>;
 
-  innerMargin = 20;
+  innerMargin = 0;
   pictureMargin = <%% 6, 6, 6, 4, 1 %%>;
 
   pannelHeight = <%% 114, 114, 114, 90, 18 %%>;
-  pannelPaddingTop = <%% 32, 32, 32, 22, 0 %%>;
-  pannelWordsSize = <%% 23, 23, 23, 21, 4 %%>;
+  pannelPaddingTop = <%% 18, 18, 18, 18, 0 %%>;
+  pannelWordsSize = <%% 20, 20, 20, 20, 4 %%>;
   pannelWordsPadding = <%% 10, 10, 10, 10, 10 %%>;
-  pannelLineTop = <%% 25, 25, 25, 25, 25 %%>;
+  pannelLineTop = <%% 31, 31, 31, 31, 25 %%>;
 
-  arrowTop = <%% 21, 21, 21, 21, 2 %%>;
+  arrowTop = <%% 27, 27, 27, 27, 2 %%>;
   arrowWidth = <%% 10, 10, 10, 8, 2 %%>;
 
   arrowZoneHeight = <%% 28, 28, 28, 28, 28 %%>;
 
   whiteMargin = 0;
+
+  questionWording = "마음에 드는 사진을 <b%3장%b> 골라주세요!";
+  completeWording = "하단의 '<b%신청 완료하기%b>' 버튼을 눌러주세요!"
 
   image = [];
 
@@ -436,6 +441,7 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
           }
           mother.style.paddingTop = String(completePaddingTop) + ea;
           mother.querySelector("." + pictureBoxClassName).removeChild(loading);
+          mother.querySelector('.' + pictureWordingTargetClassName).textContent = completeWording;
           for (let dom of greenTargets) {
             dom.remove();
           }
@@ -715,6 +721,32 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
           cursor: "pointer"
         }
       },
+      {
+        class: [ pictureWordingTargetClassName ],
+        text: questionWording,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          textAlign: "center",
+          fontSize: String(pannelWordsSize) + ea,
+          fontWeight: String(300),
+          color: colorExtended.black,
+          paddingRight: desktop ? String(pannelWordsPadding) + ea : "",
+          paddingLeft: desktop ? String(pannelWordsPadding) + ea : "",
+          paddingTop: desktop ? (isMac() ? "" : String(2) + ea) : "",
+          background: colorChip.white,
+          width: desktop ? "" : String(100) + '%',
+          top: mobile ? String(-0.3) + ea : "",
+        },
+        bold: {
+          fontWeight: String(700),
+          color: colorExtended.black,
+        },
+        under: {
+          fontWeight: String(600),
+          color: colorExtended.focusBlue,
+        }
+      }
     ]
   });
 
@@ -4458,13 +4490,195 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
   }
 }
 
+StyleExplanationJs.prototype.fileChangeEvent = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, cleanChildren } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { fileTongClassName } = this;
+  let paddingTop;
+  let block;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let num;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let barTop;
+  let titleBottom;
+  let index;
+  let mobileTitleLeft, mobileTitleTop;
+  let grayHeight, grayWording, grayTextTop;
+  let pannelWordsSize;
+  let grayMargin;
+  let cardWidthNumber, cardHeightNumber, cardMargin, cardHeight;
+  let cardInnerMargin, cardInnerMarginTop;
+  let xIconWidth, xIconTop, xVisual;
+  let cardWordingSize;
+  let fileChangeEvent;
+
+  bottomMargin = <%% 16, 16, 16, 12, 4 %%>;
+  margin = <%% 52, 52, 44, 36, 4.7 %%>;
+  paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
+
+  titleFontSize = <%% 21, 21, 21, 21, 4.3 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  barTop = <%% 15, 15, 15, 15, 2.6 %%>;
+
+  titleBottom = <%% 15, 15, 15, 12, 0 %%>;
+  grayHeight = <%% 120, 120, 120, 120, 36 %%>;
+
+  pannelWordsSize = <%% 23, 23, 23, 21, 4 %%>;
+
+  grayTextTop = <%% 40, 40, 39, 39, 14 %%>;
+  grayMargin = <%% 16, 16, 16, 16, 3 %%>;
+  if (desktop) {
+    grayTextTop = grayTextTop + (isMac() ? 0 : 2);
+  }
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+
+  cardWidthNumber = <%% 8, 6, 5, 4, 2 %%>;
+  cardHeightNumber = <%% 2, 2, 2, 2, 3 %%>;
+  cardMargin = <%% 6, 6, 6, 6, 1 %%>;
+  cardHeight = (grayHeight - (desktop ? grayMargin * 2 : (grayMargin * 2) + 2) - (cardMargin * (cardHeightNumber - 1))) / cardHeightNumber;
+
+  cardWordingSize = <%% 13, 13, 13, 13, 3 %%>;
+  cardInnerMargin = <%% 16, 16, 16, 16, 3 %%>;
+  cardInnerMarginTop = <%% 11, 11, 11, 11, 2.1 %%>;
+  if (desktop) {
+    cardInnerMarginTop = cardInnerMarginTop + (isMac() ? 0 : 1);
+  }
+  xIconWidth = <%% 10, 10, 10, 10, 2 %%>;
+  xIconTop = <%% 14, 14, 14, 14, 3 %%>;
+  xVisual = <%% 4, 4, 4, 4, 1 %%>;
+
+  return function (e) {
+    const self = this;
+    const mother = document.querySelector('.' + fileTongClassName);
+    const cardMaker = (fileObj, index) => {
+      createNode({
+        mother,
+        events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } }, { type: "selectstart", event: (e) => { e.preventDefault(); } } ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: "calc(calc(100% - " + String(cardMargin * (cardWidthNumber - 1)) + ea + ") / " + String(cardWidthNumber) + ")",
+          height: String(cardHeight) + ea,
+          marginRight: String(index % cardWidthNumber === cardWidthNumber - 1 ? 0 : cardMargin) + ea,
+          marginBottom: String(cardMargin) + ea,
+          background: colorExtended.white,
+          borderRadius: String(3) + "px",
+        },
+        children: [
+          {
+            event: { selectstart: (e) => { e.preventDefault() } },
+            style: {
+              position: "relative",
+              top: String(cardInnerMarginTop) + ea,
+              left: String(cardInnerMargin) + ea,
+              width: withOut(xIconWidth + (cardInnerMargin * 2.8), ea),
+              height: withOut(cardInnerMarginTop, ea),
+              overflow: "hidden",
+            },
+            children: [
+              {
+                event: { selectstart: (e) => { e.preventDefault() } },
+                text: fileObj.name,
+                style: {
+                  position: "absolute",
+                  fontSize: String(cardWordingSize) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,
+                  width: String(900) + ea,
+                }
+              }
+            ]
+          },
+          {
+            attribute: [
+              { index }
+            ],
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  const index = Number(this.getAttribute("index"));
+                  let cancel;
+                  cancel = JSON.parse(instance.fileInput.getAttribute("cancel"));
+                  cancel.push(index);
+                  instance.fileInput.setAttribute("cancel", JSON.stringify(cancel));
+                  this.parentElement.parentElement.removeChild(this.parentElement);
+                  if (cancel.length === self.files.length) {
+                    self.previousElementSibling.style.display = "inline-block";
+                  } else {
+                    self.previousElementSibling.style.display = "none";
+                  }
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              background: colorChip.white,
+              width: String(xIconWidth) + ea,
+              height: String(xIconWidth) + ea,
+              right: String(cardInnerMargin) + ea,
+              top: String(xIconTop) + ea,
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  background: colorChip.white,
+                  width: String(xIconWidth + (xVisual * 2)) + ea,
+                  height: String(xIconWidth + (xVisual * 2)) + ea,
+                  right: String(-1 * xVisual) + ea,
+                  top: String(-1 * xVisual) + ea,
+                }
+              },
+              {
+                mode: "svg",
+                source: instance.mother.returnCancel(colorExtended.focusBlue),
+                style: {
+                  position: "absolute",
+                  background: colorChip.white,
+                  width: String(xIconWidth) + ea,
+                  right: String(0) + ea,
+                  top: String(0) + ea,
+                }
+              }
+            ]
+          }
+        ]
+      });
+    }
+    instance.fileInput.setAttribute("cancel", JSON.stringify([]));
+    cleanChildren(mother);
+    for (let i = 0; i < this.files.length; i++) {
+      cardMaker(this.files[i], i);
+    }
+
+    if (this.files.length === 0) {
+      this.previousElementSibling.style.display = "inline-block";
+    } else {
+      this.previousElementSibling.style.display = "none";
+    }
+  }
+}
+
 StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { fourthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName } = this;
+  const { fourthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName, fileTongClassName } = this;
   try {
     const fadeOutTargets = [ ...document.querySelectorAll('.' + fourthFadeOutTargetClassName) ];
     let minusLeft;
@@ -4523,6 +4737,11 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     let descriptionWeight;
     let descriptionVisualLeft;
     let styleCheckBaseMother;
+    let fileUploadBoxHeight;
+    let fileUploadBoxSize, fileUploadBoxWeight;
+    let grayMargin;
+    let grayTextTop;
+    let fileBlockMother;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -4605,6 +4824,16 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     processValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     convertingBaseHeight = <%% 1808, 1808, 1808, 1808, 1808 %%>;
+
+    fileUploadBoxHeight = <%% 180, 180, 180, 180, 180 %%>;
+    fileUploadBoxSize = <%% 24, 24, 24, 24, 24 %%>;
+    fileUploadBoxWeight = <%% 300, 300, 300, 300, 300 %%>;
+
+    grayTextTop = <%% 40, 40, 39, 39, 14 %%>;
+    grayMargin = <%% 16, 16, 16, 16, 3 %%>;
+    if (desktop) {
+      grayTextTop = grayTextTop + (isMac() ? 0 : 2);
+    }  
 
     processValuesRatio = 99.4;
 
@@ -4763,7 +4992,6 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
             display: "block",
             position: "relative",
             width: withOut(0, ea),
-            marginTop: String(yesButtonAreaMarginTop) + ea,
           },
           children: statusItems.map((o, index) => {
             return {
@@ -4878,15 +5106,184 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
             display: "block",
             position: "relative",
             width: withOut(0, ea),
-            borderRadius: String(10) + "px",
-            overflow: "hidden",
-            boxSizing: "border-box",
-            border: "1.5px solid " + colorExtended.mainBlue,
           },
         },
       ]
     });
     instance.styleCheck(styleCheckBaseMother.firstChild);
+
+    createNode({
+      mother: ghostBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        paddingTop: String(middleLinePaddingTop) + ea,
+        borderTop: "3px dotted " + colorExtended.blueWhite,
+      },
+      children: [
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: String(titleMarginTop) + ea,
+            flexDirection: "row",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(titleSquareWidth) + ea,
+                height: String(titleSquareWidth) + ea,
+                borderRadius: String(2) + "px",
+                background: colorExtended.mainBlue,
+                marginRight: String(titleSquareMarginRight) + ea,
+                top: String(titleSquareTop) + ea,
+              }
+            },
+            {
+              text: "현장 사진 혹은 도면이 있다면 업로드해주세요.",
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorExtended.black,
+              }
+            },
+          ]
+        },
+      ]
+    });
+    fileBlockMother = createNode({
+      mother: ghostBase,
+      event: { selectstart: (e) => { e.preventDefault() } },
+      style: {
+        display: "flex",
+        position: "relative",
+        marginTop: String(imageAreaMarginTop) + ea,
+        marginBottom: String(middleLineMarginBottom) + ea,
+        borderRadius: String(8) + "px",
+        width: withOut(0, ea),
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      children: [
+        {
+          events: [
+            {
+              type: "click",
+              event: function (e) {
+                this.querySelector("input").click();
+              }
+            },
+            {
+              type: "drop",
+              event: function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.querySelector("input").files = e.dataTransfer.files;
+                instance.fileChangeEvent().call(this.querySelector("input"), e);
+              }
+            },
+            {
+              type: [ "dragenter", "dragover", "dragleave" ],
+              event: (e) => { e.preventDefault(); e.stopPropagation(); }
+            },
+            {
+              type: "selectstart",
+              event: (e) => { e.preventDefault() },
+            }
+          ],
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            height: String(fileUploadBoxHeight) + ea,
+            borderRadius: String(10) + "px",
+            overflow: "hidden",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          children: [
+            {
+              style: {
+                position: "absolute",
+                top: String(0),
+                left: String(0),
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                background: colorExtended.gradientBlue,
+                opacity: String(0.7),
+              }
+            },
+            {
+              style: {
+                position: "absolute",
+                top: String(grayMargin + (desktop ? 0 : 2)) + ea,
+                left: String(grayMargin) + ea,
+                width: withOut(grayMargin * 2, ea),
+                height: withOut(grayMargin + grayMargin + (desktop ? 0 : 2), ea),
+                overflow: "scroll",
+                zIndex: String(1),
+              },
+              children: [
+                {
+                  class: [ fileTongClassName ],
+                  style: {
+                    position: "relative",
+                    width: String(100) + '%',
+                    top: String(0),
+                    left: String(0),
+                  }
+                }
+              ]
+            },
+            {
+              event: { selectstart: (e) => { e.preventDefault() } },
+              text: "클릭 또는 드래그하여 업로드...",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(blueDescriptionTextTop) + ea,
+                fontSize: String(fileUploadBoxSize) + ea,
+                fontWeight: String(fileUploadBoxWeight),
+                color: colorExtended.blueDark,
+              },
+            },
+            {
+              mode: "input",
+              events: [
+                {
+                  type: "change",
+                  event: instance.fileChangeEvent()
+                }
+              ],
+              attribute: [
+                { type: "file" },
+                { name: "upload" },
+                { accept: "image/*,  application/pdf" },
+                { multiple: "true" },
+                { cancel: JSON.stringify([]) }
+              ],
+              style: {
+                position: "absolute",
+                display: "none",
+              }
+            }
+          ]
+        },
+      ]
+    });
+    this.fileInput = fileBlockMother.querySelector("input");
 
     createNode({
       mother: ghostBase,
@@ -4933,6 +5330,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
         {
           event: {
             click: instance.secondConverting(),
+            selectstart: (e) => { e.preventDefault() }
           },
           style: {
             display: "inline-flex",
@@ -4947,6 +5345,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
             cursor: "pointer",
           },
           child: {
+            event: { selectstart: (e) => { e.preventDefault() } },
             text: "선택 완료",
             style: {
               display: "inline-flex",
@@ -5699,6 +6098,7 @@ StyleExplanationJs.prototype.launching = async function (loading) {
     this.secondFadeOutTargetClassName = "secondFadeOutTargetClassName";
     this.thirdFadeOutTargetClassName = "thirdFadeOutTargetClassName";
     this.fourthFadeOutTargetClassName = "fourthFadeOutTargetClassName";
+    this.fileTongClassName = "fileTongClassName";
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",

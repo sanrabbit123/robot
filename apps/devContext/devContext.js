@@ -7074,9 +7074,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "박태웅",
-    //     designer: "권미정",
-    //     link: "https://drive.google.com/drive/folders/1CYHWCBt6EuKy-G-d3lkIiyPxNpeJWT6K",
+    //     client: "김영빈",
+    //     designer: "공세미",
+    //     link: "https://drive.google.com/drive/folders/1qoiZLUjEKr4YHBVWBSYbeqGJbuAfUDuX",
     //     pay: true
     //   },
     // ]);

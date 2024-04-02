@@ -4875,7 +4875,6 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
 
   grayTextTop = <%% 40, 40, 39, 39, 14 %%>;
   grayMargin = <%% 16, 16, 16, 16, 3 %%>;
-
   if (desktop) {
     grayTextTop = grayTextTop + (isMac() ? 0 : 2);
   }
