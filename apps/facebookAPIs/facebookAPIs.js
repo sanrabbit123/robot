@@ -16,7 +16,7 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
   this.facebookUrl = "https://graph.facebook.com";
   this.facebookAppId = "4385911554783319";
   this.facebookAppSecret = "5c9ad0873f5983081b8ad1ba1855806e";
-  this.facebookToken = "EAAZBU9pw9OFcBOxZBOLeRyU5gjyj5IYIuwja4SIbsv8CI4GDAP6aIwekrOOG1QyvFxj6V4pUjxYEvhw23cd4TcyjWSNZB5Yxyhkkw5zZBmeFGEp1hl7bdUbS9FtqTQ33NKSYeKZA2MW1NuWETPKcNsfCaZAasrBTczTNcIZA9BX2THOZBHpAuio72pY0QIpFnGpU";
+  this.facebookToken = "EAAZBU9pw9OFcBO2rOp2s9knqPZARAMgK90w2E6GY6TGor5NXsyDTQDTnkH5qEHQeAadchgod6XbaKZBgnqYDhJoGZBgA7LgG2xaDLn5cYh8walIrgpWLWfkx6hQM062AsBPW8xIZCAjhZALHi1FWt5chfAbTXqtuftZCBzB1MecmcB42oCjMj4ZBLOvqDtGICVlv";
   this.facebookPageId = "290144638061244";
   this.instagramId = "17841405547472752";
   this.facebookAdId = "505249990112820";
@@ -628,7 +628,7 @@ FacebookAPIs.prototype.getAccessToken = async function () {
     const url = "https://graph.facebook.com/oauth/access_token";
     let res, token;
 
-    token = "EAAZBU9pw9OFcBO8ysYsZAaKe6zy0ZCcByJ38L00AxperPNUxcIiMgmeSMby1IyRanZC73q1rTLZAWAxs7lUMokm6IDkTWraBSBJ3FZARibcAua5fPU51tTxU29bWoCj4ZCTbwNlqZBkMHQuC2rgruIY0i9oQBLuqpZBruqrVbHIyd6r5ZCbuJc92mUtZBCGHf9zD2yMbR777q8IR15K7hSGOutpQAbTSzmZBEN5Kw6MZD";
+    token = "EAAZBU9pw9OFcBO9M9jp0nLtfV8ZC4ZBvZAjDYPya42Wh7lZCJbpLjMPzLEgZBlztbfLsClMldZBN0WhaWRDPvdYrUKtOCoYazp1QU6anaTE0a6fn4ZAEzChSSyCNNeAT5gbkq852f1uXrSqfN2RN0BNSZCc6HiY0doauLtkXeNu2a3w54PBi7vjL2Bt6O7bogZAPFV1ZArmaFaYWZCh0T0uhIfh3fFyATwWfcy7Oltfd";
 
     res = await requestSystem(url, {
       grant_type: "fb_exchange_token",
