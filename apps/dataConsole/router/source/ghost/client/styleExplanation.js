@@ -1029,6 +1029,11 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
   const mobile = media[4];
   const desktop = !mobile;
   const { firstFadeOutTargetClassName, secondBaseClassName } = this;
+  const colorConvertPoint0ClassName = "colorConvertPoint0ClassName";
+  const colorConvertPoint1ClassName = "colorConvertPoint1ClassName";
+  const colorConvertPoint2ClassName = "colorConvertPoint2ClassName";
+  const selectionBaseClassName = "selectionBaseClassName";
+  const finalSelectionCompleteFirstButtonClassName = "finalSelectionCompleteFirstButtonClassName";
   try {
     let minusLeft;
     let secondBase;
@@ -1076,6 +1081,9 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     let selectionDomMaker;
     let numbersAreaMarginTop;
     let originalSecondBaseHeight;
+    let transitionString;
+    let selectionForceEvent;
+    let focusAnimation;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -1147,42 +1155,21 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
 
     originalSecondBaseHeight = <%% 1398, 1398, 1398, 1398, 1398 %%>;
 
-    textContent = [
-      {
-        title: "홈퍼니싱",
-        description: [
-          "시공 없이 스타일링만!",
-          "가구 소품 패브릭 조명으로 진행",
-        ],
-        source: StyleExplanationJs.binaryPath + "/service_f.svg",
-        plus: false,
-        default: false,
-        margin: false,
-      },
-      {
-        title: "홈스타일링",
-        description: [
-          "부분 시공 (빌트인 제작 가구 포함)",
-          "스타일링 (가구 소품 패브릭)",
-        ],
-        source: StyleExplanationJs.binaryPath + "/service_s.svg",
-        plus: true,
-        default: true,
-        margin: true,
-      },
-      {
-        title: "토탈 스타일링",
-        description: [
-          "전체 시공 (주방 혹은 화장실 설비 교체 포함)",
-          "스타일링 (가구 소품 패브릭)",
-        ],
-        source: StyleExplanationJs.binaryPath + "/service_t.svg",
-        plus: true,
-        default: false,
-        margin: false,
-      },
-    ];
-    boxWidth = (standardWidth - (betweenMargin * (textContent.length - 1))) / textContent.length;
+    instance.animationStop = true;
+    focusAnimation = "focusProgress 4s ease infinite";
+
+    selectionForceEvent = (isOn = true) => {
+      const target = document.querySelector('.' + finalSelectionCompleteFirstButtonClassName);
+      if (isOn) {
+        target.style.animation = focusAnimation;
+        target.style.background = colorExtended.ultimateBlack;
+      } else {
+        target.style.animation = "";
+        target.style.background = colorExtended.darkBlack;
+      }
+    }
+
+    transitionString = "all 0.4s ease";
 
     secondBase = createNode({
       mother: baseTong,
@@ -1220,6 +1207,48 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     });
 
     selectionDomMaker = (secondBase, returnMode = false) => {
+
+      textContent = [
+        {
+          title: "홈퍼니싱",
+          description: [
+            "시공 없이 스타일링만!",
+            "가구 소품 패브릭 조명으로 진행",
+          ],
+          source: StyleExplanationJs.binaryPath + "/service_f.svg",
+          plus: false,
+          default: instance.totalValues[0] === null ? false : (instance.totalValues[0] === 0),
+          margin: false,
+        },
+        {
+          title: "홈스타일링",
+          description: [
+            "부분 시공 (빌트인 제작 가구 포함)",
+            "스타일링 (가구 소품 패브릭)",
+          ],
+          source: StyleExplanationJs.binaryPath + "/service_s.svg",
+          plus: true,
+          default: instance.totalValues[0] === null ? true : (instance.totalValues[0] === 1),
+          margin: true,
+        },
+        {
+          title: "토탈 스타일링",
+          description: [
+            "전체 시공 (주방 혹은 화장실 설비 교체 포함)",
+            "스타일링 (가구 소품 패브릭)",
+          ],
+          source: StyleExplanationJs.binaryPath + "/service_t.svg",
+          plus: true,
+          default: instance.totalValues[0] === null ? false : (instance.totalValues[0] === 2),
+          margin: false,
+        },
+      ];
+      boxWidth = (standardWidth - (betweenMargin * (textContent.length - 1))) / textContent.length;
+
+      if (returnMode) {
+        secondBase.style.height = String(originalSecondBaseHeight) + ea;
+      }
+
       wordsMother = createNode({
         mother: secondBase,
         class: [ firstFadeOutTargetClassName ],
@@ -1346,6 +1375,98 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
         }
         serviceBase = createNode({
           mother: thisMother,
+          attribute: {
+            index: String(index),
+            toggle: (target.default ? "on" : "off"),
+            draggable: "false",
+          },
+          class: [ selectionBaseClassName ],
+          event: {
+            click: async function (e) {
+              try {
+                const itemList = [ ...document.querySelectorAll('.' + selectionBaseClassName) ];
+                const index = Number(this.getAttribute("index"));
+                const valueIndex = 0;
+                const toggle = this.getAttribute("toggle");
+                let target0, target1, target2;
+                if (toggle === "on") {
+                  for (let dom of itemList) {
+
+                    target0 = dom.querySelector('.' + colorConvertPoint0ClassName);
+                    target1 = dom.querySelector('.' + colorConvertPoint1ClassName);
+                    target2 = dom.querySelector('.' + colorConvertPoint2ClassName);
+
+                    if (Number(dom.getAttribute("index")) === index) {
+                      dom.style.opacity = String(0.5);
+                      dom.setAttribute("toggle", "off");
+                      target1.style.background = colorExtended.blueDark;
+                      target1.firstChild.style.color = colorExtended.darkBlack;
+                      target2.style.opacity = String(1);
+                    } else {
+                      dom.style.opacity = String(0.5);
+                      dom.setAttribute("toggle", "off");
+                      target1.style.background = colorExtended.blueDark;
+                      target1.firstChild.style.color = colorExtended.darkBlack;
+                      target2.style.opacity = String(1);
+                    }
+                  }
+                  instance.totalValues[valueIndex] = null;
+                  selectionForceEvent(false);
+                } else {
+                  for (let dom of itemList) {
+
+                    target0 = dom.querySelector('.' + colorConvertPoint0ClassName);
+                    target1 = dom.querySelector('.' + colorConvertPoint1ClassName);
+                    target2 = dom.querySelector('.' + colorConvertPoint2ClassName);
+
+                    if (Number(dom.getAttribute("index")) === index) {
+                      dom.style.opacity = String(1);
+                      dom.setAttribute("toggle", "on");
+                      target1.style.background = colorExtended.blueDim;
+                      target1.firstChild.style.color = colorExtended.white;
+                      target2.style.opacity = String(0);
+                    } else {
+                      dom.style.opacity = String(0.5);
+                      dom.setAttribute("toggle", "off");
+                      target1.style.background = colorExtended.blueDark;
+                      target1.firstChild.style.color = colorExtended.darkBlack;
+                      target2.style.opacity = String(1);
+                    }
+                  }
+                  instance.totalValues[valueIndex] = index;
+                  selectionForceEvent(true);
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            },
+            mouseenter: function (e) {
+              if (!instance.animationStop) {
+                const toggle = this.getAttribute("toggle");
+                const target0 = this.querySelector('.' + colorConvertPoint0ClassName);
+                const target1 = this.querySelector('.' + colorConvertPoint1ClassName);
+                this.style.opacity = String(1);
+                target0.firstChild.style.color = colorExtended.focusBlue;
+                target1.style.background = colorExtended.blueDim;
+                target1.firstChild.style.color = colorExtended.white;
+              }
+            },
+            mouseleave: function (e) {
+              if (!instance.animationStop) {
+                const toggle = this.getAttribute("toggle");
+                const target0 = this.querySelector('.' + colorConvertPoint0ClassName);
+                const target1 = this.querySelector('.' + colorConvertPoint1ClassName);
+                if (toggle === "on") {
+                  this.style.opacity = String(1);
+                } else {
+                  this.style.opacity = String(0.5);
+                  target1.style.background = colorExtended.blueDark;
+                  target1.firstChild.style.color = colorExtended.darkBlack;
+                }
+                target0.firstChild.style.color = colorExtended.black;
+              }
+            }
+          },
           style: {
             display: "inline-flex",
             position: "relative",
@@ -1356,11 +1477,13 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
             opacity: String(target.default ? 1 : 0.5),
             marginLeft: (desktop && target.margin) ? String(betweenMargin) + ea : "",
             marginRight: (desktop && target.margin) ? String(betweenMargin) + ea : "",
+            transition: transitionString,
+            cursor: "pointer",
           }
         });
-  
         createNode({
           mother: serviceBase,
+          class: [ colorConvertPoint0ClassName ],
           style: {
             display: "inline-flex",
             position: "relative",
@@ -1371,6 +1494,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
             alignItems: "center",
             justifyContent: "center",
             boxShadow: "0px 2px 12px -9px " + colorExtended.darkShadow,
+            transition: transitionString,
           },
           child: {
             text: target.title,
@@ -1381,10 +1505,10 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
               fontWeight: String(serviceNameWeight),
               color: colorExtended.black,
               top: String(serviceNameTop) + ea,
+              transition: transitionString,
             }
           }
         });
-  
         createNode({
           mother: serviceBase,
           style: {
@@ -1423,7 +1547,6 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
             opacity: String(0.4),
           }
         });
-  
         createNode({
           mother: serviceBase,
           style: {
@@ -1450,7 +1573,6 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
             }
           }
         });
-  
         createNode({
           mother: serviceBase,
           style: {
@@ -1471,19 +1593,20 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
             }
           }
         });
-  
         createNode({
           mother: serviceBase,
+          class: [ colorConvertPoint1ClassName ],
           style: {
             display: "inline-flex",
             position: "relative",
             width: String(boxWidth) + ea,
             height: String(serviceDescriptionHeight) + ea,
             borderRadius: String(8) + "px",
-            background: colorExtended.blueDark,
+            background: (target.default ? colorExtended.blueDim : colorExtended.blueDark),
             alignItems: "center",
             justifyContent: "center",
             boxShadow: "0px 2px 12px -9px " + colorExtended.blueDim,
+            transition: transitionString,
           },
           child: {
             text: target.description.join(target.plus ? "\n<b%+%b>" : "\n"),
@@ -1492,10 +1615,11 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
               position: "relative",
               fontSize: String(serviceDescriptionSize) + ea,
               fontWeight: String(serviceDescriptionWeight),
-              color: colorExtended.darkBlack,
+              color: (target.default ? colorExtended.white : colorExtended.darkBlack),
               textAlign: "center",
               lineHeight: String(serviceDescriptionLineHeight),
               top: String(serviceDescriptionTextTop) + ea,
+              transition: transitionString,
             },
             bold: {
               display: "inline-flex",
@@ -1515,7 +1639,6 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
             }
           }
         });
-  
         createNode({
           mother: serviceBase,
           style: {
@@ -1543,6 +1666,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
                 width: String(checkCircleWidth) + ea,
               },
               previous: {
+                class: [ colorConvertPoint2ClassName ],
                 style: {
                   position: "absolute",
                   top: String(0),
@@ -1557,7 +1681,6 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
             }
           }
         });
-  
       }
       for (let i = 0; i < textContent.length; i++) {
         createServiceBlock(i);
@@ -1579,8 +1702,24 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
         },
         child: {
+          class: [ finalSelectionCompleteFirstButtonClassName ],
           event: {
-            click: instance.firstConverting(),
+            click: async function (e) {
+              const targets = [ ...document.querySelectorAll('.' + selectionBaseClassName) ];
+              const target = targets.find((d) => { return d.getAttribute("toggle") === "on" });
+              let convertingFunction, thisIndex;
+              if (target === undefined) {
+                window.alert("서비스를 선택해주세요!");
+              } else {
+                thisIndex = Number(target.getAttribute("index"));
+                if (thisIndex === 0) {
+                  convertingFunction = instance.thirdConverting(true).bind(this);
+                } else {
+                  convertingFunction = instance.firstConverting().bind(this);
+                }
+                await convertingFunction(e);
+              }
+            }
           },
           style: {
             display: "inline-flex",
@@ -1593,6 +1732,11 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
             alignItems: "center",
             border: "1px solid " + colorExtended.blueDark,
             cursor: "pointer",
+            opacity: String(1),
+            transformOrigin: "center",
+            transform: "scale(1)",
+            animation: "",
+            transition: "all 0.5s ease",
           },
           child: {
             text: "선택 완료",
@@ -1619,6 +1763,162 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
   }
 }
 
+StyleExplanationJs.prototype.constructPopupEvent = async function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const promptAsideClassName = "promptAsideClassName";
+  try {
+    const zIndex = 5;
+    let blackTongBase, blockPrompt;
+    let whiteWidth;
+    let whiteHeight;
+    let paddingTop;
+    let paddingLeft;
+    let paddingBottom;
+    let size0, size1;
+    let wordingVisual;
+    let returnEvent;
+    let timeOutEventId;
+    let delta;
+
+    whiteWidth = 580;
+    whiteHeight = 180;
+    paddingTop = 17;
+    paddingLeft = 23;
+    paddingBottom = 62;
+    size1 = 16;
+    wordingVisual = GeneralJs.isMac() ? -1 : 1;
+    delta = 5 * 1000;
+
+    timeOutEventId = {};
+
+    returnEvent = () => {
+      return async function (e) {
+        try {
+          const convertingFunc = instance.firstReturn().bind(this);
+          await convertingFunc(e);
+          clearTimeout(timeOutEventId);
+          removeByClass(promptAsideClassName);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    timeOutEventId = setTimeout(async () => {
+      try {
+        const converting = returnEvent();
+        await converting(new Event("click", { bubbles: true }));
+        clearTimeout(timeOutEventId);
+      } catch (e) {
+        console.log(e);
+      }
+    }, delta);
+
+    blackTongBase = createNode({
+      mode: "aside",
+      mother: document.body,
+      class: [ promptAsideClassName ],
+      event: {
+        contextmenu: (e) => { e.stopPropagation(); },
+        dblclick: (e) => { e.stopPropagation(); },
+        drop: (e) => { e.stopPropagation(); },
+        keyup: (e) => { e.stopPropagation(); },
+        keydown: (e) => { e.stopPropagation(); },
+        keypress: (e) => { e.stopPropagation(); },
+        click: returnEvent(),
+      },
+      style: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "fixed",
+        top: String(0) + "vh",
+        left: String(1) + "vw",
+        width: String(98) + "vw",
+        height: "calc(100vh - " + String(0) + ea + ")",
+        background: "transparent",
+        zIndex: String(zIndex),
+        cursor: "pointer",
+      }
+    });
+  
+    blockPrompt = createNode({
+      mother: blackTongBase,
+      event: {
+        click: (e) => { e.stopPropagation(); },
+      },
+      style: {
+        display: "flex",
+        position: "relative",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        width: String(whiteWidth) + ea,
+        height: String(whiteHeight) + ea,
+        borderRadius: String(10) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorExtended.ultimateBlack,
+        background: colorExtended.darkBlack,
+        animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
+      }
+    });
+
+    createNode({
+      mother: blockPrompt,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(36) + ea,
+        height: String(36) + ea,
+        borderRadius: String(36) + ea,
+        border: "1px solid " + colorExtended.white,
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: String(12) + ea,
+      },
+      child: {
+        text: "!",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(1) + ea,
+          fontSize: String(28) + ea,
+          fontWeight: String(700),
+          color: colorExtended.mainBlue,
+          fontFamily: "cabinet",
+        }
+      }
+    });
+
+    createNode({
+      mother: blockPrompt,
+      text: [
+        "화장실 시공, 주방 시공과 같은 전체 철거는 토탈 스타일링 서비스에 해당합니다.",
+        "포함되는 경우 토탈 스타일링 유형을 선택해 주세요.",
+      ].join("\n"),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(size1) + ea,
+        fontWeight: String(700),
+        color: colorExtended.white,
+        top: String(wordingVisual) + ea,
+        lineHeight: String(1.7),
+        textAlign: "center",
+        marginBottom: String(5) + ea,
+      }
+    });
+
+    
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
@@ -1626,6 +1926,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
   const mobile = media[4];
   const desktop = !mobile;
   const { firstFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName, secondFadeOutTargetClassName } = this;
+  const selectionBaseThirdClassName = "selectionBaseThirdClassName";
   try {
     const fadeOutTargets = [ ...document.querySelectorAll('.' + firstFadeOutTargetClassName) ];
     let minusLeft;
@@ -1661,6 +1962,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
     let returnCircleMarginRight;
     let returnCicleArrowWidth, returnCicleArrowLeft;
     let tempSecondHeight;
+    let thirdSelectionEvent;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -1713,7 +2015,56 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
 
     tempSecondHeight = <%% 1067.84, 1067.84, 1067.84, 1067.84, 1067.84 %%>;
 
+    thirdSelectionEvent = (index) => {
+      return async function (e) {
+        try {
+          const targets = document.querySelectorAll('.' + selectionBaseThirdClassName);
+          const index = Number(this.getAttribute("index"));
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "on") {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+              } else {
+                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.background = colorExtended.mainBlue;
+                dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                dom.firstChild.style.color = colorExtended.darkBlack;
+                dom.setAttribute("toggle", "on");
+                instance.totalValues[1] = Number(dom.getAttribute("index"));
+              }
+            }
+          } else {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.background = colorExtended.mainBlue;
+                dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                dom.firstChild.style.color = colorExtended.darkBlack;
+                dom.setAttribute("toggle", "on");
+                instance.totalValues[1] = Number(dom.getAttribute("index"));
+              } else {
+                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+              }
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
     ghostBase = {};
+
+    instance.totalValues[1] = 1;
 
     thirdBase.children[1].style.opacity = String(0);
     await instance.insertSecondBarBox(20);
@@ -1741,7 +2092,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
         transform: "translateX(20px)",
         alignItems: "center",
       }
-    })
+    });
 
     createNode({
       mother: ghostBase,
@@ -1839,8 +2190,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
           ]
         },
       ]
-    })
-
+    });
     createNode({
       mother: ghostBase,
       style: {
@@ -1878,6 +2228,15 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
           },
           children: [
             {
+              class: [ selectionBaseThirdClassName ],
+              attribute: {
+                toggle: "off",
+                index: String(0),
+              },
+              event: {
+                selectstart: (e) => { e.preventDefault() },
+                click: thirdSelectionEvent(0),
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -1889,9 +2248,15 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
+                background: colorExtended.white,
+                boxShadow: "",
                 marginRight: String(yesButtonBetween) + ea,
+                cursor: "pointer",
               },
               child: {
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                },
                 text: "아니요",
                 style: {
                   display: "inline-block",
@@ -1904,6 +2269,15 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
               }
             },
             {
+              class: [ selectionBaseThirdClassName ],
+              attribute: {
+                toggle: "on",
+                index: String(1),
+              },
+              event: {
+                selectstart: (e) => { e.preventDefault() },
+                click: thirdSelectionEvent(1),
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -1917,8 +2291,12 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
                 justifyContent: "center",
                 background: colorExtended.mainBlue,
                 boxShadow: "0px 3px 15px -9px " + colorExtended.darkShadow,
+                cursor: "pointer",
               },
               child: {
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                },
                 text: "예",
                 style: {
                   display: "inline-block",
@@ -1933,8 +2311,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
           ]
         }
       ]
-    })
-
+    });
     createNode({
       mother: ghostBase,
       style: {
@@ -1979,7 +2356,15 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
         },
         {
           event: {
-            click: instance.secondConverting(),
+            click: async function (e) {
+              let convertingFunction;
+              if (instance.totalValues[0] === 2 && instance.totalValues[1] === 0) {
+                await instance.constructPopupEvent();
+              } else {
+                convertingFunction = instance.secondConverting().bind(this);
+                await convertingFunction(e);
+              }
+            },
           },
           style: {
             display: "inline-flex",
@@ -2020,6 +2405,8 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
   const mobile = media[4];
   const desktop = !mobile;
   const { secondFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName } = this;
+  const selectionBaseFourthClassName0 = "selectionBaseFourthClassName0";
+  const selectionBaseFourthClassName1 = "selectionBaseFourthClassName1";
   try {
     const fadeOutTargets = [ ...document.querySelectorAll('.' + secondFadeOutTargetClassName) ];
     let minusLeft;
@@ -2060,6 +2447,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     let middleLineMarginBottom;
     let middleLinePaddingTop;
     let blueDescriptionSize, blueDescriptionWeight, blueDescriptionBoldWeight, blueDescriptionTextTop;
+    let tempSecondHeight;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -2118,6 +2506,8 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     blueDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blueDescriptionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
     blueDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+    tempSecondHeight = <%% 1067.84, 1067.84, 1067.84, 1067.84, 1067.84 %%>;
 
     constructItems = [
       {
@@ -2188,6 +2578,8 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
 
     fourthBase.children[1].style.opacity = String(0);
     await instance.insertSecondBarBox(40);
+    fourthBase.style.transition = "all 0.6 ease";
+    fourthBase.style.height = String(tempSecondHeight) + ea;
     setQueue(() => {
       for (let dom of fadeOutTargets) {
         dom.remove();
@@ -2524,7 +2916,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
       children: [
         {
           event: {
-            click: instance.firstReturn(),
+            click: instance.secondReturn(),
           },
           style: {
             display: "inline-flex",
@@ -2587,14 +2979,15 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
   }
 }
 
-StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase) {
+StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnishingMode = false) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { fourthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName } = this;
+  const { firstFadeOutTargetClassName, fourthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName } = this;
   try {
+    const fadeOutTargets0 = [ ...document.querySelectorAll('.' + firstFadeOutTargetClassName) ];
     const fadeOutTargets = [ ...document.querySelectorAll('.' + thirdFadeOutTargetClassName) ];
     let minusLeft;
     let descriptionSize;
@@ -2778,6 +3171,9 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase) {
     fourthBase.style.transition = "all 0.6s ease";
     fourthBase.style.height = String(convertingBaseHeight) + ea;
     setQueue(() => {
+      for (let dom of fadeOutTargets0) {
+        dom.remove();
+      }
       for (let dom of fadeOutTargets) {
         dom.remove();
       }
@@ -3486,7 +3882,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase) {
       children: [
         {
           event: {
-            click: instance.firstReturn(),
+            click: instance.thirdReturn(furnishingMode),
           },
           style: {
             display: "inline-flex",
@@ -4427,7 +4823,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
       children: [
         {
           event: {
-            click: instance.firstReturn(),
+            click: instance.fourthReturn(),
           },
           style: {
             display: "inline-flex",
@@ -5300,7 +5696,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
       children: [
         {
           event: {
-            click: instance.firstReturn(),
+            click: instance.fifthReturn(),
           },
           style: {
             display: "inline-flex",
@@ -6190,10 +6586,8 @@ StyleExplanationJs.prototype.firstConverting = function () {
       numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
 
       blackTarget.style.transition = "all 0.6s ease";
-      scrollTo(window, 0, 0, true);
-
       if (blackTarget.style.marginTop.replace(/[^0-9\-]/gi, '') === String(blackScrollTop)) {
-        setQueue(() => {
+        scrollTo(window, 0, 0, false, async () => {
           for (let dom of fadeOutTargets) {
             dom.style.animation = "fadeoutlite 0.6s ease forwards";
           }
@@ -6201,9 +6595,10 @@ StyleExplanationJs.prototype.firstConverting = function () {
             instance.insertThirdBox(document.querySelector('.' + secondBaseClassName)).catch((err) => {
               console.log(err);
             });
-          }, 450);
-        }, 0);
+          }, 600);
+        });
       } else {
+        scrollTo(window, 0, 0, true);
         setQueue(() => {
           blackTarget.style.marginTop = String(blackScrollTop) + ea;
           fadeOutTargets[0].style.marginTop = String(numbersAreaMarginTop) + ea;
@@ -6241,9 +6636,7 @@ StyleExplanationJs.prototype.secondConverting = function () {
       blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
       numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
 
-      scrollTo(window, 0, 0);
-
-      setQueue(() => {
+      scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
           dom.style.animation = "fadeoutlite 0.6s ease forwards";
         }
@@ -6251,44 +6644,89 @@ StyleExplanationJs.prototype.secondConverting = function () {
           instance.insertFourthBox(document.querySelector('.' + secondBaseClassName)).catch((err) => {
             console.log(err);
           });
-        }, 450);
-      }, 0);
+        }, 600);
+      });
     } catch (e) {
       console.log(e);
     }
   }
 }
 
-StyleExplanationJs.prototype.thirdConverting = function () {
+StyleExplanationJs.prototype.thirdConverting = function (furnishingMode = false) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { initAreaClassName, thirdFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName } = this;
-  return async function (e) {
-    try {
-      const fadeOutTargets = [ ...document.querySelectorAll('.' + thirdFadeOutTargetClassName) ];
-      let blackScrollTop;
-      let numbersAreaMarginTop;
-
-      blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
-
-      scrollTo(window, 0, 0);
-
-      setQueue(() => {
-        for (let dom of fadeOutTargets) {
-          dom.style.animation = "fadeoutlite 0.6s ease forwards";
-        }
-        setQueue(() => {
-          instance.insertFifthBox(document.querySelector('.' + secondBaseClassName)).catch((err) => {
-            console.log(err);
+  const { initAreaClassName, firstFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName } = this;
+  if (!furnishingMode) {
+    return async function (e) {
+      try {
+        const fadeOutTargets = [ ...document.querySelectorAll('.' + thirdFadeOutTargetClassName) ];
+        let blackScrollTop;
+        let numbersAreaMarginTop;
+  
+        blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
+        numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+  
+        scrollTo(window, 0, 0, false, async () => {
+          for (let dom of fadeOutTargets) {
+            dom.style.animation = "fadeoutlite 0.6s ease forwards";
+          }
+          setQueue(() => {
+            instance.insertFifthBox(document.querySelector('.' + secondBaseClassName), furnishingMode).catch((err) => {
+              console.log(err);
+            });
+          }, 600);
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  } else {
+    return async function (e) {
+      try {
+        const secondBase = document.querySelector('.' + secondBaseClassName);
+        const blackTarget = document.querySelector('.' + initAreaClassName);
+        const fadeOutTargets = [ ...document.querySelectorAll('.' + firstFadeOutTargetClassName) ];
+        let blackScrollTop;
+        let numbersAreaMarginTop;
+  
+        blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
+        numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+  
+        blackTarget.style.transition = "all 0.6s ease";
+        if (blackTarget.style.marginTop.replace(/[^0-9\-]/gi, '') === String(blackScrollTop)) {
+          scrollTo(window, 0, 0, false, async () => {
+            for (let dom of fadeOutTargets) {
+              dom.style.animation = "fadeoutlite 0.6s ease forwards";
+            }
+            setQueue(() => {
+              instance.insertFifthBox(document.querySelector('.' + secondBaseClassName), furnishingMode).catch((err) => {
+                console.log(err);
+              });
+            }, 600);
           });
-        }, 450);
-      }, 0);
-    } catch (e) {
-      console.log(e);
+        } else {
+          scrollTo(window, 0, 0, true);
+          setQueue(() => {
+            blackTarget.style.marginTop = String(blackScrollTop) + ea;
+            fadeOutTargets[0].style.marginTop = String(numbersAreaMarginTop) + ea;
+            setQueue(() => {
+              for (let dom of fadeOutTargets) {
+                dom.style.animation = "fadeoutlite 0.6s ease forwards";
+              }
+              setQueue(() => {
+                instance.insertFifthBox(secondBase, furnishingMode).catch((err) => {
+                  console.log(err);
+                });
+              }, 450);
+            }, 600);
+          }, 300);
+        }
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 }
@@ -6309,9 +6747,7 @@ StyleExplanationJs.prototype.fourthConverting = function () {
       blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
       numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
 
-      scrollTo(window, 0, 0);
-
-      setQueue(() => {
+      scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
           dom.style.animation = "fadeoutlite 0.6s ease forwards";
         }
@@ -6319,8 +6755,9 @@ StyleExplanationJs.prototype.fourthConverting = function () {
           instance.insertSixthBox(document.querySelector('.' + secondBaseClassName)).catch((err) => {
             console.log(err);
           });
-        }, 450);
-      }, 0);
+        }, 600);
+      });
+
     } catch (e) {
       console.log(e);
     }
@@ -6343,9 +6780,7 @@ StyleExplanationJs.prototype.fifthConverting = function () {
       blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
       numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
 
-      scrollTo(window, 0, 0);
-
-      setQueue(() => {
+      scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
           dom.style.animation = "fadeoutlite 0.6s ease forwards";
         }
@@ -6353,8 +6788,9 @@ StyleExplanationJs.prototype.fifthConverting = function () {
           instance.insertSeventhBox(document.querySelector('.' + secondBaseClassName)).catch((err) => {
             console.log(err);
           });
-        }, 450);
-      }, 0);
+        }, 600);
+      });
+
     } catch (e) {
       console.log(e);
     }
@@ -6377,9 +6813,7 @@ StyleExplanationJs.prototype.sixthConverting = function () {
       blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
       numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
 
-      scrollTo(window, 0, 0);
-
-      setQueue(() => {
+      scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
           dom.style.animation = "fadeoutlite 0.6s ease forwards";
         }
@@ -6387,8 +6821,9 @@ StyleExplanationJs.prototype.sixthConverting = function () {
           instance.insertEighthBox(document.querySelector('.' + secondBaseClassName)).catch((err) => {
             console.log(err);
           });
-        }, 450);
-      }, 0);
+        }, 600);
+      });
+
     } catch (e) {
       console.log(e);
     }
@@ -6979,6 +7414,93 @@ StyleExplanationJs.prototype.firstReturn = function () {
   }
 }
 
+StyleExplanationJs.prototype.secondReturn = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { initAreaClassName, firstFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName, ghostBaseClassName, secondBarBoxMotherClassName } = this;
+  return async function (e) {
+    try {
+      scrollTo(window, 0, 0);
+      document.querySelector('.' + ghostBaseClassName).remove();
+      await instance.insertThirdBox(document.querySelector('.' + secondBaseClassName));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+StyleExplanationJs.prototype.thirdReturn = function (furnishingMode = false) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { initAreaClassName, firstFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName, ghostBaseClassName, secondBarBoxMotherClassName } = this;
+  if (!furnishingMode) {
+    return async function (e) {
+      try {
+        scrollTo(window, 0, 0);
+        document.querySelector('.' + ghostBaseClassName).remove();
+        await instance.insertFourthBox(document.querySelector('.' + secondBaseClassName));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  } else {
+    return async function (e) {
+      try {
+        scrollTo(window, 0, 0);
+        document.querySelector('.' + ghostBaseClassName).remove();
+        instance.selectionDomMaker(document.querySelector('.' + secondBaseClassName), true);
+        document.querySelector('.' + secondBaseClassName).children[1].style.opacity = String(1);
+        removeByClass(secondBarBoxMotherClassName);
+        await instance.insertBarBox();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+}
+
+StyleExplanationJs.prototype.fourthReturn = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { initAreaClassName, firstFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName, ghostBaseClassName, secondBarBoxMotherClassName } = this;
+  return async function (e) {
+    try {
+      scrollTo(window, 0, 0);
+      document.querySelector('.' + ghostBaseClassName).remove();
+      await instance.insertFifthBox(document.querySelector('.' + secondBaseClassName));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+StyleExplanationJs.prototype.fifthReturn = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { initAreaClassName, firstFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName, ghostBaseClassName, secondBarBoxMotherClassName } = this;
+  return async function (e) {
+    try {
+      scrollTo(window, 0, 0);
+      document.querySelector('.' + ghostBaseClassName).remove();
+      await instance.insertSixthBox(document.querySelector('.' + secondBaseClassName));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 StyleExplanationJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -7030,6 +7552,11 @@ StyleExplanationJs.prototype.launching = async function (loading) {
     this.fileTongClassName = "fileTongClassName";
     this.greenTalkEventClassName = "greenTalkEventClassName";
 
+    this.animationStop = false;
+
+    this.questionNumber = 14;
+    this.totalValues = (new Array(this.questionNumber)).fill(null, 0);
+
     await this.mother.ghostClientLaunching({
       mode: "ghost",
       name: "styleExplanation",
@@ -7050,6 +7577,22 @@ StyleExplanationJs.prototype.launching = async function (loading) {
           await instance.insertInitBox();
           const secondBase = await instance.insertSecondBox();
           await instance.insertBarBox();
+
+
+
+          GeneralJs.setQueue(() => {
+            const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
+            for (let dom of fadeOutTargets) {
+              dom.remove();
+            }
+            instance.totalValues[0] = 2;
+            instance.totalValues[1] = 1;
+          }, 0);
+          document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-642) + "px";
+          await instance.insertFourthBox(secondBase);
+
+
+
           instance.resizeEvent();
           setInterval(() => {
             homeliaisonAnalytics({

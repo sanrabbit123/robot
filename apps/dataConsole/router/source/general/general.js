@@ -1182,6 +1182,29 @@ GeneralJs.prototype.generalCss = function (justTextMode = false) {
     }
   }
 
+  @keyframes focusProgress {
+    from {
+      transform: scale(0deg);
+      opacity: 1;
+    }
+    25% {
+      transform: scale(0.92);
+      opacity: 0.9;
+    }
+    50% {
+      transform: scale(1.08);
+      opacity: 1;
+    }
+    75% {
+      transform: scale(0.92);
+      opacity: 0.9;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
   @keyframes rotateProgress {
     from {
       transform: rotate(0deg);
@@ -3809,7 +3832,6 @@ GeneralJs.prototype.greenBar = function () {
       }
     }
   }, 200);
-
 }
 
 GeneralJs.prototype.dashboardBox = function () {

@@ -1013,7 +1013,7 @@ GeneralJs.nodes = {
   figure: document.createElement("FIGURE"),
 }
 
-GeneralJs.scrollTo = function (from, valueOrTo, visualSpecific = 0, noSmoothMode = false) {
+GeneralJs.scrollTo = function (from, valueOrTo, visualSpecific = 0, noSmoothMode = false, callback = async () => {}) {
   if (from === undefined || valueOrTo === undefined || typeof visualSpecific !== "number") {
     throw new Error("invaild input");
   }
@@ -1039,6 +1039,32 @@ GeneralJs.scrollTo = function (from, valueOrTo, visualSpecific = 0, noSmoothMode
       } else {
         window.scroll({ top: Math.abs(document.body.getBoundingClientRect().top - valueOrTo.getBoundingClientRect().top) - visualSpecific, left: 0 });
       }
+    }
+  }
+
+  if (from === window && valueOrTo === 0 && !noSmoothMode) {
+    const tempEventName = "__tempScrollYOberserEventFromScrollTo__";
+    const tempObserverValueNumberName = "__tempObserverValueNumberNameScrollTo__";
+    const tempTimeoutScrollToName = "__tempTimeoutScrollToNameScrollTo__";
+    const delta = 900;
+    if (Math.floor(window.scrollY) !== 0) {
+      GeneralJs.stacks[tempTimeoutScrollToName] = setTimeout(async () => {
+        window.scroll({ top: 0, left: 0, behavior: "smooth" });
+        await callback();
+        window.removeEventListener("scroll", GeneralJs.stacks[tempEventName]);
+      }, delta);
+      GeneralJs.stacks[tempEventName] = async (e) => {
+        if (Math.floor(window.scrollY) === 0) {
+          await callback();
+          clearTimeout(GeneralJs.stacks[tempTimeoutScrollToName]);
+          window.removeEventListener("scroll", GeneralJs.stacks[tempEventName]);
+        } else {
+          GeneralJs.stacks[tempObserverValueNumberName] = window.scrollY;
+        }
+      }
+      window.addEventListener("scroll", GeneralJs.stacks[tempEventName]);
+    } else {
+      callback().catch((err) => { console.log(err) });
     }
   }
 }
