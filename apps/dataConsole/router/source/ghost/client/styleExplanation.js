@@ -3244,9 +3244,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
             click: async function (e) {
               let convertingFunction;
               if (instance.totalValues[2] === null) {
-                GeneralJs.alert("생각하시는 시공을 모두 체크해 주세요!", true, true);
-                GeneralJs.scrollTo(window, 0, 0);
-                return 0;
+                instance.totalValues[2] = [];
               }
               if (instance.totalValues[3] === null) {
                 GeneralJs.alert("시공 당일의 주거 환경을 알려주세요!", true, true);
@@ -4411,8 +4409,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                 return 0;
               }
               if (instance.totalValues[6] === null) {
-                GeneralJs.alert("생각하는 패브릭 영역을 모두 체크해 주세요!", true, true);
-                return 0;
+                instance.totalValues[6] = [];
               }
               convertingFunction = instance.fourthConverting().bind(this);
               await convertingFunction(e);
@@ -5679,7 +5676,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
 StyleExplanationJs.prototype.fileChangeEvent = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, cleanChildren } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, fileClickWordsClassName } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { fileTongClassName } = this;
@@ -5702,7 +5699,6 @@ StyleExplanationJs.prototype.fileChangeEvent = function () {
   let cardInnerMargin, cardInnerMarginTop;
   let xIconWidth, xIconTop, xVisual;
   let cardWordingSize;
-  let fileChangeEvent;
 
   bottomMargin = <%% 16, 16, 16, 12, 4 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
@@ -5802,9 +5798,9 @@ StyleExplanationJs.prototype.fileChangeEvent = function () {
                   instance.fileInput.setAttribute("cancel", JSON.stringify(cancel));
                   this.parentElement.parentElement.removeChild(this.parentElement);
                   if (cancel.length === self.files.length) {
-                    self.previousElementSibling.style.display = "inline-block";
+                    document.querySelector('.' + fileClickWordsClassName).style.display = "inline-block";
                   } else {
-                    self.previousElementSibling.style.display = "none";
+                    document.querySelector('.' + fileClickWordsClassName).style.display = "none";
                   }
                 }
               }
@@ -5851,9 +5847,9 @@ StyleExplanationJs.prototype.fileChangeEvent = function () {
     }
 
     if (this.files.length === 0) {
-      this.previousElementSibling.style.display = "inline-block";
+      document.querySelector('.' + fileClickWordsClassName).style.display = "inline-block";
     } else {
-      this.previousElementSibling.style.display = "none";
+      document.querySelector('.' + fileClickWordsClassName).style.display = "none";
     }
   }
 }
@@ -5864,7 +5860,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { fifthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName, fileTongClassName, sixthFadeOutTargetClassName } = this;
+  const { fifthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName, fileTongClassName, sixthFadeOutTargetClassName, fileInputClassName, fileClickWordsClassName } = this;
   const selectionBaseSeventhClassName0 = "selectionBaseSeventhClassName0";
   const selectionBaseSeventhClassName1 = "selectionBaseSeventhClassName1";
   const selectionBaseSeventhClassName2 = "selectionBaseSeventhClassName2";
@@ -6426,7 +6422,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
             {
               type: "click",
               event: function (e) {
-                this.querySelector("input").click();
+                document.querySelector("." + fileInputClassName).click();
               }
             },
             {
@@ -6434,8 +6430,8 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
               event: function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                this.querySelector("input").files = e.dataTransfer.files;
-                instance.fileChangeEvent().call(this.querySelector("input"), e);
+                document.querySelector("." + fileInputClassName).files = e.dataTransfer.files;
+                instance.fileChangeEvent().call(document.querySelector("." + fileInputClassName), e);
               }
             },
             {
@@ -6492,6 +6488,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
               ]
             },
             {
+              class: [ fileClickWordsClassName ],
               event: { selectstart: (e) => { e.preventDefault() } },
               text: "클릭 또는 드래그하여 업로드...",
               style: {
@@ -6503,31 +6500,37 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
                 color: colorExtended.blueDark,
               },
             },
-            {
-              mode: "input",
-              events: [
-                {
-                  type: "change",
-                  event: instance.fileChangeEvent()
-                }
-              ],
-              attribute: [
-                { type: "file" },
-                { name: "upload" },
-                { accept: "image/*,  application/pdf" },
-                { multiple: "true" },
-                { cancel: JSON.stringify([]) }
-              ],
-              style: {
-                position: "absolute",
-                display: "none",
-              }
-            }
           ]
         },
       ]
     });
-    this.fileInput = fileBlockMother.querySelector("input");
+
+    if (document.querySelector('.' + fileInputClassName) === null) {
+      createNode({
+        mother: document.body,
+        mode: "input",
+        class: [ fileInputClassName ],
+        events: [
+          {
+            type: "change",
+            event: instance.fileChangeEvent()
+          }
+        ],
+        attribute: [
+          { type: "file" },
+          { name: "upload" },
+          { accept: "image/*,  application/pdf" },
+          { multiple: "true" },
+          { cancel: JSON.stringify([]) }
+        ],
+        style: {
+          position: "absolute",
+          display: "none",
+        }
+      });
+    }
+
+    this.fileInput = document.querySelector("." + fileInputClassName);
 
     createNode({
       mother: ghostBase,
@@ -6796,9 +6799,6 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
       },
     ]
 
-    console.log(instance.totalValues);
-    console.log(instance.totalMenu);
-
     if (desktop && window.innerHeight > 1100) {
       titleSize = <%% 59, 51, 48, 39, 9 %%>;
       subTitleSize = <%% 19, 18, 17, 16, 3.6 %%>;
@@ -6809,6 +6809,10 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
       mainImageHeight = <%% 500, 508, 508, 508, 39 %%>;
       buttonMarginTop = <%% 248, 146, 132, 110, 3.6 %%>;
     }
+
+    instance.resultAnalytics().catch((err) => {
+      console.log(err);
+    });
 
     ghostBase = {};
 
@@ -7426,6 +7430,66 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     })
 
 
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+StyleExplanationJs.prototype.resultAnalytics = async function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, setDebounce } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight, baseTop, totalContents, fileInputClassName } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  try {
+    const questionNumber = this.questionNumber;
+    const totalValues = objectDeepCopy(instance.totalValues);
+    const totalMenu = objectDeepCopy(instance.totalMenu);
+    let tong;
+    let thisObj;
+    let thisArr;
+
+    tong = [];
+    for (let i = 0; i < questionNumber; i++) {
+      if (i !== questionNumber - 1) {
+        if (i !== questionNumber - 2) {
+          if (typeof totalValues[i] === "number") {
+            thisObj = objectDeepCopy(totalMenu[i][totalValues[i]]);
+            if (thisObj.value === undefined) {
+              tong.push(thisObj.title);
+            } else {
+              tong.push(thisObj.value);
+            }
+          } else if (Array.isArray(totalValues[i])) {
+            thisArr = totalMenu[i].filter((o, index) => {
+              return totalValues[i].includes(index);
+            });
+            if (thisArr.every((o) => { return o.value === undefined })) {
+              tong.push(thisArr.map((o) => { return o.title }));
+            } else {
+              tong.push(thisArr.map((o) => { return o.value }));
+            }
+          }
+        } else {
+          tong.push(objectDeepCopy(totalValues[i]));
+        }
+      }
+    }
+
+    if (document.querySelector("." + fileInputClassName) !== null) {
+      if (document.querySelector("." + fileInputClassName).length !== 0) {
+        tong.push([ ...document.querySelector("." + fileInputClassName).files ]);
+      } else {
+        tong.push([]);
+      }
+    } else {
+      tong.push([]);
+    }
+
+    console.log(tong);
 
   } catch (e) {
     console.log(e);
@@ -8415,6 +8479,8 @@ StyleExplanationJs.prototype.launching = async function (loading) {
     this.sixthFadeOutTargetClassName = "sixthFadeOutTargetClassName";
     this.blurFixedBelowBarClassName = "blurFixedBelowBarClassName";
     this.fileTongClassName = "fileTongClassName";
+    this.fileInputClassName = "fileInputClassName";
+    this.fileClickWordsClassName = "fileClickWordsClassName";
     this.greenTalkEventClassName = "greenTalkEventClassName";
 
     this.animationStop = false;
