@@ -1224,6 +1224,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           plus: false,
           default: instance.totalValues[0] === null ? false : (instance.totalValues[0] === 0),
           margin: false,
+          value: "s2011_aa01s",
         },
         {
           title: "홈스타일링",
@@ -1235,6 +1236,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           plus: true,
           default: instance.totalValues[0] === null ? true : (instance.totalValues[0] === 1),
           margin: true,
+          value: "s2011_aa02s",
         },
         {
           title: "토탈 스타일링",
@@ -1246,9 +1248,11 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           plus: true,
           default: instance.totalValues[0] === null ? false : (instance.totalValues[0] === 2),
           margin: false,
+          value: "s2011_aa03s",
         },
       ];
       boxWidth = (standardWidth - (betweenMargin * (textContent.length - 1))) / textContent.length;
+      instance.totalMenu[0] = objectDeepCopy(textContent);
 
       if (returnMode) {
         secondBase.style.height = String(originalSecondBaseHeight) + ea;
@@ -2070,6 +2074,14 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
     ghostBase = {};
 
     instance.totalValues[1] = 1;
+    instance.totalMenu[1] = [
+      {
+        value: "부분 철거",
+      },
+      {
+        value: "전체 철거",
+      },
+    ]
 
     thirdBase.children[1].style.opacity = String(0);
     await instance.insertSecondBarBox(20);
@@ -2764,6 +2776,9 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
         title: "거주하지 않으며 공실 상태",
       },
     ];
+
+    instance.totalMenu[2] = objectDeepCopy(constructItems);
+    instance.totalMenu[3] = objectDeepCopy(statusItems);
 
     yesButtonWidth = (standardWidth - (yesButtonBetween * ((constructItems.length / 2) - 1))) / (constructItems.length / 2);
     yesButtonWidth2 = (standardWidth - (yesButtonBetween * ((statusItems.length / 1) - 1))) / (statusItems.length / 1);
@@ -3465,6 +3480,10 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
         title: "구매형 침구류, 카펫 등 패브릭",
       },
     ];
+
+    instance.totalMenu[4] = objectDeepCopy(constructItems);
+    instance.totalMenu[5] = objectDeepCopy(statusItems);
+    instance.totalMenu[6] = objectDeepCopy(fabricItems);
 
     yesButtonWidth = (standardWidth - (yesButtonBetween * ((statusItems.length / 1) - 1))) / (statusItems.length / 1);
     yesButtonWidthNoMargin = (standardWidth - (0 * ((constructItems.length / 1) - 1))) / (constructItems.length / 1);
@@ -4647,6 +4666,11 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
         title: "60세 이상",
       },
     ];
+
+    instance.totalMenu[7] = objectDeepCopy(constructItems);
+    instance.totalMenu[8] = objectDeepCopy(statusItems);
+    instance.totalMenu[9] = objectDeepCopy(fabricItems);
+    instance.totalMenu[10] = objectDeepCopy(ageItems);
 
     yesButtonWidth = (standardWidth - (yesButtonBetween * ((statusItems.length / 1) - 1))) / (statusItems.length / 1);
     yesButtonWidthNoMargin = (standardWidth - (0 * ((constructItems.length / 1) - 1))) / (constructItems.length / 1);
@@ -6010,6 +6034,10 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
       { title: "16:30 - 18:30" },
     ];
 
+    instance.totalMenu[11] = objectDeepCopy(statusItems);
+    instance.totalMenu[12] = [];
+    instance.totalMenu[13] = [];
+
     yesButtonWidth = (standardWidth - (yesButtonBetween * ((statusItems.length / 1) - 1))) / (statusItems.length / 1);
 
     sevenSelectionEvent = (index) => {
@@ -6767,6 +6795,9 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
         ]
       },
     ]
+
+    console.log(instance.totalValues);
+    console.log(instance.totalMenu);
 
     if (desktop && window.innerHeight > 1100) {
       titleSize = <%% 59, 51, 48, 39, 9 %%>;
@@ -8390,6 +8421,7 @@ StyleExplanationJs.prototype.launching = async function (loading) {
 
     this.questionNumber = 14;
     this.totalValues = (new Array(this.questionNumber)).fill(null, 0);
+    this.totalMenu = (new Array(this.questionNumber)).fill(null, 0);
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",
