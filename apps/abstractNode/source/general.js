@@ -5684,10 +5684,6 @@ GeneralJs.hasQuery = function (key) {
   }
 }
 
-GeneralJs.alert = function (message) {
-  window.alert(message);
-}
-
 GeneralJs.confirm = function (message) {
   return window.confirm(message);
 }
@@ -5905,6 +5901,251 @@ GeneralJs.prompt = function (message, preValue = '') {
     }
 
   });
+}
+
+GeneralJs.alert = function (message, blackMode = false, skipMode = false) {
+  const { createNode, colorChip, colorExtended, withOut, setQueue, removeByClass } = GeneralJs;
+  const ea = "px";
+  const promptAsideClassName = "promptAsideClassName";
+  const generalJsAlertSkipModeTimeOutStactName = "generalJsAlertSkipModeTimeOutStactName";
+  const delta = 1600;
+  const mobile = window.innerWidth <= 900;
+  const desktop = !mobile;
+  const px = "px";
+  let whiteTongBase;
+  let whiteTong;
+  let whiteWidth, whiteHeight;
+  let paddingTop, paddingLeft;
+  let paddingBottom;
+  let size0, size1;
+  let marginLeft;
+  let bottomVisual;
+  let inputBoxHeight;
+  let input;
+  let inputIndent;
+  let inputBottomVisual;
+  let greenBarHeight;
+  let lineHeight;
+  let wordingVisual;
+  let finalEvent;
+  let inputSize;
+  let thisBox;
+
+  whiteWidth = 320;
+  whiteHeight = 150;
+  paddingTop = 11;
+  paddingLeft = 23;
+  paddingBottom = 13;
+  size0 = 14;
+  size1 = 16;
+  inputSize = 13;
+  marginLeft = 18;
+  bottomVisual = 7;
+  inputBoxHeight = 30;
+  inputIndent = 9;
+  inputBottomVisual = 0;
+  lineHeight = 1.5;
+  wordingVisual = GeneralJs.isMac() ? 0 : 2;
+
+  greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
+  if (Number.isNaN(greenBarHeight)) {
+    greenBarHeight = 0;
+  }
+
+  if (!skipMode) {
+    whiteTongBase = createNode({
+      mode: "aside",
+      mother: document.body,
+      class: [ promptAsideClassName ],
+      event: {
+        contextmenu: (e) => { e.stopPropagation(); },
+        dblclick: (e) => { e.stopPropagation(); },
+        drop: (e) => { e.stopPropagation(); },
+        keyup: (e) => { e.stopPropagation(); },
+        keydown: (e) => { e.stopPropagation(); },
+        keypress: (e) => { e.stopPropagation(); },
+      },
+      style: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "fixed",
+        top: String(0) + "vh",
+        left: String(1) + "vw",
+        width: String(98) + "vw",
+        height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
+        background: "transparent",
+        zIndex: String(900)
+      }
+    });
+  
+    whiteTong = createNode({
+      mother: whiteTongBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        paddingTop: String(paddingTop) + ea,
+        paddingBottom: String(paddingBottom) + ea,
+        paddingLeft: String(paddingLeft) + ea,
+        paddingRight: String(paddingLeft) + ea,
+        borderRadius: String(5) + "px",
+        boxShadow: !blackMode ? "0px 3px 15px -9px " + colorChip.shadow : "0px 3px 15px -9px " + colorChip.ultimateBlack,
+        background: !blackMode ? colorChip.white : colorExtended.darkDarkBlack,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
+      }
+    });
+  
+    createNode({
+      mother: whiteTong,
+      text: message,
+      style: {
+        position: "relative",
+        fontSize: String(size1) + ea,
+        fontWeight: String(700),
+        color: !blackMode ? colorChip.black : colorExtended.white,
+        lineHeight: String(lineHeight),
+        top: String(wordingVisual) + ea,
+      }
+    });
+  
+    return new Promise((resolve, reject) => {
+  
+      whiteTongBase.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+        for (let z = 0; z < targets.length; z++) {
+          try {
+            targets[z].remove();
+          } catch {}
+        }
+        resolve(null);
+      });
+  
+    });
+  } else {
+  
+    if (document.querySelector('.' + promptAsideClassName) === null) {
+
+      whiteTong = createNode({
+        mode: "aside",
+        mother: document.body,
+        class: [ promptAsideClassName ],
+        style: {
+          display: "flex",
+          position: "fixed",
+          top: String(50) + '%',
+          left: String(50) + '%',
+          paddingTop: String(paddingTop) + ea,
+          paddingBottom: String(paddingBottom) + ea,
+          paddingLeft: String(paddingLeft) + ea,
+          paddingRight: String(paddingLeft) + ea,
+          borderRadius: String(5) + "px",
+          boxShadow: !blackMode ? "0px 3px 15px -9px " + colorChip.shadow : "0px 3px 15px -9px " + colorChip.ultimateBlack,
+          background: !blackMode ? colorChip.white : colorExtended.darkDarkBlack,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          width: String(2000) + px,
+          opacity: String(0),
+          transition: "all 0s ease",
+          transform: "translateY(10px)",
+        },
+        child: {
+          text: message,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(size1) + ea,
+            fontWeight: String(700),
+            color: !blackMode ? colorChip.black : colorExtended.white,
+            lineHeight: String(lineHeight),
+            top: String(wordingVisual) + ea,
+          }
+        }
+      });
+  
+      whiteTong.style.width = "";
+      thisBox = whiteTong.getBoundingClientRect();
+      whiteTong.style.top = withOut(50, (thisBox.height / 2), px);
+      whiteTong.style.left = withOut(50, (thisBox.width / 2), px);
+  
+      whiteTong.style.animation = "fadeuplite 0.4s ease forwards";
+
+      GeneralJs.stacks[generalJsAlertSkipModeTimeOutStactName] = setTimeout(() => {
+        whiteTong.style.animation = "fadedownlite 0.4s ease forwards";
+        setQueue(() => {
+          removeByClass(promptAsideClassName);
+        }, 400);
+      }, 400 + delta);
+
+    } else {
+
+      clearTimeout(GeneralJs.stacks[generalJsAlertSkipModeTimeOutStactName]);
+      document.querySelector('.' + promptAsideClassName).style.animation = "fadedownlite 0.4s ease forwards";
+      setQueue(() => {
+        removeByClass(promptAsideClassName);
+
+        whiteTong = createNode({
+          mode: "aside",
+          mother: document.body,
+          class: [ promptAsideClassName ],
+          style: {
+            display: "flex",
+            position: "fixed",
+            top: String(50) + '%',
+            left: String(50) + '%',
+            paddingTop: String(paddingTop) + ea,
+            paddingBottom: String(paddingBottom) + ea,
+            paddingLeft: String(paddingLeft) + ea,
+            paddingRight: String(paddingLeft) + ea,
+            borderRadius: String(5) + "px",
+            boxShadow: !blackMode ? "0px 3px 15px -9px " + colorChip.shadow : "0px 3px 15px -9px " + colorChip.ultimateBlack,
+            background: !blackMode ? colorChip.white : colorExtended.darkDarkBlack,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            width: String(2000) + px,
+            opacity: String(0),
+            transition: "all 0s ease",
+            transform: "translateY(10px)",
+          },
+          child: {
+            text: message,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(size1) + ea,
+              fontWeight: String(700),
+              color: !blackMode ? colorChip.black : colorExtended.white,
+              lineHeight: String(lineHeight),
+              top: String(wordingVisual) + ea,
+            }
+          }
+        });
+    
+        whiteTong.style.width = "";
+        thisBox = whiteTong.getBoundingClientRect();
+        whiteTong.style.top = withOut(50, (thisBox.height / 2), px);
+        whiteTong.style.left = withOut(50, (thisBox.width / 2), px);
+    
+        whiteTong.style.animation = "fadeuplite 0.4s ease forwards";
+  
+        GeneralJs.stacks[generalJsAlertSkipModeTimeOutStactName] = setTimeout(() => {
+          whiteTong.style.animation = "fadedownlite 0.4s ease forwards";
+          setQueue(() => {
+            removeByClass(promptAsideClassName);
+          }, 400);
+        }, 400 + delta);
+
+      }, 400);
+
+    }
+
+  }
+
 }
 
 GeneralJs.promptLong = function (message, preValue = '') {

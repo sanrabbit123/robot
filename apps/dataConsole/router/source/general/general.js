@@ -1140,10 +1140,10 @@ GeneralJs.prototype.generalCss = function (justTextMode = false) {
 
   @keyframes fadeupdelay{from,30%{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0px);}}
   @keyframes fadeupdelay2{from,30%{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0px);}}
-  @keyframes fadeuplite{from{opacity:0;transform:translateY(5px);}to{opacity:0.95;transform:translateY(0px);}}
+  @keyframes fadeuplite{from{opacity:0;transform:translateY(10px);}to{opacity:0.95;transform:translateY(0px);}}
   @keyframes fadeupnine{from{opacity:0;transform:translateY(5px);}to{opacity:0.91;transform:translateY(0px);}}
   @keyframes fadeuphard{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0px);}}
-  @keyframes fadedownlite{from{opacity:0.95;transform:translateY(0px);}to{opacity:0;transform:translateY(5px);}}
+  @keyframes fadedownlite{from{opacity:0.95;transform:translateY(0px);}to{opacity:0;transform:translateY(10px);}}
   @keyframes fadeupmiddle{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0px);}}
   @keyframes fadedownmiddle{from{opacity:1;transform:translateY(0px);}to{opacity:0;transform:translateY(10px);}}
   @keyframes fadeupbacklite{from{opacity:0;transform:translateY(5px);}to{opacity:0.2;transform:translateY(0px);}}

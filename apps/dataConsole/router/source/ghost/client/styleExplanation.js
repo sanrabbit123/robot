@@ -232,7 +232,7 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, colorExtended, cleanChildren, isMac, sleep, ajaxJson, equalJson } = GeneralJs;
-  const { photos, contentsArr, designers } = this;
+  const { photos, contentsArr, designers, ghostBaseClassName } = this;
   const pictureBoxClassName = "pictureBoxClassName";
   const pictureWordingTargetClassName = "pictureWordingTargetClassName";
   const greenClassName = "greenRemoveTarget";
@@ -283,8 +283,8 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
 
   whiteMargin = 0;
 
-  questionWording = "마음에 드는 사진을 <b%3장%b> 골라주세요!";
-  completeWording = "하단의 '<b%신청 완료하기%b>' 버튼을 눌러주세요!"
+  questionWording = "마음에 드는 사진을 3장 골라주세요!";
+  completeWording = "하단의 '선택 완료하기' 버튼을 눌러주세요!"
 
   image = [];
 
@@ -339,6 +339,9 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
       designers.sort((a, b) => { return a.tendencyLength - b.tendencyLength });
       designers = designers.filter((d) => { return /완료/gi.test(d.information.contract.status); });
       designers = designers.map((obj) => { return obj.desid; });
+
+      instance.totalValues[12] = GeneralJs.objectDeepCopy(image);
+      document.querySelector('.' + ghostBaseClassName).parentNode.style.height = String(1420) + ea;
 
       ajaxJson({
         page: "styleCuration",
@@ -1154,6 +1157,8 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
     originalSecondBaseHeight = <%% 1398, 1398, 1398, 1398, 1398 %%>;
+
+    instance.totalValues[0] = 1;
 
     instance.animationStop = true;
     focusAnimation = "focusProgress 4s ease infinite";
@@ -2407,6 +2412,8 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
   const { secondFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName } = this;
   const selectionBaseFourthClassName0 = "selectionBaseFourthClassName0";
   const selectionBaseFourthClassName1 = "selectionBaseFourthClassName1";
+  const fourthNoticeBoxClassName = "fourthNoticeBoxClassName";
+  const fourthDescriptionBoxClassName = "fourthDescriptionBoxClassName";
   try {
     const fadeOutTargets = [ ...document.querySelectorAll('.' + secondFadeOutTargetClassName) ];
     let minusLeft;
@@ -2448,6 +2455,12 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     let middleLinePaddingTop;
     let blueDescriptionSize, blueDescriptionWeight, blueDescriptionBoldWeight, blueDescriptionTextTop;
     let tempSecondHeight;
+    let fourthSelectionEvent;
+    let fourthSelectionEvent2;
+    let blackDescriptionBoxHeight;
+    let blackDescriptionBoxWidth;
+    let blackDescriptionBoxIndent;
+    let blackDescriptionSize, blackDescriptionWeight, blackDescriptionLineHeight;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -2509,54 +2522,235 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
 
     tempSecondHeight = <%% 1067.84, 1067.84, 1067.84, 1067.84, 1067.84 %%>;
 
+    blackDescriptionBoxHeight = <%% 56, 56, 56, 56, 56 %%>;
+    blackDescriptionBoxWidth = <%% 196, 196, 196, 196, 196 %%>;
+    blackDescriptionBoxIndent = <%% 10, 10, 10, 10, 10 %%>;
+
+    blackDescriptionSize = <%% 12, 12, 12, 12, 12 %%>;
+    blackDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
+    blackDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+
+    instance.totalValues[3] = 2;
+
+    fourthSelectionEvent = (index) => {
+      return async function (e) {
+        try {
+          const targets = [ ...document.querySelectorAll('.' + selectionBaseFourthClassName0) ];
+          const index = Number(this.getAttribute("index"));
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "on") {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+              } else {
+                // dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                // dom.style.background = colorExtended.mainBlue;
+                // dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                // dom.firstChild.style.color = colorExtended.darkBlack;
+                // dom.setAttribute("toggle", "on");
+              }
+            }
+          } else {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.background = colorExtended.mainBlue;
+                dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                dom.firstChild.style.color = colorExtended.darkBlack;
+                dom.setAttribute("toggle", "on");
+              } else {
+                // dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                // dom.style.background = colorExtended.white;
+                // dom.style.boxShadow = "";
+                // dom.firstChild.style.color = colorExtended.blueDark;
+                // dom.setAttribute("toggle", "off");
+              }
+            }
+          }
+
+          instance.totalValues[2] = [ ...document.querySelectorAll('.' + selectionBaseFourthClassName0) ].map((d, index) => {
+            return {
+              on: (d.getAttribute("toggle") === "on"),
+              index
+            }
+          }).filter((o) => { return o.on }).map((o) => { return o.index });
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    fourthSelectionEvent2 = (index) => {
+      return async function (e) {
+        try {
+          const targets = document.querySelectorAll('.' + selectionBaseFourthClassName1);
+          const index = Number(this.getAttribute("index"));
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "on") {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+                instance.totalValues[3] = null;
+              }
+            }
+          } else {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.background = colorExtended.mainBlue;
+                dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                dom.firstChild.style.color = colorExtended.darkBlack;
+                dom.setAttribute("toggle", "on");
+                instance.totalValues[3] = Number(dom.getAttribute("index"));
+              } else {
+                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+              }
+            }
+          }
+
+          if (instance.totalValues[3] === 0 || instance.totalValues[3] === 1) {
+            document.querySelector('.' + fourthNoticeBoxClassName).children[0].style.opacity = String(0);
+            document.querySelector('.' + fourthNoticeBoxClassName).children[1].style.opacity = String(0.7);
+            document.querySelector('.' + fourthNoticeBoxClassName).children[2].style.color = colorExtended.darkBlack;
+            document.querySelector('.' + fourthNoticeBoxClassName).children[2].querySelector('b').style.color = colorExtended.blueDark;
+          } else {
+            document.querySelector('.' + fourthNoticeBoxClassName).children[0].style.opacity = String(1);
+            document.querySelector('.' + fourthNoticeBoxClassName).children[1].style.opacity = String(0);
+            document.querySelector('.' + fourthNoticeBoxClassName).children[2].style.color = colorExtended.deactive;
+            document.querySelector('.' + fourthNoticeBoxClassName).children[2].querySelector('b').style.color = colorExtended.deactive;
+          }
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
     constructItems = [
       {
         title: "철거",
+        description: "철거, 기존에 있던 것을\n모두 제거하는 작업",
+        styling: true,
+        alert: true,
+        notice: "전체 철거는 토탈 스타일링에서만 가능합니다!",
       },
       {
         title: "보양",
+        description: "복도, 엘리베이터 등에 기스 나지\n않도록 비닐을 씌우는 작업",
+        styling: true,
+        alert: false,
+        notice: "",
       },
       {
         title: "목공",
+        description: "나무를 사용한 모든 작업\n걸레 받이, 몰딩, 문짝, 천정 평탄화 등",
+        styling: true,
+        alert: false,
+        notice: "",
       },
       {
         title: "전기",
+        description: "집 내부의 전기 배선\n구성을 바꾸는 작업",
+        styling: true,
+        alert: false,
+        notice: "",
       },
       {
         title: "타일",
+        description: "공화장실, 주방 등에 타일을\n바꾸는 작업",
+        styling: true,
+        alert: true,
+        notice: "홈스타일링에서는 덧방 공사만 가능합니다!",
       },
       {
         title: "바닥",
+        description: "집의 바닥 공사\n장판, 마루, 타일이 있음",
+        styling: true,
+        alert: true,
+        notice: "홈스타일링에서는 장판과 마루 공사만 가능합니다!",
       },
       {
         title: "욕실",
+        description: "화장실 공사, 홈스타일링에서는\n부분 악세사리 교체만 가능",
+        styling: true,
+        alert: true,
+        notice: "홈스타일링에서는 부분 악세사리 교체만 가능합니다!",
       },
       {
         title: "주방",
+        description: "주방 공사, 홈스타일링에서는\n부분 악세사리 교체만 가능",
+        styling: true,
+        alert: true,
+        notice: "홈스타일링에서는 부분 악세사리 교체만 가능합니다!",
       },
       {
         title: "필름",
+        description: "필름지를 씌어서 해당 면의\n색상이나 재질감을 바꾸는 제공",
+        styling: true,
+        alert: false,
+        notice: "",
       },
       {
         title: "도배",
+        description: "벽에 도배지를 바르는 작업\n합지와 실크가 있음",
+        styling: true,
+        alert: false,
+        notice: "",
       },
       {
         title: "도장",
+        description: "페인팅, 탄성코트 등\n면의 도료를 칠하는 공사",
+        styling: true,
+        alert: false,
+        notice: "",
       },
       {
         title: "중문",
+        description: "현관에 중문을\n새로 달거나 바꾸는 작업",
+        styling: true,
+        alert: false,
+        notice: "",
       },
       {
         title: "발코니",
+        description: "발코니의 확장 및\n확장 부분 단열 공사",
+        styling: false,
+        alert: false,
+        notice: "",
       },
       {
         title: "금속 샤시",
+        description: "모든 금속 공사와\n샤시 교체 작업",
+        styling: false,
+        alert: false,
+        notice: "",
       },
       {
         title: "조명",
+        description: "스타일링을 위한 조명\n배치부터 조명 제품 선택",
+        styling: true,
+        alert: false,
+        notice: "",
       },
       {
         title: "제작 가구",
+        description: "대가구, 소가구로 나뉘며\n제작이 필요한 모든 가구",
+        styling: true,
+        alert: false,
+        notice: "",
       },
     ];
     statusItems = [
@@ -2723,6 +2917,38 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
           },
           children: constructItems.map((o, index) => {
             return {
+              class: [ selectionBaseFourthClassName0 ],
+              attribute: {
+                index: String(index),
+                toggle: "off",
+              },
+              event: {
+                click: async function (e) {
+                  const index = Number(this.getAttribute("index"));
+                  const thisObj = objectDeepCopy(constructItems[index]);
+                  const thisFunction = fourthSelectionEvent(index).bind(this);
+                  if (instance.totalValues[0] === 2) {
+                    await thisFunction(e);
+                  } else {
+                    if (thisObj.styling) {
+                      if (thisObj.alert) {
+                        if (this.getAttribute("toggle") === "off") {
+                          GeneralJs.alert(thisObj.notice, true, true);
+                        }
+                      }
+                      await thisFunction(e);
+                    } else {
+                      GeneralJs.alert("홈스타일링에서는 불가능한 공사입니다!", true, true);
+                    }
+                  }
+                },
+                mouseenter: function (e) {
+                  this.querySelector('.' + fourthDescriptionBoxClassName).style.display = "flex";
+                },
+                mouseleave: function (e) {
+                  this.querySelector('.' + fourthDescriptionBoxClassName).style.display = "none";
+                }
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -2736,6 +2962,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                 justifyContent: "center",
                 marginRight: String(index % (constructItems.length / 2) === (constructItems.length / 2) - 1 ? 0 : yesButtonBetween) + ea,
                 marginBottom: String(yesButtonBetween) + ea,
+                cursor: "pointer",
               },
               child: {
                 text: o.title,
@@ -2746,6 +2973,36 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                   fontSize: String(yesButtonSize) + ea,
                   fontWeight: String(yesButtonWeight),
                   color: colorExtended.blueDark,
+                },
+                next: {
+                  class: [ fourthDescriptionBoxClassName ],
+                  style: {
+                    display: "none",
+                    position: "absolute",
+                    top: Math.floor(index / (constructItems.length / 2)) === 0 ? String(-1 * (blackDescriptionBoxIndent + blackDescriptionBoxHeight)) + ea : String(yesButtonHeight + blackDescriptionBoxIndent - (1.5 * 2)) + ea,
+                    left: withOut(50, blackDescriptionBoxWidth / 2, ea),
+                    height: String(blackDescriptionBoxHeight) + ea,
+                    width: String(blackDescriptionBoxWidth) + ea,
+                    borderRadius: String(8) + "px",
+                    background: colorExtended.black,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0px 3px 15px -9px " + colorExtended.darkDarkBlack,
+                  },
+                  child: {
+                    text: o.description,
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(yesButtonTextTop) + ea,
+                      fontSize: String(blackDescriptionSize) + ea,
+                      fontWeight: String(blackDescriptionWeight),
+                      color: colorExtended.white,
+                      textAlign: "center",
+                      lineHeight: String(blackDescriptionLineHeight),
+                    },
+                  }
                 }
               }
             }
@@ -2819,6 +3076,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
       },
       children: [
         {
+          class: [ fourthNoticeBoxClassName ],
           style: {
             display: "flex",
             position: "relative",
@@ -2837,8 +3095,21 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                 left: String(0),
                 width: withOut(0, ea),
                 height: withOut(0, ea),
+                background: colorExtended.gray2,
+                opacity: String(1),
+                transition: "all 0.6s ease",
+              }
+            },
+            {
+              style: {
+                position: "absolute",
+                top: String(0),
+                left: String(0),
+                width: withOut(0, ea),
+                height: withOut(0, ea),
                 background: colorExtended.gradientBlue,
-                opacity: String(0.7),
+                opacity: String(0),
+                transition: "all 0.6s ease",
               }
             },
             {
@@ -2849,12 +3120,13 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                 top: String(blueDescriptionTextTop) + ea,
                 fontSize: String(blueDescriptionSize) + ea,
                 fontWeight: String(blueDescriptionWeight),
-                color: colorExtended.black,
+                color: colorExtended.deactive,
+                transition: "all 0.6s ease",
               },
               bold: {
                 fontSize: String(blueDescriptionSize) + ea,
                 fontWeight: String(blueDescriptionBoldWeight),
-                color: colorExtended.blueDark,
+                color: colorExtended.deactive,
               }
             }
           ]
@@ -2868,6 +3140,14 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
           },
           children: statusItems.map((o, index) => {
             return {
+              class: [ selectionBaseFourthClassName1 ],
+              attribute: {
+                index: String(index),
+                toggle: index === 2 ? "on" : "off"
+              },
+              event: {
+                click: fourthSelectionEvent2(index),
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -2883,6 +3163,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                 boxShadow: index === 2 ? "0px 3px 15px -9px " + colorExtended.darkShadow : "",
                 marginRight: String(index % (statusItems.length / 1) === (statusItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea,
                 marginBottom: String(yesButtonBetween) + ea,
+                cursor: "pointer",
               },
               child: {
                 text: o.title,
@@ -2945,7 +3226,22 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
         },
         {
           event: {
-            click: instance.thirdConverting(),
+            click: async function (e) {
+              let convertingFunction;
+              if (instance.totalValues[2] === null) {
+                GeneralJs.alert("생각하시는 시공을 모두 체크해 주세요!", true, true);
+                GeneralJs.scrollTo(window, 0, 0);
+                return 0;
+              }
+              if (instance.totalValues[3] === null) {
+                GeneralJs.alert("시공 당일의 주거 환경을 알려주세요!", true, true);
+                GeneralJs.scrollTo(window, 0, 0);
+                return 0;
+              }
+              convertingFunction = instance.thirdConverting().bind(this);
+              await convertingFunction(e);
+              return 1;
+            },
           },
           style: {
             display: "inline-flex",
@@ -2986,6 +3282,14 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
   const mobile = media[4];
   const desktop = !mobile;
   const { firstFadeOutTargetClassName, fourthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName } = this;
+  const selectionBaseFifthClassName0 = "selectionBaseFifthClassName0";
+  const selectionBaseFifthClassName1 = "selectionBaseFifthClassName1";
+  const selectionBaseFifthClassName2 = "selectionBaseFifthClassName2";
+  const blueBlockClassName0 = "blueBlockClassName0";
+  const blueBlockClassName1 = "blueBlockClassName1";
+  const blueBlockBarFactorClassName = "blueBlockBarFactorClassName";
+  const blueBlockBarFactorIndexClassName = "blueBlockBarFactorClassName_index_";
+  const blueBlockBarWordsIndexClassName = "blueBlockBarWordsClassName_index_";
   try {
     const fadeOutTargets0 = [ ...document.querySelectorAll('.' + firstFadeOutTargetClassName) ];
     const fadeOutTargets = [ ...document.querySelectorAll('.' + thirdFadeOutTargetClassName) ];
@@ -3040,6 +3344,8 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
     let processValuesRatio;
     let processValueSize, processValueWeight;
     let convertingBaseHeight;
+    let barClickEvent;
+    let fifthSelectionEvent2, fifthSelectionEvent3;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -3163,6 +3469,135 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
     yesButtonWidth = (standardWidth - (yesButtonBetween * ((statusItems.length / 1) - 1))) / (statusItems.length / 1);
     yesButtonWidthNoMargin = (standardWidth - (0 * ((constructItems.length / 1) - 1))) / (constructItems.length / 1);
     yesButtonWidth2 = (standardWidth - (yesButtonBetween * ((fabricItems.length / 1) - 1))) / (fabricItems.length / 1);
+
+    instance.totalValues[4] = defaultBudgetValue;
+
+    barClickEvent = (i) => {
+      return async (e) => {
+        try {
+          const target = document.querySelector('.' + blueBlockBarFactorIndexClassName + String(i));
+          const index = Number(target.getAttribute("index"));
+          const siblings = [ ...target.parentElement.querySelectorAll('.' + blueBlockBarFactorClassName) ];
+          const toggle = target.getAttribute("toggle");
+          let blue0, blue1, num, wordsTarget;
+
+          siblings.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) })
+
+          num = 0;
+          for (let dom of siblings) {
+            blue0 = dom.querySelector('.' + blueBlockClassName0);
+            blue1 = dom.querySelector('.' + blueBlockClassName1);
+            wordsTarget = document.querySelector('.' + blueBlockBarWordsIndexClassName + String(num));
+            if (index > num) {
+              blue0.style.opacity = String(1);
+              blue1.style.opacity = String(0);
+              wordsTarget.firstChild.style.color = colorExtended.mainBlue;
+              dom.setAttribute("toggle", "off");
+            } else if (index === num) {
+              blue0.style.opacity = String(0);
+              blue1.style.opacity = String(1);
+              wordsTarget.firstChild.style.color = colorExtended.darkBlack;
+              dom.setAttribute("toggle", "on");
+            } else {
+              blue0.style.opacity = String(0);
+              blue1.style.opacity = String(0);
+              wordsTarget.firstChild.style.color = colorExtended.mainBlue;
+              dom.setAttribute("toggle", "off");
+            }
+            num++;
+          }
+
+          instance.totalValues[4] = index;
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    fifthSelectionEvent2 = (index) => {
+      return async function (e) {
+        try {
+          const targets = document.querySelectorAll('.' + selectionBaseFifthClassName1);
+          const index = Number(this.getAttribute("index"));
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "on") {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+                instance.totalValues[5] = null;
+              }
+            }
+          } else {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.background = colorExtended.mainBlue;
+                dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                dom.firstChild.style.color = colorExtended.darkBlack;
+                dom.setAttribute("toggle", "on");
+                instance.totalValues[5] = Number(dom.getAttribute("index"));
+              }
+            }
+          }
+
+          instance.totalValues[5] = [ ...document.querySelectorAll('.' + selectionBaseFifthClassName1) ].map((d, index) => {
+            return {
+              on: (d.getAttribute("toggle") === "on"),
+              index
+            }
+          }).filter((o) => { return o.on }).map((o) => { return o.index });
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    fifthSelectionEvent3 = (index) => {
+      return async function (e) {
+        try {
+          const targets = document.querySelectorAll('.' + selectionBaseFifthClassName2);
+          const index = Number(this.getAttribute("index"));
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "on") {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+              }
+            }
+          } else {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.background = colorExtended.mainBlue;
+                dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                dom.firstChild.style.color = colorExtended.darkBlack;
+                dom.setAttribute("toggle", "on");
+              }
+            }
+          }
+
+          instance.totalValues[6] = [ ...document.querySelectorAll('.' + selectionBaseFifthClassName2) ].map((d, index) => {
+            return {
+              on: (d.getAttribute("toggle") === "on"),
+              index
+            }
+          }).filter((o) => { return o.on }).map((o) => { return o.index });
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
 
     ghostBase = {};
 
@@ -3387,7 +3822,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                       top: String(blueWhiteFactorTextTop) + ea,
                       fontSize: String(blueWhiteFactorSize) + ea,
                       fontWeight: String(blueWhiteFactorWeight),
-                      color: colorExtended.mainBlue,
+                      color: colorExtended.blueDark,
                     }
                   }
                 },
@@ -3435,7 +3870,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                       top: String(blueWhiteFactorTextTop) + ea,
                       fontSize: String(blueWhiteFactorSize) + ea,
                       fontWeight: String(blueWhiteFactorWeight),
-                      color: colorExtended.mainBlue,
+                      color: colorExtended.blueDark,
                     }
                   }
                 },
@@ -3483,7 +3918,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                       top: String(blueWhiteFactorTextTop) + ea,
                       fontSize: String(blueWhiteFactorSize) + ea,
                       fontWeight: String(blueWhiteFactorWeight),
-                      color: colorExtended.mainBlue,
+                      color: colorExtended.blueDark,
                     }
                   }
                 },
@@ -3511,8 +3946,13 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
           children: constructItems.map((o, index) => {
             return [
               {
+                class: [ blueBlockBarFactorClassName, blueBlockBarFactorIndexClassName + String(index) ],
                 attribute: {
                   index: String(index),
+                  toggle: (index === defaultBudgetValue ? "on" : "off"),
+                },
+                event: {
+                  click: barClickEvent(index),
                 },
                 style: {
                   display: "inline-flex",
@@ -3528,9 +3968,11 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                   borderTopRightRadius: (index === constructItems.length - 1 ? String(processBarHeight) + ea : ""),
                   borderBottomRightRadius: (index === constructItems.length - 1 ? String(processBarHeight) + ea : ""),
                   background: colorExtended.white,
+                  cursor: "pointer",
                 },
                 children: [
                   {
+                    class: [ blueBlockClassName0 ],
                     style: {
                       display: "inline-flex",
                       position: "absolute",
@@ -3553,6 +3995,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                     }
                   },
                   {
+                    class: [ blueBlockClassName1 ],
                     style: {
                       display: "inline-flex",
                       position: "absolute",
@@ -3587,6 +4030,13 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
           },
           children: constructItems.map((o, index) => {
             return {
+              class: [ blueBlockBarWordsIndexClassName + String(index) ],
+              attribute: {
+                index: String(index),
+              },
+              event: {
+                click: barClickEvent(index),
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -3596,6 +4046,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
+                cursor: "pointer",
               },
               child: {
                 text: o.title,
@@ -3605,6 +4056,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                   top: String(yesButtonTextTop) + ea,
                   fontSize: String(processValueSize) + ea,
                   fontWeight: String(processValueWeight),
+                  transition: "all 0.2 ease",
                   color: index === defaultBudgetValue ? colorExtended.darkBlack : colorExtended.mainBlue,
                 }
               }
@@ -3697,8 +4149,8 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                 left: String(0),
                 width: withOut(0, ea),
                 height: withOut(0, ea),
-                background: colorExtended.gradientBlue,
-                opacity: String(0.7),
+                background: colorExtended.gray2,
+                opacity: String(1),
               }
             },
             {
@@ -3733,6 +4185,14 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
           },
           children: statusItems.map((o, index) => {
             return {
+              class: [ selectionBaseFifthClassName1 ],
+              attribute: {
+                index: String(index),
+                toggle: "off",
+              },
+              event: {
+                click: fifthSelectionEvent2(index),
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -3836,6 +4296,14 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
           },
           children: fabricItems.map((o, index) => {
             return {
+              class: [ selectionBaseFifthClassName2 ],
+              attribute: {
+                index: String(index),
+                toggle: "off",
+              },
+              event: {
+                click: fifthSelectionEvent3(index),
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -3911,7 +4379,26 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
         },
         {
           event: {
-            click: instance.fourthConverting(),
+            click: async function (e) {
+              let convertingFunction;
+              if (instance.totalValues[4] === null) {
+                GeneralJs.alert("인테리어 전체 가용 예산을 알려주세요!", true, true);
+                GeneralJs.scrollTo(window, 0, 0);
+                return 0;
+              }
+              if (instance.totalValues[5] === null) {
+                GeneralJs.alert("생각하는 가구 영역을 모두 체크해 주세요!", true, true);
+                GeneralJs.scrollTo(window, 0, 0);
+                return 0;
+              }
+              if (instance.totalValues[6] === null) {
+                GeneralJs.alert("생각하는 패브릭 영역을 모두 체크해 주세요!", true, true);
+                return 0;
+              }
+              convertingFunction = instance.fourthConverting().bind(this);
+              await convertingFunction(e);
+              return 1;
+            },
           },
           style: {
             display: "inline-flex",
@@ -3952,6 +4439,16 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
   const mobile = media[4];
   const desktop = !mobile;
   const { fourthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName, fifthFadeOutTargetClassName } = this;
+  const selectionBaseSixthClassName0 = "selectionBaseSixthClassName0";
+  const selectionBaseSixthClassName1 = "selectionBaseSixthClassName1";
+  const selectionBaseSixthClassName2 = "selectionBaseSixthClassName2";
+  const selectionBaseSixthClassName3 = "selectionBaseSixthClassName3";
+  const blueBlock2ClassName0 = "blueBlock2ClassName0";
+  const blueBlock2ClassName1 = "blueBlock2ClassName1";
+  const blueBlock2BarFactorClassName = "blueBlock2BarFactorClassName";
+  const blueBlock2BarFactorIndexClassName = "blueBlock2BarFactorClassName_index_";
+  const blueBlock2BarWordsIndexClassName = "blueBlock2BarWordsClassName_index_";
+  const sixthNoticeBoxClassName = "sixthNoticeBoxClassName";
   try {
     const fadeOutTargets = [ ...document.querySelectorAll('.' + fourthFadeOutTargetClassName) ];
     let minusLeft;
@@ -4007,6 +4504,10 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
     let convertingBaseHeight;
     let ageItems;
     let yesButtonWidth3;
+    let barClickEvent;
+    let sixSelectionEvent2;
+    let sixSelectionEvent3;
+    let sixSelectionEvent4;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -4151,6 +4652,191 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
     yesButtonWidthNoMargin = (standardWidth - (0 * ((constructItems.length / 1) - 1))) / (constructItems.length / 1);
     yesButtonWidth2 = (standardWidth - (yesButtonBetween * ((fabricItems.length / 1) - 1))) / (fabricItems.length / 1);
     yesButtonWidth3 = (standardWidth - (yesButtonBetween * ((ageItems.length / 1) - 1))) / (ageItems.length / 1);
+
+    instance.totalValues[7] = defaultBudgetValue;
+
+    barClickEvent = (i) => {
+      return async (e) => {
+        try {
+          const target = document.querySelector('.' + blueBlock2BarFactorIndexClassName + String(i));
+          const index = Number(target.getAttribute("index"));
+          const siblings = [ ...target.parentElement.querySelectorAll('.' + blueBlock2BarFactorClassName) ];
+          const toggle = target.getAttribute("toggle");
+          let blue0, blue1, num, wordsTarget;
+
+          siblings.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) })
+
+          num = 0;
+          for (let dom of siblings) {
+            blue0 = dom.querySelector('.' + blueBlock2ClassName0);
+            blue1 = dom.querySelector('.' + blueBlock2ClassName1);
+            wordsTarget = document.querySelector('.' + blueBlock2BarWordsIndexClassName + String(num));
+            if (index > num) {
+              blue0.style.opacity = String(1);
+              blue1.style.opacity = String(0);
+              wordsTarget.firstChild.style.color = colorExtended.mainBlue;
+              dom.setAttribute("toggle", "off");
+            } else if (index === num) {
+              blue0.style.opacity = String(0);
+              blue1.style.opacity = String(1);
+              wordsTarget.firstChild.style.color = colorExtended.darkBlack;
+              dom.setAttribute("toggle", "on");
+            } else {
+              blue0.style.opacity = String(0);
+              blue1.style.opacity = String(0);
+              wordsTarget.firstChild.style.color = colorExtended.mainBlue;
+              dom.setAttribute("toggle", "off");
+            }
+            num++;
+          }
+
+          instance.totalValues[7] = index;
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    sixSelectionEvent2 = (index) => {
+      return async function (e) {
+        try {
+          const targets = document.querySelectorAll('.' + selectionBaseSixthClassName1);
+          const index = Number(this.getAttribute("index"));
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "on") {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+                instance.totalValues[8] = null;
+              }
+            }
+          } else {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.background = colorExtended.mainBlue;
+                dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                dom.firstChild.style.color = colorExtended.darkBlack;
+                dom.setAttribute("toggle", "on");
+                instance.totalValues[8] = Number(dom.getAttribute("index"));
+              } else {
+                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+              }
+            }
+          }
+
+          if (instance.totalValues[8] === 0) {
+            document.querySelector('.' + sixthNoticeBoxClassName).children[0].style.opacity = String(0);
+            document.querySelector('.' + sixthNoticeBoxClassName).children[1].style.opacity = String(0.7);
+            document.querySelector('.' + sixthNoticeBoxClassName).children[2].style.color = colorExtended.darkBlack;
+            document.querySelector('.' + sixthNoticeBoxClassName).children[2].querySelectorAll('b')[0].style.color = colorExtended.blueDark;
+            document.querySelector('.' + sixthNoticeBoxClassName).children[2].querySelectorAll('b')[1].style.color = colorExtended.darkBlack;
+          } else {
+            document.querySelector('.' + sixthNoticeBoxClassName).children[0].style.opacity = String(1);
+            document.querySelector('.' + sixthNoticeBoxClassName).children[1].style.opacity = String(0);
+            document.querySelector('.' + sixthNoticeBoxClassName).children[2].style.color = colorExtended.deactive;
+            document.querySelector('.' + sixthNoticeBoxClassName).children[2].querySelectorAll('b')[0].style.color = colorExtended.deactive;
+            document.querySelector('.' + sixthNoticeBoxClassName).children[2].querySelectorAll('b')[1].style.color = colorExtended.deactive;
+          }
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    sixSelectionEvent3 = (index) => {
+      return async function (e) {
+        try {
+          const targets = document.querySelectorAll('.' + selectionBaseSixthClassName2);
+          const index = Number(this.getAttribute("index"));
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "on") {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+                instance.totalValues[9] = null;
+              }
+            }
+          } else {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.background = colorExtended.mainBlue;
+                dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                dom.firstChild.style.color = colorExtended.darkBlack;
+                dom.setAttribute("toggle", "on");
+                instance.totalValues[9] = Number(dom.getAttribute("index"));
+              } else {
+                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+              }
+            }
+          }
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    sixSelectionEvent4 = (index) => {
+      return async function (e) {
+        try {
+          const targets = document.querySelectorAll('.' + selectionBaseSixthClassName3);
+          const index = Number(this.getAttribute("index"));
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "on") {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+                instance.totalValues[10] = null;
+              }
+            }
+          } else {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.background = colorExtended.mainBlue;
+                dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                dom.firstChild.style.color = colorExtended.darkBlack;
+                dom.setAttribute("toggle", "on");
+                instance.totalValues[10] = Number(dom.getAttribute("index"));
+              } else {
+                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+              }
+            }
+          }
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
 
     ghostBase = {};
 
@@ -4302,8 +4988,13 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
           children: constructItems.map((o, index) => {
             return [
               {
+                class: [ blueBlock2BarFactorClassName, blueBlock2BarFactorIndexClassName + String(index) ],
                 attribute: {
                   index: String(index),
+                  toggle: (index === defaultBudgetValue ? "on" : "off"),
+                },
+                event: {
+                  click: barClickEvent(index),
                 },
                 style: {
                   display: "inline-flex",
@@ -4319,9 +5010,11 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                   borderTopRightRadius: (index === constructItems.length - 1 ? String(processBarHeight) + ea : ""),
                   borderBottomRightRadius: (index === constructItems.length - 1 ? String(processBarHeight) + ea : ""),
                   background: colorExtended.white,
+                  cursor: "pointer",
                 },
                 children: [
                   {
+                    class: [ blueBlock2ClassName0 ],
                     style: {
                       display: "inline-flex",
                       position: "absolute",
@@ -4344,6 +5037,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                     }
                   },
                   {
+                    class: [ blueBlock2ClassName1 ],
                     style: {
                       display: "inline-flex",
                       position: "absolute",
@@ -4378,6 +5072,13 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
           },
           children: constructItems.map((o, index) => {
             return {
+              class: [ blueBlock2BarWordsIndexClassName + String(index) ],
+              attribute: {
+                index: String(index),
+              },
+              event: {
+                click: barClickEvent(index),
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -4387,6 +5088,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
+                cursor: "pointer",
               },
               child: {
                 text: o.title,
@@ -4470,6 +5172,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
       },
       children: [
         {
+          class: [ sixthNoticeBoxClassName ],
           style: {
             display: "flex",
             position: "relative",
@@ -4488,8 +5191,21 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 left: String(0),
                 width: withOut(0, ea),
                 height: withOut(0, ea),
+                background: colorExtended.gray2,
+                opacity: String(1),
+                transition: "all 0.6s ease",
+              }
+            },
+            {
+              style: {
+                position: "absolute",
+                top: String(0),
+                left: String(0),
+                width: withOut(0, ea),
+                height: withOut(0, ea),
                 background: colorExtended.gradientBlue,
-                opacity: String(0.7),
+                opacity: String(0),
+                transition: "all 0.6s ease",
               }
             },
             {
@@ -4500,17 +5216,17 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 top: String(blueDescriptionTextTop) + ea,
                 fontSize: String(blueDescriptionSize) + ea,
                 fontWeight: String(blueDescriptionWeight),
-                color: colorExtended.black,
+                color: colorExtended.deactive,
               },
               bold: {
                 fontSize: String(blueDescriptionSize) + ea,
                 fontWeight: String(blueDescriptionBoldWeight),
-                color: colorExtended.blueDark,
+                color: colorExtended.deactive,
               },
               under: {
                 fontSize: String(blueDescriptionSize) + ea,
                 fontWeight: String(400),
-                color: colorExtended.black,
+                color: colorExtended.deactive,
               },
             }
           ]
@@ -4524,6 +5240,14 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
           },
           children: statusItems.map((o, index) => {
             return {
+              class: [ selectionBaseSixthClassName1 ],
+              attribute: {
+                index: String(index),
+                toggle: "off"
+              },
+              event: {
+                click: sixSelectionEvent2(index),
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -4537,6 +5261,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 justifyContent: "center",
                 marginRight: String(index % (statusItems.length / 1) === (statusItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea,
                 marginBottom: String(yesButtonBetween) + ea,
+                cursor: "pointer",
               },
               child: {
                 text: o.title,
@@ -4627,6 +5352,14 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
           },
           children: fabricItems.map((o, index) => {
             return {
+              class: [ selectionBaseSixthClassName2 ],
+              attribute: {
+                index: String(index),
+                toggle: "off",
+              },
+              event: {
+                click: sixSelectionEvent3(index),
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -4640,6 +5373,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 justifyContent: "center",
                 marginRight: String(index % (fabricItems.length / 1) === (fabricItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea,
                 marginBottom: String(yesButtonBetween) + ea,
+                cursor: "pointer",
               },
               child: {
                 text: o.title,
@@ -4742,7 +5476,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 width: withOut(0, ea),
                 height: withOut(0, ea),
                 background: colorExtended.gray2,
-                opacity: String(0.7),
+                opacity: String(1),
               }
             },
             {
@@ -4777,6 +5511,14 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
           },
           children: ageItems.map((o, index) => {
             return {
+              class: [ selectionBaseSixthClassName3 ],
+              attribute: {
+                index: String(index),
+                toggle: "off",
+              },
+              event: {
+                click: sixSelectionEvent4(index),
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -4790,6 +5532,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 justifyContent: "center",
                 marginRight: String(index % (ageItems.length / 1) === (ageItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea,
                 marginBottom: String(yesButtonBetween) + ea,
+                cursor: "pointer",
               },
               child: {
                 text: o.title,
@@ -4852,7 +5595,30 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
         },
         {
           event: {
-            click: instance.fifthConverting(),
+            click: async function (e) {
+              let convertingFunction;
+              if (instance.totalValues[7] === null) {
+                GeneralJs.alert("입주 예정 시기를 알려주세요!", true, true);
+                GeneralJs.scrollTo(window, 0, 0);
+                return 0;
+              }
+              if (instance.totalValues[8] === null) {
+                GeneralJs.alert("가구 구매 정도를 알려주세요!", true, true);
+                GeneralJs.scrollTo(window, 0, 0);
+                return 0;
+              }
+              if (instance.totalValues[9] === null) {
+                GeneralJs.alert("해당 가족 구성원을 체크해 주세요!", true, true);
+                GeneralJs.scrollTo(window, 0, 0);
+                return 0;
+              }
+              if (instance.totalValues[10] === null) {
+                GeneralJs.alert("고객님의 연령대를 체크해 주세요!", true, true);
+                return 0;
+              }
+              convertingFunction = instance.fifthConverting().bind(this);
+              await convertingFunction(e);
+            },
           },
           style: {
             display: "inline-flex",
@@ -5075,6 +5841,9 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
   const mobile = media[4];
   const desktop = !mobile;
   const { fifthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName, fileTongClassName, sixthFadeOutTargetClassName } = this;
+  const selectionBaseSeventhClassName0 = "selectionBaseSeventhClassName0";
+  const selectionBaseSeventhClassName1 = "selectionBaseSeventhClassName1";
+  const selectionBaseSeventhClassName2 = "selectionBaseSeventhClassName2";
   try {
     const fadeOutTargets = [ ...document.querySelectorAll('.' + fifthFadeOutTargetClassName) ];
     let minusLeft;
@@ -5138,6 +5907,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     let grayMargin;
     let grayTextTop;
     let fileBlockMother;
+    let sevenSelectionEvent;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -5241,6 +6011,47 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     ];
 
     yesButtonWidth = (standardWidth - (yesButtonBetween * ((statusItems.length / 1) - 1))) / (statusItems.length / 1);
+
+    sevenSelectionEvent = (index) => {
+      return async function (e) {
+        try {
+          const targets = document.querySelectorAll('.' + selectionBaseSeventhClassName0);
+          const index = Number(this.getAttribute("index"));
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "on") {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+              }
+            }
+          } else {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.background = colorExtended.mainBlue;
+                dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                dom.firstChild.style.color = colorExtended.darkBlack;
+                dom.setAttribute("toggle", "on");
+              }
+            }
+          }
+
+          instance.totalValues[11] = [ ...document.querySelectorAll('.' + selectionBaseSeventhClassName0) ].map((d, index) => {
+            return {
+              on: (d.getAttribute("toggle") === "on"),
+              index
+            }
+          }).filter((o) => { return o.on }).map((o) => { return o.index });
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
 
     ghostBase = {};
 
@@ -5391,6 +6202,14 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
           },
           children: statusItems.map((o, index) => {
             return {
+              class: [ selectionBaseSeventhClassName0 ],
+              attribute: {
+                index: String(index),
+                toggle: "off",
+              },
+              event: {
+                click: sevenSelectionEvent(index),
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -5404,6 +6223,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
                 justifyContent: "center",
                 marginRight: String(index % (statusItems.length / 1) === (statusItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea,
                 marginBottom: String(yesButtonBetween) + ea,
+                cursor: "pointer",
               },
               child: {
                 text: o.title,
@@ -5725,7 +6545,21 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
         },
         {
           event: {
-            click: instance.sixthConverting(),
+            click: async function (e) {
+              let convertingFunction;
+              if (instance.totalValues[11] === null) {
+                GeneralJs.alert("가능한 상담 시간을 모두 체크해 주세요!", true, true);
+                GeneralJs.scrollTo(window, 0, 0);
+                return 0;
+              }
+              if (instance.totalValues[12] === null) {
+                GeneralJs.alert("마음에 드는 사진을 3장씩 선택해주세요!", true, true);
+                GeneralJs.scrollTo(window, 0, 0);
+                return 0;
+              }
+              convertingFunction = instance.sixthConverting().bind(this);
+              await convertingFunction(e);
+            },
             selectstart: (e) => { e.preventDefault() }
           },
           style: {
@@ -7578,20 +8412,16 @@ StyleExplanationJs.prototype.launching = async function (loading) {
           const secondBase = await instance.insertSecondBox();
           await instance.insertBarBox();
 
-
-
-          GeneralJs.setQueue(() => {
-            const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
-            for (let dom of fadeOutTargets) {
-              dom.remove();
-            }
-            instance.totalValues[0] = 2;
-            instance.totalValues[1] = 1;
-          }, 0);
-          document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-642) + "px";
-          await instance.insertFourthBox(secondBase);
-
-
+          // GeneralJs.setQueue(() => {
+          //   const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
+          //   for (let dom of fadeOutTargets) {
+          //     dom.remove();
+          //   }
+          //   instance.totalValues[0] = 1;
+          //   instance.totalValues[1] = 1;
+          // }, 0);
+          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-642) + "px";
+          // await instance.insertSeventhBox(secondBase);
 
           instance.resizeEvent();
           setInterval(() => {
