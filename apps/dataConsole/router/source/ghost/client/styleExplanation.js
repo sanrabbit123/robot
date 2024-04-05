@@ -1721,6 +1721,8 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
                 window.alert("서비스를 선택해주세요!");
               } else {
                 thisIndex = Number(target.getAttribute("index"));
+                instance.totalValues[0] = thisIndex;
+                window.history.pushState({ mode: "first" }, "");
                 if (thisIndex === 0) {
                   convertingFunction = instance.thirdConverting(true).bind(this);
                 } else {
@@ -2073,7 +2075,9 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
 
     ghostBase = {};
 
-    instance.totalValues[1] = 1;
+    if (instance.totalValues[1] === null) {
+      instance.totalValues[1] = 1;
+    }
     instance.totalMenu[1] = [
       {
         value: "부분 철거",
@@ -2247,7 +2251,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
             {
               class: [ selectionBaseThirdClassName ],
               attribute: {
-                toggle: "off",
+                toggle: instance.totalValues[1] === 0 ? "on" : "off",
                 index: String(0),
               },
               event: {
@@ -2260,13 +2264,13 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
                 width: String(yesButtonWidth) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: "1.5px solid " + colorExtended.mainBlue,
+                border: instance.totalValues[1] !== 0 ? "1.5px solid " + colorExtended.mainBlue : "1.5px solid " + colorExtended.darkBlack,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                background: colorExtended.white,
-                boxShadow: "",
+                background: instance.totalValues[1] !== 0 ? colorExtended.white : colorExtended.mainBlue,
+                boxShadow: instance.totalValues[1] !== 0 ? "" : "0px 3px 15px -9px " + colorExtended.darkShadow,
                 marginRight: String(yesButtonBetween) + ea,
                 cursor: "pointer",
               },
@@ -2281,14 +2285,14 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
                   top: String(yesButtonTextTop) + ea,
                   fontSize: String(yesButtonSize) + ea,
                   fontWeight: String(yesButtonWeight),
-                  color: colorExtended.blueDark,
+                  color: instance.totalValues[1] !== 0 ? colorExtended.blueDark : colorExtended.darkBlack,
                 }
               }
             },
             {
               class: [ selectionBaseThirdClassName ],
               attribute: {
-                toggle: "on",
+                toggle: instance.totalValues[1] === 1 ? "on" : "off",
                 index: String(1),
               },
               event: {
@@ -2301,13 +2305,13 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
                 width: String(yesButtonWidth) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: "1.5px solid " + colorExtended.darkBlack,
+                border: instance.totalValues[1] !== 1 ? "1.5px solid " + colorExtended.mainBlue : "1.5px solid " + colorExtended.darkBlack,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                background: colorExtended.mainBlue,
-                boxShadow: "0px 3px 15px -9px " + colorExtended.darkShadow,
+                background: instance.totalValues[1] !== 1 ? colorExtended.white : colorExtended.mainBlue,
+                boxShadow: instance.totalValues[1] !== 1 ? "" : "0px 3px 15px -9px " + colorExtended.darkShadow,
                 cursor: "pointer",
               },
               child: {
@@ -2321,7 +2325,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
                   top: String(yesButtonTextTop) + ea,
                   fontSize: String(yesButtonSize) + ea,
                   fontWeight: String(yesButtonWeight),
-                  color: colorExtended.darkBlack,
+                  color: instance.totalValues[1] !== 1 ? colorExtended.blueDark : colorExtended.darkBlack,
                 }
               }
             },
@@ -2378,6 +2382,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
               if (instance.totalValues[0] === 2 && instance.totalValues[1] === 0) {
                 await instance.constructPopupEvent();
               } else {
+                window.history.pushState({ mode: "second" }, "");
                 convertingFunction = instance.secondConverting().bind(this);
                 await convertingFunction(e);
               }
@@ -2542,7 +2547,9 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     blackDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blackDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-    instance.totalValues[3] = 2;
+    if (instance.totalValues[3] === null) {
+      instance.totalValues[3] = 2;
+    }
 
     fourthSelectionEvent = (index) => {
       return async function (e) {
@@ -2935,7 +2942,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
               class: [ selectionBaseFourthClassName0 ],
               attribute: {
                 index: String(index),
-                toggle: "off",
+                toggle: (Array.isArray(instance.totalValues[2]) && instance.totalValues[2]?.includes(index)) ? "on" : "off",
               },
               event: {
                 click: async function (e) {
@@ -2970,7 +2977,9 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                 width: String(yesButtonWidth) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: "1.5px solid " + colorExtended.mainBlue,
+                border: !(Array.isArray(instance.totalValues[2]) && instance.totalValues[2]?.includes(index)) ? "1.5px solid " + colorExtended.mainBlue : "1.5px solid " + colorExtended.darkBlack,
+                background: !(Array.isArray(instance.totalValues[2]) && instance.totalValues[2]?.includes(index)) ? colorExtended.white : colorExtended.mainBlue,
+                boxShadow: !(Array.isArray(instance.totalValues[2]) && instance.totalValues[2]?.includes(index)) ? "" : "0px 3px 15px -9px " + colorExtended.darkShadow,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
@@ -2987,7 +2996,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                   top: String(yesButtonTextTop) + ea,
                   fontSize: String(yesButtonSize) + ea,
                   fontWeight: String(yesButtonWeight),
-                  color: colorExtended.blueDark,
+                  color: !(Array.isArray(instance.totalValues[2]) && instance.totalValues[2]?.includes(index)) ? colorExtended.blueDark : colorExtended.darkBlack,
                 },
                 next: {
                   class: [ fourthDescriptionBoxClassName ],
@@ -3111,7 +3120,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                 width: withOut(0, ea),
                 height: withOut(0, ea),
                 background: colorExtended.gray2,
-                opacity: String(1),
+                opacity: (instance.totalValues[3] === 0 || instance.totalValues[3] === 1) ? String(0) : String(1),
                 transition: "all 0.6s ease",
               }
             },
@@ -3123,7 +3132,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                 width: withOut(0, ea),
                 height: withOut(0, ea),
                 background: colorExtended.gradientBlue,
-                opacity: String(0),
+                opacity: (instance.totalValues[3] === 0 || instance.totalValues[3] === 1) ? String(0.7) : String(0),
                 transition: "all 0.6s ease",
               }
             },
@@ -3135,13 +3144,13 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                 top: String(blueDescriptionTextTop) + ea,
                 fontSize: String(blueDescriptionSize) + ea,
                 fontWeight: String(blueDescriptionWeight),
-                color: colorExtended.deactive,
+                color: (instance.totalValues[3] === 0 || instance.totalValues[3] === 1) ? colorExtended.darkBlack : colorExtended.deactive,
                 transition: "all 0.6s ease",
               },
               bold: {
                 fontSize: String(blueDescriptionSize) + ea,
                 fontWeight: String(blueDescriptionBoldWeight),
-                color: colorExtended.deactive,
+                color: (instance.totalValues[3] === 0 || instance.totalValues[3] === 1) ? colorExtended.blueDark : colorExtended.deactive,
               }
             }
           ]
@@ -3158,7 +3167,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
               class: [ selectionBaseFourthClassName1 ],
               attribute: {
                 index: String(index),
-                toggle: index === 2 ? "on" : "off"
+                toggle: index === instance.totalValues[3] ? "on" : "off"
               },
               event: {
                 click: fourthSelectionEvent2(index),
@@ -3169,13 +3178,13 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                 width: String(yesButtonWidth2) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: index === 2 ? "1.5px solid " + colorExtended.darkBlack : "1.5px solid " + colorExtended.mainBlue,
+                border: index === instance.totalValues[3] ? "1.5px solid " + colorExtended.darkBlack : "1.5px solid " + colorExtended.mainBlue,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                background: index === 2 ? colorExtended.mainBlue : colorExtended.white,
-                boxShadow: index === 2 ? "0px 3px 15px -9px " + colorExtended.darkShadow : "",
+                background: index === instance.totalValues[3] ? colorExtended.mainBlue : colorExtended.white,
+                boxShadow: index === instance.totalValues[3] ? "0px 3px 15px -9px " + colorExtended.darkShadow : "",
                 marginRight: String(index % (statusItems.length / 1) === (statusItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea,
                 marginBottom: String(yesButtonBetween) + ea,
                 cursor: "pointer",
@@ -3188,7 +3197,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                   top: String(yesButtonTextTop) + ea,
                   fontSize: String(yesButtonSize) + ea,
                   fontWeight: String(yesButtonWeight),
-                  color: index === 2 ? colorExtended.darkBlack : colorExtended.blueDark,
+                  color: index === instance.totalValues[3] ? colorExtended.darkBlack : colorExtended.blueDark,
                 }
               }
             }
@@ -3251,6 +3260,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                 GeneralJs.scrollTo(window, 0, 0);
                 return 0;
               }
+              window.history.pushState({ mode: "third" }, "");
               convertingFunction = instance.thirdConverting().bind(this);
               await convertingFunction(e);
               return 1;
@@ -3487,7 +3497,11 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
     yesButtonWidthNoMargin = (standardWidth - (0 * ((constructItems.length / 1) - 1))) / (constructItems.length / 1);
     yesButtonWidth2 = (standardWidth - (yesButtonBetween * ((fabricItems.length / 1) - 1))) / (fabricItems.length / 1);
 
-    instance.totalValues[4] = defaultBudgetValue;
+    if (instance.totalValues[4] === null) {
+      instance.totalValues[4] = defaultBudgetValue;
+    } else {
+      defaultBudgetValue = instance.totalValues[4];
+    }
 
     barClickEvent = (i) => {
       return async (e) => {
@@ -4205,7 +4219,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
               class: [ selectionBaseFifthClassName1 ],
               attribute: {
                 index: String(index),
-                toggle: "off",
+                toggle: (Array.isArray(instance.totalValues[5]) && instance.totalValues[5]?.includes(index)) ? "on" : "off",
               },
               event: {
                 click: fifthSelectionEvent2(index),
@@ -4216,7 +4230,9 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                 width: String(yesButtonWidth) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: "1.5px solid " + colorExtended.mainBlue,
+                border: !(Array.isArray(instance.totalValues[5]) && instance.totalValues[5]?.includes(index)) ? "1.5px solid " + colorExtended.mainBlue : "1.5px solid " + colorExtended.darkBlack,
+                background: !(Array.isArray(instance.totalValues[5]) && instance.totalValues[5]?.includes(index)) ? colorExtended.white : colorExtended.mainBlue,
+                boxShadow: !(Array.isArray(instance.totalValues[5]) && instance.totalValues[5]?.includes(index)) ? "" : "0px 3px 15px -9px " + colorExtended.darkShadow,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
@@ -4232,7 +4248,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                   top: String(yesButtonTextTop) + ea,
                   fontSize: String(yesButtonSize) + ea,
                   fontWeight: String(yesButtonWeight),
-                  color: colorExtended.blueDark,
+                  color: !(Array.isArray(instance.totalValues[5]) && instance.totalValues[5]?.includes(index)) ? colorExtended.blueDark : colorExtended.darkBlack,
                 }
               }
             }
@@ -4316,7 +4332,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
               class: [ selectionBaseFifthClassName2 ],
               attribute: {
                 index: String(index),
-                toggle: "off",
+                toggle: (Array.isArray(instance.totalValues[6]) && instance.totalValues[6]?.includes(index)) ? "on" : "off",
               },
               event: {
                 click: fifthSelectionEvent3(index),
@@ -4327,7 +4343,9 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                 width: String(yesButtonWidth) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: "1.5px solid " + colorExtended.mainBlue,
+                border: !(Array.isArray(instance.totalValues[6]) && instance.totalValues[6]?.includes(index)) ? "1.5px solid " + colorExtended.mainBlue : "1.5px solid " + colorExtended.darkBlack,
+                background: !(Array.isArray(instance.totalValues[6]) && instance.totalValues[6]?.includes(index)) ? colorExtended.white : colorExtended.mainBlue,
+                boxShadow: !(Array.isArray(instance.totalValues[6]) && instance.totalValues[6]?.includes(index)) ? "" : "0px 3px 15px -9px " + colorExtended.darkShadow,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
@@ -4343,7 +4361,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                   top: String(yesButtonTextTop) + ea,
                   fontSize: String(yesButtonSize) + ea,
                   fontWeight: String(yesButtonWeight),
-                  color: colorExtended.blueDark,
+                  color: !(Array.isArray(instance.totalValues[6]) && instance.totalValues[6]?.includes(index)) ? colorExtended.blueDark : colorExtended.darkBlack,
                 }
               }
             }
@@ -4411,6 +4429,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
               if (instance.totalValues[6] === null) {
                 instance.totalValues[6] = [];
               }
+              window.history.pushState({ mode: "fourth" }, "");
               convertingFunction = instance.fourthConverting().bind(this);
               await convertingFunction(e);
               return 1;
@@ -4674,7 +4693,11 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
     yesButtonWidth2 = (standardWidth - (yesButtonBetween * ((fabricItems.length / 1) - 1))) / (fabricItems.length / 1);
     yesButtonWidth3 = (standardWidth - (yesButtonBetween * ((ageItems.length / 1) - 1))) / (ageItems.length / 1);
 
-    instance.totalValues[7] = defaultBudgetValue;
+    if (instance.totalValues[7] === null) {
+      instance.totalValues[7] = defaultBudgetValue;
+    } else {
+      defaultBudgetValue = instance.totalValues[7];
+    }
 
     barClickEvent = (i) => {
       return async (e) => {
@@ -5213,7 +5236,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 width: withOut(0, ea),
                 height: withOut(0, ea),
                 background: colorExtended.gray2,
-                opacity: String(1),
+                opacity: (instance.totalValues[8] === 0) ? String(0) : String(1),
                 transition: "all 0.6s ease",
               }
             },
@@ -5225,7 +5248,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 width: withOut(0, ea),
                 height: withOut(0, ea),
                 background: colorExtended.gradientBlue,
-                opacity: String(0),
+                opacity: (instance.totalValues[8] === 0) ? String(0.7) : String(0),
                 transition: "all 0.6s ease",
               }
             },
@@ -5237,17 +5260,17 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 top: String(blueDescriptionTextTop) + ea,
                 fontSize: String(blueDescriptionSize) + ea,
                 fontWeight: String(blueDescriptionWeight),
-                color: colorExtended.deactive,
+                color: (instance.totalValues[8] === 0) ? colorExtended.darkBlack : colorExtended.deactive,
               },
               bold: {
                 fontSize: String(blueDescriptionSize) + ea,
                 fontWeight: String(blueDescriptionBoldWeight),
-                color: colorExtended.deactive,
+                color: (instance.totalValues[8] === 0) ? colorExtended.blueDark : colorExtended.deactive,
               },
               under: {
                 fontSize: String(blueDescriptionSize) + ea,
                 fontWeight: String(400),
-                color: colorExtended.deactive,
+                color: (instance.totalValues[8] === 0) ? colorExtended.darkBlack : colorExtended.deactive,
               },
             }
           ]
@@ -5264,7 +5287,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
               class: [ selectionBaseSixthClassName1 ],
               attribute: {
                 index: String(index),
-                toggle: "off"
+                toggle: index === instance.totalValues[8] ? "on" : "off"
               },
               event: {
                 click: sixSelectionEvent2(index),
@@ -5275,7 +5298,9 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 width: String(yesButtonWidth) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: "1.5px solid " + colorExtended.mainBlue,
+                border: index === instance.totalValues[8] ? "1.5px solid " + colorExtended.darkBlack : "1.5px solid " + colorExtended.mainBlue,
+                background: index === instance.totalValues[8] ? colorExtended.mainBlue : colorExtended.white,
+                boxShadow: index === instance.totalValues[8] ? "0px 3px 15px -9px " + colorExtended.darkShadow : "",
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
@@ -5292,7 +5317,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                   top: String(yesButtonTextTop) + ea,
                   fontSize: String(yesButtonSize) + ea,
                   fontWeight: String(yesButtonWeight),
-                  color: colorExtended.blueDark,
+                  color: index === instance.totalValues[8] ? colorExtended.darkBlack : colorExtended.blueDark,
                 }
               }
             }
@@ -5376,7 +5401,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
               class: [ selectionBaseSixthClassName2 ],
               attribute: {
                 index: String(index),
-                toggle: "off",
+                toggle: index === instance.totalValues[9] ? "on" : "off"
               },
               event: {
                 click: sixSelectionEvent3(index),
@@ -5387,7 +5412,9 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 width: String(yesButtonWidth2) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: "1.5px solid " + colorExtended.mainBlue,
+                border: index === instance.totalValues[9] ? "1.5px solid " + colorExtended.darkBlack : "1.5px solid " + colorExtended.mainBlue,
+                background: index === instance.totalValues[9] ? colorExtended.mainBlue : colorExtended.white,
+                boxShadow: index === instance.totalValues[9] ? "0px 3px 15px -9px " + colorExtended.darkShadow : "",
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
@@ -5404,7 +5431,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                   top: String(yesButtonTextTop) + ea,
                   fontSize: String(yesButtonSize) + ea,
                   fontWeight: String(yesButtonWeight),
-                  color: colorExtended.blueDark,
+                  color: index === instance.totalValues[9] ? colorExtended.darkBlack : colorExtended.blueDark,
                 }
               }
             }
@@ -5535,7 +5562,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
               class: [ selectionBaseSixthClassName3 ],
               attribute: {
                 index: String(index),
-                toggle: "off",
+                toggle: index === instance.totalValues[10] ? "on" : "off"
               },
               event: {
                 click: sixSelectionEvent4(index),
@@ -5546,7 +5573,9 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 width: String(yesButtonWidth3) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: "1.5px solid " + colorExtended.mainBlue,
+                border: index === instance.totalValues[10] ? "1.5px solid " + colorExtended.darkBlack : "1.5px solid " + colorExtended.mainBlue,
+                background: index === instance.totalValues[10] ? colorExtended.mainBlue : colorExtended.white,
+                boxShadow: index === instance.totalValues[10] ? "0px 3px 15px -9px " + colorExtended.darkShadow : "",
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
@@ -5563,7 +5592,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                   top: String(yesButtonTextTop) + ea,
                   fontSize: String(yesButtonSize) + ea,
                   fontWeight: String(yesButtonWeight),
-                  color: colorExtended.blueDark,
+                  color: index === instance.totalValues[10] ? colorExtended.darkBlack : colorExtended.blueDark,
                 }
               }
             }
@@ -5637,6 +5666,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 GeneralJs.alert("고객님의 연령대를 체크해 주세요!", true, true);
                 return 0;
               }
+              window.history.pushState({ mode: "fifth" }, "");
               convertingFunction = instance.fifthConverting().bind(this);
               await convertingFunction(e);
             },
@@ -6229,7 +6259,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
               class: [ selectionBaseSeventhClassName0 ],
               attribute: {
                 index: String(index),
-                toggle: "off",
+                toggle: (Array.isArray(instance.totalValues[11]) && instance.totalValues[11]?.includes(index)) ? "on" : "off",
               },
               event: {
                 click: sevenSelectionEvent(index),
@@ -6240,7 +6270,9 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
                 width: String(yesButtonWidth) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: "1.5px solid " + colorExtended.mainBlue,
+                border: !(Array.isArray(instance.totalValues[11]) && instance.totalValues[11]?.includes(index)) ? "1.5px solid " + colorExtended.mainBlue : "1.5px solid " + colorExtended.darkBlack,
+                background: !(Array.isArray(instance.totalValues[11]) && instance.totalValues[11]?.includes(index)) ? colorExtended.white : colorExtended.mainBlue,
+                boxShadow: !(Array.isArray(instance.totalValues[11]) && instance.totalValues[11]?.includes(index)) ? "" : "0px 3px 15px -9px " + colorExtended.darkShadow,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
@@ -6257,7 +6289,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
                   top: String(yesButtonTextTop) + ea,
                   fontSize: String(yesButtonSize) + ea,
                   fontWeight: String(yesButtonWeight),
-                  color: colorExtended.blueDark,
+                  color: !(Array.isArray(instance.totalValues[11]) && instance.totalValues[11]?.includes(index)) ? colorExtended.blueDark : colorExtended.darkBlack,
                 }
               }
             }
@@ -6588,6 +6620,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
                 GeneralJs.scrollTo(window, 0, 0);
                 return 0;
               }
+              window.history.pushState({ mode: "sixth" }, "");
               convertingFunction = instance.sixthConverting().bind(this);
               await convertingFunction(e);
             },
@@ -8538,6 +8571,38 @@ StyleExplanationJs.prototype.launching = async function (loading) {
           }, 60 * 1000);
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "StyleExplanationJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+        }
+      }
+    });
+
+    window.history.replaceState({ mode: "base" }, "");
+    window.addEventListener("popstate", async (e) => {
+      let convertingFunction;
+      if (typeof e.state === "object" && e.state !== null) {
+        if (typeof e.state.mode === "string") {
+          GeneralJs.scrollTo(window, 0, 0, true);
+
+          console.log(e.state.mode);
+
+          if (e.state.mode === "base") {
+            convertingFunction = instance.firstReturn();
+          } else if (e.state.mode === "first") {
+            convertingFunction = instance.secondReturn();
+          } else if (e.state.mode === "second") {
+            convertingFunction = instance.thirdReturn();
+          } else if (e.state.mode === "third") {
+            convertingFunction = instance.fourthReturn();
+          } else if (e.state.mode === "fourth") {
+            convertingFunction = instance.fifthReturn();
+          } else if (e.state.mode === "fifth") {
+            convertingFunction = instance.fifthReturn();
+          }
+          if (typeof convertingFunction === "function") {
+            await convertingFunction(e);
+            GeneralJs.setQueue(() => {
+              GeneralJs.scrollTo(window, 0, 0);
+            }, 600);
+          }
         }
       }
     });
