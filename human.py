@@ -40,6 +40,7 @@ from apps.infoObj import returnAddress
 from apps.memberObj import returnMembers
 from apps.backMaker.backMaker import BackMaker
 from apps.devContext.devContext import DevContext
+from apps.devContext.sqlContext import SqlContext
 
 back = BackMaker()
 
@@ -55,6 +56,10 @@ async def main():
         elif thisCommand == "dev":
             devInstance = DevContext()
             await devInstance.launching()
+
+        elif thisCommand == "sql":
+            sqlInstance = SqlContext()
+            await sqlInstance.launching()
 
         else:
             pass
