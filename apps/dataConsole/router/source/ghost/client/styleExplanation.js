@@ -798,9 +798,9 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
     firstBasePaddingTop = <%% 26, 24, 24, 24, 8 %%>;
-    firstBasePaddingBottom = <%% 180, 170, 160, 120, 20 %%>;
+    firstBasePaddingBottom = <%% 180, 170, 160, 120, 18.6 %%>;
 
-    subTitleSize = <%% 18, 18, 17, 16, 3.7 %%>;
+    subTitleSize = <%% 18, 18, 17, 15, 3.6 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     subTitleMarginTop = <%% (isMac() ? 4 : 6), (isMac() ? 3 : 5), (isMac() ? 1 : 4), (isMac() ? 1 : 4), 0.5 %%>;
 
@@ -812,7 +812,7 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
     buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
 
-    titleSize = <%% 57, 51, 43, 36, 8 %%>;
+    titleSize = <%% 57, 51, 43, 36, 7 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
     titleVisualLeft = <%% 2, 2, 2, 2, -0.5 %%>;
@@ -824,27 +824,26 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
     mainImageHeight = <%% 390, 370, 338, 314, 39 %%>;
 
     descriptionSize = <%% 15, 14, 14, 13, 3.2 %%>;
-    descriptionLineHeight = <%% 1.9, 1.9, 1.9, 1.8, 1.9 %%>;
+    descriptionLineHeight = <%% 1.9, 1.9, 1.9, 1.8, 1.8 %%>;
 
     mobileLeftPaddingVisual = 1;
 
-    descriptionMarginTop = <%% 40, 40, 36, 30, 81.5 %%>;
+    descriptionMarginTop = <%% 40, 40, 36, 30, 6.4 %%>;
 
     descriptionPointBoldPaddingLeft = <%% 8, 8, 8, 8, 1.6 %%>;
     descriptionPointBoldPaddingTop = <%% (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 3), (isMac() ? 2 : 3), 0.4 %%>;
     descriptionPointBoldPaddingBottom = <%% (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 0.8 %%>;
     descriptionPointBoldMargin = <%% 2, 2, 2, 2, 1 %%>;
 
-    blanketHeight = <%% 50, 40, 40, 40, 40 %%>;
+    blanketHeight = <%% 50, 40, 40, 40, 4 %%>;
     blanketVisualTop = <%% 1, 1, 1, 1, 1 %%>;
     blanketOpacity = <%% 0.3, 0.3, 0.3, 0.3, 0.3 %%>;
-    blanketMargin = <%% 34, 32, 30, 30, 34 %%>;
+    blanketMargin = <%% 34, 32, 30, 30, 2 %%>;
 
     if (desktop && window.innerHeight > 1100) {
-      titleSize = <%% 59, 51, 43, 36, 9 %%>;
-      subTitleSize = <%% 19, 18, 17, 16, 3.6 %%>;
-      firstBasePaddingTop = <%% 80, 48, 30, 28, 50 %%>;
+      titleSize = <%% 59, 51, 43, 36, 7 %%>;
       subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
+      firstBasePaddingTop = <%% 80, 48, 30, 28, 50 %%>;
       firstBasePaddingBottom = <%% 240, 210, 160, 120, 210 %%>;
       mainImageTop = <%% 42, 32, 18, 16, 32 %%>;
       mainImageHeight = <%% 390, 372, 338, 314, 39 %%>;
@@ -857,8 +856,8 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
     document.body.style.background = colorExtended.black;
 
     description = [
-      "홈리에종의 서비스 진행을 위해서는 다음 큐레이션 과정이 필요합니다.",
-      "서비스 신청서를 모두 작성 후, <b%디자이너의 1:1 맞춤 상담%b>을 받아보세요!"
+      desktop ? "홈리에종의 서비스 진행을 위해서는 다음 큐레이션 과정이 필요합니다." : "홈리에종 서비스 진행을 위해선 큐레이션 과정이 필요합니다.",
+      desktop ? "서비스 신청서를 모두 작성 후, <b%디자이너의 1:1 맞춤 상담%b>을 받아보세요!" : "신청서를 모두 작성 후, <b%디자이너 1:1 상담%b>을 받아보세요!"
     ];
 
     firstBase = createNode({
@@ -879,7 +878,7 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
           left: String(-1 * minusLeft) + ea,
           background: colorExtended.darkDarkBlack,
           width: withOut(-1 * (minusLeft * 2), ea),
-          height: withOut(1 * ((-1 * baseTop) + naviHeight), ea),
+          height: desktop ? withOut(1 * ((-1 * baseTop) + naviHeight), ea) : String(185) + ea,
         }
       }
     });
@@ -972,7 +971,7 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
             src: StyleExplanationJs.binaryPath + "/blanketLeft.svg",
           },
           style: {
-            display: "inline-block",
+            display: desktop ? "inline-block" : "none",
             position: "relative",
             height: String(blanketHeight) + ea,
             opacity: String(blanketOpacity),
@@ -1009,7 +1008,7 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
             src: StyleExplanationJs.binaryPath + "/blanketRight.svg",
           },
           style: {
-            display: "inline-block",
+            display: desktop ? "inline-block" : "none",
             position: "relative",
             height: String(blanketHeight) + ea,
             opacity: String(blanketOpacity),
@@ -1090,32 +1089,32 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 21, 15, 10, 25 %%>;
-    titleSize = <%% 25, 24, 22, 19, 4 %%>;
+    titleMarginTop = <%% 25, 21, 15, 10, 3 %%>;
+    titleSize = <%% 25, 24, 22, 19, 5 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
-    descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
+    descriptionSize = <%% 15, 14, 13, 12, 3.2 %%>;
+    descriptionMarginTop = <%% 5, 5, 4, 3, 0.7 %%>;
     descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
-    descriptionVisualLeft = <%% -1, -1, -1, -1, -1 %%>;
+    descriptionVisualLeft = <%% -1, -1, -1, -1, -0.1 %%>;
 
     betweenMargin = <%% 26, 16, 12, 8, 26 %%>;
 
-    wordsMotherMarginTop = <%% 120, 120, 110, 90, 12 %%>;
+    wordsMotherMarginTop = <%% 120, 120, 110, 90, 16 %%>;
     numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
 
-    numberSize = <%% 28, 26, 24, 21, 28 %%>;
+    numberSize = <%% 28, 26, 24, 21, 5 %%>;
     numberWeight = <%% 700, 700, 700, 700, 700 %%>;
-    numberBarHeight = <%% 28, 24, 22, 19, 28 %%>;
-    numberBarMarginLeft = <%% 12, 12, 10, 9, 12 %%>;
-    numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
+    numberBarHeight = <%% 28, 24, 22, 19, 4.5 %%>;
+    numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
+    numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
     serviceAreMarginTop = <%% 100, 80, 60, 40, 10 %%>;
     serviceAreMarginBottom = <%% 100, 80, 60, 40, 10 %%>;
 
-    serviceNameBoxWidth = <%% 156, 140, 130, 120, 156 %%>;
-    serviceNameBoxHeight = <%% 40, 36, 32, 30, 40 %%>;
-    serviceNameSize = <%% 17, 16, 14, 13, 17 %%>;
+    serviceNameBoxWidth = <%% 156, 140, 130, 120, 15 %%>;
+    serviceNameBoxHeight = <%% 40, 36, 32, 30, 4 %%>;
+    serviceNameSize = <%% 17, 16, 14, 13, 3 %%>;
     serviceNameWeight = <%% 800, 800, 800, 800, 800 %%>;
     serviceNameTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
 
@@ -1133,12 +1132,12 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     triangleWidth = <%% 12, 11, 10, 9, 12 %%>;
 
     serviceDescriptionHeight = <%% 98, 86, 76, 64, 98 %%>;
-    serviceDescriptionSize = <%% 16, 15, 13, 12, 16 %%>;
+    serviceDescriptionSize = <%% 16, 15, 13, 12, 3 %%>;
     serviceDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     serviceDescriptionLineHeight = <%% 1.52, 1.52, 1.52, 1.52, 1.52 %%>;
     serviceDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    plusSize = <%% 15, 15, 15, 15, 15 %%>;
+    plusSize = <%% 15, 15, 13, 12, 3 %%>;
     plusWeight = <%% 700, 700, 700, 700, 700 %%>;
     plusPaddingLeft = <%% 3, 3, 3, 3, 3 %%>;
     plusPaddingTop = <%% 0, 0, 0, 0, 0 %%>;
@@ -1977,8 +1976,8 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 21, 15, 10, 25 %%>;
-    titleSize = <%% 25, 24, 22, 19, 4 %%>;
+    titleMarginTop = <%% 25, 21, 15, 10, 3 %%>;
+    titleSize = <%% 25, 24, 22, 19, 5 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
     titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
     titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
@@ -1993,11 +1992,11 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
-    numberSize = <%% 28, 26, 24, 21, 28 %%>;
+    numberSize = <%% 28, 26, 24, 21, 5 %%>;
     numberWeight = <%% 700, 700, 700, 700, 700 %%>;
-    numberBarHeight = <%% 28, 24, 22, 19, 28 %%>;
-    numberBarMarginLeft = <%% 12, 12, 10, 9, 12 %%>;
-    numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
+    numberBarHeight = <%% 28, 24, 22, 19, 4.5 %%>;
+    numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
+    numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
     numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
 
@@ -2481,8 +2480,8 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 21, 15, 10, 25 %%>;
-    titleSize = <%% 25, 24, 22, 19, 4 %%>;
+    titleMarginTop = <%% 25, 21, 15, 10, 3 %%>;
+    titleSize = <%% 25, 24, 22, 19, 5 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
     titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
     titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
@@ -2497,11 +2496,11 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
-    numberSize = <%% 28, 26, 24, 21, 28 %%>;
+    numberSize = <%% 28, 26, 24, 21, 5 %%>;
     numberWeight = <%% 700, 700, 700, 700, 700 %%>;
-    numberBarHeight = <%% 28, 24, 22, 19, 28 %%>;
-    numberBarMarginLeft = <%% 12, 12, 10, 9, 12 %%>;
-    numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
+    numberBarHeight = <%% 28, 24, 22, 19, 4.5 %%>;
+    numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
+    numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
     numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
 
@@ -3372,8 +3371,8 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 21, 15, 10, 25 %%>;
-    titleSize = <%% 25, 24, 22, 19, 4 %%>;
+    titleMarginTop = <%% 25, 21, 15, 10, 3 %%>;
+    titleSize = <%% 25, 24, 22, 19, 5 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
     titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
     titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
@@ -3388,11 +3387,11 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
-    numberSize = <%% 28, 26, 24, 21, 28 %%>;
+    numberSize = <%% 28, 26, 24, 21, 5 %%>;
     numberWeight = <%% 700, 700, 700, 700, 700 %%>;
-    numberBarHeight = <%% 28, 24, 22, 19, 28 %%>;
-    numberBarMarginLeft = <%% 12, 12, 10, 9, 12 %%>;
-    numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
+    numberBarHeight = <%% 28, 24, 22, 19, 4.5 %%>;
+    numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
+    numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
     numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
 
@@ -4546,8 +4545,8 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 21, 15, 10, 25 %%>;
-    titleSize = <%% 25, 24, 22, 19, 4 %%>;
+    titleMarginTop = <%% 25, 21, 15, 10, 3 %%>;
+    titleSize = <%% 25, 24, 22, 19, 5 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
     titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
     titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
@@ -4562,11 +4561,11 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
-    numberSize = <%% 28, 26, 24, 21, 28 %%>;
+    numberSize = <%% 28, 26, 24, 21, 5 %%>;
     numberWeight = <%% 700, 700, 700, 700, 700 %%>;
-    numberBarHeight = <%% 28, 24, 22, 19, 28 %%>;
-    numberBarMarginLeft = <%% 12, 12, 10, 9, 12 %%>;
-    numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
+    numberBarHeight = <%% 28, 24, 22, 19, 4.5 %%>;
+    numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
+    numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
     numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
 
@@ -5961,8 +5960,8 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 21, 15, 10, 25 %%>;
-    titleSize = <%% 25, 24, 22, 19, 4 %%>;
+    titleMarginTop = <%% 25, 21, 15, 10, 3 %%>;
+    titleSize = <%% 25, 24, 22, 19, 5 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
     titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
     titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
@@ -5979,11 +5978,11 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
-    numberSize = <%% 28, 26, 24, 21, 28 %%>;
+    numberSize = <%% 28, 26, 24, 21, 5 %%>;
     numberWeight = <%% 700, 700, 700, 700, 700 %%>;
-    numberBarHeight = <%% 28, 24, 22, 19, 28 %%>;
-    numberBarMarginLeft = <%% 12, 12, 10, 9, 12 %%>;
-    numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
+    numberBarHeight = <%% 28, 24, 22, 19, 4.5 %%>;
+    numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
+    numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
     numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
 
