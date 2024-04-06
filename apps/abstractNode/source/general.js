@@ -1047,6 +1047,13 @@ GeneralJs.scrollTo = function (from, valueOrTo, visualSpecific = 0, noSmoothMode
     const tempObserverValueNumberName = "__tempObserverValueNumberNameScrollTo__";
     const tempTimeoutScrollToName = "__tempTimeoutScrollToNameScrollTo__";
     const delta = 900;
+    const scrollDelta = 8;
+    if (GeneralJs.stacks[tempTimeoutScrollToName] !== undefined) {
+      clearTimeout(GeneralJs.stacks[tempTimeoutScrollToName]);
+    }
+    if (GeneralJs.stacks[tempEventName] !== undefined) {
+      window.removeEventListener("scroll", GeneralJs.stacks[tempEventName]);
+    }
     if (Math.floor(window.scrollY) !== 0) {
       GeneralJs.stacks[tempTimeoutScrollToName] = setTimeout(async () => {
         window.scroll({ top: 0, left: 0, behavior: "smooth" });
@@ -1054,10 +1061,11 @@ GeneralJs.scrollTo = function (from, valueOrTo, visualSpecific = 0, noSmoothMode
         window.removeEventListener("scroll", GeneralJs.stacks[tempEventName]);
       }, delta);
       GeneralJs.stacks[tempEventName] = async (e) => {
-        if (Math.floor(window.scrollY) === 0) {
-          await callback();
-          clearTimeout(GeneralJs.stacks[tempTimeoutScrollToName]);
-          window.removeEventListener("scroll", GeneralJs.stacks[tempEventName]);
+        if (Math.floor(window.scrollY) <= scrollDelta) {
+          callback().then(() => {
+            clearTimeout(GeneralJs.stacks[tempTimeoutScrollToName]);
+            window.removeEventListener("scroll", GeneralJs.stacks[tempEventName]);
+          }).catch((err) => { console.log(err) });
         } else {
           GeneralJs.stacks[tempObserverValueNumberName] = window.scrollY;
         }

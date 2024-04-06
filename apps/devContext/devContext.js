@@ -7074,22 +7074,21 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김영빈",
-    //     designer: "공세미",
-    //     link: "https://drive.google.com/drive/folders/1qoiZLUjEKr4YHBVWBSYbeqGJbuAfUDuX",
+    //     client: "김수연",
+    //     designer: "박정훈",
+    //     link: "https://drive.google.com/drive/folders/18YFeh43Sfs8DDyONr81z9ujZ2C9ttnxQ",
     //     pay: true
     //   },
     // ]);
 
 
     
-    
     // raw video
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "안순영",
-    //     designer: "박주령",
+    //     client: "김수연",
+    //     designer: "박정훈",
     //   },
     // ]);
 

@@ -341,7 +341,7 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
       designers = designers.map((obj) => { return obj.desid; });
 
       instance.totalValues[12] = GeneralJs.objectDeepCopy(image);
-      document.querySelector('.' + ghostBaseClassName).parentNode.style.height = String(1420) + ea;
+      document.querySelector('.' + ghostBaseClassName).parentNode.style.height = String(<&& 1420 | 1323 | 1174 | 1323 | 132 &&>) + ea;
 
       ajaxJson({
         page: "styleCuration",
@@ -805,7 +805,7 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
     subTitleMarginTop = <%% (isMac() ? 4 : 6), (isMac() ? 3 : 5), (isMac() ? 1 : 4), (isMac() ? 1 : 4), 0.5 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
-    buttonWidth = <%% 190, 194, 186, 168, 31 %%>;
+    buttonWidth = <%% 190, 190, 186, 168, 31 %%>;
     buttonHeight = <%% 32, 32, 30, 28, 9 %%>;
     buttonSize = <%% 14, 14, 13, 12, 3.5 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
@@ -835,17 +835,17 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
     descriptionPointBoldPaddingBottom = <%% (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 0.8 %%>;
     descriptionPointBoldMargin = <%% 2, 2, 2, 2, 1 %%>;
 
-    blanketHeight = <%% 50, 50, 50, 50, 50 %%>;
+    blanketHeight = <%% 50, 40, 40, 40, 40 %%>;
     blanketVisualTop = <%% 1, 1, 1, 1, 1 %%>;
     blanketOpacity = <%% 0.3, 0.3, 0.3, 0.3, 0.3 %%>;
-    blanketMargin = <%% 34, 34, 34, 34, 34 %%>;
+    blanketMargin = <%% 34, 32, 30, 30, 34 %%>;
 
     if (desktop && window.innerHeight > 1100) {
-      titleSize = <%% 59, 51, 48, 39, 9 %%>;
+      titleSize = <%% 59, 51, 43, 39, 9 %%>;
       subTitleSize = <%% 19, 18, 17, 16, 3.6 %%>;
       firstBasePaddingTop = <%% 80, 48, 30, 28, 50 %%>;
       subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
-      firstBasePaddingBottom = <%% 240, 240, 160, 130, 210 %%>;
+      firstBasePaddingBottom = <%% 240, 210, 160, 130, 210 %%>;
       mainImageTop = <%% 42, 32, 18, 16, 32 %%>;
       mainImageHeight = <%% 390, 372, 338, 314, 39 %%>;
       buttonMarginTop = <%% 146, 146, 132, 110, 3.6 %%>;
@@ -1090,8 +1090,8 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 25, 25, 25, 25 %%>;
-    titleSize = <%% 26, 26, 26, 26, 26 %%>;
+    titleMarginTop = <%% 25, 21, 15, 12, 25 %%>;
+    titleSize = <%% 25, 24, 22, 20, 4 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
@@ -1099,23 +1099,23 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
     descriptionVisualLeft = <%% -1, -1, -1, -1, -1 %%>;
 
-    betweenMargin = <%% 26, 26, 26, 26, 26 %%>;
+    betweenMargin = <%% 26, 16, 12, 8, 26 %%>;
 
-    wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
-    numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+    wordsMotherMarginTop = <%% 120, 120, 110, 100, 12 %%>;
+    numbersAreaMarginTop = <%% 100, 100, 90, 80, 10 %%>;
 
-    numberSize = <%% 28, 28, 28, 28, 28 %%>;
+    numberSize = <%% 28, 26, 24, 21, 28 %%>;
     numberWeight = <%% 700, 700, 700, 700, 700 %%>;
-    numberBarHeight = <%% 28, 28, 28, 28, 28 %%>;
-    numberBarMarginLeft = <%% 12, 12, 12, 12, 12 %%>;
+    numberBarHeight = <%% 28, 24, 22, 19, 28 %%>;
+    numberBarMarginLeft = <%% 12, 12, 10, 9, 12 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    serviceAreMarginTop = <%% 100, 100, 100, 100, 100 %%>;
-    serviceAreMarginBottom = <%% 100, 100, 100, 100, 100 %%>;
+    serviceAreMarginTop = <%% 100, 80, 60, 40, 10 %%>;
+    serviceAreMarginBottom = <%% 100, 80, 60, 40, 10 %%>;
 
-    serviceNameBoxWidth = <%% 156, 156, 156, 156, 156 %%>;
-    serviceNameBoxHeight = <%% 40, 40, 40, 40, 40 %%>;
-    serviceNameSize = <%% 17, 17, 17, 17, 17 %%>;
+    serviceNameBoxWidth = <%% 156, 140, 130, 120, 156 %%>;
+    serviceNameBoxHeight = <%% 40, 36, 32, 28, 40 %%>;
+    serviceNameSize = <%% 17, 16, 14, 12, 17 %%>;
     serviceNameWeight = <%% 800, 800, 800, 800, 800 %%>;
     serviceNameTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
 
@@ -1127,13 +1127,13 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     circleGroupMarginTop = <%% 11, 11, 11, 11, 11 %%>;
     circleGroupMarginBottom = <%% 13, 13, 13, 13, 13 %%>;
 
-    imageRatio = <%% 75, 75, 75, 75, 75 %%>;
+    imageRatio = <%% 75, 80, 82, 85, 75 %%>;
 
-    triangleZoneHeight = <%% 50, 50, 50, 50, 50 %%>;
-    triangleWidth = <%% 12, 12, 12, 12, 12 %%>;
+    triangleZoneHeight = <%% 50, 45, 40, 35, 50 %%>;
+    triangleWidth = <%% 12, 11, 10, 9, 12 %%>;
 
-    serviceDescriptionHeight = <%% 98, 98, 98, 98, 98 %%>;
-    serviceDescriptionSize = <%% 16, 16, 16, 16, 16 %%>;
+    serviceDescriptionHeight = <%% 98, 86, 76, 72, 98 %%>;
+    serviceDescriptionSize = <%% 16, 15, 13, 12, 16 %%>;
     serviceDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     serviceDescriptionLineHeight = <%% 1.52, 1.52, 1.52, 1.52, 1.52 %%>;
     serviceDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
@@ -1146,17 +1146,17 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     plusBoxHeight = <%% 11, 11, 11, 11, 11 %%>;
     plusBoxMarginRight = <%% 4.5, 4.5, 4.5, 4.5, 4.5 %%>;
 
-    checkCircleAreaHeight = <%% 80, 80, 80, 80, 80 %%>;
-    checkCircleWidth = <%% 23, 23, 23, 23, 23 %%>;
+    checkCircleAreaHeight = <%% 80, 64, 52, 56, 80 %%>;
+    checkCircleWidth = <%% 23, 21, 19, 17, 23 %%>;
 
-    buttonMotherMarginBottom = <%% 140, 140, 140, 140, 140 %%>;
-    buttonHeight = <%% 42, 42, 42, 42, 42 %%>;
-    buttonWidth = <%% 120, 120, 120, 120, 120 %%>;
-    buttonSize = <%% 17, 17, 17, 17, 17 %%>;
+    buttonMotherMarginBottom = <%% 140, 140, 120, 100, 140 %%>;
+    buttonHeight = <%% 42, 42, 38, 32, 42 %%>;
+    buttonWidth = <%% 120, 120, 110, 100, 120 %%>;
+    buttonSize = <%% 17, 17, 16, 15, 17 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
     buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    originalSecondBaseHeight = <%% 1398, 1398, 1398, 1398, 1398 %%>;
+    originalSecondBaseHeight = <%% 1398, 1203, 1035, 1035, 1203 %%>;
 
     instance.totalValues[0] = 1;
 
@@ -1977,11 +1977,11 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 25, 25, 25, 25 %%>;
-    titleSize = <%% 26, 26, 26, 26, 26 %%>;
+    titleMarginTop = <%% 25, 21, 15, 12, 25 %%>;
+    titleSize = <%% 25, 24, 22, 20, 4 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 8, 8, 8 %%>;
-    titleSquareMarginRight = <%% 9, 9, 9, 9, 9 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
+    titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
     titleSquareTop = <%% 1, 1, 1, 1, 1 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
@@ -1989,42 +1989,42 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
 
     betweenMargin = <%% 26, 26, 26, 26, 26 %%>;
     checkCircleWidth = <%% 23, 23, 23, 23, 23 %%>;
-    buttonHeight = <%% 42, 42, 42, 42, 42 %%>;
+    buttonHeight = <%% 42, 42, 38, 32, 42 %%>;
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
-    numberSize = <%% 28, 28, 28, 28, 28 %%>;
+    numberSize = <%% 28, 26, 24, 21, 28 %%>;
     numberWeight = <%% 700, 700, 700, 700, 700 %%>;
-    numberBarHeight = <%% 28, 28, 28, 28, 28 %%>;
-    numberBarMarginLeft = <%% 12, 12, 12, 12, 12 %%>;
+    numberBarHeight = <%% 28, 24, 22, 19, 28 %%>;
+    numberBarMarginLeft = <%% 12, 12, 10, 9, 12 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+    numbersAreaMarginTop = <%% 100, 100, 90, 80, 10 %%>;
 
-    imageAreaMarginTop = <%% 70, 70, 70, 70, 70 %%>;
-    imageAreaMarginBottom = <%% 110, 110, 110, 110, 110 %%>;
-    imageWidth = <%% 510, 510, 510, 510, 510 %%>;
+    imageAreaMarginTop = <%% 70, 70, 50, 30, 70 %%>;
+    imageAreaMarginBottom = <%% 110, 100, 75, 65, 110 %%>;
+    imageWidth = <%% 510, 500, 450, 400, 510 %%>;
 
-    yesButtonAreaMarginTop = <%% 50, 50, 50, 50, 50 %%>;
-    yesButtonWidth = <%% 160, 160, 160, 160, 160 %%>;
-    yesButtonHeight = <%% 40, 40, 40, 40, 40 %%>;
-    yesButtonBetween = <%% 12, 12, 12, 12, 12 %%>;
+    yesButtonAreaMarginTop = <%% 50, 40, 30, 20, 50 %%>;
+    yesButtonWidth = <%% 160, 140, 130, 120, 160 %%>;
+    yesButtonHeight = <%% 40, 36, 34, 22, 40 %%>;
+    yesButtonBetween = <%% 12, 10, 9, 8, 12 %%>;
     yesButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    yesButtonSize = <%% 16, 16, 16, 16, 16 %%>;
+    yesButtonSize = <%% 16, 15, 14, 13, 3.5 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    completeButtonWidth = <%% 120, 120, 120, 120, 120 %%>;
-    completeButtonAreaMarginBottom = <%% 150, 150, 150, 150, 150 %%>;
-    completeButtonSize = <%% 17, 17, 17, 17, 17 %%>;
+    completeButtonWidth = <%% 120, 120, 110, 100, 120 %%>;
+    completeButtonAreaMarginBottom = <%% 150, 150, 120, 90, 150 %%>;
+    completeButtonSize = <%% 17, 17, 16, 15, 17 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
     completeButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    returnCircleWidth = <%% 34, 34, 34, 34, 34 %%>;
-    returnCircleMarginRight = <%% 11, 11, 11, 11, 11 %%>;
-    returnCicleArrowWidth = <%% 9, 9, 9, 9, 9 %%>;
-    returnCicleArrowLeft = <%% -1.5, -1.5, -1.5, -1.5, -1.5 %%>;
+    returnCircleWidth = <%% 34, 34, 32, 30, 34 %%>;
+    returnCircleMarginRight = <%% 11, 11, 10, 9, 11 %%>;
+    returnCicleArrowWidth = <%% 9, 9, 8, 7, 9 %%>;
+    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -1.5 %%>;
 
-    tempSecondHeight = <%% 1067.84, 1067.84, 1067.84, 1067.84, 1067.84 %%>;
+    tempSecondHeight = <%% 1067.84, 1037, 875, 875, 1067.84 %%>;
 
     thirdSelectionEvent = (index) => {
       return async function (e) {
@@ -2481,11 +2481,11 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 25, 25, 25, 25 %%>;
-    titleSize = <%% 26, 26, 26, 26, 26 %%>;
+    titleMarginTop = <%% 25, 21, 15, 12, 25 %%>;
+    titleSize = <%% 25, 24, 22, 20, 4 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 8, 8, 8 %%>;
-    titleSquareMarginRight = <%% 9, 9, 9, 9, 9 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
+    titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
     titleSquareTop = <%% 1, 1, 1, 1, 1 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
@@ -2493,51 +2493,51 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
 
     betweenMargin = <%% 26, 26, 26, 26, 26 %%>;
     checkCircleWidth = <%% 23, 23, 23, 23, 23 %%>;
-    buttonHeight = <%% 42, 42, 42, 42, 42 %%>;
+    buttonHeight = <%% 42, 42, 38, 32, 42 %%>;
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
-    numberSize = <%% 28, 28, 28, 28, 28 %%>;
+    numberSize = <%% 28, 26, 24, 21, 28 %%>;
     numberWeight = <%% 700, 700, 700, 700, 700 %%>;
-    numberBarHeight = <%% 28, 28, 28, 28, 28 %%>;
-    numberBarMarginLeft = <%% 12, 12, 12, 12, 12 %%>;
+    numberBarHeight = <%% 28, 24, 22, 19, 28 %%>;
+    numberBarMarginLeft = <%% 12, 12, 10, 9, 12 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+    numbersAreaMarginTop = <%% 100, 100, 90, 80, 10 %%>;
 
-    imageAreaMarginTop = <%% 45, 45, 45, 45, 45 %%>;
-    imageAreaMarginBottom = <%% 110, 110, 110, 110, 110 %%>;
+    imageAreaMarginTop = <%% 45, 40, 35, 30, 45 %%>;
+    imageAreaMarginBottom = <%% 110, 100, 75, 65, 110 %%>;
     imageWidth = <%% 510, 510, 510, 510, 510 %%>;
 
-    yesButtonAreaMarginTop = <%% 25, 25, 25, 25, 25 %%>;
-    yesButtonWidth = <%% 160, 160, 160, 160, 160 %%>;
-    yesButtonHeight = <%% 40, 40, 40, 40, 40 %%>;
-    yesButtonBetween = <%% 12, 12, 12, 12, 12 %%>;
+    yesButtonAreaMarginTop = <%% 25, 21, 18, 16, 25 %%>;
+    yesButtonWidth = <%% 160, 140, 130, 120, 160 %%>;
+    yesButtonHeight = <%% 40, 36, 34, 22, 40 %%>;
+    yesButtonBetween = <%% 12, 10, 9, 8, 12 %%>;
     yesButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    yesButtonSize = <%% 16, 16, 16, 16, 16 %%>;
+    yesButtonSize = <%% 16, 15, 14, 13, 3.5 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    completeButtonWidth = <%% 120, 120, 120, 120, 120 %%>;
-    completeButtonAreaMarginBottom = <%% 129, 129, 129, 129, 129 %%>;
-    completeButtonSize = <%% 17, 17, 17, 17, 17 %%>;
+    completeButtonWidth = <%% 120, 120, 110, 100, 120 %%>;
+    completeButtonAreaMarginBottom = <%% 129, 129, 110, 90, 129 %%>;
+    completeButtonSize = <%% 17, 17, 16, 15, 17 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
     completeButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    returnCircleWidth = <%% 34, 34, 34, 34, 34 %%>;
-    returnCircleMarginRight = <%% 11, 11, 11, 11, 11 %%>;
-    returnCicleArrowWidth = <%% 9, 9, 9, 9, 9 %%>;
-    returnCicleArrowLeft = <%% -1.5, -1.5, -1.5, -1.5, -1.5 %%>;
+    returnCircleWidth = <%% 34, 34, 32, 30, 34 %%>;
+    returnCircleMarginRight = <%% 11, 11, 10, 9, 11 %%>;
+    returnCicleArrowWidth = <%% 9, 9, 8, 7, 9 %%>;
+    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -1.5 %%>;
 
-    middleLineMarginBottom = <%% 90, 90, 90, 90, 90 %%>;
-    middleLinePaddingTop = <%% 80, 80, 80, 80, 80 %%>;
+    middleLineMarginBottom = <%% 90, 85, 75, 65, 90 %%>;
+    middleLinePaddingTop = <%% 80, 70, 60, 50, 80 %%>;
 
-    blueBoxHeight = <%% 70, 70, 70, 70, 70 %%>;
-    blueDescriptionSize = <%% 16, 16, 15, 15, 15 %%>;
+    blueBoxHeight = <%% 70, 68, 60, 56, 70 %%>;
+    blueDescriptionSize = <%% 16, 15, 14, 13, 15 %%>;
     blueDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blueDescriptionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
     blueDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    tempSecondHeight = <%% 1067.84, 1067.84, 1067.84, 1067.84, 1067.84 %%>;
+    tempSecondHeight = <%% 1067.84, 995, 853, 853, 1067.84 %%>;
 
     blackDescriptionBoxHeight = <%% 56, 56, 56, 56, 56 %%>;
     blackDescriptionBoxWidth = <%% 196, 196, 196, 196, 196 %%>;
@@ -3372,11 +3372,11 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 25, 25, 25, 25 %%>;
-    titleSize = <%% 26, 26, 26, 26, 26 %%>;
+    titleMarginTop = <%% 25, 21, 15, 12, 25 %%>;
+    titleSize = <%% 25, 24, 22, 20, 4 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 8, 8, 8 %%>;
-    titleSquareMarginRight = <%% 9, 9, 9, 9, 9 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
+    titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
     titleSquareTop = <%% 1, 1, 1, 1, 1 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
@@ -3384,71 +3384,71 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
 
     betweenMargin = <%% 26, 26, 26, 26, 26 %%>;
     checkCircleWidth = <%% 23, 23, 23, 23, 23 %%>;
-    buttonHeight = <%% 42, 42, 42, 42, 42 %%>;
+    buttonHeight = <%% 42, 42, 38, 32, 42 %%>;
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
-    numberSize = <%% 28, 28, 28, 28, 28 %%>;
+    numberSize = <%% 28, 26, 24, 21, 28 %%>;
     numberWeight = <%% 700, 700, 700, 700, 700 %%>;
-    numberBarHeight = <%% 28, 28, 28, 28, 28 %%>;
-    numberBarMarginLeft = <%% 12, 12, 12, 12, 12 %%>;
+    numberBarHeight = <%% 28, 24, 22, 19, 28 %%>;
+    numberBarMarginLeft = <%% 12, 12, 10, 9, 12 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+    numbersAreaMarginTop = <%% 100, 100, 90, 80, 10 %%>;
 
-    imageAreaMarginTop = <%% 45, 45, 45, 45, 45 %%>;
-    imageAreaMarginBottom = <%% 110, 110, 110, 110, 110 %%>;
+    imageAreaMarginTop = <%% 45, 40, 35, 30, 45 %%>;
+    imageAreaMarginBottom = <%% 110, 100, 75, 65, 110 %%>;
     imageWidth = <%% 510, 510, 510, 510, 510 %%>;
 
-    yesButtonAreaMarginTop = <%% 25, 25, 25, 25, 25 %%>;
-    yesButtonWidth = <%% 160, 160, 160, 160, 160 %%>;
-    yesButtonHeight = <%% 40, 40, 40, 40, 40 %%>;
-    yesButtonBetween = <%% 12, 12, 12, 12, 12 %%>;
+    yesButtonAreaMarginTop = <%% 25, 21, 18, 16, 25 %%>;
+    yesButtonWidth = <%% 160, 140, 130, 120, 160 %%>;
+    yesButtonHeight = <%% 40, 36, 34, 22, 40 %%>;
+    yesButtonBetween = <%% 12, 10, 9, 8, 12 %%>;
     yesButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    yesButtonSize = <%% 16, 16, 16, 16, 16 %%>;
+    yesButtonSize = <%% 16, 15, 14, 13, 3.5 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    completeButtonWidth = <%% 120, 120, 120, 120, 120 %%>;
-    completeButtonAreaMarginBottom = <%% 129, 129, 129, 129, 129 %%>;
-    completeButtonSize = <%% 17, 17, 17, 17, 17 %%>;
+    completeButtonWidth = <%% 120, 120, 110, 100, 120 %%>;
+    completeButtonAreaMarginBottom = <%% 129, 129, 110, 90, 129 %%>;
+    completeButtonSize = <%% 17, 17, 16, 15, 17 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
     completeButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    returnCircleWidth = <%% 34, 34, 34, 34, 34 %%>;
-    returnCircleMarginRight = <%% 11, 11, 11, 11, 11 %%>;
-    returnCicleArrowWidth = <%% 9, 9, 9, 9, 9 %%>;
-    returnCicleArrowLeft = <%% -1.5, -1.5, -1.5, -1.5, -1.5 %%>;
+    returnCircleWidth = <%% 34, 34, 32, 30, 34 %%>;
+    returnCircleMarginRight = <%% 11, 11, 10, 9, 11 %%>;
+    returnCicleArrowWidth = <%% 9, 9, 8, 7, 9 %%>;
+    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -1.5 %%>;
 
-    middleLineMarginBottom = <%% 100, 100, 100, 100, 100 %%>;
-    middleLinePaddingTop = <%% 80, 80, 80, 80, 80 %%>;
+    middleLineMarginBottom = <%% 100, 90, 80, 70, 100 %%>;
+    middleLinePaddingTop = <%% 80, 70, 60, 50, 80 %%>;
 
-    blueBoxHeight = <%% 130, 130, 130, 130, 120 %%>;
-    blueBoxHeight2 = <%% 70, 70, 70, 70, 70 %%>;
-    blueDescriptionSize = <%% 16, 16, 15, 15, 15 %%>;
+    blueBoxHeight = <%% 130, 120, 105, 95, 120 %%>;
+    blueBoxHeight2 = <%% 70, 68, 60, 56, 70 %%>;
+    blueDescriptionSize = <%% 16, 15, 14, 13, 15 %%>;
     blueDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blueDescriptionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
     blueDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    processBarHeight = <%% 24, 24, 24, 24, 24 %%>;
+    processBarHeight = <%% 24, 21, 18, 15, 24 %%>;
     defaultBudgetValue = <%% 5, 5, 5, 5, 5 %%>;
     blueWhiteFactorsAreaMarginTop = <%% 11, 11, 11, 11, 11 %%>;
-    blueWhiteFactorLineWidth = <%% 352, 352, 352, 352, 352 %%>;
+    blueWhiteFactorLineWidth = <%% 352, 280, 240, 200, 352 %%>;
     blueWhiteFactorLineMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-    blueWhiteFactorWidth = <%% 180, 180, 180, 180, 180 %%>;
-    blueWhiteFactorHeight = <%% 36, 36, 36, 36, 36 %%>;
+    blueWhiteFactorWidth = <%% 180, 150, 120, 90, 180 %%>;
+    blueWhiteFactorHeight = <%% 36, 30, 26, 21, 36 %%>;
     blueWhiteFactorTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    blueWhiteFactorSize = <%% 15, 15, 15, 15, 15 %%>;
+    blueWhiteFactorSize = <%% 15, 14, 12, 11, 3 %%>;
     blueWhiteFactorWeight = <%% 700, 700, 700, 700, 700 %%>;
-    blueWhitePlusCircleWidth = <%% 22, 22, 22, 22, 22 %%>;
-    blueWhitePlusCircleSize = <%% 20, 20, 20, 20, 20 %%>;
+    blueWhitePlusCircleWidth = <%% 22, 19, 17, 15, 22 %%>;
+    blueWhitePlusCircleSize = <%% 20, 19, 16, 15, 20 %%>;
     blueWhitePlusCircleWeight = <%% 800, 800, 800, 800, 800 %%>;
     blueWhitePlusCircleTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    blueWhitePlusCircleMargin = <%% 8, 8, 8, 8, 8 %%>;
+    blueWhitePlusCircleMargin = <%% 8, 7, 6, 5, 8 %%>;
 
-    processValueSize = <%% 15, 15, 15, 15, 15 %%>;
+    processValueSize = <%% 15, 13, 12, 11, 15 %%>;
     processValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    convertingBaseHeight = <%% 1540, 1540, 1540, 1540, 1540 %%>;
+    convertingBaseHeight = <%% 1540, 1392, 1220, 1392, 1392 %%>;
 
     processValuesRatio = 99.4;
 
@@ -3766,7 +3766,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
         display: "flex",
         position: "relative",
         marginTop: String(imageAreaMarginTop) + ea,
-        marginBottom: String(imageAreaMarginBottom) + ea,
+        marginBottom: String(middleLineMarginBottom) + ea,
         borderRadius: String(8) + "px",
         width: withOut(0, ea),
         flexDirection: "column",
@@ -4546,11 +4546,11 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 25, 25, 25, 25 %%>;
-    titleSize = <%% 26, 26, 26, 26, 26 %%>;
+    titleMarginTop = <%% 25, 21, 15, 12, 25 %%>;
+    titleSize = <%% 25, 24, 22, 20, 4 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 8, 8, 8 %%>;
-    titleSquareMarginRight = <%% 9, 9, 9, 9, 9 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
+    titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
     titleSquareTop = <%% 1, 1, 1, 1, 1 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
@@ -4558,71 +4558,71 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
 
     betweenMargin = <%% 26, 26, 26, 26, 26 %%>;
     checkCircleWidth = <%% 23, 23, 23, 23, 23 %%>;
-    buttonHeight = <%% 42, 42, 42, 42, 42 %%>;
+    buttonHeight = <%% 42, 42, 38, 32, 42 %%>;
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
-    numberSize = <%% 28, 28, 28, 28, 28 %%>;
+    numberSize = <%% 28, 26, 24, 21, 28 %%>;
     numberWeight = <%% 700, 700, 700, 700, 700 %%>;
-    numberBarHeight = <%% 28, 28, 28, 28, 28 %%>;
-    numberBarMarginLeft = <%% 12, 12, 12, 12, 12 %%>;
+    numberBarHeight = <%% 28, 24, 22, 19, 28 %%>;
+    numberBarMarginLeft = <%% 12, 12, 10, 9, 12 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+    numbersAreaMarginTop = <%% 100, 100, 90, 80, 10 %%>;
 
-    imageAreaMarginTop = <%% 45, 45, 45, 45, 45 %%>;
-    imageAreaMarginBottom = <%% 110, 110, 110, 110, 110 %%>;
+    imageAreaMarginTop = <%% 45, 40, 35, 30, 45 %%>;
+    imageAreaMarginBottom = <%% 110, 100, 75, 65, 110 %%>;
     imageWidth = <%% 510, 510, 510, 510, 510 %%>;
 
-    yesButtonAreaMarginTop = <%% 25, 25, 25, 25, 25 %%>;
-    yesButtonWidth = <%% 160, 160, 160, 160, 160 %%>;
-    yesButtonHeight = <%% 40, 40, 40, 40, 40 %%>;
-    yesButtonBetween = <%% 12, 12, 12, 12, 12 %%>;
+    yesButtonAreaMarginTop = <%% 25, 21, 18, 16, 25 %%>;
+    yesButtonWidth = <%% 160, 140, 130, 120, 160 %%>;
+    yesButtonHeight = <%% 40, 36, 34, 22, 40 %%>;
+    yesButtonBetween = <%% 12, 10, 9, 8, 12 %%>;
     yesButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    yesButtonSize = <%% 16, 16, 16, 16, 16 %%>;
+    yesButtonSize = <%% 16, 15, 14, 13, 3.5 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    completeButtonWidth = <%% 120, 120, 120, 120, 120 %%>;
-    completeButtonAreaMarginBottom = <%% 129, 129, 129, 129, 129 %%>;
-    completeButtonSize = <%% 17, 17, 17, 17, 17 %%>;
+    completeButtonWidth = <%% 120, 120, 110, 100, 120 %%>;
+    completeButtonAreaMarginBottom = <%% 129, 129, 110, 90, 129 %%>;
+    completeButtonSize = <%% 17, 17, 16, 15, 17 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
     completeButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    returnCircleWidth = <%% 34, 34, 34, 34, 34 %%>;
-    returnCircleMarginRight = <%% 11, 11, 11, 11, 11 %%>;
-    returnCicleArrowWidth = <%% 9, 9, 9, 9, 9 %%>;
-    returnCicleArrowLeft = <%% -1.5, -1.5, -1.5, -1.5, -1.5 %%>;
+    returnCircleWidth = <%% 34, 34, 32, 30, 34 %%>;
+    returnCircleMarginRight = <%% 11, 11, 10, 9, 11 %%>;
+    returnCicleArrowWidth = <%% 9, 9, 8, 7, 9 %%>;
+    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -1.5 %%>;
 
-    middleLineMarginBottom = <%% 100, 100, 100, 100, 100 %%>;
-    middleLinePaddingTop = <%% 80, 80, 80, 80, 80 %%>;
+    middleLineMarginBottom = <%% 100, 90, 80, 70, 100 %%>;
+    middleLinePaddingTop = <%% 80, 70, 60, 50, 80 %%>;
 
-    blueBoxHeight = <%% 130, 130, 130, 130, 120 %%>;
-    blueBoxHeight2 = <%% 70, 70, 70, 70, 70 %%>;
-    blueDescriptionSize = <%% 16, 16, 15, 15, 15 %%>;
+    blueBoxHeight = <%% 130, 120, 105, 95, 120 %%>;
+    blueBoxHeight2 = <%% 70, 68, 60, 56, 70 %%>;
+    blueDescriptionSize = <%% 16, 15, 14, 13, 15 %%>;
     blueDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blueDescriptionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
     blueDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    processBarHeight = <%% 24, 24, 24, 24, 24 %%>;
-    defaultBudgetValue = <%% 2, 2, 2, 2, 2 %%>;
+    processBarHeight = <%% 24, 21, 18, 15, 24 %%>;
+    defaultBudgetValue = <%% 5, 5, 5, 5, 5 %%>;
     blueWhiteFactorsAreaMarginTop = <%% 11, 11, 11, 11, 11 %%>;
-    blueWhiteFactorLineWidth = <%% 352, 352, 352, 352, 352 %%>;
+    blueWhiteFactorLineWidth = <%% 352, 280, 240, 200, 352 %%>;
     blueWhiteFactorLineMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-    blueWhiteFactorWidth = <%% 180, 180, 180, 180, 180 %%>;
-    blueWhiteFactorHeight = <%% 36, 36, 36, 36, 36 %%>;
+    blueWhiteFactorWidth = <%% 180, 150, 140, 120, 180 %%>;
+    blueWhiteFactorHeight = <%% 36, 30, 26, 21, 36 %%>;
     blueWhiteFactorTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    blueWhiteFactorSize = <%% 15, 15, 15, 15, 15 %%>;
+    blueWhiteFactorSize = <%% 15, 14, 13, 12, 3 %%>;
     blueWhiteFactorWeight = <%% 700, 700, 700, 700, 700 %%>;
-    blueWhitePlusCircleWidth = <%% 22, 22, 22, 22, 22 %%>;
-    blueWhitePlusCircleSize = <%% 20, 20, 20, 20, 20 %%>;
+    blueWhitePlusCircleWidth = <%% 22, 19, 17, 15, 22 %%>;
+    blueWhitePlusCircleSize = <%% 20, 19, 16, 15, 20 %%>;
     blueWhitePlusCircleWeight = <%% 800, 800, 800, 800, 800 %%>;
     blueWhitePlusCircleTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    blueWhitePlusCircleMargin = <%% 8, 8, 8, 8, 8 %%>;
+    blueWhitePlusCircleMargin = <%% 8, 7, 6, 5, 8 %%>;
 
-    processValueSize = <%% 15, 15, 15, 15, 15 %%>;
+    processValueSize = <%% 15, 13, 12, 11, 15 %%>;
     processValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    convertingBaseHeight = <%% 1808, 1808, 1808, 1808, 1808 %%>;
+    convertingBaseHeight = <%% 1808, 1638, 1442, 1442, 1808 %%>;
 
     processValuesRatio = 99.4;
 
@@ -5015,7 +5015,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
         display: "flex",
         position: "relative",
         marginTop: String(imageAreaMarginTop) + ea,
-        marginBottom: String(imageAreaMarginBottom) + ea,
+        marginBottom: String(middleLineMarginBottom) + ea,
         borderRadius: String(8) + "px",
         width: withOut(0, ea),
         flexDirection: "column",
@@ -5961,11 +5961,11 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 25, 25, 25, 25 %%>;
-    titleSize = <%% 26, 26, 26, 26, 26 %%>;
+    titleMarginTop = <%% 25, 21, 15, 12, 25 %%>;
+    titleSize = <%% 25, 24, 22, 20, 4 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 8, 8, 8 %%>;
-    titleSquareMarginRight = <%% 9, 9, 9, 9, 9 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
+    titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
     titleSquareTop = <%% 1, 1, 1, 1, 1 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
@@ -5975,71 +5975,71 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
 
     betweenMargin = <%% 26, 26, 26, 26, 26 %%>;
     checkCircleWidth = <%% 23, 23, 23, 23, 23 %%>;
-    buttonHeight = <%% 42, 42, 42, 42, 42 %%>;
+    buttonHeight = <%% 42, 42, 38, 32, 42 %%>;
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
-    numberSize = <%% 28, 28, 28, 28, 28 %%>;
+    numberSize = <%% 28, 26, 24, 21, 28 %%>;
     numberWeight = <%% 700, 700, 700, 700, 700 %%>;
-    numberBarHeight = <%% 28, 28, 28, 28, 28 %%>;
-    numberBarMarginLeft = <%% 12, 12, 12, 12, 12 %%>;
+    numberBarHeight = <%% 28, 24, 22, 19, 28 %%>;
+    numberBarMarginLeft = <%% 12, 12, 10, 9, 12 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+    numbersAreaMarginTop = <%% 100, 100, 90, 80, 10 %%>;
 
-    imageAreaMarginTop = <%% 45, 45, 45, 45, 45 %%>;
-    imageAreaMarginBottom = <%% 110, 110, 110, 110, 110 %%>;
+    imageAreaMarginTop = <%% 45, 40, 35, 30, 45 %%>;
+    imageAreaMarginBottom = <%% 110, 100, 75, 65, 110 %%>;
     imageWidth = <%% 510, 510, 510, 510, 510 %%>;
 
-    yesButtonAreaMarginTop = <%% 25, 25, 25, 25, 25 %%>;
-    yesButtonWidth = <%% 160, 160, 160, 160, 160 %%>;
-    yesButtonHeight = <%% 40, 40, 40, 40, 40 %%>;
-    yesButtonBetween = <%% 12, 12, 12, 12, 12 %%>;
+    yesButtonAreaMarginTop = <%% 25, 21, 18, 16, 25 %%>;
+    yesButtonWidth = <%% 160, 140, 130, 120, 160 %%>;
+    yesButtonHeight = <%% 40, 36, 34, 22, 40 %%>;
+    yesButtonBetween = <%% 12, 10, 9, 8, 12 %%>;
     yesButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    yesButtonSize = <%% 16, 16, 16, 16, 16 %%>;
+    yesButtonSize = <%% 16, 15, 14, 13, 3.5 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    completeButtonWidth = <%% 120, 120, 120, 120, 120 %%>;
-    completeButtonAreaMarginBottom = <%% 129, 129, 129, 129, 129 %%>;
-    completeButtonSize = <%% 17, 17, 17, 17, 17 %%>;
+    completeButtonWidth = <%% 120, 120, 110, 100, 120 %%>;
+    completeButtonAreaMarginBottom = <%% 129, 129, 110, 90, 129 %%>;
+    completeButtonSize = <%% 17, 17, 16, 15, 17 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
     completeButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    returnCircleWidth = <%% 34, 34, 34, 34, 34 %%>;
-    returnCircleMarginRight = <%% 11, 11, 11, 11, 11 %%>;
-    returnCicleArrowWidth = <%% 9, 9, 9, 9, 9 %%>;
-    returnCicleArrowLeft = <%% -1.5, -1.5, -1.5, -1.5, -1.5 %%>;
+    returnCircleWidth = <%% 34, 34, 32, 30, 34 %%>;
+    returnCircleMarginRight = <%% 11, 11, 10, 9, 11 %%>;
+    returnCicleArrowWidth = <%% 9, 9, 8, 7, 9 %%>;
+    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -1.5 %%>;
 
-    middleLineMarginBottom = <%% 100, 100, 100, 100, 100 %%>;
-    middleLinePaddingTop = <%% 80, 80, 80, 80, 80 %%>;
+    middleLineMarginBottom = <%% 100, 90, 80, 70, 100 %%>;
+    middleLinePaddingTop = <%% 80, 70, 60, 50, 80 %%>;
 
-    blueBoxHeight = <%% 130, 130, 130, 130, 120 %%>;
-    blueBoxHeight2 = <%% 70, 70, 70, 70, 70 %%>;
-    blueDescriptionSize = <%% 16, 16, 15, 15, 15 %%>;
+    blueBoxHeight = <%% 130, 120, 105, 95, 120 %%>;
+    blueBoxHeight2 = <%% 70, 68, 60, 56, 70 %%>;
+    blueDescriptionSize = <%% 16, 15, 14, 13, 15 %%>;
     blueDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blueDescriptionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
     blueDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    processBarHeight = <%% 24, 24, 24, 24, 24 %%>;
-    defaultBudgetValue = <%% 2, 2, 2, 2, 2 %%>;
+    processBarHeight = <%% 24, 21, 18, 15, 24 %%>;
+    defaultBudgetValue = <%% 5, 5, 5, 5, 5 %%>;
     blueWhiteFactorsAreaMarginTop = <%% 11, 11, 11, 11, 11 %%>;
-    blueWhiteFactorLineWidth = <%% 352, 352, 352, 352, 352 %%>;
+    blueWhiteFactorLineWidth = <%% 352, 280, 240, 200, 352 %%>;
     blueWhiteFactorLineMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-    blueWhiteFactorWidth = <%% 180, 180, 180, 180, 180 %%>;
-    blueWhiteFactorHeight = <%% 36, 36, 36, 36, 36 %%>;
+    blueWhiteFactorWidth = <%% 180, 150, 140, 120, 180 %%>;
+    blueWhiteFactorHeight = <%% 36, 30, 26, 21, 36 %%>;
     blueWhiteFactorTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    blueWhiteFactorSize = <%% 15, 15, 15, 15, 15 %%>;
+    blueWhiteFactorSize = <%% 15, 14, 13, 12, 3 %%>;
     blueWhiteFactorWeight = <%% 700, 700, 700, 700, 700 %%>;
-    blueWhitePlusCircleWidth = <%% 22, 22, 22, 22, 22 %%>;
-    blueWhitePlusCircleSize = <%% 20, 20, 20, 20, 20 %%>;
+    blueWhitePlusCircleWidth = <%% 22, 19, 17, 15, 22 %%>;
+    blueWhitePlusCircleSize = <%% 20, 19, 16, 15, 20 %%>;
     blueWhitePlusCircleWeight = <%% 800, 800, 800, 800, 800 %%>;
     blueWhitePlusCircleTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    blueWhitePlusCircleMargin = <%% 8, 8, 8, 8, 8 %%>;
+    blueWhitePlusCircleMargin = <%% 8, 7, 6, 5, 8 %%>;
 
-    processValueSize = <%% 15, 15, 15, 15, 15 %%>;
+    processValueSize = <%% 15, 13, 12, 11, 15 %%>;
     processValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    convertingBaseHeight = <%% 2000, 2000, 2000, 2000, 2000 %%>;
+    convertingBaseHeight = <%% 2000, 1864, 1640, 1640, 1864 %%>;
 
     fileUploadBoxHeight = <%% 180, 180, 180, 180, 180 %%>;
     fileUploadBoxSize = <%% 24, 24, 24, 24, 24 %%>;
@@ -6721,11 +6721,18 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     let thirdDescriptionMarginTop, thirdDescriptionWeight, thirdDescriptionSize, thirdDescriptionLineHeight;
     let processDiagramHeight;
     let totalHeight;
+    let blackButtonWidth, blackButtonHeight, blackButtonBetween;
+    let blackButtonSize, blackButtonWeight;
+    let hangulDescriptionWeight, hangulDescriptionSize, hangulDescriptionLineHeight;
+    let hangulDescriptionMarginTop;
+    let hangulBarMarginTop, hangulBarWidth, hangulBarHeight;
+    let noticeVisual;
+    let fixedWhiteBarHeight, fixedWhiteBarButtonMarginLeft;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
-    totalHeight = <%% 2588, 2588, 2578, 2578, 2578 %%>;
+    totalHeight = <%% 2593, 2346, 1960, 1960, 201 %%>;
 
     firstBasePaddingTop = <%% 26, 24, 24, 24, 8 %%>;
     firstBasePaddingBottom = <%% 180, 170, 160, 120, 20 %%>;
@@ -6751,7 +6758,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     pointOpacity = 0.4;
 
     mainImageTop = <%% 27, 24, 18, 16, 33 %%>;
-    mainImageHeight = <%% 390, 370, 338, 314, 39 %%>;
+    mainImageHeight = <%% 390, 370, 346, 314, 39 %%>;
 
     descriptionSize = <%% 15, 14, 14, 13, 3.2 %%>;
     descriptionLineHeight = <%% 1.8, 1.8, 1.8, 1.7, 1.8 %%>;
@@ -6770,35 +6777,54 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
 
     barBaseMarginTop = <%% 80, 80, 80, 80, 80 %%>;
 
-    initAreaPaddingBottom = <%% 200, 200, 200, 200, 200 %%>;
+    initAreaPaddingBottom = <%% 200, 200, 150, 100, 200 %%>;
 
-    hangulTitleSize = <%% 32, 32, 32, 32, 32 %%>;
+    hangulTitleSize = <%% 32, 28, 23.5, 20, 32 %%>;
     hangulTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    noticeBlockBetween = 10;
-    noticeBlockTitleWidth = 280;
-    noticeBlockHeight = 108;
+    noticeBlockBetween = <%% 10, 9, 5, 6, 10 %%>;
+    noticeBlockTitleWidth = <%% 280, 210, 150, 120, 280 %%>;
+    noticeBlockHeight = <%% 108, 100, 90, 70, 108 %%>;
 
-    blockPaddingTop = 170;
-    blockPaddingBottom = 200;
+    noticeVisual = <%% 24, 21, 18, 15, 3 %%>;
 
-    noticeBlockMarginTop = <%% 50, 50, 50, 50, 50 %%>;
+    blockPaddingTop = <%% 170, 170, 130, 90, 170 %%>;
+    blockPaddingBottom = <%% 200, 200, 150, 100, 200 %%>;
 
-    noticeTitleSize = <%% 21, 21, 21, 21, 21 %%>;
+    noticeBlockMarginTop = <%% 50, 45, 40, 35, 50 %%>;
+
+    noticeTitleSize = <%% 21, 18, 15, 14, 21 %%>;
     noticeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     noticeTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    noticeDescriptionIndent = <%% 24, 24, 24, 24, 24 %%>;
-    noticeDescriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+    noticeDescriptionIndent = <%% 24, 24, 21, 18, 24 %%>;
+    noticeDescriptionSize = <%% 15, 14, 13, 12, 15 %%>;
     noticeDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
     noticeDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
     noticeDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    thirdDescriptionMarginTop = <%% 10, 10, 10, 10, 10 %%>;
+    thirdDescriptionMarginTop = <%% 10, 7, 3, 1, 1 %%>;
     thirdDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-    thirdDescriptionSize = <%% 16, 16, 16, 16, 16 %%>;
+    thirdDescriptionSize = <%% 16, 15, 14, 13, 16 %%>;
     thirdDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-    processDiagramHeight = <%% 420, 420, 420, 420, 420 %%>;
+    processDiagramHeight = <%% 420, 350, 320, 290, 420 %%>;
+
+    blackButtonWidth = <%% 180, 160, 145, 120, 180 %%>;
+    blackButtonHeight = <%% 38, 32, 30, 24, 38 %%>;
+    blackButtonBetween = <%% 8, 7, 6, 5, 8 %%>;
+    blackButtonSize = <%% 16, 14, 13, 12, 4 %%>;
+    blackButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+    hangulDescriptionMarginTop = <%% 45, 32, 28, 20, 4 %%>;
+    hangulDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+    hangulDescriptionSize = <%% 16, 15, 14, 13, 3 %%>;
+    hangulDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+    hangulBarMarginTop = <%% 102, 67, 67, 67, 102 %%>;
+    hangulBarWidth = <%% 96, 84, 64, 48, 96 %%>;
+    hangulBarHeight = <%% 6, 5, 4, 3, 1 %%>;
+
+    fixedWhiteBarHeight = <%% 96, 80, 72, 64, 9 %%>;
+    fixedWhiteBarButtonMarginLeft = <%% 1037, 722, 503, 300, 600 %%>;
 
     mainIllust = <%% StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg" %%>;
 
@@ -6826,7 +6852,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
         title: "시공사 선택권",
         description: [
           "홈리에종은 시공 업체 선택을 고객에게 부여하고 있습니다.",
-          "최저가 제안을 보장해드릴 수 없기 때문에 업체의 신뢰도와 견적을 비교하여 선택하실 수 있으며 홈리에종 시공사와 디자이너 시공사 선택 시 책임 시공합니다.",
+          "최저가를 보장해드릴 수 없기 때문에 업체를 비교하여 선택하실 수 있으며 홈리에종과 디자이너 시공사 선택시 책임 시공합니다.",
           "고객님께서 직접 선택하신 외부 시공사를 이용할 수 있으며 이 경우에는 시공 감리를 진행하지 않습니다.",
         ]
       },
@@ -6838,8 +6864,8 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
       firstBasePaddingTop = <%% 60, 48, 30, 28, 50 %%>;
       subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
       firstBasePaddingBottom = <%% 230, 210, 160, 130, 210 %%>;
-      mainImageTop = <%% 36, 32, 18, 16, 32 %%>;
-      mainImageHeight = <%% 500, 508, 508, 508, 39 %%>;
+      mainImageTop = <%% 36, 26, 18, 16, 32 %%>;
+      mainImageHeight = <%% 500, 394, 346, 346, 39 %%>;
       buttonMarginTop = <%% 248, 146, 132, 110, 3.6 %%>;
     }
 
@@ -6882,7 +6908,6 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
         top: String(0) + ea,
         marginTop: String(baseTop - naviHeight) + ea,
         paddingTop: String(firstBasePaddingTop) + ea,
-        paddingBottom: String(firstBasePaddingBottom) + ea,
         width: withOut(0, ea),
         animation: "fadeinlite 0.6s ease forwards",
         opacity: String(0),
@@ -7039,13 +7064,13 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
           style: {
             display: "inline-flex",
             position: "relative",    
-            width: String(180) + ea,
-            height: String(38) + ea,
+            width: String(blackButtonWidth) + ea,
+            height: String(blackButtonHeight) + ea,
             background: colorExtended.blueDark,
-            borderRadius: String(38) + ea,
+            borderRadius: String(blackButtonHeight) + ea,
             justifyContent: "center",
             alignItems: "center",
-            marginRight: String(8) + ea,
+            marginRight: String(blackButtonBetween) + ea,
           },
           child: {
             attribute: {
@@ -7056,8 +7081,8 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
               display: "inline-block",
               position: "relative",
               top: String(buttonTextTop) + ea,
-              fontSize: String(16) + ea,
-              fontWeight: String(700),
+              fontSize: String(blackButtonSize) + ea,
+              fontWeight: String(blackButtonWeight),
               color: colorExtended.white,
             },
           }
@@ -7066,10 +7091,10 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
           style: {
             display: "inline-flex",
             position: "relative",    
-            width: String(180) + ea,
-            height: String(38) + ea,
+            width: String(blackButtonWidth) + ea,
+            height: String(blackButtonHeight) + ea,
             background: colorExtended.darkBlack,
-            borderRadius: String(38) + ea,
+            borderRadius: String(blackButtonHeight) + ea,
             justifyContent: "center",
             alignItems: "center",
           },
@@ -7082,8 +7107,8 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
               display: "inline-block",
               position: "relative",
               top: String(buttonTextTop) + ea,
-              fontSize: String(16) + ea,
-              fontWeight: String(700),
+              fontSize: String(blackButtonSize) + ea,
+              fontWeight: String(blackButtonWeight),
               color: colorExtended.white,
             },
           }
@@ -7108,7 +7133,6 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
       },
     });
     await instance.insertSecondBarBox(100, barBase);
-
 
     // second white
     secondWhite = createNode({
@@ -7170,7 +7194,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
         position: "relative",
         justifyContent: desktop ? "start" : "center",
         alignItems: desktop ? "start" : "center",
-        marginTop: String(45) + ea,
+        marginTop: String(hangulDescriptionMarginTop) + ea,
       },
       children: [
         {
@@ -7187,9 +7211,9 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
             display: "inline-block",
             position: "relative",
             color: colorExtended.black,
-            fontWeight: String(400),
-            fontSize: String(16) + ea,
-            lineHeight: String(1.6),
+            fontWeight: String(hangulDescriptionWeight),
+            fontSize: String(hangulDescriptionSize) + ea,
+            lineHeight: String(hangulDescriptionLineHeight),
           }
         }
       ]
@@ -7202,16 +7226,16 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
         position: "relative",
         justifyContent: desktop ? "start" : "center",
         alignItems: desktop ? "start" : "center",
-        marginTop: String(102) + ea,
+        marginTop: String(hangulBarMarginTop) + ea,
       },
       children: [
         {
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(96) + ea,
-            height: String(6) + ea,
-            borderRadius: String(6) + ea,
+            width: String(hangulBarWidth) + ea,
+            height: String(hangulBarHeight) + ea,
+            borderRadius: String(hangulBarHeight) + ea,
             background: colorExtended.gradientBlue,
             opacity: String(0.7),
           }
@@ -7223,7 +7247,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
       mother: secondWhite,
       mode: "img",
       attribute: {
-        src: StyleExplanationJs.binaryPath + "/diagram.svg",
+        src: (<&& StyleExplanationJs.binaryPath + "/diagram.svg" | StyleExplanationJs.binaryPath + "/diagram.svg" | StyleExplanationJs.binaryPath + "/diagram2.svg" | StyleExplanationJs.binaryPath + "/diagram.svg" | StyleExplanationJs.binaryPath + "/diagram.svg" &&>),
       },
       style: {
         position: "absolute",
@@ -7365,7 +7389,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
           alignItems: "center",
           justifyContent: "start",
           paddingLeft: String(noticeDescriptionIndent) + ea,
-          width: withOut(noticeBlockTitleWidth + noticeBlockBetween + 24, ea),
+          width: withOut(noticeBlockTitleWidth + noticeBlockBetween + noticeVisual, ea),
           borderRadius: String(10) + "px",
           background: colorExtended.white,
         },
@@ -7397,11 +7421,11 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
         bottom: String(0),
         left: String(0),
         width: withOut(0, ea),
-        height: String(96) + ea,
+        height: String(fixedWhiteBarHeight) + ea,
         zIndex: String(4),
         boxShadow: "0px -3px 19px -9px " + colorExtended.darkShadow,
         transformOrigin: "100% 0%",
-        transform: "translateY(" + String(96) + ea + ")",
+        transform: "translateY(" + String(fixedWhiteBarHeight) + ea + ")",
         transition: "all 0.6s ease",
       },
       children: [
@@ -7409,14 +7433,14 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
           style: {
             display: "inline-flex",
             position: "relative",    
-            width: String(180) + ea,
-            height: String(38) + ea,
+            width: String(blackButtonWidth) + ea,
+            height: String(blackButtonHeight) + ea,
             background: colorExtended.gradientBlue4,
-            borderRadius: String(38) + ea,
+            borderRadius: String(blackButtonHeight) + ea,
             justifyContent: "center",
             alignItems: "center",
-            marginRight: String(8) + ea,
-            marginLeft: String(1037) + ea,
+            marginRight: String(blackButtonBetween) + ea,
+            marginLeft: String(fixedWhiteBarButtonMarginLeft) + ea,
           },
           child: {
             attribute: {
@@ -7427,8 +7451,8 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
               display: "inline-block",
               position: "relative",
               top: String(buttonTextTop) + ea,
-              fontSize: String(16) + ea,
-              fontWeight: String(700),
+              fontSize: String(blackButtonSize) + ea,
+              fontWeight: String(blackButtonWeight),
               color: colorExtended.white,
             },
           }
@@ -7437,10 +7461,10 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
           style: {
             display: "inline-flex",
             position: "relative",    
-            width: String(180) + ea,
-            height: String(38) + ea,
+            width: String(blackButtonWidth) + ea,
+            height: String(blackButtonHeight) + ea,
             background: colorExtended.darkBlack,
-            borderRadius: String(38) + ea,
+            borderRadius: String(blackButtonHeight) + ea,
             justifyContent: "center",
             alignItems: "center",
           },
@@ -7453,16 +7477,14 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
               display: "inline-block",
               position: "relative",
               top: String(buttonTextTop) + ea,
-              fontSize: String(16) + ea,
-              fontWeight: String(700),
+              fontSize: String(blackButtonSize) + ea,
+              fontWeight: String(blackButtonWeight),
               color: colorExtended.white,
             },
           }
         },
       ]
-    })
-
-
+    });
 
   } catch (e) {
     console.log(e);
@@ -7544,8 +7566,8 @@ StyleExplanationJs.prototype.firstConverting = function () {
       let blackScrollTop;
       let numbersAreaMarginTop;
 
-      blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+      blackScrollTop = <%% -642, -565, -457, -0, -0 %%>;
+      numbersAreaMarginTop = <%% 100, 100, 90, 80, 10 %%>;
 
       blackTarget.style.transition = "all 0.6s ease";
       if (blackTarget.style.marginTop.replace(/[^0-9\-]/gi, '') === String(blackScrollTop)) {
@@ -7554,7 +7576,7 @@ StyleExplanationJs.prototype.firstConverting = function () {
             dom.style.animation = "fadeoutlite 0.6s ease forwards";
           }
           setQueue(() => {
-            instance.insertThirdBox(document.querySelector('.' + secondBaseClassName)).catch((err) => {
+            instance.insertThirdBox(secondBase).catch((err) => {
               console.log(err);
             });
           }, 600);
@@ -7595,8 +7617,8 @@ StyleExplanationJs.prototype.secondConverting = function () {
       let blackScrollTop;
       let numbersAreaMarginTop;
 
-      blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+      blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
+      numbersAreaMarginTop = <%% 100, 100, 90, 80, 10 %%>;
 
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
@@ -7628,8 +7650,8 @@ StyleExplanationJs.prototype.thirdConverting = function (furnishingMode = false)
         let blackScrollTop;
         let numbersAreaMarginTop;
   
-        blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
-        numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+        blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
+        numbersAreaMarginTop = <%% 100, 100, 90, 80, 10 %%>;
   
         scrollTo(window, 0, 0, false, async () => {
           for (let dom of fadeOutTargets) {
@@ -7654,8 +7676,8 @@ StyleExplanationJs.prototype.thirdConverting = function (furnishingMode = false)
         let blackScrollTop;
         let numbersAreaMarginTop;
   
-        blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
-        numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+        blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
+        numbersAreaMarginTop = <%% 100, 100, 90, 80, 10 %%>;
   
         blackTarget.style.transition = "all 0.6s ease";
         if (blackTarget.style.marginTop.replace(/[^0-9\-]/gi, '') === String(blackScrollTop)) {
@@ -7706,8 +7728,8 @@ StyleExplanationJs.prototype.fourthConverting = function () {
       let blackScrollTop;
       let numbersAreaMarginTop;
 
-      blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+      blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
+      numbersAreaMarginTop = <%% 100, 100, 90, 80, 10 %%>;
 
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
@@ -7739,8 +7761,8 @@ StyleExplanationJs.prototype.fifthConverting = function () {
       let blackScrollTop;
       let numbersAreaMarginTop;
 
-      blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+      blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
+      numbersAreaMarginTop = <%% 100, 100, 90, 80, 10 %%>;
 
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
@@ -7772,8 +7794,8 @@ StyleExplanationJs.prototype.sixthConverting = function () {
       let blackScrollTop;
       let numbersAreaMarginTop;
 
-      blackScrollTop = <%% -642, -642, -642, -642, -642 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 100, 100, 100 %%>;
+      blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
+      numbersAreaMarginTop = <%% 100, 100, 90, 80, 10 %%>;
 
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
@@ -7815,25 +7837,25 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
     let commentTriangleWidth;
     let commentSize, commentWeight, commentTextTop;
 
-    radius = <%% 5, 5, 5, 5, 5 %%>;
+    radius = <%% 5, 5, 4, 3, 1 %%>;
 
     x = <%% 2, 2, 2, 2, 2 %%>;
     y = <%% 5, 5, 5, 5, 5 %%>;
     z = <%% 8, 8, 8, 8, 8 %%>;
 
-    barAreaHeight = <%% 270, 270, 270, 270, 270 %%>;
-    flagWidth = <%% 23, 23, 23, 23, 23 %%>;
-    flagRight = <%% -19, -19, -19, -19, -19 %%>;
-    flagTop = <%% -34, -34, -34, -34, -34 %%>;
+    barAreaHeight = <%% 270, 270, 250, 230, 270 %%>;
+    flagWidth = <%% 23, 23, 21, 19, 23 %%>;
+    flagRight = <%% -19, -19, -18, -17, -19 %%>;
+    flagTop = <%% -34, -34, -32, -30, -34 %%>;
 
-    commentAreaTop = <%% -52, -52, -52, -52, -52 %%>;
+    commentAreaTop = <%% -52, -52, -50, -48, -52 %%>;
     commentAreaLeft = <%% 2, 2, 2, 2, 2 %%>;
-    commentAreaWidth = <%% 286, 286, 286, 286, 286 %%>;
-    commentAreaHeight = <%% 32, 32, 32, 32, 32 %%>;
+    commentAreaWidth = <%% 286, 286, 270, 260, 286 %%>;
+    commentAreaHeight = <%% 32, 32, 28, 24, 32 %%>;
 
-    commentTriangleWidth = <%% 8, 8, 8, 8, 8 %%>;
+    commentTriangleWidth = <%% 8, 8, 8, 6, 8 %%>;
 
-    commentSize = <%% 14, 14, 14, 14, 14 %%>;
+    commentSize = <%% 14, 14, 13, 11, 14 %%>;
     commentWeight = <%% 700, 700, 700, 700, 700 %%>;
     commentTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
@@ -8008,25 +8030,25 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20, ba
     let commentTriangleWidth;
     let commentSize, commentWeight, commentTextTop;
 
-    radius = <%% 5, 5, 5, 5, 5 %%>;
+    radius = <%% 5, 5, 4, 3, 1 %%>;
 
     x = <%% 2, 2, 2, 2, 2 %%>;
     y = <%% 5, 5, 5, 5, 5 %%>;
     z = <%% 8, 8, 8, 8, 8 %%>;
 
-    barAreaHeight = <%% 270, 270, 270, 270, 270 %%>;
-    flagWidth = <%% 23, 23, 23, 23, 23 %%>;
-    flagRight = <%% -19, -19, -19, -19, -19 %%>;
-    flagTop = <%% -34, -34, -34, -34, -34 %%>;
+    barAreaHeight = <%% 270, 270, 250, 230, 270 %%>;
+    flagWidth = <%% 23, 23, 21, 19, 23 %%>;
+    flagRight = <%% -19, -19, -18, -17, -19 %%>;
+    flagTop = <%% -34, -34, -32, -30, -34 %%>;
 
-    commentAreaTop = <%% -52, -52, -52, -52, -52 %%>;
+    commentAreaTop = <%% -52, -52, -50, -48, -52 %%>;
     commentAreaLeft = <%% 2, 2, 2, 2, 2 %%>;
-    commentAreaWidth = <%% 286, 286, 286, 286, 286 %%>;
-    commentAreaHeight = <%% 32, 32, 32, 32, 32 %%>;
+    commentAreaWidth = <%% 286, 286, 270, 260, 286 %%>;
+    commentAreaHeight = <%% 32, 32, 28, 24, 32 %%>;
 
-    commentTriangleWidth = <%% 8, 8, 8, 8, 8 %%>;
+    commentTriangleWidth = <%% 8, 8, 8, 6, 8 %%>;
 
-    commentSize = <%% 14, 14, 14, 14, 14 %%>;
+    commentSize = <%% 14, 14, 13, 11, 14 %%>;
     commentWeight = <%% 700, 700, 700, 700, 700 %%>;
     commentTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
@@ -8365,11 +8387,13 @@ StyleExplanationJs.prototype.firstReturn = function () {
   const { initAreaClassName, firstFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName, ghostBaseClassName, secondBarBoxMotherClassName } = this;
   return async function (e) {
     try {
+      scrollTo(window, 0, 0);
       document.querySelector('.' + ghostBaseClassName).remove();
       instance.selectionDomMaker(document.querySelector('.' + secondBaseClassName), true);
       document.querySelector('.' + secondBaseClassName).children[1].style.opacity = String(1);
       removeByClass(secondBarBoxMotherClassName);
       await instance.insertBarBox();
+      scrollTo(window, 0, 0);
     } catch (e) {
       console.log(e);
     }
@@ -8551,8 +8575,8 @@ StyleExplanationJs.prototype.launching = async function (loading) {
           //   instance.totalValues[0] = 1;
           //   instance.totalValues[1] = 1;
           // }, 0);
-          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-642) + "px";
-          // await instance.insertSeventhBox(secondBase);
+          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-457) + "px";
+          // await instance.insertEighthBox(secondBase);
 
           instance.resizeEvent();
           setInterval(() => {

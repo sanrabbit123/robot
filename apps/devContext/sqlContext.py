@@ -16,15 +16,25 @@ class SqlContext:
         self.mongo = localConnection
         self.mongolocal = localConnection
 
+        self.dir = processCwd() + "/apps/devContext"
+        self.targetFile = "sql.py"
+        self.targetFilePath = self.dir + "/" + self.targetFile
+
     async def launching(self) -> int:
         back = self.back
         mongo = self.mongo
         mongolocal = self.mongolocal
         try:
 
+            humanString = await fileSystem("readString", [ processCwd() + "/human.py" ])
+            initString = humanString.split("async def main():")[0]
+
+            sqlString = await fileSystem("readString", [ self.targetFilePath ])
+
+            print(sqlString)
 
 
-            
+
 
 
 
