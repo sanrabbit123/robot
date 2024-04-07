@@ -7119,7 +7119,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
-    totalHeight = <%% 2593, 2346, 1960, 1540, 201 %%>;
+    totalHeight = <%% 2593, 2346, 1960, 1540, 480 %%>;
 
     firstBasePaddingTop = <%% 26, 24, 24, 24, 20 %%>;
     firstBasePaddingBottom = <%% 180, 170, 160, 120, 20 %%>;
@@ -7128,10 +7128,10 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     subTitleMarginTop = <%% (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 3 : 6), (isMac() ? 3 : 6), 0.5 %%>;
 
-    buttonMarginTop = <%% 165, 160, 132, 110, 6 %%>;
+    buttonMarginTop = <%% 165, 160, 132, 110, 6.5 %%>;
     buttonWidth = <%% 205, 194, 186, 168, 31 %%>;
-    buttonHeight = <%% 32, 32, 30, 28, 9 %%>;
-    buttonSize = <%% 14, 14, 13, 12, 3.5 %%>;
+    buttonHeight = <%% 32, 32, 30, 28, 8.5 %%>;
+    buttonSize = <%% 14, 14, 13, 12, 3.4 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
     buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
@@ -7152,7 +7152,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
 
     mobileLeftPaddingVisual = 1;
 
-    descriptionMarginTop = <%% 40, 40, 36, 30, 75 %%>;
+    descriptionMarginTop = <%% 40, 40, 36, 30, 76 %%>;
 
     descriptionPointBoldPaddingLeft = <%% 8, 8, 8, 8, 1.6 %%>;
     descriptionPointBoldPaddingTop = <%% (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 3), (isMac() ? 2 : 3), 0.4 %%>;
@@ -7166,52 +7166,52 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
 
     initAreaPaddingBottom = <%% 200, 200, 150, 100, 22 %%>;
 
-    hangulTitleSize = <%% 32, 28, 23.5, 20, 32 %%>;
+    hangulTitleSize = <%% 32, 28, 23.5, 20, 4.6 %%>;
     hangulTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    noticeBlockBetween = <%% 10, 9, 5, 6, 10 %%>;
-    noticeBlockTitleWidth = <%% 280, 210, 150, 120, 280 %%>;
-    noticeBlockHeight = <%% 108, 100, 90, 80, 108 %%>;
+    noticeBlockBetween = <%% 10, 9, 5, 6, 2.5 %%>;
+    noticeBlockTitleWidth = <%% 280, 210, 150, 120, 30 %%>;
+    noticeBlockHeight = <%% 108, 100, 90, 80, 27.5 %%>;
 
     noticeVisual = <%% 24, 21, 18, 15, 3 %%>;
 
-    blockPaddingTop = <%% 170, 170, 130, 90, 20 %%>;
-    blockPaddingBottom = <%% 200, 200, 150, 100, 22 %%>;
+    blockPaddingTop = <%% 170, 170, 130, 90, 19 %%>;
+    blockPaddingBottom = <%% 200, 200, 150, 100, 21 %%>;
 
-    noticeBlockMarginTop = <%% 50, 45, 40, 35, 50 %%>;
+    noticeBlockMarginTop = <%% 50, 45, 40, 35, 5 %%>;
 
-    noticeTitleSize = <%% 21, 18, 15, 14, 3 %%>;
+    noticeTitleSize = <%% 21, 18, 15, 14, 3.4 %%>;
     noticeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     noticeTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    noticeDescriptionIndent = <%% 24, 24, 21, 18, 24 %%>;
+    noticeDescriptionIndent = <%% 24, 24, 21, 18, 2 %%>;
     noticeDescriptionSize = <%% 15, 14, 13, 12, 3 %%>;
     noticeDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-    noticeDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-    noticeDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    noticeDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.6 %%>;
+    noticeDescriptionTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
 
     thirdDescriptionMarginTop = <%% 10, 7, 3, 1, 1 %%>;
     thirdDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-    thirdDescriptionSize = <%% 16, 15, 14, 13, 3 %%>;
+    thirdDescriptionSize = <%% 16, 15, 14, 13, 3.2 %%>;
     thirdDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
     processDiagramHeight = <%% 420, 350, 320, 270, 420 %%>;
 
     blackButtonWidth = <%% 180, 160, 145, 130, 34 %%>;
     blackButtonHeight = <%% 38, 32, 30, 28, 7.6 %%>;
-    blackButtonBetween = <%% 8, 7, 6, 5, 2 %%>;
+    blackButtonBetween = <%% 8, 7, 6, 5, 1.5 %%>;
     blackButtonSize = <%% 16, 14, 13, 12, 3 %%>;
     blackButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    hangulDescriptionMarginTop = <%% 45, 32, 28, 20, 4 %%>;
+    hangulDescriptionMarginTop = <%% 45, 32, 28, 20, 2 %%>;
     hangulDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-    hangulDescriptionSize = <%% 16, 15, 14, 13, 3 %%>;
+    hangulDescriptionSize = <%% 16, 15, 14, 13, 3.2 %%>;
     hangulDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
     hangulBarMarginTop = <%% 102, 67, 67, 45, 102 %%>;
     hangulBarWidth = <%% 96, 84, 64, 48, 96 %%>;
     hangulBarHeight = <%% 6, 5, 4, 3, 1 %%>;
 
-    fixedWhiteBarHeight = <%% 96, 80, 72, 64, 9 %%>;
-    fixedWhiteBarButtonMarginLeft = <%% 1037, 722, 503, 456, 600 %%>;
+    fixedWhiteBarHeight = <%% 96, 80, 72, 64, 15 %%>;
+    fixedWhiteBarButtonMarginLeft = <%% 1037, 722, 503, 456, 40 %%>;
 
     returnCircleWidth = <%% 34, 34, 32, 28, 7.2 %%>;
     returnCicleArrowWidth = <%% 9, 9, 8, 7, 2 %%>;
@@ -7229,24 +7229,40 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     etcNotice = [
       {
         title: "예산과 기간",
-        description: [
+        description: desktop ? [
           "홈리에종의 인테리어 예산은 크게 시공 비용, 가구 구매, 디자이너 비용으로 구분됩니다.",
           big ? "프로젝트 기간은 서비스 종류에 따라 다르며 홈퍼니싱, 홈스타일링, 토탈 스타일링 평균 소요 기간은 각 30일, 45일, 60일입니다." : "프로젝트 소요기간은 홈퍼니싱, 홈스타일링, 토탈 스타일링 평균 기간은 각 30일, 45일, 60일입니다.",
+        ] : [
+          "홈리에종의 인테리어 예산은 크게",
+          "시공 비용, 가구 구매, 디자이너 비용으로 구분됩니다.",
+          "프로젝트 소요기간은 홈퍼니싱, 홈스타일링, 토탈 스타일링",
+          "평균 기간은 각 30일, 45일, 60일입니다.",
         ]
+
       },
       {
-        title: big ? "디자이너의 제공물" : "제공물",
-        description: [
+        title: (mobile || big) ? "디자이너의 제공물" : "제공물",
+        description: desktop ? [
           "디자이너 기본 작업물로는 일정표, 디자인 제안서, 배치도 (콜라주, 3D 모델링), 예산 구성안 및 제품 리스트 등이 있습니다.",
           "시공을 진행할 경우 시공 의뢰서가 추가 제공됩니다.",
+        ] : [
+          "디자이너 기본 작업물로는 일정표, 디자인 제안서,",
+          "배치도 (콜라주, 3D 모델링), 예산 구성안 및",
+          "제품 리스트 등이 있습니다.",
+          "시공을 진행할 경우 시공 의뢰서가 추가됩니다.",
         ]
       },
       {
         title: "시공사 선택권",
-        description: [
+        description: desktop ? [
           "홈리에종은 시공 업체 선택을 고객에게 부여하고 있습니다.",
           big ? "최저가를 보장해드릴 수 없기 때문에 업체를 비교하여 선택하실 수 있으며 홈리에종과 디자이너 시공사 선택시 책임 시공합니다." : "최저가를 보장해드릴 수 없기 때문에 업체를 비교하여 선택하실 수 있으며 홈리에종 시공사 선택시 책임 시공합니다.",
           "고객님께서 직접 선택하신 외부 시공사를 이용할 수 있으며 이 경우에는 시공 감리를 진행하지 않습니다.",
+        ] : [
+          "홈리에종은 시공 업체 선택을 고객에게 부여하고 있습니다.",
+          "최저가를 보장해드릴 수 없기 때문에 업체를 비교하여",
+          "선택하실 수 있으며 홈리에종 선택시 책임 시공합니다.",
+          "고객님께서 데려오신 외부 시공사 경우, 감리를 진행하지 않습니다.",
         ]
       },
     ]
@@ -7275,7 +7291,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     fifthBase.children[1].style.opacity = String(1);
     await instance.insertSecondBarBox(100);
     fifthBase.style.transition = "all 0.6s ease";
-    fifthBase.style.height = desktop ? String(totalHeight) + ea : "";
+    fifthBase.style.height = String(totalHeight) + ea;
     document.querySelector('.' + secondBarBoxMotherClassName)?.remove();
     setQueue(() => {
       for (let dom of fadeOutTargets) {
@@ -7604,12 +7620,13 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
       style: {
         display: "flex",
         position: "relative",
+        width: desktop ? "" : withOut(0, ea),
         justifyContent: desktop ? "start" : "center",
         alignItems: desktop ? "start" : "center",
       },
       children: [
         {
-          text: "서비스 과정을\n한눈에 확인해 보세요.",
+          text: desktop ? "서비스 과정을\n한눈에 확인해 보세요." : "서비스 과정을 한눈에 확인해 보세요.",
           style: {
             display: "inline-block",
             position: "relative",
@@ -7630,13 +7647,14 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
       style: {
         display: "flex",
         position: "relative",
+        width: desktop ? "" : withOut(0, ea),
         justifyContent: desktop ? "start" : "center",
         alignItems: desktop ? "start" : "center",
         marginTop: String(hangulDescriptionMarginTop) + ea,
       },
       children: [
         {
-          text: [
+          text: (desktop ? [
             "문의 및 응대 이후,",
             "",
             "홈리에종은 디자이너 추천서를 제공하며",
@@ -7644,7 +7662,10 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
             "",
             "계약 체결 후 매칭된 디자이너와 현장 미팅이 이루어지고,",
             "본격적인 디자인, 시공, 가구 구매가 시작됩니다.",
-          ].join("\n"),
+          ].join("\n") : [
+            "문의 및 응대 후, 홈리에종은 디자이너 추천서를 제공,",
+            "고객님의 디자이너 선택 및 계약금 결제가 이어집니다.",
+          ].join(" ")),
           style: {
             display: "inline-block",
             position: "relative",
@@ -7652,30 +7673,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
             fontWeight: String(hangulDescriptionWeight),
             fontSize: String(hangulDescriptionSize) + ea,
             lineHeight: String(hangulDescriptionLineHeight),
-          }
-        }
-      ]
-    });
-
-    createNode({
-      mother: secondWhite,
-      style: {
-        display: "flex",
-        position: "relative",
-        justifyContent: desktop ? "start" : "center",
-        alignItems: desktop ? "start" : "center",
-        marginTop: String(hangulBarMarginTop) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(hangulBarWidth) + ea,
-            height: String(hangulBarHeight) + ea,
-            borderRadius: String(hangulBarHeight) + ea,
-            background: colorExtended.gradientBlue,
-            opacity: String(0.7),
+            textAlign: desktop ? "" : "center",
           }
         }
       ]
@@ -7685,16 +7683,44 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
       mother: secondWhite,
       mode: "img",
       attribute: {
-        src: (<&& StyleExplanationJs.binaryPath + "/diagram.svg" | StyleExplanationJs.binaryPath + "/diagram.svg" | StyleExplanationJs.binaryPath + "/diagram2.svg" | StyleExplanationJs.binaryPath + "/diagram3.svg" | StyleExplanationJs.binaryPath + "/diagram.svg" &&>),
+        src: (<&& StyleExplanationJs.binaryPath + "/diagram.svg" | StyleExplanationJs.binaryPath + "/diagram.svg" | StyleExplanationJs.binaryPath + "/diagram2.svg" | StyleExplanationJs.binaryPath + "/diagram3.svg" | StyleExplanationJs.binaryPath + "/diagram4.svg" &&>),
       },
       style: {
-        position: "absolute",
-        right: desktop ? String(0) : String(mobileImageRight) + ea,
-        top: String(blockPaddingTop) + ea,
-        width: desktop ? "" : withOut(mobileImageRight * 2, ea),
+        display: desktop ? "inline-block" : "block",
+        position: desktop ? "absolute" : "relative",
+        right: String(0),
+        top: desktop ? String(blockPaddingTop) + ea : "",
+        marginTop: desktop ? "" : String(7) + ea,
+        width: desktop ? "" : withOut(0 * 2, ea),
         height: desktop ? String(processDiagramHeight) + ea : "",
       }
     });
+
+    if (desktop) {
+      createNode({
+        mother: secondWhite,
+        style: {
+          display: "flex",
+          position: "relative",
+          justifyContent: desktop ? "start" : "center",
+          alignItems: desktop ? "start" : "center",
+          marginTop: String(hangulBarMarginTop) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(hangulBarWidth) + ea,
+              height: String(hangulBarHeight) + ea,
+              borderRadius: String(hangulBarHeight) + ea,
+              background: colorExtended.gradientBlue,
+              opacity: String(0.7),
+            }
+          }
+        ]
+      });
+    }
 
     // third etc
     thirdEtc = createNode({
@@ -7707,7 +7733,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
         alignItems: "center",
         flexDirection: "column",
         paddingTop: String(blockPaddingTop) + ea,
-        paddingBottom: String(blockPaddingBottom) + ea,
+        paddingBottom: desktop ? String(blockPaddingBottom) + ea : String(blockPaddingTop) + ea,
       },
       child: {
         style: {
@@ -7746,29 +7772,31 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
       ]
     });
 
-    createNode({
-      mother: thirdEtc,
-      style: {
-        display: "flex",
-        position: "relative",
-        justifyContent: desktop ? "center" : "center",
-        alignItems: desktop ? "center" : "center",
-        marginTop: String(thirdDescriptionMarginTop) + ea,
-      },
-      children: [
-        {
-          text: "더 자세한 내용은 홈리에종 카카오 채널 혹은 유선 전화를 통해 확인하실 수 있습니다.",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            color: colorExtended.black,
-            fontWeight: String(thirdDescriptionWeight),
-            fontSize: String(thirdDescriptionSize) + ea,
-            lineHeight: String(thirdDescriptionLineHeight),
+    if (desktop) {
+      createNode({
+        mother: thirdEtc,
+        style: {
+          display: "flex",
+          position: "relative",
+          justifyContent: desktop ? "center" : "center",
+          alignItems: desktop ? "center" : "center",
+          marginTop: String(thirdDescriptionMarginTop) + ea,
+        },
+        children: [
+          {
+            text: "더 자세한 내용은 홈리에종 카카오 채널 혹은 유선 전화를 통해 확인하실 수 있습니다.",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              color: colorExtended.black,
+              fontWeight: String(thirdDescriptionWeight),
+              fontSize: String(thirdDescriptionSize) + ea,
+              lineHeight: String(thirdDescriptionLineHeight),
+            }
           }
-        }
-      ]
-    });
+        ]
+      });
+    }
 
     noticeTong = createNode({
       mother: thirdEtc,
@@ -7786,9 +7814,9 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
         style: {
           display: "flex",
           position: "relative",
-          flexDirection: "row",
+          flexDirection: desktop ? "row" : "column",
           width: withOut(0, ea),
-          height: String(noticeBlockHeight) + ea,
+          height: desktop ? String(noticeBlockHeight) + ea : "",
           marginBottom: String(noticeBlockBetween) + ea,
         }
       });
@@ -7800,10 +7828,12 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
           position: "relative",
           justifyContent: "center",
           alignItems: "center",
-          width: String(noticeBlockTitleWidth) + ea,
-          height: withOut(0, ea),
-          marginRight: String(noticeBlockBetween) + ea,
+          width: desktop ? String(noticeBlockTitleWidth) + ea : withOut(0, ea),
+          height: desktop ? withOut(0, ea) : String(9.6) + ea,
+          marginRight: desktop ? String(noticeBlockBetween) + ea : "",
           borderRadius: String(10) + "px",
+          borderBottomLeftRadius: desktop ? String(10) + "px" : String(0) + ea,
+          borderBottomRightRadius: desktop ? String(10) + "px" : String(0) + ea,
           background: colorExtended.blueDark,
         },
         child: {
@@ -7814,7 +7844,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
             color: colorExtended.white,
             display: "inline-block",
             position: "relative",
-            top: String(noticeTitleTextTop) + ea,
+            top: desktop ? String(noticeTitleTextTop) + ea : "",
           }
         }
       })
@@ -7825,10 +7855,13 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
           display: "inline-flex",
           position: "relative",
           alignItems: "center",
-          justifyContent: "start",
-          paddingLeft: String(noticeDescriptionIndent) + ea,
-          width: withOut(noticeBlockTitleWidth + noticeBlockBetween + noticeVisual, ea),
+          justifyContent: desktop ? "start" : "center",
+          paddingLeft: desktop ? String(noticeDescriptionIndent) + ea : "",
+          width: desktop ? withOut(noticeBlockTitleWidth + noticeBlockBetween + noticeVisual, ea) : withOut(0, ea),
+          height: desktop ? withOut(0, ea) : String(noticeBlockHeight) + ea,
           borderRadius: String(10) + "px",
+          borderTopLeftRadius: desktop ? String(10) + "px" : String(0) + ea,
+          borderTopRightRadius: desktop ? String(10) + "px" : String(0) + ea,
           background: colorExtended.white,
         },
         child: {
@@ -7836,6 +7869,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
           style: {
             display: "inline-block",
             position: "relative",
+            textAlign: desktop ? "" : "center",
             fontSize: String(noticeDescriptionSize) + ea,
             fontWeight: String(noticeDescriptionWeight),
             color: colorExtended.black,
@@ -7878,7 +7912,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
             justifyContent: "center",
             alignItems: "center",
             marginRight: String(blackButtonBetween) + ea,
-            marginLeft: String(fixedWhiteBarButtonMarginLeft) + ea,
+            marginLeft: desktop ? String(fixedWhiteBarButtonMarginLeft) + ea : "",
           },
           child: {
             attribute: {
@@ -9019,16 +9053,16 @@ StyleExplanationJs.prototype.launching = async function (loading) {
           const secondBase = await instance.insertSecondBox();
           await instance.insertBarBox();
 
-          GeneralJs.setQueue(() => {
-            const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
-            for (let dom of fadeOutTargets) {
-              dom.remove();
-            }
-            instance.totalValues[0] = 1;
-            instance.totalValues[1] = 1;
-          }, 0);
-          document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-71) + instance.ea;
-          await instance.insertEighthBox(secondBase);
+          // GeneralJs.setQueue(() => {
+          //   const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
+          //   for (let dom of fadeOutTargets) {
+          //     dom.remove();
+          //   }
+          //   instance.totalValues[0] = 1;
+          //   instance.totalValues[1] = 1;
+          // }, 0);
+          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-71) + instance.ea;
+          // await instance.insertEighthBox(secondBase);
 
           instance.resizeEvent();
           setInterval(() => {
