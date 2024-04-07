@@ -300,7 +300,7 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
   targetPhotos = randomPick.map((obj) => { return BRIDGEHOST.replace(/\:3000$/gi, '') + obj.path; });
   this.photoPosition = [];
 
-  mother.style.paddingTop = desktop ? String(innerMargin) + ea : String(0) + ea;
+  mother.style.paddingTop = desktop ? String(innerMargin) + ea : String(1) + ea;
   if (mobile) {
     mother.style.background = "";
     mother.style.boxShadow = "";
@@ -341,7 +341,7 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
       designers = designers.map((obj) => { return obj.desid; });
 
       instance.totalValues[12] = GeneralJs.objectDeepCopy(image);
-      document.querySelector('.' + ghostBaseClassName).parentNode.style.height = String(<&& 1420 | 1323 | 1174 | 958 | 132 &&>) + ea;
+      document.querySelector('.' + ghostBaseClassName).parentNode.style.height = String(<&& 1420 | 1323 | 1174 | 958 | 228 &&>) + ea;
 
       ajaxJson({
         page: "styleCuration",
@@ -443,6 +443,9 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
             instance.photoPosition[i].setAttribute("complete", "true");
           }
           mother.style.paddingTop = String(completePaddingTop) + ea;
+          if (mobile) {
+            mother.parentElement.style.marginTop = String(0) + ea;
+          }
           mother.querySelector("." + pictureBoxClassName).removeChild(loading);
           mother.querySelector('.' + pictureWordingTargetClassName).textContent = completeWording;
           for (let dom of greenTargets) {
@@ -565,8 +568,8 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
                   position: "absolute",
                   width: photoWidthCss,
                   height: photoHeightCss,
-                  top: String(greenTop) + ea,
-                  left: String(greenLeft) + ea,
+                  top: String(greenTop) + "px",
+                  left: String(greenLeft) + "px",
                   borderRadius: String(3) + "px",
                   cursor: "pointer",
                   overflow: "hidden",
@@ -611,8 +614,8 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
                 style: {
                   position: "absolute",
                   width: String(radius * 2) + ea,
-                  top: String(greenTop + (photoHeight / 2) - (radius + circleVisual)) + ea,
-                  left: String(greenLeft + (photoWidth / 2) - radius) + ea,
+                  top: "calc(" + String(greenTop) + "px" + " + " + String((photoHeight / 2) - (radius + circleVisual)) + ea + ")",
+                  left: "calc(" + String(greenLeft) + "px" + " + " + String((photoWidth / 2) - radius) + ea + ")",
                   cursor: "pointer",
                 },
               });
@@ -660,7 +663,7 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
   questionBlock = createNode({
     mother,
     style: {
-      display: desktop ? "block" : "flex",
+      display: desktop ? "block" : "none",
       position: "relative",
       width: String(100) + '%',
       height: String(arrowZoneHeight) + ea,
@@ -797,8 +800,8 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
-    firstBasePaddingTop = <%% 26, 24, 24, 24, 8 %%>;
-    firstBasePaddingBottom = <%% 180, 170, 160, 120, 18.6 %%>;
+    firstBasePaddingTop = <%% 26, 24, 24, 24, 10 %%>;
+    firstBasePaddingBottom = <%% 180, 170, 160, 120, 20 %%>;
 
     subTitleSize = <%% 18, 18, 17, 15, 3.6 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -1086,22 +1089,30 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     let transitionString;
     let selectionForceEvent;
     let focusAnimation;
+    let mobileLeftBox, mobileRightBox;
+    let mobileBoxInnerPadding;
+    let mobileLeftBoxWidth;
+    let mobileTitleSize, mobileEngSize;
+    let mobileEngTextTop, mobileBoxLineMargin;
+    let mobileWhiteBoxHeight;
+    let mobileWhiteBoxBetween;
+    let mobileBlueLineHeight;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 21, 15, 10, 3 %%>;
-    titleSize = <%% 25, 24, 22, 19, 5 %%>;
+    titleMarginTop = <%% 25, 21, 15, 10, 2 %%>;
+    titleSize = <%% 25, 24, 22, 19, 4.7 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.2 %%>;
-    descriptionMarginTop = <%% 5, 5, 4, 3, 0.7 %%>;
+    descriptionMarginTop = <%% 5, 5, 4, 3, 0.6 %%>;
     descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
     descriptionVisualLeft = <%% -1, -1, -1, -1, -0.1 %%>;
 
     betweenMargin = <%% 26, 16, 12, 8, 26 %%>;
 
     wordsMotherMarginTop = <%% 120, 120, 110, 90, 16 %%>;
-    numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
+    numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
 
     numberSize = <%% 28, 26, 24, 21, 5 %%>;
     numberWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -1109,8 +1120,8 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    serviceAreMarginTop = <%% 100, 80, 60, 40, 10 %%>;
-    serviceAreMarginBottom = <%% 100, 80, 60, 40, 10 %%>;
+    serviceAreMarginTop = <%% 100, 80, 60, 40, 9.5 %%>;
+    serviceAreMarginBottom = <%% 100, 80, 60, 40, 7.5 %%>;
 
     serviceNameBoxWidth = <%% 156, 140, 130, 120, 15 %%>;
     serviceNameBoxHeight = <%% 40, 36, 32, 30, 4 %%>;
@@ -1126,36 +1137,46 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     circleGroupMarginTop = <%% 11, 11, 11, 9, 11 %%>;
     circleGroupMarginBottom = <%% 13, 13, 13, 11, 13 %%>;
 
-    imageRatio = <%% 75, 80, 82, 85, 75 %%>;
+    imageRatio = <%% 75, 80, 82, 85, 99 %%>;
 
     triangleZoneHeight = <%% 50, 45, 40, 32, 50 %%>;
     triangleWidth = <%% 12, 11, 10, 9, 12 %%>;
 
     serviceDescriptionHeight = <%% 98, 86, 76, 64, 98 %%>;
-    serviceDescriptionSize = <%% 16, 15, 13, 12, 3 %%>;
-    serviceDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
-    serviceDescriptionLineHeight = <%% 1.52, 1.52, 1.52, 1.52, 1.52 %%>;
-    serviceDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    serviceDescriptionSize = <%% 16, 15, 13, 12, 2.7 %%>;
+    serviceDescriptionWeight = <%% 700, 700, 700, 700, 400 %%>;
+    serviceDescriptionLineHeight = <%% 1.52, 1.52, 1.52, 1.52, 1.4 %%>;
+    serviceDescriptionTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
 
-    plusSize = <%% 15, 15, 13, 12, 3 %%>;
+    plusSize = <%% 15, 15, 13, 12, 2.6 %%>;
     plusWeight = <%% 700, 700, 700, 700, 700 %%>;
-    plusPaddingLeft = <%% 3, 3, 3, 3, 3 %%>;
-    plusPaddingTop = <%% 0, 0, 0, 0, 0 %%>;
-    plusPaddingBottom = <%% 2, 2, 2, 2, 2 %%>;
-    plusBoxHeight = <%% 11, 11, 11, 11, 11 %%>;
-    plusBoxMarginRight = <%% 4.5, 4.5, 4.5, 4.5, 4.5 %%>;
+    plusPaddingLeft = <%% 3, 3, 3, 3, 0.4 %%>;
+    plusPaddingTop = <%% 0, 0, 0, 0, 0.1 %%>;
+    plusPaddingBottom = <%% 2, 2, 2, 2, 0.1 %%>;
+    plusBoxHeight = <%% 11, 11, 11, 11, 2 %%>;
+    plusBoxMarginRight = <%% 4.5, 4.5, 4.5, 4.5, 0.5 %%>;
 
     checkCircleAreaHeight = <%% 80, 64, 52, 45, 80 %%>;
-    checkCircleWidth = <%% 23, 21, 19, 17, 23 %%>;
+    checkCircleWidth = <%% 23, 21, 19, 17, 3.6 %%>;
 
-    buttonMotherMarginBottom = <%% 140, 140, 120, 90, 140 %%>;
-    buttonHeight = <%% 42, 42, 38, 32, 42 %%>;
-    buttonWidth = <%% 120, 120, 110, 90, 120 %%>;
-    buttonSize = <%% 17, 17, 16, 14, 17 %%>;
+    buttonMotherMarginBottom = <%% 140, 140, 120, 90, 22 %%>;
+    buttonHeight = <%% 42, 42, 38, 32, 9 %%>;
+    buttonWidth = <%% 120, 120, 110, 90, 24 %%>;
+    buttonSize = <%% 17, 17, 16, 14, 3.6 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
-    buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    buttonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
 
-    originalSecondBaseHeight = <%% 1398, 1203, 1035, 825, 1203 %%>;
+    originalSecondBaseHeight = <%% 1398, 1203, 1035, 825, 238 %%>;
+
+    mobileWhiteBoxHeight = 48.8;
+    mobileWhiteBoxBetween = 2;
+    mobileBoxInnerPadding = 4.5;
+    mobileLeftBoxWidth = 42;
+    mobileTitleSize = 4;
+    mobileEngSize = 2.8;
+    mobileEngTextTop = -0.3;
+    mobileBoxLineMargin = 2.4;
+    mobileBlueLineHeight = 2;
 
     instance.totalValues[0] = 1;
 
@@ -1215,6 +1236,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
       textContent = [
         {
           title: "홈퍼니싱",
+          english: "Homefurnishing",
           description: [
             "시공 없이 스타일링만!",
             "가구 소품 패브릭 조명으로 진행",
@@ -1227,8 +1249,9 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
         },
         {
           title: "홈스타일링",
+          english: "Homestyling",
           description: [
-            "부분 시공 (빌트인 제작 가구 포함)",
+            desktop ? "부분 시공 (빌트인 제작 가구 포함)" : "부분 시공 (제작 가구 포함)",
             "스타일링 (가구 소품 패브릭)",
           ],
           source: StyleExplanationJs.binaryPath + "/service_s.svg",
@@ -1239,8 +1262,9 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
         },
         {
           title: "토탈 스타일링",
+          english: "Totalstyling",
           description: [
-            "전체 시공 (주방, 화장실 설비 교체 포함)",
+            desktop ? "전체 시공 (주방, 화장실 설비 교체 포함)" : "전체 시공 (주방, 화장실 포함)",
             "스타일링 (가구 소품 패브릭)",
           ],
           source: StyleExplanationJs.binaryPath + "/service_t.svg",
@@ -1280,7 +1304,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
               justifyContent: "center",
               alignItems: "center",
               flexDirection: "row",
-              borderBottom: "1.5px solid " + colorExtended.blueDark,
+              borderBottom: String(instance.lineWeight) + "px" + " solid " + colorExtended.blueDark,
             },
             children: [
               {
@@ -1367,7 +1391,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
           width: withOut(0, ea),
           justifyContent: "center",
           alignItems: "center",
-          flexDirection: "row",
+          flexDirection: desktop ? "row" : "column",
           paddingTop: String(serviceAreMarginTop) + ea,
           paddingBottom: String(serviceAreMarginBottom) + ea,
           opacity: String(0),
@@ -1479,216 +1503,388 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
             display: "inline-flex",
             position: "relative",
             width: desktop ? String(boxWidth) + ea : withOut(0, ea),
-            flexDirection: "column",
+            flexDirection: desktop ? "column" : "row",
             alignItems: "center",
             justifyContent: "start",
-            opacity: String(target.default ? 1 : 0.5),
+            opacity: desktop ? String(target.default ? 1 : 0.5) : String(target.default ? 1 : 0.8),
             marginLeft: (desktop && target.margin) ? String(betweenMargin) + ea : "",
             marginRight: (desktop && target.margin) ? String(betweenMargin) + ea : "",
             transition: transitionString,
             cursor: "pointer",
+            height: desktop ? "" : String(mobileWhiteBoxHeight) + ea,
+            borderRadius: desktop ? "" : String(10) + "px",
+            background: desktop ? "" : colorExtended.white,
+            boxShadow: desktop ? "" : "0px 5px 15px -9px " + colorExtended.darkDarkShadow,
+            marginBottom: desktop ? "" : String(mobileWhiteBoxBetween) + ea,
           }
         });
-        createNode({
-          mother: serviceBase,
-          class: [ colorConvertPoint0ClassName ],
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: String(serviceNameBoxWidth) + ea,
-            height: String(serviceNameBoxHeight) + ea,
-            borderRadius: String(serviceNameBoxHeight) + ea,
-            background: colorExtended.white,
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0px 2px 12px -9px " + colorExtended.darkShadow,
-            transition: transitionString,
-          },
-          child: {
-            text: target.title,
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(serviceNameSize) + ea,
-              fontWeight: String(serviceNameWeight),
-              color: colorExtended.black,
-              top: String(serviceNameTop) + ea,
-              transition: transitionString,
-            }
-          }
-        });
-        createNode({
-          mother: serviceBase,
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: String(circleWidth0) + ea,
-            height: String(circleWidth0) + ea,
-            borderRadius: String(circleWidth0) + ea,
-            background: colorExtended.white,
-            marginTop: String(circleGroupMarginTop) + ea,
-          }
-        });
-        createNode({
-          mother: serviceBase,
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: String(circleWidth1) + ea,
-            height: String(circleWidth1) + ea,
-            borderRadius: String(circleWidth1) + ea,
-            background: colorExtended.white,
-            marginTop: String(circleBetween) + ea,
-            opacity: String(0.7),
-          }
-        });
-        createNode({
-          mother: serviceBase,
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: String(circleWidth2) + ea,
-            height: String(circleWidth2) + ea,
-            borderRadius: String(circleWidth2) + ea,
-            background: colorExtended.white,
-            marginTop: String(circleBetween) + ea,
-            opacity: String(0.4),
-          }
-        });
-        createNode({
-          mother: serviceBase,
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: String(boxWidth) + ea,
-            height: String(boxWidth) + ea,
-            borderRadius: String(8) + "px",
-            background: colorExtended.gradientWhite2,
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0px 3px 15px -9px " + colorExtended.darkShadow,
-            marginTop: String(circleGroupMarginBottom) + ea,
-          },
-          child: {
-            mode: "img",
-            attribute: {
-              src: target.source,
-            },
+
+        if (desktop) {
+
+          createNode({
+            mother: serviceBase,
+            class: [ colorConvertPoint0ClassName ],
             style: {
               display: "inline-flex",
               position: "relative",
-              width: String(imageRatio) + '%',
-            }
-          }
-        });
-        createNode({
-          mother: serviceBase,
-          style: {
-            display: "flex",
-            position: "relative",
-            width: withOut(0, ea),
-            height: String(triangleZoneHeight) + ea,
-            alignItems: "center",
-            justifyContent: "center",
-          },
-          child: {
-            mode: "svg",
-            source: svgMaker.generalTriangle(colorExtended.blueDark),
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              width: String(triangleWidth) + ea,
-            }
-          }
-        });
-        createNode({
-          mother: serviceBase,
-          class: [ colorConvertPoint1ClassName ],
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: String(boxWidth) + ea,
-            height: String(serviceDescriptionHeight) + ea,
-            borderRadius: String(8) + "px",
-            background: (target.default ? colorExtended.blueDim : colorExtended.blueDark),
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0px 2px 12px -9px " + colorExtended.blueDim,
-            transition: transitionString,
-          },
-          child: {
-            text: target.description.join(target.plus ? "\n<b%+%b>" : "\n"),
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(serviceDescriptionSize) + ea,
-              fontWeight: String(serviceDescriptionWeight),
-              color: (target.default ? colorExtended.white : colorExtended.darkBlack),
-              textAlign: "center",
-              lineHeight: String(serviceDescriptionLineHeight),
-              top: String(serviceDescriptionTextTop) + ea,
-              transition: transitionString,
-            },
-            bold: {
-              display: "inline-flex",
-              position: "relative",
-              "justify-content": "center",
-              "align-items": "center",
-              color: colorExtended.mainBlue,
-              fontWeight: String(plusWeight),
-              fontSize: String(plusSize) + ea,
+              width: String(serviceNameBoxWidth) + ea,
+              height: String(serviceNameBoxHeight) + ea,
+              borderRadius: String(serviceNameBoxHeight) + ea,
               background: colorExtended.white,
-              padding: String(plusPaddingLeft) + ea,
-              paddingTop: String(plusPaddingTop) + ea,
-              paddingBottom: String(plusPaddingBottom) + ea,
-              height: String(plusBoxHeight) + ea,
-              "border-radius": String(8) + ea,
-              marginRight: String(plusBoxMarginRight) + ea,
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0px 2px 12px -9px " + colorExtended.darkShadow,
+              transition: transitionString,
+            },
+            child: {
+              text: target.title,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(serviceNameSize) + ea,
+                fontWeight: String(serviceNameWeight),
+                color: colorExtended.black,
+                top: String(serviceNameTop) + ea,
+                transition: transitionString,
+              }
             }
-          }
-        });
-        createNode({
-          mother: serviceBase,
-          style: {
-            display: "flex",
-            position: "relative",
-            width: withOut(0, ea),
-            height: String(checkCircleAreaHeight) + ea,
-            alignItems: "center",
-            justifyContent: "center",
-          },
-          child: {
+          });
+          createNode({
+            mother: serviceBase,
             style: {
               display: "inline-flex",
               position: "relative",
-              width: String(checkCircleWidth) + ea,
-              height: String(checkCircleWidth) + ea,
-              borderRadius: String(checkCircleWidth) + ea,
+              width: String(circleWidth0) + ea,
+              height: String(circleWidth0) + ea,
+              borderRadius: String(circleWidth0) + ea,
+              background: colorExtended.white,
+              marginTop: String(circleGroupMarginTop) + ea,
+            }
+          });
+          createNode({
+            mother: serviceBase,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(circleWidth1) + ea,
+              height: String(circleWidth1) + ea,
+              borderRadius: String(circleWidth1) + ea,
+              background: colorExtended.white,
+              marginTop: String(circleBetween) + ea,
+              opacity: String(0.7),
+            }
+          });
+          createNode({
+            mother: serviceBase,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(circleWidth2) + ea,
+              height: String(circleWidth2) + ea,
+              borderRadius: String(circleWidth2) + ea,
+              background: colorExtended.white,
+              marginTop: String(circleBetween) + ea,
+              opacity: String(0.4),
+            }
+          });
+          createNode({
+            mother: serviceBase,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(boxWidth) + ea,
+              height: String(boxWidth) + ea,
+              borderRadius: String(8) + "px",
+              background: colorExtended.gradientWhite2,
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0px 3px 15px -9px " + colorExtended.darkShadow,
+              marginTop: String(circleGroupMarginBottom) + ea,
+            },
+            child: {
+              mode: "img",
+              attribute: {
+                src: target.source,
+              },
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(imageRatio) + '%',
+              }
+            }
+          });
+          createNode({
+            mother: serviceBase,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(triangleZoneHeight) + ea,
+              alignItems: "center",
+              justifyContent: "center",
             },
             child: {
               mode: "svg",
-              source: svgMaker.checkCircle(colorExtended.white),
+              source: svgMaker.generalTriangle(colorExtended.blueDark),
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(triangleWidth) + ea,
+              }
+            }
+          });
+          createNode({
+            mother: serviceBase,
+            class: [ colorConvertPoint1ClassName ],
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(boxWidth) + ea,
+              height: String(serviceDescriptionHeight) + ea,
+              borderRadius: String(8) + "px",
+              background: (target.default ? colorExtended.blueDim : colorExtended.blueDark),
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0px 2px 12px -9px " + colorExtended.blueDim,
+              transition: transitionString,
+            },
+            child: {
+              text: target.description.join(target.plus ? "\n<b%+%b>" : "\n"),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(serviceDescriptionSize) + ea,
+                fontWeight: String(serviceDescriptionWeight),
+                color: (target.default ? colorExtended.white : colorExtended.darkBlack),
+                textAlign: "center",
+                lineHeight: String(serviceDescriptionLineHeight),
+                top: String(serviceDescriptionTextTop) + ea,
+                transition: transitionString,
+              },
+              bold: {
+                display: "inline-flex",
+                position: "relative",
+                "justify-content": "center",
+                "align-items": "center",
+                color: colorExtended.mainBlue,
+                fontWeight: String(plusWeight),
+                fontSize: String(plusSize) + ea,
+                background: colorExtended.white,
+                padding: String(plusPaddingLeft) + ea,
+                paddingTop: String(plusPaddingTop) + ea,
+                paddingBottom: String(plusPaddingBottom) + ea,
+                height: String(plusBoxHeight) + ea,
+                "border-radius": String(8) + ea,
+                marginRight: String(plusBoxMarginRight) + ea,
+              }
+            }
+          });
+          createNode({
+            mother: serviceBase,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(checkCircleAreaHeight) + ea,
+              alignItems: "center",
+              justifyContent: "center",
+            },
+            child: {
               style: {
                 display: "inline-flex",
                 position: "relative",
                 width: String(checkCircleWidth) + ea,
+                height: String(checkCircleWidth) + ea,
+                borderRadius: String(checkCircleWidth) + ea,
               },
-              previous: {
-                class: [ colorConvertPoint2ClassName ],
+              child: {
+                mode: "svg",
+                source: svgMaker.checkCircle(colorExtended.white),
                 style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(checkCircleWidth) + ea,
+                },
+                previous: {
+                  class: [ colorConvertPoint2ClassName ],
+                  style: {
+                    position: "absolute",
+                    top: String(0),
+                    left: String(0),
+                    width: String(checkCircleWidth) + ea,
+                    height: String(checkCircleWidth) + ea,
+                    borderRadius: String(checkCircleWidth) + ea,
+                    background: colorExtended.white,
+                    opacity: String(target.default ? 0 : 1),
+                  },
+                }
+              }
+            }
+          });
+
+        } else {
+
+          mobileLeftBox = createNode({
+            mother: serviceBase,
+            style: {
+              display: "inline-flex",
+              flexDirection: "column",
+              position: "relative",
+              width: String(mobileLeftBoxWidth - (mobileBoxInnerPadding * 2)) + ea,
+              height: withOut(mobileBoxInnerPadding * 2, ea),
+              justifyContent: "end",
+              alignItems: "start",
+              padding: String(mobileBoxInnerPadding) + ea,
+            },
+            children: [
+              {
+                text: target.title,
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(mobileTitleSize) + ea,
+                  fontWeight: String(700),
+                  color: colorExtended.black,
+                }
+              },
+              {
+                text: target.english,
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontFamily: "graphik",
+                  fontSize: String(mobileEngSize) + ea,
+                  fontWeight: String(200),
+                  color: colorExtended.black,
+                  top: String(mobileEngTextTop) + ea,
+                }
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  height: String(mobileBlueLineHeight) + ea,
+                  borderBottom: "1px solid " + colorExtended.mainBlue,
+                  marginBottom: String(mobileBoxLineMargin) + ea,
+                }
+              },
+              {
+                text: target.description.join(target.plus ? "\n<b%+%b>" : "\n"),
+                style: {
+                  display: "block",
+                  position: "relative",
+                  fontSize: String(serviceDescriptionSize) + ea,
+                  fontWeight: String(serviceDescriptionWeight),
+                  color: colorExtended.black,
+                  textAlign: "left",
+                  lineHeight: String(serviceDescriptionLineHeight),
+                  top: String(serviceDescriptionTextTop) + ea,
+                  transition: transitionString,
+                },
+                bold: {
+                  display: "inline-flex",
+                  position: "relative",
+                  "justify-content": "center",
+                  "align-items": "center",
+                  color: colorExtended.white,
+                  fontWeight: String(plusWeight),
+                  fontSize: String(plusSize) + ea,
+                  background: colorExtended.blueDark,
+                  padding: String(plusPaddingLeft) + ea,
+                  paddingTop: String(plusPaddingTop) + ea,
+                  paddingBottom: String(plusPaddingBottom) + ea,
+                  height: String(plusBoxHeight) + ea,
+                  "border-radius": String(8) + ea,
+                  marginRight: String(plusBoxMarginRight) + ea,
+                }
+              }
+            ]
+          });
+
+          mobileRightBox = createNode({
+            mother: serviceBase,
+            style: {
+              display: "inline-flex",
+              flexDirection: "column",
+              position: "relative",
+              width: withOut(mobileLeftBoxWidth + mobileBoxInnerPadding, ea),
+              height: withOut(mobileBoxInnerPadding * 2, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              padding: String(mobileBoxInnerPadding) + ea,
+              paddingLeft: String(0) + ea,
+            },
+            child: {
+              mode: "img",
+              attribute: {
+                src: target.source,
+              },
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(imageRatio) + '%',
+              }
+            }
+          });
+
+          createNode({
+            mother: mobileLeftBox,
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              top: String(mobileBoxInnerPadding) + ea,
+              left: String(mobileBoxInnerPadding) + ea,
+              width: String(checkCircleWidth) + ea,
+              height: String(checkCircleWidth) + ea,
+              borderRadius: String(checkCircleWidth) + ea,
+              overflow: "visible",
+            },
+            child: {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                mode: "svg",
+                source: svgMaker.checkCircle(colorExtended.white),
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(checkCircleWidth) + ea,
+                },
+                next: {
                   position: "absolute",
                   top: String(0),
                   left: String(0),
                   width: String(checkCircleWidth) + ea,
                   height: String(checkCircleWidth) + ea,
                   borderRadius: String(checkCircleWidth) + ea,
-                  background: colorExtended.white,
-                  opacity: String(target.default ? 0 : 1),
+                  zIndex: String(1),
+                  border: "1px solid " + colorExtended.mainBlue,
+                  boxSizing: "border-box",
                 },
+                previous: {
+                  class: [ colorConvertPoint2ClassName ],
+                  style: {
+                    position: "absolute",
+                    top: String(0),
+                    left: String(0),
+                    width: String(checkCircleWidth) + ea,
+                    height: String(checkCircleWidth) + ea,
+                    borderRadius: String(checkCircleWidth) + ea,
+                    background: colorExtended.mainBlue,
+                    opacity: String(target.default ? 1 : 0),
+                  },
+                }
               }
             }
-          }
-        });
+          });
+
+        }
+
       }
       for (let i = 0; i < textContent.length; i++) {
         createServiceBlock(i);
@@ -1976,19 +2172,19 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 21, 15, 10, 3 %%>;
-    titleSize = <%% 25, 24, 22, 19, 5 %%>;
+    titleMarginTop = <%% 25, 21, 15, 10, 2 %%>;
+    titleSize = <%% 25, 24, 22, 19, 4.7 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
-    titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
-    titleSquareTop = <%% 1, 1, 1, 1, 1 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 0 %%>;
+    titleSquareMarginRight = <%% 9, 9, 7, 5, 0 %%>;
+    titleSquareTop = <%% 1, 1, 1, 1, 0 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
     descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
 
     betweenMargin = <%% 26, 26, 26, 26, 26 %%>;
     checkCircleWidth = <%% 23, 23, 23, 23, 23 %%>;
-    buttonHeight = <%% 42, 42, 38, 32, 42 %%>;
+    buttonHeight = <%% 42, 42, 38, 32, 9 %%>;
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
@@ -1998,32 +2194,32 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
     numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
+    numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
 
-    imageAreaMarginTop = <%% 70, 70, 50, 25, 70 %%>;
-    imageAreaMarginBottom = <%% 110, 100, 75, 50, 110 %%>;
-    imageWidth = <%% 510, 500, 450, 350, 510 %%>;
+    imageAreaMarginTop = <%% 70, 70, 50, 25, 6 %%>;
+    imageAreaMarginBottom = <%% 110, 100, 75, 50, 11.5 %%>;
+    imageWidth = <%% 510, 500, 450, 350, 82 %%>;
 
-    yesButtonAreaMarginTop = <%% 50, 40, 30, 20, 50 %%>;
-    yesButtonWidth = <%% 160, 140, 130, 100, 160 %%>;
-    yesButtonHeight = <%% 40, 36, 34, 32, 40 %%>;
-    yesButtonBetween = <%% 12, 10, 9, 6, 12 %%>;
-    yesButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    yesButtonSize = <%% 16, 15, 14, 13, 3.5 %%>;
+    yesButtonAreaMarginTop = <%% 50, 40, 30, 20, 4 %%>;
+    yesButtonWidth = <%% 160, 140, 130, 100, 30 %%>;
+    yesButtonHeight = <%% 40, 36, 34, 32, 8 %%>;
+    yesButtonBetween = <%% 12, 10, 9, 6, 1.6 %%>;
+    yesButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    yesButtonSize = <%% 16, 15, 14, 13, 3.2 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    completeButtonWidth = <%% 120, 120, 110, 90, 120 %%>;
-    completeButtonAreaMarginBottom = <%% 150, 150, 120, 100, 150 %%>;
-    completeButtonSize = <%% 17, 17, 16, 14, 17 %%>;
+    completeButtonWidth = <%% 120, 120, 110, 90, 22 %%>;
+    completeButtonAreaMarginBottom = <%% 150, 150, 120, 100, 23 %%>;
+    completeButtonSize = <%% 17, 17, 16, 14, 3.6 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
-    completeButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    completeButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
 
-    returnCircleWidth = <%% 34, 34, 32, 28, 34 %%>;
-    returnCircleMarginRight = <%% 11, 11, 10, 7, 11 %%>;
-    returnCicleArrowWidth = <%% 9, 9, 8, 7, 9 %%>;
-    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -1.5 %%>;
+    returnCircleWidth = <%% 34, 34, 32, 28, 6.8 %%>;
+    returnCircleMarginRight = <%% 11, 11, 10, 7, 1.8 %%>;
+    returnCicleArrowWidth = <%% 9, 9, 8, 7, 1.8 %%>;
+    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -0.2 %%>;
 
-    tempSecondHeight = <%% 1067.84, 1037, 875, 675, 1067.84 %%>;
+    tempSecondHeight = <%% 1067.84, 1037, 875, 675, 159 %%>;
 
     thirdSelectionEvent = (index) => {
       return async function (e) {
@@ -2034,13 +2230,13 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
           if (toggle === "on") {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
                 dom.setAttribute("toggle", "off");
               } else {
-                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
                 dom.style.background = colorExtended.mainBlue;
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
@@ -2051,14 +2247,14 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
           } else {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
                 dom.style.background = colorExtended.mainBlue;
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
                 dom.setAttribute("toggle", "on");
                 instance.totalValues[1] = Number(dom.getAttribute("index"));
               } else {
-                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
@@ -2133,7 +2329,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "row",
-            borderBottom: "1.5px solid " + colorExtended.blueDark,
+            borderBottom: String(1.5) + "px" + " solid " + colorExtended.blueDark,
           },
           children: [
             {
@@ -2198,7 +2394,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
               }
             },
             {
-              text: "전체 공간을 철거하고 재시공을 원하시나요?",
+              text: desktop ? "전체 공간을 철거하고 재시공을 원하시나요?" : "전체 철거 후 재시공을 원하시나요?",
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -2263,7 +2459,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
                 width: String(yesButtonWidth) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: instance.totalValues[1] !== 0 ? "1.5px solid " + colorExtended.mainBlue : "1.5px solid " + colorExtended.darkBlack,
+                border: instance.totalValues[1] !== 0 ? String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue : String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
@@ -2304,7 +2500,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
                 width: String(yesButtonWidth) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: instance.totalValues[1] !== 1 ? "1.5px solid " + colorExtended.mainBlue : "1.5px solid " + colorExtended.darkBlack,
+                border: instance.totalValues[1] !== 1 ? String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue : String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
@@ -2359,7 +2555,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
             justifyContent: "center",
             alignItems: "center",
             boxSizing: "border-box",
-            border: "1.5px solid " + colorExtended.mainBlue,
+            border: String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue,
             cursor: "pointer",
           },
           child: {
@@ -2477,22 +2673,23 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     let blackDescriptionBoxWidth;
     let blackDescriptionBoxIndent;
     let blackDescriptionSize, blackDescriptionWeight, blackDescriptionLineHeight;
+    let mobileConstructItemDevide;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 21, 15, 10, 3 %%>;
-    titleSize = <%% 25, 24, 22, 19, 5 %%>;
+    titleMarginTop = <%% 25, 21, 15, 10, 2 %%>;
+    titleSize = <%% 25, 24, 22, 19, 4.7 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
-    titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
-    titleSquareTop = <%% 1, 1, 1, 1, 1 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 0 %%>;
+    titleSquareMarginRight = <%% 9, 9, 7, 5, 0 %%>;
+    titleSquareTop = <%% 1, 1, 1, 1, 0 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
     descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
 
     betweenMargin = <%% 26, 26, 26, 26, 26 %%>;
     checkCircleWidth = <%% 23, 23, 23, 23, 23 %%>;
-    buttonHeight = <%% 42, 42, 38, 32, 42 %%>;
+    buttonHeight = <%% 42, 42, 38, 32, 9 %%>;
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
@@ -2502,41 +2699,41 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
+    numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
 
-    imageAreaMarginTop = <%% 45, 40, 35, 25, 45 %%>;
-    imageAreaMarginBottom = <%% 110, 100, 75, 50, 110 %%>;
+    imageAreaMarginTop = <%% 45, 40, 35, 25, 6.5 %%>;
+    imageAreaMarginBottom = <%% 110, 100, 75, 50, 11.5 %%>;
     imageWidth = <%% 510, 510, 510, 510, 510 %%>;
 
-    yesButtonAreaMarginTop = <%% 25, 21, 18, 16, 25 %%>;
-    yesButtonWidth = <%% 160, 140, 130, 100, 160 %%>;
-    yesButtonHeight = <%% 40, 36, 34, 32, 40 %%>;
-    yesButtonBetween = <%% 12, 10, 9, 6, 12 %%>;
-    yesButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    yesButtonSize = <%% 16, 15, 14, 13, 3.5 %%>;
+    yesButtonAreaMarginTop = <%% 25, 21, 18, 16, 4.5 %%>;
+    yesButtonWidth = <%% 160, 140, 130, 100, 30 %%>;
+    yesButtonHeight = <%% 40, 36, 34, 32, 8 %%>;
+    yesButtonBetween = <%% 12, 10, 9, 6, 1.6 %%>;
+    yesButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    yesButtonSize = <%% 16, 15, 14, 13, 3.2 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    completeButtonWidth = <%% 120, 120, 110, 90, 120 %%>;
-    completeButtonAreaMarginBottom = <%% 129, 129, 110, 100, 129 %%>;
-    completeButtonSize = <%% 17, 17, 16, 14, 17 %%>;
+    completeButtonWidth = <%% 120, 120, 110, 90, 22 %%>;
+    completeButtonAreaMarginBottom = <%% 129, 129, 110, 100, 23 %%>;
+    completeButtonSize = <%% 17, 17, 16, 14, 3.6 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
-    completeButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    completeButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
 
-    returnCircleWidth = <%% 34, 34, 32, 28, 34 %%>;
-    returnCircleMarginRight = <%% 11, 11, 10, 7, 11 %%>;
-    returnCicleArrowWidth = <%% 9, 9, 8, 7, 9 %%>;
-    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -1.5 %%>;
+    returnCircleWidth = <%% 34, 34, 32, 28, 6.8 %%>;
+    returnCircleMarginRight = <%% 11, 11, 10, 7, 1.8 %%>;
+    returnCicleArrowWidth = <%% 9, 9, 8, 7, 1.8 %%>;
+    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -0.2 %%>;
 
-    middleLineMarginBottom = <%% 90, 85, 75, 60, 90 %%>;
-    middleLinePaddingTop = <%% 80, 70, 60, 50, 80 %%>;
+    middleLineMarginBottom = <%% 90, 85, 75, 60, 11.5 %%>;
+    middleLinePaddingTop = <%% 80, 70, 60, 50, 10 %%>;
 
-    blueBoxHeight = <%% 70, 68, 60, 52, 70 %%>;
-    blueDescriptionSize = <%% 16, 15, 14, 13, 15 %%>;
+    blueBoxHeight = <%% 70, 68, 60, 52, 17.5 %%>;
+    blueDescriptionSize = <%% 16, 15, 14, 13, 3 %%>;
     blueDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blueDescriptionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
-    blueDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    blueDescriptionTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
 
-    tempSecondHeight = <%% 1067.84, 995, 853, 708, 1067.84 %%>;
+    tempSecondHeight = <%% 1067.84, 995, 853, 708, 208.5 %%>;
 
     blackDescriptionBoxHeight = <%% 56, 56, 56, 56, 56 %%>;
     blackDescriptionBoxWidth = <%% 196, 196, 196, 196, 196 %%>;
@@ -2545,6 +2742,8 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     blackDescriptionSize = <%% 12, 12, 12, 12, 12 %%>;
     blackDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blackDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+
+    mobileConstructItemDevide = 4;
 
     if (instance.totalValues[3] === null) {
       instance.totalValues[3] = 2;
@@ -2559,13 +2758,13 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
           if (toggle === "on") {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
                 dom.setAttribute("toggle", "off");
               } else {
-                // dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                // dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
                 // dom.style.background = colorExtended.mainBlue;
                 // dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 // dom.firstChild.style.color = colorExtended.darkBlack;
@@ -2575,13 +2774,13 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
           } else {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
                 dom.style.background = colorExtended.mainBlue;
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
                 dom.setAttribute("toggle", "on");
               } else {
-                // dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                // dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 // dom.style.background = colorExtended.white;
                 // dom.style.boxShadow = "";
                 // dom.firstChild.style.color = colorExtended.blueDark;
@@ -2612,7 +2811,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
           if (toggle === "on") {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
@@ -2623,14 +2822,14 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
           } else {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
                 dom.style.background = colorExtended.mainBlue;
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
                 dom.setAttribute("toggle", "on");
                 instance.totalValues[3] = Number(dom.getAttribute("index"));
               } else {
-                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
@@ -2786,8 +2985,13 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     instance.totalMenu[2] = objectDeepCopy(constructItems);
     instance.totalMenu[3] = objectDeepCopy(statusItems);
 
-    yesButtonWidth = (standardWidth - (yesButtonBetween * ((constructItems.length / 2) - 1))) / (constructItems.length / 2);
-    yesButtonWidth2 = (standardWidth - (yesButtonBetween * ((statusItems.length / 1) - 1))) / (statusItems.length / 1);
+    if (desktop) {
+      yesButtonWidth = (standardWidth - (yesButtonBetween * ((constructItems.length / 2) - 1))) / (constructItems.length / 2);
+      yesButtonWidth2 = (standardWidth - (yesButtonBetween * ((statusItems.length / 1) - 1))) / (statusItems.length / 1);
+    } else {
+      yesButtonWidth = (standardWidth - (yesButtonBetween * (mobileConstructItemDevide - 1))) / mobileConstructItemDevide;
+      yesButtonWidth2 = standardWidth;
+    }
 
     ghostBase = {};
 
@@ -2838,7 +3042,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "row",
-            borderBottom: "1.5px solid " + colorExtended.blueDark,
+            borderBottom: String(instance.lineWeight) + "px" + " solid " + colorExtended.blueDark,
           },
           children: [
             {
@@ -2976,14 +3180,14 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                 width: String(yesButtonWidth) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: !(Array.isArray(instance.totalValues[2]) && instance.totalValues[2]?.includes(index)) ? "1.5px solid " + colorExtended.mainBlue : "1.5px solid " + colorExtended.darkBlack,
+                border: !(Array.isArray(instance.totalValues[2]) && instance.totalValues[2]?.includes(index)) ? String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue : String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack,
                 background: !(Array.isArray(instance.totalValues[2]) && instance.totalValues[2]?.includes(index)) ? colorExtended.white : colorExtended.mainBlue,
                 boxShadow: !(Array.isArray(instance.totalValues[2]) && instance.totalValues[2]?.includes(index)) ? "" : "0px 3px 15px -9px " + colorExtended.darkShadow,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                marginRight: String(index % (constructItems.length / 2) === (constructItems.length / 2) - 1 ? 0 : yesButtonBetween) + ea,
+                marginRight: desktop ? String(index % (constructItems.length / 2) === (constructItems.length / 2) - 1 ? 0 : yesButtonBetween) + ea : String(index % mobileConstructItemDevide === mobileConstructItemDevide - 1 ? 0 : yesButtonBetween) + ea,
                 marginBottom: String(yesButtonBetween) + ea,
                 cursor: "pointer",
               },
@@ -3136,13 +3340,15 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
               }
             },
             {
-              text: "<b%*%b>거주 중일 경우, 먼지 확산과 시공 외 범위에 대한 관리가 어려워 홈리에종 시공사 이용이 어려울 수 있습니다.",
+              text: desktop ? "<b%*%b>거주 중일 경우, 먼지 확산과 시공 외 범위에 대한 관리가 어려워 홈리에종 시공사 이용이 어려울 수 있습니다." : "<b%*%b>거주 중일 경우, 먼지와 시공 외 범위에 대한 관리가 어려워\n홈리에종 시공사 이용이 어려울 수 있습니다.",
               style: {
                 display: "inline-block",
                 position: "relative",
                 top: String(blueDescriptionTextTop) + ea,
                 fontSize: String(blueDescriptionSize) + ea,
                 fontWeight: String(blueDescriptionWeight),
+                lineHeight: desktop ? "" : String(1.45),
+                textAlign: desktop ? "" : "center",
                 color: (instance.totalValues[3] === 0 || instance.totalValues[3] === 1) ? colorExtended.darkBlack : colorExtended.deactive,
                 transition: "all 0.6s ease",
               },
@@ -3177,14 +3383,14 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                 width: String(yesButtonWidth2) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: index === instance.totalValues[3] ? "1.5px solid " + colorExtended.darkBlack : "1.5px solid " + colorExtended.mainBlue,
+                border: index === instance.totalValues[3] ? String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack : String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
                 background: index === instance.totalValues[3] ? colorExtended.mainBlue : colorExtended.white,
                 boxShadow: index === instance.totalValues[3] ? "0px 3px 15px -9px " + colorExtended.darkShadow : "",
-                marginRight: String(index % (statusItems.length / 1) === (statusItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea,
+                marginRight: desktop ? String(index % (statusItems.length / 1) === (statusItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea : "",
                 marginBottom: String(yesButtonBetween) + ea,
                 cursor: "pointer",
               },
@@ -3232,7 +3438,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
             justifyContent: "center",
             alignItems: "center",
             boxSizing: "border-box",
-            border: "1.5px solid " + colorExtended.mainBlue,
+            border: String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue,
             cursor: "pointer",
           },
           child: {
@@ -3368,22 +3574,23 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
     let convertingBaseHeight;
     let barClickEvent;
     let fifthSelectionEvent2, fifthSelectionEvent3;
+    let mobileConstructItemDevide;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 21, 15, 10, 3 %%>;
-    titleSize = <%% 25, 24, 22, 19, 5 %%>;
+    titleMarginTop = <%% 25, 21, 15, 10, 2 %%>;
+    titleSize = <%% 25, 24, 22, 19, 4.7 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
-    titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
-    titleSquareTop = <%% 1, 1, 1, 1, 1 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 0 %%>;
+    titleSquareMarginRight = <%% 9, 9, 7, 5, 0 %%>;
+    titleSquareTop = <%% 1, 1, 1, 1, 0 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
     descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
 
     betweenMargin = <%% 26, 26, 26, 26, 26 %%>;
     checkCircleWidth = <%% 23, 23, 23, 23, 23 %%>;
-    buttonHeight = <%% 42, 42, 38, 32, 42 %%>;
+    buttonHeight = <%% 42, 42, 38, 32, 9 %%>;
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
@@ -3393,63 +3600,65 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
     numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
+    numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
 
-    imageAreaMarginTop = <%% 45, 40, 35, 25, 45 %%>;
-    imageAreaMarginBottom = <%% 110, 100, 75, 50, 110 %%>;
+    imageAreaMarginTop = <%% 45, 40, 35, 25, 6.5 %%>;
+    imageAreaMarginBottom = <%% 110, 100, 75, 50, 11.5 %%>;
     imageWidth = <%% 510, 510, 510, 510, 510 %%>;
 
-    yesButtonAreaMarginTop = <%% 25, 21, 18, 16, 25 %%>;
-    yesButtonWidth = <%% 160, 140, 130, 100, 160 %%>;
-    yesButtonHeight = <%% 40, 36, 34, 32, 40 %%>;
-    yesButtonBetween = <%% 12, 10, 9, 6, 12 %%>;
-    yesButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    yesButtonSize = <%% 16, 15, 14, 13, 3.5 %%>;
+    yesButtonAreaMarginTop = <%% 25, 21, 18, 16, 4.5 %%>;
+    yesButtonWidth = <%% 160, 140, 130, 100, 30 %%>;
+    yesButtonHeight = <%% 40, 36, 34, 32, 8 %%>;
+    yesButtonBetween = <%% 12, 10, 9, 6, 1.6 %%>;
+    yesButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    yesButtonSize = <%% 16, 15, 14, 13, 3.2 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    completeButtonWidth = <%% 120, 120, 110, 90, 120 %%>;
-    completeButtonAreaMarginBottom = <%% 129, 129, 110, 100, 129 %%>;
-    completeButtonSize = <%% 17, 17, 16, 14, 17 %%>;
+    completeButtonWidth = <%% 120, 120, 110, 90, 22 %%>;
+    completeButtonAreaMarginBottom = <%% 129, 129, 110, 100, 23 %%>;
+    completeButtonSize = <%% 17, 17, 16, 14, 3.6 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
-    completeButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    completeButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
 
-    returnCircleWidth = <%% 34, 34, 32, 28, 34 %%>;
-    returnCircleMarginRight = <%% 11, 11, 10, 7, 11 %%>;
-    returnCicleArrowWidth = <%% 9, 9, 8, 7, 9 %%>;
-    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -1.5 %%>;
+    returnCircleWidth = <%% 34, 34, 32, 28, 6.8 %%>;
+    returnCircleMarginRight = <%% 11, 11, 10, 7, 1.8 %%>;
+    returnCicleArrowWidth = <%% 9, 9, 8, 7, 1.8 %%>;
+    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -0.2 %%>;
 
-    middleLineMarginBottom = <%% 100, 90, 80, 65, 100 %%>;
-    middleLinePaddingTop = <%% 80, 70, 60, 50, 80 %%>;
+    middleLineMarginBottom = <%% 100, 90, 80, 65, 11.5 %%>;
+    middleLinePaddingTop = <%% 80, 70, 60, 50, 10 %%>;
 
-    blueBoxHeight = <%% 130, 120, 105, 90, 120 %%>;
-    blueBoxHeight2 = <%% 70, 68, 60, 52, 70 %%>;
-    blueDescriptionSize = <%% 16, 15, 14, 13, 15 %%>;
+    blueBoxHeight = <%% 130, 120, 105, 90, 21 %%>;
+    blueBoxHeight2 = <%% 70, 68, 60, 52, 16 %%>;
+    blueDescriptionSize = <%% 16, 15, 14, 13, 3 %%>;
     blueDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blueDescriptionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
-    blueDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    blueDescriptionTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
 
-    processBarHeight = <%% 24, 21, 18, 15, 24 %%>;
+    processBarHeight = <%% 24, 21, 18, 15, 3 %%>;
     defaultBudgetValue = <%% 5, 5, 5, 5, 5 %%>;
-    blueWhiteFactorsAreaMarginTop = <%% 11, 11, 11, 11, 11 %%>;
-    blueWhiteFactorLineWidth = <%% 352, 280, 240, 200, 352 %%>;
-    blueWhiteFactorLineMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-    blueWhiteFactorWidth = <%% 180, 150, 120, 90, 180 %%>;
-    blueWhiteFactorHeight = <%% 36, 30, 26, 21, 36 %%>;
-    blueWhiteFactorTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    blueWhiteFactorSize = <%% 15, 14, 12, 11, 3 %%>;
+    blueWhiteFactorsAreaMarginTop = <%% 11, 11, 11, 11, 1.5 %%>;
+    blueWhiteFactorLineWidth = <%% 352, 280, 240, 200, 0 %%>;
+    blueWhiteFactorLineMarginRight = <%% 10, 10, 10, 10, 0 %%>;
+    blueWhiteFactorWidth = <%% 180, 150, 120, 90, 21 %%>;
+    blueWhiteFactorHeight = <%% 36, 30, 26, 21, 6.1 %%>;
+    blueWhiteFactorTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
+    blueWhiteFactorSize = <%% 15, 14, 12, 11, 2.7 %%>;
     blueWhiteFactorWeight = <%% 700, 700, 700, 700, 700 %%>;
-    blueWhitePlusCircleWidth = <%% 22, 19, 17, 14, 22 %%>;
-    blueWhitePlusCircleSize = <%% 20, 19, 16, 15, 20 %%>;
+    blueWhitePlusCircleWidth = <%% 22, 19, 17, 14, 4 %%>;
+    blueWhitePlusCircleSize = <%% 20, 19, 16, 15, 3.5 %%>;
     blueWhitePlusCircleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    blueWhitePlusCircleTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    blueWhitePlusCircleMargin = <%% 8, 7, 6, 4, 8 %%>;
+    blueWhitePlusCircleTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
+    blueWhitePlusCircleMargin = <%% 8, 7, 6, 4, 1.2 %%>;
 
-    processValueSize = <%% 15, 13, 12, 10, 15 %%>;
+    processValueSize = <%% 15, 13, 12, 10, 2.5 %%>;
     processValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    convertingBaseHeight = <%% 1540, 1392, 1220, 1019, 1392 %%>;
+    convertingBaseHeight = <%% 1540, 1392, 1220, 1019, 299 %%>;
 
     processValuesRatio = <%% 99.4, 99.4, 99.4, 100, 100 %%>;
+
+    mobileConstructItemDevide = 3;
 
     constructItems = [
       { title: "500만원 이하", value: "500만원 이하" },
@@ -3495,6 +3704,12 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
     yesButtonWidth = (standardWidth - (yesButtonBetween * ((statusItems.length / 1) - 1))) / (statusItems.length / 1);
     yesButtonWidthNoMargin = (standardWidth - (0 * ((constructItems.length / 1) - 1))) / (constructItems.length / 1);
     yesButtonWidth2 = (standardWidth - (yesButtonBetween * ((fabricItems.length / 1) - 1))) / (fabricItems.length / 1);
+
+    if (mobile) {
+      yesButtonWidth = standardWidth;
+      yesButtonWidth2 = standardWidth;
+      yesButtonWidthNoMargin = (standardWidth - (yesButtonBetween * (mobileConstructItemDevide - 1))) / mobileConstructItemDevide;
+    }
 
     if (instance.totalValues[4] === null) {
       instance.totalValues[4] = defaultBudgetValue;
@@ -3554,7 +3769,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
           if (toggle === "on") {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
@@ -3565,7 +3780,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
           } else {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
                 dom.style.background = colorExtended.mainBlue;
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
@@ -3597,7 +3812,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
           if (toggle === "on") {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
@@ -3607,7 +3822,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
           } else {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
                 dom.style.background = colorExtended.mainBlue;
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
@@ -3681,7 +3896,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "row",
-            borderBottom: "1.5px solid " + colorExtended.blueDark,
+            borderBottom: String(instance.lineWeight) + "px" + " solid " + colorExtended.blueDark,
           },
           children: [
             {
@@ -3973,7 +4188,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
             width: withOut(0, ea),
             marginTop: String(yesButtonAreaMarginTop) + ea,
           },
-          children: constructItems.map((o, index) => {
+          children: (desktop ? constructItems.map((o, index) => {
             return [
               {
                 class: [ blueBlockBarFactorClassName, blueBlockBarFactorIndexClassName + String(index) ],
@@ -3989,9 +4204,9 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                   position: "relative",
                   width: String(yesButtonWidthNoMargin) + ea,
                   height: String(processBarHeight) + ea,
-                  border: "1.5px solid " + colorExtended.mainBlue,
-                  borderRight: (index === constructItems.length - 1 ? "1.5px solid " + colorExtended.mainBlue : ""),
-                  borderLeft: (index === 0 ? "1.5px solid " + colorExtended.mainBlue : "1px dashed " + colorExtended.mainBlue),
+                  border: String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue,
+                  borderRight: (index === constructItems.length - 1 ? String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue : ""),
+                  borderLeft: (index === 0 ? String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue : "1px dashed " + colorExtended.mainBlue),
                   boxSizing: "border-box",
                   borderTopLeftRadius: (index === 0 ? String(processBarHeight) + ea : ""),
                   borderBottomLeftRadius: (index === 0 ? String(processBarHeight) + ea : ""),
@@ -4010,9 +4225,9 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                       height: String(processBarHeight) + ea,
                       top: String(-1.5) + "px",
                       left: String(-1.5) + "px",
-                      border: "1.5px solid " + colorExtended.darkBlack,
-                      borderRight: (index === constructItems.length - 1 ? "1.5px solid " + colorExtended.darkBlack : ""),
-                      borderLeft: (index === 0 ? "1.5px solid " + colorExtended.darkBlack : "1px dashed " + colorExtended.darkBlack),
+                      border: String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack,
+                      borderRight: (index === constructItems.length - 1 ? String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack : ""),
+                      borderLeft: (index === 0 ? String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack : "1px dashed " + colorExtended.darkBlack),
                       boxSizing: "border-box",
                       borderTopLeftRadius: (index === 0 ? String(processBarHeight) + ea : ""),
                       borderBottomLeftRadius: (index === 0 ? String(processBarHeight) + ea : ""),
@@ -4033,9 +4248,9 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                       height: String(processBarHeight) + ea,
                       top: String(-1.5) + "px",
                       left: String(-1.5) + "px",
-                      border: "1.5px solid " + colorExtended.darkBlack,
-                      borderRight: "1.5px solid " + colorExtended.darkBlack,
-                      borderLeft: (index === 0 ? "1.5px solid " + colorExtended.darkBlack : "1px dashed " + colorExtended.darkBlack),
+                      border: String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack,
+                      borderRight: String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack,
+                      borderLeft: (index === 0 ? String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack : "1px dashed " + colorExtended.darkBlack),
                       boxSizing: "border-box",
                       borderTopLeftRadius: (index === 0 ? String(processBarHeight) + ea : ""),
                       borderBottomLeftRadius: (index === 0 ? String(processBarHeight) + ea : ""),
@@ -4050,7 +4265,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                 ]
               },
             ]
-          }).flat()
+          }).flat() : [])
         },
         {
           style: {
@@ -4058,7 +4273,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
             position: "relative",
             width: String(processValuesRatio) + '%',
           },
-          children: constructItems.map((o, index) => {
+          children: (desktop ? constructItems.map((o, index) => {
             return {
               class: [ blueBlockBarWordsIndexClassName + String(index) ],
               attribute: {
@@ -4091,7 +4306,84 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                 }
               }
             }
-          })
+          }) : constructItems.map((o, index) => {
+            return {
+              class: [ blueBlockBarFactorClassName ],
+              attribute: {
+                index: String(index),
+                toggle: (index === defaultBudgetValue ? "on" : "off"),
+              },
+              event: {
+                click: async function (e) {
+                  try {
+                    const targets = document.querySelectorAll('.' + blueBlockBarFactorClassName);
+                    const index = Number(this.getAttribute("index"));
+                    const toggle = this.getAttribute("toggle");
+                    if (toggle === "on") {
+                      for (let dom of targets) {
+                        if (index === Number(dom.getAttribute("index"))) {
+                          dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
+                          dom.style.background = colorExtended.white;
+                          dom.style.boxShadow = "";
+                          dom.firstChild.style.color = colorExtended.blueDark;
+                          dom.setAttribute("toggle", "off");
+                          instance.totalValues[4] = null;
+                        }
+                      }
+                    } else {
+                      for (let dom of targets) {
+                        if (index === Number(dom.getAttribute("index"))) {
+                          dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
+                          dom.style.background = colorExtended.mainBlue;
+                          dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                          dom.firstChild.style.color = colorExtended.darkBlack;
+                          dom.setAttribute("toggle", "on");
+                          instance.totalValues[4] = Number(dom.getAttribute("index"));
+                        } else {
+                          dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
+                          dom.style.background = colorExtended.white;
+                          dom.style.boxShadow = "";
+                          dom.firstChild.style.color = colorExtended.blueDark;
+                          dom.setAttribute("toggle", "off");
+                        }
+                      }
+                    }
+          
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              },
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(yesButtonWidthNoMargin) + ea,
+                height: String(yesButtonHeight) + ea,
+                borderRadius: String(yesButtonHeight) + ea,
+                border: !(index === defaultBudgetValue) ? String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue : String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack,
+                background: !(index === defaultBudgetValue) ? colorExtended.white : colorExtended.mainBlue,
+                boxShadow: !(index === defaultBudgetValue) ? "" : "0px 3px 15px -9px " + colorExtended.darkShadow,
+                boxSizing: "border-box",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                marginRight: desktop ? String(index % (constructItems.length / 2) === (constructItems.length / 2) - 1 ? 0 : yesButtonBetween) + ea : String(index % mobileConstructItemDevide === mobileConstructItemDevide - 1 ? 0 : yesButtonBetween) + ea,
+                marginBottom: String(yesButtonBetween) + ea,
+                cursor: "pointer",
+              },
+              child: {
+                text: o.title,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(yesButtonTextTop) + ea,
+                  fontSize: String(yesButtonSize) + ea,
+                  fontWeight: String(yesButtonWeight),
+                  color: !(index === defaultBudgetValue) ? colorExtended.blueDark : colorExtended.darkBlack,
+                },
+              }
+            }
+          }))
         }
       ]
     });
@@ -4184,7 +4476,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
               }
             },
             {
-              text: "<b%*%b>빌트인 제작 가구 :&nbsp;&nbsp;<u%싱크대 전체 교체, 거실 북카페, 전체 제작 책상 및 서재 연출 등%u>&nbsp;&nbsp;&nbsp;<b%/%b>&nbsp;&nbsp;&nbsp;단순 붙박이장 :&nbsp;&nbsp;<u%옷장, 신발장 등%u>",
+              text: desktop ? "<b%*%b>빌트인 제작 가구 :&nbsp;&nbsp;<u%싱크대 전체 교체, 거실 북카페, 전체 제작 책상 및 서재 연출 등%u>&nbsp;&nbsp;&nbsp;<b%/%b>&nbsp;&nbsp;&nbsp;단순 붙박이장 :&nbsp;&nbsp;<u%옷장, 신발장 등%u>" : "<b%*%b>빌트인 가구 :&nbsp;&nbsp;<u%싱크대, 거실 북카페, 책상 및 서재 연출 등%u>\n<b%*%b>단순 붙박이장 :&nbsp;&nbsp;<u%옷장, 신발장 등%u>",
               style: {
                 display: "inline-block",
                 position: "relative",
@@ -4192,6 +4484,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                 fontSize: String(blueDescriptionSize) + ea,
                 fontWeight: String(blueDescriptionWeight),
                 color: colorExtended.black,
+                textAlign: desktop ? "" : "center",
               },
               bold: {
                 fontSize: String(blueDescriptionSize) + ea,
@@ -4229,14 +4522,14 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                 width: String(yesButtonWidth) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: !(Array.isArray(instance.totalValues[5]) && instance.totalValues[5]?.includes(index)) ? "1.5px solid " + colorExtended.mainBlue : "1.5px solid " + colorExtended.darkBlack,
+                border: !(Array.isArray(instance.totalValues[5]) && instance.totalValues[5]?.includes(index)) ? String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue : String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack,
                 background: !(Array.isArray(instance.totalValues[5]) && instance.totalValues[5]?.includes(index)) ? colorExtended.white : colorExtended.mainBlue,
                 boxShadow: !(Array.isArray(instance.totalValues[5]) && instance.totalValues[5]?.includes(index)) ? "" : "0px 3px 15px -9px " + colorExtended.darkShadow,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                marginRight: String(index % (statusItems.length / 1) === (statusItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea,
+                marginRight: desktop ? String(index % (statusItems.length / 1) === (statusItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea : "",
                 marginBottom: String(yesButtonBetween) + ea,
               },
               child: {
@@ -4342,14 +4635,14 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                 width: String(yesButtonWidth) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: !(Array.isArray(instance.totalValues[6]) && instance.totalValues[6]?.includes(index)) ? "1.5px solid " + colorExtended.mainBlue : "1.5px solid " + colorExtended.darkBlack,
+                border: !(Array.isArray(instance.totalValues[6]) && instance.totalValues[6]?.includes(index)) ? String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue : String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack,
                 background: !(Array.isArray(instance.totalValues[6]) && instance.totalValues[6]?.includes(index)) ? colorExtended.white : colorExtended.mainBlue,
                 boxShadow: !(Array.isArray(instance.totalValues[6]) && instance.totalValues[6]?.includes(index)) ? "" : "0px 3px 15px -9px " + colorExtended.darkShadow,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                marginRight: String(index % (fabricItems.length / 1) === (fabricItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea,
+                marginRight: desktop ? String(index % (fabricItems.length / 1) === (fabricItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea : "",
                 marginBottom: String(yesButtonBetween) + ea,
               },
               child: {
@@ -4396,7 +4689,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
             justifyContent: "center",
             alignItems: "center",
             boxSizing: "border-box",
-            border: "1.5px solid " + colorExtended.mainBlue,
+            border: String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue,
             cursor: "pointer",
           },
           child: {
@@ -4542,22 +4835,23 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
     let sixSelectionEvent2;
     let sixSelectionEvent3;
     let sixSelectionEvent4;
+    let mobileConstructItemDevide;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 21, 15, 10, 3 %%>;
-    titleSize = <%% 25, 24, 22, 19, 5 %%>;
+    titleMarginTop = <%% 25, 21, 15, 10, 2 %%>;
+    titleSize = <%% 25, 24, 22, 19, 4.7 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
-    titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
-    titleSquareTop = <%% 1, 1, 1, 1, 1 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 0 %%>;
+    titleSquareMarginRight = <%% 9, 9, 7, 5, 0 %%>;
+    titleSquareTop = <%% 1, 1, 1, 1, 0 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
     descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
 
     betweenMargin = <%% 26, 26, 26, 26, 26 %%>;
     checkCircleWidth = <%% 23, 23, 23, 23, 23 %%>;
-    buttonHeight = <%% 42, 42, 38, 32, 42 %%>;
+    buttonHeight = <%% 42, 42, 38, 32, 9 %%>;
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
@@ -4567,40 +4861,40 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
     numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
+    numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
 
-    imageAreaMarginTop = <%% 45, 40, 35, 25, 45 %%>;
-    imageAreaMarginBottom = <%% 110, 100, 75, 50, 110 %%>;
+    imageAreaMarginTop = <%% 45, 40, 35, 25, 6.5 %%>;
+    imageAreaMarginBottom = <%% 110, 100, 75, 50, 11.5 %%>;
     imageWidth = <%% 510, 510, 510, 510, 510 %%>;
 
-    yesButtonAreaMarginTop = <%% 25, 21, 18, 16, 25 %%>;
-    yesButtonWidth = <%% 160, 140, 130, 100, 160 %%>;
-    yesButtonHeight = <%% 40, 36, 34, 32, 40 %%>;
-    yesButtonBetween = <%% 12, 10, 9, 6, 12 %%>;
-    yesButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    yesButtonSize = <%% 16, 15, 14, 13, 3.5 %%>;
+    yesButtonAreaMarginTop = <%% 25, 21, 18, 16, 4.5 %%>;
+    yesButtonWidth = <%% 160, 140, 130, 100, 30 %%>;
+    yesButtonHeight = <%% 40, 36, 34, 32, 8 %%>;
+    yesButtonBetween = <%% 12, 10, 9, 6, 1.6 %%>;
+    yesButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    yesButtonSize = <%% 16, 15, 14, 13, 3.2 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    completeButtonWidth = <%% 120, 120, 110, 90, 120 %%>;
-    completeButtonAreaMarginBottom = <%% 129, 129, 110, 100, 129 %%>;
-    completeButtonSize = <%% 17, 17, 16, 14, 17 %%>;
+    completeButtonWidth = <%% 120, 120, 110, 90, 22 %%>;
+    completeButtonAreaMarginBottom = <%% 129, 129, 110, 100, 23 %%>;
+    completeButtonSize = <%% 17, 17, 16, 14, 3.6 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
-    completeButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    completeButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
 
-    returnCircleWidth = <%% 34, 34, 32, 28, 34 %%>;
-    returnCircleMarginRight = <%% 11, 11, 10, 7, 11 %%>;
-    returnCicleArrowWidth = <%% 9, 9, 8, 7, 9 %%>;
-    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -1.5 %%>;
+    returnCircleWidth = <%% 34, 34, 32, 28, 6.8 %%>;
+    returnCircleMarginRight = <%% 11, 11, 10, 7, 1.8 %%>;
+    returnCicleArrowWidth = <%% 9, 9, 8, 7, 1.8 %%>;
+    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -0.2 %%>;
 
-    middleLineMarginBottom = <%% 100, 90, 80, 65, 100 %%>;
-    middleLinePaddingTop = <%% 80, 70, 60, 50, 80 %%>;
+    middleLineMarginBottom = <%% 100, 90, 80, 65, 11.5 %%>;
+    middleLinePaddingTop = <%% 80, 70, 60, 50, 10 %%>;
 
     blueBoxHeight = <%% 130, 120, 105, 95, 120 %%>;
-    blueBoxHeight2 = <%% 70, 68, 60, 52, 70 %%>;
-    blueDescriptionSize = <%% 16, 15, 14, 13, 15 %%>;
+    blueBoxHeight2 = <%% 70, 68, 60, 52, 13.5 %%>;
+    blueDescriptionSize = <%% 16, 15, 14, 13, 3 %%>;
     blueDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blueDescriptionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
-    blueDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    blueDescriptionTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
 
     processBarHeight = <%% 24, 21, 18, 15, 24 %%>;
     defaultBudgetValue = <%% 2, 2, 2, 2, 2 %%>;
@@ -4621,9 +4915,11 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
     processValueSize = <%% 15, 13, 12, 10, 15 %%>;
     processValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    convertingBaseHeight = <%% 1808, 1638, 1442, 1199, 1808 %%>;
+    convertingBaseHeight = <%% 1808, 1638, 1442, 1199, 384 %%>;
 
-    processValuesRatio = 99.4;
+    processValuesRatio = desktop ? 99.4 : 100;
+
+    mobileConstructItemDevide = 3;
 
     constructItems = [
       { title: "미정 / 거주중" },
@@ -4692,6 +4988,13 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
     yesButtonWidth2 = (standardWidth - (yesButtonBetween * ((fabricItems.length / 1) - 1))) / (fabricItems.length / 1);
     yesButtonWidth3 = (standardWidth - (yesButtonBetween * ((ageItems.length / 1) - 1))) / (ageItems.length / 1);
 
+    if (mobile) {
+      yesButtonWidth = standardWidth;
+      yesButtonWidth2 = standardWidth;
+      yesButtonWidth3 = standardWidth;
+      yesButtonWidthNoMargin = (standardWidth - (yesButtonBetween * (mobileConstructItemDevide - 1))) / mobileConstructItemDevide;
+    }
+
     if (instance.totalValues[7] === null) {
       instance.totalValues[7] = defaultBudgetValue;
     } else {
@@ -4750,7 +5053,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
           if (toggle === "on") {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
@@ -4761,14 +5064,14 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
           } else {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
                 dom.style.background = colorExtended.mainBlue;
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
                 dom.setAttribute("toggle", "on");
                 instance.totalValues[8] = Number(dom.getAttribute("index"));
               } else {
-                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
@@ -4806,7 +5109,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
           if (toggle === "on") {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
@@ -4817,14 +5120,14 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
           } else {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
                 dom.style.background = colorExtended.mainBlue;
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
                 dom.setAttribute("toggle", "on");
                 instance.totalValues[9] = Number(dom.getAttribute("index"));
               } else {
-                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
@@ -4848,7 +5151,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
           if (toggle === "on") {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
@@ -4859,14 +5162,14 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
           } else {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
                 dom.style.background = colorExtended.mainBlue;
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
                 dom.setAttribute("toggle", "on");
                 instance.totalValues[10] = Number(dom.getAttribute("index"));
               } else {
-                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
@@ -4930,7 +5233,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "row",
-            borderBottom: "1.5px solid " + colorExtended.blueDark,
+            borderBottom: String(instance.lineWeight) + "px" + " solid " + colorExtended.blueDark,
           },
           children: [
             {
@@ -5028,7 +5331,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
             position: "relative",
             width: withOut(0, ea),
           },
-          children: constructItems.map((o, index) => {
+          children: (desktop ? constructItems.map((o, index) => {
             return [
               {
                 class: [ blueBlock2BarFactorClassName, blueBlock2BarFactorIndexClassName + String(index) ],
@@ -5044,9 +5347,9 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                   position: "relative",
                   width: String(yesButtonWidthNoMargin) + ea,
                   height: String(processBarHeight) + ea,
-                  border: "1.5px solid " + colorExtended.mainBlue,
-                  borderRight: (index === constructItems.length - 1 ? "1.5px solid " + colorExtended.mainBlue : ""),
-                  borderLeft: (index === 0 ? "1.5px solid " + colorExtended.mainBlue : "1px dashed " + colorExtended.mainBlue),
+                  border: String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue,
+                  borderRight: (index === constructItems.length - 1 ? String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue : ""),
+                  borderLeft: (index === 0 ? String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue : "1px dashed " + colorExtended.mainBlue),
                   boxSizing: "border-box",
                   borderTopLeftRadius: (index === 0 ? String(processBarHeight) + ea : ""),
                   borderBottomLeftRadius: (index === 0 ? String(processBarHeight) + ea : ""),
@@ -5065,9 +5368,9 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                       height: String(processBarHeight) + ea,
                       top: String(-1.5) + "px",
                       left: String(-1.5) + "px",
-                      border: "1.5px solid " + colorExtended.darkBlack,
-                      borderRight: (index === constructItems.length - 1 ? "1.5px solid " + colorExtended.darkBlack : ""),
-                      borderLeft: (index === 0 ? "1.5px solid " + colorExtended.darkBlack : "1px dashed " + colorExtended.darkBlack),
+                      border: String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack,
+                      borderRight: (index === constructItems.length - 1 ? String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack : ""),
+                      borderLeft: (index === 0 ? String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack : "1px dashed " + colorExtended.darkBlack),
                       boxSizing: "border-box",
                       borderTopLeftRadius: (index === 0 ? String(processBarHeight) + ea : ""),
                       borderBottomLeftRadius: (index === 0 ? String(processBarHeight) + ea : ""),
@@ -5088,9 +5391,9 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                       height: String(processBarHeight) + ea,
                       top: String(-1.5) + "px",
                       left: String(-1.5) + "px",
-                      border: "1.5px solid " + colorExtended.darkBlack,
-                      borderRight: "1.5px solid " + colorExtended.darkBlack,
-                      borderLeft: (index === 0 ? "1.5px solid " + colorExtended.darkBlack : "1px dashed " + colorExtended.darkBlack),
+                      border: String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack,
+                      borderRight: String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack,
+                      borderLeft: (index === 0 ? String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack : "1px dashed " + colorExtended.darkBlack),
                       boxSizing: "border-box",
                       borderTopLeftRadius: (index === 0 ? String(processBarHeight) + ea : ""),
                       borderBottomLeftRadius: (index === 0 ? String(processBarHeight) + ea : ""),
@@ -5105,7 +5408,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 ]
               },
             ]
-          }).flat()
+          }).flat() : [])
         },
         {
           style: {
@@ -5113,7 +5416,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
             position: "relative",
             width: String(processValuesRatio) + '%',
           },
-          children: constructItems.map((o, index) => {
+          children: (desktop ? constructItems.map((o, index) => {
             return {
               class: [ blueBlock2BarWordsIndexClassName + String(index) ],
               attribute: {
@@ -5145,7 +5448,84 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 }
               }
             }
-          })
+          }) : constructItems.map((o, index) => {
+            return {
+              class: [ blueBlock2BarFactorClassName ],
+              attribute: {
+                index: String(index),
+                toggle: (index === defaultBudgetValue ? "on" : "off"),
+              },
+              event: {
+                click: async function (e) {
+                  try {
+                    const targets = document.querySelectorAll('.' + blueBlock2BarFactorClassName);
+                    const index = Number(this.getAttribute("index"));
+                    const toggle = this.getAttribute("toggle");
+                    if (toggle === "on") {
+                      for (let dom of targets) {
+                        if (index === Number(dom.getAttribute("index"))) {
+                          dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
+                          dom.style.background = colorExtended.white;
+                          dom.style.boxShadow = "";
+                          dom.firstChild.style.color = colorExtended.blueDark;
+                          dom.setAttribute("toggle", "off");
+                          instance.totalValues[4] = null;
+                        }
+                      }
+                    } else {
+                      for (let dom of targets) {
+                        if (index === Number(dom.getAttribute("index"))) {
+                          dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
+                          dom.style.background = colorExtended.mainBlue;
+                          dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                          dom.firstChild.style.color = colorExtended.darkBlack;
+                          dom.setAttribute("toggle", "on");
+                          instance.totalValues[4] = Number(dom.getAttribute("index"));
+                        } else {
+                          dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
+                          dom.style.background = colorExtended.white;
+                          dom.style.boxShadow = "";
+                          dom.firstChild.style.color = colorExtended.blueDark;
+                          dom.setAttribute("toggle", "off");
+                        }
+                      }
+                    }
+          
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              },
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(yesButtonWidthNoMargin) + ea,
+                height: String(yesButtonHeight) + ea,
+                borderRadius: String(yesButtonHeight) + ea,
+                border: !(index === defaultBudgetValue) ? String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue : String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack,
+                background: !(index === defaultBudgetValue) ? colorExtended.white : colorExtended.mainBlue,
+                boxShadow: !(index === defaultBudgetValue) ? "" : "0px 3px 15px -9px " + colorExtended.darkShadow,
+                boxSizing: "border-box",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                marginRight: desktop ? String(index % (constructItems.length / 2) === (constructItems.length / 2) - 1 ? 0 : yesButtonBetween) + ea : String(index % mobileConstructItemDevide === mobileConstructItemDevide - 1 ? 0 : yesButtonBetween) + ea,
+                marginBottom: String(yesButtonBetween) + ea,
+                cursor: "pointer",
+              },
+              child: {
+                text: o.title,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(yesButtonTextTop) + ea,
+                  fontSize: String(yesButtonSize) + ea,
+                  fontWeight: String(yesButtonWeight),
+                  color: !(index === defaultBudgetValue) ? colorExtended.blueDark : colorExtended.darkBlack,
+                },
+              }
+            }
+          }))
         }
       ]
     });
@@ -5297,7 +5677,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 width: String(yesButtonWidth) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: index === instance.totalValues[8] ? "1.5px solid " + colorExtended.darkBlack : "1.5px solid " + colorExtended.mainBlue,
+                border: index === instance.totalValues[8] ? String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack : String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue,
                 background: index === instance.totalValues[8] ? colorExtended.mainBlue : colorExtended.white,
                 boxShadow: index === instance.totalValues[8] ? "0px 3px 15px -9px " + colorExtended.darkShadow : "",
                 boxSizing: "border-box",
@@ -5411,7 +5791,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 width: String(yesButtonWidth2) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: index === instance.totalValues[9] ? "1.5px solid " + colorExtended.darkBlack : "1.5px solid " + colorExtended.mainBlue,
+                border: index === instance.totalValues[9] ? String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack : String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue,
                 background: index === instance.totalValues[9] ? colorExtended.mainBlue : colorExtended.white,
                 boxShadow: index === instance.totalValues[9] ? "0px 3px 15px -9px " + colorExtended.darkShadow : "",
                 boxSizing: "border-box",
@@ -5527,7 +5907,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
               }
             },
             {
-              text: "<b%*%b>고객님의 연령대에 맞는 경험과 노하우의 디자이너를 추천해 드려요!",
+              text: "<b%*%b>연령대에 맞는 경험과 노하우의 디자이너를 추천해 드려요!",
               style: {
                 display: "inline-block",
                 position: "relative",
@@ -5572,7 +5952,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 width: String(yesButtonWidth3) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: index === instance.totalValues[10] ? "1.5px solid " + colorExtended.darkBlack : "1.5px solid " + colorExtended.mainBlue,
+                border: index === instance.totalValues[10] ? String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack : String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue,
                 background: index === instance.totalValues[10] ? colorExtended.mainBlue : colorExtended.white,
                 boxShadow: index === instance.totalValues[10] ? "0px 3px 15px -9px " + colorExtended.darkShadow : "",
                 boxSizing: "border-box",
@@ -5627,7 +6007,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
             justifyContent: "center",
             alignItems: "center",
             boxSizing: "border-box",
-            border: "1.5px solid " + colorExtended.mainBlue,
+            border: String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue,
             cursor: "pointer",
           },
           child: {
@@ -5960,21 +6340,21 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    titleMarginTop = <%% 25, 21, 15, 10, 3 %%>;
-    titleSize = <%% 25, 24, 22, 19, 5 %%>;
+    titleMarginTop = <%% 25, 21, 15, 10, 2 %%>;
+    titleSize = <%% 25, 24, 22, 19, 4.7 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 6, 5, 8 %%>;
-    titleSquareMarginRight = <%% 9, 9, 7, 5, 9 %%>;
-    titleSquareTop = <%% 1, 1, 1, 1, 1 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 0 %%>;
+    titleSquareMarginRight = <%% 9, 9, 7, 5, 0 %%>;
+    titleSquareTop = <%% 1, 1, 1, 1, 0 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
-    descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
+    descriptionMarginTop = <%% 5, 5, 4, 3, 0.6 %%>;
     descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
     descriptionVisualLeft = <%% -1, -1, -1, -1, -1 %%>;
 
     betweenMargin = <%% 26, 26, 26, 26, 26 %%>;
     checkCircleWidth = <%% 23, 23, 23, 23, 23 %%>;
-    buttonHeight = <%% 42, 42, 38, 32, 42 %%>;
+    buttonHeight = <%% 42, 42, 38, 32, 9 %%>;
 
     wordsMotherMarginTop = <%% 120, 120, 120, 120, 120 %%>;
 
@@ -5984,40 +6364,40 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
+    numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
 
-    imageAreaMarginTop = <%% 45, 40, 35, 25, 45 %%>;
-    imageAreaMarginBottom = <%% 110, 100, 75, 50, 110 %%>;
+    imageAreaMarginTop = <%% 45, 40, 35, 25, 6.5 %%>;
+    imageAreaMarginBottom = <%% 110, 100, 75, 50, 11.5 %%>;
     imageWidth = <%% 510, 510, 510, 510, 510 %%>;
 
-    yesButtonAreaMarginTop = <%% 25, 21, 18, 16, 25 %%>;
-    yesButtonWidth = <%% 160, 140, 130, 100, 160 %%>;
-    yesButtonHeight = <%% 40, 36, 34, 32, 40 %%>;
-    yesButtonBetween = <%% 12, 10, 9, 6, 12 %%>;
-    yesButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-    yesButtonSize = <%% 16, 15, 14, 13, 3.5 %%>;
+    yesButtonAreaMarginTop = <%% 25, 21, 18, 16, 4.5 %%>;
+    yesButtonWidth = <%% 160, 140, 130, 100, 30 %%>;
+    yesButtonHeight = <%% 40, 36, 34, 32, 8 %%>;
+    yesButtonBetween = <%% 12, 10, 9, 6, 1.6 %%>;
+    yesButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    yesButtonSize = <%% 16, 15, 14, 13, 3.2 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    completeButtonWidth = <%% 120, 120, 110, 90, 120 %%>;
-    completeButtonAreaMarginBottom = <%% 129, 129, 110, 100, 129 %%>;
-    completeButtonSize = <%% 17, 17, 16, 14, 17 %%>;
+    completeButtonWidth = <%% 120, 120, 110, 90, 22 %%>;
+    completeButtonAreaMarginBottom = <%% 129, 129, 110, 100, 23 %%>;
+    completeButtonSize = <%% 17, 17, 16, 14, 3.6 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
-    completeButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    completeButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
 
-    returnCircleWidth = <%% 34, 34, 32, 28, 34 %%>;
-    returnCircleMarginRight = <%% 11, 11, 10, 7, 11 %%>;
-    returnCicleArrowWidth = <%% 9, 9, 8, 7, 9 %%>;
-    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -1.5 %%>;
+    returnCircleWidth = <%% 34, 34, 32, 28, 6.8 %%>;
+    returnCircleMarginRight = <%% 11, 11, 10, 7, 1.8 %%>;
+    returnCicleArrowWidth = <%% 9, 9, 8, 7, 1.8 %%>;
+    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -0.2 %%>;
 
-    middleLineMarginBottom = <%% 100, 90, 80, 65, 100 %%>;
-    middleLinePaddingTop = <%% 80, 70, 60, 50, 80 %%>;
+    middleLineMarginBottom = <%% 100, 90, 80, 65, 11.5 %%>;
+    middleLinePaddingTop = <%% 80, 70, 60, 50, 10 %%>;
 
     blueBoxHeight = <%% 130, 120, 105, 95, 120 %%>;
-    blueBoxHeight2 = <%% 70, 68, 60, 52, 70 %%>;
-    blueDescriptionSize = <%% 16, 15, 14, 13, 15 %%>;
+    blueBoxHeight2 = <%% 70, 68, 60, 52, 17.5 %%>;
+    blueDescriptionSize = <%% 16, 15, 14, 13, 3 %%>;
     blueDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blueDescriptionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
-    blueDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    blueDescriptionTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
 
     processBarHeight = <%% 24, 21, 18, 15, 24 %%>;
     defaultBudgetValue = <%% 5, 5, 5, 5, 5 %%>;
@@ -6038,10 +6418,10 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     processValueSize = <%% 15, 13, 12, 10, 15 %%>;
     processValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    convertingBaseHeight = <%% 2000, 1864, 1640, 1328, 1864 %%>;
+    convertingBaseHeight = <%% 2000, 1864, 1640, 1328, 359 %%>;
 
-    fileUploadBoxHeight = <%% 180, 180, 180, 140, 180 %%>;
-    fileUploadBoxSize = <%% 24, 22, 20, 18, 24 %%>;
+    fileUploadBoxHeight = <%% 180, 180, 180, 140, 34 %%>;
+    fileUploadBoxSize = <%% 24, 22, 20, 18, 4.5 %%>;
     fileUploadBoxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
     grayTextTop = <%% 40, 40, 39, 39, 14 %%>;
@@ -6064,6 +6444,9 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     instance.totalMenu[13] = [];
 
     yesButtonWidth = (standardWidth - (yesButtonBetween * ((statusItems.length / 1) - 1))) / (statusItems.length / 1);
+    if (mobile) {
+      yesButtonWidth = standardWidth;
+    }
 
     sevenSelectionEvent = (index) => {
       return async function (e) {
@@ -6074,7 +6457,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
           if (toggle === "on") {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.mainBlue;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
@@ -6084,7 +6467,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
           } else {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = "1.5px solid " + colorExtended.darkBlack;
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
                 dom.style.background = colorExtended.mainBlue;
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
@@ -6155,7 +6538,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "row",
-            borderBottom: "1.5px solid " + colorExtended.blueDark,
+            borderBottom: String(instance.lineWeight) + "px" + " solid " + colorExtended.blueDark,
           },
           children: [
             {
@@ -6269,14 +6652,14 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
                 width: String(yesButtonWidth) + ea,
                 height: String(yesButtonHeight) + ea,
                 borderRadius: String(yesButtonHeight) + ea,
-                border: !(Array.isArray(instance.totalValues[11]) && instance.totalValues[11]?.includes(index)) ? "1.5px solid " + colorExtended.mainBlue : "1.5px solid " + colorExtended.darkBlack,
+                border: !(Array.isArray(instance.totalValues[11]) && instance.totalValues[11]?.includes(index)) ? String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue : String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack,
                 background: !(Array.isArray(instance.totalValues[11]) && instance.totalValues[11]?.includes(index)) ? colorExtended.white : colorExtended.mainBlue,
                 boxShadow: !(Array.isArray(instance.totalValues[11]) && instance.totalValues[11]?.includes(index)) ? "" : "0px 3px 15px -9px " + colorExtended.darkShadow,
                 boxSizing: "border-box",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                marginRight: String(index % (statusItems.length / 1) === (statusItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea,
+                marginRight: desktop ? String(index % (statusItems.length / 1) === (statusItems.length / 1) - 1 ? 0 : yesButtonBetween) + ea : "",
                 marginBottom: String(yesButtonBetween) + ea,
                 cursor: "pointer",
               },
@@ -6420,7 +6803,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
               }
             },
             {
-              text: "현장 사진 혹은 도면이 있다면 업로드해주세요.",
+              text: "현장 사진, 도면이 있다면 업로드해주세요.",
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -6499,10 +6882,10 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
             {
               style: {
                 position: "absolute",
-                top: String(grayMargin + (desktop ? 0 : 2)) + ea,
+                top: String(grayMargin + (desktop ? 0 : 0)) + ea,
                 left: String(grayMargin) + ea,
                 width: withOut(grayMargin * 2, ea),
-                height: withOut(grayMargin + grayMargin + (desktop ? 0 : 2), ea),
+                height: withOut(grayMargin + grayMargin + (desktop ? 0 : 0), ea),
                 overflow: "scroll",
                 zIndex: String(1),
               },
@@ -6521,7 +6904,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
             {
               class: [ fileClickWordsClassName ],
               event: { selectstart: (e) => { e.preventDefault() } },
-              text: "클릭 또는 드래그하여 업로드...",
+              text: desktop ? "클릭 또는 드래그하여 업로드..." : "클릭하여 업로드...",
               style: {
                 display: "inline-block",
                 position: "relative",
@@ -6590,7 +6973,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
             justifyContent: "center",
             alignItems: "center",
             boxSizing: "border-box",
-            border: "1.5px solid " + colorExtended.mainBlue,
+            border: String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue,
             cursor: "pointer",
           },
           child: {
@@ -6727,20 +7110,25 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     let hangulBarMarginTop, hangulBarWidth, hangulBarHeight;
     let noticeVisual;
     let fixedWhiteBarHeight, fixedWhiteBarButtonMarginLeft;
+    let returnCircleWidth;
+    let returnCircleMarginRight;
+    let returnCicleArrowWidth;
+    let returnCicleArrowLeft;
+    let mobileArrowZoneMarginTop;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
     totalHeight = <%% 2593, 2346, 1960, 1540, 201 %%>;
 
-    firstBasePaddingTop = <%% 26, 24, 24, 24, 8 %%>;
+    firstBasePaddingTop = <%% 26, 24, 24, 24, 20 %%>;
     firstBasePaddingBottom = <%% 180, 170, 160, 120, 20 %%>;
 
-    subTitleSize = <%% 18, 18, 17, 16, 3.7 %%>;
+    subTitleSize = <%% 18, 18, 17, 16, 3.6 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     subTitleMarginTop = <%% (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 3 : 6), (isMac() ? 3 : 6), 0.5 %%>;
 
-    buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
+    buttonMarginTop = <%% 165, 160, 132, 110, 6 %%>;
     buttonWidth = <%% 205, 194, 186, 168, 31 %%>;
     buttonHeight = <%% 32, 32, 30, 28, 9 %%>;
     buttonSize = <%% 14, 14, 13, 12, 3.5 %%>;
@@ -6748,7 +7136,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
     buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
 
-    titleSize = <%% 57, 51, 48, 39, 8 %%>;
+    titleSize = <%% 57, 51, 48, 39, 7 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
@@ -6756,7 +7144,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
 
     pointOpacity = 0.4;
 
-    mainImageTop = <%% 27, 24, 18, 16, 33 %%>;
+    mainImageTop = <%% 27, 24, 18, 16, 44 %%>;
     mainImageHeight = <%% 390, 370, 346, 314, 39 %%>;
 
     descriptionSize = <%% 15, 14, 14, 13, 3.2 %%>;
@@ -6764,19 +7152,19 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
 
     mobileLeftPaddingVisual = 1;
 
-    descriptionMarginTop = <%% 40, 40, 36, 30, 81.5 %%>;
+    descriptionMarginTop = <%% 40, 40, 36, 30, 75 %%>;
 
     descriptionPointBoldPaddingLeft = <%% 8, 8, 8, 8, 1.6 %%>;
     descriptionPointBoldPaddingTop = <%% (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 3), (isMac() ? 2 : 3), 0.4 %%>;
     descriptionPointBoldPaddingBottom = <%% (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 0.8 %%>;
     descriptionPointBoldMargin = <%% 2, 2, 2, 2, 1 %%>;
 
-    mobileImageRight = 5;
+    mobileImageRight = 1.2;
     mobileSubImageMarginTop = 7.5;
 
     barBaseMarginTop = <%% 80, 80, 80, 80, 80 %%>;
 
-    initAreaPaddingBottom = <%% 200, 200, 150, 100, 200 %%>;
+    initAreaPaddingBottom = <%% 200, 200, 150, 100, 22 %%>;
 
     hangulTitleSize = <%% 32, 28, 23.5, 20, 32 %%>;
     hangulTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -6787,31 +7175,31 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
 
     noticeVisual = <%% 24, 21, 18, 15, 3 %%>;
 
-    blockPaddingTop = <%% 170, 170, 130, 90, 170 %%>;
-    blockPaddingBottom = <%% 200, 200, 150, 100, 200 %%>;
+    blockPaddingTop = <%% 170, 170, 130, 90, 20 %%>;
+    blockPaddingBottom = <%% 200, 200, 150, 100, 22 %%>;
 
     noticeBlockMarginTop = <%% 50, 45, 40, 35, 50 %%>;
 
-    noticeTitleSize = <%% 21, 18, 15, 14, 21 %%>;
+    noticeTitleSize = <%% 21, 18, 15, 14, 3 %%>;
     noticeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     noticeTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
     noticeDescriptionIndent = <%% 24, 24, 21, 18, 24 %%>;
-    noticeDescriptionSize = <%% 15, 14, 13, 12, 15 %%>;
+    noticeDescriptionSize = <%% 15, 14, 13, 12, 3 %%>;
     noticeDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
     noticeDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
     noticeDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
     thirdDescriptionMarginTop = <%% 10, 7, 3, 1, 1 %%>;
     thirdDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-    thirdDescriptionSize = <%% 16, 15, 14, 13, 16 %%>;
+    thirdDescriptionSize = <%% 16, 15, 14, 13, 3 %%>;
     thirdDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
     processDiagramHeight = <%% 420, 350, 320, 270, 420 %%>;
 
-    blackButtonWidth = <%% 180, 160, 145, 130, 180 %%>;
-    blackButtonHeight = <%% 38, 32, 30, 28, 38 %%>;
-    blackButtonBetween = <%% 8, 7, 6, 5, 8 %%>;
-    blackButtonSize = <%% 16, 14, 13, 12, 4 %%>;
+    blackButtonWidth = <%% 180, 160, 145, 130, 34 %%>;
+    blackButtonHeight = <%% 38, 32, 30, 28, 7.6 %%>;
+    blackButtonBetween = <%% 8, 7, 6, 5, 2 %%>;
+    blackButtonSize = <%% 16, 14, 13, 12, 3 %%>;
     blackButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     hangulDescriptionMarginTop = <%% 45, 32, 28, 20, 4 %%>;
@@ -6825,7 +7213,13 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     fixedWhiteBarHeight = <%% 96, 80, 72, 64, 9 %%>;
     fixedWhiteBarButtonMarginLeft = <%% 1037, 722, 503, 456, 600 %%>;
 
-    mainIllust = <%% StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg" %%>;
+    returnCircleWidth = <%% 34, 34, 32, 28, 7.2 %%>;
+    returnCicleArrowWidth = <%% 9, 9, 8, 7, 2 %%>;
+    returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, 0.2 %%>;
+
+    mobileArrowZoneMarginTop = 11;
+
+    mainIllust = <%% StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust2.svg" %%>;
 
     descriptionContents = [
       `홈리에종의 서비스 신청을 진행해주셔서 감사합니다!`,
@@ -6858,10 +7252,9 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     ]
 
     if (desktop && window.innerHeight > 1100) {
-      titleSize = <%% 59, 51, 48, 38, 9 %%>;
-      subTitleSize = <%% 19, 18, 17, 16, 3.6 %%>;
-      firstBasePaddingTop = <%% 60, 48, 30, 28, 50 %%>;
+      titleSize = <%% 59, 51, 48, 38, 7 %%>;
       subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
+      firstBasePaddingTop = <%% 60, 48, 30, 28, 50 %%>;
       firstBasePaddingBottom = <%% 230, 210, 160, 130, 210 %%>;
       mainImageTop = <%% 36, 26, 18, 18, 32 %%>;
       mainImageHeight = <%% 500, 394, 346, 275, 39 %%>;
@@ -6874,10 +7267,15 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
 
     ghostBase = {};
 
+    if (mobile) {
+      fifthBase.children[1].style.transition = "all 0s ease";
+      fifthBase.children[1].style.background = colorExtended.darkDarkBlack;
+    }
+    fifthBase.children[1].style.transition = "all 0.6s ease";
     fifthBase.children[1].style.opacity = String(1);
     await instance.insertSecondBarBox(100);
     fifthBase.style.transition = "all 0.6s ease";
-    fifthBase.style.height = String(totalHeight) + ea;
+    fifthBase.style.height = desktop ? String(totalHeight) + ea : "";
     document.querySelector('.' + secondBarBoxMotherClassName)?.remove();
     setQueue(() => {
       for (let dom of fadeOutTargets) {
@@ -6905,7 +7303,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
         position: "absolute",
         flexDirection: "column",
         top: String(0) + ea,
-        marginTop: String(baseTop - naviHeight) + ea,
+        marginTop: desktop ? String(baseTop - naviHeight) + ea : "",
         paddingTop: String(firstBasePaddingTop) + ea,
         width: withOut(0, ea),
         animation: "fadeinlite 0.6s ease forwards",
@@ -6935,7 +7333,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
             position: "relative",
             fontSize: String(titleSize) + ea,
             fontWeight: String(titleWeight),
-            color: colorExtended.darkBlack,
+            color: desktop ? colorExtended.darkBlack : colorExtended.blueLight,
             fontFamily: "mont",
             top: desktop ? String(titleVisualTop) + ea : "",
             left: desktop ? String(titleVisualLeft) + ea : "",
@@ -6944,7 +7342,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
           bold: {
             fontSize: String(titleSize) + ea,
             fontWeight: String(titleWeight),
-            color: colorExtended.darkBlack,
+            color: desktop ? colorExtended.darkBlack : colorExtended.blueLight,
             fontFamily: "mont",
             opacity: String(pointOpacity),
           }
@@ -6971,7 +7369,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
           style: {
             display: "inline-block",
             position: "relative",
-            color: colorExtended.black,
+            color: desktop ? colorExtended.black : colorExtended.white,
             fontWeight: String(subTitleWeight),
             fontSize: String(subTitleSize) + ea,
           }
@@ -7019,7 +7417,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
           style: {
             display: "inline-block",
             position: "relative",
-            color: colorExtended.black,
+            color: desktop ? colorExtended.black : colorExtended.white,
             fontWeight: String(400),
             fontSize: String(descriptionSize) + ea,
             lineHeight: String(descriptionLineHeight),
@@ -7049,7 +7447,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
       style: {
         display: "flex",
         position: "relative",
-        justifyContent: "start",
+        justifyContent: desktop ? "start" : "center",
         alignItems: "center",
         marginTop: String(buttonMarginTop) + ea,
         opacity: String(0),
@@ -7092,7 +7490,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
             position: "relative",    
             width: String(blackButtonWidth) + ea,
             height: String(blackButtonHeight) + ea,
-            background: colorExtended.darkBlack,
+            background: desktop ? colorExtended.darkBlack : colorExtended.ultimateBlack,
             borderRadius: String(blackButtonHeight) + ea,
             justifyContent: "center",
             alignItems: "center",
@@ -7115,23 +7513,64 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
       ]
     });
 
-    barBase = createNode({
-      mother: ghostBase,
-      attribute: {
-        selectstart: (e) => { e.preventDefault() },
-      },
-      style: {
-        display: "flex",
-        position: "relative",
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: String(barBaseMarginTop) + ea,
-        opacity: String(0),
-        transform: "translateY(10px)",
-        animation: "1.2s ease 0.6s 1 normal forwards running fadeupdelay",
-      },
-    });
-    await instance.insertSecondBarBox(100, barBase);
+    if (desktop) {
+      barBase = createNode({
+        mother: ghostBase,
+        attribute: {
+          selectstart: (e) => { e.preventDefault() },
+        },
+        style: {
+          display: "flex",
+          position: "relative",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: String(barBaseMarginTop) + ea,
+          opacity: String(0),
+          transform: "translateY(10px)",
+          animation: "1.2s ease 0.6s 1 normal forwards running fadeupdelay",
+        },
+      });
+      await instance.insertSecondBarBox(100, barBase);
+    } else {
+      createNode({
+        mother: ghostBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "row",
+          animation: "1.5s ease 0s 1 normal forwards running fadeupdelay2",
+          marginTop: String(mobileArrowZoneMarginTop) + ea,
+        },
+        child: {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(returnCircleWidth) + ea,
+            height: String(returnCircleWidth) + ea,
+            borderRadius: String(returnCircleWidth) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            boxSizing: "border-box",
+            border: "1px solid " + colorExtended.mainBlue,
+            cursor: "pointer",
+          },
+          child: {
+            mode: "svg",
+            source: svgMaker.buttonLineArrow(colorExtended.mainBlue),
+            style: {
+              position: "relative",
+              width: String(returnCicleArrowWidth) + ea,
+              transformOrigin: "50% 50%",
+              transform: "rotate(90deg)",
+              top: String(returnCicleArrowLeft) + ea,
+            }
+          }
+        }
+      });
+    }
 
     // second white
     secondWhite = createNode({
@@ -7565,8 +8004,8 @@ StyleExplanationJs.prototype.firstConverting = function () {
       let blackScrollTop;
       let numbersAreaMarginTop;
 
-      blackScrollTop = <%% -642, -565, -457, -368, -0 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
+      blackScrollTop = <%% -642, -565, -457, -368, -71 %%>;
+      numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
 
       blackTarget.style.transition = "all 0.6s ease";
       if (blackTarget.style.marginTop.replace(/[^0-9\-]/gi, '') === String(blackScrollTop)) {
@@ -7617,7 +8056,7 @@ StyleExplanationJs.prototype.secondConverting = function () {
       let numbersAreaMarginTop;
 
       blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
+      numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
 
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
@@ -7650,7 +8089,7 @@ StyleExplanationJs.prototype.thirdConverting = function (furnishingMode = false)
         let numbersAreaMarginTop;
   
         blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
-        numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
+        numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
   
         scrollTo(window, 0, 0, false, async () => {
           for (let dom of fadeOutTargets) {
@@ -7676,7 +8115,7 @@ StyleExplanationJs.prototype.thirdConverting = function (furnishingMode = false)
         let numbersAreaMarginTop;
   
         blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
-        numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
+        numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
   
         blackTarget.style.transition = "all 0.6s ease";
         if (blackTarget.style.marginTop.replace(/[^0-9\-]/gi, '') === String(blackScrollTop)) {
@@ -7728,7 +8167,7 @@ StyleExplanationJs.prototype.fourthConverting = function () {
       let numbersAreaMarginTop;
 
       blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
+      numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
 
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
@@ -7761,7 +8200,7 @@ StyleExplanationJs.prototype.fifthConverting = function () {
       let numbersAreaMarginTop;
 
       blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
+      numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
 
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
@@ -7794,7 +8233,7 @@ StyleExplanationJs.prototype.sixthConverting = function () {
       let numbersAreaMarginTop;
 
       blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 90, 75, 10 %%>;
+      numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
 
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
@@ -7817,6 +8256,7 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const px = "px";
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -7838,27 +8278,27 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
     let commentTriangleWidth;
     let commentSize, commentWeight, commentTextTop;
 
-    radius = <%% 5, 5, 4, 3, 1 %%>;
+    radius = <%% 5, 5, 4, 3, 4 %%>;
 
-    x = <%% 2, 2, 2, 2, 2 %%>;
-    y = <%% 5, 5, 5, 5, 5 %%>;
-    z = <%% 8, 8, 8, 8, 8 %%>;
+    x = <%% 2, 2, 2, 2, 1 %%>;
+    y = <%% 5, 5, 5, 5, 3 %%>;
+    z = <%% 8, 8, 8, 8, 5 %%>;
 
-    barAreaHeight = <%% 270, 270, 250, 180, 270 %%>;
-    flagWidth = <%% 23, 23, 21, 19, 23 %%>;
-    flagRight = <%% -19, -19, -18, -17, -19 %%>;
-    flagTop = <%% -34, -34, -32, -30, -34 %%>;
+    barAreaHeight = <%% 270, 270, 250, 180, 32 %%>;
+    flagWidth = <%% 23, 23, 21, 19, 3.5 %%>;
+    flagRight = <%% -19, -19, -18, -17, -3 %%>;
+    flagTop = <%% -34, -34, -32, -30, -5.6 %%>;
 
-    commentAreaTop = <%% -52, -52, -50, -42, -52 %%>;
-    commentAreaLeft = <%% 2, 2, 2, 2, 2 %%>;
-    commentAreaWidth = <%% 286, 286, 270, 216, 286 %%>;
-    commentAreaHeight = <%% 32, 32, 28, 26, 32 %%>;
+    commentAreaTop = <%% -52, -52, -50, -42, -9 %%>;
+    commentAreaLeft = <%% 2, 2, 2, 2, 0.3 %%>;
+    commentAreaWidth = <%% 286, 286, 270, 216, 44.3 %%>;
+    commentAreaHeight = <%% 32, 32, 28, 26, 6.1 %%>;
 
-    commentTriangleWidth = <%% 8, 8, 8, 6, 8 %%>;
+    commentTriangleWidth = <%% 8, 8, 8, 6, 1.6 %%>;
 
-    commentSize = <%% 14, 14, 13, 12, 14 %%>;
+    commentSize = <%% 14, 14, 13, 12, 2.5 %%>;
     commentWeight = <%% 700, 700, 700, 700, 700 %%>;
-    commentTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    commentTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -7893,17 +8333,17 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
         position: "relative",
         width: withOut(0, ea),
         height: String(0),
-        borderBottom: String(radius) + "px dotted " + colorExtended.black,
+        borderBottom: String(radius) + px + " dotted " + colorExtended.black,
       },
       children: [
         {
           style: {
             position: "absolute",
-            top: String(-1 * z) + ea,
-            left: String(-1 * z) + ea,
-            width: String(radius + (z * 2)) + ea,
-            height: String(radius + (z * 2)) + ea,
-            borderRadius: String(radius + (z * 2)) + ea,
+            top: String(-1 * z) + px,
+            left: String(-1 * z) + px,
+            width: String(radius + (z * 2)) + px,
+            height: String(radius + (z * 2)) + px,
+            borderRadius: String(radius + (z * 2)) + px,
             background: colorExtended.white,
             opacity: String(0.2),
           }
@@ -7911,11 +8351,11 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
         {
           style: {
             position: "absolute",
-            top: String(-1 * y) + ea,
-            left: String(-1 * y) + ea,
-            width: String(radius + (y * 2)) + ea,
-            height: String(radius + (y * 2)) + ea,
-            borderRadius: String(radius + (y * 2)) + ea,
+            top: String(-1 * y) + px,
+            left: String(-1 * y) + px,
+            width: String(radius + (y * 2)) + px,
+            height: String(radius + (y * 2)) + px,
+            borderRadius: String(radius + (y * 2)) + px,
             background: colorExtended.white,
             opacity: String(0.6),
           }
@@ -7923,11 +8363,11 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
         {
           style: {
             position: "absolute",
-            top: String(-1 * x) + ea,
-            left: String(-1 * x) + ea,
-            width: String(radius + (x * 2)) + ea,
-            height: String(radius + (x * 2)) + ea,
-            borderRadius: String(radius + (x * 2)) + ea,
+            top: String(-1 * x) + px,
+            left: String(-1 * x) + px,
+            width: String(radius + (x * 2)) + px,
+            height: String(radius + (x * 2)) + px,
+            borderRadius: String(radius + (x * 2)) + px,
             background: colorExtended.white,
             opacity: String(1),
           }
@@ -7935,11 +8375,11 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
         {
           style: {
             position: "absolute",
-            top: String(0) + ea,
-            left: String(0) + ea,
-            width: String(radius) + ea,
-            height: String(radius) + ea,
-            borderRadius: String(radius) + ea,
+            top: String(0) + px,
+            left: String(0) + px,
+            width: String(radius) + px,
+            height: String(radius) + px,
+            borderRadius: String(radius) + px,
             background: colorExtended.blueDim,
           }
         },
@@ -8012,6 +8452,7 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20, ba
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, removeByClass } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const px = "px";
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -8032,28 +8473,31 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20, ba
     let commentAreaHeight;
     let commentTriangleWidth;
     let commentSize, commentWeight, commentTextTop;
+    let ratioStandard;
 
-    radius = <%% 5, 5, 4, 3, 1 %%>;
+    ratioStandard = desktop ? 90 : 52;
 
-    x = <%% 2, 2, 2, 2, 2 %%>;
-    y = <%% 5, 5, 5, 5, 5 %%>;
-    z = <%% 8, 8, 8, 8, 8 %%>;
+    radius = <%% 5, 5, 4, 3, 4 %%>;
 
-    barAreaHeight = <%% 270, 270, 250, 180, 270 %%>;
-    flagWidth = <%% 23, 23, 21, 19, 23 %%>;
-    flagRight = <%% -19, -19, -18, -17, -19 %%>;
-    flagTop = <%% -34, -34, -32, -30, -34 %%>;
+    x = <%% 2, 2, 2, 2, 1 %%>;
+    y = <%% 5, 5, 5, 5, 3 %%>;
+    z = <%% 8, 8, 8, 8, 5 %%>;
 
-    commentAreaTop = <%% -52, -52, -50, -42, -52 %%>;
-    commentAreaLeft = <%% 2, 2, 2, 2, 2 %%>;
-    commentAreaWidth = <%% 286, 286, 270, 216, 286 %%>;
-    commentAreaHeight = <%% 32, 32, 28, 26, 32 %%>;
+    barAreaHeight = <%% 270, 270, 250, 180, 32 %%>;
+    flagWidth = <%% 23, 23, 21, 19, 3.5 %%>;
+    flagRight = <%% -19, -19, -18, -17, -3 %%>;
+    flagTop = <%% -34, -34, -32, -30, -5.6 %%>;
 
-    commentTriangleWidth = <%% 8, 8, 8, 6, 8 %%>;
+    commentAreaTop = <%% -52, -52, -50, -42, -9 %%>;
+    commentAreaLeft = <%% 2, 2, 2, 2, 0.3 %%>;
+    commentAreaWidth = <%% 286, 286, 270, 216, 44.3 %%>;
+    commentAreaHeight = <%% 32, 32, 28, 26, 6.1 %%>;
 
-    commentSize = <%% 14, 14, 13, 12, 14 %%>;
+    commentTriangleWidth = <%% 8, 8, 8, 6, 1.6 %%>;
+
+    commentSize = <%% 14, 14, 13, 12, 2.5 %%>;
     commentWeight = <%% 700, 700, 700, 700, 700 %%>;
-    commentTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    commentTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -8160,21 +8604,21 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20, ba
           style: {
             position: "absolute",
             top: String(0),
-            left: String(radius / 2) + ea,
+            left: String(radius / 2) + px,
             height: String(0),
             zIndex: String(1),
-            width: "calc(" + String(ratio) + "%" + " - " + String(radius * 1) + ea + ")",
+            width: "calc(" + String(ratio) + "%" + " - " + String(radius * 1) + px + ")",
             borderBottom: String(radius) + "px solid " + colorExtended.white,
           }
         },
         {
           style: {
             position: "absolute",
-            top: String(-1 * z) + ea,
-            left: "calc(" + String(ratio) + "% + " + String(-1 * z) + ea + ")",
-            width: String(radius + (z * 2)) + ea,
-            height: String(radius + (z * 2)) + ea,
-            borderRadius: String(radius + (z * 2)) + ea,
+            top: String(-1 * z) + px,
+            left: "calc(" + String(ratio) + "% + " + String(-1 * z) + px + ")",
+            width: String(radius + (z * 2)) + px,
+            height: String(radius + (z * 2)) + px,
+            borderRadius: String(radius + (z * 2)) + px,
             background: colorExtended.white,
             opacity: String(ratio === 100 ? 0.1 : 0.2),
           }
@@ -8182,11 +8626,11 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20, ba
         {
           style: {
             position: "absolute",
-            top: String(-1 * y) + ea,
-            left: "calc(" + String(ratio) + "% + " + String(-1 * y) + ea + ")",
-            width: String(radius + (y * 2)) + ea,
-            height: String(radius + (y * 2)) + ea,
-            borderRadius: String(radius + (y * 2)) + ea,
+            top: String(-1 * y) + px,
+            left: "calc(" + String(ratio) + "% + " + String(-1 * y) + px + ")",
+            width: String(radius + (y * 2)) + px,
+            height: String(radius + (y * 2)) + px,
+            borderRadius: String(radius + (y * 2)) + px,
             background: colorExtended.white,
             opacity: String(ratio === 100 ? 0.3 : 0.6),
           }
@@ -8194,11 +8638,11 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20, ba
         {
           style: {
             position: "absolute",
-            top: String(-1 * x) + ea,
-            left: "calc(" + String(ratio) + "% + " + String(-1 * x) + ea + ")",
-            width: String(radius + (x * 2)) + ea,
-            height: String(radius + (x * 2)) + ea,
-            borderRadius: String(radius + (x * 2)) + ea,
+            top: String(-1 * x) + px,
+            left: "calc(" + String(ratio) + "% + " + String(-1 * x) + px + ")",
+            width: String(radius + (x * 2)) + px,
+            height: String(radius + (x * 2)) + px,
+            borderRadius: String(radius + (x * 2)) + px,
             background: colorExtended.white,
             opacity: String(ratio === 100 ? 0.8 : 1),
           }
@@ -8206,11 +8650,11 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20, ba
         {
           style: {
             position: "absolute",
-            top: String(0) + ea,
-            left: "calc(" + String(ratio) + "% + " + String(0) + ea + ")",
-            width: String(radius) + ea,
-            height: String(radius) + ea,
-            borderRadius: String(radius) + ea,
+            top: String(0) + px,
+            left: "calc(" + String(ratio) + "% + " + String(0) + px + ")",
+            width: String(radius) + px,
+            height: String(radius) + px,
+            borderRadius: String(radius) + px,
             background: colorExtended.blueDim,
           }
         },
@@ -8224,7 +8668,7 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20, ba
             width: String(flagWidth) + ea,
           }
         },
-        (ratio < 90 ? {
+        (ratio < ratioStandard ? {
           style: {
             display: "inline-flex",
             position: "absolute",
@@ -8495,10 +8939,13 @@ StyleExplanationJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
+    const { media } = this;
     const { returnGet, ajaxJson, dateToString, homeliaisonAnalytics, colorExtended, stringToLink, objectDeepCopy } = GeneralJs;
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
+    const mobile = media[4];
+    const desktop = !mobile;  
     let cliid;
     let clients, client;
     let contentsPhotoObj;
@@ -8549,6 +8996,8 @@ StyleExplanationJs.prototype.launching = async function (loading) {
     this.totalValues = (new Array(this.questionNumber)).fill(null, 0);
     this.totalMenu = (new Array(this.questionNumber)).fill(null, 0);
 
+    this.lineWeight = <%% 1.5, 1.5, 1.5, 1, 1 %%>;
+
     await this.mother.ghostClientLaunching({
       mode: "ghost",
       name: "styleExplanation",
@@ -8570,16 +9019,16 @@ StyleExplanationJs.prototype.launching = async function (loading) {
           const secondBase = await instance.insertSecondBox();
           await instance.insertBarBox();
 
-          // GeneralJs.setQueue(() => {
-          //   const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
-          //   for (let dom of fadeOutTargets) {
-          //     dom.remove();
-          //   }
-          //   instance.totalValues[0] = 1;
-          //   instance.totalValues[1] = 1;
-          // }, 0);
-          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-368) + "px";
-          // await instance.insertEighthBox(secondBase);
+          GeneralJs.setQueue(() => {
+            const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
+            for (let dom of fadeOutTargets) {
+              dom.remove();
+            }
+            instance.totalValues[0] = 1;
+            instance.totalValues[1] = 1;
+          }, 0);
+          document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-71) + instance.ea;
+          await instance.insertEighthBox(secondBase);
 
           instance.resizeEvent();
           setInterval(() => {
