@@ -761,7 +761,7 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
 StyleExplanationJs.prototype.insertInitBox = async function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop } = this;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -800,12 +800,12 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
-    firstBasePaddingTop = <%% 26, 24, 24, 24, 10 %%>;
-    firstBasePaddingBottom = <%% 180, 170, 160, 120, 20 %%>;
+    firstBasePaddingTop = <%% 24, 24, 24, 24, 10 %%>;
+    firstBasePaddingBottom = <%% 160, 160, 160, 120, 20 %%>;
 
     subTitleSize = <%% 18, 18, 17, 15, 3.6 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% (isMac() ? 4 : 6), (isMac() ? 3 : 5), (isMac() ? 1 : 4), (isMac() ? 1 : 4), 0.5 %%>;
+    subTitleMarginTop = <%% (isMac() ? 3 : 4), (isMac() ? 2 : 3), (isMac() ? 1 : 2), (isMac() ? 1 : 1), 0.5 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 190, 186, 168, 31 %%>;
@@ -815,7 +815,7 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
     buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
 
-    titleSize = <%% 57, 51, 43, 36, 7 %%>;
+    titleSize = <%% 50, 48, 43, 36, 7 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
     titleVisualLeft = <%% 2, 2, 2, 2, -0.5 %%>;
@@ -838,13 +838,13 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
     descriptionPointBoldPaddingBottom = <%% (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 0.8 %%>;
     descriptionPointBoldMargin = <%% 2, 2, 2, 2, 1 %%>;
 
-    blanketHeight = <%% 50, 40, 40, 40, 4 %%>;
-    blanketVisualTop = <%% 1, 1, 1, 1, 1 %%>;
+    blanketHeight = <%% 48, 40, 40, 40, 4 %%>;
+    blanketVisualTop = <%% (isMac() ? 1 : 0), (isMac() ? 1 : 0), (isMac() ? 1 : 0), (isMac() ? 1 : 0), 1 %%>;
     blanketOpacity = <%% 0.3, 0.3, 0.3, 0.3, 0.3 %%>;
     blanketMargin = <%% 34, 32, 30, 30, 2 %%>;
 
     if (desktop && window.innerHeight > 1100) {
-      titleSize = <%% 59, 51, 43, 36, 7 %%>;
+      titleSize = <%% 57, 51, 43, 36, 7 %%>;
       subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
       firstBasePaddingTop = <%% 80, 48, 30, 28, 50 %%>;
       firstBasePaddingBottom = <%% 240, 210, 160, 120, 210 %%>;
@@ -1030,7 +1030,7 @@ StyleExplanationJs.prototype.insertInitBox = async function () {
 StyleExplanationJs.prototype.insertSecondBox = async function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { firstFadeOutTargetClassName, secondBaseClassName } = this;
@@ -1039,6 +1039,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
   const colorConvertPoint2ClassName = "colorConvertPoint2ClassName";
   const selectionBaseClassName = "selectionBaseClassName";
   const finalSelectionCompleteFirstButtonClassName = "finalSelectionCompleteFirstButtonClassName";
+  const mobileCheckPointClassName = "mobileCheckPointClassName";
   try {
     let minusLeft;
     let secondBase;
@@ -1097,6 +1098,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     let mobileWhiteBoxHeight;
     let mobileWhiteBoxBetween;
     let mobileBlueLineHeight;
+    let plusVisualTop;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -1105,14 +1107,14 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.2 %%>;
-    descriptionMarginTop = <%% 5, 5, 4, 3, 0.6 %%>;
+    descriptionMarginTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), (isMac() ? 3 : 1), 0.6 %%>;
     descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
     descriptionVisualLeft = <%% -1, -1, -1, -1, -0.1 %%>;
 
     betweenMargin = <%% 26, 16, 12, 8, 26 %%>;
 
     wordsMotherMarginTop = <%% 120, 120, 110, 90, 16 %%>;
-    numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
+    numbersAreaMarginTop = heightTong.numbers;
 
     numberSize = <%% 28, 26, 24, 21, 5 %%>;
     numberWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -1127,7 +1129,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     serviceNameBoxHeight = <%% 40, 36, 32, 30, 4 %%>;
     serviceNameSize = <%% 17, 16, 14, 13, 3 %%>;
     serviceNameWeight = <%% 800, 800, 800, 800, 800 %%>;
-    serviceNameTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
+    serviceNameTop = <%% (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), -0.5 %%>;
 
     circleWidth0 = <%% 8, 8, 8, 6, 8 %%>;
     circleWidth1 = <%% 6, 6, 6, 4, 6 %%>;
@@ -1146,15 +1148,16 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     serviceDescriptionSize = <%% 16, 15, 13, 12, 2.7 %%>;
     serviceDescriptionWeight = <%% 700, 700, 700, 700, 400 %%>;
     serviceDescriptionLineHeight = <%% 1.52, 1.52, 1.52, 1.52, 1.4 %%>;
-    serviceDescriptionTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
+    serviceDescriptionTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
     plusSize = <%% 15, 15, 13, 12, 2.6 %%>;
     plusWeight = <%% 700, 700, 700, 700, 700 %%>;
     plusPaddingLeft = <%% 3, 3, 3, 3, 0.4 %%>;
-    plusPaddingTop = <%% 0, 0, 0, 0, 0.1 %%>;
-    plusPaddingBottom = <%% 2, 2, 2, 2, 0.1 %%>;
+    plusPaddingTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0.1 %%>;
+    plusPaddingBottom = <%% (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), 0.1 %%>;
     plusBoxHeight = <%% 11, 11, 11, 11, 2 %%>;
     plusBoxMarginRight = <%% 4.5, 4.5, 4.5, 4.5, 0.5 %%>;
+    plusVisualTop = <%% (isMac() ? 0 : -1), (isMac() ? 0 : -1), (isMac() ? 0 : -1), (isMac() ? 0 : -1), 0 %%>;
 
     checkCircleAreaHeight = <%% 80, 64, 52, 45, 80 %%>;
     checkCircleWidth = <%% 23, 21, 19, 17, 3.6 %%>;
@@ -1164,9 +1167,9 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     buttonWidth = <%% 120, 120, 110, 90, 24 %%>;
     buttonSize = <%% 17, 17, 16, 14, 3.6 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
-    buttonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
-    originalSecondBaseHeight = <%% 1398, 1203, 1035, 825, 238 %%>;
+    originalSecondBaseHeight = heightTong.second;
 
     mobileWhiteBoxHeight = 48.8;
     mobileWhiteBoxBetween = 2;
@@ -1421,81 +1424,113 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
                 const valueIndex = 0;
                 const toggle = this.getAttribute("toggle");
                 let target0, target1, target2;
-                if (toggle === "on") {
-                  for (let dom of itemList) {
-
-                    target0 = dom.querySelector('.' + colorConvertPoint0ClassName);
-                    target1 = dom.querySelector('.' + colorConvertPoint1ClassName);
-                    target2 = dom.querySelector('.' + colorConvertPoint2ClassName);
-
-                    if (Number(dom.getAttribute("index")) === index) {
-                      dom.style.opacity = String(0.5);
-                      dom.setAttribute("toggle", "off");
-                      target1.style.background = colorExtended.blueDark;
-                      target1.firstChild.style.color = colorExtended.darkBlack;
-                      target2.style.opacity = String(1);
-                    } else {
-                      dom.style.opacity = String(0.5);
-                      dom.setAttribute("toggle", "off");
-                      target1.style.background = colorExtended.blueDark;
-                      target1.firstChild.style.color = colorExtended.darkBlack;
-                      target2.style.opacity = String(1);
+                if (desktop) {
+                  if (toggle === "on") {
+                    for (let dom of itemList) {
+                      target0 = dom.querySelector('.' + colorConvertPoint0ClassName);
+                      target1 = dom.querySelector('.' + colorConvertPoint1ClassName);
+                      target2 = dom.querySelector('.' + colorConvertPoint2ClassName);
+                      if (Number(dom.getAttribute("index")) === index) {
+                        dom.style.opacity = String(0.5);
+                        dom.setAttribute("toggle", "off");
+                        target1.style.background = colorExtended.blueDark;
+                        target1.firstChild.style.color = colorExtended.darkBlack;
+                        target2.style.opacity = String(1);
+                      } else {
+                        dom.style.opacity = String(0.5);
+                        dom.setAttribute("toggle", "off");
+                        target1.style.background = colorExtended.blueDark;
+                        target1.firstChild.style.color = colorExtended.darkBlack;
+                        target2.style.opacity = String(1);
+                      }
                     }
+                    instance.totalValues[valueIndex] = null;
+                    selectionForceEvent(false);
+                  } else {
+                    for (let dom of itemList) {
+                      target0 = dom.querySelector('.' + colorConvertPoint0ClassName);
+                      target1 = dom.querySelector('.' + colorConvertPoint1ClassName);
+                      target2 = dom.querySelector('.' + colorConvertPoint2ClassName);
+                      if (Number(dom.getAttribute("index")) === index) {
+                        dom.style.opacity = String(1);
+                        dom.setAttribute("toggle", "on");
+                        target1.style.background = colorExtended.blueDim;
+                        target1.firstChild.style.color = colorExtended.white;
+                        target2.style.opacity = String(0);
+                      } else {
+                        dom.style.opacity = String(0.5);
+                        dom.setAttribute("toggle", "off");
+                        target1.style.background = colorExtended.blueDark;
+                        target1.firstChild.style.color = colorExtended.darkBlack;
+                        target2.style.opacity = String(1);
+                      }
+                    }
+                    instance.totalValues[valueIndex] = index;
+                    selectionForceEvent(true);
                   }
-                  instance.totalValues[valueIndex] = null;
-                  selectionForceEvent(false);
                 } else {
-                  for (let dom of itemList) {
-
-                    target0 = dom.querySelector('.' + colorConvertPoint0ClassName);
-                    target1 = dom.querySelector('.' + colorConvertPoint1ClassName);
-                    target2 = dom.querySelector('.' + colorConvertPoint2ClassName);
-
-                    if (Number(dom.getAttribute("index")) === index) {
-                      dom.style.opacity = String(1);
-                      dom.setAttribute("toggle", "on");
-                      target1.style.background = colorExtended.blueDim;
-                      target1.firstChild.style.color = colorExtended.white;
-                      target2.style.opacity = String(0);
-                    } else {
-                      dom.style.opacity = String(0.5);
-                      dom.setAttribute("toggle", "off");
-                      target1.style.background = colorExtended.blueDark;
-                      target1.firstChild.style.color = colorExtended.darkBlack;
-                      target2.style.opacity = String(1);
+                  if (toggle === "on") {
+                    for (let dom of itemList) {
+                      target0 = dom.querySelector('.' + mobileCheckPointClassName);
+                      if (Number(dom.getAttribute("index")) === index) {
+                        dom.style.opacity = String(0.6);
+                        dom.setAttribute("toggle", "off");
+                        target0.style.opacity = String(0);
+                      } else {
+                        dom.style.opacity = String(0.6);
+                        dom.setAttribute("toggle", "off");
+                        target0.style.opacity = String(0);
+                      }
                     }
+                    instance.totalValues[valueIndex] = null;
+                  } else {
+                    for (let dom of itemList) {
+                      target0 = dom.querySelector('.' + mobileCheckPointClassName);
+                      if (Number(dom.getAttribute("index")) === index) {
+                        dom.style.opacity = String(1);
+                        dom.setAttribute("toggle", "on");
+                        target0.style.opacity = String(1);
+                      } else {
+                        dom.style.opacity = String(0.6);
+                        dom.setAttribute("toggle", "off");
+                        target0.style.opacity = String(0);
+                      }
+                    }
+                    instance.totalValues[valueIndex] = index;
                   }
-                  instance.totalValues[valueIndex] = index;
-                  selectionForceEvent(true);
                 }
               } catch (e) {
                 console.log(e);
               }
             },
             mouseenter: function (e) {
-              if (!instance.animationStop) {
-                const toggle = this.getAttribute("toggle");
-                const target0 = this.querySelector('.' + colorConvertPoint0ClassName);
-                const target1 = this.querySelector('.' + colorConvertPoint1ClassName);
-                this.style.opacity = String(1);
-                target0.firstChild.style.color = colorExtended.focusBlue;
-                target1.style.background = colorExtended.blueDim;
-                target1.firstChild.style.color = colorExtended.white;
+              if (desktop) {
+                if (!instance.animationStop) {
+                  const toggle = this.getAttribute("toggle");
+                  const target0 = this.querySelector('.' + colorConvertPoint0ClassName);
+                  const target1 = this.querySelector('.' + colorConvertPoint1ClassName);
+                  this.style.opacity = String(1);
+                  target0.firstChild.style.color = colorExtended.focusBlue;
+                  target1.style.background = colorExtended.blueDim;
+                  target1.firstChild.style.color = colorExtended.white;
+                }
               }
             },
             mouseleave: function (e) {
-              if (!instance.animationStop) {
-                const toggle = this.getAttribute("toggle");
-                const target0 = this.querySelector('.' + colorConvertPoint0ClassName);
-                const target1 = this.querySelector('.' + colorConvertPoint1ClassName);
-                if (toggle === "on") {
-                  this.style.opacity = String(1);
-                } else {
-                  this.style.opacity = String(0.5);
-                  target1.style.background = colorExtended.blueDark;
-                  target1.firstChild.style.color = colorExtended.darkBlack;
+              if (desktop) {
+                if (!instance.animationStop) {
+                  const toggle = this.getAttribute("toggle");
+                  const target0 = this.querySelector('.' + colorConvertPoint0ClassName);
+                  const target1 = this.querySelector('.' + colorConvertPoint1ClassName);
+                  if (toggle === "on") {
+                    this.style.opacity = String(1);
+                  } else {
+                    this.style.opacity = String(0.5);
+                    target1.style.background = colorExtended.blueDark;
+                    target1.firstChild.style.color = colorExtended.darkBlack;
+                  }
+                  target0.firstChild.style.color = colorExtended.black;
                 }
-                target0.firstChild.style.color = colorExtended.black;
               }
             }
           },
@@ -1506,7 +1541,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
             flexDirection: desktop ? "column" : "row",
             alignItems: "center",
             justifyContent: "start",
-            opacity: desktop ? String(target.default ? 1 : 0.5) : String(target.default ? 1 : 0.8),
+            opacity: desktop ? String(target.default ? 1 : 0.5) : String(target.default ? 1 : 0.6),
             marginLeft: (desktop && target.margin) ? String(betweenMargin) + ea : "",
             marginRight: (desktop && target.margin) ? String(betweenMargin) + ea : "",
             transition: transitionString,
@@ -1676,6 +1711,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
                 height: String(plusBoxHeight) + ea,
                 "border-radius": String(8) + ea,
                 marginRight: String(plusBoxMarginRight) + ea,
+                top: String(plusVisualTop) + ea,
               }
             }
           });
@@ -1867,7 +1903,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
                   boxSizing: "border-box",
                 },
                 previous: {
-                  class: [ colorConvertPoint2ClassName ],
+                  class: [ mobileCheckPointClassName ],
                   style: {
                     position: "absolute",
                     top: String(0),
@@ -1989,15 +2025,28 @@ StyleExplanationJs.prototype.constructPopupEvent = async function () {
     let returnEvent;
     let timeOutEventId;
     let delta;
+    let alertCircleWidth, alertCircleMarginBottom, alertTextTop, alertSize, alertWeight;
+    let wordingWeight, wordingLineHeight, wordingMarginBottom;
 
-    whiteWidth = 580;
-    whiteHeight = 180;
-    paddingTop = 17;
-    paddingLeft = 23;
-    paddingBottom = 62;
-    size1 = 16;
+    whiteWidth = <%% 580, 480, 400, 350, 88 %%>;
+    whiteHeight = <%% 160, 150, 140, 120, 28 %%>;
+    paddingTop = <%% 17, 16, 15, 13, 4 %%>;
+    paddingLeft = <%% 23, 23, 23, 23, 8 %%>;
+    paddingBottom = <%% 62, 62, 62, 62, 5 %%>;
+
     wordingVisual = GeneralJs.isMac() ? -1 : 1;
     delta = 5 * 1000;
+
+    alertCircleWidth = <%% 36, 34, 32, 30, 5 %%>;
+    alertCircleMarginBottom = <%% 12, 11, 10, 9, 3 %%>;
+    alertTextTop = <%% 1, 1, 1, 1, 0.1 %%>;
+    alertSize = <%% 28, 27, 26, 24, 4 %%>;
+    alertWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+    size1 = <%% 16, 15, 14, 12, 3.3 %%>;
+    wordingWeight = <%% 700, 700, 700, 700, 700 %%>;
+    wordingLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.56 %%>;
+    wordingMarginBottom = <%% 5, 5, 4, 3, 0.2 %%>;
 
     timeOutEventId = {};
 
@@ -2077,22 +2126,22 @@ StyleExplanationJs.prototype.constructPopupEvent = async function () {
       style: {
         display: "inline-flex",
         position: "relative",
-        width: String(36) + ea,
-        height: String(36) + ea,
-        borderRadius: String(36) + ea,
+        width: String(alertCircleWidth) + ea,
+        height: String(alertCircleWidth) + ea,
+        borderRadius: String(alertCircleWidth) + ea,
         border: "1px solid " + colorExtended.white,
         justifyContent: "center",
         alignItems: "center",
-        marginBottom: String(12) + ea,
+        marginBottom: String(alertCircleMarginBottom) + ea,
       },
       child: {
         text: "!",
         style: {
           display: "inline-block",
           position: "relative",
-          top: String(1) + ea,
-          fontSize: String(28) + ea,
-          fontWeight: String(700),
+          top: String(alertTextTop) + ea,
+          fontSize: String(alertSize) + ea,
+          fontWeight: String(alertWeight),
           color: colorExtended.mainBlue,
           fontFamily: "cabinet",
         }
@@ -2102,23 +2151,21 @@ StyleExplanationJs.prototype.constructPopupEvent = async function () {
     createNode({
       mother: blockPrompt,
       text: [
-        "화장실 시공, 주방 시공과 같은 전체 철거는 토탈 스타일링 서비스에 해당합니다.",
-        "포함되는 경우 토탈 스타일링 유형을 선택해 주세요.",
+        "토탈 스타일링 서비스에서는 전체 철거가 필수입니다.",
+        "전체 철거를 원하시지 않는 경우, 홈스타일링을 선택해주세요!",
       ].join("\n"),
       style: {
         display: "inline-block",
         position: "relative",
         fontSize: String(size1) + ea,
-        fontWeight: String(700),
+        fontWeight: String(wordingWeight),
         color: colorExtended.white,
         top: String(wordingVisual) + ea,
-        lineHeight: String(1.7),
+        lineHeight: String(wordingLineHeight),
         textAlign: "center",
-        marginBottom: String(5) + ea,
+        marginBottom: String(wordingMarginBottom) + ea,
       }
     });
-
-    
 
   } catch (e) {
     console.log(e);
@@ -2128,7 +2175,7 @@ StyleExplanationJs.prototype.constructPopupEvent = async function () {
 StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { firstFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName, secondFadeOutTargetClassName } = this;
@@ -2175,9 +2222,9 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
     titleMarginTop = <%% 25, 21, 15, 10, 2 %%>;
     titleSize = <%% 25, 24, 22, 19, 4.7 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 6, 5, 0 %%>;
-    titleSquareMarginRight = <%% 9, 9, 7, 5, 0 %%>;
-    titleSquareTop = <%% 1, 1, 1, 1, 0 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 1.4 %%>;
+    titleSquareMarginRight = <%% 9, 8, 7, 5, 1.4 %%>;
+    titleSquareTop = <%% (isMac() ? 1 : -1), (isMac() ? 1 : -2), (isMac() ? 1 : -2), (isMac() ? 1 : -2), 0 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
     descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
@@ -2194,7 +2241,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
     numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
+    numbersAreaMarginTop = heightTong.numbers;
 
     imageAreaMarginTop = <%% 70, 70, 50, 25, 6 %%>;
     imageAreaMarginBottom = <%% 110, 100, 75, 50, 11.5 %%>;
@@ -2204,7 +2251,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
     yesButtonWidth = <%% 160, 140, 130, 100, 30 %%>;
     yesButtonHeight = <%% 40, 36, 34, 32, 8 %%>;
     yesButtonBetween = <%% 12, 10, 9, 6, 1.6 %%>;
-    yesButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    yesButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     yesButtonSize = <%% 16, 15, 14, 13, 3.2 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
@@ -2212,14 +2259,14 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
     completeButtonAreaMarginBottom = <%% 150, 150, 120, 100, 23 %%>;
     completeButtonSize = <%% 17, 17, 16, 14, 3.6 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
-    completeButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    completeButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
     returnCircleWidth = <%% 34, 34, 32, 28, 6.8 %%>;
     returnCircleMarginRight = <%% 11, 11, 10, 7, 1.8 %%>;
     returnCicleArrowWidth = <%% 9, 9, 8, 7, 1.8 %%>;
     returnCicleArrowLeft = <%% -1.5, -1.5, -1, -0.5, -0.2 %%>;
 
-    tempSecondHeight = <%% 1067.84, 1037, 875, 675, 159 %%>;
+    tempSecondHeight = heightTong.third;
 
     thirdSelectionEvent = (index) => {
       return async function (e) {
@@ -2230,18 +2277,18 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
           if (toggle === "on") {
             for (let dom of targets) {
               if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
-                dom.style.background = colorExtended.white;
-                dom.style.boxShadow = "";
-                dom.firstChild.style.color = colorExtended.blueDark;
-                dom.setAttribute("toggle", "off");
-              } else {
                 dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
                 dom.style.background = colorExtended.mainBlue;
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
                 dom.setAttribute("toggle", "on");
                 instance.totalValues[1] = Number(dom.getAttribute("index"));
+              } else {
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
               }
             }
           } else {
@@ -2275,9 +2322,11 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
     }
     instance.totalMenu[1] = [
       {
+        title: "아니요",
         value: "부분 철거",
       },
       {
+        title: "예",
         value: "전체 철거",
       },
     ]
@@ -2615,10 +2664,157 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
   }
 }
 
+StyleExplanationJs.prototype.constructItemPopupEvent = async function (constructItems) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const promptAsideClassName = "promptAsideClassName";
+  try {
+    const zIndex = 5;
+    let blackTongBase, blockPrompt;
+    let whiteWidth;
+    let whiteHeight;
+    let paddingTop;
+    let paddingLeft;
+    let paddingBottom;
+    let size0, size1;
+    let wordingVisual;
+    let returnEvent;
+    let timeOutEventId;
+    let delta;
+    let alertCircleWidth, alertCircleMarginBottom, alertTextTop, alertSize, alertWeight;
+    let wordingWeight, wordingLineHeight, wordingMarginBottom;
+
+    whiteWidth = <%% 580, 480, 400, 350, 88 %%>;
+    whiteHeight = <%% 160, 150, 140, 120, 88 %%>;
+    paddingTop = <%% 17, 16, 15, 13, 4 %%>;
+    paddingLeft = <%% 23, 23, 23, 23, 8 %%>;
+    paddingBottom = <%% 62, 62, 62, 62, 5 %%>;
+
+    wordingVisual = GeneralJs.isMac() ? -1 : 1;
+    delta = 5 * 1000;
+
+    alertCircleWidth = <%% 36, 34, 32, 30, 5 %%>;
+    alertCircleMarginBottom = <%% 12, 11, 10, 9, 3 %%>;
+    alertTextTop = <%% 1, 1, 1, 1, 0.1 %%>;
+    alertSize = <%% 28, 27, 26, 24, 4 %%>;
+    alertWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+    size1 = <%% 16, 15, 14, 12, 3 %%>;
+    wordingWeight = <%% 700, 700, 700, 700, 700 %%>;
+    wordingLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+    wordingMarginBottom = <%% 5, 5, 4, 3, 0.2 %%>;
+
+    returnEvent = () => {
+      return async function (e) {
+        try {
+          removeByClass(promptAsideClassName);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    blackTongBase = createNode({
+      mode: "aside",
+      mother: document.body,
+      class: [ promptAsideClassName ],
+      event: {
+        contextmenu: (e) => { e.stopPropagation(); },
+        dblclick: (e) => { e.stopPropagation(); },
+        drop: (e) => { e.stopPropagation(); },
+        keyup: (e) => { e.stopPropagation(); },
+        keydown: (e) => { e.stopPropagation(); },
+        keypress: (e) => { e.stopPropagation(); },
+        click: returnEvent(),
+      },
+      style: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "fixed",
+        top: String(0) + "vh",
+        left: String(1) + "vw",
+        width: String(98) + "vw",
+        height: "calc(100vh - " + String(0) + ea + ")",
+        background: "transparent",
+        zIndex: String(zIndex),
+        cursor: "pointer",
+      }
+    });
+  
+    blockPrompt = createNode({
+      mother: blackTongBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+        width: String(whiteWidth) + ea,
+        height: String(whiteHeight) + ea,
+        borderRadius: String(10) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorExtended.ultimateBlack,
+        background: colorExtended.darkBlack,
+        animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
+      }
+    });
+
+    createNode({
+      mother: blockPrompt,
+      text: constructItems.map((o) => { return o.title }).join("\n"),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(size1) + ea,
+        fontWeight: String(wordingWeight),
+        color: colorExtended.white,
+        lineHeight: String(wordingLineHeight),
+        textAlign: "left",
+        marginBottom: String(wordingMarginBottom) + ea,
+      }
+    });
+    createNode({
+      mother: blockPrompt,
+      text: constructItems.map((o) => { return " : " }).join("\n"),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(size1) + ea,
+        fontWeight: String(wordingWeight),
+        color: colorExtended.mainBlue,
+        lineHeight: String(wordingLineHeight),
+        textAlign: "center",
+        width: String(4) + ea,
+        marginBottom: String(wordingMarginBottom) + ea,
+      }
+    });
+    createNode({
+      mother: blockPrompt,
+      text: constructItems.map((o) => { return o.description.replace(/\n/gi, " ") }).join("\n"),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(size1) + ea,
+        fontWeight: String(300),
+        color: colorExtended.white,
+        lineHeight: String(wordingLineHeight),
+        textAlign: "left",
+        marginBottom: String(wordingMarginBottom) + ea,
+      }
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { secondFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName } = this;
@@ -2674,15 +2870,21 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     let blackDescriptionBoxIndent;
     let blackDescriptionSize, blackDescriptionWeight, blackDescriptionLineHeight;
     let mobileConstructItemDevide;
+    let alertCircleWidth;
+    let alertCircleMarginLeft;
+    let alertTextTop;
+    let alertSize;
+    let alertWeight;
+    let mobileConstructPopupEvent;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
     titleMarginTop = <%% 25, 21, 15, 10, 2 %%>;
     titleSize = <%% 25, 24, 22, 19, 4.7 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 6, 5, 0 %%>;
-    titleSquareMarginRight = <%% 9, 9, 7, 5, 0 %%>;
-    titleSquareTop = <%% 1, 1, 1, 1, 0 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 1.4 %%>;
+    titleSquareMarginRight = <%% 9, 8, 7, 5, 1.4 %%>;
+    titleSquareTop = <%% (isMac() ? 1 : -1), (isMac() ? 1 : -2), (isMac() ? 1 : -2), (isMac() ? 1 : -2), 0 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
     descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
@@ -2699,7 +2901,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
+    numbersAreaMarginTop = heightTong.numbers;
 
     imageAreaMarginTop = <%% 45, 40, 35, 25, 6.5 %%>;
     imageAreaMarginBottom = <%% 110, 100, 75, 50, 11.5 %%>;
@@ -2709,7 +2911,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     yesButtonWidth = <%% 160, 140, 130, 100, 30 %%>;
     yesButtonHeight = <%% 40, 36, 34, 32, 8 %%>;
     yesButtonBetween = <%% 12, 10, 9, 6, 1.6 %%>;
-    yesButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    yesButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     yesButtonSize = <%% 16, 15, 14, 13, 3.2 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
@@ -2717,7 +2919,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     completeButtonAreaMarginBottom = <%% 129, 129, 110, 100, 23 %%>;
     completeButtonSize = <%% 17, 17, 16, 14, 3.6 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
-    completeButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    completeButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
     returnCircleWidth = <%% 34, 34, 32, 28, 6.8 %%>;
     returnCircleMarginRight = <%% 11, 11, 10, 7, 1.8 %%>;
@@ -2727,13 +2929,13 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     middleLineMarginBottom = <%% 90, 85, 75, 60, 11.5 %%>;
     middleLinePaddingTop = <%% 80, 70, 60, 50, 10 %%>;
 
-    blueBoxHeight = <%% 70, 68, 60, 52, 17.5 %%>;
+    blueBoxHeight = <%% 70, 68, 60, 52, 17.2 %%>;
     blueDescriptionSize = <%% 16, 15, 14, 13, 3 %%>;
     blueDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blueDescriptionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
-    blueDescriptionTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
+    blueDescriptionTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
-    tempSecondHeight = <%% 1067.84, 995, 853, 708, 208.5 %%>;
+    tempSecondHeight = heightTong.fourth;
 
     blackDescriptionBoxHeight = <%% 56, 56, 56, 56, 56 %%>;
     blackDescriptionBoxWidth = <%% 196, 196, 196, 196, 196 %%>;
@@ -2744,6 +2946,12 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     blackDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
     mobileConstructItemDevide = 4;
+
+    alertCircleWidth = <%% 36, 34, 32, 30, 3.8 %%>;
+    alertCircleMarginLeft = <%% 12, 11, 10, 9, 1 %%>;
+    alertTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), 0 %%>;
+    alertSize = <%% 28, 27, 26, 24, 3.2 %%>;
+    alertWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     if (instance.totalValues[3] === null) {
       instance.totalValues[3] = 2;
@@ -2856,6 +3064,16 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
       }
     }
 
+    mobileConstructPopupEvent = (constructItems) => {
+      return async function (e) {
+        try {
+          await instance.constructItemPopupEvent(constructItems);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
     constructItems = [
       {
         title: "철거",
@@ -2866,14 +3084,14 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
       },
       {
         title: "보양",
-        description: "복도, 엘리베이터 등에 기스 나지\n않도록 비닐을 씌우는 작업",
+        description: "엘리베이터 등에 기스 나지\n않도록 비닐을 씌우는 작업",
         styling: true,
         alert: false,
         notice: "",
       },
       {
         title: "목공",
-        description: "나무를 사용한 모든 작업\n걸레 받이, 몰딩, 문짝, 천정 평탄화 등",
+        description: "나무를 사용한 작업\n걸레받이, 몰딩, 문짝, 천정 평탄화 등",
         styling: true,
         alert: false,
         notice: "",
@@ -2887,7 +3105,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
       },
       {
         title: "타일",
-        description: "공화장실, 주방 등에 타일을\n바꾸는 작업",
+        description: "화장실, 주방 등에 타일을\n바꾸는 작업",
         styling: true,
         alert: true,
         notice: "홈스타일링에서는 덧방 공사만 가능합니다!",
@@ -2901,21 +3119,21 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
       },
       {
         title: "욕실",
-        description: "화장실 공사, 홈스타일링에서는\n부분 악세사리 교체만 가능",
+        description: "화장실 공사, 홈스타일링에선\n부분 악세사리 교체만 가능",
         styling: true,
         alert: true,
         notice: "홈스타일링에서는 부분 악세사리 교체만 가능합니다!",
       },
       {
         title: "주방",
-        description: "주방 공사, 홈스타일링에서는\n부분 악세사리 교체만 가능",
+        description: "주방 공사, 홈스타일링에선\n부분 악세사리 교체만 가능",
         styling: true,
         alert: true,
         notice: "홈스타일링에서는 부분 악세사리 교체만 가능합니다!",
       },
       {
         title: "필름",
-        description: "필름지를 씌어서 해당 면의\n색상이나 재질감을 바꾸는 제공",
+        description: "필름지를 씌어 해당 면의\n색상이나 재질감을 바꾸는 제공",
         styling: true,
         alert: false,
         notice: "",
@@ -3116,6 +3334,36 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                 color: colorExtended.black,
               }
             },
+            {
+              event: {
+                click: mobileConstructPopupEvent(constructItems),
+              },
+              style: {
+                display: mobile ? "inline-flex" : "none",
+                position: "relative",
+                width: String(alertCircleWidth) + ea,
+                height: String(alertCircleWidth) + ea,
+                borderRadius: String(alertCircleWidth) + ea,
+                background: colorExtended.mainBlue,
+                marginLeft: String(alertCircleMarginLeft) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+                top: String(0.1) + ea,
+              },
+              child: {
+                text: "?",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(alertTextTop) + ea,
+                  fontSize: String(alertSize) + ea,
+                  fontWeight: String(alertWeight),
+                  color: colorExtended.white,
+                  fontFamily: "cabinet",
+                }
+              }
+            },
           ]
         },
       ]
@@ -3152,6 +3400,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                   const index = Number(this.getAttribute("index"));
                   const thisObj = objectDeepCopy(constructItems[index]);
                   const thisFunction = fourthSelectionEvent(index).bind(this);
+                  
                   if (instance.totalValues[0] === 2) {
                     await thisFunction(e);
                   } else {
@@ -3168,10 +3417,14 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
                   }
                 },
                 mouseenter: function (e) {
-                  this.querySelector('.' + fourthDescriptionBoxClassName).style.display = "flex";
+                  if (desktop) {
+                    this.querySelector('.' + fourthDescriptionBoxClassName).style.display = "flex";
+                  }
                 },
                 mouseleave: function (e) {
-                  this.querySelector('.' + fourthDescriptionBoxClassName).style.display = "none";
+                  if (desktop) {
+                    this.querySelector('.' + fourthDescriptionBoxClassName).style.display = "none";
+                  }
                 }
               },
               style: {
@@ -3506,7 +3759,7 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
 StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnishingMode = false) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { firstFadeOutTargetClassName, fourthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName } = this;
@@ -3581,9 +3834,9 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
     titleMarginTop = <%% 25, 21, 15, 10, 2 %%>;
     titleSize = <%% 25, 24, 22, 19, 4.7 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 6, 5, 0 %%>;
-    titleSquareMarginRight = <%% 9, 9, 7, 5, 0 %%>;
-    titleSquareTop = <%% 1, 1, 1, 1, 0 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 1.4 %%>;
+    titleSquareMarginRight = <%% 9, 8, 7, 5, 1.4 %%>;
+    titleSquareTop = <%% (isMac() ? 1 : -1), (isMac() ? 1 : -2), (isMac() ? 1 : -2), (isMac() ? 1 : -2), 0 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
     descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
@@ -3600,7 +3853,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
     numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
+    numbersAreaMarginTop = heightTong.numbers;
 
     imageAreaMarginTop = <%% 45, 40, 35, 25, 6.5 %%>;
     imageAreaMarginBottom = <%% 110, 100, 75, 50, 11.5 %%>;
@@ -3610,7 +3863,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
     yesButtonWidth = <%% 160, 140, 130, 100, 30 %%>;
     yesButtonHeight = <%% 40, 36, 34, 32, 8 %%>;
     yesButtonBetween = <%% 12, 10, 9, 6, 1.6 %%>;
-    yesButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    yesButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     yesButtonSize = <%% 16, 15, 14, 13, 3.2 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
@@ -3618,7 +3871,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
     completeButtonAreaMarginBottom = <%% 129, 129, 110, 100, 23 %%>;
     completeButtonSize = <%% 17, 17, 16, 14, 3.6 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
-    completeButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    completeButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
     returnCircleWidth = <%% 34, 34, 32, 28, 6.8 %%>;
     returnCircleMarginRight = <%% 11, 11, 10, 7, 1.8 %%>;
@@ -3633,7 +3886,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
     blueDescriptionSize = <%% 16, 15, 14, 13, 3 %%>;
     blueDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blueDescriptionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
-    blueDescriptionTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    blueDescriptionTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
     processBarHeight = <%% 24, 21, 18, 15, 3 %%>;
     defaultBudgetValue = <%% 5, 5, 5, 5, 5 %%>;
@@ -3642,19 +3895,19 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
     blueWhiteFactorLineMarginRight = <%% 10, 10, 10, 10, 0 %%>;
     blueWhiteFactorWidth = <%% 180, 150, 120, 90, 21 %%>;
     blueWhiteFactorHeight = <%% 36, 30, 26, 21, 6.1 %%>;
-    blueWhiteFactorTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
+    blueWhiteFactorTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     blueWhiteFactorSize = <%% 15, 14, 12, 11, 2.7 %%>;
     blueWhiteFactorWeight = <%% 700, 700, 700, 700, 700 %%>;
     blueWhitePlusCircleWidth = <%% 22, 19, 17, 14, 4 %%>;
     blueWhitePlusCircleSize = <%% 20, 19, 16, 15, 3.5 %%>;
     blueWhitePlusCircleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    blueWhitePlusCircleTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
+    blueWhitePlusCircleTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.1 %%>;
     blueWhitePlusCircleMargin = <%% 8, 7, 6, 4, 1.2 %%>;
 
     processValueSize = <%% 15, 13, 12, 10, 2.5 %%>;
     processValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    convertingBaseHeight = <%% 1540, 1392, 1220, 1019, 299 %%>;
+    convertingBaseHeight = heightTong.fifth;
 
     processValuesRatio = <%% 99.4, 99.4, 99.4, 100, 100 %%>;
 
@@ -4762,7 +5015,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
 StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { fourthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName, fifthFadeOutTargetClassName } = this;
@@ -4842,9 +5095,9 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
     titleMarginTop = <%% 25, 21, 15, 10, 2 %%>;
     titleSize = <%% 25, 24, 22, 19, 4.7 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 6, 5, 0 %%>;
-    titleSquareMarginRight = <%% 9, 9, 7, 5, 0 %%>;
-    titleSquareTop = <%% 1, 1, 1, 1, 0 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 1.4 %%>;
+    titleSquareMarginRight = <%% 9, 8, 7, 5, 1.4 %%>;
+    titleSquareTop = <%% (isMac() ? 1 : -1), (isMac() ? 1 : -2), (isMac() ? 1 : -2), (isMac() ? 1 : -2), 0 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
     descriptionMarginTop = <%% 5, 5, 4, 3, 2.6 %%>;
@@ -4861,7 +5114,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
     numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
+    numbersAreaMarginTop = heightTong.numbers;
 
     imageAreaMarginTop = <%% 45, 40, 35, 25, 6.5 %%>;
     imageAreaMarginBottom = <%% 110, 100, 75, 50, 11.5 %%>;
@@ -4871,7 +5124,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
     yesButtonWidth = <%% 160, 140, 130, 100, 30 %%>;
     yesButtonHeight = <%% 40, 36, 34, 32, 8 %%>;
     yesButtonBetween = <%% 12, 10, 9, 6, 1.6 %%>;
-    yesButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    yesButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     yesButtonSize = <%% 16, 15, 14, 13, 3.2 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
@@ -4879,7 +5132,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
     completeButtonAreaMarginBottom = <%% 129, 129, 110, 100, 23 %%>;
     completeButtonSize = <%% 17, 17, 16, 14, 3.6 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
-    completeButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    completeButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
     returnCircleWidth = <%% 34, 34, 32, 28, 6.8 %%>;
     returnCircleMarginRight = <%% 11, 11, 10, 7, 1.8 %%>;
@@ -4890,11 +5143,11 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
     middleLinePaddingTop = <%% 80, 70, 60, 50, 10 %%>;
 
     blueBoxHeight = <%% 130, 120, 105, 95, 120 %%>;
-    blueBoxHeight2 = <%% 70, 68, 60, 52, 13.5 %%>;
+    blueBoxHeight2 = <%% 70, 68, 60, 52, 13 %%>;
     blueDescriptionSize = <%% 16, 15, 14, 13, 3 %%>;
     blueDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blueDescriptionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
-    blueDescriptionTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
+    blueDescriptionTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
     processBarHeight = <%% 24, 21, 18, 15, 24 %%>;
     defaultBudgetValue = <%% 2, 2, 2, 2, 2 %%>;
@@ -4915,7 +5168,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
     processValueSize = <%% 15, 13, 12, 10, 15 %%>;
     processValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    convertingBaseHeight = <%% 1808, 1638, 1442, 1199, 384 %%>;
+    convertingBaseHeight = heightTong.sixth;
 
     processValuesRatio = desktop ? 99.4 : 100;
 
@@ -6266,7 +6519,7 @@ StyleExplanationJs.prototype.fileChangeEvent = function () {
 StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { fifthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName, fileTongClassName, sixthFadeOutTargetClassName, fileInputClassName, fileClickWordsClassName } = this;
@@ -6343,9 +6596,9 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     titleMarginTop = <%% 25, 21, 15, 10, 2 %%>;
     titleSize = <%% 25, 24, 22, 19, 4.7 %%>;
     titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    titleSquareWidth = <%% 8, 8, 6, 5, 0 %%>;
-    titleSquareMarginRight = <%% 9, 9, 7, 5, 0 %%>;
-    titleSquareTop = <%% 1, 1, 1, 1, 0 %%>;
+    titleSquareWidth = <%% 8, 8, 6, 5, 1.4 %%>;
+    titleSquareMarginRight = <%% 9, 8, 7, 5, 1.4 %%>;
+    titleSquareTop = <%% (isMac() ? 1 : -1), (isMac() ? 1 : -2), (isMac() ? 1 : -2), (isMac() ? 1 : -2), 0 %%>;
 
     descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
     descriptionMarginTop = <%% 5, 5, 4, 3, 0.6 %%>;
@@ -6364,7 +6617,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
     numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
+    numbersAreaMarginTop = heightTong.numbers;
 
     imageAreaMarginTop = <%% 45, 40, 35, 25, 6.5 %%>;
     imageAreaMarginBottom = <%% 110, 100, 75, 50, 11.5 %%>;
@@ -6374,7 +6627,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     yesButtonWidth = <%% 160, 140, 130, 100, 30 %%>;
     yesButtonHeight = <%% 40, 36, 34, 32, 8 %%>;
     yesButtonBetween = <%% 12, 10, 9, 6, 1.6 %%>;
-    yesButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    yesButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
     yesButtonSize = <%% 16, 15, 14, 13, 3.2 %%>;
     yesButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
@@ -6382,7 +6635,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     completeButtonAreaMarginBottom = <%% 129, 129, 110, 100, 23 %%>;
     completeButtonSize = <%% 17, 17, 16, 14, 3.6 %%>;
     completeButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
-    completeButtonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    completeButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
     returnCircleWidth = <%% 34, 34, 32, 28, 6.8 %%>;
     returnCircleMarginRight = <%% 11, 11, 10, 7, 1.8 %%>;
@@ -6397,7 +6650,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     blueDescriptionSize = <%% 16, 15, 14, 13, 3 %%>;
     blueDescriptionWeight = <%% 700, 700, 700, 700, 700 %%>;
     blueDescriptionBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
-    blueDescriptionTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
+    blueDescriptionTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
     processBarHeight = <%% 24, 21, 18, 15, 24 %%>;
     defaultBudgetValue = <%% 5, 5, 5, 5, 5 %%>;
@@ -6418,7 +6671,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
     processValueSize = <%% 15, 13, 12, 10, 15 %%>;
     processValueWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    convertingBaseHeight = <%% 2000, 1864, 1640, 1328, 359 %%>;
+    convertingBaseHeight = heightTong.seventh;
 
     fileUploadBoxHeight = <%% 180, 180, 180, 140, 34 %%>;
     fileUploadBoxSize = <%% 24, 22, 20, 18, 4.5 %%>;
@@ -7044,12 +7297,13 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
 StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, setDebounce } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight, baseTop, totalContents } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, baseTop, totalContents, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const submitBlockClassName = "submitBlockClassName";
+  const eightSecondWhiteClassName = "eightSecondWhiteClassName";
   const { sixthFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, ghostBaseClassName, fileTongClassName, secondBarBoxMotherClassName, blurFixedBelowBarClassName, greenTalkEventClassName } = this;
   try {
     const fadeOutTargets = [ ...document.querySelectorAll('.' + sixthFadeOutTargetClassName) ];
@@ -7119,7 +7373,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
-    totalHeight = <%% 2593, 2346, 1960, 1540, 480 %%>;
+    totalHeight = heightTong.eighth;
 
     firstBasePaddingTop = <%% 26, 24, 24, 24, 20 %%>;
     firstBasePaddingBottom = <%% 180, 170, 160, 120, 20 %%>;
@@ -7128,15 +7382,15 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     subTitleMarginTop = <%% (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 3 : 6), (isMac() ? 3 : 6), 0.5 %%>;
 
-    buttonMarginTop = <%% 165, 160, 132, 110, 6.5 %%>;
+    buttonMarginTop = <%% 165, 160, 132, 90, 6.5 %%>;
     buttonWidth = <%% 205, 194, 186, 168, 31 %%>;
     buttonHeight = <%% 32, 32, 30, 28, 8.5 %%>;
     buttonSize = <%% 14, 14, 13, 12, 3.4 %%>;
-    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 0), -0.2 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
     buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
 
-    titleSize = <%% 57, 51, 48, 39, 7 %%>;
+    titleSize = <%% 57, 51, 48, 38, 7 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
@@ -7144,8 +7398,8 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
 
     pointOpacity = 0.4;
 
-    mainImageTop = <%% 27, 24, 18, 16, 44 %%>;
-    mainImageHeight = <%% 390, 370, 346, 314, 39 %%>;
+    mainImageTop = <%% 24, 22, 18, 18, 44 %%>;
+    mainImageHeight = <%% 404, 383, 346, 275, 39 %%>;
 
     descriptionSize = <%% 15, 14, 14, 13, 3.2 %%>;
     descriptionLineHeight = <%% 1.8, 1.8, 1.8, 1.7, 1.8 %%>;
@@ -7182,12 +7436,12 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
 
     noticeTitleSize = <%% 21, 18, 15, 14, 3.4 %%>;
     noticeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    noticeTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    noticeTitleTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1 %%>;
     noticeDescriptionIndent = <%% 24, 24, 21, 18, 2 %%>;
     noticeDescriptionSize = <%% 15, 14, 13, 12, 3 %%>;
     noticeDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
     noticeDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.6 %%>;
-    noticeDescriptionTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+    noticeDescriptionTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
     thirdDescriptionMarginTop = <%% 10, 7, 3, 1, 1 %%>;
     thirdDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -7196,7 +7450,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
 
     processDiagramHeight = <%% 420, 350, 320, 270, 420 %%>;
 
-    blackButtonWidth = <%% 180, 160, 145, 130, 34 %%>;
+    blackButtonWidth = <%% 180, 160, 145, 125, 34 %%>;
     blackButtonHeight = <%% 38, 32, 30, 28, 7.6 %%>;
     blackButtonBetween = <%% 8, 7, 6, 5, 1.5 %%>;
     blackButtonSize = <%% 16, 14, 13, 12, 3 %%>;
@@ -7550,6 +7804,17 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     } else {
       createNode({
         mother: ghostBase,
+        event: {
+          click: async function (e) {
+            try {
+              GeneralJs.scrollTo(window, 0, 0, true);
+              await GeneralJs.sleep(200);
+              GeneralJs.scrollTo(window, document.querySelector('.' + eightSecondWhiteClassName).getBoundingClientRect().top - instance.naviHeight, 0, false);  
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
         style: {
           display: "flex",
           position: "relative",
@@ -7591,6 +7856,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     // second white
     secondWhite = createNode({
       mother: ghostBase,
+      class: [ eightSecondWhiteClassName ],
       style: {
         display: "flex",
         position: "relative",
@@ -8026,7 +8292,7 @@ StyleExplanationJs.prototype.resultAnalytics = async function () {
 StyleExplanationJs.prototype.firstConverting = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { initAreaClassName, firstFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName } = this;
@@ -8038,8 +8304,8 @@ StyleExplanationJs.prototype.firstConverting = function () {
       let blackScrollTop;
       let numbersAreaMarginTop;
 
-      blackScrollTop = <%% -642, -565, -457, -368, -71 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
+      blackScrollTop = heightTong.scroll;
+      numbersAreaMarginTop = heightTong.numbers;
 
       blackTarget.style.transition = "all 0.6s ease";
       if (blackTarget.style.marginTop.replace(/[^0-9\-]/gi, '') === String(blackScrollTop)) {
@@ -8079,7 +8345,7 @@ StyleExplanationJs.prototype.firstConverting = function () {
 StyleExplanationJs.prototype.secondConverting = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { initAreaClassName, secondFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName } = this;
@@ -8089,8 +8355,8 @@ StyleExplanationJs.prototype.secondConverting = function () {
       let blackScrollTop;
       let numbersAreaMarginTop;
 
-      blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
+      blackScrollTop = heightTong.scroll;
+      numbersAreaMarginTop = heightTong.numbers;
 
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
@@ -8111,7 +8377,7 @@ StyleExplanationJs.prototype.secondConverting = function () {
 StyleExplanationJs.prototype.thirdConverting = function (furnishingMode = false) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { initAreaClassName, firstFadeOutTargetClassName, thirdFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName } = this;
@@ -8122,9 +8388,9 @@ StyleExplanationJs.prototype.thirdConverting = function (furnishingMode = false)
         let blackScrollTop;
         let numbersAreaMarginTop;
   
-        blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
-        numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
-  
+        blackScrollTop = heightTong.scroll;
+        numbersAreaMarginTop = heightTong.numbers;
+    
         scrollTo(window, 0, 0, false, async () => {
           for (let dom of fadeOutTargets) {
             dom.style.animation = "fadeoutlite 0.6s ease forwards";
@@ -8148,9 +8414,9 @@ StyleExplanationJs.prototype.thirdConverting = function (furnishingMode = false)
         let blackScrollTop;
         let numbersAreaMarginTop;
   
-        blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
-        numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
-  
+        blackScrollTop = heightTong.scroll;
+        numbersAreaMarginTop = heightTong.numbers;
+    
         blackTarget.style.transition = "all 0.6s ease";
         if (blackTarget.style.marginTop.replace(/[^0-9\-]/gi, '') === String(blackScrollTop)) {
           scrollTo(window, 0, 0, false, async () => {
@@ -8190,7 +8456,7 @@ StyleExplanationJs.prototype.thirdConverting = function (furnishingMode = false)
 StyleExplanationJs.prototype.fourthConverting = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { initAreaClassName, fourthFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName } = this;
@@ -8200,8 +8466,8 @@ StyleExplanationJs.prototype.fourthConverting = function () {
       let blackScrollTop;
       let numbersAreaMarginTop;
 
-      blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
+      blackScrollTop = heightTong.scroll;
+      numbersAreaMarginTop = heightTong.numbers;
 
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
@@ -8223,7 +8489,7 @@ StyleExplanationJs.prototype.fourthConverting = function () {
 StyleExplanationJs.prototype.fifthConverting = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { initAreaClassName, fifthFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName } = this;
@@ -8233,8 +8499,8 @@ StyleExplanationJs.prototype.fifthConverting = function () {
       let blackScrollTop;
       let numbersAreaMarginTop;
 
-      blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
+      blackScrollTop = heightTong.scroll;
+      numbersAreaMarginTop = heightTong.numbers;
 
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
@@ -8256,7 +8522,7 @@ StyleExplanationJs.prototype.fifthConverting = function () {
 StyleExplanationJs.prototype.sixthConverting = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { initAreaClassName, sixthFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName } = this;
@@ -8266,8 +8532,8 @@ StyleExplanationJs.prototype.sixthConverting = function () {
       let blackScrollTop;
       let numbersAreaMarginTop;
 
-      blackScrollTop = <%% -642, -0, -0, -0, -0 %%>;
-      numbersAreaMarginTop = <%% 100, 100, 90, 75, 16.5 %%>;
+      blackScrollTop = heightTong.scroll;
+      numbersAreaMarginTop = heightTong.numbers;
 
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
@@ -8332,7 +8598,7 @@ StyleExplanationJs.prototype.insertBarBox = async function () {
 
     commentSize = <%% 14, 14, 13, 12, 2.5 %%>;
     commentWeight = <%% 700, 700, 700, 700, 700 %%>;
-    commentTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
+    commentTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -8531,7 +8797,7 @@ StyleExplanationJs.prototype.insertSecondBarBox = async function (ratio = 20, ba
 
     commentSize = <%% 14, 14, 13, 12, 2.5 %%>;
     commentWeight = <%% 700, 700, 700, 700, 700 %%>;
-    commentTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
+    commentTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
@@ -8979,10 +9245,11 @@ StyleExplanationJs.prototype.launching = async function (loading) {
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
     const mobile = media[4];
-    const desktop = !mobile;  
+    const desktop = !mobile;
     let cliid;
     let clients, client;
     let contentsPhotoObj;
+    let fhdVisual;
 
     if (getObj.cliid !== undefined) {
       cliid = getObj.cliid;
@@ -9032,6 +9299,50 @@ StyleExplanationJs.prototype.launching = async function (loading) {
 
     this.lineWeight = <%% 1.5, 1.5, 1.5, 1, 1 %%>;
 
+    this.heightTong = {};
+
+    if (desktop && window.innerHeight > 1100) {
+      this.heightTong.second = <%% 1398, 1203, 1035, 825, 238 %%>;
+      this.heightTong.third = <%% 1067.84, 1037, 875, 675, 159 %%>;
+      this.heightTong.fourth = <%% 1067.84, 995, 853, 708, 208.5 %%>;
+      this.heightTong.fifth = <%% 1540, 1392, 1220, 1019, 299 %%>;
+      this.heightTong.sixth = <%% 1808, 1638, 1442, 1199, 384 %%>;
+      this.heightTong.seventh = <%% 2000, 1864, 1640, 1328, 359 %%>;
+      this.heightTong.eighth = <%% 2593, 2346, 1960, 1540, 480 %%>;
+      this.heightTong.scroll = <%% -638, -565, -457, -368, -71 %%>;
+      this.heightTong.numbers = <%% 100, 100, 90, 75, 16.5 %%>;
+    } else if (desktop) {
+      this.heightTong.second = <%% 1398, 1203, 1035, 825, 238 %%>;
+      this.heightTong.third = <%% 1067.84, 1037, 875, 675, 159 %%>;
+      this.heightTong.fourth = <%% 1067.84, 995, 853, 708, 208.5 %%>;
+      this.heightTong.fifth = <%% 1540, 1392, 1220, 1019, 299 %%>;
+      this.heightTong.sixth = <%% 1808, 1638, 1442, 1199, 384 %%>;
+      this.heightTong.seventh = <%% 2000, 1864, 1640, 1328, 359 %%>;
+      this.heightTong.eighth = <%% 2473, 2337, 1956, 1540, 480 %%>;
+      this.heightTong.scroll = <%% -492, -486, -451, -365, -71 %%>;
+      this.heightTong.numbers = <%% 100, 100, 90, 75, 16.5 %%>;
+
+      fhdVisual = <%% 30, 30, 20, 0, 0 %%>;
+
+      this.heightTong.second = this.heightTong.second - fhdVisual;
+      this.heightTong.third = this.heightTong.third - fhdVisual;
+      this.heightTong.fourth = this.heightTong.fourth - fhdVisual;
+      this.heightTong.fifth = this.heightTong.fifth - fhdVisual;
+      this.heightTong.sixth = this.heightTong.sixth - fhdVisual;
+      this.heightTong.seventh = this.heightTong.seventh - fhdVisual;
+      this.heightTong.numbers = this.heightTong.numbers - fhdVisual;
+    } else if (mobile) {
+      this.heightTong.second = <%% 1398, 1203, 1035, 825, 238 %%>;
+      this.heightTong.third = <%% 1067.84, 1037, 875, 675, 159 %%>;
+      this.heightTong.fourth = <%% 1067.84, 995, 853, 708, 208.5 %%>;
+      this.heightTong.fifth = <%% 1540, 1392, 1220, 1019, 299 %%>;
+      this.heightTong.sixth = <%% 1808, 1638, 1442, 1199, 384 %%>;
+      this.heightTong.seventh = <%% 2000, 1864, 1640, 1328, 359 %%>;
+      this.heightTong.eighth = <%% 2593, 2346, 1960, 1540, 480 %%>;
+      this.heightTong.scroll = <%% -638, -565, -457, -368, -71 %%>;
+      this.heightTong.numbers = <%% 100, 100, 90, 75, 16.5 %%>;
+    }
+
     await this.mother.ghostClientLaunching({
       mode: "ghost",
       name: "styleExplanation",
@@ -9061,7 +9372,7 @@ StyleExplanationJs.prototype.launching = async function (loading) {
           //   instance.totalValues[0] = 1;
           //   instance.totalValues[1] = 1;
           // }, 0);
-          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(-71) + instance.ea;
+          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(instance.heightTong.scroll) + instance.ea;
           // await instance.insertEighthBox(secondBase);
 
           instance.resizeEvent();

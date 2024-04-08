@@ -5938,14 +5938,16 @@ GeneralJs.alert = function (message, blackMode = false, skipMode = false) {
   let finalEvent;
   let inputSize;
   let thisBox;
+  let maxHeight;
+  let maxWidthVw;
 
   whiteWidth = 320;
   whiteHeight = 150;
-  paddingTop = 11;
-  paddingLeft = 23;
-  paddingBottom = 13;
-  size0 = 14;
-  size1 = 16;
+  paddingTop = desktop ? 11 : 9;
+  paddingLeft = desktop ? 23 : 17;
+  paddingBottom = desktop ? 13 : 10;
+  size0 = desktop ? 14 : 12;
+  size1 = desktop ? 15 : 13;
   inputSize = 13;
   marginLeft = 18;
   bottomVisual = 7;
@@ -5954,6 +5956,8 @@ GeneralJs.alert = function (message, blackMode = false, skipMode = false) {
   inputBottomVisual = 0;
   lineHeight = 1.5;
   wordingVisual = GeneralJs.isMac() ? 0 : 2;
+  maxHeight = 50;
+  maxWidthVw = 90;
 
   greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
   if (Number.isNaN(greenBarHeight)) {
@@ -5997,8 +6001,8 @@ GeneralJs.alert = function (message, blackMode = false, skipMode = false) {
         paddingLeft: String(paddingLeft) + ea,
         paddingRight: String(paddingLeft) + ea,
         borderRadius: String(5) + "px",
-        boxShadow: !blackMode ? "0px 3px 15px -9px " + colorChip.shadow : "0px 3px 15px -9px " + colorChip.ultimateBlack,
-        background: !blackMode ? colorChip.white : colorExtended.darkDarkBlack,
+        boxShadow: !blackMode ? "0px 3px 15px -9px " + colorExtended.shadow : "0px 3px 15px -9px " + colorExtended.ultimateBlack,
+        background: !blackMode ? colorExtended.white : colorExtended.darkDarkBlack,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
@@ -6043,47 +6047,54 @@ GeneralJs.alert = function (message, blackMode = false, skipMode = false) {
         class: [ promptAsideClassName ],
         style: {
           display: "flex",
-          position: "fixed",
-          top: String(50) + '%',
-          left: String(50) + '%',
-          paddingTop: String(paddingTop) + ea,
-          paddingBottom: String(paddingBottom) + ea,
-          paddingLeft: String(paddingLeft) + ea,
-          paddingRight: String(paddingLeft) + ea,
-          borderRadius: String(5) + "px",
-          boxShadow: !blackMode ? "0px 3px 15px -9px " + colorChip.shadow : "0px 3px 15px -9px " + colorChip.ultimateBlack,
-          background: !blackMode ? colorChip.white : colorExtended.darkDarkBlack,
-          flexDirection: "row",
-          alignItems: "center",
           justifyContent: "center",
-          width: String(2000) + px,
-          opacity: String(0),
-          transition: "all 0s ease",
-          transform: "translateY(10px)",
+          alignItems: "center",
+          position: "fixed",
+          top: withOut(50, maxHeight / 2, px),
+          left: String((100 - maxWidthVw) / 2) + "vw",
+          width: String(maxWidthVw) + "vw",
+          height: String(maxHeight) + px,
+          background: "transparent",
+          zIndex: String(900)
         },
         child: {
-          text: message,
           style: {
-            display: "inline-block",
+            display: "flex",
             position: "relative",
-            fontSize: String(size1) + ea,
-            fontWeight: String(700),
-            color: !blackMode ? colorChip.black : colorExtended.white,
-            lineHeight: String(lineHeight),
-            top: String(wordingVisual) + ea,
+            paddingTop: String(paddingTop) + ea,
+            paddingBottom: String(paddingBottom) + ea,
+            paddingLeft: String(paddingLeft) + ea,
+            paddingRight: String(paddingLeft) + ea,
+            borderRadius: String(5) + "px",
+            boxShadow: !blackMode ? "0px 3px 15px -9px " + colorcolorExtendedChip.shadow : "0px 3px 15px -9px " + colorExtended.ultimateBlack,
+            background: !blackMode ? colorChip.white : colorExtended.darkDarkBlack,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            opacity: String(0),
+            transition: "all 0s ease",
+            transform: "translateY(10px)",
+            width: String(2000) + px,
+          },
+          child: {
+            text: message,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(size1) + ea,
+              fontWeight: String(700),
+              color: !blackMode ? colorExtended.black : colorExtended.white,
+              lineHeight: String(lineHeight),
+              top: String(wordingVisual) + ea,
+            }
           }
-        }
+        },
       });
-  
-      whiteTong.style.width = "";
-      thisBox = whiteTong.getBoundingClientRect();
-      whiteTong.style.top = withOut(50, (thisBox.height / 2), px);
-      whiteTong.style.left = withOut(50, (thisBox.width / 2), px);
-  
-      whiteTong.style.animation = "fadeuplite 0.4s ease forwards";
+      whiteTong.firstChild.style.width = "";
+      whiteTong.firstChild.style.animation = "fadeuplite 0.4s ease forwards";
 
       GeneralJs.stacks[generalJsAlertSkipModeTimeOutStactName] = setTimeout(() => {
-        whiteTong.style.animation = "fadedownlite 0.4s ease forwards";
+        whiteTong.firstChild.style.animation = "fadedownlite 0.4s ease forwards";
         setQueue(() => {
           removeByClass(promptAsideClassName);
         }, 400);
@@ -6102,47 +6113,54 @@ GeneralJs.alert = function (message, blackMode = false, skipMode = false) {
           class: [ promptAsideClassName ],
           style: {
             display: "flex",
-            position: "fixed",
-            top: String(50) + '%',
-            left: String(50) + '%',
-            paddingTop: String(paddingTop) + ea,
-            paddingBottom: String(paddingBottom) + ea,
-            paddingLeft: String(paddingLeft) + ea,
-            paddingRight: String(paddingLeft) + ea,
-            borderRadius: String(5) + "px",
-            boxShadow: !blackMode ? "0px 3px 15px -9px " + colorChip.shadow : "0px 3px 15px -9px " + colorChip.ultimateBlack,
-            background: !blackMode ? colorChip.white : colorExtended.darkDarkBlack,
-            flexDirection: "row",
-            alignItems: "center",
             justifyContent: "center",
-            width: String(2000) + px,
-            opacity: String(0),
-            transition: "all 0s ease",
-            transform: "translateY(10px)",
+            alignItems: "center",
+            position: "fixed",
+            top: withOut(50, maxHeight / 2, px),
+            left: String((100 - maxWidthVw) / 2) + "vw",
+            width: String(maxWidthVw) + "vw",
+            height: String(maxHeight) + px,
+            background: "transparent",
+            zIndex: String(900)
           },
           child: {
-            text: message,
             style: {
-              display: "inline-block",
+              display: "flex",
               position: "relative",
-              fontSize: String(size1) + ea,
-              fontWeight: String(700),
-              color: !blackMode ? colorChip.black : colorExtended.white,
-              lineHeight: String(lineHeight),
-              top: String(wordingVisual) + ea,
+              paddingTop: String(paddingTop) + ea,
+              paddingBottom: String(paddingBottom) + ea,
+              paddingLeft: String(paddingLeft) + ea,
+              paddingRight: String(paddingLeft) + ea,
+              borderRadius: String(5) + "px",
+              boxShadow: !blackMode ? "0px 3px 15px -9px " + colorcolorExtendedChip.shadow : "0px 3px 15px -9px " + colorExtended.ultimateBlack,
+              background: !blackMode ? colorChip.white : colorExtended.darkDarkBlack,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              opacity: String(0),
+              transition: "all 0s ease",
+              transform: "translateY(10px)",
+              width: String(2000) + px,
+            },
+            child: {
+              text: message,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(size1) + ea,
+                fontWeight: String(700),
+                color: !blackMode ? colorExtended.black : colorExtended.white,
+                lineHeight: String(lineHeight),
+                top: String(wordingVisual) + ea,
+              }
             }
-          }
+          },
         });
-    
-        whiteTong.style.width = "";
-        thisBox = whiteTong.getBoundingClientRect();
-        whiteTong.style.top = withOut(50, (thisBox.height / 2), px);
-        whiteTong.style.left = withOut(50, (thisBox.width / 2), px);
-    
-        whiteTong.style.animation = "fadeuplite 0.4s ease forwards";
+        whiteTong.firstChild.style.width = "";
+        whiteTong.firstChild.style.animation = "fadeuplite 0.4s ease forwards";
   
         GeneralJs.stacks[generalJsAlertSkipModeTimeOutStactName] = setTimeout(() => {
-          whiteTong.style.animation = "fadedownlite 0.4s ease forwards";
+          whiteTong.firstChild.style.animation = "fadedownlite 0.4s ease forwards";
           setQueue(() => {
             removeByClass(promptAsideClassName);
           }, 400);
