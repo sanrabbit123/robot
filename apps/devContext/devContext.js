@@ -193,7 +193,20 @@ DevContext.prototype.launching = async function () {
 
 
 
+    /*
 
+    const selfMongo = this.MONGOC;
+    const toNormal = true;
+    const designers = await back.getDesignersByQuery({}, { selfMongo, toNormal });
+
+    // console.log(designers);
+
+    for (let designer of designers) {
+      console.log(designer.setting);
+    }
+
+
+    */
 
     
 
