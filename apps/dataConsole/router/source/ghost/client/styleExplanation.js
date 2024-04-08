@@ -41,7 +41,7 @@ const StyleExplanationJs = function () {
   this.mother = new GeneralJs();
 }
 
-StyleExplanationJs.binaryPath = "/middle/style";
+StyleExplanationJs.binaryPath = FRONTHOST + "/middle/style";
 
 StyleExplanationJs.randomPick = function (photos, contentsArr, pictureNumber, roomsIntersection = false) {
   if (typeof photos !== "object" || typeof contentsArr !== "object" || typeof pictureNumber !== "number" || typeof roomsIntersection !== "boolean") {
@@ -9303,24 +9303,24 @@ StyleExplanationJs.prototype.launching = async function (loading) {
 
     if (desktop && window.innerHeight > 1100) {
       this.heightTong.second = <%% 1398, 1203, 1035, 825, 238 %%>;
-      this.heightTong.third = <%% 1067.84, 1037, 875, 675, 159 %%>;
-      this.heightTong.fourth = <%% 1067.84, 995, 853, 708, 208.5 %%>;
-      this.heightTong.fifth = <%% 1540, 1392, 1220, 1019, 299 %%>;
-      this.heightTong.sixth = <%% 1808, 1638, 1442, 1199, 384 %%>;
-      this.heightTong.seventh = <%% 2000, 1864, 1640, 1328, 359 %%>;
+      this.heightTong.third = <%% 1067.84, 1037, 875, 675, 158 %%>;
+      this.heightTong.fourth = <%% 1067.84, 995, 853, 708, 208 %%>;
+      this.heightTong.fifth = <%% 1540, 1392, 1220, 1019, 298.5 %%>;
+      this.heightTong.sixth = <%% 1808, 1638, 1442, 1199, 383.5 %%>;
+      this.heightTong.seventh = <%% 2000, 1864, 1640, 1328, 358.5 %%>;
       this.heightTong.eighth = <%% 2593, 2346, 1960, 1540, 480 %%>;
       this.heightTong.scroll = <%% -638, -565, -457, -368, -71 %%>;
-      this.heightTong.numbers = <%% 100, 100, 90, 75, 16.5 %%>;
+      this.heightTong.numbers = <%% 100, 100, 90, 75, 16 %%>;
     } else if (desktop) {
       this.heightTong.second = <%% 1398, 1203, 1035, 825, 238 %%>;
-      this.heightTong.third = <%% 1067.84, 1037, 875, 675, 159 %%>;
-      this.heightTong.fourth = <%% 1067.84, 995, 853, 708, 208.5 %%>;
-      this.heightTong.fifth = <%% 1540, 1392, 1220, 1019, 299 %%>;
-      this.heightTong.sixth = <%% 1808, 1638, 1442, 1199, 384 %%>;
-      this.heightTong.seventh = <%% 2000, 1864, 1640, 1328, 359 %%>;
+      this.heightTong.third = <%% 1067.84, 1037, 875, 675, 158 %%>;
+      this.heightTong.fourth = <%% 1067.84, 995, 853, 708, 208 %%>;
+      this.heightTong.fifth = <%% 1540, 1392, 1220, 1019, 298.5 %%>;
+      this.heightTong.sixth = <%% 1808, 1638, 1442, 1199, 383.5 %%>;
+      this.heightTong.seventh = <%% 2000, 1864, 1640, 1328, 358.5 %%>;
       this.heightTong.eighth = <%% 2473, 2337, 1956, 1540, 480 %%>;
       this.heightTong.scroll = <%% -492, -486, -451, -365, -71 %%>;
-      this.heightTong.numbers = <%% 100, 100, 90, 75, 16.5 %%>;
+      this.heightTong.numbers = <%% 100, 100, 90, 75, 16 %%>;
 
       fhdVisual = <%% 30, 30, 20, 0, 0 %%>;
 
@@ -9333,14 +9333,14 @@ StyleExplanationJs.prototype.launching = async function (loading) {
       this.heightTong.numbers = this.heightTong.numbers - fhdVisual;
     } else if (mobile) {
       this.heightTong.second = <%% 1398, 1203, 1035, 825, 238 %%>;
-      this.heightTong.third = <%% 1067.84, 1037, 875, 675, 159 %%>;
-      this.heightTong.fourth = <%% 1067.84, 995, 853, 708, 208.5 %%>;
-      this.heightTong.fifth = <%% 1540, 1392, 1220, 1019, 299 %%>;
-      this.heightTong.sixth = <%% 1808, 1638, 1442, 1199, 384 %%>;
-      this.heightTong.seventh = <%% 2000, 1864, 1640, 1328, 359 %%>;
+      this.heightTong.third = <%% 1067.84, 1037, 875, 675, 158 %%>;
+      this.heightTong.fourth = <%% 1067.84, 995, 853, 708, 208 %%>;
+      this.heightTong.fifth = <%% 1540, 1392, 1220, 1019, 298.5 %%>;
+      this.heightTong.sixth = <%% 1808, 1638, 1442, 1199, 383.5 %%>;
+      this.heightTong.seventh = <%% 2000, 1864, 1640, 1328, 358.5 %%>;
       this.heightTong.eighth = <%% 2593, 2346, 1960, 1540, 480 %%>;
       this.heightTong.scroll = <%% -638, -565, -457, -368, -71 %%>;
-      this.heightTong.numbers = <%% 100, 100, 90, 75, 16.5 %%>;
+      this.heightTong.numbers = <%% 100, 100, 90, 75, 16 %%>;
     }
 
     await this.mother.ghostClientLaunching({
