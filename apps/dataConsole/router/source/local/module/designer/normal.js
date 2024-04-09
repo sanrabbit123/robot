@@ -1303,6 +1303,37 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                     event: {
                       click: function (e) {
                         const desid = this.getAttribute("desid");
+                        blankHref(FRONTHOST + "/proposal_test.php?desid=" + desid);
+                      }
+                    },
+                    text: "추천서 샘플",
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.black,
+                      cursor: "pointer",
+                    }
+                  },
+                  {
+                    text: blank,
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.gray3,
+                    }
+                  },
+                  {
+                    class: [ titleButtonsClassName ],
+                    attribute: { toggle: "off", desid },
+                    event: {
+                      click: function (e) {
+                        const desid = this.getAttribute("desid");
                         blankHref(FRONTHOST + "/designer/dashboard.php?desid=" + desid + "&view=test");
                       }
                     },
