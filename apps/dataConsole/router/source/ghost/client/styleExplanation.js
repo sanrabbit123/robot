@@ -7369,6 +7369,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     let returnCicleArrowWidth;
     let returnCicleArrowLeft;
     let mobileArrowZoneMarginTop;
+    let mobileFixedWhiteMarginBottom;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -7464,8 +7465,9 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     hangulBarWidth = <%% 96, 84, 64, 48, 96 %%>;
     hangulBarHeight = <%% 6, 5, 4, 3, 1 %%>;
 
-    fixedWhiteBarHeight = <%% 96, 80, 72, 64, 15 %%>;
+    fixedWhiteBarHeight = <%% 96, 80, 72, 64, 19 %%>;
     fixedWhiteBarButtonMarginLeft = <%% 1037, 722, 503, 456, 40 %%>;
+    mobileFixedWhiteMarginBottom = 2.5;
 
     returnCircleWidth = <%% 34, 34, 32, 28, 7.2 %%>;
     returnCicleArrowWidth = <%% 9, 9, 8, 7, 2 %%>;
@@ -8179,6 +8181,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
             alignItems: "center",
             marginRight: String(blackButtonBetween) + ea,
             marginLeft: desktop ? String(fixedWhiteBarButtonMarginLeft) + ea : "",
+            marginBottom: desktop ? "" : String(mobileFixedWhiteMarginBottom) + ea,
           },
           child: {
             attribute: {
@@ -8205,6 +8208,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
             borderRadius: String(blackButtonHeight) + ea,
             justifyContent: "center",
             alignItems: "center",
+            marginBottom: desktop ? "" : String(mobileFixedWhiteMarginBottom) + ea,
           },
           child: {
             attribute: {
@@ -9364,16 +9368,16 @@ StyleExplanationJs.prototype.launching = async function (loading) {
           const secondBase = await instance.insertSecondBox();
           await instance.insertBarBox();
 
-          // GeneralJs.setQueue(() => {
-          //   const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
-          //   for (let dom of fadeOutTargets) {
-          //     dom.remove();
-          //   }
-          //   instance.totalValues[0] = 1;
-          //   instance.totalValues[1] = 1;
-          // }, 0);
-          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(instance.heightTong.scroll) + instance.ea;
-          // await instance.insertEighthBox(secondBase);
+          GeneralJs.setQueue(() => {
+            const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
+            for (let dom of fadeOutTargets) {
+              dom.remove();
+            }
+            instance.totalValues[0] = 1;
+            instance.totalValues[1] = 1;
+          }, 0);
+          document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(instance.heightTong.scroll) + instance.ea;
+          await instance.insertEighthBox(secondBase);
 
           instance.resizeEvent();
           setInterval(() => {
