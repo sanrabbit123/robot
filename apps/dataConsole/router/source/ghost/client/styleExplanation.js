@@ -758,6 +758,69 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
 
 }
 
+StyleExplanationJs.prototype.updateImmediately = async function (valueIndex, menuIndex, menu) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop, heightTong } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  try {
+    const defaultQueryObject = {
+      newMode: true,
+      method: "client",
+      id: instance.client.cliid
+    };
+    let updateQuery;
+    
+    if (typeof valueIndex !== "number") {
+      throw new Error("invalid value index");
+    }
+    if (!Array.isArray(menu)) {
+      throw new Error("invalid menu");
+    }
+    if (menuIndex === undefined) {
+      throw new Error("invalid menu index");
+    }
+
+    console.log(valueIndex, menuIndex, menu);
+
+    if (valueIndex === 0) {
+
+      updateQuery = {};
+      
+      await ajaxJson({ ...defaultQueryObject, updateQuery }, BACKHOST + "/updateHistory");
+
+    } else if (valueIndex === 1) {
+
+    } else if (valueIndex === 2) {
+      
+    } else if (valueIndex === 3) {
+      
+    } else if (valueIndex === 4) {
+      
+    } else if (valueIndex === 5) {
+      
+    } else if (valueIndex === 6) {
+      
+    } else if (valueIndex === 7) {
+      
+    } else if (valueIndex === 8) {
+      
+    } else if (valueIndex === 9) {
+      
+    } else if (valueIndex === 10) {
+      
+    } else if (valueIndex === 11) {
+      
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 StyleExplanationJs.prototype.insertInitBox = async function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
@@ -1466,6 +1529,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
                       }
                     }
                     instance.totalValues[valueIndex] = index;
+                    await instance.updateImmediately(valueIndex, index, textContent.map((o) => { return o.value }));
                     selectionForceEvent(true);
                   }
                 } else {
@@ -1497,6 +1561,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
                       }
                     }
                     instance.totalValues[valueIndex] = index;
+                    await instance.updateImmediately(valueIndex, index, textContent.map((o) => { return o.value }));
                   }
                 }
               } catch (e) {

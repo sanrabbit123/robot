@@ -2737,171 +2737,229 @@ DataRouter.prototype.rou_post_updateHistory = function () {
   let obj = {};
   obj.link = [ "/updateHistory", "/updateClientHistory", "/updateProjectHistory", "/updateDesignerHistory" ];
   obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       const today = new Date();
-      const { id, column, value, email } = equalJson(req.body);
-      const logDir = `${instance.dir}/log`;
-      const managerInteraction = {
-        designer: {
-          to: "project",
-          toId: "proid",
-          method: "getProjectsByQuery",
-          whereQuery: { desid: id }
-        },
-      };
-      let historyObj;
-      let whereQuery, updateQuery;
-      let thisPerson;
-      let fileTarget;
-      let method, standard;
-      let managerArr;
-      let managerIdArr;
-      let managerToObj;
-      let managerTargetArr;
-      let page, query, dummy, cookies;
-
-      thisPerson = null;
-      if (email !== null) {
-        for (let member of members) {
-          if (member.email.includes(email)) {
-            thisPerson = member.name;
-            break;
-          }
-        }
-      }
-
-      whereQuery = {};
-      updateQuery = {};
-
-      if (/Client/gi.test(req.url)) {
-        method = "client";
-      } else if (/Project/gi.test(req.url)) {
-        method = "project";
-      } else if (/Designer/gi.test(req.url)) {
-        method = "designer";
-      } else if (/Contents/gi.test(req.url)) {
-        method = "contents";
-      } else {
-        if (req.body.method === undefined) {
-          throw new Error("invaild method");
-        } else {
-          method = req.body.method;
-        }
-      }
-
-      if (/client/gi.test(method)) {
-        standard = "cliid";
-      } else if (/project/gi.test(method)) {
-        standard = "proid";
-      } else if (/designer/gi.test(method)) {
-        standard = "desid";
-      } else if (/contents/gi.test(method)) {
-        standard = "conid";
-      } else {
-        throw new Error("invaild method");
-      }
-
-      historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
-      if (historyObj === null) {
-        updateQuery = {};
-        updateQuery[standard] = id;
-        if (column === "important") {
-          updateQuery[column] = (Number(value) === 1);
-        } else {
-          if (column !== null) {
-            if (value === "true" || value === "false") {
-              updateQuery[column] = (value === "true");
-            } else {
-              updateQuery[column] = value;
+      if (req.body.newMode === undefined || req.body.newMode === null || req.body.newMode === 0) {
+        const { id, column, value, email } = equalJson(req.body);
+        const logDir = `${instance.dir}/log`;
+        const managerInteraction = {
+          designer: {
+            to: "project",
+            toId: "proid",
+            method: "getProjectsByQuery",
+            whereQuery: { desid: id }
+          },
+        };
+        let historyObj;
+        let whereQuery, updateQuery;
+        let thisPerson;
+        let fileTarget;
+        let method, standard;
+        let managerArr;
+        let managerIdArr;
+        let managerToObj;
+        let managerTargetArr;
+        let page, query, dummy, cookies;
+  
+        thisPerson = null;
+        if (email !== null) {
+          for (let member of members) {
+            if (member.email.includes(email)) {
+              thisPerson = member.name;
+              break;
             }
           }
         }
-        await back.createHistory(method, updateQuery, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+  
+        whereQuery = {};
+        updateQuery = {};
+  
+        if (/Client/gi.test(req.url)) {
+          method = "client";
+        } else if (/Project/gi.test(req.url)) {
+          method = "project";
+        } else if (/Designer/gi.test(req.url)) {
+          method = "designer";
+        } else if (/Contents/gi.test(req.url)) {
+          method = "contents";
+        } else {
+          if (req.body.method === undefined) {
+            throw new Error("invaild method");
+          } else {
+            method = req.body.method;
+          }
+        }
+  
+        if (/client/gi.test(method)) {
+          standard = "cliid";
+        } else if (/project/gi.test(method)) {
+          standard = "proid";
+        } else if (/designer/gi.test(method)) {
+          standard = "desid";
+        } else if (/contents/gi.test(method)) {
+          standard = "conid";
+        } else {
+          throw new Error("invaild method");
+        }
+  
         historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
+        if (historyObj === null) {
+          updateQuery = {};
+          updateQuery[standard] = id;
+          if (column === "important") {
+            updateQuery[column] = (Number(value) === 1);
+          } else {
+            if (column !== null) {
+              if (value === "true" || value === "false") {
+                updateQuery[column] = (value === "true");
+              } else {
+                updateQuery[column] = value;
+              }
+            }
+          }
+          await back.createHistory(method, updateQuery, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+          historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
+        } else {
+          whereQuery = {};
+          whereQuery[standard] = id;
+          updateQuery = {};
+          if (column === "important") {
+            updateQuery[column] = (Number(value) === 1);
+          } else {
+            if (column !== null) {
+              if (value === "true" || value === "false") {
+                updateQuery[column] = (value === "true");
+              } else {
+                updateQuery[column] = value;
+              }
+            }
+          }
+  
+          if (Object.keys(updateQuery).length > 0) {
+            await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+          }
+        }
+  
+        if (column !== null && thisPerson !== null) {
+          await fileSystem(`write`, [ logDir + "/" + method + "_" + "latest.json", JSON.stringify({ path: method, who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
+          const dir = await fileSystem(`readDir`, [ logDir ]);
+          fileTarget = null;
+          for (let fileName of dir) {
+            if ((new RegExp("^" + id)).test(fileName)) {
+              fileTarget = fileName;
+            }
+          }
+          if (fileTarget !== null) {
+            await shellExec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
+          }
+          await fileSystem(`write`, [ `${instance.dir}/log/${id}__name__${thisPerson}`, `0` ]);
+        }
+  
+        if (column === "manager") {
+          if (managerInteraction[method] !== undefined) {
+            managerArr = await back[managerInteraction[method].method](managerInteraction[method].whereQuery, { selfMongo: instance.mongo });
+            managerIdArr = [];
+            for (let obj of managerArr) {
+              managerIdArr.push(obj[managerInteraction[method].toId]);
+            }
+            if (managerIdArr.length !== 0) {
+              managerToObj = await back.getHistoryProperty(managerInteraction[method].to, "manager", managerIdArr, { selfMongo: instance.mongolocal });
+              managerTargetArr = [];
+              for (let i in managerToObj) {
+                managerTargetArr.push([ i, managerToObj[i] ]);
+              }
+              managerTargetArr = managerTargetArr.filter((a) => { return a[1] === '' || a[1] === '-' || a[1] === "홀딩"; });
+              for (let [ id ] of managerTargetArr) {
+                whereQuery = {};
+                whereQuery[managerInteraction[method].toId] = id;
+                await back.updateHistory(managerInteraction[method].to, [ whereQuery, { manager: value } ], { selfMongo: instance.mongolocal });
+              }
+            }
+          }
+        }
+  
+        if (typeof req.body.send === "string" && /Client/gi.test(req.url)) {
+          page = req.body.send.split('_')[0];
+          query = req.body.send.split('_').length > 1 ? req.body.send.split('_')[1] : null;
+          dummy = {
+            page,
+            date: new Date(),
+            mode: query,
+            who: {
+              name: null,
+              email: null,
+            }
+          };
+          if (Array.isArray(historyObj.curation.analytics.send)) {
+            historyObj.curation.analytics.send.push(dummy);
+          } else {
+            historyObj.curation.analytics.send = [ dummy ];
+          }
+          await back.updateHistory("client", [ { cliid: id }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
+        }
+  
       } else {
+        const { id, updateQuery } = equalJson(req.body);
+        let historyObj;
+        let method, standard;
+        let createQuery;
+        let whereQuery;
+  
+        if (/Client/gi.test(req.url)) {
+          method = "client";
+        } else if (/Project/gi.test(req.url)) {
+          method = "project";
+        } else if (/Designer/gi.test(req.url)) {
+          method = "designer";
+        } else if (/Contents/gi.test(req.url)) {
+          method = "contents";
+        } else {
+          if (req.body.method === undefined) {
+            throw new Error("invaild method");
+          } else {
+            method = req.body.method;
+          }
+        }
+  
+        if (/client/gi.test(method)) {
+          standard = "cliid";
+        } else if (/project/gi.test(method)) {
+          standard = "proid";
+        } else if (/designer/gi.test(method)) {
+          standard = "desid";
+        } else if (/contents/gi.test(method)) {
+          standard = "conid";
+        } else {
+          throw new Error("invaild method");
+        }
+
         whereQuery = {};
         whereQuery[standard] = id;
-        updateQuery = {};
-        if (column === "important") {
-          updateQuery[column] = (Number(value) === 1);
+  
+        historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
+        if (historyObj === null) {
+          createQuery = { ...updateQuery };
+          createQuery[standard] = id;
+          await back.createHistory(method, createQuery, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+          historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
         } else {
-          if (column !== null) {
-            if (value === "true" || value === "false") {
-              updateQuery[column] = (value === "true");
-            } else {
-              updateQuery[column] = value;
-            }
+          if (Object.keys(updateQuery).length > 0) {
+            await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
           }
         }
-
-        if (Object.keys(updateQuery).length > 0) {
-          await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-        }
+  
       }
-
-      if (column !== null && thisPerson !== null) {
-        await fileSystem(`write`, [ logDir + "/" + method + "_" + "latest.json", JSON.stringify({ path: method, who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
-        const dir = await fileSystem(`readDir`, [ logDir ]);
-        fileTarget = null;
-        for (let fileName of dir) {
-          if ((new RegExp("^" + id)).test(fileName)) {
-            fileTarget = fileName;
-          }
-        }
-        if (fileTarget !== null) {
-          await shellExec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
-        }
-        await fileSystem(`write`, [ `${instance.dir}/log/${id}__name__${thisPerson}`, `0` ]);
-      }
-
-      if (column === "manager") {
-        if (managerInteraction[method] !== undefined) {
-          managerArr = await back[managerInteraction[method].method](managerInteraction[method].whereQuery, { selfMongo: instance.mongo });
-          managerIdArr = [];
-          for (let obj of managerArr) {
-            managerIdArr.push(obj[managerInteraction[method].toId]);
-          }
-          if (managerIdArr.length !== 0) {
-            managerToObj = await back.getHistoryProperty(managerInteraction[method].to, "manager", managerIdArr, { selfMongo: instance.mongolocal });
-            managerTargetArr = [];
-            for (let i in managerToObj) {
-              managerTargetArr.push([ i, managerToObj[i] ]);
-            }
-            managerTargetArr = managerTargetArr.filter((a) => { return a[1] === '' || a[1] === '-' || a[1] === "홀딩"; });
-            for (let [ id ] of managerTargetArr) {
-              whereQuery = {};
-              whereQuery[managerInteraction[method].toId] = id;
-              await back.updateHistory(managerInteraction[method].to, [ whereQuery, { manager: value } ], { selfMongo: instance.mongolocal });
-            }
-          }
-        }
-      }
-
-      if (typeof req.body.send === "string" && /Client/gi.test(req.url)) {
-        page = req.body.send.split('_')[0];
-        query = req.body.send.split('_').length > 1 ? req.body.send.split('_')[1] : null;
-        dummy = {
-          page,
-          date: new Date(),
-          mode: query,
-          who: {
-            name: null,
-            email: null,
-          }
-        };
-        if (Array.isArray(historyObj.curation.analytics.send)) {
-          historyObj.curation.analytics.send.push(dummy);
-        } else {
-          historyObj.curation.analytics.send = [ dummy ];
-        }
-        await back.updateHistory("client", [ { cliid: id }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
-      }
-
-      res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
       logger.error("Console 서버 문제 생김 (rou_post_updateHistory): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;

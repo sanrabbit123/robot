@@ -10163,6 +10163,20 @@ GeneralJs.getRealBox = function (dom, original = "attribute") {
   return box;
 };
 
+GeneralJs.capitalizeString = function (str) {
+  if (typeof str !== "string") {
+    throw new Error("invalid input");
+  }
+  if (str.length === 0 || str.length === 1) {
+    if (str.length === 0) {
+      return "";
+    }
+    return str.toUpperCase();
+  } else {
+    return str.slice(0, 1).toUpperCase() + str.slice(1);
+  }
+}
+
 GeneralJs.nonCxBan = async function (booMode = false) {
   const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   try {
