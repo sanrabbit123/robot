@@ -8794,6 +8794,7 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     let designerMode;
     let testMode;
     let designerNum;
+    let targetDesigner;
 
     temp0 = 'A'.charCodeAt();
     temp1 = 'Z'.charCodeAt();
@@ -8848,15 +8849,49 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
 
     if (!designerMode) {
       desidArr = projects.map((p) => { return p.proposal.detail.map((p) => { return p.desid }) }).flat();
-      designers = await ajaxJson({ proid: project.proid, whereQuery: { "$or": desidArr.map((desid) => { return { desid } }) } }, BACKHOST + "/designerProposal_getDesigners", { equal: true });
+      designers = await ajaxJson({ designerMode: 0, proid: project.proid, whereQuery: { "$or": desidArr.map((desid) => { return { desid } }) } }, BACKHOST + "/designerProposal_getDesigners", { equal: true });
       profileList = await ajaxJson({ mode: "entire", desidArr }, BRIDGEHOST + "/designerProfileList", { equal: true });
     } else {
-      desidArr = projects.map((p) => { return p.proposal.detail.map((p) => { return p.desid }) }).flat();
-      designers = await ajaxJson({ proid: project.proid, whereQuery: { "$or": desidArr.map((desid) => { return { desid } }) } }, BACKHOST + "/designerProposal_getDesigners", { equal: true });
+      desidArr = [ getObj.desid ];
+      designers = await ajaxJson({ designerMode: 1, proid: sampleProid, whereQuery: { "$or": desidArr.map((desid) => { return { desid } }) } }, BACKHOST + "/designerProposal_getDesigners", { equal: true });
+      targetDesigner = designers.find((d) => { return d.desid === getObj.desid });
       profileList = await ajaxJson({ mode: "entire", desidArr }, BRIDGEHOST + "/designerProfileList", { equal: true });
+      project.proposal.detail = [
+        {
+          "desid": targetDesigner.desid,
+          "fee": [
+            {
+              "method": "offline",
+              "partial": false,
+              "amount": 5000000,
+              "distance": {
+                "number": 0,
+                "amount": 0,
+                "distance": "0km",
+                "time": "0시간 0분",
+                "limit": 5
+              },
+              "discount": 0
+            },
+            {
+              "method": "online",
+              "partial": false,
+              "amount": 5000000,
+              "distance": {
+                "number": 0,
+                "amount": 0,
+                "distance": "0km",
+                "time": "0시간 0분",
+                "limit": 5
+              },
+              "discount": 0
+            }
+          ],
+          "pictureSettings": objectDeepCopy(targetDesigner.setting.proposal[0].photo),
+          "description": objectDeepCopy(targetDesigner.setting.proposal[0].description),
+        },
+      ];
     }
-
-    console.log(profileList);
 
     blankPhoto = DesignerExplanationJs.binaryPath + "/blank.png";
     this.blankPhoto = blankPhoto;
@@ -8931,6 +8966,9 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
         } else {
           designer.end = false;
         }
+      }
+      if (designerMode) {
+        designer.end = true;
       }
       designerNum++;
     }

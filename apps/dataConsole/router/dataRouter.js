@@ -8603,15 +8603,36 @@ DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
       let designerNormal;
       let realtime;
       let thisDesigner;
-      designersNormal = [];
-      for (let { desid } of thisProject.proposal.detail) {
-        thisDesigner = designers.find((d) => { return d.desid === desid });
-        realtime = await work.realtimeDesignerMatch(desid, proid, { selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal });
-        designerNormal = thisDesigner.toNormal();
-        designerNormal.end = !realtime.result;
-        designersNormal.push(designerNormal);
+      let designerMode;
+
+      designerMode = false;
+      if (req.body.designerMode !== undefined) {
+        if (req.body.designerMode === 1 || req.body.designerMode === '1') {
+          designerMode = true;
+        }
       }
-      res.send(JSON.stringify(designersNormal));
+
+      if (!designerMode) {
+        designersNormal = [];
+        for (let { desid } of thisProject.proposal.detail) {
+          thisDesigner = designers.find((d) => { return d.desid === desid });
+          realtime = await work.realtimeDesignerMatch(desid, proid, { selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal });
+          designerNormal = thisDesigner.toNormal();
+          designerNormal.end = !realtime.result;
+          designersNormal.push(designerNormal);
+        }
+        res.send(JSON.stringify(designersNormal));
+      } else {
+        designersNormal = [];
+        for (let { desid } of designers) {
+          thisDesigner = designers.find((d) => { return d.desid === desid });
+          designerNormal = thisDesigner.toNormal();
+          designerNormal.end = false;
+          designersNormal.push(designerNormal);
+        }
+        res.send(JSON.stringify(designersNormal));
+      }
+
     } catch (e) {
       await logger.error("Console 서버 문제 생김(designerProposal_getDesigners) : " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));
