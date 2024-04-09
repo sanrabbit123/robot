@@ -215,7 +215,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
 
     // await this.MONGOCONSOLEC.connect();
@@ -229,6 +229,7 @@ DevContext.prototype.launching = async function () {
     //   whereQuery = { cliid };
     //   updateQuery = objectDeepCopy(defaultCheckObject);
     //   await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+    //   await back.mongoUpdate(collection, [ whereQuery, { "check": "", "null": "" } ], { selfMongo, unset: true });
     //   console.log(whereQuery, updateQuery);
     // }
     // await this.MONGOCONSOLEC.close();

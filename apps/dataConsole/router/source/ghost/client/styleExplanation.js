@@ -758,9 +758,55 @@ StyleExplanationJs.prototype.styleCheck = function (mother) {
 
 }
 
+StyleExplanationJs.prototype.generateTotalValues = async function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, ajaxJson, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, objectDeepCopy } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop, heightTong } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  try {
+    const clientHistory = this.clientHistory;
+    let totalValues;
+
+    totalValues = (new Array(this.questionNumber)).fill(null, 0);
+
+    if (typeof clientHistory.curation.check === "object" && clientHistory.curation.check !== null) {
+
+      // 0
+      if (typeof clientHistory.curation.check.serid === "string") {
+        if (/_/gi.test(clientHistory.curation.check.serid) && !Number.isNaN(Number(clientHistory.curation.check.serid.split("_")[1].replace(/[^0-9]/gi, '')))) {
+          totalValues[0] = Number(clientHistory.curation.check.serid.split("_")[1].replace(/[^0-9]/gi, '')) - 1;
+        }
+      }
+
+      // 1
+      if (typeof clientHistory.curation.check.construct.entire === "boolean") {
+        totalValues[1] = clientHistory.curation.check.construct.entire ? 1 : 0;
+      }
+
+      // 2
+      if (Array.isArray(clientHistory.curation.check.construct.items) && clientHistory.curation.check.construct.items.length > 0) {
+        totalValues[2] = objectDeepCopy(clientHistory.curation.check.construct.items);
+      }
+
+      // 3
+      if (typeof clientHistory.curation.check.construct.environment === "number") {
+        totalValues[3] = clientHistory.curation.check.construct.environment;
+      }
+
+    }
+
+    return totalValues;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 StyleExplanationJs.prototype.updateImmediately = async function (valueIndex, menuIndex, menu) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { withOut, returnGet, createNode, ajaxJson, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
   const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -784,20 +830,35 @@ StyleExplanationJs.prototype.updateImmediately = async function (valueIndex, men
       throw new Error("invalid menu index");
     }
 
-    console.log(valueIndex, menuIndex, menu);
-
     if (valueIndex === 0) {
-
-      updateQuery = {};
-      
-      await ajaxJson({ ...defaultQueryObject, updateQuery }, BACKHOST + "/updateHistory");
-
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        updateQuery["curation.service.serid"] = [ menu[menuIndex] ];
+        updateQuery["curation.check.serid"] = menu[menuIndex];
+        await ajaxJson({ ...defaultQueryObject, updateQuery }, BACKHOST + "/updateHistory");
+      }
     } else if (valueIndex === 1) {
-
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        if (instance.totalValues[0] === 1) {
+          updateQuery["curation.check.construct.entire"] = menu[menuIndex];
+        } else {
+          updateQuery["curation.check.construct.entire"] = true;
+        }
+        await ajaxJson({ ...defaultQueryObject, updateQuery }, BACKHOST + "/updateHistory");
+      }
     } else if (valueIndex === 2) {
-      
+      if (Array.isArray(menuIndex)) {
+        updateQuery = {};
+        updateQuery["curation.check.construct.items"] = menuIndex;
+        await ajaxJson({ ...defaultQueryObject, updateQuery }, BACKHOST + "/updateHistory");
+      }
     } else if (valueIndex === 3) {
-      
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        updateQuery["curation.check.construct.environment"] = menuIndex;
+        await ajaxJson({ ...defaultQueryObject, updateQuery }, BACKHOST + "/updateHistory");
+      }
     } else if (valueIndex === 4) {
       
     } else if (valueIndex === 5) {
@@ -1244,7 +1305,9 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
     mobileBoxLineMargin = 2.4;
     mobileBlueLineHeight = 2;
 
-    instance.totalValues[0] = 1;
+    if (instance.totalValues[0] === null || instance.totalValues[0] === undefined) {
+      instance.totalValues[0] = 1;
+    }
 
     instance.animationStop = true;
     focusAnimation = "focusProgress 4s ease infinite";
@@ -2348,6 +2411,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
                 dom.firstChild.style.color = colorExtended.darkBlack;
                 dom.setAttribute("toggle", "on");
                 instance.totalValues[1] = Number(dom.getAttribute("index"));
+                await instance.updateImmediately(1, Number(dom.getAttribute("index")), [ false, true ]);
               } else {
                 dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
@@ -2365,6 +2429,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
                 dom.firstChild.style.color = colorExtended.darkBlack;
                 dom.setAttribute("toggle", "on");
                 instance.totalValues[1] = Number(dom.getAttribute("index"));
+                await instance.updateImmediately(1, Number(dom.getAttribute("index")), [ false, true ]);
               } else {
                 dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
@@ -2382,7 +2447,7 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
 
     ghostBase = {};
 
-    if (instance.totalValues[1] === null) {
+    if (instance.totalValues[1] === null || instance.totalValues[1] === undefined) {
       instance.totalValues[1] = 1;
     }
     instance.totalMenu[1] = [
@@ -3018,125 +3083,8 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     alertSize = <%% 28, 27, 26, 24, 3.2 %%>;
     alertWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    if (instance.totalValues[3] === null) {
+    if (instance.totalValues[3] === null || instance.totalValues[3] === undefined) {
       instance.totalValues[3] = 2;
-    }
-
-    fourthSelectionEvent = (index) => {
-      return async function (e) {
-        try {
-          const targets = [ ...document.querySelectorAll('.' + selectionBaseFourthClassName0) ];
-          const index = Number(this.getAttribute("index"));
-          const toggle = this.getAttribute("toggle");
-          if (toggle === "on") {
-            for (let dom of targets) {
-              if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
-                dom.style.background = colorExtended.white;
-                dom.style.boxShadow = "";
-                dom.firstChild.style.color = colorExtended.blueDark;
-                dom.setAttribute("toggle", "off");
-              } else {
-                // dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
-                // dom.style.background = colorExtended.mainBlue;
-                // dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
-                // dom.firstChild.style.color = colorExtended.darkBlack;
-                // dom.setAttribute("toggle", "on");
-              }
-            }
-          } else {
-            for (let dom of targets) {
-              if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
-                dom.style.background = colorExtended.mainBlue;
-                dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
-                dom.firstChild.style.color = colorExtended.darkBlack;
-                dom.setAttribute("toggle", "on");
-              } else {
-                // dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
-                // dom.style.background = colorExtended.white;
-                // dom.style.boxShadow = "";
-                // dom.firstChild.style.color = colorExtended.blueDark;
-                // dom.setAttribute("toggle", "off");
-              }
-            }
-          }
-
-          instance.totalValues[2] = [ ...document.querySelectorAll('.' + selectionBaseFourthClassName0) ].map((d, index) => {
-            return {
-              on: (d.getAttribute("toggle") === "on"),
-              index
-            }
-          }).filter((o) => { return o.on }).map((o) => { return o.index });
-
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    }
-
-    fourthSelectionEvent2 = (index) => {
-      return async function (e) {
-        try {
-          const targets = document.querySelectorAll('.' + selectionBaseFourthClassName1);
-          const index = Number(this.getAttribute("index"));
-          const toggle = this.getAttribute("toggle");
-          if (toggle === "on") {
-            for (let dom of targets) {
-              if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
-                dom.style.background = colorExtended.white;
-                dom.style.boxShadow = "";
-                dom.firstChild.style.color = colorExtended.blueDark;
-                dom.setAttribute("toggle", "off");
-                instance.totalValues[3] = null;
-              }
-            }
-          } else {
-            for (let dom of targets) {
-              if (index === Number(dom.getAttribute("index"))) {
-                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
-                dom.style.background = colorExtended.mainBlue;
-                dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
-                dom.firstChild.style.color = colorExtended.darkBlack;
-                dom.setAttribute("toggle", "on");
-                instance.totalValues[3] = Number(dom.getAttribute("index"));
-              } else {
-                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
-                dom.style.background = colorExtended.white;
-                dom.style.boxShadow = "";
-                dom.firstChild.style.color = colorExtended.blueDark;
-                dom.setAttribute("toggle", "off");
-              }
-            }
-          }
-
-          if (instance.totalValues[3] === 0 || instance.totalValues[3] === 1) {
-            document.querySelector('.' + fourthNoticeBoxClassName).children[0].style.opacity = String(0);
-            document.querySelector('.' + fourthNoticeBoxClassName).children[1].style.opacity = String(0.7);
-            document.querySelector('.' + fourthNoticeBoxClassName).children[2].style.color = colorExtended.darkBlack;
-            document.querySelector('.' + fourthNoticeBoxClassName).children[2].querySelector('b').style.color = colorExtended.blueDark;
-          } else {
-            document.querySelector('.' + fourthNoticeBoxClassName).children[0].style.opacity = String(1);
-            document.querySelector('.' + fourthNoticeBoxClassName).children[1].style.opacity = String(0);
-            document.querySelector('.' + fourthNoticeBoxClassName).children[2].style.color = colorExtended.deactive;
-            document.querySelector('.' + fourthNoticeBoxClassName).children[2].querySelector('b').style.color = colorExtended.deactive;
-          }
-
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    }
-
-    mobileConstructPopupEvent = (constructItems) => {
-      return async function (e) {
-        try {
-          await instance.constructItemPopupEvent(constructItems);
-        } catch (e) {
-          console.log(e);
-        }
-      }
     }
 
     constructItems = [
@@ -3264,6 +3212,128 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
         title: "거주하지 않으며 공실 상태",
       },
     ];
+
+    fourthSelectionEvent = (index) => {
+      return async function (e) {
+        try {
+          const targets = [ ...document.querySelectorAll('.' + selectionBaseFourthClassName0) ];
+          const index = Number(this.getAttribute("index"));
+          const toggle = this.getAttribute("toggle");
+          let finalArr;
+          if (toggle === "on") {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+              } else {
+                // dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
+                // dom.style.background = colorExtended.mainBlue;
+                // dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                // dom.firstChild.style.color = colorExtended.darkBlack;
+                // dom.setAttribute("toggle", "on");
+              }
+            }
+          } else {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
+                dom.style.background = colorExtended.mainBlue;
+                dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                dom.firstChild.style.color = colorExtended.darkBlack;
+                dom.setAttribute("toggle", "on");
+              } else {
+                // dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
+                // dom.style.background = colorExtended.white;
+                // dom.style.boxShadow = "";
+                // dom.firstChild.style.color = colorExtended.blueDark;
+                // dom.setAttribute("toggle", "off");
+              }
+            }
+          }
+
+          finalArr = [ ...document.querySelectorAll('.' + selectionBaseFourthClassName0) ].map((d, index) => {
+            return {
+              on: (d.getAttribute("toggle") === "on"),
+              index
+            }
+          }).filter((o) => { return o.on }).map((o) => { return o.index });
+
+          instance.totalValues[2] = objectDeepCopy(finalArr);
+          await instance.updateImmediately(2, finalArr, constructItems.map((o) => { return o.title }));
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    fourthSelectionEvent2 = (index) => {
+      return async function (e) {
+        try {
+          const targets = document.querySelectorAll('.' + selectionBaseFourthClassName1);
+          const index = Number(this.getAttribute("index"));
+          const toggle = this.getAttribute("toggle");
+          if (toggle === "on") {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+                instance.totalValues[3] = null;
+              }
+            }
+          } else {
+            for (let dom of targets) {
+              if (index === Number(dom.getAttribute("index"))) {
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.darkBlack;
+                dom.style.background = colorExtended.mainBlue;
+                dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
+                dom.firstChild.style.color = colorExtended.darkBlack;
+                dom.setAttribute("toggle", "on");
+                instance.totalValues[3] = Number(dom.getAttribute("index"));
+                await instance.updateImmediately(3, Number(dom.getAttribute("index")), statusItems.map((o) => { return o.title }));
+              } else {
+                dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
+                dom.style.background = colorExtended.white;
+                dom.style.boxShadow = "";
+                dom.firstChild.style.color = colorExtended.blueDark;
+                dom.setAttribute("toggle", "off");
+              }
+            }
+          }
+
+          if (instance.totalValues[3] === 0 || instance.totalValues[3] === 1) {
+            document.querySelector('.' + fourthNoticeBoxClassName).children[0].style.opacity = String(0);
+            document.querySelector('.' + fourthNoticeBoxClassName).children[1].style.opacity = String(0.7);
+            document.querySelector('.' + fourthNoticeBoxClassName).children[2].style.color = colorExtended.darkBlack;
+            document.querySelector('.' + fourthNoticeBoxClassName).children[2].querySelector('b').style.color = colorExtended.blueDark;
+          } else {
+            document.querySelector('.' + fourthNoticeBoxClassName).children[0].style.opacity = String(1);
+            document.querySelector('.' + fourthNoticeBoxClassName).children[1].style.opacity = String(0);
+            document.querySelector('.' + fourthNoticeBoxClassName).children[2].style.color = colorExtended.deactive;
+            document.querySelector('.' + fourthNoticeBoxClassName).children[2].querySelector('b').style.color = colorExtended.deactive;
+          }
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    mobileConstructPopupEvent = (constructItems) => {
+      return async function (e) {
+        try {
+          await instance.constructItemPopupEvent(constructItems);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
 
     instance.totalMenu[2] = objectDeepCopy(constructItems);
     instance.totalMenu[3] = objectDeepCopy(statusItems);
@@ -9363,7 +9433,7 @@ StyleExplanationJs.prototype.launching = async function (loading) {
     this.animationStop = false;
 
     this.questionNumber = 14;
-    this.totalValues = (new Array(this.questionNumber)).fill(null, 0);
+    this.totalValues = await this.generateTotalValues();
     this.totalMenu = (new Array(this.questionNumber)).fill(null, 0);
 
     this.lineWeight = <%% 1.5, 1.5, 1.5, 1, 1 %%>;

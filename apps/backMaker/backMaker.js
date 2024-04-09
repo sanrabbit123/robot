@@ -3508,7 +3508,7 @@ BackMaker.prototype.createHistory = async function (method = "client", updateQue
   const instance = this;
   const { mongo, mongolocalinfo, mongoconsoleinfo, objectDeepCopy } = this.mother;
   const defaultSerid = "s2011_aa02s";
-  const defaultCheckKey = "check";
+  const defaultCheckKey = "curation.check";
   const defaultCheckObject = {
     serid: defaultSerid,
     construct: {
