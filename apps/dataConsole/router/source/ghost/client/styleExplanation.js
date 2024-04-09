@@ -7521,7 +7521,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
           "고객님께서 데려오신 외부 시공사 경우, 감리를 진행하지 않습니다.",
         ]
       },
-    ]
+    ];
 
     if (desktop && window.innerHeight > 1100) {
       titleSize = <%% 59, 51, 48, 38, 7 %%>;
