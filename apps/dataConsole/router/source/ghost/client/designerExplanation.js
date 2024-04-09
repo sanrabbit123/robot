@@ -8773,6 +8773,7 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
+    const sampleProid = "p1801_aa01s";
     let proid, cliid;
     let projects, project;
     let clients, client;
@@ -8790,6 +8791,9 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     let isOffice;
     let thisStyleTendency;
     let thisToneTendency;
+    let designerMode;
+    let testMode;
+    let designerNum;
 
     temp0 = 'A'.charCodeAt();
     temp1 = 'Z'.charCodeAt();
@@ -8809,11 +8813,21 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
       }
     }
 
+    designerMode = false;
+    testMode = false;
     if (getObj.proid !== undefined) {
       proid = getObj.proid;
     } else {
-      window.alert("잘못된 접근입니다!");
-      throw new Error("invaild get object");
+      if (typeof getObj.desid === "string") {
+        proid = sampleProid;
+        designerMode = true;
+      } else {
+        window.alert("잘못된 접근입니다!");
+        throw new Error("invaild get object");
+      }
+    }
+    if (proid === sampleProid && !designerMode) {
+      testMode = true;
     }
 
     projects = await ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects", { equal: true });
@@ -8831,10 +8845,19 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     this.client = client;
 
     proposalHistory = await ajaxJson({ proid: project.proid }, BACKHOST + "/proposalLog", { equal: true });
-    desidArr = projects.map((p) => { return p.proposal.detail.map((p) => { return p.desid }) }).flat();
 
-    designers = await ajaxJson({ proid: project.proid, whereQuery: { "$or": desidArr.map((desid) => { return { desid } }) } }, BACKHOST + "/designerProposal_getDesigners", { equal: true });
-    profileList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerProfileList", { equal: true });
+    if (!designerMode) {
+      desidArr = projects.map((p) => { return p.proposal.detail.map((p) => { return p.desid }) }).flat();
+      designers = await ajaxJson({ proid: project.proid, whereQuery: { "$or": desidArr.map((desid) => { return { desid } }) } }, BACKHOST + "/designerProposal_getDesigners", { equal: true });
+      profileList = await ajaxJson({ mode: "entire", desidArr }, BRIDGEHOST + "/designerProfileList", { equal: true });
+    } else {
+      desidArr = projects.map((p) => { return p.proposal.detail.map((p) => { return p.desid }) }).flat();
+      designers = await ajaxJson({ proid: project.proid, whereQuery: { "$or": desidArr.map((desid) => { return { desid } }) } }, BACKHOST + "/designerProposal_getDesigners", { equal: true });
+      profileList = await ajaxJson({ mode: "entire", desidArr }, BRIDGEHOST + "/designerProfileList", { equal: true });
+    }
+
+    console.log(profileList);
+
     blankPhoto = DesignerExplanationJs.binaryPath + "/blank.png";
     this.blankPhoto = blankPhoto;
 
@@ -8863,6 +8886,7 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     keywordsList = (await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativeKeywords", { equal: true })).data;
     photosList = (await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativePhotos", { equal: true })).data;
 
+    designerNum = 0;
     for (let designer of designers) {
       profileListFiltered = profileList.filter((o) => { return o.desid === designer.desid });
       keywordsListFiltered = keywordsList.filter((o) => { return o.desid === designer.desid });
@@ -8900,15 +8924,16 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
       }
       thisToneTendency.sort((a, b) => { return b.value - a.value });
       designer.toneTendency = thisToneTendency;
-    }
 
-    // TEST Center ==================================================================================================
-    // if (proid === "p1801_aa01s") {
-    //   for (let d of designers) {
-    //     d.end = false;
-    //   }
-    // }
-    // TEST Center ==================================================================================================
+      if (testMode) {
+        if (designerNum === designers.length - 1) {
+          designer.end = true;
+        } else {
+          designer.end = false;
+        }
+      }
+      designerNum++;
+    }
     this.designers = designers;
 
     await this.mother.ghostClientLaunching({

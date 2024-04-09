@@ -2753,6 +2753,12 @@ TransferRouter.prototype.rou_post_designerProfileList = function () {
         res.send(JSON.stringify(result));
       } else if (mode === "entire" || mode === "list") {
 
+        if (req.body.desidArr !== undefined) {
+          const { desidArr } = equalJson(req.body);
+          result = result.filter((o) => {
+            return desidArr.includes(o.desid);
+          });
+        }
         res.send(JSON.stringify(result));
 
       } else {
