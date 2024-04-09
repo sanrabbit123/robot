@@ -46,23 +46,33 @@ class OpenAiAPIs:
 
         return result
 
-    async def createImage(self, query: str, hdQuality: bool = False) -> str:
+    async def createImage(self, query: str, hdQuality: bool = False, pastMode: bool = True) -> str:
         thisText = query.strip()
         if thisText == "":
-            thisText = "sitting rabbit"
+            thisText = "rabbit on pigeon"
 
         client = self.client
         qualityMode = "standard"
         if hdQuality:
             qualityMode = "hd"
 
-        response = client.images.generate(
-            model="dall-e-3",
-            prompt=thisText,
-            size="1792x1024",
-            quality=qualityMode,
-            n=1,
-        )
+        if pastMode:
+            response = client.images.generate(
+                model="dall-e-2",
+                prompt=thisText,
+                size="1024x1024",
+                quality=qualityMode,
+                n=1,
+            )
+        else:
+            response = client.images.generate(
+                model="dall-e-3",
+                prompt=thisText,
+                size="1792x1024",
+                quality=qualityMode,
+                n=1,
+            )
+
         image_url = response.data[0].url
 
         return image_url

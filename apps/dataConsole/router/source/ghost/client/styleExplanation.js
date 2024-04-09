@@ -796,6 +796,40 @@ StyleExplanationJs.prototype.generateTotalValues = async function () {
         totalValues[3] = clientHistory.curation.check.construct.environment;
       }
 
+      // 4
+
+
+
+      // 5
+
+
+
+      // 6
+
+
+
+      // 7
+
+
+
+      // 8
+
+
+
+      // 9
+
+
+
+      // 10
+
+
+
+      // 11
+
+      
+
+      // 12
+
     }
 
     return totalValues;
