@@ -3358,7 +3358,7 @@ DesignerExplanationJs.prototype.insertThirdPlusBox = async function () {
       style: {
         display: "block",
         position: "relative",
-        width: String(((cardWidth * 2) + cardBetween) * (designers.length) * 2) + ea,
+        width: String(((cardWidth * 2) + cardBetween) * (viewNumber <= designers.length ? designers.length : viewNumber) * 2) + ea,
         transformOrigin: "0% 0%",
         transform: "translateX(0px)",
         transition: "all 0.4s ease",
@@ -8668,7 +8668,7 @@ DesignerExplanationJs.prototype.designerFinalSelection = function (fromCard = fa
 DesignerExplanationJs.prototype.finalSubmit = async function (desid) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, autoComma, selfHref, ajaxJson, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, designerCareer, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight, blankPhoto } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, blankPhoto, testMode, designerMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   try {
@@ -8714,7 +8714,7 @@ DesignerExplanationJs.prototype.finalSubmit = async function (desid) {
         method = "offline";
       }
   
-      if (getObj.mode === "test") {
+      if (testMode || designerMode || getObj.mode === "test" || getObj.test === "true") {
         window.alert("검수 모드입니다!");
       } else {
 
@@ -8968,11 +8968,13 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
         }
       }
       if (designerMode) {
-        designer.end = true;
+        designer.end = false;
       }
       designerNum++;
     }
     this.designers = designers;
+    this.designerMode = designerMode;
+    this.testMode = testMode;
 
     await this.mother.ghostClientLaunching({
       mode: "front",
