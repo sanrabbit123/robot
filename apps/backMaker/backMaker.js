@@ -3504,11 +3504,55 @@ BackMaker.prototype.returnHistoryDummies = function (subject) {
   return dummy;
 }
 
-BackMaker.prototype.createHistory = async function (method, updateQuery, option = { fromConsole: false, selfMongo: null, secondMongo: null }) {
+BackMaker.prototype.createHistory = async function (method = "client", updateQuery = {}, option = { fromConsole: false, selfMongo: null, secondMongo: null, defaultCheckMode: false }) {
   const instance = this;
-  const { mongo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongolocalinfo, mongoconsoleinfo, objectDeepCopy } = this.mother;
+  const defaultSerid = "s2011_aa02s";
+  const defaultCheckKey = "check";
+  const defaultCheckObject = {
+    serid: defaultSerid,
+    construct: {
+      entire: true,
+      items: [],
+      environment: 2,
+    },
+    budget: 5,
+    furniture: [],
+    fabric: [],
+    expect: 2,
+    purchase: 0,
+    family: 4,
+    age: 1,
+    time: [],
+  };
   try {
     let MONGOLOCALC, SELFMONGOBOO;
+    let dummy;
+    let sortStandard, collection, whereQuery;
+    let temp, tempArr;
+    let projectManager;
+    let resultObject;
+
+    if (typeof method !== "string") {
+      throw new Error("invalid method");
+    }
+    if (typeof updateQuery !== "object" || updateQuery === null) {
+      throw new Error("invalid update query");
+    }
+    if (typeof option !== "object" || option === null) {
+      throw new Error("invalid option");
+    }
+
+    if (option.defaultCheckMode === true || option.defaultCheckMode === 1) {
+      if (option.keyMode === true || option.keyMode === 1) {
+        resultObject = {};
+        resultObject[defaultCheckKey] = objectDeepCopy(defaultCheckObject);
+        return resultObject;
+      } else {
+        return objectDeepCopy(defaultCheckObject);
+      }
+    }
+
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       SELFMONGOBOO = true;
       MONGOLOCALC = option.selfMongo;
@@ -3520,11 +3564,6 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
         MONGOLOCALC = new mongo(mongolocalinfo);
       }
     }
-
-    let dummy;
-    let sortStandard, collection, whereQuery;
-    let temp, tempArr;
-    let projectManager;
 
     if (/client/gi.test(method)) {
       collection = "clientHistory";
@@ -3555,7 +3594,7 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
           style: [],
           image: [],
           service: {
-            serid: [ "s2011_aa02s" ],
+            serid: [ defaultSerid ],
           },
           building: {
             type: "",
@@ -3570,7 +3609,8 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
           construct: {
             living: false,
             items: []
-          }
+          },
+          check: objectDeepCopy(defaultCheckObject),
         }
       };
     } else if (/designer/gi.test(method)) {

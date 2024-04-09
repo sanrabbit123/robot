@@ -1048,7 +1048,7 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
 DesignerExplanationJs.prototype.insertThirdBox = async function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, stringToDate, designerCareer, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, swipePatch } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const { ea, media, baseTong, standardWidth, naviHeight, designerBlockClassName, designerMainBlockMotherClassName } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -1345,6 +1345,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
     thirdBase = createNode({
       mother: baseTong,
+      class: [ designerMainBlockMotherClassName ],
       style: {
         display: "flex",
         position: "relative",
@@ -1415,6 +1416,7 @@ DesignerExplanationJs.prototype.insertThirdBox = async function () {
 
       thisBase = createNode({
         mother: thirdBase,
+        class: [ designerBlockClassName ],
         style: {
           display: "flex",
           position: "relative",
@@ -8795,6 +8797,7 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     let testMode;
     let designerNum;
     let targetDesigner;
+    let designerAllMode;
 
     temp0 = 'A'.charCodeAt();
     temp1 = 'Z'.charCodeAt();
@@ -8814,17 +8817,26 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
       }
     }
 
+    designerAllMode = false;
     designerMode = false;
     testMode = false;
     if (getObj.proid !== undefined) {
       proid = getObj.proid;
+      if (proid === sampleProid && getObj.designerall === "true") {
+        designerAllMode = true;
+      }
     } else {
       if (typeof getObj.desid === "string") {
         proid = sampleProid;
         designerMode = true;
       } else {
-        window.alert("잘못된 접근입니다!");
-        throw new Error("invaild get object");
+        if (getObj.designerall === "true") {
+          proid = sampleProid;
+          designerAllMode = true;
+        } else {
+          window.alert("잘못된 접근입니다!");
+          throw new Error("invaild get object");
+        }
       }
     }
     if (proid === sampleProid && !designerMode) {
@@ -8848,9 +8860,52 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
     proposalHistory = await ajaxJson({ proid: project.proid }, BACKHOST + "/proposalLog", { equal: true });
 
     if (!designerMode) {
-      desidArr = projects.map((p) => { return p.proposal.detail.map((p) => { return p.desid }) }).flat();
-      designers = await ajaxJson({ designerMode: 0, proid: project.proid, whereQuery: { "$or": desidArr.map((desid) => { return { desid } }) } }, BACKHOST + "/designerProposal_getDesigners", { equal: true });
-      profileList = await ajaxJson({ mode: "entire", desidArr }, BRIDGEHOST + "/designerProfileList", { equal: true });
+      if (!designerAllMode) {
+        desidArr = projects.map((p) => { return p.proposal.detail.map((p) => { return p.desid }) }).flat();
+        designers = await ajaxJson({ designerMode: 0, proid: project.proid, whereQuery: { "$or": desidArr.map((desid) => { return { desid } }) } }, BACKHOST + "/designerProposal_getDesigners", { equal: true });
+        profileList = await ajaxJson({ mode: "entire", desidArr }, BRIDGEHOST + "/designerProfileList", { equal: true });  
+      } else {
+        designers = await ajaxJson({ whereQuery: { "information.contract.status": { "$regex": "협약 완료" } } }, SECONDHOST + "/getDesigners", { equal: true });
+        desidArr = designers.map((d) => { return d.desid });
+        profileList = await ajaxJson({ mode: "entire", desidArr }, BRIDGEHOST + "/designerProfileList", { equal: true });
+        project.proposal.detail = [];
+        for (let d of designers) {
+          d.end = false;
+          project.proposal.detail.push({
+            "desid": d.desid,
+            "fee": [
+              {
+                "method": "offline",
+                "partial": false,
+                "amount": 5000000,
+                "distance": {
+                  "number": 0,
+                  "amount": 0,
+                  "distance": "0km",
+                  "time": "0시간 0분",
+                  "limit": 5
+                },
+                "discount": 0
+              },
+              {
+                "method": "online",
+                "partial": false,
+                "amount": 5000000,
+                "distance": {
+                  "number": 0,
+                  "amount": 0,
+                  "distance": "0km",
+                  "time": "0시간 0분",
+                  "limit": 5
+                },
+                "discount": 0
+              }
+            ],
+            "pictureSettings": objectDeepCopy(d.setting.proposal[0].photo),
+            "description": objectDeepCopy(d.setting.proposal[0].description),
+          });
+        }
+      }
     } else {
       desidArr = [ getObj.desid ];
       designers = await ajaxJson({ designerMode: 1, proid: sampleProid, whereQuery: { "$or": desidArr.map((desid) => { return { desid } }) } }, BACKHOST + "/designerProposal_getDesigners", { equal: true });
@@ -8967,14 +9022,17 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
           designer.end = false;
         }
       }
-      if (designerMode) {
+      if (designerMode || designerAllMode) {
         designer.end = false;
       }
       designerNum++;
     }
     this.designers = designers;
     this.designerMode = designerMode;
+    this.designerAllMode = designerAllMode;
     this.testMode = testMode;
+    this.designerBlockClassName = "designerBlockClassName";
+    this.designerMainBlockMotherClassName = "designerMainBlockMotherClassName";
 
     await this.mother.ghostClientLaunching({
       mode: "front",
@@ -9044,6 +9102,11 @@ DesignerExplanationJs.prototype.launching = async function (loading) {
 
     GeneralJs.setQueue(() => {
       window.scrollTo(0, 0);
+      if (getObj.designerscroll === "true") {
+        GeneralJs.setQueue(() => {
+          GeneralJs.scrollTo(window, document.querySelector('.' + instance.designerMainBlockMotherClassName))
+        }, 100);    
+      }
     }, 400);
 
   } catch (err) {

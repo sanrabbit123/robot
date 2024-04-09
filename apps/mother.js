@@ -2520,6 +2520,20 @@ Mother.prototype.equalJson = function (jsonString) {
   return equal(jsonString);
 }
 
+Mother.prototype.capitalizeString = function (str) {
+  if (typeof str !== "string") {
+    throw new Error("invalid input");
+  }
+  if (str.length === 0 || str.length === 1) {
+    if (str.length === 0) {
+      return "";
+    }
+    return str.toUpperCase();
+  } else {
+    return str.slice(0, 1).toUpperCase() + str.slice(1);
+  }
+}
+
 Mother.prototype.objectDeepCopy = function (obj) {
   const equalJson = function (jsonString) {
     const equal = function (jsonString) {

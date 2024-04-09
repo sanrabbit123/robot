@@ -227,7 +227,7 @@ ProposalManualJs.prototype.insertFirstBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, colorExtended, blankHref } = GeneralJs;
   let paddingTop;
   let whiteBlock, whiteTong;
   let bottomMargin;
@@ -258,7 +258,7 @@ ProposalManualJs.prototype.insertFirstBox = function () {
   titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.5 %%>;
 
   contentsSize = <%% 15, 15, 14, 13, 3.2 %%>;
-  contentsWeight = <%% 600, 600, 600, 600, 600 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
   contentsBetween = <%% 20, 20, 20, 20, 4 %%>;
 
@@ -275,7 +275,10 @@ ProposalManualJs.prototype.insertFirstBox = function () {
       ],
       [
         "프로필 사진은 디자이너님을 고객님들께 소개하는 데 중요한 역할을 하므로, 얼굴이 정면 또는 측면에서 잘 보이는 사진을 업로드해 주세요! :)",
-      ]
+      ],
+      [
+        "프로필 사진 업로드 하기",
+      ],
     ]
   };
 
@@ -371,6 +374,24 @@ ProposalManualJs.prototype.insertFirstBox = function () {
           marginTop: String(contentsBetween) + ea,
         }
       },
+      {
+        event: (e) => {
+          blankHref(FRONTHOST + "/designer/about.php?desid=" + instance.desid);
+        },
+        text: contents.description[2].join("\n"),
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(contentsSize) + ea,
+          fontWeight: String(800),
+          color: colorExtended.mainBlue,
+          lineHeight: String(contentsLineHeight),
+          marginTop: String(desktop ? contentsBetween : contentsBetween * 2) + ea,
+          "text-decoration": "underline solid " +  colorExtended.focusBlue,
+          textAlign: desktop ? "left" : "right",
+          cursor: "pointer",
+        }
+      },
     ]
   });
 
@@ -448,7 +469,7 @@ ProposalManualJs.prototype.insertMainDescriptionBox = function () {
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
   titleBottom = <%% (isMac() ? 14 : 12), (isMac() ? 14 : 12), (isMac() ? 14 : 12), (isMac() ? 14 : 12), 0 %%>;
-  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
+  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 0 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
@@ -482,8 +503,8 @@ ProposalManualJs.prototype.insertMainDescriptionBox = function () {
   checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
-  contentsMarginBottom0 = <%% 30, 24, 24, 24, 3 %%>;
-  contentsMarginBottom1 = <%% 32, 32, 30, 28, 6 %%>;
+  contentsMarginBottom0 = <%% 30, 24, 24, 24, 0 %%>;
+  contentsMarginBottom1 = <%% 32, 32, 30, 28, 0 %%>;
 
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
   linePadding = <%% 12, 12, 12, 12, 12 %%>;
@@ -571,18 +592,18 @@ ProposalManualJs.prototype.insertMainDescriptionBox = function () {
         style: {
           display: "block",
           position: "relative",
-          width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
+          width: desktop ? String(100) + '%' : withOut(0 * 2, ea),
           background: desktop ? "" : colorChip.white,
           boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
-          borderRadius: mobile ? String(1) + ea : "",
+          borderRadius: mobile ? String(8) + "px" : "",
           overflow: "hidden",
           marginBottom: String(0) + ea,
           marginTop: desktop ? "" : String(14) + ea,
           paddingTop: String(contentsAreaPaddingTop) + ea,
           borderTop: desktop ? "1px solid " + colorChip.shadow : "",
-          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingBottom: desktop ? "" : String(6) + ea,
+          paddingLeft: desktop ? "" : String(0) + ea,
+          paddingRight: desktop ? "" : String(0) + ea,
+          paddingBottom: desktop ? "" : String(0) + ea,
         }
       },
     ]
@@ -600,18 +621,256 @@ ProposalManualJs.prototype.insertMainDescriptionBox = function () {
     child: {
       mode: "iframe",
       attribute: {
-        src: FRONTHOST + "/proposal_test.php?desid=" + instance.desid,
+        src: FRONTHOST + "/proposal_test.php?desid=" + instance.desid + "&designerscroll=true",
       },
       style: {
         display: "block",
         position: "relative",
         border: String(0),
         width: withOut(0, ea),
-        height: String(2000) + ea,
+        height: String(window.innerHeight - (instance.naviHeight * (desktop ? 2 : 3))) + "px",
+        borderRadius: String(8) + "px",
       }
     }
   });
+}
 
+ProposalManualJs.prototype.insertExampleBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const blank = "&nbsp;&nbsp;&nbsp;";
+  let paddingTop;
+  let block;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let num, num2;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let titleBottom;
+  let index;
+  let mobileTitleLeft, mobileTitleTop;
+  let secondBlockWidth, secondBlockMargin;
+  let tong;
+  let contentsWordingSize;
+  let contentsBottom;
+  let whiteBottomMargin;
+  let contentsTitleMarginTop, contentsMarginTop;
+  let contentsPaddingLeft;
+  let arrowWidth;
+  let arrowTop;
+  let arrorLeft;
+  let bigNumberSize;
+  let bigNumberBetween;
+  let bigNumberMargin;
+  let bigNumberBetweenMargin;
+  let matrix;
+  let firstWidth, secondWidth, secondMarginRight;
+  let contentsAreaPaddingTop;
+  let zeroWidth, zeroMarginRight;
+  let checkBoxWidth, checkBoxTop;
+  let arrowBoxWidth, arrowBoxTop;
+  let contentsMarginBottom0, contentsMarginBottom1;
+  let mobilePaddingLeft;
+  let mobileContentsWordingSize;
+  let wordings;
+  let lineTop, linePadding;
+  let mainContents;
+  let mainTitle;
+  let title, contents;
+  let factors;
+  let contentsHeight;
+  let factorBoxTop, factorBoxLeft;
+  let factorLineTop, factorLineLeft, factorLineWidth, factorLineHeight;
+  let image;
+  let funcAreaOuterPadding;
+  let funcAreaHeight;
+  let funcAreaContentsHeight;
+  let funcAreaAlphaContentsHeight;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+
+  whiteBottomMargin = <%% 42, 42, 42, 36, 0 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  titleBottom = <%% (isMac() ? 14 : 12), (isMac() ? 14 : 12), (isMac() ? 14 : 12), (isMac() ? 14 : 12), 0 %%>;
+  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 0 %%>;
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+
+  secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
+  secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
+
+  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+
+  contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
+  contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
+  contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
+  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
+  arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
+  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
+
+  bigNumberSize = <%% 37, 37, 37, 37, 5 %%>;
+  bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
+  bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
+  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
+
+  zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
+  zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+  firstWidth = <%% 240, 180, 170, 150, 10 %%>;
+  secondWidth = <%% 15, 15, 8, 0, 0 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 0 %%>;
+
+  checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
+  arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
+  checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
+  arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
+
+  contentsMarginBottom0 = <%% 30, 24, 24, 24, 0 %%>;
+  contentsMarginBottom1 = <%% 32, 32, 30, 28, 0 %%>;
+
+  lineTop = <%% 10, 10, 10, 10, 10 %%>;
+  linePadding = <%% 12, 12, 12, 12, 12 %%>;
+
+  mobilePaddingLeft = 6;
+
+  mobileContentsWordingSize = 3.2;
+
+  contentsHeight = <%% 143, 143, 143, 143, 180 %%>;
+
+  factorBoxTop = <%% 25, 25, 25, 25, 25 %%>;
+  factorBoxLeft = <%% 920, 600, 600, 600, 920 %%>;
+
+  factorLineTop = <%% (isMac() ? 36 : 34), 36, 36, 36, 36 %%>;
+  factorLineLeft = <%% 888, 588, 588, 588, 888 %%>;
+  factorLineWidth = <%% 22, 22, 22, 22, 22 %%>;
+  factorLineHeight = <%% 99, 99, 99, 99, 123 %%>;
+
+  funcAreaOuterPadding = <%% 8, 7, 6, 4, 0.5 %%>;
+  funcAreaHeight = <%% 120, 102, 92, 70, 12 %%>;
+  funcAreaContentsHeight = <%% 58, 50, 42, 33, 5.2 %%>;
+  funcAreaAlphaContentsHeight = <%% 26, 22, 19, 15, 2.6 %%>;
+
+  mainTitle = "프로필 사진 예시";
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: desktop ? colorChip.white : "",
+      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+        height: String(100) + '%',
+        marginLeft: String(desktop ? margin : 0) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  block = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: mobile ? "absolute" : "relative",
+          left: desktop ? "" : String(mobileTitleLeft) + ea,
+          top: desktop ? "" : String(mobileTitleTop) + ea,
+          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+          marginBottom: String(titleBottom) + ea,
+          zIndex: mobile ? String(1) : "",
+        },
+        children: [
+          {
+            text: mainTitle,
+            style: {
+              position: "relative",
+              display: "inline-block",
+              top: String(titleTopNumber) + ea,
+              fontSize: String(titleFontSize) + ea,
+              fontWeight: String(800),
+              background: desktop ? colorChip.white : colorChip.gray1,
+              paddingRight: String(numberRight) + ea,
+              color: colorChip.black,
+            }
+          },
+        ]
+      },
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: desktop ? String(100) + '%' : withOut(0 * 2, ea),
+          background: desktop ? "" : colorChip.white,
+          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+          borderRadius: mobile ? String(8) + "px" : "",
+          overflow: "hidden",
+          marginBottom: String(0) + ea,
+          marginTop: desktop ? "" : String(14) + ea,
+          paddingTop: String(contentsAreaPaddingTop) + ea,
+          borderTop: desktop ? "1px solid " + colorChip.shadow : "",
+          paddingLeft: desktop ? "" : String(0) + ea,
+          paddingRight: desktop ? "" : String(0) + ea,
+          paddingBottom: desktop ? "" : String(0) + ea,
+        }
+      },
+    ]
+  });
+  tong = block.lastChild;
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "column",
+      marginBottom: String(contentsMarginBottom0) + ea,
+    },
+    child: {
+      mode: "iframe",
+      attribute: {
+        src: FRONTHOST + "/proposal_test.php?desid=" + instance.exampleDesid + "&designerscroll=true",
+      },
+      style: {
+        display: "block",
+        position: "relative",
+        border: String(0),
+        width: withOut(0, ea),
+        height: String(window.innerHeight - (instance.naviHeight * (desktop ? 6 : 5))) + "px",
+        borderRadius: String(8) + "px",
+      }
+    }
+  });
 }
 
 ProposalManualJs.prototype.launching = async function (loading) {
@@ -674,6 +933,7 @@ ProposalManualJs.prototype.launching = async function (loading) {
     }
     [ designer ] = designers;
     this.designer = designer;
+    this.exampleDesid = "d2401_aa01s";
 
     await this.mother.ghostDesignerLaunching({
       name: "proposalManual",
@@ -689,6 +949,7 @@ ProposalManualJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           instance.insertFirstBox();
           instance.insertMainDescriptionBox();
+          instance.insertExampleBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ProposalManualJs.launching.ghostDesignerLaunching : " + e.message }, BACKHOST + "/errorLog");
         }

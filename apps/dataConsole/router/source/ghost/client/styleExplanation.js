@@ -9368,16 +9368,16 @@ StyleExplanationJs.prototype.launching = async function (loading) {
           const secondBase = await instance.insertSecondBox();
           await instance.insertBarBox();
 
-          GeneralJs.setQueue(() => {
-            const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
-            for (let dom of fadeOutTargets) {
-              dom.remove();
-            }
-            instance.totalValues[0] = 1;
-            instance.totalValues[1] = 1;
-          }, 0);
-          document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(instance.heightTong.scroll) + instance.ea;
-          await instance.insertEighthBox(secondBase);
+          // GeneralJs.setQueue(() => {
+          //   const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
+          //   for (let dom of fadeOutTargets) {
+          //     dom.remove();
+          //   }
+          //   instance.totalValues[0] = 1;
+          //   instance.totalValues[1] = 1;
+          // }, 0);
+          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(instance.heightTong.scroll) + instance.ea;
+          // await instance.insertEighthBox(secondBase);
 
           instance.resizeEvent();
           setInterval(() => {

@@ -76,7 +76,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
-  const { consoleQ, fileSystem, setQueue, shellExec, shellLink, orderSystem, ghostFileUpload, chromeOpen, curlRequest, diskReading, requestSystem, objectDeepCopy, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition, linkToString, stringToLink, aliveLog, cronLog, alertLog, homeliaisonAnalytics, aliveMongo, getHoliday } = this.mother;
+  const { consoleQ, fileSystem, setQueue, shellExec, shellLink, orderSystem, ghostFileUpload, chromeOpen, curlRequest, diskReading, requestSystem, objectDeepCopy, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition, linkToString, stringToLink, aliveLog, cronLog, alertLog, homeliaisonAnalytics, aliveMongo, getHoliday, capitalizeString } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -208,21 +208,31 @@ DevContext.prototype.launching = async function () {
 
     */
 
-    
-
-
-
-    
-
-
 
 
 
 
     
 
+    // await this.MONGOCONSOLEC.connect();
+    // const selfMongo = this.MONGOCONSOLEC;
+    // const target = "client";
+    // const collection = target + capitalizeString("history");
+    // const defaultCheckObject = await back.createHistory(target, {}, { defaultCheckMode: true, keyMode: true });
+    // const entireHistory = await back.mongoRead(collection, {}, { selfMongo });
+    // let whereQuery, updateQuery;
+    // for (let { cliid } of entireHistory) {
+    //   whereQuery = { cliid };
+    //   updateQuery = objectDeepCopy(defaultCheckObject);
+    //   await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+    //   console.log(whereQuery, updateQuery);
+    // }
+    // await this.MONGOCONSOLEC.close();
 
     
+
+
+
 
 
 
@@ -7087,9 +7097,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김수연",
-    //     designer: "박정훈",
-    //     link: "https://drive.google.com/drive/folders/18YFeh43Sfs8DDyONr81z9ujZ2C9ttnxQ",
+    //     client: "마선혁",
+    //     designer: "최지원",
+    //     link: "https://drive.google.com/drive/folders/1R_V-JlxWpyOT_eyKUPyh_4IIL183dGdK",
     //     pay: true
     //   },
     // ]);
@@ -7100,7 +7110,7 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "김수연",
+    //     client: "정현주",
     //     designer: "박정훈",
     //   },
     // ]);
