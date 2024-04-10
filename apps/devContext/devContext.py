@@ -45,8 +45,10 @@ class DevContext:
         aws = AwsAPIs()
         gpt = OpenAiAPIs()
         try:
-            # response = await gpt.createImage("rabbit on pigeon", pastMode=True)
-            # print(response)
+
+
+            
+
 
             return 1
         except Exception as e:
