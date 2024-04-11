@@ -835,7 +835,17 @@ StyleExplanationJs.prototype.generateTotalValues = async function () {
       if (Array.isArray(clientHistory.curation.check.time) && clientHistory.curation.check.time.length > 0) {
         totalValues[11] = objectDeepCopy(clientHistory.curation.check.time);
       }
-      
+
+      // 12
+      if (Array.isArray(clientHistory.curation.image) && clientHistory.curation.image.length > 0) {
+        totalValues[12] = objectDeepCopy(clientHistory.curation.image);
+      } else {
+        totalValues[12] = [];
+      }
+
+      // 13
+      totalValues[13] = [];
+
     }
 
     return totalValues;
@@ -7768,10 +7778,6 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
       buttonMarginTop = <%% 248, 146, 132, 90, 3.6 %%>;
     }
 
-    instance.resultAnalytics().catch((err) => {
-      console.log(err);
-    });
-
     ghostBase = {};
 
     if (mobile) {
@@ -8468,66 +8474,6 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
   }
 }
 
-StyleExplanationJs.prototype.resultAnalytics = async function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, setDebounce } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, naviHeight, baseTop, totalContents, fileInputClassName } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const big = (media[0] || media[1] || media[2]);
-  const small = !big;
-  try {
-    const questionNumber = this.questionNumber;
-    const totalValues = objectDeepCopy(instance.totalValues);
-    const totalMenu = objectDeepCopy(instance.totalMenu);
-    let tong;
-    let thisObj;
-    let thisArr;
-
-    tong = [];
-    for (let i = 0; i < questionNumber; i++) {
-      if (i !== questionNumber - 1) {
-        if (i !== questionNumber - 2) {
-          if (typeof totalValues[i] === "number") {
-            thisObj = objectDeepCopy(totalMenu[i][totalValues[i]]);
-            if (thisObj.value === undefined) {
-              tong.push(thisObj.title);
-            } else {
-              tong.push(thisObj.value);
-            }
-          } else if (Array.isArray(totalValues[i])) {
-            thisArr = totalMenu[i].filter((o, index) => {
-              return totalValues[i].includes(index);
-            });
-            if (thisArr.every((o) => { return o.value === undefined })) {
-              tong.push(thisArr.map((o) => { return o.title }));
-            } else {
-              tong.push(thisArr.map((o) => { return o.value }));
-            }
-          }
-        } else {
-          tong.push(objectDeepCopy(totalValues[i]));
-        }
-      }
-    }
-
-    if (document.querySelector("." + fileInputClassName) !== null) {
-      if (document.querySelector("." + fileInputClassName).length !== 0) {
-        tong.push([ ...document.querySelector("." + fileInputClassName).files ]);
-      } else {
-        tong.push([]);
-      }
-    } else {
-      tong.push([]);
-    }
-
-    console.log(tong);
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 StyleExplanationJs.prototype.firstConverting = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
@@ -8760,24 +8706,57 @@ StyleExplanationJs.prototype.fifthConverting = function () {
 
 StyleExplanationJs.prototype.sixthConverting = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo, ajaxForm, ajaxJson, sleep } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { initAreaClassName, sixthFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName } = this;
+  const { initAreaClassName, sixthFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName, fileInputClassName } = this;
   return async function (e) {
     try {
+      const gamma = 500;
+      const delta = 1500;
       const fadeOutTargets = [ ...document.querySelectorAll('.' + sixthFadeOutTargetClassName) ];
       let blackScrollTop;
       let numbersAreaMarginTop;
+      let loading;
+      let fileInput, formData;
+      let cancelPhoto;
+      let formProgress;
 
       blackScrollTop = heightTong.scroll;
       numbersAreaMarginTop = heightTong.numbers;
+
+      formProgress = (document.querySelector('.' + fileInputClassName) !== null && document.querySelector('.' + fileInputClassName).files.length > 0) ? true : false;
+      fileInput = document.querySelector('.' + fileInputClassName);
+
+      loading = instance.mother.whiteProgressLoading(null, !formProgress);
+
+      if (formProgress) {
+        formData = new FormData();
+        formData.enctype = "multipart/form-data";
+        formData.append("name", instance.client.name);
+        formData.append("cliid", instance.client.cliid);
+        cancelPhoto = JSON.parse(fileInput.getAttribute("cancel"));
+        for (let i = 0; i < fileInput.files.length; i++) {
+          if (!cancelPhoto.includes(i)) {
+            formData.append("upload0", fileInput.files[i]);
+          }
+        }
+        await ajaxForm(formData, BRIDGEHOST + "/clientBinary", loading.progress.firstChild);
+      }
+      await ajaxJson({ cliid: instance.client.cliid, historyQuery: {}, coreQuery: {}, mode: "calculation", fromConsole: 0 }, BACKHOST + "/styleCuration_updateCalculation");
+      await ajaxJson({
+        page: "styleCuration",
+        mode: "submit",
+        cliid: instance.client.cliid,
+      }, BACKHOST + "/ghostClient_updateAnalytics");
+      await sleep(formProgress ? gamma : delta);
 
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
           dom.style.animation = "fadeoutlite 0.6s ease forwards";
         }
+        loading.remove();
         setQueue(() => {
           instance.insertEighthBox(document.querySelector('.' + secondBaseClassName)).catch((err) => {
             console.log(err);
@@ -9582,6 +9561,8 @@ StyleExplanationJs.prototype.launching = async function (loading) {
       this.heightTong.scroll = <%% -638, -565, -457, -368, -71 %%>;
       this.heightTong.numbers = <%% 100, 100, 90, 75, 16 %%>;
     }
+
+    await GeneralJs.ajaxJson({ cliid: instance.client.cliid, name: instance.client.name, phone: instance.client.phone }, BACKHOST + "/styleCuration_pageInitComplete");
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",

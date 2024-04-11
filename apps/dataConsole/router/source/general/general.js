@@ -6628,7 +6628,7 @@ GeneralJs.prototype.whiteProgressLoading = function (mother = null, emptyProgres
         fontSize: String(progressSize) + ea,
         fontWeight: String(progressWeight),
         fontFamily: "graphik",
-        color: colorExtended.mainBlue,
+        color: colorExtended.black,
       }
     }
   })
