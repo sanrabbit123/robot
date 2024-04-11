@@ -394,9 +394,7 @@ MongoReflection.prototype.coreReflection = async function (to = "local") {
         }
 
         rows = await MONGOC_FROM.db(dbName).collection(i).find({}).toArray();
-        for (let j of rows) {
-          await MONGOC_TO.db(dbName).collection(i).insertOne(j);
-        }
+        await MONGOC_TO.db(dbName).collection(i).insertMany(rows);
         console.log(`migration ${i} success`);
 
       }
@@ -406,7 +404,6 @@ MongoReflection.prototype.coreReflection = async function (to = "local") {
 
       console.log(`\x1b[33m%s\x1b[0m`, `from: ${from} => to: ${to} reflection success`);
       console.log(``);
-
     }
 
   } catch (e) {
@@ -642,9 +639,7 @@ MongoReflection.prototype.frontReflection = async function (to = "local") {
         }
 
         rows = await MONGOC_FROM.db(dbName).collection(i).find({}).toArray();
-        for (let j of rows) {
-          await MONGOC_TO.db(dbName).collection(i).insertOne(j);
-        }
+        await MONGOC_TO.db(dbName).collection(i).insertMany(rows);
         console.log(`migration ${i} success`);
 
       }
@@ -704,9 +699,7 @@ MongoReflection.prototype.logReflection = async function () {
       }
 
       rows = await MONGOC_FROM.db(dbName).collection(i).find({}).toArray();
-      for (let j of rows) {
-        await MONGOC_TO.db(dbName).collection(i).insertOne(j);
-      }
+      await MONGOC_TO.db(dbName).collection(i).insertMany(rows);
       console.log(`migration ${i} success`);
 
     }
