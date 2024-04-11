@@ -768,10 +768,9 @@ StyleExplanationJs.prototype.generateTotalValues = async function () {
   const small = !big;
   try {
     const clientHistory = this.clientHistory;
-    let totalValues;
+    let totalValues, totalMenu;
 
     totalValues = (new Array(this.questionNumber)).fill(null, 0);
-
     if (typeof clientHistory.curation.check === "object" && clientHistory.curation.check !== null) {
 
       // 0
@@ -848,7 +847,12 @@ StyleExplanationJs.prototype.generateTotalValues = async function () {
 
     }
 
-    return totalValues;
+    totalMenu = (await ajaxJson({ data: null }, BACKHOST + "/styleCuration_getTotalMenu", { equal: true })).totalMenu.map((o) => { return o.values });
+
+    instance.totalValues = objectDeepCopy(totalValues);
+    instance.totalMenu = objectDeepCopy(totalMenu)
+
+    return { totalValues, totalMenu };
   } catch (e) {
     console.log(e);
   }
@@ -1459,48 +1463,23 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
 
     selectionDomMaker = (secondBase, returnMode = false) => {
 
-      textContent = [
-        {
-          title: "홈퍼니싱",
-          english: "Homefurnishing",
-          description: [
-            "시공 없이 스타일링만!",
-            "가구 소품 패브릭 조명으로 진행",
-          ],
-          source: StyleExplanationJs.binaryPath + "/service_f.svg",
-          plus: false,
-          default: instance.totalValues[0] === null ? false : (instance.totalValues[0] === 0),
-          margin: false,
-          value: "s2011_aa01s",
-        },
-        {
-          title: "홈스타일링",
-          english: "Homestyling",
-          description: [
-            desktop ? "부분 시공 (빌트인 제작 가구 포함)" : "부분 시공 (제작 가구 포함)",
-            "스타일링 (가구 소품 패브릭)",
-          ],
-          source: StyleExplanationJs.binaryPath + "/service_s.svg",
-          plus: true,
-          default: instance.totalValues[0] === null ? true : (instance.totalValues[0] === 1),
-          margin: true,
-          value: "s2011_aa02s",
-        },
-        {
-          title: "토탈 스타일링",
-          english: "Totalstyling",
-          description: [
-            desktop ? "전체 시공 (주방, 화장실 설비 교체 포함)" : "전체 시공 (주방, 화장실 포함)",
-            "스타일링 (가구 소품 패브릭)",
-          ],
-          source: StyleExplanationJs.binaryPath + "/service_t.svg",
-          plus: true,
-          default: instance.totalValues[0] === null ? false : (instance.totalValues[0] === 2),
-          margin: false,
-          value: "s2011_aa03s",
-        },
-      ];
+      textContent = objectDeepCopy(instance.totalMenu[0]);
       boxWidth = (standardWidth - (betweenMargin * (textContent.length - 1))) / textContent.length;
+      for (let i = 0; i < textContent.length; i++) {
+        if (instance.totalValues[0] === null) {
+          if (i === 1) {
+            textContent[i].default = true;
+          } else {
+            textContent[i].default = false;
+          }
+        } else {
+          if (i === instance.totalValues[0]) {
+            textContent[i].default = true;
+          } else {
+            textContent[i].default = false;
+          }
+        }
+      }
       instance.totalMenu[0] = objectDeepCopy(textContent);
 
       if (returnMode) {
@@ -1864,7 +1843,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
             child: {
               mode: "img",
               attribute: {
-                src: target.source,
+                src: StyleExplanationJs.binaryPath + target.source,
               },
               style: {
                 display: "inline-flex",
@@ -2079,7 +2058,7 @@ StyleExplanationJs.prototype.insertSecondBox = async function () {
             child: {
               mode: "img",
               attribute: {
-                src: target.source,
+                src: StyleExplanationJs.binaryPath + target.source,
               },
               style: {
                 display: "inline-flex",
@@ -2547,16 +2526,6 @@ StyleExplanationJs.prototype.insertThirdBox = async function (thirdBase) {
     if (instance.totalValues[1] === null || instance.totalValues[1] === undefined) {
       instance.totalValues[1] = 1;
     }
-    instance.totalMenu[1] = [
-      {
-        title: "아니요",
-        value: "부분 철거",
-      },
-      {
-        title: "예",
-        value: "전체 철거",
-      },
-    ]
 
     thirdBase.children[1].style.opacity = String(0);
     await instance.insertSecondBarBox(20);
@@ -3183,132 +3152,8 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
     if (instance.totalValues[3] === null || instance.totalValues[3] === undefined) {
       instance.totalValues[3] = 2;
     }
-
-    constructItems = [
-      {
-        title: "철거",
-        description: "철거, 기존에 있던 것을\n모두 제거하는 작업",
-        styling: true,
-        alert: true,
-        notice: "전체 철거는 토탈 스타일링에서만 가능합니다!",
-      },
-      {
-        title: "보양",
-        description: "엘리베이터 등에 기스 나지\n않도록 비닐을 씌우는 작업",
-        styling: true,
-        alert: false,
-        notice: "",
-      },
-      {
-        title: "목공",
-        description: "나무를 사용한 작업\n걸레받이, 몰딩, 문짝, 천정 평탄화 등",
-        styling: true,
-        alert: false,
-        notice: "",
-      },
-      {
-        title: "전기",
-        description: "집 내부의 전기 배선\n구성을 바꾸는 작업",
-        styling: true,
-        alert: false,
-        notice: "",
-      },
-      {
-        title: "타일",
-        description: "화장실, 주방 등에 타일을\n바꾸는 작업",
-        styling: true,
-        alert: true,
-        notice: "홈스타일링에서는 덧방 공사만 가능합니다!",
-      },
-      {
-        title: "바닥",
-        description: "집의 바닥 공사\n장판, 마루, 타일이 있음",
-        styling: true,
-        alert: true,
-        notice: "홈스타일링에서는 장판과 마루 공사만 가능합니다!",
-      },
-      {
-        title: "욕실",
-        description: "화장실 공사, 홈스타일링에선\n부분 악세사리 교체만 가능",
-        styling: true,
-        alert: true,
-        notice: "홈스타일링에서는 부분 악세사리 교체만 가능합니다!",
-      },
-      {
-        title: "주방",
-        description: "주방 공사, 홈스타일링에선\n부분 악세사리 교체만 가능",
-        styling: true,
-        alert: true,
-        notice: "홈스타일링에서는 부분 악세사리 교체만 가능합니다!",
-      },
-      {
-        title: "필름",
-        description: "필름지를 씌어 해당 면의\n색상이나 재질감을 바꾸는 제공",
-        styling: true,
-        alert: false,
-        notice: "",
-      },
-      {
-        title: "도배",
-        description: "벽에 도배지를 바르는 작업\n합지와 실크가 있음",
-        styling: true,
-        alert: false,
-        notice: "",
-      },
-      {
-        title: "도장",
-        description: "페인팅, 탄성코트 등\n면의 도료를 칠하는 공사",
-        styling: true,
-        alert: false,
-        notice: "",
-      },
-      {
-        title: "중문",
-        description: "현관에 중문을\n새로 달거나 바꾸는 작업",
-        styling: true,
-        alert: false,
-        notice: "",
-      },
-      {
-        title: "발코니",
-        description: "발코니의 확장 및\n확장 부분 단열 공사",
-        styling: false,
-        alert: false,
-        notice: "",
-      },
-      {
-        title: "금속 샤시",
-        description: "모든 금속 공사와\n샤시 교체 작업",
-        styling: false,
-        alert: false,
-        notice: "",
-      },
-      {
-        title: "조명",
-        description: "스타일링을 위한 조명\n배치부터 조명 제품 선택",
-        styling: true,
-        alert: false,
-        notice: "",
-      },
-      {
-        title: "제작 가구",
-        description: "대가구, 소가구로 나뉘며\n제작이 필요한 모든 가구",
-        styling: true,
-        alert: false,
-        notice: "",
-      },
-    ];
-    statusItems = [
-      {
-        title: "거주 중이며 가구 있음",
-      },
-      {
-        title: "거주 중이며 보관 이사 계획",
-      },
-      {
-        title: "거주하지 않으며 공실 상태",
-      },
-    ];
+    constructItems = objectDeepCopy(instance.totalMenu[2]);
+    statusItems = objectDeepCopy(instance.totalMenu[3]);
 
     fourthSelectionEvent = (index) => {
       return async function (e) {
@@ -3431,9 +3276,6 @@ StyleExplanationJs.prototype.insertFourthBox = async function (fourthBase) {
         }
       }
     }
-
-    instance.totalMenu[2] = objectDeepCopy(constructItems);
-    instance.totalMenu[3] = objectDeepCopy(statusItems);
 
     if (desktop) {
       yesButtonWidth = (standardWidth - (yesButtonBetween * ((constructItems.length / 2) - 1))) / (constructItems.length / 2);
@@ -4145,46 +3987,9 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
 
     mobileConstructItemDevide = 3;
 
-    constructItems = [
-      { title: "500만원 이하", value: "500만원 이하" },
-      { title: "1,000만원", value: "1,000만원" },
-      { title: "1,500만원", value: "1,500만원" },
-      { title: "2,000만원", value: "2,000만원" },
-      { title: "3,000만원", value: "3,000만원" },
-      { title: "4,000만원", value: "4,000만원" },
-      { title: "5,000만원", value: "5,000만원 이상" },
-      { title: "6,000만원", value: "6,000만원 이상" },
-      { title: "7,000만원", value: "7,000만원 이상" },
-      { title: "8,000만원", value: "8,000만원 이상" },
-      { title: "9,000만원", value: "9,000만원 이상" },
-      { title: "1억원 이상", value: "1억원 이상" },
-    ];
-    statusItems = [
-      {
-        title: "빌트인 제작 가구",
-      },
-      {
-        title: "단순 붙박이장",
-      },
-      {
-        title: "구매형 가구",
-      },
-    ];
-    fabricItems = [
-      {
-        title: "커튼, 블라인드 등 외부 창문 패브릭",
-      },
-      {
-        title: "제작 발주형 침구류 (쿠션, 이불, 베개 등)",
-      },
-      {
-        title: "구매형 침구류, 카펫 등 패브릭",
-      },
-    ];
-
-    instance.totalMenu[4] = objectDeepCopy(constructItems);
-    instance.totalMenu[5] = objectDeepCopy(statusItems);
-    instance.totalMenu[6] = objectDeepCopy(fabricItems);
+    constructItems = objectDeepCopy(instance.totalMenu[4]);
+    statusItems = objectDeepCopy(instance.totalMenu[5]);
+    fabricItems = objectDeepCopy(instance.totalMenu[6]);
 
     yesButtonWidth = (standardWidth - (yesButtonBetween * ((statusItems.length / 1) - 1))) / (statusItems.length / 1);
     yesButtonWidthNoMargin = (standardWidth - (0 * ((constructItems.length / 1) - 1))) / (constructItems.length / 1);
@@ -5408,67 +5213,10 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
 
     mobileConstructItemDevide = 3;
 
-    constructItems = [
-      { title: "미정 / 거주중" },
-      { title: "1개월 이내" },
-      { title: "2개월 이내" },
-      { title: "3개월 이내" },
-      { title: "4개월 이내" },
-      { title: "5개월 이내" },
-      { title: "6개월 이내" },
-      { title: "1년 이내" },
-      { title: "1년 이상" },
-    ]
-    statusItems = [
-      {
-        title: "기존 가구 재배치",
-      },
-      {
-        title: "일부 신규 구매",
-      },
-      {
-        title: "전체 신규 구매",
-      },
-    ];
-    fabricItems = [
-      {
-        title: "1인 가구",
-      },
-      {
-        title: "부부, 자녀 없음",
-      },
-      {
-        title: "부부, 유아기 자녀",
-      },
-      {
-        title: "부부, 학령기 자녀",
-      },
-      {
-        title: "기타",
-      },
-    ];
-    ageItems = [
-      {
-        title: "29세 이하",
-      },
-      {
-        title: "30세 - 39세",
-      },
-      {
-        title: "40세 - 49세",
-      },
-      {
-        title: "50세 - 59세",
-      },
-      {
-        title: "60세 이상",
-      },
-    ];
-
-    instance.totalMenu[7] = objectDeepCopy(constructItems);
-    instance.totalMenu[8] = objectDeepCopy(statusItems);
-    instance.totalMenu[9] = objectDeepCopy(fabricItems);
-    instance.totalMenu[10] = objectDeepCopy(ageItems);
+    constructItems = objectDeepCopy(instance.totalMenu[7]);
+    statusItems = objectDeepCopy(instance.totalMenu[8]);
+    fabricItems = objectDeepCopy(instance.totalMenu[9]);
+    ageItems = objectDeepCopy(instance.totalMenu[10]);
 
     yesButtonWidth = (standardWidth - (yesButtonBetween * ((statusItems.length / 1) - 1))) / (statusItems.length / 1);
     yesButtonWidthNoMargin = (standardWidth - (0 * ((constructItems.length / 1) - 1))) / (constructItems.length / 1);
@@ -6924,16 +6672,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
 
     processValuesRatio = 99.4;
 
-    statusItems = [
-      { title: "9:30 - 11:00" },
-      { title: "11:00 - 12:30" },
-      { title: "13:30 - 16:30" },
-      { title: "16:30 - 18:30" },
-    ];
-
-    instance.totalMenu[11] = objectDeepCopy(statusItems);
-    instance.totalMenu[12] = [];
-    instance.totalMenu[13] = [];
+    statusItems = objectDeepCopy(instance.totalMenu[11]);
 
     yesButtonWidth = (standardWidth - (yesButtonBetween * ((statusItems.length / 1) - 1))) / (statusItems.length / 1);
     if (mobile) {
@@ -8713,8 +8452,8 @@ StyleExplanationJs.prototype.sixthConverting = function () {
   const { initAreaClassName, sixthFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName, fileInputClassName } = this;
   return async function (e) {
     try {
-      const gamma = 500;
-      const delta = 1500;
+      const gamma = 100;
+      const delta = 200;
       const fadeOutTargets = [ ...document.querySelectorAll('.' + sixthFadeOutTargetClassName) ];
       let blackScrollTop;
       let numbersAreaMarginTop;
@@ -9513,8 +9252,7 @@ StyleExplanationJs.prototype.launching = async function (loading) {
     this.animationStop = false;
 
     this.questionNumber = 14;
-    this.totalValues = await this.generateTotalValues();
-    this.totalMenu = (new Array(this.questionNumber)).fill(null, 0);
+    await this.generateTotalValues();
 
     this.lineWeight = <%% 1.5, 1.5, 1.5, 1, 1 %%>;
 
@@ -9562,7 +9300,7 @@ StyleExplanationJs.prototype.launching = async function (loading) {
       this.heightTong.numbers = <%% 100, 100, 90, 75, 16 %%>;
     }
 
-    await GeneralJs.ajaxJson({ cliid: instance.client.cliid, name: instance.client.name, phone: instance.client.phone }, BACKHOST + "/styleCuration_pageInitComplete");
+    await ajaxJson({ cliid: instance.client.cliid, name: instance.client.name, phone: instance.client.phone }, BACKHOST + "/styleCuration_pageInitComplete");
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",
