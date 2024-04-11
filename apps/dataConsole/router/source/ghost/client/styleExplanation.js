@@ -841,7 +841,7 @@ StyleExplanationJs.prototype.generateTotalValues = async function () {
 StyleExplanationJs.prototype.updateImmediately = async function (valueIndex, menuIndex, menu) {
   const instance = this;
   const { withOut, returnGet, createNode, ajaxJson, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop, heightTong } = this;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop, heightTong, requestNumber } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -852,7 +852,7 @@ StyleExplanationJs.prototype.updateImmediately = async function (valueIndex, men
       method: "client",
       id: instance.client.cliid
     };
-    let updateQuery;
+    let updateQuery, coreQuery;
     
     if (typeof valueIndex !== "number") {
       throw new Error("invalid value index");
@@ -867,38 +867,58 @@ StyleExplanationJs.prototype.updateImmediately = async function (valueIndex, men
     if (valueIndex === 0) {
       if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
         updateQuery = {};
+        coreQuery = {};
         updateQuery["curation.service.serid"] = [ menu[menuIndex] ];
         updateQuery["curation.check.serid"] = menu[menuIndex];
-        await ajaxJson({ ...defaultQueryObject, updateQuery }, BACKHOST + "/updateHistory");
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
       }
     } else if (valueIndex === 1) {
       if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
         updateQuery = {};
+        coreQuery = {};
         if (instance.totalValues[0] === 1) {
           updateQuery["curation.check.construct.entire"] = menu[menuIndex];
         } else {
           updateQuery["curation.check.construct.entire"] = true;
         }
-        await ajaxJson({ ...defaultQueryObject, updateQuery }, BACKHOST + "/updateHistory");
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
       }
     } else if (valueIndex === 2) {
       if (Array.isArray(menuIndex)) {
         updateQuery = {};
+        coreQuery = {};
         updateQuery["curation.check.construct.items"] = menuIndex;
-        await ajaxJson({ ...defaultQueryObject, updateQuery }, BACKHOST + "/updateHistory");
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
       }
     } else if (valueIndex === 3) {
       if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
         updateQuery = {};
+        coreQuery = {};
         updateQuery["curation.check.construct.environment"] = menuIndex;
-        await ajaxJson({ ...defaultQueryObject, updateQuery }, BACKHOST + "/updateHistory");
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
       }
     } else if (valueIndex === 4) {
-      
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.budget"] = menuIndex;
+        coreQuery["requests." + String(requestNumber) + ".request.budget"] = menu[menuIndex];
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
     } else if (valueIndex === 5) {
-      
+      if (Array.isArray(menuIndex)) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.furniture"] = menuIndex;
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
     } else if (valueIndex === 6) {
-      
+      if (Array.isArray(menuIndex)) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.fabric"] = menuIndex;
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
     } else if (valueIndex === 7) {
       
     } else if (valueIndex === 8) {
@@ -4095,7 +4115,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
       { title: "8,000만원", value: "8,000만원 이상" },
       { title: "9,000만원", value: "9,000만원 이상" },
       { title: "1억원 이상", value: "1억원 이상" },
-    ]
+    ];
     statusItems = [
       {
         title: "빌트인 제작 가구",
@@ -4175,6 +4195,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
           }
 
           instance.totalValues[4] = index;
+          await instance.updateImmediately(4, index, constructItems.map((o) => { return o.value }));
 
         } catch (e) {
           console.log(e);
@@ -4196,7 +4217,6 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                 dom.style.boxShadow = "";
                 dom.firstChild.style.color = colorExtended.blueDark;
                 dom.setAttribute("toggle", "off");
-                instance.totalValues[5] = null;
               }
             }
           } else {
@@ -4207,7 +4227,6 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
                 dom.setAttribute("toggle", "on");
-                instance.totalValues[5] = Number(dom.getAttribute("index"));
               }
             }
           }
@@ -4218,6 +4237,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
               index
             }
           }).filter((o) => { return o.on }).map((o) => { return o.index });
+          await instance.updateImmediately(5, instance.totalValues[5], statusItems.map((o) => { return o.title }));
 
         } catch (e) {
           console.log(e);
@@ -4259,6 +4279,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
               index
             }
           }).filter((o) => { return o.on }).map((o) => { return o.index });
+          await instance.updateImmediately(6, instance.totalValues[6], fabricItems.map((o) => { return o.title }));
 
         } catch (e) {
           console.log(e);
@@ -4761,6 +4782,7 @@ StyleExplanationJs.prototype.insertFifthBox = async function (fourthBase, furnis
                           dom.firstChild.style.color = colorExtended.darkBlack;
                           dom.setAttribute("toggle", "on");
                           instance.totalValues[4] = Number(dom.getAttribute("index"));
+                          await instance.updateImmediately(4, index, constructItems.map((o) => { return o.value }));
                         } else {
                           dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                           dom.style.background = colorExtended.white;
@@ -5891,7 +5913,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                           dom.style.boxShadow = "";
                           dom.firstChild.style.color = colorExtended.blueDark;
                           dom.setAttribute("toggle", "off");
-                          instance.totalValues[4] = null;
+                          instance.totalValues[7] = null;
                         }
                       }
                     } else {
@@ -5902,7 +5924,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                           dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                           dom.firstChild.style.color = colorExtended.darkBlack;
                           dom.setAttribute("toggle", "on");
-                          instance.totalValues[4] = Number(dom.getAttribute("index"));
+                          instance.totalValues[7] = Number(dom.getAttribute("index"));
                         } else {
                           dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                           dom.style.background = colorExtended.white;
@@ -9446,6 +9468,7 @@ StyleExplanationJs.prototype.launching = async function (loading) {
     this.designers = contentsPhotoObj.designers;
     this.client = client;
     this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, BACKHOST + "/getClientHistory", { equal: true });
+    this.requestNumber = 0;
 
     this.initAreaClassName = "initAreaClassName";
     this.firstFadeOutTargetClassName = "firstFadeOutTargetClassName";
@@ -9537,16 +9560,16 @@ StyleExplanationJs.prototype.launching = async function (loading) {
           const secondBase = await instance.insertSecondBox();
           await instance.insertBarBox();
 
-          // GeneralJs.setQueue(() => {
-          //   const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
-          //   for (let dom of fadeOutTargets) {
-          //     dom.remove();
-          //   }
-          //   instance.totalValues[0] = 1;
-          //   instance.totalValues[1] = 1;
-          // }, 0);
-          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(instance.heightTong.scroll) + instance.ea;
-          // await instance.insertEighthBox(secondBase);
+          GeneralJs.setQueue(() => {
+            const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
+            for (let dom of fadeOutTargets) {
+              dom.remove();
+            }
+            instance.totalValues[0] = 1;
+            instance.totalValues[1] = 1;
+          }, 0);
+          document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(instance.heightTong.scroll) + instance.ea;
+          await instance.insertFifthBox(secondBase);
 
           instance.resizeEvent();
           setInterval(() => {
@@ -9575,8 +9598,6 @@ StyleExplanationJs.prototype.launching = async function (loading) {
       if (typeof e.state === "object" && e.state !== null) {
         if (typeof e.state.mode === "string") {
           GeneralJs.scrollTo(window, 0, 0, true);
-
-          console.log(e.state.mode);
 
           if (e.state.mode === "base") {
             convertingFunction = instance.firstReturn();

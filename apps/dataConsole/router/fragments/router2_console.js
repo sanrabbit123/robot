@@ -2069,11 +2069,12 @@ DataRouter.prototype.rou_post_updateHistory = function () {
         }
   
       } else {
-        const { id, updateQuery } = equalJson(req.body);
+        const { id, updateQuery, coreQuery } = equalJson(req.body);
         let historyObj;
         let method, standard;
         let createQuery;
         let whereQuery;
+        let collection;
   
         if (/Client/gi.test(req.url)) {
           method = "client";
@@ -2093,12 +2094,16 @@ DataRouter.prototype.rou_post_updateHistory = function () {
   
         if (/client/gi.test(method)) {
           standard = "cliid";
+          collection = "client";
         } else if (/project/gi.test(method)) {
           standard = "proid";
+          collection = "project";
         } else if (/designer/gi.test(method)) {
           standard = "desid";
+          collection = "designer";
         } else if (/contents/gi.test(method)) {
           standard = "conid";
+          collection = "contents";
         } else {
           throw new Error("invaild method");
         }
@@ -2118,6 +2123,12 @@ DataRouter.prototype.rou_post_updateHistory = function () {
           }
         }
   
+        if (typeof coreQuery === "object" && coreQuery !== null) {
+          if (Object.keys(coreQuery).length > 0) {
+            await back.mongoUpdate(collection, [ whereQuery, coreQuery ], { selfMongo: instance.mongo });
+          }
+        }
+
       }
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
