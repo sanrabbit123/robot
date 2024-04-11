@@ -3520,9 +3520,9 @@ BackMaker.prototype.createHistory = async function (method = "client", updateQue
     furniture: [],
     fabric: [],
     expect: 2,
-    purchase: 0,
-    family: 4,
-    age: 1,
+    purchase: null,
+    family: null,
+    age: null,
     time: [],
   };
   try {

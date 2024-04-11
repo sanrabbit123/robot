@@ -797,39 +797,45 @@ StyleExplanationJs.prototype.generateTotalValues = async function () {
       }
 
       // 4
-
-
+      if (typeof clientHistory.curation.check.budget === "number") {
+        totalValues[4] = clientHistory.curation.check.budget;
+      }
 
       // 5
-
-
+      if (Array.isArray(clientHistory.curation.check.furniture) && clientHistory.curation.check.furniture.length > 0) {
+        totalValues[5] = objectDeepCopy(clientHistory.curation.check.furniture);
+      }
 
       // 6
-
-
+      if (Array.isArray(clientHistory.curation.check.fabric) && clientHistory.curation.check.fabric.length > 0) {
+        totalValues[6] = objectDeepCopy(clientHistory.curation.check.fabric);
+      }
 
       // 7
-
-
+      if (typeof clientHistory.curation.check.expect === "number") {
+        totalValues[7] = clientHistory.curation.check.expect;
+      }
 
       // 8
-
-
+      if (typeof clientHistory.curation.check.purchase === "number") {
+        totalValues[8] = clientHistory.curation.check.purchase;
+      }
 
       // 9
-
-
+      if (typeof clientHistory.curation.check.family === "number") {
+        totalValues[9] = clientHistory.curation.check.family;
+      }
 
       // 10
-
-
+      if (typeof clientHistory.curation.check.age === "number") {
+        totalValues[10] = clientHistory.curation.check.age;
+      }
 
       // 11
-
+      if (Array.isArray(clientHistory.curation.check.time) && clientHistory.curation.check.time.length > 0) {
+        totalValues[11] = objectDeepCopy(clientHistory.curation.check.time);
+      }
       
-
-      // 12
-
     }
 
     return totalValues;
@@ -920,15 +926,42 @@ StyleExplanationJs.prototype.updateImmediately = async function (valueIndex, men
         await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
       }
     } else if (valueIndex === 7) {
-      
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.expect"] = menuIndex;
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
     } else if (valueIndex === 8) {
-      
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.purchase"] = menuIndex;
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
     } else if (valueIndex === 9) {
-      
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.family"] = menuIndex;
+        coreQuery["requests." + String(requestNumber) + ".request.family"] = menu[menuIndex];
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
     } else if (valueIndex === 10) {
-      
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.age"] = menuIndex;
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
     } else if (valueIndex === 11) {
-      
+      if (Array.isArray(menuIndex)) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.time"] = menuIndex;
+        updateQuery["budget"] = "상담 가능 시간 : \n" + menu.filter((str, index) => { return menuIndex.includes(index) }).join(", ");
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
     }
 
   } catch (e) {
@@ -5392,13 +5425,13 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
         title: "1인 가구",
       },
       {
-        title: "부부 (자녀 없음)",
+        title: "부부, 자녀 없음",
       },
       {
-        title: "부부 + 유아기 자녀",
+        title: "부부, 유아기 자녀",
       },
       {
-        title: "부부 + 학령기 자녀",
+        title: "부부, 학령기 자녀",
       },
       {
         title: "기타",
@@ -5481,6 +5514,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
           }
 
           instance.totalValues[7] = index;
+          await instance.updateImmediately(7, index, constructItems.map((o) => { return o.title }));
 
         } catch (e) {
           console.log(e);
@@ -5513,7 +5547,8 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
                 dom.setAttribute("toggle", "on");
-                instance.totalValues[8] = Number(dom.getAttribute("index"));
+                instance.totalValues[8] = index;
+                await instance.updateImmediately(8, index, statusItems.map((o) => { return o.title }));
               } else {
                 dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
@@ -5569,7 +5604,8 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
                 dom.setAttribute("toggle", "on");
-                instance.totalValues[9] = Number(dom.getAttribute("index"));
+                instance.totalValues[9] = index;
+                await instance.updateImmediately(9, index, fabricItems.map((o) => { return o.title }));
               } else {
                 dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
@@ -5611,7 +5647,8 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                 dom.style.boxShadow = "0px 3px 15px -9px " + colorExtended.darkShadow;
                 dom.firstChild.style.color = colorExtended.darkBlack;
                 dom.setAttribute("toggle", "on");
-                instance.totalValues[10] = Number(dom.getAttribute("index"));
+                instance.totalValues[10] = index;
+                await instance.updateImmediately(10, index, ageItems.map((o) => { return o.title }));
               } else {
                 dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                 dom.style.background = colorExtended.white;
@@ -5925,6 +5962,7 @@ StyleExplanationJs.prototype.insertSixthBox = async function (fifthBase) {
                           dom.firstChild.style.color = colorExtended.darkBlack;
                           dom.setAttribute("toggle", "on");
                           instance.totalValues[7] = Number(dom.getAttribute("index"));
+                          await instance.updateImmediately(7, index, constructItems.map((o) => { return o.title }));
                         } else {
                           dom.style.border = String(instance.lineWeight) + "px" + " solid " + colorExtended.mainBlue;
                           dom.style.background = colorExtended.white;
@@ -6926,6 +6964,7 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
               index
             }
           }).filter((o) => { return o.on }).map((o) => { return o.index });
+          await instance.updateImmediately(11, instance.totalValues[11], statusItems.map((o) => { return o.title }));
 
         } catch (e) {
           console.log(e);
@@ -7437,6 +7476,11 @@ StyleExplanationJs.prototype.insertSeventhBox = async function (fifthBase) {
             click: async function (e) {
               let convertingFunction;
               if (instance.totalValues[11] === null) {
+                GeneralJs.alert("가능한 상담 시간을 모두 체크해 주세요!", true, true);
+                GeneralJs.scrollTo(window, 0, 0);
+                return 0;
+              }
+              if (Array.isArray(instance.totalValues[11]) && instance.totalValues[11].length === 0) {
                 GeneralJs.alert("가능한 상담 시간을 모두 체크해 주세요!", true, true);
                 GeneralJs.scrollTo(window, 0, 0);
                 return 0;
@@ -9560,16 +9604,16 @@ StyleExplanationJs.prototype.launching = async function (loading) {
           const secondBase = await instance.insertSecondBox();
           await instance.insertBarBox();
 
-          GeneralJs.setQueue(() => {
-            const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
-            for (let dom of fadeOutTargets) {
-              dom.remove();
-            }
-            instance.totalValues[0] = 1;
-            instance.totalValues[1] = 1;
-          }, 0);
-          document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(instance.heightTong.scroll) + instance.ea;
-          await instance.insertFifthBox(secondBase);
+          // GeneralJs.setQueue(() => {
+          //   const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
+          //   for (let dom of fadeOutTargets) {
+          //     dom.remove();
+          //   }
+          //   instance.totalValues[0] = 1;
+          //   instance.totalValues[1] = 1;
+          // }, 0);
+          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(instance.heightTong.scroll) + instance.ea;
+          // await instance.insertSeventhBox(secondBase);
 
           instance.resizeEvent();
           setInterval(() => {
