@@ -978,6 +978,44 @@ StyleExplanationJs.prototype.updateImmediately = async function (valueIndex, men
       }
     }
 
+    if (Array.isArray(instance.totalMenu[valueIndex])) {
+      if (typeof menuIndex === "number") {
+        if (typeof instance.totalMenu[valueIndex][menuIndex] === "object" && instance.totalMenu[valueIndex][menuIndex] !== null && instance.totalMenu[valueIndex][menuIndex].value !== undefined) {
+          homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "updateCheckValue",
+            data: {
+              cliid: instance.client.cliid,
+              date: new Date(),
+              index: valueIndex,
+              raw: menuIndex,
+              value: instance.totalMenu[valueIndex][menuIndex].value,
+            },
+          }).catch((err) => {
+            console.log(err);
+          });
+        }  
+      } else if (Array.isArray(menuIndex)) {
+        if (menuIndex.every((n) => { return (typeof n === "number") })) {
+          homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "updateCheckValue",
+            data: {
+              cliid: instance.client.cliid,
+              date: new Date(),
+              index: valueIndex,
+              raw: menuIndex,
+              value: instance.totalMenu[valueIndex].filter((o, index) => { return menuIndex.includes(index) }).map((o) => { return o.value === undefined ? o.title : o.value }),
+            },
+          }).catch((err) => {
+            console.log(err);
+          });          
+        }  
+      }
+    }
+
   } catch (e) {
     console.log(e);
   }
@@ -7461,6 +7499,17 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
 
     mainIllust = <%% StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust.svg", StyleExplanationJs.binaryPath + "/endIllust2.svg" %%>;
 
+    homeliaisonAnalytics({
+      page: instance.pageName,
+      standard: instance.firstPageViewTime,
+      action: "submitForm",
+      data: {
+        cliid: instance.client.cliid,
+      },
+    }).catch((err) => {
+      console.log(err);
+    });
+
     descriptionContents = [
       `홈리에종의 서비스 신청을 진행해주셔서 감사합니다!`,
       `신청서를 검토한 후, 고객님께 <b%1차 응대 전화%b>를 드릴 예정입니다!`,
@@ -8231,6 +8280,19 @@ StyleExplanationJs.prototype.firstConverting = function () {
       blackScrollTop = heightTong.scroll;
       numbersAreaMarginTop = heightTong.numbers;
 
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "convertingPage",
+        data: {
+          cliid: instance.client.cliid,
+          date: new Date(),
+          order: "first",
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+
       blackTarget.style.transition = "all 0.6s ease";
       if (blackTarget.style.marginTop.replace(/[^0-9\-]/gi, '') === String(blackScrollTop)) {
         scrollTo(window, 0, 0, false, async () => {
@@ -8282,6 +8344,19 @@ StyleExplanationJs.prototype.secondConverting = function () {
       blackScrollTop = heightTong.scroll;
       numbersAreaMarginTop = heightTong.numbers;
 
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "convertingPage",
+        data: {
+          cliid: instance.client.cliid,
+          date: new Date(),
+          order: "second",
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
           dom.style.animation = "fadeoutlite 0.6s ease forwards";
@@ -8315,6 +8390,19 @@ StyleExplanationJs.prototype.thirdConverting = function (furnishingMode = false)
         blackScrollTop = heightTong.scroll;
         numbersAreaMarginTop = heightTong.numbers;
     
+        homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "convertingPage",
+          data: {
+            cliid: instance.client.cliid,
+            date: new Date(),
+            order: "third",
+          },
+        }).catch((err) => {
+          console.log(err);
+        });
+  
         scrollTo(window, 0, 0, false, async () => {
           for (let dom of fadeOutTargets) {
             dom.style.animation = "fadeoutlite 0.6s ease forwards";
@@ -8393,6 +8481,19 @@ StyleExplanationJs.prototype.fourthConverting = function () {
       blackScrollTop = heightTong.scroll;
       numbersAreaMarginTop = heightTong.numbers;
 
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "convertingPage",
+        data: {
+          cliid: instance.client.cliid,
+          date: new Date(),
+          order: "fourth",
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
           dom.style.animation = "fadeoutlite 0.6s ease forwards";
@@ -8425,6 +8526,19 @@ StyleExplanationJs.prototype.fifthConverting = function () {
 
       blackScrollTop = heightTong.scroll;
       numbersAreaMarginTop = heightTong.numbers;
+
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "convertingPage",
+        data: {
+          cliid: instance.client.cliid,
+          date: new Date(),
+          order: "fifth",
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
 
       scrollTo(window, 0, 0, false, async () => {
         for (let dom of fadeOutTargets) {
@@ -8467,6 +8581,19 @@ StyleExplanationJs.prototype.sixthConverting = function () {
 
       formProgress = (document.querySelector('.' + fileInputClassName) !== null && document.querySelector('.' + fileInputClassName).files.length > 0) ? true : false;
       fileInput = document.querySelector('.' + fileInputClassName);
+
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "convertingPage",
+        data: {
+          cliid: instance.client.cliid,
+          date: new Date(),
+          order: "sixth",
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
 
       loading = instance.mother.whiteProgressLoading(null, !formProgress);
 
@@ -9091,6 +9218,20 @@ StyleExplanationJs.prototype.firstReturn = function () {
   const { initAreaClassName, firstFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName, ghostBaseClassName, secondBarBoxMotherClassName } = this;
   return async function (e) {
     try {
+
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "returnPage",
+        data: {
+          cliid: instance.client.cliid,
+          date: new Date(),
+          order: "first",
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+
       scrollTo(window, 0, 0);
       document.querySelector('.' + ghostBaseClassName).remove();
       instance.selectionDomMaker(document.querySelector('.' + secondBaseClassName), true);
@@ -9113,6 +9254,20 @@ StyleExplanationJs.prototype.secondReturn = function () {
   const { initAreaClassName, firstFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName, ghostBaseClassName, secondBarBoxMotherClassName } = this;
   return async function (e) {
     try {
+
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "returnPage",
+        data: {
+          cliid: instance.client.cliid,
+          date: new Date(),
+          order: "second",
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+
       scrollTo(window, 0, 0);
       document.querySelector('.' + ghostBaseClassName).remove();
       await instance.insertThirdBox(document.querySelector('.' + secondBaseClassName));
@@ -9132,6 +9287,20 @@ StyleExplanationJs.prototype.thirdReturn = function (furnishingMode = false) {
   if (!furnishingMode) {
     return async function (e) {
       try {
+
+        homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "returnPage",
+          data: {
+            cliid: instance.client.cliid,
+            date: new Date(),
+            order: "third",
+          },
+        }).catch((err) => {
+          console.log(err);
+        });
+
         scrollTo(window, 0, 0);
         document.querySelector('.' + ghostBaseClassName).remove();
         await instance.insertFourthBox(document.querySelector('.' + secondBaseClassName));
@@ -9164,6 +9333,20 @@ StyleExplanationJs.prototype.fourthReturn = function () {
   const { initAreaClassName, firstFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName, ghostBaseClassName, secondBarBoxMotherClassName } = this;
   return async function (e) {
     try {
+
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "returnPage",
+        data: {
+          cliid: instance.client.cliid,
+          date: new Date(),
+          order: "fourth",
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+
       scrollTo(window, 0, 0);
       document.querySelector('.' + ghostBaseClassName).remove();
       await instance.insertFifthBox(document.querySelector('.' + secondBaseClassName));
@@ -9182,6 +9365,20 @@ StyleExplanationJs.prototype.fifthReturn = function () {
   const { initAreaClassName, firstFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName, ghostBaseClassName, secondBarBoxMotherClassName } = this;
   return async function (e) {
     try {
+
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "returnPage",
+        data: {
+          cliid: instance.client.cliid,
+          date: new Date(),
+          order: "fifth",
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+
       scrollTo(window, 0, 0);
       document.querySelector('.' + ghostBaseClassName).remove();
       await instance.insertSixthBox(document.querySelector('.' + secondBaseClassName));

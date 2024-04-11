@@ -515,6 +515,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
           values: [
             {
               title: "철거",
+              value: "철거",
               description: "철거, 기존에 있던 것을\n모두 제거하는 작업",
               styling: true,
               alert: true,
@@ -522,6 +523,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "보양",
+              value: "보양",
               description: "엘리베이터 등에 기스 나지\n않도록 비닐을 씌우는 작업",
               styling: true,
               alert: false,
@@ -529,6 +531,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "목공",
+              value: "목공",
               description: "나무를 사용한 작업\n걸레받이, 몰딩, 문짝, 천정 평탄화 등",
               styling: true,
               alert: false,
@@ -536,6 +539,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "전기",
+              value: "전기",
               description: "집 내부의 전기 배선\n구성을 바꾸는 작업",
               styling: true,
               alert: false,
@@ -543,6 +547,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "타일",
+              value: "타일",
               description: "화장실, 주방 등에 타일을\n바꾸는 작업",
               styling: true,
               alert: true,
@@ -550,6 +555,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "바닥",
+              value: "바닥",
               description: "집의 바닥 공사\n장판, 마루, 타일이 있음",
               styling: true,
               alert: true,
@@ -557,6 +563,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "욕실",
+              value: "욕실",
               description: "화장실 공사, 홈스타일링에선\n부분 악세사리 교체만 가능",
               styling: true,
               alert: true,
@@ -564,6 +571,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "주방",
+              value: "주방",
               description: "주방 공사, 홈스타일링에선\n부분 악세사리 교체만 가능",
               styling: true,
               alert: true,
@@ -571,6 +579,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "필름",
+              value: "필름",
               description: "필름지를 씌어 해당 면의\n색상이나 재질감을 바꾸는 제공",
               styling: true,
               alert: false,
@@ -578,6 +587,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "도배",
+              value: "도배",
               description: "벽에 도배지를 바르는 작업\n합지와 실크가 있음",
               styling: true,
               alert: false,
@@ -585,6 +595,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "도장",
+              value: "도장",
               description: "페인팅, 탄성코트 등\n면의 도료를 칠하는 공사",
               styling: true,
               alert: false,
@@ -592,6 +603,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "중문",
+              value: "중문",
               description: "현관에 중문을\n새로 달거나 바꾸는 작업",
               styling: true,
               alert: false,
@@ -599,6 +611,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "발코니",
+              value: "발코니",
               description: "발코니의 확장 및\n확장 부분 단열 공사",
               styling: false,
               alert: false,
@@ -606,6 +619,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "금속 샤시",
+              value: "금속 샤시",
               description: "모든 금속 공사와\n샤시 교체 작업",
               styling: false,
               alert: false,
@@ -613,6 +627,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "조명",
+              value: "조명",
               description: "스타일링을 위한 조명\n배치부터 조명 제품 선택",
               styling: true,
               alert: false,
@@ -620,6 +635,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             },
             {
               title: "제작 가구",
+              value: "제작 가구",
               description: "대가구, 소가구로 나뉘며\n제작이 필요한 모든 가구",
               styling: true,
               alert: false,
