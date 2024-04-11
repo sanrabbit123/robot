@@ -2599,6 +2599,18 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
 
           res.send(JSON.stringify({ message: "success" }));
 
+        } else if (type === "proposalProfile") {
+
+          await kakao.sendTalk("noticeDesignerProfileWithProposal", designer, phone, { designer, date: req.body.until, host: address.frontinfo.host, path: "proposal_manual", desid });
+          await messageSend({
+            text: designer + " 실장님께 추천서 안내 및 프로필 업로드 요청 알림톡을 전송하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
+
+          res.send(JSON.stringify({ message: "success" }));
+
         } else {
           throw new Error("invalid type");
         }

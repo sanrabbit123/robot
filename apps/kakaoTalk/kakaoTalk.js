@@ -3914,6 +3914,50 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       },
     },
+    "noticeDesignerProfileWithProposal": {
+      "name": "디자이너 요청 전송 프로필 추천서 업데이트",
+      "id": "TS_2889",
+      "needs": [
+        "designer",
+        "date",
+        "host",
+        "path",
+        "desid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"date\", to: obj.date },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"desid\", to: obj.desid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 디자이너님! 홈리에종입니다 :)\n\n홈리에종은 디자이너님들에게 더 많고 좋은 연결을 제공하기 위해 추천서 페이지를 새롭게 업데이트했습니다!\n\n새로운 추천서와 디자이너님이 어떻게 추천되는지 아래 링크를 통해 확인하실 수 있습니다. 이번 중요한 업데이트 사항은 디자이너님의 프로필 사진이 추가되었다는 점입니다!\n\n아래 링크로 접속하셔서 #{date}까지 디자이너님의 프로필 사진을 업로드해주시기 바랍니다. 프로필 사진은 디자이너님을 고객님들께 소개하는 데 중요한 역할을 하므로, 얼굴이 정면 또는 측면에서 잘 보이는 사진을 선택해 주세요! :)\n\n* 추천서 샘플 확인 및 프로필 업로드\nhttps://#{host}/designer/#{path}.php?desid=#{desid}",
+        "templtName": "디자이너 요청 전송 프로필 추천서 업데이트",
+        "templateType": "BA",
+        "templateEmType": "TEXT",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "추천서 업데이트",
+        "templtSubtitle": "프로필 사진 업로드 필수!",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2024-04-09 10:10:14",
+        "templtCode": "TS_2889",
+        "comments": [
+          {
+            "cdate": "2024-04-09 17:34:00",
+            "name": "검수자",
+            "id": "3254643",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2024-04-09 17:34:00",
+            "status": "APR"
+          }
+        ]
+      },
+    },
     "noticeDesignerWork": {
       "name": "디자이너 요청 전송 작업 사진",
       "id": "TO_1923",
