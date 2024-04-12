@@ -23,7 +23,7 @@ class SqlCloud:
 
         localConnection = mongoConnection("local")
         coreConnection = mongoConnection("core")
-        mysqlConnection = await aiomysql.connect(host="127.0.0.1", port=address["mysqlinfo"]["port"], user=address["mysqlinfo"]["user"], password=address["mysqlinfo"]["password"], db=address["mysqlinfo"]["database"], loop=loop)
+        mysqlConnection = await aiomysql.connect(host=address["mysqlinfo"]["host"], port=address["mysqlinfo"]["port"], user=address["mysqlinfo"]["user"], password=address["mysqlinfo"]["password"], db=address["mysqlinfo"]["database"], loop=loop)
 
         router = SqlRouter(self.app, coreConnection, localConnection, mysqlConnection)
         router.setRouting()
@@ -45,5 +45,3 @@ class SqlCloud:
         config.ca_certs = processCwd() + "/pems/" + address["mysqlinfo"]["host"] + "/ca/fullchain1.pem"
 
         await serve(self.app, config)
-
-

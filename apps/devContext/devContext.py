@@ -11,6 +11,7 @@ from apps.excelReader.excelReader import ExcelReader
 from apps.openAiAPIs.openAiAPIs import OpenAiAPIs
 from apps.awsAPIs.awsAPIs import AwsAPIs
 import asyncio
+import aiomysql
 
 class DevContext:
 
@@ -35,6 +36,7 @@ class DevContext:
 
     async def launching(self) -> int:
         back = self.back
+        address = self.address
         mongo = self.mongo
         mongoconsole = self.mongoconsole
         mongopython = self.mongopython
@@ -45,9 +47,11 @@ class DevContext:
         aws = AwsAPIs()
         gpt = OpenAiAPIs()
         try:
+            loop = asyncio.get_running_loop()
+            mysqlConnection = await aiomysql.connect(host=address["mysqlinfo"]["host"], port=address["mysqlinfo"]["port"], user=address["mysqlinfo"]["user"], password=address["mysqlinfo"]["password"], db=address["mysqlinfo"]["database"], loop=loop)
 
 
-            
+
 
 
             return 1

@@ -55,8 +55,6 @@ class SqlRouter:
             try:
 
 
-
-
                 return ({ "message": "will do" }, 200, headers)
             except Exception as e:
                 traceback.print_exc()
@@ -70,12 +68,42 @@ class SqlRouter:
             rawBody = bytesData.decode("utf-8")
             body = equalJson(rawBody)
             try:
-
+                if not "query" in body:
+                    raise Exception("invalid post")
                 
+                if not type(body["query"] is str):
+                    raise Exception("invalid post")
 
-
-                return ({ "message": "will do" }, 200, headers)
+                query = body["query"]
+                if not patternTest(r"^SELECT", query):
+                    raise Exception("invalid query")
+                
+                result = await mysqlQuery(query, self.mysql)
+                
+                return ({ "data": result["data"] }, 200, headers)
             except Exception as e:
                 traceback.print_exc()
                 await alertLog("Sql Cloud 서버 문제 생김 (rou_post_selectQuery): " + str(e))
+                return { "error": str(e) }
+            
+        @app.post("/mysqlQuery")
+        async def rou_post_mysqlQuery():
+            headers = self.headers
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            body = equalJson(rawBody)
+            try:
+                if not "query" in body:
+                    raise Exception("invalid post")
+                
+                if not type(body["query"] is str):
+                    raise Exception("invalid post")
+
+                query = body["query"]                
+                result = await mysqlQuery(query, self.mysql)
+
+                return ({ "data": result["data"] }, 200, headers)
+            except Exception as e:
+                traceback.print_exc()
+                await alertLog("Sql Cloud 서버 문제 생김 (rou_post_mysqlQuery): " + str(e))
                 return { "error": str(e) }

@@ -30,6 +30,7 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import binascii
+import aiomysql
 
 def mongoConnection(target: str = "core"):
     if type(target) is not str:
@@ -1537,3 +1538,14 @@ def getMimeTypes(exeName: str = ""):
                 return default
         except:
             return default
+
+async def mysqlQuery(query: str, selfMysql) -> dict:
+    cursor = await selfMysql.cursor(aiomysql.DictCursor)
+    await cursor.execute(query)
+    if patternTest(r"^SELECT", query):
+        result = await cursor.fetchall()
+        await cursor.close()
+        return { "data": list(result) }
+    else:
+        await cursor.close()
+        return { "message": "done" }
