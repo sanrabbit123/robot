@@ -9,7 +9,7 @@ import traceback
 
 class SqlRouter:
 
-    def __init__(self, app, coreConnection, localConnection):
+    def __init__(self, app, coreConnection, localConnection, mysqlConnection):
         self.app = app
         self.back = BackMaker()
         self.address = returnAddress()
@@ -17,6 +17,7 @@ class SqlRouter:
         self.mongo = coreConnection
         self.mongolocal = localConnection
         self.members = returnMembers()
+        self.mysql = mysqlConnection
 
     def setRouting(self):
         app = self.app
@@ -53,7 +54,7 @@ class SqlRouter:
             body = equalJson(rawBody)
             try:
 
-                
+
 
 
                 return ({ "message": "will do" }, 200, headers)
@@ -62,3 +63,19 @@ class SqlRouter:
                 await alertLog("Sql Cloud 서버 문제 생김 (rou_post_coreReflect): " + str(e))
                 return { "error": str(e) }
 
+        @app.post("/selectQuery")
+        async def rou_post_selectQuery():
+            headers = self.headers
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            body = equalJson(rawBody)
+            try:
+
+                
+
+
+                return ({ "message": "will do" }, 200, headers)
+            except Exception as e:
+                traceback.print_exc()
+                await alertLog("Sql Cloud 서버 문제 생김 (rou_post_selectQuery): " + str(e))
+                return { "error": str(e) }

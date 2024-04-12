@@ -71,6 +71,9 @@ def generalHeaders():
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     }
 
+def generalPort():
+    return { "host": "0.0.0.0", "bind": "0.0.0.0:8000", "bindDev": "0.0.0.0:8001", "port": 8000, "portDev": 8001 }
+
 def processCwd():
     return os.getcwd()
 

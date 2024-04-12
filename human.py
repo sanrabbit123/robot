@@ -40,7 +40,8 @@ from apps.infoObj import returnAddress
 from apps.memberObj import returnMembers
 from apps.backMaker.backMaker import BackMaker
 from apps.devContext.devContext import DevContext
-from apps.devContext.sqlContext import SqlContext
+from apps.sqlCloud.context.sqlContext import SqlContext
+from apps.sqlCloud.sqlCloud import SqlCloud
 
 back = BackMaker()
 address = returnAddress()
@@ -61,6 +62,10 @@ async def main():
         elif thisCommand == "sql":
             sqlInstance = SqlContext()
             await sqlInstance.launching()
+
+        elif thisCommand == "sqlCloud":
+            sqlServer = SqlCloud()
+            await sqlServer.serverConnect()
 
         else:
             pass
