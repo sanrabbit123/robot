@@ -1541,6 +1541,8 @@ def getMimeTypes(exeName: str = ""):
 
 async def mysqlQuery(query: str, selfMysql) -> dict:
     cursor = await selfMysql.cursor(aiomysql.DictCursor)
+    if not patternTest(r"\;$", query):
+        query = query + ";"
     await cursor.execute(query)
     if patternTest(r"^SELECT", query):
         result = await cursor.fetchall()
