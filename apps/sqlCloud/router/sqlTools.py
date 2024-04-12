@@ -2,7 +2,6 @@ from quart import Quart
 from apps.mother import *
 from apps.infoObj import returnAddress
 from apps.memberObj import returnMembers
-from apps.sqlCloud.router.sqlRouter import SqlRouter
 from apps.backMaker.backMaker import BackMaker
 from apps.googleAPIs.googleAPIs import GoogleAPIs
 import asyncio
