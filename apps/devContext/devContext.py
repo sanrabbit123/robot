@@ -47,9 +47,6 @@ class DevContext:
         gpt = OpenAiAPIs()
         try:            
 
-            test = requestSync("https://home-liaison.co.kr/mysqlQuery", { "query": "SELECT name, phone FROM client LIMIT 10;" })
-
-            print(test)
 
 
             return 1

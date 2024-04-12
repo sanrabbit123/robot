@@ -930,6 +930,13 @@ def requestSync(url: str, data: dict = {}, config: dict = {}):
                 return body
             else:
                 return equalJson(body)
+        elif postType == "json":
+            response = requests.post(url, json=data, headers=headers)
+            body = response.text
+            if not isJson(body):
+                return body
+            else:
+                return equalJson(body)
         else:
             response = requests.post(url, data=data, headers=headers)
             body = response.text

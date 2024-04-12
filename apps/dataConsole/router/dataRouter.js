@@ -9293,7 +9293,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
             {
               title: "필름",
               value: "필름",
-              description: "필름지를 씌어 해당 면의\n색상이나 재질감을 바꾸는 제공",
+              description: "필름지를 씌워 해당 면의\n색상이나 재질감을 바꾸는 제공",
               styling: true,
               alert: false,
               notice: "",

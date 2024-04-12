@@ -3,6 +3,7 @@ from apps.mother import *
 from apps.infoObj import returnAddress
 from apps.memberObj import returnMembers
 from apps.backMaker.backMaker import BackMaker
+from apps.sqlCloud.router.sqlTools import SqlTools
 from quart import request
 from urllib import parse
 import traceback
@@ -18,6 +19,7 @@ class SqlRouter:
         self.mongolocal = localConnection
         self.members = returnMembers()
         self.mysql = mysqlConnection
+        self.tools = SqlTools()
 
     def setRouting(self):
         app = self.app
@@ -59,6 +61,27 @@ class SqlRouter:
             except Exception as e:
                 traceback.print_exc()
                 await alertLog("Sql Cloud 서버 문제 생김 (rou_post_coreReflect): " + str(e))
+                return { "error": str(e) }
+
+        @app.post("/createClientSheets")
+        async def rou_post_createClientSheets():
+            headers = self.headers
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            body = equalJson(rawBody)
+            tools = self.tools
+            try:
+                if not "rows" in body:
+                    raise Exception("invalid post")
+                
+                if not type(body["rows"] is list):
+                    raise Exception("invalid post")
+
+                resultDic = await tools.createClientSheets(body["rows"])
+                return (resultDic, 200, headers)
+            except Exception as e:
+                traceback.print_exc()
+                await alertLog("Sql Cloud 서버 문제 생김 (rou_post_createClientSheets): " + str(e))
                 return { "error": str(e) }
 
         @app.post("/selectQuery")

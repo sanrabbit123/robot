@@ -3,14 +3,12 @@ from apps.mother import *
 from apps.infoObj import returnAddress
 from apps.memberObj import returnMembers
 from apps.sqlCloud.router.sqlRouter import SqlRouter
-from apps.sqlCloud.router.sqlTools import SqlTools
 from apps.backMaker.backMaker import BackMaker
+from apps.googleAPIs.googleAPIs import GoogleAPIs
 import asyncio
 import aiomysql
-from hypercorn.asyncio import serve
-from hypercorn.config import Config
 
-class SqlCloud:
+class SqlTools:
 
     def __init__(self):
         app = Quart(__name__)
@@ -18,35 +16,48 @@ class SqlCloud:
         self.back = BackMaker()
         self.address = returnAddress()
         self.dir = processCwd() + "/apps/sqlCloud"
-        self.tools = SqlTools()
+        self.google = GoogleAPIs()
 
-    async def setReady(self, loop):
-        address = self.address
+    async def createClientSheets(self, rows: list) -> dict:
+        try:
+            defaultSheetsName = "client"
+            google = self.google
+            parentId = "1I7jcio6n9bdVvEvS9mz7PQTcbzxlfNbd"
+            sheetsName = "clientSheets_" + uniqueValue("hex")
 
-        localConnection = mongoConnection("local")
-        coreConnection = mongoConnection("core")
-        mysqlConnection = await aiomysql.connect(host=address["mysqlinfo"]["host"], port=address["mysqlinfo"]["port"], user=address["mysqlinfo"]["user"], password=address["mysqlinfo"]["password"], db=address["mysqlinfo"]["database"], loop=loop)
+            clientMap = (self.returnCoreStructure())["client"]
+            matrix = []
 
-        router = SqlRouter(self.app, coreConnection, localConnection, mysqlConnection)
-        router.setRouting()
+            if len(rows) == 0:
+                raise Exception("no empty rows")
 
-        return router
+            initKeyList = []
+            for key in rows[0]:
+                initKeyList.append(key)
 
-    async def serverConnect(self):
-        address = self.address
+            columns = []
+            for obj in clientMap:
+                if listIncludes(initKeyList, lambda s: s == obj["title"]):
+                    columns.append(obj["title"])
 
-        loop = asyncio.get_running_loop()
-        await self.setReady(loop)
+            matrix.append(columns)
 
-        portObject = generalPort()
+            for obj in rows:
+                tempList = []
+                for k in columns:
+                    tempList.append(obj[k])
+                matrix.append(tempList)
 
-        config = Config()
-        config.bind = [ portObject["bind"] ]
-        config.certfile = processCwd() + "/pems/" + address["mysqlinfo"]["host"] + "/cert/cert1.pem"
-        config.keyfile = processCwd() + "/pems/" + address["mysqlinfo"]["host"] + "/key/privkey1.pem"
-        config.ca_certs = processCwd() + "/pems/" + address["mysqlinfo"]["host"] + "/ca/fullchain1.pem"
+            tempObj = google.sheets_createSheets(sheetsName, parentId)
+            thisSheetsId = tempObj["id"]
 
-        await serve(self.app, config)
+            google.sheets_updateDefaultSheetsName(thisSheetsId, defaultSheetsName)
+            google.sheets_updateValue(thisSheetsId, defaultSheetsName, matrix)
+            google.sheets_cleanView(thisSheetsId)
+
+            return { "id": thisSheetsId }
+        except:
+            return { "id": "" }
 
     def returnCoreStructure(self) -> dict:
         result = {}

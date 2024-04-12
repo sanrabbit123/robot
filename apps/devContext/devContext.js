@@ -191,7 +191,7 @@ DevContext.prototype.launching = async function () {
     // console.log(await requestSystem("https://home-liaison.link:3000/kakaoComplex", { day: 30 }, { headers: { "Content-Type": "application/json" } }));
 
 
-    // const res = await requestSystem("https://home-liaison.co.kr/mysqlQuery", { query: "SELECT name, phone FROM client LIMIT 10" }, { headers: { "Content-Type": "application/json" } })
+    // const res = await requestSystem("https://home-liaison.co.kr/mysqlQuery", { query: "SELECT name, phone FROM client LIMIT 10;" }, { headers: { "Content-Type": "application/json" } })
     // console.log(res.data.data);
 
 
