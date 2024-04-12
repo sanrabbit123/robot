@@ -16,6 +16,7 @@ class SqlTools:
         self.address = returnAddress()
         self.dir = processCwd() + "/apps/sqlCloud"
         self.google = GoogleAPIs()
+        self.sheetsLink = "https://docs.google.com/spreadsheets/d/"
 
     async def createClientSheets(self, rows: list) -> dict:
         try:
@@ -54,7 +55,7 @@ class SqlTools:
             google.sheets_updateValue(thisSheetsId, defaultSheetsName, matrix)
             google.sheets_cleanView(thisSheetsId)
 
-            return { "id": thisSheetsId }
+            return { "id": thisSheetsId, "link": self.sheetsLink + thisSheetsId }
         except:
             return { "id": "" }
 
@@ -62,6 +63,7 @@ class SqlTools:
         result = {}
 
         result["client"] = [
+            { "title": "cliid", "name": "아이디", },
             { "title": "name", "name": "성함", },
             { "title": "status", "name": "상태", },
             { "title": "action", "name": "액션", },
