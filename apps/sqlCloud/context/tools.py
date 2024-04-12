@@ -7,7 +7,8 @@ mysqlHost = address["mysqlinfo"]["host"]
 localHost = "127.0.0.1:8000"
 
 async def query(queryString: str) -> list:
-    result = await requestSystem(f"https://{mysqlHost}/mysqlQuery", { "query": queryString }, { "headers": { "Content-Type": "application/json" } })
+    result = await requestSystem(f"https://{mysqlHost}/mysqlQuery", { "query": queryString.strip() }, { "headers": { "Content-Type": "application/json" } })
+    print(result["data"])
     return result["data"]
 
 async def mysql(queryString: str) -> list:

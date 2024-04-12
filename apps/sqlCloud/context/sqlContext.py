@@ -52,8 +52,8 @@ class SqlContext:
             await fileSystem("writeString", [ tempFile, tempScript ])
 
             response = await shellExec("python3", [ tempFile ])
-
-            print(response.strip())
+            if type(response) is str:
+                print(response.strip())
 
             await shellExec("rm", [ "-rf", tempFile ])
 

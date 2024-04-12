@@ -17,15 +17,23 @@ class SqlTools:
         self.dir = processCwd() + "/apps/sqlCloud"
         self.google = GoogleAPIs()
         self.sheetsLink = "https://docs.google.com/spreadsheets/d/"
+        self.extractFolderId = "1I7jcio6n9bdVvEvS9mz7PQTcbzxlfNbd"
 
-    async def createClientSheets(self, rows: list) -> dict:
+    async def createSqlSheets(self, rows: list) -> dict:
         try:
             defaultSheetsName = "client"
             google = self.google
-            parentId = "1I7jcio6n9bdVvEvS9mz7PQTcbzxlfNbd"
-            sheetsName = "clientSheets_" + uniqueValue("hex")
+            parentId = self.extractFolderId
+            sheetsName = "sqlSheets_" + uniqueValue("hex")
 
-            clientMap = (self.returnCoreStructure())["client"]
+            coreStructure = self.returnCoreStructure()
+
+            clientMap = coreStructure["client"]
+            projectMap = coreStructure["project"]
+            designerMap = coreStructure["designer"]
+            contentsMap = coreStructure["contents"]
+            aspirantMap = coreStructure["aspirant"]
+
             matrix = []
 
             if len(rows) == 0:
@@ -36,11 +44,29 @@ class SqlTools:
                 initKeyList.append(key)
 
             columns = []
+            columnNames = []
             for obj in clientMap:
                 if listIncludes(initKeyList, lambda s: s == obj["title"]):
                     columns.append(obj["title"])
+                    columnNames.append(obj["name"])
+            for obj in projectMap:
+                if listIncludes(initKeyList, lambda s: s == obj["title"]):
+                    columns.append(obj["title"])
+                    columnNames.append(obj["name"])
+            for obj in designerMap:
+                if listIncludes(initKeyList, lambda s: s == obj["title"]):
+                    columns.append(obj["title"])
+                    columnNames.append(obj["name"])
+            for obj in contentsMap:
+                if listIncludes(initKeyList, lambda s: s == obj["title"]):
+                    columns.append(obj["title"])
+                    columnNames.append(obj["name"])
+            for obj in aspirantMap:
+                if listIncludes(initKeyList, lambda s: s == obj["title"]):
+                    columns.append(obj["title"])
+                    columnNames.append(obj["name"])
 
-            matrix.append(columns)
+            matrix.append(columnNames)
 
             for obj in rows:
                 tempList = []
@@ -104,5 +130,13 @@ class SqlTools:
             { "title": "possible", "name": "가능성 여부", },
             { "title": "memo", "name": "메모", },
         ]
+
+        result["project"] = [
+            { "title": "remainConsumer", "name": "소비자가" },
+        ]
+
+        result["designer"] = []
+        result["contents"] = []
+        result["aspirant"] = []
 
         return result

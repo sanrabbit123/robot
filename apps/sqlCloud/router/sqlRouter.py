@@ -63,8 +63,8 @@ class SqlRouter:
                 await alertLog("Sql Cloud 서버 문제 생김 (rou_post_coreReflect): " + str(e))
                 return { "error": str(e) }
 
-        @app.post("/createClientSheets")
-        async def rou_post_createClientSheets():
+        @app.post("/createSqlSheets")
+        async def rou_post_createSqlSheets():
             headers = self.headers
             bytesData = await request.get_data()
             rawBody = bytesData.decode("utf-8")
@@ -77,11 +77,11 @@ class SqlRouter:
                 if not type(body["rows"] is list):
                     raise Exception("invalid post")
 
-                resultDic = await tools.createClientSheets(body["rows"])
+                resultDic = await tools.createSqlSheets(body["rows"])
                 return (resultDic, 200, headers)
             except Exception as e:
                 traceback.print_exc()
-                await alertLog("Sql Cloud 서버 문제 생김 (rou_post_createClientSheets): " + str(e))
+                await alertLog("Sql Cloud 서버 문제 생김 (rou_post_createSqlSheets): " + str(e))
                 return { "error": str(e) }
 
         @app.post("/selectQuery")
