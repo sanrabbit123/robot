@@ -79,10 +79,11 @@ class SqlRouter:
                     raise Exception("invalid query")
                 
                 result = await mysqlQuery(query, self.mysql)
-                
+
                 return ({ "data": result["data"] }, 200, headers)
             except Exception as e:
                 traceback.print_exc()
+                print(body)
                 await alertLog("Sql Cloud 서버 문제 생김 (rou_post_selectQuery): " + str(e))
                 return { "error": str(e) }
             
@@ -105,5 +106,6 @@ class SqlRouter:
                 return ({ "data": result["data"] }, 200, headers)
             except Exception as e:
                 traceback.print_exc()
+                print(body)
                 await alertLog("Sql Cloud 서버 문제 생김 (rou_post_mysqlQuery): " + str(e))
                 return { "error": str(e) }

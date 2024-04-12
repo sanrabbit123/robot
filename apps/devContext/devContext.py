@@ -11,7 +11,6 @@ from apps.excelReader.excelReader import ExcelReader
 from apps.openAiAPIs.openAiAPIs import OpenAiAPIs
 from apps.awsAPIs.awsAPIs import AwsAPIs
 import asyncio
-import aiomysql
 
 class DevContext:
 
@@ -46,12 +45,11 @@ class DevContext:
         google = GoogleAPIs()
         aws = AwsAPIs()
         gpt = OpenAiAPIs()
-        try:
-            loop = asyncio.get_running_loop()
-            mysqlConnection = await aiomysql.connect(host=address["mysqlinfo"]["host"], port=address["mysqlinfo"]["port"], user=address["mysqlinfo"]["user"], password=address["mysqlinfo"]["password"], db=address["mysqlinfo"]["database"], loop=loop)
+        try:            
 
+            test = requestSync("https://home-liaison.co.kr/mysqlQuery", { "query": "SELECT name, phone FROM client LIMIT 10;" })
 
-
+            print(test)
 
 
             return 1

@@ -1,4 +1,8 @@
-from apps.devContext.tools import *
+from apps.sqlCloud.context.tools import *
 
 rows = query("SELECT * FROM client;")
-sheets(rows)
+
+print(rows)
+
+
+# sheets(rows)

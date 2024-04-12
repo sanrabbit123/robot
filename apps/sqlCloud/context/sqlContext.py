@@ -16,9 +16,12 @@ class SqlContext:
         self.mongo = localConnection
         self.mongolocal = localConnection
 
-        self.dir = processCwd() + "/apps/devContext"
+        self.dir = processCwd() + "/apps/sqlCloud"
+        self.contextDir = self.dir + "/" + "context"
         self.targetFile = "sql.py"
-        self.targetFilePath = self.dir + "/" + self.targetFile
+        self.targetFilePath = self.contextDir + "/" + self.targetFile
+
+        self.scriptName = "_____sqlLaunching_"
 
     async def launching(self) -> int:
         back = self.back
@@ -27,18 +30,24 @@ class SqlContext:
         try:
 
             humanString = await fileSystem("readString", [ processCwd() + "/human.py" ])
-            initString = humanString.split("async def main():")[0]
+            initString = humanString.split("# python start")[0]
+            initString = initString + "\n\n" + "from apps.mother import *\nfrom apps.sqlCloud.context.tools import *" 
 
             sqlString = await fileSystem("readString", [ self.targetFilePath ])
+            sqlStringList = sqlString.split("\n")
+            sqlString = "\n".join(sqlStringList[1:])
 
-            print(sqlString)
+            tempScript = initString + "\n\n" + sqlString
+            tempName = self.scriptName + uniqueValue("hex") + ".py"
+            tempFile = processCwd() + "/" + tempName
+            await fileSystem("writeString", [ tempFile, tempScript ])
 
+            response = await shellExec("python3", [ tempFile ])
 
+            print(response.strip())
 
-
-
-
-
+            await shellExec("rm", [ "-rf", tempFile ])
+            
             return 1
         except Exception as e:
             print(e)

@@ -791,6 +791,153 @@ async def fileSystem(command: str, detail: list):
     else:
         raise Exception("invalid command")
 
+def requestSync(url: str, data: dict = {}, config: dict = {}):
+    if type(url) is not str:
+        raise TypeError("url must be string")
+    if type(data) is not dict:
+        raise TypeError("data must be string")
+    if type(config) is not dict:
+        raise TypeError("config must be string")
+
+    method = "post"
+    if "method" in config:
+        if config["method"] == "get":
+            method = "get"
+        elif config["method"] == "patch":
+            method = "patch"
+        else:
+            if len(data) == 0:
+                method = "get"
+            else:
+                method = "post"
+    else:
+        if len(data) == 0:
+            method = "get"
+        else:
+            method = "post"
+
+    headers = {}
+    if "headers" in config:
+        if len(config["headers"]) > 0:
+            headers = objectDeepCopy(config["headers"])
+        else:
+            headers = { "Content-Type": "application/json" }
+    else:
+        headers = { "Content-Type": "application/json" }
+
+    postType = "json"
+    if "headers" in config:
+        if type(config["headers"]) is dict and "Content-Type" in config["headers"]:
+            typeRawString = config["headers"]["Content-Type"]
+            if patternTest(r"form", typeRawString):
+                postType = "form"
+            elif patternTest(r"www", typeRawString):
+                postType = "nvp"
+            else:
+                postType = "json"
+        else:
+            postType = "json"
+    else:
+        postType = "json"
+
+    if method == "get":
+        if (len(headers) > 0):
+            if len(data) == 0:
+                response = requests.get(url, headers=headers)
+                body = response.text
+                if not isJson(body):
+                    return body
+                else:
+                    return equalJson(body)
+            else:
+                params = {}
+                for key in data:
+                    if type(data[key]) is str or type(data[key]) is int or type(data[key]) is float:
+                        params[key] = data[key]
+                    elif type(data[key]) is dict or type(data[key]) is list:
+                        params[key] = jsonStringify(data[key])
+                    elif type(data[key]) is bool:
+                        if data[key]:
+                            params[key] = "true"
+                        else:
+                            params[key] = "false"
+                    else:
+                        params[key] = str(data[key])
+                response = requests.get(url, params=params, headers=headers)
+                body = response.text
+                if not isJson(body):
+                    return body
+                else:
+                    return equalJson(body)
+        else:
+            if len(data) == 0:
+                response = requests.get(url)
+                body = response.text
+                if not isJson(body):
+                    return body
+                else:
+                    return equalJson(body)
+            else:
+                params = {}
+                for key in data:
+                    if type(data[key]) is str or type(data[key]) is int or type(data[key]) is float:
+                        params[key] = data[key]
+                    elif type(data[key]) is dict or type(data[key]) is list:
+                        params[key] = jsonStringify(data[key])
+                    elif type(data[key]) is bool:
+                        if data[key]:
+                            params[key] = "true"
+                        else:
+                            params[key] = "false"
+                    else:
+                        params[key] = str(data[key])
+                response = requests.get(url, params=params)
+                body = response.text
+                if not isJson(body):
+                    return body
+                else:
+                    return equalJson(body)        
+                      
+    elif method == "post":
+        if postType == "form":
+            postData = {}
+            for key in data:
+                value = data[key]
+                if type(data[key]) is dict or type(data[key]) is list or type(data[key]) is tuple:
+                    if type(data[key]) is tuple:
+                        data[key] = jsonStringify(list(data[key]))
+                    if type(data[key]) is dict:
+                        postData[key] = jsonStringify(value)
+                    else:
+                        postData[key] = jsonStringify(value)
+                elif type(data[key]) is str or type(data[key]) is bool or type(data[key]) is int or type(data[key]) is float or type(data[key]) is complex:
+                    if type(data[key]) is bool:
+                        if data[key]:
+                            postData[key] = "true"
+                        else:
+                            postData[key] = "false"
+                    else:
+                        postData[key] = value
+                elif data[key] is None:
+                    postData[key] = value
+                else:
+                    postData[key] = value
+            form = MultipartEncoder(fields=postData)
+            headers["Content-Type"] = form.content_type
+            response = requests.post(url, headers=headers, data=form)
+            body = response.text
+            if not isJson(body):
+                return body
+            else:
+                return equalJson(body)
+        else:
+            response = requests.post(url, data=data, headers=headers)
+            body = response.text
+            if not isJson(body):
+                return body
+            else:
+                return equalJson(body)
+
 async def requestSystem(url: str, data: dict = {}, config: dict = {}):
     if type(url) is not str:
         raise TypeError("url must be string")
@@ -1539,15 +1686,34 @@ def getMimeTypes(exeName: str = ""):
         except:
             return default
 
-async def mysqlQuery(query: str, selfMysql) -> dict:
-    cursor = await selfMysql.cursor(aiomysql.DictCursor)
+async def mysqlQuery(query: str, selfMysql = None) -> dict:
+
     if not patternTest(r"\;$", query):
         query = query + ";"
-    await cursor.execute(query)
-    if patternTest(r"^SELECT", query):
-        result = await cursor.fetchall()
-        await cursor.close()
-        return { "data": list(result) }
+
+    if selfMysql is None:
+        address = returnAddress()
+        loop = asyncio.get_running_loop()
+        mysqlConnection = await aiomysql.connect(host=address["mysqlinfo"]["host"], port=address["mysqlinfo"]["port"], user=address["mysqlinfo"]["user"], password=address["mysqlinfo"]["password"], db=address["mysqlinfo"]["database"], loop=loop)
+        cursor = await mysqlConnection.cursor(aiomysql.DictCursor)
+        await cursor.execute(query)
+        if patternTest(r"^SELECT", query):
+            result = await cursor.fetchall()
+            await cursor.close()
+            mysqlConnection.close()
+            return { "data": list(result) }
+        else:
+            await cursor.close()
+            mysqlConnection.close()
+            return { "message": "done" }
+        
     else:
-        await cursor.close()
-        return { "message": "done" }
+        cursor = await selfMysql.cursor(aiomysql.DictCursor)
+        await cursor.execute(query)
+        if patternTest(r"^SELECT", query):
+            result = await cursor.fetchall()
+            await cursor.close()
+            return { "data": list(result) }
+        else:
+            await cursor.close()
+            return { "message": "done" }
