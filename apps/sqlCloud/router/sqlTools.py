@@ -86,7 +86,7 @@ class SqlTools:
 
     async def coreReflect(self):
         print(await shellExec("node", [ processCwd() + "/robot.js", "coreReflect" ]))
-        await sleep(2 * 1000)
+        await sleep(1 * 1000)
         print(await shellExec("node", [ processCwd() + "/robot.js", "mysqlReflect" ]))
         return 0
 
