@@ -191,12 +191,8 @@ DevContext.prototype.launching = async function () {
     // console.log(await requestSystem("https://home-liaison.link:3000/kakaoComplex", { day: 30 }, { headers: { "Content-Type": "application/json" } }));
 
 
-    const res = await requestSystem("https://home-liaison.co.kr/mysqlQuery", { query: "SELECT name, phone, cliid FROM client LIMIT 20;" }, { headers: { "Content-Type": "application/json" } })
-
-    const res2 = await requestSystem("https://home-liaison.co.kr/createClientSheets", { rows: res.data.data }, { headers: { "Content-Type": "application/json" } })
-
-    console.log("https://docs.google.com/spreadsheets/d/" + res2.data.id);
-
+    const res = await requestSystem("https://home-liaison.co.kr/coreReflect", { data: null }, { headers: { "Content-Type": "application/json" } })
+    console.log(res);
 
 
 

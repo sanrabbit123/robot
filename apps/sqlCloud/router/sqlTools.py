@@ -85,9 +85,9 @@ class SqlTools:
             return { "id": "" }
 
     async def coreReflect(self):
-        await shellExec("node", [ processCwd() + "/robot.js", "coreReflect" ])
+        print(await shellExec("node", [ processCwd() + "/robot.js", "coreReflect" ]))
         await sleep(2 * 1000)
-        await shellExec("node", [ processCwd() + "/robot.js", "mysqlReflect" ])
+        print(await shellExec("node", [ processCwd() + "/robot.js", "mysqlReflect" ]))
         return 0
 
     def returnCoreStructure(self) -> dict:
