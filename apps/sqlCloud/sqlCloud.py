@@ -25,9 +25,8 @@ class SqlCloud:
 
         localConnection = mongoConnection("local")
         coreConnection = mongoConnection("core")
-        mysqlConnection = await aiomysql.connect(host=address["mysqlinfo"]["host"], port=address["mysqlinfo"]["port"], user=address["mysqlinfo"]["user"], password=address["mysqlinfo"]["password"], db=address["mysqlinfo"]["database"], loop=loop)
 
-        router = SqlRouter(self.app, coreConnection, localConnection, mysqlConnection)
+        router = SqlRouter(self.app, coreConnection, localConnection)
         router.setRouting()
 
         return router

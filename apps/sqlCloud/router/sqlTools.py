@@ -5,7 +5,6 @@ from apps.memberObj import returnMembers
 from apps.backMaker.backMaker import BackMaker
 from apps.googleAPIs.googleAPIs import GoogleAPIs
 import asyncio
-import aiomysql
 
 class SqlTools:
 

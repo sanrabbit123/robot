@@ -10,7 +10,7 @@ import traceback
 
 class SqlRouter:
 
-    def __init__(self, app, coreConnection, localConnection, mysqlConnection):
+    def __init__(self, app, coreConnection, localConnection):
         self.app = app
         self.back = BackMaker()
         self.address = returnAddress()
@@ -18,7 +18,6 @@ class SqlRouter:
         self.mongo = coreConnection
         self.mongolocal = localConnection
         self.members = returnMembers()
-        self.mysql = mysqlConnection
         self.tools = SqlTools()
 
     def setRouting(self):
@@ -101,7 +100,7 @@ class SqlRouter:
                 if not patternTest(r"^SELECT", query):
                     raise Exception("invalid query")
                 
-                result = await mysqlQuery(query, self.mysql)
+                result = await mysqlQuery(query)
 
                 return ({ "data": result["data"] }, 200, headers)
             except Exception as e:
@@ -124,7 +123,7 @@ class SqlRouter:
                     raise Exception("invalid post")
 
                 query = body["query"]                
-                result = await mysqlQuery(query, self.mysql)
+                result = await mysqlQuery(query)
 
                 return ({ "data": result["data"] }, 200, headers)
             except Exception as e:
