@@ -205,21 +205,22 @@ class SqlTools:
         ]
 
         result["designer"] = [
-
-
-
-        ]
-
-        result["contents"] = [
-
-
-
-        ]
-
-        result["aspirant"] = [
-
-
-            
+            { "title": "desid", "name": "디자이너 아이디", "type": "string", },
+            { "title": "designer", "name": "디자이너", "type": "string", },
+            { "title": "status", "name": "상태", "type": "string", },
+            { "title": "date", "name": "계약일", "type": "date", },
+            { "title": "phone", "name": "연락처", "type": "string", },
+            { "title": "email", "name": "이메일", "type": "string", },
+            { "title": "did", "name": "서브 아이디", "type": "string", },
+            { "title": "address", "name": "주소", "type": "string", },
+            { "title": "showRoom", "name": "쇼룸 소유 여부", "type": "string", },
+            { "title": "webPage", "name": "웹페이지", "type": "string", },
+            { "title": "sns", "name": "SNS", "type": "string", },
+            { "title": "career", "name": "경력", "type": "string", },
+            { "title": "account", "name": "계좌번호", "type": "string", },
+            { "title": "classification", "name": "사업자 분류", "type": "string", },
+            { "title": "businessNumber", "name": "사업자 번호", "type": "string", },
+            { "title": "percentage", "name": "수수료", "type": "number", },
         ]
 
         return result
