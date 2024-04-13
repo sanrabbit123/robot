@@ -191,14 +191,6 @@ DevContext.prototype.launching = async function () {
     // console.log(await requestSystem("https://home-liaison.link:3000/kakaoComplex", { day: 30 }, { headers: { "Content-Type": "application/json" } }));
 
 
-    const res = await requestSystem("https://home-liaison.co.kr/coreReflect", { data: null }, { headers: { "Content-Type": "application/json" } })
-    console.log(res);
-
-
-
-
-
-
     // await this.MONGOCONSOLEC.connect();
     // const selfMongo = this.MONGOCONSOLEC;
     // const target = "client";
