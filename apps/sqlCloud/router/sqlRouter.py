@@ -53,13 +53,9 @@ class SqlRouter:
             bytesData = await request.get_data()
             rawBody = bytesData.decode("utf-8")
             body = equalJson(rawBody)
+            tools = self.tools
             try:
-
-
-                
-
-
-
+                asyncio.create_task(tools.coreReflect())
                 return ({ "message": "will do" }, 200, headers)
             except Exception as e:
                 traceback.print_exc()
