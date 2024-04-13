@@ -27,11 +27,9 @@ class SqlTools:
 
             coreStructure = self.returnCoreStructure()
 
-            clientMap = coreStructure["client"]
-            projectMap = coreStructure["project"]
-            designerMap = coreStructure["designer"]
-            contentsMap = coreStructure["contents"]
-            aspirantMap = coreStructure["aspirant"]
+            clientMap = coreStructure["client"]["map"]
+            projectMap = coreStructure["project"]["map"]
+            designerMap = coreStructure["designer"]["map"]
 
             matrix = []
 
@@ -53,14 +51,6 @@ class SqlTools:
                     columns.append(obj["title"])
                     columnNames.append(obj["name"])
             for obj in designerMap:
-                if listIncludes(initKeyList, lambda s: s == obj["title"]):
-                    columns.append(obj["title"])
-                    columnNames.append(obj["name"])
-            for obj in contentsMap:
-                if listIncludes(initKeyList, lambda s: s == obj["title"]):
-                    columns.append(obj["title"])
-                    columnNames.append(obj["name"])
-            for obj in aspirantMap:
                 if listIncludes(initKeyList, lambda s: s == obj["title"]):
                     columns.append(obj["title"])
                     columnNames.append(obj["name"])
@@ -91,9 +81,13 @@ class SqlTools:
         return 0
 
     def returnCoreStructure(self) -> dict:
-        result = {}
+        result = {
+            "client": { "name": "고객" },
+            "project": { "name": "프로젝트" },
+            "designer": { "name": "디자이너" },
+        }
 
-        result["client"] = [
+        result["client"]["map"] = [
             { "title": "cliid", "name": "고객 아이디", "type": "string", },
             { "title": "name", "name": "성함", "type": "string", },
             { "title": "status", "name": "상태", "type": "string", },
@@ -136,7 +130,7 @@ class SqlTools:
             { "title": "memo", "name": "메모", "type": "string", },
         ]
 
-        result["project"] = [
+        result["project"]["map"] = [
             { "title": "proid", "name": "프로젝트 아이디", "type": "string" },
             { "title": "cliid", "name": "고객 아이디", "type": "string" },
             { "title": "desid", "name": "디자이너 아이디", "type": "string" },
@@ -204,7 +198,7 @@ class SqlTools:
             { "title": "proposalAverage", "name": "제안 평균 금액", "type": "number" },
         ]
 
-        result["designer"] = [
+        result["designer"]["map"] = [
             { "title": "desid", "name": "디자이너 아이디", "type": "string", },
             { "title": "designer", "name": "디자이너", "type": "string", },
             { "title": "status", "name": "상태", "type": "string", },
