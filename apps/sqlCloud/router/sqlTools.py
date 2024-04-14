@@ -158,14 +158,17 @@ class SqlTools:
                     thisMap = structure[tableName]["map"]
                     thisDic = {}
                     for obj in thisMap:
-                        thisDic[obj["title"]] = obj["type"]
-                    tableType = thisDic[arr[1]]
-                    tableTypeDict[arr[1]] = tableType
+                        thisDic[tableName + "." + obj["title"]] = obj["type"]
+                    tableType = thisDic['.'.join(arr)]
+                    tableTypeDict['.'.join(arr)] = tableType
 
                 responseDic["data"] = []
                 for obj in result["data"]:
                     tempDic = {}
-                    for key in obj:
+                    for shortKey in obj:
+                        targetArr = listFind(tableMatrix, lambda arr: arr[1] == shortKey)
+                        tableName = targetArr[0]
+                        key = tableName + "." + shortKey
                         if tableTypeDict[key] == "number":
                             if patternTest(r"\.", str(obj[key])):
                                 tempDic[key] = float(obj[key])                                
@@ -189,28 +192,29 @@ class SqlTools:
                     queryArr.append(query.split("from")[0])
                     queryArr.append(query.split("from")[1])
 
+                queryArr[1] = queryArr[1].strip().split(" ")[0]
+                tableName = queryArr[1]
+                thisMap = structure[tableName]["map"]
+                thisDic = {}
+                for obj in thisMap:
+                    thisDic[tableName + "." + obj["title"]] = obj["type"]
+
                 queryArr[0] = patternReplace(queryArr[0], r"^[ ]*(SELECT|select)", "").strip()
                 tableArr = queryArr[0].split(",")
                 tableArr = listMap(tableArr, lambda x: x.strip())
                 newTableArr = []
                 for string in tableArr:
                     if patternTest(r"\.", string):
-                        newTableArr.append(string.split(".")[1])
-                    else:
                         newTableArr.append(string)
+                    else:
+                        newTableArr.append(tableName + "." + string)
                 tableArr = objectDeepCopy(newTableArr)
-
-                queryArr[1] = queryArr[1].strip().split(" ")[0]
-                tableName = queryArr[1]
-                thisMap = structure[tableName]["map"]
-                thisDic = {}
-                for obj in thisMap:
-                    thisDic[obj["title"]] = obj["type"]
 
                 responseDic["data"] = []
                 for obj in result["data"]:
                     tempDic = {}
-                    for key in obj:
+                    for shortKey in obj:
+                        key = tableName + "." + shortKey
                         if thisDic[key] == "number":
                             if patternTest(r"\.", str(obj[key])):
                                 tempDic[key] = float(obj[key])
@@ -260,8 +264,8 @@ class SqlTools:
                 thisMap = structure[tableName]["map"]
                 thisDic = {}
                 for obj in thisMap:
-                    thisDic[obj["title"]] = obj["name"]
-                tableHangul = thisDic[arr[1]]
+                    thisDic[tableName + "." + obj["title"]] = obj["name"]
+                tableHangul = thisDic['.'.join(arr)]
                 tableNameArr.append(tableHangul)
 
             table.field_names = tableNameArr
@@ -270,7 +274,7 @@ class SqlTools:
             for dictionaryFactor in data:
                 tempArr = []
                 for arr in tableMatrix:
-                    tempArr.append(dictionaryFactor[arr[1]])
+                    tempArr.append(dictionaryFactor['.'.join(arr)])
                 matrix.append(tempArr)
 
             table.add_rows(matrix)
@@ -284,23 +288,23 @@ class SqlTools:
                 queryArr.append(query.split("from")[0])
                 queryArr.append(query.split("from")[1])
 
+            queryArr[1] = queryArr[1].strip().split(" ")[0]
+            tableName = queryArr[1]
+            thisMap = structure[tableName]["map"]
+            thisDic = {}
+            for obj in thisMap:
+                thisDic[tableName + "." + obj["title"]] = obj["name"]
+
             queryArr[0] = patternReplace(queryArr[0], r"^[ ]*(SELECT|select)", "").strip()
             tableArr = queryArr[0].split(",")
             tableArr = listMap(tableArr, lambda x: x.strip())
             newTableArr = []
             for string in tableArr:
                 if patternTest(r"\.", string):
-                    newTableArr.append(string.split(".")[1])
-                else:
                     newTableArr.append(string)
+                else:
+                    newTableArr.append(tableName + "." + string)
             tableArr = objectDeepCopy(newTableArr)
-
-            queryArr[1] = queryArr[1].strip().split(" ")[0]
-            tableName = queryArr[1]
-            thisMap = structure[tableName]["map"]
-            thisDic = {}
-            for obj in thisMap:
-                thisDic[obj["title"]] = obj["name"]
 
             tableNameArr = []
             for key in tableArr:
