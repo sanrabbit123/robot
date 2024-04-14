@@ -170,14 +170,14 @@ class SqlTools:
                         tableName = targetArr[0]
                         key = tableName + "." + shortKey
                         if tableTypeDict[key] == "number":
-                            if patternTest(r"\.", str(obj[key])):
-                                tempDic[key] = float(obj[key])                                
+                            if patternTest(r"\.", str(obj[shortKey])):
+                                tempDic[key] = float(obj[shortKey])                                
                             else:
-                                tempDic[key] = int(obj[key])
+                                tempDic[key] = int(obj[shortKey])
                         elif tableTypeDict[key] == "date":
-                            tempDic[key] = dateToString(stringToDate(str(obj[key])), True)
+                            tempDic[key] = dateToString(stringToDate(str(obj[shortKey])), True)
                         else:
-                            tempDic[key] = obj[key]
+                            tempDic[key] = obj[shortKey]
                     responseDic["data"].append(objectDeepCopy(tempDic))
 
                 tableString = self.intoPrettyTable(query, responseDic["data"])
@@ -216,14 +216,14 @@ class SqlTools:
                     for shortKey in obj:
                         key = tableName + "." + shortKey
                         if thisDic[key] == "number":
-                            if patternTest(r"\.", str(obj[key])):
-                                tempDic[key] = float(obj[key])
+                            if patternTest(r"\.", str(obj[shortKey])):
+                                tempDic[key] = float(obj[shortKey])
                             else:
-                                tempDic[key] = int(obj[key])
+                                tempDic[key] = int(obj[shortKey])
                         elif thisDic[key] == "date":
-                            tempDic[key] = dateToString(stringToDate(str(obj[key])), True)
+                            tempDic[key] = dateToString(stringToDate(str(obj[shortKey])), True)
                         else:
-                            tempDic[key] = obj[key]
+                            tempDic[key] = obj[shortKey]
                     responseDic["data"].append(objectDeepCopy(tempDic))
 
                 tableString = self.intoPrettyTable(query, responseDic["data"])
