@@ -160,6 +160,8 @@ class SqlTools:
                 for obj in result["data"]:
                     tempDic = {}
                     for key in obj:
+                        print(obj[key])
+                        print(type(obj[key]))
                         if thisDic[key] == "number":
                             if patternTest(r"\.", str(obj[key])):
                                 tempDic[key] = float(obj[key])
