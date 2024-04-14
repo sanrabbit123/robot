@@ -56,16 +56,16 @@ class GoogleSheets:
     def updateValue(self, id, range, values):
         dateConvertBoo = False
 
-        targetIndexArr = []
-        for arr in values:
-            index = 0
-            for value in arr:
-                if patternTest(r"^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$", value):
-                    dateConvertBoo = True
-                    thisTargetIndex = index
-                    targetIndexArr.append(thisTargetIndex)
-                index = index + 1
-        targetIndexArr = list(set(targetIndexArr))
+        # targetIndexArr = []
+        # for arr in values:
+        #     index = 0
+        #     for value in arr:
+        #         if patternTest(r"^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$", value):
+        #             dateConvertBoo = True
+        #             thisTargetIndex = index
+        #             targetIndexArr.append(thisTargetIndex)
+        #         index = index + 1
+        # targetIndexArr = list(set(targetIndexArr))
 
         request = self.app.values().update(spreadsheetId=id, range=range, valueInputOption="RAW", body={
             "range": range,
