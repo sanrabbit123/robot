@@ -131,6 +131,8 @@ class SqlTools:
             else:
                 query = newQueryString + ";"
 
+        print(query)
+
         result = await mysqlQuery(query)
 
         responseDic = {}
@@ -232,11 +234,13 @@ class SqlTools:
         structure = self.returnCoreStructure()            
         query = query.strip()
         query = patternReplace(query, r"[\n\t]", " ")
-        for i in range(10):
+        for i in range(20):
             query = patternReplace(query, r"  ", " ")
 
         table = PrettyTable()
         table.align = "l"
+
+        print(query)
 
         if patternTest(r"(JOIN|join)", query):
             queryArr = []
