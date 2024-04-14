@@ -111,8 +111,10 @@ class SqlTools:
             queryArr = []
             if patternTest(r"FROM", query):
                 queryArr.append(query.split("FROM")[0])
+                queryArr.append(query.split("FROM")[1])
             else:
                 queryArr.append(query.split("from")[0])
+                queryArr.append(query.split("from")[1])
 
             queryArr[0] = patternReplace(queryArr[0], r"^(SELECT|select)", "").strip()
             tableArr = queryArr[0].split(",")
