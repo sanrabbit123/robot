@@ -161,9 +161,11 @@ class SqlTools:
                     for key in obj:
                         if tableTypeDict[key] == "number":
                             if patternTest(r"\.", str(obj[key])):
-                                tempDic[key] = float(obj[key])
+                                tempDic[key] = float(obj[key])                                
                             else:
                                 tempDic[key] = int(obj[key])
+                        elif tableTypeDict[key] == "date":
+                            tempDic[key] = dateToString(stringToDate(str(obj[key])), True)
                         else:
                             tempDic[key] = obj[key]
                     responseDic["data"].append(objectDeepCopy(tempDic))
@@ -200,6 +202,8 @@ class SqlTools:
                                 tempDic[key] = float(obj[key])
                             else:
                                 tempDic[key] = int(obj[key])
+                        elif thisDic[key] == "date":
+                            tempDic[key] = dateToString(stringToDate(str(obj[key])), True)
                         else:
                             tempDic[key] = obj[key]
                     responseDic["data"].append(objectDeepCopy(tempDic))
