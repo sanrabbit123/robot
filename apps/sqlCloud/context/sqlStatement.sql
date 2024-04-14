@@ -2,7 +2,7 @@ SELECT
     client.name,
     client.cliid,
     client.timeline,
-    client.address,
+    client.pyeong,
     project.remainConsumer,
 
 FROM
@@ -13,10 +13,10 @@ WHERE
     AND client.status REGEXP "진행"
 
 -- SELECT
---     name,
---     cliid,
---     timeline,
---     pyeong,
+--     client.name,
+--     client.cliid,
+--     client.timeline,
+--     client.pyeong,
 
 -- FROM
 --     client
