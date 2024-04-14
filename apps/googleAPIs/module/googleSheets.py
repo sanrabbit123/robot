@@ -74,25 +74,31 @@ class GoogleSheets:
         response = request.execute()
 
         if dateConvertBoo:
-            rangeArr = range.split("!")
-            batch_update_spreadsheet_request_body = {
-                "requests": [
-                    {
-                        "updateCells": {
-                            "range": {
-                                "startRowIndex": 2,
-                                "endRowIndex": 2,
-                                "startColumnIndex": 5,
-                                "endColumnIndex": 5
-                            },
-                            'rows': {'values': [{'userEnteredFormat': {'numberFormat': {'type': "DATE", 'pattern': "yyyy-mm-dd hh:mm:ss"}}}]},
-                            'fields': 'userEnteredFormat.numberFormat'
-                        }
-                    }
-                ]
-            }
-            request2 = self.app.batchUpdate(spreadsheetId=id, body=batch_update_spreadsheet_request_body)
-            request2.execute()
+
+            result = self.app.values().get(spreadsheetId=id).execute()
+            print(result)
+
+
+
+            # rangeArr = range.split("!")
+            # batch_update_spreadsheet_request_body = {
+            #     "requests": [
+            #         {
+            #             "updateCells": {
+            #                 "range": {
+            #                     "startRowIndex": 2,
+            #                     "endRowIndex": 2,
+            #                     "startColumnIndex": 5,
+            #                     "endColumnIndex": 5
+            #                 },
+            #                 'rows': {'values': [{'userEnteredFormat': {'numberFormat': {'type': "DATE", 'pattern': "yyyy-mm-dd hh:mm:ss"}}}]},
+            #                 'fields': 'userEnteredFormat.numberFormat'
+            #             }
+            #         }
+            #     ]
+            # }
+            # request2 = self.app.batchUpdate(spreadsheetId=id, body=batch_update_spreadsheet_request_body)
+            # request2.execute()
 
         return { "response": response }
 
