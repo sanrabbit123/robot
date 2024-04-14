@@ -19,8 +19,10 @@ class SqlTools:
         self.sheetsLink = "https://docs.google.com/spreadsheets/d/"
         self.extractFolderId = "1I7jcio6n9bdVvEvS9mz7PQTcbzxlfNbd"
 
-    async def createSqlSheets(self, rows: list) -> dict:
+    async def createSqlSheets(self, rows: list, query = None) -> dict:
         try:
+            structure = self.returnCoreStructure()            
+
             defaultSheetsName = "client"
             google = self.google
             parentId = self.extractFolderId
@@ -33,6 +35,8 @@ class SqlTools:
             designerMap = coreStructure["designer"]["map"]
 
             matrix = []
+            columns = []
+            columnNames = []
 
             if len(rows) == 0:
                 raise Exception("no empty rows")
@@ -41,22 +45,67 @@ class SqlTools:
             for key in rows[0]:
                 initKeyList.append(key)
 
-            columns = []
-            columnNames = []
-            for obj in clientMap:
-                if listIncludes(initKeyList, lambda s: s == "client" + "." + obj["title"]):
-                    columns.append("client" + "." + obj["title"])
-                    columnNames.append(obj["name"])
-            for obj in projectMap:
-                if listIncludes(initKeyList, lambda s: s == "project" + "." + obj["title"]):
-                    columns.append("project" + "." + obj["title"])
-                    columnNames.append(obj["name"])
-            for obj in designerMap:
-                if listIncludes(initKeyList, lambda s: s == "designer" + "." + obj["title"]):
-                    columns.append("designer" + "." + obj["title"])
-                    columnNames.append(obj["name"])
+            if query is None:
+                for obj in clientMap:
+                    if listIncludes(initKeyList, lambda s: s == "client" + "." + obj["title"]):
+                        columns.append("client" + "." + obj["title"])
+                        columnNames.append(obj["name"])
+                for obj in projectMap:
+                    if listIncludes(initKeyList, lambda s: s == "project" + "." + obj["title"]):
+                        columns.append("project" + "." + obj["title"])
+                        columnNames.append(obj["name"])
+                for obj in designerMap:
+                    if listIncludes(initKeyList, lambda s: s == "designer" + "." + obj["title"]):
+                        columns.append("designer" + "." + obj["title"])
+                        columnNames.append(obj["name"])
+                matrix.append(columnNames)
+            else:
+                query = self.queryFilter(query)
+                tableArr = []
+                if patternTest(r"(JOIN|join)", query):
+                    queryArr = []
+                    if patternTest(r"FROM", query):
+                        queryArr.append(query.split("FROM")[0])
+                        queryArr.append(query.split("FROM")[1])
+                    else:
+                        queryArr.append(query.split("from")[0])
+                        queryArr.append(query.split("from")[1])
 
-            matrix.append(columnNames)
+                    queryArr[0] = patternReplace(queryArr[0], r"^[ ]*(SELECT|select)", "").strip()
+                    tableArr = queryArr[0].split(",")
+                    tableArr = listMap(tableArr, lambda x: x.strip())
+
+                else:
+                    queryArr = []
+                    if patternTest(r"FROM", query):
+                        queryArr.append(query.split("FROM")[0])
+                        queryArr.append(query.split("FROM")[1])
+                    else:
+                        queryArr.append(query.split("from")[0])
+                        queryArr.append(query.split("from")[1])
+
+                    queryArr[1] = queryArr[1].strip().split(" ")[0]
+                    tableName = queryArr[1]
+
+                    queryArr[0] = patternReplace(queryArr[0], r"^[ ]*(SELECT|select)", "").strip()
+                    tableArr = queryArr[0].split(",")
+                    tableArr = listMap(tableArr, lambda x: x.strip())
+                    newTableArr = []
+                    for string in tableArr:
+                        if patternTest(r"\.", string):
+                            newTableArr.append(string)
+                        else:
+                            newTableArr.append(tableName + "." + string)
+                    tableArr = objectDeepCopy(newTableArr)
+                
+                for string in tableArr:
+                    thisTableName = string.split(".")[0]
+                    thisPropertyName = string.split(".")[1]
+                    thisTargetObj = listFind(structure[thisTableName]["map"], lambda x: x["title"] == thisPropertyName)
+                    columns.append(string)
+                    columnNames.append(thisTargetObj["name"])
+
+                matrix.append(columnNames)
 
             for obj in rows:
                 tempList = []
@@ -100,9 +149,7 @@ class SqlTools:
 
         return table.get_string()
 
-    async def homeliaisonQuery(self, query: str) -> dict:
-        structure = self.returnCoreStructure()    
-        
+    def queryFilter(self, query: str) -> str:
         query = query.strip()
         queryTempArr = query.split("\n")
         queryTempArr = listMap(queryTempArr, lambda x: x.strip())
@@ -128,11 +175,16 @@ class SqlTools:
             tableArr = listMap(tableArr, lambda x: x.strip())
             tableArr = listFilter(tableArr, lambda x: x != "")
             newQueryString = "SELECT " + ", ".join(tableArr) + " FROM " + queryArr[1].strip()
+            result = ""
             if patternTest(r";$", newQueryString):
-                query = newQueryString
+                result = newQueryString
             else:
-                query = newQueryString + ";"
+                result = newQueryString + ";"
+        return result
 
+    async def homeliaisonQuery(self, query: str) -> dict:
+        structure = self.returnCoreStructure()
+        query = self.queryFilter(query)
         result = await mysqlQuery(query)
 
         responseDic = {}
