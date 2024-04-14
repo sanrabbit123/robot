@@ -97,32 +97,6 @@ class SqlRouter:
                 traceback.print_exc()
                 await alertLog("Sql Cloud 서버 문제 생김 (rou_post_createSqlSheets): " + str(e))
                 return { "error": str(e) }
-
-        @app.post("/selectQuery")
-        async def rou_post_selectQuery():
-            headers = self.headers
-            bytesData = await request.get_data()
-            rawBody = bytesData.decode("utf-8")
-            body = equalJson(rawBody)
-            try:
-                if not "query" in body:
-                    raise Exception("invalid post")
-                
-                if not type(body["query"] is str):
-                    raise Exception("invalid post")
-
-                query = body["query"]
-                if not patternTest(r"^SELECT", query):
-                    raise Exception("invalid query")
-                
-                result = await mysqlQuery(query)
-
-                return ({ "data": result["data"] }, 200, headers)
-            except Exception as e:
-                traceback.print_exc()
-                print(body)
-                await alertLog("Sql Cloud 서버 문제 생김 (rou_post_selectQuery): " + str(e))
-                return { "error": str(e) }
             
         @app.post("/mysqlQuery")
         async def rou_post_mysqlQuery():
@@ -137,10 +111,18 @@ class SqlRouter:
                 if not type(body["query"] is str):
                     raise Exception("invalid post")
 
-                query = body["query"]                
+                responseDic = {}
+                query = body["query"].strip()
                 result = await mysqlQuery(query)
 
-                return ({ "data": result["data"] }, 200, headers)
+                if patternTest(r"^SELECT", query):
+                    responseDic["data"] = result["data"]
+                    
+
+                else:
+                    responseDic["data"] = result["data"]
+
+                return (responseDic, 200, headers)
             except Exception as e:
                 traceback.print_exc()
                 print(body)
