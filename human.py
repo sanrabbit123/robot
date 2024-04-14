@@ -59,7 +59,15 @@ async def main():
             devInstance = DevContext()
             await devInstance.launching()
 
-        elif thisCommand == "sql":
+        elif thisCommand == "sqlView":
+            sqlInstance = SqlContext()
+            await sqlInstance.sqlView()
+
+        elif thisCommand == "sqlSheets":
+            sqlInstance = SqlContext()
+            await sqlInstance.sqlSheets()
+
+        elif thisCommand == "sqlPython":
             sqlInstance = SqlContext()
             await sqlInstance.launching()
 

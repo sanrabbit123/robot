@@ -32,9 +32,15 @@ async def excel(rows: list) -> dict:
 
     return { "link": "" }
 
-async def read(rows: list) -> dict:
-
-    return { "link": "" }
+async def read(filePath: str) -> str:
+    sqlFolderName = "sql"
+    if patternTest(r"^[\/\~\.]", filePath):
+        filePath = patternReplace(filePath, r"^\~", processHome())
+        filePath = patternReplace(filePath, r"^\.", processHome() + f"/{sqlFolderName}")
+    else:
+        filePath = processHome() + f"/{sqlFolderName}" + "/" + filePath
+    fileStr = await fileSystem("readString", [ filePath ])
+    return fileStr
 
 async def write(rows: list) -> dict:
 

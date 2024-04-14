@@ -57,52 +57,6 @@ class GoogleSheets:
         values = result.get('values', [])
         return values
 
-    def test(self, id):
-
-
-        # targetIndexArr = []
-        # for arr in values:
-        #     index = 0
-        #     for value in arr:
-        #         if patternTest(r"^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$", value):
-        #             dateConvertBoo = True
-        #             thisTargetIndex = index
-        #             targetIndexArr.append(thisTargetIndex)
-        #         index = index + 1
-        # targetIndexArr = list(set(targetIndexArr))
-
-        result = self.getSheetsInfo(id)
-        targetSheetId = result["sheets"][0]["properties"]["sheetId"]
-
-
-        batch_update_spreadsheet_request_body = {
-            "requests": [
-                {
-                    "repeatCell": {
-                        "range": {
-                            "sheetId": targetSheetId,
-                            "startRowIndex": 1,
-                            "endRowIndex": 6,
-                            "startColumnIndex": 0,
-                            "endColumnIndex": 5
-                        },
-                        "cell": {
-                            "userEnteredFormat": {
-                                "numberFormat": {
-                                    "pattern": "yyyy-mm-dd hh:mm:ss",
-                                    "type": "DATE",
-                                },
-                            },
-                        },
-                        "fields": "userEnteredFormat",
-                    }
-                }
-            ]
-        }
-        request2 = self.app.batchUpdate(spreadsheetId=id, body=batch_update_spreadsheet_request_body)
-        print(request2.execute())
-        print("done")
-
 
     def updateValue(self, id, range, values):
         request = self.app.values().update(spreadsheetId=id, range=range, valueInputOption="USER_ENTERED", body={

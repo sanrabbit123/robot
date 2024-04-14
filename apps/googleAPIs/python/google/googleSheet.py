@@ -54,7 +54,7 @@ class GoogleSheet:
 
 
     def updateValue(self, id, range, values):
-        request = self.app.values().update(spreadsheetId=id, range=range, valueInputOption="RAW", body={ "range": range, "values": values })
+        request = self.app.values().update(spreadsheetId=id, range=range, valueInputOption="USER_ENTERED", body={ "range": range, "values": values })
         response = request.execute()
         return dumps({ "response": response })
 

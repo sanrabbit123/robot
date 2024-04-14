@@ -23,17 +23,12 @@ class SqlContext:
 
         self.scriptName = "_____sqlLaunching_"
 
-    async def launching(self) -> int:
-        back = self.back
-        mongo = self.mongo
-        mongolocal = self.mongolocal
+    async def sqlScriptRun(self, sqlString: str) -> int:
         try:
-
             humanString = await fileSystem("readString", [ processCwd() + "/human.py" ])
             initString = humanString.split("# python start")[0]
             initString = initString + "\n\n" + "from apps.mother import *\nfrom apps.sqlCloud.context.tools import *" 
-
-            sqlString = await fileSystem("readString", [ self.targetFilePath ])
+            
             sqlStringList = sqlString.split("\n")
             sqlString = "\n".join(sqlStringList[1:])
             sqlString = patternReplace(sqlString, r"query\(", "await query(", True)
@@ -62,6 +57,47 @@ class SqlContext:
 
             await shellExec("rm", [ "-rf", tempFile ])
 
+            return 1
+        except Exception as e:
+            print(e)
+            return 0
+
+    async def sqlView(self) -> int:
+        try:
+            script = [
+                "from apps.sqlCloud.context.tools import *",
+                "",
+                "sqlStatement = read(\"sqlStatement.sql\")",
+                "",
+                "queryView(sqlStatement)",
+            ]
+            await self.sqlScriptRun("\n".join(script))
+            return 1
+        except Exception as e:
+            print(e)
+            return 0
+        
+    async def sqlSheets(self) -> int:
+        try:
+            script = [
+                "from apps.sqlCloud.context.tools import *",
+                "",
+                "sqlStatement = read(\"sqlStatement.sql\")",
+                "",
+                "querySheets(sqlStatement)",
+            ]
+            await self.sqlScriptRun("\n".join(script))
+            return 1
+        except Exception as e:
+            print(e)
+            return 0
+
+    async def launching(self) -> int:
+        back = self.back
+        mongo = self.mongo
+        mongolocal = self.mongolocal
+        try:
+            await self.sqlScriptRun(await fileSystem("readString", [ self.targetFilePath ]))
             return 1
         except Exception as e:
             print(e)
