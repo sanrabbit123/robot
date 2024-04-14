@@ -132,6 +132,42 @@ class SqlTools:
         if patternTest(r"^(SELECT|select)", query):
 
             if patternTest(r"(JOIN|join)", query):
+                queryArr = []
+                if patternTest(r"FROM", query):
+                    queryArr.append(query.split("FROM")[0])
+                    queryArr.append(query.split("FROM")[1])
+                else:
+                    queryArr.append(query.split("from")[0])
+                    queryArr.append(query.split("from")[1])
+
+                queryArr[0] = patternReplace(queryArr[0], r"^(SELECT|select)", "").strip()
+                tableArr = queryArr[0].split(",")
+                tableArr = listMap(tableArr, lambda x: x.strip())
+                tableMatrix = listMap(tableArr, lambda x: x.split("."))
+
+                tableTypeDict = {}
+                for arr in tableMatrix:
+                    tableName = arr[0]
+                    thisMap = structure[tableName]["map"]
+                    thisDic = {}
+                    for obj in thisMap:
+                        thisDic[obj["title"]] = obj["type"]
+                    tableType = thisDic[arr[1]]
+                    tableTypeDict[arr[1]] = tableType
+
+                responseDic["data"] = []
+                for obj in result["data"]:
+                    tempDic = {}
+                    for key in obj:
+                        if tableTypeDict[key] == "number":
+                            if patternTest(r"\.", str(obj[key])):
+                                tempDic[key] = float(obj[key])
+                            else:
+                                tempDic[key] = int(obj[key])
+                        else:
+                            tempDic[key] = obj[key]
+                    responseDic["data"].append(objectDeepCopy(tempDic))
+
                 responseDic["data"] = result["data"]
                 tableString = self.intoPrettyTable(query, result["data"])
                 responseDic["table"] = tableString
@@ -160,8 +196,6 @@ class SqlTools:
                 for obj in result["data"]:
                     tempDic = {}
                     for key in obj:
-                        print(obj[key])
-                        print(type(obj[key]))
                         if thisDic[key] == "number":
                             if patternTest(r"\.", str(obj[key])):
                                 tempDic[key] = float(obj[key])
