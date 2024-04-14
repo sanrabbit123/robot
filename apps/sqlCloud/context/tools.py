@@ -20,8 +20,8 @@ async def query(queryString: str) -> list:
 async def mysql(queryString: str) -> list:
     return query(queryString)
 
-async def sheets(rows: dict) -> dict:
-    result = await requestSystem(f"https://{mysqlHost}/createSqlSheets", { "rows": rows["data"] }, { "headers": { "Content-Type": "application/json" } })
+async def sheets(rows: dict, queryString = False) -> dict:
+    result = await requestSystem(f"https://{mysqlHost}/createSqlSheets", { "rows": rows["data"], "query": queryString }, { "headers": { "Content-Type": "application/json" } })
     await requestSystem(f"http://{localHost}/chromeOpen", { "url": result["link"] }, { "headers": { "Content-Type": "application/json" } })
     return { "link": result["link"] }
 
@@ -54,6 +54,6 @@ async def queryView(queryString: str):
 async def querySheets(queryString: str):
     result = await requestSystem(f"https://{mysqlHost}/mysqlQuery", { "query": queryString.strip() }, { "headers": { "Content-Type": "application/json" } })
     print(result["table"])
-    result2 = await requestSystem(f"https://{mysqlHost}/createSqlSheets", { "rows": result["data"] }, { "headers": { "Content-Type": "application/json" } })
+    result2 = await requestSystem(f"https://{mysqlHost}/createSqlSheets", { "rows": result["data"], "query": queryString }, { "headers": { "Content-Type": "application/json" } })
     await requestSystem(f"http://{localHost}/chromeOpen", { "url": result2["link"] }, { "headers": { "Content-Type": "application/json" } })
     return { "link": result2["link"] }

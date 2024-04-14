@@ -45,7 +45,7 @@ class SqlTools:
             for key in rows[0]:
                 initKeyList.append(key)
 
-            if query is None:
+            if type(query) is not str or query == "False" or query == "false" or query == "None" or query == "null":
                 for obj in clientMap:
                     if listIncludes(initKeyList, lambda s: s == "client" + "." + obj["title"]):
                         columns.append("client" + "." + obj["title"])
