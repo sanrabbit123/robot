@@ -47,14 +47,18 @@ class GoogleSheets:
         return { "id": spreadsheet.get('spreadsheetId') }
 
 
+    def getSheetsInfo(self, id: str):
+        result = self.app.get(spreadsheetId=id).execute()
+        return result
+
+
     def getValue(self, id, range):
         result = self.app.values().get(spreadsheetId=id, range=range).execute()
         values = result.get('values', [])
         return values
 
+    def test(self, id):
 
-    def updateValue(self, id, range, values):
-        dateConvertBoo = False
 
         # targetIndexArr = []
         # for arr in values:
@@ -67,38 +71,45 @@ class GoogleSheets:
         #         index = index + 1
         # targetIndexArr = list(set(targetIndexArr))
 
-        request = self.app.values().update(spreadsheetId=id, range=range, valueInputOption="RAW", body={
+        result = self.getSheetsInfo(id)
+        targetSheetId = result["sheets"][0]["properties"]["sheetId"]
+
+
+        batch_update_spreadsheet_request_body = {
+            "requests": [
+                {
+                    "repeatCell": {
+                        "range": {
+                            "sheetId": targetSheetId,
+                            "startRowIndex": 1,
+                            "endRowIndex": 6,
+                            "startColumnIndex": 0,
+                            "endColumnIndex": 5
+                        },
+                        "cell": {
+                            "userEnteredFormat": {
+                                "numberFormat": {
+                                    "pattern": "yyyy-mm-dd hh:mm:ss",
+                                    "type": "DATE",
+                                },
+                            },
+                        },
+                        "fields": "userEnteredFormat",
+                    }
+                }
+            ]
+        }
+        request2 = self.app.batchUpdate(spreadsheetId=id, body=batch_update_spreadsheet_request_body)
+        print(request2.execute())
+        print("done")
+
+
+    def updateValue(self, id, range, values):
+        request = self.app.values().update(spreadsheetId=id, range=range, valueInputOption="USER_ENTERED", body={
             "range": range,
             "values": values
         })
         response = request.execute()
-
-        # if dateConvertBoo:
-
-        #     result = self.app.values().get(spreadsheetId=id).execute()
-        #     print(result)
-
-
-
-            # rangeArr = range.split("!")
-            # batch_update_spreadsheet_request_body = {
-            #     "requests": [
-            #         {
-            #             "updateCells": {
-            #                 "range": {
-            #                     "startRowIndex": 2,
-            #                     "endRowIndex": 2,
-            #                     "startColumnIndex": 5,
-            #                     "endColumnIndex": 5
-            #                 },
-            #                 'rows': {'values': [{'userEnteredFormat': {'numberFormat': {'type': "DATE", 'pattern': "yyyy-mm-dd hh:mm:ss"}}}]},
-            #                 'fields': 'userEnteredFormat.numberFormat'
-            #             }
-            #         }
-            #     ]
-            # }
-            # request2 = self.app.batchUpdate(spreadsheetId=id, body=batch_update_spreadsheet_request_body)
-            # request2.execute()
 
         return { "response": response }
 

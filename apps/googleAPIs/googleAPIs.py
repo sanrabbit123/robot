@@ -161,6 +161,16 @@ class GoogleAPIs:
         result = driveApp.downloadFile(targetId, targetFolder)
         return result
 
+    def sheets_getSheetsInfo(self, targetId: str):
+        sheetsApp = GoogleSheets()
+        result = sheetsApp.getSheetsInfo(self.parsingId(targetId))
+        return result
+
+    def test(self, targetId: str):
+        sheetsApp = GoogleSheets()
+        result = sheetsApp.test(self.parsingId(targetId))
+        return result
+
     def sheets_getValue(self, targetId, thisRange):
         sheetsApp = GoogleSheets()
         result = sheetsApp.getValue(self.parsingId(targetId), thisRange)
