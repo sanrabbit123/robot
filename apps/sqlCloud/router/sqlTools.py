@@ -44,16 +44,16 @@ class SqlTools:
             columns = []
             columnNames = []
             for obj in clientMap:
-                if listIncludes(initKeyList, lambda s: s == obj["title"]):
-                    columns.append(obj["title"])
+                if listIncludes(initKeyList, lambda s: s == "client" + "." + obj["title"]):
+                    columns.append("client" + "." + obj["title"])
                     columnNames.append(obj["name"])
             for obj in projectMap:
-                if listIncludes(initKeyList, lambda s: s == obj["title"]):
-                    columns.append(obj["title"])
+                if listIncludes(initKeyList, lambda s: s == "project" + "." + obj["title"]):
+                    columns.append("project" + "." + obj["title"])
                     columnNames.append(obj["name"])
             for obj in designerMap:
-                if listIncludes(initKeyList, lambda s: s == obj["title"]):
-                    columns.append(obj["title"])
+                if listIncludes(initKeyList, lambda s: s == "designer" + "." + obj["title"]):
+                    columns.append("designer" + "." + obj["title"])
                     columnNames.append(obj["name"])
 
             matrix.append(columnNames)
