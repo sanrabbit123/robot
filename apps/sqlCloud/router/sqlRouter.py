@@ -104,6 +104,7 @@ class SqlRouter:
             bytesData = await request.get_data()
             rawBody = bytesData.decode("utf-8")
             body = equalJson(rawBody)
+            tools = self.tools
             try:
                 if not "query" in body:
                     raise Exception("invalid post")
@@ -117,8 +118,8 @@ class SqlRouter:
 
                 if patternTest(r"^SELECT", query):
                     responseDic["data"] = result["data"]
-                    
-
+                    tableString = tools.intoPrettyTable(query, result["data"])
+                    responseDic["table"] = tableString
                 else:
                     responseDic["data"] = result["data"]
 

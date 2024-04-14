@@ -100,6 +100,54 @@ class SqlTools:
 
         return table.get_string()
 
+    def intoPrettyTable(self, query: str, data: list) -> str:
+        finalString = ""
+        structure = self.returnCoreStructure()            
+        query = query.strip()
+
+        if patternTest(r"(JOIN|join)", query):
+            pass
+        else:
+            queryArr = []
+            if patternTest(r"FROM", query):
+                queryArr.append(query.split("FROM")[0])
+                queryArr.append(query.split("FROM")[1])
+            else:
+                queryArr.append(query.split("from")[0])
+                queryArr.append(query.split("from")[1])
+
+            queryArr[0] = patternReplace(queryArr[0], r"^(SELECT|select)", "").strip()
+            tableArr = queryArr[0].split(",")
+            tableArr = listMap(tableArr, lambda x: x.strip())
+
+            queryArr[1] = queryArr[1].strip().split(" ")[0]
+            tableName = queryArr[1]
+            thisMap = structure[tableName]["map"]
+            thisDic = {}
+            for obj in thisMap:
+                thisDic[obj["title"]] = obj["name"]
+
+            tableNameArr = []
+            for key in tableArr:
+                tableNameArr.append(thisDic[key])
+
+            table = PrettyTable()
+            table.align = "l"
+            table.field_names = tableNameArr
+
+            matrix = []
+            for dictionaryFactor in data:
+                tempArr = []
+                for key in tableArr:
+                    tempArr.append(dictionaryFactor[key])
+                matrix.append(tempArr)
+
+            table.add_rows(matrix)
+
+            finalString = table.get_string()
+
+        return finalString
+
     def returnCoreStructure(self) -> dict:
         result = {
             "client": { "name": "고객" },
