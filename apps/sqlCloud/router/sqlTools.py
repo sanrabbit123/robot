@@ -112,7 +112,9 @@ class SqlTools:
         query = patternReplace(query, r"[\n\t]", " ")
         for i in range(20):
             query = patternReplace(query, r"  ", " ")
-        if patternTest(r"^(SELECT|select)", query):
+        query = query.strip()
+
+        if patternTest(r"^[ ]*(SELECT|select)", query):
             queryArr = []
             if patternTest(r"FROM", query):
                 queryArr.append(query.split("FROM")[0])
@@ -121,7 +123,7 @@ class SqlTools:
                 queryArr.append(query.split("from")[0])
                 queryArr.append(query.split("from")[1])
 
-            queryArr[0] = patternReplace(queryArr[0], r"^(SELECT|select)", "").strip()
+            queryArr[0] = patternReplace(queryArr[0], r"^[ ]*(SELECT|select)", "").strip()
             tableArr = queryArr[0].split(",")
             tableArr = listMap(tableArr, lambda x: x.strip())
             tableArr = listFilter(tableArr, lambda x: x != "")
@@ -131,12 +133,10 @@ class SqlTools:
             else:
                 query = newQueryString + ";"
 
-        print(query)
-
         result = await mysqlQuery(query)
 
         responseDic = {}
-        if patternTest(r"^(SELECT|select)", query):
+        if patternTest(r"^[ ]*(SELECT|select)", query):
 
             if patternTest(r"(JOIN|join)", query):
                 queryArr = []
@@ -147,7 +147,7 @@ class SqlTools:
                     queryArr.append(query.split("from")[0])
                     queryArr.append(query.split("from")[1])
 
-                queryArr[0] = patternReplace(queryArr[0], r"^(SELECT|select)", "").strip()
+                queryArr[0] = patternReplace(queryArr[0], r"^[ ]*(SELECT|select)", "").strip()
                 tableArr = queryArr[0].split(",")
                 tableArr = listMap(tableArr, lambda x: x.strip())
                 tableMatrix = listMap(tableArr, lambda x: x.split("."))
@@ -189,7 +189,7 @@ class SqlTools:
                     queryArr.append(query.split("from")[0])
                     queryArr.append(query.split("from")[1])
 
-                queryArr[0] = patternReplace(queryArr[0], r"^(SELECT|select)", "").strip()
+                queryArr[0] = patternReplace(queryArr[0], r"^[ ]*(SELECT|select)", "").strip()
                 tableArr = queryArr[0].split(",")
                 tableArr = listMap(tableArr, lambda x: x.strip())
                 newTableArr = []
@@ -240,8 +240,6 @@ class SqlTools:
         table = PrettyTable()
         table.align = "l"
 
-        print(query)
-
         if patternTest(r"(JOIN|join)", query):
             queryArr = []
             if patternTest(r"FROM", query):
@@ -251,7 +249,7 @@ class SqlTools:
                 queryArr.append(query.split("from")[0])
                 queryArr.append(query.split("from")[1])
 
-            queryArr[0] = patternReplace(queryArr[0], r"^(SELECT|select)", "").strip()
+            queryArr[0] = patternReplace(queryArr[0], r"^[ ]*(SELECT|select)", "").strip()
             tableArr = queryArr[0].split(",")
             tableArr = listMap(tableArr, lambda x: x.strip())
             tableMatrix = listMap(tableArr, lambda x: x.split("."))
@@ -286,7 +284,7 @@ class SqlTools:
                 queryArr.append(query.split("from")[0])
                 queryArr.append(query.split("from")[1])
 
-            queryArr[0] = patternReplace(queryArr[0], r"^(SELECT|select)", "").strip()
+            queryArr[0] = patternReplace(queryArr[0], r"^[ ]*(SELECT|select)", "").strip()
             tableArr = queryArr[0].split(",")
             tableArr = listMap(tableArr, lambda x: x.strip())
             newTableArr = []
