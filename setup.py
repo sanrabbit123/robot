@@ -46,6 +46,7 @@ class RobotInstall:
             [ "binascii" ],
             [ "google-generativeai" ],
             [ "openai" ],
+            [ "prettytable" ],
         ]
 
         self.upgrade = [

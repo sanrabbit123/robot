@@ -62,6 +62,21 @@ class SqlRouter:
                 await alertLog("Sql Cloud 서버 문제 생김 (rou_post_coreReflect): " + str(e))
                 return { "error": str(e) }
 
+        @app.post("/getCoreStructure")
+        async def rou_post_getCoreStructure():
+            headers = self.headers
+            bytesData = await request.get_data()
+            rawBody = bytesData.decode("utf-8")
+            body = equalJson(rawBody)
+            tools = self.tools
+            try:
+                resultString = tools.getCoreStructure()
+                return ({ "table": resultString }, 200, headers)
+            except Exception as e:
+                traceback.print_exc()
+                await alertLog("Sql Cloud 서버 문제 생김 (rou_post_getCoreStructure): " + str(e))
+                return { "error": str(e) }
+
         @app.post("/createSqlSheets")
         async def rou_post_createSqlSheets():
             headers = self.headers

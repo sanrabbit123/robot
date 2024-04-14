@@ -25,7 +25,3 @@ async def excel(rows: list) -> dict:
 async def write(rows: list) -> dict:
 
     return { "link": "" }
-
-def print(something, indentNumber: int = 2):
-    pp = pprint.PrettyPrinter(indent=indentNumber)
-    pp.pprint(something)

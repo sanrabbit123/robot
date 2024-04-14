@@ -4,6 +4,7 @@ from apps.infoObj import returnAddress
 from apps.memberObj import returnMembers
 from apps.backMaker.backMaker import BackMaker
 from apps.googleAPIs.googleAPIs import GoogleAPIs
+from prettytable import PrettyTable
 import asyncio
 
 class SqlTools:
@@ -79,6 +80,25 @@ class SqlTools:
         await sleep(1 * 1000)
         print(await shellExec("node", [ processCwd() + "/robot.js", "mysqlReflect" ]))
         return 0
+
+    def getCoreStructure(self) -> str:
+        structure = self.returnCoreStructure()            
+        table = PrettyTable()
+        table.header = False
+        table.field_names = [ "a", "b" ]
+        table.align = "l"
+
+        for tableName in structure:
+            thisMap = structure[tableName]["map"]
+            table.add_row([ tableName, "" ], divider=True)
+            matrix = []
+            for obj in thisMap:
+                matrix.append([ obj["title"], obj["name"] ])
+            lastArr = matrix.pop()
+            table.add_rows(matrix)
+            table.add_row(lastArr, divider=True)
+
+        return table.get_string()
 
     def returnCoreStructure(self) -> dict:
         result = {

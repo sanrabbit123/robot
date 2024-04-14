@@ -8,8 +8,10 @@ from apps.notionAPIs.children.liaisonCalendar import LiaisonCalendar
 from apps.numbersConsole.router.numbersCalculator import NumbersCalculator
 from apps.numbersConsole.numbersConsole import NumbersConsole
 from apps.excelReader.excelReader import ExcelReader
+from apps.sqlCloud.router.sqlTools import SqlTools
 from apps.openAiAPIs.openAiAPIs import OpenAiAPIs
 from apps.awsAPIs.awsAPIs import AwsAPIs
+from prettytable import PrettyTable
 import asyncio
 
 class DevContext:
@@ -46,6 +48,9 @@ class DevContext:
         aws = AwsAPIs()
         gpt = OpenAiAPIs()
         try:            
+
+            tools = SqlTools()
+
 
 
 
