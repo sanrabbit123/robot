@@ -114,6 +114,9 @@ class SqlRouter:
 
                 responseDic = {}
                 query = body["query"].strip()
+                query = patternReplace(query, r"[\n\t]", " ")
+                for i in range(10):
+                    query = patternReplace(query, r"  ", " ")
                 result = await mysqlQuery(query)
 
                 if patternTest(r"^SELECT", query):

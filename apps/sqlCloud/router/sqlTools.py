@@ -104,6 +104,8 @@ class SqlTools:
         finalString = ""
         structure = self.returnCoreStructure()            
         query = query.strip()
+        table = PrettyTable()
+        table.align = "l"
 
         if patternTest(r"(JOIN|join)", query):
             pass
@@ -131,8 +133,6 @@ class SqlTools:
             for key in tableArr:
                 tableNameArr.append(thisDic[key])
 
-            table = PrettyTable()
-            table.align = "l"
             table.field_names = tableNameArr
 
             matrix = []
