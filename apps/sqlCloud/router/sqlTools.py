@@ -121,15 +121,57 @@ class SqlTools:
             tableArr = listMap(tableArr, lambda x: x.strip())
             tableArr = listFilter(tableArr, lambda x: x != "")
             newQueryString = "SELECT " + ", ".join(tableArr) + " FROM " + queryArr[1].strip()
-            query = newQueryString
+            if patternTest(r";$", newQueryString):
+                query = newQueryString
+            else:
+                query = newQueryString + ";"
 
         result = await mysqlQuery(query)
 
         responseDic = {}
         if patternTest(r"^(SELECT|select)", query):
-            responseDic["data"] = result["data"]
-            tableString = self.intoPrettyTable(query, result["data"])
-            responseDic["table"] = tableString
+
+            if patternTest(r"(JOIN|join)", query):
+                responseDic["data"] = result["data"]
+                tableString = self.intoPrettyTable(query, result["data"])
+                responseDic["table"] = tableString
+
+            else:
+                queryArr = []
+                if patternTest(r"FROM", query):
+                    queryArr.append(query.split("FROM")[0])
+                    queryArr.append(query.split("FROM")[1])
+                else:
+                    queryArr.append(query.split("from")[0])
+                    queryArr.append(query.split("from")[1])
+
+                queryArr[0] = patternReplace(queryArr[0], r"^(SELECT|select)", "").strip()
+                tableArr = queryArr[0].split(",")
+                tableArr = listMap(tableArr, lambda x: x.strip())
+
+                queryArr[1] = queryArr[1].strip().split(" ")[0]
+                tableName = queryArr[1]
+                thisMap = structure[tableName]["map"]
+                thisDic = {}
+                for obj in thisMap:
+                    thisDic[obj["title"]] = obj["type"]
+
+                responseDic["data"] = []
+                for obj in result["data"]:
+                    tempDic = {}
+                    for key in obj:
+                        if thisDic[key] == "number":
+                            if patternTest(r"\.", obj[key]):
+                                tempDic[key] = float(obj[key])
+                            else:
+                                tempDic[key] = int(obj[key])
+                        else:
+                            tempDic[key] = obj[key]
+                    responseDic["data"].append(objectDeepCopy(tempDic))
+
+                responseDic["data"] = result["data"]
+                tableString = self.intoPrettyTable(query, result["data"])
+                responseDic["table"] = tableString
         else:
             responseDic["data"] = result["data"]
 
