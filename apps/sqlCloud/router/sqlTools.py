@@ -104,11 +104,48 @@ class SqlTools:
         finalString = ""
         structure = self.returnCoreStructure()            
         query = query.strip()
+        query = patternReplace(query, r"[\n\t]", " ")
+        for i in range(10):
+            query = patternReplace(query, r"  ", " ")
+
         table = PrettyTable()
         table.align = "l"
 
         if patternTest(r"(JOIN|join)", query):
-            pass
+            queryArr = []
+            if patternTest(r"FROM", query):
+                queryArr.append(query.split("FROM")[0])
+                queryArr.append(query.split("FROM")[1])
+            else:
+                queryArr.append(query.split("from")[0])
+                queryArr.append(query.split("from")[1])
+
+            queryArr[0] = patternReplace(queryArr[0], r"^(SELECT|select)", "").strip()
+            tableArr = queryArr[0].split(",")
+            tableArr = listMap(tableArr, lambda x: x.strip())
+            tableMatrix = listMap(tableArr, lambda x: x.split("."))
+
+            tableNameArr = []
+            for arr in tableMatrix:
+                tableName = arr[0]
+                thisMap = structure[tableName]["map"]
+                thisDic = {}
+                for obj in thisMap:
+                    thisDic[obj["title"]] = obj["name"]
+                tableHangul = thisDic[arr[1]]
+                tableNameArr.append(tableHangul)
+
+            table.field_names = tableNameArr
+
+            matrix = []
+            for dictionaryFactor in data:
+                tempArr = []
+                for arr in tableMatrix:
+                    tempArr.append(dictionaryFactor[arr[1]])
+                matrix.append(tempArr)
+
+            table.add_rows(matrix)
+            finalString = table.get_string()
         else:
             queryArr = []
             if patternTest(r"FROM", query):

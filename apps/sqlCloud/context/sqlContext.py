@@ -43,7 +43,9 @@ class SqlContext:
             sqlString = patternReplace(sqlString, r"write\(", "await write(", True)
             sqlString = patternReplace(sqlString, r"structure\(", "await structure(", True)
             sqlString = patternReplace(sqlString, r"view\(", "await view(", True)
+            sqlString = patternReplace(sqlString, r"read\(", "await read(", True)
             sqlString = patternReplace(sqlString, r"queryView\(", "await queryView(", True)
+            sqlString = patternReplace(sqlString, r"querySheets\(", "await querySheets(", True)
 
             sqlStringList = sqlString.split("\n")
             sqlStringList = listMap(sqlStringList, lambda x: "    " + x)

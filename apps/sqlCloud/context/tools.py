@@ -29,6 +29,10 @@ async def excel(rows: list) -> dict:
 
     return { "link": "" }
 
+async def read(rows: list) -> dict:
+
+    return { "link": "" }
+
 async def write(rows: list) -> dict:
 
     return { "link": "" }
