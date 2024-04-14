@@ -168,8 +168,7 @@ class SqlTools:
                             tempDic[key] = obj[key]
                     responseDic["data"].append(objectDeepCopy(tempDic))
 
-                responseDic["data"] = result["data"]
-                tableString = self.intoPrettyTable(query, result["data"])
+                tableString = self.intoPrettyTable(query, responseDic["data"])
                 responseDic["table"] = tableString
 
             else:
@@ -205,8 +204,7 @@ class SqlTools:
                             tempDic[key] = obj[key]
                     responseDic["data"].append(objectDeepCopy(tempDic))
 
-                responseDic["data"] = result["data"]
-                tableString = self.intoPrettyTable(query, result["data"])
+                tableString = self.intoPrettyTable(query, responseDic["data"])
                 responseDic["table"] = tableString
         else:
             responseDic["data"] = result["data"]

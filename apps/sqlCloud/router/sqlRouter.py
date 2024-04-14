@@ -90,9 +90,6 @@ class SqlRouter:
                 
                 if not type(body["rows"] is list):
                     raise Exception("invalid post")
-
-                consoleLog(body["rows"])
-
                 resultDic = await tools.createSqlSheets(body["rows"])
                 return (resultDic, 200, headers)
             except Exception as e:
