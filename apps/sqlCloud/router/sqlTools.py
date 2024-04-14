@@ -155,10 +155,14 @@ class SqlTools:
                     tableType = thisDic[arr[1]]
                     tableTypeDict[arr[1]] = tableType
 
+                print(tableTypeDict)
+
                 responseDic["data"] = []
                 for obj in result["data"]:
                     tempDic = {}
                     for key in obj:
+                        print(obj[key])
+                        print(type(obj[key]))
                         if tableTypeDict[key] == "number":
                             if patternTest(r"\.", str(obj[key])):
                                 tempDic[key] = float(obj[key])
@@ -166,6 +170,8 @@ class SqlTools:
                                 tempDic[key] = int(obj[key])
                         else:
                             tempDic[key] = obj[key]
+                        print(tempDic[key])
+                        print(type(tempDic[key]))
                     responseDic["data"].append(objectDeepCopy(tempDic))
 
                 responseDic["data"] = result["data"]
