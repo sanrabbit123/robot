@@ -73,10 +73,10 @@ class GoogleSheets:
         })
         response = request.execute()
 
-        if dateConvertBoo:
+        # if dateConvertBoo:
 
-            result = self.app.values().get(spreadsheetId=id).execute()
-            print(result)
+        #     result = self.app.values().get(spreadsheetId=id).execute()
+        #     print(result)
 
 
 
