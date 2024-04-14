@@ -104,8 +104,13 @@ class SqlTools:
         structure = self.returnCoreStructure()    
         
         query = query.strip()
+        queryTempArr = query.split("\n")
+        queryTempArr = listMap(queryTempArr, lambda x: x.strip())
+        queryTempArr = listFilter(queryTempArr, lambda x: not patternTest(r"^\-\-", x))
+        query = "\n ".join(queryTempArr)
+
         query = patternReplace(query, r"[\n\t]", " ")
-        for i in range(10):
+        for i in range(20):
             query = patternReplace(query, r"  ", " ")
         if patternTest(r"^(SELECT|select)", query):
             queryArr = []
@@ -185,6 +190,13 @@ class SqlTools:
                 queryArr[0] = patternReplace(queryArr[0], r"^(SELECT|select)", "").strip()
                 tableArr = queryArr[0].split(",")
                 tableArr = listMap(tableArr, lambda x: x.strip())
+                newTableArr = []
+                for string in tableArr:
+                    if patternTest(r"\.", string):
+                        newTableArr.append(string.split(".")[1])
+                    else:
+                        newTableArr.append(string)
+                tableArr = objectDeepCopy(newTableArr)
 
                 queryArr[1] = queryArr[1].strip().split(" ")[0]
                 tableName = queryArr[1]
@@ -273,6 +285,13 @@ class SqlTools:
             queryArr[0] = patternReplace(queryArr[0], r"^(SELECT|select)", "").strip()
             tableArr = queryArr[0].split(",")
             tableArr = listMap(tableArr, lambda x: x.strip())
+            newTableArr = []
+            for string in tableArr:
+                if patternTest(r"\.", string):
+                    newTableArr.append(string.split(".")[1])
+                else:
+                    newTableArr.append(string)
+            tableArr = objectDeepCopy(newTableArr)
 
             queryArr[1] = queryArr[1].strip().split(" ")[0]
             tableName = queryArr[1]

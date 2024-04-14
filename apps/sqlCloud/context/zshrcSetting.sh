@@ -1,0 +1,11 @@
+HUMANEXEC="python3 human.py"
+ROBOTPATH="${HOME}/robot"
+SETTINGORDER="code ${ROBOTPATH}/apps/sqlCloud/context/queryTableStructure.txt;code ${HOME}/sql/sqlStatement.sql;"
+SQLORDER="cd ${ROBOTPATH};${HUMANEXEC} sqlView"
+SHEETSORDER="cd ${ROBOTPATH};${HUMANEXEC} sqlSheets"
+PYTHONORDER="cd ${ROBOTPATH};${HUMANEXEC} sqlPython"
+alias update='curl -X POST -d "{\"type\": \"designer\"}" http://127.0.0.1:8000/gitPush'
+alias setting="${SETTINGORDER}"
+alias sql="${SQLORDER}"
+alias sheets="${SHEETSORDER}"
+alias python="${PYTHONORDER}"

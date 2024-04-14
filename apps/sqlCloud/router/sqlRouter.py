@@ -111,12 +111,7 @@ class SqlRouter:
                 if not type(body["query"] is str):
                     raise Exception("invalid post")
 
-                query = body["query"].strip()
-                query = patternReplace(query, r"[\n\t]", " ")
-                for i in range(10):
-                    query = patternReplace(query, r"  ", " ")
-
-                result = await tools.homeliaisonQuery(query)
+                result = await tools.homeliaisonQuery(body["query"])
 
                 return (result, 200, headers)
             except Exception as e:
