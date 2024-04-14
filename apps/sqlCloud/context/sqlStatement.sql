@@ -22,5 +22,5 @@ WHERE
 --     client
 
 -- WHERE
---     timeline BETWEEN "2024-03-01" AND "2024-03-10"
+--     client.timeline BETWEEN "2024-03-01" AND "2024-03-10"
 --     AND status REGEXP "진행"
