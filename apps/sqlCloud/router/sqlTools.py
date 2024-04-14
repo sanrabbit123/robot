@@ -100,6 +100,39 @@ class SqlTools:
 
         return table.get_string()
 
+    async def homeliaisonQuery(self, query: str) -> dict:
+        structure = self.returnCoreStructure()    
+        
+        query = query.strip()
+        query = patternReplace(query, r"[\n\t]", " ")
+        for i in range(10):
+            query = patternReplace(query, r"  ", " ")
+        if patternTest(r"^(SELECT|select)", query):
+            queryArr = []
+            if patternTest(r"FROM", query):
+                queryArr.append(query.split("FROM")[0])
+            else:
+                queryArr.append(query.split("from")[0])
+
+            queryArr[0] = patternReplace(queryArr[0], r"^(SELECT|select)", "").strip()
+            tableArr = queryArr[0].split(",")
+            tableArr = listMap(tableArr, lambda x: x.strip())
+            tableArr = listFilter(tableArr, lambda x: x != "")
+            newQueryString = "SELECT " + ", ".join(tableArr) + " FROM " + queryArr[1].strip()
+            query = newQueryString
+
+        result = await mysqlQuery(query)
+
+        responseDic = {}
+        if patternTest(r"^(SELECT|select)", query):
+            responseDic["data"] = result["data"]
+            tableString = self.intoPrettyTable(query, result["data"])
+            responseDic["table"] = tableString
+        else:
+            responseDic["data"] = result["data"]
+
+        return responseDic
+
     def intoPrettyTable(self, query: str, data: list) -> str:
         finalString = ""
         structure = self.returnCoreStructure()            

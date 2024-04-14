@@ -7,8 +7,11 @@ mysqlHost = address["mysqlinfo"]["host"]
 localHost = "127.0.0.1:8000"
 
 async def structure():
+    tempFileName = processCwd() + "/temp/queryTableStructure.txt"
     result = await requestSystem(f"https://{mysqlHost}/getCoreStructure", { "data": False }, { "headers": { "Content-Type": "application/json" } })
     print(result["table"])
+    await fileSystem("writeString", [ tempFileName, result["table"] ])
+    await shellExec("code", [ tempFileName ])
 
 async def query(queryString: str) -> list:
     result = await requestSystem(f"https://{mysqlHost}/mysqlQuery", { "query": queryString.strip() }, { "headers": { "Content-Type": "application/json" } })

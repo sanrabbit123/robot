@@ -112,21 +112,14 @@ class SqlRouter:
                 if not type(body["query"] is str):
                     raise Exception("invalid post")
 
-                responseDic = {}
                 query = body["query"].strip()
                 query = patternReplace(query, r"[\n\t]", " ")
                 for i in range(10):
                     query = patternReplace(query, r"  ", " ")
-                result = await mysqlQuery(query)
 
-                if patternTest(r"^SELECT", query):
-                    responseDic["data"] = result["data"]
-                    tableString = tools.intoPrettyTable(query, result["data"])
-                    responseDic["table"] = tableString
-                else:
-                    responseDic["data"] = result["data"]
+                result = await tools.homeliaisonQuery(query)
 
-                return (responseDic, 200, headers)
+                return (result, 200, headers)
             except Exception as e:
                 traceback.print_exc()
                 print(body)
