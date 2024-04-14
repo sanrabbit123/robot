@@ -55,14 +55,14 @@ class GoogleSheets:
     def updateValue(self, id, range, values):
         request = self.app.values().update(spreadsheetId=id, range=range, valueInputOption="RAW", body={
             "range": range,
-            "cell": {
-                "userEnteredFormat": {
-                    "numberFormat": {
-                        "type": "DATE",
-                        "pattern": "yyyy-mm-dd hh:mm:ss"
-                    }
-                }
-            },
+            # "cell": {
+            #     "userEnteredFormat": {
+            #         "numberFormat": {
+            #             "type": "DATE",
+            #             "pattern": "yyyy-mm-dd hh:mm:ss"
+            #         }
+            #     }
+            # },
             "values": values
         })
         response = request.execute()
