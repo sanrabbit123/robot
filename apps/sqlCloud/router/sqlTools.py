@@ -161,7 +161,7 @@ class SqlTools:
                     tempDic = {}
                     for key in obj:
                         if thisDic[key] == "number":
-                            if patternTest(r"\.", obj[key]):
+                            if patternTest(r"\.", str(obj[key])):
                                 tempDic[key] = float(obj[key])
                             else:
                                 tempDic[key] = int(obj[key])
