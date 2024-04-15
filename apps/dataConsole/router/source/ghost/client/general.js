@@ -587,40 +587,30 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   let wordingWeight;
   let searchTop;
 
-  // iconHeight = <%% 21, 21, 19, 17, 16 %%>;
-  // iconTop = <%% 22, 22, 21, 18, 21 %%>;
-
-  iconHeight = 19.6;
-  iconTop = 25;
+  iconHeight = <%% 19.6, 18.6, 17, 14, 4 %%>;
+  iconTop = <%% 25, 26, 24, 22.5, 2 %%>;
 
   wordHeight = <%% 20, 20, 20, 20, 20 %%>;
   wordSize = <%% 15, 15, 15, 14, 13 %%>;
   wordTop = <%% 24, 24, 21, 20, 18 %%>;
 
-  wordingTop = <%% (isMac() ? 22 : 22), (isMac() ? 22 : 22), (isMac() ? 21 : 20), (isMac() ? 17 : 16), 10 %%>;
-  // wordingSize = <%% 15, 15, 14, 13, 15 %%>;
-  // wordingMarginRight = <%% 36, 36, 34, 24, 3 %%>;
+  wordingTop = <%% (isMac() ? 22 : 22), (isMac() ? 22 : 22), 21, 18, 10 %%>;
   wordingMarginRightLast = <%% 9, 9, 4, 0, 1 %%>;
-  // wordingWeight = 700;
 
-  wordingSize = 16;
-  wordingMarginRight = 40;
+  wordingSize = <%% 16, 15, 14, 14, 15 %%>;
+  wordingMarginRight = <%% 40, 36, 30, 19, 3 %%>;
   wordingWeight = 700;
 
   mobileMargin = 6.1;
 
   hamburgerTop = 21;
-  // searchWidth = <%% 64, 64, 62, 60, 20 %%>;
-  // searchWidthMinus = <%% 63, 63, 61, 58.5, 2 %%>;
   mobileMenuHeight = 203;
   mobileFirstTop = 11;
   mobileVerticalBetween = 37;
-  // magazineSize = <%% 14, 14, 14, 13, 3 %%>;
 
   magazineSize = 16;
-  searchTop = 22;
-  searchWidth = 23;
-  searchWidthMinus = 23;
+  searchTop = <%% 22, 22, 19.5, 18, 2 %%>;
+  searchWidth = <%% 23, 22, 20, 18, 2 %%>;
 
   thisIndex = 99;
   naviMenu = [
@@ -812,7 +802,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
           color: modeNumber === 2 ? colorChip.white : colorChip.black,
           // top: String(iconTop) + ea,
           top: String(searchTop) + ea,
-          left: desktop ? "calc(50% + " + String((standardWidth / 2) - searchWidthMinus) + ea + ")" : String(mobileMargin) + ea,
+          left: desktop ? "calc(50% + " + String((standardWidth / 2) - searchWidth) + ea + ")" : String(mobileMargin) + ea,
           width: String(searchWidth) + ea,
           zIndex: String(1),
         }

@@ -7742,7 +7742,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     // black button
     createNode({
       mother: ghostBase,
-      attribute: {
+      event: {
         selectstart: (e) => { e.preventDefault() },
       },
       style: {
@@ -7771,7 +7771,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
             marginRight: String(blackButtonBetween) + ea,
           },
           child: {
-            attribute: {
+            event: {
               selectstart: (e) => { e.preventDefault() },
             },
             text: `추천부터 받고 싶어요!`,
@@ -7797,7 +7797,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
             alignItems: "center",
           },
           child: {
-            attribute: {
+            event: {
               selectstart: (e) => { e.preventDefault() },
             },
             text: `상담부터 원해요.`,
@@ -7817,7 +7817,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
     if (desktop) {
       barBase = createNode({
         mother: ghostBase,
-        attribute: {
+        event: {
           selectstart: (e) => { e.preventDefault() },
         },
         style: {
@@ -8213,7 +8213,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
             marginBottom: desktop ? "" : String(mobileFixedWhiteMarginBottom) + ea,
           },
           child: {
-            attribute: {
+            event: {
               selectstart: (e) => { e.preventDefault() },
             },
             text: `추천부터 받고 싶어요!`,
@@ -8240,7 +8240,7 @@ StyleExplanationJs.prototype.insertEighthBox = async function (fifthBase) {
             marginBottom: desktop ? "" : String(mobileFixedWhiteMarginBottom) + ea,
           },
           child: {
-            attribute: {
+            event: {
               selectstart: (e) => { e.preventDefault() },
             },
             text: `상담부터 원해요.`,

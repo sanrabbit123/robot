@@ -233,6 +233,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
     const idKeyword = 'f';
     const metaKeyword = 'f';
     const metaKeyKeyword = "meta";
+    const delta = 10 * 1000;
     let tempRows;
     let res;
     let json;
@@ -301,7 +302,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
       };
 
       // campaign
-      await sleep(1000);
+      await sleep(delta);
       res = await requestSystem("https://graph.facebook.com/" + appVersion + "/act_" + facebookAdId + "/insights", {
         level: "campaign",
         fields: [
@@ -340,7 +341,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
           children: [],
         });
 
-        await sleep(5000);
+        await sleep(delta);
         campaignId = obj.campaign_id;
         res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + campaignId + "/insights", {
           level: "adset",
@@ -380,7 +381,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
             children: [],
           })
 
-          await sleep(5000);
+          await sleep(delta);
           adsetId = obj2.adset_id;
           res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + adsetId + "/insights", {
             level: "ad",
@@ -435,7 +436,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
       }
 
       // instagram
-      await sleep(5000);
+      await sleep(delta);
       res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + instagramId + "/insights", {
         metric: "impressions,profile_views,follower_count,website_clicks",
         period: "day",
@@ -463,7 +464,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
       } catch {
         json.instagram.performance.clicks = 0;
       }  
-      await sleep(1000);
+      await sleep(delta);
       try {
         res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + instagramId + "/insights", {
           metric: "likes,comments,saves,shares",
@@ -502,6 +503,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
 
   } catch (e) {
     emergencyAlarm("FacebookAPIs.metaComplex error : " + e.message).catch((err) => { console.log(err); });
+    emergencyAlarm("FacebookAPIs.metaComplex error : " + JSON.stringify(e?.response?.data?.error)).catch((err) => { console.log(err); });
     console.log(e);
     return false;
   }

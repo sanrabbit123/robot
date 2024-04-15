@@ -611,7 +611,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
     if (desktop) {
       createNode({
         mother: firstBase,
-        attribute: {
+        event: {
           selectstart: (e) => { e.preventDefault() },
         },
         style: {
@@ -638,7 +638,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
               alignItems: "center",
             },
             child: {
-              attribute: {
+              event: {
                 selectstart: (e) => { e.preventDefault() },
               },
               text: `예상 시작일&nbsp;&nbsp;|&nbsp;&nbsp;<b%${dateToHangul(instance.project.process.contract.form.date.from, true)}%b>`,
@@ -670,7 +670,7 @@ DesignerExplanationJs.prototype.insertInitBox = async function () {
               marginLeft: String(buttonBetween) + ea,
             },
             child: {
-              attribute: {
+              event: {
                 selectstart: (e) => { e.preventDefault() },
               },
               text: `예상 종료일&nbsp;&nbsp;|&nbsp;&nbsp;<b%${dateToHangul(instance.project.process.contract.form.date.to, true)}%b>`,

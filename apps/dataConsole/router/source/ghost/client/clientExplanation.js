@@ -46,7 +46,7 @@ ClientExplanationJs.binaryPath = "/middle/client";
 ClientExplanationJs.prototype.insertInitBox = async function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
-  const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop } = this;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop, whiteConsultingBoxClassName } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -92,7 +92,7 @@ ClientExplanationJs.prototype.insertInitBox = async function () {
     subTitleMarginTop = <%% (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 3 : 6), (isMac() ? 3 : 6), 0.5 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
-    buttonWidth = <%% 136, 194, 186, 168, 31 %%>;
+    buttonWidth = <%% 140, 145, 130, 120, 31 %%>;
     buttonHeight = <%% 32, 32, 30, 28, 9 %%>;
     buttonSize = <%% 14, 14, 13, 12, 3.5 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
@@ -125,7 +125,7 @@ ClientExplanationJs.prototype.insertInitBox = async function () {
     mobileImageRight = 5;
     mobileSubImageMarginTop = 7.5;
 
-    mainIllust = <%% ClientExplanationJs.binaryPath + "/mainIllust0.png", ClientExplanationJs.binaryPath + "/mainIllust1.png", ClientExplanationJs.binaryPath + "/mainIllust2.png", ClientExplanationJs.binaryPath + "/mainIllust2.png", ClientExplanationJs.binaryPath + "/mainIllust1.png" %%>;
+    mainIllust = <%% ClientExplanationJs.binaryPath + "/mainIllust0.png", ClientExplanationJs.binaryPath + "/mainIllust1.png", ClientExplanationJs.binaryPath + "/mainIllust2.png", ClientExplanationJs.binaryPath + "/mainIllust3.png", ClientExplanationJs.binaryPath + "/mainIllust1.png" %%>;
 
     if (big) {
       descriptionContents = [
@@ -147,7 +147,7 @@ ClientExplanationJs.prototype.insertInitBox = async function () {
       subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
       firstBasePaddingBottom = <%% 230, 210, 160, 130, 210 %%>;
       mainImageTop = <%% 28, 28, 18, 16, 32 %%>;
-      mainImageHeight = <%% 410, 372, 338, 314, 39 %%>;
+      mainImageHeight = <%% 410, 392, 342, 319, 39 %%>;
       buttonMarginTop = <%% 150, 150, 132, 110, 3.6 %%>;
     }
 
@@ -323,7 +323,7 @@ ClientExplanationJs.prototype.insertInitBox = async function () {
     if (desktop) {
       createNode({
         mother: firstBase,
-        attribute: {
+        event: {
           selectstart: (e) => { e.preventDefault() },
         },
         style: {
@@ -339,6 +339,12 @@ ClientExplanationJs.prototype.insertInitBox = async function () {
         },
         children: [
           {
+            event: {
+              click: (e) => {
+                GeneralJs.scrollTo(window, document.querySelector('.' + whiteConsultingBoxClassName), instance.naviHeight + (<&& 30 | 24 | 20 | 20 | 1 &&>));
+              },
+              selectstart: (e) => { e.preventDefault() },
+            },
             style: {
               display: "inline-flex",
               position: "relative",    
@@ -348,9 +354,10 @@ ClientExplanationJs.prototype.insertInitBox = async function () {
               borderRadius: String(buttonHeight) + ea,
               justifyContent: "center",
               alignItems: "center",
+              cursor: "pointer",
             },
             child: {
-              attribute: {
+              event: {
                 selectstart: (e) => { e.preventDefault() },
               },
               text: `무료 상담 신청`,
@@ -483,17 +490,35 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
 
     serviceClickEvent = (index) => {
       return async function (e) {
+        const self = this;
         const friends = document.querySelectorAll('.' + serviceBaseClassName);
         const target = objectDeepCopy(textContent[index]);
         const toggle = this.getAttribute("toggle");
         if (toggle === "on") {
-
+          for (let serviceDom of friends) {
+            if (serviceDom === self) {
+              serviceDom.style.opacity = String(1);
+              serviceDom.lastChild.style.background = colorExtended.focusBlue;
+              serviceDom.setAttribute("toggle", "on");
+            } else {
+              serviceDom.style.opacity = String(0.4);
+              serviceDom.lastChild.style.background = colorExtended.white;
+              serviceDom.setAttribute("toggle", "off");
+            }
+          }
         } else {
-          
+          for (let serviceDom of friends) {
+            if (serviceDom === self) {
+              serviceDom.style.opacity = String(1);
+              serviceDom.lastChild.style.background = colorExtended.focusBlue;
+              serviceDom.setAttribute("toggle", "on");
+            } else {
+              serviceDom.style.opacity = String(0.4);
+              serviceDom.lastChild.style.background = colorExtended.white;
+              serviceDom.setAttribute("toggle", "off");
+            }
+          }
         }
-        
-
-
       }
     }
 
@@ -748,7 +773,7 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
 ClientExplanationJs.prototype.insertConsultingBox = function (thisBase) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson } = GeneralJs;
-  const { ea, media, standardWidth } = this;
+  const { ea, media, standardWidth, whiteConsultingBoxClassName } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -1119,7 +1144,7 @@ ClientExplanationJs.prototype.insertConsultingBox = function (thisBase) {
   leftBoxWidth = <%% 398, 250, 209, 160, 0 %%>;
   textAreaBlockHeight = <%% 156, 136, 133, 130, 44.2 %%>;
 
-  descriptionSize = <%% 15, 14, 13, 13, 3 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.66 %%>;
   descriptionMarginTop = <%% 10, 10, 8, 6, 10 %%>;
@@ -1182,8 +1207,8 @@ ClientExplanationJs.prototype.insertConsultingBox = function (thisBase) {
     sub: [
       <&& "서비스 신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," &&>,
       <&& "<b%디자이너의 1:1 맞춤 상담%b>을 받아보세요!" | "<b%1:1 맞춤 상담%b>을 받아보세요!" | "<b%1:1 상담%b>을 받아보세요!" | "<b%1:1 상담%b>을 받아보세요!" | "<b%1:1 맞춤 상담%b>을 받아보세요!" &&>,
-      <&& "주소는 인테리어 받을 곳으로 작성해주시고," | "주소는 인테리어 받을 곳으로 작성해주시고," | "주소는 인테리어 받을 곳으로 작성해주시고," | "주소는 인테리어 받을 곳으로 작성해주시고," | "주소는 인테리어 받을 곳으로 작성해주시고," &&>,
-      <&& "평수는 공급 평수로 적어주세요!" | "평수는 공급 평수로 적어주세요!" | "평수는 공급 평수로 적어주세요!" | "평수는 공급 평수로 적어주세요!" | "평수는 공급 평수로 적어주세요!" &&>,
+      <&& "주소는 인테리어 받을 곳으로 작성해주시고," | "주소는 인테리어 받을 곳으로," | "주소는 인테리어 받을 곳으로," | "주소는 인테리어 대상으로," | "주소는 인테리어 받을 곳으로 작성해주시고," &&>,
+      <&& "평수는 공급 평수로 적어주세요!" | "평수는 공급 평수로 적어주세요!" | "평수는 공급 평수로 적어주세요!" | "평수는 공급으로 적어주세요!" | "평수는 공급 평수로 적어주세요!" &&>,
     ]
   };
 
@@ -1890,6 +1915,7 @@ ClientExplanationJs.prototype.insertConsultingBox = function (thisBase) {
 
   contentsArea = createNode({
     mother: mainBlock,
+    class: [ whiteConsultingBoxClassName ],
     style: {
       display: "block",
       position: "relative",
@@ -3936,6 +3962,8 @@ ClientExplanationJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
+
+    this.whiteConsultingBoxClassName = "whiteConsultingBoxClassName";
 
     await this.mother.ghostClientLaunching({
       mode: "front",
