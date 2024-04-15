@@ -12,7 +12,8 @@ GeneralJs.prototype.setGeneralProperties = function (instance) {
   this.standardWidth = <%% 1400, 1050, 900, 720, 88 %%>;
   this.sero = <%% false, false, false, false, true %%>;
   this.modeMinus = <%% 0, 1, 1, 1, 1 %%>;
-  this.naviHeight = <%% 72, 72, 66, 60, 60 %%>;
+  // this.naviHeight = <%% 72, 72, 66, 60, 60 %%>;
+  this.naviHeight = <%% 72, 72, 66, 60, 52 %%>;
   this.backHeight = <%% 860, 830, 670, 640, 80 %%>;
   this.margin = 20 - this.modeMinus;
   this.px = "px";
@@ -586,9 +587,10 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   let magazineSize;
   let wordingWeight;
   let searchTop;
+  let naviBaseMenu;
 
-  iconHeight = <%% 19.6, 18.6, 17, 14, 4 %%>;
-  iconTop = <%% 25, 26, 24, 22.5, 2 %%>;
+  iconHeight = <%% 19.6, 18.6, 16.5, 14, 14 %%>;
+  iconTop = <%% 25, 26, 24, 22.5, 19 %%>;
 
   wordHeight = <%% 20, 20, 20, 20, 20 %%>;
   wordSize = <%% 15, 15, 15, 14, 13 %%>;
@@ -597,20 +599,20 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   wordingTop = <%% (isMac() ? 22 : 22), (isMac() ? 22 : 22), 21, 18, 10 %%>;
   wordingMarginRightLast = <%% 9, 9, 4, 0, 1 %%>;
 
-  wordingSize = <%% 16, 15, 14, 14, 15 %%>;
+  wordingSize = <%% 16, 15, 14, 13.5, 15 %%>;
   wordingMarginRight = <%% 40, 36, 30, 19, 3 %%>;
   wordingWeight = 700;
 
   mobileMargin = 6.1;
 
-  hamburgerTop = 21;
+  hamburgerTop = 18;
   mobileMenuHeight = 203;
   mobileFirstTop = 11;
   mobileVerticalBetween = 37;
 
   magazineSize = 16;
   searchTop = <%% 22, 22, 19.5, 18, 2 %%>;
-  searchWidth = <%% 23, 22, 20, 18, 2 %%>;
+  searchWidth = <%% 23, 22, 20, 18, 19 %%>;
 
   thisIndex = 99;
   naviMenu = [
@@ -665,6 +667,19 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
     wordTop = wordTop + (GeneralJs.isMac() ? 0 : 1);
   }
 
+  naviBaseMenu = createNode({
+    mother: totalContents,
+    style: {
+      position: "fixed",
+      background: "transparent",
+      height: String(naviHeight) + "px",
+      width: String(100) + '%',
+      top: String(0),
+      left: String(0),
+      zIndex: String(99),
+    }
+  });
+
   naviBase = createNode({
     mother: totalContents,
     class: [ (modeNumber !== 1 ? "backblurdefault_lite" : "backblurwhite_lite") ],
@@ -683,7 +698,6 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
     mother: naviBase,
     mode: "svg",
     source: svgMaker.homeliaisonLogo(modeNumber !== 1 ? colorExtended.white : colorExtended.mainBlue),
-    // source: this.returnLogo(modeNumber !== 1 ? colorExtended.white : colorExtended.black, 0),
     class: [ desktop ? "hoverDefault" : "hoverDefault_mobile" ],
     event: {
       click: (e) => {
@@ -810,7 +824,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
     } else {
 
       mobileMenuTong = createNode({
-        mother: naviBase,
+        mother: naviBaseMenu,
         attribute: {
           toggle: "off",
         },
@@ -829,7 +843,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
               position: "absolute",
               bottom: String(0),
               left: String(0),
-              width: String(100) + '%',
+              width: GeneralJs.withOut(0, "px"),
               height: String(mobileMenuHeight) + "px",
               background: modeNumber !== 1 ? colorExtended.gradientGray : colorExtended.gradientWhite,
             },

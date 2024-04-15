@@ -41,7 +41,7 @@ const ClientExplanationJs = function () {
   this.mother = new GeneralJs();
 }
 
-ClientExplanationJs.binaryPath = "/middle/client";
+ClientExplanationJs.binaryPath = FRONTHOST + "/middle/client";
 
 ClientExplanationJs.prototype.insertInitBox = async function () {
   const instance = this;
@@ -99,7 +99,7 @@ ClientExplanationJs.prototype.insertInitBox = async function () {
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
     buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
 
-    titleSize = <%% 57, 51, 48, 39, 8 %%>;
+    titleSize = <%% 57, 51, 48, 39, 8.2 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
     titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
@@ -107,7 +107,7 @@ ClientExplanationJs.prototype.insertInitBox = async function () {
 
     pointOpacity = 0.4;
 
-    mainImageTop = <%% 27, 24, 18, 16, 33 %%>;
+    mainImageTop = <%% 27, 24, 18, 16, 32 %%>;
     mainImageHeight = <%% 390, 370, 338, 314, 39 %%>;
 
     descriptionSize = <%% 15, 14, 14, 13, 3.2 %%>;
@@ -115,17 +115,17 @@ ClientExplanationJs.prototype.insertInitBox = async function () {
 
     mobileLeftPaddingVisual = 1;
 
-    descriptionMarginTop = <%% 40, 40, 36, 30, 81.5 %%>;
+    descriptionMarginTop = <%% 40, 40, 36, 30, 72.5 %%>;
 
     descriptionPointBoldPaddingLeft = <%% 8, 8, 8, 8, 1.6 %%>;
     descriptionPointBoldPaddingTop = <%% (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 3), (isMac() ? 2 : 3), 0.4 %%>;
     descriptionPointBoldPaddingBottom = <%% (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 0.8 %%>;
     descriptionPointBoldMargin = <%% 2, 2, 2, 2, 1 %%>;
 
-    mobileImageRight = 5;
+    mobileImageRight = 3.5;
     mobileSubImageMarginTop = 7.5;
 
-    mainIllust = <%% ClientExplanationJs.binaryPath + "/mainIllust0.png", ClientExplanationJs.binaryPath + "/mainIllust1.png", ClientExplanationJs.binaryPath + "/mainIllust2.png", ClientExplanationJs.binaryPath + "/mainIllust3.png", ClientExplanationJs.binaryPath + "/mainIllust1.png" %%>;
+    mainIllust = <%% ClientExplanationJs.binaryPath + "/mainIllust0.png", ClientExplanationJs.binaryPath + "/mainIllust1.png", ClientExplanationJs.binaryPath + "/mainIllust2.png", ClientExplanationJs.binaryPath + "/mainIllust3.png", ClientExplanationJs.binaryPath + "/mainIllust5.png" %%>;
 
     if (big) {
       descriptionContents = [
@@ -147,7 +147,7 @@ ClientExplanationJs.prototype.insertInitBox = async function () {
       subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
       firstBasePaddingBottom = <%% 230, 210, 160, 130, 210 %%>;
       mainImageTop = <%% 28, 28, 18, 16, 32 %%>;
-      mainImageHeight = <%% 410, 392, 342, 319, 39 %%>;
+      mainImageHeight = <%% 410, 398, 342, 319, 39 %%>;
       buttonMarginTop = <%% 150, 150, 132, 110, 3.6 %%>;
     }
 
@@ -431,18 +431,18 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
 
-    titleSize = <%% 23, 21, 19, 17, 4.6 %%>;
-    descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
-    descriptionMarginTop = <%% 9, 9, 7, 6, 2.6 %%>;
+    titleSize = <%% 23, 21, 19, 17, 3.4 %%>;
+    descriptionSize = <%% 15, 14, 13, 12, 2.8 %%>;
+    descriptionMarginTop = <%% 9, 9, 7, 6, 0.2 %%>;
 
-    checkCircleWidth = <%% 21, 21, 20, 18, 4.6 %%>;
+    checkCircleWidth = <%% 21, 21, 20, 18, 3.4 %%>;
 
     visualTop = <%% 24, 24, 22, 17, 2 %%>;
 
-    boxWidth = <%% 290, 270, 240, 200, 56 %%>;
-    boxHeight = <%% 227, 214, 192, 163, 39.8 %%>;
+    boxWidth = <%% 290, 270, 240, 200, 25.8 %%>;
+    boxHeight = <%% 227, 214, 192, 163, 29.4 %%>;
 
-    betweenMargin = <%% 152, 90, 90, 60, 9 %%>;
+    betweenMargin = <%% 152, 90, 90, 60, 1.6 %%>;
 
     totalHeight = <%% 350, 340, 320, 254, 88 %%>;
 
@@ -484,9 +484,9 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
         focus: false,
       },
     ]
-    if (mobile) {
-      textContent = textContent.find((o) => { return o.focus });
-    }
+    // if (mobile) {
+    //   textContent = textContent.find((o) => { return o.focus });
+    // }
 
     serviceClickEvent = (index) => {
       return async function (e) {
@@ -496,6 +496,8 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
         const toggle = this.getAttribute("toggle");
         if (toggle === "on") {
           for (let serviceDom of friends) {
+            serviceDom.style.transform = "translateY(0px)";
+            serviceDom.style.animation = "";
             if (serviceDom === self) {
               serviceDom.style.opacity = String(1);
               serviceDom.lastChild.style.background = colorExtended.focusBlue;
@@ -508,6 +510,8 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
           }
         } else {
           for (let serviceDom of friends) {
+            serviceDom.style.transform = "translateY(0px)";
+            serviceDom.style.animation = "";
             if (serviceDom === self) {
               serviceDom.style.opacity = String(1);
               serviceDom.lastChild.style.background = colorExtended.focusBlue;
@@ -531,9 +535,9 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
         height: desktop ? String(totalHeight) + ea : "",
         justifyContent: "center",
         alignItems: "center",
-        flexDirection: desktop ? "row" : "column",
-        paddingTop: desktop ? "" : String(mobileBasePaddingTop) + ea,
-        paddingBottom: desktop ? "" : String(mobileBasePaddingTop) + ea,
+        flexDirection: "row",
+        paddingTop: desktop ? "" : String(9) + ea,
+        paddingBottom: desktop ? "" : String(4.5) + ea,
       },
       child: {
         style: {
@@ -572,16 +576,18 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
           justifyContent: "center",
           alignItems: "center",
           top: String(visualTop) + ea,
-          opacity: target.focus ? String(1) : String(0.4),
           marginLeft: (desktop && target.margin) ? String(betweenMargin) + ea : "",
           marginRight: (desktop && target.margin) ? String(betweenMargin) + ea : "",
           cursor: "pointer",
+          opacity: String(0),
+          transform: "translateY(10px)",
+          animation: "1.2s ease " + String(0.2 + (0.2 * index)) + "s 1 normal forwards running " + (target.focus ? "fadeupdelay" : "fadeupdelaymiddle"),
         }
       });
       createNode({
         mother: serviceBase,
         mode: "svg",
-        source: svgMaker.houseLine(colorExtended.focusBlue),
+        source: svgMaker.houseLine(colorExtended.blueDark, mobile),
         style: {
           display: "flex",
           position: "absolute",
@@ -600,7 +606,7 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
           fontSize: String(titleSize) + ea,
           fontWeight: String(700),
           color: colorExtended.black,
-          marginTop: desktop ? "" : String(5.6) + ea,
+          marginTop: desktop ? "" : String(-1) + ea,
         }
       });
       createNode({
@@ -614,10 +620,11 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
           color: colorExtended.black,
           marginTop: String(descriptionMarginTop) + ea,
           marginBottom: String(0) + ea,
+          textAlign: "center",
         },
         bold: {
           fontSize: String(descriptionSize) + ea,
-          fontWeight: String(800),
+          fontWeight: String(desktop ? 800 : 400),
           color: colorExtended.black,
         }
       });
@@ -625,11 +632,12 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
         mother: serviceBase,
         text: target.description[1],
         style: {
-          display: "flex",
+          display: desktop ? "flex" : "none",
           position: "relative",
           fontSize: String(descriptionSize) + ea,
           fontWeight: String(400),
           color: colorExtended.black,
+          textAlign: "center",
         },
         bold: {
           fontSize: String(descriptionSize) + ea,
@@ -660,111 +668,26 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
       });
     }
 
-    if (desktop) {
-      for (let i = 0; i < textContent.length; i++) {
-        createServiceBlock(i);
-      }
-    } else {
-
-      mobileWhiteBase = createNode({
-        mother: secondBase,
-        style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          borderRadius: String(8) + "px",
-          background: colorExtended.white,
-          boxShadow: "0px 3px 13px -9px " + colorExtended.blueDim,
-          paddingTop: String(whiteInnerVisualPaddingTop) + ea,
-          paddingBottom: String(whiteInnerVisualPaddingTop) + ea,
-          flexDirection: "column",
-          marginBottom: String(2) + ea,
-        }
-      });
-
-      num = 0;
-      for (let [ black, white ] of mobileStartEndText) {
-        createNode({
-          mother: mobileWhiteBase,
-          style: {
-            display: "flex",
-            position: "relative",
-            marginLeft: String(whiteInnerPadding) + ea,
-            width: withOut(whiteInnerPadding * 2, ea),
-            height: String(12) + ea,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "start",
-            borderBottom: num === 0 ? "1px dashed " + colorExtended.black : "",
-          },
-          children: [
-            {
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: String(21.6) + ea,
-                height: String(7.2) + ea,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: String(8) + "px",
-                background: colorExtended.black,
-              },
-              child: {
-                text: black,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontWeight: String(800),
-                  fontSize: String(startEndSize) + ea,
-                  color: colorExtended.white,
-                  top: String(-0.2) + ea,
-                }
-              }
-            },
-            {
-              style: {
-                display: "inline-flex",
-                position: "absolute",
-                right: String(0),
-                top: String(0),
-                width: String(40) + ea,
-                height: withOut(0, ea),
-                alignItems: "center",
-                justifyContent: "end",
-              },
-              child: {
-                text: white,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontWeight: String(500),
-                  fontSize: String(startEndValueSize) + ea,
-                  color: colorExtended.black,
-                  top: String(-0.4) + ea,
-                }
-              }
-            },
-          ]
-        });
-        num++;
-      }
-
-      createServiceBlock(textContent, createNode({
-        mother: secondBase,
-        style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          borderRadius: String(8) + "px",
-          background: colorExtended.white,
-          boxShadow: "0px 3px 13px -9px " + colorExtended.blueDim,
-          paddingTop: String(mobileServicePaddingTop) + ea,
-          paddingBottom: String(mobileServicePaddingTop) + ea,
-          flexDirection: "column",
-        }
-      }));
+    for (let i = 0; i < textContent.length; i++) {
+      createServiceBlock(i);
     }
 
+    setQueue(() => {
+      const friends = document.querySelectorAll('.' + serviceBaseClassName);
+      for (let serviceDom of friends) {
+        const toggle = serviceDom.getAttribute("toggle");
+        if (toggle === "on") {
+          serviceDom.style.transform = "translateY(0px)";
+          serviceDom.style.opacity = String(1);
+          serviceDom.style.animation = "";
+        } else {
+          serviceDom.style.transform = "translateY(0px)";
+          serviceDom.style.opacity = String(0.4);
+          serviceDom.style.animation = "";
+        }
+      }  
+    }, 1800)
+    
   } catch (e) {
     console.log(e);
   }
@@ -3842,7 +3765,7 @@ ClientExplanationJs.prototype.insertFourthBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
 
     colorTop = <%% 200, 200, 200, 200, 200 %%>;
-    basePaddingTop = <%% 160, 160, 140, 110, 19 %%>;
+    basePaddingTop = <%% 160, 160, 140, 110, 18 %%>;
     basePaddingBottom = <%% 200, 200, 170, 150, 24 %%>;
 
     checkCircleWidth = 13;

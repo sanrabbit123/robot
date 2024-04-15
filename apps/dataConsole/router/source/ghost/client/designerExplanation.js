@@ -851,12 +851,15 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
           opacity: target.focus ? String(1) : String(0.4),
           marginLeft: (desktop && target.margin) ? String(betweenMargin) + ea : "",
           marginRight: (desktop && target.margin) ? String(betweenMargin) + ea : "",
+          opacity: String(0),
+          transform: "translateY(10px)",
+          animation: typeof index === "number" ? "1.2s ease " + String(0.2 + (0.2 * index)) + "s 1 normal forwards running " + (target.focus ? "fadeupdelay" : "fadeupdelaymiddle") : "1.2s ease " + String(0.4) + "s 1 normal forwards running fadeupdelay",
         }
       });
       createNode({
         mother: serviceBase,
         mode: "svg",
-        source: svgMaker.houseLine(colorExtended.focusBlue),
+        source: svgMaker.houseLine(colorExtended.blueDark),
         style: {
           display: "flex",
           position: "absolute",
@@ -954,6 +957,9 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
           paddingBottom: String(whiteInnerVisualPaddingTop) + ea,
           flexDirection: "column",
           marginBottom: String(2) + ea,
+          opacity: String(0),
+          transform: "translateY(10px)",
+          animation: "1.2s ease " + String(0.4) + "s 1 normal forwards running fadeupdelay",
         }
       });
 
@@ -1036,6 +1042,9 @@ DesignerExplanationJs.prototype.insertSecondBox = async function () {
           paddingTop: String(mobileServicePaddingTop) + ea,
           paddingBottom: String(mobileServicePaddingTop) + ea,
           flexDirection: "column",
+          opacity: String(0),
+          transform: "translateY(10px)",
+          animation: "1.2s ease " + String(0.6) + "s 1 normal forwards running fadeupdelay",
         }
       }));
     }
