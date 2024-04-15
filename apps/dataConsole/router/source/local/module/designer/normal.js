@@ -4010,7 +4010,7 @@ DesignerJs.prototype.communicationRender = function () {
     async function (e) {
       const desid = document.querySelector('.' + whiteBaseClassName).getAttribute("desid");
       try {
-        const sendFunc = instance.normalSendNotice("proposalProfile", desid);
+        const sendFunc = instance.normalSendNotice("settingPortfolio", desid);
         await sendFunc();
       } catch (e) {
         console.log(e);
@@ -4042,7 +4042,7 @@ DesignerJs.prototype.communicationRender = function () {
     async function (e) {
       const desid = document.querySelector('.' + whiteBaseClassName).getAttribute("desid");
       try {
-        const sendFunc = instance.normalSendNotice("settingPortfolio", desid);
+        const sendFunc = instance.normalSendNotice("proposalProfile", desid);
         await sendFunc();
       } catch (e) {
         console.log(e);

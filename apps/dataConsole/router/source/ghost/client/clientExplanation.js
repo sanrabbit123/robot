@@ -390,6 +390,7 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
   const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const serviceBaseClassName = "serviceBaseClassName";
   try {
     let mainHeight;
     let minusLeft;
@@ -416,6 +417,7 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
     let whiteInnerPadding;
     let whiteInnerVisualPaddingTop;
     let mobileServicePaddingTop;
+    let serviceClickEvent;
 
     mainHeight = <%% 440, 390, 370, 280, 136 %%>;
     minusLeft = window.innerWidth - standardWidth + 1;
@@ -475,9 +477,24 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
         focus: false,
       },
     ]
-
     if (mobile) {
       textContent = textContent.find((o) => { return o.focus });
+    }
+
+    serviceClickEvent = (index) => {
+      return async function (e) {
+        const friends = document.querySelectorAll('.' + serviceBaseClassName);
+        const target = objectDeepCopy(textContent[index]);
+        const toggle = this.getAttribute("toggle");
+        if (toggle === "on") {
+
+        } else {
+          
+        }
+        
+
+
+      }
     }
 
     secondBase = createNode({
@@ -514,6 +531,13 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
       }
       serviceBase = createNode({
         mother: thisMother,
+        class: [ serviceBaseClassName ],
+        attribute: {
+          toggle: target.focus ? "on" : "off",
+        },
+        event: {
+          click: serviceClickEvent(index),
+        },
         style: {
           display: "inline-flex",
           position: "relative",
@@ -526,6 +550,7 @@ ClientExplanationJs.prototype.insertSecondBox = async function () {
           opacity: target.focus ? String(1) : String(0.4),
           marginLeft: (desktop && target.margin) ? String(betweenMargin) + ea : "",
           marginRight: (desktop && target.margin) ? String(betweenMargin) + ea : "",
+          cursor: "pointer",
         }
       });
       createNode({
@@ -1155,10 +1180,10 @@ ClientExplanationJs.prototype.insertConsultingBox = function (thisBase) {
       "홈리에종 서비스 신청",
     ],
     sub: [
-      <&& "홈리에종의 서비스 진행을 위해서는" | "홈리에종 서비스 진행을 위해서는" | "서비스 진행을 위해서는" | "서비스 진행을 위해서는" | "홈리에종 서비스 진행을 위해서는" &&>,
-      <&& "다음과 같이 기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." &&>,
       <&& "서비스 신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," &&>,
       <&& "<b%디자이너의 1:1 맞춤 상담%b>을 받아보세요!" | "<b%1:1 맞춤 상담%b>을 받아보세요!" | "<b%1:1 상담%b>을 받아보세요!" | "<b%1:1 상담%b>을 받아보세요!" | "<b%1:1 맞춤 상담%b>을 받아보세요!" &&>,
+      <&& "주소는 인테리어 받을 곳으로 작성해주시고," | "주소는 인테리어 받을 곳으로 작성해주시고," | "주소는 인테리어 받을 곳으로 작성해주시고," | "주소는 인테리어 받을 곳으로 작성해주시고," | "주소는 인테리어 받을 곳으로 작성해주시고," &&>,
+      <&& "평수는 공급 평수로 적어주세요!" | "평수는 공급 평수로 적어주세요!" | "평수는 공급 평수로 적어주세요!" | "평수는 공급 평수로 적어주세요!" | "평수는 공급 평수로 적어주세요!" &&>,
     ]
   };
 
