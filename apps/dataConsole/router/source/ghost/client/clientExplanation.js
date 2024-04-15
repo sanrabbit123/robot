@@ -107,8 +107,8 @@ ClientExplanationJs.prototype.insertInitBox = async function () {
 
     pointOpacity = 0.4;
 
-    mainImageTop = <%% 27, 24, 18, 16, 32 %%>;
-    mainImageHeight = <%% 390, 370, 338, 314, 39 %%>;
+    mainImageTop = <%% 16, 16, 16, 16, 32 %%>;
+    mainImageHeight = <%% 402, 384, 340, 318, 39 %%>;
 
     descriptionSize = <%% 15, 14, 14, 13, 3.2 %%>;
     descriptionLineHeight = <%% 1.8, 1.8, 1.8, 1.7, 1.8 %%>;
@@ -147,7 +147,7 @@ ClientExplanationJs.prototype.insertInitBox = async function () {
       subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
       firstBasePaddingBottom = <%% 230, 210, 160, 130, 210 %%>;
       mainImageTop = <%% 28, 28, 18, 16, 32 %%>;
-      mainImageHeight = <%% 410, 398, 342, 319, 39 %%>;
+      mainImageHeight = <%% 410, 398, 342, 318, 39 %%>;
       buttonMarginTop = <%% 150, 150, 132, 110, 3.6 %%>;
     }
 
