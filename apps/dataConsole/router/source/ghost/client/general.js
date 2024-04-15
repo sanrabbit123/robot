@@ -589,17 +589,17 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   let searchTop;
   let naviBaseMenu;
 
-  iconHeight = <%% 19.6, 18.6, 16.5, 14, 14 %%>;
-  iconTop = <%% 25, 26, 24, 22.5, 19 %%>;
+  iconHeight = <%% 19, 18.6, 16.5, 14, 14 %%>;
+  iconTop = <%% 26, 26, 24.5, 22.5, 19 %%>;
 
   wordHeight = <%% 20, 20, 20, 20, 20 %%>;
   wordSize = <%% 15, 15, 15, 14, 13 %%>;
   wordTop = <%% 24, 24, 21, 20, 18 %%>;
 
-  wordingTop = <%% (isMac() ? 22 : 22), (isMac() ? 22 : 22), 21, 18, 10 %%>;
+  wordingTop = <%% 21, 22, 20, 18, 10 %%>;
   wordingMarginRightLast = <%% 9, 9, 4, 0, 1 %%>;
 
-  wordingSize = <%% 16, 15, 14, 13.5, 15 %%>;
+  wordingSize = <%% 16, 15, 14.5, 13.5, 15 %%>;
   wordingMarginRight = <%% 40, 36, 30, 19, 3 %%>;
   wordingWeight = 700;
 
