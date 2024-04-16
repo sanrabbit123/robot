@@ -590,7 +590,10 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   let naviBaseMenu;
 
   iconHeight = <%% 19, 18.6, 16.5, 14, 14 %%>;
-  iconTop = <%% 26, 26, 24.5, 22.5, 19 %%>;
+  iconTop = <%% 27, 27, 24.5, 22.5, 19 %%>;
+
+  iconHeight = <%% 21, 21, 20, 17, 15 %%>;
+  iconTop = <%% 23, 23, 21, 19, 18 %%>;
 
   wordHeight = <%% 20, 20, 20, 20, 20 %%>;
   wordSize = <%% 15, 15, 15, 14, 13 %%>;
@@ -697,7 +700,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   createNode({
     mother: naviBase,
     mode: "svg",
-    source: svgMaker.homeliaisonLogo(modeNumber !== 1 ? colorExtended.white : colorExtended.mainBlue),
+    source: svgMaker.homeliaisonLogo(modeNumber !== 1 ? colorExtended.white : colorExtended.black),
     class: [ desktop ? "hoverDefault" : "hoverDefault_mobile" ],
     event: {
       click: (e) => {
