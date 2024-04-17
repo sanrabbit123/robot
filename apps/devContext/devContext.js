@@ -83,6 +83,7 @@ DevContext.prototype.launching = async function () {
     const address = this.address;
     const back = this.back;
     const work = new BackWorker();
+    const parent = "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ";
     const sheets = new GoogleSheet();
     const bill = new BillMaker();
     const chrome = new GoogleChrome();
@@ -210,10 +211,163 @@ DevContext.prototype.launching = async function () {
     
 
 
-
-
+    /*
     
+    // 객단가
 
+    await this.MONGOPYTHONC.connect();
+    const agoDate = new Date(2021, 0, 1, 0, 0, 0);
+    const selfMongo = this.MONGOC;
+    const selfPythonMongo = this.MONGOPYTHONC;
+    const emptyDate = new Date(2000, 0, 1);
+    const toNormal = true;
+    const collection = "generalBill";
+    let projects, clients, bills;
+    let whereQuery;
+    let cliidArr;
+    let orQuery;
+    let proidArr;
+    let billMatrix;
+    let payCancelMatrix;
+    let projectFeeArr;
+    let thisClient, thisProject;
+    let thisRequestNumber;
+    let designFee2021, designFee2022, designFee2023;
+    let returnFeeMatrix;
+    let sheetsId0, sheetsId1, sheetsId2;
+    let designers, thisDesigner;
+    
+    designers = await back.getDesignersByQuery({}, { selfMongo, toNormal });
+    projects = await back.getProjectsByQuery({ "process.contract.first.date": { $gte: agoDate } }, { selfMongo, toNormal })
+    proidArr = projects.map((p) => { return { cliid: p.cliid } });
+    clients = await back.getClientsByQuery({ "$or": proidArr }, { selfMongo, toNormal });
+    cliidArr = [ ...new Set(clients.map((c) => { return c.cliid })) ];
+    proidArr = projects.map((p) => { return { "links.proid": p.proid, "links.method": (p.service.online ? "online" : "offline") } })
+    bills = await back.mongoRead(collection, { $or: proidArr }, { selfMongo: selfPythonMongo });
+    billMatrix = bills.map((b) => {
+      const resultArr = objectDeepCopy(b.requests.filter((o) => { return /홈리에종 잔금/gi.test(o.name) || /홈리에종 계약금/gi.test(o.name) }));
+      resultArr.proid = b.links.proid;
+      resultArr.cliid = b.links.cliid;
+      resultArr.method = b.links.method;
+      return resultArr;
+    });
+
+    payCancelMatrix = billMatrix.map((arr) => {
+      return arr.map((o, index, original) => {
+        return { pay: o.pay, cancel: o.cancel, proid: original.proid, cliid: original.cliid, method: original.method }
+      })
+    });
+
+    payCancelMatrix = payCancelMatrix.map((arr) => {
+      return arr.map(({ pay, cancel, proid, cliid, method }) => {
+        if (pay.length === cancel.length) {
+          return { amount: 0, proid, cliid, method };
+        } else {
+          return { amount: pay.reduce((acc, curr) => { return acc + curr.amount }, 0) - cancel.reduce((acc, curr) => { return acc + curr.amount }, 0), proid, cliid, method };
+        }
+      })
+    })
+    
+    projectFeeArr = payCancelMatrix.map((arr, index, original) => {
+      if (arr.length > 0) {
+        return arr.reduce((acc, curr) => { acc.amount = acc.amount + curr.amount; return acc }, { amount: 0, proid: arr[0].proid, cliid: arr[0].cliid, method: arr[0].method });
+      } else {
+        return { amount: 0 };
+      }
+    }).filter((n) => { return n.amount !== 0 })
+
+    for (let obj of projectFeeArr) {
+      thisClient = clients.find((o) => { return o.cliid === obj.cliid });
+      [ thisProject ] = projects.filter((o) => { return o.cliid === obj.cliid }).filter((o) => { return o.service.online === (obj.method === "online") });
+      thisRequestNumber = 0;
+      for (let i = 0; i < thisClient.requests.length; i++) {
+        if (thisClient.requests[i].request.timeline.valueOf() < thisProject.proposal.date.valueOf()) {
+          thisRequestNumber = i;
+          break;
+        }
+      }
+      thisDesigner = designers.find((d) => { return d.desid === thisProject.desid });
+
+      obj.serid = thisProject.service.serid;
+      obj.desid = thisProject.desid;
+      obj.designer = thisDesigner.designer;
+      obj.first = thisProject.process.contract.first.date;
+      obj.remain = thisProject.process.contract.remain.date;
+      obj.discount = thisProject.process.contract.remain.calculation.discount;
+
+      obj.timeline = thisClient.requests[thisRequestNumber].request.timeline;
+      obj.family = thisClient.requests[thisRequestNumber].request.family;
+      obj.address = thisClient.requests[thisRequestNumber].request.space.address;
+      obj.contract = thisClient.requests[thisRequestNumber].request.space.contract;
+      obj.pyeong = thisClient.requests[thisRequestNumber].request.space.pyeong;
+
+      obj.name = thisClient.name;
+    }
+
+    designFee2021 = projectFeeArr.filter((o) => { return o.first.getFullYear() === 2021; });
+    designFee2022 = projectFeeArr.filter((o) => { return o.first.getFullYear() === 2022; });
+    designFee2023 = projectFeeArr.filter((o) => { return o.first.getFullYear() === 2023; });
+
+    returnFeeMatrix = (arr) => {
+      let matrix;
+      matrix = [ [
+        "성함",
+        "디자이너",
+        "고객 아이디",
+        "디자이너 아이디",
+        "프로젝트 아이디",
+        "디자인비",
+        "온오프라인",
+        "서비스",
+        "문의일",
+        "계약일",
+        "잔금일",
+        "할인율",
+        "가족구성원",
+        "주소",
+        "계약 형태",
+        "평수"
+      ] ];
+      arr.sort((a, b) => { return a.timeline.valueOf() - b.timeline.valueOf() });
+      arr = arr.filter((obj) => { return obj.remain.valueOf() > emptyDate.valueOf(); });
+      for (let obj of arr) {
+        matrix.push([
+          obj.name,
+          obj.designer,
+          obj.cliid,
+          obj.desid,
+          obj.proid,
+          obj.amount,
+          obj.method === "online" ? "온라인" : "오프라인",
+          serviceParsing(obj.serid),
+          dateToString(obj.timeline, true),
+          dateToString(obj.first, true),
+          dateToString(obj.remain, true),
+          obj.discount,
+          obj.family,
+          obj.address,
+          obj.contract,
+          obj.pyeong,
+        ]);
+      }
+      return matrix;
+    }
+
+    sheetsId0 = await sheets.create_newSheets_inPython("디자인비_2021년", parent);
+    await sheets.setting_cleanView_inPython(sheetsId0);
+    await sheets.update_value_inPython(sheetsId0, "", returnFeeMatrix(designFee2021));
+
+    sheetsId1 = await sheets.create_newSheets_inPython("디자인비_2022년", parent);
+    await sheets.setting_cleanView_inPython(sheetsId1);
+    await sheets.update_value_inPython(sheetsId1, "", returnFeeMatrix(designFee2022));
+
+    sheetsId2 = await sheets.create_newSheets_inPython("디자인비_2023년", parent);
+    await sheets.setting_cleanView_inPython(sheetsId2);
+    await sheets.update_value_inPython(sheetsId2, "", returnFeeMatrix(designFee2023));
+
+    await this.MONGOPYTHONC.close();
+    
+    */
     
     
 
@@ -7182,11 +7336,10 @@ DevContext.prototype.launching = async function () {
     //   contents: "안녕하세요.",
     // }));
 
-
     
-    // // send sms
-    // const name = "최경숙";
-    // const amount = 1_723_700;
+    // send sms
+    // const name = "이지수";
+    // const amount = 330000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
