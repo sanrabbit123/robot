@@ -64,7 +64,7 @@ GoogleChrome.prototype.pdfPrint = async function (link, filePath = null, openMod
   }
 }
 
-GoogleChrome.prototype.pageToPng = async function (link, filePath = null, tabletMode = false) {
+GoogleChrome.prototype.pageToPng = async function (link, filePath = null, tabletMode = false, mobileMode = false) {
   const instance = this;
   const { shellLink, shellExec, uniqueValue } = this.mother;
   const { chromium } = this;
@@ -82,8 +82,8 @@ GoogleChrome.prototype.pageToPng = async function (link, filePath = null, tablet
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.setViewportSize({
-      width: !tabletMode ? 1920 : 1200,
-      height: 1080,
+      width: !mobileMode ? (!tabletMode ? 2400 : 1200) : 720,
+      height: 1200,
     });
     await page.goto(link, { waitUntil: "networkidle" });
     await page.evaluateHandle("document.fonts.ready");

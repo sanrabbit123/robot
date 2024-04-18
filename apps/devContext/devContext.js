@@ -210,6 +210,8 @@ DevContext.prototype.launching = async function () {
 
     
 
+    // await chrome.pageToPng("https://home-liaison.com/about.php");
+
 
     /*
     
@@ -232,9 +234,9 @@ DevContext.prototype.launching = async function () {
     let projectFeeArr;
     let thisClient, thisProject;
     let thisRequestNumber;
-    let designFee2021, designFee2022, designFee2023;
+    let designFee2021, designFee2022, designFee2023, designFee2024;
     let returnFeeMatrix;
-    let sheetsId0, sheetsId1, sheetsId2;
+    let sheetsId0, sheetsId1, sheetsId2, sheetsId3;
     let designers, thisDesigner;
     
     designers = await back.getDesignersByQuery({}, { selfMongo, toNormal });
@@ -249,32 +251,45 @@ DevContext.prototype.launching = async function () {
       resultArr.proid = b.links.proid;
       resultArr.cliid = b.links.cliid;
       resultArr.method = b.links.method;
+      resultArr.response = objectDeepCopy(b.responses.filter((o) => { return /홈리에종 선금 정산/gi.test(o.name) || /홈리에종 잔금 정산/gi.test(o.name) }));
       return resultArr;
     });
 
     payCancelMatrix = billMatrix.map((arr) => {
       return arr.map((o, index, original) => {
-        return { pay: o.pay, cancel: o.cancel, proid: original.proid, cliid: original.cliid, method: original.method }
+        return { items: o.items, pay: o.pay, cancel: o.cancel, proid: original.proid, cliid: original.cliid, method: original.method, response: original.response }
       })
     });
 
     payCancelMatrix = payCancelMatrix.map((arr) => {
-      return arr.map(({ pay, cancel, proid, cliid, method }) => {
-        if (pay.length === cancel.length) {
-          return { amount: 0, proid, cliid, method };
+      return arr.map(({ items, pay, cancel, proid, cliid, method, response }) => {
+        if (pay.length === 0) {
+            return { amount: items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0), proid, cliid, method, response };
         } else {
-          return { amount: pay.reduce((acc, curr) => { return acc + curr.amount }, 0) - cancel.reduce((acc, curr) => { return acc + curr.amount }, 0), proid, cliid, method };
+          // if (pay.length === cancel.length) {
+          //   return { amount: 0, proid, cliid, method, response: [] };
+          // } else {
+            // return { amount: pay.reduce((acc, curr) => { return acc + curr.amount }, 0) - cancel.reduce((acc, curr) => { return acc + curr.amount }, 0), proid, cliid, method, response };
+            return { amount: pay.reduce((acc, curr) => { return acc + curr.amount }, 0), proid, cliid, method, response };
+          // }
         }
       })
     })
     
     projectFeeArr = payCancelMatrix.map((arr, index, original) => {
       if (arr.length > 0) {
-        return arr.reduce((acc, curr) => { acc.amount = acc.amount + curr.amount; return acc }, { amount: 0, proid: arr[0].proid, cliid: arr[0].cliid, method: arr[0].method });
+        return arr.reduce((acc, curr) => { acc.amount = acc.amount + curr.amount; return acc }, { amount: 0, proid: arr[0].proid, cliid: arr[0].cliid, method: arr[0].method, response: arr[0].response });
       } else {
         return { amount: 0 };
       }
     }).filter((n) => { return n.amount !== 0 })
+
+    projectFeeArr = projectFeeArr.map((obj) => {
+      obj.response = obj.response.map((o) => {
+        return o.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0);
+      }).reduce((acc, curr) => { return acc + curr }, 0);
+      return obj;
+    })
 
     for (let obj of projectFeeArr) {
       thisClient = clients.find((o) => { return o.cliid === obj.cliid });
@@ -307,6 +322,7 @@ DevContext.prototype.launching = async function () {
     designFee2021 = projectFeeArr.filter((o) => { return o.first.getFullYear() === 2021; });
     designFee2022 = projectFeeArr.filter((o) => { return o.first.getFullYear() === 2022; });
     designFee2023 = projectFeeArr.filter((o) => { return o.first.getFullYear() === 2023; });
+    designFee2024 = projectFeeArr.filter((o) => { return o.first.getFullYear() === 2024; });
 
     returnFeeMatrix = (arr) => {
       let matrix;
@@ -317,6 +333,8 @@ DevContext.prototype.launching = async function () {
         "디자이너 아이디",
         "프로젝트 아이디",
         "디자인비",
+        "정산액",
+        "수익",
         "온오프라인",
         "서비스",
         "문의일",
@@ -338,6 +356,8 @@ DevContext.prototype.launching = async function () {
           obj.desid,
           obj.proid,
           obj.amount,
+          obj.response,
+          (obj.amount - obj.response),
           obj.method === "online" ? "온라인" : "오프라인",
           serviceParsing(obj.serid),
           dateToString(obj.timeline, true),
@@ -364,6 +384,10 @@ DevContext.prototype.launching = async function () {
     sheetsId2 = await sheets.create_newSheets_inPython("디자인비_2023년", parent);
     await sheets.setting_cleanView_inPython(sheetsId2);
     await sheets.update_value_inPython(sheetsId2, "", returnFeeMatrix(designFee2023));
+
+    sheetsId3 = await sheets.create_newSheets_inPython("디자인비_2024년", parent);
+    await sheets.setting_cleanView_inPython(sheetsId3);
+    await sheets.update_value_inPython(sheetsId3, "", returnFeeMatrix(designFee2024));
 
     await this.MONGOPYTHONC.close();
     
@@ -7235,9 +7259,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이승은",
-    //     designer: "손민선",
-    //     link: "https://drive.google.com/drive/folders/1ZBbfr22X4KD2nrNjY0NUFsj7H92Epwos",
+    //     client: "이미애",
+    //     designer: "고은나라",
+    //     link: "https://drive.google.com/drive/folders/1MqIVe1arUyjMHCZwUO2BATQ_cWL7vPkM",
     //     pay: true
     //   },
     // ]);
@@ -7248,8 +7272,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "정현주",
-    //     designer: "박정훈",
+    //     client: "이미애",
+    //     designer: "고은나라",
     //   },
     // ]);
 
