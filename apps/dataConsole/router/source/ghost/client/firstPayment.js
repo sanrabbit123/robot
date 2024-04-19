@@ -81,6 +81,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     let mobileSubImageMarginTop;
     let description;
     let blanketHeight, blanketVisualTop, blanketOpacity, blanketMargin;
+    let mainTitleText;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -104,7 +105,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
     titleVisualLeft = <%% 2, 2, 2, 2, -0.5 %%>;
-    titleLineHeight = <%% 1.11, 1.11, 1.11, 1.11, 1.07 %%>;
+    titleLineHeight = <%% 1.1, 1.1, 1.1, 1.1, 1.07 %%>;
 
     pointOpacity = 0.4;
 
@@ -127,6 +128,8 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     blanketVisualTop = <%% (isMac() ? 1 : 0), (isMac() ? 1 : 0), (isMac() ? 1 : 0), (isMac() ? 1 : 0), 1 %%>;
     blanketOpacity = <%% 0.3, 0.3, 0.3, 0.3, 0.3 %%>;
     blanketMargin = <%% 34, 32, 30, 30, 2 %%>;
+
+    mainTitleText = (desktop ? "Payment\n<u%and%u>\nFirst meeting<b%.%b>" : "Payment\n<u%and%u>\nFirst meeting<b%.%b>");
 
     if (desktop && window.innerHeight > 1100) {
       titleSize = <%% 57, 51, 43, 36, 7 %%>;
@@ -186,14 +189,15 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
       },
       children: [
         {
-          text: (desktop ? "Service curation<b%.%b>" : "Service curation<b%.%b>"),
+          text: mainTitleText,
           style: {
             display: "inline-block",
             position: "relative",
             fontSize: String(titleSize) + ea,
             fontWeight: String(titleWeight),
-            color: colorExtended.white,
+            color: colorExtended.blueLight,
             fontFamily: "mont",
+            textAlign: "center",
             top: desktop ? String(titleVisualTop) + ea : "",
             left: desktop ? String(titleVisualLeft) + ea : "",
             lineHeight: String(titleLineHeight),
@@ -201,10 +205,17 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
           bold: {
             fontSize: String(titleSize) + ea,
             fontWeight: String(titleWeight),
-            color: colorExtended.white,
+            color: colorExtended.blueLight,
             fontFamily: "mont",
             opacity: String(pointOpacity),
-          }
+          },
+          under: {
+            fontSize: String(titleSize - 10) + ea,
+            fontWeight: String(titleWeight),
+            color: colorExtended.blueLight,
+            fontFamily: "mont",
+            opacity: String(pointOpacity),
+          },
         }
       ]
     });
@@ -237,74 +248,21 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
       ]
     });
 
-    // description
+    // white box
     createNode({
       mother: firstBase,
       style: {
         display: "flex",
         position: "relative",
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: String(descriptionMarginTop) + ea,
+        width: withOut(0, ea),
+        height: String(600) + ea,
+        marginTop: String(100) + ea,
+        background: colorExtended.white,
+        borderRadius: String(10) + "px",
         opacity: String(0),
         transform: "translateY(30px)",
-        animation: "1.5s ease 0s 1 normal forwards running fadeupdelay2",
-        textAlign: "center",
-        flexDirection: "row",
-      },
-      children: [
-        {
-          mode: "img",
-          attribute: {
-            src: FirstPaymentJs.binaryPath + "/blanketLeft.svg",
-          },
-          style: {
-            display: desktop ? "inline-block" : "none",
-            position: "relative",
-            height: String(blanketHeight) + ea,
-            opacity: String(blanketOpacity),
-            marginRight: String(blanketMargin) + ea,
-            top: String(blanketVisualTop) + ea,
-          }
-        },
-        {
-          text: description.join("\n"),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            color: colorExtended.white,
-            fontWeight: String(400),
-            fontSize: String(descriptionSize) + ea,
-            lineHeight: String(descriptionLineHeight),
-          },
-          bold: {
-            color: colorExtended.darkDarkBlack,
-            fontWeight: String(700),
-            fontSize: String(descriptionSize) + ea,
-            lineHeight: String(descriptionLineHeight),
-            background: colorExtended.gradientBlue,
-            padding: String(descriptionPointBoldPaddingLeft) + ea,
-            paddingTop: String(descriptionPointBoldPaddingTop) + ea,
-            paddingBottom: String(descriptionPointBoldPaddingBottom) + ea,
-            "border-radius": String(5) + "px",
-            margin: String(descriptionPointBoldMargin) + ea,
-          }
-        },
-        {
-          mode: "img",
-          attribute: {
-            src: FirstPaymentJs.binaryPath + "/blanketRight.svg",
-          },
-          style: {
-            display: desktop ? "inline-block" : "none",
-            position: "relative",
-            height: String(blanketHeight) + ea,
-            opacity: String(blanketOpacity),
-            marginLeft: String(blanketMargin) + ea,
-            top: String(blanketVisualTop) + ea,
-          }
-        },
-      ]
+        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+      }
     });
 
   } catch (e) {
