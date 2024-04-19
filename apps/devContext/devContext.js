@@ -188,7 +188,6 @@ DevContext.prototype.launching = async function () {
 
     
 
-
     // console.log(await requestSystem("https://home-liaison.link:3000/kakaoComplex", { day: 30 }, { headers: { "Content-Type": "application/json" } }));
 
 
@@ -347,7 +346,7 @@ DevContext.prototype.launching = async function () {
         "평수"
       ] ];
       arr.sort((a, b) => { return a.timeline.valueOf() - b.timeline.valueOf() });
-      arr = arr.filter((obj) => { return obj.remain.valueOf() > emptyDate.valueOf(); });
+      // arr = arr.filter((obj) => { return obj.remain.valueOf() > emptyDate.valueOf(); });
       for (let obj of arr) {
         matrix.push([
           obj.name,
