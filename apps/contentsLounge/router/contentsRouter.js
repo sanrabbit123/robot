@@ -113,7 +113,7 @@ ContentsRouter.prototype.rou_get_First = function () {
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
           "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
         });
-        res.send(req.query.challenge);
+        res.send(req.query["hub.challenge"] || req.query[" hub.challenge"]);
       } else {
         res.send(JSON.stringify({ message: "hi" }));
       }
