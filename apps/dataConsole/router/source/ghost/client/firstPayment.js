@@ -41,11 +41,11 @@ const FirstPaymentJs = function () {
   this.mother = new GeneralJs();
 }
 
-FirstPaymentJs.binaryPath = FRONTHOST + "/middle/style";
+FirstPaymentJs.binaryPath = "/middle/payment";
 
 FirstPaymentJs.prototype.insertInitBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, autoComma } = GeneralJs;
   const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -82,6 +82,29 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     let description;
     let blanketHeight, blanketVisualTop, blanketOpacity, blanketMargin;
     let mainTitleText;
+    let mainIllustLeft, mainIllustRight;
+    let mainIllustMargin, mainIllustTop, mainIllustWidth;
+    let blueBoxMarginTop;
+    let whiteAreaWidth;
+    let whiteBase, blueBase;
+    let boxInnerMargin;
+    let titleSquareWidth;
+    let titleSquareLeftIndent;
+    let titleSquareTop;
+    let whiteTitleEngSize, whiteTitleEngWeight;
+    let whiteTitleKorSize, whiteTitleKorWeight, whiteTitleKorLightWeight;
+    let whiteTitleKorTextTop;
+    let whiteTitleBarMargin;
+    let paymentMatrix;
+    let matrixTong;
+    let num;
+    let matrixTongMarginTop, matixTongVisualBottom;
+    let matrixFactorHeight, matrixLineWeight;
+    let factorTitleWidth;
+    let factorSize, factorWeight, factorBoldWeight, factorTextTop;
+    let factorTitleHeightPercentage;
+    let totalBoxHeight;
+    let vatWording, finalWording;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -91,7 +114,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
 
     subTitleSize = <%% 18, 18, 17, 15, 3.6 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% (isMac() ? 3 : 4), (isMac() ? 2 : 3), (isMac() ? 1 : 2), (isMac() ? 1 : 1), 0.5 %%>;
+    subTitleMarginTop = 4;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 190, 186, 168, 31 %%>;
@@ -105,7 +128,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
     titleVisualLeft = <%% 2, 2, 2, 2, -0.5 %%>;
-    titleLineHeight = <%% 1.1, 1.1, 1.1, 1.1, 1.07 %%>;
+    titleLineHeight = <%% 1, 1, 1, 1, 1 %%>;
 
     pointOpacity = 0.4;
 
@@ -141,15 +164,61 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
       buttonMarginTop = <%% 146, 146, 132, 110, 3.6 %%>;
     }
 
+    mainIllustLeft = FirstPaymentJs.binaryPath + "/mainillust_left.png";
+    mainIllustRight = FirstPaymentJs.binaryPath + "/mainillust_right.png";
+
+    mainIllustMargin = 108;
+    mainIllustTop = -340;
+    mainIllustWidth = 275;
+
+    blueBoxMarginTop = 114;
+    whiteAreaWidth = 950;
+
+    boxInnerMargin = 45;
+
+    titleSquareWidth = 27;
+    titleSquareLeftIndent = 10;
+    titleSquareTop = -1;
+
+    whiteTitleEngSize = 22;
+    whiteTitleEngWeight = 700;
+    whiteTitleKorSize = 16;
+    whiteTitleKorWeight = 800;
+    whiteTitleKorLightWeight = 200;
+    whiteTitleKorTextTop = -2;
+    whiteTitleBarMargin = 11;
+
+    matrixTongMarginTop = 24;
+    matixTongVisualBottom = 1;
+
+    matrixFactorHeight = 52;
+    matrixLineWeight = 2.5;
+
+    factorTitleWidth = 240;
+    factorSize = 15;
+    factorWeight = 400;
+    factorBoldWeight = 800;
+    factorTextTop = -1;
+
+    factorTitleHeightPercentage = 12;
+
+    totalBoxHeight = 467;
+
     this.totalContents = document.getElementById("totalcontents");
     this.totalContents.style.overflow = "hidden";
     this.totalContents.style.background = colorExtended.black;
     document.body.style.background = colorExtended.black;
 
-    description = [
-      desktop ? "홈리에종의 서비스 진행을 위해서는 다음 큐레이션 과정이 필요합니다." : "홈리에종 서비스 진행을 위해선 큐레이션 과정이 필요합니다.",
-      desktop ? "서비스 신청서를 모두 작성 후, <b%디자이너의 1:1 맞춤 상담%b>을 받아보세요!" : "신청서를 모두 작성 후, <b%디자이너 1:1 상담%b>을 받아보세요!"
+    paymentMatrix = [
+      [ "품명", "디자인비" ],
+      [ "단가", autoComma(0) + "원" ],
+      [ "수량", autoComma(0) + "원" ],
+      [ "공급가", autoComma(0) + "원" ],
+      [ "VAT", autoComma(0) + "원" ],
+      [ "소비자가", autoComma(0) + "원" ],
     ];
+    vatWording = "VAT 포함";
+    finalWording = autoComma(3000000) + "원";
 
     firstBase = createNode({
       mother: baseTong,
@@ -245,24 +314,363 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
             textAlign: "center",
           }
         }
-      ]
+      ],
     });
 
-    // white box
-    createNode({
+    // payment box
+    [ , , whiteBase, blueBase ] = createNode({
       mother: firstBase,
       style: {
         display: "flex",
         position: "relative",
+        flexDirection: "row",
         width: withOut(0, ea),
-        height: String(600) + ea,
-        marginTop: String(100) + ea,
-        background: colorExtended.white,
+        height: String(totalBoxHeight) + ea,
+        marginTop: String(blueBoxMarginTop) + ea,
+        background: colorExtended.mainBlue,
         borderRadius: String(10) + "px",
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
-      }
+        overflow: "visible",
+      },
+      children: [
+        {
+          mode: "img",
+          attribute: {
+            src: mainIllustLeft,
+          },
+          style: {
+            display: "flex",
+            position: "absolute",
+            left: String(mainIllustMargin) + ea,
+            top: String(mainIllustTop) + ea,
+            width: String(mainIllustWidth) + ea,
+            zIndex: String(1),
+          }
+        },
+        {
+          mode: "img",
+          attribute: {
+            src: mainIllustRight,
+          },
+          style: {
+            display: "flex",
+            position: "absolute",
+            right: String(mainIllustMargin) + ea,
+            top: String(mainIllustTop) + ea,
+            width: String(mainIllustWidth) + ea,
+            zIndex: String(1),
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            flexDirection: "column",
+            position: "relative",
+            height: withOut(boxInnerMargin * 2, ea),
+            width: String(whiteAreaWidth) + ea,
+            background: colorExtended.gray0,
+            borderTopLeftRadius: String(10) + "px",
+            borderBottomLeftRadius: String(10) + "px",
+            borderTopRightRadius: String(0) + "px",
+            borderBottomRightRadius: String(0) + "px",
+            overflow: "hidden",
+            justifyContent: "start",
+            alignItems: "start",
+            paddingTop: String(boxInnerMargin) + ea,
+            paddingBottom: String(boxInnerMargin) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            flexDirection: "column",
+            position: "relative",
+            height: withOut(boxInnerMargin * 2, ea),
+            width: withOut(whiteAreaWidth, ea),
+            background: colorExtended.transparent,
+            borderTopLeftRadius: String(0) + "px",
+            borderBottomLeftRadius: String(0) + "px",
+            borderTopRightRadius: String(10) + "px",
+            borderBottomRightRadius: String(10) + "px",
+            overflow: "hidden",
+            justifyContent: "end",
+            alignItems: "start",
+            paddingTop: String(boxInnerMargin) + ea,
+            paddingBottom: String(boxInnerMargin) + ea,
+          }
+        },
+      ]
+    }).children;
+
+    // white box
+    createNode({
+      mother: whiteBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut((boxInnerMargin * 2) + titleSquareLeftIndent, ea),
+        marginLeft: String(boxInnerMargin + titleSquareLeftIndent) + ea,
+        justifyContent: "start",
+        alignItems: "center",
+        flexDirection: "row",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "absolute",
+            top: String(titleSquareTop) + ea,
+            left: String(-1 * titleSquareLeftIndent) + ea,
+            width: String(titleSquareWidth) + ea,
+            height: String(titleSquareWidth) + ea,
+            borderRadius: String(4) + "px",
+            background: colorExtended.blueLight,
+            opacity: String(0.8),
+          }
+        },
+        {
+          text: "Summary",
+          style: {
+            fontSize: String(whiteTitleEngSize) + ea,
+            fontWeight: String(whiteTitleEngWeight),
+            color: colorExtended.black,
+            display: "inline-block",
+            position: "relative",
+            fontFamily: "mont",
+          }
+        },
+        {
+          text: "<b%|%b>&nbsp;&nbsp;&nbsp;결제 정보",
+          style: {
+            marginLeft: String(whiteTitleBarMargin) + ea,
+            top: String(whiteTitleKorTextTop) + ea,
+            fontSize: String(whiteTitleKorSize) + ea,
+            fontWeight: String(whiteTitleKorWeight),
+            color: colorExtended.black,
+            display: "inline-block",
+            position: "relative",
+          },
+          bold: {
+            fontSize: String(whiteTitleKorSize) + ea,
+            fontWeight: String(whiteTitleKorLightWeight),
+            color: colorExtended.black,
+          }
+        },
+      ]
+    });
+
+    matrixTong = createNode({
+      mother: whiteBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(boxInnerMargin * 2, ea),
+        marginLeft: String(boxInnerMargin) + ea,
+        justifyContent: "start",
+        alignItems: "start",
+        flexDirection: "column",
+        marginTop: String(matrixTongMarginTop) + ea,
+        marginBottom: String(matixTongVisualBottom) + ea,
+      },
+    });
+    num = 0;
+    for (let [ title, value ] of paymentMatrix) {
+      createNode({
+        mother: matrixTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          width: withOut(0, ea),
+          height: String(matrixFactorHeight) + ea,
+          background: colorExtended.transparent,
+          borderTop: String(num === 0 ? matrixLineWeight : 0) + "px solid " + (num === 0 ? colorExtended.black : colorExtended.gray4),
+          borderBottom: String(num === 0 || num === paymentMatrix.length - 1 ? matrixLineWeight : 1) + "px solid " + (num === 0 || num === paymentMatrix.length - 1 ? colorExtended.black : colorExtended.gray4),
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              justifyContent: "center",
+              alignItems: "center",
+              width: String(factorTitleWidth) + ea,
+              height: withOut(factorTitleHeightPercentage * 2, '%'),
+              boxSizing: "border-box",
+              borderRight: "1px solid " + colorExtended.gray4,
+            },
+            child: {
+              text: title,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(factorTextTop) + ea,
+                fontSize: String(factorSize) + ea,
+                fontWeight: String(factorBoldWeight),
+                color: colorExtended.black,
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              justifyContent: "center",
+              alignItems: "center",
+              width: withOut(factorTitleWidth, ea),
+              height: withOut(0, ea),
+              boxSizing: "border-box",
+            },
+            child: {
+              text: value,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(factorTextTop) + ea,
+                fontSize: String(factorSize) + ea,
+                fontWeight: String(factorWeight),
+                color: colorExtended.black,
+              }
+            }
+          },
+        ]
+      });
+      num++;
+    }
+
+    // ==================================================================================================================================================================================
+
+    // blue box
+    createNode({
+      mother: blueBase,
+      style: {
+        display: "flex",
+        position: "absolute",
+        top: String(boxInnerMargin) + ea,
+        width: withOut((boxInnerMargin * 2) + titleSquareLeftIndent, ea),
+        left: String(boxInnerMargin + titleSquareLeftIndent) + ea,
+        justifyContent: "start",
+        alignItems: "center",
+        flexDirection: "row",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "absolute",
+            top: String(titleSquareTop) + ea,
+            left: String(-1 * titleSquareLeftIndent) + ea,
+            width: String(titleSquareWidth) + ea,
+            height: String(titleSquareWidth) + ea,
+            borderRadius: String(4) + "px",
+            background: colorExtended.white,
+            opacity: String(0.6),
+          }
+        },
+        {
+          text: "Total",
+          style: {
+            fontSize: String(whiteTitleEngSize) + ea,
+            fontWeight: String(whiteTitleEngWeight),
+            color: colorExtended.black,
+            display: "inline-block",
+            position: "relative",
+            fontFamily: "mont",
+          }
+        },
+        {
+          text: "<b%|%b>&nbsp;&nbsp;&nbsp;금액 합계",
+          style: {
+            marginLeft: String(whiteTitleBarMargin) + ea,
+            top: String(whiteTitleKorTextTop) + ea,
+            fontSize: String(whiteTitleKorSize) + ea,
+            fontWeight: String(whiteTitleKorWeight),
+            color: colorExtended.black,
+            display: "inline-block",
+            position: "relative",
+          },
+          bold: {
+            fontSize: String(whiteTitleKorSize) + ea,
+            fontWeight: String(whiteTitleKorLightWeight),
+            color: colorExtended.black,
+          }
+        },
+      ]
+    });
+
+    createNode({
+      mother: blueBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut((boxInnerMargin * 2) + titleSquareLeftIndent, ea),
+        marginLeft: String(boxInnerMargin + titleSquareLeftIndent) + ea,
+        justifyContent: "end",
+        alignItems: "center",
+        flexDirection: "row",
+        top: String(4) + ea,
+      },
+      children: [
+        {
+          text: "TOTAL<b%.%b>",
+          style: {
+            fontSize: String(23) + ea,
+            fontWeight: String(whiteTitleEngWeight),
+            color: colorExtended.darkBlack,
+            display: "inline-block",
+            position: "relative",
+            fontFamily: "mont",
+          },
+          bold: {
+            fontSize: String(30) + ea,
+            fontWeight: String(whiteTitleEngWeight),
+            color: colorExtended.darkBlack,
+            opacity: String(0.4),
+          }
+        },
+      ]
+    });
+
+    createNode({
+      mother: blueBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut((boxInnerMargin * 2) + titleSquareLeftIndent, ea),
+        marginLeft: String(boxInnerMargin + titleSquareLeftIndent) + ea,
+        justifyContent: "end",
+        alignItems: "end",
+        flexDirection: "row",
+      },
+      children: [
+        {
+          text: vatWording,
+          style: {
+            fontSize: String(14) + ea,
+            fontWeight: String(900),
+            top: String(-9) + ea,
+            color: colorExtended.blueDim,
+            display: "inline-block",
+            position: "relative",
+          }
+        },
+        {
+          text: finalWording,
+          style: {
+            marginLeft: String(whiteTitleBarMargin) + ea,
+            top: String(-2) + ea,
+            fontSize: String(38) + ea,
+            fontWeight: String(800),
+            color: colorExtended.white,
+            display: "inline-block",
+            position: "relative",
+          },
+        },
+      ]
     });
 
   } catch (e) {

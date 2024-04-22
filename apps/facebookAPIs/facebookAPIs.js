@@ -20,8 +20,9 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
   this.facebookPageId = "290144638061244";
   this.instagramId = "17841405547472752";
   this.facebookAdId = "505249990112820";
+  this.facebookUserId = "192515798954554";
   this.pixelId = "814052605684956";
-  this.appVersion = "v18.0";
+  this.appVersion = "v19.0";
 }
 
 FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, logger = null) {
@@ -219,6 +220,85 @@ FacebookAPIs.prototype.accountStatusCheck = async function (logger = null) {
   } catch (e) {
     emergencyAlarm("FacebookAPIs.accountStatusCheck error : " + e.message).catch((err) => { console.log(err); });
     console.log(e);
+    return false;
+  }
+}
+
+FacebookAPIs.prototype.getActiveInstantFormId = async function (logger = null) {
+  const instance = this;
+  const back = this.back;
+  const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId } = this;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy } = this.mother;
+  try {
+    const delta = 3 * 1000;
+    let res;
+    let pageAccessToken;
+    let formArr;
+
+    await sleep(1000);
+
+    res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + facebookUserId + "/accounts", {
+      access_token: facebookToken
+    }, { method: "get" });
+    pageAccessToken = res.data.data.find((o) => { return o.id === facebookPageId }).access_token;
+    
+    await sleep(delta);
+
+    res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + facebookPageId + "/leadgen_forms", {
+      access_token: pageAccessToken
+    }, { method: "get" });
+
+    formArr = objectDeepCopy(res.data.data);
+    formArr = formArr.filter((o) => { return o.name.replace(/[^0-9]/gi, '').trim().length > 5 });
+    formArr.sort((a, b) => {
+      const aStandard = a.name.replace(/[^0-9\.\- ]/gi, '').trim();
+      const bStandard = b.name.replace(/[^0-9\.\- ]/gi, '').trim();
+      const aStandardDate = stringToDate(aStandard.split(/[\.\- ]/gi).map((s) => { return s.replace(/[^0-9]/gi, '').trim() }).filter((s) => { return s !== "" }).join("-"));
+      const bStandardDate = stringToDate(bStandard.split(/[\.\- ]/gi).map((s) => { return s.replace(/[^0-9]/gi, '').trim() }).filter((s) => { return s !== "" }).join("-"));
+      return bStandardDate.valueOf() - aStandardDate.valueOf();
+    });
+
+    if (formArr.length > 0) {
+      return { pageAccessToken, formId: formArr[0].id };
+    } else {
+      return null;
+    }
+
+  } catch (e) {
+    emergencyAlarm("FacebookAPIs.getActiveInstantFormId error : " + e.message).catch((err) => { console.log(err); });
+    emergencyAlarm("FacebookAPIs.getActiveInstantFormId error : " + JSON.stringify(e?.response?.data?.error)).catch((err) => { console.log(err); });
+    console.log(e);
+    console.log("FacebookAPIs.getActiveInstantFormId error : " + JSON.stringify(e?.response?.data?.error));
+    return null;
+  }
+}
+
+FacebookAPIs.prototype.getActiveInstantForm = async function (logger = null) {
+  const instance = this;
+  const back = this.back;
+  const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId } = this;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy } = this.mother;
+  try {
+    const delta = 3 * 1000;
+    const { pageAccessToken, formId } = await instance.getActiveInstantFormId(logger);
+    let res;
+
+    await sleep(2 * 1000);
+
+    res = await requestSystem("https://www.facebook.com/ads/lead_gen/export_csv", {
+      id: formId,
+      type: "form",
+    }, { method: "get" });
+
+    console.log(res.data);
+
+    return true;
+
+  } catch (e) {
+    emergencyAlarm("FacebookAPIs.getActiveInstantForm error : " + e.message).catch((err) => { console.log(err); });
+    emergencyAlarm("FacebookAPIs.getActiveInstantForm error : " + JSON.stringify(e?.response?.data?.error)).catch((err) => { console.log(err); });
+    console.log(e);
+    console.log("FacebookAPIs.getActiveInstantForm error : " + JSON.stringify(e?.response?.data?.error));
     return false;
   }
 }

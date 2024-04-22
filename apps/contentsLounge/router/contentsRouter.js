@@ -606,6 +606,35 @@ ContentsRouter.prototype.rou_post_contentsSchedule = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_metaWebhook = function () {
+  const instance = this;
+  const meta = this.facebook;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/metaWebhook" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolocal;
+      const dataString = JSON.stringify(req.body, null, 2);
+
+      logger.error("meta webhook => \n\n" + dataString).catch((err) => { console.log(err.message) });
+
+      res.send("homeliaison");
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_metaWebhook): " + e.message).catch((e) => { console.log(e); });
+      res.send("error");
+    }
+  }
+  return obj;
+}
+
 ContentsRouter.prototype.rou_post_metaComplex = function () {
   const instance = this;
   const meta = this.facebook;

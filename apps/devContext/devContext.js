@@ -108,7 +108,7 @@ DevContext.prototype.launching = async function () {
     // const res = await ajaxJson({
     //   mode: "constructOnoff",
     //   action: "on",
-    //   proid: "p2403_aa84s",
+    //   proid: "p2312_aa18s",
     // }, "https://" + address.backinfo.host + ":3000/constructInteraction");
     // console.log(res);
     // =======================================================================================================================================================
@@ -210,6 +210,16 @@ DevContext.prototype.launching = async function () {
     
 
     // await chrome.pageToPng("https://home-liaison.com/about.php");
+
+
+
+
+
+    // const facebook = new FacebookAPIs();
+    // console.log(await facebook.getActiveInstantForm(null));
+
+
+
 
 
     /*
@@ -7258,15 +7268,14 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이미애",
-    //     designer: "고은나라",
-    //     link: "https://drive.google.com/drive/folders/1MqIVe1arUyjMHCZwUO2BATQ_cWL7vPkM",
+    //     client: "한예지",
+    //     designer: "이윤아",
+    //     link: "https://drive.google.com/drive/folders/1oHeWVYrPoTxyFYXUwGLMPbF8MdM2DGvF",
     //     pay: true
     //   },
     // ]);
 
 
-    
     // raw video
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([

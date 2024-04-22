@@ -434,6 +434,7 @@ GeneralJs.colorChip = {
 };
 
 GeneralJs.colorExtended = {
+  transparent: "transparent",
   white: "#ffffff",
   whiteIcon: "#ffffff",
   whiteBlack: "#ffffff",
