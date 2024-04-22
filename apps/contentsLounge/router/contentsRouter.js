@@ -752,6 +752,60 @@ ContentsRouter.prototype.rou_post_metaComplex = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_metaInstant = function () {
+  const instance = this;
+  const meta = this.facebook;
+  const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/metaInstant" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolocal;
+      const defaultDay = 3;
+      const dayConst = req.body.day === undefined ? defaultDay : (Number.isNaN(Number(req.body.day)) ? defaultDay : Number(req.body.day));
+      let boo;
+
+      (async () => {
+        try {
+          boo = await meta.syncMetaInstantForm(selfMongo, dayConst, logger);
+          if (!boo) {
+            await sleep(3000);
+            boo = await meta.syncMetaInstantForm(selfMongo, dayConst, logger);
+            if (!boo) {
+              await sleep(3000);
+              boo = await meta.syncMetaInstantForm(selfMongo, dayConst, logger);
+              if (!boo) {
+                await sleep(3000);
+                await meta.syncMetaInstantForm(selfMongo, dayConst, logger);
+              }
+            }
+          }
+        } catch (e) {
+          console.log(e);
+          logger.error("Contents lounge 서버 문제 생김 (rou_post_metaInstant): " + e.message).catch((e) => { console.log(e); });
+          return false;
+        }
+      })().catch((err) => {
+        console.log(err);
+        logger.error("Contents lounge 서버 문제 생김 (rou_post_metaInstant): " + err.message).catch((e) => { console.log(e); });
+      });
+
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_metaInstant): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 ContentsRouter.prototype.rou_post_kakaoComplex = function () {
   const instance = this;
   const kakao = this.kakao;

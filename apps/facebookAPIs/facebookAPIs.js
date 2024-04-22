@@ -230,7 +230,7 @@ FacebookAPIs.prototype.getActiveInstantFormId = async function (logger = null) {
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId } = this;
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy } = this.mother;
   try {
-    const delta = 3 * 1000;
+    const delta = 15 * 1000;
     let res;
     let pageAccessToken;
     let formArr;
@@ -273,32 +273,224 @@ FacebookAPIs.prototype.getActiveInstantFormId = async function (logger = null) {
   }
 }
 
-FacebookAPIs.prototype.getActiveInstantForm = async function (logger = null) {
+FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelta = 3, logger = null) {
   const instance = this;
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId } = this;
-  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy } = this.mother;
+  const { sleep, dateToString, stringToDate, sha256Hmac, fileSystem, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy, binaryRequest, messageSend } = this.mother;
   try {
-    const delta = 3 * 1000;
+    const collection = "metaInstantForm";
+    const delta = 15 * 1000;
     const { pageAccessToken, formId } = await instance.getActiveInstantFormId(logger);
+    const url = "https://graph.facebook.com/" + appVersion + "/" + formId + "/leads";
     let res;
+    let tong;
+    let tempObj;
+    let thisDate;
+    let afterToken;
+    let fields;
+    let now, ago;
+    let standardStamp;
+    let filtering;
+    let rawArr;
+    let seridRaw;
+    let purchaseRaw;
+    let budgetRaw;
+    let nameRaw;
+    let phoneRaw;
+    let addressRaw;
+    let pyeongRaw;
+    let expectedRaw;
+    let thisId, json;
+    let rows;
 
-    await sleep(2 * 1000);
+    now = new Date();
+    ago = new Date(JSON.stringify(now).slice(1, -1));
+    ago.setDate(ago.getDate() - dateDelta);
 
-    res = await requestSystem("https://www.facebook.com/ads/lead_gen/export_csv", {
-      id: formId,
-      type: "form",
-    }, { method: "get" });
+    standardStamp = Math.floor(ago.valueOf() / 1000);
+    
+    filtering = JSON.stringify([
+      {
+        field: "time_created",
+        operator: "GREATER_THAN_OR_EQUAL",
+        value: standardStamp
+      }
+    ]);
+    fields = [
+      "created_time",
+      "id",
+      "ad_id",
+      "form_id",
+      "field_data"
+    ].join(",");
 
-    console.log(res.data);
+    res = await requestSystem(url, { access_token: pageAccessToken, fields, filtering }, { method: "get" });
+    if (res.data.paging === undefined || res.data.data.length === 0) {
+      afterToken = null;
+    } else {
+      if (typeof res.data.paging === "object" && res.data.paging !== null) {
+        afterToken = res.data.paging.cursors?.after;
+      } else {
+        afterToken = null;
+      }
+    }
+
+    tong = [];
+    for (let obj of res.data.data) {
+
+      thisDate = new Date(obj.created_time);
+      thisDate = dateToString(thisDate, true);
+      thisDate = stringToDate(thisDate);
+      rawArr = objectDeepCopy(obj.field_data);
+
+      seridRaw = null;
+      purchaseRaw = null;
+      budgetRaw = null;
+      nameRaw = null;
+      phoneRaw = null;
+      addressRaw = null;
+      pyeongRaw = null;
+      expectedRaw = null;
+
+      tempObj = {
+        id: obj.id,
+        ad: obj.ad_id,
+        date: new Date(JSON.stringify(thisDate).slice(1, -1)),
+        raw: rawArr,
+        data: {},
+      };
+
+      try {
+        seridRaw = rawArr.find((o) => { return /serid/gi.test(o.name) })?.values?.join("");
+        if (seridRaw === null || seridRaw === undefined) {
+          throw new Error("");
+        }
+        tempObj.data.serid = seridRaw;
+      } catch {
+        tempObj.data.serid = null;  
+      }
+
+      try {
+        purchaseRaw = rawArr.find((o) => { return /purchase/gi.test(o.name) })?.values?.join("");
+        if (purchaseRaw === null || purchaseRaw === undefined) {
+          throw new Error("");
+        }
+        tempObj.data.purchase = purchaseRaw;
+      } catch {
+        tempObj.data.purchase = null;
+      }
+
+      try {
+        budgetRaw = rawArr.find((o) => { return /budget/gi.test(o.name) })?.values?.join("");
+        if (budgetRaw === null || budgetRaw === undefined) {
+          throw new Error("");
+        }
+        tempObj.data.budget = budgetRaw;
+      } catch {
+        tempObj.data.budget = null;
+      }
+
+      try {
+        nameRaw = rawArr.find((o) => { return /name/gi.test(o.name) })?.values?.join("");
+        if (nameRaw === null || nameRaw === undefined) {
+          throw new Error("");
+        }
+        tempObj.data.name = nameRaw;
+      } catch {
+        tempObj.data.name = null;
+      }
+
+      try {
+        phoneRaw = rawArr.find((o) => { return /phone/gi.test(o.name) })?.values?.join("");
+        if (phoneRaw === null || phoneRaw === undefined) {
+          throw new Error("");
+        }
+        tempObj.data.phone = phoneRaw;
+      } catch {
+        tempObj.data.phone = null;
+      }
+
+      try {
+        addressRaw = rawArr.find((o) => { return /address/gi.test(o.name) })?.values?.join("");
+        if (addressRaw === null || addressRaw === undefined) {
+          throw new Error("");
+        }
+        tempObj.data.address = addressRaw;
+      } catch {
+        tempObj.data.address = null;
+      }
+
+      try {
+        pyeongRaw = rawArr.find((o) => { return /pyeong/gi.test(o.name) })?.values?.join("");
+        if (pyeongRaw === null || pyeongRaw === undefined) {
+          throw new Error("");
+        }
+        tempObj.data.pyeong = pyeongRaw;
+      } catch {
+        tempObj.data.pyeong = null;
+      }
+
+      try {
+        expectedRaw = rawArr.find((o) => { return /expected/gi.test(o.name) })?.values?.join("");
+        if (expectedRaw === null || expectedRaw === undefined) {
+          throw new Error("");
+        }
+        tempObj.data.expected = expectedRaw;
+      } catch {
+        tempObj.data.expected = null;
+      }
+
+      tong.push(tempObj);
+    }
+    
+    while (Boolean(afterToken)) {
+      await sleep(delta);
+      res = await requestSystem(url, { access_token: pageAccessToken, fields, filtering, after: afterToken }, { method: "get" });
+      if (res.data.paging === undefined || res.data.data.length === 0) {
+        afterToken = null;
+      } else {
+        if (typeof res.data.paging === "object" && res.data.paging !== null) {
+          afterToken = res.data.paging.cursors?.after;
+        } else {
+          afterToken = null;
+        }
+      }
+      for (let obj of res.data.data) {
+        thisDate = new Date(obj.created_time);
+        thisDate = dateToString(thisDate, true);
+        thisDate = stringToDate(thisDate);
+        tempObj = {
+          id: obj.id,
+          date: new Date(JSON.stringify(thisDate).slice(1, -1)),
+          raw: objectDeepCopy(obj.field_data),
+        }
+        tong.push(tempObj);
+      }
+    }
+
+    for (let row of tong) {
+      json = objectDeepCopy(row);
+      thisId = row.id;
+      rows = await back.mongoRead(collection, { id: thisId }, { selfMongo });
+      if (rows.length === 0) {
+        messageSend({ text: "새로운 인스턴트 문의가 왔습니다! 성함은 " + json.data.name + "입니다! 현재 개발중에 있으니 수동으로 확인해주세요.", channel: "#401_consulting" }).then(() => {
+          return requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: "새로운 인스턴트 문의가 왔습니다! 성함은 " + json.data.name + "입니다!" }, { headers: { "Content-Type": "application/json" } });
+        }).catch((err) => { console.log(err); });
+      }
+      for (let pastRow of rows) {
+        await back.mongoDelete(collection, { id: pastRow.id }, { selfMongo });
+      }
+      await back.mongoCreate(collection, json, { selfMongo });
+    }
 
     return true;
 
   } catch (e) {
-    emergencyAlarm("FacebookAPIs.getActiveInstantForm error : " + e.message).catch((err) => { console.log(err); });
-    emergencyAlarm("FacebookAPIs.getActiveInstantForm error : " + JSON.stringify(e?.response?.data?.error)).catch((err) => { console.log(err); });
+    emergencyAlarm("FacebookAPIs.syncMetaInstantForm error : " + e.message).catch((err) => { console.log(err); });
+    emergencyAlarm("FacebookAPIs.syncMetaInstantForm error : " + JSON.stringify(e?.response?.data?.error)).catch((err) => { console.log(err); });
     console.log(e);
-    console.log("FacebookAPIs.getActiveInstantForm error : " + JSON.stringify(e?.response?.data?.error));
+    console.log("FacebookAPIs.syncMetaInstantForm error : " + JSON.stringify(e?.response?.data?.error));
     return false;
   }
 }
@@ -313,7 +505,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
     const idKeyword = 'f';
     const metaKeyword = 'f';
     const metaKeyKeyword = "meta";
-    const delta = 10 * 1000;
+    const delta = 15 * 1000;
     let tempRows;
     let res;
     let json;
