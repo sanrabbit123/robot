@@ -105,6 +105,11 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     let factorTitleHeightPercentage;
     let totalBoxHeight;
     let vatWording, finalWording;
+    let buttonBase;
+    let payButtonBetween;
+    let payButtonHeight;
+    let payButtonContents;
+    let buttonBaseMarginTop;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -203,11 +208,24 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     factorTitleHeightPercentage = 12;
 
     totalBoxHeight = 467;
+    payButtonBetween = 10;
+    payButtonHeight = 50;
+
+    buttonBaseMarginTop = 30;
 
     this.totalContents = document.getElementById("totalcontents");
     this.totalContents.style.overflow = "hidden";
     this.totalContents.style.background = colorExtended.black;
     document.body.style.background = colorExtended.black;
+
+    payButtonContents = [
+      {
+        title: "계좌 이체",
+      },
+      {
+        title: "카드 결제",
+      },
+    ];
 
     paymentMatrix = [
       [ "품명", "디자인비" ],
@@ -672,6 +690,60 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
         },
       ]
     });
+
+    // ==================================================================================================================================================================================
+
+    // buttons
+    buttonBase = createNode({
+      mother: firstBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        flexDirection: "row",
+        justifyContent: "end",
+        alignItems: "end",
+        width: withOut(boxInnerMargin, ea),
+        height: String(payButtonHeight) + ea,
+        marginTop: String(buttonBaseMarginTop) + ea,
+        opacity: String(0),
+        transform: "translateY(30px)",
+        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+        overflow: "visible",
+        paddingRight: String(boxInnerMargin) + ea,
+      }
+    });
+
+    createNode({
+      mother: buttonBase,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "calc(calc(" + withOut(whiteAreaWidth + (boxInnerMargin * 2), ea) + " - " + String(payButtonBetween * (payButtonContents.length - 1)) + ea + ") / " + String(payButtonContents.length) + ")",
+        height: String(payButtonHeight) + ea,
+        borderRadius: String(10) + "px",
+        background: colorExtended.mainBlue,
+      }
+    });
+
+    createNode({
+      mother: buttonBase,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "calc(calc(" + withOut(whiteAreaWidth + (boxInnerMargin * 2), ea) + " - " + String(payButtonBetween * (payButtonContents.length - 1)) + ea + ") / " + String(payButtonContents.length) + ")",
+        height: String(payButtonHeight) + ea,
+        marginLeft: String(payButtonBetween) + ea,
+        borderRadius: String(10) + "px",
+        background: colorExtended.mainBlue,
+      }
+    });
+
 
   } catch (e) {
     console.log(e);
