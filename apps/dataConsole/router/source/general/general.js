@@ -5259,6 +5259,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   let whiteModePaddingTop, whiteModePaddingBottom;
   let whiteModeDoubleLineMargin;
   let doubleLineMode;
+  let titleBorderWeight;
 
   [ columns ] = matrix;
   columnsLength = columns.length;
@@ -5492,6 +5493,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     blockWidth = option.style.totalHeight / totalLength;
   }
 
+  titleBorderWeight = <%% 2.5, 2.5, 2.5, 2.5, 2 %%>;
   borderWeight = <%% 1, 1, 1, 1, 1 %%>;
 
   size = <%% 15, 14, 13, 12, 2.6 %%>;
@@ -5598,8 +5600,8 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
         display: "block",
         width: String(blockWidth * columnsLength) + ea,
         overflow: "hidden",
-        borderTop: String(borderWeight) + "px solid " + colorChip.shadow,
-        borderBottom: String(borderWeight) + "px solid " + colorChip.shadow,
+        borderTop: String(titleBorderWeight) + "px solid " + colorChip.black,
+        borderBottom: String(titleBorderWeight) + "px solid " + colorChip.black,
         boxSizing: "border-box",
         borderRadius: String(0) + "px",
         paddingTop: String(whiteModePaddingTop) + ea,
