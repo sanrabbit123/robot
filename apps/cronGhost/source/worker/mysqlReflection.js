@@ -11,7 +11,7 @@ const worker = async function (package) {
     await requestSystem("https://" + address.mysqlinfo.host + "/coreReflect", { data: null }, { headers: { "Content-Type": "application/json" } });
     return true;
   } catch (e) {
-    await emergencyAlarm("front reflection error : " + e.message);
+    await emergencyAlarm("mysql reflection error : " + e.message);
     return false;
   }
 }
