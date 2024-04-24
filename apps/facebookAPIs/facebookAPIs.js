@@ -517,6 +517,10 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
     let searchResult;
 
     rows = await back.mongoRead(collection, {}, { selfMongo });
+
+
+
+    
     target = rows[0];
 
     serid = target.data.serid;
@@ -528,9 +532,15 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
     pyeong = target.data.pyeong;
     expected = target.data.expected;
 
-    searchResult = await app.getAddress("원당 롯데캐슬스카이엘");
+    searchResult = await app.getAddress(address);
+    if (searchResult !== null) {
+      address = searchResult.address.road;
+    }
 
-    console.log(searchResult);
+
+
+
+    console.log(address);
 
     
 
