@@ -1230,7 +1230,7 @@ FirstPaymentJs.prototype.insertSecondBox = async function () {
           },
         ]
       },
-    ]
+    ];
 
     secondBase = createNode({
       mother: baseTong,
