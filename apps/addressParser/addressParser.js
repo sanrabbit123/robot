@@ -57,9 +57,10 @@ const AddressParser = function () {
   this.token = {
     vworld: {
       url: "http://api.vworld.kr/req/search",
-      key: "A9ECB4F3-AE34-3A28-AD0F-59DAA7AC0A0B"
+      key: "034D39D9-E04A-32CE-B860-70C780965F05"
     },
     tMap: {
+      poi: "https://apis.openapi.sk.com/tmap/pois",
       url: "https://apis.openapi.sk.com/tmap/routes?version=1",
       key: "l7xxa22f35e01b7d4814a4eb247b28a84c3a"
     },
@@ -442,6 +443,91 @@ AddressParser.prototype.convertXY = function (x, y, reverse = false) {
   }
 }
 
+AddressParser.prototype.getTmapPoiSearch = async function (searchKeyword) {
+  const instance = this;
+  const { poi: url, key: appKey } = this.token.tMap;
+  const { requestSystem, objectDeepCopy, emergencyAlarm, sleep } = this.mother;
+  try {
+    const delta = 500;
+    const version = 1;
+    const format = "json";
+    const callback = "result";
+    const resCoordType = "EPSG3857";
+    const reqCoordType = "WGS84GEO";
+    const count = 10;
+    const method = "get";
+    const res = await requestSystem(url, { version, format, callback, searchKeyword, resCoordType, reqCoordType, count, appKey }, { method, headers: { appKey } });
+    let result;
+    let target;
+
+    result = null;
+    if (typeof res.data === "object" && res.data !== null) {
+      if (typeof res.data.searchPoiInfo === "object" && res.data.searchPoiInfo !== null) {
+        if (Array.isArray(res.data.searchPoiInfo.pois) && res.data.searchPoiInfo.pois.length > 0) {
+          [ target ] = res.data.searchPoiInfo.pois;
+        } else if (typeof res.data.searchPoiInfo.pois === "object" && res.data.searchPoiInfo.pois !== null) {
+          [ target ] = objectDeepCopy(res.data.searchPoiInfo.pois).poi;
+        } else {
+          target = null;
+        }
+        if (target !== null) {
+          if (typeof target.roadName === "string" && target.roadName !== "") {
+            result = "";
+            result += target.upperAddrName;
+            result += " ";
+            result += target.middleAddrName;
+            result += " ";
+            result += target.roadName;
+            result += " ";
+            result += target.firstBuildNo;
+            if (target.secondBuildNo !== "" && target.secondBuildNo !== "0" && target.secondBuildNo !== 0) {
+              result += "-";
+              result += target.secondBuildNo;
+            }
+            result = result.trim();
+          } else {
+            result = "";
+            result += target.upperAddrName;
+            result += " ";
+            result += target.middleAddrName;
+            result += " ";
+            result += target.lowerAddrName;
+            result += " ";
+            result += target.firstNo;
+            if (target.secondNo !== "" && target.secondNo !== "0" && target.secondNo !== 0) {
+              result += "-";
+              result += target.secondNo;
+            }
+          }
+          if (result !== null) {
+            if (target.name.slice(0, 2) !== result.slice(0, 2)) {
+              result += " " + target.name;
+            }
+          }
+        }
+      }
+    }
+
+    if (result === null) {
+      await sleep(delta);
+      searchKeyword = searchKeyword.replace(/\([^\)]*\)/gi, '');
+      result = await instance.getTmapPoiSearch(searchKeyword);
+      if (result === null) {
+        await sleep(delta);
+        searchKeyword = searchKeyword.split(" ").map((s) => { return s.trim() }).filter((s) => { return !/[도시구]$/gi.test(s); }).join(" ");
+        result = await instance.getTmapPoiSearch(searchKeyword);
+      }
+    }
+
+    return result;
+
+  } catch (e) {
+    console.log(e);
+    emergencyAlarm("getTmapPoiSearch error : " + e.message).catch((err) => { console.log(err) });
+    return null;
+  }
+}
+
 AddressParser.prototype.getAddress = async function (address, pointMode = false, defaultGeneralSpotsNameIndex = 0) {
   if (typeof address !== "string") {
     throw new Error("invaild input, address must be string");
@@ -469,6 +555,8 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false,
     let firstBoo;
     let tempResult, convertResult;
     let tempValue0, tempValue1;
+    let indexStop;
+    let fixedAddress;
 
     if (/[가-힣]+로[0-9]+ /gi.test(address)) {
       [ , tempValue0, tempValue1 ] = [ .../([가-힣]+로)([0-9]+) /g.exec(address) ];
@@ -482,17 +570,23 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false,
 
     tempArr = address.split(' ');
     roadBoo = true;
+    indexStop = false;
     for (let i = 0; i < tempArr.length; i++) {
       if (/[동가리]$/i.test(tempArr[i].trim())) {
         roadBoo = false;
         index = i;
+        indexStop = true;
         break;
       }
       if (/[로길]$/i.test(tempArr[i].trim())) {
         roadBoo = true;
         index = i;
+        indexStop = true;
         break;
       }
+    }
+    if (!indexStop) {
+      index = tempArr.length - 1;
     }
 
     if (tempArr[index + 1] !== undefined) {
@@ -503,6 +597,14 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false,
 
     tempArr = tempArr.map((i) => { return i.trim(); });
     address = tempArr.join(" ");
+
+    //zero search
+    fixedAddress = await instance.getTmapPoiSearch(address);
+    if (fixedAddress !== null) {
+      address = fixedAddress;
+    } else {
+      fixedAddress = null;
+    }
 
     //first search
     firstBoo = false;
@@ -526,7 +628,7 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false,
                 tempResult = {
                   address: {
                     zipcode: res.data.results.juso[0].zipNo,
-                    road: res.data.results.juso[0].roadAddr,
+                    road: String(res.data.results.juso[0].roadAddr + " " + (res.data.results.juso[0].bdNm !== '' ? res.data.results.juso[0].bdNm : "")).trim(),
                     parcel: res.data.results.juso[0].jibunAddr,
                     english: res.data.results.juso[0].engAddr,
                   },
@@ -605,6 +707,7 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false,
       result = null;
       try {
         res = await requestSystem(vworldUrl, data, { method: "get" });
+
         if (res.data.response.status === "OK") {
           if (res.data.response.result !== undefined) {
             if (Array.isArray(res.data.response.result.items)) {
@@ -620,6 +723,7 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false,
                 result.info = {};
                 result.info.bldnm = result.address.bldnm;
                 result.info.bldnmdc = result.address.bldnmdc;
+                result.address.road = String(result.address.road + " " + (result.address.bldnm !== '' ? result.address.bldnm : "")).trim();
                 delete result.id;
                 delete result.address.category;
                 delete result.address.bldnm;
@@ -635,7 +739,7 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false,
     }
 
     //third search
-    if (result === null) {
+    if (result === null && fixedAddress === null) {
       tempArr = address.split(' ');
       tempArr = tempArr.slice(0, index + 1);
       if (defaultGeneralSpotsName[defaultGeneralSpotsNameIndex] === undefined) {
@@ -643,6 +747,12 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false,
       }
       tempArr.push(defaultGeneralSpotsName[defaultGeneralSpotsNameIndex]);
       result = await this.getAddress(tempArr.join(" "), false, defaultGeneralSpotsNameIndex + 1);
+    } else if (result === null && !pointMode && typeof fixedAddress === "string") {
+      return {
+        address: {
+          road: fixedAddress
+        }
+      }
     }
 
     if (result !== null && pointMode) {

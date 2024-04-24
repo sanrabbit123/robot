@@ -495,6 +495,62 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
   }
 }
 
+FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCoreMongo, logger = null) {
+  const instance = this;
+  const back = this.back;
+  const AddressParser = require(process.cwd() + "/apps/addressParser/addressParser.js");
+  const app = new AddressParser();
+  const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId } = this;
+  const { sleep, dateToString, stringToDate, sha256Hmac, fileSystem, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy, binaryRequest, messageSend } = this.mother;
+  try {
+    const collection = "metaInstantForm";
+    let rows;
+    let target;
+    let serid;
+    let purchase;
+    let budget;
+    let name;
+    let phone;
+    let address;
+    let pyeong;
+    let expected;
+    let searchResult;
+
+    rows = await back.mongoRead(collection, {}, { selfMongo });
+    target = rows[0];
+
+    serid = target.data.serid;
+    purchase = target.data.purchase;
+    budget = target.data.budget;
+    name = target.data.name;
+    phone = target.data.phone;
+    address = target.data.address;
+    pyeong = target.data.pyeong;
+    expected = target.data.expected;
+
+    searchResult = await app.getAddress("원당 롯데캐슬스카이엘");
+
+    console.log(searchResult);
+
+    
+
+
+
+
+
+
+
+
+
+
+  } catch (e) {
+    emergencyAlarm("FacebookAPIs.metaInstantToClient error : " + e.message).catch((err) => { console.log(err); });
+    emergencyAlarm("FacebookAPIs.metaInstantToClient error : " + JSON.stringify(e?.response?.data?.error)).catch((err) => { console.log(err); });
+    console.log(e);
+    console.log("FacebookAPIs.metaInstantToClient error : " + JSON.stringify(e?.response?.data?.error));
+  }
+}
+
 FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, logger = null) {
   const instance = this;
   const back = this.back;

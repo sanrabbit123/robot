@@ -213,9 +213,14 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // await this.MONGOCONTENTSC.connect();
+
+    // const meta = new FacebookAPIs();
+    // await meta.metaInstantToClient(this.MONGOCONTENTSC, this.MONGOLOCALC, null);
+
+    // await this.MONGOCONTENTSC.close();
 
 
-    
 
     
 
@@ -7431,6 +7436,7 @@ DevContext.prototype.launching = async function () {
 
   } catch (e) {
     console.log(e);
+    console.log(e?.response?.data);
     await this.MONGOC.close();
     await this.MONGOLOCALC.close();
     // await rethink.close();
