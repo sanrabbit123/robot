@@ -411,45 +411,45 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     mainIllustLeft = FirstPaymentJs.binaryPath + "/mainillust_left.png";
     mainIllustRight = FirstPaymentJs.binaryPath + "/mainillust_right.png";
 
-    mainIllustMargin = 104;
-    mainIllustTop = -340;
-    mainIllustWidth = 275;
+    mainIllustMargin = <%% 104, 104, 104, 104, 104 %%>;
+    mainIllustTop = <%% -340, -340, -340, -340, -340 %%>;
+    mainIllustWidth = <%% 275, 275, 275, 275, 275 %%>;
 
-    blueBoxMarginTop = 114;
-    whiteAreaWidth = 960;
+    blueBoxMarginTop = <%% 114, 114, 114, 114, 114 %%>;
+    whiteAreaWidth = <%% 960, 960, 960, 960, 960 %%>;
 
-    boxInnerMargin = 45;
+    boxInnerMargin = <%% 45, 45, 45, 45, 45 %%>;
 
-    titleSquareWidth = 27;
-    titleSquareLeftIndent = 10;
-    titleSquareTop = -1;
+    titleSquareWidth = <%% 27, 27, 27, 27, 27 %%>;
+    titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
+    titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    whiteTitleEngSize = 22;
-    whiteTitleEngWeight = 700;
-    whiteTitleKorSize = 18;
-    whiteTitleKorWeight = 800;
-    whiteTitleKorLightWeight = 200;
-    whiteTitleKorTextTop = -4;
-    whiteTitleBarMargin = 11;
+    whiteTitleEngSize = <%% 22, 22, 22, 22, 22 %%>;
+    whiteTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
+    whiteTitleKorSize = <%% 18, 18, 18, 18, 18 %%>;
+    whiteTitleKorWeight = <%% 800, 800, 800, 800, 800 %%>;
+    whiteTitleKorLightWeight = <%% 200, 200, 200, 200, 200 %%>;
+    whiteTitleKorTextTop = <%% -4, -4, -4, -4, -4 %%>;
+    whiteTitleBarMargin = <%% 11, 11, 11, 11, 11 %%>;
 
-    matrixTongMarginTop = 24;
-    matixTongVisualBottom = 1;
+    matrixTongMarginTop = <%% 24, 24, 24, 24, 24 %%>;
+    matixTongVisualBottom = <%% 1, 1, 1, 1, 1 %%>;
 
-    matrixFactorHeight = 52;
-    matrixLineWeight = 2.5;
+    matrixFactorHeight = <%% 52, 52, 52, 52, 52 %%>;
+    matrixLineWeight = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
 
-    factorTitleWidth = 240;
-    factorSize = 15;
-    factorWeight = 400;
-    factorBoldWeight = 800;
-    factorTextTop = -1;
+    factorTitleWidth = <%% 240, 240, 240, 240, 240 %%>;
+    factorSize = <%% 15, 15, 15, 15, 15 %%>;
+    factorWeight = <%% 400, 400, 400, 400, 400 %%>;
+    factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
+    factorTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    factorTitleHeightPercentage = 12;
+    factorTitleHeightPercentage = <%% 12, 12, 12, 12, 12 %%>;
 
-    totalBoxHeight = 467;
-    payButtonBetween = 10;
-    payButtonHeight = 50;
-    payButtonWidth = 156;
+    totalBoxHeight = <%% 467, 467, 467, 467, 467 %%>;
+    payButtonBetween = <%% 10, 10, 10, 10, 10 %%>;
+    payButtonHeight = <%% 50, 50, 50, 50, 50 %%>;
+    payButtonWidth = <%% 156, 156, 156, 156, 156 %%>;
 
     buttonBaseMarginTop = 25;
 
