@@ -865,7 +865,8 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
             await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
           }
         }
-      } catch {
+      } catch (e) {
+        console.log(e);
         if (logger !== null) {
           logger.error("intant error : " + thisId).catch((err) => { console.log(err) });
         }
