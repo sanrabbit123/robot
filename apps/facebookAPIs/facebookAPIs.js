@@ -872,6 +872,8 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
             });
             await sleep(1000);
   
+            await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
+
           } else {
             await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
           }
