@@ -58,12 +58,12 @@ UniversalEstimationJs.binaryPath = FRONTHOST + "/middle/estimation";
 UniversalEstimationJs.prototype.billWordings = function () {
   const instance = this;
   const { client, designer, project, media, bill, requestNumber } = this;
-  const { dateToString, autoComma, colorExtended } = GeneralJs;
+  const { dateToString, autoComma, colorExtended, serviceParsing } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const { analytics, request } = client.requests[this.clientRequestNumber];
   const spendDates = (Number(String(analytics.response.service.serid).split('_')[1].replace(/[^0-9]/gi, '')) + 1) * 15;
-  const serviceName = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "설계 변경" ];
+  const serviceName = serviceParsing().name;
   let start, end;
   let wordings;
   let tempArr;
