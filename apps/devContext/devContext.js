@@ -216,11 +216,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await this.MONGOCONTENTSC.connect();
-    // const meta = new FacebookAPIs();
-    // await meta.metaInstantToClient(this.MONGOCONTENTSC, this.MONGOLOCALC, null);
-    // await this.MONGOCONTENTSC.close();
-
 
     
     

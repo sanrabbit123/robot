@@ -304,6 +304,7 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
     let thisId, json;
     let rows;
     let emailRaw, contractRaw;
+    let thisInjection;
 
     now = new Date();
     ago = new Date(JSON.stringify(now).slice(1, -1));
@@ -495,12 +496,14 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
 
     for (let row of tong) {
       json = objectDeepCopy(row);
-      thisId = row.id;
+      thisId = row.id;      
       rows = await back.mongoRead(collection, { id: thisId }, { selfMongo });
       if (rows.length === 0) {
-        messageSend({ text: "새로운 인스턴트 문의가 왔습니다! 성함은 " + json.data.name + "입니다! 현재 개발중에 있으니 수동으로 확인해주세요.", channel: "#401_consulting" }).then(() => {
+        messageSend({ text: "새로운 인스턴트 문의가 왔습니다! 성함은 " + json.data.name + "입니다!", channel: "#401_consulting" }).then(() => {
           return requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: "새로운 인스턴트 문의가 왔습니다! 성함은 " + json.data.name + "입니다!" }, { headers: { "Content-Type": "application/json" } });
         }).catch((err) => { console.log(err); });
+      } else {
+        json.injection = rows[0].injection;
       }
       for (let pastRow of rows) {
         await back.mongoDelete(collection, { id: pastRow.id }, { selfMongo });
@@ -525,8 +528,17 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
   const AddressParser = require(process.cwd() + "/apps/addressParser/addressParser.js");
   const app = new AddressParser();
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId } = this;
-  const { sleep, dateToString, stringToDate, sha256Hmac, fileSystem, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy, binaryRequest, messageSend, autoComma, autoHypenPhone } = this.mother;
+  const { sleep, dateToString, stringToDate, sha256Hmac, fileSystem, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy, binaryRequest, messageSend, autoComma, autoHypenPhone, homeliaisonAnalytics } = this.mother;
   try {
+    const budgetArr = [ '500만원 이하', '1,000만원', '1,500만원', '2,000만원', '2,500만원', '3,000만원', '3,500만원', '4,000만원', '4,500만원', '5,000만원 이상', '6,000만원 이상', '7,000만원 이상', '8,000만원 이상', '9,000만원 이상', '1억원 이상', '1억 5,000만원 이상', '2억원 이상', '3억원 이상', '5억원 이상', '10억원 이상', ];
+    const staticImageSet = [
+      "t6p18.jpg",
+      "t11p58.jpg",
+      "t4p123.jpg",
+      "t9p306.jpg",
+      "t1p29.jpg",
+      "t18p350.jpg"
+    ];
     const collection = "metaInstantForm";
     let rows;
     let target;
@@ -548,152 +560,315 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
     let etc;
     let living;
     let map;
+    let response;
+    let thisId;
+    let clientResponse;
+    let cliid;
+    let whereQuery, updateQuery, coreQuery;
+    let defaultQueryObject;
+    let requestNumber;
 
     now = new Date();
-    rows = await back.mongoRead(collection, {}, { selfMongo });
+    rows = await back.mongoRead(collection, { injection: 0 }, { selfMongo });
 
-    target = rows[0];
+    for (let i = 0; i < rows.length; i++) {
+      await sleep(1000);
 
-    serid = target.data.serid;
-    purchase = Number(target.data.purchase);
-    budget = target.data.budget;
-    name = target.data.name.trim();
-    email = target.data.email.trim();
-    contract = target.data.contract;
-    etc = '';
-    living = "false";
-
-    if (/^0/gi.test(target.data.phone)) {
-      phone = autoHypenPhone(target.data.phone.trim());
-    } else {
-      phone = autoHypenPhone(String('0' + target.data.phone).trim());
-    }
-
-    address = target.data.address;
-    searchResult = await app.getAddress(address);
-    if (searchResult !== null) {
-      address = searchResult.address.road;
-    }
-
-    pyeong = target.data.pyeong.replace(/[^0-9\.]/gi, '');
-    if (pyeong === '' || Number.isNaN(Number(pyeong))) {
-      pyeong = 34;
-    } else {
-      pyeong = Number(pyeong);
-    }
-
-    expected = target.data.expected;
-    expectedYear = /([0-9]+[ ]*[년연])/gi.exec(expected)
-    expectedMonth = /([0-9]+[ ]*[월윌])/gi.exec(expected)
-    expectedDate = /([0-9]+[ ]*[일])/gi.exec(expected)
-
-    if (expectedYear !== null) {
-      if (expectedYear[1] !== undefined) {
-        expectedYear = Number(expectedYear[1].replace(/[^0-9]/gi, ''));
-        if (expectedYear < 1000) {
-          expectedYear = 2000 + expectedYear;
+      target = rows[i];
+      thisId = target.id;
+      requestNumber = 0;
+  
+      try {
+  
+        serid = target.data.serid;
+        purchase = Number(target.data.purchase);
+        budget = target.data.budget;
+        name = target.data.name.trim();
+        email = target.data.email.trim();
+        contract = target.data.contract;
+        etc = '';
+        living = "false";
+    
+        if (/^0/gi.test(target.data.phone)) {
+          phone = autoHypenPhone(target.data.phone.trim().replace(/[^0-9\-]/gi, ''));
+        } else {
+          phone = autoHypenPhone(String('0' + target.data.phone).trim().replace(/[^0-9\-]/gi, ''));
         }
-      } else {
-        expectedYear = null;
-      }
-    } else {
-      expectedYear = null;
-    }
-
-    if (expectedMonth !== null) {
-      if (expectedMonth[1] !== undefined) {
-        expectedMonth = Number(expectedMonth[1].replace(/[^0-9]/gi, ''));
-      } else {
-        expectedMonth = null;
-      }
-    } else {
-      expectedMonth = null;
-    }
-
-    if (expectedDate !== null) {
-      if (expectedDate[1] !== undefined) {
-        expectedDate = Number(expectedDate[1].replace(/[^0-9]/gi, ''));
-      } else {
-        expectedDate = null;
-      }
-    } else {
-      expectedDate = null;
-    }
     
-    tempDate = new Date(JSON.stringify(now).slice(1, -1));
-    if (expectedYear === null) {
-      year = tempDate.getFullYear();
-    } else {
-      year = expectedYear;
-    }
-    if (expectedMonth === null) {
-      month = tempDate.getMonth() + 1;
-    } else {
-      month = expectedMonth;
-    }
-    if (expectedDate === null) {
-      date = 1;
-    } else {
-      date = expectedDate;
-    }
-
-    thisDate = stringToDate(`${String(year)}-${zeroAddition(month)}-${zeroAddition(date)}`)
-    expected = new Date(JSON.stringify(thisDate).slice(1, -1));
-
-    if (email === undefined || email === null || email === '') {
-      email = "";
-    }
-
-    if (contract === undefined || contract === null || contract === '') {
-      contract = "자가";
-    }
-
-    map = [
-      {
-        property: "name",
-        value: String(name),
-      },
-      {
-        property: "phone",
-        value: String(phone),
-      },
-      {
-        property: "address0",
-        value: String(address),
-      },
-      {
-        property: "address1",
-        value: "",
-      },
-      {
-        property: "email",
-        value: String(email),
-      },
-      {
-        property: "pyeong",
-        value: String(pyeong),
-      },
-      {
-        property: "movein",
-        value: dateToString(expected),
-      },
-      {
-        property: "living",
-        value: String(living),
-      },
-      {
-        property: "etc",
-        value: String(etc),
-      },
-      {
-        property: "contract",
-        value: String(contract),
-      },
-    ]
+        address = target.data.address;
+        searchResult = await app.getAddress(address);
+        if (searchResult !== null) {
+          address = searchResult.address.road;
+        }
     
-    console.log(map);
-
-
+        pyeong = target.data.pyeong.replace(/[^0-9\.]/gi, '');
+        if (pyeong === '' || Number.isNaN(Number(pyeong))) {
+          pyeong = 34;
+        } else {
+          pyeong = Number(pyeong);
+        }
+    
+        expected = target.data.expected;
+        expectedYear = /([0-9]+[ ]*[년연])/gi.exec(expected)
+        expectedMonth = /([0-9]+[ ]*[월윌])/gi.exec(expected)
+        expectedDate = /([0-9]+[ ]*[일])/gi.exec(expected)
+    
+        if (expectedYear !== null) {
+          if (expectedYear[1] !== undefined) {
+            expectedYear = Number(expectedYear[1].replace(/[^0-9]/gi, ''));
+            if (expectedYear < 1000) {
+              expectedYear = 2000 + expectedYear;
+            }
+          } else {
+            expectedYear = null;
+          }
+        } else {
+          expectedYear = null;
+        }
+    
+        if (expectedMonth !== null) {
+          if (expectedMonth[1] !== undefined) {
+            expectedMonth = Number(expectedMonth[1].replace(/[^0-9]/gi, ''));
+          } else {
+            expectedMonth = null;
+          }
+        } else {
+          expectedMonth = null;
+        }
+    
+        if (expectedDate !== null) {
+          if (expectedDate[1] !== undefined) {
+            expectedDate = Number(expectedDate[1].replace(/[^0-9]/gi, ''));
+          } else {
+            expectedDate = null;
+          }
+        } else {
+          expectedDate = null;
+        }
+        
+        tempDate = new Date(JSON.stringify(now).slice(1, -1));
+        if (expectedYear === null) {
+          year = tempDate.getFullYear();
+        } else {
+          year = expectedYear;
+        }
+        if (expectedMonth === null) {
+          month = tempDate.getMonth() + 1;
+        } else {
+          month = expectedMonth;
+        }
+        if (expectedDate === null) {
+          date = 1;
+        } else {
+          date = expectedDate;
+        }
+    
+        thisDate = stringToDate(`${String(year)}-${zeroAddition(month)}-${zeroAddition(date)}`)
+        expected = new Date(JSON.stringify(thisDate).slice(1, -1));
+    
+        if (email === undefined || email === null || email === '') {
+          email = "";
+        }
+    
+        if (contract === undefined || contract === null || contract === '') {
+          contract = "자가";
+        }
+    
+        map = [
+          {
+            property: "name",
+            value: String(name),
+          },
+          {
+            property: "phone",
+            value: String(phone),
+          },
+          {
+            property: "address0",
+            value: String(address),
+          },
+          {
+            property: "address1",
+            value: "",
+          },
+          {
+            property: "email",
+            value: String(email),
+          },
+          {
+            property: "pyeong",
+            value: String(pyeong),
+          },
+          {
+            property: "movein",
+            value: dateToString(expected),
+          },
+          {
+            property: "living",
+            value: String(living),
+          },
+          {
+            property: "etc",
+            value: String(etc),
+          },
+          {
+            property: "contract",
+            value: String(contract),
+          },
+        ];
+        
+        if (/0[0-9][0-9]?\-[0-9][0-9][0-9][0-9]?\-[0-9][0-9][0-9][0-9]/gi.test(phone)) {
+          response = await back.getClientsByQuery({ phone }, { selfMongo: selfCoreMongo })
+          if (response.length === 0) {
+  
+            clientResponse = await requestSystem("https://" + instance.address.backinfo.host + ":3000/clientSubmit", {
+              map
+            }, {
+              headers: {
+                "Content-Type": "application/json",
+                "origin": instance.address.frontinfo.host,
+              }
+            });
+            if (clientResponse.cliid === undefined) {
+              throw new Error("");
+            }
+            cliid = clientResponse.cliid;
+  
+            await homeliaisonAnalytics({
+              action: "login",
+              data: {
+                cliid,
+                date: dateToString(new Date(), true),
+              },
+            });
+  
+            // style check
+  
+            defaultQueryObject = {
+              newMode: true,
+              method: "client",
+              id: cliid
+            };
+            whereQuery = { cliid };
+  
+            updateQuery = {};
+            coreQuery = {};
+            updateQuery["curation.service.serid"] = [ serid ];
+            updateQuery["curation.check.serid"] = serid;
+            await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
+              ...defaultQueryObject,
+              updateQuery,
+              coreQuery
+            }, {
+              headers: {
+                "Content-Type": "application/json",
+                "origin": instance.address.frontinfo.host,
+              }
+            });
+  
+            updateQuery = {};
+            coreQuery = {};
+            updateQuery["curation.check.purchase"] = Number.isNaN(Number(purchase)) ? 0 : Number(purchase);
+            await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
+              ...defaultQueryObject,
+              updateQuery,
+              coreQuery
+            }, {
+              headers: {
+                "Content-Type": "application/json",
+                "origin": instance.address.frontinfo.host,
+              }
+            });
+  
+            updateQuery = {};
+            coreQuery = {};
+            updateQuery["curation.check.time"] = [];
+            updateQuery["budget"] = "상담 가능 시간 : \n" + [].join(", ");
+            await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
+              ...defaultQueryObject,
+              updateQuery,
+              coreQuery
+            }, {
+              headers: {
+                "Content-Type": "application/json",
+                "origin": instance.address.frontinfo.host,
+              }
+            });
+  
+            updateQuery = {};
+            coreQuery = {};
+            updateQuery["curation.check.budget"] = budgetArr.findIndex((s) => { return s === budget });
+            coreQuery["requests." + String(requestNumber) + ".request.budget"] = budget;
+            await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
+              ...defaultQueryObject,
+              updateQuery,
+              coreQuery
+            }, {
+              headers: {
+                "Content-Type": "application/json",
+                "origin": instance.address.frontinfo.host,
+              }
+            });
+  
+            updateQuery = {};
+            coreQuery = {};
+            updateQuery["curation.check.budget"] = budgetArr.findIndex((s) => { return s === budget });
+            coreQuery["requests." + String(requestNumber) + ".request.budget"] = budget;
+            await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
+              ...defaultQueryObject,
+              updateQuery,
+              coreQuery
+            }, {
+              headers: {
+                "Content-Type": "application/json",
+                "origin": instance.address.frontinfo.host,
+              }
+            });
+  
+            updateQuery = {};
+            coreQuery = {};
+            updateQuery["curation.image"] = objectDeepCopy(staticImageSet);
+            await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
+              ...defaultQueryObject,
+              updateQuery,
+              coreQuery
+            }, {
+              headers: {
+                "Content-Type": "application/json",
+                "origin": instance.address.frontinfo.host,
+              }
+            });
+  
+            await sleep(3 * 1000);
+  
+            await requestSystem("https://" + instance.address.backinfo.host + ":3000/styleCuration_updateCalculation", { cliid: cliid, historyQuery: {}, coreQuery: {}, mode: "calculation", fromConsole: 0 }, {
+              headers: {
+                "Content-Type": "application/json",
+                "origin": instance.address.frontinfo.host,
+              }
+            });
+            await sleep(1000);
+  
+            await requestSystem("https://" + instance.address.backinfo.host + ":3000/ghostClient_updateAnalytics", {
+              page: "styleCuration",
+              mode: "submit",
+              cliid: cliid,
+            }, {
+              headers: {
+                "Content-Type": "application/json",
+                "origin": instance.address.frontinfo.host,
+              }
+            });
+            await sleep(1000);
+  
+          } else {
+            await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
+          }
+        }
+      } catch {
+        await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
+      }
+    }
 
   } catch (e) {
     emergencyAlarm("FacebookAPIs.metaInstantToClient error : " + e.message).catch((err) => { console.log(err); });
