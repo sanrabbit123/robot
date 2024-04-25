@@ -741,7 +741,8 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
                 date: dateToString(new Date(), true),
               },
             });
-  
+            await sleep(5000);
+
             // style check
   
             defaultQueryObject = {
@@ -868,8 +869,9 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
       } catch (e) {
         console.log(e);
         if (logger !== null) {
-          logger.error("intant error : " + thisId).catch((err) => { console.log(err) });
+          logger.error("intant error : " + thisId + " / " + e.message).catch((err) => { console.log(err) });
         }
+        emergencyAlarm("FacebookAPIs.metaInstantToClient error : " + e.message).catch((err) => { console.log(err); });
         await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
       }
     }
