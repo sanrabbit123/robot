@@ -1097,6 +1097,11 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, contentsArr
     clientObject.source.campaign = [];
     clientObject.source.search = [];
 
+    if (thisClient.requests.some((o) => { return /from meta instant/gi.test(o.request.etc.comment) })) {
+      clientObject.source.mother.push("facebook");
+      clientObject.source.medium.push("instantads");
+    }
+
     clientObject.history = {};
     clientObject.history.detail = [];
     for (let obj of sessionResult.users) {

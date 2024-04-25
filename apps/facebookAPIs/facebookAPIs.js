@@ -586,7 +586,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
         name = target.data.name.trim();
         email = target.data.email.trim();
         contract = target.data.contract;
-        etc = '';
+        etc = "from meta instant ads";
         living = "false";
     
         if (/^0/gi.test(target.data.phone)) {
