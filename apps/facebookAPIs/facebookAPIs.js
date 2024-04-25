@@ -360,6 +360,7 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
         id: obj.id,
         ad: obj.ad_id,
         date: new Date(JSON.stringify(thisDate).slice(1, -1)),
+        injection: 0,
         raw: rawArr,
         data: {},
       };
@@ -542,8 +543,11 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
     let now, thisDate;
     let tempDate;
     let year, month, date;
-    let response;
     let email;
+    let contract;
+    let etc;
+    let living;
+    let map;
 
     now = new Date();
     rows = await back.mongoRead(collection, {}, { selfMongo });
@@ -554,12 +558,15 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
     purchase = Number(target.data.purchase);
     budget = target.data.budget;
     name = target.data.name.trim();
-    email = target.data.email;
+    email = target.data.email.trim();
+    contract = target.data.contract;
+    etc = '';
+    living = "false";
 
     if (/^0/gi.test(target.data.phone)) {
-      phone = autoHypenPhone(target.data.phone);
+      phone = autoHypenPhone(target.data.phone.trim());
     } else {
-      phone = autoHypenPhone('0' + target.data.phone);
+      phone = autoHypenPhone(String('0' + target.data.phone).trim());
     }
 
     address = target.data.address;
@@ -633,20 +640,58 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
     thisDate = stringToDate(`${String(year)}-${zeroAddition(month)}-${zeroAddition(date)}`)
     expected = new Date(JSON.stringify(thisDate).slice(1, -1));
 
-    console.log(serid);
-    console.log(purchase);
-    console.log(budget);
-    console.log(name);
-    console.log(phone);
-    console.log(address);
-    console.log(pyeong);
-    console.log(expected);
-    console.log(email);
+    if (email === undefined || email === null || email === '') {
+      email = "";
+    }
 
+    if (contract === undefined || contract === null || contract === '') {
+      contract = "자가";
+    }
 
+    map = [
+      {
+        property: "name",
+        value: String(name),
+      },
+      {
+        property: "phone",
+        value: String(phone),
+      },
+      {
+        property: "address0",
+        value: String(address),
+      },
+      {
+        property: "address1",
+        value: "",
+      },
+      {
+        property: "email",
+        value: String(email),
+      },
+      {
+        property: "pyeong",
+        value: String(pyeong),
+      },
+      {
+        property: "movein",
+        value: dateToString(expected),
+      },
+      {
+        property: "living",
+        value: String(living),
+      },
+      {
+        property: "etc",
+        value: String(etc),
+      },
+      {
+        property: "contract",
+        value: String(contract),
+      },
+    ]
     
-    
-
+    console.log(map);
 
 
 

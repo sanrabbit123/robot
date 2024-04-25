@@ -3679,12 +3679,12 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       movein = map.find((obj) => { return obj.property === "movein" });
       living = map.find((obj) => { return obj.property === "living" });
       etc = map.find((obj) => { return obj.property === "etc" });
+      contract = map.find((obj) => { return obj.property === "contract" });
 
       sessionId = map.find((obj) => { return obj.property === "sessionId" });
 
       // budget = map.find((obj) => { return obj.property === "budget" });
       // furniture = map.find((obj) => { return obj.property === "furniture" });
-      contract = map.find((obj) => { return obj.property === "contract" });
 
       if (name === undefined || phone === undefined || address0 === undefined || address1 === undefined || email === undefined || pyeong === undefined || movein === undefined || living === undefined || etc === undefined) {
         throw new Error("invaild post");
@@ -3702,6 +3702,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       // if (furniture === undefined) {
       //   furniture = { property: "furniture", value: furnitureArr[1] };
       // }
+      
       if (contract === undefined) {
         contract = { property: "contract", value: contractArr[0] };
       }
@@ -3715,10 +3716,10 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       movein = movein.value.trim();
       living = living.value.trim();
       etc = etc.value.trim();
+      contract = contract.value.trim();
 
       // budget = budget.value.trim();
       // furniture = furniture.value.trim();
-      contract = contract.value.trim();
 
       requestObject = {};
 
@@ -3726,7 +3727,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       requestObject["phone"] = phone.replace(/[^0-9\-]/gi, '');
       requestObject["email"] = email;
 
-      requestObject["requests.0.request.space.address"] = address0 + " " + address1;
+      requestObject["requests.0.request.space.address"] = String(address0 + " " + address1).trim();
       requestObject["requests.0.request.family"] = "";
 
       // requestObject["requests.0.request.budget"] = budget;
