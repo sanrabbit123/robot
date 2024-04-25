@@ -1097,7 +1097,7 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, contentsArr
     clientObject.source.campaign = [];
     clientObject.source.search = [];
 
-    if (thisClient.requests.some((o) => { return /from meta instant/gi.test(o.request.etc.comment) })) {
+    if (thisClient.requests.some((o) => { return /from meta instant/gi.test(o.request.etc.comment) }) || thisClient.requests.some((o) => { return /메타 인스턴트/gi.test(o.request.etc.channel) })) {
       clientObject.source.mother.push("facebook");
       clientObject.source.medium.push("instantads");
     }

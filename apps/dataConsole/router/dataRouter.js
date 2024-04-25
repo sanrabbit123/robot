@@ -3769,7 +3769,11 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       requestObject["requests.0.request.space.spec.valcony"] = false;
 
       requestObject["requests.0.request.etc.comment"] = etc;
-      requestObject["requests.0.request.etc.channel"] = "인터넷 검색";
+      if (/from meta instant ads/gi.test(etc)) {
+        requestObject["requests.0.request.etc.channel"] = "메타 인스턴트";
+      } else {
+        requestObject["requests.0.request.etc.channel"] = "인터넷 검색";
+      }
       requestObject["requests.0.request.timeline"] = new Date();
 
       requestObject["requests.0.analytics.session"] = sessionId;
