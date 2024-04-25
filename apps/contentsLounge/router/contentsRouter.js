@@ -768,6 +768,7 @@ ContentsRouter.prototype.rou_post_metaInstant = function () {
     });
     try {
       const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
       const defaultDay = 3;
       const dayConst = req.body.day === undefined ? defaultDay : (Number.isNaN(Number(req.body.day)) ? defaultDay : Number(req.body.day));
       let boo;
@@ -787,6 +788,12 @@ ContentsRouter.prototype.rou_post_metaInstant = function () {
               }
             }
           }
+
+          if (boo) {
+            await sleep(3000);
+            await meta.metaInstantToClient(selfMongo, selfCoreMongo, logger);
+          }
+
         } catch (e) {
           console.log(e);
           logger.error("Contents lounge 서버 문제 생김 (rou_post_metaInstant): " + e.message).catch((e) => { console.log(e); });
