@@ -767,6 +767,8 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
               }
             });
   
+            await sleep(100);
+
             updateQuery = {};
             coreQuery = {};
             updateQuery["curation.check.purchase"] = Number.isNaN(Number(purchase)) ? 0 : Number(purchase);
@@ -781,6 +783,8 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
               }
             });
   
+            await sleep(100);
+
             updateQuery = {};
             coreQuery = {};
             updateQuery["curation.check.time"] = [];
@@ -796,6 +800,8 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
               }
             });
   
+            await sleep(100);
+
             updateQuery = {};
             coreQuery = {};
             updateQuery["curation.check.budget"] = budgetArr.findIndex((s) => { return s === budget });
@@ -811,6 +817,8 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
               }
             });
   
+            await sleep(100);
+
             updateQuery = {};
             coreQuery = {};
             updateQuery["curation.check.budget"] = budgetArr.findIndex((s) => { return s === budget });
@@ -826,6 +834,8 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
               }
             });
   
+            await sleep(100);
+
             updateQuery = {};
             coreQuery = {};
             updateQuery["curation.image"] = objectDeepCopy(staticImageSet);
