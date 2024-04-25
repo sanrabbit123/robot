@@ -443,12 +443,12 @@ AddressParser.prototype.convertXY = function (x, y, reverse = false) {
   }
 }
 
-AddressParser.prototype.getTmapPoiSearch = async function (searchKeyword) {
+AddressParser.prototype.getTmapPoiSearch = async function (searchKeyword, child = false) {
   const instance = this;
   const { poi: url, key: appKey } = this.token.tMap;
   const { requestSystem, objectDeepCopy, emergencyAlarm, sleep } = this.mother;
   try {
-    const delta = 500;
+    const delta = 100;
     const version = 1;
     const format = "json";
     const callback = "result";
@@ -459,6 +459,7 @@ AddressParser.prototype.getTmapPoiSearch = async function (searchKeyword) {
     const res = await requestSystem(url, { version, format, callback, searchKeyword, resCoordType, reqCoordType, count, appKey }, { method, headers: { appKey } });
     let result;
     let target;
+    let tempArr;
 
     result = null;
     if (typeof res.data === "object" && res.data !== null) {
@@ -508,14 +509,27 @@ AddressParser.prototype.getTmapPoiSearch = async function (searchKeyword) {
       }
     }
 
-    if (result === null) {
-      await sleep(delta);
-      searchKeyword = searchKeyword.replace(/\([^\)]*\)/gi, '');
-      result = await instance.getTmapPoiSearch(searchKeyword);
+    if (!child) {
       if (result === null) {
         await sleep(delta);
-        searchKeyword = searchKeyword.split(" ").map((s) => { return s.trim() }).filter((s) => { return !/[도시구]$/gi.test(s); }).join(" ");
-        result = await instance.getTmapPoiSearch(searchKeyword);
+        searchKeyword = searchKeyword.replace(/\([^\)]*\)/gi, '');
+        result = await instance.getTmapPoiSearch(searchKeyword, true);
+        if (result === null) {
+          await sleep(delta);
+          tempArr = searchKeyword.split(" ").map((s) => { return s.trim() }).filter((s) => { return !/[도리]$/gi.test(s); });
+          tempArr = tempArr.filter((s) => { return !/거주(중)?/gi.test(s) });
+          tempArr = tempArr.filter((s) => { return !/입주(할|예정)?/gi.test(s) });
+          tempArr = tempArr.filter((s) => { return !/예정/gi.test(s) });
+          tempArr = tempArr.filter((s) => { return !/아파트/gi.test(s) });
+          searchKeyword = tempArr.join(" ");
+          result = await instance.getTmapPoiSearch(searchKeyword, true);
+          if (result === null) {
+            await sleep(delta);
+            tempArr = searchKeyword.split(" ").map((s) => { return s.trim() }).filter((s) => { return !/[도시구동리]$/gi.test(s); });
+            searchKeyword = tempArr.join(" ");
+            result = await instance.getTmapPoiSearch(searchKeyword, true);
+          }
+        }
       }
     }
 
@@ -528,7 +542,7 @@ AddressParser.prototype.getTmapPoiSearch = async function (searchKeyword) {
   }
 }
 
-AddressParser.prototype.getAddress = async function (address, pointMode = false, defaultGeneralSpotsNameIndex = 0) {
+AddressParser.prototype.getAddress = async function (address, pointMode = false) {
   if (typeof address !== "string") {
     throw new Error("invaild input, address must be string");
   }
@@ -537,17 +551,6 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false,
   const { url: vworldUrl, key: vworldKey } = this.token.vworld;
   const { url: roadUrl, key: roadKey } = this.token.jusoRoad;
   const { url: locationUrl, key: locationKey } = this.token.jusoLocation;
-  const defaultGeneralSpotsName = [
-    "공원",
-    "초등학교",
-    "중학교",
-    "고등학교",
-    "학교",
-    "1",
-    "사거리",
-    "삼거리",
-    "보건소",
-  ];
   try {
     let data, res, res2, result;
     let tempArr, roadBoo;
@@ -740,13 +743,7 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false,
 
     //third search
     if (result === null && fixedAddress === null) {
-      tempArr = address.split(' ');
-      tempArr = tempArr.slice(0, index + 1);
-      if (defaultGeneralSpotsName[defaultGeneralSpotsNameIndex] === undefined) {
-        return null;
-      }
-      tempArr.push(defaultGeneralSpotsName[defaultGeneralSpotsNameIndex]);
-      result = await this.getAddress(tempArr.join(" "), false, defaultGeneralSpotsNameIndex + 1);
+      return null;
     } else if (result === null && !pointMode && typeof fixedAddress === "string") {
       return {
         address: {

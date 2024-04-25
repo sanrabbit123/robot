@@ -303,6 +303,7 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
     let expectedRaw;
     let thisId, json;
     let rows;
+    let emailRaw, contractRaw;
 
     now = new Date();
     ago = new Date(JSON.stringify(now).slice(1, -1));
@@ -352,6 +353,8 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
       addressRaw = null;
       pyeongRaw = null;
       expectedRaw = null;
+      emailRaw = null;
+      contractRaw = null;
 
       tempObj = {
         id: obj.id,
@@ -441,6 +444,26 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
         tempObj.data.expected = null;
       }
 
+      try {
+        emailRaw = rawArr.find((o) => { return /email/gi.test(o.name) })?.values?.join("");
+        if (emailRaw === null || emailRaw === undefined) {
+          throw new Error("");
+        }
+        tempObj.data.email = emailRaw;
+      } catch {
+        tempObj.data.email = "";
+      }
+
+      try {
+        contractRaw = rawArr.find((o) => { return /contract/gi.test(o.name) })?.values?.join("");
+        if (contractRaw === null || contractRaw === undefined) {
+          throw new Error("");
+        }
+        tempObj.data.contract = contractRaw;
+      } catch {
+        tempObj.data.contract = "자가";
+      }
+
       tong.push(tempObj);
     }
     
@@ -501,7 +524,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
   const AddressParser = require(process.cwd() + "/apps/addressParser/addressParser.js");
   const app = new AddressParser();
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId } = this;
-  const { sleep, dateToString, stringToDate, sha256Hmac, fileSystem, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy, binaryRequest, messageSend } = this.mother;
+  const { sleep, dateToString, stringToDate, sha256Hmac, fileSystem, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy, binaryRequest, messageSend, autoComma, autoHypenPhone } = this.mother;
   try {
     const collection = "metaInstantForm";
     let rows;
@@ -515,40 +538,114 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
     let pyeong;
     let expected;
     let searchResult;
+    let expectedYear, expectedMonth, expectedDate;
+    let now, thisDate;
+    let tempDate;
+    let year, month, date;
+    let response;
+    let email;
 
+    now = new Date();
     rows = await back.mongoRead(collection, {}, { selfMongo });
 
-
-
-    
     target = rows[0];
 
     serid = target.data.serid;
-    purchase = target.data.purchase;
+    purchase = Number(target.data.purchase);
     budget = target.data.budget;
-    name = target.data.name;
-    phone = target.data.phone;
-    address = target.data.address;
-    pyeong = target.data.pyeong;
-    expected = target.data.expected;
+    name = target.data.name.trim();
+    email = target.data.email;
 
+    if (/^0/gi.test(target.data.phone)) {
+      phone = autoHypenPhone(target.data.phone);
+    } else {
+      phone = autoHypenPhone('0' + target.data.phone);
+    }
+
+    address = target.data.address;
     searchResult = await app.getAddress(address);
     if (searchResult !== null) {
       address = searchResult.address.road;
     }
 
+    pyeong = target.data.pyeong.replace(/[^0-9\.]/gi, '');
+    if (pyeong === '' || Number.isNaN(Number(pyeong))) {
+      pyeong = 34;
+    } else {
+      pyeong = Number(pyeong);
+    }
 
+    expected = target.data.expected;
+    expectedYear = /([0-9]+[ ]*[년연])/gi.exec(expected)
+    expectedMonth = /([0-9]+[ ]*[월윌])/gi.exec(expected)
+    expectedDate = /([0-9]+[ ]*[일])/gi.exec(expected)
 
+    if (expectedYear !== null) {
+      if (expectedYear[1] !== undefined) {
+        expectedYear = Number(expectedYear[1].replace(/[^0-9]/gi, ''));
+        if (expectedYear < 1000) {
+          expectedYear = 2000 + expectedYear;
+        }
+      } else {
+        expectedYear = null;
+      }
+    } else {
+      expectedYear = null;
+    }
 
+    if (expectedMonth !== null) {
+      if (expectedMonth[1] !== undefined) {
+        expectedMonth = Number(expectedMonth[1].replace(/[^0-9]/gi, ''));
+      } else {
+        expectedMonth = null;
+      }
+    } else {
+      expectedMonth = null;
+    }
+
+    if (expectedDate !== null) {
+      if (expectedDate[1] !== undefined) {
+        expectedDate = Number(expectedDate[1].replace(/[^0-9]/gi, ''));
+      } else {
+        expectedDate = null;
+      }
+    } else {
+      expectedDate = null;
+    }
+    
+    tempDate = new Date(JSON.stringify(now).slice(1, -1));
+    if (expectedYear === null) {
+      year = tempDate.getFullYear();
+    } else {
+      year = expectedYear;
+    }
+    if (expectedMonth === null) {
+      month = tempDate.getMonth() + 1;
+    } else {
+      month = expectedMonth;
+    }
+    if (expectedDate === null) {
+      date = 1;
+    } else {
+      date = expectedDate;
+    }
+
+    thisDate = stringToDate(`${String(year)}-${zeroAddition(month)}-${zeroAddition(date)}`)
+    expected = new Date(JSON.stringify(thisDate).slice(1, -1));
+
+    console.log(serid);
+    console.log(purchase);
+    console.log(budget);
+    console.log(name);
+    console.log(phone);
     console.log(address);
+    console.log(pyeong);
+    console.log(expected);
+    console.log(email);
+
 
     
-
-
-
-
-
-
+    
 
 
 

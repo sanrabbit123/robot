@@ -213,14 +213,19 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+    
+
     // await this.MONGOCONTENTSC.connect();
     // const meta = new FacebookAPIs();
     // await meta.metaInstantToClient(this.MONGOCONTENTSC, this.MONGOLOCALC, null);
     // await this.MONGOCONTENTSC.close();
 
 
-
     
+    
+
+
 
     /*
     
@@ -7268,9 +7273,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "한예지",
-    //     designer: "이윤아",
-    //     link: "https://drive.google.com/drive/folders/1oHeWVYrPoTxyFYXUwGLMPbF8MdM2DGvF",
+    //     client: "서주연",
+    //     designer: "김지혜",
+    //     link: "https://drive.google.com/drive/folders/1V7vD6PdQ4kNpgptQ-Z6ApOnuippLTR68",
     //     pay: true
     //   },
     // ]);
