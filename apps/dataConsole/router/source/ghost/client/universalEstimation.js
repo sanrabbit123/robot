@@ -1923,7 +1923,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     if (bills.length === 0) {
       bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": (/off/gi.test(method) ? "online" : "offline") } ] } }, PYTHONHOST + "/generalBill", { equal: true });
       if (bills.length === 0) {
-        alert("결제 안내 문서가 없습니다! 홈리에종에 문의해주세요!");
+        window.alert("결제 안내 문서가 없습니다! 홈리에종에 문의해주세요!");
         window.location.href = this.frontPage;
       }
     }

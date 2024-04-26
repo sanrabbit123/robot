@@ -2903,14 +2903,17 @@ Mother.prototype.stringToDate = function (str) {
   }
 
   if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str) && !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(str)) {
-    if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str)) {
+    if (/^[0-9][0-9]\-[ ]*[0-9][0-9]\-[ ]*[0-9][0-9]$/.test(str)) {
+      str = str.split("-").map((s) => { return s.trim() }).join("-");
       str = "20" + str;
-    } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9]\-[ ]*[0-9][0-9]$/.test(str)) {
+      str = str.split("-").map((s) => { return s.trim() }).join("-");
       str = str + "-01";
-    } else if (/^[0-9][0-9]\-[0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9]\-[ ]*[0-9][0-9]$/.test(str)) {
+      str = str.split("-").map((s) => { return s.trim() }).join("-");
       str = "20" + str + "-01";
-    } else if (/^[0-9][0-9][년] ?[0-9]/.test(str)) {
-      tempArr = str.split("년");
+    } else if (/^[0-9][0-9][년][ ]*[0-9]/.test(str)) {
+      tempArr = str.split("년").map((s) => { return s.trim(); });
       if (/월/gi.test(str)) {
         tempArr4 = tempArr[1].trim().split("월");
         if (/일/gi.test(str)) {
@@ -2921,8 +2924,8 @@ Mother.prototype.stringToDate = function (str) {
       } else {
         str = String(Number(tempArr[0].replace(/[^0-9]/gi, '')) + 2000) + "-" + zeroAddition(Number(tempArr[1].replace(/[^0-9]/gi, ''))) + "-01";
       }
-    } else if (/^[0-9][0-9][0-9][0-9][년] ?[0-9]/.test(str)) {
-      tempArr = str.split("년");
+    } else if (/^[0-9][0-9][0-9][0-9][년][ ]*[0-9]/.test(str)) {
+      tempArr = str.split("년").map((s) => { return s.trim(); });
       if (/월/gi.test(str)) {
         tempArr4 = tempArr[1].trim().split("월");
         if (/일/gi.test(str)) {

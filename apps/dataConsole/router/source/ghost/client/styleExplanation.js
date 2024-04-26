@@ -952,6 +952,7 @@ StyleExplanationJs.prototype.updateImmediately = async function (valueIndex, men
         updateQuery = {};
         coreQuery = {};
         updateQuery["curation.check.purchase"] = menuIndex;
+        coreQuery["requests." + String(requestNumber) + ".request.furniture"] = menu[menuIndex];
         await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
       }
     } else if (valueIndex === 9) {

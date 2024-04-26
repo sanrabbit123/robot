@@ -3408,6 +3408,8 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
     let completeBoxTextMarginTop;
     let whiteBase2;
     let whiteBaseBetween;
+    let receiptContents;
+    let receiptNotice;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -3555,6 +3557,16 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
     paymentMatrix = [
       [ "총 금액", autoComma(thisBill.request.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0)) + "원" ],
       [ "계좌 정보",  "기업 049-085567-04-022 " + "(주)홈리에종"]
+    ];
+    receiptContents = [
+      [ "현금 영수증 발행", "핸드폰 번호", "cash" ],
+      [ "세금 계산서 발행", "사업자 등록 번호", "business" ],
+    ];
+    receiptNotice = [
+      "<b%주의사항%b>",
+      "1. 계약서를 사업자명으로 작성한 경우에 한해 사업자 번호 기준 세금 계산서 발행되며 그렇지 않을 경우, 신청자의 핸드폰 번호 기준 현금 영수증이 발행됩니다.",
+      "2. 세금 계산서 발행을 마친 후에도 입금자명을 반드시 신청자명으로 보내주셔야 합니다.",
+      "3. 계좌 이체시 입금자 이름과 서비스 신청자 이름이 일치해야 합니다. 그렇지 않을 경우, 입금 확인에 문제가 생길 수 있습니다.",
     ];
     vatWording = "VAT 포함";
     finalWording = autoComma(thisBill.request.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0)) + "원";
@@ -3889,7 +3901,6 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
       });
       num++;
     }
-
     createNode({
       mother: whiteBase,
       style: {
@@ -3938,7 +3949,6 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
         position: "relative",
         flexDirection: "row",
         width: withOut(0, ea),
-        height: String(totalBoxHeight) + ea,
         background: colorExtended.white,
         borderRadius: String(10) + "px",
         marginTop: String(whiteBaseBetween) + ea,
@@ -4019,6 +4029,224 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
             color: colorExtended.black,
           }
         },
+      ]
+    });
+
+    matrixTong = createNode({
+      mother: whiteBase2,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(boxInnerMargin * 2, ea),
+        marginLeft: String(boxInnerMargin) + ea,
+        justifyContent: "start",
+        alignItems: "start",
+        flexDirection: "column",
+        marginTop: String(matrixTongMarginTop) + ea,
+        marginBottom: String(matixTongVisualBottom) + ea,
+      },
+    });
+    num = 0;
+    for (let [ title, placeholder, property ] of receiptContents) {
+      createNode({
+        mother: matrixTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          width: withOut(0, ea),
+          height: String(matrixFactorHeight) + ea,
+          background: colorExtended.transparent,
+          borderTop: String(num === 0 ? matrixLineWeight : 0) + "px solid " + (num === 0 ? colorExtended.black : colorExtended.gray4),
+          borderBottom: String(num === receiptContents.length - 1 ? matrixLineWeight : 1) + "px solid " + (num === receiptContents.length - 1 ? colorExtended.black : colorExtended.gray4),
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              justifyContent: "center",
+              alignItems: "center",
+              width: String(factorTitleWidth) + ea,
+              height: withOut(factorTitleHeightPercentage * 2, '%'),
+              boxSizing: "border-box",
+              borderRight: "1px solid " + colorExtended.gray4,
+            },
+            child: {
+              text: title,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(factorTextTop) + ea,
+                fontSize: String(factorSize) + ea,
+                fontWeight: String(factorBoldWeight),
+                color: colorExtended.black,
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              flexDirection: "row",
+              justifyContent: "end",
+              alignItems: "center",
+              width: withOut(factorTitleWidth, ea),
+              height: withOut(0, ea),
+              boxSizing: "border-box",
+            },
+            children: [
+              {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(320) + ea,
+                  height: String(30) + ea,
+                  background: colorExtended.gray6,
+                  borderRadius: String(8) + "px",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  mode: "input",
+                  event: {
+                    keyup: function (e) {
+                      const index = Number(this.getAttribute("index"));
+                      if (index === 0) {
+                        this.value = autoHypenPhone(this.value);
+                      } else {
+                        this.value = this.value.trim().replace(/[^0-9\-]/gi, '');
+                      }
+                    },
+                    blur: function (e) {
+                      const index = Number(this.getAttribute("index"));
+                      if (index === 0) {
+                        this.value = this.value.trim().replace(/[^0-9\-]/gi, '');
+                        this.value = autoHypenPhone(this.value);
+                      } else {
+                        this.value = this.value.trim().replace(/[^0-9\-]/gi, '');
+                      }
+                    },
+                  },
+                  attribute: {
+                    type: "text",
+                    placeholder,
+                    property,
+                    value: "",
+                    index: String(num),
+                  },
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: withOut(0, ea),
+                    height: String(26) + ea,
+                    top: String(-1) + ea,
+                    outline: String(0),
+                    border: String(0),
+                    fontSize: String(13) + ea,
+                    fontWeight: String(400),
+                    color: colorExtended.black,
+                    textAlign: "center",
+                    background: colorExtended.transparent,
+                  }
+                }
+              },
+              {
+                attribute: {
+                  index: String(num),
+                },
+                event: {
+                  click: async function (e) {
+                    try {
+                      const index = Number(this.getAttribute("index"));
+                      if (index === 0) {
+
+
+
+                      } else {
+
+                        
+
+                      }
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  },
+                },
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(70) + ea,
+                  height: String(30) + ea,
+                  background: colorExtended.gradientGray,
+                  borderRadius: String(8) + "px",
+                  marginLeft: String(8) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  cursor: "pointer",
+                },
+                child: {
+                  text: "제출",
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(-1) + ea,
+                    fontSize: String(14) + ea,
+                    fontWeight: String(800),
+                    color: colorExtended.white,
+                  }
+                }
+              },
+            ]
+          },
+        ]
+      });
+      num++;
+    }
+    createNode({
+      mother: whiteBase2,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut((boxInnerMargin * 2), ea),
+        marginLeft: String(boxInnerMargin) + ea,
+        justifyContent: "start",
+        alignItems: "center",
+        flexDirection: "row",
+        marginTop: String(matrixTongMarginTop) + ea,
+      },
+      children: [
+        {
+          text: receiptNotice.join("\n"),
+          style: {
+            fontSize: String(factorSize) + ea,
+            fontWeight: String(400),
+            color: colorExtended.black,
+            display: "inline-block",
+            position: "relative",
+            top: String(0) + ea,
+            lineHeight: String(1.7),
+          },
+          bold: {
+            fontSize: String(factorSize) + ea,
+            fontWeight: String(800),
+            color: colorExtended.black,
+          },
+        },
+        {
+          mode: "svg",
+          source: svgMaker.informationCircle(colorExtended.deactive, colorExtended.black),
+          style: {
+            display: "inline-block",
+            position: "absolute",
+            width: String(24) + ea,
+            bottom: String(0) + ea,
+            right: String(0) + ea,
+          }
+        }
       ]
     });
 
@@ -4195,7 +4423,7 @@ FirstPaymentJs.prototype.launching = async function (loading) {
       projects = await ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects", { equal: true });
       if (projects.length === 0) {
         window.alert("잘못된 접근입니다!");
-        window.location.href = this.frontPage;
+        throw new Error("error spot 11 : " + "no projects");
       }
       project = projects[0];
       this.proid = proid;
@@ -4206,7 +4434,7 @@ FirstPaymentJs.prototype.launching = async function (loading) {
       clients = await ajaxJson({ whereQuery: { cliid } }, SECONDHOST + "/getClients", { equal: true });
       if (clients.length === 0) {
         window.alert("잘못된 접근입니다!");
-        window.location.href = this.frontPage;
+        throw new Error("error spot 10 : " + "no clients");
       }
       client = clients[0];
       this.cliid = cliid;
@@ -4226,7 +4454,7 @@ FirstPaymentJs.prototype.launching = async function (loading) {
       designers = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
       if (designers.length === 0) {
         window.alert("잘못된 접근입니다!");
-        window.location.href = this.frontPage;
+        throw new Error("error spot 12 : " + "no designers");
       }
       designer = designers[0];
       this.desid = desid;
@@ -4292,8 +4520,8 @@ FirstPaymentJs.prototype.launching = async function (loading) {
     if (bills.length === 0) {
       bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": (/off/gi.test(method) ? "online" : "offline") } ] } }, PYTHONHOST + "/generalBill", { equal: true });
       if (bills.length === 0) {
-        alert("결제 안내 문서가 없습니다! 홈리에종에 문의해주세요!");
-        window.location.href = this.frontPage;
+        window.alert("결제 안내 문서가 없습니다! 홈리에종에 문의해주세요!");
+        throw new Error("error spot 15 : " + "no bills");
       }
     }
     bill = new StylingBill(bills[0]);
@@ -4415,5 +4643,7 @@ FirstPaymentJs.prototype.launching = async function (loading) {
   } catch (err) {
     console.log(err);
     await GeneralJs.ajaxJson({ message: "FirstPaymentJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
+    window.alert("잘못된 접근입니다!");
+    window.location.href = FRONTHOST;
   }
 }

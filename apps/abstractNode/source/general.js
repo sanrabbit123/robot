@@ -451,7 +451,7 @@ GeneralJs.colorExtended = {
   gray3: "#dddddd",
   gray4: "#cccccc",
   gray5: "#aaaaaa",
-  gray6: "#e2e2e2",
+  gray6: "#e7e7e7",
   grayDeactive: "#c2c2c2",
   deactive: "#bbbbbb",
   liteShadow: "#bbbbbb",

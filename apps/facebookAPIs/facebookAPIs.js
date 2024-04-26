@@ -529,6 +529,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
   const { sleep, dateToString, stringToDate, sha256Hmac, fileSystem, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy, binaryRequest, messageSend, autoComma, autoHypenPhone, homeliaisonAnalytics } = this.mother;
   try {
     const budgetArr = [ '500만원 이하', '1,000만원', '1,500만원', '2,000만원', '2,500만원', '3,000만원', '3,500만원', '4,000만원', '4,500만원', '5,000만원 이상', '6,000만원 이상', '7,000만원 이상', '8,000만원 이상', '9,000만원 이상', '1억원 이상', '1억 5,000만원 이상', '2억원 이상', '3억원 이상', '5억원 이상', '10억원 이상', ];
+    const purchaseArr = [ "재배치", "일부 구매", "전체 구매" ];
     const staticImageSet = [
       "t6p18.jpg",
       "t11p58.jpg",
@@ -613,12 +614,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
         }
     
         livingNow = false;
-        expected = target.data.expected;
-        expectedYear = /([0-9]+[ ]*[년연])/gi.exec(expected)
-        expectedMonth = /([0-9]+[ ]*[월윌])/gi.exec(expected)
-        expectedDate = /([0-9]+[ ]*[일])/gi.exec(expected)
-    
-        if (expectedYear === null && expectedMonth === null && expectedDate === null) {
+        try {
           if (/거주/gi.test(target.data.expected)) {
             livingNow = true;
             expected = new Date();
@@ -631,59 +627,82 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
               expected = new Date();
             }
           }
-        } else {
-          if (expectedYear !== null) {
-            if (expectedYear[1] !== undefined) {
-              expectedYear = Number(expectedYear[1].replace(/[^0-9]/gi, ''));
-              if (expectedYear < 1000) {
-                expectedYear = 2000 + expectedYear;
+        } catch {
+          expected = target.data.expected;
+          expectedYear = /([0-9]+[ ]*[년연])/gi.exec(expected)
+          expectedMonth = /([0-9]+[ ]*[월윌])/gi.exec(expected)
+          expectedDate = /([0-9]+[ ]*[일])/gi.exec(expected)
+      
+          if (expectedYear === null && expectedMonth === null && expectedDate === null) {
+            if (/거주/gi.test(target.data.expected)) {
+              livingNow = true;
+              expected = new Date();
+            } else {
+              try {
+                livingNow = false;
+                expected = stringToDate(target.data.expected.trim());
+              } catch (e) {
+                livingNow = true;
+                expected = new Date();
+              }
+            }
+          } else {
+
+            livingNow = false;
+
+            if (expectedYear !== null) {
+              if (expectedYear[0] !== undefined) {
+                expectedYear = Number(expectedYear[0].replace(/[^0-9]/gi, ''));
+                if (expectedYear < 1000) {
+                  expectedYear = 2000 + expectedYear;
+                }
+              } else {
+                expectedYear = null;
               }
             } else {
               expectedYear = null;
             }
-          } else {
-            expectedYear = null;
-          }
-      
-          if (expectedMonth !== null) {
-            if (expectedMonth[1] !== undefined) {
-              expectedMonth = Number(expectedMonth[1].replace(/[^0-9]/gi, ''));
+        
+            if (expectedMonth !== null) {
+              if (expectedMonth[0] !== undefined) {
+                expectedMonth = Number(expectedMonth[0].replace(/[^0-9]/gi, ''));
+              } else {
+                expectedMonth = null;
+              }
             } else {
               expectedMonth = null;
             }
-          } else {
-            expectedMonth = null;
-          }
-      
-          if (expectedDate !== null) {
-            if (expectedDate[1] !== undefined) {
-              expectedDate = Number(expectedDate[1].replace(/[^0-9]/gi, ''));
+        
+            if (expectedDate !== null) {
+              if (expectedDate[0] !== undefined) {
+                expectedDate = Number(expectedDate[0].replace(/[^0-9]/gi, ''));
+              } else {
+                expectedDate = null;
+              }
             } else {
               expectedDate = null;
             }
-          } else {
-            expectedDate = null;
+            
+            tempDate = new Date(JSON.stringify(now).slice(1, -1));
+            if (expectedYear === null) {
+              year = tempDate.getFullYear();
+            } else {
+              year = expectedYear;
+            }
+            if (expectedMonth === null) {
+              month = tempDate.getMonth() + 1;
+            } else {
+              month = expectedMonth;
+            }
+            if (expectedDate === null) {
+              date = 1;
+            } else {
+              date = expectedDate;
+            }
+        
+            thisDate = stringToDate(`${String(year)}-${zeroAddition(month)}-${zeroAddition(date)}`)
+            expected = new Date(JSON.stringify(thisDate).slice(1, -1));
           }
-          
-          tempDate = new Date(JSON.stringify(now).slice(1, -1));
-          if (expectedYear === null) {
-            year = tempDate.getFullYear();
-          } else {
-            year = expectedYear;
-          }
-          if (expectedMonth === null) {
-            month = tempDate.getMonth() + 1;
-          } else {
-            month = expectedMonth;
-          }
-          if (expectedDate === null) {
-            date = 1;
-          } else {
-            date = expectedDate;
-          }
-      
-          thisDate = stringToDate(`${String(year)}-${zeroAddition(month)}-${zeroAddition(date)}`)
-          expected = new Date(JSON.stringify(thisDate).slice(1, -1));
         }
     
         if (email === undefined || email === null || email === '') {
@@ -793,6 +812,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
             updateQuery = {};
             coreQuery = {};
             updateQuery["curation.check.purchase"] = Number.isNaN(Number(purchase)) ? 0 : Number(purchase);
+            coreQuery["requests." + String(requestNumber) + ".request.furniture"] = purchaseArr[Number.isNaN(Number(purchase)) ? 0 : Number(purchase)];
             await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
               ...defaultQueryObject,
               updateQuery,
