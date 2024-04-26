@@ -3330,12 +3330,13 @@ FirstPaymentJs.prototype.insertCompleteBox = async function () {
 
 FirstPaymentJs.prototype.insertAccountBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, autoComma } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, autoComma, ajaxJson } = GeneralJs;
   const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop, thisBill } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
+  const injectionInputClassName = "injectionInputClassName";
   try {
     let minusLeft;
     let firstBase;
@@ -3410,6 +3411,7 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
     let whiteBaseBetween;
     let receiptContents;
     let receiptNotice;
+    let receiptSubmitEvent;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -3468,9 +3470,6 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
       mainImageHeight = <%% 390, 372, 338, 314, 39 %%>;
       buttonMarginTop = <%% 146, 146, 132, 110, 3.6 %%>;
     }
-
-    mainIllustLeft = FirstPaymentJs.binaryPath + "/mainillust_left.png";
-    mainIllustRight = FirstPaymentJs.binaryPath + "/mainillust_right.png";
 
     mainIllustMargin = 90;
     mainIllustTop = <%% -340, -340, -340, -340, -340 %%>;
@@ -3545,6 +3544,50 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
     this.totalContents.style.overflow = "hidden";
     this.totalContents.style.background = colorExtended.black;
     document.body.style.background = colorExtended.black;
+
+    receiptSubmitEvent = (num) => {
+      return async function (e) {
+        try {
+          const index = Number(this.getAttribute("index"));
+          const targetInput = document.querySelector('.' + injectionInputClassName + String(index));
+          const thisValue = targetInput.value.trim().replace(/[^0-9\-]/gi, '');
+          const getObj = returnGet();
+          if (index === 0) {
+
+            await ajaxJson({
+              mode: "cashPhone",
+              phone: thisValue,
+              hash: getObj.hash,
+              bilid: instance.bill.bilid,
+              proid: instance.project.proid,
+              desid: instance.designer.desid,
+              cliid: instance.client.cliid,
+              name: instance.client.name,
+            }, BACKHOST + "/inicisPayment");
+
+            GeneralJs.alert("정상적으로 제출되었습니다!", true, true);
+
+          } else {
+
+            await ajaxJson({
+              mode: "cashPhone",
+              phone: thisValue,
+              hash: getObj.hash,
+              bilid: instance.bill.bilid,
+              proid: instance.project.proid,
+              desid: instance.designer.desid,
+              cliid: instance.client.cliid,
+              name: instance.client.name,
+            }, BACKHOST + "/inicisPayment");
+            
+            GeneralJs.alert("정상적으로 제출되었습니다!", true, true);
+
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
 
     payButtonContents = [
       {
@@ -4112,6 +4155,7 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
                 },
                 child: {
                   mode: "input",
+                  class: [ injectionInputClassName + String(num) ],
                   event: {
                     keyup: function (e) {
                       const index = Number(this.getAttribute("index"));
@@ -4119,6 +4163,20 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
                         this.value = autoHypenPhone(this.value);
                       } else {
                         this.value = this.value.trim().replace(/[^0-9\-]/gi, '');
+                      }
+                    },
+                    keypress: async function (e) {
+                      if (e.key === "Enter") {
+                        const index = Number(this.getAttribute("index"));
+                        const thisFunc = receiptSubmitEvent(index).bind(this);
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (index === 0) {
+                          this.value = autoHypenPhone(this.value);
+                        } else {
+                          this.value = this.value.trim().replace(/[^0-9\-]/gi, '');
+                        }
+                        await thisFunc(e);
                       }
                     },
                     blur: function (e) {
@@ -4159,22 +4217,7 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
                   index: String(num),
                 },
                 event: {
-                  click: async function (e) {
-                    try {
-                      const index = Number(this.getAttribute("index"));
-                      if (index === 0) {
-
-
-
-                      } else {
-
-                        
-
-                      }
-                    } catch (e) {
-                      console.log(e);
-                    }
-                  },
+                  click: receiptSubmitEvent(num)
                 },
                 style: {
                   display: "inline-flex",
@@ -4580,6 +4623,11 @@ FirstPaymentJs.prototype.launching = async function (loading) {
       // }
     }
 
+    if (getObj.accountinfo !== undefined) {
+      this.completeMode = true;
+      this.paymentMethod = "account";
+    }
+
     await this.mother.ghostClientLaunching({
       mode: "ghost",
       name: "firstPayment",
@@ -4601,8 +4649,7 @@ FirstPaymentJs.prototype.launching = async function (loading) {
           instance.thisBill = thisBill;
           if (instance.completeMode) {
             if (instance.paymentMethod === "card") {
-              // await instance.insertCompleteBox();
-              await instance.insertAccountBox();
+              await instance.insertCompleteBox();
             } else {
               await instance.insertAccountBox();
             }

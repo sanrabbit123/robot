@@ -9448,15 +9448,15 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
           values: [
             {
               title: "기존 가구 재배치",
-              value: "기존 가구 재배치",
+              value: "재배치",
             },
             {
               title: "일부 신규 구매",
-              value: "일부 신규 구매",
+              value: "일부 구매",
             },
             {
               title: "전체 신규 구매",
-              value: "전체 신규 구매",
+              value: "전체 구매",
             },
           ],
         },
