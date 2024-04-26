@@ -385,6 +385,7 @@ class SqlTools:
         }
 
         result["client"]["map"] = [
+            { "title": "id", "name": "테이블 아이디", "type": "number", },
             { "title": "cliid", "name": "고객 아이디", "type": "string", },
             { "title": "name", "name": "성함", "type": "string", },
             { "title": "status", "name": "상태", "type": "string", },
@@ -428,6 +429,7 @@ class SqlTools:
         ]
 
         result["project"]["map"] = [
+            { "title": "id", "name": "테이블 아이디", "type": "number", },
             { "title": "proid", "name": "프로젝트 아이디", "type": "string" },
             { "title": "cliid", "name": "고객 아이디", "type": "string" },
             { "title": "desid", "name": "디자이너 아이디", "type": "string" },
@@ -496,6 +498,7 @@ class SqlTools:
         ]
 
         result["designer"]["map"] = [
+            { "title": "id", "name": "테이블 아이디", "type": "number", },
             { "title": "desid", "name": "디자이너 아이디", "type": "string", },
             { "title": "designer", "name": "디자이너", "type": "string", },
             { "title": "status", "name": "상태", "type": "string", },
