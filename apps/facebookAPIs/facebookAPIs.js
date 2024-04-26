@@ -572,6 +572,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
     rows = await back.mongoRead(collection, { injection: 0 }, { selfMongo });
 
     for (let i = 0; i < rows.length; i++) {
+
       await sleep(1000);
 
       target = rows[i];
@@ -581,7 +582,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
       try {
   
         serid = target.data.serid;
-        purchase = Number(target.data.purchase);
+        purchase = (/기존[_ ]?가구/gi.test(target.data.purchase) ? 0 : (/일부/gi.test(target.data.purchase) ? 1 : 2));
         budget = target.data.budget;
         name = target.data.name.trim();
         email = target.data.email.trim();
@@ -729,10 +730,10 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
                 "origin": instance.address.frontinfo.host,
               }
             });
-            if (clientResponse.cliid === undefined) {
+            if (clientResponse.data.cliid === undefined) {
               throw new Error("");
             }
-            cliid = clientResponse.cliid;
+            cliid = clientResponse.data.cliid;
   
             await homeliaisonAnalytics({
               action: "login",
@@ -789,23 +790,6 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
             coreQuery = {};
             updateQuery["curation.check.time"] = [];
             updateQuery["budget"] = "상담 가능 시간 : \n" + [].join(", ");
-            await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
-              ...defaultQueryObject,
-              updateQuery,
-              coreQuery
-            }, {
-              headers: {
-                "Content-Type": "application/json",
-                "origin": instance.address.frontinfo.host,
-              }
-            });
-  
-            await sleep(100);
-
-            updateQuery = {};
-            coreQuery = {};
-            updateQuery["curation.check.budget"] = budgetArr.findIndex((s) => { return s === budget });
-            coreQuery["requests." + String(requestNumber) + ".request.budget"] = budget;
             await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
               ...defaultQueryObject,
               updateQuery,

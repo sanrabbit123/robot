@@ -1231,6 +1231,8 @@ AddressParser.prototype.addressInspection = async function (addressArr, liteMode
   }
   const instance = this;
   const { fileSystem } = this.mother;
+  let failAddress;
+  let inspectionResult;
   try {
     const inspection = async function (id, address, liteMode = false) {
       if (id === undefined || address === undefined) {
@@ -1288,8 +1290,6 @@ AddressParser.prototype.addressInspection = async function (addressArr, liteMode
         console.log(e);
       }
     }
-    let inspectionResult;
-
     failAddress = [];
     for (let { id, address } of addressArr) {
       inspectionResult = await inspection(id, address, liteMode);
@@ -1297,10 +1297,14 @@ AddressParser.prototype.addressInspection = async function (addressArr, liteMode
         failAddress.push({ id, address, message: inspectionResult.message });
       }
     }
-
     return failAddress;
   } catch (e) {
     console.log(e);
+    failAddress = [];
+    for (let { id, address } of addressArr) {
+      failAddress.push({ id, address, message: "" });
+    }
+    return failAddress;
   }
 }
 
