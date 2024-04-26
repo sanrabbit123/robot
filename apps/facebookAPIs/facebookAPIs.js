@@ -565,6 +565,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
     let whereQuery, updateQuery, coreQuery;
     let defaultQueryObject;
     let requestNumber;
+    let livingNow;
 
     now = new Date();
     rows = await back.mongoRead(collection, { injection: 0 }, { selfMongo });
@@ -580,7 +581,11 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
       try {
   
         serid = target.data.serid;
-        purchase = (/기존[_ ]?가구/gi.test(target.data.purchase) ? 0 : (/일부/gi.test(target.data.purchase) ? 1 : 2));
+        if (/[0-9]/gi.test(target.data.purchase)) {
+          purchase = Number(target.data.purchase.replace(/[^0-9]/gi, ''));
+        } else {
+          purchase = (/기존[_ ]?가구/gi.test(target.data.purchase) ? 0 : (/일부/gi.test(target.data.purchase) ? 1 : 2));
+        }
         budget = target.data.budget;
         name = target.data.name.trim();
         email = target.data.email.trim();
@@ -607,63 +612,79 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
           pyeong = Number(pyeong);
         }
     
+        livingNow = false;
         expected = target.data.expected;
         expectedYear = /([0-9]+[ ]*[년연])/gi.exec(expected)
         expectedMonth = /([0-9]+[ ]*[월윌])/gi.exec(expected)
         expectedDate = /([0-9]+[ ]*[일])/gi.exec(expected)
     
-        if (expectedYear !== null) {
-          if (expectedYear[1] !== undefined) {
-            expectedYear = Number(expectedYear[1].replace(/[^0-9]/gi, ''));
-            if (expectedYear < 1000) {
-              expectedYear = 2000 + expectedYear;
+        if (expectedYear === null && expectedMonth === null && expectedDate === null) {
+          if (/거주/gi.test(target.data.expected)) {
+            livingNow = true;
+            expected = new Date();
+          } else {
+            try {
+              livingNow = false;
+              expected = stringToDate(target.data.expected.trim());
+            } catch (e) {
+              livingNow = true;
+              expected = new Date();
+            }
+          }
+        } else {
+          if (expectedYear !== null) {
+            if (expectedYear[1] !== undefined) {
+              expectedYear = Number(expectedYear[1].replace(/[^0-9]/gi, ''));
+              if (expectedYear < 1000) {
+                expectedYear = 2000 + expectedYear;
+              }
+            } else {
+              expectedYear = null;
             }
           } else {
             expectedYear = null;
           }
-        } else {
-          expectedYear = null;
-        }
-    
-        if (expectedMonth !== null) {
-          if (expectedMonth[1] !== undefined) {
-            expectedMonth = Number(expectedMonth[1].replace(/[^0-9]/gi, ''));
+      
+          if (expectedMonth !== null) {
+            if (expectedMonth[1] !== undefined) {
+              expectedMonth = Number(expectedMonth[1].replace(/[^0-9]/gi, ''));
+            } else {
+              expectedMonth = null;
+            }
           } else {
             expectedMonth = null;
           }
-        } else {
-          expectedMonth = null;
-        }
-    
-        if (expectedDate !== null) {
-          if (expectedDate[1] !== undefined) {
-            expectedDate = Number(expectedDate[1].replace(/[^0-9]/gi, ''));
+      
+          if (expectedDate !== null) {
+            if (expectedDate[1] !== undefined) {
+              expectedDate = Number(expectedDate[1].replace(/[^0-9]/gi, ''));
+            } else {
+              expectedDate = null;
+            }
           } else {
             expectedDate = null;
           }
-        } else {
-          expectedDate = null;
+          
+          tempDate = new Date(JSON.stringify(now).slice(1, -1));
+          if (expectedYear === null) {
+            year = tempDate.getFullYear();
+          } else {
+            year = expectedYear;
+          }
+          if (expectedMonth === null) {
+            month = tempDate.getMonth() + 1;
+          } else {
+            month = expectedMonth;
+          }
+          if (expectedDate === null) {
+            date = 1;
+          } else {
+            date = expectedDate;
+          }
+      
+          thisDate = stringToDate(`${String(year)}-${zeroAddition(month)}-${zeroAddition(date)}`)
+          expected = new Date(JSON.stringify(thisDate).slice(1, -1));
         }
-        
-        tempDate = new Date(JSON.stringify(now).slice(1, -1));
-        if (expectedYear === null) {
-          year = tempDate.getFullYear();
-        } else {
-          year = expectedYear;
-        }
-        if (expectedMonth === null) {
-          month = tempDate.getMonth() + 1;
-        } else {
-          month = expectedMonth;
-        }
-        if (expectedDate === null) {
-          date = 1;
-        } else {
-          date = expectedDate;
-        }
-    
-        thisDate = stringToDate(`${String(year)}-${zeroAddition(month)}-${zeroAddition(date)}`)
-        expected = new Date(JSON.stringify(thisDate).slice(1, -1));
     
         if (email === undefined || email === null || email === '') {
           email = "";
@@ -704,7 +725,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
           },
           {
             property: "living",
-            value: String(living),
+            value: livingNow ? "거주중" : "이사",
           },
           {
             property: "etc",
@@ -755,6 +776,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
             coreQuery = {};
             updateQuery["curation.service.serid"] = [ serid ];
             updateQuery["curation.check.serid"] = serid;
+            coreQuery["requests." + String(requestNumber) + ".analytics.response.service.serid"] = serid;
             await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
               ...defaultQueryObject,
               updateQuery,

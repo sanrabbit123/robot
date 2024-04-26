@@ -890,6 +890,7 @@ StyleExplanationJs.prototype.updateImmediately = async function (valueIndex, men
         coreQuery = {};
         updateQuery["curation.service.serid"] = [ menu[menuIndex] ];
         updateQuery["curation.check.serid"] = menu[menuIndex];
+        coreQuery["requests." + String(requestNumber) + ".analytics.response.service.serid"] = menu[menuIndex];
         await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
       }
     } else if (valueIndex === 1) {
