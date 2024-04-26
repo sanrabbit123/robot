@@ -174,8 +174,23 @@ class SqlTools:
             tableArr = queryArr[0].split(",")
             tableArr = listMap(tableArr, lambda x: x.strip())
             tableArr = listFilter(tableArr, lambda x: x != "")
-            newQueryString = "SELECT " + ", ".join(tableArr) + " FROM " + queryArr[1].strip()
-            result = ""
+
+            if len(tableArr) == 1 and tableArr[0] == '*':
+                tableQueryArr = queryArr[1].strip().split(" ")
+                tableQueryArr = listMap(tableQueryArr, lambda x: x.strip())
+                tableQueryArr = listFilter(tableQueryArr, lambda x: x != "")
+                thisTableName = tableQueryArr[1]
+                targetList = self.returnCoreStructure()[thisTableName]["map"]
+                selectTableString = ""
+                for obj in targetList:
+                    selectTableString += thisTableName + "." + obj["title"] + ", "
+                selectTableString = selectTableString[0:-2]
+                newQueryString = "SELECT " + selectTableString.strip() + " FROM " + queryArr[1].strip()
+                result = ""
+            else:
+                tableArr = listFilter(tableArr, lambda x: x != "*")
+                newQueryString = "SELECT " + ", ".join(tableArr) + " FROM " + queryArr[1].strip()
+                result = ""
             if patternTest(r";$", newQueryString):
                 result = newQueryString
             else:
