@@ -238,6 +238,7 @@ class SqlTools:
                         tableName = targetArr[0]
                         key = tableName + "." + shortKey
                         if tableTypeDict[key] == "number":
+                            obj[shortKey] = patternReplace(obj[shortKey], r"[^0-9\.\-]", "")
                             if patternTest(r"\.", str(obj[shortKey])):
                                 tempDic[key] = float(obj[shortKey])                                
                             else:
@@ -469,8 +470,8 @@ class SqlTools:
             { "title": "remainPure", "name": "잔금", "type": "number" },
             { "title": "remainInfo", "name": "잔금 지불 정보", "type": "string" },
             { "title": "remainRefund", "name": "잔금 환불액", "type": "number" },
-            { "title": "discount", "name": "할인율 홈리에종", "type": "number" },
-            { "title": "discountDesigner", "name": "할인율 디자이너", "type": "number" },
+            { "title": "discount", "name": "할인율 홈리에종", "type": "string" },
+            { "title": "discountDesigner", "name": "할인율 디자이너", "type": "string" },
             { "title": "formDateFrom", "name": "프로젝트 시작일", "type": "date" },
             { "title": "formDateTo", "name": "프로젝트 종료일", "type": "date" },
             { "title": "formDateCancel", "name": "프로젝트 취소일", "type": "date" },
