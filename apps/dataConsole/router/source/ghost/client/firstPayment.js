@@ -635,15 +635,15 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
       buttonMarginTop = <%% 146, 146, 132, 110, 3.6 %%>;
     }
 
-    mainIllustLeft = FirstPaymentJs.binaryPath + "/mainillust_left.png";
-    mainIllustRight = FirstPaymentJs.binaryPath + "/mainillust_right.png";
+    mainIllustLeft = <%% (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png") %%>;
+    mainIllustRight = <%% (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png") %%>;
 
-    mainIllustMargin = <%% 90, 90, 90, 90, 90 %%>;
-    mainIllustTop = <%% -340, -261, -266, -280, -340 %%>;
-    mainIllustWidth = <%% 275, 210, 275, 275, 275 %%>;
+    mainIllustMargin = <%% 90, 80, 90, 90, 90 %%>;
+    mainIllustTop = <%% -340, -268, -266, -280, -340 %%>;
+    mainIllustWidth = <%% 275, 216, 275, 275, 275 %%>;
 
     blueBoxMarginTop = <%% 114, 100, 90, 80, 114 %%>;
-    whiteAreaWidth = <%% 1000, 700, 480, 360, 1000 %%>;
+    whiteAreaWidth = <%% 1000, 710, 480, 360, 1000 %%>;
 
     boxInnerMargin = <%% 45, 40, 35, 45, 45 %%>;
 
@@ -662,25 +662,25 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     matrixTongMarginTop = <%% 24, 24, 24, 24, 24 %%>;
     matixTongVisualBottom = <%% 1, 1, 1, 1, 1 %%>;
 
-    matrixFactorHeight = <%% 52, 48, 45, 40, 52 %%>;
+    matrixFactorHeight = <%% 52, 45, 40, 32, 52 %%>;
     matrixLineWeight = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
 
-    factorTitleWidth = <%% 240, 240, 240, 240, 240 %%>;
-    factorSize = <%% 15, 15, 15, 15, 15 %%>;
+    factorTitleWidth = <%% 240, 160, 140, 120, 240 %%>;
+    factorSize = <%% 15, 14, 13, 12, 15 %%>;
     factorWeight = <%% 400, 400, 400, 400, 400 %%>;
     factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
     factorTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
     factorTitleHeightPercentage = <%% 12, 12, 12, 12, 12 %%>;
 
-    totalBoxHeight = <%% 467, 434, 434, 434, 445 %%>;
+    totalBoxHeight = <%% 467, 415, 412, 412, 445 %%>;
     payButtonBetween = <%% 10, 10, 10, 10, 10 %%>;
-    payButtonHeight = <%% 48, 48, 48, 48, 48 %%>;
-    payButtonWidth = <%% 140, 140, 140, 140, 140 %%>;
+    payButtonHeight = <%% 48, 45, 42, 40, 48 %%>;
+    payButtonWidth = <%% 140, 130, 120, 110, 140 %%>;
 
     buttonBaseMarginTop = <%% 25, 25, 25, 25, 25 %%>;
 
-    payTextSize = <%% 18, 18, 18, 18, 18 %%>;
+    payTextSize = <%% 18, 17, 16, 14, 18 %%>;
     payTextWeight = <%% 800, 800, 800, 800, 800 %%>;
     payTextTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
 
@@ -694,7 +694,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     vatTextTop = <%% -9, -9, -9, -9, -9 %%>;
 
     finalAmountTextTop = <%% -2, -2, -2, -2, -2 %%>;
-    finalAmountSize = <%% 38, 38, 38, 38, 38 %%>;
+    finalAmountSize = <%% 38, 36, 34, 32, 38 %%>;
     finalAmountWeight = <%% 800, 800, 800, 800, 800 %%>;
 
     this.totalContents = document.getElementById("totalcontents");
@@ -710,6 +710,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
         title: "카드 결제",
       },
     ];
+
     paymentMatrix = [
       [ "품명", "디자인비" ],
       [ "단가", autoComma(thisBill.request.items.reduce((acc, curr) => { return acc + curr.unit.price }, 0)) + "원" ],
@@ -718,6 +719,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
       [ "VAT", autoComma(thisBill.request.items.reduce((acc, curr) => { return acc + curr.amount.vat }, 0)) + "원" ],
       [ "소비자가", autoComma(thisBill.request.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0)) + "원" ],
     ];
+    
     vatWording = "VAT 포함";
     finalWording = autoComma(thisBill.request.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0)) + "원";
 
