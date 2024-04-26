@@ -585,7 +585,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
 
     subTitleSize = <%% 18, 18, 17, 15, 3.6 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = 4;
+    subTitleMarginTop = <%% 4, 4, 4, 4, 4 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 190, 186, 168, 31 %%>;
@@ -638,14 +638,14 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     mainIllustLeft = FirstPaymentJs.binaryPath + "/mainillust_left.png";
     mainIllustRight = FirstPaymentJs.binaryPath + "/mainillust_right.png";
 
-    mainIllustMargin = 90;
-    mainIllustTop = <%% -340, -340, -340, -340, -340 %%>;
-    mainIllustWidth = <%% 275, 275, 275, 275, 275 %%>;
+    mainIllustMargin = <%% 90, 90, 90, 90, 90 %%>;
+    mainIllustTop = <%% -340, -261, -266, -280, -340 %%>;
+    mainIllustWidth = <%% 275, 210, 275, 275, 275 %%>;
 
-    blueBoxMarginTop = <%% 114, 114, 114, 114, 114 %%>;
-    whiteAreaWidth = 1000;
+    blueBoxMarginTop = <%% 114, 100, 90, 80, 114 %%>;
+    whiteAreaWidth = <%% 1000, 700, 480, 360, 1000 %%>;
 
-    boxInnerMargin = <%% 45, 45, 45, 45, 45 %%>;
+    boxInnerMargin = <%% 45, 40, 35, 45, 45 %%>;
 
     titleSquareWidth = <%% 27, 27, 27, 27, 27 %%>;
     titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
@@ -662,7 +662,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     matrixTongMarginTop = <%% 24, 24, 24, 24, 24 %%>;
     matixTongVisualBottom = <%% 1, 1, 1, 1, 1 %%>;
 
-    matrixFactorHeight = <%% 52, 52, 52, 52, 52 %%>;
+    matrixFactorHeight = <%% 52, 48, 45, 40, 52 %%>;
     matrixLineWeight = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
 
     factorTitleWidth = <%% 240, 240, 240, 240, 240 %%>;
@@ -673,7 +673,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
 
     factorTitleHeightPercentage = <%% 12, 12, 12, 12, 12 %%>;
 
-    totalBoxHeight = <%% 467, 467, 467, 467, 467 %%>;
+    totalBoxHeight = <%% 467, 434, 434, 434, 445 %%>;
     payButtonBetween = <%% 10, 10, 10, 10, 10 %%>;
     payButtonHeight = <%% 48, 48, 48, 48, 48 %%>;
     payButtonWidth = <%% 140, 140, 140, 140, 140 %%>;
