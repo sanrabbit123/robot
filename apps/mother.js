@@ -2903,16 +2903,16 @@ Mother.prototype.stringToDate = function (str) {
   }
 
   if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str) && !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(str)) {
-    if (/^[0-9][0-9]\-[ ]*[0-9][0-9]\-[ ]*[0-9][0-9]$/.test(str)) {
+    if (/^[0-9][0-9][ ]*\-[ ]*[0-9][0-9][ ]*\-[ ]*[0-9][0-9]$/.test(str)) {
       str = str.split("-").map((s) => { return s.trim() }).join("-");
       str = "20" + str;
-    } else if (/^[0-9][0-9][0-9][0-9]\-[ ]*[0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]*\-[ ]*[0-9][0-9]$/.test(str)) {
       str = str.split("-").map((s) => { return s.trim() }).join("-");
       str = str + "-01";
-    } else if (/^[0-9][0-9]\-[ ]*[0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*\-[ ]*[0-9][0-9]$/.test(str)) {
       str = str.split("-").map((s) => { return s.trim() }).join("-");
       str = "20" + str + "-01";
-    } else if (/^[0-9][0-9][년][ ]*[0-9]/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*[년][ ]*[0-9]/.test(str)) {
       tempArr = str.split("년").map((s) => { return s.trim(); });
       if (/월/gi.test(str)) {
         tempArr4 = tempArr[1].trim().split("월");
@@ -2924,7 +2924,7 @@ Mother.prototype.stringToDate = function (str) {
       } else {
         str = String(Number(tempArr[0].replace(/[^0-9]/gi, '')) + 2000) + "-" + zeroAddition(Number(tempArr[1].replace(/[^0-9]/gi, ''))) + "-01";
       }
-    } else if (/^[0-9][0-9][0-9][0-9][년][ ]*[0-9]/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]*[년][ ]*[0-9]/.test(str)) {
       tempArr = str.split("년").map((s) => { return s.trim(); });
       if (/월/gi.test(str)) {
         tempArr4 = tempArr[1].trim().split("월");
@@ -2940,127 +2940,165 @@ Mother.prototype.stringToDate = function (str) {
       str = str.slice(0, 4) + "-" + str.slice(4, 6) + "-" + str.slice(6);
     } else if (/^[0-9][0-9][0-9][0-9][0-9][0-9]$/.test(str.trim())) {
       str = "20" + str.slice(0, 2) + "-" + str.slice(2, 4) + "-" + str.slice(4);
-    } else if (/^[0-9][0-9]\-[0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*\-[ ]*[0-9]$/.test(str)) {
+      str = str.split("-").map((s) => { return s.trim() }).join("-");
       tempArr5 = str.split("-");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]*\-[ ]*[0-9]$/.test(str)) {
+      str = str.split("-").map((s) => { return s.trim() }).join("-");
       tempArr5 = str.split("-");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9] [0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]+[0-9][0-9]$/.test(str)) {
+      str = str.split(" ").map((s) => { return s.trim() }).filter((s) => { return s !== "" }).join(" ");
       tempArr5 = str.split(" ");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9][0-9][0-9] [0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]+[0-9]$/.test(str)) {
+      str = str.split(" ").map((s) => { return s.trim() }).filter((s) => { return s !== "" }).join(" ");
       tempArr5 = str.split(" ");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9] [0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]+[0-9]$/.test(str)) {
+      str = str.split(" ").map((s) => { return s.trim() }).filter((s) => { return s !== "" }).join(" ");
       tempArr5 = str.split(" ");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9][0-9][0-9] [0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]+[0-9]$/.test(str)) {
+      str = str.split(" ").map((s) => { return s.trim() }).filter((s) => { return s !== "" }).join(" ");
       tempArr5 = str.split(" ");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]+[0-9][0-9][ ]+[0-9][0-9]$/.test(str)) {
+      str = str.split(" ").map((s) => { return s.trim() }).filter((s) => { return s !== "" }).join(" ");
       tempArr5 = str.split(" ");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]+[0-9][ ]+[0-9][0-9]$/.test(str)) {
+      str = str.split(" ").map((s) => { return s.trim() }).filter((s) => { return s !== "" }).join(" ");
       tempArr5 = str.split(" ");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]+[0-9][0-9][ ]+[0-9]$/.test(str)) {
+      str = str.split(" ").map((s) => { return s.trim() }).filter((s) => { return s !== "" }).join(" ");
       tempArr5 = str.split(" ");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]+[0-9][ ]+[0-9]$/.test(str)) {
+      str = str.split(" ").map((s) => { return s.trim() }).filter((s) => { return s !== "" }).join(" ");
       tempArr5 = str.split(" ");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9] [0-9][0-9] [0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]+[0-9][0-9][ ]+[0-9][0-9]$/.test(str)) {
+      str = str.split(" ").map((s) => { return s.trim() }).filter((s) => { return s !== "" }).join(" ");
       tempArr5 = str.split(" ");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9] [0-9] [0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]+[0-9][ ]+[0-9][0-9]$/.test(str)) {
+      str = str.split(" ").map((s) => { return s.trim() }).filter((s) => { return s !== "" }).join(" ");
       tempArr5 = str.split(" ");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9] [0-9][0-9] [0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]+[0-9][0-9][ ]+[0-9]$/.test(str)) {
+      str = str.split(" ").map((s) => { return s.trim() }).filter((s) => { return s !== "" }).join(" ");
       tempArr5 = str.split(" ");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9] [0-9] [0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]+[0-9][ ]+[0-9]$/.test(str)) {
+      str = str.split(" ").map((s) => { return s.trim() }).filter((s) => { return s !== "" }).join(" ");
       tempArr5 = str.split(" ");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9]\/[0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*\/[ ]*[0-9][0-9]$/.test(str)) {
+      str = str.split("/").map((s) => { return s.trim() }).join("/");
       tempArr5 = str.split("/");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]*\/[ ]*[0-9][0-9]$/.test(str)) {
+      str = str.split("/").map((s) => { return s.trim() }).join("/");
       tempArr5 = str.split("/");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9]\/[0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*\/[ ]*[0-9]$/.test(str)) {
+      str = str.split("/").map((s) => { return s.trim() }).join("/");
       tempArr5 = str.split("/");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]*\/[ ]*[0-9]$/.test(str)) {
+      str = str.split("/").map((s) => { return s.trim() }).join("/");
       tempArr5 = str.split("/");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]*\/[ ]*[0-9][0-9][ ]*\/[ ]*[0-9][0-9]$/.test(str)) {
+      str = str.split("/").map((s) => { return s.trim() }).join("/");
       tempArr5 = str.split("/");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]*\/[ ]*[0-9][ ]*\/[ ]*[0-9][0-9]$/.test(str)) {
+      str = str.split("/").map((s) => { return s.trim() }).join("/");
       tempArr5 = str.split("/");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]*\/[ ]*[0-9][0-9][ ]*\/[ ]*[0-9]$/.test(str)) {
+      str = str.split("/").map((s) => { return s.trim() }).join("/");
       tempArr5 = str.split("/");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]*\/[ ]*[0-9][ ]*\/[ ]*[0-9]$/.test(str)) {
+      str = str.split("/").map((s) => { return s.trim() }).join("/");
       tempArr5 = str.split("/");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*\/[ ]*[0-9][0-9][ ]*\/[ ]*[0-9][0-9]$/.test(str)) {
+      str = str.split("/").map((s) => { return s.trim() }).join("/");
       tempArr5 = str.split("/");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9]\/[0-9]\/[0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*\/[ ]*[0-9][ ]*\/[ ]*[0-9][0-9]$/.test(str)) {
+      str = str.split("/").map((s) => { return s.trim() }).join("/");
       tempArr5 = str.split("/");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*\/[ ]*[0-9][0-9][ ]*\/[ ]*[0-9]$/.test(str)) {
+      str = str.split("/").map((s) => { return s.trim() }).join("/");
       tempArr5 = str.split("/");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9]\/[0-9]\/[0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*\/[ ]*[0-9][ ]*\/[ ]*[0-9]$/.test(str)) {
+      str = str.split("/").map((s) => { return s.trim() }).join("/");
       tempArr5 = str.split("/");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9]\.[0-9][0-9]\.?$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*\.[ ]*[0-9][0-9][ ]*\.?[ ]*$/.test(str)) {
+      str = str.split(".").map((s) => { return s.trim() }).join(".");
       tempArr5 = str.split(".");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.?$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9][ ]*\.?[ ]*$/.test(str)) {
+      str = str.split(".").map((s) => { return s.trim() }).join(".");
       tempArr5 = str.split(".");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9]\.[0-9]\.?$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*\.[ ]*[0-9][ ]*\.?[ ]*$/.test(str)) {
+      str = str.split(".").map((s) => { return s.trim() }).join(".");
       tempArr5 = str.split(".");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.?$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]*\.[ ]*[0-9][ ]*\.?[ ]*$/.test(str)) {
+      str = str.split(".").map((s) => { return s.trim() }).join(".");
       tempArr5 = str.split(".");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]*\.[ ]*[0-9][0-9][ ]*\.[ ]*[0-9][0-9]$/.test(str)) {
+      str = str.split(".").map((s) => { return s.trim() }).join(".");
       tempArr5 = str.split(".");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]*\.[ ]*[0-9][ ]*\.[ ]*[0-9][0-9]$/.test(str)) {
+      str = str.split(".").map((s) => { return s.trim() }).join(".");
       tempArr5 = str.split(".");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]*\.[ ]*[0-9][0-9][ ]*\.[ ]*[0-9]$/.test(str)) {
+      str = str.split(".").map((s) => { return s.trim() }).join(".");
       tempArr5 = str.split(".");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9][ ]*\.[ ]*[0-9][ ]*\.[ ]*[0-9]$/.test(str)) {
+      str = str.split(".").map((s) => { return s.trim() }).join(".");
       tempArr5 = str.split(".");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*\.[ ]*[0-9][0-9][ ]*\.[ ]*[0-9][0-9]$/.test(str)) {
+      str = str.split(".").map((s) => { return s.trim() }).join(".");
       tempArr5 = str.split(".");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9]\.[0-9]\.[0-9][0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*\.[ ]*[0-9][ ]*\.[ ]*[0-9][0-9]$/.test(str)) {
+      str = str.split(".").map((s) => { return s.trim() }).join(".");
       tempArr5 = str.split(".");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*\.[ ]*[0-9][0-9][ ]*\.[ ]*[0-9]$/.test(str)) {
+      str = str.split(".").map((s) => { return s.trim() }).join(".");
       tempArr5 = str.split(".");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9]\.[0-9]\.[0-9]$/.test(str)) {
+    } else if (/^[0-9][0-9][ ]*\.[ ]*[0-9][ ]*\.[ ]*[0-9]$/.test(str)) {
+      str = str.split(".").map((s) => { return s.trim() }).join(".");
       tempArr5 = str.split(".");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
-    } else if (/^[0-9][0-9]\. [0-9][0-9]\.?$/.test(str)) {
+    } else if (/^[0-9][0-9]\. [0-9][0-9][ ]*\.?[ ]*$/.test(str)) {
       tempArr5 = str.split(". ");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9][0-9][0-9]\. [0-9][0-9]\.?$/.test(str)) {
+    } else if (/^[0-9][0-9][0-9][0-9]\. [0-9][0-9][ ]*\.?[ ]*$/.test(str)) {
       tempArr5 = str.split(". ");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
-    } else if (/^[0-9][0-9]\. [0-9]\.?$/.test(str)) {
+    } else if (/^[0-9][0-9]\. [0-9][ ]*\.?[ ]*$/.test(str)) {
       tempArr5 = str.split(". ");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
     } else if (/^[0-9][0-9][0-9][0-9]\. [0-9]\.?$/.test(str)) {
