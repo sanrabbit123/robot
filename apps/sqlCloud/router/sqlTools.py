@@ -186,15 +186,17 @@ class SqlTools:
                     selectTableString += thisTableName + "." + obj["title"] + ", "
                 selectTableString = selectTableString[0:-2]
                 newQueryString = "SELECT " + selectTableString.strip() + " FROM " + queryArr[1].strip()
-                result = ""
             else:
                 tableArr = listFilter(tableArr, lambda x: x != "*")
                 newQueryString = "SELECT " + ", ".join(tableArr) + " FROM " + queryArr[1].strip()
-                result = ""
+
+            result = ""
             if patternTest(r";$", newQueryString):
                 result = newQueryString
             else:
                 result = newQueryString + ";"
+        
+        print(result)
         return result
 
     async def homeliaisonQuery(self, query: str) -> dict:
