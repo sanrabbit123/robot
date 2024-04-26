@@ -179,7 +179,7 @@ class SqlTools:
                 tableQueryArr = queryArr[1].strip().split(" ")
                 tableQueryArr = listMap(tableQueryArr, lambda x: x.strip())
                 tableQueryArr = listFilter(tableQueryArr, lambda x: x != "")
-                thisTableName = tableQueryArr[1]
+                thisTableName = tableQueryArr[0]
                 targetList = self.returnCoreStructure()[thisTableName]["map"]
                 selectTableString = ""
                 for obj in targetList:
@@ -196,7 +196,6 @@ class SqlTools:
             else:
                 result = newQueryString + ";"
         
-        print(result)
         return result
 
     async def homeliaisonQuery(self, query: str) -> dict:
