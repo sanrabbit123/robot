@@ -499,9 +499,7 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
       thisId = row.id;      
       rows = await back.mongoRead(collection, { id: thisId }, { selfMongo });
       if (rows.length === 0) {
-        messageSend({ text: "새로운 인스턴트 문의가 왔습니다! 성함은 " + json.data.name + "입니다!", channel: "#401_consulting" }).then(() => {
-          return requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: "새로운 인스턴트 문의가 왔습니다! 성함은 " + json.data.name + "입니다!" }, { headers: { "Content-Type": "application/json" } });
-        }).catch((err) => { console.log(err); });
+        messageSend({ text: "새로운 인스턴트 문의가 왔습니다! 성함은 " + json.data.name + "입니다!", channel: "#401_consulting" }).catch((err) => { console.log(err); });
       } else {
         json.injection = rows[0].injection;
       }
