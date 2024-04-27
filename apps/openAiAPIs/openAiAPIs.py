@@ -77,6 +77,21 @@ class OpenAiAPIs:
 
         return image_url
 
+    async def variationImage(self, imagePath: str) -> str:
+        thisPath = imagePath.strip()
+
+        client = self.client
+        response = client.images.create_variation(
+            model="dall-e-2",
+            image=open(thisPath, "rb"),
+            size="1024x1024",
+            n=1,
+        )
+
+        image_url = response.data[0].url
+
+        return image_url
+
     async def fairyGPT(self, channel: str, query: str, userDict = None):
         address = self.address
         port = 3000
