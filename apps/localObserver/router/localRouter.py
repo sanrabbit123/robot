@@ -193,7 +193,7 @@ class LocalRouter:
                 json["app"] = { "type": thisType, "name": appName["name"], "address": appName["address"] }
 
                 await back.mongoCreate(collection, json, { "selfMongo": mongo })
-                await messageSend({ "text": member["name"] + "님이 " + appName["name"] + " 프로젝트의 git 저장소를 업데이트 진행하였습니다!", "channel": "C06CLNRM286", "voice": False })
+                await messageSend({ "text": member["name"] + "님이 " + appName["name"] + " 프로젝트의 git 저장소를 업데이트 진행하였습니다!", "channel": "C06CLNRM286", "voice": False, "fairy": True })
                 await requestSystem(self.coreServer + "/gitLocalSync", { "type": thisType }, { "headers": { "Content-Type": "application/json" } })
 
                 return ({ "message": "done" }, 200, headers)
