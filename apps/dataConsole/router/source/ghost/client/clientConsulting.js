@@ -135,7 +135,6 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
   mobileBlockTop = 5.6;
 
-
   whiteBlock = createNode({
     mother: this.baseTong,
     style: {

@@ -142,6 +142,9 @@ ReviewListJs.prototype.insertInitBox = function () {
   let mobileBackgroundHeight;
   let mobileVisualPaddingLeft;
   let tagBoxRight;
+  let illust0Top, illust0Left, illust0Width;
+  let illust1Top, illust1Right, illust1Width;
+  let illust2Top, illust2Right, illust2Width;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -149,7 +152,7 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 35, 34, 32, 29, 5.3 %%>;
+  titleFontSize = <%% 43, 38, 35, 30, 5.6 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
@@ -163,7 +166,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 210, 190, 170, 156, 7 %%>;
+  searchBarPaddingTop = <%% 200, 160, 115, 85, 20 %%>;
   searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
   searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
 
@@ -177,17 +180,17 @@ ReviewListJs.prototype.insertInitBox = function () {
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
   subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
-  subTitleFontSize = <%% 16, 16, 16, 15, 3.2 %%>;
-  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subTitleFontSize = <%% 19, 18, 17, 16, 3.4 %%>;
+  subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
   tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
   titleWording = "HomeLiaison review<b%.%b>";
-  subTitleContents = "포트폴리오로 찾는 나의 스타일";
+  subTitleContents = "홈리에종 리뷰";
 
-  mobileBlockTop = 5.6;
+  mobileBlockTop = 7;
 
   mobileSearchWhiteBoxPaddingTop = 5;
   mobileSearchWhiteBoxPaddingBottom = 5;
@@ -218,6 +221,18 @@ ReviewListJs.prototype.insertInitBox = function () {
   mobileVisualPaddingLeft = 6;
 
   tagBoxRight = <%% 132, 128, 100, 100, 10 %%>;
+
+  illust0Top = <%% -130, -130, -105, -76, -0.5 %%>;
+  illust0Left = <%% 0, 0, 0, 0, 0 %%>;
+  illust0Width = <%% 325, 260, 210, 160, 33 %%>;
+
+  illust1Top = <%% 30, 15, 10, 15, 17 %%>;
+  illust1Right = <%% 160, 135, 105, 90, 13 %%>;
+  illust1Width = <%% 155, 120, 95, 70, 16 %%>;
+
+  illust2Top = <%% -130, -120, -85, -70, -1 %%>;
+  illust2Left = <%% 0, 0, 0, 0, 0 %%>;
+  illust2Width = <%% 160, 150, 120, 100, 15 %%>;
 
   searchTags = [];
   if (media[0]) {
@@ -317,10 +332,6 @@ ReviewListJs.prototype.insertInitBox = function () {
     }
   }
 
-  if (mobile) {
-    instance.mother.backgroundImageBox.style.height = String(mobileBackgroundHeight) + ea;
-  }
-
   whiteBlock = createNode({
     mother: this.baseTong,
     style: {
@@ -334,6 +345,46 @@ ReviewListJs.prototype.insertInitBox = function () {
     }
   });
 
+  createNode({
+    mother: whiteBlock,
+    mode: "svg",
+    source: svgMaker.furnitureIllust(0, colorExtended.mainBlue),
+    style: {
+      display: "inline-block",
+      position: "absolute",
+      top: String(illust0Top) + ea,
+      left: String(illust0Left) + ea,
+      width: String(illust0Width) + ea,
+    }
+  })
+  createNode({
+    mother: whiteBlock,
+    mode: "svg",
+    source: svgMaker.furnitureIllust(1, colorExtended.mainBlue),
+    style: {
+      display: "inline-block",
+      position: "absolute",
+      top: String(illust1Top) + ea,
+      right: String(illust1Right) + ea,
+      width: String(illust1Width) + ea,
+      opacity: String(0.7),
+    }
+  })
+  createNode({
+    mother: whiteBlock,
+    mode: "svg",
+    source: svgMaker.furnitureIllust(2, colorExtended.mainBlue),
+    style: {
+      display: "inline-block",
+      position: "absolute",
+      top: String(illust2Top) + ea,
+      right: String(illust2Left) + ea,
+      width: String(illust2Width) + ea,
+      opacity: String(0.4),
+    }
+  })
+
+  // title and sub title
   createNode({
     mother: whiteBlock,
     style: {
@@ -352,16 +403,39 @@ ReviewListJs.prototype.insertInitBox = function () {
           fontSize: String(titleFontSize) + ea,
           fontFamily: "mont",
           fontWeight: String(titleFontWeight),
-          color: colorChip.white,
+          color: colorChip.black,
           wordSpacing: String(2) + "px",
         },
         bold: {
           fontSize: String(titleFontSize) + ea,
           fontFamily: "mont",
           fontWeight: String(titleFontWeight),
-          color: colorChip.white,
+          color: colorChip.black,
           opacity: String(0.4),
         }
+      }
+    ]
+  });
+  createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        text: subTitleContents,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(subTitleFontSize) + ea,
+          fontFamily: "pretendard",
+          fontWeight: String(subTitleWeight),
+          color: colorChip.black,
+        },
       }
     ]
   });
@@ -390,8 +464,9 @@ ReviewListJs.prototype.insertInitBox = function () {
           position: "relative",
           width: String(searchBarWidth) + ea,
           height: String(searchBarHeight) + ea,
-          borderRadius: String(5) + "px",
-          background: colorChip.gray2,
+          borderRadius: String(8) + "px",
+          background: colorChip.white,
+          border: "1px solid " + colorExtended.gray3,
           opacity: String(1),
         },
         children: [
@@ -686,8 +761,9 @@ ReviewListJs.prototype.insertInitBox = function () {
           paddingLeft: String(servicePaddingLeft) + ea,
           paddingRight: String(servicePaddingLeft) + ea,
           textAlign: "center",
-          background: colorChip.gray2,
-          borderRadius: String(5) + "px",
+          background: colorChip.white,
+          borderRadius: String(8) + "px",
+          border: "1px solid " + colorExtended.gray3,
           cursor: "pointer",
           justifyContent: "center",
           alignItems: "center",
@@ -847,7 +923,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
     contentsArr = this.contentsArr;
   }
 
-  contentsArr = equalJson(JSON.stringify(contentsArr)).filter((obj) => { return obj.contents.review.detailInfo.photodae.length > 1 });
+  contentsArr = equalJson(JSON.stringify(contentsArr)).filter((obj) => { return obj.contents.review.detailInfo.photodae.length > 1 && obj.contents.review.title.main !== "" });
   if (sort === "key9") {
     contentsArr.sort((a, b) => {
       return Number(b.contents.review.detailInfo.order) - Number(a.contents.review.detailInfo.order);
@@ -974,7 +1050,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
           style: {
             display: "inline-block",
             width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
-            borderRadius: String(5) + "px",
+            borderRadius: String(10) + "px",
             marginRight: String(photoMargin) + ea,
             marginBottom: String(photoBlockMarginBottom) + ea,
             verticalAlign: "top",
@@ -1195,7 +1271,7 @@ ReviewListJs.prototype.launching = async function (loading) {
         binaryPath: ReviewListJs.binaryPath,
         subTitle: "",
         secondBackground: false,
-        backgroundType: 10,
+        backgroundType: 20,
       },
       local: async () => {
         try {
