@@ -626,9 +626,9 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     mainTitleText = (desktop ? "Payment\n<u%and%u>\nFirst meeting<b%.%b>" : "Payment\n<u%and%u>\nFirst meeting<b%.%b>");
 
     if (desktop && window.innerHeight > 1100) {
-      titleSize = <%% 57, 51, 43, 36, 7 %%>;
+      titleSize = <%% 57, 48, 43, 36, 7 %%>;
       subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
-      firstBasePaddingTop = <%% 80, 48, 30, 28, 50 %%>;
+      firstBasePaddingTop = <%% 48, 45, 30, 28, 50 %%>;
       firstBasePaddingBottom = <%% 160, 160, 140, 120, 210 %%>;
       mainImageTop = <%% 42, 32, 18, 16, 32 %%>;
       mainImageHeight = <%% 390, 372, 338, 314, 39 %%>;
@@ -638,11 +638,11 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     mainIllustLeft = <%% (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png") %%>;
     mainIllustRight = <%% (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png") %%>;
 
-    mainIllustMargin = <%% 90, 80, 90, 90, 90 %%>;
-    mainIllustTop = <%% -340, -268, -266, -280, -340 %%>;
-    mainIllustWidth = <%% 275, 216, 275, 275, 275 %%>;
+    mainIllustMargin = <%% 90, 70, 90, 90, 90 %%>;
+    mainIllustTop = <%% -340, -296, -266, -280, -340 %%>;
+    mainIllustWidth = <%% 275, 240, 275, 275, 275 %%>;
 
-    blueBoxMarginTop = <%% 114, 100, 90, 80, 114 %%>;
+    blueBoxMarginTop = <%% 114, 90, 90, 80, 114 %%>;
     whiteAreaWidth = <%% 1000, 710, 480, 360, 1000 %%>;
 
     boxInnerMargin = <%% 45, 40, 35, 45, 45 %%>;
