@@ -604,7 +604,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     pointOpacity = 0.4;
 
     mainImageTop = <%% 27, 24, 18, 16, 33 %%>;
-    mainImageHeight = <%% 390, 370, 338, 314, 39 %%>;
+    mainImageHeight = <%% 390, 370, 330, 314, 39 %%>;
 
     descriptionSize = <%% 15, 14, 14, 13, 3.2 %%>;
     descriptionLineHeight = <%% 1.9, 1.9, 1.9, 1.8, 1.8 %%>;
@@ -626,10 +626,10 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     mainTitleText = (desktop ? "Payment\n<u%and%u>\nFirst meeting<b%.%b>" : "Payment\n<u%and%u>\nFirst meeting<b%.%b>");
 
     if (desktop && window.innerHeight > 1100) {
-      titleSize = <%% 57, 48, 43, 36, 7 %%>;
-      subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
+      titleSize = <%% 57, 47, 41, 36, 7 %%>;
+      subTitleSize = <%% 19, 17, 16, 15, 3.6 %%>;
       firstBasePaddingTop = <%% 48, 45, 30, 28, 50 %%>;
-      firstBasePaddingBottom = <%% 160, 160, 140, 120, 210 %%>;
+      firstBasePaddingBottom = <%% 160, 160, 120, 100, 210 %%>;
       mainImageTop = <%% 42, 32, 18, 16, 32 %%>;
       mainImageHeight = <%% 390, 372, 338, 314, 39 %%>;
       buttonMarginTop = <%% 146, 146, 132, 110, 3.6 %%>;
@@ -638,28 +638,28 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     mainIllustLeft = <%% (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png") %%>;
     mainIllustRight = <%% (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png") %%>;
 
-    mainIllustMargin = <%% 90, 70, 90, 90, 90 %%>;
-    mainIllustTop = <%% -340, -296, -266, -280, -340 %%>;
-    mainIllustWidth = <%% 275, 240, 275, 275, 275 %%>;
+    mainIllustMargin = <%% 90, 70, 56, 50, 70 %%>;
+    mainIllustTop = <%% -340, -296, -260, -280, -340 %%>;
+    mainIllustWidth = <%% 275, 240, 210, 180, 240 %%>;
 
-    blueBoxMarginTop = <%% 114, 90, 90, 80, 114 %%>;
-    whiteAreaWidth = <%% 1000, 710, 480, 360, 1000 %%>;
+    blueBoxMarginTop = <%% 114, 82, 70, 64, 114 %%>;
+    whiteAreaWidth = <%% 1000, 710, 600, 360, 1000 %%>;
 
-    boxInnerMargin = <%% 45, 40, 35, 45, 45 %%>;
+    boxInnerMargin = <%% 45, 40, 30, 25, 45 %%>;
 
-    titleSquareWidth = <%% 27, 27, 27, 27, 27 %%>;
+    titleSquareWidth = <%% 27, 27, 24, 22, 27 %%>;
     titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
     titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    whiteTitleEngSize = <%% 22, 22, 22, 22, 22 %%>;
+    whiteTitleEngSize = <%% 22, 22, 18, 17, 22 %%>;
     whiteTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
-    whiteTitleKorSize = <%% 18, 18, 18, 18, 18 %%>;
+    whiteTitleKorSize = <%% 18, 18, 16, 13, 18 %%>;
     whiteTitleKorWeight = <%% 800, 800, 800, 800, 800 %%>;
     whiteTitleKorLightWeight = <%% 200, 200, 200, 200, 200 %%>;
-    whiteTitleKorTextTop = <%% -4, -4, -4, -4, -4 %%>;
-    whiteTitleBarMargin = <%% 11, 11, 11, 11, 11 %%>;
+    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -4 %%>;
+    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1 %%>;
 
-    matrixTongMarginTop = <%% 24, 24, 24, 24, 24 %%>;
+    matrixTongMarginTop = <%% 24, 24, 18, 16, 1 %%>;
     matixTongVisualBottom = <%% 1, 1, 1, 1, 1 %%>;
 
     matrixFactorHeight = <%% 52, 45, 40, 32, 52 %%>;
@@ -673,28 +673,28 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
 
     factorTitleHeightPercentage = <%% 12, 12, 12, 12, 12 %%>;
 
-    totalBoxHeight = <%% 467, 415, 412, 412, 445 %%>;
-    payButtonBetween = <%% 10, 10, 10, 10, 10 %%>;
-    payButtonHeight = <%% 48, 45, 42, 40, 48 %%>;
-    payButtonWidth = <%% 140, 130, 120, 110, 140 %%>;
+    totalBoxHeight = <%% 467, 415, 356, 350, 445 %%>;
+    payButtonBetween = <%% 10, 10, 8, 6, 10 %%>;
+    payButtonHeight = <%% 48, 42, 38, 34, 48 %%>;
+    payButtonWidth = <%% 140, 120, 108, 100, 140 %%>;
 
-    buttonBaseMarginTop = <%% 25, 25, 25, 25, 25 %%>;
+    buttonBaseMarginTop = <%% 25, 25, 20, 18, 25 %%>;
 
-    payTextSize = <%% 18, 17, 16, 14, 18 %%>;
+    payTextSize = <%% 18, 17, 15, 14, 18 %%>;
     payTextWeight = <%% 800, 800, 800, 800, 800 %%>;
     payTextTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
 
     totalWordingTextTop = <%% 4, 4, 4, 4, 4 %%>;
-    totalWordingSize = <%% 23, 23, 23, 23, 23 %%>;
-    totalWordingDotSize = <%% 30, 30, 30, 30, 30 %%>;
+    totalWordingSize = <%% 23, 21, 18, 16, 23 %%>;
+    totalWordingDotSize = <%% 30, 24, 22, 20, 30 %%>;
     totalWordingDotOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
-    vatSize = <%% 14, 14, 14, 14, 14 %%>;
+    vatSize = <%% 14, 13, 12, 11, 14 %%>;
     vatWeight = <%% 900, 900, 900, 900, 900 %%>;
     vatTextTop = <%% -9, -9, -9, -9, -9 %%>;
 
     finalAmountTextTop = <%% -2, -2, -2, -2, -2 %%>;
-    finalAmountSize = <%% 38, 36, 34, 32, 38 %%>;
+    finalAmountSize = <%% 38, 36, 32, 32, 38 %%>;
     finalAmountWeight = <%% 800, 800, 800, 800, 800 %%>;
 
     this.totalContents = document.getElementById("totalcontents");
@@ -1313,27 +1313,27 @@ FirstPaymentJs.prototype.insertSecondBox = async function () {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    basePaddingTop = <%% 150, 150, 140, 110, 19 %%>;
-    basePaddingBottom = <%% 160, 160, 140, 110, 17 %%>;
+    basePaddingTop = <%% 150, 150, 120, 100, 19 %%>;
+    basePaddingBottom = <%% 160, 160, 120, 100, 17 %%>;
 
-    leftBoxWidth = <%% 590, 590, 590, 590, 590 %%>;
-    boxBetween = <%% 45, 45, 45, 45, 45 %%>;
+    leftBoxWidth = <%% 590, 510, 430, 430, 510 %%>;
+    boxBetween = <%% 45, 30, 25, 20, 45 %%>;
 
-    boxInnerMargin = <%% 36, 36, 36, 36, 36 %%>;
-    boxInnerMarginVisual = <%% 32, 32, 32, 32, 32 %%>;
-    contentsBoxTop = <%% 28, 28, 28, 28, 28 %%>;
+    boxInnerMargin = <%% 36, 28, 22, 28, 28 %%>;
+    boxInnerMarginVisual = <%% 32, 26, 22, 24, 24 %%>;
+    contentsBoxTop = <%% 28, 20, 18, 20, 24 %%>;
 
-    titleSquareWidth = <%% 27, 27, 27, 27, 27 %%>;
+    titleSquareWidth = <%% 27, 27, 24, 22, 27 %%>;
     titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
     titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    whiteTitleEngSize = <%% 22, 22, 22, 22, 22 %%>;
+    whiteTitleEngSize = <%% 22, 22, 18, 17, 22 %%>;
     whiteTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
-    whiteTitleKorSize = <%% 18, 18, 18, 18, 18 %%>;
+    whiteTitleKorSize = <%% 18, 18, 16, 13, 18 %%>;
     whiteTitleKorWeight = <%% 800, 800, 800, 800, 800 %%>;
     whiteTitleKorLightWeight = <%% 200, 200, 200, 200, 200 %%>;
-    whiteTitleKorTextTop = <%% -4, -4, -4, -4, -4 %%>;
-    whiteTitleBarMargin = <%% 11, 11, 11, 11, 11 %%>;
+    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -4 %%>;
+    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1 %%>;
 
     checklistBoxBetween = <%% 10, 10, 10, 10, 10 %%>;
 
@@ -1342,25 +1342,25 @@ FirstPaymentJs.prototype.insertSecondBox = async function () {
     numberTitleMarginLeft = <%% 1, 1, 1, 1, 1 %%>;
     numberTitleTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    contentsDescriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+    contentsDescriptionSize = <%% 15, 15, 13, 12, 15 %%>;
     contentsDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
     contentsDescriptionLineWeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
     contentsDescriptionBoxMarginTop = <%% 12, 12, 12, 12, 12 %%>;
 
-    rightInfoBetween = <%% 28, 28, 28, 28, 28 %%>;
+    rightInfoBetween = <%% 28, 24, 12, 28, 28 %%>;
     rightTitleBorderPadding = <%% 5, 5, 5, 5, 5 %%>;
-    rightTitleSize = <%% 19, 19, 19, 19, 19 %%>;
+    rightTitleSize = <%% 19, 17, 15, 14, 19 %%>;
     rightTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     rightTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    rightContentsVerticalMargin = <%% 15, 15, 15, 15, 15 %%>;
+    rightContentsVerticalMargin = <%% 15, 13, 11, 9, 15 %%>;
 
-    rightContentsTitleWidth = <%% 200, 200, 200, 200, 200 %%>;
-    rightContentsTitleSize = <%% 16, 16, 16, 16, 16 %%>;
+    rightContentsTitleWidth = <%% 200, 100, 75, 70, 200 %%>;
+    rightContentsTitleSize = <%% 16, 14, 12, 12, 16 %%>;
     rightContentsTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
     rightContentsTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    rightContentsDescriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+    rightContentsDescriptionSize = <%% 15, 13, 12, 11, 15 %%>;
     rightContentsDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
     rightContentsDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
     rightContentsDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
@@ -1827,8 +1827,8 @@ FirstPaymentJs.prototype.insertThirdBox = async function () {
 
     minusLeft = window.innerWidth - standardWidth + 1;
 
-    basePaddingTop = <%% 150, 150, 140, 110, 19 %%>;
-    basePaddingBottom = <%% 160, 160, 140, 110, 17 %%>;
+    basePaddingTop = <%% 150, 150, 120, 100, 19 %%>;
+    basePaddingBottom = <%% 160, 160, 120, 100, 17 %%>;
 
     leftBoxWidth = <%% 590, 590, 590, 590, 590 %%>;
     boxBetween = <%% 45, 45, 45, 45, 45 %%>;
@@ -1837,17 +1837,17 @@ FirstPaymentJs.prototype.insertThirdBox = async function () {
     boxInnerMarginVisual = <%% 30, 30, 30, 30, 30 %%>;
     contentsBoxTop = <%% 24, 24, 24, 24, 24 %%>;
 
-    titleSquareWidth = <%% 27, 27, 27, 27, 27 %%>;
+    titleSquareWidth = <%% 27, 27, 24, 22, 27 %%>;
     titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
     titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    whiteTitleEngSize = <%% 22, 22, 22, 22, 22 %%>;
+    whiteTitleEngSize = <%% 22, 22, 18, 17, 22 %%>;
     whiteTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
-    whiteTitleKorSize = <%% 18, 18, 18, 18, 18 %%>;
+    whiteTitleKorSize = <%% 18, 18, 16, 13, 18 %%>;
     whiteTitleKorWeight = <%% 800, 800, 800, 800, 800 %%>;
     whiteTitleKorLightWeight = <%% 200, 200, 200, 200, 200 %%>;
-    whiteTitleKorTextTop = <%% -4, -4, -4, -4, -4 %%>;
-    whiteTitleBarMargin = <%% 11, 11, 11, 11, 11 %%>;
+    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -4 %%>;
+    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1 %%>;
 
     checklistBoxBetween = <%% 10, 10, 10, 10, 10 %%>;
 
@@ -1985,10 +1985,10 @@ FirstPaymentJs.prototype.insertInformationBox = function (totalBase) {
   wordsTitle = wordings.title.join(" ");
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 4.7 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
+  margin = <%% 55, 55, 32, 30, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 30, 28, 6 %%>;
 
-  whiteBottomMargin = <%% 60, 60, 58, 56, 0 %%>;
+  whiteBottomMargin = <%% 60, 60, 36, 32, 0 %%>;
 
   titleFontSize = <%% 22, 22, 22, 21, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -2038,20 +2038,20 @@ FirstPaymentJs.prototype.insertInformationBox = function (totalBase) {
   initContentsBottom = <%% -3, -3, -3, -3, 0 %%>;
   initContentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
 
-  boxInnerMargin = <%% 45, 45, 45, 45, 45 %%>;
+  boxInnerMargin = <%% 45, 40, 30, 25, 45 %%>;
 
-  titleSquareWidth = <%% 27, 27, 27, 27, 27 %%>;
+  titleSquareWidth = <%% 27, 27, 24, 22, 27 %%>;
   titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
   titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  whiteTitleEngSize = <%% 22, 22, 22, 22, 22 %%>;
+  whiteTitleEngSize = <%% 22, 22, 18, 17, 22 %%>;
   whiteTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
-  whiteTitleKorSize = <%% 18, 18, 18, 18, 18 %%>;
+  whiteTitleKorSize = <%% 18, 18, 16, 13, 18 %%>;
   whiteTitleKorWeight = <%% 800, 800, 800, 800, 800 %%>;
   whiteTitleKorLightWeight = <%% 200, 200, 200, 200, 200 %%>;
-  whiteTitleKorTextTop = <%% -4, -4, -4, -4, -4 %%>;
-  whiteTitleBarMargin = <%% 11, 11, 11, 11, 11 %%>;
-  tableMarginTop = <%% 24, 24, 24, 24, 24 %%>;
+  whiteTitleKorTextTop = <%% -4, -4, -3, -4, -4 %%>;
+  whiteTitleBarMargin = <%% 11, 11, 10, 8, 1 %%>;
+  tableMarginTop = <%% 24, 22, 18, 14, 24 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -2326,13 +2326,13 @@ FirstPaymentJs.prototype.insertCompleteBox = async function () {
     titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
     titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    whiteTitleEngSize = <%% 22, 22, 22, 22, 22 %%>;
+    whiteTitleEngSize = <%% 22, 22, 18, 17, 22 %%>;
     whiteTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
-    whiteTitleKorSize = <%% 18, 18, 18, 18, 18 %%>;
+    whiteTitleKorSize = <%% 18, 18, 16, 13, 18 %%>;
     whiteTitleKorWeight = <%% 800, 800, 800, 800, 800 %%>;
     whiteTitleKorLightWeight = <%% 200, 200, 200, 200, 200 %%>;
-    whiteTitleKorTextTop = <%% -4, -4, -4, -4, -4 %%>;
-    whiteTitleBarMargin = <%% 11, 11, 11, 11, 11 %%>;
+    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -4 %%>;
+    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1 %%>;
 
     matrixTongMarginTop = <%% 24, 24, 24, 24, 24 %%>;
     matixTongVisualBottom = <%% 1, 1, 1, 1, 1 %%>;
@@ -3051,13 +3051,13 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
     titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
     titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    whiteTitleEngSize = <%% 22, 22, 22, 22, 22 %%>;
+    whiteTitleEngSize = <%% 22, 22, 18, 17, 22 %%>;
     whiteTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
-    whiteTitleKorSize = <%% 18, 18, 18, 18, 18 %%>;
+    whiteTitleKorSize = <%% 18, 18, 16, 13, 18 %%>;
     whiteTitleKorWeight = <%% 800, 800, 800, 800, 800 %%>;
     whiteTitleKorLightWeight = <%% 200, 200, 200, 200, 200 %%>;
-    whiteTitleKorTextTop = <%% -4, -4, -4, -4, -4 %%>;
-    whiteTitleBarMargin = <%% 11, 11, 11, 11, 11 %%>;
+    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -4 %%>;
+    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1 %%>;
 
     matrixTongMarginTop = <%% 24, 24, 24, 24, 24 %%>;
     matixTongVisualBottom = <%% 1, 1, 1, 1, 1 %%>;
