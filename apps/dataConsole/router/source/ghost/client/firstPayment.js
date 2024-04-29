@@ -2256,11 +2256,11 @@ FirstPaymentJs.prototype.insertCompleteBox = async function () {
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
     firstBasePaddingTop = <%% 24, 24, 24, 24, 10 %%>;
-    firstBasePaddingBottom = <%% 240, 240, 240, 240, 20 %%>;
+    firstBasePaddingBottom = <%% 160, 160, 160, 120, 20 %%>;
 
     subTitleSize = <%% 18, 18, 17, 15, 3.6 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = 4;
+    subTitleMarginTop = <%% 4, 4, 4, 4, 4 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 190, 186, 168, 31 %%>;
@@ -2279,7 +2279,7 @@ FirstPaymentJs.prototype.insertCompleteBox = async function () {
     pointOpacity = 0.4;
 
     mainImageTop = <%% 27, 24, 18, 16, 33 %%>;
-    mainImageHeight = <%% 390, 370, 338, 314, 39 %%>;
+    mainImageHeight = <%% 390, 370, 330, 314, 39 %%>;
 
     descriptionSize = <%% 15, 14, 14, 13, 3.2 %%>;
     descriptionLineHeight = <%% 1.9, 1.9, 1.9, 1.8, 1.8 %%>;
@@ -2301,10 +2301,10 @@ FirstPaymentJs.prototype.insertCompleteBox = async function () {
     mainTitleText = (desktop ? "Payment\n<u%and%u>\nFirst meeting<b%.%b>" : "Payment\n<u%and%u>\nFirst meeting<b%.%b>");
 
     if (desktop && window.innerHeight > 1100) {
-      titleSize = <%% 57, 51, 43, 36, 7 %%>;
-      subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
-      firstBasePaddingTop = <%% 80, 48, 30, 28, 50 %%>;
-      firstBasePaddingBottom = <%% 240, 240, 240, 240, 20 %%>;
+      titleSize = <%% 57, 47, 40, 34, 7 %%>;
+      subTitleSize = <%% 19, 17, 16, 14, 3.6 %%>;
+      firstBasePaddingTop = <%% 48, 45, 30, 28, 50 %%>;
+      firstBasePaddingBottom = <%% 160, 160, 120, 100, 210 %%>;
       mainImageTop = <%% 42, 32, 18, 16, 32 %%>;
       mainImageHeight = <%% 390, 372, 338, 314, 39 %%>;
       buttonMarginTop = <%% 146, 146, 132, 110, 3.6 %%>;
@@ -2313,16 +2313,16 @@ FirstPaymentJs.prototype.insertCompleteBox = async function () {
     mainIllustLeft = FirstPaymentJs.binaryPath + "/mainillust_left.png";
     mainIllustRight = FirstPaymentJs.binaryPath + "/mainillust_right.png";
 
-    mainIllustMargin = 90;
-    mainIllustTop = <%% -340, -340, -340, -340, -340 %%>;
-    mainIllustWidth = <%% 275, 275, 275, 275, 275 %%>;
+    mainIllustMargin = <%% 90, 70, 56, 50, 70 %%>;
+    mainIllustTop = <%% -340, -296, -260, -212, -340 %%>;
+    mainIllustWidth = <%% 275, 240, 210, 170, 240 %%>;
 
-    blueBoxMarginTop = <%% 114, 114, 114, 114, 114 %%>;
-    whiteAreaWidth = 1000;
+    blueBoxMarginTop = <%% 114, 82, 48, 42, 114 %%>;
+    whiteAreaWidth = <%% 1000, 710, 600, 460, 80 %%>;
 
-    boxInnerMargin = <%% 45, 45, 45, 45, 45 %%>;
+    boxInnerMargin = <%% 45, 40, 30, 25, 45 %%>;
 
-    titleSquareWidth = <%% 27, 27, 27, 27, 27 %%>;
+    titleSquareWidth = <%% 27, 27, 24, 21, 27 %%>;
     titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
     titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
 
@@ -2334,51 +2334,51 @@ FirstPaymentJs.prototype.insertCompleteBox = async function () {
     whiteTitleKorTextTop = <%% -4, -4, -3, -4, -4 %%>;
     whiteTitleBarMargin = <%% 11, 11, 10, 8, 1 %%>;
 
-    matrixTongMarginTop = <%% 24, 24, 24, 24, 24 %%>;
+    matrixTongMarginTop = <%% 24, 24, 18, 16, 1 %%>;
     matixTongVisualBottom = <%% 1, 1, 1, 1, 1 %%>;
 
-    matrixFactorHeight = <%% 52, 52, 52, 52, 52 %%>;
+    matrixFactorHeight = <%% 52, 45, 40, 32, 52 %%>;
     matrixLineWeight = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
 
-    factorTitleWidth = <%% 240, 240, 240, 240, 240 %%>;
-    factorSize = <%% 15, 15, 15, 15, 15 %%>;
+    factorTitleWidth = <%% 240, 160, 140, 120, 240 %%>;
+    factorSize = <%% 15, 14, 13, 12, 15 %%>;
     factorWeight = <%% 400, 400, 400, 400, 400 %%>;
     factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
     factorTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
     factorTitleHeightPercentage = <%% 12, 12, 12, 12, 12 %%>;
 
-    totalBoxHeight = <%% 467, 467, 467, 467, 467 %%>;
-    payButtonBetween = <%% 10, 10, 10, 10, 10 %%>;
-    payButtonHeight = <%% 48, 48, 48, 48, 48 %%>;
-    payButtonWidth = <%% 140, 140, 140, 140, 140 %%>;
+    totalBoxHeight = <%% 467, 415, 356, 296, 445 %%>;
+    payButtonBetween = <%% 10, 10, 8, 6, 10 %%>;
+    payButtonHeight = <%% 48, 42, 38, 34, 48 %%>;
+    payButtonWidth = <%% 140, 120, 108, 100, 140 %%>;
 
-    buttonBaseMarginTop = <%% 25, 25, 25, 25, 25 %%>;
+    buttonBaseMarginTop = <%% 25, 25, 20, 18, 25 %%>;
 
-    payTextSize = <%% 18, 18, 18, 18, 18 %%>;
+    payTextSize = <%% 18, 17, 15, 14, 18 %%>;
     payTextWeight = <%% 800, 800, 800, 800, 800 %%>;
     payTextTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
 
     totalWordingTextTop = <%% 4, 4, 4, 4, 4 %%>;
-    totalWordingSize = <%% 23, 23, 23, 23, 23 %%>;
-    totalWordingDotSize = <%% 30, 30, 30, 30, 30 %%>;
+    totalWordingSize = <%% 23, 21, 18, 16, 23 %%>;
+    totalWordingDotSize = <%% 30, 24, 22, 18, 30 %%>;
     totalWordingDotOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
-    vatSize = <%% 14, 14, 14, 14, 14 %%>;
+    vatSize = <%% 14, 13, 12, 11, 14 %%>;
     vatWeight = <%% 900, 900, 900, 900, 900 %%>;
     vatTextTop = <%% -9, -9, -9, -9, -9 %%>;
 
     finalAmountTextTop = <%% -2, -2, -2, -2, -2 %%>;
-    finalAmountSize = <%% 38, 38, 38, 38, 38 %%>;
+    finalAmountSize = <%% 38, 36, 32, 29, 38 %%>;
     finalAmountWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    completeBoxHeight = <%% 300, 300, 300, 300, 300 %%>;
+    completeBoxHeight = <%% 300, 270, 240, 210, 300 %%>;
     completeBoxVisualPaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
-    completeBoxMarginBottom = <%% 64, 64, 64, 64, 64 %%>;
-    completeBoxCircleWidth = <%% 50, 50, 50, 50, 50 %%>;
-    completeBoxTextSize = <%% 24, 24, 24, 24, 24 %%>;
+    completeBoxMarginBottom = <%% 64, 64, 48, 42, 64 %%>;
+    completeBoxCircleWidth = <%% 50, 45, 40, 36, 50 %%>;
+    completeBoxTextSize = <%% 24, 21, 18, 17, 4 %%>;
     completeBoxTextTop = <%% 0, 0, 0, 0, 0 %%>;
-    completeBoxTextMarginTop = <%% 12, 12, 12, 12, 12 %%>;
+    completeBoxTextMarginTop = <%% 12, 12, 10, 8, 12 %%>;
 
     this.totalContents = document.getElementById("totalcontents");
     this.totalContents.style.overflow = "hidden";
@@ -2979,6 +2979,12 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
     let receiptContents;
     let receiptNotice;
     let receiptSubmitEvent;
+    let infoArrowWidth, infoWordingMarginLeft;
+    let infoArrowHeight;
+    let inputBaseWidth, inputBaseHeight;
+    let receiptInputHeight, receiptInputVisualTop, receiptInputSize, receiptInputWeight;
+    let submitButtonWidth, submitButtonHeight, submitButtonMargin, submitButtonTextTop, submitButtonSize, submitButtonWeight;
+    let finalIconWidth;
 
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -2988,7 +2994,7 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
 
     subTitleSize = <%% 18, 18, 17, 15, 3.6 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = 4;
+    subTitleMarginTop = <%% 4, 4, 4, 4, 4 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 190, 186, 168, 31 %%>;
@@ -3007,7 +3013,7 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
     pointOpacity = 0.4;
 
     mainImageTop = <%% 27, 24, 18, 16, 33 %%>;
-    mainImageHeight = <%% 390, 370, 338, 314, 39 %%>;
+    mainImageHeight = <%% 390, 370, 330, 314, 39 %%>;
 
     descriptionSize = <%% 15, 14, 14, 13, 3.2 %%>;
     descriptionLineHeight = <%% 1.9, 1.9, 1.9, 1.8, 1.8 %%>;
@@ -3029,25 +3035,25 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
     mainTitleText = (desktop ? "Payment\n<u%and%u>\nFirst meeting<b%.%b>" : "Payment\n<u%and%u>\nFirst meeting<b%.%b>");
 
     if (desktop && window.innerHeight > 1100) {
-      titleSize = <%% 57, 51, 43, 36, 7 %%>;
-      subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
-      firstBasePaddingTop = <%% 80, 48, 30, 28, 50 %%>;
-      firstBasePaddingBottom = <%% 240, 240, 240, 240, 20 %%>;
+      titleSize = <%% 57, 47, 40, 34, 7 %%>;
+      subTitleSize = <%% 19, 17, 16, 14, 3.6 %%>;
+      firstBasePaddingTop = <%% 48, 45, 30, 28, 50 %%>;
+      firstBasePaddingBottom = <%% 160, 160, 120, 100, 210 %%>;
       mainImageTop = <%% 42, 32, 18, 16, 32 %%>;
       mainImageHeight = <%% 390, 372, 338, 314, 39 %%>;
       buttonMarginTop = <%% 146, 146, 132, 110, 3.6 %%>;
     }
 
-    mainIllustMargin = <%% 90, 90, 90, 90, 90 %%>;
-    mainIllustTop = <%% -340, -340, -340, -340, -340 %%>;
-    mainIllustWidth = <%% 275, 275, 275, 275, 275 %%>;
+    mainIllustMargin = <%% 90, 70, 56, 50, 70 %%>;
+    mainIllustTop = <%% -340, -296, -260, -212, -340 %%>;
+    mainIllustWidth = <%% 275, 240, 210, 170, 240 %%>;
 
-    blueBoxMarginTop = <%% 114, 114, 114, 114, 114 %%>;
-    whiteAreaWidth = <%% 1000, 1000, 1000, 1000, 1000 %%>;
+    blueBoxMarginTop = <%% 114, 82, 48, 42, 114 %%>;
+    whiteAreaWidth = <%% 1000, 710, 600, 460, 80 %%>;
 
-    boxInnerMargin = <%% 45, 45, 45, 45, 45 %%>;
+    boxInnerMargin = <%% 45, 40, 30, 25, 45 %%>;
 
-    titleSquareWidth = <%% 27, 27, 27, 27, 27 %%>;
+    titleSquareWidth = <%% 27, 27, 24, 21, 27 %%>;
     titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
     titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
 
@@ -3059,53 +3065,74 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
     whiteTitleKorTextTop = <%% -4, -4, -3, -4, -4 %%>;
     whiteTitleBarMargin = <%% 11, 11, 10, 8, 1 %%>;
 
-    matrixTongMarginTop = <%% 24, 24, 24, 24, 24 %%>;
+    matrixTongMarginTop = <%% 24, 24, 18, 16, 1 %%>;
     matixTongVisualBottom = <%% 1, 1, 1, 1, 1 %%>;
 
-    matrixFactorHeight = <%% 52, 52, 52, 52, 52 %%>;
+    matrixFactorHeight = <%% 52, 45, 40, 32, 52 %%>;
     matrixLineWeight = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
 
-    factorTitleWidth = <%% 240, 240, 240, 240, 240 %%>;
-    factorSize = <%% 15, 15, 15, 15, 15 %%>;
+    factorTitleWidth = <%% 240, 160, 140, 120, 240 %%>;
+    factorSize = <%% 15, 14, 13, 12, 15 %%>;
     factorWeight = <%% 400, 400, 400, 400, 400 %%>;
     factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
     factorTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
     factorTitleHeightPercentage = <%% 12, 12, 12, 12, 12 %%>;
 
-    totalBoxHeight = <%% 305, 305, 305, 305, 305 %%>;
-    payButtonBetween = <%% 10, 10, 10, 10, 10 %%>;
-    payButtonHeight = <%% 48, 48, 48, 48, 48 %%>;
-    payButtonWidth = <%% 140, 140, 140, 140, 140 %%>;
+    totalBoxHeight = <%% 305, 275, 226, 192, 445 %%>;
+    payButtonBetween = <%% 10, 10, 8, 6, 10 %%>;
+    payButtonHeight = <%% 48, 42, 38, 34, 48 %%>;
+    payButtonWidth = <%% 140, 120, 108, 100, 140 %%>;
 
-    buttonBaseMarginTop = <%% 25, 25, 25, 25, 25 %%>;
+    buttonBaseMarginTop = <%% 25, 25, 20, 18, 25 %%>;
 
-    payTextSize = <%% 18, 18, 18, 18, 18 %%>;
+    payTextSize = <%% 18, 17, 15, 14, 18 %%>;
     payTextWeight = <%% 800, 800, 800, 800, 800 %%>;
     payTextTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
 
     totalWordingTextTop = <%% 4, 4, 4, 4, 4 %%>;
-    totalWordingSize = <%% 23, 23, 23, 23, 23 %%>;
-    totalWordingDotSize = <%% 30, 30, 30, 30, 30 %%>;
+    totalWordingSize = <%% 23, 21, 18, 16, 23 %%>;
+    totalWordingDotSize = <%% 30, 24, 22, 18, 30 %%>;
     totalWordingDotOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
-    vatSize = <%% 14, 14, 14, 14, 14 %%>;
+    vatSize = <%% 14, 13, 12, 11, 14 %%>;
     vatWeight = <%% 900, 900, 900, 900, 900 %%>;
     vatTextTop = <%% -9, -9, -9, -9, -9 %%>;
 
     finalAmountTextTop = <%% -2, -2, -2, -2, -2 %%>;
-    finalAmountSize = <%% 38, 38, 38, 38, 38 %%>;
+    finalAmountSize = <%% 38, 36, 32, 29, 38 %%>;
     finalAmountWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    completeBoxHeight = <%% 300, 300, 300, 300, 300 %%>;
+    completeBoxHeight = <%% 300, 270, 240, 210, 300 %%>;
     completeBoxVisualPaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
-    completeBoxMarginBottom = <%% 64, 64, 64, 64, 64 %%>;
-    completeBoxCircleWidth = <%% 50, 50, 50, 50, 50 %%>;
-    completeBoxTextSize = <%% 24, 24, 24, 24, 24 %%>;
+    completeBoxMarginBottom = <%% 64, 64, 48, 42, 64 %%>;
+    completeBoxCircleWidth = <%% 50, 45, 40, 36, 50 %%>;
+    completeBoxTextSize = <%% 24, 21, 18, 17, 4 %%>;
     completeBoxTextTop = <%% 0, 0, 0, 0, 0 %%>;
-    completeBoxTextMarginTop = <%% 12, 12, 12, 12, 12 %%>;
+    completeBoxTextMarginTop = <%% 12, 12, 10, 8, 12 %%>;
 
     whiteBaseBetween = <%% 20, 20, 20, 20, 20 %%>;
+
+    infoArrowWidth = <%% 900, 580, 480, 340, 900 %%>;
+    infoArrowHeight = <%% 12, 12, 10, 9, 12 %%>;
+    infoWordingMarginLeft = <%% 12, 12, 12, 12, 12 %%>;
+
+    inputBaseWidth = <%% 320, 320, 300, 260, 320 %%>;
+    inputBaseHeight = <%% 30, 30, 28, 24, 30 %%>;
+
+    receiptInputHeight = <%% 26, 26, 24, 20, 26 %%>;
+    receiptInputVisualTop = <%% -1, -1, -1, -1, -1 %%>;
+    receiptInputSize = <%% 13, 13, 12, 11, 13 %%>;
+    receiptInputWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+    submitButtonWidth = <%% 70, 70, 64, 56, 70 %%>;
+    submitButtonHeight = <%% 30, 30, 28, 24, 30 %%>;
+    submitButtonMargin = <%% 8, 8, 6, 4, 8 %%>;
+    submitButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    submitButtonSize = <%% 14, 13, 13, 12, 14 %%>;
+    submitButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+    finalIconWidth = <%% 24, 24, 24, 24, 24 %%>;
 
     this.totalContents = document.getElementById("totalcontents");
     this.totalContents.style.overflow = "hidden";
@@ -3530,11 +3557,11 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
       children: [
         {
           mode: "svg",
-          source: svgMaker.horizontalArrow(900, 12, colorExtended.mainBlue),
+          source: svgMaker.horizontalArrow(infoArrowWidth, infoArrowHeight, colorExtended.mainBlue),
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(900) + ea,
+            width: String(infoArrowWidth) + ea,
             top: String(0) + ea,
           }
         },
@@ -3546,7 +3573,7 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
             color: colorExtended.black,
             display: "inline-block",
             position: "relative",
-            marginLeft: String(12) + ea,
+            marginLeft: String(infoWordingMarginLeft) + ea,
             top: String(0) + ea,
           },
         },
@@ -3716,8 +3743,8 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
                 style: {
                   display: "inline-flex",
                   position: "relative",
-                  width: String(320) + ea,
-                  height: String(30) + ea,
+                  width: String(inputBaseWidth) + ea,
+                  height: String(inputBaseHeight) + ea,
                   background: colorExtended.gray6,
                   borderRadius: String(8) + "px",
                   flexDirection: "column",
@@ -3771,12 +3798,12 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
                     display: "inline-block",
                     position: "relative",
                     width: withOut(0, ea),
-                    height: String(26) + ea,
-                    top: String(-1) + ea,
+                    height: String(receiptInputHeight) + ea,
+                    top: String(receiptInputVisualTop) + ea,
                     outline: String(0),
                     border: String(0),
-                    fontSize: String(13) + ea,
-                    fontWeight: String(400),
+                    fontSize: String(receiptInputSize) + ea,
+                    fontWeight: String(receiptInputWeight),
                     color: colorExtended.black,
                     textAlign: "center",
                     background: colorExtended.transparent,
@@ -3793,11 +3820,11 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
                 style: {
                   display: "inline-flex",
                   position: "relative",
-                  width: String(70) + ea,
-                  height: String(30) + ea,
+                  width: String(submitButtonWidth) + ea,
+                  height: String(submitButtonHeight) + ea,
                   background: colorExtended.gradientGray,
                   borderRadius: String(8) + "px",
-                  marginLeft: String(8) + ea,
+                  marginLeft: String(submitButtonMargin) + ea,
                   justifyContent: "center",
                   alignItems: "center",
                   cursor: "pointer",
@@ -3807,9 +3834,9 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
                   style: {
                     display: "inline-block",
                     position: "relative",
-                    top: String(-1) + ea,
-                    fontSize: String(14) + ea,
-                    fontWeight: String(800),
+                    top: String(submitButtonTextTop) + ea,
+                    fontSize: String(submitButtonSize) + ea,
+                    fontWeight: String(submitButtonWeight),
                     color: colorExtended.white,
                   }
                 }
@@ -3856,7 +3883,7 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
           style: {
             display: "inline-block",
             position: "absolute",
-            width: String(24) + ea,
+            width: String(finalIconWidth) + ea,
             bottom: String(0) + ea,
             right: String(0) + ea,
           }
