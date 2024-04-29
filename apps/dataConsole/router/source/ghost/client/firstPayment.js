@@ -626,7 +626,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     mainTitleText = (desktop ? "Payment\n<u%and%u>\nFirst meeting<b%.%b>" : "Payment\n<u%and%u>\nFirst meeting<b%.%b>");
 
     if (desktop && window.innerHeight > 1100) {
-      titleSize = <%% 57, 47, 41, 36, 7 %%>;
+      titleSize = <%% 57, 47, 40, 36, 7 %%>;
       subTitleSize = <%% 19, 17, 16, 15, 3.6 %%>;
       firstBasePaddingTop = <%% 48, 45, 30, 28, 50 %%>;
       firstBasePaddingBottom = <%% 160, 160, 120, 100, 210 %%>;
