@@ -145,6 +145,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   let illust0Top, illust0Left, illust0Width;
   let illust1Top, illust1Right, illust1Width;
   let illust2Top, illust2Right, illust2Width;
+  let mobileTitlePaddingTop;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -152,7 +153,7 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 43, 38, 35, 30, 5.6 %%>;
+  titleFontSize = <%% 43, 40, 36, 30, 5.6 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
@@ -222,17 +223,19 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   tagBoxRight = <%% 132, 128, 100, 100, 10 %%>;
 
-  illust0Top = <%% -130, -130, -105, -76, -0.5 %%>;
+  illust0Top = <%% -130, -130, -105, -76, 0.5 %%>;
   illust0Left = <%% 0, 0, 0, 0, 0 %%>;
-  illust0Width = <%% 325, 260, 210, 160, 33 %%>;
+  illust0Width = <%% 325, 280, 225, 170, 33 %%>;
 
-  illust1Top = <%% 30, 15, 10, 15, 17 %%>;
-  illust1Right = <%% 160, 135, 105, 90, 13 %%>;
-  illust1Width = <%% 155, 120, 95, 70, 16 %%>;
+  illust1Top = <%% 30, 25, 20, 20, 18 %%>;
+  illust1Right = <%% 160, 135, 110, 90, 13 %%>;
+  illust1Width = <%% 155, 125, 95, 80, 16 %%>;
 
   illust2Top = <%% -130, -120, -85, -70, -1 %%>;
   illust2Left = <%% 0, 0, 0, 0, 0 %%>;
-  illust2Width = <%% 160, 150, 120, 100, 15 %%>;
+  illust2Width = <%% 160, 145, 120, 100, 16 %%>;
+
+  mobileTitlePaddingTop = 2;
 
   searchTags = [];
   if (media[0]) {
@@ -393,6 +396,7 @@ ReviewListJs.prototype.insertInitBox = function () {
       textAlign: "center",
       justifyContent: "center",
       alignItems: "center",
+      paddingTop: desktop ? "" : String(mobileTitlePaddingTop) + ea,
     },
     children: [
       {
