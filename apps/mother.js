@@ -2420,7 +2420,7 @@ Mother.prototype.mysqlQuery = function (query, option = { local: false, front: t
     host = mysqlStandard.host;
     ({ user, password, database } = mysqlStandard);
   } else if (option.test === true) {
-    mysqlStandard = ADDRESS["officeinfo"]["test"]["host"];
+    mysqlStandard = ADDRESS["officeinfo"]["test"];
     host = mysqlStandard.host;
     ({ user, password, database, port } = mysqlStandard.mysql);
   } else {
