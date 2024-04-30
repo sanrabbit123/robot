@@ -62,14 +62,13 @@ class GeneralPhp {
     $html .= 'window.homeliaisonClientInfo = '.$clientInfo.';'."\n";
     $html .= 'if (window.homeliaisonClientInfo.ip === "'.$this->officeIp.'") {'."\n";
     $html .= 'try {'."\n";
-    $html .= 'setTimeout(() => {'."\n";
     $html .= '(async function () {'."\n";
     $html .= 'const ipResponse = await fetch("https://'.$this->coreHost.'/ip", { credentials: "omit" });'."\n";
     $html .= 'const thisText = await ipResponse.text();'."\n";
     $html .= 'const thisIp = thisText.trim();'."\n";
-    $html .= 'await fetch("https://'.$this->backHost.'/sendSlack", { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json", }, body: JSON.stringify({ "message": "office front web => id : " + window.homeliaisonSessionId + " / ip : " + thisIp, "channel": "#error_log" }), });'."\n";
+    $html .= 'const thisBody = { "id": window.homeliaisonSessionId, "ip": thisIp, "href": window.location.href, "mode": "store" };'."\n";
+    $html .= 'await fetch("https://'.$this->backHost.'/frontMemberParsing", { method: "POST", body: JSON.stringify(thisBody), headers: { "Content-Type": "application/json" } });'."\n";
     $html .= '})().catch((err) => { console.log(err); });'."\n";
-    $html .= '}, 100);'."\n";
     $html .= '} catch {}'."\n";
     $html .= '}'."\n";
     $html .= 'if (typeof window.homeliaisonClientInfo === "object" && window.homeliaisonClientInfo !== null) { window.homeliaisonClientInfo["pageTitle"] = "'.$titleString.'"; }'."\n";

@@ -7554,3 +7554,69 @@ DataRouter.prototype.rou_post_proposalGeneration = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_frontMemberParsing = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, messageSend, dateToString, stringToDate, sleep } = this.mother;
+  let obj = {};
+  obj.link = [ "/frontMemberParsing" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.id === undefined || req.body.ip === undefined || req.body.href === undefined || req.body.mode === undefined) {
+        throw new Error("invalid input => " + JSON.stringify(req.body, null, 2));
+      }
+      const { id, ip, href, mode } = equalJson(req.body);
+      const selfMongo = instance.mongolocal;
+      const collection = "frontMemberHistory";
+      const members = instance.members;
+      let json;
+      let targetMember;
+      let memberId, memberName;
+
+      if (mode === "store") {
+
+        targetMember = members.find((o) => { return o.ip.includes(ip) });
+        if (targetMember !== undefined && targetMember !== null) {
+          memberId = targetMember.id;
+          memberName = targetMember.name;
+  
+          json = {
+            date: new Date(),
+            member: {
+              memid: memberId,
+              name: memberName,
+            },
+            data: {
+              session: id,
+              ip: ip,
+              href: href,
+            },
+          };
+  
+          await back.mongoCreate(collection, json, { selfMongo });
+          logger.alert("front member => " + memberName + " (" + memberId + ") / " + ip + " / " + id + " / " + href).catch((err) => { console.log(err); });
+        } else {
+          json = { data: null };
+        }
+  
+        res.send(JSON.stringify(json));
+
+      } else {
+        throw new Error("invalid mode");
+      }
+
+    } catch (e) {
+      await logger.error("Console 서버 문제 생김 (rou_post_frontMemberParsing): " + e.message);
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
