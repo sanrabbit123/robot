@@ -8437,7 +8437,6 @@ DataRouter.prototype.rou_post_frontMemberParsing = function () {
           };
   
           await back.mongoCreate(collection, json, { selfMongo });
-          logger.alert("front member => " + memberName + " (" + memberId + ") / " + ip + " / " + id + " / " + href).catch((err) => { console.log(err); });
         } else {
           json = { data: null };
         }
