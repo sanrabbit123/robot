@@ -411,7 +411,7 @@ MongoReflection.prototype.coreReflection = async function (to = "local") {
   }
 }
 
-MongoReflection.prototype.mongoToFront = async function () {
+MongoReflection.prototype.mongoToFront = async function (testMode = false) {
   const instance = this;
   const back = this.back;
   const { mysqlQuery } = this.mother;
@@ -483,7 +483,11 @@ MongoReflection.prototype.mongoToFront = async function () {
         queryArr.unshift(createQuery);
         queryArr.unshift("DROP TABLE " + table + ";");
 
-        await mysqlQuery(queryArr);
+        if (testMode) {
+          await mysqlQuery(queryArr, { test: true });
+        } else {
+          await mysqlQuery(queryArr);
+        }
 
       } catch (e) {
         console.log(e);
@@ -575,7 +579,12 @@ MongoReflection.prototype.mongoToFront = async function () {
         queryArr.unshift(createQuery);
         queryArr.unshift("DROP TABLE " + table + ";");
 
-        await mysqlQuery(queryArr);
+        if (testMode) {
+          await mysqlQuery(queryArr, { test: true });
+        } else {
+          await mysqlQuery(queryArr);
+        }
+        
       } catch (e) {
         console.log(e);
       }
@@ -587,7 +596,7 @@ MongoReflection.prototype.mongoToFront = async function () {
   }
 }
 
-MongoReflection.prototype.frontReflection = async function (to = "local") {
+MongoReflection.prototype.frontReflection = async function (to = "local", testMode = false) {
   const instance = this;
   const { mongo } = this.mother;
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
@@ -652,7 +661,7 @@ MongoReflection.prototype.frontReflection = async function (to = "local") {
 
     }
 
-    await this.mongoToFront();
+    await this.mongoToFront(testMode);
 
   } catch (e) {
     console.log(e);

@@ -479,11 +479,11 @@ Robot.prototype.coreReflection = async function () {
   }
 }
 
-Robot.prototype.frontReflection = async function () {
+Robot.prototype.frontReflection = async function (testMode = false) {
   try {
     const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
     const reflection = new MongoReflection();
-    await reflection.frontReflection();
+    await reflection.frontReflection("local", testMode);
   } catch (e) {
     console.log(e);
   }
@@ -1010,7 +1010,14 @@ const MENU = {
   },
   frontReflect: async function () {
     try {
-      await robot.frontReflection();
+      await robot.frontReflection(false);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  frontReflectTest: async function () {
+    try {
+      await robot.frontReflection(true);
     } catch (e) {
       console.log(e);
     }
@@ -1018,13 +1025,6 @@ const MENU = {
   mysqlReflect: async function () {
     try {
       await robot.mysqlReflection();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  frontReflect: async function () {
-    try {
-      await robot.frontReflection();
     } catch (e) {
       console.log(e);
     }

@@ -2396,27 +2396,37 @@ Mother.prototype.decryptoHash = function (password, hash, option = { algorithm: 
   }
 }
 
-Mother.prototype.mysqlQuery = function (query, option = { local: false, front: true, center: false }) {
+Mother.prototype.mysqlQuery = function (query, option = { local: false, front: true, center: false, test: false }) {
   const mysql = require("mysql2");
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const defaultPort = 3306;
   let mysqlStandard;
   let host;
+  let port;
 
   mysqlStandard = ADDRESS["frontinfo"];
   if (option.local === true) {
     host = "127.0.0.1";
+    port = defaultPort;
   } else if (option.front === true) {
     host = ADDRESS["frontinfo"]["host"];
+    port = defaultPort;
   } else if (option.center === true) {
     mysqlStandard = ADDRESS["mysqlinfo"];
+    port = defaultPort;
     host = mysqlStandard.host;
+  } else if (option.test === true) {
+    mysqlStandard = ADDRESS["officeinfo"]["test"]["host"];
+    host = mysqlStandard.host;
+    port = mysqlStandard.mysql;
   } else {
     mysqlStandard = option;
     host = mysqlStandard.host;
+    port = defaultPort;
   }
 
   const { user, password, database } = mysqlStandard;
-  const connection = mysql.createConnection({ host, user, password, database });
+  const connection = mysql.createConnection({ host, port, user, password, database });
   let tong = {};
   if (Array.isArray(query)) {
     let promiseList;
