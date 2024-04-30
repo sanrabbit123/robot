@@ -2403,29 +2403,33 @@ Mother.prototype.mysqlQuery = function (query, option = { local: false, front: t
   let mysqlStandard;
   let host;
   let port;
+  let user, password, database;
 
   mysqlStandard = ADDRESS["frontinfo"];
   if (option.local === true) {
     host = "127.0.0.1";
     port = defaultPort;
+    ({ user, password, database } = mysqlStandard);
   } else if (option.front === true) {
     host = ADDRESS["frontinfo"]["host"];
     port = defaultPort;
+    ({ user, password, database } = mysqlStandard);
   } else if (option.center === true) {
     mysqlStandard = ADDRESS["mysqlinfo"];
     port = defaultPort;
     host = mysqlStandard.host;
+    ({ user, password, database } = mysqlStandard);
   } else if (option.test === true) {
     mysqlStandard = ADDRESS["officeinfo"]["test"]["host"];
     host = mysqlStandard.host;
-    port = mysqlStandard.mysql;
+    ({ user, password, database, port } = mysqlStandard.mysql);
   } else {
     mysqlStandard = option;
     host = mysqlStandard.host;
     port = defaultPort;
+    ({ user, password, database } = mysqlStandard);
   }
 
-  const { user, password, database } = mysqlStandard;
   const connection = mysql.createConnection({ host, port, user, password, database });
   let tong = {};
   if (Array.isArray(query)) {
