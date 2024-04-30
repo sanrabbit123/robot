@@ -148,10 +148,10 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
   }
 }
 
-LogConsole.prototype.logConnect = async function () {
+LogConsole.prototype.logConnect = async function (testMode = false) {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongotestinfo, mongoconsoleinfo, errorLog, messageLog, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
-  const PORT = 3000;
+  const PORT = testMode ? instance.address.officeinfo.test.port : 3000;
   const https = require("https");
   const express = require("express");
   const app = express();
@@ -201,7 +201,7 @@ LogConsole.prototype.logConnect = async function () {
     let certDir, keyDir, caDir;
 
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + this.address.testinfo.host;
+    pemsLink = testMode ? process.cwd() + "/pems/" + this.address.officeinfo.test.host : process.cwd() + "/pems/" + this.address.testinfo.host;
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);

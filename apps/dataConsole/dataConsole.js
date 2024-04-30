@@ -11,11 +11,12 @@ const DataConsole = function () {
   this.frontDir = this.sourceDir + "/front";
   this.middleModuleDir = this.middleDir + "/module";
   this.testModeInfo = {
-    host: "192.168.0.23",
-    port: 52080,
-    log: 54001,
-    path: "/home/ubuntu",
-    name: "ubuntu",
+    host: this.address.officeinfo.test.host,
+    ip: this.address.officeinfo.test.ip.inner,
+    port: 443,
+    log: this.address.officeinfo.test.port,
+    path: "/home/" + this.address.officeinfo.test.user,
+    name: this.address.officeinfo.test.user,
   }
 }
 
@@ -250,8 +251,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const FILEHOST = this.address.officeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
   const BRIDGEHOST = "https://" + this.address.transinfo.host + ":3000";
-  const LOGHOST = testMode ? "http://" + testModeInfo.host + ":" + String(testModeInfo.log) : "https://" + this.address.testinfo.host + ":3000";
-  const FRONTHOST = testMode ? "http://" + testModeInfo.host + ":" + String(testModeInfo.port) : "https://" + this.address.frontinfo.host;
+  const LOGHOST = testMode ? "https://" + testModeInfo.host + ":" + String(testModeInfo.log) : "https://" + this.address.testinfo.host + ":3000";
+  const FRONTHOST = testMode ? "https://" + testModeInfo.host + ":" + String(testModeInfo.port) : "https://" + this.address.frontinfo.host;
   const BACKHOST = "https://" + this.address.backinfo.host + ":3000";
   const SECONDHOST = "https://" + this.address.secondinfo.host + ":3000";
   const CONTENTSHOST = "https://" + this.address.contentsinfo.host + ":3000";
@@ -337,6 +338,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let ghostClientGeneral, ghostDesignerGeneral;
     let ghostClientGeneralString, ghostDesignerGeneralString;
     let generalMediaBoo;
+    let testHomeLiaisonAnalytics;
 
     staticDirList = [];
     for (let s of staticTargets) {
@@ -413,6 +415,32 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
 
       //set browser js
       generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
+      if (testMode) {
+        testHomeLiaisonAnalytics = [
+          `GeneralJs.homeliaisonAnalytics = function (obj) {`,
+          `  let dimension, gtagObject;`,
+          `  return new Promise((resolve, reject) => {`,
+          `    if (typeof obj !== "object" || obj === null) {`,
+          `      resolve(null);`,
+          `    } else {`,
+          `      const json = {`,
+          `        date: {`,
+          `          now: new Date(),`,
+          `        },`,
+          `        data: {`,
+          `          page: obj.page,`,
+          `          action: obj.action,`,
+          `          id: "",`,
+          `          value: { ...obj.data }`,
+          `        }`,
+          `      };`,
+          `      resolve(json);`,
+          `    }`,
+          `  });`,
+          `}`,
+        ].join("\n");
+        generalString = generalString + "\n\n\n\n" + testHomeLiaisonAnalytics;
+      }
 
       execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/middleExec.js` ]);
       execString = execString.replace(/\/<%name%>\//g, (name.slice(0, 1).toUpperCase() + name.slice(1)));
@@ -558,7 +586,9 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
   const localTarget = {
     name: testModeInfo.name,
     host: testModeInfo.host,
-    path: testModeInfo.path
+    path: testModeInfo.path,
+    ip: testModeInfo.ip,
+    log: testModeInfo.log,
   }
   try {
     await this.renderMiddleStatic(staticFolder, address.backinfo, DataPatch, DataMiddle, true, testMode);
@@ -680,15 +710,15 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
     } else {
 
       command = middleTong.map((p) => {
-        return `scp ${p} ${localTarget.name}@${localTarget.host}:${localTarget.path}/www/middle/`;
+        return `scp ${p} ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/middle/`;
       }).concat(motherTong.map((p) => {
-        return `scp ${p} ${localTarget.name}@${localTarget.host}:${localTarget.path}/www/`;
+        return `scp ${p} ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/`;
       })).join(';');
 
       generalPhpScript = await fileSystem(`readString`, [ testDir + "/general.php" ]);
       generalPhpScript = generalPhpScript.replace(/__host__/gi, localTarget.host);
       generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__logHost__/gi, address.testinfo.host + ":3000");
+      generalPhpScript = generalPhpScript.replace(/__logHost__/gi, localTarget.host + ":" + String(localTarget.log));
       generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
@@ -698,14 +728,14 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
       generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
       generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
       await fileSystem(`write`, [ `${process.cwd()}/temp/general.php`, generalPhpScript ]);
-      command += `;scp ${process.cwd()}/temp/general.php ${localTarget.name}@${localTarget.host}:${localTarget.path}/www/;`;
+      command += `;scp ${process.cwd()}/temp/general.php ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/;`;
   
       generalTargets = await fileSystem(`readDir`, [ frontGeneralDir ]);
       generalTargets = generalTargets.filter((str) => { return str !== ".DS_Store" });
       for (let target of generalTargets) {
         generalTargetScript = await fileSystem(`readString`, [ frontGeneralDir + "/" + target ]);
         await fileSystem(`write`, [ `${process.cwd()}/temp/${target}`, generalTargetScript ]);
-        command += `scp ${process.cwd()}/temp/${target} ${localTarget.name}@${localTarget.host}:${localTarget.path}/www/;`;
+        command += `scp ${process.cwd()}/temp/${target} ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/;`;
       }
 
     }
@@ -742,7 +772,9 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
   const localTarget = {
     name: testModeInfo.name,
     host: testModeInfo.host,
-    path: testModeInfo.path
+    path: testModeInfo.path,
+    ip: testModeInfo.ip,
+    log: testModeInfo.log,
   }
   try {
     await this.renderMiddleStatic(staticFolder, address.backinfo, DataPatch, DataMiddle, true, testMode);
@@ -827,15 +859,15 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
     } else {
 
       command = middleTong.map((p) => {
-        return `scp ${p} ${localTarget.name}@${localTarget.host}:${localTarget.path}/www/middle/`;
+        return `scp ${p} ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/middle/`;
       }).concat(motherTong.map((p) => {
-        return `scp ${p} ${localTarget.name}@${localTarget.host}:${localTarget.path}/www/designer/`;
+        return `scp ${p} ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/designer/`;
       })).join(';');
   
       generalPhpScript = await fileSystem(`readString`, [ testDir + "/general.php" ]);
       generalPhpScript = generalPhpScript.replace(/__host__/gi, localTarget.host);
       generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__logHost__/gi, address.testinfo.host + ":3000");
+      generalPhpScript = generalPhpScript.replace(/__logHost__/gi, localTarget.host + ":" + String(localTarget.log));
       generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
@@ -845,7 +877,7 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
       generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
       generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
       await fileSystem(`write`, [ `${process.cwd()}/temp/general.php`, generalPhpScript ]);
-      command += `;scp ${process.cwd()}/temp/general.php ${localTarget.name}@${localTarget.host}:${localTarget.path}/www/designer/;`;
+      command += `;scp ${process.cwd()}/temp/general.php ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/designer/;`;
 
     }
 
@@ -1255,7 +1287,6 @@ DataConsole.prototype.connect = async function () {
 
     //server on
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
-
 
   } catch (e) {
     console.log(e);

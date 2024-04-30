@@ -303,11 +303,11 @@ Robot.prototype.portfolioFilter = function (boo, clientName, apartName, designer
   }
 }
 
-Robot.prototype.logConnect = async function () {
+Robot.prototype.logConnect = async function (testMode = false) {
   try {
     const LogConsole = require(process.cwd() + "/apps/logConsole/logConsole.js");
     const app = new LogConsole();
-    await app.logConnect();
+    await app.logConnect(testMode);
   } catch (e) {
     console.log(e);
   }
@@ -1238,7 +1238,14 @@ const MENU = {
   },
   log: async function () {
     try {
-      await robot.logConnect();
+      await robot.logConnect(false);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  logTest: async function () {
+    try {
+      await robot.logConnect(true);
     } catch (e) {
       console.log(e);
     }
