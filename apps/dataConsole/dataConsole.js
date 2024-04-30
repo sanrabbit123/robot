@@ -259,6 +259,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const CONSTRUCTHOST = "https://" + this.address.officeinfo.construct.host + "";
   const NUMBERSHOST = "https://" + this.address.officeinfo.numbers.host + "";
   const PARSERHOST = "https://" + this.address.aliveinfo.host + "";
+  const testDir = this.frontDir + "/test";
   try {
 
     //module transform function
@@ -353,8 +354,13 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     for (let { kinds, dir, file } of staticDirList) {
       if (kinds === "GHOST:CLIENT") {
         if (file === "general.js") {
-          ghostClientGeneral = dir + "/" + file;
-          ghostClientGeneralString = await fileSystem(`readString`, [ ghostClientGeneral ]);
+          if (!testMode) {
+            ghostClientGeneral = dir + "/" + file;
+            ghostClientGeneralString = await fileSystem(`readString`, [ ghostClientGeneral ]);
+          } else {
+            ghostClientGeneral = testDir + "/" + file;
+            ghostClientGeneralString = await fileSystem(`readString`, [ ghostClientGeneral ]);
+          }
         }
       } else if (kinds === "GHOST:DESIGNER") {
         if (file === "general.js") {
