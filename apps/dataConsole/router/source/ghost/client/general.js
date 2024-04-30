@@ -12,7 +12,6 @@ GeneralJs.prototype.setGeneralProperties = function (instance) {
   this.standardWidth = <%% 1400, 1050, 900, 720, 88 %%>;
   this.sero = <%% false, false, false, false, true %%>;
   this.modeMinus = <%% 0, 1, 1, 1, 1 %%>;
-  // this.naviHeight = <%% 72, 72, 66, 60, 60 %%>;
   this.naviHeight = <%% 72, 72, 66, 60, 52 %%>;
   this.backHeight = <%% 860, 830, 670, 640, 80 %%>;
   this.margin = 20 - this.modeMinus;
@@ -450,7 +449,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
         class: [ "hoverDefault" ],
         event: {
           click: (e) => {
-            selfHref(frontPage + "/magazine.php");
+            selfHref(frontPage + "/portfolio.php");
           }
         },
         style: {
