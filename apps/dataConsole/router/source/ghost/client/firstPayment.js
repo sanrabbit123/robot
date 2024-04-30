@@ -580,12 +580,12 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
-    firstBasePaddingTop = <%% 24, 24, 24, 24, 10 %%>;
+    firstBasePaddingTop = <%% 24, 24, 24, 24, 8 %%>;
     firstBasePaddingBottom = <%% 160, 160, 160, 120, 20 %%>;
 
-    subTitleSize = <%% 18, 18, 17, 15, 3.6 %%>;
+    subTitleSize = <%% 18, 18, 17, 15, 3.5 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% 4, 4, 4, 4, 4 %%>;
+    subTitleMarginTop = <%% 4, 4, 4, 4, 1.8 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 190, 186, 168, 31 %%>;
@@ -599,7 +599,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
     titleVisualLeft = <%% 2, 2, 2, 2, -0.5 %%>;
-    titleLineHeight = <%% 1, 1, 1, 1, 1 %%>;
+    titleLineHeight = <%% 1, 1, 1, 1, 1.1 %%>;
 
     pointOpacity = 0.4;
 
@@ -627,8 +627,8 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
 
     if (desktop && window.innerHeight > 1100) {
       titleSize = <%% 57, 47, 40, 34, 7 %%>;
-      subTitleSize = <%% 19, 17, 16, 14, 3.6 %%>;
-      firstBasePaddingTop = <%% 48, 45, 30, 28, 50 %%>;
+      subTitleSize = <%% 19, 17, 16, 14, 3.5 %%>;
+      firstBasePaddingTop = <%% 48, 45, 30, 28, 9 %%>;
       firstBasePaddingBottom = <%% 160, 160, 120, 100, 210 %%>;
       mainImageTop = <%% 42, 32, 18, 16, 32 %%>;
       mainImageHeight = <%% 390, 372, 338, 314, 39 %%>;
@@ -638,63 +638,63 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     mainIllustLeft = <%% (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png"), (FirstPaymentJs.binaryPath + "/mainillust_left.png") %%>;
     mainIllustRight = <%% (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png"), (FirstPaymentJs.binaryPath + "/mainillust_right.png") %%>;
 
-    mainIllustMargin = <%% 90, 70, 56, 50, 70 %%>;
-    mainIllustTop = <%% -340, -296, -260, -212, -340 %%>;
-    mainIllustWidth = <%% 275, 240, 210, 170, 240 %%>;
+    mainIllustMargin = <%% 90, 70, 56, 50, 7.5 %%>;
+    mainIllustTop = <%% -340, -296, -260, -212, -42 %%>;
+    mainIllustWidth = <%% 275, 240, 210, 170, 34 %%>;
 
-    blueBoxMarginTop = <%% 114, 82, 72, 52, 114 %%>;
+    blueBoxMarginTop = <%% 114, 82, 72, 52, 48 %%>;
     whiteAreaWidth = <%% 1000, 710, 600, 460, 80 %%>;
 
-    boxInnerMargin = <%% 45, 40, 30, 25, 45 %%>;
+    boxInnerMargin = <%% 45, 40, 30, 25, 48 %%>;
 
-    titleSquareWidth = <%% 27, 27, 24, 21, 27 %%>;
-    titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
+    titleSquareWidth = <%% 27, 27, 24, 21, 2 %%>;
+    titleSquareLeftIndent = <%% 10, 10, 10, 10, 1 %%>;
     titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    whiteTitleEngSize = <%% 22, 22, 18, 17, 22 %%>;
+    whiteTitleEngSize = <%% 22, 22, 18, 17, 3.5 %%>;
     whiteTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
-    whiteTitleKorSize = <%% 18, 18, 16, 14, 18 %%>;
+    whiteTitleKorSize = <%% 18, 18, 16, 14, 3.5 %%>;
     whiteTitleKorWeight = <%% 800, 800, 800, 800, 800 %%>;
     whiteTitleKorLightWeight = <%% 200, 200, 200, 200, 200 %%>;
-    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -4 %%>;
-    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1 %%>;
+    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -0 %%>;
+    whiteTitleBarMargin = <%% 11, 11, 10, 8, 0 %%>;
 
     matrixTongMarginTop = <%% 24, 24, 18, 16, 1 %%>;
     matixTongVisualBottom = <%% 1, 1, 1, 1, 1 %%>;
 
-    matrixFactorHeight = <%% 52, 45, 40, 32, 52 %%>;
+    matrixFactorHeight = <%% 52, 45, 40, 32, 4 %%>;
     matrixLineWeight = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
 
-    factorTitleWidth = <%% 240, 160, 140, 120, 240 %%>;
-    factorSize = <%% 15, 14, 13, 12, 15 %%>;
+    factorTitleWidth = <%% 240, 160, 140, 120, 24 %%>;
+    factorSize = <%% 15, 14, 13, 12, 3.5 %%>;
     factorWeight = <%% 400, 400, 400, 400, 400 %%>;
     factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
     factorTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    factorTitleHeightPercentage = <%% 12, 12, 12, 12, 12 %%>;
+    factorTitleHeightPercentage = <%% 12, 12, 12, 12, 1 %%>;
 
-    totalBoxHeight = <%% 467, 415, 356, 296, 445 %%>;
-    payButtonBetween = <%% 10, 10, 8, 6, 10 %%>;
-    payButtonHeight = <%% 48, 42, 38, 34, 48 %%>;
-    payButtonWidth = <%% 140, 120, 108, 100, 140 %%>;
+    totalBoxHeight = <%% 467, 415, 356, 296, 80 %%>;
+    payButtonBetween = <%% 10, 10, 8, 6, 1 %%>;
+    payButtonHeight = <%% 48, 42, 38, 34, 8 %%>;
+    payButtonWidth = <%% 140, 120, 108, 100, 24 %%>;
 
-    buttonBaseMarginTop = <%% 25, 25, 20, 18, 25 %%>;
+    buttonBaseMarginTop = <%% 25, 25, 20, 18, 5 %%>;
 
-    payTextSize = <%% 18, 17, 15, 14, 18 %%>;
+    payTextSize = <%% 18, 17, 15, 14, 3.5 %%>;
     payTextWeight = <%% 800, 800, 800, 800, 800 %%>;
     payTextTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
 
-    totalWordingTextTop = <%% 4, 4, 4, 4, 4 %%>;
-    totalWordingSize = <%% 23, 21, 18, 16, 23 %%>;
-    totalWordingDotSize = <%% 30, 24, 22, 18, 30 %%>;
+    totalWordingTextTop = <%% 4, 4, 4, 4, 1 %%>;
+    totalWordingSize = <%% 23, 21, 18, 16, 3.5 %%>;
+    totalWordingDotSize = <%% 30, 24, 22, 18, 3.5 %%>;
     totalWordingDotOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
-    vatSize = <%% 14, 13, 12, 11, 14 %%>;
+    vatSize = <%% 14, 13, 12, 11, 3.5 %%>;
     vatWeight = <%% 900, 900, 900, 900, 900 %%>;
-    vatTextTop = <%% -9, -9, -9, -9, -9 %%>;
+    vatTextTop = <%% -9, -9, -9, -9, -1 %%>;
 
-    finalAmountTextTop = <%% -2, -2, -2, -2, -2 %%>;
-    finalAmountSize = <%% 38, 36, 32, 29, 38 %%>;
+    finalAmountTextTop = <%% -2, -2, -2, -2, -1 %%>;
+    finalAmountSize = <%% 38, 36, 32, 29, 3.5 %%>;
     finalAmountWeight = <%% 800, 800, 800, 800, 800 %%>;
 
     this.totalContents = document.getElementById("totalcontents");

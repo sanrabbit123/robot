@@ -11,6 +11,7 @@ class GeneralPhp {
   public $protocol = "https://";
   public $testHost = "__testHost__";
   public $acceptCode = "accepthomeliaison";
+  public $coreHost = "__coreHost__";
 
   function __construct() {}
 
@@ -59,6 +60,18 @@ class GeneralPhp {
     $html .= 'window.homeliaisonSessionId = "'.$sessionId.'";'."\n";
     $html .= '} else { window.homeliaisonSessionId = window.localStorage.getItem("homeliaisonSessionId"); }'."\n";
     $html .= 'window.homeliaisonClientInfo = '.$clientInfo.';'."\n";
+    $html .= 'if (window.homeliaisonClientInfo.ip === "'.$this->officeIp.'") {'."\n";
+    $html .= 'try {'."\n";
+    $html .= 'setTimeout(() => {'."\n";
+    $html .= '(async function () {'."\n";
+    $html .= 'const ipResponse = await fetch("https://'.$this->coreHost.'/ip", { credentials: "omit" });'."\n";
+    $html .= 'const thisText = await ipResponse.text();'."\n";
+    $html .= 'const thisIp = thisText.trim();'."\n";
+    $html .= 'await fetch("https://'.$this->backHost.'/sendSlack", { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json", }, body: JSON.stringify({ "message": "office front web => id : " + window.homeliaisonSessionId + " / ip : " + thisIp, "channel": "#error_log" }), });'."\n";
+    $html .= '})().catch((err) => { console.log(err); });'."\n";
+    $html .= '}, 100);'."\n";
+    $html .= '} catch {}'."\n";
+    $html .= '}'."\n";
     $html .= 'if (typeof window.homeliaisonClientInfo === "object" && window.homeliaisonClientInfo !== null) { window.homeliaisonClientInfo["pageTitle"] = "'.$titleString.'"; }'."\n";
     $html .= '</script>'."\n";
 
