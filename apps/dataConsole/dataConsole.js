@@ -1194,6 +1194,8 @@ DataConsole.prototype.connect = async function () {
         app.post(obj.link, async function (req, res) {
           try {
 
+            console.log(req.body);
+
             expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
 
             let __wallLogicBoo, __vailHosts, __authorization, __originTarget, __headers, __slackMessage;

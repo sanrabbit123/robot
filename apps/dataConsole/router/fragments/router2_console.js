@@ -2182,7 +2182,6 @@ DataRouter.prototype.rou_post_sendSlack = function () {
     });
     try {
       if (req.body.message === undefined || req.body.channel === undefined) {
-        console.log(req.body);
         throw new Error("invalid post");
       }
       const { message, channel } = req.body;
