@@ -2,6 +2,7 @@
 require_once __DIR__.'/general.php';
 
 $general = new GeneralPhp();
+$general->officeRedirect();
 $host = $general->host;
 $protocol = $general->protocol;
 $hostLink = $protocol.$host;

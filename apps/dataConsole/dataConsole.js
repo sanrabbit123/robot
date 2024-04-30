@@ -692,6 +692,7 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
 
       generalPhpScript = await fileSystem(`readString`, [ frontDir + "/general.php" ]);
       generalPhpScript = generalPhpScript.replace(/__host__/gi, address.frontinfo.host);
+      generalPhpScript = generalPhpScript.replace(/__realHost__/gi, address.frontinfo.host);
       generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__logHost__/gi, address.testinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
@@ -699,6 +700,8 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
       generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.aliveinfo.host + ":8000");
+      generalPhpScript = generalPhpScript.replace(/__officeIp__/gi, address.officeinfo.test.ip.outer);
+      generalPhpScript = generalPhpScript.replace(/__testHost__/gi, address.officeinfo.test.host);
       generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
       generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
       generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
@@ -723,6 +726,7 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
 
       generalPhpScript = await fileSystem(`readString`, [ testDir + "/general.php" ]);
       generalPhpScript = generalPhpScript.replace(/__host__/gi, localTarget.host);
+      generalPhpScript = generalPhpScript.replace(/__realHost__/gi, address.frontinfo.host);
       generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__logHost__/gi, localTarget.host + ":" + String(localTarget.log));
       generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
@@ -730,6 +734,8 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
       generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.aliveinfo.host + ":8000");
+      generalPhpScript = generalPhpScript.replace(/__officeIp__/gi, address.officeinfo.test.ip.outer);
+      generalPhpScript = generalPhpScript.replace(/__testHost__/gi, address.officeinfo.test.host);
       generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
       generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
       generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
@@ -849,6 +855,7 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
   
       generalPhpScript = await fileSystem(`readString`, [ frontClientDir + "/general.php" ]);
       generalPhpScript = generalPhpScript.replace(/__host__/gi, address.frontinfo.host);
+      generalPhpScript = generalPhpScript.replace(/__realHost__/gi, address.frontinfo.host);
       generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__logHost__/gi, address.testinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
@@ -856,6 +863,8 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
       generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.aliveinfo.host + ":8000");
+      generalPhpScript = generalPhpScript.replace(/__officeIp__/gi, address.officeinfo.test.ip.outer);
+      generalPhpScript = generalPhpScript.replace(/__testHost__/gi, address.officeinfo.test.host);
       generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
       generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
       generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
@@ -872,6 +881,7 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
   
       generalPhpScript = await fileSystem(`readString`, [ testDir + "/general.php" ]);
       generalPhpScript = generalPhpScript.replace(/__host__/gi, localTarget.host);
+      generalPhpScript = generalPhpScript.replace(/__realHost__/gi, address.frontinfo.host);
       generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
       generalPhpScript = generalPhpScript.replace(/__logHost__/gi, localTarget.host + ":" + String(localTarget.log));
       generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
@@ -879,6 +889,8 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
       generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
       generalPhpScript = generalPhpScript.replace(/__parserHost__/gi, address.aliveinfo.host + ":8000");
+      generalPhpScript = generalPhpScript.replace(/__officeIp__/gi, address.officeinfo.test.ip.outer);
+      generalPhpScript = generalPhpScript.replace(/__testHost__/gi, address.officeinfo.test.host);
       generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
       generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
       generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);

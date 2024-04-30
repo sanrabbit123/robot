@@ -2,11 +2,15 @@
 class GeneralPhp {
 
   public $host = "127.0.0.1";
+  public $realFrontHost = "__realHost__";
   public $frontHost = "__host__";
   public $secondHost = "__secondHost__";
   public $logHost = "__logHost__";
   public $backHost = "__backHost__";
-  public $protocol = "http://";
+  public $officeIp = "__officeIp__";
+  public $protocol = "https://";
+  public $testHost = "__testHost__";
+  public $acceptCode = "accepthomeliaison";
 
   function __construct() {}
 
@@ -63,30 +67,7 @@ class GeneralPhp {
   }
 
   public function hiddenHtml($hiddenString) {
-    $html = '<header class="hiddenobject"><h1>홈스타일링 플랫폼 : 홈리에종</h1></header>'."\n";
-    $html .= '<nav class="hiddenobject"><a href="/about.php" class="hiddenobject">홈스타일링 서비스 소개</a>'."\n";
-    $html .= '<a href="/portfolio.php" class="hiddenobject"><b>홈스타일링</b> 디자이너 주거 인테리어 디자인 포트폴리오</a>'."\n";
-    $html .= '<a href="/review.php" class="hiddenobject">홈리에종 고객 후기</a>'."\n";
-    $html .= '<a href="/designer.php" class="hiddenobject">홈스타일링 디자이너 모아보기</a>'."\n";
-    $html .= '<a href="/consulting.php" class="hiddenobject">홈스타일링 상담 신청</a>'."\n";
-    $html .= '<a href="/index.php" class="hiddenobject">홈리에종 홈페이지</a>'."\n";
-    $html .= '<a href="/magazine.php" class="hiddenobject">홈리에종 매거진</a></nav>'."\n";
-    $html .= '<article class="hiddenobject"><b>홈스타일링</b> 디자이너 주거 인테리어 디자인 포트폴리오</article>'."\n";
-    $html .= '<aside class="hiddenobject">홈스타일링 디자이너 주거 인테리어</aside>'."\n";
-    $html .= '<section class="hiddenobject"><b>홈스타일링</b> <p>디자이너 주거 인테리어 디자인 포트폴리오</p></section>'."\n";
-    $html .= '<main class="hiddenobject">'.$hiddenString.'</main>'."\n";
-    $html .= '<footer class="hiddenobject"><h1 class="hiddenobject">(주)홈리에종</h1>'."\n";
-    $html .= '<p class="hiddenobject">CEO : 박혜연</p>'."\n";
-    $html .= '<p class="hiddenobject">서울특별시 성동구 성수일로 10, 서울숲ITCT지식산업센터 605호</p>'."\n";
-    $html .= '<p class="hiddenobject">사업자등록번호 : 221 - 81 - 49759</p>'."\n";
-    $html .= '<p class="hiddenobject">통신판매신고업 : 제 2020 - 서울성동 - 01563호</p>'."\n";
-    $html .= '<p class="hiddenobject">T : 02-2039-2252</p>'."\n";
-    $html .= '<p class="hiddenobject">E : help@home-liaison.com</p>'."\n";
-    $html .= '<a href="/terms.php" class="hiddenobject">홈리에종 개인정보 처리 방침 / 이용약관</a>'."\n";
-    $html .= '<a href="/faq.php" class="hiddenobject">홈리에종 FAQ</a>'."\n";
-    $html .= '<a href="http://pf.kakao.com/_vxixkjxl" class="hiddenobject">홈리에종 카카오 플러스 채널</a>'."\n";
-    $html .= '<a href="https://blog.naver.com/homeliaison" class="hiddenobject">홈리에종 네이버 블로그</a>'."\n";
-    $html .= '<a href="https://instagram.com/homeliaison" class="hiddenobject">홈리에종 인스타그램</a></footer>'."\n";
+    $html = '<header class="hiddenobject"><h1>aa</h1></header>'."\n";
     return $html;
   }
 
@@ -137,22 +118,34 @@ class GeneralPhp {
 
   public function getRealClientIp() {
     $ipAddress = '';
-    if ($_SERVER['HTTP_CLIENT_IP']) {
-      $ipAddress = $_SERVER['HTTP_CLIENT_IP'];
-    } else if($_SERVER['HTTP_X_FORWARDED_FOR']) {
-      $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else if($_SERVER['HTTP_X_FORWARDED']) {
-      $ipAddress = $_SERVER['HTTP_X_FORWARDED'];
-    } else if($_SERVER['HTTP_FORWARDED_FOR']) {
-      $ipAddress = $_SERVER['HTTP_FORWARDED_FOR'];
-    } else if($_SERVER['HTTP_FORWARDED']) {
-      $ipAddress = $_SERVER['HTTP_FORWARDED'];
-    } else if($_SERVER['REMOTE_ADDR']) {
-      $ipAddress = $_SERVER['REMOTE_ADDR'];
-    } else {
+    try {
+      if ($_SERVER['HTTP_CLIENT_IP']) {
+        $ipAddress = $_SERVER['HTTP_CLIENT_IP'];
+      } else if($_SERVER['HTTP_X_FORWARDED_FOR']) {
+        $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+      } else if($_SERVER['HTTP_X_FORWARDED']) {
+        $ipAddress = $_SERVER['HTTP_X_FORWARDED'];
+      } else if($_SERVER['HTTP_FORWARDED_FOR']) {
+        $ipAddress = $_SERVER['HTTP_FORWARDED_FOR'];
+      } else if($_SERVER['HTTP_FORWARDED']) {
+        $ipAddress = $_SERVER['HTTP_FORWARDED'];
+      } else if($_SERVER['REMOTE_ADDR']) {
+        $ipAddress = $_SERVER['REMOTE_ADDR'];
+      } else {
+        $ipAddress = 'unknown';
+      }
+    } catch(Exception $e){
       $ipAddress = 'unknown';
     }
     return $ipAddress;
+  }
+
+  public function officeRedirect() {
+    try {
+      return "";
+    } catch (Exception $e){
+      return "";
+    }
   }
 
   public function getClients(string $cliid) {

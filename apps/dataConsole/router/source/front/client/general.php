@@ -2,11 +2,15 @@
 class GeneralPhp {
 
   public $host = "__host__";
+  public $realFrontHost = "__realHost__";
   public $frontHost = "__host__";
   public $secondHost = "__secondHost__";
   public $logHost = "__logHost__";
   public $backHost = "__backHost__";
+  public $officeIp = "__officeIp__";
   public $protocol = "https://";
+  public $testHost = "__testHost__";
+  public $acceptCode = "accepthomeliaison";
 
   function __construct() {}
 
@@ -198,22 +202,48 @@ class GeneralPhp {
 
   public function getRealClientIp() {
     $ipAddress = '';
-    if ($_SERVER['HTTP_CLIENT_IP']) {
-      $ipAddress = $_SERVER['HTTP_CLIENT_IP'];
-    } else if($_SERVER['HTTP_X_FORWARDED_FOR']) {
-      $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else if($_SERVER['HTTP_X_FORWARDED']) {
-      $ipAddress = $_SERVER['HTTP_X_FORWARDED'];
-    } else if($_SERVER['HTTP_FORWARDED_FOR']) {
-      $ipAddress = $_SERVER['HTTP_FORWARDED_FOR'];
-    } else if($_SERVER['HTTP_FORWARDED']) {
-      $ipAddress = $_SERVER['HTTP_FORWARDED'];
-    } else if($_SERVER['REMOTE_ADDR']) {
-      $ipAddress = $_SERVER['REMOTE_ADDR'];
-    } else {
+    try {
+      if ($_SERVER['HTTP_CLIENT_IP']) {
+        $ipAddress = $_SERVER['HTTP_CLIENT_IP'];
+      } else if($_SERVER['HTTP_X_FORWARDED_FOR']) {
+        $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+      } else if($_SERVER['HTTP_X_FORWARDED']) {
+        $ipAddress = $_SERVER['HTTP_X_FORWARDED'];
+      } else if($_SERVER['HTTP_FORWARDED_FOR']) {
+        $ipAddress = $_SERVER['HTTP_FORWARDED_FOR'];
+      } else if($_SERVER['HTTP_FORWARDED']) {
+        $ipAddress = $_SERVER['HTTP_FORWARDED'];
+      } else if($_SERVER['REMOTE_ADDR']) {
+        $ipAddress = $_SERVER['REMOTE_ADDR'];
+      } else {
+        $ipAddress = 'unknown';
+      }
+    } catch (Exception $e){
       $ipAddress = 'unknown';
     }
     return $ipAddress;
+  }
+
+  public function officeRedirect() {
+    try {
+      $thisIp = $this->getRealClientIp();
+      if (gettype($thisIp) === "string") {
+        if (trim($thisIp) === $this->officeIp) {
+          if (isset($_GET[$this->acceptCode])) {
+            if ($_GET[$this->acceptCode] === "true") {
+              // pass
+            } else {
+              header("location: https://".$this->testHost.$_SERVER["REQUEST_URI"]);
+            }
+          } else {
+            header("location: https://".$this->testHost.$_SERVER["REQUEST_URI"]);
+          }
+        }
+      }
+      return $thisIp;
+    } catch (Exception $e){
+      return "";
+    }
   }
 
   public function getClients(string $cliid) {

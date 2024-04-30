@@ -142,10 +142,18 @@ StaticRouter.prototype.rou_get_First = function () {
       } else if (req.params.id === "disk") {
         const disk = await diskReading();
         res.send(JSON.stringify({ disk: disk.toArray() }));
-
       } else if (((req.params.id === "microsoft" && typeof req.query === "object") && req.query !== null) && typeof req.query.code === "string") {
         microsoft.codeToAccessToken(req.query.code).catch((err) => { console.log(err) });
         res.send(JSON.stringify({ message: "hi" }));
+      } else if (req.params.id === "ip") {
+        const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+        res.set({
+          "Content-Type": "text/plain",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send(String(ip).replace(/[^0-9\.]/gi, ''));
       } else {
         res.send(JSON.stringify({ message: "hi" }));
       }
