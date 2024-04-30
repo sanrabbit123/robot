@@ -228,25 +228,26 @@ class GeneralPhp {
   }
 
   public function officeRedirect() {
-    try {
-      $thisIp = $this->getRealClientIp();
-      if (gettype($thisIp) === "string") {
-        if (trim($thisIp) === $this->officeIp) {
-          if (isset($_GET[$this->acceptCode])) {
-            if ($_GET[$this->acceptCode] === "true") {
-              // pass
-            } else {
-              header("location: https://".$this->testHost.$_SERVER["REQUEST_URI"]);
-            }
-          } else {
-            header("location: https://".$this->testHost.$_SERVER["REQUEST_URI"]);
-          }
-        }
-      }
-      return $thisIp;
-    } catch (Exception $e){
-      return "";
-    }
+    // try {
+    //   $thisIp = $this->getRealClientIp();
+    //   if (gettype($thisIp) === "string") {
+    //     if (trim($thisIp) === $this->officeIp) {
+    //       if (isset($_GET[$this->acceptCode])) {
+    //         if ($_GET[$this->acceptCode] === "true") {
+    //           // pass
+    //         } else {
+    //           header("location: https://".$this->testHost.$_SERVER["REQUEST_URI"]);
+    //         }
+    //       } else {
+    //         header("location: https://".$this->testHost.$_SERVER["REQUEST_URI"]);
+    //       }
+    //     }
+    //   }
+    //   return $thisIp;
+    // } catch (Exception $e){
+    //   return "";
+    // }
+    return "";
   }
 
   public function getClients(string $cliid) {
