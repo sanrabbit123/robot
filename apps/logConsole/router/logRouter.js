@@ -1,4 +1,4 @@
-const LogRouter = function (slack_bot, MONGOC, MONGOLOCALC) {
+const LogRouter = function (slack_bot, MONGOC, MONGOLOCALC, testMode) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
@@ -21,6 +21,8 @@ const LogRouter = function (slack_bot, MONGOC, MONGOLOCALC) {
   this.naver = new NaverAPIs();
   this.google = new GoogleAds();
   this.youtube = new GoogleYoutube();
+
+  this.testMode = testMode;
 }
 
 LogRouter.prototype.baseMaker = function (target, req = null) {
@@ -261,7 +263,7 @@ LogRouter.prototype.rou_post_frontReflection = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      reflection.frontReflection().catch((err) => {
+      reflection.frontReflection("local", instance.testMode).catch((err) => {
         logger.error("Log Console 서버 문제 생김 (rou_post_frontReflection): " + err.message).catch((e) => { console.log(e); });
       })
       res.send(JSON.stringify({ message: "will do" }));

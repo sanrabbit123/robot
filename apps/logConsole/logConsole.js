@@ -227,7 +227,7 @@ LogConsole.prototype.logConnect = async function (testMode = false) {
 
     //set router
     const LogRouter = require(`${this.dir}/router/logRouter.js`);
-    const router = new LogRouter(this.slack_bot, MONGOC, MONGOLOCALC);
+    const router = new LogRouter(this.slack_bot, MONGOC, MONGOLOCALC, testMode);
 
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);
