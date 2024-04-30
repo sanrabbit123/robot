@@ -1193,6 +1193,8 @@ DataConsole.prototype.connect = async function () {
               instance.address.transinfo.host + ":3000",
               instance.address.contentsinfo.host,
               instance.address.contentsinfo.host + ":3000",
+              instance.address.officeinfo.test.host,
+              instance.address.officeinfo.test.host + ":" + instance.address.officeinfo.test.port,
               "localhost:3000",
               "localhost:8080",
               "stdpay.inicis.com",
