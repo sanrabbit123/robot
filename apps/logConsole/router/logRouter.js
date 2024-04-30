@@ -414,8 +414,6 @@ LogRouter.prototype.rou_post_getContents = function () {
       let reviewArr, indexArr;
       let indexSliceNumber;
 
-      console.log(req.body);
-
       if (req.body.mode === "portfolio" || req.body.mode === "review") {
 
         contentsArr_raw = await back.getContentsArrByQuery({}, { selfMongo });
