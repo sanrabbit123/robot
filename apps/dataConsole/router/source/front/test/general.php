@@ -31,6 +31,15 @@ class GeneralPhp {
 
     // session and client info
     $html .= '<script>'."\n";
+    $html .= 'try {'."\n";
+    $html .= '(async function () {'."\n";
+    $html .= 'const allowedIp = [ "192.168.0.20", "192.168.0.24", "192.168.0.37", ];'."\n";
+    $html .= 'const ipResponse = await fetch("https://192.168.0.88/ip", { credentials: "omit" });'."\n";
+    $html .= 'const thisText = await ipResponse.text();'."\n";
+    $html .= 'const thisIp = thisText.trim();'."\n";
+    $html .= 'if (allowedIp.includes(thisIp)) { window.location.href = "https://'.$this->realFrontHost.'" + window.location.pathname + (/\\?/gi.test(window.location.search) ? (window.location.search + "&" + "'.$this->acceptCode.'=true") : (window.location.search + "?" + "'.$this->acceptCode.'=true")); }'."\n";
+    $html .= '})().catch((err) => { console.log(err); });'."\n";
+    $html .= '} catch {}'."\n";
     $html .= 'window.homeliaisonSessionId = "'.$sessionId.'";'."\n";
     $html .= 'window.homeliaisonClientInfo = '.$clientInfo.';'."\n";
     $html .= 'if (typeof window.homeliaisonClientInfo === "object" && window.homeliaisonClientInfo !== null) { window.homeliaisonClientInfo["pageTitle"] = "'.$titleString.'"; }'."\n";

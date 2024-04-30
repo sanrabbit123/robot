@@ -54,7 +54,10 @@ class GeneralPhp {
 
     // session and client info
     $html .= '<script>'."\n";
+    $html .= 'if (window.localStorage.getItem("homeliaisonSessionId") === null) {'."\n";
+    $html .= 'window.localStorage.setItem("homeliaisonSessionId", "'.$sessionId.'");'."\n";
     $html .= 'window.homeliaisonSessionId = "'.$sessionId.'";'."\n";
+    $html .= '} else { window.homeliaisonSessionId = window.localStorage.getItem("homeliaisonSessionId"); }'."\n";
     $html .= 'window.homeliaisonClientInfo = '.$clientInfo.';'."\n";
     $html .= 'if (typeof window.homeliaisonClientInfo === "object" && window.homeliaisonClientInfo !== null) { window.homeliaisonClientInfo["pageTitle"] = "'.$titleString.'"; }'."\n";
     $html .= '</script>'."\n";
