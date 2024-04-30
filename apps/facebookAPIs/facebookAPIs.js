@@ -600,10 +600,16 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
           phone = autoHypenPhone(String('0' + target.data.phone).trim().replace(/[^0-9\-]/gi, ''));
         }
     
-        address = target.data.address;
+        address = target.data.address.trim().replace(/[\n\t]/gi, '').replace(/[\n\t]/gi, '');
         searchResult = await app.getAddress(address);
         if (searchResult !== null) {
-          address = searchResult.address.road;
+          if (typeof searchResult === "object" && searchResult.address !== undefined && searchResult.address !== null && typeof searchResult.address === "object") {
+            if (typeof searchResult.address.road === "string") {
+              if (searchResult.address.road.trim() !== "") {
+                address = searchResult.address.road;
+              }
+            }
+          }
         }
     
         pyeong = target.data.pyeong.replace(/[^0-9\.]/gi, '');

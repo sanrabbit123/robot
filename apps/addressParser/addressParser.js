@@ -745,9 +745,14 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false)
     if (result === null && fixedAddress === null) {
       return null;
     } else if (result === null && !pointMode && typeof fixedAddress === "string") {
-      return {
-        address: {
-          road: fixedAddress
+
+      if (fixedAddress.trim() === "") {
+        return null;
+      } else {
+        return {
+          address: {
+            road: fixedAddress
+          }
         }
       }
     }
