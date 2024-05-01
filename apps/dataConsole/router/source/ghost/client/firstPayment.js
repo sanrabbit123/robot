@@ -580,7 +580,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
-    firstBasePaddingTop = <%% 24, 24, 24, 24, 8 %%>;
+    firstBasePaddingTop = <%% 24, 24, 24, 24, 7 %%>;
     firstBasePaddingBottom = <%% 160, 160, 160, 120, 20 %%>;
 
     subTitleSize = <%% 18, 18, 17, 15, 3.5 %%>;
@@ -601,7 +601,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     titleVisualLeft = <%% 2, 2, 2, 2, -0.5 %%>;
     titleLineHeight = <%% 1, 1, 1, 1, 1.1 %%>;
 
-    pointOpacity = 0.4;
+    pointOpacity = <%% 0.4, 0.4, 0.4, 0.4, 1 %%>;
 
     mainImageTop = <%% 27, 24, 18, 16, 33 %%>;
     mainImageHeight = <%% 390, 370, 330, 314, 39 %%>;
@@ -643,58 +643,58 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     mainIllustWidth = <%% 275, 240, 210, 170, 34 %%>;
 
     blueBoxMarginTop = <%% 114, 82, 72, 52, 48 %%>;
-    whiteAreaWidth = <%% 1000, 710, 600, 460, 80 %%>;
+    whiteAreaWidth = <%% 1000, 710, 600, 460, 88 %%>;
 
-    boxInnerMargin = <%% 45, 40, 30, 25, 48 %%>;
+    boxInnerMargin = <%% 45, 40, 30, 25, 6 %%>;
 
-    titleSquareWidth = <%% 27, 27, 24, 21, 2 %%>;
-    titleSquareLeftIndent = <%% 10, 10, 10, 10, 1 %%>;
-    titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
+    titleSquareWidth = <%% 27, 27, 24, 21, 5.5 %%>;
+    titleSquareLeftIndent = <%% 10, 10, 10, 10, 1.8 %%>;
+    titleSquareTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    whiteTitleEngSize = <%% 22, 22, 18, 17, 3.5 %%>;
+    whiteTitleEngSize = <%% 22, 22, 18, 17, 3.9 %%>;
     whiteTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
     whiteTitleKorSize = <%% 18, 18, 16, 14, 3.5 %%>;
     whiteTitleKorWeight = <%% 800, 800, 800, 800, 800 %%>;
     whiteTitleKorLightWeight = <%% 200, 200, 200, 200, 200 %%>;
-    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -0 %%>;
-    whiteTitleBarMargin = <%% 11, 11, 10, 8, 0 %%>;
+    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -0.4 %%>;
+    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1.8 %%>;
 
-    matrixTongMarginTop = <%% 24, 24, 18, 16, 1 %%>;
+    matrixTongMarginTop = <%% 24, 24, 18, 16, 3.6 %%>;
     matixTongVisualBottom = <%% 1, 1, 1, 1, 1 %%>;
 
-    matrixFactorHeight = <%% 52, 45, 40, 32, 4 %%>;
+    matrixFactorHeight = <%% 52, 45, 40, 32, 9.2 %%>;
     matrixLineWeight = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
 
     factorTitleWidth = <%% 240, 160, 140, 120, 24 %%>;
-    factorSize = <%% 15, 14, 13, 12, 3.5 %%>;
+    factorSize = <%% 15, 14, 13, 12, 3 %%>;
     factorWeight = <%% 400, 400, 400, 400, 400 %%>;
     factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
-    factorTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    factorTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
 
     factorTitleHeightPercentage = <%% 12, 12, 12, 12, 1 %%>;
 
-    totalBoxHeight = <%% 467, 415, 356, 296, 80 %%>;
-    payButtonBetween = <%% 10, 10, 8, 6, 1 %%>;
-    payButtonHeight = <%% 48, 42, 38, 34, 8 %%>;
-    payButtonWidth = <%% 140, 120, 108, 100, 24 %%>;
+    totalBoxHeight = <%% 467, 415, 356, 296, 90 %%>;
+    payButtonBetween = <%% 10, 10, 8, 6, 2.4 %%>;
+    payButtonHeight = <%% 48, 42, 38, 34, 10 %%>;
+    payButtonWidth = <%% 140, 120, 108, 100, 30 %%>;
 
-    buttonBaseMarginTop = <%% 25, 25, 20, 18, 5 %%>;
+    buttonBaseMarginTop = <%% 25, 25, 20, 18, 6 %%>;
 
-    payTextSize = <%% 18, 17, 15, 14, 3.5 %%>;
+    payTextSize = <%% 18, 17, 15, 14, 3.9 %%>;
     payTextWeight = <%% 800, 800, 800, 800, 800 %%>;
-    payTextTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
+    payTextTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
     totalWordingTextTop = <%% 4, 4, 4, 4, 1 %%>;
-    totalWordingSize = <%% 23, 21, 18, 16, 3.5 %%>;
-    totalWordingDotSize = <%% 30, 24, 22, 18, 3.5 %%>;
+    totalWordingSize = <%% 23, 21, 18, 16, 5.6 %%>;
+    totalWordingDotSize = <%% 30, 24, 22, 18, 7 %%>;
     totalWordingDotOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
-    vatSize = <%% 14, 13, 12, 11, 3.5 %%>;
-    vatWeight = <%% 900, 900, 900, 900, 900 %%>;
-    vatTextTop = <%% -9, -9, -9, -9, -1 %%>;
+    vatSize = <%% 14, 13, 12, 11, 2.8 %%>;
+    vatWeight = <%% 900, 900, 900, 900, 400 %%>;
+    vatTextTop = <%% -9, -9, -9, -9, -1.2 %%>;
 
-    finalAmountTextTop = <%% -2, -2, -2, -2, -1 %%>;
-    finalAmountSize = <%% 38, 36, 32, 29, 3.5 %%>;
+    finalAmountTextTop = <%% -2, -2, -2, -2, -0.1 %%>;
+    finalAmountSize = <%% 38, 36, 32, 29, 6 %%>;
     finalAmountWeight = <%% 800, 800, 800, 800, 800 %%>;
 
     this.totalContents = document.getElementById("totalcontents");
@@ -740,7 +740,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
           left: String(-1 * minusLeft) + ea,
           background: colorExtended.darkDarkBlack,
           width: withOut(-1 * (minusLeft * 2), ea),
-          height: desktop ? withOut(1 * ((-1 * baseTop) + naviHeight), ea) : String(185) + ea,
+          height: desktop ? withOut(1 * ((-1 * baseTop) + naviHeight), ea) : String(240) + ea,
         }
       }
     });
@@ -766,7 +766,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
             position: "relative",
             fontSize: String(titleSize) + ea,
             fontWeight: String(titleWeight),
-            color: colorExtended.blueLight,
+            color: desktop ? colorExtended.blueLight : colorExtended.white,
             fontFamily: "mont",
             textAlign: "center",
             top: desktop ? String(titleVisualTop) + ea : "",
@@ -776,14 +776,14 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
           bold: {
             fontSize: String(titleSize) + ea,
             fontWeight: String(titleWeight),
-            color: colorExtended.blueLight,
+            color: desktop ? colorExtended.blueLight : colorExtended.mainBlue,
             fontFamily: "mont",
             opacity: String(pointOpacity),
           },
           under: {
             fontSize: String(titleSize - 10) + ea,
             fontWeight: String(titleWeight),
-            color: colorExtended.blueLight,
+            color: desktop ? colorExtended.blueLight : colorExtended.mainBlue,
             fontFamily: "mont",
             opacity: String(pointOpacity),
           },
@@ -829,7 +829,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
         width: withOut(0, ea),
         height: String(totalBoxHeight) + ea,
         marginTop: String(blueBoxMarginTop) + ea,
-        background: colorExtended.mainBlue,
+        background: desktop ? colorExtended.mainBlue : colorExtended.white,
         borderRadius: String(10) + "px",
         opacity: String(0),
         transform: "translateY(30px)",
@@ -867,16 +867,16 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
         },
         {
           style: {
-            display: "inline-flex",
+            display: desktop ? "inline-flex" : "flex",
             flexDirection: "column",
             position: "relative",
             height: withOut(boxInnerMargin * 2, ea),
             width: String(whiteAreaWidth) + ea,
-            background: colorExtended.gray0,
+            background: desktop ? colorExtended.gray0 : colorExtended.white,
             borderTopLeftRadius: String(10) + "px",
             borderBottomLeftRadius: String(10) + "px",
-            borderTopRightRadius: String(0) + "px",
-            borderBottomRightRadius: String(0) + "px",
+            borderTopRightRadius: desktop ? String(0) + "px" : String(10) + "px",
+            borderBottomRightRadius: desktop ? String(0) + "px" : String(10) + "px",
             overflow: "hidden",
             justifyContent: "start",
             alignItems: "start",
@@ -886,7 +886,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
         },
         {
           style: {
-            display: "inline-flex",
+            display: desktop ? "inline-flex" : "none",
             flexDirection: "column",
             position: "relative",
             height: withOut(boxInnerMargin * 2, ea),
@@ -1105,16 +1105,18 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     });
 
     createNode({
-      mother: blueBase,
+      mother: desktop ? blueBase : whiteBase,
       style: {
         display: "flex",
-        position: "relative",
-        width: withOut((boxInnerMargin * 2) + titleSquareLeftIndent, ea),
-        marginLeft: String(boxInnerMargin + titleSquareLeftIndent) + ea,
-        justifyContent: "end",
+        position: desktop ? "relative" : "absolute",
+        width: desktop ? withOut((boxInnerMargin * 2) + titleSquareLeftIndent, ea) : withOut(boxInnerMargin * 2, ea),
+        marginLeft: desktop ? String(boxInnerMargin + titleSquareLeftIndent) + ea : "",
+        justifyContent: desktop ? "end" : "start",
         alignItems: "center",
         flexDirection: "row",
-        top: String(totalWordingTextTop) + ea,
+        top: desktop ? String(totalWordingTextTop) + ea : "",
+        bottom: desktop ? "" : String(boxInnerMargin - 1.2) + ea,
+        left: desktop ? "" : String(boxInnerMargin) + ea,
       },
       children: [
         {
@@ -1138,15 +1140,17 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     });
 
     createNode({
-      mother: blueBase,
+      mother: desktop ? blueBase : whiteBase,
       style: {
         display: "flex",
-        position: "relative",
-        width: withOut((boxInnerMargin * 2) + titleSquareLeftIndent, ea),
-        marginLeft: String(boxInnerMargin + titleSquareLeftIndent) + ea,
+        position: desktop ? "relative" : "absolute",
+        width: desktop ? withOut((boxInnerMargin * 2) + titleSquareLeftIndent, ea) : withOut(boxInnerMargin * 2, ea),
+        marginLeft: desktop ? String(boxInnerMargin + titleSquareLeftIndent) + ea : "",
         justifyContent: "end",
         alignItems: "end",
         flexDirection: "row",
+        bottom: desktop ? "" : String(boxInnerMargin - 1.2) + ea,
+        left: desktop ? "" : String(boxInnerMargin) + ea,
       },
       children: [
         {
@@ -1155,7 +1159,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
             fontSize: String(vatSize) + ea,
             fontWeight: String(vatWeight),
             top: String(vatTextTop) + ea,
-            color: colorExtended.blueDim,
+            color: desktop ? colorExtended.blueDim : colorExtended.black,
             display: "inline-block",
             position: "relative",
           }
@@ -1167,7 +1171,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
             top: String(finalAmountTextTop) + ea,
             fontSize: String(finalAmountSize) + ea,
             fontWeight: String(finalAmountWeight),
-            color: colorExtended.white,
+            color: desktop ? colorExtended.white : colorExtended.mainBlue,
             display: "inline-block",
             position: "relative",
           },
@@ -1184,8 +1188,8 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
         display: "flex",
         position: "relative",
         flexDirection: "row",
-        justifyContent: "end",
-        alignItems: "end",
+        justifyContent: desktop ? "end" : "center",
+        alignItems: desktop ? "end" : "center",
         width: withOut(0, ea),
         height: String(payButtonHeight) + ea,
         marginTop: String(buttonBaseMarginTop) + ea,
@@ -1316,54 +1320,54 @@ FirstPaymentJs.prototype.insertSecondBox = async function () {
     basePaddingTop = <%% 150, 150, 120, 100, 19 %%>;
     basePaddingBottom = <%% 160, 160, 110, 90, 17 %%>;
 
-    leftBoxWidth = <%% 590, 510, 430, 340, 510 %%>;
-    boxBetween = <%% 45, 30, 25, 20, 45 %%>;
+    leftBoxWidth = <%% 590, 510, 430, 340, 88 %%>;
+    boxBetween = <%% 45, 30, 25, 20, 1 %%>;
 
-    boxInnerMargin = <%% 36, 28, 22, 22, 28 %%>;
-    boxInnerMarginVisual = <%% 32, 26, 22, 22, 24 %%>;
-    contentsBoxTop = <%% 28, 20, 18, 18, 24 %%>;
+    boxInnerMargin = <%% 36, 28, 22, 22, 5.6 %%>;
+    boxInnerMarginVisual = <%% 32, 26, 22, 22, 5.3 %%>;
+    contentsBoxTop = <%% 28, 20, 18, 18, 4.4 %%>;
 
-    titleSquareWidth = <%% 27, 27, 24, 21, 27 %%>;
-    titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
-    titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
+    titleSquareWidth = <%% 27, 27, 24, 21, 5.5 %%>;
+    titleSquareLeftIndent = <%% 10, 10, 10, 10, 1.8 %%>;
+    titleSquareTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    whiteTitleEngSize = <%% 22, 22, 18, 17, 22 %%>;
+    whiteTitleEngSize = <%% 22, 22, 18, 17, 3.9 %%>;
     whiteTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
-    whiteTitleKorSize = <%% 18, 18, 16, 14, 18 %%>;
+    whiteTitleKorSize = <%% 18, 18, 16, 14, 3.5 %%>;
     whiteTitleKorWeight = <%% 800, 800, 800, 800, 800 %%>;
     whiteTitleKorLightWeight = <%% 200, 200, 200, 200, 200 %%>;
-    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -4 %%>;
-    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1 %%>;
+    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -0.4 %%>;
+    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1.8 %%>;
 
-    checklistBoxBetween = <%% 10, 10, 10, 10, 10 %%>;
+    checklistBoxBetween = <%% 10, 10, 10, 10, 1.8 %%>;
 
     titleLinePaddingBottom = <%% 1, 1, 1, 1, 1 %%>;
 
-    numberTitleMarginLeft = <%% 1, 1, 1, 1, 1 %%>;
-    numberTitleTop = <%% -1, -1, -1, -1, -1 %%>;
+    numberTitleMarginLeft = <%% 1, 1, 1, 1, 0 %%>;
+    numberTitleTop = <%% -1, -1, -1, -1, -0.1 %%>;
 
-    contentsDescriptionSize = <%% 15, 15, 13, 12, 15 %%>;
+    contentsDescriptionSize = <%% 15, 15, 13, 12, 3.1 %%>;
     contentsDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
     contentsDescriptionLineWeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-    contentsDescriptionBoxMarginTop = <%% 12, 12, 12, 12, 12 %%>;
+    contentsDescriptionBoxMarginTop = <%% 12, 12, 12, 12, 2.5 %%>;
 
-    rightInfoBetween = <%% 28, 24, 12, 14, 28 %%>;
-    rightTitleBorderPadding = <%% 5, 5, 5, 5, 5 %%>;
-    rightTitleSize = <%% 19, 17, 15, 14, 19 %%>;
+    rightInfoBetween = <%% 28, 24, 12, 14, 5 %%>;
+    rightTitleBorderPadding = <%% 5, 5, 5, 5, 2 %%>;
+    rightTitleSize = <%% 19, 17, 15, 14, 4.1 %%>;
     rightTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    rightTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    rightTitleTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
 
-    rightContentsVerticalMargin = <%% 15, 13, 11, 10, 15 %%>;
+    rightContentsVerticalMargin = <%% 15, 13, 11, 10, 2.8 %%>;
 
-    rightContentsTitleWidth = <%% 200, 100, 80, 80, 200 %%>;
-    rightContentsTitleSize = <%% 16, 14, 12, 12, 16 %%>;
+    rightContentsTitleWidth = <%% 200, 100, 80, 80, 23 %%>;
+    rightContentsTitleSize = <%% 16, 14, 12, 12, 3.2 %%>;
     rightContentsTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    rightContentsTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    rightContentsTitleTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
 
-    rightContentsDescriptionSize = <%% 15, 13, 12, 11, 15 %%>;
+    rightContentsDescriptionSize = <%% 15, 13, 12, 11, 3 %%>;
     rightContentsDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
     rightContentsDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-    rightContentsDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    rightContentsDescriptionTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
 
     checklistContents = [
       {
@@ -1460,7 +1464,7 @@ FirstPaymentJs.prototype.insertSecondBox = async function () {
           {
             title: "진행 취소 시",
             description: [
-              "현장 미팅 이후 진행을 취소시 계약금은 환불되지 않습니다.",
+              "현장 미팅 이후 진행 취소시 계약금은 환불되지 않습니다.",
             ],
           },
         ]
@@ -1497,27 +1501,28 @@ FirstPaymentJs.prototype.insertSecondBox = async function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        flexDirection: "row",
+        flexDirection: desktop ? "row" : "column",
         height: withOut(0, ea),
       },
       children: [
         {
           style: {
-            display: "inline-flex",
+            display: desktop ? "inline-flex" : "flex",
             position: "relative",
             width: String(leftBoxWidth) + ea,
             height: withOut(0, ea),
             flexDirection: "column",
-            marginRight: String(boxBetween) + ea,
+            marginRight: desktop ? String(boxBetween) + ea : "",
           }
         },
         {
           style: {
-            display: "inline-flex",
+            display: desktop ? "inline-flex" : "flex",
             position: "relative",
-            width: withOut(leftBoxWidth + boxBetween, ea),
+            width: desktop ? withOut(leftBoxWidth + boxBetween, ea) : String(leftBoxWidth) + ea,
             height: withOut(0, ea),
             flexDirection: "column",
+            marginTop: desktop ? "" : String(11) + ea,
           }
         },
       ]
@@ -1830,24 +1835,24 @@ FirstPaymentJs.prototype.insertThirdBox = async function () {
     basePaddingTop = <%% 150, 150, 120, 100, 19 %%>;
     basePaddingBottom = <%% 160, 160, 120, 100, 17 %%>;
 
-    leftBoxWidth = <%% 590, 590, 590, 590, 590 %%>;
-    boxBetween = <%% 45, 45, 45, 45, 45 %%>;
+    leftBoxWidth = <%% 590, 590, 590, 590, 88 %%>;
+    boxBetween = <%% 45, 45, 45, 45, 1 %%>;
 
-    boxInnerMargin = <%% 32, 32, 32, 32, 32 %%>;
-    boxInnerMarginVisual = <%% 30, 30, 30, 30, 30 %%>;
-    contentsBoxTop = <%% 24, 24, 24, 24, 24 %%>;
+    boxInnerMargin = <%% 32, 32, 32, 32, 5.6 %%>;
+    boxInnerMarginVisual = <%% 30, 30, 30, 30, 5.3 %%>;
+    contentsBoxTop = <%% 24, 24, 24, 24, 4.4 %%>;
 
-    titleSquareWidth = <%% 27, 27, 24, 21, 27 %%>;
-    titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
-    titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
+    titleSquareWidth = <%% 27, 27, 24, 21, 5.5 %%>;
+    titleSquareLeftIndent = <%% 10, 10, 10, 10, 1.8 %%>;
+    titleSquareTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    whiteTitleEngSize = <%% 22, 22, 18, 17, 22 %%>;
+    whiteTitleEngSize = <%% 22, 22, 18, 17, 3.9 %%>;
     whiteTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
-    whiteTitleKorSize = <%% 18, 18, 16, 14, 18 %%>;
+    whiteTitleKorSize = <%% 18, 18, 16, 14, 3.5 %%>;
     whiteTitleKorWeight = <%% 800, 800, 800, 800, 800 %%>;
     whiteTitleKorLightWeight = <%% 200, 200, 200, 200, 200 %%>;
-    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -4 %%>;
-    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1 %%>;
+    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -0.4 %%>;
+    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1.8 %%>;
 
     checklistBoxBetween = <%% 10, 10, 10, 10, 10 %%>;
 
@@ -1856,10 +1861,10 @@ FirstPaymentJs.prototype.insertThirdBox = async function () {
     numberTitleMarginLeft = <%% 1, 1, 1, 1, 1 %%>;
     numberTitleTop = <%% -1, -1, -1, -1, -1 %%>;
 
-    contentsDescriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+    contentsDescriptionSize = <%% 15, 15, 13, 12, 3.1 %%>;
     contentsDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
     contentsDescriptionLineWeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-    contentsDescriptionBoxMarginTop = <%% 12, 12, 12, 12, 12 %%>;
+    contentsDescriptionBoxMarginTop = <%% 12, 12, 12, 12, 2.5 %%>;
 
     secondBase = createNode({
       mother: baseTong,
@@ -1985,7 +1990,7 @@ FirstPaymentJs.prototype.insertInformationBox = function (totalBase) {
   wordsTitle = wordings.title.join(" ");
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 32, 30, 4.7 %%>;
+  margin = <%% 55, 55, 32, 30, 5.6 %%>;
   paddingTop =  <%% 52, 52, 30, 28, 6 %%>;
 
   whiteBottomMargin = <%% 60, 60, 36, 32, 0 %%>;
@@ -2023,7 +2028,7 @@ FirstPaymentJs.prototype.insertInformationBox = function (totalBase) {
   periodPaddingLeft = <%% 16, 16, 16, 32, 7 %%>;
   periodLineWidth = <%% 4, 4, 4, 18, 4 %%>;
 
-  mobileCalendarMargin = 6;
+  mobileCalendarMargin = 0;
   mobileCalendarMarginTop = 4;
   mobilePaddingTop = 5;
   mobilePaddingBottom = 10.5;
@@ -2038,20 +2043,21 @@ FirstPaymentJs.prototype.insertInformationBox = function (totalBase) {
   initContentsBottom = <%% -3, -3, -3, -3, 0 %%>;
   initContentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
 
-  boxInnerMargin = <%% 45, 40, 30, 25, 45 %%>;
+  boxInnerMargin = <%% 45, 40, 30, 25, 6 %%>;
 
-  titleSquareWidth = <%% 27, 27, 24, 21, 27 %%>;
-  titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
-  titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
+  titleSquareWidth = <%% 27, 27, 24, 21, 5.6 %%>;
+  titleSquareLeftIndent = <%% 10, 10, 10, 10, 1.8 %%>;
+  titleSquareTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-  whiteTitleEngSize = <%% 22, 22, 18, 17, 22 %%>;
+  whiteTitleEngSize = <%% 22, 22, 18, 17, 3.9 %%>;
   whiteTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
-  whiteTitleKorSize = <%% 18, 18, 16, 14, 18 %%>;
+  whiteTitleKorSize = <%% 18, 18, 16, 14, 3.5 %%>;
   whiteTitleKorWeight = <%% 800, 800, 800, 800, 800 %%>;
   whiteTitleKorLightWeight = <%% 200, 200, 200, 200, 200 %%>;
-  whiteTitleKorTextTop = <%% -4, -4, -3, -4, -4 %%>;
-  whiteTitleBarMargin = <%% 11, 11, 10, 8, 1 %%>;
-  tableMarginTop = <%% 24, 22, 18, 14, 24 %%>;
+  whiteTitleKorTextTop = <%% -4, -4, -3, -4, -0.4 %%>;
+  whiteTitleBarMargin = <%% 11, 11, 10, 8, 1.8 %%>;
+
+  tableMarginTop = <%% 24, 22, 18, 14, 3 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -2071,9 +2077,9 @@ FirstPaymentJs.prototype.insertInformationBox = function (totalBase) {
       {
         display: "block",
         position: "relative",
-        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+        width: withOut(margin * 2, ea),
         height: String(100) + '%',
-        marginLeft: String(desktop ? margin : 0) + ea,
+        marginLeft: String(margin) + ea,
       }
     ]
   });
@@ -2092,9 +2098,9 @@ FirstPaymentJs.prototype.insertInformationBox = function (totalBase) {
           display: "flex",
           position: "relative",
           width: String(100) + '%',
-          overflow: "hidden",
           marginBottom: String(0) + ea,
           flexDirection: "column",
+          paddingBottom: desktop ? "" : String(6) + ea,
         }
       },
     ]
@@ -2167,7 +2173,6 @@ FirstPaymentJs.prototype.insertInformationBox = function (totalBase) {
   } else {
     calendar.style.width = withOut(mobileCalendarMargin * 2, ea);
     calendar.style.marginLeft = String(mobileCalendarMargin) + ea;
-    tong.style.paddingTop = String(mobileCalendarMarginTop) + ea;
     calendar.style.display = "block";
   }
 
@@ -2322,17 +2327,17 @@ FirstPaymentJs.prototype.insertCompleteBox = async function () {
 
     boxInnerMargin = <%% 45, 40, 30, 25, 45 %%>;
 
-    titleSquareWidth = <%% 27, 27, 24, 21, 27 %%>;
-    titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
-    titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
+    titleSquareWidth = <%% 27, 27, 24, 21, 5.5 %%>;
+    titleSquareLeftIndent = <%% 10, 10, 10, 10, 1.8 %%>;
+    titleSquareTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    whiteTitleEngSize = <%% 22, 22, 18, 17, 22 %%>;
+    whiteTitleEngSize = <%% 22, 22, 18, 17, 3.9 %%>;
     whiteTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
-    whiteTitleKorSize = <%% 18, 18, 16, 14, 18 %%>;
+    whiteTitleKorSize = <%% 18, 18, 16, 14, 3.5 %%>;
     whiteTitleKorWeight = <%% 800, 800, 800, 800, 800 %%>;
     whiteTitleKorLightWeight = <%% 200, 200, 200, 200, 200 %%>;
-    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -4 %%>;
-    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1 %%>;
+    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -0.4 %%>;
+    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1.8 %%>;
 
     matrixTongMarginTop = <%% 24, 24, 18, 16, 1 %%>;
     matixTongVisualBottom = <%% 1, 1, 1, 1, 1 %%>;
@@ -3053,17 +3058,17 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
 
     boxInnerMargin = <%% 45, 40, 30, 25, 45 %%>;
 
-    titleSquareWidth = <%% 27, 27, 24, 21, 27 %%>;
-    titleSquareLeftIndent = <%% 10, 10, 10, 10, 10 %%>;
-    titleSquareTop = <%% -1, -1, -1, -1, -1 %%>;
+    titleSquareWidth = <%% 27, 27, 24, 21, 5.5 %%>;
+    titleSquareLeftIndent = <%% 10, 10, 10, 10, 1.8 %%>;
+    titleSquareTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-    whiteTitleEngSize = <%% 22, 22, 18, 17, 22 %%>;
+    whiteTitleEngSize = <%% 22, 22, 18, 17, 3.9 %%>;
     whiteTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
-    whiteTitleKorSize = <%% 18, 18, 16, 14, 18 %%>;
+    whiteTitleKorSize = <%% 18, 18, 16, 14, 3.5 %%>;
     whiteTitleKorWeight = <%% 800, 800, 800, 800, 800 %%>;
     whiteTitleKorLightWeight = <%% 200, 200, 200, 200, 200 %%>;
-    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -4 %%>;
-    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1 %%>;
+    whiteTitleKorTextTop = <%% -4, -4, -3, -4, -0.4 %%>;
+    whiteTitleBarMargin = <%% 11, 11, 10, 8, 1.8 %%>;
 
     matrixTongMarginTop = <%% 24, 24, 18, 16, 1 %%>;
     matixTongVisualBottom = <%% 1, 1, 1, 1, 1 %%>;

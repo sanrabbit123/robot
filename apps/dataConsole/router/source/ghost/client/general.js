@@ -227,7 +227,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
 
   wordHeight = <%% 20, 20, 20, 20, 20 %%>;
   wordSize = <%% 15, 15, 15, 14, 13 %%>;
-  wordTop = <%% 24, 24, 21, 21, 18 %%>;
+  wordTop = <%% 24, 24, 21, 21, 16.8 %%>;
 
   wordingTop = <%% 21, 22, 20, 19, 10 %%>;
   wordingMarginRightLast = <%% 9, 9, 4, 0, 1 %%>;
