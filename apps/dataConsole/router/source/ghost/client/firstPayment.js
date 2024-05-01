@@ -2260,12 +2260,12 @@ FirstPaymentJs.prototype.insertCompleteBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
-    firstBasePaddingTop = <%% 24, 24, 24, 24, 7 %%>;
+    firstBasePaddingTop = <%% 16, 16, 12, 10, 7 %%>;
     firstBasePaddingBottom = <%% 160, 160, 160, 120, 20 %%>;
 
-    subTitleSize = <%% 18, 18, 17, 15, 3.5 %%>;
+    subTitleSize = <%% 18, 17, 16, 14, 3.5 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% 4, 4, 4, 4, 1.8 %%>;
+    subTitleMarginTop = <%% (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), 1.8 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 190, 186, 168, 31 %%>;
@@ -2275,7 +2275,7 @@ FirstPaymentJs.prototype.insertCompleteBox = async function () {
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
     buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
 
-    titleSize = <%% 50, 48, 43, 36, 7 %%>;
+    titleSize = <%% 52, 45, 38, 32, 7 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
     titleVisualLeft = <%% 2, 2, 2, 2, -0.5 %%>;
@@ -2382,7 +2382,7 @@ FirstPaymentJs.prototype.insertCompleteBox = async function () {
     completeBoxMarginBottom = <%% 64, 64, 48, 42, 7.5 %%>;
     completeBoxCircleWidth = <%% 50, 45, 40, 36, 8.4 %%>;
     completeBoxTextSize = <%% 24, 21, 18, 17, 3.8 %%>;
-    completeBoxTextTop = <%% 0, 0, 0, 0, 0 %%>;
+    completeBoxTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
     completeBoxTextMarginTop = <%% 12, 12, 10, 8, 2.2 %%>;
 
     this.totalContents = document.getElementById("totalcontents");
@@ -2998,12 +2998,12 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
     minusLeft = window.innerWidth - standardWidth + 1;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
-    firstBasePaddingTop = <%% 24, 24, 24, 24, 7 %%>;
+    firstBasePaddingTop = <%% 16, 16, 12, 10, 7 %%>;
     firstBasePaddingBottom = <%% 160, 160, 160, 120, 20 %%>;
 
-    subTitleSize = <%% 18, 18, 17, 15, 3.5 %%>;
+    subTitleSize = <%% 18, 17, 16, 14, 3.5 %%>;
     subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% 4, 4, 4, 4, 1.8 %%>;
+    subTitleMarginTop = <%% (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), 1.8 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 190, 186, 168, 31 %%>;
@@ -3013,11 +3013,11 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
     buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
 
-    titleSize = <%% 50, 48, 43, 36, 7 %%>;
+    titleSize = <%% 52, 45, 38, 32, 7 %%>;
     titleWeight = <%% 500, 500, 500, 500, 500 %%>;
     titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
     titleVisualLeft = <%% 2, 2, 2, 2, -0.5 %%>;
-    titleLineHeight = <%% 1, 1, 1, 1, 1 %%>;
+    titleLineHeight = <%% 1, 1, 1, 1, 1.1 %%>;
 
     pointOpacity = <%% 0.4, 0.4, 0.4, 0.4, 1 %%>;
 
@@ -3117,7 +3117,7 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
     completeBoxMarginBottom = <%% 64, 64, 48, 42, 7.5 %%>;
     completeBoxCircleWidth = <%% 50, 45, 40, 36, 8.4 %%>;
     completeBoxTextSize = <%% 24, 21, 18, 17, 3.8 %%>;
-    completeBoxTextTop = <%% 0, 0, 0, 0, 0 %%>;
+    completeBoxTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
     completeBoxTextMarginTop = <%% 12, 12, 10, 8, 2.2 %%>;
 
     whiteBaseBetween = <%% 20, 20, 20, 20, 2 %%>;
@@ -3130,14 +3130,14 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
     inputBaseHeight = <%% 30, 30, 28, 24, 6 %%>;
 
     receiptInputHeight = <%% 26, 26, 24, 20, 6 %%>;
-    receiptInputVisualTop = <%% -1, -1, -1, -1, -0.1 %%>;
+    receiptInputVisualTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.1 %%>;
     receiptInputSize = <%% 13, 13, 12, 11, 2.7 %%>;
     receiptInputWeight = <%% 400, 400, 400, 400, 400 %%>;
 
     submitButtonWidth = <%% 70, 70, 64, 56, 12 %%>;
     submitButtonHeight = <%% 30, 30, 28, 24, 6 %%>;
     submitButtonMargin = <%% 8, 8, 6, 4, 1 %%>;
-    submitButtonTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
+    submitButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.1 %%>;
     submitButtonSize = <%% 14, 13, 13, 12, 2.7 %%>;
     submitButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
 
@@ -3238,7 +3238,7 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
           left: String(-1 * minusLeft) + ea,
           background: colorExtended.darkDarkBlack,
           width: withOut(-1 * (minusLeft * 2), ea),
-          height: desktop ? withOut(1 * ((-1 * baseTop) + naviHeight), ea) : String(258) + ea,
+          height: desktop ? withOut(1 * ((-1 * baseTop) + naviHeight), ea) : String(260) + ea,
         }
       }
     });
@@ -3583,7 +3583,7 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
             display: "inline-block",
             position: "relative",
             marginLeft: desktop ? String(infoWordingMarginLeft) + ea : "",
-            top: String(0) + ea,
+            top: String(desktop ? (isMac() ? 0 : 2) : 0) + ea,
           },
         },
       ]
@@ -4215,32 +4215,32 @@ FirstPaymentJs.prototype.launching = async function (loading) {
     this.paymentMethod = null;
 
     if (getObj.mobilecard !== undefined) {
-      // const { convertingData } = await ajaxJson({
-      //   mode: "mobileCard",
-      //   mid: getObj.mid,
-      //   oid: getObj.oid,
-      //   impId: getObj.imp_uid,
-      // }, BACKHOST + "/inicisPayment");
-      // if (convertingData.error === "error") {
-      //   window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-      // } else {
-      //   await this.payComplete(convertingData, false);
+      const { convertingData } = await ajaxJson({
+        mode: "mobileCard",
+        mid: getObj.mid,
+        oid: getObj.oid,
+        impId: getObj.imp_uid,
+      }, BACKHOST + "/inicisPayment");
+      if (convertingData.error === "error") {
+        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+      } else {
+        await this.payComplete(convertingData, false);
         this.completeMode = true;
         this.paymentMethod = "card";
-      // }
+      }
     }
 
     if (getObj.accountinfo !== undefined) {
-      // await ajaxJson({
-      //   mode: "cashPhone",
-      //   phone: instance.client.phone,
-      //   hash: getObj.hash,
-      //   bilid: instance.bill.bilid,
-      //   proid: instance.project.proid,
-      //   desid: instance.designer.desid,
-      //   cliid: instance.client.cliid,
-      //   name: instance.client.name,
-      // }, BACKHOST + "/inicisPayment");
+      await ajaxJson({
+        mode: "cashPhone",
+        phone: instance.client.phone,
+        hash: getObj.hash,
+        bilid: instance.bill.bilid,
+        proid: instance.project.proid,
+        desid: instance.designer.desid,
+        cliid: instance.client.cliid,
+        name: instance.client.name,
+      }, BACKHOST + "/inicisPayment");
       this.completeMode = true;
       this.paymentMethod = "account";
     }
