@@ -376,8 +376,8 @@ DesignerProposalJs.prototype.insertInitBox = async function () {
     firstBasePaddingBottom = <%% 180, 170, 160, 120, 20 %%>;
 
     subTitleSize = <%% 18, 18, 17, 16, 3.7 %%>;
-    subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 3 : 6), (isMac() ? 3 : 6), 0.5 %%>;
+    subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    subTitleMarginTop = <%% 6, 5, 3, 3, 0.5 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 194, 186, 168, 31 %%>;
@@ -526,6 +526,7 @@ DesignerProposalJs.prototype.insertInitBox = async function () {
             color: colorExtended.black,
             fontWeight: String(subTitleWeight),
             fontSize: String(subTitleSize) + ea,
+            fontFamily: "pretendard",
           }
         }
       ]

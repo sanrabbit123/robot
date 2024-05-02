@@ -69,7 +69,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
   }
   secondBackgroundImageName = "back2.jpg";
 
-  if (this.backgroundType !== 9 && this.backgroundType !== 10 && this.backgroundType !== 11 && this.backgroundType !== 20) {
+  if (this.backgroundType !== 9 && this.backgroundType !== 10 && this.backgroundType !== 11 && this.backgroundType !== 20 && this.backgroundType !== 21) {
     if (!second) {
       [ backgroundGray, backgroundImageBox ] = createNodes([
         {
@@ -186,6 +186,38 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
     this.backgroundImageBox2 = null;
   }
 
+  if (this.backgroundType === 21) {
+    [ backgroundGray, backgroundImageBox ] = createNodes([
+      {
+        mother: totalContents,
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: colorChip.gray1,
+          animation: "justfadeinoriginal 0.3s ease forwards",
+        }
+      },
+      {
+        mother: totalContents,
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(backHeight) + ea,
+          animation: "justfadeinoriginal 0.3s ease forwards",
+        }
+      }
+    ]);
+    this.backgroundGray = backgroundGray;
+    this.backgroundImageBox = backgroundImageBox;
+    this.backgroundImageBox2 = null;
+  }
+
+
 }
 
 GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
@@ -229,10 +261,10 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   wordSize = <%% 15, 15, 15, 14, 13 %%>;
   wordTop = <%% 24, 24, 21, 21, 16.8 %%>;
 
-  wordingTop = <%% 21, 22, 20, 19, 10 %%>;
+  wordingTop = <%% 22, 22, 20, 19, 10 %%>;
   wordingMarginRightLast = <%% 9, 9, 4, 0, 1 %%>;
 
-  wordingSize = <%% 16, 15, 14.5, 13.5, 15 %%>;
+  wordingSize = <%% 15, 15, 14.5, 13.5, 15 %%>;
   wordingMarginRight = <%% 40, 36, 30, 19, 3 %%>;
   wordingWeight = 700;
 
@@ -298,21 +330,6 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
 
   if (desktop) {
     wordTop = wordTop + (GeneralJs.isMac() ? 0 : 1);
-  }
-
-  if (this.backgroundType === 20) {
-    naviBaseBlue = createNode({
-      mother: totalContents,
-      style: {
-        position: "absolute",
-        background: GeneralJs.colorExtended.blueLight,
-        height: String(naviHeight) + "px",
-        width: String(100) + '%',
-        top: String(0),
-        left: String(0),
-        zIndex: String(98),
-      }
-    });
   }
 
   naviBaseMenu = createNode({
@@ -605,6 +622,10 @@ GeneralJs.prototype.setBaseTong = function (child) {
     baseTop = <%% 180, 180, 164, 148, 10 %%>;
   } else if (this.backgroundType === 11) {
     baseTop = <%% 206, 200, 174, 150, 11 %%>;
+  } else if (this.backgroundType === 20) {
+    baseTop = <%% 130, 130, 130, 130, 10 %%>;
+  } else if (this.backgroundType === 21) {
+    baseTop = <%% 130, 130, 130, 130, 10 %%>;
   } else {
     baseTop = <%% 200, 200, 170, 140, 10 %%>;
   }
@@ -664,6 +685,9 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
       this.backHeight = <%% 346, 330, 310, 280, 58 %%>;
       base.instance.backHeight = this.backHeight;
     } else if (base.backgroundType === 11) {
+      this.backHeight = <%% 670, 650, 570, 480, 70 %%>;
+      base.instance.backHeight = this.backHeight;
+    } else if (base.backgroundType === 21) {
       this.backHeight = <%% 670, 650, 570, 480, 70 %%>;
       base.instance.backHeight = this.backHeight;
     }

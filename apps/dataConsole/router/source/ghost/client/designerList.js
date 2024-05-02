@@ -114,14 +114,15 @@ DesignerListJs.prototype.insertInitBox = function () {
   let mobileSearchWhiteBoxPaddingTop;
   let mobileSearchWhiteBoxPaddingBottom;
   let mobileSearchWhiteBoxMarginBottom;
+  let titleBoxRowTong;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 25, 24, 24, 21, 4 %%>;
+  whiteBlockMarginBottom = <%% 40, 38, 35, 30, 4 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 35, 34, 32, 29, 5.3 %%>;
+  titleFontSize = <%% 26, 40, 36, 30, 5.6 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
@@ -135,31 +136,31 @@ DesignerListJs.prototype.insertInitBox = function () {
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 210, 190, 170, 156, 7 %%>;
-  searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
+  searchBarPaddingTop = <%% 50, 160, 115, 85, 20 %%>;
+  searchBarHeight = <%% 36, 36, 36, 36, 8 %%>;
   searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
-  searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
-  searchIconTop = <%% 10, 10, 10, 10, 1.8 %%>;
+  searchIconRight = <%% 0, 0, 0, 0, 2 %%>;
+  searchIconTop = <%% 8, 8, 8, 8, 1.8 %%>;
 
   inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
 
-  inputSize = <%% 15, 15, 15, 14, 3.1 %%>;
+  inputSize = <%% 14, 14, 14, 14, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
   subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
-  subTitleFontSize = <%% 16, 16, 16, 15, 3.2 %%>;
-  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subTitleFontSize = <%% 21, 18, 17, 16, 3.4 %%>;
+  subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+  tagTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
   tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "Designer list<b%.%b>";
-  subTitleContents = "포트폴리오로 찾는 나의 스타일";
+  titleWording = "DESIGNER LIST<b%.%b>";
+  subTitleContents = "디자이너 리스트";
 
-  mobileBlockTop = 5.6;
+  mobileBlockTop = 7;
 
   mobileSearchWhiteBoxPaddingTop = 5;
   mobileSearchWhiteBoxPaddingBottom = 5;
@@ -167,9 +168,9 @@ DesignerListJs.prototype.insertInitBox = function () {
 
   placeholder = "새아파트";
 
-  buttonSize = <%% 14, 14, 13, 13, 3.2 %%>;
+  buttonSize = <%% 13, 13, 13, 13, 3.2 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonBetween = <%% 2, 2, 2, 2, 2 %%>;
+  buttonBetween = <%% 1, 1, 1, 1, 2 %%>;
 
   buttonTongWidth = <%% 90, 90, 85, 85, 90 %%>;
 
@@ -308,7 +309,6 @@ DesignerListJs.prototype.insertInitBox = function () {
     style: {
       display: "block",
       position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
       marginBottom: String(whiteBlockMarginBottom) + ea,
       top: String(-1 * boxTopVisual) + ea,
@@ -316,10 +316,22 @@ DesignerListJs.prototype.insertInitBox = function () {
     }
   });
 
-  createNode({
+  titleBoxRowTong = createNode({
     mother: whiteBlock,
     style: {
       display: "flex",
+      position: "relative",
+      width: String(100) + '%',
+      flexDirection: "row",
+      justifyContent: "start",
+      alignItems: "start",
+    }
+  })
+
+  createNode({
+    mother: titleBoxRowTong,
+    style: {
+      display: "inline-flex",
       position: "relative",
       textAlign: "center",
       justifyContent: "center",
@@ -334,16 +346,47 @@ DesignerListJs.prototype.insertInitBox = function () {
           fontSize: String(titleFontSize) + ea,
           fontFamily: "mont",
           fontWeight: String(titleFontWeight),
-          color: colorChip.white,
+          color: colorExtended.mainBlue,
           wordSpacing: String(2) + "px",
         },
         bold: {
           fontSize: String(titleFontSize) + ea,
           fontFamily: "mont",
           fontWeight: String(titleFontWeight),
-          color: colorChip.white,
+          color: colorExtended.mainBlue,
           opacity: String(0.4),
         }
+      }
+    ]
+  });
+  createNode({
+    mother: titleBoxRowTong,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        text: "<u%|%u>&nbsp;&nbsp;&nbsp;" + subTitleContents,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(subTitleFontSize) + ea,
+          fontFamily: "pretendard",
+          fontWeight: String(subTitleWeight),
+          color: colorChip.black,
+          marginLeft: String(12) + ea,
+          top: String(-2) + ea,
+        },
+        under: {
+          fontSize: String(subTitleFontSize) + ea,
+          fontFamily: "pretendard",
+          color: colorChip.deactive,
+          fontWeight: String(400),
+        },
       }
     ]
   });
@@ -372,8 +415,8 @@ DesignerListJs.prototype.insertInitBox = function () {
           position: "relative",
           width: String(searchBarWidth) + ea,
           height: String(searchBarHeight) + ea,
-          borderRadius: String(5) + "px",
-          background: colorChip.gray2,
+          background: colorChip.white,
+          borderBottom: "1.5px solid " + colorExtended.black,
           opacity: String(1),
         },
         children: [
@@ -439,6 +482,7 @@ DesignerListJs.prototype.insertInitBox = function () {
               background: "transparent",
               fontSize: String(inputSize) + ea,
               fontWeight: String(inputWeight),
+              fontFamily: "pretendard",
               color: colorChip.black,
               textAlign: "center",
             }
@@ -492,6 +536,7 @@ DesignerListJs.prototype.insertInitBox = function () {
           fontSize: String(buttonSize) + ea,
           fontWeight: String(buttonWeight),
           color: colorExtended.mainBlue,
+          fontFamily: "pretendard",
           cursor: "pointer",
           transition: "all 0.5s ease",
         },
@@ -566,6 +611,7 @@ DesignerListJs.prototype.insertInitBox = function () {
           position: "relative",
           fontSize: String(buttonSize) + ea,
           fontWeight: String(buttonWeight),
+          fontFamily: "pretendard",
           color: colorChip.deactive,
           cursor: "pointer",
           transition: "all 0.5s ease",
@@ -671,8 +717,9 @@ DesignerListJs.prototype.insertInitBox = function () {
           paddingLeft: String(servicePaddingLeft) + ea,
           paddingRight: String(servicePaddingLeft) + ea,
           textAlign: "center",
-          background: colorChip.gray2,
-          borderRadius: String(5) + "px",
+          background: colorChip.white,
+          borderRadius: String(8) + "px",
+          border: "1px solid " + colorExtended.gray3,
           cursor: "pointer",
           justifyContent: "center",
           alignItems: "center",
@@ -686,7 +733,8 @@ DesignerListJs.prototype.insertInitBox = function () {
               position: "relative",
               top: String(tagTextTop) + ea,
               fontSize: String(serviceSize) + ea,
-              fontWeight: String(400),
+              fontFamily: "pretendard",
+              fontWeight: String(600),
               color: colorChip.black,
               cursor: "pointer",
               textAlign: "center",
@@ -785,7 +833,7 @@ DesignerListJs.prototype.designerList = function (search = null) {
   inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  designerTongPaddingTop = <%% 80, 72, 72, 72, 6 %%>;
+  designerTongPaddingTop = <%% 30, 40, 40, 40, 6 %%>;
 
   placeholder = "";
 
@@ -806,7 +854,6 @@ DesignerListJs.prototype.designerList = function (search = null) {
       paddingBottom: String(whiteBlockPaddingBottom) + ea,
       background: colorChip.white,
       marginBottom: String(whiteBlockMarginBottom) + ea,
-      boxShadow: "0px 3px 15px -10px " + colorChip.gray5,
     }
   });
 
@@ -862,22 +909,23 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   let whiteCircleWidth;
   let realPhotoCircleWidth;
   let maxHeight;
+  let z;
 
-  tongPaddingLeft = <%% 100, 70, 80, 50, 6.5 %%>;
+  tongPaddingLeft = <%% 0, 0, 0, 0, 6.5 %%>;
   blockMargin = <%% 40, 30, 20, 20, 2 %%>;
   blockMarginBottom = <%% 20, 20, 15, 10, 4 %%>;
   columns = <%% 2, 2, 1, 1, 1 %%>;
   contentsPaddingTop = <%% 16, 16, 16, 16, 1 %%>;
 
-  blockHeight = <%% (isMac() ? 178 : 176), 160, (isMac() ? 178 : 176), 170, 25 %%>;
+  blockHeight = <%% 198, 160, (isMac() ? 178 : 176), 170, 25 %%>;
   photoWidth = blockHeight - (contentsPaddingTop * 2);
 
-  whiteCircleWidth = photoWidth * 0.98;
-  realPhotoCircleWidth = photoWidth * (desktop ? 0.95 : 0.94);
+  whiteCircleWidth = photoWidth * 0.94;
+  realPhotoCircleWidth = photoWidth * 0.92;
 
-  photoMargin = <%% 30, 25, 30, 30, 4 %%>;
+  photoMargin = <%% 22, 22, 22, 21, 4 %%>;
 
-  titleSize = <%% 24, 23, 23, 23, 4 %%>;
+  titleSize = <%% 25, 23, 23, 23, 4 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   careerSize = <%% 12, 12, 12, 12, 2.5 %%>;
@@ -889,7 +937,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   grayBarTop = <%% 8, 8, 8, 8, 1.5 %%>;
   grayBarBottom = <%% 14, 10, 14, 14, 1.5 %%>;
 
-  descriptionSize = <%% 14, 11, 13, 12, 2.7 %%>;
+  descriptionSize = <%% 13, 11, 13, 12, 2.7 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.55 %%>;
 
@@ -897,12 +945,12 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
   tagTongMarginTop = <%% 15, 15, 19, 15, (isIphone() ? 2.9 : 2.8) %%>;
 
-  tagTongPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), 1.4 %%>;
-  tagTongPaddingBottom = <%% (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isIphone() ? 1.6 : 2) %%>;
-  tagTongPaddingLeft = <%% 10, 10, 10, 10, 2.4 %%>;
+  tagTongPaddingTop = <%% 3, 3, 3, 3, 1.4 %%>;
+  tagTongPaddingBottom = <%% 4, 4, 4, 4, (isIphone() ? 1.6 : 2) %%>;
+  tagTongPaddingLeft = <%% 8, 8, 8, 8, 2.4 %%>;
   tagTongMarginRight = <%% 5, 5, 5, 5, 1.2 %%>;
 
-  tagSize = <%% 12, 11, 12, 12, 2.5 %%>;
+  tagSize = <%% 11, 11, 11, 11, 2.5 %%>;
   tagWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   arrowWidth = <%% 40, 32, 32, 32, 3 %%>;
@@ -912,7 +960,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   markWidth = <%% 34, 34, 34, 34, 6.4 %%>;
   markTop = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isIphone() ? 2.3 : 2) %%>;
 
-  maxHeight = <%% 45, 35.5, 42, 39, 6 %%>;
+  maxHeight = <%% 63, 35.5, 42, 39, 6 %%>;
 
   cleanChildren(designerTong);
 
@@ -948,6 +996,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
   targets.sort((a, b) => { return a.designer >= b.designer ? 1 : -1 });
 
+  z = 0;
   for (let designer of targets) {
 
     if (desktop) {
@@ -960,9 +1009,9 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
       mother: tong,
       style: {
         display: "inline-block",
-        width: "calc(calc(100% - " + String(columns * blockMargin) + ea + ") / " + String(columns) + ")",
+        width: "calc(calc(100% - " + String((columns - 1) * blockMargin) + ea + ") / " + String(columns) + ")",
         height: String(blockHeight) + ea,
-        marginRight: String(blockMargin) + ea,
+        marginRight: (z % columns === columns - 1) ? "" : String(blockMargin) + ea,
         marginBottom: String(blockMarginBottom) + ea,
       },
       children: [
@@ -995,7 +1044,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             width: String(photoWidth) + ea,
             height: String(photoWidth) + ea,
             background: colorExtended.gray1,
-            background: designer.analytics.grade === 1 ? colorExtended.gradientBlue : colorExtended.gray1,
+            background: colorExtended.gradientBlue,
             verticalAlign: "top",
             cursor: "pointer",
             justifyContent: "center",
@@ -1087,6 +1136,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             display: "inline-block",
             fontSize: String(titleSize) + ea,
             fontWeight: String(titleWeight),
+            fontFamily: "pretendard",
             color: colorExtended.black,
             marginRight: String(careerBetween) + ea,
           }
@@ -1099,6 +1149,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             fontSize: String(careerSize) + ea,
             fontWeight: String(careerWeight),
             color: colorExtended.mainBlue,
+            fontFamily: "pretendard",
             top: String(careerTextTop) + ea,
           },
           bold: {
@@ -1134,13 +1185,14 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
     createNode({
       mother: contentsBlock,
-      text: desktop ? (designer.setting.front.introduction.desktop.slice(0, 2).join("\n") + " ...") : (designer.setting.front.introduction.desktop.slice(0, 1).join("\n") + " ..."),
+      text: desktop ? (designer.setting.front.introduction.desktop.slice(0, 3).join("\n") + " ...") : (designer.setting.front.introduction.desktop.slice(0, 1).join("\n") + " ..."),
       style: {
         display: "block",
         marginTop: String(grayBarBottom) + ea,
         fontSize: String(descriptionSize) + ea,
         fontWeight: String(descriptionWeight),
-        color: colorChip.black,
+        fontFamily: "pretendard",
+        color: colorChip.gray5,
         lineHeight: String(descriptionLineHeight),
         height: desktop ? "" : String(contentsBlockHeight) + ea,
         "max-height": desktop ? String(maxHeight) + ea : "",
@@ -1182,7 +1234,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
           paddingRight: String(tagTongPaddingLeft) + ea,
           borderRadius: String(5) + "px",
           marginRight: String(tagTongMarginRight) + ea,
-          background: colorChip.gray1,
+          border: "1px solid " + colorExtended.mainBlue,
         },
         children: [
           {
@@ -1191,7 +1243,8 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
               position: "relative",
               fontSize: String(tagSize) + ea,
               fontWeight: String(tagWeight),
-              color: colorChip.black,
+              fontFamily: "pretendard",
+              color: colorExtended.mainBlue,
               textAlign: "center",
             }
           }
@@ -1219,6 +1272,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
       });
     }
 
+    z++;
   }
 
 }
@@ -2029,7 +2083,7 @@ DesignerListJs.prototype.launching = async function (loading) {
         binaryPath: DesignerListJs.binaryPath,
         subTitle: "",
         secondBackground: false,
-        backgroundType: 10,
+        backgroundType: 20,
       },
       local: async () => {
         try {

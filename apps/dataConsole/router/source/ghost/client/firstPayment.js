@@ -584,8 +584,8 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
     firstBasePaddingBottom = <%% 160, 160, 160, 120, 20 %%>;
 
     subTitleSize = <%% 18, 17, 16, 14, 3.5 %%>;
-    subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), 1.8 %%>;
+    subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    subTitleMarginTop = <%% 4, 4, 3, 3, 1.8 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 190, 186, 168, 31 %%>;
@@ -814,6 +814,7 @@ FirstPaymentJs.prototype.insertInitBox = async function () {
             fontWeight: String(subTitleWeight),
             fontSize: String(subTitleSize) + ea,
             textAlign: "center",
+            fontFamily: "pretendard",
           }
         }
       ],
@@ -2264,8 +2265,8 @@ FirstPaymentJs.prototype.insertCompleteBox = async function () {
     firstBasePaddingBottom = <%% 160, 160, 160, 120, 20 %%>;
 
     subTitleSize = <%% 18, 17, 16, 14, 3.5 %%>;
-    subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), 1.8 %%>;
+    subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    subTitleMarginTop = <%% 4, 4, 3, 3, 1.8 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 190, 186, 168, 31 %%>;
@@ -2500,6 +2501,7 @@ FirstPaymentJs.prototype.insertCompleteBox = async function () {
             fontWeight: String(subTitleWeight),
             fontSize: String(subTitleSize) + ea,
             textAlign: "center",
+            fontFamily: "pretendard",
           }
         }
       ],
@@ -3002,8 +3004,8 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
     firstBasePaddingBottom = <%% 160, 160, 160, 120, 20 %%>;
 
     subTitleSize = <%% 18, 17, 16, 14, 3.5 %%>;
-    subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), 1.8 %%>;
+    subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    subTitleMarginTop = <%% 4, 4, 3, 3, 1.8 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 190, 186, 168, 31 %%>;
@@ -3312,6 +3314,7 @@ FirstPaymentJs.prototype.insertAccountBox = async function () {
             fontWeight: String(subTitleWeight),
             fontSize: String(subTitleSize) + ea,
             textAlign: "center",
+            fontFamily: "pretendard",
           }
         }
       ],

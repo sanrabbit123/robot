@@ -87,14 +87,15 @@ FrontAboutJs.prototype.insertInitBox = function () {
   let tagTongBottom;
   let boxTopVisual;
   let mobileBlockTop;
+  let titleBoxRowTong;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 60, 56, 52, 50, 7 %%>;
+  whiteBlockMarginBottom = <%% 52, 38, 35, 30, 4 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 35, 34, 32, 29, 5.3 %%>;
+  titleFontSize = <%% 26, 40, 36, 30, 5.6 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
@@ -118,28 +119,27 @@ FrontAboutJs.prototype.insertInitBox = function () {
 
   inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
 
-  inputSize = <%% 15, 15, 15, 14, 3.1 %%>;
+  inputSize = <%% 14, 14, 14, 14, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
   subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
-  subTitleFontSize = <%% 16, 16, 16, 15, 3.2 %%>;
-  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subTitleFontSize = <%% 21, 18, 17, 16, 3.4 %%>;
+  subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
   tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "About service<b%.%b>";
-  subTitleContents = "홈리에종 서비스에 대한 상세한 안내";
+  titleWording = "ABOUT SERVICE<b%.%b>";
+  subTitleContents = "서비스 안내";
 
-  mobileBlockTop = 5.6;
+  mobileBlockTop = 7;
 
   whiteBlock = createNode({
     mother: this.baseTong,
     style: {
       display: "block",
       position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
       marginBottom: String(whiteBlockMarginBottom) + ea,
       top: String(-1 * boxTopVisual) + ea,
@@ -147,8 +147,20 @@ FrontAboutJs.prototype.insertInitBox = function () {
     }
   });
 
-  createNode({
+  titleBoxRowTong = createNode({
     mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: String(100) + '%',
+      flexDirection: "row",
+      justifyContent: "start",
+      alignItems: "start",
+    }
+  })
+
+  createNode({
+    mother: titleBoxRowTong,
     style: {
       display: "flex",
       position: "relative",
@@ -165,16 +177,49 @@ FrontAboutJs.prototype.insertInitBox = function () {
           fontSize: String(titleFontSize) + ea,
           fontFamily: "mont",
           fontWeight: String(titleFontWeight),
-          color: colorChip.white,
+          color: colorExtended.mainBlue,
           wordSpacing: String(2) + "px",
+          "mix-blend-mode": "multiply",
         },
         bold: {
           fontSize: String(titleFontSize) + ea,
           fontFamily: "mont",
           fontWeight: String(titleFontWeight),
-          color: colorChip.white,
+          color: colorExtended.mainBlue,
           opacity: String(0.4),
         }
+      }
+    ]
+  });
+
+  createNode({
+    mother: titleBoxRowTong,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        text: "<u%|%u>&nbsp;&nbsp;&nbsp;" + subTitleContents,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(subTitleFontSize) + ea,
+          fontFamily: "pretendard",
+          fontWeight: String(subTitleWeight),
+          color: colorChip.black,
+          marginLeft: String(12) + ea,
+          top: String(-2) + ea,
+        },
+        under: {
+          fontSize: String(subTitleFontSize) + ea,
+          fontFamily: "pretendard",
+          color: colorChip.deactive,
+          fontWeight: String(400),
+        },
       }
     ]
   });
@@ -1299,7 +1344,7 @@ FrontAboutJs.prototype.insertMainContentsBox = function () {
       paddingBottom: String(desktop ? middleTitleMarginBottom2 : 11) + ea,
     }
   });
-  basicContentsMaker(whiteBlock0, "service", colorChip.gray1);
+  basicContentsMaker(whiteBlock0, "service", colorChip.gray2);
   instance.insertThreeBox(whiteBlock0);
 
   whiteInjection = createNode({
@@ -1377,30 +1422,30 @@ FrontAboutJs.prototype.insertMainContentsBox = function () {
 
   // white area ---------------------------------------------------------------------------------------------------
 
-  baseTong4 = baseTong.cloneNode(false);
-  baseTong4Back = baseTong.cloneNode(false);
-  baseTong.parentNode.appendChild(baseTong4Back);
-  baseTong4Back.appendChild(baseTong4);
-  baseTong4.style.paddingTop = String(0) + ea;
-  baseTong4Back.style.paddingTop = String(middleAreaPaddingTop) + ea;
-  baseTong4Back.style.width = String(100) + '%';
-  baseTong4Back.style.left = String(0);
-  baseTong4Back.style.background = colorChip.white;
-  baseTong.style.marginBottom = String(desktop ? middleTongPaddingBottom : 18) + ea;
-  baseTong4.style.marginBottom = String(0) + ea;
-  baseTong4Back.style.marginBottom = String(0) + ea;
-  baseTong4.style.paddingBottom = String(middleTongPaddingBottom) + ea;
+  // baseTong4 = baseTong.cloneNode(false);
+  // baseTong4Back = baseTong.cloneNode(false);
+  // baseTong.parentNode.appendChild(baseTong4Back);
+  // baseTong4Back.appendChild(baseTong4);
+  // baseTong4.style.paddingTop = String(0) + ea;
+  // baseTong4Back.style.paddingTop = String(middleAreaPaddingTop) + ea;
+  // baseTong4Back.style.width = String(100) + '%';
+  // baseTong4Back.style.left = String(0);
+  // baseTong4Back.style.background = colorChip.white;
+  // baseTong.style.marginBottom = String(desktop ? middleTongPaddingBottom : 18) + ea;
+  // baseTong4.style.marginBottom = String(0) + ea;
+  // baseTong4Back.style.marginBottom = String(0) + ea;
+  // baseTong4.style.paddingBottom = String(middleTongPaddingBottom) + ea;
 
-  whiteBlock5 = createNode({
-    mother: baseTong4,
-    style: {
-      position: "relative",
-      width: "calc(100% + " + String(photoMargin) + ea + ")",
-      paddingTop: String(middleTongPaddinngTop) + ea,
-      paddingBottom: String(middleTitleMarginBottom) + ea,
-    }
-  });
-  this.portfolioBlock(whiteBlock5);
+  // whiteBlock5 = createNode({
+  //   mother: baseTong4,
+  //   style: {
+  //     position: "relative",
+  //     width: "calc(100% + " + String(photoMargin) + ea + ")",
+  //     paddingTop: String(middleTongPaddinngTop) + ea,
+  //     paddingBottom: String(middleTitleMarginBottom) + ea,
+  //   }
+  // });
+  // this.portfolioBlock(whiteBlock5);
 
 }
 
@@ -2615,7 +2660,7 @@ FrontAboutJs.prototype.launching = async function (loading) {
         binaryPath: FrontAboutJs.binaryPath,
         subTitle: "홈리에종 서비스 설명",
         secondBackground: false,
-        backgroundType: 11,
+        backgroundType: 21,
         talk: {
           text: "실제 고객님들의 후기를 살펴보세요!",
           event: "review",
@@ -2652,7 +2697,7 @@ FrontAboutJs.prototype.launching = async function (loading) {
 
     loading.parentNode.removeChild(loading);
     
-    this.totalContents.children[0].style.background = colorChip.gray1;
+    this.totalContents.children[0].style.background = colorChip.gray2;
     this.totalContents.children[1].style.transition = "all 0s ease";
     this.totalContents.children[1].style.height = String(<&& 670 | 650 | 570 | 480 | 70 &&>) + this.ea;
     if (this.media[4]) {

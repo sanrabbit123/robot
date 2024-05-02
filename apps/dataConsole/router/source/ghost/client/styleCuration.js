@@ -1069,8 +1069,8 @@ StyleCurationJs.prototype.insertInitBox = async function () {
     firstBasePaddingBottom = <%% 160, 160, 160, 120, 20 %%>;
 
     subTitleSize = <%% 18, 18, 17, 15, 3.6 %%>;
-    subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% (isMac() ? 3 : 4), (isMac() ? 2 : 3), (isMac() ? 1 : 2), (isMac() ? 1 : 1), 0.5 %%>;
+    subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    subTitleMarginTop = <%% 3, 2, 1, 1, 0.5 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 190, 190, 186, 168, 31 %%>;
@@ -1212,6 +1212,7 @@ StyleCurationJs.prototype.insertInitBox = async function () {
             fontWeight: String(subTitleWeight),
             fontSize: String(subTitleSize) + ea,
             textAlign: "center",
+            fontFamily: "pretendard",
           }
         }
       ]
@@ -7403,9 +7404,9 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
     firstBasePaddingTop = <%% 26, 24, 24, 24, 20 %%>;
     firstBasePaddingBottom = <%% 180, 170, 160, 120, 20 %%>;
 
-    subTitleSize = <%% 18, 18, 17, 16, 3.6 %%>;
-    subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 3 : 6), (isMac() ? 3 : 6), 0.5 %%>;
+    subTitleSize = <%% 18, 18, 17, 16, 3.7 %%>;
+    subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    subTitleMarginTop = <%% 6, 5, 3, 3, 0.5 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 90, 6.5 %%>;
     buttonWidth = <%% 205, 194, 186, 168, 31 %%>;
@@ -7675,6 +7676,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
             color: desktop ? colorExtended.black : colorExtended.white,
             fontWeight: String(subTitleWeight),
             fontSize: String(subTitleSize) + ea,
+            fontFamily: "pretendard",
           }
         }
       ]

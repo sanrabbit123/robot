@@ -89,8 +89,8 @@ ClientConsultingJs.prototype.insertInitBox = async function () {
     firstBasePaddingBottom = <%% 180, 170, 160, 120, 20 %%>;
 
     subTitleSize = <%% 18, 18, 17, 16, 3.7 %%>;
-    subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-    subTitleMarginTop = <%% (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 3 : 6), (isMac() ? 3 : 6), 0.5 %%>;
+    subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+    subTitleMarginTop = <%% 6, 5, 3, 3, 0.5 %%>;
 
     buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
     buttonWidth = <%% 140, 145, 130, 120, 31 %%>;
@@ -143,7 +143,6 @@ ClientConsultingJs.prototype.insertInitBox = async function () {
 
     if (desktop && window.innerHeight > 1100) {
       titleSize = <%% 59, 51, 48, 39, 9 %%>;
-      subTitleSize = <%% 19, 18, 17, 16, 3.6 %%>;
       firstBasePaddingTop = <%% 60, 48, 30, 28, 50 %%>;
       subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
       firstBasePaddingBottom = <%% 230, 210, 160, 130, 210 %%>;
@@ -239,6 +238,7 @@ ClientConsultingJs.prototype.insertInitBox = async function () {
             color: colorExtended.black,
             fontWeight: String(subTitleWeight),
             fontSize: String(subTitleSize) + ea,
+            fontFamily: "pretendard",
           }
         }
       ]

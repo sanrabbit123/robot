@@ -229,10 +229,10 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   wordSize = <%% 15, 15, 15, 14, 13 %%>;
   wordTop = <%% 24, 24, 21, 21, 16.8 %%>;
 
-  wordingTop = <%% 21, 22, 20, 19, 10 %%>;
+  wordingTop = <%% 22, 22, 20, 19, 10 %%>;
   wordingMarginRightLast = <%% 9, 9, 4, 0, 1 %%>;
 
-  wordingSize = <%% 16, 15, 14.5, 13.5, 15 %%>;
+  wordingSize = <%% 15, 15, 14.5, 13.5, 15 %%>;
   wordingMarginRight = <%% 40, 36, 30, 19, 3 %%>;
   wordingWeight = 700;
 
