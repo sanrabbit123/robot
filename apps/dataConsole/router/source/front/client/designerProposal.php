@@ -10,7 +10,9 @@ $sessionId = $general->setSessionId();
 $clientInfo = $general->getClientInfo();
 
 if (!isset($_GET["proid"])) {
-  header("Location: ".$hostLink."/index.php");
+  $proid = "p1801_aa01s";
+} else {
+  $proid = $_GET["proid"];
 }
 
 $proid = $_GET["proid"];

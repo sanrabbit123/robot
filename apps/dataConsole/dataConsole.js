@@ -10,6 +10,18 @@ const DataConsole = function () {
   this.ghostDir = this.sourceDir + "/ghost";
   this.frontDir = this.sourceDir + "/front";
   this.middleModuleDir = this.middleDir + "/module";
+  this.webHistory = [
+    {
+      date: new Date(2024, 3, 30),
+      version: "web240430",
+      port: 48901,
+    },
+    {
+      date: new Date(2024, 4, 27),
+      version: "web240527",
+      port: 48902,
+    },
+  ];
   this.testModeInfo = {
     host: this.address.officeinfo.test.host,
     ip: this.address.officeinfo.test.ip.inner,
@@ -17,7 +29,8 @@ const DataConsole = function () {
     log: this.address.officeinfo.test.port,
     path: "/home/" + this.address.officeinfo.test.user,
     name: this.address.officeinfo.test.user,
-  }
+    version: this.webHistory.find((o) => { return o.version === "web240527" }).port,
+  };
 }
 
 DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch) {
@@ -252,7 +265,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
   const BRIDGEHOST = "https://" + this.address.transinfo.host + ":3000";
   const LOGHOST = testMode ? "https://" + testModeInfo.host + ":" + String(testModeInfo.log) : "https://" + this.address.testinfo.host + ":3000";
-  const FRONTHOST = testMode ? "https://" + testModeInfo.host + ":" + String(testModeInfo.port) : "https://" + this.address.frontinfo.host;
+  const FRONTHOST = testMode ? "https://" + testModeInfo.host + ":" + String(testModeInfo.version) : "https://" + this.address.frontinfo.host;
   const BACKHOST = "https://" + this.address.backinfo.host + ":3000";
   const SECONDHOST = "https://" + this.address.secondinfo.host + ":3000";
   const CONTENTSHOST = "https://" + this.address.contentsinfo.host + ":3000";
@@ -595,6 +608,7 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
     path: testModeInfo.path,
     ip: testModeInfo.ip,
     log: testModeInfo.log,
+    port: testModeInfo.version,
   }
   try {
     await this.renderMiddleStatic(staticFolder, address.backinfo, DataPatch, DataMiddle, true, testMode);
@@ -638,8 +652,7 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
       { from: "firstResponse", to: "response", path: "/middle/firstResponse" },
       { from: "jobPosting", to: "job", path: "/middle/jobPosting" },
       { from: "imageTransfer", to: "transfer", path: "/middle/imageTransfer" },
-      { from: "designerExplanation", to: "proposal_test", path: "/middle/designerExplanation" },
-      { from: "styleExplanation", to: "curation_test", path: "/middle/styleExplanation" },
+      { from: "firstPayment", to: "payment", path: "/middle/firstPayment" },
     ];
     const ghostTargets = (await fileSystem(`readDir`, [ ghostDir + "/client" ])).filter((str) => { return str !== ".DS_Store" }).filter((str) => {
       const fromArr = targetMap.map((obj) => { return obj.from });
@@ -726,7 +739,7 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
       })).join(';');
 
       generalPhpScript = await fileSystem(`readString`, [ testDir + "/general.php" ]);
-      generalPhpScript = generalPhpScript.replace(/__host__/gi, localTarget.host);
+      generalPhpScript = generalPhpScript.replace(/__host__/gi, localTarget.host + ":" + String(localTarget.port));
       generalPhpScript = generalPhpScript.replace(/__realHost__/gi, address.frontinfo.host);
       generalPhpScript = generalPhpScript.replace(/__coreHost__/gi, address.officeinfo.core.ddns);
       generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
@@ -789,6 +802,7 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
     path: testModeInfo.path,
     ip: testModeInfo.ip,
     log: testModeInfo.log,
+    port: testModeInfo.version,
   }
   try {
     await this.renderMiddleStatic(staticFolder, address.backinfo, DataPatch, DataMiddle, true, testMode);
@@ -883,7 +897,7 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
       })).join(';');
   
       generalPhpScript = await fileSystem(`readString`, [ testDir + "/general.php" ]);
-      generalPhpScript = generalPhpScript.replace(/__host__/gi, localTarget.host);
+      generalPhpScript = generalPhpScript.replace(/__host__/gi, localTarget.host + ":" + String(localTarget.port));
       generalPhpScript = generalPhpScript.replace(/__realHost__/gi, address.frontinfo.host);
       generalPhpScript = generalPhpScript.replace(/__coreHost__/gi, address.officeinfo.core.ddns);
       generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");

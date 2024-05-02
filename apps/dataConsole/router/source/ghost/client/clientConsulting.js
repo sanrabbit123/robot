@@ -42,150 +42,662 @@ const ClientConsultingJs = function () {
   this.mother = new GeneralJs();
 }
 
-ClientConsultingJs.binaryPath = FRONTHOST + "/middle/consulting";
+ClientConsultingJs.binaryPath = FRONTHOST + "/middle/client";
 
-ClientConsultingJs.prototype.insertInitBox = function () {
+ClientConsultingJs.prototype.insertInitBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media } = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop, whiteConsultingBoxClassName } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  let whiteBlock;
-  let style;
-  let blockHeight;
-  let leftBox, rightBox;
-  let titleBox, barBox, indexBox;
-  let margin;
-  let quoteWidth;
-  let quoteHeight;
-  let titleFontSize, titleFontWeight;
-  let serviceChildren;
-  let searchTags;
-  let titleWording;
-  let servicePaddingLeft;
-  let serviceSize;
-  let serviceBlockPaddingTop;
-  let whiteBlockPaddingTop, whiteBlockPaddingBottom;
-  let quotoTongHeight;
-  let searchBarPaddingTop;
-  let searchBarHeight;
-  let searchBarWidth;
-  let searchIconHeight;
-  let searchIconRight, searchIconTop;
-  let whiteBlockMarginBottom;
-  let inputWithoutHeight;
-  let serviceButtonClassName;
-  let serviceBlock;
-  let inputSize, inputWeight;
-  let placeholder;
-  let titleTop;
-  let servicePaddingTop, servicePaddingBottom;
-  let serviceMarginRight;
-  let subTitleMarginTop, subTitleFontSize, subTitleWeight;
-  let subTitleContents;
-  let middleBox;
-  let tagTextTop;
-  let tagTongBottom;
-  let boxTopVisual;
-  let mobileBlockTop;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  try {
+    let minusLeft;
+    let firstBase;
+    let leftRightWidth;
+    let firstBasePaddingBottom;
+    let subTitleSize, subTitleWeight, subTitleMarginTop;
+    let buttonMarginTop;
+    let buttonWidth;
+    let buttonHeight;
+    let buttonSize;
+    let buttonTextTop;
+    let buttonWeight;
+    let firstBasePaddingTop;
+    let mainIllust;
+    let mobileLeftPaddingVisual;
+    let titleSize, titleWeight, titleVisualTop, titleVisualLeft;
+    let titleLineHeight;
+    let descriptionContents;
+    let descriptionSize, descriptionLineHeight;
+    let descriptionMarginTop;
+    let mainImageTop, mainImageHeight;
+    let pointOpacity;
+    let descriptionPointBoldPaddingLeft;
+    let descriptionPointBoldPaddingTop;
+    let descriptionPointBoldPaddingBottom;
+    let descriptionPointBoldMargin;
+    let buttonBetween;
+    let mobileImageRight;
+    let mobileSubImageMarginTop;
 
-  margin = <%% 30, 30, 30, 30, 30 %%>;
+    minusLeft = window.innerWidth - standardWidth + 1;
+    leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
-  whiteBlockMarginBottom = <%% 60, 56, 52, 50, 7 %%>;
+    firstBasePaddingTop = <%% 26, 24, 24, 24, 8 %%>;
+    firstBasePaddingBottom = <%% 180, 170, 160, 120, 20 %%>;
 
-  quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
-  quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 35, 34, 32, 29, 5.3 %%>;
-  titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
-  titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
+    subTitleSize = <%% 18, 18, 17, 16, 3.7 %%>;
+    subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+    subTitleMarginTop = <%% (isMac() ? 6 : 8), (isMac() ? 5 : 7), (isMac() ? 3 : 6), (isMac() ? 3 : 6), 0.5 %%>;
 
-  servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
-  servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 15, 15, 14, 13, 2.2 %%>;
-  serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 13.5, 13.5, 13, 12, 3.3 %%>;
-  serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
+    buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
+    buttonWidth = <%% 140, 145, 130, 120, 31 %%>;
+    buttonHeight = <%% 32, 32, 30, 28, 9 %%>;
+    buttonSize = <%% 14, 14, 13, 12, 3.5 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+    buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+    buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
 
-  whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
-  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
+    titleSize = <%% 57, 51, 48, 39, 8.2 %%>;
+    titleWeight = <%% 500, 500, 500, 500, 500 %%>;
+    titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
+    titleVisualLeft = <%% -2, -2, -2, -2, -0.5 %%>;
+    titleLineHeight = <%% 1.11, 1.11, 1.11, 1.11, 1.07 %%>;
 
-  searchBarPaddingTop = <%% 210, 190, 170, 156, 7 %%>;
-  searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
+    pointOpacity = 0.4;
 
-  searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
-  searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
-  searchIconTop = <%% 10, 10, 10, 10, 1.8 %%>;
+    mainImageTop = <%% 16, 16, 16, 16, 32 %%>;
+    mainImageHeight = <%% 402, 384, 340, 318, 39 %%>;
 
-  inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
+    descriptionSize = <%% 15, 14, 14, 13, 3.2 %%>;
+    descriptionLineHeight = <%% 1.8, 1.8, 1.8, 1.7, 1.8 %%>;
 
-  inputSize = <%% 15, 15, 15, 14, 3.1 %%>;
-  inputWeight = <%% 300, 300, 300, 300, 300 %%>;
+    mobileLeftPaddingVisual = 1;
 
-  subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
-  subTitleFontSize = <%% 16, 16, 16, 15, 3.2 %%>;
-  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+    descriptionMarginTop = <%% 40, 40, 36, 30, 72.5 %%>;
 
-  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
-  tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
-  boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
+    descriptionPointBoldPaddingLeft = <%% 8, 8, 8, 8, 1.6 %%>;
+    descriptionPointBoldPaddingTop = <%% (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 3), (isMac() ? 2 : 3), 0.4 %%>;
+    descriptionPointBoldPaddingBottom = <%% (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 0.8 %%>;
+    descriptionPointBoldMargin = <%% 2, 2, 2, 2, 1 %%>;
 
-  titleWording = "Service request<b%.%b>";
-  subTitleContents = "홈리에종 서비스에 대한 상세한 안내";
+    mobileImageRight = 3.5;
+    mobileSubImageMarginTop = 7.5;
 
-  mobileBlockTop = 5.6;
+    mainIllust = <%% ClientConsultingJs.binaryPath + "/mainIllust0.png", ClientConsultingJs.binaryPath + "/mainIllust1.png", ClientConsultingJs.binaryPath + "/mainIllust2.png", ClientConsultingJs.binaryPath + "/mainIllust3.png", ClientConsultingJs.binaryPath + "/mainIllust5.png" %%>;
 
-  whiteBlock = createNode({
-    mother: this.baseTong,
-    style: {
-      display: "block",
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      marginBottom: String(whiteBlockMarginBottom) + ea,
-      top: String(-1 * boxTopVisual) + ea,
-      paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
+    if (big) {
+      descriptionContents = [
+        `홈리에종의 서비스 진행을 위해서는 다음과 같이 기본 정보가 필요합니다.`,
+        `서비스 신청서를 간단히 작성 후, <b%디자이너의 1:1 맞춤 상담%b> 을 받아보세요!`,
+      ];
+    } else {
+      descriptionContents = [
+        `고객님께 <b%디자이너의 1:1 맞춤 상담%b>와 그에 맞는`,
+        `디자이너를 제안드립니다. 선택된 디자이너는 고객님의 예산을`,
+        `현장 조건에 맞게 적절히 분배하여 스타일링을 진행합니다.`,
+      ];
     }
-  });
 
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    children: [
-      {
-        text: titleWording,
+    if (desktop && window.innerHeight > 1100) {
+      titleSize = <%% 59, 51, 48, 39, 9 %%>;
+      subTitleSize = <%% 19, 18, 17, 16, 3.6 %%>;
+      firstBasePaddingTop = <%% 60, 48, 30, 28, 50 %%>;
+      subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
+      firstBasePaddingBottom = <%% 230, 210, 160, 130, 210 %%>;
+      mainImageTop = <%% 28, 28, 18, 16, 32 %%>;
+      mainImageHeight = <%% 410, 398, 342, 318, 39 %%>;
+      buttonMarginTop = <%% 150, 150, 132, 110, 3.6 %%>;
+    }
+
+    this.totalContents = document.getElementById("totalcontents");
+    this.totalContents.style.overflow = "hidden";
+    this.totalContents.style.background = colorExtended.mainBlue;
+    document.body.style.background = colorExtended.mainBlue;
+
+    firstBase = createNode({
+      mother: baseTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        paddingTop: String(firstBasePaddingTop) + ea,
+        flexDirection: "column",
+        paddingBottom: String(firstBasePaddingBottom) + ea,
+      },
+      child: {
         style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(titleFontSize) + ea,
-          fontFamily: "mont",
-          fontWeight: String(titleFontWeight),
-          color: colorChip.white,
-          wordSpacing: String(2) + "px",
-        },
-        bold: {
-          fontSize: String(titleFontSize) + ea,
-          fontFamily: "mont",
-          fontWeight: String(titleFontWeight),
-          color: colorChip.white,
-          opacity: String(0.4),
+          position: "absolute",
+          top: desktop ? String((-1 * baseTop) + naviHeight) + ea : "calc(calc(" + String(naviHeight - naviHeight) + "px" + ") - " + String(baseTop) + ea + ")",
+          left: String(-1 * minusLeft) + ea,
+          background: colorExtended.white,
+          width: withOut(-1 * (minusLeft * 2), ea),
+          height: desktop ? withOut(1 * ((-1 * baseTop) + naviHeight), ea) : String(185) + ea,
         }
       }
-    ]
-  });
+    });
+  
+    // main title
+    createNode({
+      mother: firstBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: desktop ? "start" : "center",
+        alignItems: desktop ? "start" : "center",
+        opacity: String(0),
+        transform: "translateY(30px)",
+        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+        paddingLeft: mobile ? String(mobileLeftPaddingVisual) + ea : "",
+      },
+      children: [
+        {
+          text: (desktop ? "Service request<b%.%b>" : "Service request<b%.%b>"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorExtended.mainBlue,
+            fontFamily: "mont",
+            top: desktop ? String(titleVisualTop) + ea : "",
+            left: desktop ? String(titleVisualLeft) + ea : "",
+            lineHeight: String(titleLineHeight),
+          },
+          bold: {
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorExtended.mainBlue,
+            fontFamily: "mont",
+            opacity: String(pointOpacity),
+          }
+        }
+      ]
+    });
 
+    // sub title
+    createNode({
+      mother: firstBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: desktop ? "start" : "center",
+        alignItems: desktop ? "start" : "center",
+        marginTop: String(subTitleMarginTop) + ea,
+        opacity: String(0),
+        transform: "translateY(30px)",
+        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+      },
+      children: [
+        {
+          text: "홈리에종 서비스 신청",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            color: colorExtended.black,
+            fontWeight: String(subTitleWeight),
+            fontSize: String(subTitleSize) + ea,
+          }
+        }
+      ]
+    });
+
+    // main illust
+    createNode({
+      mother: firstBase,
+      mode: "img",
+      attribute: {
+        src: mainIllust
+      },
+      style: {
+        position: "absolute",
+        right: desktop ? String(0) : String(mobileImageRight) + ea,
+        top: String(mainImageTop) + ea,
+        width: desktop ? "" : withOut(mobileImageRight * 2, ea),
+        height: desktop ? String(mainImageHeight) + ea : "",
+        opacity: String(0),
+        transform: "translateY(30px)",
+        animation: "1.2s ease 0.2s 1 normal forwards running fadeupdelay2",
+      }
+    })
+
+    // description
+    createNode({
+      mother: firstBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: desktop ? "start" : "center",
+        alignItems: desktop ? "start" : "center",
+        marginTop: String(descriptionMarginTop) + ea,
+        opacity: String(0),
+        transform: "translateY(30px)",
+        animation: "1.5s ease 0s 1 normal forwards running fadeupdelay2",
+        textAlign: desktop ? "left" : "center",
+        flexDirection: desktop ? "row" : "column",
+      },
+      children: [
+        {
+          text: descriptionContents.join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            color: colorExtended.black,
+            fontWeight: String(400),
+            fontSize: String(descriptionSize) + ea,
+            lineHeight: String(descriptionLineHeight),
+          },
+          bold: {
+            color: colorExtended.white,
+            fontWeight: String(700),
+            fontSize: String(descriptionSize) + ea,
+            lineHeight: String(descriptionLineHeight),
+            background: colorExtended.gradientBlue,
+            padding: String(descriptionPointBoldPaddingLeft) + ea,
+            paddingTop: String(descriptionPointBoldPaddingTop) + ea,
+            paddingBottom: String(descriptionPointBoldPaddingBottom) + ea,
+            "border-radius": String(5) + "px",
+            margin: String(descriptionPointBoldMargin) + ea,
+          }
+        },
+        {
+          mode: "img",
+          attribute: {
+            src: ClientConsultingJs.binaryPath + "/mainIllust4.png"
+          },
+          style: {
+            display: desktop ? "none" : "relative",
+            position: "relative",
+            marginTop: String(mobileSubImageMarginTop) + ea,
+            width: desktop ? "" : withOut(mobileImageRight * 2, ea),
+            opacity: String(0),
+            transform: "translateY(30px)",
+            animation: "1.2s ease 0.2s 1 normal forwards running fadeupdelay2",
+          }
+        }
+      ]
+    })
+
+    // black buttons
+    if (desktop) {
+      createNode({
+        mother: firstBase,
+        event: {
+          selectstart: (e) => { e.preventDefault() },
+        },
+        style: {
+          display: "flex",
+          position: "relative",
+          justifyContent: "start",
+          alignItems: "center",
+          marginTop: String(buttonMarginTop) + ea,
+          opacity: String(0),
+          transform: "translateY(10px)",
+          animation: "1.2s ease 0.4s 1 normal forwards running fadeupdelay",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            event: {
+              click: (e) => {
+                GeneralJs.scrollTo(window, document.querySelector('.' + whiteConsultingBoxClassName), instance.naviHeight + (<&& 30 | 24 | 20 | 20 | 1 &&>));
+              },
+              selectstart: (e) => { e.preventDefault() },
+            },
+            style: {
+              display: "inline-flex",
+              position: "relative",    
+              width: String(buttonWidth) + ea,
+              height: String(buttonHeight) + ea,
+              background: colorExtended.darkDarkShadow,
+              borderRadius: String(buttonHeight) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            },
+            child: {
+              event: {
+                selectstart: (e) => { e.preventDefault() },
+              },
+              text: `무료 상담 신청`,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(buttonTextTop) + ea,
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(700),
+                color: colorExtended.white,
+              },
+              next: {
+                mode: "svg",
+                source: svgMaker.buttonLineArrow(colorExtended.white),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: String(7) + ea,
+                  transform: "rotate(90deg)",
+                  marginLeft: String(11) + ea,
+                }
+              }
+            }
+          },
+        ]
+      });
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-ClientConsultingJs.prototype.insertConsultingBox = function () {
+ClientConsultingJs.prototype.insertSecondBox = async function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const serviceBaseClassName = "serviceBaseClassName";
+  try {
+    let mainHeight;
+    let minusLeft;
+    let secondBase;
+    let colorTop;
+    let serviceBase;
+    let textContent;
+    let descriptionSize;
+    let checkCircleWidth;
+    let visualTop;
+    let createServiceBlock;
+    let titleSize;
+    let descriptionMarginTop;
+    let boxWidth, boxHeight;
+    let betweenMargin;
+    let totalHeight;
+    let circleMarginTop;
+    let mobileStartEndText;
+    let mobileBasePaddingTop;
+    let mobileWhiteBase;
+    let num;
+    let startEndSize;
+    let startEndValueSize;
+    let whiteInnerPadding;
+    let whiteInnerVisualPaddingTop;
+    let mobileServicePaddingTop;
+    let serviceClickEvent;
+
+    mainHeight = <%% 440, 390, 370, 280, 136 %%>;
+    minusLeft = window.innerWidth - standardWidth + 1;
+
+    colorTop = <%% 200, 200, 200, 200, 200 %%>;
+
+    titleSize = <%% 23, 21, 19, 17, 3.4 %%>;
+    descriptionSize = <%% 15, 14, 13, 12, 2.8 %%>;
+    descriptionMarginTop = <%% 9, 9, 7, 6, 0.2 %%>;
+
+    checkCircleWidth = <%% 21, 21, 20, 18, 3.4 %%>;
+
+    visualTop = <%% 24, 24, 22, 17, 2 %%>;
+
+    boxWidth = <%% 290, 270, 240, 200, 25.8 %%>;
+    boxHeight = <%% 227, 214, 192, 163, 29.4 %%>;
+
+    betweenMargin = <%% 152, 90, 90, 60, 1.6 %%>;
+
+    totalHeight = <%% 350, 340, 320, 254, 88 %%>;
+
+    circleMarginTop = <%% 16, 16, 14, 12, 2.2 %%>;
+
+    mobileBasePaddingTop = 7.2;
+    startEndSize = 3.3;
+    startEndValueSize = 3.6;
+    whiteInnerPadding = 4.8;
+    whiteInnerVisualPaddingTop = 2.1;
+    mobileServicePaddingTop = 5;
+
+    textContent = [
+      {
+        title: "홈퍼니싱",
+        description: [
+          "<b%시공 없이 스타일링만%b>",
+          "가구와 소품, 그리고 패브릭으로 진행",
+        ],
+        margin: false,
+        focus: false,
+      },
+      {
+        title: "홈스타일링",
+        description: [
+          "<b%부분 시공과 스타일링%b>",
+          "집 컨디션에 맞는 범위의 시공을 진행",
+        ],
+        margin: true,
+        focus: true,
+      },
+      {
+        title: "토탈 스타일링",
+        description: [
+          "<b%전체 시공과 스타일링%b>",
+          "전체 시공과 스타일링까지 전부 진행"
+        ],
+        margin: false,
+        focus: false,
+      },
+    ]
+    // if (mobile) {
+    //   textContent = textContent.find((o) => { return o.focus });
+    // }
+
+    serviceClickEvent = (index) => {
+      return async function (e) {
+        const self = this;
+        const friends = document.querySelectorAll('.' + serviceBaseClassName);
+        const target = objectDeepCopy(textContent[index]);
+        const toggle = this.getAttribute("toggle");
+        if (toggle === "on") {
+          for (let serviceDom of friends) {
+            serviceDom.style.transform = "translateY(0px)";
+            serviceDom.style.animation = "";
+            if (serviceDom === self) {
+              serviceDom.style.opacity = String(1);
+              serviceDom.lastChild.style.background = colorExtended.focusBlue;
+              serviceDom.setAttribute("toggle", "on");
+            } else {
+              serviceDom.style.opacity = String(0.4);
+              serviceDom.lastChild.style.background = colorExtended.white;
+              serviceDom.setAttribute("toggle", "off");
+            }
+          }
+        } else {
+          for (let serviceDom of friends) {
+            serviceDom.style.transform = "translateY(0px)";
+            serviceDom.style.animation = "";
+            if (serviceDom === self) {
+              serviceDom.style.opacity = String(1);
+              serviceDom.lastChild.style.background = colorExtended.focusBlue;
+              serviceDom.setAttribute("toggle", "on");
+            } else {
+              serviceDom.style.opacity = String(0.4);
+              serviceDom.lastChild.style.background = colorExtended.white;
+              serviceDom.setAttribute("toggle", "off");
+            }
+          }
+        }
+      }
+    }
+
+    secondBase = createNode({
+      mother: baseTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: desktop ? String(totalHeight) + ea : "",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+        paddingTop: desktop ? "" : String(9) + ea,
+        paddingBottom: desktop ? "" : String(4.5) + ea,
+      },
+      child: {
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(-1 * minusLeft) + ea,
+          background: colorExtended.blueWhiteBack,
+          width: withOut(-1 * (minusLeft * 2), ea),
+          height: desktop ? withOut(1 * ((-1 * colorTop) + naviHeight), ea) : withOut(0, ea),
+        }
+      }
+    });
+
+    createServiceBlock = (index, thisMother = secondBase) => {
+      let target;
+      if (typeof index === "number") {
+        target = textContent[index];
+      } else {
+        target = objectDeepCopy(index);
+      }
+      serviceBase = createNode({
+        mother: thisMother,
+        class: [ serviceBaseClassName ],
+        attribute: {
+          toggle: target.focus ? "on" : "off",
+        },
+        event: {
+          click: serviceClickEvent(index),
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: desktop ? String(boxWidth) + ea : withOut(0, ea),
+          height: String(boxHeight) + ea,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          top: String(visualTop) + ea,
+          marginLeft: (desktop && target.margin) ? String(betweenMargin) + ea : "",
+          marginRight: (desktop && target.margin) ? String(betweenMargin) + ea : "",
+          cursor: "pointer",
+          opacity: String(0),
+          transform: "translateY(10px)",
+          animation: "1.2s ease " + String(0.2 + (0.2 * index)) + "s 1 normal forwards running " + (target.focus ? "fadeupdelay" : "fadeupdelaymiddle"),
+        }
+      });
+      createNode({
+        mother: serviceBase,
+        mode: "svg",
+        source: svgMaker.houseLine(colorExtended.blueDark, mobile),
+        style: {
+          display: "flex",
+          position: "absolute",
+          width: String(boxWidth) + ea,
+          top: String(0),
+          left: desktop ? String(0) : withOut(50, boxWidth / 2, ea),
+        }
+      });
+      createNode({
+        mother: serviceBase,
+        text: target.title,
+        style: {
+          display: "flex",
+          position: "relative",
+          fontFamily: "gmarket",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(700),
+          color: colorExtended.black,
+          marginTop: desktop ? "" : String(-1) + ea,
+        }
+      });
+      createNode({
+        mother: serviceBase,
+        text: target.description[0],
+        style: {
+          display: "flex",
+          position: "relative",
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(400),
+          color: colorExtended.black,
+          marginTop: String(descriptionMarginTop) + ea,
+          marginBottom: String(0) + ea,
+          textAlign: "center",
+        },
+        bold: {
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(desktop ? 800 : 400),
+          color: colorExtended.black,
+        }
+      });
+      createNode({
+        mother: serviceBase,
+        text: target.description[1],
+        style: {
+          display: desktop ? "flex" : "none",
+          position: "relative",
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(400),
+          color: colorExtended.black,
+          textAlign: "center",
+        },
+        bold: {
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(800),
+          color: colorExtended.black,
+        }
+      });
+      createNode({
+        mother: serviceBase,
+        style: {
+          display: "flex",
+          width: String(checkCircleWidth) + ea,
+          height: String(checkCircleWidth) + ea,
+          background: target.focus ? colorExtended.focusBlue : colorExtended.white,
+          borderRadius: String(checkCircleWidth) + ea,
+          marginTop: String(circleMarginTop) + ea,
+          border: "1px solid " + colorExtended.focusBlue,
+        },
+        child: {
+          mode: "svg",
+          source: svgMaker.checkCircle(colorExtended.white),
+          style: {
+            display: "flex",
+            position: "relative",
+            width: String(checkCircleWidth) + ea,
+          },
+        }
+      });
+    }
+
+    for (let i = 0; i < textContent.length; i++) {
+      createServiceBlock(i);
+    }
+
+    setQueue(() => {
+      const friends = document.querySelectorAll('.' + serviceBaseClassName);
+      for (let serviceDom of friends) {
+        const toggle = serviceDom.getAttribute("toggle");
+        if (toggle === "on") {
+          serviceDom.style.transform = "translateY(0px)";
+          serviceDom.style.opacity = String(1);
+          serviceDom.style.animation = "";
+        } else {
+          serviceDom.style.transform = "translateY(0px)";
+          serviceDom.style.opacity = String(0.4);
+          serviceDom.style.animation = "";
+        }
+      }  
+    }, 1800)
+    
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ClientConsultingJs.prototype.insertConsultingBox = function (thisBase) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson } = GeneralJs;
-  const { ea, media, standardWidth } = this;
+  const { ea, media, standardWidth, whiteConsultingBoxClassName } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -556,7 +1068,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   leftBoxWidth = <%% 398, 250, 209, 160, 0 %%>;
   textAreaBlockHeight = <%% 156, 136, 133, 130, 44.2 %%>;
 
-  descriptionSize = <%% 15, 14, 13, 13, 3 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.66 %%>;
   descriptionMarginTop = <%% 10, 10, 8, 6, 10 %%>;
@@ -578,7 +1090,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   agreeCircleMarginRight = <%% 5, 5, 5, 5, 1 %%>;
 
   submitTongMarginTop = <%% 20, 20, 20, 20, 6 %%>;
-  submitButtonWidth = <%% 160, 160, 150, 136, 34 %%>;
+  submitButtonWidth = <%% 170, 170, 150, 136, 34 %%>;
   submitButtonHeight = <%% 47, 47, 42, 38, 10 %%>;
   submitSize = <%% 20, 20, 18, 16, 4 %%>;
   submitWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -617,10 +1129,10 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       "홈리에종 서비스 신청",
     ],
     sub: [
-      <&& "홈리에종의 서비스 진행을 위해서는" | "홈리에종 서비스 진행을 위해서는" | "서비스 진행을 위해서는" | "서비스 진행을 위해서는" | "홈리에종 서비스 진행을 위해서는" &&>,
-      <&& "다음과 같이 기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." &&>,
       <&& "서비스 신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," &&>,
       <&& "<b%디자이너의 1:1 맞춤 상담%b>을 받아보세요!" | "<b%1:1 맞춤 상담%b>을 받아보세요!" | "<b%1:1 상담%b>을 받아보세요!" | "<b%1:1 상담%b>을 받아보세요!" | "<b%1:1 맞춤 상담%b>을 받아보세요!" &&>,
+      <&& "주소는 인테리어 받을 곳으로 작성해주시고," | "주소는 인테리어 받을 곳으로," | "주소는 인테리어 받을 곳으로," | "주소는 인테리어 대상으로," | "주소는 인테리어 받을 곳으로 작성해주시고," &&>,
+      <&& "평수는 공급 평수로 적어주세요!" | "평수는 공급 평수로 적어주세요!" | "평수는 공급 평수로 적어주세요!" | "평수는 공급으로 적어주세요!" | "평수는 공급 평수로 적어주세요!" &&>,
     ]
   };
 
@@ -1315,24 +1827,24 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   }
 
   mainBlock = createNode({
-    mother: this.baseTong,
+    mother: thisBase,
     style: {
       display: "block",
       position: "relative",
-      paddingBottom: String(mainPaddingBottom) + ea,
+      borderRadius: String(8) + "px",
+      boxShadow: "0px 8px 20px -9px " + colorExtended.blueDim,
+      overflow: "hidden",
     }
   });
 
   contentsArea = createNode({
     mother: mainBlock,
+    class: [ whiteConsultingBoxClassName ],
     style: {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      marginTop: String(contentsAreaMarginTop) + ea,
       background: colorChip.white,
-      borderRadius: String(5) + "px",
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
       paddingTop: String(innerPadding) + ea,
       paddingBottom: String(innerPadding) + ea,
     }
@@ -2836,11 +3348,8 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      marginTop: String(policyAreaMarginTop) + ea,
+      marginTop: String(-1) + "px",
       background: colorChip.white,
-      borderRadius: String(5) + "px",
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-      paddingTop: String(innerPadding) + ea,
       paddingBottom: String(innerPadding) + ea,
     }
   });
@@ -3216,428 +3725,156 @@ ClientConsultingJs.prototype.finalSubmit = function () {
   }
 }
 
-ClientConsultingJs.prototype.insertPannelBox = function () {
+ClientConsultingJs.prototype.insertFourthBox = async function () {
   const instance = this;
-  const { ea, baseTong, media } = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, stringToLink, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, colorExtended, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone } = GeneralJs;
-  let whiteBlock;
-  let style;
-  let blockHeight, blockMarginBottom;
-  let designerButtonTong;
-  let designerButtonBar;
-  let designerButtonBarHead;
-  let designerButton;
-  let designerButtonText;
-  let buttonHeight, buttonWidth;
-  let buttonMargin;
-  let buttonTextTop, buttonTextSize;
-  let headWidth, headVisual;
-  let informationArea;
-  let wordSpacing;
-  let finalBottom;
-  let grayTong, grayTextScroll, grayTextTong;
-  let grayHeight, grayTop, grayTextTop, grayTextLeft, grayTextSize;
-  let buttonOff, buttonOn;
-  let buttonTongHeight, grayButtonHeight;
-  let margin, paddingTop;
+  try {
+    let minusLeft;
+    let fourthBase;
+    let colorTop;
+    let basePaddingTop;
+    let basePaddingBottom;
+    let abc, designers;
+    let thisBase;
+    let designer;
+    let checkCircleWidth;
+    let thisCardBase;
+    let cardWidth, cardHeight, cardBetween;
+    let buttonCardWidth;
+    let shadowForm;
+    let cardLength;
+    let keywords;
+    let representative;
+    let buttonArrowWdith;
+    let designerProfileBase;
+    let profileHeight;
+    let designerCardGroupBetween;
+    let designerCardGroupBetweenFirst;
+    let nameTitleSize;
+    let selectionBase;
+    let buttonBoxMarginTop;
+    let buttonWidth;
+    let buttonHeight;
+    let buttonTextTop;
+    let buttonSize;
+    let buttonWeight;
+    let buttonBaseMarginTop;
 
-  margin = <%% 52, 52, 44, 36, 4.7 %%>;
-  paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
+    minusLeft = window.innerWidth - standardWidth + 1;
 
-  blockHeight = <%% 820, 820, 820, 820, 820 %%>;
-  blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
+    colorTop = <%% 200, 200, 200, 200, 200 %%>;
+    basePaddingTop = <%% 160, 160, 140, 110, 18 %%>;
+    basePaddingBottom = <%% 200, 200, 170, 150, 24 %%>;
 
-  buttonHeight = <%% 47, 48, 48, 40, 8.4 %%>;
-  buttonWidth = <%% 156, 156, 156, 126, 28 %%>;
-  buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
+    checkCircleWidth = 13;
 
-  buttonTextTop = <%% 8, 8, 8, 8, (isIphone() ? 1.1 : 1.3) %%>;
-  buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
+    cardLength = 5;
 
-  if (desktop) {
-    buttonTextTop = buttonTextTop + (isMac() ? 0 : 1);
-  }
+    cardHeight = 445;
+    profileHeight = 250;
+    cardBetween = 8;
+    buttonCardWidth = 50;
+    cardWidth = "calc(" + withOut((cardBetween * cardLength) + buttonCardWidth, ea) + " / " + String(cardLength) + ")";
 
-  headWidth = <%% 10, 10, 10, 10, 2 %%>;
-  headVisual = <%% 11, 11, 11, 11, 11 %%>;
+    buttonArrowWdith = 14;
 
-  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+    designerCardGroupBetween = 70;
+    designerCardGroupBetweenFirst = 50;
 
-  finalBottom = <%% paddingTop + 6, paddingTop + 6, paddingTop + 6, paddingTop + 6, 8 %%>;
+    nameTitleSize = 25;
 
-  grayHeight = <%% 180, 180, 180, 180, 42 %%>;
-  grayTop = <%% 5, 5, 5, 5, 0 %%>;
-  grayTextTop = <%% 22, 22, 20, 20, 3 %%>;
-  grayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
-  grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
+    buttonBoxMarginTop = <%% 28, 26, 24, 20, 4 %%>;
+    buttonWidth = <%% 110, 90, 80, 80, 15 %%>;
+    buttonHeight = <%% 44, 38, 38, 36, 7.5 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+    buttonSize = <%% 20, 17, 17, 16, 3.5 %%>;
+    buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
-  grayButtonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
+    shadowForm = "0px 8px 20px -9px " + colorExtended.blueDim;
 
-  buttonOn = {};
-
-  whiteBlock = createNode({
-    mother: this.baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 3) + "px",
-      paddingTop: String(paddingTop) + ea,
-      paddingLeft: String(margin) + ea,
-      paddingRight: String(margin) + ea,
-      width: withOut(margin * 2, ea),
-      height: String(blockHeight) + ea,
-      background: colorChip.white,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-      marginBottom: String(blockMarginBottom) + ea,
-    }
-  });
-
-  [ grayTong, grayTextScroll, grayTextTong ] = createNodes([
-    {
-      mother: whiteBlock,
+    fourthBase = createNode({
+      mother: baseTong,
       style: {
+        display: "block",
         position: "relative",
-        left: String(0) + ea,
-        width: withOut(0 * 2, ea),
-        marginTop: String(grayTop) + ea,
-        marginBottom: String(desktop ? 15 : 2.5) + ea,
-        height: String(grayHeight) + ea,
-        background: colorChip.gray1,
-        borderRadius: String(3) + "px",
-      }
-    },
-    {
-      mother: -1,
-      style: {
-        position: "absolute",
-        top: String(grayTextTop) + ea,
-        left: String(grayTextLeft) + ea,
-        width: withOut(grayTextLeft * 2, ea),
-        height: withOut(grayTextTop * 2, ea),
-        overflow: "scroll",
-      }
-    },
-    {
-      mother: -1,
-      style: {
-        position: "absolute",
-        top: String(0) + ea,
-        left: String(0) + ea,
-        width: String(100) + '%',
-        height: "auto",
-        fontSize: String(grayTextSize) + ea,
-        fontWeight: String(300),
-        lineHeight: String(1.6),
-      }
-    },
-  ]);
-
-  [ buttonTong ] = createNodes([
-    {
-      mother: whiteBlock,
-      attribute: [
-        { toggle: "on" }
-      ],
-      events: [
-        {
-          type: "click",
-          event: function (e) {
-            if (buttonOn.style !== undefined) {
-              if (this.getAttribute("toggle") === "on") {
-                buttonOn.style.opacity = String(0);
-                this.setAttribute("toggle", "off");
-              } else {
-                buttonOn.style.opacity = String(1);
-                this.setAttribute("toggle", "on");
-              }
-            }
-          }
-        }
-      ],
-      style: {
-        position: "relative",
-        left: String(0) + ea,
-        width: withOut(0 * 2, ea),
-        height: String(buttonTongHeight) + ea,
-        cursor: "pointer",
-      }
-    },
-  ]);
-
-  ajaxJson({}, BACKHOST + "/designerProposal_policy").then(function (res) {
-    const { policy, button } = res;
-    let bTags;
-
-    grayTextTong.insertAdjacentHTML("beforeend", policy);
-    bTags = grayTextTong.querySelectorAll("b");
-    for (let b of bTags) {
-      b.style.color = colorChip.black;
-      b.style.fontWeight = String(600);
-    }
-
-    [ buttonOff, buttonOn ] = createNodes([
-      {
-        mother: buttonTong,
-        mode: "svg",
-        source: button.off,
+        width: withOut(0, ea),
+        paddingTop: String(basePaddingTop) + ea,
+        paddingBottom: String(basePaddingBottom) + ea,
+      },
+      child: {
         style: {
           position: "absolute",
-          height: String(grayButtonHeight) + ea,
-          right: String(0) + ea,
-          top: String(0) + ea,
-        }
-      },
-      {
-        mother: buttonTong,
-        mode: "svg",
-        source: button.on,
-        style: {
-          position: "absolute",
-          height: String(grayButtonHeight) + ea,
-          right: String(0) + ea,
-          top: String(0) + ea,
-          background: colorChip.white,
-        }
-      },
-    ]);
-
-  }).catch(function (err) {
-    throw new Error(err);
-  });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      position: "relative",
-      height: String(buttonHeight) + ea,
-      textAlign: "center",
-      marginTop: desktop ? "" : String(3) + ea,
-    },
-    children: [
-      {
-        class: [ "submitButtonClassName" ],
-        events: [
-          {
-            type: "click",
-            event: instance.finalSubmit(),
-          }
-        ],
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(buttonWidth) + ea,
-          height: String(100) + '%',
+          top: String(0),
+          left: String(-1 * minusLeft) + ea,
           background: colorExtended.gradientBlue,
-          borderRadius: String(5) + "px",
-          cursor: "pointer",
-        },
-        children: [
-          {
-            text: "상담 신청하기",
-            style: {
-              position: "absolute",
-              top: String(buttonTextTop) + ea,
-              fontSize: String(buttonTextSize) + ea,
-              fontWeight: String(800),
-              color: colorChip.white,
-              width: String(100) + '%',
-              textAlign: "center",
-            }
-          }
-        ]
+          width: withOut(-1 * (minusLeft * 2), ea),
+          height: withOut(0, ea),
+        }
       }
-    ]
-  });
+    });
 
-  whiteBlock.style.paddingBottom = String(finalBottom) + ea;
-  whiteBlock.style.height = "";
+    this.insertConsultingBox(fourthBase);
 
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-ClientConsultingJs.prototype.insertStrongBox = function () {
+ClientConsultingJs.prototype.resizeEvent = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, totalContents, standardWidth } = this;
+  const { homeliaisonAnalytics, colorExtended } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  let speed;
-  let mainHeight;
-  let mainTong;
-  let blockTong;
-  let blockNumber;
-  let tongPaddingLeft;
-  let tongPaddingTop, tongPaddingBottom;
-  let strongContents;
-  let whiteTongPaddingLeft, whiteTongPaddingTop, whiteTongPaddingRight, whiteTongPaddingBottom;
-  let whiteTongTitleSize;
-  let iconWidth;
-  let whiteTongTitleWeight;
-  let whiteTongDescriptionSize;
-  let whiteTongDescriptionWeight;
-  let whiteTongDescriptionMarginTop;
-  let whiteTongDescriptionLineHeight;
-  let iconBottom;
-  let iconRight;
-  let blockMarginBottom;
 
-  if (media[0]) {
-    strongContents = [
-      {
-        title: "디자이너 추천",
-        description: "선호하는 스타일과 역량이 맞는\n디자이너를 추천받을 수 있어요.",
-        icon: "icons0.png",
-      },
-      {
-        title: "홈리에종 케어",
-        description: "예상하지 못한 상황에도 안심하고\n인테리어를 진행할 수 있어요.",
-        icon: "icons1.png",
-      },
-      {
-        title: "원스탑 서비스",
-        description: "시공부터 스타일링까지 원스탑\n서비스를 경험할 수 있어요.",
-        icon: "icons2.png",
-      },
-      {
-        title: "선 기획 후 시공",
-        description: "디자인 선 기획 후 꼭 필요한 시공\n부터 효율적으로 진행할 수 있어요.",
-        icon: "icons3.png",
-      },
-    ]
-  } else {
-    strongContents = [
-      {
-        title: "디자이너 추천",
-        description: "선호하는 스타일이 맞는\n디자이너를 추천받아요.",
-        icon: "icons0.png",
-      },
-      {
-        title: "홈리에종 케어",
-        description: "문제 상황에도 안심하고\n진행할 수 있어요.",
-        icon: "icons1.png",
-      },
-      {
-        title: "원스탑 서비스",
-        description: "시공부터 스타일링까지\n원스탑으로 진행해요.",
-        icon: "icons2.png",
-      },
-      {
-        title: "선 기획 후 시공",
-        description: "디자인 후 꼭 필요한 시공\n부터 진행할 수 있어요.",
-        icon: "icons3.png",
-      },
-    ]
-  }
+  this.resizeStack = 0;
+  this.resizeFrom = 0;
+  this.resizePopup = 0;
 
-  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
-  mainHeight = <%% 240, 240, 240, 240, 40 %%>;
-  margin = <%% 12, 12, 10, 10, 2 %%>;
-  blockNumber = desktop ? strongContents.length : 2;
-
-  tongPaddingLeft = 0;
-  tongPaddingTop = <%% 16, 16, 16, 12, 3 %%>;
-  tongPaddingBottom = <%% 180, 160, 150, 80, 14 %%>;
-
-  whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
-  whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
-  whiteTongPaddingRight = <%% 84, 50, 50, 42, 5 %%>;
-  whiteTongPaddingBottom = <%% 28, 25, 24, 20, 4 %%>;
-
-  whiteTongTitleSize = <%% 18, 16, 16, 14, 3.5 %%>;
-  whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-
-  whiteTongDescriptionSize = <%% 14, 13, 13, 11, 2.5 %%>;
-  whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  whiteTongDescriptionMarginTop = <%% 7, 7, 5, 5, 1.2 %%>;
-  whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
-
-  iconWidth = <%% 24, 24, 24, 18, 5 %%>;
-  iconBottom = <%% 32, 28, 28, 24, 4.8 %%>;
-  iconRight = <%% 28, 20, 20, 18, 2.8 %%>;
-
-  blockMarginBottom = <%% 3, 3, 3, 3, 2 %%>;
-
-  mainTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "block",
-      position: "relative",
-      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
-    },
-  });
-
-  blockTong = createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String((standardWidth - (tongPaddingLeft * 2)) + margin) + ea,
-      paddingTop: String(tongPaddingTop) + ea,
-      paddingBottom: String(tongPaddingBottom) + ea,
-      left: "calc(50% - " + String((standardWidth - (tongPaddingLeft * 2)) / 2) + ea + ")",
-    }
-  });
-
-  for (let i = 0; i < strongContents.length; i++) {
-    createNode({
-      mother: blockTong,
-      style: {
-        display: "inline-block",
-        position: "relative",
-        width: "calc(calc(calc(100% - " + String(margin * blockNumber) + ea + ") / " + String(blockNumber) + ") - " + String(whiteTongPaddingLeft + whiteTongPaddingRight) + ea + ")",
-        paddingTop: String(whiteTongPaddingTop) + ea,
-        paddingLeft: String(whiteTongPaddingLeft) + ea,
-        paddingRight: String(whiteTongPaddingRight) + ea,
-        paddingBottom: String(whiteTongPaddingBottom) + ea,
-        marginRight: String(margin) + ea,
-        borderRadius: String(5) + "px",
-        background: colorChip.white,
-        boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
-        marginBottom: desktop ? "" : String(blockMarginBottom) + ea,
-      },
-      children: [
-        {
-          text: strongContents[i].title,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: (isMac() || mobile ? "" : String(2) + ea),
-            fontSize: String(whiteTongTitleSize) + ea,
-            fontWeight: String(whiteTongTitleWeight),
-            color: colorChip.black,
-          }
-        },
-        {
-          text: strongContents[i].description,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: (isMac() || mobile ? "" : String(2) + ea),
-            marginTop: String(whiteTongDescriptionMarginTop) + ea,
-            fontSize: String(whiteTongDescriptionSize) + ea,
-            fontWeight: String(whiteTongDescriptionWeight),
-            lineHeight: String(whiteTongDescriptionLineHeight),
-            color: colorChip.black,
-          }
-        },
-        {
-          mode: "img",
-          attribute: {
-            src: (FRONTHOST + "/middle/index") + "/" + strongContents[i].icon,
+  if (desktop) {
+    const resizeDebounceEvent = function () {
+      let timeout;
+      const reEvent = function () {
+        homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "aspirantPageResize",
+          data: {
+            delta: (new Date()).valueOf() - instance.firstPageViewTime.valueOf(),
+            date: new Date(),
           },
-          style: {
-            position: "absolute",
-            bottom: String(iconBottom) + ea,
-            right: String(iconRight) + ea,
-            width: String(iconWidth) + ea,
-            height: "auto",
-          }
+        }).then(() => {
+          window.location.reload();
+          instance.resizeStack = 0;
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
+      let immediate = null;
+      return function (e) {
+        if (instance.resizeStack === 0) {
+          instance.resizeStack = 1;
+          instance.resizeFrom = window.innerWidth;
         }
-      ]
-    });
+        let context = this;
+        let args = arguments;
+        function later() {
+          timeout = null;
+          if (!immediate) { reEvent.apply(context, args); };
+        }
+        let callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, 250);
+        if (callNow) {
+          reEvent.apply(context, args);
+        }
+      }
+    }
+    window.addEventListener("resize", resizeDebounceEvent());
   }
-
 }
 
 ClientConsultingJs.prototype.launching = async function (loading) {
@@ -3645,10 +3882,12 @@ ClientConsultingJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, colorExtended } = GeneralJs;
+    const { returnGet, ajaxJson, dateToString, homeliaisonAnalytics, colorExtended, stringToLink, objectDeepCopy } = GeneralJs;
     const getObj = returnGet();
+    const entireMode = (getObj.entire === "true");
+    const normalMode = (entireMode && getObj.normal === "true");
 
-    this.inputClassName = "consultingInput";
+    this.whiteConsultingBoxClassName = "whiteConsultingBoxClassName";
 
     await this.mother.ghostClientLaunching({
       mode: "front",
@@ -3659,12 +3898,33 @@ ClientConsultingJs.prototype.launching = async function (loading) {
         binaryPath: ClientConsultingJs.binaryPath,
         subTitle: "",
         secondBackground: false,
-        backgroundType: 11,
+        backgroundType: 9,
+        talk: {
+          text: "기타 문의 사항은 홈리에종 채널에 주세요!",
+          event: "channel",
+        }
       },
       local: async () => {
         try {
-          instance.insertInitBox();
-          instance.insertConsultingBox();
+          await instance.insertInitBox();
+          await instance.insertSecondBox();
+          await instance.insertFourthBox();
+          instance.resizeEvent();
+          setInterval(() => {
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "readTimer",
+              data: {
+                cliid: "null",
+                href: window.encodeURIComponent(window.location.href),
+                date: dateToString(new Date(), true),
+              },
+            }).catch((err) => {
+              console.log(err);
+            });
+          }, 60 * 1000);
+
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ClientConsultingJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
@@ -3673,12 +3933,11 @@ ClientConsultingJs.prototype.launching = async function (loading) {
 
     loading.parentNode.removeChild(loading);
 
-    this.totalContents.children[0].style.background = colorExtended.gray1;
-    this.totalContents.children[1].style.transition = "all 0s ease";
-    this.totalContents.children[1].style.height = String(<&& 670 | 650 | 570 | 480 | 70 &&>) + this.ea;
-    if (this.media[4]) {
-      this.totalContents.children[1].style.backgroundSize = "auto 100%";
-    }
+    document.querySelector("style").insertAdjacentHTML("beforeend", "*{transition:all 0.3s ease}");
+
+    GeneralJs.setQueue(() => {
+      window.scrollTo(0, 0);
+    }, 400);
 
   } catch (err) {
     console.log(err);

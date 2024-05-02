@@ -9,28 +9,19 @@ $hostLink = $protocol.$host;
 $sessionId = $general->setSessionId();
 $clientInfo = $general->getClientInfo();
 
-if (!isset($_GET["proid"])) {
-  $proid = "p1801_aa01s";
-} else {
-  $proid = $_GET["proid"];
-}
-
-$project = $general->getProject($proid);
-$client = $general->getClient($project->cliid);
-
-$name = "designerExplanation";
-$fullLink = $hostLink."/proposal_test.php?proid=".$proid;
+$name = "firstPayment";
+$fullLink = $hostLink."/payment.php";
 
 if (!($sessionId)) {
   $general->clearAllCookies();
   header("Location: ".$fullLink);
 }
 
-$titleString = "디자이너 추천서 | 홈리에종";
-$descriptionString = $client->name." 고객님을 위한 서비스와 디자이너 추천 페이지입니다.";
+$titleString = "계약금 결제 안내 | 홈리에종";
+$descriptionString = "계약금 결제 안내 페이지입니다.";
 $imageString = "/list_image/portpp18/t19p18.jpg";
 
-$hiddenString = $client->name." 고객님을 위한 서비스와 디자이너 추천 페이지입니다.";
+$hiddenString = "계약금 결제 안내 페이지입니다.";
 
 $html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo);
 echo $html;

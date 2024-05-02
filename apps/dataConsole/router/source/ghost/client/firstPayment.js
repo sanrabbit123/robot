@@ -52,7 +52,7 @@ const FirstPaymentJs = function () {
   this.mother = new GeneralJs();
 }
 
-FirstPaymentJs.binaryPath = "/middle/payment";
+FirstPaymentJs.binaryPath = FRONTHOST + "/middle/payment";
 
 FirstPaymentJs.prototype.tableStatic = function (designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;

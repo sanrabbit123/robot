@@ -13,6 +13,7 @@ const ResourceMaker = function (p_id) {
     p_id = p_id.replace(/^ /g, '').replace(/ $/g, '').toLowerCase();
   }
   this.frontHost = `${ADDRESS["frontinfo"]["user"]}@${ADDRESS["frontinfo"]["host"]}:/${ADDRESS["frontinfo"]["user"]}/www`;
+  this.testHost = `${ADDRESS["officeinfo"]["test"]["user"]}@${ADDRESS["officeinfo"]["test"]["ip"]["inner"]}:/home/${ADDRESS["frontinfo"]["test"]["user"]}/www`;
 
   this.p_id = p_id;
   this.arr = [];
@@ -847,7 +848,7 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
 ResourceMaker.prototype.launching = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, mongo, mongoinfo, mongocontentsinfo, shellExec, shellLink, headRequest, binaryRequest, ghostFileUpload, requestSystem, chromeOpen } = this.mother;
+  const { fileSystem, mongo, mongoinfo, mongocontentsinfo, shellExec, shellLink, headRequest, binaryRequest, ghostFileUpload, requestSystem, chromeOpen, sleep } = this.mother;
   const MONGOC = new mongo(mongoinfo);
   const MONGOCONTENTSC = new mongo(mongocontentsinfo);
   const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
@@ -1002,7 +1003,11 @@ ResourceMaker.prototype.launching = async function () {
       }
       await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(this.final.contents.portfolio.detailInfo.photodae[1])}${this.p_id}.jpg -resize ${String(sizeMatrix[2][0]) + "x" + String(sizeMatrix[2][1])} -quality ${String(bQualityConst)} ${shellLink(outputFolder)}/${reviewInitial}${String(this.final.contents.portfolio.detailInfo.photodae[1])}${this.p_id}.jpg`);
 
+      await sleep(500);
       await shellExec(`scp -r ${shellLink(outputFolder)} ${this.frontHost}/list_image`);
+
+      await sleep(500);
+      await shellExec(`scp -r ${shellLink(outputFolder)} ${this.testHost}/list_image`);
 
       outputFolderList = await fileSystem(`readDir`, [ outputFolder ]);
       outputMobildFolderList = await fileSystem(`readDir`, [ outputMobildFolder ]);
