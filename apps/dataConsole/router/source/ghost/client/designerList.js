@@ -920,8 +920,8 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   blockHeight = <%% 198, 160, (isMac() ? 178 : 176), 170, 25 %%>;
   photoWidth = blockHeight - (contentsPaddingTop * 2);
 
-  whiteCircleWidth = photoWidth * 0.94;
-  realPhotoCircleWidth = photoWidth * 0.92;
+  whiteCircleWidth = photoWidth * 0.95;
+  realPhotoCircleWidth = photoWidth * 0.93;
 
   photoMargin = <%% 22, 22, 22, 21, 4 %%>;
 
@@ -1043,8 +1043,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
             borderRadius: String(photoWidth) + ea,
             width: String(photoWidth) + ea,
             height: String(photoWidth) + ea,
-            background: colorExtended.gray1,
-            background: colorExtended.gradientBlue,
+            background: colorExtended.gradientBlue2,
             verticalAlign: "top",
             cursor: "pointer",
             justifyContent: "center",
@@ -1192,7 +1191,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
         fontSize: String(descriptionSize) + ea,
         fontWeight: String(descriptionWeight),
         fontFamily: "pretendard",
-        color: colorChip.gray5,
+        color: colorChip.darkDarkShadow,
         lineHeight: String(descriptionLineHeight),
         height: desktop ? "" : String(contentsBlockHeight) + ea,
         "max-height": desktop ? String(maxHeight) + ea : "",
@@ -1344,7 +1343,7 @@ DesignerListJs.prototype.designerListWithReview = function (search = null) {
   inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  designerTongPaddingTop = <%% 80, 72, 72, 72, 6 %%>;
+  designerTongPaddingTop = <%% 30, 40, 40, 40, 6 %%>;
 
   placeholder = "";
 
@@ -1361,6 +1360,8 @@ DesignerListJs.prototype.designerListWithReview = function (search = null) {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
+      paddingTop: String(designerTongPaddingTop) + ea,
+      paddingBottom: String(whiteBlockPaddingBottom) + ea,
       marginBottom: String(whiteBlockMarginBottom) + ea,
     }
   });
@@ -1600,8 +1601,8 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
         paddingTop: String(blockPaddingTop) + ea,
         paddingBottom: String(blockPaddingTop) + ea,
         width: withOut(blockMargin * 2, ea),
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        borderRadius: String(12) + "px",
+        border: "1.5px solid " + colorExtended.black,
       },
       children: [
         {
@@ -1718,7 +1719,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
         display: "block",
         width: String(100) + '%',
         height: String(grayBarTop) + ea,
-        borderBottom: "1px solid " + colorExtended.gray3,
+        borderBottom: "1px solid " + colorExtended.black,
       }
     });
     createNode({
@@ -1768,9 +1769,9 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
           paddingBottom: String(tagTongPaddingBottom) + ea,
           paddingLeft: String(tagTongPaddingLeft) + ea,
           paddingRight: String(tagTongPaddingLeft) + ea,
-          borderRadius: String(5) + "px",
+          borderRadius: String(8) + "px",
           marginRight: String(tagTongMarginRight) + ea,
-          background: colorChip.gray1,
+          border: "1px solid " + colorExtended.black,
         },
         children: [
           {
@@ -1795,7 +1796,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
         mode: "svg",
         mother: tagTong,
         class: [ "hoverDefault_lite" ],
-        source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorExtended.mainBlue),
+        source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorExtended.black),
         style: {
           position: "absolute",
           right: String(0) + ea,
@@ -1835,7 +1836,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
                   left: String(0),
                   width: withOut(0),
                   height: String(reviewTitleLineTop) + ea,
-                  borderBottom: "1px solid " + colorChip.gray3,
+                  borderBottom: "1px solid " + colorChip.black,
                 }
               },
               {
@@ -1848,7 +1849,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
                   fontWeight: String(reviewTitleBoxWeight),
                   paddingRight: String(reviewTitleBoxPaddingRight) + ea,
                   color: colorChip.black,
-                  background: desktop ? colorChip.gray0 : colorChip.gray1,
+                  background: colorExtended.white,
                 },
                 bold: {
                   fontWeight: String(reviewTitleBoxBoldWeight),

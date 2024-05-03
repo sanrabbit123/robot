@@ -13,7 +13,7 @@ const ResourceMaker = function (p_id) {
     p_id = p_id.replace(/^ /g, '').replace(/ $/g, '').toLowerCase();
   }
   this.frontHost = `${ADDRESS["frontinfo"]["user"]}@${ADDRESS["frontinfo"]["host"]}:/${ADDRESS["frontinfo"]["user"]}/www`;
-  this.testHost = `${ADDRESS["officeinfo"]["test"]["user"]}@${ADDRESS["officeinfo"]["test"]["ip"]["inner"]}:/home/${ADDRESS["frontinfo"]["test"]["user"]}/www`;
+  this.testHost = `${ADDRESS["officeinfo"]["test"]["user"]}@${ADDRESS["officeinfo"]["test"]["ip"]["inner"]}:/home/${ADDRESS["officeinfo"]["test"]["user"]}/www`;
 
   this.p_id = p_id;
   this.arr = [];
