@@ -4708,7 +4708,7 @@ GeneralJs.hexaJson = async function (input, middleMode = false) {
   }
 }
 
-GeneralJs.autoComma = function (str) {
+GeneralJs.autoComma = function (str, manVersion = false) {
   let minus;
   let count, countArr;
   let temp, tempArr;
@@ -4721,7 +4721,10 @@ GeneralJs.autoComma = function (str) {
   minus = /\-/g.test(str) ? /\-/g.exec(str)[0] : '';
   str = str.replace(/[^0-9]/g, '');
   if (str === '') {
-    throw new Error("invaild number : emptyString");
+    throw new Error("invaild number");
+  }
+  if (manVersion) {
+    str = String(Math.floor(Number(str) / 10000));
   }
   count = Math.ceil(str.length / 3);
   countArr = [];
@@ -4745,7 +4748,12 @@ GeneralJs.autoComma = function (str) {
       tempArr.unshift(temp);
     }
   }
-  return (minus + tempArr.join(','));
+
+  if (manVersion) {
+    return (minus + tempArr.join(',')) + "만";
+  } else {
+    return (minus + tempArr.join(','));
+  }
 }
 
 GeneralJs.dateToString = function (date, detail = false, dayOption = false) {

@@ -2796,7 +2796,7 @@ Mother.prototype.copyJson = function (obj) {
   return json;
 }
 
-Mother.prototype.autoComma = function (str) {
+Mother.prototype.autoComma = function (str, manVersion = false) {
   let minus;
   let count, countArr;
   let temp, tempArr;
@@ -2810,6 +2810,9 @@ Mother.prototype.autoComma = function (str) {
   str = str.replace(/[^0-9]/g, '');
   if (str === '') {
     throw new Error("invaild number");
+  }
+  if (manVersion) {
+    str = String(Math.floor(Number(str) / 10000));
   }
   count = Math.ceil(str.length / 3);
   countArr = [];
@@ -2833,7 +2836,12 @@ Mother.prototype.autoComma = function (str) {
       tempArr.unshift(temp);
     }
   }
-  return (minus + tempArr.join(','));
+
+  if (manVersion) {
+    return (minus + tempArr.join(',')) + "만";
+  } else {
+    return (minus + tempArr.join(','));
+  }
 }
 
 Mother.prototype.dateToString = function (date, detail = false, dayOption = false) {

@@ -2205,6 +2205,102 @@ ContentsRouter.prototype.rou_post_shareGoogleId = function () {
   return obj;
 }
 
+ContentsRouter.prototype.rou_post_syncClientBudget = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, sleep, stringToDate, dateToString, autoComma } = this.mother;
+  let obj = {};
+  obj.link = [ "/syncClientBudget" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const toNormal = true;
+      const selfCoreMongo = instance.mongo;
+      const selfMongo = instance.mongolocal;
+      const collection = "clientEvaluation";
+      const budgetArr = [
+        "500만원 이하",
+        "1,000만원",
+        "1,500만원",
+        "2,000만원",
+        "3,000만원",
+        "4,000만원",
+        "5,000만원 이상",
+        "6,000만원 이상",
+        "7,000만원 이상",
+        "8,000만원 이상",
+        "9,000만원 이상",
+        "1억원 이상",
+      ]
+      let rows;
+      let projects, clients;
+      let proidArr, cliidArr;
+      let thisProject, thisClient;
+      let thisRequestNumber;
+      let whereQuery, updateQuery;
+      let tempString;
+      let thisIndex;
+      let ago;
+
+      (async function () {
+        try {
+          ago = new Date();
+          ago.setMonth(ago.getMonth() - 2);
+      
+          rows = await back.mongoRead(collection, { date: { $gte: ago } }, { selfMongo });
+          proidArr = rows.map((o) => { return { proid: o.proid } });
+          cliidArr = rows.map((o) => { return { cliid: o.cliid } });
+      
+          projects = await back.getProjectsByQuery({ $or: proidArr }, { selfMongo: selfCoreMongo, toNormal });
+          clients = await back.getClientsByQuery({ $or: cliidArr }, { selfMongo: selfCoreMongo, toNormal });
+      
+          for (let obj of rows) {
+      
+            thisProject = projects.find((p) => { return p.proid === obj.proid });
+            thisClient = clients.find((c) => { return c.cliid === obj.cliid });
+            thisRequestNumber = 0;
+            for (let i = 0; i < thisClient.requests.length; i++) {
+              if (thisClient.requests[i].request.timeline.valueOf() <= thisProject.proposal.date.valueOf()) {
+                thisRequestNumber = i;
+                break;
+              }
+            }
+      
+            whereQuery = { cliid: obj.cliid };
+            updateQuery = {};
+      
+            tempString = autoComma(obj.spend.total >= obj.spend.styling ? obj.spend.total : obj.spend.styling, true);
+            thisIndex = budgetArr.findIndex((str) => { return (new RegExp(tempString, "gi")).test(str) });
+      
+            if (thisIndex !== -1) {
+              updateQuery["requests." + String(thisRequestNumber) + ".request.budget"] = budgetArr[thisIndex];
+              await back.updateClient([ whereQuery, updateQuery ], { selfMongo: selfCoreMongo });
+            }
+          }
+
+          logger.log("budget sync done").catch((err) => { console.log(err) });
+
+        } catch (e) {
+          console.log(e);
+        }
+      })().catch((err) => { console.log(err); })
+
+      res.send(JSON.stringify({ message: "will do" }));
+
+    } catch (e) {
+      logger.error("Contents lounge 서버 문제 생김 (rou_post_syncClientBudget): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 ContentsRouter.prototype.rou_post_storeContentsView = function () {
   const instance = this;
   const calcaulator = this.calcaulator;
