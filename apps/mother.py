@@ -90,6 +90,12 @@ def consoleLog(something, indentNumber: int = 2):
     pp = pprint.PrettyPrinter(indent=indentNumber)
     pp.pprint(something)
 
+def log(something):
+    if type(something) is dict or type(something) is list:
+        print(jsonStringify(something, indent=2))
+    else:
+        consoleLog(something)
+
 def patternTest(pattern: str, targetString: str):
     if type(pattern) is not str:
         raise TypeError("pattern must be string")
@@ -182,6 +188,60 @@ def listReduce(target: list, lambFunc, init = 0):
     if type(target) is not list:
         raise TypeError("target must be list")
     return reduce(lambFunc, target, init)
+
+def listEvery(target: list, lambFunc):
+    if type(target) is not list:
+        raise TypeError("target must be list")
+    result = True
+    for o in target:
+        resultBoolean = lambFunc(o)
+        if resultBoolean:
+            result = True
+        else:
+            result = False
+        if not result:
+            break
+    return result
+
+def listSome(target: list, lambFunc):
+    if type(target) is not list:
+        raise TypeError("target must be list")
+    result = False
+    for o in target:
+        resultBoolean = lambFunc(o)
+        if resultBoolean:
+            result = True
+        else:
+            result = False
+        if result:
+            break
+    return result
+
+def listSort(target: list, lambFunc = None, reverse = False):
+    if type(target) is not list:
+        raise TypeError("target must be list")
+    if lambFunc is None:
+        return sorted(target, reverse=reverse)
+    else:
+        length = len(target)
+        if length <= 1:
+            return target
+        else:
+            newList = objectDeepCopy(target)
+            for i in range(length - 1):
+                for j in range(length - 1 - i):
+                    if lambFunc(newList[j], newList[j + 1]) > 0:
+                        tempValue = 0
+                        if type(newList[j]) is dict or type(newList[j]) is list:
+                            tempValue = objectDeepCopy(newList[j])
+                        else:
+                            tempValue = newList[j]
+                        if type(newList[j + 1]) is dict or type(newList[j + 1]) is list:
+                            newList[j] = objectDeepCopy(newList[j + 1])
+                        else:
+                            newList[j] = newList[j + 1]
+                        newList[j + 1] = tempValue
+            return newList
 
 def getSystemInfo():
     def filterFunc(x):
@@ -396,6 +456,7 @@ def stringToDate(dateString: str):
         else:
             return dateParse(dateString)
     else:
+        dateString = dateString.strip()
         if dateString.strip() == '' or dateString.strip() == '-' or patternTest(r"없음", dateString):
             return numberToDate(1800, 0, 1)
         elif dateString.strip() == "예정" or dateString.strip() == "진행중" or dateString.strip() == "미정":
@@ -408,6 +469,32 @@ def stringToDate(dateString: str):
         elif patternTest(r"^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$", dateString):
             tempArr = dateString.split('-')
             return numberToDate(int(tempArr[0]), int(tempArr[1]) - 1, int(tempArr[2]))
+        elif patternTest(r"^[0-9][0-9][0-9][0-9][ ]*\-[ ]*[0-9]?[0-9][ ]*\-[ ]*[0-9]?[0-9]$", dateString):
+            tempArr = dateString.split('-')
+            return numberToDate(int(tempArr[0].strip()), int(tempArr[1].strip()) - 1, int(tempArr[2].strip()))
+        elif patternTest(r"^[0-9][0-9][ ]*\-[ ]*[0-9]?[0-9][ ]*\-[ ]*[0-9]?[0-9]$", dateString):
+            tempArr = dateString.split('-')
+            return numberToDate(int("20" + tempArr[0].strip()), int(tempArr[1].strip()) - 1, int(tempArr[2].strip()))
+        elif patternTest(r"^[0-9][0-9][0-9][0-9][ ]*\/[ ]*[0-9]?[0-9][ ]*\/[ ]*[0-9]?[0-9]$", dateString):
+            tempArr = dateString.split('/')
+            return numberToDate(int(tempArr[0].strip()), int(tempArr[1].strip()) - 1, int(tempArr[2].strip()))
+        elif patternTest(r"^[0-9][0-9][ ]*\/[ ]*[0-9]?[0-9][ ]*\/[ ]*[0-9]?[0-9]$", dateString):
+            tempArr = dateString.split('/')
+            return numberToDate(int("20" + tempArr[0].strip()), int(tempArr[1].strip()) - 1, int(tempArr[2].strip()))
+        elif patternTest(r"^[0-9][0-9][0-9][0-9][ ]*\:[ ]*[0-9]?[0-9][ ]*\:[ ]*[0-9]?[0-9]$", dateString):
+            tempArr = dateString.split(':')
+            return numberToDate(int(tempArr[0].strip()), int(tempArr[1].strip()) - 1, int(tempArr[2].strip()))
+        elif patternTest(r"^[0-9][0-9][ ]*\:[ ]*[0-9]?[0-9][ ]*\:[ ]*[0-9]?[0-9]$", dateString):
+            tempArr = dateString.split(':')
+            return numberToDate(int("20" + tempArr[0].strip()), int(tempArr[1].strip()) - 1, int(tempArr[2].strip()))
+        elif patternTest(r"^[0-9][0-9][0-9][0-9][ ]+[0-9]?[0-9][ ]+[0-9]?[0-9]$", dateString):
+            tempArr = dateString.split(' ')
+            tempArr = listFilter(tempArr, lambda x: x != "")
+            return numberToDate(int(tempArr[0].strip()), int(tempArr[1].strip()) - 1, int(tempArr[2].strip()))
+        elif patternTest(r"^[0-9][0-9][ ]+[0-9]?[0-9][ ]+[0-9]?[0-9]$", dateString):
+            tempArr = dateString.split(' ')
+            tempArr = listFilter(tempArr, lambda x: x != "")
+            return numberToDate(int("20" + tempArr[0].strip()), int(tempArr[1].strip()) - 1, int(tempArr[2].strip()))
         elif patternTest(r"^[0-9][0-9][년] ?[0-9]", dateString):
             tempArr = dateString.split("년")
             year = int(patternReplace(tempArr[0], r"[^0-9]", "")) + 2000
@@ -565,6 +652,21 @@ def fromIsoFormatDate(dateString: str, backMode: bool = False):
             return False
     else:
         return False
+    
+def fromIsoFormatDateBackQuery(dateString: str):
+    if type(dateString) is not str:
+        raise TypeError("dateString must be string")
+    if patternTest("T", dateString) and patternTest("Z", dateString):
+        if patternTest(r"^[0-9][0-9][0-9][0-9]", dateString):
+            dateArr = dateString.split("T")
+            fixedDateString = dateArr[0] + " " + dateArr[1][0:8]
+            dateObject = dateParse(fixedDateString)
+            finalDateObject = setRelativeDate(dateObject, 0, "hour")
+            return finalDateObject
+        else:
+            return False
+    else:
+        return False
 
 def isIsoFormatDate(dateString: str):
     if type(dateString) is not str:
@@ -643,6 +745,51 @@ def jsonParse(input: str):
 
 def bytesJsonParse(target: bytes):
     return json.loads(patternReplace(patternReplace(str(target), r"^b[\'\"\\]", ""), r"[\'\"\\]$", ""))
+
+def equalBackQuery(input):
+    if type(input) is dict or type(input) is list:
+        target = jsonStringify(input)
+    elif type(input) is str:
+        target = input
+    if isJson(target):
+        middleObject = json.loads(target)
+        result = None
+        if type(middleObject) is dict:
+            newDict = {}
+            for key in middleObject:
+                if type(middleObject[key]) is dict or type(middleObject[key]) is list:
+                    newDict[key] = equalBackQuery(middleObject[key])
+                elif type(middleObject[key]) is str and isIsoFormatDate(middleObject[key]):
+                    newDict[key] = fromIsoFormatDateBackQuery(middleObject[key])
+                else:
+                    newDict[key] = middleObject[key]
+            result = newDict
+        else:
+            newList = []
+            for factor in middleObject:
+                if type(factor) is dict or type(factor) is list:
+                    newList.append(equalBackQuery(factor))
+                elif type(factor) is str and isIsoFormatDate(factor):
+                    newList.append(fromIsoFormatDateBackQuery(factor))
+                else:
+                    newList.append(factor)
+            result = newList
+        return result
+    else:
+        queryArr = target.split("&")
+        queryDictionary = {}
+        for keyValue in queryArr:
+            key = keyValue.split("=")[0]
+            value = keyValue.split("=")[1]
+            if isJson(value):
+                if jsonParse(value) is None:
+                    queryDictionary[key] = None
+                else:
+                    queryDictionary[key] = equalBackQuery(value)
+            else:
+                queryDictionary[key] = value
+        newTarget = jsonStringify(queryDictionary)
+        return equalBackQuery(newTarget)
 
 def equalJson(input, backMode: bool = False):
     if type(input) is dict or type(input) is list:
@@ -1724,3 +1871,61 @@ async def mysqlQuery(query: str, selfMysql = None) -> dict:
         else:
             await cursor.close()
             return { "message": "done" }
+
+def flatMatrix(objectMatrix: list, property: str):
+    if type(objectMatrix) is not list or type(property) is not str:
+        raise TypeError("invalid input")
+    if not listEvery(objectMatrix, lambda x: type(x) is dict):
+        raise TypeError("invalid input")
+    
+    if patternTest(r"\.", property):
+        propertyMap = property.split(".")
+        if len(propertyMap) == 0:
+            raise TypeError("invalid input")
+        
+        boo = False
+        for obj in objectMatrix:
+            try:
+                targetObject = obj[propertyMap[0]]
+                for num in range(len(propertyMap)):
+                    if num == 0:
+                        pass
+                    else:
+                        targetObject = targetObject[propertyMap[num]]
+                boo = True
+            except:
+                boo = False
+            if not boo:
+                break
+        if not boo:
+            raise TypeError("invalid input")
+
+        result = []
+        for obj in objectMatrix:
+            propertyMap = property.split(".")
+            targetObject = obj[propertyMap[0]]
+            for num in range(len(propertyMap)):
+                if num == 0:
+                    pass
+                else:
+                    targetObject = targetObject[propertyMap[num]]
+            for x in targetObject:
+                result.append(x)
+        return result
+
+    else:
+        if not listEvery(objectMatrix, lambda x: property in x):
+            raise TypeError("invalid input")
+        if not listEvery(objectMatrix, lambda x: type(x[property]) is list):
+            raise TypeError("invalid input")
+        result = []
+        for obj in objectMatrix:
+            for x in obj[property]:
+                result.append(x)
+        return result
+
+
+
+
+
+

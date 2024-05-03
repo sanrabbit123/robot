@@ -1,6 +1,6 @@
 import asyncio
 import motor
-from apps.mother import processCwd, equalJson, jsonStringify, mongoConnection, objectDeepCopy, fileSystem, patternReplace, listMap
+from apps.mother import processCwd, equalJson, jsonStringify, mongoConnection, objectDeepCopy, fileSystem, patternReplace, listMap, consoleLog, equalBackQuery
 from apps.infoObj import returnAddress
 
 class BackMaker:
@@ -61,6 +61,7 @@ class BackMaker:
         db = connection[self.db]
         collectionObject = db[collection]
 
+        query = equalBackQuery(jsonStringify(query))
         if len(sortQueryArr) > 0:
             if limitNumber == 0:
                 result = collectionObject.find(query).sort(sortQueryArr[0][0], sortQueryArr[0][1])
@@ -116,6 +117,7 @@ class BackMaker:
         db = connection[self.db]
         collectionObject = db[collection]
 
+        query = equalBackQuery(jsonStringify(query))
         if len(sortQueryArr) > 0:
             if limitNumber == 0:
                 result = collectionObject.find(query, projectQuery).sort(sortQueryArr[0][0], sortQueryArr[0][1])

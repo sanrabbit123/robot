@@ -157,7 +157,7 @@ FrontAboutJs.prototype.insertInitBox = function () {
       justifyContent: "start",
       alignItems: "start",
     }
-  })
+  });
 
   createNode({
     mother: titleBoxRowTong,
