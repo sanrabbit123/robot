@@ -623,9 +623,9 @@ GeneralJs.prototype.setBaseTong = function (child) {
   } else if (this.backgroundType === 11) {
     baseTop = <%% 206, 200, 174, 150, 11 %%>;
   } else if (this.backgroundType === 20) {
-    baseTop = <%% 130, 130, 130, 130, 10 %%>;
+    baseTop = <%% 130, 125, 120, 100, 9 %%>;
   } else if (this.backgroundType === 21) {
-    baseTop = <%% 130, 130, 130, 130, 10 %%>;
+    baseTop = <%% 130, 125, 120, 100, 9 %%>;
   } else {
     baseTop = <%% 200, 200, 170, 140, 10 %%>;
   }
