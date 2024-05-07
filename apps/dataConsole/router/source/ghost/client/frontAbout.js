@@ -88,14 +88,15 @@ FrontAboutJs.prototype.insertInitBox = function () {
   let boxTopVisual;
   let mobileBlockTop;
   let titleBoxRowTong;
+  let blackTitleTextTop, blackTitleMarginLeft;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 52, 38, 35, 30, 4 %%>;
+  whiteBlockMarginBottom = <%% 52, 48, 46, 38, 5 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 26, 40, 36, 30, 5.6 %%>;
+  titleFontSize = <%% 26, 23, 22, 19, 5 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
@@ -109,21 +110,21 @@ FrontAboutJs.prototype.insertInitBox = function () {
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 210, 190, 170, 156, 7 %%>;
-  searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
+  searchBarPaddingTop = <%% 50, 50, 50, 40, 20 %%>;
+  searchBarHeight = <%% 36, 36, 36, 36, 8 %%>;
+  searchBarWidth = <%% 690, 516, 595, 476, 88 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
-  searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
-  searchIconTop = <%% 10, 10, 10, 10, 1.8 %%>;
+  searchIconRight = <%% 0, 0, 0, 0, 2 %%>;
+  searchIconTop = <%% 8, 8, 8, 8, 1.8 %%>;
 
   inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
 
   inputSize = <%% 14, 14, 14, 14, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
-  subTitleFontSize = <%% 21, 18, 17, 16, 3.4 %%>;
+  subTitleMarginTop = <%% 2, 2, 1, 1, 0.1 %%>;
+  subTitleFontSize = <%% 21, 19, 18, 16, 3.4 %%>;
   subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
@@ -135,6 +136,9 @@ FrontAboutJs.prototype.insertInitBox = function () {
 
   mobileBlockTop = 7;
 
+  blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
+  blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
+
   whiteBlock = createNode({
     mother: this.baseTong,
     style: {
@@ -143,7 +147,6 @@ FrontAboutJs.prototype.insertInitBox = function () {
       width: String(100) + '%',
       marginBottom: String(whiteBlockMarginBottom) + ea,
       top: String(-1 * boxTopVisual) + ea,
-      paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
     }
   });
 
@@ -153,7 +156,7 @@ FrontAboutJs.prototype.insertInitBox = function () {
       display: "flex",
       position: "relative",
       width: String(100) + '%',
-      flexDirection: "row",
+      flexDirection: desktop ? "row" : "column",
       justifyContent: "start",
       alignItems: "start",
     }
@@ -162,7 +165,7 @@ FrontAboutJs.prototype.insertInitBox = function () {
   createNode({
     mother: titleBoxRowTong,
     style: {
-      display: "flex",
+      display: desktop ? "inline-flex" : "flex",
       position: "relative",
       textAlign: "center",
       justifyContent: "center",
@@ -179,7 +182,6 @@ FrontAboutJs.prototype.insertInitBox = function () {
           fontWeight: String(titleFontWeight),
           color: colorExtended.mainBlue,
           wordSpacing: String(2) + "px",
-          "mix-blend-mode": "multiply",
         },
         bold: {
           fontSize: String(titleFontSize) + ea,
@@ -191,11 +193,10 @@ FrontAboutJs.prototype.insertInitBox = function () {
       }
     ]
   });
-
   createNode({
     mother: titleBoxRowTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       position: "relative",
       textAlign: "center",
       justifyContent: "center",
@@ -203,7 +204,7 @@ FrontAboutJs.prototype.insertInitBox = function () {
     },
     children: [
       {
-        text: "<u%|%u>&nbsp;&nbsp;&nbsp;" + subTitleContents,
+        text: desktop ? "<u%|%u>&nbsp;&nbsp;&nbsp;" + subTitleContents : subTitleContents,
         style: {
           display: "inline-block",
           position: "relative",
@@ -211,8 +212,8 @@ FrontAboutJs.prototype.insertInitBox = function () {
           fontFamily: "pretendard",
           fontWeight: String(subTitleWeight),
           color: colorChip.black,
-          marginLeft: String(12) + ea,
-          top: String(-2) + ea,
+          marginLeft: desktop ? String(blackTitleMarginLeft) + ea : "",
+          top: String(blackTitleTextTop) + ea,
         },
         under: {
           fontSize: String(subTitleFontSize) + ea,

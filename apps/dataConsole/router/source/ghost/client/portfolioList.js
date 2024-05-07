@@ -183,7 +183,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
   subTitleMarginTop = <%% 2, 2, 1, 1, 0.1 %%>;
-  subTitleFontSize = <%% 21, 18, 17, 16, 3.4 %%>;
+  subTitleFontSize = <%% 21, 19, 18, 16, 3.4 %%>;
   subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
@@ -228,7 +228,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
   mobileTitlePaddingTop = 2;
 
   blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
-  blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -1.5 : 1), (isMac() ? -1.5 : 1), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
+  blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
   
   searchTags = [];
   if (media[0]) {
@@ -349,7 +349,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
       justifyContent: "start",
       alignItems: "start",
     }
-  })
+  });
 
   // title and sub title
   createNode({

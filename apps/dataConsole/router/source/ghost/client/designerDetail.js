@@ -142,6 +142,8 @@ DesignerDetailJs.prototype.insertInitBox = function () {
   let mobileSearchWhiteBoxPaddingBottom;
   let mobileSearchWhiteBoxMarginBottom;
   let titleBoxRowTong;
+  let blackTitleMarginLeft;
+  let blackTitleTextTop;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -149,7 +151,7 @@ DesignerDetailJs.prototype.insertInitBox = function () {
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 26, 40, 36, 30, 5.6 %%>;
+  titleFontSize = <%% 26, 23, 22, 19, 5 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
@@ -163,9 +165,9 @@ DesignerDetailJs.prototype.insertInitBox = function () {
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 50, 160, 115, 85, 20 %%>;
+  searchBarPaddingTop = <%% 50, 50, 50, 40, 20 %%>;
   searchBarHeight = <%% 36, 36, 36, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
+  searchBarWidth = <%% 690, 516, 595, 476, 88 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
   searchIconRight = <%% 0, 0, 0, 0, 2 %%>;
@@ -176,11 +178,11 @@ DesignerDetailJs.prototype.insertInitBox = function () {
   inputSize = <%% 14, 14, 14, 14, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
-  subTitleFontSize = <%% 21, 18, 17, 16, 3.4 %%>;
+  subTitleMarginTop = <%% 2, 2, 1, 1, 0.1 %%>;
+  subTitleFontSize = <%% 21, 19, 18, 16, 3.4 %%>;
   subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  tagTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
   tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
@@ -189,27 +191,27 @@ DesignerDetailJs.prototype.insertInitBox = function () {
 
   mobileBlockTop = 7;
 
-  mobileSearchWhiteBoxPaddingTop = 5;
-  mobileSearchWhiteBoxPaddingBottom = 5;
+  mobileSearchWhiteBoxPaddingTop = 4;
+  mobileSearchWhiteBoxPaddingBottom = 7;
   mobileSearchWhiteBoxMarginBottom = 5;
 
   placeholder = "새아파트";
 
-  buttonSize = <%% 13, 13, 13, 13, 3.2 %%>;
+  buttonSize = <%% 13, 13, 13, 13, 3 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
   buttonBetween = <%% 1, 1, 1, 1, 2 %%>;
 
-  buttonTongWidth = <%% 90, 90, 85, 85, 90 %%>;
+  buttonTongWidth = <%% 65, 65, 60, 60, 90 %%>;
 
   buttonWidth = <%% 26, 26, 26, 24, 5.6 %%>;
   buttonHeight = <%% 12, 12, 12, 12, 3 %%>;
-  buttonTextTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), (isMac() ? 4 : 2), (isIphone() ? 1.2 : 1) %%>;
+  buttonTextTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isIphone() ? 1.3 : 1) %%>;
   buttonLeft = <%% -34, -34, -34, -31, -7 %%>;
   circleWidth = <%% 8, 8, 8, 8, 2 %%>;
 
   tabletVisualBottom = 4;
   mobileButtonTongMarginTop = 3;
-  mobileButtonBetween = 11.5;
+  mobileButtonBetween = 10;
   contentsPaddingTop = <%% 16, 16, 16, 0, 1 %%>;
 
   sortBoxRight = <%% 0, 0, 0, 0, 20 %%>;
@@ -217,13 +219,12 @@ DesignerDetailJs.prototype.insertInitBox = function () {
   mobileBackgroundHeight = 58;
   mobileVisualPaddingLeft = 6;
 
-  tagBoxRight = <%% 157, 153, 125, 125, 10 %%>;
+  tagBoxRight = <%% 132, 128, 100, 100, 10 %%>;
 
   serviceButtonClassName = "serviceButton";
 
-  if (mobile) {
-    instance.mother.backgroundImageBox.style.height = String(mobileBackgroundHeight) + ea;
-  }
+  blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
+  blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -233,7 +234,6 @@ DesignerDetailJs.prototype.insertInitBox = function () {
       width: String(100) + '%',
       marginBottom: String(whiteBlockMarginBottom) + ea,
       top: String(-1 * boxTopVisual) + ea,
-      paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
     }
   });
 
@@ -243,16 +243,17 @@ DesignerDetailJs.prototype.insertInitBox = function () {
       display: "flex",
       position: "relative",
       width: String(100) + '%',
-      flexDirection: "row",
+      flexDirection: desktop ? "row" : "column",
       justifyContent: "start",
       alignItems: "start",
     }
   })
 
+  // title and sub title
   createNode({
     mother: titleBoxRowTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       position: "relative",
       textAlign: "center",
       justifyContent: "center",
@@ -283,7 +284,7 @@ DesignerDetailJs.prototype.insertInitBox = function () {
   createNode({
     mother: titleBoxRowTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       position: "relative",
       textAlign: "center",
       justifyContent: "center",
@@ -291,7 +292,7 @@ DesignerDetailJs.prototype.insertInitBox = function () {
     },
     children: [
       {
-        text: "<u%|%u>&nbsp;&nbsp;&nbsp;" + subTitleContents,
+        text: desktop ? "<u%|%u>&nbsp;&nbsp;&nbsp;" + subTitleContents : subTitleContents,
         style: {
           display: "inline-block",
           position: "relative",
@@ -299,8 +300,8 @@ DesignerDetailJs.prototype.insertInitBox = function () {
           fontFamily: "pretendard",
           fontWeight: String(subTitleWeight),
           color: colorChip.black,
-          marginLeft: String(12) + ea,
-          top: String(-2) + ea,
+          marginLeft: desktop ? String(blackTitleMarginLeft) + ea : "",
+          top: String(blackTitleTextTop) + ea,
         },
         under: {
           fontSize: String(subTitleFontSize) + ea,
@@ -371,19 +372,19 @@ DesignerDetailJs.prototype.designerBlock = function () {
   tongPaddingLeft = <%% 75, 75, 65, 60, 6.5 %%>;
   blockMargin = <%% 0, 0, 0, 0, 0 %%>;
   columns = 1;
-  contentsPaddingTop = <%% 16, 16, 16, 0, 1 %%>;
+  contentsPaddingTop = <%% (isMac() ? 19 : 18), (isMac() ? 21 : 19), (isMac() ? 16 : 15), 0, 1 %%>;
 
-  blockHeight = <%% (isMac() ? 206 : 203), (isMac() ? 206 : 203), (isMac() ? 192 : 190), (isMac() ? 192 : 190), 42 %%>;
+  blockHeight = <%% (isMac() ? 206 : 203), (isMac() ? 206 : 203), (isMac() ? 192 : 190), (isMac() ? 192 : 190), 32 %%>;
   photoWidth = blockHeight - (contentsPaddingTop * 2);
 
   photoMargin = <%% 32, 32, 32, 32, 4 %%>;
 
   searchBarPaddingTop = <%% 50, 160, 115, 85, 20 %%>;
-  detailNameBoxPaddingTop = <%% 36, 36, 36, 36, 20 %%>;
-  detailNameBoxPaddingBottom = <%% 12, 12, 12, 12, 20 %%>;
+  detailNameBoxPaddingTop = <%% 36, 36, 36, 36, 8 %%>;
+  detailNameBoxPaddingBottom = <%% 12, 12, 12, 12, 8 %%>;
 
-  titleSize = <%% 32, 32, 30, 30, 4.2 %%>;
-  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleSize = <%% 30, 28, 28, 28, 4.5 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   careerSize = <%% 13, 13, 13, 13, 2.5 %%>;
   careerWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -394,7 +395,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
   grayBarTop = <%% 8, 8, 8, 8, 2 %%>;
   grayBarBottom = <%% 18, 18, 18, 18, 2 %%>;
 
-  descriptionSize = <%% 15, 15, 14, 14, 2.7 %%>;
+  descriptionSize = <%% 15, 15, 14, 14, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.55 %%>;
 
@@ -402,11 +403,11 @@ DesignerDetailJs.prototype.designerBlock = function () {
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
   buttonBetween = <%% 3, 3, 3, 3, 3 %%>;
 
-  buttonTongWidth = <%% 95, 95, 95, 95, 95 %%>;
+  buttonTongWidth = <%% 97, 97, 97, 97, 95 %%>;
 
   buttonWidth = <%% 28, 28, 28, 28, 5.6 %%>;
   buttonHeight = <%% 14, 14, 14, 14, 3 %%>;
-  buttonTextTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), (isMac() ? 4 : 2), (isIphone() ? 1.1 : 0.8) %%>;
+  buttonTextTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isIphone() ? 1.3 : 1) %%>;
   buttonLeft = <%% -36, -36, -36, -36, -7 %%>;
   circleWidth = <%% 10, 10, 10, 10, 2 %%>;
 
@@ -490,6 +491,8 @@ DesignerDetailJs.prototype.designerBlock = function () {
       position: "relative",
       paddingTop: String(detailNameBoxPaddingTop) + ea,
       paddingBottom: String(detailNameBoxPaddingBottom) + ea,
+      borderBottom: mobile ? "1px solid " + colorExtended.black : "",
+      marginBottom: mobile ? String(10) + ea : "",
     }
   });
 
@@ -515,7 +518,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
             display: desktop ? (media[3] ? "none" : "inline-block") : "block",
             position: "relative",
             top: String(contentsPaddingTop) + ea,
-            borderRadius: desktop ? String(8) + "px" : String(5) + "px",
+            borderRadius: desktop ? String(12) + "px" : String(12) + "px",
             width: desktop ? String(photoWidth) + ea : String(100) + '%',
             height: String(photoWidth) + ea,
             backgroundSize: desktop ? "auto 100%" : "100% auto",
@@ -544,7 +547,6 @@ DesignerDetailJs.prototype.designerBlock = function () {
 
     createNode({
       mother: contentsBlock,
-      text: designer.designer,
       style: {
         display: "block",
         position: "relative",
@@ -584,7 +586,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
     createNode({
       mother: contentsBlock,
       style: {
-        display: "block",
+        display: desktop ? "block" : "none",
         width: String(100) + '%',
         height: String(grayBarTop) + ea,
         borderBottom: "1px solid " + colorChip.gray3,
@@ -610,7 +612,7 @@ DesignerDetailJs.prototype.designerBlock = function () {
     createNode({
       mother: contentsBlock,
       style: {
-        display: desktop ? "inline-flex" : "flex",
+        display: desktop ? "inline-flex" : "none",
         flexDirection: desktop ? "column" : "row",
         position: desktop ? "absolute" : "relative",
         width: desktop ? String(buttonTongWidth) + ea : "",
@@ -861,7 +863,7 @@ DesignerDetailJs.prototype.portfolioBlock = function () {
   gsArray = this.generateGsArray(limitLength);
 
   baseWidth = Number(baseTong.style.width.replace(/[^0-9\.]/gi, ''));
-  photoMargin = <%% 12, 12, 11, 10, 3 %%>;
+  photoMargin = <%% 12, 11, 10, 9, 3 %%>;
   columns = <%% 4, 4, 3, 3, 2 %%>;
 
   photoRatio = (297 / 210);
@@ -874,14 +876,14 @@ DesignerDetailJs.prototype.portfolioBlock = function () {
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
 
-  titleSize = <%% 21, 17, 17, 15, 3 %%>;
+  titleSize = <%% 20, 17, 17, 15, 3.4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
   titleSubSize = <%% 14, 12, 12, 11, 2.5 %%>;
-  titleSubMarginTop = <%% 3, 3, 3, 2, 0.5 %%>;
+  titleSubMarginTop = <%% 3, 2, 2, 1, (isIphone() ? 0 : 0.3) %%>;
 
-  photoBlockMarginBottom = <%% 72, 66, 66, 62, 8 %%>;
+  photoBlockMarginBottom = <%% 64, 56, 48, 40, 8 %%>;
 
   garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
   garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
@@ -929,6 +931,9 @@ DesignerDetailJs.prototype.portfolioBlock = function () {
 
       title = contents.portfolio.title.main.split(", ")[1];
       title = title.replace(/홈?스타일링/gi, '') + serviceParsing(0).name[Number(service.serid.split('_')[1].replace(/[^0-9]/gi, '')) - 1];
+      if (mobile) {
+        title = title.split(" ").slice(0, title.split(" ").findIndex((s) => { return /py/gi.test(s) }) + 1).join(" ")
+      }
 
       if (media[0] || media[2]) {
         subTitle = contents.portfolio.title.sub;
@@ -986,7 +991,6 @@ DesignerDetailJs.prototype.portfolioBlock = function () {
         style: {
           display: "inline-block",
           width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
-          borderRadius: String(radiusPixel) + "px",
           marginRight: String(photoMargin) + ea,
           marginBottom: String(photoBlockMarginBottom) + ea,
           verticalAlign: "top",
@@ -999,7 +1003,7 @@ DesignerDetailJs.prototype.portfolioBlock = function () {
               display: "block",
               width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
               height: String(photoHeight) + ea,
-              borderRadius: String(5) + "px",
+              borderRadius: String(radiusPixel) + "px",
               marginBottom: String(photoMarginBottom) + ea,
               backgroundSize: "100% auto",
               backgroundPosition: "50% 50%",
@@ -1450,6 +1454,7 @@ DesignerDetailJs.prototype.insertBelowButton = function () {
   let belowButtonTextTop;
   let belowButtonSize;
   let belowButtonWeight;
+  let consultingTextTop;
 
   belowBoxHeight = <%% 150, 148, 148, 125, 24 %%>;
   belowButtonTop = <%% 45, 45, 45, 32, 7 %%>;
@@ -1461,6 +1466,8 @@ DesignerDetailJs.prototype.insertBelowButton = function () {
   belowButtonTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
   belowButtonSize = <%% 17, 17, 16, 16, 3.5 %%>;
   belowButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  consultingTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), -0.1 %%>;
 
   belowTong = createNode({
     mother: totalContents,
@@ -1502,7 +1509,7 @@ DesignerDetailJs.prototype.insertBelowButton = function () {
       position: "relative",
       height: String(belowButtonHeight) + ea,
       background: colorChip.white,
-      borderRadius: String(5) + "px",
+      borderRadius: String(10) + "px",
       paddingLeft: String(belowButtonWordPadding) + ea,
       paddingRight: String(belowButtonWordPadding) + ea,
       cursor: "pointer",
@@ -1517,7 +1524,7 @@ DesignerDetailJs.prototype.insertBelowButton = function () {
           fontWeight: String(belowButtonWeight),
           color: colorChip.black,
           fontFamily: "pretendard",
-          top: String(0) + ea,
+          top: String(consultingTextTop) + ea,
         }
       }
     ]
