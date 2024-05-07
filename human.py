@@ -42,6 +42,7 @@ from apps.backMaker.backMaker import BackMaker
 from apps.devContext.devContext import DevContext
 from apps.sqlCloud.context.sqlContext import SqlContext
 from apps.sqlCloud.sqlCloud import SqlCloud
+from apps.historyCloud.historyCloud import HistoryCloud
 
 back = BackMaker()
 address = returnAddress()
@@ -74,6 +75,10 @@ async def main():
         elif thisCommand == "sqlCloud":
             sqlServer = SqlCloud()
             await sqlServer.serverConnect()
+
+        elif thisCommand == "historyCloud":
+            historyServer = HistoryCloud()
+            await historyServer.serverConnect()
 
         else:
             pass
