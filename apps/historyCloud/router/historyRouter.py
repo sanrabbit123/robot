@@ -53,9 +53,9 @@ class HistoryRouter:
             headers["Content-Type"] = "text/html"
             html = '<html></html>'
             if keyword == "green0":
-                html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="http://' + pastHost + ':52080" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
+                html = '<html><head><meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" /><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="http://' + pastHost + ':52080" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
             elif keyword == "green1":
-                html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="http://' + pastHost + ':60080" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
+                html = '<html><head><meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" /><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="http://' + pastHost + ':60080" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
             elif keyword == "black0":
                 html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="https://' + host + ':48901" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
             elif keyword == "blue0":
