@@ -17,6 +17,8 @@ class HistoryRouter:
         self.mongo = coreConnection
         self.mongolocal = localConnection
         self.members = returnMembers()
+        self.postHost = "192.168.0.23"
+        self.host = self.address["officeinfo"]["test"]["host"]
 
     def setRouting(self):
         app = self.app
@@ -45,11 +47,20 @@ class HistoryRouter:
 
         @app.get("/history/<keyword>")
         async def rou_get_history(keyword):
+            host = self.host
+            pastHost = self.postHost
             headers = self.headers
             headers["Content-Type"] = "text/html"
-            html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="https://home-liaison.servehttp.com:48902" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
+            html = '<html></html>'
+            if keyword == "green0":
+                html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="https://' + pastHost + ':52080" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
+            elif keyword == "green1":
+                html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="https://' + pastHost + ':60080" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
+            elif keyword == "black0":
+                html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="https://' + host + ':48901" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
+            elif keyword == "blue0":
+                html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="https://' + host + ':48902" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
             return (html, 200, headers)
-
 
         # post =================================================================================
 
