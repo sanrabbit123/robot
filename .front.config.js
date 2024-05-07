@@ -7,5 +7,12 @@ module.exports = {
       exec_mode: "cluster",
       args: [ "logTest" ]
     },
+    {
+      name: "human",
+      script: "./human.py",
+      interpreter: "python3",
+      instances: 1,
+      args: [ "historyCloud" ]
+    },
   ]
 };
