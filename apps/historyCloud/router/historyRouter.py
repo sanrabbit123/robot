@@ -52,10 +52,17 @@ class HistoryRouter:
             headers = self.headers
             headers["Content-Type"] = "text/html"
             html = '<html></html>'
+
+            '''
+            %s/http:\/\/192.168.0.23:63000/https:\/\/home-liaison.servehttp.com:48896
+            %s/http:\/\/192.168.0.23:60080/https:\/\/home-liaison.servehttp.com:48898
+            %s/localhost:3000/home-liaison.servehttp.com:48898
+            '''
+
             if keyword == "green0":
-                html = '<html><head><meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" /><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="http://' + pastHost + ':52080" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
+                html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="https://' + host + ':48898" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
             elif keyword == "green1":
-                html = '<html><head><meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" /><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="http://' + pastHost + ':60080" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
+                html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="https://' + host + ':48899" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
             elif keyword == "black0":
                 html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="https://' + host + ':48901" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
             elif keyword == "blue0":
