@@ -147,6 +147,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   let illust2Top, illust2Right, illust2Width;
   let mobileTitlePaddingTop;
   let titleBoxRowTong;
+  let blackTitleTextTop, blackTitleMarginLeft;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -154,7 +155,7 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 26, 40, 36, 30, 5.6 %%>;
+  titleFontSize = <%% 26, 23, 22, 19, 5 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
@@ -168,9 +169,9 @@ ReviewListJs.prototype.insertInitBox = function () {
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 50, 160, 115, 85, 20 %%>;
+  searchBarPaddingTop = <%% 50, 50, 50, 40, 20 %%>;
   searchBarHeight = <%% 36, 36, 36, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
+  searchBarWidth = <%% 690, 516, 595, 476, 88 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
   searchIconRight = <%% 0, 0, 0, 0, 2 %%>;
@@ -181,11 +182,11 @@ ReviewListJs.prototype.insertInitBox = function () {
   inputSize = <%% 14, 14, 14, 14, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
+  subTitleMarginTop = <%% 2, 2, 1, 1, 0.1 %%>;
   subTitleFontSize = <%% 21, 18, 17, 16, 3.4 %%>;
   subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  tagTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
   tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
@@ -194,13 +195,13 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   mobileBlockTop = 7;
 
-  mobileSearchWhiteBoxPaddingTop = 5;
-  mobileSearchWhiteBoxPaddingBottom = 5;
+  mobileSearchWhiteBoxPaddingTop = 4;
+  mobileSearchWhiteBoxPaddingBottom = 7;
   mobileSearchWhiteBoxMarginBottom = 5;
 
   placeholder = "새아파트";
 
-  buttonSize = <%% 13, 13, 13, 13, 3.2 %%>;
+  buttonSize = <%% 13, 13, 13, 13, 3 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
   buttonBetween = <%% 1, 1, 1, 1, 2 %%>;
 
@@ -208,13 +209,13 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   buttonWidth = <%% 26, 26, 26, 24, 5.6 %%>;
   buttonHeight = <%% 12, 12, 12, 12, 3 %%>;
-  buttonTextTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), (isMac() ? 4 : 2), (isIphone() ? 1.2 : 1) %%>;
+  buttonTextTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isIphone() ? 1.3 : 1) %%>;
   buttonLeft = <%% -34, -34, -34, -31, -7 %%>;
   circleWidth = <%% 8, 8, 8, 8, 2 %%>;
 
   tabletVisualBottom = 4;
   mobileButtonTongMarginTop = 3;
-  mobileButtonBetween = 11.5;
+  mobileButtonBetween = 10;
   contentsPaddingTop = <%% 16, 16, 16, 0, 1 %%>;
 
   sortBoxRight = <%% 0, 0, 0, 0, 20 %%>;
@@ -225,6 +226,9 @@ ReviewListJs.prototype.insertInitBox = function () {
   tagBoxRight = <%% 132, 128, 100, 100, 10 %%>;
 
   mobileTitlePaddingTop = 2;
+
+  blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
+  blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -1.5 : 1), (isMac() ? -1.5 : 1), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
 
   searchTags = [];
   if (media[0]) {
@@ -332,7 +336,6 @@ ReviewListJs.prototype.insertInitBox = function () {
       width: String(100) + '%',
       marginBottom: String(whiteBlockMarginBottom) + ea,
       top: String(-1 * boxTopVisual) + ea,
-      paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
     }
   });
 
@@ -342,7 +345,7 @@ ReviewListJs.prototype.insertInitBox = function () {
       display: "flex",
       position: "relative",
       width: String(100) + '%',
-      flexDirection: "row",
+      flexDirection: desktop ? "row" : "column",
       justifyContent: "start",
       alignItems: "start",
     }
@@ -352,12 +355,11 @@ ReviewListJs.prototype.insertInitBox = function () {
   createNode({
     mother: titleBoxRowTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       position: "relative",
       textAlign: "center",
       justifyContent: "center",
       alignItems: "center",
-      paddingTop: desktop ? "" : String(mobileTitlePaddingTop) + ea,
     },
     children: [
       {
@@ -384,7 +386,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   createNode({
     mother: titleBoxRowTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       position: "relative",
       textAlign: "center",
       justifyContent: "center",
@@ -392,7 +394,7 @@ ReviewListJs.prototype.insertInitBox = function () {
     },
     children: [
       {
-        text: "<u%|%u>&nbsp;&nbsp;&nbsp;" + subTitleContents,
+        text: desktop ? "<u%|%u>&nbsp;&nbsp;&nbsp;" + subTitleContents : subTitleContents,
         style: {
           display: "inline-block",
           position: "relative",
@@ -400,8 +402,8 @@ ReviewListJs.prototype.insertInitBox = function () {
           fontFamily: "pretendard",
           fontWeight: String(subTitleWeight),
           color: colorChip.black,
-          marginLeft: String(12) + ea,
-          top: String(-2) + ea,
+          marginLeft: desktop ? String(blackTitleMarginLeft) + ea : "",
+          top: String(blackTitleTextTop) + ea,
         },
         under: {
           fontSize: String(subTitleFontSize) + ea,
@@ -423,12 +425,7 @@ ReviewListJs.prototype.insertInitBox = function () {
       alignItems: "center",
       paddingTop: desktop ? String(searchBarPaddingTop) + ea : String(mobileSearchWhiteBoxPaddingTop) + ea,
       paddingBottom: desktop ? "" : String(mobileSearchWhiteBoxPaddingBottom) + ea,
-      background: mobile ? colorChip.white : "",
-      borderRadius: mobile ? String(5) + "px" : "",
-      boxShadow: mobile ? "0px 3px 15px -9px " + colorChip.shadow : "",
       flexDirection: mobile ? "column" : "row",
-      marginTop: mobile ? String(searchBarPaddingTop) + ea : "",
-      marginBottom: mobile ? String(mobileSearchWhiteBoxMarginBottom) + ea : "",
     },
     children: [
       {
@@ -524,10 +521,9 @@ ReviewListJs.prototype.insertInitBox = function () {
       bottom: String(0),
       marginTop: desktop ? "" : String(mobileButtonTongMarginTop) + ea,
       right: desktop ? String(sortBoxRight) + ea : "",
-      justifyContent: desktop ? "left" : "center",
+      justifyContent: desktop ? "start" : "end",
       alignItems: "start",
       textAlign: "left",
-      paddingLeft: desktop ? "" : String(mobileVisualPaddingLeft) + ea,
     },
     children: [
       {
@@ -538,18 +534,6 @@ ReviewListJs.prototype.insertInitBox = function () {
         },
         event: {
           click: designerDetailToggleEvent(toggleTargetClassName2),
-          touchstart: function (e) {
-            const self = this;
-            self.setAttribute(touchStartConst, "on");
-            setQueue(() => {
-              self.setAttribute(touchStartConst, "off");
-            });
-          },
-          touchend: function (e) {
-            if (this.getAttribute(touchStartConst) === "on") {
-              designerDetailToggleEvent(toggleTargetClassName2).call(this, e);
-            }
-          }
         },
         text: "최신순 정렬",
         style: {
@@ -612,18 +596,6 @@ ReviewListJs.prototype.insertInitBox = function () {
         },
         event: {
           click: designerDetailToggleEvent(toggleTargetClassName2),
-          touchstart: function (e) {
-            const self = this;
-            self.setAttribute(touchStartConst, "on");
-            setQueue(() => {
-              self.setAttribute(touchStartConst, "off");
-            });
-          },
-          touchend: function (e) {
-            if (this.getAttribute(touchStartConst) === "on") {
-              designerDetailToggleEvent(toggleTargetClassName2).call(this, e);
-            }
-          }
         },
         text: "인기순 정렬",
         style: {
@@ -860,6 +832,8 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   let subTitleTextTop;
   let contentsArr;
   let radiusPixel;
+  let titleSubSize;
+  let titleSubMarginTop;
 
   if (typeof search === "string") {
 
@@ -925,17 +899,20 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
   garoWidth = (seroWidth * 2) + photoMargin;
   photoHeight = seroWidth * photoRatio;
-  photoMarginBottom = <%% 14, 14, 13, 12, 2.5 %%>;
+  photoMarginBottom = <%% 14, 14, 13, 12, 2.3 %%>;
 
-  quoteHeight = <%% 10, 8, 8, 7, 1.6 %%>;
+  quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
-  quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
+  quoteTop = <%% (isMac() ? 8 : 7), (isMac() ? 7 : 6.5), (isMac() ? 7 : 6.5), (isMac() ? 6 : 5), (isIphone() ? 1.4 : 1.2) %%>;
 
-  titleSize = <%% 20, 17, 17, 15, 3.2 %%>;
+  titleSize = <%% 20, 17, 17, 15, 3.4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleMarginLeft = <%% 6, 6, 5, 5, 1.1 %%>;
+  titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
-  photoBlockMarginBottom = <%% 64, 64, 60, 60, 8 %%>;
+  titleSubSize = <%% 14, 12, 12, 11, 2.5 %%>;
+  titleSubMarginTop = <%% 0, 0, 0, 0, -0.4 %%>;
+
+  photoBlockMarginBottom = <%% 64, 56, 48, 40, 8 %%>;
 
   garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
   garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
@@ -953,19 +930,19 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
 
   tagPaddingLeft = <%% 10, 8, 8, 7, 1 %%>;
   tagPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 0.9 %%>;
-  tagPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
+  tagPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isIphone() ? 1.2 : 1.4) %%>;
   tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
 
   subTitleMarginTop = <%% 2, 2, 2, 2, 0.2 %%>;
-  subTitleSize = <%% 13, 12, 12, 11, 2.6 %%>;
+  subTitleSize = <%% 13, 12, 12, 11, 2.5 %%>;
   subTitleTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 0), 0 %%>;
 
   reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
 
   arrowWidth = <%% 32, 28, 28, 26, 4 %%>;
   arrowHeight = <%% 9, 8, 8, 8, 1.5 %%>;
-  arrowBottom = <%% 3, 3, 3, 2, 1 %%>;
-  arrowReviewBottom = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 1.5 %%>;
+  arrowBottom = <%% 5, 5, 4, 3, 1 %%>;
+  arrowReviewBottom = <%% (isMac() ? 6 : 7), (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), 1.5 %%>;
 
   baseBlock = baseTong.children[1];
 
@@ -1097,9 +1074,9 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                   style: {
                     display: "inline-block",
                     position: "relative",
-                    top: String(0) + ea,
+                    top: String(titleSubMarginTop) + ea,
                     fontFamily: "pretendard",
-                    fontSize: String(subTitleSize) + ea,
+                    fontSize: String(titleSubSize) + ea,
                     fontWeight: String(500),
                     color: colorChip.gray5,
                   }

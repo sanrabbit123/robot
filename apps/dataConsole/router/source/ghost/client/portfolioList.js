@@ -171,7 +171,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
 
   searchBarPaddingTop = <%% 50, 50, 50, 40, 20 %%>;
   searchBarHeight = <%% 36, 36, 36, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
+  searchBarWidth = <%% 690, 516, 595, 476, 88 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
   searchIconRight = <%% 0, 0, 0, 0, 2 %%>;
@@ -228,7 +228,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
   mobileTitlePaddingTop = 2;
 
   blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
-  blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
+  blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -1.5 : 1), (isMac() ? -1.5 : 1), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
   
   searchTags = [];
   if (media[0]) {
@@ -534,18 +534,6 @@ PortfolioListJs.prototype.insertInitBox = function () {
         },
         event: {
           click: designerDetailToggleEvent(toggleTargetClassName2),
-          touchstart: function (e) {
-            const self = this;
-            self.setAttribute(touchStartConst, "on");
-            setQueue(() => {
-              self.setAttribute(touchStartConst, "off");
-            });
-          },
-          touchend: function (e) {
-            if (this.getAttribute(touchStartConst) === "on") {
-              designerDetailToggleEvent(toggleTargetClassName2).call(this, e);
-            }
-          }
         },
         text: "최신순 정렬",
         style: {
@@ -608,18 +596,6 @@ PortfolioListJs.prototype.insertInitBox = function () {
         },
         event: {
           click: designerDetailToggleEvent(toggleTargetClassName2),
-          touchstart: function (e) {
-            const self = this;
-            self.setAttribute(touchStartConst, "on");
-            setQueue(() => {
-              self.setAttribute(touchStartConst, "off");
-            });
-          },
-          touchend: function (e) {
-            if (this.getAttribute(touchStartConst) === "on") {
-              designerDetailToggleEvent(toggleTargetClassName2).call(this, e);
-            }
-          }
         },
         text: "인기순 정렬",
         style: {

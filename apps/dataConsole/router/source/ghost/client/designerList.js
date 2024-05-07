@@ -115,6 +115,7 @@ DesignerListJs.prototype.insertInitBox = function () {
   let mobileSearchWhiteBoxPaddingBottom;
   let mobileSearchWhiteBoxMarginBottom;
   let titleBoxRowTong;
+  let blackTitleTextTop, blackTitleMarginLeft;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -122,7 +123,7 @@ DesignerListJs.prototype.insertInitBox = function () {
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 26, 40, 36, 30, 5.6 %%>;
+  titleFontSize = <%% 26, 23, 22, 19, 5 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
@@ -136,9 +137,9 @@ DesignerListJs.prototype.insertInitBox = function () {
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 50, 160, 115, 85, 20 %%>;
+  searchBarPaddingTop = <%% 50, 50, 50, 40, 20 %%>;
   searchBarHeight = <%% 36, 36, 36, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
+  searchBarWidth = <%% 690, 516, 595, 476, 88 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
   searchIconRight = <%% 0, 0, 0, 0, 2 %%>;
@@ -149,11 +150,11 @@ DesignerListJs.prototype.insertInitBox = function () {
   inputSize = <%% 14, 14, 14, 14, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
+  subTitleMarginTop = <%% 2, 2, 1, 1, 0.1 %%>;
   subTitleFontSize = <%% 21, 18, 17, 16, 3.4 %%>;
   subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  tagTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
   tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
@@ -162,27 +163,27 @@ DesignerListJs.prototype.insertInitBox = function () {
 
   mobileBlockTop = 7;
 
-  mobileSearchWhiteBoxPaddingTop = 5;
-  mobileSearchWhiteBoxPaddingBottom = 5;
+  mobileSearchWhiteBoxPaddingTop = 4;
+  mobileSearchWhiteBoxPaddingBottom = 7;
   mobileSearchWhiteBoxMarginBottom = 5;
 
-  placeholder = "새아파트";
+  placeholder = "패브릭";
 
-  buttonSize = <%% 13, 13, 13, 13, 3.2 %%>;
+  buttonSize = <%% 13, 13, 13, 13, 3 %%>;
   buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
   buttonBetween = <%% 1, 1, 1, 1, 2 %%>;
 
-  buttonTongWidth = <%% 90, 90, 85, 85, 90 %%>;
+  buttonTongWidth = <%% 83, 83, 83, 83, 90 %%>;
 
   buttonWidth = <%% 26, 26, 26, 24, 5.6 %%>;
   buttonHeight = <%% 12, 12, 12, 12, 3 %%>;
-  buttonTextTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), (isMac() ? 4 : 2), (isIphone() ? 1.2 : 1) %%>;
+  buttonTextTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isIphone() ? 1.3 : 1) %%>;
   buttonLeft = <%% -34, -34, -34, -31, -7 %%>;
   circleWidth = <%% 8, 8, 8, 8, 2 %%>;
 
   tabletVisualBottom = 4;
   mobileButtonTongMarginTop = 3;
-  mobileButtonBetween = 11.5;
+  mobileButtonBetween = 10;
   contentsPaddingTop = <%% 16, 16, 16, 0, 1 %%>;
 
   sortBoxRight = <%% 0, 0, 0, 0, 20 %%>;
@@ -191,6 +192,9 @@ DesignerListJs.prototype.insertInitBox = function () {
   mobileVisualPaddingLeft = 6;
 
   tagBoxRight = <%% 157, 153, 125, 125, 10 %%>;
+
+  blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
+  blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -1.5 : 1), (isMac() ? -1.5 : 1), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
 
   designerDetailToggleEvent = (toggleTargetClassName) => {
     return async function (e) {
@@ -296,13 +300,7 @@ DesignerListJs.prototype.insertInitBox = function () {
     searchTags.push("전체");
   }
 
-  placeholder = "패브릭";
-
   serviceButtonClassName = "serviceButton";
-
-  if (mobile) {
-    instance.mother.backgroundImageBox.style.height = String(mobileBackgroundHeight) + ea;
-  }
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -312,7 +310,6 @@ DesignerListJs.prototype.insertInitBox = function () {
       width: String(100) + '%',
       marginBottom: String(whiteBlockMarginBottom) + ea,
       top: String(-1 * boxTopVisual) + ea,
-      paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
     }
   });
 
@@ -322,16 +319,17 @@ DesignerListJs.prototype.insertInitBox = function () {
       display: "flex",
       position: "relative",
       width: String(100) + '%',
-      flexDirection: "row",
+      flexDirection: desktop ? "row" : "column",
       justifyContent: "start",
       alignItems: "start",
     }
   })
 
+  // title and sub title
   createNode({
     mother: titleBoxRowTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       position: "relative",
       textAlign: "center",
       justifyContent: "center",
@@ -362,7 +360,7 @@ DesignerListJs.prototype.insertInitBox = function () {
   createNode({
     mother: titleBoxRowTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       position: "relative",
       textAlign: "center",
       justifyContent: "center",
@@ -370,7 +368,7 @@ DesignerListJs.prototype.insertInitBox = function () {
     },
     children: [
       {
-        text: "<u%|%u>&nbsp;&nbsp;&nbsp;" + subTitleContents,
+        text: desktop ? "<u%|%u>&nbsp;&nbsp;&nbsp;" + subTitleContents : subTitleContents,
         style: {
           display: "inline-block",
           position: "relative",
@@ -378,8 +376,8 @@ DesignerListJs.prototype.insertInitBox = function () {
           fontFamily: "pretendard",
           fontWeight: String(subTitleWeight),
           color: colorChip.black,
-          marginLeft: String(12) + ea,
-          top: String(-2) + ea,
+          marginLeft: desktop ? String(blackTitleMarginLeft) + ea : "",
+          top: String(blackTitleTextTop) + ea,
         },
         under: {
           fontSize: String(subTitleFontSize) + ea,
@@ -401,12 +399,7 @@ DesignerListJs.prototype.insertInitBox = function () {
       alignItems: "center",
       paddingTop: desktop ? String(searchBarPaddingTop) + ea : String(mobileSearchWhiteBoxPaddingTop) + ea,
       paddingBottom: desktop ? "" : String(mobileSearchWhiteBoxPaddingBottom) + ea,
-      background: mobile ? colorChip.white : "",
-      borderRadius: mobile ? String(5) + "px" : "",
-      boxShadow: mobile ? "0px 3px 15px -9px " + colorChip.shadow : "",
       flexDirection: mobile ? "column" : "row",
-      marginTop: mobile ? String(searchBarPaddingTop) + ea : "",
-      marginBottom: mobile ? String(mobileSearchWhiteBoxMarginBottom) + ea : "",
     },
     children: [
       {
@@ -502,10 +495,9 @@ DesignerListJs.prototype.insertInitBox = function () {
       bottom: String(0),
       marginTop: desktop ? "" : String(mobileButtonTongMarginTop) + ea,
       right: desktop ? String(sortBoxRight) + ea : "",
-      justifyContent: desktop ? "left" : "center",
+      justifyContent: desktop ? "start" : "end",
       alignItems: "start",
       textAlign: "left",
-      paddingLeft: desktop ? "" : String(mobileVisualPaddingLeft) + ea,
     },
     children: [
       {
@@ -516,27 +508,15 @@ DesignerListJs.prototype.insertInitBox = function () {
         },
         event: {
           click: designerDetailToggleEvent(toggleTargetClassName2),
-          touchstart: function (e) {
-            const self = this;
-            self.setAttribute(touchStartConst, "on");
-            setQueue(() => {
-              self.setAttribute(touchStartConst, "off");
-            });
-          },
-          touchend: function (e) {
-            if (this.getAttribute(touchStartConst) === "on") {
-              designerDetailToggleEvent(toggleTargetClassName2).call(this, e);
-            }
-          }
         },
         text: "디자이너만 보기",
         style: {
           display: "inline-block",
           position: "relative",
           fontSize: String(buttonSize) + ea,
+          fontFamily: "pretendard",
           fontWeight: String(buttonWeight),
           color: colorExtended.mainBlue,
-          fontFamily: "pretendard",
           cursor: "pointer",
           transition: "all 0.5s ease",
         },
@@ -571,7 +551,7 @@ DesignerListJs.prototype.insertInitBox = function () {
                       borderRadius: String(circleWidth) + ea,
                       top: String((buttonHeight - circleWidth) / 2) + ea,
                       left: String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea,
-                      background: colorChip.white,
+                      background: colorExtended.white,
                       position: "absolute",
                       transition: "all 0.5s ease",
                     }
@@ -590,18 +570,6 @@ DesignerListJs.prototype.insertInitBox = function () {
         },
         event: {
           click: designerDetailToggleEvent(toggleTargetClassName2),
-          touchstart: function (e) {
-            const self = this;
-            self.setAttribute(touchStartConst, "on");
-            setQueue(() => {
-              self.setAttribute(touchStartConst, "off");
-            });
-          },
-          touchend: function (e) {
-            if (this.getAttribute(touchStartConst) === "on") {
-              designerDetailToggleEvent(toggleTargetClassName2).call(this, e);
-            }
-          }
         },
         text: "리뷰 함께 보기",
         style: {
@@ -610,8 +578,8 @@ DesignerListJs.prototype.insertInitBox = function () {
           display: "inline-block",
           position: "relative",
           fontSize: String(buttonSize) + ea,
-          fontWeight: String(buttonWeight),
           fontFamily: "pretendard",
+          fontWeight: String(buttonWeight),
           color: colorChip.deactive,
           cursor: "pointer",
           transition: "all 0.5s ease",
@@ -833,7 +801,7 @@ DesignerListJs.prototype.designerList = function (search = null) {
   inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  designerTongPaddingTop = <%% 30, 40, 40, 40, 6 %%>;
+  designerTongPaddingTop = <%% 30, 40, 40, 40, 0 %%>;
 
   placeholder = "";
 
@@ -911,9 +879,9 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   let maxHeight;
   let z;
 
-  tongPaddingLeft = <%% 0, 0, 0, 0, 6.5 %%>;
-  blockMargin = <%% 40, 30, 20, 20, 2 %%>;
-  blockMarginBottom = <%% 20, 20, 15, 10, 4 %%>;
+  tongPaddingLeft = <%% 0, 0, 0, 0, 0 %%>;
+  blockMargin = <%% 40, 30, 20, 20, 0 %%>;
+  blockMarginBottom = <%% 20, 20, 15, 10, 5 %%>;
   columns = <%% 2, 2, 1, 1, 1 %%>;
   contentsPaddingTop = <%% 16, 16, 16, 16, 1 %%>;
 
@@ -932,7 +900,7 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   careerWeight = <%% 500, 500, 500, 500, 500 %%>;
   careerTextTop = <%% 0, 0, 0, 0, 0 %%>;
 
-  careerBetween = <%% 8, 8, 8, 8, 1.5 %%>;
+  careerBetween = <%% (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), 1.5 %%>;
 
   grayBarTop = <%% 8, 8, 8, 8, 1.5 %%>;
   grayBarBottom = <%% 14, 10, 14, 14, 1.5 %%>;
@@ -943,14 +911,13 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
 
   contentsBlockHeight = 4;
 
-  tagTongMarginTop = <%% 15, 15, 19, 15, (isIphone() ? 2.9 : 2.8) %%>;
+  tagTongMarginTop = <%% 15, 15, 19, 15, (isIphone() ? 3.6 : 3.8) %%>;
+  tagTongPaddingTop = <%% (isMac() ? 3 : 4), (isMac() ? 3 : 4), (isMac() ? 3 : 4), (isMac() ? 3 : 4), 0.6 %%>;
+  tagTongPaddingBottom = <%% (isMac() ? 4 : 3.5), (isMac() ? 4 : 3.5), (isMac() ? 4 : 3.5), (isMac() ? 4 : 3.5), (isIphone() ? 0.8 : 0.9) %%>;
+  tagTongPaddingLeft = <%% 8, 8, 8, 8, 1.8 %%>;
+  tagTongMarginRight = <%% 5, 5, 5, 5, 1 %%>;
 
-  tagTongPaddingTop = <%% 3, 3, 3, 3, 1.4 %%>;
-  tagTongPaddingBottom = <%% 4, 4, 4, 4, (isIphone() ? 1.6 : 2) %%>;
-  tagTongPaddingLeft = <%% 8, 8, 8, 8, 2.4 %%>;
-  tagTongMarginRight = <%% 5, 5, 5, 5, 1.2 %%>;
-
-  tagSize = <%% 11, 11, 11, 11, 2.5 %%>;
+  tagSize = <%% 11, 11, 11, 11, 2.4 %%>;
   tagWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   arrowWidth = <%% 40, 32, 32, 32, 3 %%>;
@@ -995,7 +962,6 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
   });
 
   targets.sort((a, b) => { return a.designer >= b.designer ? 1 : -1 });
-
   z = 0;
   for (let designer of targets) {
 
@@ -1343,7 +1309,7 @@ DesignerListJs.prototype.designerListWithReview = function (search = null) {
   inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  designerTongPaddingTop = <%% 30, 40, 40, 40, 6 %%>;
+  designerTongPaddingTop = <%% 30, 40, 40, 40, 0 %%>;
 
   placeholder = "";
 
@@ -1485,17 +1451,17 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
 
   contentsBlockHeight = 4;
 
-  tagTongMarginTop = <%% 15, 15, 19, 15, (isIphone() ? 2.9 : 2.8) %%>;
+  tagTongMarginTop = <%% 15, 15, 19, 15, (isIphone() ? 4.4 : 4.8) %%>;
 
-  tagTongPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), 1.4 %%>;
-  tagTongPaddingBottom = <%% (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isIphone() ? 1.6 : 2) %%>;
-  tagTongPaddingLeft = <%% 10, 10, 10, 10, 2.4 %%>;
-  tagTongMarginRight = <%% 5, 5, 5, 5, 1.2 %%>;
+  tagTongPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isIphone() ? 0.7 : 0.6) %%>;
+  tagTongPaddingBottom = <%% (isMac() ? 8 : 5), (isMac() ? 8 : 5), (isMac() ? 8 : 5), (isMac() ? 8 : 5), (isIphone() ? 0.6 : 0.9) %%>;
+  tagTongPaddingLeft = <%% 10, 10, 10, 10, 1.8 %%>;
+  tagTongMarginRight = <%% 5, 5, 5, 5, 1 %%>;
 
-  tagSize = <%% 12, 11, 12, 12, 2.5 %%>;
+  tagSize = <%% 12, 11, 12, 12, 2.4 %%>;
   tagWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  arrowWidth = <%% 40, 32, 32, 32, 3 %%>;
+  arrowWidth = <%% 40, 32, 32, 24, 3 %%>;
   arrowHeight = <%% 10, 8, 8, 8, 2 %%>;
   arrowBottom = <%% 12, 12, 12, 12, 1 %%>;
 
@@ -1523,7 +1489,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
   subTitleOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
   tagTongOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
 
-  reviewArrowWidth = <%% 28, 28, 26, 26, 4 %%>;
+  reviewArrowWidth = <%% 28, 26, 24, 18, 4 %%>;
   reviewArrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
   reviewArrowBottom = <%% 2, 2, 2, 2, 1 %%>;
   reviewArrowReviewBottom = <%% 4, 4, 4, 3, 1.5 %%>;
@@ -1573,7 +1539,7 @@ DesignerListJs.prototype.designerBlockWithReview = function (search = null) {
 
   for (let designer of targets) {
     contentsTarget = instance.contentsArr.toNormal().filter((obj) => { return obj.desid === designer.desid }).filter((obj) => {
-      return obj.contents.review.detailInfo.photodae.length > 0;
+      return (obj.contents.review.detailInfo.photodae.length > 0 && obj.contents.review.title.main !== "");
     });
     designer.contentsTarget = contentsTarget;
   }

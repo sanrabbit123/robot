@@ -92,7 +92,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
   photoRightMargin = <%% 50, 50, 45, 40, 50 %%>;
 
-  quoteHeight = <%% 14, 14, 13, 11, 2 %%>;
+  quoteHeight = <%% 14, 14, 13, 11, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% 140, 135, 125, 80, 5 %%>;
   quotePaddingLeft = <%% 2, 2, 2, 2, 5.4 %%>;
@@ -103,9 +103,9 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   mainTitleSize = <%% 36, 35, 33, 29, 4.5 %%>;
   mainTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
   mainTitleLineHeight = <%% 1.16, 1.16, 1.16, 1.16, 1.2 %%>;
-  mainTitleMarginTop = <%% 5, 5, 5, 3, 7.5 %%>;
+  mainTitleMarginTop = <%% 7, 7, 7, 5, 8.5 %%>;
 
-  subTitleSize = <%% 18, 17, 17, 15, 3.1 %%>;
+  subTitleSize = <%% 18, 17, 17, 15, 3 %%>;
   subTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   subTitleMarginTop = <%% 17, 17, 16, 13, 20 %%>;
 
@@ -118,8 +118,8 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
   mobileWhiteBoxTop = 20;
   mobileWhiteBoxLeft = 8;
-  mobileWhiteBoxWidth = 37;
-  mobileWhiteBoxHeight = 31;
+  mobileWhiteBoxWidth = 38;
+  mobileWhiteBoxHeight = 30;
 
   mobileWordingLeft = 5.3;
 
@@ -195,7 +195,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         left: String(mobileWhiteBoxLeft) + ea,
         width: String(mobileWhiteBoxWidth) + ea,
         height: String(mobileWhiteBoxHeight) + ea,
-        borderRadius: String(1) + ea,
+        borderRadius: String(12) + "px",
         overflow: "hidden",
       },
       children: [
@@ -228,7 +228,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
             textAlign: "left",
             fontSize: String(mainTitleSize) + ea,
             fontWeight: String(mainTitleWeight),
-            fontFamily: "graphik",
+            fontFamily: "mont",
             color: colorChip.black,
             top: String(mainTitleMarginTop) + ea,
             left: String(mobileWordingLeft) + ea,
@@ -306,7 +306,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         textAlign: "left",
         fontSize: String(mainTitleSize) + ea,
         fontWeight: String(mainTitleWeight),
-        fontFamily: "graphik",
+        fontFamily: "mont",
         color: colorChip.black,
         lineHeight: String(mainTitleLineHeight),
         marginTop: String(mainTitleMarginTop) + ea,

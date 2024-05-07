@@ -5361,7 +5361,11 @@ GeneralJs.designerCareer = function (designer, wordingMode = false, justNumbers 
     if (justNumbers) {
       return `${String(finalYear)}년 ${String(finalMonth)}개월`;
     } else {
-      return `경력&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;${String(finalYear)}년 ${String(finalMonth)}개월`;
+      if (GeneralJs.isIphone()) {
+        return `경력  <b%|%b>  ${String(finalYear)}년 ${String(finalMonth)}개월`;
+      } else {
+        return `경력&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;${String(finalYear)}년 ${String(finalMonth)}개월`;
+      }
     }
   } else {
     return [ finalYear, finalMonth ];
