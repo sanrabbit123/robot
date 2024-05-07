@@ -1243,6 +1243,7 @@ DataConsole.prototype.connect = async function () {
               "172.30.1.37:3000",
               "192.168.0.90:3000",
               "192.168.0.20:3000",
+              "1.229.181.6:53000",
             ];
             __wallLogicBoo = false;
             __originTarget = req.headers["origin"] || "invaild";

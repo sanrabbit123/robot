@@ -10,7 +10,7 @@ const LocalRouter = function (MONGOC) {
   this.targetIp = [
     "192.168.0.20",
     "192.168.0.24",
-    "192.168.0.30"
+    "192.168.0.30",
   ]
   this.port = 8000;
 }
