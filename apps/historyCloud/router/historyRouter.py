@@ -43,6 +43,12 @@ class HistoryRouter:
             headers = self.headers
             return (getSystemInfo(), 200, headers)
 
+        @app.get("/history/<keyword>")
+        async def rou_get_history(keyword):
+            headers = self.headers
+            return ({ "message": keyword }, 200, headers)
+
+
         # post =================================================================================
 
         @app.post("/coreReflect")
