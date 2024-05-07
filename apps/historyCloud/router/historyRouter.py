@@ -46,7 +46,9 @@ class HistoryRouter:
         @app.get("/history/<keyword>")
         async def rou_get_history(keyword):
             headers = self.headers
-            return ({ "message": keyword }, 200, headers)
+            headers["Content-Type"] = "text/html"
+            html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="https://home-liaison.servehttp.com:48902" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
+            return (html, 200, headers)
 
 
         # post =================================================================================
