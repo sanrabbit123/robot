@@ -9823,7 +9823,7 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
     if (typeof obj !== "object" || obj === null) {
       resolve(null);
     } else {
-      if (window.location.host === "localhost:3000" || window.location.host === "localhost:8080" || window.location.host === "localhost" || /^172/gi.test(window.location.host) || /^192/gi.test(window.location.host)) {
+      if (window.location.host === "localhost:3000" || window.location.host === "localhost:8080" || window.location.host === "localhost" || /^172/gi.test(window.location.host) || /^192/gi.test(window.location.host) || /1.229.181.6/gi.test(window.location.host)) {
         const json = {
           date: {
             now: new Date(),

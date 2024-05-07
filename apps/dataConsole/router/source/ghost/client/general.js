@@ -254,17 +254,17 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   let naviBaseMenu;
   let naviBaseBlue;
 
-  iconHeight = <%% 18, 17, 16, 13, 14 %%>;
+  iconHeight = <%% 18, 17, 15, 13, 14 %%>;
   iconTop = <%% 27, 27, 25, 23, 19 %%>;
 
   wordHeight = <%% 20, 20, 20, 20, 20 %%>;
   wordSize = <%% 15, 15, 15, 14, 13 %%>;
   wordTop = <%% 24, 24, 21, 21, 16.8 %%>;
 
-  wordingTop = <%% 22, 22, 20, 19, 10 %%>;
+  wordingTop = <%% (isMac() ? 22 : 21.5), (isMac() ? 22 : 21.5), (isMac() ? 19.5 : 18), (isMac() ? 18.5 : 17), 10 %%>;
   wordingMarginRightLast = <%% 9, 9, 4, 0, 1 %%>;
 
-  wordingSize = <%% 15, 15, 14.5, 13.5, 15 %%>;
+  wordingSize = <%% 15, 15, 14, 13, 15 %%>;
   wordingMarginRight = <%% 40, 36, 30, 19, 3 %%>;
   wordingWeight = 700;
 
@@ -712,7 +712,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
         mode: "page",
         liteMode: returnGet().mode === "lite",
         cliid: client.cliid,
-      }, "/ghostClient_updateAnalytics");
+      }, BACKHOST + "/ghostClient_updateAnalytics");
     }
     homeliaisonAnalytics({
       page: base.instance.pageName,

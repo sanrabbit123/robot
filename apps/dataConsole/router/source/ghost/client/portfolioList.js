@@ -155,7 +155,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 26, 24, 22, 19, 4.9 %%>;
+  titleFontSize = <%% 26, 23, 22, 19, 5 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
@@ -182,11 +182,11 @@ PortfolioListJs.prototype.insertInitBox = function () {
   inputSize = <%% 14, 14, 14, 14, 3.1 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  subTitleMarginTop = <%% 2, 2, 1, 1, 0.2 %%>;
+  subTitleMarginTop = <%% 2, 2, 1, 1, 0.1 %%>;
   subTitleFontSize = <%% 21, 18, 17, 16, 3.4 %%>;
   subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  tagTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
   tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
@@ -209,7 +209,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
 
   buttonWidth = <%% 26, 26, 26, 24, 5.6 %%>;
   buttonHeight = <%% 12, 12, 12, 12, 3 %%>;
-  buttonTextTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), (isMac() ? 4 : 2), (isIphone() ? 1.2 : 1) %%>;
+  buttonTextTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isIphone() ? 1.3 : 1) %%>;
   buttonLeft = <%% -34, -34, -34, -31, -7 %%>;
   circleWidth = <%% 8, 8, 8, 8, 2 %%>;
 
@@ -228,7 +228,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
   mobileTitlePaddingTop = 2;
 
   blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
-  blackTitleTextTop = <%% -2, -0.5, -1, -2, -0.5 %%>;
+  blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
   
   searchTags = [];
   if (media[0]) {
@@ -403,7 +403,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
           fontWeight: String(subTitleWeight),
           color: colorChip.black,
           marginLeft: desktop ? String(blackTitleMarginLeft) + ea : "",
-          top: desktop ? String(blackTitleTextTop) + ea : "",
+          top: String(blackTitleTextTop) + ea,
         },
         under: {
           fontSize: String(subTitleFontSize) + ea,
@@ -928,12 +928,12 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null,
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
 
-  titleSize = <%% 20, 17, 17, 15, 3 %%>;
+  titleSize = <%% 20, 17, 17, 15, 3.4 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
   titleSubSize = <%% 14, 12, 12, 11, 2.5 %%>;
-  titleSubMarginTop = <%% 3, 2, 2, 1, 0.5 %%>;
+  titleSubMarginTop = <%% 3, 2, 2, 1, (isIphone() ? 0 : 0.3) %%>;
 
   photoBlockMarginBottom = <%% 64, 56, 48, 40, 8 %%>;
 
@@ -986,6 +986,10 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null,
 
         title = contents.portfolio.title.main.split(", ")[1];
         title = title.replace(/홈?스타일링/gi, '') + serviceParsing(0).name[Number(service.serid.split('_')[1].replace(/[^0-9]/gi, '')) - 1];
+        if (mobile) {
+          title = title.split(" ").slice(0, title.split(" ").findIndex((s) => { return /py/gi.test(s) }) + 1).join(" ")
+        }
+
 
         if (media[0] || media[2]) {
           subTitle = contents.portfolio.title.sub;
