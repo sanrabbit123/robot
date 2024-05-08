@@ -168,6 +168,10 @@ ReviewListJs.prototype.insertInitBox = function () {
   let numbersMiddleBarHeight;
   let numbersBoxPaddingRight;
   let numbersBoxMarginBottom;
+  let sortButtonWidth, sortButtonBetween;
+  let sortButtonHeight;
+  let buttonArrowDownWidth, buttonArrowDownMarginLeft;
+  let serviceNum;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -181,9 +185,9 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 15, 15, 14, 13, 2.2 %%>;
+  servicePaddingLeft = <%% 18, 18, 14, 13, 2.2 %%>;
   serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 13.5, 13.5, 13, 12, 3.3 %%>;
+  serviceSize = <%% 14, 14, 13, 12, 3.3 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
@@ -206,7 +210,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   subTitleFontSize = <%% 21, 19, 18, 16, 3.4 %%>;
   subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
+  tagTextTop = <%% (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? 0.51 : 0), (isMac() ? -0.5 : 0), -0.3 %%>;
   tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
@@ -250,13 +254,16 @@ ReviewListJs.prototype.insertInitBox = function () {
   blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
   blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
 
+  sortButtonWidth = 90;
+  sortButtonBetween = 16;
+  sortButtonHeight = searchBarHeight - 1;
 
   numbersTotalHeight = 138;
   borderWidth = 1.5;
   numbersMaxWidth = 8000;
-  numbersRadius = 16;
-  numbersBoxMarginTop = 24;
-  numbersBoxMarginBottom = 2;
+  numbersRadius = 12;
+  numbersBoxMarginTop = 21;
+  numbersBoxMarginBottom = 30;
 
   numbersBoxPaddingLeft = 42;
   numbersBoxPaddingRight = 36;
@@ -268,7 +275,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   numbersImageWidth0 = 80;
   numbersImageWidth1 = 95;
   numbersImageWidth2 = 110;
-  numbersImageWidth3 = 115;
+  numbersImageWidth3 = 80;
 
   numbersImageTop0 = 8;
   numbersImageTop1 = 2;
@@ -284,8 +291,11 @@ ReviewListJs.prototype.insertInitBox = function () {
   numbersTextWeight = 700;
 
   numbersDescriptionSize = 14;
-  numbersDescriptionWeight = 700;
+  numbersDescriptionWeight = 500;
   numbersDescriptionTextTop = -5;
+
+  buttonArrowDownWidth = 6;
+  buttonArrowDownMarginLeft = 10;
 
   numbersMiddleTitleContents0 = "282";
   numbersMiddleTitleContents1 = "4.7";
@@ -298,18 +308,11 @@ ReviewListJs.prototype.insertInitBox = function () {
   numbersDescriptionContents3 = "82명의 디자이너";
 
   searchTags = [];
-  if (media[0]) {
-    searchTags.push("아이방");
-    searchTags.push("모던");
-    searchTags.push("제작가구");
-    searchTags.push("화이트");
-    searchTags.push("전체");
-  } else if (media[1]) {
-    searchTags.push("아이방");
-    searchTags.push("모던");
-    searchTags.push("제작가구");
-    searchTags.push("전체");
-  }
+  searchTags.push("평수");
+  searchTags.push("예산");
+  searchTags.push("시공 항목");
+  searchTags.push("스타일링 항목");
+  searchTags.push("전체");
 
   serviceButtonClassName = "serviceButton";
 
@@ -766,7 +769,7 @@ ReviewListJs.prototype.insertInitBox = function () {
       position: "relative",
       textAlign: "center",
       justifyContent: desktop ? "left" : "center",
-      alignItems: "center",
+      alignItems: desktop ? "end" : "center",
       paddingTop: desktop ? String(searchBarPaddingTop) + ea : String(mobileSearchWhiteBoxPaddingTop) + ea,
       paddingBottom: desktop ? "" : String(mobileSearchWhiteBoxPaddingBottom) + ea,
       flexDirection: mobile ? "column" : "row",
@@ -774,9 +777,50 @@ ReviewListJs.prototype.insertInitBox = function () {
     children: [
       {
         style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(sortButtonWidth) + ea,
+          height: String(sortButtonHeight) + ea,
+          background: colorExtended.gradientBlue,
+          borderRadius: String(sortButtonHeight) + ea,
+          border: String(borderWidth) + "px solid " + colorExtended.black,
+          boxSizing: "border-box",
+          marginRight: String(sortButtonBetween) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        },
+        children: [
+          {
+            text: "최신순",
+            style: {
+              fontSize: String(14) + ea,
+              fontWeight: String(800),
+              fontFamily: "pretendard",
+              position: "relative",
+              display: "inline-block",
+              top: String(tagTextTop) + ea,
+            }
+          },
+          {
+            mode: "svg",
+            source: svgMaker.buttonLineArrow(colorExtended.black),
+            style: {
+              position: "relative",
+              display: "inline-block",
+              width: String(buttonArrowDownWidth) + ea,
+              marginLeft: String(buttonArrowDownMarginLeft) + ea,
+              transformOrigin: "50% 50%",
+              transform: "rotate(90deg)",
+            }
+          }
+        ]
+      },
+      {
+        style: {
           display: "inline-block",
           position: "relative",
-          width: String(searchBarWidth) + ea,
+          width: String(searchBarWidth - sortButtonWidth - sortButtonBetween) + ea,
           height: String(searchBarHeight) + ea,
           background: colorChip.white,
           borderBottom: "1.5px solid " + colorExtended.black,
@@ -855,249 +899,76 @@ ReviewListJs.prototype.insertInitBox = function () {
     ]
   });
 
-  createNode({
+  serviceChildren = [];
+  serviceNum = 0;
+  for (let service of searchTags) {
+    serviceChildren.push({
+      class: [
+        serviceButtonClassName
+      ],
+      attribute: {
+        toggle: "off",
+        value: service,
+      },
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        height: String(sortButtonHeight - (borderWidth * 2)) + ea,
+        marginRight: String(serviceMarginRight) + ea,
+        paddingLeft: String(servicePaddingLeft) + ea,
+        paddingRight: String(servicePaddingLeft) + ea,
+        textAlign: "center",
+        background: colorExtended.white,
+        borderRadius: String(sortButtonHeight - (borderWidth * 2)) + ea,
+        border: String(borderWidth) + "px solid " + (serviceNum === searchTags.length - 1 ? colorExtended.gray3 : colorExtended.gray3),
+        cursor: "pointer",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+      },
+      children: [
+        {
+          text: service,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(tagTextTop) + ea,
+            fontSize: String(serviceSize) + ea,
+            fontFamily: "pretendard",
+            fontWeight: String(700),
+            color: serviceNum === searchTags.length - 1 ? colorExtended.black : colorExtended.black,
+            cursor: "pointer",
+            textAlign: "center",
+          },
+        },
+        {
+          mode: "svg",
+          source: svgMaker.buttonLineArrow(colorExtended.black),
+          style: {
+            position: "relative",
+            display: serviceNum === searchTags.length - 1 ? "none" : "inline-block",
+            width: String(buttonArrowDownWidth) + ea,
+            marginLeft: String(buttonArrowDownMarginLeft) + ea,
+            transformOrigin: "50% 50%",
+            transform: "rotate(90deg)",
+          }
+        }
+      ]
+    });
+    serviceNum++;
+  }
+  serviceBlock = createNode({
     mother: middleBox,
     style: {
-      display: desktop ? "inline-flex" : "flex",
-      flexDirection: desktop ? "column" : "row",
-      position: desktop ? "absolute" : "relative",
-      width: desktop ? String(buttonTongWidth) + ea : String(searchBarWidth) + ea,
-      bottom: String(0),
-      marginTop: desktop ? "" : String(mobileButtonTongMarginTop) + ea,
-      right: desktop ? String(sortBoxRight) + ea : "",
-      justifyContent: desktop ? "start" : "end",
-      alignItems: "start",
-      textAlign: "left",
+      display: desktop ? "block" : "none",
+      position: "absolute",
+      textAlign: "center",
+      right: String(0) + ea,
+      bottom: String(tagTongBottom) + ea,
     },
-    children: [
-      {
-        class: [ toggleTargetClassName2 ],
-        attribute: {
-          toggle: "on",
-          mode: "key9",
-        },
-        event: {
-          click: designerDetailToggleEvent(toggleTargetClassName2),
-        },
-        text: "최신순 정렬",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(buttonSize) + ea,
-          fontFamily: "pretendard",
-          fontWeight: String(buttonWeight),
-          color: colorExtended.mainBlue,
-          cursor: "pointer",
-          transition: "all 0.5s ease",
-        },
-        children: [
-          {
-            class: [ circleBaseClassName ],
-            style: {
-              position: "absolute",
-              width: String(buttonWidth) + ea,
-              height: String(buttonHeight) + ea,
-              background: colorExtended.mainBlue,
-              top: String(buttonTextTop) + ea,
-              left: String(buttonLeft) + ea,
-              borderRadius: String(buttonHeight) + ea,
-              transition: "all 0.5s ease",
-            },
-            children: [
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  width: withOut(0),
-                  height: withOut(0),
-                },
-                children: [
-                  {
-                    class: [ circleClassName ],
-                    style: {
-                      display: "inline-block",
-                      width: String(circleWidth) + ea,
-                      height: String(circleWidth) + ea,
-                      borderRadius: String(circleWidth) + ea,
-                      top: String((buttonHeight - circleWidth) / 2) + ea,
-                      left: String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea,
-                      background: colorExtended.white,
-                      position: "absolute",
-                      transition: "all 0.5s ease",
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        class: [ toggleTargetClassName2 ],
-        attribute: {
-          toggle: "off",
-          mode: "key8",
-        },
-        event: {
-          click: designerDetailToggleEvent(toggleTargetClassName2),
-        },
-        text: "인기순 정렬",
-        style: {
-          marginTop: desktop ? String(buttonBetween) + ea : '',
-          marginLeft: desktop ? '' : String(mobileButtonBetween) + ea,
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(buttonSize) + ea,
-          fontFamily: "pretendard",
-          fontWeight: String(buttonWeight),
-          color: colorChip.deactive,
-          cursor: "pointer",
-          transition: "all 0.5s ease",
-        },
-        children: [
-          {
-            class: [ circleBaseClassName ],
-            style: {
-              position: "absolute",
-              width: String(buttonWidth) + ea,
-              height: String(buttonHeight) + ea,
-              background: colorChip.gray5,
-              top: String(buttonTextTop) + ea,
-              left: String(buttonLeft) + ea,
-              borderRadius: String(buttonHeight) + ea,
-              transition: "all 0.5s ease",
-            },
-            children: [
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  width: withOut(0),
-                  height: withOut(0),
-                },
-                children: [
-                  {
-                    class: [ circleClassName ],
-                    style: {
-                      display: "inline-block",
-                      width: String(circleWidth) + ea,
-                      height: String(circleWidth) + ea,
-                      borderRadius: String(circleWidth) + ea,
-                      top: String((buttonHeight - circleWidth) / 2) + ea,
-                      left: String((buttonHeight - circleWidth) / 2) + ea,
-                      background: colorChip.white,
-                      position: "absolute",
-                      transition: "all 0.5s ease",
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-    ]
+    children: serviceChildren
   });
-
-  if (media[0] || media[1]) {
-    serviceChildren = [];
-    for (let service of searchTags) {
-      serviceChildren.push({
-        class: [
-          serviceButtonClassName
-        ],
-        attribute: {
-          toggle: "off",
-          value: service,
-        },
-        event: {
-          click: function (e) {
-            const targets = [ ...document.querySelectorAll('.' + serviceButtonClassName) ];
-            let thisValue;
-            for (let dom of targets) {
-              if (dom === this) {
-                dom.setAttribute("toggle", "on");
-                dom.firstChild.style.color = colorExtended.black;
-                dom.firstChild.querySelector('b').style.color = colorExtended.mainBlue;
-                thisValue = dom.getAttribute("value");
-              } else {
-                dom.setAttribute("toggle", "off");
-                dom.firstChild.style.color = colorExtended.deactive;
-                dom.firstChild.querySelector('b').style.color = colorExtended.deactive;
-              }
-            }
-
-            homeliaisonAnalytics({
-              page: instance.pageName,
-              standard: instance.firstPageViewTime,
-              action: "clickKeyword",
-              data: {
-                value: thisValue,
-                date: dateToString(new Date(), true),
-              },
-            }).catch((err) => {
-              console.log(err);
-            });
-
-            instance.search = /전체/gi.test(thisValue) ? "" : thisValue;
-            instance.portfolioBlock(null, instance.search, instance.sort);
-            instance.photoLoad = true;
-          }
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          height: String(searchBarHeight - (tagTongBottom * 2)) + ea,
-          marginRight: String(serviceMarginRight) + ea,
-          paddingLeft: String(servicePaddingLeft) + ea,
-          paddingRight: String(servicePaddingLeft) + ea,
-          textAlign: "center",
-          background: colorChip.white,
-          borderRadius: String(8) + "px",
-          border: "1px solid " + colorExtended.gray3,
-          cursor: "pointer",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-        },
-        children: [
-          {
-            text: "<b%#%b> " + service,
-            style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(tagTextTop) + ea,
-              fontSize: String(serviceSize) + ea,
-              fontFamily: "pretendard",
-              fontWeight: String(600),
-              color: colorChip.black,
-              cursor: "pointer",
-              textAlign: "center",
-            },
-            bold: {
-              color: colorChip.deactive,
-            }
-          }
-        ]
-      });
-    }
-    serviceBlock = createNode({
-      mother: middleBox,
-      style: {
-        display: desktop ? "block" : "none",
-        position: "absolute",
-        textAlign: "center",
-        right: String(tagBoxRight) + ea,
-        bottom: String(tagTongBottom) + ea,
-      },
-      children: serviceChildren
-    });
-    for (let dom of serviceBlock.children) {
-      dom.firstChild.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width + 1)) + "px";
-      dom.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width) + 1) + "px";
-    }
-    serviceBlock.lastChild.style.marginRight = "";
-  }
+  serviceBlock.lastChild.style.marginRight = "";
 
 }
 
@@ -1113,7 +984,7 @@ ReviewListJs.prototype.insertPortfolioBase = function () {
   let paddingBottom;
 
   limitLength = <%% 42, 42, 42, 42, 42 %%>;
-  photoMargin = <%% 20, 18, 18, 16, 3 %%>;
+  photoMargin = <%% 21, 20, 18, 16, 3 %%>;
   paddingBottom = <%% 120, 120, 120, 120, 40 %%>;
 
   baseBlock = createNode({
@@ -1178,6 +1049,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   let radiusPixel;
   let titleSubSize;
   let titleSubMarginTop;
+  let alpha;
 
   if (typeof search === "string") {
 
@@ -1236,21 +1108,21 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   gsArray = this.generateGsArray(limitLength);
 
   baseWidth = Number(baseTong.style.width.replace(/[^0-9\.]/gi, ''));
-  photoMargin = <%% 12, 12, 11, 10, 3 %%>;
+  photoMargin = <%% 21, 20, 18, 16, 3 %%>;
   columns = <%% 4, 4, 3, 3, 2 %%>;
 
   photoRatio = (297 / 210);
   seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
   garoWidth = (seroWidth * 2) + photoMargin;
   photoHeight = seroWidth * photoRatio;
-  photoMarginBottom = <%% 14, 14, 13, 12, 2.3 %%>;
+  photoMarginBottom = <%% 12, 12, 12, 12, 2.3 %%>;
 
   quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 8 : 7), (isMac() ? 7 : 6.5), (isMac() ? 7 : 6.5), (isMac() ? 6 : 5), (isIphone() ? 1.4 : 1.2) %%>;
 
-  titleSize = <%% 20, 17, 17, 15, 3.4 %%>;
-  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleSize = <%% 17, 17, 17, 15, 3.4 %%>;
+  titleWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
   titleSubSize = <%% 14, 12, 12, 11, 2.5 %%>;
@@ -1290,7 +1162,9 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
 
   baseBlock = baseTong.children[1];
 
-  radiusPixel = <%% 15, 15, 15, 15, 15 %%>;
+  radiusPixel = <%% 18, 18, 18, 18, 18 %%>;
+
+  alpha = 3;
 
   if (search !== null) {
     cleanChildren(baseBlock);
@@ -1308,7 +1182,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
           src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
         }
 
-        title = contents.review.title.sub.split(", ").join(" ");
+        title = contents.portfolio.spaceInfo.space;
         tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
 
         if (gsArray[i] !== 'g') {
@@ -1353,7 +1227,6 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
             marginRight: String(photoMargin) + ea,
             marginBottom: String(photoBlockMarginBottom) + ea,
             verticalAlign: "top",
-            overflow: "hidden",
             cursor: "pointer",
           },
           children: [
@@ -1377,66 +1250,50 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
               },
               children: [
                 {
-                  mode: "svg",
-                  source: svgMaker.doubleQuote(colorExtended.mainBlue),
-                  style: {
-                    display: "inline-block",
-                    height: String(quoteHeight) + ea,
-                    width: String(quoteWidth) + ea,
-                    verticalAlign: "top",
-                    position: "relative",
-                    top: String(quoteTop) + ea,
-                  }
-                },
-                {
                   text: title,
                   style: {
                     display: "inline-block",
+                    position: "relative",
                     fontSize: String(titleSize) + ea,
                     fontFamily: "pretendard",
                     fontWeight: String(titleWeight),
                     color: colorExtended.black,
-                    marginLeft: String(titleMarginLeft) + ea,
-                    width: withOut(quoteWidth + titleMarginLeft, ea),
                     verticalAlign: "top",
-                  }
-                }
-              ]
-            },
-            {
-              style: {
-                display: "block",
-                position: "relative",
-                marginTop: String(subTitleMarginTop) + ea,
-                paddingLeft: String(quoteWidth + titleMarginLeft + reviewSubTitleVisual) + ea,
-                width: withOut(quoteWidth + titleMarginLeft + reviewSubTitleVisual, ea),
-                left: String(0) + ea,
-              },
-              children: [
-                {
-                  text: contents.portfolio.spaceInfo.space + " " + String(contents.portfolio.spaceInfo.pyeong) + "py " + (desktop ? "홈스타일링 후기" : "후기"),
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    top: String(titleSubMarginTop) + ea,
-                    fontFamily: "pretendard",
-                    fontSize: String(titleSubSize) + ea,
-                    fontWeight: String(500),
-                    color: colorChip.gray5,
                   }
                 },
                 {
-                  mode: "svg",
-                  source: svgMaker.horizontalArrow(arrowWidth, arrowHeight),
+                  text: "34PY&nbsp;&nbsp;&nbsp;<u%3,000%u> <b%만원대%b>",
                   style: {
+                    display: "inline-block",
                     position: "absolute",
-                    width: String(arrowWidth) + ea,
+                    fontSize: String(19) + ea,
+                    fontFamily: "mont",
+                    fontWeight: String(700),
+                    color: colorExtended.gray4,
+                    verticalAlign: "top",
                     right: String(0),
-                    bottom: String(arrowReviewBottom) + ea,
+                    top: String(0) + ea,
+                    textAlign: "right",
+                  },
+                  bold: {
+                    fontSize: String(16) + ea,
+                    fontFamily: "pretendard",
+                    fontWeight: String(800),
+                    color: colorExtended.black,
+                    position: "relative",
+                    top: String(-1) + ea,
+                  },
+                  under: {
+                    fontSize: String(19) + ea,
+                    fontFamily: "mont",
+                    fontWeight: String(700),
+                    color: colorExtended.black,
+                    position: "relative",
+                    top: String(-0.5) + ea,
                   }
-                }
+                },
               ]
-            }
+            },
           ]
         });
 
