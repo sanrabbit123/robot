@@ -172,6 +172,8 @@ ReviewListJs.prototype.insertInitBox = function () {
   let sortButtonHeight;
   let buttonArrowDownWidth, buttonArrowDownMarginLeft;
   let serviceNum;
+  let borderWidthLight;
+  let sortButtonClickEvent;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -260,6 +262,7 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   numbersTotalHeight = <%% 138, 138, 138, 138, 138 %%>;
   borderWidth = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  borderWidthLight = 1;
   numbersMaxWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
   numbersRadius = <%% 12, 12, 12, 12, 12 %%>;
   numbersBoxMarginTop = <%% 15, 15, 15, 15, 15 %%>;
@@ -315,6 +318,21 @@ ReviewListJs.prototype.insertInitBox = function () {
   searchTags.push("전체");
 
   serviceButtonClassName = "serviceButton";
+
+  sortButtonClickEvent = () => {
+    return async function (e) {
+      try {
+        const thisSort = Number(this.getAttribute("sort"));
+
+
+        console.log(thisSort);
+
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
 
   designerDetailToggleEvent = (toggleTargetClassName) => {
     return async function (e) {
@@ -776,12 +794,19 @@ ReviewListJs.prototype.insertInitBox = function () {
     },
     children: [
       {
+        event: {
+          selectstart: (e) => { e.preventDefault() },
+          click: sortButtonClickEvent(),
+        },
+        attribute: {
+          sort: String(0),
+        },
         style: {
           display: "inline-flex",
           position: "relative",
           width: String(sortButtonWidth) + ea,
           height: String(sortButtonHeight) + ea,
-          background: colorExtended.gradientBlue,
+          background: colorExtended.gradientBlue2,
           borderRadius: String(sortButtonHeight) + ea,
           border: String(borderWidth) + "px solid " + colorExtended.black,
           boxSizing: "border-box",
@@ -789,13 +814,17 @@ ReviewListJs.prototype.insertInitBox = function () {
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
+          cursor: "pointer",
         },
         children: [
           {
+            event: {
+              selectstart: (e) => { e.preventDefault() },
+            },
             text: "최신순",
             style: {
-              fontSize: String(14) + ea,
-              fontWeight: String(800),
+              fontSize: String(serviceSize) + ea,
+              fontWeight: String(700),
               fontFamily: "pretendard",
               position: "relative",
               display: "inline-block",
@@ -913,14 +942,14 @@ ReviewListJs.prototype.insertInitBox = function () {
       style: {
         display: "inline-flex",
         position: "relative",
-        height: String(sortButtonHeight - (borderWidth * 2)) + ea,
+        height: String(sortButtonHeight - (borderWidthLight * 2)) + ea,
         marginRight: String(serviceMarginRight) + ea,
         paddingLeft: String(servicePaddingLeft) + ea,
         paddingRight: String(servicePaddingLeft) + ea,
         textAlign: "center",
         background: colorExtended.white,
-        borderRadius: String(sortButtonHeight - (borderWidth * 2)) + ea,
-        border: String(borderWidth) + "px solid " + (serviceNum === searchTags.length - 1 ? colorExtended.gray3 : colorExtended.gray3),
+        borderRadius: String(sortButtonHeight - (borderWidthLight * 2)) + ea,
+        border: String(borderWidthLight) + "px solid " + (serviceNum === searchTags.length - 1 ? colorExtended.gray3 : colorExtended.gray3),
         cursor: "pointer",
         justifyContent: "center",
         alignItems: "center",
@@ -1051,6 +1080,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   let titleSubMarginTop;
   let alpha;
   let montTitleSize;
+  let borderWidthLight;
 
   if (typeof search === "string") {
 
@@ -1164,7 +1194,9 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
 
   baseBlock = baseTong.children[1];
 
-  radiusPixel = <%% 18, 18, 18, 18, 18 %%>;
+  radiusPixel = <%% 15, 15, 15, 15, 15 %%>;
+
+  borderWidthLight = 1;
 
   alpha = 3;
 
