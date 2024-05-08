@@ -362,7 +362,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   createNode({
     mother: naviBase,
     mode: "svg",
-    source: svgMaker.homeliaisonLogoPlusEdge(modeNumber !== 1 ? colorExtended.white : (Math.random() >= 0.5 ? colorExtended.black : colorExtended.mainBlue)),
+    source: svgMaker.homeliaisonLogoPlusEdge(modeNumber !== 1 ? colorExtended.white : (Math.random() >= 0.5 ? colorExtended.black : colorExtended.black)),
     class: [ desktop ? "hoverDefault" : "hoverDefault_mobile" ],
     event: {
       click: (e) => {

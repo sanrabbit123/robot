@@ -175,7 +175,7 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 40, 38, 35, 30, 4 %%>;
+  whiteBlockMarginBottom = <%% 36, 36, 35, 30, 4 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
@@ -262,8 +262,8 @@ ReviewListJs.prototype.insertInitBox = function () {
   borderWidth = 1.5;
   numbersMaxWidth = 8000;
   numbersRadius = 12;
-  numbersBoxMarginTop = 21;
-  numbersBoxMarginBottom = 30;
+  numbersBoxMarginTop = 15;
+  numbersBoxMarginBottom = 45;
 
   numbersBoxPaddingLeft = 42;
   numbersBoxPaddingRight = 36;
@@ -984,7 +984,7 @@ ReviewListJs.prototype.insertPortfolioBase = function () {
   let paddingBottom;
 
   limitLength = <%% 42, 42, 42, 42, 42 %%>;
-  photoMargin = <%% 21, 20, 18, 16, 3 %%>;
+  photoMargin = <%% 18, 18, 18, 16, 3 %%>;
   paddingBottom = <%% 120, 120, 120, 120, 40 %%>;
 
   baseBlock = createNode({
@@ -1050,6 +1050,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   let titleSubSize;
   let titleSubMarginTop;
   let alpha;
+  let montTitleSize;
 
   if (typeof search === "string") {
 
@@ -1108,7 +1109,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   gsArray = this.generateGsArray(limitLength);
 
   baseWidth = Number(baseTong.style.width.replace(/[^0-9\.]/gi, ''));
-  photoMargin = <%% 21, 20, 18, 16, 3 %%>;
+  photoMargin = <%% 18, 18, 18, 16, 3 %%>;
   columns = <%% 4, 4, 3, 3, 2 %%>;
 
   photoRatio = (297 / 210);
@@ -1121,14 +1122,15 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 8 : 7), (isMac() ? 7 : 6.5), (isMac() ? 7 : 6.5), (isMac() ? 6 : 5), (isIphone() ? 1.4 : 1.2) %%>;
 
-  titleSize = <%% 17, 17, 17, 15, 3.4 %%>;
+  titleSize = <%% 18, 17, 17, 15, 3.4 %%>;
+  montTitleSize = <%% 21, 20, 20, 18, 3.4 %%>;
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
   titleSubSize = <%% 14, 12, 12, 11, 2.5 %%>;
   titleSubMarginTop = <%% 0, 0, 0, 0, -0.4 %%>;
 
-  photoBlockMarginBottom = <%% 64, 56, 48, 40, 8 %%>;
+  photoBlockMarginBottom = <%% 70, 60, 48, 40, 8 %%>;
 
   garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
   garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
@@ -1247,52 +1249,74 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                 display: "block",
                 position: "relative",
                 width: String(100) + '%',
+                overflow: "hidden",
               },
-              children: [
-                {
-                  text: title,
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    fontSize: String(titleSize) + ea,
-                    fontFamily: "pretendard",
-                    fontWeight: String(titleWeight),
-                    color: colorExtended.black,
-                    verticalAlign: "top",
-                  }
+              child: {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: String(500) + '%',
+                  left: String(0),
+                  top: String(0),
                 },
-                {
-                  text: "34PY&nbsp;&nbsp;&nbsp;<u%3,000%u> <b%만원대%b>",
-                  style: {
-                    display: "inline-block",
-                    position: "absolute",
-                    fontSize: String(19) + ea,
-                    fontFamily: "mont",
-                    fontWeight: String(700),
-                    color: colorExtended.gray4,
-                    verticalAlign: "top",
-                    right: String(0),
-                    top: String(0) + ea,
-                    textAlign: "right",
+                children: [
+                  {
+                    text: title + "&nbsp;&nbsp;<s%|%s>&nbsp;&nbsp;",
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      fontSize: String(titleSize) + ea,
+                      fontFamily: "pretendard",
+                      fontWeight: String(titleWeight),
+                      color: colorExtended.black,
+                      verticalAlign: "top",
+                    },
+                    special: {
+                      fontSize: String(titleSize) + ea,
+                      fontFamily: "pretendard",
+                      fontWeight: String(400),
+                      color: colorExtended.gray3,
+                    },
                   },
-                  bold: {
-                    fontSize: String(16) + ea,
-                    fontFamily: "pretendard",
-                    fontWeight: String(800),
-                    color: colorExtended.black,
-                    position: "relative",
-                    top: String(-1) + ea,
+                  {
+                    text: "34PY&nbsp;&nbsp;&nbsp;<u%3,000%u> <b%만원대%b>",
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      fontSize: String(montTitleSize) + ea,
+                      fontFamily: "mont",
+                      fontWeight: String(700),
+                      color: colorExtended.deactive,
+                      verticalAlign: "top",
+                      top: String(0) + ea,
+                    },
+                    bold: {
+                      fontSize: String(titleSize) + ea,
+                      fontFamily: "pretendard",
+                      fontWeight: String(800),
+                      color: colorExtended.black,
+                      position: "relative",
+                      top: String(-1) + ea,
+                    },
+                    under: {
+                      fontSize: String(montTitleSize) + ea,
+                      fontFamily: "mont",
+                      fontWeight: String(700),
+                      color: colorExtended.black,
+                      position: "relative",
+                      top: String(-0.5) + ea,
+                    },
+                    special: {
+                      fontSize: String(titleSize) + ea,
+                      fontFamily: "pretendard",
+                      fontWeight: String(400),
+                      color: colorExtended.gray3,
+                      position: "relative",
+                      top: String(-1) + ea,
+                    },
                   },
-                  under: {
-                    fontSize: String(19) + ea,
-                    fontFamily: "mont",
-                    fontWeight: String(700),
-                    color: colorExtended.black,
-                    position: "relative",
-                    top: String(-0.5) + ea,
-                  }
-                },
-              ]
+                ]
+              }
             },
           ]
         });
