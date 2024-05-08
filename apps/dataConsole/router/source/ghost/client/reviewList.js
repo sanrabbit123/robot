@@ -75,7 +75,7 @@ ReviewListJs.prototype.generateGsArray = function (number) {
 ReviewListJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media } = this;
+  const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const toggleTargetClassName = "toggleTargetClassName";
@@ -148,6 +148,26 @@ ReviewListJs.prototype.insertInitBox = function () {
   let mobileTitlePaddingTop;
   let titleBoxRowTong;
   let blackTitleTextTop, blackTitleMarginLeft;
+  let numbersBox;
+  let numbersBoxBarMargin;
+  let numbersBoxPaddingLeft;
+  let numbersMargin;
+  let multiplyNumber;
+  let numbersImageWidth;
+  let numbersWidth0, numbersWidth1, numbersWidth2, numbersWidth3;
+  let numbersTotalHeight;
+  let borderWidth;
+  let numbersMaxWidth, numbersRadius;
+  let numbersBoxMarginTop;
+  let numbersTextSize, numbersTextWeight;
+  let numbersImageWidth0, numbersImageWidth1, numbersImageWidth2, numbersImageWidth3;
+  let numbersImageTop0, numbersImageTop1, numbersImageTop2, numbersImageTop3;
+  let numbersMiddleTitleContents0, numbersMiddleTitleContents1, numbersMiddleTitleContents2, numbersMiddleTitleContents3;
+  let numbersDescriptionContents0, numbersDescriptionContents1, numbersDescriptionContents2, numbersDescriptionContents3;
+  let numbersDescriptionSize, numbersDescriptionWeight, numbersDescriptionTextTop;
+  let numbersMiddleBarHeight;
+  let numbersBoxPaddingRight;
+  let numbersBoxMarginBottom;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -229,6 +249,53 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
   blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
+
+
+  numbersTotalHeight = 138;
+  borderWidth = 1.5;
+  numbersMaxWidth = 8000;
+  numbersRadius = 16;
+  numbersBoxMarginTop = 24;
+  numbersBoxMarginBottom = 2;
+
+  numbersBoxPaddingLeft = 42;
+  numbersBoxPaddingRight = 36;
+  numbersBoxBarMargin = 36;
+  numbersMiddleBarHeight = 100;
+
+  numbersMargin = 20;
+
+  numbersImageWidth0 = 80;
+  numbersImageWidth1 = 95;
+  numbersImageWidth2 = 110;
+  numbersImageWidth3 = 115;
+
+  numbersImageTop0 = 8;
+  numbersImageTop1 = 2;
+  numbersImageTop2 = 7;
+  numbersImageTop3 = 7;
+
+  numbersWidth0 = 140;
+  numbersWidth1 = 140;
+  numbersWidth2 = 140;
+  numbersWidth3 = 110;
+
+  numbersTextSize = 38;
+  numbersTextWeight = 700;
+
+  numbersDescriptionSize = 14;
+  numbersDescriptionWeight = 700;
+  numbersDescriptionTextTop = -5;
+
+  numbersMiddleTitleContents0 = "282";
+  numbersMiddleTitleContents1 = "4.7";
+  numbersMiddleTitleContents2 = "3447";
+  numbersMiddleTitleContents3 = "82";
+
+  numbersDescriptionContents0 = "282개의 고객 평가";
+  numbersDescriptionContents1 = "5점 만점 4.7 만족도";
+  numbersDescriptionContents2 = "3447건의 프로젝트";
+  numbersDescriptionContents3 = "82명의 디자이너";
 
   searchTags = [];
   if (media[0]) {
@@ -414,6 +481,283 @@ ReviewListJs.prototype.insertInitBox = function () {
       }
     ]
   });
+
+  numbersBox = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: String(numbersMaxWidth) + ea,
+      marginTop: String(numbersBoxMarginTop) + ea,
+      marginBottom: String(numbersBoxMarginBottom) + ea,
+      height: String(numbersTotalHeight) + ea,
+      borderRadius: String(numbersRadius) + "px",
+      border: String(borderWidth) + "px solid " + colorExtended.black,
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      paddingLeft: String(numbersBoxPaddingLeft) + ea,
+      paddingRight: String(numbersBoxPaddingRight) + ea,
+      boxSizing: "border-box",
+    }
+  });
+
+  createNode({
+    mother: numbersBox,
+    mode: "img",
+    attribute: {
+      src: ReviewListJs.binaryPath + "/source0.svg",
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: String(numbersImageWidth0) + ea,
+      top: String(numbersImageTop0) + ea,
+    }
+  });
+  createNode({
+    mother: numbersBox,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      height: String(numbersTotalHeight) + ea,
+      width: String(numbersWidth0) + ea,
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      marginLeft: String(numbersMargin) + ea,
+    },
+    children: [
+      {
+        text: numbersMiddleTitleContents0,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          textAlign: "center",
+          fontSize: String(numbersTextSize) + ea,
+          fontWeight: String(numbersTextWeight),
+          fontFamily: "mont",
+          color: colorExtended.mainBlue,
+        }
+      },
+      {
+        text: numbersDescriptionContents0,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          textAlign: "center",
+          fontSize: String(numbersDescriptionSize) + ea,
+          fontWeight: String(numbersDescriptionWeight),
+          top: String(numbersDescriptionTextTop) + ea,
+          fontFamily: "pretendard",
+          color: colorExtended.black,
+        }
+      }
+    ],
+  });
+  createNode({
+    mother: numbersBox,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: String(numbersBoxBarMargin) + ea,
+      height: String(numbersMiddleBarHeight) + ea,
+      borderRight: "1px solid " + colorExtended.gray3,
+      marginRight: String(numbersBoxBarMargin) + ea,
+      boxSizing: "border-box",
+    }
+  });
+
+  createNode({
+    mother: numbersBox,
+    mode: "img",
+    attribute: {
+      src: ReviewListJs.binaryPath + "/source1.svg",
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: String(numbersImageWidth1) + ea,
+      top: String(numbersImageTop1) + ea,
+    }
+  });
+  createNode({
+    mother: numbersBox,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      height: String(numbersTotalHeight) + ea,
+      width: String(numbersWidth1) + ea,
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      marginLeft: String(numbersMargin) + ea,
+    },
+    children: [
+      {
+        text: numbersMiddleTitleContents1,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          textAlign: "center",
+          fontSize: String(numbersTextSize) + ea,
+          fontWeight: String(numbersTextWeight),
+          fontFamily: "mont",
+          color: colorExtended.mainBlue,
+        }
+      },
+      {
+        text: numbersDescriptionContents1,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          textAlign: "center",
+          fontSize: String(numbersDescriptionSize) + ea,
+          fontWeight: String(numbersDescriptionWeight),
+          top: String(numbersDescriptionTextTop) + ea,
+          fontFamily: "pretendard",
+          color: colorExtended.black,
+        }
+      }
+    ],
+  });
+  createNode({
+    mother: numbersBox,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: String(numbersBoxBarMargin) + ea,
+      height: String(numbersMiddleBarHeight) + ea,
+      borderRight: "1px solid " + colorExtended.gray3,
+      marginRight: String(numbersBoxBarMargin) + ea,
+      boxSizing: "border-box",
+    }
+  });
+
+  createNode({
+    mother: numbersBox,
+    mode: "img",
+    attribute: {
+      src: ReviewListJs.binaryPath + "/source2.svg",
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: String(numbersImageWidth2) + ea,
+      top: String(numbersImageTop2) + ea,
+    }
+  });
+  createNode({
+    mother: numbersBox,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      height: String(numbersTotalHeight) + ea,
+      width: String(numbersWidth2) + ea,
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      marginLeft: String(numbersMargin) + ea,
+    },
+    children: [
+      {
+        text: numbersMiddleTitleContents2,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          textAlign: "center",
+          fontSize: String(numbersTextSize) + ea,
+          fontWeight: String(numbersTextWeight),
+          fontFamily: "mont",
+          color: colorExtended.mainBlue,
+        }
+      },
+      {
+        text: numbersDescriptionContents2,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          textAlign: "center",
+          fontSize: String(numbersDescriptionSize) + ea,
+          fontWeight: String(numbersDescriptionWeight),
+          top: String(numbersDescriptionTextTop) + ea,
+          fontFamily: "pretendard",
+          color: colorExtended.black,
+        }
+      }
+    ],
+  });
+  createNode({
+    mother: numbersBox,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: String(numbersBoxBarMargin) + ea,
+      height: String(numbersMiddleBarHeight) + ea,
+      borderRight: "1px solid " + colorExtended.gray3,
+      marginRight: String(numbersBoxBarMargin) + ea,
+      boxSizing: "border-box",
+    }
+  });
+  
+  createNode({
+    mother: numbersBox,
+    mode: "img",
+    attribute: {
+      src: ReviewListJs.binaryPath + "/source3.svg",
+    },
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: String(numbersImageWidth3) + ea,
+      top: String(numbersImageTop3) + ea,
+    }
+  });
+  createNode({
+    mother: numbersBox,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      height: String(numbersTotalHeight) + ea,
+      width: String(numbersWidth3) + ea,
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      marginLeft: String(numbersMargin) + ea,
+    },
+    children: [
+      {
+        text: numbersMiddleTitleContents3,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          textAlign: "center",
+          fontSize: String(numbersTextSize) + ea,
+          fontWeight: String(numbersTextWeight),
+          fontFamily: "mont",
+          color: colorExtended.mainBlue,
+        }
+      },
+      {
+        text: numbersDescriptionContents3,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          textAlign: "center",
+          fontSize: String(numbersDescriptionSize) + ea,
+          fontWeight: String(numbersDescriptionWeight),
+          top: String(numbersDescriptionTextTop) + ea,
+          fontFamily: "pretendard",
+          color: colorExtended.black,
+        }
+      }
+    ],
+  });
+
+  numbersBox.style.width = "auto";
+  multiplyNumber = (standardWidth / ((numbersBoxPaddingLeft + numbersBoxPaddingRight) + (numbersBoxBarMargin * 6) + (numbersImageWidth0 + numbersImageWidth1 + numbersImageWidth2 + numbersImageWidth3) + (numbersMargin * 4) + (numbersWidth0 + numbersWidth1 + numbersWidth2 + numbersWidth3) + (borderWidth * 2)));
+  numbersBox.style.transform = "scale(" + String(multiplyNumber) + ")";
+  numbersBox.style.transformOrigin = "0% 0%";
 
   middleBox = createNode({
     mother: whiteBlock,

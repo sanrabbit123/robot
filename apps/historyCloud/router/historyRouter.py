@@ -59,11 +59,9 @@ class HistoryRouter:
             %s/localhost:3000/home-liaison.servehttp.com:48898
             '''
 
-            if keyword == "green0":
+            if keyword == "green0" or keyword == "green":
                 html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="https://' + host + ':48898" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
-            elif keyword == "green1":
-                html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="https://' + host + ':48899" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
-            elif keyword == "black0":
+            elif keyword == "black0" or keyword == "black":
                 html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="https://' + host + ':48901" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
             elif keyword == "blue0":
                 html = '<html><head><style>body {margin: 0;padding: 0;border: 0;}* {margin: 0;padding: 0;border: 0;}</style></head><body><iframe src="https://' + host + ':48902" style="display: block;width: 100vw;height: 100vh;margin: 0;padding: 0;border: 0;"></iframe></body></html>'
