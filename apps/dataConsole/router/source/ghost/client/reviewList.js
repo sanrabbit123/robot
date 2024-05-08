@@ -254,48 +254,48 @@ ReviewListJs.prototype.insertInitBox = function () {
   blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
   blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
 
-  sortButtonWidth = 90;
-  sortButtonBetween = 16;
-  sortButtonHeight = searchBarHeight - 1;
+  sortButtonWidth = <%% 90, 90, 90, 90, 90 %%>;
+  sortButtonBetween = <%% 16, 16, 16, 16, 16 %%>;
+  sortButtonHeight = <%% searchBarHeight - 1, searchBarHeight - 1, searchBarHeight - 1, searchBarHeight - 1, searchBarHeight - 1 %%>;
 
-  numbersTotalHeight = 138;
-  borderWidth = 1.5;
-  numbersMaxWidth = 8000;
-  numbersRadius = 12;
-  numbersBoxMarginTop = 15;
-  numbersBoxMarginBottom = 45;
+  numbersTotalHeight = <%% 138, 138, 138, 138, 138 %%>;
+  borderWidth = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  numbersMaxWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
+  numbersRadius = <%% 12, 12, 12, 12, 12 %%>;
+  numbersBoxMarginTop = <%% 15, 15, 15, 15, 15 %%>;
+  numbersBoxMarginBottom = <%% 46, 46, 46, 46, 46 %%>;
 
-  numbersBoxPaddingLeft = 42;
-  numbersBoxPaddingRight = 36;
-  numbersBoxBarMargin = 36;
-  numbersMiddleBarHeight = 100;
+  numbersBoxPaddingLeft = <%% 42, 42, 42, 42, 42 %%>;
+  numbersBoxPaddingRight = <%% 36, 36, 36, 36, 36 %%>;
+  numbersBoxBarMargin = <%% 36, 36, 36, 36, 36 %%>;
+  numbersMiddleBarHeight = <%% 100, 100, 100, 100, 100 %%>;
 
-  numbersMargin = 20;
+  numbersMargin = <%% 20, 20, 20, 20, 20 %%>;
 
-  numbersImageWidth0 = 80;
-  numbersImageWidth1 = 95;
-  numbersImageWidth2 = 110;
-  numbersImageWidth3 = 80;
+  numbersImageWidth0 = <%% 80, 80, 80, 80, 80 %%>;
+  numbersImageWidth1 = <%% 95, 95, 95, 95, 95 %%>;
+  numbersImageWidth2 = <%% 110, 110, 110, 110, 110 %%>;
+  numbersImageWidth3 = <%% 80, 80, 80, 80, 80 %%>;
 
-  numbersImageTop0 = 8;
-  numbersImageTop1 = 2;
-  numbersImageTop2 = 7;
-  numbersImageTop3 = 7;
+  numbersImageTop0 = <%% 8, 8, 8, 8, 8 %%>;
+  numbersImageTop1 = <%% 2, 2, 2, 2, 2 %%>;
+  numbersImageTop2 = <%% 7, 7, 7, 7, 7 %%>;
+  numbersImageTop3 = <%% 7, 7, 7, 7, 7 %%>;
 
-  numbersWidth0 = 140;
-  numbersWidth1 = 140;
-  numbersWidth2 = 140;
-  numbersWidth3 = 110;
+  numbersWidth0 = <%% 140, 140, 140, 140, 140 %%>;
+  numbersWidth1 = <%% 140, 140, 140, 140, 140 %%>;
+  numbersWidth2 = <%% 140, 140, 140, 140, 140 %%>;
+  numbersWidth3 = <%% 110, 110, 110, 110, 110 %%>;
 
-  numbersTextSize = 38;
-  numbersTextWeight = 700;
+  numbersTextSize = <%% 38, 38, 38, 38, 38 %%>;
+  numbersTextWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  numbersDescriptionSize = 14;
-  numbersDescriptionWeight = 500;
-  numbersDescriptionTextTop = -5;
+  numbersDescriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  numbersDescriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
+  numbersDescriptionTextTop = <%% -5, -5, -5, -5, -5 %%>;
 
-  buttonArrowDownWidth = 6;
-  buttonArrowDownMarginLeft = 10;
+  buttonArrowDownWidth = <%% 6, 6, 6, 6, 6 %%>;
+  buttonArrowDownMarginLeft = <%% 10, 10, 10, 10, 10 %%>;
 
   numbersMiddleTitleContents0 = "282";
   numbersMiddleTitleContents1 = "4.7";
