@@ -461,7 +461,6 @@ LogRouter.prototype.rou_post_getContents = function () {
 
         } else {
 
-          limit = ((req.body.limit === undefined) ? null : Number(req.body.limit));
           contentsProjectQuery = {
             conid: 1,
             desid: 1,
@@ -480,7 +479,7 @@ LogRouter.prototype.rou_post_getContents = function () {
             "contents.review.title": 1,
             "contents.review.detailInfo": 1,
           };
-          contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo, limit });
+          contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo });
   
           if (req.body.mode === "review") {
             contentsArr.sort((a, b) => {
@@ -493,6 +492,10 @@ LogRouter.prototype.rou_post_getContents = function () {
           }
 
           contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
+          if (req.body.limit !== undefined) {
+            contentsArr = contentsArr.slice(0, Number(req.body.limit));
+          }
+
           if (contentsArr.length > 0) {
             designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
             res.send(JSON.stringify({
