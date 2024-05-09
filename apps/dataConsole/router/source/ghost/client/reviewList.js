@@ -74,8 +74,8 @@ ReviewListJs.prototype.generateGsArray = function (number) {
 
 ReviewListJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, standardWidth } = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { ea, media, standardWidth, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const toggleTargetClassName = "toggleTargetClassName";
@@ -83,6 +83,9 @@ ReviewListJs.prototype.insertInitBox = function () {
   const circleClassName = "circleClassName";
   const circleBaseClassName = "circleBaseClassName";
   const touchStartConst = "toggleTouchStartConstName";
+  const sortMenuPopupClassName = "sortMenuPopupClassName";
+  const targetTextDomClassName = "targetTextDomClassName";
+  const px = "px";
   let mobileSearchWhiteBoxPaddingTop;
   let mobileSearchWhiteBoxPaddingBottom;
   let mobileSearchWhiteBoxMarginBottom;
@@ -137,7 +140,6 @@ ReviewListJs.prototype.insertInitBox = function () {
   let mobileButtonTongMarginTop;
   let mobileButtonBetween;
   let contentsPaddingTop;
-  let designerDetailToggleEvent;
   let sortBoxRight;
   let mobileBackgroundHeight;
   let mobileVisualPaddingLeft;
@@ -174,6 +176,8 @@ ReviewListJs.prototype.insertInitBox = function () {
   let serviceNum;
   let borderWidthLight;
   let sortButtonClickEvent;
+  let popupBetween;
+  let middleBorderWidth;
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -300,6 +304,9 @@ ReviewListJs.prototype.insertInitBox = function () {
   buttonArrowDownWidth = <%% 6, 6, 6, 6, 6 %%>;
   buttonArrowDownMarginLeft = <%% 10, 10, 10, 10, 10 %%>;
 
+  popupBetween = 6;
+  middleBorderWidth = 1;
+
   numbersMiddleTitleContents0 = "282";
   numbersMiddleTitleContents1 = "4.7";
   numbersMiddleTitleContents2 = "3447";
@@ -313,8 +320,9 @@ ReviewListJs.prototype.insertInitBox = function () {
   searchTags = [];
   searchTags.push("평수");
   searchTags.push("예산");
-  searchTags.push("시공 항목");
-  searchTags.push("스타일링 항목");
+  searchTags.push("서비스 종류");
+  searchTags.push("기간");
+  searchTags.push("지역");
   searchTags.push("전체");
 
   serviceButtonClassName = "serviceButton";
@@ -322,94 +330,216 @@ ReviewListJs.prototype.insertInitBox = function () {
   sortButtonClickEvent = () => {
     return async function (e) {
       try {
+        const self = this;
+        const box = self.getBoundingClientRect();
+        const zIndex = 3;
         const thisSort = Number(this.getAttribute("sort"));
+        let cancelBack;
+        let menuPopup;
+        let menuPopupTop;
 
 
-        console.log(thisSort);
+        menuPopupTop = box.top + window.scrollY + sortButtonHeight + popupBetween;
 
-
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
-
-  designerDetailToggleEvent = (toggleTargetClassName) => {
-    return async function (e) {
-      try {
-        const toggle = this.getAttribute("toggle");
-        const mode = this.getAttribute("mode");
-        const targets = [ ...document.querySelectorAll('.' + toggleTargetClassName) ];
-        const thisTarget = targets.find((dom) => { return dom.getAttribute("mode") === mode });
-        const oppositeTarget = targets.find((dom) => { return dom.getAttribute("mode") !== mode });
-        const thisCircleBase = thisTarget.querySelector('.' + circleBaseClassName);
-        const thisCircle = thisTarget.querySelector('.' + circleClassName);
-        const oppositeCircleBase = oppositeTarget.querySelector('.' + circleBaseClassName);
-        const oppositeCircle = oppositeTarget.querySelector('.' + circleClassName);
-
-        homeliaisonAnalytics({
-          page: instance.pageName,
-          standard: instance.firstPageViewTime,
-          action: "viewToggle",
-          data: {
-            mode: mode,
-            toggle: toggle,
-            date: dateToString(new Date(), true),
+        cancelBack = createNode({
+          mother: totalContents,
+          class: [ sortMenuPopupClassName ],
+          event: {
+            click: function (e) {
+              removeByClass(sortMenuPopupClassName);
+            }
           },
-        }).catch((err) => {
-          console.log(err);
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: String(100) + "vh",
+            background: colorExtended.transparent,
+            zIndex: String(zIndex),
+          }
         });
 
-        if (toggle === "off") {
+        menuPopup = createNode({
+          mother: totalContents,
+          class: [ sortMenuPopupClassName ],
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(menuPopupTop) + px,
+            left: String(box.left) + px,
+            width: String(sortButtonWidth) + ea,
+            height: "calc(" + String(sortButtonHeight * 2) + ea + " + " + String(middleBorderWidth) + px + ")",
+            background: colorExtended.gradientBlue2,
+            zIndex: String(zIndex),
+            border: String(borderWidth) + "px solid " + colorExtended.black,
+            boxSizing: "border-box",
+            borderRadius: String(12) + px,
+            animation: "fadeuplitereverse 0.3s ease forwards",
+            opacity: String(0),
+            overflow: "hidden",
+          },
+          child: {
+            event: {
+              selectstart: (e) => { e.preventDefault() },
+            },
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              flexDirection: "column",
+              cursor: "pointer",
+            },
+            children: [
+              {
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                  click: async function (e) {
+                    try {
 
-          thisTarget.style.color = colorExtended.mainBlue;
-          thisCircleBase.style.background = colorExtended.mainBlue;
-          thisCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
-          thisTarget.setAttribute("toggle", "on");
+                      homeliaisonAnalytics({
+                        page: instance.pageName,
+                        standard: instance.firstPageViewTime,
+                        action: "viewToggle",
+                        data: {
+                          mode: "key9",
+                          toggle: "on",
+                          date: dateToString(new Date(), true),
+                        },
+                      }).then(() => {
+                        return homeliaisonAnalytics({
+                          page: instance.pageName,
+                          standard: instance.firstPageViewTime,
+                          action: "viewToggle",
+                          data: {
+                            mode: "key8",
+                            toggle: "off",
+                            date: dateToString(new Date(), true),
+                          },
+                        })
+                      }).catch((err) => {
+                        console.log(err);
+                      });
 
-          oppositeTarget.style.color = colorExtended.deactive;
-          oppositeCircleBase.style.background = colorExtended.gray5;
-          oppositeCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
-          oppositeTarget.setAttribute("toggle", "off");
+                      instance.sort = "key9";
+                      instance.portfolioBlock(null, instance.search, instance.sort);
 
-          while (!instance.fullLoad) {
-            await sleep(500);
+                      while (!instance.fullLoad) {
+                        await sleep(500);
+                      }
+
+                      document.querySelector('.' + targetTextDomClassName).textContent = "최신순";
+                      removeByClass(sortMenuPopupClassName);
+
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                },
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  width: withOut(0, ea),
+                  height: String(sortButtonHeight) + ea,
+                  boxSizing: "border-box",
+                  borderBottom: String(middleBorderWidth) + "px solid " + colorExtended.blueDim,
+                },
+                child: {
+                  event: {
+                    selectstart: (e) => { e.preventDefault() },
+                  },
+                  text: "최신순",
+                  style: {
+                    fontSize: String(serviceSize) + ea,
+                    fontWeight: String(700),
+                    fontFamily: "pretendard",
+                    position: "relative",
+                    display: "inline-block",
+                    top: String(tagTextTop) + ea,
+                  }
+                }
+              },
+              {
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                  click: async function (e) {
+                    try {
+
+                      homeliaisonAnalytics({
+                        page: instance.pageName,
+                        standard: instance.firstPageViewTime,
+                        action: "viewToggle",
+                        data: {
+                          mode: "key8",
+                          toggle: "on",
+                          date: dateToString(new Date(), true),
+                        },
+                      }).then(() => {
+                        return homeliaisonAnalytics({
+                          page: instance.pageName,
+                          standard: instance.firstPageViewTime,
+                          action: "viewToggle",
+                          data: {
+                            mode: "key9",
+                            toggle: "off",
+                            date: dateToString(new Date(), true),
+                          },
+                        })
+                      }).catch((err) => {
+                        console.log(err);
+                      });
+
+                      instance.sort = "key8";
+                      instance.portfolioBlock(null, instance.search, instance.sort);
+
+                      while (!instance.fullLoad) {
+                        await sleep(500);
+                      }
+
+                      document.querySelector('.' + targetTextDomClassName).textContent = "인기순";
+                      removeByClass(sortMenuPopupClassName);
+
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                },
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  width: withOut(0, ea),
+                  height: String(sortButtonHeight) + ea,
+                },
+                child: {
+                  event: {
+                    selectstart: (e) => { e.preventDefault() },
+                  },
+                  text: "인기순",
+                  style: {
+                    fontSize: String(serviceSize) + ea,
+                    fontWeight: String(700),
+                    fontFamily: "pretendard",
+                    position: "relative",
+                    display: "inline-block",
+                    top: String(tagTextTop) + ea,
+                  }
+                }
+              },
+            ]
           }
+        });
 
-          if (mode === "key9") {
-            instance.sort = "key9";
-          } else {
-            instance.sort = "key8";
-          }
-          instance.portfolioBlock(null, instance.search, instance.sort);
 
-        } else {
 
-          thisTarget.style.color = colorExtended.deactive;
-          thisCircleBase.style.background = colorExtended.gray5;
-          thisCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
-          thisTarget.setAttribute("toggle", "off");
 
-          oppositeTarget.style.color = colorExtended.mainBlue;
-          oppositeCircleBase.style.background = colorExtended.mainBlue;
-          oppositeCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
-          oppositeTarget.setAttribute("toggle", "on");
-
-          while (!instance.fullLoad) {
-            await sleep(500);
-          }
-
-          if (mode === "key9") {
-            instance.sort = "key8";
-          } else {
-            instance.sort = "key9";
-          }
-          instance.portfolioBlock(null, instance.search, instance.sort);
-
-        }
-
-        instance.photoLoad = true;
-
+        
       } catch (e) {
         console.log(e);
       }
@@ -821,6 +951,7 @@ ReviewListJs.prototype.insertInitBox = function () {
             event: {
               selectstart: (e) => { e.preventDefault() },
             },
+            class: [ targetTextDomClassName ],
             text: "최신순",
             style: {
               fontSize: String(serviceSize) + ea,
@@ -1152,15 +1283,15 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 8 : 7), (isMac() ? 7 : 6.5), (isMac() ? 7 : 6.5), (isMac() ? 6 : 5), (isIphone() ? 1.4 : 1.2) %%>;
 
-  titleSize = <%% 18, 17, 17, 15, 3.4 %%>;
-  montTitleSize = <%% 21, 20, 20, 18, 3.4 %%>;
+  titleSize = <%% 17, 17, 17, 15, 3.4 %%>;
+  montTitleSize = <%% 20, 20, 20, 18, 3.4 %%>;
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
   titleSubSize = <%% 14, 12, 12, 11, 2.5 %%>;
   titleSubMarginTop = <%% 0, 0, 0, 0, -0.4 %%>;
 
-  photoBlockMarginBottom = <%% 70, 60, 48, 40, 8 %%>;
+  photoBlockMarginBottom = <%% 65, 60, 48, 40, 8 %%>;
 
   garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
   garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
@@ -1287,40 +1418,53 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                 style: {
                   display: "block",
                   position: "relative",
-                  width: String(500) + '%',
+                  width: String(100) + '%',
                   left: String(0),
                   top: String(0),
+                  overflow: "hidden",
                 },
                 children: [
                   {
-                    text: title + "&nbsp;&nbsp;<s%|%s>&nbsp;&nbsp;",
                     style: {
-                      display: "inline-block",
+                      display: "block",
                       position: "relative",
-                      fontSize: String(titleSize) + ea,
-                      fontFamily: "pretendard",
-                      fontWeight: String(titleWeight),
-                      color: colorExtended.black,
-                      verticalAlign: "top",
+                      width: String(500) + '%',
+                      left: String(0),
+                      top: String(0),
                     },
-                    special: {
-                      fontSize: String(titleSize) + ea,
-                      fontFamily: "pretendard",
-                      fontWeight: String(400),
-                      color: colorExtended.gray3,
-                    },
+                    child: {
+                      text: title,
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        fontSize: String(titleSize) + ea,
+                        fontFamily: "pretendard",
+                        fontWeight: String(titleWeight),
+                        color: colorExtended.black,
+                        verticalAlign: "top",
+                      },
+                      special: {
+                        fontSize: String(titleSize) + ea,
+                        fontFamily: "pretendard",
+                        fontWeight: String(400),
+                        color: colorExtended.gray3,
+                      },
+                    }
                   },
                   {
                     text: "34PY&nbsp;&nbsp;&nbsp;<u%3,000%u> <b%만원대%b>",
                     style: {
                       display: "inline-block",
-                      position: "relative",
+                      position: "absolute",
                       fontSize: String(montTitleSize) + ea,
                       fontFamily: "mont",
                       fontWeight: String(700),
                       color: colorExtended.deactive,
+                      background: colorExtended.white,
                       verticalAlign: "top",
                       top: String(0) + ea,
+                      right: String(0) + ea,
+                      paddingLeft: String(10) + ea,
                     },
                     bold: {
                       fontSize: String(titleSize) + ea,
@@ -1337,14 +1481,6 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                       color: colorExtended.black,
                       position: "relative",
                       top: String(-0.5) + ea,
-                    },
-                    special: {
-                      fontSize: String(titleSize) + ea,
-                      fontFamily: "pretendard",
-                      fontWeight: String(400),
-                      color: colorExtended.gray3,
-                      position: "relative",
-                      top: String(-1) + ea,
                     },
                   },
                 ]

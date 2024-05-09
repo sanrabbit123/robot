@@ -1248,14 +1248,14 @@ BackMaker.prototype.getContentsArrByQuery = async function (query, option = { wi
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
-      if (option.limit !== undefined) {
+      if (option.limit !== undefined && option.limit !== null) {
         tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
       } else {
         tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).toArray();
       }
       await MONGOC.close();
     } else {
-      if (option.limit !== undefined) {
+      if (option.limit !== undefined && option.limit !== null) {
         tong = await option.selfMongo.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
       } else {
         tong = await option.selfMongo.db(`miro81`).collection(button).find(query).sort(sortQuery).toArray();

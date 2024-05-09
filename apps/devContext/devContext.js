@@ -210,9 +210,192 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // version 0
 
+    /*
+    const selfMongo = this.MONGOC;
+    const contentsProjectQuery = {
+      conid: 1,
+      desid: 1,
+      cliid: 1,
+      proid: 1,
+      service: 1,
+      photos: 1,
+      "contents.portfolio.pid": 1,
+      "contents.portfolio.date": 1,
+      "contents.portfolio.spaceInfo": 1,
+      "contents.portfolio.title": 1,
+      "contents.portfolio.color": 1,
+      "contents.portfolio.detailInfo": 1,
+      "contents.review.rid": 1,
+      "contents.review.date": 1,
+      "contents.review.title": 1,
+      "contents.review.detailInfo": 1,
+    };
+    const collection = "contents";
+    let designers, contentsArr;
+    let cliidArr;
+    let proidArr;
+    let whereQuery, projectQuery;
+    let thisClients, thisProjects;
+    let thisRequestNumber;
+    let thisClient;
+    let proposalDate;
+    let projects;
+    let thisProject;
+    let thisDesigner;
 
+    contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo });
+    designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
+
+    cliidArr = [ ...new Set(contentsArr.map((o) => { return o.cliid.trim() }).filter((s) => { return s !== "" })) ];
+    proidArr = [ ...new Set(contentsArr.map((o) => { return o.proid.trim() }).filter((s) => { return s !== "" })) ];
     
+    if (cliidArr.length > 0) {
+
+      whereQuery = { $or: cliidArr.map((cliid) => { return { cliid } }) };
+      projectQuery = {
+        cliid: 1,
+        name: 1,
+        "requests.request.timeline": 1,
+        "requests.request.budget": 1,
+        "requests.request.family": 1,
+        "requests.request.furniture": 1,
+        "requests.request.space": 1,
+      }
+      thisClients = await back.mongoPick("client", [ objectDeepCopy(whereQuery), objectDeepCopy(projectQuery) ], { selfMongo });
+
+      whereQuery = { $or: proidArr.map((proid) => { return { proid } }) };
+      projectQuery = {
+        proid: 1,
+        cliid: 1,
+        desid: 1,
+        "proposal.date": 1,
+        process: 1,
+      }
+      thisProjects = await back.mongoPick("project", [ objectDeepCopy(whereQuery), objectDeepCopy(projectQuery) ], { selfMongo });
+
+      projects = [];
+      for (let project of thisProjects) {
+        proposalDate = new Date(JSON.stringify(project.proposal.date).slice(1, -1));
+        thisClient = thisClients.find((c) => { return c.cliid === project.cliid });
+
+        thisRequestNumber = 0;
+        for (let i = 0; i < thisClient.requests.length; i++) {
+          if (thisClient.requests[i].request.timeline.valueOf() <= proposalDate.valueOf()) {
+            thisRequestNumber = i;
+            break;
+          }
+        }
+
+        project.requestNumber = thisRequestNumber;
+        project.client = {
+          name: thisClient.name,
+          cliid: thisClient.cliid,
+          request: objectDeepCopy(thisClient.requests[thisRequestNumber].request),
+        };
+        projects.push(project);
+      }
+
+      for (let contents of contentsArr) {
+        if (contents.proid !== "") {
+          thisProject = projects.find((p) => { return p.proid === contents.proid });
+          contents.project = objectDeepCopy(thisProject);
+        } else {
+          contents.project = {};
+        }
+        thisDesigner = designers.find((d) => { return d.desid === contents.desid });
+        contents.designer = thisDesigner.designer;
+      }
+
+
+
+    }
+    */
+
+    // version 1
+
+    const selfMongo = this.MONGOC;
+    const contentsProjectQuery = {
+      conid: 1,
+      desid: 1,
+      cliid: 1,
+      proid: 1,
+      service: 1,
+      photos: 1,
+      "contents.portfolio.pid": 1,
+      "contents.portfolio.date": 1,
+      "contents.portfolio.spaceInfo": 1,
+      "contents.portfolio.title": 1,
+      "contents.portfolio.color": 1,
+      "contents.portfolio.detailInfo": 1,
+      "contents.review.rid": 1,
+      "contents.review.date": 1,
+      "contents.review.title": 1,
+      "contents.review.detailInfo": 1,
+    };
+    const collection = "contents";
+    const limit = 42;
+    const toNormal = true;
+    let designers, contentsArr;
+    let cliidArr;
+    let whereQuery, projectQuery;
+    let thisClients;
+    let thisRequestNumber;
+    let thisClient;
+    let thisDesigner;
+
+    contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo, limit });
+    designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo, toNormal });
+
+    cliidArr = [ ...new Set(contentsArr.map((o) => { return o.cliid.trim() }).filter((s) => { return s !== "" })) ];
+    
+    if (cliidArr.length > 0) {
+
+      whereQuery = { $or: cliidArr.map((cliid) => { return { cliid } }) };
+      projectQuery = {
+        cliid: 1,
+        name: 1,
+        "requests.request.timeline": 1,
+        "requests.request.budget": 1,
+        "requests.request.family": 1,
+        "requests.request.furniture": 1,
+        "requests.request.space": 1,
+      }
+      thisClients = await back.mongoPick("client", [ objectDeepCopy(whereQuery), objectDeepCopy(projectQuery) ], { selfMongo });
+
+      for (let contents of contentsArr) {
+        if (contents.cliid !== "") {
+          thisClient = thisClients.find((c) => { return c.cliid === contents.cliid });
+          thisRequestNumber = 0;
+          for (let i = 0; i < thisClient.requests.length; i++) {
+            if (thisClient.requests[i].request.timeline.valueOf() <= contents.contents.portfolio.date.valueOf()) {
+              thisRequestNumber = i;
+              break;
+            }
+          }
+          contents.client = {
+            name: thisClient.name,
+            cliid: thisClient.cliid,
+            request: objectDeepCopy(thisClient.requests[thisRequestNumber].request),
+          };
+        } else {
+          contents.client = {};
+        }
+        thisDesigner = designers.find((d) => { return d.desid === contents.desid });
+        contents.designer = thisDesigner.designer;
+      }
+
+      console.log(contentsArr);
+
+    }
+
+
+
+
+
+
+
 
 
     
@@ -7367,8 +7550,8 @@ DevContext.prototype.launching = async function () {
 
     
     // send sms
-    // const name = "김해니";
-    // const amount = 6_927_000;
+    // const name = "신예은";
+    // const amount = 2_018_000 + 9_000_000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
