@@ -796,6 +796,8 @@ DevContext.prototype.launching = async function () {
 
     /*
 
+    // designer proposal realtime - 디자이너 추천 현황
+
     await this.MONGOCONSOLEC.connect();
 
     const selfMongo = this.MONGOC;
