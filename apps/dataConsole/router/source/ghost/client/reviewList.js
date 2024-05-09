@@ -1329,7 +1329,7 @@ ReviewListJs.prototype.insertPortfolioBase = function () {
 
 ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, sort = "key9") {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref, autoComma } = GeneralJs;
   const { ea, media, baseTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1380,6 +1380,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   let alpha;
   let montTitleSize;
   let borderWidthLight;
+  let thisPyeong, thisBudget;
 
   if (typeof search === "string") {
 
@@ -1530,6 +1531,9 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
           }
         }
 
+        thisPyeong = String(contents.portfolio.spaceInfo.pyeong) + "PY";
+        thisBudget = "<u%" + autoComma(Number(contents.portfolio.spaceInfo.budget.replace(/[^0-9]/gi, '').trim())) + "%u> " + "<b%" + contents.portfolio.spaceInfo.budget.replace(/[^조억만원]/gi, '').trim() + "대" + "%b>";
+      
         block = createNode({
           mother: baseBlock,
           attribute: {
@@ -1610,6 +1614,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                         fontWeight: String(titleWeight),
                         color: colorExtended.black,
                         verticalAlign: "top",
+                        background: colorExtended.white,
                       },
                       special: {
                         fontSize: String(titleSize) + ea,
@@ -1620,7 +1625,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                     }
                   },
                   {
-                    text: "34PY&nbsp;&nbsp;&nbsp;<u%3,000%u> <b%만원대%b>",
+                    text: thisPyeong + "&nbsp;&nbsp;&nbsp;" + thisBudget,
                     style: {
                       display: "inline-block",
                       position: "absolute",
