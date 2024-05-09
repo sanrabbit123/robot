@@ -3924,14 +3924,14 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
         MONGOC = new mongo(mongoinfo);
       }
       await MONGOC.connect();
-      if (option.limit !== undefined) {
+      if (option.limit !== undefined && option.limit !== null) {
         tong = await MONGOC.db(`miro81`).collection(collection).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
       } else {
         tong = await MONGOC.db(`miro81`).collection(collection).find(query).sort(sortQuery).toArray();
       }
       await MONGOC.close();
     } else {
-      if (option.limit !== undefined) {
+      if (option.limit !== undefined && option.limit !== null) {
         tong = await option.selfMongo.db(`miro81`).collection(collection).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
       } else {
         tong = await option.selfMongo.db(`miro81`).collection(collection).find(query).sort(sortQuery).toArray();
@@ -3981,14 +3981,14 @@ BackMaker.prototype.mongoPick = async function (collection, queryArr, option = {
         MONGOC = new mongo(mongoinfo);
       }
       await MONGOC.connect();
-      if (option.limit !== undefined) {
+      if (option.limit !== undefined && option.limit !== null) {
         tong = await MONGOC.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).limit(Number(option.limit)).toArray();
       } else {
         tong = await MONGOC.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).toArray();
       }
       await MONGOC.close();
     } else {
-      if (option.limit !== undefined) {
+      if (option.limit !== undefined && option.limit !== null) {
         cursor = option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).limit(Number(option.limit));
       } else {
         cursor = option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]);

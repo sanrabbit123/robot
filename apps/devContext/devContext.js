@@ -313,6 +313,8 @@ DevContext.prototype.launching = async function () {
     }
     */
 
+    /*
+
     // version 1
 
     const selfMongo = this.MONGOC;
@@ -348,10 +350,6 @@ DevContext.prototype.launching = async function () {
     contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo, limit });
     designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo, toNormal });
 
-
-    console.log(contentsArr);
-
-    /*
     cliidArr = [ ...new Set(contentsArr.map((o) => { return o.cliid.trim() }).filter((s) => { return s !== "" })) ];
     
     if (cliidArr.length > 0) {
@@ -384,7 +382,7 @@ DevContext.prototype.launching = async function () {
             request: objectDeepCopy(thisClient.requests[thisRequestNumber].request),
           };
         } else {
-          contents.client = {};
+          contents.client = { request: {} };
         }
         thisDesigner = designers.find((d) => { return d.desid === contents.desid });
         contents.designer = thisDesigner.designer;
@@ -393,8 +391,8 @@ DevContext.prototype.launching = async function () {
       console.log(contentsArr);
 
     }
-    */
 
+    */
 
 
 
