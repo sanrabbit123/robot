@@ -2236,7 +2236,7 @@ ContentsRouter.prototype.rou_post_syncClientBudget = function () {
         "8,000만원 이상",
         "9,000만원 이상",
         "1억원 이상",
-      ]
+      ];
       let rows;
       let projects, clients;
       let proidArr, cliidArr;
@@ -2246,6 +2246,7 @@ ContentsRouter.prototype.rou_post_syncClientBudget = function () {
       let tempString;
       let thisIndex;
       let ago;
+      let contentsRows;
 
       (async function () {
         try {
@@ -2280,6 +2281,12 @@ ContentsRouter.prototype.rou_post_syncClientBudget = function () {
             if (thisIndex !== -1) {
               updateQuery["requests." + String(thisRequestNumber) + ".request.budget"] = budgetArr[thisIndex];
               await back.updateClient([ whereQuery, updateQuery ], { selfMongo: selfCoreMongo });
+              contentsRows = await back.getContentsArrByQuery({ proid: thisProject.proid }, { selfMongo: selfCoreMongo });
+              if (contentsRows.length > 0) {
+                await back.updateContents([ { conid: contentsRows[0].conid }, {
+                  "contents.portfolio.spaceInfo.budget": budgetArr[thisIndex],
+                } ], { selfMongo: selfCoreMongo });
+              }
             }
           }
 

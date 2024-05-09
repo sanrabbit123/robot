@@ -9,6 +9,7 @@ const SpaceInfo = function (json) {
   this.pyeong = Number(json.pyeong);
   this.region = json.region;
   this.method = json.method;
+  this.budget = json.budget;
 }
 
 SpaceInfo.prototype.toNormal = function () {
@@ -17,7 +18,7 @@ SpaceInfo.prototype.toNormal = function () {
   obj.pyeong = Number(this.pyeong);
   obj.region = this.region;
   obj.method = this.method;
-
+  obj.budget = this.budget;
   return obj;
 }
 

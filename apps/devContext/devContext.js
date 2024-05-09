@@ -396,12 +396,80 @@ DevContext.prototype.launching = async function () {
 
 
 
+    /*
 
+    // contents budget sync
 
+    const selfMongo = this.MONGOC;
+    const collection = "contents";
+    const budgetArr = [
+      "500만원 이하",
+      "1,000만원",
+      "1,500만원",
+      "2,000만원",
+      "3,000만원",
+      "4,000만원",
+      "5,000만원 이상",
+      "6,000만원 이상",
+      "7,000만원 이상",
+      "8,000만원 이상",
+      "9,000만원 이상",
+      "1억원 이상",
+    ];
+    let whereQuery, updateQuery, projectQuery;
+    let rows;
+    let thisClient, thisProject, thisRequestNumber, thisIndex;
+    let tempString;
 
+    whereQuery = {};
+    projectQuery = { conid: 1, cliid: 1, proid: 1, "contents.portfolio.spaceInfo.pyeong": 1 };
+    rows = await back.mongoPick(collection, [ whereQuery, projectQuery ], { selfMongo });
+
+    for (let { conid, cliid, proid, contents } of rows) {
+      whereQuery = { conid };
+      updateQuery = {};
+      updateQuery["contents.portfolio.spaceInfo.budget"] = "3,000만원";
+
+      if (typeof cliid === "string" && /^c/gi.test(cliid) && cliid.trim() !== "") {
+        thisClient = await back.getClientById(cliid, { selfMongo });
+        thisClient = thisClient.toNormal();
+        thisProject = await back.getProjectById(proid, { selfMongo });
+        thisProject = thisProject.toNormal();
+        thisRequestNumber = 0;
+        for (let i = 0; i < thisClient.requests.length; i++) {
+          if (thisClient.requests[i].request.timeline.valueOf() <= thisProject.proposal.date.valueOf()) {
+            thisRequestNumber = i;
+            break;
+          }
+        }
+        if (thisClient.requests[thisRequestNumber].request.budget !== "알 수 없음") {
+          updateQuery["contents.portfolio.spaceInfo.budget"] = thisClient.requests[thisRequestNumber].request.budget;
+        } else {
+          if (!Number.isNaN(Number(contents.portfolio.spaceInfo.pyeong))) {
+            tempString = autoComma(Math.floor((Number(contents.portfolio.spaceInfo.pyeong) + 20) / 10) * 1000, false);
+            thisIndex = budgetArr.findIndex((str) => { return (new RegExp(tempString, "gi")).test(str) });
+            if (thisIndex !== -1) {
+              updateQuery["contents.portfolio.spaceInfo.budget"] = budgetArr[thisIndex];
+            }
+          }
+        }
+      } else {
+        if (!Number.isNaN(Number(contents.portfolio.spaceInfo.pyeong))) {
+          tempString = autoComma(Math.floor((Number(contents.portfolio.spaceInfo.pyeong) + 20) / 10) * 1000, false);
+          thisIndex = budgetArr.findIndex((str) => { return (new RegExp(tempString, "gi")).test(str) });
+          if (thisIndex !== -1) {
+            updateQuery["contents.portfolio.spaceInfo.budget"] = budgetArr[thisIndex];
+          }
+        }
+      }
+
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+      console.log(whereQuery, updateQuery);
+    }
+    
+    */
 
     
-
 
 
     /*

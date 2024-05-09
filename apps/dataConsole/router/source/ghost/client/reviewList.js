@@ -74,7 +74,7 @@ ReviewListJs.prototype.generateGsArray = function (number) {
 
 ReviewListJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, objectDeepCopy } = GeneralJs;
   const { ea, media, standardWidth, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -84,6 +84,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   const circleBaseClassName = "circleBaseClassName";
   const touchStartConst = "toggleTouchStartConstName";
   const sortMenuPopupClassName = "sortMenuPopupClassName";
+  const filterMenuPopupClassName = "filterMenuPopupClassName";
   const targetTextDomClassName = "targetTextDomClassName";
   const px = "px";
   let mobileSearchWhiteBoxPaddingTop;
@@ -178,7 +179,10 @@ ReviewListJs.prototype.insertInitBox = function () {
   let sortButtonClickEvent;
   let popupBetween;
   let middleBorderWidth;
-
+  let filterButtonClickEvent;
+  let searchDescriptionTags;
+  let searchWidthTags;
+  
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
   whiteBlockMarginBottom = <%% 36, 36, 35, 30, 4 %%>;
@@ -321,9 +325,51 @@ ReviewListJs.prototype.insertInitBox = function () {
   searchTags.push("평수");
   searchTags.push("예산");
   searchTags.push("서비스 종류");
-  searchTags.push("기간");
+  searchTags.push("서비스 기간");
   searchTags.push("지역");
   searchTags.push("전체");
+
+  searchWidthTags = [];
+  searchWidthTags.push(<&& 96 | 96 | 96 | 96 | 96 &&>);
+  searchWidthTags.push(<&& 120 | 120 | 120 | 120 | 120 &&>);
+  searchWidthTags.push(<&& 132 | 132 | 132 | 132 | 132 &&>);
+  searchWidthTags.push(<&& 0 | 0 | 0 | 0 | 0 &&>);
+  searchWidthTags.push(<&& 100 | 100 | 100 | 100 | 100 &&>);
+  searchWidthTags.push(<&& 0 | 0 | 0 | 0 | 0 &&>);
+
+  searchDescriptionTags = [];
+  searchDescriptionTags.push([
+    "10평 이하",
+    "10평대",
+    "20평대",
+    "30평대",
+    "40평대",
+    "50평대",
+    "60평 이상",
+  ]);
+  searchDescriptionTags.push([
+    "500만원 이하",
+    "1,000만원대",
+    "2,000만원대",
+    "3,000만원대",
+    "4,000만원대",
+    "5,000만원대",
+    "6,000만원 이상",
+  ]);
+  searchDescriptionTags.push(serviceParsing().name);
+  searchDescriptionTags.push([
+    "3주 이내",
+    "3주 ~ 6주",
+    "6주 이상",
+  ]);
+  searchDescriptionTags.push([
+    "서울 / 경기",
+    "충청 / 강원",
+    "전라 / 경상",
+    "기타"
+  ]);
+  searchDescriptionTags.push([]);
+
 
   serviceButtonClassName = "serviceButton";
 
@@ -337,7 +383,6 @@ ReviewListJs.prototype.insertInitBox = function () {
         let cancelBack;
         let menuPopup;
         let menuPopupTop;
-
 
         menuPopupTop = box.top + window.scrollY + sortButtonHeight + popupBetween;
 
@@ -536,10 +581,125 @@ ReviewListJs.prototype.insertInitBox = function () {
           }
         });
 
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
 
+  filterButtonClickEvent = (index) => {
+    return async function (e) {
+      try {
+        const self = this;
+        const box = self.getBoundingClientRect();
+        const zIndex = 3;
+        const thisMenu = objectDeepCopy(searchDescriptionTags[index]);
+        let cancelBack;
+        let menuPopup;
+        let menuPopupTop;
+        let thisWidth;
+        let thisLeft;
 
+        menuPopupTop = box.top + window.scrollY + sortButtonHeight + popupBetween;
+        thisWidth = searchWidthTags[index] === 0 ? box.width : searchWidthTags[index];
+        thisLeft = box.left + ((Math.abs(thisWidth - box.width) / 2) * -1);
 
-        
+        if (thisMenu.length !== 0) {
+
+          self.style.background = colorExtended.blueLight;
+          self.firstChild.style.color = colorExtended.black;
+          self.style.border = String(borderWidth) + "px solid " + colorExtended.black;
+
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ filterMenuPopupClassName ],
+            event: {
+              click: function (e) {
+                self.style.background = colorExtended.white;
+                self.firstChild.style.color = colorExtended.darkDarkShadow;
+                self.style.border = String(borderWidth) + "px solid " + colorExtended.gray3;
+                removeByClass(filterMenuPopupClassName);
+              }
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: String(100) + "vh",
+              background: colorExtended.transparent,
+              zIndex: String(zIndex),
+            }
+          });
+  
+          menuPopup = createNode({
+            mother: totalContents,
+            class: [ filterMenuPopupClassName ],
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              top: String(menuPopupTop) + px,
+              left: String(thisLeft) + px,
+              width: String(thisWidth) + ea,
+              height: "calc(" + String(sortButtonHeight * thisMenu.length) + ea + " + " + String(middleBorderWidth * (thisMenu.length - 1)) + px + ")",
+              background: colorExtended.gradientBlue2,
+              zIndex: String(zIndex),
+              border: String(borderWidth) + "px solid " + colorExtended.black,
+              boxSizing: "border-box",
+              borderRadius: String(12) + px,
+              animation: "fadeuplitereverse 0.3s ease forwards",
+              opacity: String(0),
+              overflow: "hidden",
+            },
+            child: {
+              event: {
+                selectstart: (e) => { e.preventDefault() },
+              },
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                flexDirection: "column",
+                cursor: "pointer",
+              },
+              children: thisMenu.map((item, index, arr) => {
+                return {
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    width: withOut(0, ea),
+                    height: String(sortButtonHeight) + ea,
+                    boxSizing: "border-box",
+                    borderBottom: index === arr.length - 1 ? "" : (String(middleBorderWidth) + "px solid " + colorExtended.blueDim),
+                  },
+                  child: {
+                    event: {
+                      selectstart: (e) => { e.preventDefault() },
+                    },
+                    text: item,
+                    style: {
+                      fontSize: String(serviceSize) + ea,
+                      fontWeight: String(600),
+                      fontFamily: "pretendard",
+                      position: "relative",
+                      display: "inline-block",
+                      top: String(tagTextTop) + ea,
+                    }
+                  }
+                }
+              })
+            }
+          });
+        } else {
+
+          // dev
+
+        }
+
       } catch (e) {
         console.log(e);
       }
@@ -1070,24 +1230,32 @@ ReviewListJs.prototype.insertInitBox = function () {
         toggle: "off",
         value: service,
       },
+      event: {
+        selectstart: (e) => { e.preventDefault() },
+        click: filterButtonClickEvent(serviceNum),
+      },
       style: {
         display: "inline-flex",
         position: "relative",
-        height: String(sortButtonHeight - (borderWidthLight * 2)) + ea,
+        height: String(sortButtonHeight - (borderWidth * 2)) + ea,
         marginRight: String(serviceMarginRight) + ea,
         paddingLeft: String(servicePaddingLeft) + ea,
         paddingRight: String(servicePaddingLeft) + ea,
         textAlign: "center",
         background: colorExtended.white,
-        borderRadius: String(sortButtonHeight - (borderWidthLight * 2)) + ea,
-        border: String(borderWidthLight) + "px solid " + (serviceNum === searchTags.length - 1 ? colorExtended.gray3 : colorExtended.gray3),
+        borderRadius: String(sortButtonHeight - (borderWidth * 2)) + ea,
+        border: String(borderWidth) + "px solid " + colorExtended.gray3,
         cursor: "pointer",
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
+        transition: "all 0.3s ease",
       },
       children: [
         {
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
           text: service,
           style: {
             display: "inline-block",
@@ -1095,15 +1263,15 @@ ReviewListJs.prototype.insertInitBox = function () {
             top: String(tagTextTop) + ea,
             fontSize: String(serviceSize) + ea,
             fontFamily: "pretendard",
-            fontWeight: String(700),
-            color: serviceNum === searchTags.length - 1 ? colorExtended.black : colorExtended.black,
+            fontWeight: String(600),
+            color: colorExtended.darkDarkShadow,
             cursor: "pointer",
             textAlign: "center",
           },
         },
         {
           mode: "svg",
-          source: svgMaker.buttonLineArrow(colorExtended.black),
+          source: svgMaker.buttonLineArrow(colorExtended.darkDarkShadow),
           style: {
             position: "relative",
             display: serviceNum === searchTags.length - 1 ? "none" : "inline-block",
@@ -1270,7 +1438,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   gsArray = this.generateGsArray(limitLength);
 
   baseWidth = Number(baseTong.style.width.replace(/[^0-9\.]/gi, ''));
-  photoMargin = <%% 18, 18, 18, 16, 3 %%>;
+  photoMargin = <%% 18, 18, 17, 16, 3 %%>;
   columns = <%% 4, 4, 3, 3, 2 %%>;
 
   photoRatio = (297 / 210);

@@ -16,6 +16,7 @@ module.exports = {
               pyeong: 0,
               region: "",
               method: "",
+              budget: "3,000만원",
             },
             title: {
               main: "",

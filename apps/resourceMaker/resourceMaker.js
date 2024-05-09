@@ -523,7 +523,7 @@ ResourceMaker.prototype.modelingMap = function () {
 ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cliid, service) {
   const instance = this;
   const back = this.back;
-  const { fileSystem, orderSystem } = this.mother;
+  const { fileSystem, orderSystem, autoComma } = this.mother;
   const past = this.final;
   const dateMaker = function (dateRaw) {
     let date = "20" + dateRaw.slice(0, 2) + "-" + dateRaw.slice(2, 4) + "-" + dateRaw.slice(4);
@@ -531,14 +531,31 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cl
   }
   const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
   const garoseroParser = new GaroseroParser();
+  const budgetArr = [
+    "500만원 이하",
+    "1,000만원",
+    "1,500만원",
+    "2,000만원",
+    "3,000만원",
+    "4,000만원",
+    "5,000만원 이상",
+    "6,000만원 이상",
+    "7,000만원 이상",
+    "8,000만원 이상",
+    "9,000만원 이상",
+    "1억원 이상",
+  ];
   try {
-
     let tempObj, tempObjDetail, portfolio, review;
     let targetPhotoDirArr, targetPhotoDirRaw, targetPhotoDir, targetPhotoDirFinal;
     let tempReg, conidTargetArr;
     let garoseroObj;
     let todayString;
     let thisDeisnger;
+    let tempString, thisIndex;
+    let thisRequestNumber;
+    let thisClient;
+    let thisProject;
 
     tempObj = this.modelingMap().structure;
 
@@ -558,6 +575,39 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cl
     portfolio.spaceInfo.pyeong = Number(past.pyeong);
     portfolio.spaceInfo.region = past.sub_titles.portivec.region;
     portfolio.spaceInfo.method = past.sub_titles.portivec.method;
+    portfolio.spaceInfo.budget = "3,000만원";
+    if (typeof cliid === "string" && /^c/gi.test(cliid) && cliid.trim() !== "") {
+      thisClient = await back.getClientById(cliid);
+      thisClient = thisClient.toNormal();
+      thisProject = await back.getProjectById(proid);
+      thisProject = thisProject.toNormal();
+      thisRequestNumber = 0;
+      for (let i = 0; i < thisClient.requests.length; i++) {
+        if (thisClient.requests[i].request.timeline.valueOf() <= thisProject.proposal.date.valueOf()) {
+          thisRequestNumber = i;
+          break;
+        }
+      }
+      if (thisClient.requests[thisRequestNumber].request.budget !== "알 수 없음") {
+        portfolio.spaceInfo.budget = thisClient.requests[thisRequestNumber].request.budget;
+      } else {
+        if (!Number.isNaN(Number(past.pyeong))) {
+          tempString = autoComma(Math.floor((Number(past.pyeong) + 20) / 10) * 1000, false);
+          thisIndex = budgetArr.findIndex((str) => { return (new RegExp(tempString, "gi")).test(str) });
+          if (thisIndex !== -1) {
+            portfolio.spaceInfo.budget = budgetArr[thisIndex];
+          }
+        }
+      }
+    } else {
+      if (!Number.isNaN(Number(past.pyeong))) {
+        tempString = autoComma(Math.floor((Number(past.pyeong) + 20) / 10) * 1000, false);
+        thisIndex = budgetArr.findIndex((str) => { return (new RegExp(tempString, "gi")).test(str) });
+        if (thisIndex !== -1) {
+          portfolio.spaceInfo.budget = budgetArr[thisIndex];
+        }
+      }
+    }
 
     portfolio.title.main = past.title;
     portfolio.title.sub = past.sub_titles.portivec.sub;
