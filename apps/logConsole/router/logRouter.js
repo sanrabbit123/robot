@@ -480,7 +480,6 @@ LogRouter.prototype.rou_post_searchContents = function () {
       const collection = "contents";
       const hideContents = [ "p61", "p36", "a51" ];
       const toNormal = true;
-      const addressArr = [ "서울", "경기", "충청", "강원", "전라", "경상" ];
       const { keywords: seridKeywords, name: serviceNames } = serviceParsing();
       let limit;
       let contentsArr_raw;
@@ -679,19 +678,159 @@ LogRouter.prototype.rou_post_searchContents = function () {
           
           contentsArr = contentsArr.filter((c) => { return typeof c.project.client.request.space === "object" });
           contentsArr = contentsArr.filter((c) => {
-            if (value === "기타") {
-              return addressArr.every((str) => {
+            if (value === "서울 / 경기") {
+
+              thisArr = [
+                "서울",
+                "남구",
+                "강동",
+                "강북",
+                "강서",
+                "관악",
+                "광진",
+                "구로",
+                "금천",
+                "노원",
+                "도봉",
+                "동대문",
+                "동작",
+                "마포",
+                "서대문",
+                "서초",
+                "성동",
+                "성북",
+                "송파",
+                "양천",
+                "영등포",
+                "용산",
+                "은평",
+                "종로",
+                "중구",
+                "중랑구",
+                "경기",
+                "의정부",
+                "포천",
+                "인천",
+              ];
+              return thisArr.some((str) => {
+                const thisReg = new RegExp("^[ ]*" + (str.trim()), "gi");
+                return thisReg.test(c.project.client.request.space.address.trim());
+              });
+
+            } else if (value === "충청 / 강원") {
+
+              thisArr = [
+                "충청",
+                "충북",
+                "충남",
+                "세종",
+                "대전",
+                "청주",
+                "제천",
+                "천안",
+                "강원",
+                "강릉",
+                "원주",
+                "속초",
+              ];
+              return thisArr.some((str) => {
+                const thisReg = new RegExp("^[ ]*" + (str.trim()), "gi");
+                return thisReg.test(c.project.client.request.space.address.trim());
+              });
+
+            } else if (value === "전라 / 경상") {
+
+              thisArr = [
+                "전라",
+                "경상",
+                "전남",
+                "전북",
+                "경북",
+                "경남",
+                "광주",
+                "대구",
+                "부산",
+                "울산",
+              ];
+              return thisArr.some((str) => {
+                const thisReg = new RegExp("^[ ]*" + (str.trim()), "gi");
+                return thisReg.test(c.project.client.request.space.address.trim());
+              });
+
+            } else if (value === "제주") {
+
+              thisArr = [
+                "제주",
+                "서귀포",
+              ];
+              return thisArr.some((str) => {
+                const thisReg = new RegExp("^[ ]*" + (str.trim()), "gi");
+                return thisReg.test(c.project.client.request.space.address.trim());
+              });
+
+            } else {
+
+              thisArr = [
+                "서울",
+                "남구",
+                "강동",
+                "강북",
+                "강서",
+                "관악",
+                "광진",
+                "구로",
+                "금천",
+                "노원",
+                "도봉",
+                "동대문",
+                "동작",
+                "마포",
+                "서대문",
+                "서초",
+                "성동",
+                "성북",
+                "송파",
+                "양천",
+                "영등포",
+                "용산",
+                "은평",
+                "종로",
+                "중구",
+                "중랑구",
+                "경기",
+                "의정부",
+                "포천",
+                "인천",
+                "충청",
+                "충북",
+                "충남",
+                "세종",
+                "대전",
+                "청주",
+                "제천",
+                "천안",
+                "강원",
+                "강릉",
+                "원주",
+                "속초",
+                "전라",
+                "경상",
+                "전남",
+                "전북",
+                "경북",
+                "경남",
+                "광주",
+                "대구",
+                "부산",
+                "울산",
+                "제주",
+                "서귀포",
+              ];
+
+              return thisArr.every((str) => {
                 const thisReg = new RegExp("^[ ]*" + (str.trim()), "gi");
                 return !thisReg.test(c.project.client.request.space.address.trim());
               });
-            
-
-
-            } else {
-              regionArr = value.split(" / ");
-              reg0 = new RegExp("^[ ]*" + (regionArr[0].trim()), "gi");
-              reg1 = new RegExp("^[ ]*" + (regionArr[1].trim()), "gi");
-              return (reg0.test(c.project.client.request.space.address.trim()) || reg1.test(c.project.client.request.space.address.trim()))
             }
           });
           res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));

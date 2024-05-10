@@ -370,7 +370,8 @@ ReviewListJs.prototype.insertInitBox = function () {
     "서울 / 경기",
     "충청 / 강원",
     "전라 / 경상",
-    "기타"
+    "제주",
+    "기타",
   ]);
   searchDescriptionTags.push([]);
 
