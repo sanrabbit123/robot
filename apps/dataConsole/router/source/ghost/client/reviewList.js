@@ -86,6 +86,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   const sortMenuPopupClassName = "sortMenuPopupClassName";
   const filterMenuPopupClassName = "filterMenuPopupClassName";
   const targetTextDomClassName = "targetTextDomClassName";
+  const searchTagsButtonClassName = "searchTagsButtonClassName";
   const px = "px";
   let mobileSearchWhiteBoxPaddingTop;
   let mobileSearchWhiteBoxPaddingBottom;
@@ -182,6 +183,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   let filterButtonClickEvent;
   let searchDescriptionTags;
   let searchWidthTags;
+  let menuPopupPaddingTop;
   
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
@@ -307,6 +309,8 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   buttonArrowDownWidth = <%% 6, 6, 6, 6, 6 %%>;
   buttonArrowDownMarginLeft = <%% 10, 10, 10, 10, 10 %%>;
+
+  menuPopupPaddingTop = <%% 5, 5, 5, 5, 5 %%>;
 
   popupBetween = 6;
   middleBorderWidth = 1;
@@ -590,35 +594,53 @@ ReviewListJs.prototype.insertInitBox = function () {
   filterButtonClickEvent = (index) => {
     return async function (e) {
       try {
+        const friends = [ ...document.querySelectorAll('.' + searchTagsButtonClassName) ];
         const self = this;
         const box = self.getBoundingClientRect();
         const zIndex = 3;
+        const thisSubject = searchTags[index];
         const thisMenu = objectDeepCopy(searchDescriptionTags[index]);
         let cancelBack;
         let menuPopup;
         let menuPopupTop;
         let thisWidth;
         let thisLeft;
+        let endEvent;
 
         menuPopupTop = box.top + window.scrollY + sortButtonHeight + popupBetween;
         thisWidth = searchWidthTags[index] === 0 ? box.width : searchWidthTags[index];
         thisLeft = box.left + ((Math.abs(thisWidth - box.width) / 2) * -1);
 
+        endEvent = function (e) {
+          for (let dom of friends) {
+            dom.style.opacity = String(1);
+          }      
+          self.style.background = colorExtended.white;
+          self.children[0].style.color = colorExtended.darkDarkShadow;
+          self.children[1].querySelector("path").setAttribute("fill", colorExtended.black);
+          self.style.border = String(borderWidth) + "px solid " + colorExtended.gray3;
+          removeByClass(filterMenuPopupClassName);
+        }
+
         if (thisMenu.length !== 0) {
 
-          self.style.background = colorExtended.blueLight;
-          self.firstChild.style.color = colorExtended.black;
-          self.style.border = String(borderWidth) + "px solid " + colorExtended.black;
+          for (let dom of friends) {
+            if (dom === self) {
+              self.style.background = colorExtended.black;
+              self.children[0].style.color = colorExtended.white;
+              self.children[1].querySelector("path").setAttribute("fill", colorExtended.white);
+              self.style.border = String(borderWidth) + "px solid " + colorExtended.black;
+            } else {
+              dom.style.opacity = String(0.5);
+            }
+          }
 
           cancelBack = createNode({
             mother: totalContents,
             class: [ filterMenuPopupClassName ],
             event: {
               click: function (e) {
-                self.style.background = colorExtended.white;
-                self.firstChild.style.color = colorExtended.darkDarkShadow;
-                self.style.border = String(borderWidth) + "px solid " + colorExtended.gray3;
-                removeByClass(filterMenuPopupClassName);
+                endEvent.call(this, e);
               }
             },
             style: {
@@ -642,14 +664,13 @@ ReviewListJs.prototype.insertInitBox = function () {
               left: String(thisLeft) + px,
               width: String(thisWidth) + ea,
               height: "calc(" + String(sortButtonHeight * thisMenu.length) + ea + " + " + String(middleBorderWidth * (thisMenu.length - 1)) + px + ")",
-              background: colorExtended.gradientBlue2,
+              background: colorExtended.gradientBlack,
               zIndex: String(zIndex),
-              border: String(borderWidth) + "px solid " + colorExtended.black,
-              boxSizing: "border-box",
               borderRadius: String(12) + px,
               animation: "fadeuplitereverse 0.3s ease forwards",
               opacity: String(0),
               overflow: "hidden",
+              paddingTop: String(menuPopupPaddingTop) + ea,
             },
             child: {
               event: {
@@ -674,16 +695,38 @@ ReviewListJs.prototype.insertInitBox = function () {
                     width: withOut(0, ea),
                     height: String(sortButtonHeight) + ea,
                     boxSizing: "border-box",
-                    borderBottom: index === arr.length - 1 ? "" : (String(middleBorderWidth) + "px solid " + colorExtended.blueDim),
+                    borderBottom: index === arr.length - 1 ? "" : (String(middleBorderWidth) + "px solid " + colorExtended.ultimateBlack),
                   },
                   child: {
                     event: {
                       selectstart: (e) => { e.preventDefault() },
+                      click: async function (e) {
+                        try {
+                          const value = this.getAttribute("item");
+                          const subject = this.getAttribute("subject");
+
+                          ajaxJson({ subject, value }, LOGHOST + "/searchContents", { equal: true }).then((response) => {
+                            instance.portfolioBlock(null, "<<<" + response.conids.join(",") + ">>>", instance.sort);
+                          }).catch((err) => {
+                            endEvent.call(this, e);
+                          });
+
+                          endEvent.call(this, e);
+                        } catch (err) {
+                          console.log(err);
+                          endEvent.call(this, e);
+                        }
+                      }
+                    },
+                    attribute: {
+                      item,
+                      subject: thisSubject,
                     },
                     text: item,
                     style: {
                       fontSize: String(serviceSize) + ea,
                       fontWeight: String(600),
+                      color: colorExtended.white,
                       fontFamily: "pretendard",
                       position: "relative",
                       display: "inline-block",
@@ -1224,7 +1267,8 @@ ReviewListJs.prototype.insertInitBox = function () {
   for (let service of searchTags) {
     serviceChildren.push({
       class: [
-        serviceButtonClassName
+        serviceButtonClassName,
+        searchTagsButtonClassName
       ],
       attribute: {
         toggle: "off",

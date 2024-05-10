@@ -3906,7 +3906,12 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
     let sortQuery;
 
     if (option.sort === undefined) {
-      sortQuery = {};
+      sortQuery = null;
+      if (option.sortQuery === undefined) {
+        sortQuery = null;
+      } else {
+        sortQuery = option.sortQuery;
+      }
     } else {
       sortQuery = option.sort;
     }
@@ -3924,17 +3929,33 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
         MONGOC = new mongo(mongoinfo);
       }
       await MONGOC.connect();
-      if (option.limit !== undefined && option.limit !== null) {
-        tong = await MONGOC.db(`miro81`).collection(collection).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
+      if (sortQuery === null) {
+        if (option.limit !== undefined && option.limit !== null) {
+          tong = await MONGOC.db(`miro81`).collection(collection).find(query).limit(Number(option.limit)).toArray();
+        } else {
+          tong = await MONGOC.db(`miro81`).collection(collection).find(query).toArray();
+        }
       } else {
-        tong = await MONGOC.db(`miro81`).collection(collection).find(query).sort(sortQuery).toArray();
+        if (option.limit !== undefined && option.limit !== null) {
+          tong = await MONGOC.db(`miro81`).collection(collection).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
+        } else {
+          tong = await MONGOC.db(`miro81`).collection(collection).find(query).sort(sortQuery).toArray();
+        }
       }
       await MONGOC.close();
     } else {
-      if (option.limit !== undefined && option.limit !== null) {
-        tong = await option.selfMongo.db(`miro81`).collection(collection).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
+      if (sortQuery === null) {
+        if (option.limit !== undefined && option.limit !== null) {
+          tong = await option.selfMongo.db(`miro81`).collection(collection).find(query).limit(Number(option.limit)).toArray();
+        } else {
+          tong = await option.selfMongo.db(`miro81`).collection(collection).find(query).toArray();
+        }
       } else {
-        tong = await option.selfMongo.db(`miro81`).collection(collection).find(query).sort(sortQuery).toArray();
+        if (option.limit !== undefined && option.limit !== null) {
+          tong = await option.selfMongo.db(`miro81`).collection(collection).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
+        } else {
+          tong = await option.selfMongo.db(`miro81`).collection(collection).find(query).sort(sortQuery).toArray();
+        }
       }
     }
 
@@ -3955,6 +3976,18 @@ BackMaker.prototype.mongoPick = async function (collection, queryArr, option = {
     let MONGOC;
     let tong;
     let cursor;
+    let sortQuery;
+
+    if (option.sort === undefined) {
+      sortQuery = null;
+      if (option.sortQuery === undefined) {
+        sortQuery = null;
+      } else {
+        sortQuery = option.sortQuery;
+      }
+    } else {
+      sortQuery = option.sort;
+    }
 
     if (!Array.isArray(queryArr)) {
       throw new Error("must be [ whereQuery, projectQuery ]");
@@ -3981,19 +4014,34 @@ BackMaker.prototype.mongoPick = async function (collection, queryArr, option = {
         MONGOC = new mongo(mongoinfo);
       }
       await MONGOC.connect();
-      if (option.limit !== undefined && option.limit !== null) {
-        tong = await MONGOC.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).limit(Number(option.limit)).toArray();
+      if (sortQuery === null) {
+        if (option.limit !== undefined && option.limit !== null) {
+          tong = await MONGOC.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).limit(Number(option.limit)).toArray();
+        } else {
+          tong = await MONGOC.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).toArray();
+        }
       } else {
-        tong = await MONGOC.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).toArray();
+        if (option.limit !== undefined && option.limit !== null) {
+          tong = await MONGOC.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).sort(sortQuery).limit(Number(option.limit)).toArray();
+        } else {
+          tong = await MONGOC.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).sort(sortQuery).toArray();
+        }
       }
       await MONGOC.close();
     } else {
-      if (option.limit !== undefined && option.limit !== null) {
-        cursor = option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).limit(Number(option.limit));
+      if (sortQuery === null) {
+        if (option.limit !== undefined && option.limit !== null) {
+          tong = await option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).limit(Number(option.limit)).toArray();
+        } else {
+          tong = await option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).toArray();
+        }
       } else {
-        cursor = option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]);
+        if (option.limit !== undefined && option.limit !== null) {
+          tong = await option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).sort(sortQuery).limit(Number(option.limit)).toArray();
+        } else {
+          tong = await option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).sort(sortQuery).toArray();
+        }
       }
-      tong = await cursor.toArray();
     }
 
     if (option.hexaMode === true) {

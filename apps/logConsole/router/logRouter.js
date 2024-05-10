@@ -418,16 +418,7 @@ LogRouter.prototype.rou_post_getContents = function () {
       let reviewArr, indexArr;
       let indexSliceNumber;
       let contentsProjectQuery;
-      let cliidArr;
-      let proidArr;
-      let whereQuery, projectQuery;
-      let thisClients, thisProjects;
-      let thisRequestNumber;
-      let thisClient;
-      let proposalDate;
-      let projects;
-      let thisProject;
-      let thisDesigner;
+      let sortQuery;
 
       if (req.body.mode === "portfolio" || req.body.mode === "review") {
 
@@ -458,7 +449,6 @@ LogRouter.prototype.rou_post_getContents = function () {
             }));
           }
 
-
         } else {
 
           contentsProjectQuery = {
@@ -479,22 +469,21 @@ LogRouter.prototype.rou_post_getContents = function () {
             "contents.review.title": 1,
             "contents.review.detailInfo": 1,
           };
-          contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo });
-  
+
+          sortQuery = {};
           if (req.body.mode === "review") {
-            contentsArr.sort((a, b) => {
-              return b.contents.review.detailInfo.order - a.contents.review.detailInfo.order;
-            });
+            sortQuery = { "contents.review.detailInfo.order": -1 };
           } else {
-            contentsArr.sort((a, b) => {
-              return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
-            });
+            sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
+          }
+
+          if (req.body.limit !== undefined) {
+            contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo, sort: sortQuery, limit: Number(req.body.limit) });
+          } else {
+            contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo, sort: sortQuery });
           }
 
           contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
-          if (req.body.limit !== undefined) {
-            contentsArr = contentsArr.slice(0, Number(req.body.limit));
-          }
 
           if (contentsArr.length > 0) {
             designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
@@ -578,6 +567,7 @@ LogRouter.prototype.rou_post_getContents = function () {
         indexArr = indexArr.slice(0, indexSliceNumber * 2);
 
         res.send(JSON.stringify({ contentsArr, reviewArr, indexArr }));
+
       } else if (req.body.mode === "magazine") {
 
         contentsArr_raw = await back.mongoRead("magazine", {}, { selfMongo });
