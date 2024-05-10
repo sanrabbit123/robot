@@ -608,7 +608,7 @@ LogRouter.prototype.rou_post_searchContents = function () {
         if (subject === "평수") {
 
           contentsArr = contentsArr.filter((c) => { return typeof c.contents.portfolio.spaceInfo.pyeong === "number" });
-          if (value === "10평 이하") {
+          if (value === "10평 미만") {
             contentsArr = contentsArr.filter((c) => {
               const pyeong = c.contents.portfolio.spaceInfo.pyeong;
               console.log(pyeong);

@@ -709,6 +709,9 @@ ReviewListJs.prototype.insertInitBox = function () {
 
                           const loading = instance.mother.whiteProgressLoading(null, true, false, false);
 
+                          console.log(subject, value);
+                          console.log(LOGHOST);
+
                           ajaxJson({ subject, value, from: "review" }, LOGHOST + "/searchContents", { equal: true }).then((response) => {
 
                             console.log(response.conids)
