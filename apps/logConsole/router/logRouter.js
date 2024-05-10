@@ -504,6 +504,7 @@ LogRouter.prototype.rou_post_searchContents = function () {
       let dateDelta;
       let regionArr;
       let reg0, reg1;
+      let thisArr;
 
       contentsProjectQuery = {
         conid: 1,
@@ -683,6 +684,9 @@ LogRouter.prototype.rou_post_searchContents = function () {
                 const thisReg = new RegExp("^[ ]*" + (str.trim()), "gi");
                 return !thisReg.test(c.project.client.request.space.address.trim());
               });
+            
+
+
             } else {
               regionArr = value.split(" / ");
               reg0 = new RegExp("^[ ]*" + (regionArr[0].trim()), "gi");
