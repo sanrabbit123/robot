@@ -480,7 +480,8 @@ LogRouter.prototype.rou_post_searchContents = function () {
       const collection = "contents";
       const hideContents = [ "p61", "p36", "a51" ];
       const toNormal = true;
-      const { keywords: seridKeywords } = serviceParsing();
+      const addressArr = [ "서울", "경기", "충청", "강원", "전라", "경상" ];
+      const { keywords: seridKeywords, name: serviceNames } = serviceParsing();
       let limit;
       let contentsArr_raw;
       let contentsArr, designers;
@@ -498,6 +499,11 @@ LogRouter.prototype.rou_post_searchContents = function () {
       let projects;
       let thisProject;
       let thisDesigner;
+      let thisSerid;
+      let fromDate, toDate;
+      let dateDelta;
+      let regionArr;
+      let reg0, reg1;
 
       contentsProjectQuery = {
         conid: 1,
@@ -601,20 +607,20 @@ LogRouter.prototype.rou_post_searchContents = function () {
 
         if (subject === "평수") {
 
-          contentsArr = contentsArr.filter((c) => { return typeof c.project.client.request.space === "object" });
+          contentsArr = contentsArr.filter((c) => { return typeof c.contents.portfolio.spaceInfo.pyeong === "number" });
           if (value === "10평 이하") {
             contentsArr = contentsArr.filter((c) => {
-              const pyeong = c.project.client.request.space.pyeong;
+              const pyeong = c.contents.portfolio.spaceInfo.pyeong;
               return pyeong < 10;
             });
           } else if (value === "60평 이상") {
             contentsArr = contentsArr.filter((c) => {
-              const pyeong = c.project.client.request.space.pyeong;
+              const pyeong = c.contents.portfolio.spaceInfo.pyeong;
               return pyeong >= 60;
             });
           } else {
             contentsArr = contentsArr.filter((c) => {
-              const pyeong = c.project.client.request.space.pyeong;
+              const pyeong = c.contents.portfolio.spaceInfo.pyeong;
               const standard = Number(value.replace(/[^0-9]/gi, ''))
               return (pyeong >= standard && pyeong < (standard + 10));
             });
@@ -646,27 +652,47 @@ LogRouter.prototype.rou_post_searchContents = function () {
 
         } else if (subject === "서비스 종류") {
           
-
-
-
+          thisSerid = seridKeywords + String(serviceNames.findIndex((s) => { return s === value }) + 1) + 's'; 
+          contentsArr = contentsArr.filter((c) => { return c.service.serid === thisSerid });
+          
           res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+
         } else if (subject === "서비스 기간") {
           
-
-
-
+          contentsArr = contentsArr.filter((c) => { return typeof c.project.process === "object" });
+          contentsArr = contentsArr.filter((c) => {
+            fromDate = c.project.process.contract.form.date.from;
+            toDate = c.project.process.contract.form.date.to;
+            dateDelta = Math.floor(((((toDate.valueOf() - fromDate.valueOf()) / 1000) / 60) / 60) / 24);
+            if (value === "3주 이내") {
+              return dateDelta < 21;
+            } else if (value === "6주 이상") {
+              return dateDelta >= 42;
+            } else {
+              return (dateDelta >= 21 && dateDelta < 42);
+            }
+          });
           res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+
         } else if (subject === "지역") {
           
-
-
-
+          contentsArr = contentsArr.filter((c) => { return typeof c.project.client.request.space === "object" });
+          contentsArr = contentsArr.filter((c) => {
+            if (value === "기타") {
+              return addressArr.every((str) => {
+                const thisReg = new RegExp("^[ ]*" + (str.trim()), "gi");
+                return !thisReg.test(c.project.client.request.space.address.trim());
+              });
+            } else {
+              regionArr = value.split(" / ");
+              reg0 = new RegExp("^[ ]*" + (regionArr[0].trim()), "gi");
+              reg1 = new RegExp("^[ ]*" + (regionArr[1].trim()), "gi");
+              return (reg0.test(c.project.client.request.space.address.trim()) || reg1.test(c.project.client.request.space.address.trim()))
+            }
+          });
           res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+
         } else if (subject === "전체") {
-          
-
-
-
           res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
         } else {
           res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));

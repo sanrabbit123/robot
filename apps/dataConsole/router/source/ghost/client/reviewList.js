@@ -743,9 +743,8 @@ ReviewListJs.prototype.insertInitBox = function () {
             }
           });
         } else {
-
-          // dev
-
+          endEvent.call(this, e);
+          instance.portfolioBlock(null, "", instance.sort);
         }
 
       } catch (e) {
