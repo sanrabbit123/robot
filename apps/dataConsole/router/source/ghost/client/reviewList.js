@@ -187,7 +187,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 36, 36, 35, 30, 4 %%>;
+  whiteBlockMarginBottom = <%% 36, 32, 30, 28, 4 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
@@ -197,16 +197,16 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 18, 18, 14, 13, 2.2 %%>;
-  serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 14, 14, 13, 12, 3.3 %%>;
+  servicePaddingLeft = <%% 18, 14, 13, 12, 2.2 %%>;
+  serviceMarginRight = <%% 6, 5, 4, 3, 6 %%>;
+  serviceSize = <%% 14, 13, 13, 12, 3.3 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
   searchBarPaddingTop = <%% 50, 50, 50, 40, 20 %%>;
-  searchBarHeight = <%% 36, 36, 36, 36, 8 %%>;
+  searchBarHeight = <%% 36, 34, 32, 28, 8 %%>;
   searchBarWidth = <%% 690, 516, 595, 476, 88 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
@@ -266,9 +266,9 @@ ReviewListJs.prototype.insertInitBox = function () {
   blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
   blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
 
-  sortButtonWidth = <%% 90, 90, 90, 90, 90 %%>;
-  sortButtonBetween = <%% 16, 16, 16, 16, 16 %%>;
-  sortButtonHeight = <%% searchBarHeight - 1, searchBarHeight - 1, searchBarHeight - 1, searchBarHeight - 1, searchBarHeight - 1 %%>;
+  sortButtonWidth = <%% 90, 82, 80, 72, 90 %%>;
+  sortButtonBetween = <%% 16, 14, 12, 10, 1 %%>;
+  sortButtonHeight = <%% searchBarHeight - 1, searchBarHeight - 2, searchBarHeight - 1, searchBarHeight - 1, searchBarHeight - 1 %%>;
 
   numbersTotalHeight = <%% 138, 138, 138, 138, 138 %%>;
   borderWidth = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
@@ -276,14 +276,14 @@ ReviewListJs.prototype.insertInitBox = function () {
   numbersMaxWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
   numbersRadius = <%% 12, 12, 12, 12, 12 %%>;
   numbersBoxMarginTop = <%% 15, 15, 15, 15, 15 %%>;
-  numbersBoxMarginBottom = <%% 46, 46, 46, 46, 46 %%>;
+  numbersBoxMarginBottom = <%% 46, -20, 46, 46, 46 %%>;
 
-  numbersBoxPaddingLeft = <%% 42, 42, 42, 42, 42 %%>;
-  numbersBoxPaddingRight = <%% 36, 36, 36, 36, 36 %%>;
-  numbersBoxBarMargin = <%% 36, 36, 36, 36, 36 %%>;
+  numbersBoxPaddingLeft = <%% 42, 40, 42, 42, 42 %%>;
+  numbersBoxPaddingRight = <%% 36, 34, 36, 36, 36 %%>;
+  numbersBoxBarMargin = <%% 36, 32, 36, 36, 36 %%>;
   numbersMiddleBarHeight = <%% 100, 100, 100, 100, 100 %%>;
 
-  numbersMargin = <%% 20, 20, 20, 20, 20 %%>;
+  numbersMargin = <%% 20, 12, 20, 20, 20 %%>;
 
   numbersImageWidth0 = <%% 80, 80, 80, 80, 80 %%>;
   numbersImageWidth1 = <%% 95, 95, 95, 95, 95 %%>;
@@ -307,8 +307,8 @@ ReviewListJs.prototype.insertInitBox = function () {
   numbersDescriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
   numbersDescriptionTextTop = <%% -5, -5, -5, -5, -5 %%>;
 
-  buttonArrowDownWidth = <%% 6, 6, 6, 6, 6 %%>;
-  buttonArrowDownMarginLeft = <%% 10, 10, 10, 10, 10 %%>;
+  buttonArrowDownWidth = <%% 6, 5, 5, 4, 1 %%>;
+  buttonArrowDownMarginLeft = <%% 10, 8, 8, 6, 1 %%>;
 
   menuPopupPaddingTop = <%% 5, 5, 5, 5, 5 %%>;
 
@@ -1362,7 +1362,7 @@ ReviewListJs.prototype.insertPortfolioBase = function () {
   let paddingBottom;
 
   limitLength = <%% 42, 42, 42, 42, 42 %%>;
-  photoMargin = <%% 18, 18, 18, 16, 3 %%>;
+  photoMargin = <%% 18, 16, 16, 14, 3 %%>;
   paddingBottom = <%% 120, 120, 120, 120, 40 %%>;
 
   baseBlock = createNode({
@@ -1432,6 +1432,10 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   let borderWidthLight;
   let thisPyeong, thisBudget;
   let conidArr;
+  let montTitleMarginLeft;
+  let montHangulTitleTop;
+  let montTitleTop;
+  let montSpecialTitleTop;
 
   if (typeof search === "string") {
 
@@ -1506,7 +1510,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   gsArray = this.generateGsArray(limitLength);
 
   baseWidth = Number(baseTong.style.width.replace(/[^0-9\.]/gi, ''));
-  photoMargin = <%% 18, 18, 17, 16, 3 %%>;
+  photoMargin = <%% 18, 16, 16, 14, 3 %%>;
   columns = <%% 4, 4, 3, 3, 2 %%>;
 
   photoRatio = (297 / 210);
@@ -1519,15 +1523,19 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 8 : 7), (isMac() ? 7 : 6.5), (isMac() ? 7 : 6.5), (isMac() ? 6 : 5), (isIphone() ? 1.4 : 1.2) %%>;
 
-  titleSize = <%% 17, 17, 17, 15, 3.4 %%>;
-  montTitleSize = <%% 20, 20, 20, 18, 3.4 %%>;
+  titleSize = <%% 17, 15, 15, 14, 3.4 %%>;
+  montTitleSize = <%% 20, 16, 18, 17, 3.4 %%>;
+  montTitleMarginLeft = <%% 10, 8, 7, 6, 1 %%>;
+  montHangulTitleTop = <%% -1, -1, -1, -1, -1 %%>;
+  montTitleTop = <%% -0.5, -1, -0.5, -0.5, -0.5 %%>;
+  montSpecialTitleTop = <%% 0, -0.5, -0.5, -0.5, -0.5 %%>; 
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
   titleSubSize = <%% 14, 12, 12, 11, 2.5 %%>;
   titleSubMarginTop = <%% 0, 0, 0, 0, -0.4 %%>;
 
-  photoBlockMarginBottom = <%% 65, 60, 48, 40, 8 %%>;
+  photoBlockMarginBottom = <%% 65, 56, 48, 40, 8 %%>;
 
   garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
   garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
@@ -1598,7 +1606,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
           }
         }
 
-        thisPyeong = String(contents.portfolio.spaceInfo.pyeong) + "PY";
+        thisPyeong = "<s%" + String(contents.portfolio.spaceInfo.pyeong) + "PY%s>";
         thisBudget = "<u%" + autoComma(Number(contents.portfolio.spaceInfo.budget.replace(/[^0-9]/gi, '').trim())) + "%u> " + "<b%" + contents.portfolio.spaceInfo.budget.replace(/[^조억만원]/gi, '').trim() + "대" + "%b>";
       
         block = createNode({
@@ -1692,7 +1700,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                     }
                   },
                   {
-                    text: thisPyeong + "&nbsp;&nbsp;&nbsp;" + thisBudget,
+                    text: thisPyeong + (desktop ? (media[0] ? "&nbsp;&nbsp;&nbsp;" : "&nbsp;&nbsp;") : "  ") + thisBudget,
                     style: {
                       display: "inline-block",
                       position: "absolute",
@@ -1704,7 +1712,15 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                       verticalAlign: "top",
                       top: String(0) + ea,
                       right: String(0) + ea,
-                      paddingLeft: String(10) + ea,
+                      paddingLeft: String(montTitleMarginLeft) + ea,
+                    },
+                    special: {
+                      position: "relative",
+                      fontSize: String(montTitleSize) + ea,
+                      fontFamily: "mont",
+                      fontWeight: String(700),
+                      color: colorExtended.deactive,
+                      top: String(montSpecialTitleTop) + ea,
                     },
                     bold: {
                       fontSize: String(titleSize) + ea,
@@ -1712,7 +1728,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                       fontWeight: String(800),
                       color: colorExtended.black,
                       position: "relative",
-                      top: String(-1) + ea,
+                      top: String(montHangulTitleTop) + ea,
                     },
                     under: {
                       fontSize: String(montTitleSize) + ea,
@@ -1720,7 +1736,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                       fontWeight: String(700),
                       color: colorExtended.black,
                       position: "relative",
-                      top: String(-0.5) + ea,
+                      top: String(montTitleTop) + ea,
                     },
                   },
                 ]
