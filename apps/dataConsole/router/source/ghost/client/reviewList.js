@@ -705,7 +705,7 @@ ReviewListJs.prototype.insertInitBox = function () {
                           const value = this.getAttribute("item");
                           const subject = this.getAttribute("subject");
 
-                          ajaxJson({ subject, value }, LOGHOST + "/searchContents", { equal: true }).then((response) => {
+                          ajaxJson({ subject, value, from: "review" }, LOGHOST + "/searchContents", { equal: true }).then((response) => {
                             instance.portfolioBlock(null, "<<<" + response.conids.join(",") + ">>>", instance.sort);
                           }).catch((err) => {
                             endEvent.call(this, e);

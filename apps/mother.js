@@ -3683,7 +3683,8 @@ Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false, i
       onoff: onoffString,
       name: serviceString,
       date: startDateNumbers,
-      xValue: xValueString
+      xValue: xValueString,
+      keywords: seridKeywords,
     };
   }
 }

@@ -1,4 +1,4 @@
-const LogRouter = function (slack_bot, MONGOC, MONGOLOCALC, testMode) {
+const LogRouter = function (slack_bot, MONGOC, MONGOLOCALC, MONGOCOREC, testMode) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
@@ -12,6 +12,7 @@ const LogRouter = function (slack_bot, MONGOC, MONGOLOCALC, testMode) {
   this.back = new BackMaker();
   this.mongo = MONGOC;
   this.mongolocal = MONGOLOCALC;
+  this.mongocore = MONGOCOREC;
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.report = new LogReport(MONGOC);
   this.host = this.address.testinfo.host;
@@ -178,76 +179,6 @@ LogRouter.prototype.rou_get_Address = function () {
 
 //POST ---------------------------------------------------------------------------------------------
 
-LogRouter.prototype.rou_post_receiveLog = function () {
-  const instance = this;
-  const back = this.back;
-  const { equalJson, ipParsing } = this.mother;
-  const ignoreList = [ 121130214221, 2201171312 ];
-  let obj = {};
-  obj.link = [ "/receiveLog" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (req.body.data === undefined) {
-        throw new Error("invaild post");
-      }
-      const collection = "homeliaisonAnalytics";
-      const { data } = equalJson(req.body);
-      const { page, action, standard, id, value } = data;
-      const selfMongo = instance.mongo;
-      const ip = String(req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"]).trim().replace(/[^0-9\.]/gi, '');
-      const rawUserAgent = req.useragent;
-      const { source: userAgent, browser, os, platform } = rawUserAgent;
-      const referer = (req.headers.referer === undefined ? "" : req.headers.referer);
-      let ipObj, json;
-
-      ipObj = await ipParsing(ip);
-      if (ipObj === null) {
-        ipObj = { ip };
-      }
-
-      json = {
-        network: {
-          referer,
-          userAgent,
-          browser,
-          os,
-          platform,
-          mobile: rawUserAgent.isMobile,
-          ...ipObj
-        },
-        date: {
-          standard: new Date(Number(standard)),
-          now: new Date(),
-        },
-        data: {
-          page,
-          action,
-          id,
-          value
-        }
-      };
-
-      if (typeof ip === "string") {
-        if (!ignoreList.includes(Number(ip.replace(/[^0-9]/gi, '')))) {
-          await back.mongoCreate(collection, json, { selfMongo });
-        }
-      }
-      res.send(JSON.stringify(json));
-
-    } catch (e) {
-      logger.error("Log Console 서버 문제 생김 (rou_post_receiveLog): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
 LogRouter.prototype.rou_post_frontReflection = function () {
   const instance = this;
   const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
@@ -269,125 +200,6 @@ LogRouter.prototype.rou_post_frontReflection = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       logger.error("Log Console 서버 문제 생김 (rou_post_frontReflection): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-LogRouter.prototype.rou_post_extractLog = function () {
-  const instance = this;
-  const back = this.back;
-  const { equalJson, stringToDate } = this.mother;
-  let obj = {};
-  let findBackground, rowsToTong;
-
-  findBackground = async (from, to) => {
-    try {
-      const collection = "homeliaisonAnalytics";
-      let rows;
-      rows = await back.mongoRead(collection, {
-        $and: [
-          { "date.now": { $gte: from } },
-          { "date.now": { $lt: to } },
-        ]
-      }, { selfMongo: instance.mongo });
-      return rows;
-    } catch (e) {
-      console.log(e);
-      return [];
-    }
-  }
-  rowsToTong = (rows) => {
-    let tong;
-    let copied;
-    tong = {};
-    for (let obj of rows) {
-      if (typeof tong[obj.data.id] !== "object") {
-        tong[obj.data.id] = {};
-      }
-      copied = equalJson(JSON.stringify(obj));
-      delete copied._id;
-
-      tong[obj.data.id].network = copied.network;
-      if (!Array.isArray(tong[obj.data.id].history)) {
-        tong[obj.data.id].history = [];
-      }
-      tong[obj.data.id].history.push({
-        date: copied.date.now,
-        ...copied.data
-      });
-    }
-    for (let key in tong) {
-      tong[key].history.sort((a, b) => {
-        return a.date.valueOf() - b.date.valueOf();
-      });
-    }
-    return tong;
-  }
-
-  obj.link = [ "/extractLog" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (req.body.mode === undefined) {
-        throw new Error("invaild post");
-      }
-      const { mode } = req.body;
-      let id, from, to;
-      let rows, tong;
-
-      if (mode === "list") {
-        if (typeof req.body.from !== "string" || typeof req.body.to !== "string") {
-          throw new Error("must be from, to");
-        }
-
-        from = stringToDate(req.body.from);
-        to = stringToDate(req.body.to);
-
-        rows = await findBackground(from, to);
-        tong = rowsToTong(rows);
-
-      } else if (mode === "get") {
-        if (req.body.id === undefined) {
-          throw new Error("must be id");
-        }
-        id = req.body.id;
-
-        from = new Date();
-        to = new Date();
-        from.setMonth(from.getMonth() - 1);
-
-        rows = await findBackground(from, to);
-        tong = rowsToTong(rows);
-
-        if (tong[id] === undefined) {
-          tong = {};
-        } else {
-          tong[id].id = id;
-          tong = tong[id];
-        }
-      } else if (mode === "raw") {
-        if (typeof req.body.from !== "string" || typeof req.body.to !== "string") {
-          throw new Error("must be from, to");
-        }
-
-        from = stringToDate(req.body.from);
-        to = stringToDate(req.body.to);
-
-        tong = await findBackground(from, to);
-      } else {
-        throw new Error("invalid mode");
-      }
-
-      res.send(JSON.stringify(tong));
-    } catch (e) {
-      logger.error("Log Console 서버 문제 생김 (rou_post_extractLog): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -649,13 +461,12 @@ LogRouter.prototype.rou_post_getContents = function () {
   return obj;
 }
 
-LogRouter.prototype.rou_post_basicReport = function () {
+LogRouter.prototype.rou_post_searchContents = function () {
   const instance = this;
-  const report = this.report;
-  const { equalJson } = this.mother;
-  let obj;
-  obj = {};
-  obj.link = [ "/basicReport" ];
+  const back = this.back;
+  const { equalJson, objectDeepCopy, sleep, serviceParsing } = this.mother;
+  let obj = {};
+  obj.link = [ "/searchContents" ];
   obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
@@ -664,13 +475,211 @@ LogRouter.prototype.rou_post_basicReport = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      report.dailyReports().catch((err) => {
-        logger.error("Log console, basic dailyReports error : " + err.message).catch((err) => { console.log(err) });
-      });
-      res.send(JSON.stringify({ message: "will do" }));
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongocore;
+      const collection = "contents";
+      const hideContents = [ "p61", "p36", "a51" ];
+      const toNormal = true;
+      const { keywords: seridKeywords } = serviceParsing();
+      let limit;
+      let contentsArr_raw;
+      let contentsArr, designers;
+      let reviewArr, indexArr;
+      let indexSliceNumber;
+      let contentsProjectQuery;
+      let sortQuery;
+      let cliidArr;
+      let proidArr;
+      let whereQuery, projectQuery;
+      let thisClients, thisProjects;
+      let thisRequestNumber;
+      let thisClient;
+      let proposalDate;
+      let projects;
+      let thisProject;
+      let thisDesigner;
+
+      contentsProjectQuery = {
+        conid: 1,
+        desid: 1,
+        cliid: 1,
+        proid: 1,
+        service: 1,
+        photos: 1,
+        "contents.portfolio.pid": 1,
+        "contents.portfolio.date": 1,
+        "contents.portfolio.spaceInfo": 1,
+        "contents.portfolio.title": 1,
+        "contents.portfolio.color": 1,
+        "contents.portfolio.detailInfo": 1,
+        "contents.review.rid": 1,
+        "contents.review.date": 1,
+        "contents.review.title": 1,
+        "contents.review.detailInfo": 1,
+      };
+
+      sortQuery = {};
+      if (req.body.from === "review") {
+        sortQuery = { "contents.review.detailInfo.order": -1 };
+      } else {
+        sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
+      }
+
+      contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo, sort: sortQuery });
+      if (contentsArr.length === 0) {
+        res.send(JSON.stringify({ conids: [] }));
+      } else {
+        designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
+        cliidArr = [ ...new Set(contentsArr.map((o) => { return o.cliid.trim() }).filter((s) => { return s !== "" })) ];
+        proidArr = [ ...new Set(contentsArr.map((o) => { return o.proid.trim() }).filter((s) => { return s !== "" })) ];
+    
+        if (cliidArr.length > 0) {
+          whereQuery = { $or: cliidArr.map((cliid) => { return { cliid } }) };
+          projectQuery = {
+            cliid: 1,
+            name: 1,
+            "requests.request.timeline": 1,
+            "requests.request.budget": 1,
+            "requests.request.family": 1,
+            "requests.request.furniture": 1,
+            "requests.request.space": 1,
+          }
+          thisClients = await back.mongoPick("client", [ objectDeepCopy(whereQuery), objectDeepCopy(projectQuery) ], { selfMongo: selfCoreMongo });
+    
+          whereQuery = { $or: proidArr.map((proid) => { return { proid } }) };
+          projectQuery = {
+            proid: 1,
+            cliid: 1,
+            desid: 1,
+            "proposal.date": 1,
+            process: 1,
+          }
+          thisProjects = await back.mongoPick("project", [ objectDeepCopy(whereQuery), objectDeepCopy(projectQuery) ], { selfMongo: selfCoreMongo });
+    
+          projects = [];
+          for (let project of thisProjects) {
+            proposalDate = new Date(JSON.stringify(project.proposal.date).slice(1, -1));
+            thisClient = thisClients.find((c) => { return c.cliid === project.cliid });
+    
+            thisRequestNumber = 0;
+            for (let i = 0; i < thisClient.requests.length; i++) {
+              if (thisClient.requests[i].request.timeline.valueOf() <= proposalDate.valueOf()) {
+                thisRequestNumber = i;
+                break;
+              }
+            }
+    
+            project.requestNumber = thisRequestNumber;
+            project.client = {
+              name: thisClient.name,
+              cliid: thisClient.cliid,
+              request: objectDeepCopy(thisClient.requests[thisRequestNumber].request),
+            };
+            projects.push(project);
+          }
+    
+          for (let contents of contentsArr) {
+            if (contents.proid !== "") {
+              thisProject = projects.find((p) => { return p.proid === contents.proid });
+              contents.project = objectDeepCopy(thisProject);
+            } else {
+              contents.project = { client: { request: {} } };
+            }
+            thisDesigner = designers.find((d) => { return d.desid === contents.desid });
+            contents.designer = thisDesigner.designer;
+          }
+    
+        } else {
+          for (let contents of contentsArr) {
+            contents.project = { client: { request: {} } };
+            thisDesigner = designers.find((d) => { return d.desid === contents.desid });
+            contents.designer = thisDesigner.designer;
+          }
+        }
+
+        const { subject, value } = equalJson(req.body);
+
+        if (subject === "평수") {
+
+
+
+
+          res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+        } else if (subject === "예산") {
+
+          contentsArr = contentsArr.filter((c) => { return typeof c.project.client.request.budget === "string" });
+
+          if (value === "500만원 이하") {
+            contentsArr = contentsArr.filter((c) => {
+              const budget = Number(c.project.client.request.budget.replace(/[^0-9]/gi, ''));
+              return budget <= 500;
+            });
+          } else if (value === "6,000만원 이상") {
+            contentsArr = contentsArr.filter((c) => {
+              const budget = Number(c.project.client.request.budget.replace(/[^0-9]/gi, ''));
+              return budget >= 6000;
+            });
+          } else {
+            contentsArr = contentsArr.filter((c) => {
+              const budget = Number(c.project.client.request.budget.replace(/[^0-9]/gi, ''));
+              const standard = Number(value.replace(/[^0-9]/gi, ''))
+              return (budget >= standard && budget < (standard + 1000));
+            });
+          }
+
+          res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+        } else if (subject === "서비스 종류") {
+          
+
+
+
+          res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+        } else if (subject === "서비스 기간") {
+          
+
+
+
+          res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+        } else if (subject === "지역") {
+          
+
+
+
+          res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+        } else if (subject === "전체") {
+          
+
+
+
+          res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+        } else {
+          res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+        }
+      }
+
+
+
+
+      
+
+      
+
+      if (contentsArr.length > 0) {
+        designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
+        res.send(JSON.stringify({
+          contentsArr: contentsArr,
+          designers: designers.frontMode(),
+        }));
+      } else {
+        res.send(JSON.stringify({
+          contentsArr: contentsArr,
+          designers: [],
+        }));
+      }
+
     } catch (e) {
-      logger.error("Log console 서버 문제 생김 (rou_post_basicReport): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
+      logger.error("Log Console 서버 문제 생김 (rou_post_searchContents): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;

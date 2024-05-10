@@ -187,14 +187,16 @@ LogConsole.prototype.logConnect = async function (testMode = false) {
     console.log(``);
 
     //set mongo connetion
-    let MONGOC, MONGOLOCALC;
+    let MONGOC, MONGOLOCALC, MONGOCOREC;
     MONGOC = new mongo(mongotestinfo);
     MONGOLOCALC = new mongo(mongolocalinfo);
+    MONGOCOREC = new mongo(mongoinfo);
     console.log(`\x1b[33m%s\x1b[0m`, `set DB server => 127.0.0.1`);
     console.log(``);
 
     await MONGOC.connect();
     await MONGOLOCALC.connect();
+    await MONGOCOREC.connect();
 
     //set pem key
     let pems, pemsLink;
@@ -227,7 +229,7 @@ LogConsole.prototype.logConnect = async function (testMode = false) {
 
     //set router
     const LogRouter = require(`${this.dir}/router/logRouter.js`);
-    const router = new LogRouter(this.slack_bot, MONGOC, MONGOLOCALC, testMode);
+    const router = new LogRouter(this.slack_bot, MONGOC, MONGOLOCALC, MONGOCOREC, testMode);
 
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);
