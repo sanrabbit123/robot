@@ -315,15 +315,15 @@ ReviewListJs.prototype.insertInitBox = function () {
   popupBetween = 6;
   middleBorderWidth = 1;
 
-  numbersMiddleTitleContents0 = "282";
+  numbersMiddleTitleContents0 = String(instance.lengthDic.contents);
   numbersMiddleTitleContents1 = "4.7";
-  numbersMiddleTitleContents2 = "3447";
-  numbersMiddleTitleContents3 = "82";
+  numbersMiddleTitleContents2 = String(instance.lengthDic.project);
+  numbersMiddleTitleContents3 = String(instance.lengthDic.designer);
 
-  numbersDescriptionContents0 = "282개의 고객 평가";
+  numbersDescriptionContents0 = numbersMiddleTitleContents0 + "개의 고객 평가";
   numbersDescriptionContents1 = "5점 만점 4.7 만족도";
-  numbersDescriptionContents2 = "3447건의 프로젝트";
-  numbersDescriptionContents3 = "82명의 디자이너";
+  numbersDescriptionContents2 = numbersMiddleTitleContents2 + "건의 프로젝트";
+  numbersDescriptionContents3 = numbersMiddleTitleContents3 + "명의 디자이너";
 
   searchTags = [];
   searchTags.push("평수");
@@ -1830,9 +1830,10 @@ ReviewListJs.prototype.launching = async function (loading) {
     }
 
     const getObj = returnGet();
-    let response;
+    let response, lengthDic;
 
     response = await ajaxJson({ mode: "review", limit: 42 }, LOGHOST + "/getContents", { equal: true });
+    lengthDic = await ajaxJson({ data: null }, LOGHOST + "/getLength", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
     this.designers = new SearchArray(response.designers);
     this.fullLoad = false;
@@ -1840,6 +1841,7 @@ ReviewListJs.prototype.launching = async function (loading) {
     this.loadedContents = [];
     this.sort = "key9";
     this.search = "";
+    this.lengthDic = lengthDic;
 
     await this.mother.ghostClientLaunching({
       mode: "front",
