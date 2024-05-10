@@ -305,6 +305,7 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
     let rows;
     let emailRaw, contractRaw;
     let thisInjection;
+    let timeRaw;
 
     now = new Date();
     ago = new Date(JSON.stringify(now).slice(1, -1));
@@ -356,6 +357,7 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
       expectedRaw = null;
       emailRaw = null;
       contractRaw = null;
+      timeRaw = null;
 
       tempObj = {
         id: obj.id,
@@ -466,6 +468,16 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
         tempObj.data.contract = "자가";
       }
 
+      try {
+        timeRaw = rawArr.find((o) => { return /time/gi.test(o.name) })?.values?.join("");
+        if (timeRaw === null || timeRaw === undefined) {
+          throw new Error("");
+        }
+        tempObj.data.time = [ "9:30 - 11:00", "11:00 - 12:30", "13:30 - 16:30", "16:30 - 18:30", ][Number(timeRaw)];
+      } catch {
+        tempObj.data.time = "";
+      }
+
       tong.push(tempObj);
     }
     
@@ -567,6 +579,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
     let defaultQueryObject;
     let requestNumber;
     let livingNow;
+    let time;
 
     now = new Date();
     rows = await back.mongoRead(collection, { injection: 0 }, { selfMongo });
@@ -869,6 +882,22 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
             updateQuery = {};
             coreQuery = {};
             updateQuery["curation.image"] = objectDeepCopy(staticImageSet);
+            await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
+              ...defaultQueryObject,
+              updateQuery,
+              coreQuery
+            }, {
+              headers: {
+                "Content-Type": "application/json",
+                "origin": instance.address.frontinfo.host,
+              }
+            });
+
+            await sleep(100);
+
+            updateQuery = {};
+            coreQuery = {};
+            updateQuery["budget"] = "상담 가능 시간 : \n" + (typeof target.data.time === "string" ? target.data.time : "");
             await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
               ...defaultQueryObject,
               updateQuery,

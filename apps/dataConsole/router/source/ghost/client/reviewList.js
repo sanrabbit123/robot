@@ -710,6 +710,7 @@ ReviewListJs.prototype.insertInitBox = function () {
 
                           ajaxJson({ subject, value, from: "review" }, LOGHOST + "/searchContents", { equal: true }).then((response) => {
                             instance.portfolioBlock(null, "<<<" + response.conids.join(",") + ">>>", instance.sort);
+                            instance.photoLoad = true;
                             loading.remove();
                           }).catch((err) => {
                             endEvent.call(this, e);
@@ -744,6 +745,7 @@ ReviewListJs.prototype.insertInitBox = function () {
         } else {
           endEvent.call(this, e);
           instance.portfolioBlock(null, "", instance.sort);
+          instance.photoLoad = true;
         }
 
       } catch (e) {
@@ -1439,12 +1441,9 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
 
       search = search.trim().replace(/^\<\<\</gi, '').replace(/\>\>\>$/gi, '');
       if (search === "") {
-        contentsArr = this.contentsArr;
+        contentsArr = [];
       } else {
         conidArr = search.split(",");
-
-        console.log(conidArr);
-
         contentsArr = this.contentsArr.toNormal().filter((o) => {
           return conidArr.includes(o.conid);
         });
@@ -1462,9 +1461,13 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
         let designerTarget;
 
         target = equalJson(JSON.stringify(obj.contents.portfolio.detailInfo.tag));
+        target.push(obj.contents.portfolio.spaceInfo.space);
+        target.push(obj.contents.portfolio.spaceInfo.region);
+        target.push(obj.contents.portfolio.spaceInfo.method);
         target.push(obj.contents.review.title.main);
         target.push(obj.contents.review.title.sub);
         target.push(serviceParsing(obj.service));
+
         designerTarget = designers.search("desid", obj.desid);
         target.push(designerTarget.designer);
 
@@ -1478,7 +1481,6 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
 
         return boo;
       });
-
     }
 
   } else {

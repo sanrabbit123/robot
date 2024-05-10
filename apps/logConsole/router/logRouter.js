@@ -611,8 +611,6 @@ LogRouter.prototype.rou_post_searchContents = function () {
           if (value === "10평 미만") {
             contentsArr = contentsArr.filter((c) => {
               const pyeong = c.contents.portfolio.spaceInfo.pyeong;
-              console.log(pyeong);
-              console.log(pyeong < 10);
               return pyeong < 10;
             });
           } else if (value === "60평 이상") {
@@ -640,7 +638,7 @@ LogRouter.prototype.rou_post_searchContents = function () {
           } else if (value === "6,000만원 이상") {
             contentsArr = contentsArr.filter((c) => {
               const budget = Number(c.project.client.request.budget.replace(/[^0-9]/gi, ''));
-              return (budget >= 6000 && budget <= 50);
+              return (budget >= 6000 || budget <= 50);
             });
           } else {
             contentsArr = contentsArr.filter((c) => {
