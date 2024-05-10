@@ -635,12 +635,12 @@ LogRouter.prototype.rou_post_searchContents = function () {
           if (value === "500만원 이하") {
             contentsArr = contentsArr.filter((c) => {
               const budget = Number(c.project.client.request.budget.replace(/[^0-9]/gi, ''));
-              return budget <= 500;
+              return (budget > 50 && budget <= 500);
             });
           } else if (value === "6,000만원 이상") {
             contentsArr = contentsArr.filter((c) => {
               const budget = Number(c.project.client.request.budget.replace(/[^0-9]/gi, ''));
-              return budget >= 6000;
+              return (budget >= 6000 && budget <= 50);
             });
           } else {
             contentsArr = contentsArr.filter((c) => {

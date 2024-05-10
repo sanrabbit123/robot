@@ -1443,7 +1443,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
       } else {
         conidArr = search.split(",");
 
-        console.log(condiArr);
+        console.log(conidArr);
 
         contentsArr = this.contentsArr.toNormal().filter((o) => {
           return conidArr.includes(o.conid);
