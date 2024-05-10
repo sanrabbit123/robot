@@ -710,6 +710,9 @@ ReviewListJs.prototype.insertInitBox = function () {
                           const loading = instance.mother.whiteProgressLoading(null, true, false, false);
 
                           ajaxJson({ subject, value, from: "review" }, LOGHOST + "/searchContents", { equal: true }).then((response) => {
+
+                            console.log(response.conids)
+
                             instance.portfolioBlock(null, "<<<" + response.conids.join(",") + ">>>", instance.sort);
                             loading.remove();
                           }).catch((err) => {

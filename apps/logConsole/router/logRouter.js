@@ -611,6 +611,8 @@ LogRouter.prototype.rou_post_searchContents = function () {
           if (value === "10평 이하") {
             contentsArr = contentsArr.filter((c) => {
               const pyeong = c.contents.portfolio.spaceInfo.pyeong;
+              console.log(pyeong);
+              console.log(pyeong < 10);
               return pyeong < 10;
             });
           } else if (value === "60평 이상") {
