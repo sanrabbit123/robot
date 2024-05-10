@@ -601,14 +601,29 @@ LogRouter.prototype.rou_post_searchContents = function () {
 
         if (subject === "평수") {
 
-
-
+          contentsArr = contentsArr.filter((c) => { return typeof c.project.client.request.space === "object" });
+          if (value === "10평 이하") {
+            contentsArr = contentsArr.filter((c) => {
+              const pyeong = c.project.client.request.space.pyeong;
+              return pyeong < 10;
+            });
+          } else if (value === "60평 이상") {
+            contentsArr = contentsArr.filter((c) => {
+              const pyeong = c.project.client.request.space.pyeong;
+              return pyeong >= 60;
+            });
+          } else {
+            contentsArr = contentsArr.filter((c) => {
+              const pyeong = c.project.client.request.space.pyeong;
+              const standard = Number(value.replace(/[^0-9]/gi, ''))
+              return (pyeong >= standard && pyeong < (standard + 10));
+            });
+          }
 
           res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
         } else if (subject === "예산") {
 
           contentsArr = contentsArr.filter((c) => { return typeof c.project.client.request.budget === "string" });
-
           if (value === "500만원 이하") {
             contentsArr = contentsArr.filter((c) => {
               const budget = Number(c.project.client.request.budget.replace(/[^0-9]/gi, ''));
@@ -628,6 +643,7 @@ LogRouter.prototype.rou_post_searchContents = function () {
           }
 
           res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+
         } else if (subject === "서비스 종류") {
           
 

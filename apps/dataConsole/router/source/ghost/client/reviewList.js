@@ -343,7 +343,7 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   searchDescriptionTags = [];
   searchDescriptionTags.push([
-    "10평 이하",
+    "10평 미만",
     "10평대",
     "20평대",
     "30평대",
@@ -705,8 +705,13 @@ ReviewListJs.prototype.insertInitBox = function () {
                           const value = this.getAttribute("item");
                           const subject = this.getAttribute("subject");
 
+                          endEvent.call(this, e);
+
+                          const loading = instance.mother.whiteProgressLoading(null, true, false, false);
+
                           ajaxJson({ subject, value, from: "review" }, LOGHOST + "/searchContents", { equal: true }).then((response) => {
                             instance.portfolioBlock(null, "<<<" + response.conids.join(",") + ">>>", instance.sort);
+                            loading.remove();
                           }).catch((err) => {
                             endEvent.call(this, e);
                           });
@@ -1425,11 +1430,25 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   let montTitleSize;
   let borderWidthLight;
   let thisPyeong, thisBudget;
+  let conidArr;
 
   if (typeof search === "string") {
 
     if (search === '') {
       contentsArr = this.contentsArr;
+
+    } else if (/^\<\<\</.test(search)) {
+
+      search = search.trim().replace(/^\<\<\</gi, '').replace(/\>\>\>$/gi, '');
+      if (search === "") {
+        contentsArr = this.contentsArr;
+      } else {
+        conidArr = search.split(",");
+        contentsArr = this.contentsArr.toNormal().filter((o) => {
+          return conidArr.includes(o.conid);
+        });
+      }
+
     } else {
 
       if (/엑스트라/gi.test(search)) {
