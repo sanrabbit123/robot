@@ -74,7 +74,7 @@ ReviewListJs.prototype.generateGsArray = function (number) {
 
 ReviewListJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, objectDeepCopy } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, ajaxJson, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, objectDeepCopy } = GeneralJs;
   const { ea, media, standardWidth, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1743,18 +1743,6 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
               position: "relative",
             },
             children: [
-              {
-                mode: "svg",
-                source: svgMaker.doubleQuote(colorExtended.mainBlue),
-                style: {
-                  display: "inline-block",
-                  height: String(quoteHeight) + ea,
-                  width: String(quoteWidth) + ea,
-                  verticalAlign: "top",
-                  position: "relative",
-                  top: String(quoteTop) + ea,
-                }
-              },
               {
                 text: "-",
                 style: {

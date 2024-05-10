@@ -657,26 +657,6 @@ LogRouter.prototype.rou_post_searchContents = function () {
         }
       }
 
-
-
-
-      
-
-      
-
-      if (contentsArr.length > 0) {
-        designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
-        res.send(JSON.stringify({
-          contentsArr: contentsArr,
-          designers: designers.frontMode(),
-        }));
-      } else {
-        res.send(JSON.stringify({
-          contentsArr: contentsArr,
-          designers: [],
-        }));
-      }
-
     } catch (e) {
       logger.error("Log Console 서버 문제 생김 (rou_post_searchContents): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
