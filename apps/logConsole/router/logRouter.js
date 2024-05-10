@@ -504,19 +504,28 @@ LogRouter.prototype.rou_post_getContents = function () {
 
         if (req.body.desid === undefined) {
 
+          contentsProjectQuery = {
+            conid: 1,
+            desid: 1,
+            cliid: 1,
+            proid: 1,
+            service: 1,
+            photos: 1,
+            "contents.portfolio.pid": 1,
+            "contents.portfolio.date": 1,
+            "contents.portfolio.spaceInfo": 1,
+            "contents.portfolio.title": 1,
+            "contents.portfolio.color": 1,
+            "contents.portfolio.detailInfo": 1,
+            "contents.review.rid": 1,
+            "contents.review.date": 1,
+            "contents.review.title": 1,
+            "contents.review.detailInfo": 1,
+          };
+          sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
+
           designers = await back.getDesignersByQuery({}, { selfMongo });
-          contentsArr_raw = await back.getContentsArrByQuery({}, { selfMongo });
-          contentsArr_raw = contentsArr_raw.toNormal();
-          contentsArr_raw.sort((a, b) => {
-            return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
-          });
-          contentsArr = contentsArr_raw.map((obj) => {
-            let copied;
-            copied = equalJson(JSON.stringify(obj));
-            delete copied.contents.portfolio.contents.detail;
-            delete copied.contents.review.contents.detail;
-            return copied;
-          });
+          contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo, sort: sortQuery });
           contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
 
           res.send(JSON.stringify({
@@ -526,13 +535,28 @@ LogRouter.prototype.rou_post_getContents = function () {
 
         } else {
 
+          contentsProjectQuery = {
+            conid: 1,
+            desid: 1,
+            cliid: 1,
+            proid: 1,
+            service: 1,
+            photos: 1,
+            "contents.portfolio.pid": 1,
+            "contents.portfolio.date": 1,
+            "contents.portfolio.spaceInfo": 1,
+            "contents.portfolio.title": 1,
+            "contents.portfolio.color": 1,
+            "contents.portfolio.detailInfo": 1,
+            "contents.review.rid": 1,
+            "contents.review.date": 1,
+            "contents.review.title": 1,
+            "contents.review.detailInfo": 1,
+          };
+          sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
+
           designers = await back.getDesignersByQuery({ desid: req.body.desid }, { selfMongo });
-          contentsArr_raw = await back.getContentsArrByQuery({ desid: req.body.desid }, { selfMongo });
-          contentsArr_raw = contentsArr_raw.toNormal();
-          contentsArr_raw.sort((a, b) => {
-            return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
-          });
-          contentsArr = contentsArr_raw;
+          contentsArr = await back.mongoPick(collection, [ { desid: req.body.desid }, contentsProjectQuery ], { selfMongo, sort: sortQuery });
           contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
 
           res.send(JSON.stringify({
@@ -546,11 +570,30 @@ LogRouter.prototype.rou_post_getContents = function () {
 
         indexSliceNumber = 9;
 
-        contentsArr_raw = await back.getContentsArrByQuery({}, { selfMongo });
+        contentsProjectQuery = {
+          conid: 1,
+          desid: 1,
+          cliid: 1,
+          proid: 1,
+          service: 1,
+          photos: 1,
+          "contents.portfolio.pid": 1,
+          "contents.portfolio.date": 1,
+          "contents.portfolio.spaceInfo": 1,
+          "contents.portfolio.title": 1,
+          "contents.portfolio.color": 1,
+          "contents.portfolio.detailInfo": 1,
+          "contents.review.rid": 1,
+          "contents.review.date": 1,
+          "contents.review.title": 1,
+          "contents.review.detailInfo": 1,
+        };
 
-        contentsArr = contentsArr_raw.toNormal().filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
-        reviewArr = contentsArr_raw.toNormal().filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
-        indexArr = contentsArr_raw.toNormal().filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
+        contentsArr_raw = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo });
+
+        contentsArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
+        reviewArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
+        indexArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
 
         contentsArr.sort((a, b) => {
           return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
