@@ -187,7 +187,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 36, 32, 30, 28, 4 %%>;
+  whiteBlockMarginBottom = <%% 36, 32, 30, 23, 4 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
@@ -197,21 +197,21 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 18, 14, 13, 12, 2.2 %%>;
+  servicePaddingLeft = <%% 18, 14, 12, 12, 2.2 %%>;
   serviceMarginRight = <%% 6, 5, 4, 3, 6 %%>;
-  serviceSize = <%% 14, 13, 13, 12, 3.3 %%>;
+  serviceSize = <%% 14, 13, 13, 11, 3.3 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 50, 50, 50, 40, 20 %%>;
+  searchBarPaddingTop = <%% 50, 50, 50, 36, 20 %%>;
   searchBarHeight = <%% 36, 34, 32, 28, 8 %%>;
-  searchBarWidth = <%% 690, 516, 595, 476, 88 %%>;
+  searchBarWidth = <%% 690, 516, 412, 284, 88 %%>;
 
-  searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
+  searchIconHeight = <%% 20, 20, 18, 16, 4 %%>;
   searchIconRight = <%% 0, 0, 0, 0, 2 %%>;
-  searchIconTop = <%% 8, 8, 8, 8, 1.8 %%>;
+  searchIconTop = <%% 8, 8, 7, 6, 1.8 %%>;
 
   inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
 
@@ -222,7 +222,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   subTitleFontSize = <%% 21, 19, 18, 16, 3.4 %%>;
   subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  tagTextTop = <%% (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? 0.51 : 0), (isMac() ? -0.5 : 0), -0.3 %%>;
+  tagTextTop = <%% (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), -0.3 %%>;
   tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
@@ -266,7 +266,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
   blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
 
-  sortButtonWidth = <%% 90, 82, 80, 72, 90 %%>;
+  sortButtonWidth = <%% 90, 82, 78, 68, 90 %%>;
   sortButtonBetween = <%% 16, 14, 12, 10, 1 %%>;
   sortButtonHeight = <%% searchBarHeight - 1, searchBarHeight - 2, searchBarHeight - 1, searchBarHeight - 1, searchBarHeight - 1 %%>;
 
@@ -276,14 +276,14 @@ ReviewListJs.prototype.insertInitBox = function () {
   numbersMaxWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
   numbersRadius = <%% 12, 12, 12, 12, 12 %%>;
   numbersBoxMarginTop = <%% 15, 15, 15, 15, 15 %%>;
-  numbersBoxMarginBottom = <%% 46, -20, 46, 46, 46 %%>;
+  numbersBoxMarginBottom = <%% 46, -22, -8, -24, 46 %%>;
 
-  numbersBoxPaddingLeft = <%% 42, 40, 42, 42, 42 %%>;
-  numbersBoxPaddingRight = <%% 36, 34, 36, 36, 36 %%>;
-  numbersBoxBarMargin = <%% 36, 32, 36, 36, 36 %%>;
+  numbersBoxPaddingLeft = <%% 42, 40, 38, 32, 42 %%>;
+  numbersBoxPaddingRight = <%% 36, 34, 32, 26, 36 %%>;
+  numbersBoxBarMargin = <%% 36, 32, 32, 28, 36 %%>;
   numbersMiddleBarHeight = <%% 100, 100, 100, 100, 100 %%>;
 
-  numbersMargin = <%% 20, 12, 20, 20, 20 %%>;
+  numbersMargin = <%% 20, 12, 12, 6, 20 %%>;
 
   numbersImageWidth0 = <%% 80, 80, 80, 80, 80 %%>;
   numbersImageWidth1 = <%% 95, 95, 95, 95, 95 %%>;
@@ -310,7 +310,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   buttonArrowDownWidth = <%% 6, 5, 5, 4, 1 %%>;
   buttonArrowDownMarginLeft = <%% 10, 8, 8, 6, 1 %%>;
 
-  menuPopupPaddingTop = <%% 5, 5, 5, 5, 5 %%>;
+  menuPopupPaddingTop = <%% 4, 4, 4, 4, 5 %%>;
 
   popupBetween = 6;
   middleBorderWidth = 1;
@@ -334,11 +334,11 @@ ReviewListJs.prototype.insertInitBox = function () {
   searchTags.push("전체");
 
   searchWidthTags = [];
-  searchWidthTags.push(<&& 96 | 96 | 96 | 96 | 96 &&>);
-  searchWidthTags.push(<&& 120 | 120 | 120 | 120 | 120 &&>);
-  searchWidthTags.push(<&& 132 | 132 | 132 | 132 | 132 &&>);
+  searchWidthTags.push(<&& 96 | 88 | 80 | 72 | 96 &&>);
+  searchWidthTags.push(<&& 120 | 110 | 108 | 90 | 120 &&>);
+  searchWidthTags.push(<&& 132 | 124 | 120 | 108 | 132 &&>);
   searchWidthTags.push(<&& 0 | 0 | 0 | 0 | 0 &&>);
-  searchWidthTags.push(<&& 100 | 100 | 100 | 100 | 100 &&>);
+  searchWidthTags.push(<&& 100 | 90 | 82 | 70 | 100 &&>);
   searchWidthTags.push(<&& 0 | 0 | 0 | 0 | 0 &&>);
 
   searchDescriptionTags = [];
@@ -427,6 +427,7 @@ ReviewListJs.prototype.insertInitBox = function () {
             animation: "fadeuplitereverse 0.3s ease forwards",
             opacity: String(0),
             overflow: "hidden",
+            paddingTop: String(menuPopupPaddingTop / 2) + ea,
           },
           child: {
             event: {
@@ -763,6 +764,7 @@ ReviewListJs.prototype.insertInitBox = function () {
       width: String(100) + '%',
       marginBottom: String(whiteBlockMarginBottom) + ea,
       top: String(-1 * boxTopVisual) + ea,
+      overflow: "hidden"
     }
   });
 
@@ -862,6 +864,8 @@ ReviewListJs.prototype.insertInitBox = function () {
     }
   });
 
+  // 1
+
   createNode({
     mother: numbersBox,
     mode: "img",
@@ -927,6 +931,8 @@ ReviewListJs.prototype.insertInitBox = function () {
       boxSizing: "border-box",
     }
   });
+
+  // 2
 
   createNode({
     mother: numbersBox,
@@ -994,6 +1000,9 @@ ReviewListJs.prototype.insertInitBox = function () {
     }
   });
 
+
+  // 3
+
   createNode({
     mother: numbersBox,
     mode: "img",
@@ -1047,75 +1056,83 @@ ReviewListJs.prototype.insertInitBox = function () {
       }
     ],
   });
-  createNode({
-    mother: numbersBox,
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      width: String(numbersBoxBarMargin) + ea,
-      height: String(numbersMiddleBarHeight) + ea,
-      borderRight: "1px solid " + colorExtended.gray3,
-      marginRight: String(numbersBoxBarMargin) + ea,
-      boxSizing: "border-box",
-    }
-  });
-  
-  createNode({
-    mother: numbersBox,
-    mode: "img",
-    attribute: {
-      src: ReviewListJs.binaryPath + "/source3.svg",
-    },
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      width: String(numbersImageWidth3) + ea,
-      top: String(numbersImageTop3) + ea,
-    }
-  });
-  createNode({
-    mother: numbersBox,
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      height: String(numbersTotalHeight) + ea,
-      width: String(numbersWidth3) + ea,
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-      marginLeft: String(numbersMargin) + ea,
-    },
-    children: [
-      {
-        text: numbersMiddleTitleContents3,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          textAlign: "center",
-          fontSize: String(numbersTextSize) + ea,
-          fontWeight: String(numbersTextWeight),
-          fontFamily: "mont",
-          color: colorExtended.mainBlue,
-        }
-      },
-      {
-        text: numbersDescriptionContents3,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          textAlign: "center",
-          fontSize: String(numbersDescriptionSize) + ea,
-          fontWeight: String(numbersDescriptionWeight),
-          top: String(numbersDescriptionTextTop) + ea,
-          fontFamily: "pretendard",
-          color: colorExtended.black,
-        }
+  if (media[0] || media[1]) {
+    createNode({
+      mother: numbersBox,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(numbersBoxBarMargin) + ea,
+        height: String(numbersMiddleBarHeight) + ea,
+        borderRight: "1px solid " + colorExtended.gray3,
+        marginRight: String(numbersBoxBarMargin) + ea,
+        boxSizing: "border-box",
       }
-    ],
-  });
+    });
+    
+    // 4
+  
+    createNode({
+      mother: numbersBox,
+      mode: "img",
+      attribute: {
+        src: ReviewListJs.binaryPath + "/source3.svg",
+      },
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(numbersImageWidth3) + ea,
+        top: String(numbersImageTop3) + ea,
+      }
+    });
+    createNode({
+      mother: numbersBox,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        height: String(numbersTotalHeight) + ea,
+        width: String(numbersWidth3) + ea,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: String(numbersMargin) + ea,
+      },
+      children: [
+        {
+          text: numbersMiddleTitleContents3,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            textAlign: "center",
+            fontSize: String(numbersTextSize) + ea,
+            fontWeight: String(numbersTextWeight),
+            fontFamily: "mont",
+            color: colorExtended.mainBlue,
+          }
+        },
+        {
+          text: numbersDescriptionContents3,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            textAlign: "center",
+            fontSize: String(numbersDescriptionSize) + ea,
+            fontWeight: String(numbersDescriptionWeight),
+            top: String(numbersDescriptionTextTop) + ea,
+            fontFamily: "pretendard",
+            color: colorExtended.black,
+          }
+        }
+      ],
+    });
+  }
 
   numbersBox.style.width = "auto";
-  multiplyNumber = (standardWidth / ((numbersBoxPaddingLeft + numbersBoxPaddingRight) + (numbersBoxBarMargin * 6) + (numbersImageWidth0 + numbersImageWidth1 + numbersImageWidth2 + numbersImageWidth3) + (numbersMargin * 4) + (numbersWidth0 + numbersWidth1 + numbersWidth2 + numbersWidth3) + (borderWidth * 2)));
+  if (media[0] || media[1]) {
+    multiplyNumber = (standardWidth / ((numbersBoxPaddingLeft + numbersBoxPaddingRight) + (numbersBoxBarMargin * 6) + (numbersImageWidth0 + numbersImageWidth1 + numbersImageWidth2 + numbersImageWidth3) + (numbersMargin * 4) + (numbersWidth0 + numbersWidth1 + numbersWidth2 + numbersWidth3) + (borderWidth * 2)));
+  } else {
+    multiplyNumber = (standardWidth / ((numbersBoxPaddingLeft + numbersBoxPaddingRight) + (numbersBoxBarMargin * 4) + (numbersImageWidth0 + numbersImageWidth1 + numbersImageWidth2) + (numbersMargin * 3) + (numbersWidth0 + numbersWidth1 + numbersWidth2) + (borderWidth * 2)));
+  }
   numbersBox.style.transform = "scale(" + String(multiplyNumber) + ")";
   numbersBox.style.transformOrigin = "0% 0%";
 
@@ -1362,7 +1379,7 @@ ReviewListJs.prototype.insertPortfolioBase = function () {
   let paddingBottom;
 
   limitLength = <%% 42, 42, 42, 42, 42 %%>;
-  photoMargin = <%% 18, 16, 16, 14, 3 %%>;
+  photoMargin = <%% 18, 16, 16, 16, 3 %%>;
   paddingBottom = <%% 120, 120, 120, 120, 40 %%>;
 
   baseBlock = createNode({
@@ -1510,7 +1527,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   gsArray = this.generateGsArray(limitLength);
 
   baseWidth = Number(baseTong.style.width.replace(/[^0-9\.]/gi, ''));
-  photoMargin = <%% 18, 16, 16, 14, 3 %%>;
+  photoMargin = <%% 18, 16, 16, 16, 3 %%>;
   columns = <%% 4, 4, 3, 3, 2 %%>;
 
   photoRatio = (297 / 210);
@@ -1523,11 +1540,11 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 8 : 7), (isMac() ? 7 : 6.5), (isMac() ? 7 : 6.5), (isMac() ? 6 : 5), (isIphone() ? 1.4 : 1.2) %%>;
 
-  titleSize = <%% 17, 15, 15, 14, 3.4 %%>;
-  montTitleSize = <%% 20, 16, 18, 17, 3.4 %%>;
-  montTitleMarginLeft = <%% 10, 8, 7, 6, 1 %%>;
+  titleSize = <%% 17, 15, 16, 14, 3.4 %%>;
+  montTitleSize = <%% 20, 16, 17, 15, 3.4 %%>;
+  montTitleMarginLeft = <%% 10, 8, 8, 6, 1 %%>;
   montHangulTitleTop = <%% -1, -1, -1, -1, -1 %%>;
-  montTitleTop = <%% -0.5, -1, -0.5, -0.5, -0.5 %%>;
+  montTitleTop = <%% -0.5, -1, -1, -1, -0.5 %%>;
   montSpecialTitleTop = <%% 0, -0.5, -0.5, -0.5, -0.5 %%>; 
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
@@ -1535,7 +1552,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   titleSubSize = <%% 14, 12, 12, 11, 2.5 %%>;
   titleSubMarginTop = <%% 0, 0, 0, 0, -0.4 %%>;
 
-  photoBlockMarginBottom = <%% 65, 56, 48, 40, 8 %%>;
+  photoBlockMarginBottom = <%% 65, 56, 52, 46, 8 %%>;
 
   garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
   garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
@@ -1640,6 +1657,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
             marginBottom: String(photoBlockMarginBottom) + ea,
             verticalAlign: "top",
             cursor: "pointer",
+            overflow: "hidden",
           },
           children: [
             {
