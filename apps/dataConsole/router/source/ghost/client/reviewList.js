@@ -277,7 +277,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   numbersMaxWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
   numbersRadius = <%% 12, 12, 12, 12, 12 %%>;
   numbersBoxMarginTop = <%% 15, 15, 15, 15, 7 %%>;
-  numbersBoxMarginBottom = <%% 46, -22, -8, -24, 2.5 %%>;
+  numbersBoxMarginBottom = <%% 46, -22, -8, -24, 3 %%>;
 
   numbersBoxPaddingLeft = <%% 42, 40, 38, 32, 5 %%>;
   numbersBoxPaddingRight = <%% 36, 34, 32, 26, 4 %%>;
