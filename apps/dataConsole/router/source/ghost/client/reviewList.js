@@ -184,10 +184,11 @@ ReviewListJs.prototype.insertInitBox = function () {
   let searchDescriptionTags;
   let searchWidthTags;
   let menuPopupPaddingTop;
+  let numbersBox0, numbersBox1;
   
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 36, 32, 30, 23, 4 %%>;
+  whiteBlockMarginBottom = <%% 36, 32, 30, 23, 9.5 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
@@ -197,32 +198,32 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 18, 14, 12, 12, 2.2 %%>;
-  serviceMarginRight = <%% 6, 5, 4, 3, 6 %%>;
-  serviceSize = <%% 14, 13, 13, 11, 3.3 %%>;
+  servicePaddingLeft = <%% 18, 14, 12, 12, 3 %%>;
+  serviceMarginRight = <%% 6, 5, 4, 3, 0.8 %%>;
+  serviceSize = <%% 14, 13, 13, 11, 2.8 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
   searchBarPaddingTop = <%% 50, 50, 50, 36, 20 %%>;
-  searchBarHeight = <%% 36, 34, 32, 28, 8 %%>;
+  searchBarHeight = <%% 36, 34, 32, 28, 7 %%>;
   searchBarWidth = <%% 690, 516, 412, 284, 88 %%>;
 
-  searchIconHeight = <%% 20, 20, 18, 16, 4 %%>;
-  searchIconRight = <%% 0, 0, 0, 0, 2 %%>;
-  searchIconTop = <%% 8, 8, 7, 6, 1.8 %%>;
+  searchIconHeight = <%% 20, 20, 18, 16, 4.3 %%>;
+  searchIconRight = <%% 0, 0, 0, 0, 0.2 %%>;
+  searchIconTop = <%% 8, 8, 7, 6, 1 %%>;
 
   inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
 
-  inputSize = <%% 14, 14, 14, 14, 3.1 %%>;
+  inputSize = <%% 14, 14, 14, 14, 3 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
   subTitleMarginTop = <%% 2, 2, 1, 1, 0.1 %%>;
   subTitleFontSize = <%% 21, 19, 18, 16, 3.4 %%>;
   subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  tagTextTop = <%% (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), -0.3 %%>;
+  tagTextTop = <%% (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), -0.2 %%>;
   tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
@@ -232,7 +233,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   mobileBlockTop = 7;
 
   mobileSearchWhiteBoxPaddingTop = 4;
-  mobileSearchWhiteBoxPaddingBottom = 7;
+  mobileSearchWhiteBoxPaddingBottom = 3.6;
   mobileSearchWhiteBoxMarginBottom = 5;
 
   placeholder = "새아파트";
@@ -266,51 +267,51 @@ ReviewListJs.prototype.insertInitBox = function () {
   blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
   blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
 
-  sortButtonWidth = <%% 90, 82, 78, 68, 9 %%>;
-  sortButtonBetween = <%% 16, 14, 12, 10, 1 %%>;
+  sortButtonWidth = <%% 90, 82, 78, 68, 16.5 %%>;
+  sortButtonBetween = <%% 16, 14, 12, 10, 2.6 %%>;
   sortButtonHeight = <%% searchBarHeight - 1, searchBarHeight - 2, searchBarHeight - 1, searchBarHeight - 1, searchBarHeight - 0.1 %%>;
 
-  numbersTotalHeight = <%% 138, 138, 138, 138, 138 %%>;
+  numbersTotalHeight = <%% 138, 138, 138, 138, 22 %%>;
   borderWidth = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   borderWidthLight = 1;
   numbersMaxWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
   numbersRadius = <%% 12, 12, 12, 12, 12 %%>;
-  numbersBoxMarginTop = <%% 15, 15, 15, 15, 15 %%>;
-  numbersBoxMarginBottom = <%% 46, -22, -8, -24, 46 %%>;
+  numbersBoxMarginTop = <%% 15, 15, 15, 15, 7 %%>;
+  numbersBoxMarginBottom = <%% 46, -22, -8, -24, 3.5 %%>;
 
-  numbersBoxPaddingLeft = <%% 42, 40, 38, 32, 42 %%>;
-  numbersBoxPaddingRight = <%% 36, 34, 32, 26, 36 %%>;
-  numbersBoxBarMargin = <%% 36, 32, 32, 28, 36 %%>;
+  numbersBoxPaddingLeft = <%% 42, 40, 38, 32, 5 %%>;
+  numbersBoxPaddingRight = <%% 36, 34, 32, 26, 4 %%>;
+  numbersBoxBarMargin = <%% 36, 32, 32, 28, 6 %%>;
   numbersMiddleBarHeight = <%% 100, 100, 100, 100, 100 %%>;
 
-  numbersMargin = <%% 20, 12, 12, 6, 20 %%>;
+  numbersMargin = <%% 20, 12, 12, 6, 2 %%>;
 
-  numbersImageWidth0 = <%% 80, 80, 80, 80, 80 %%>;
-  numbersImageWidth1 = <%% 95, 95, 95, 95, 95 %%>;
-  numbersImageWidth2 = <%% 110, 110, 110, 110, 110 %%>;
-  numbersImageWidth3 = <%% 80, 80, 80, 80, 80 %%>;
+  numbersImageWidth0 = <%% 80, 80, 80, 80, 13 %%>;
+  numbersImageWidth1 = <%% 95, 95, 95, 95, 13 %%>;
+  numbersImageWidth2 = <%% 110, 110, 110, 110, 14.5 %%>;
+  numbersImageWidth3 = <%% 80, 80, 80, 80, 12 %%>;
 
-  numbersImageTop0 = <%% 8, 8, 8, 8, 8 %%>;
-  numbersImageTop1 = <%% 2, 2, 2, 2, 2 %%>;
-  numbersImageTop2 = <%% 7, 7, 7, 7, 7 %%>;
-  numbersImageTop3 = <%% 7, 7, 7, 7, 7 %%>;
+  numbersImageTop0 = <%% 8, 8, 8, 8, 1.2 %%>;
+  numbersImageTop1 = <%% 2, 2, 2, 2, 1 %%>;
+  numbersImageTop2 = <%% 7, 7, 7, 7, 1 %%>;
+  numbersImageTop3 = <%% 7, 7, 7, 7, 1 %%>;
 
-  numbersWidth0 = <%% 140, 140, 140, 140, 140 %%>;
-  numbersWidth1 = <%% 140, 140, 140, 140, 140 %%>;
-  numbersWidth2 = <%% 140, 140, 140, 140, 140 %%>;
-  numbersWidth3 = <%% 110, 110, 110, 110, 110 %%>;
+  numbersWidth0 = <%% 140, 140, 140, 140, 35 %%>;
+  numbersWidth1 = <%% 140, 140, 140, 140, 33 %%>;
+  numbersWidth2 = <%% 140, 140, 140, 140, 33 %%>;
+  numbersWidth3 = <%% 110, 110, 110, 110, 33 %%>;
 
-  numbersTextSize = <%% 38, 38, 38, 38, 38 %%>;
+  numbersTextSize = <%% 38, 38, 38, 38, 6 %%>;
   numbersTextWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  numbersDescriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  numbersDescriptionSize = <%% 14, 14, 14, 14, 2.8 %%>;
   numbersDescriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
-  numbersDescriptionTextTop = <%% -5, -5, -5, -5, -5 %%>;
+  numbersDescriptionTextTop = <%% -5, -5, -5, -5, -1 %%>;
 
-  buttonArrowDownWidth = <%% 6, 5, 5, 4, 1 %%>;
-  buttonArrowDownMarginLeft = <%% 10, 8, 8, 6, 1 %%>;
+  buttonArrowDownWidth = <%% 6, 5, 5, 4, 1.1 %%>;
+  buttonArrowDownMarginLeft = <%% 10, 8, 8, 6, 1.9 %%>;
 
-  menuPopupPaddingTop = <%% 4, 4, 4, 4, 5 %%>;
+  menuPopupPaddingTop = <%% 4, 4, 4, 4, 1 %%>;
 
   popupBetween = 6;
   middleBorderWidth = 1;
@@ -320,25 +321,25 @@ ReviewListJs.prototype.insertInitBox = function () {
   numbersMiddleTitleContents2 = String(instance.lengthDic.project);
   numbersMiddleTitleContents3 = String(instance.lengthDic.designer);
 
-  numbersDescriptionContents0 = numbersMiddleTitleContents0 + "개의 고객 평가";
-  numbersDescriptionContents1 = "5점 만점 4.7 만족도";
-  numbersDescriptionContents2 = numbersMiddleTitleContents2 + "건의 프로젝트";
-  numbersDescriptionContents3 = numbersMiddleTitleContents3 + "명의 디자이너";
+  numbersDescriptionContents0 = desktop ? numbersMiddleTitleContents0 + "개의 고객 평가" : "고객 평가수";
+  numbersDescriptionContents1 = desktop ? "5점 만점 4.7 만족도" : "5점 중 4.7점";
+  numbersDescriptionContents2 = desktop ? numbersMiddleTitleContents2 + "건의 프로젝트" : "프로젝트 건수";
+  numbersDescriptionContents3 = desktop ? numbersMiddleTitleContents3 + "명의 디자이너" : "디자이너 수";
 
   searchTags = [];
   searchTags.push("평수");
   searchTags.push("예산");
-  searchTags.push("서비스 종류");
-  searchTags.push("서비스 기간");
+  searchTags.push(desktop ? "서비스 종류" : "종류");
+  searchTags.push(desktop ? "서비스 기간" : "기간");
   searchTags.push("지역");
   searchTags.push("전체");
 
   searchWidthTags = [];
-  searchWidthTags.push(<&& 96 | 88 | 80 | 72 | 96 &&>);
-  searchWidthTags.push(<&& 120 | 110 | 108 | 90 | 120 &&>);
-  searchWidthTags.push(<&& 132 | 124 | 120 | 108 | 132 &&>);
-  searchWidthTags.push(<&& 0 | 0 | 0 | 0 | 0 &&>);
-  searchWidthTags.push(<&& 100 | 90 | 82 | 70 | 100 &&>);
+  searchWidthTags.push(<&& 96 | 88 | 80 | 72 | 18 &&>);
+  searchWidthTags.push(<&& 120 | 110 | 108 | 90 | 24 &&>);
+  searchWidthTags.push(<&& 132 | 124 | 120 | 108 | 26 &&>);
+  searchWidthTags.push(<&& 0 | 0 | 0 | 0 | 20 &&>);
+  searchWidthTags.push(<&& 100 | 90 | 82 | 70 | 20 &&>);
   searchWidthTags.push(<&& 0 | 0 | 0 | 0 | 0 &&>);
 
   searchDescriptionTags = [];
@@ -388,7 +389,11 @@ ReviewListJs.prototype.insertInitBox = function () {
         let menuPopup;
         let menuPopupTop;
 
-        menuPopupTop = box.top + window.scrollY + sortButtonHeight + popupBetween;
+        if (desktop) {
+          menuPopupTop = box.top + window.scrollY + sortButtonHeight + popupBetween;
+        } else {
+          menuPopupTop = box.top + window.scrollY + box.height + popupBetween;
+        }
 
         cancelBack = createNode({
           mother: totalContents,
@@ -607,10 +612,18 @@ ReviewListJs.prototype.insertInitBox = function () {
         let thisWidth;
         let thisLeft;
         let endEvent;
+        let vwTopx;
 
-        menuPopupTop = box.top + window.scrollY + sortButtonHeight + popupBetween;
-        thisWidth = searchWidthTags[index] === 0 ? box.width : searchWidthTags[index];
-        thisLeft = box.left + ((Math.abs(thisWidth - box.width) / 2) * -1);
+        if (desktop) {
+          menuPopupTop = box.top + window.scrollY + sortButtonHeight + popupBetween;
+          thisWidth = searchWidthTags[index] === 0 ? box.width : searchWidthTags[index];
+          thisLeft = String(box.left + ((Math.abs(thisWidth - box.width) / 2) * -1)) + px;
+        } else {
+          menuPopupTop = box.top + window.scrollY + box.height + popupBetween;
+          thisWidth = searchWidthTags[index] === 0 ? box.width : searchWidthTags[index];
+          vwTopx = (window.innerWidth * (thisWidth / 100));
+          thisLeft = String(box.left + ((Math.abs(vwTopx - box.width) / 2) * -1)) + px;
+        }
 
         endEvent = function (e) {
           for (let dom of friends) {
@@ -662,7 +675,7 @@ ReviewListJs.prototype.insertInitBox = function () {
               display: "inline-flex",
               position: "absolute",
               top: String(menuPopupTop) + px,
-              left: String(thisLeft) + px,
+              left: thisLeft,
               width: String(thisWidth) + ea,
               height: "calc(" + String(sortButtonHeight * thisMenu.length) + ea + " + " + String(middleBorderWidth * (thisMenu.length - 1)) + px + ")",
               background: colorExtended.gradientBlack,
@@ -1135,7 +1148,296 @@ ReviewListJs.prototype.insertInitBox = function () {
   
   } else {
 
+    numbersBox0 = createNode({
+      mother: whiteBlock,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        boxSizing: "border-box",
+        marginTop: String(numbersBoxMarginTop) + ea,
+        height: String(numbersTotalHeight) + ea,
+        borderTopLeftRadius: String(numbersRadius) + "px",
+        borderTopRightRadius: String(numbersRadius) + "px",
+        borderBottomLeftRadius: String(0) + "px",
+        borderBottomRightRadius: String(0) + "px",
+        border: String(borderWidth) + "px solid " + colorExtended.black,
+        borderBottom: String(borderWidthLight) + "px dashed " + colorExtended.gray3,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingLeft: String(numbersBoxPaddingLeft) + ea,
+        paddingRight: String(numbersBoxPaddingRight) + ea,
+      }
+    });
+  
+    // 1
+    createNode({
+      mother: numbersBox0,
+      mode: "img",
+      attribute: {
+        src: ReviewListJs.binaryPath + "/source0.svg",
+      },
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(numbersImageWidth0) + ea,
+        marginLeft: String(1.2) + ea,
+        top: String(numbersImageTop0) + ea,
+      }
+    });
+    createNode({
+      mother: numbersBox0,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        height: String(numbersTotalHeight) + ea,
+        width: String(numbersImageWidth0 + numbersWidth0 - numbersImageWidth0) + ea,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: String(numbersMargin) + ea,
+      },
+      children: [
+        {
+          text: numbersMiddleTitleContents0,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            textAlign: "center",
+            fontSize: String(numbersTextSize) + ea,
+            fontWeight: String(numbersTextWeight),
+            fontFamily: "mont",
+            color: colorExtended.mainBlue,
+          }
+        },
+        {
+          text: numbersDescriptionContents0,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            textAlign: "center",
+            fontSize: String(numbersDescriptionSize) + ea,
+            fontWeight: String(numbersDescriptionWeight),
+            top: String(numbersDescriptionTextTop) + ea,
+            fontFamily: "pretendard",
+            color: colorExtended.black,
+          }
+        }
+      ],
+    });
+    createNode({
+      mother: numbersBox0,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(numbersBoxBarMargin) + ea,
+        height: String(84) + "%",
+        borderRight: "1px dashed " + colorExtended.gray3,
+        marginRight: String(numbersBoxBarMargin) + ea,
+        boxSizing: "border-box",
+      }
+    });
+  
+    // 2
+    createNode({
+      mother: numbersBox0,
+      mode: "img",
+      attribute: {
+        src: ReviewListJs.binaryPath + "/source1.svg",
+      },
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(numbersImageWidth1) + ea,
+        top: String(numbersImageTop1) + ea,
+      }
+    });
+    createNode({
+      mother: numbersBox0,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        height: String(numbersTotalHeight) + ea,
+        width: String(numbersImageWidth0 + numbersWidth0 - numbersImageWidth1) + ea,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: String(numbersMargin) + ea,
+      },
+      children: [
+        {
+          text: numbersMiddleTitleContents1,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            textAlign: "center",
+            fontSize: String(numbersTextSize) + ea,
+            fontWeight: String(numbersTextWeight),
+            fontFamily: "mont",
+            color: colorExtended.mainBlue,
+          }
+        },
+        {
+          text: numbersDescriptionContents1,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            textAlign: "center",
+            fontSize: String(numbersDescriptionSize) + ea,
+            fontWeight: String(numbersDescriptionWeight),
+            top: String(numbersDescriptionTextTop) + ea,
+            fontFamily: "pretendard",
+            color: colorExtended.black,
+          }
+        }
+      ],
+    });
 
+    numbersBox1 = createNode({
+      mother: whiteBlock,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        boxSizing: "border-box",
+        marginBottom: String(numbersBoxMarginBottom) + ea,
+        height: String(numbersTotalHeight) + ea,
+        borderTopLeftRadius: String(0) + "px",
+        borderTopRightRadius: String(0) + "px",
+        borderBottomLeftRadius: String(numbersRadius) + "px",
+        borderBottomRightRadius: String(numbersRadius) + "px",
+        border: String(borderWidth) + "px solid " + colorExtended.black,
+        borderTop: String(0),
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingLeft: String(numbersBoxPaddingLeft) + ea,
+        paddingRight: String(numbersBoxPaddingRight) + ea,
+      }
+    });
+  
+    // 3
+    createNode({
+      mother: numbersBox1,
+      mode: "img",
+      attribute: {
+        src: ReviewListJs.binaryPath + "/source2.svg",
+      },
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(numbersImageWidth2) + ea,
+        top: String(numbersImageTop2) + ea,
+      }
+    });
+    createNode({
+      mother: numbersBox1,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        height: String(numbersTotalHeight) + ea,
+        width: String(numbersImageWidth0 + numbersWidth0 - numbersImageWidth2) + ea,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: String(numbersMargin) + ea,
+      },
+      children: [
+        {
+          text: numbersMiddleTitleContents2,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            textAlign: "center",
+            fontSize: String(numbersTextSize) + ea,
+            fontWeight: String(numbersTextWeight),
+            fontFamily: "mont",
+            color: colorExtended.mainBlue,
+          }
+        },
+        {
+          text: numbersDescriptionContents2,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            textAlign: "center",
+            fontSize: String(numbersDescriptionSize) + ea,
+            fontWeight: String(numbersDescriptionWeight),
+            top: String(numbersDescriptionTextTop) + ea,
+            fontFamily: "pretendard",
+            color: colorExtended.black,
+          }
+        }
+      ],
+    });
+    createNode({
+      mother: numbersBox1,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(numbersBoxBarMargin) + ea,
+        height: String(84) + "%",
+        borderRight: "1px dashed " + colorExtended.gray3,
+        marginRight: String(numbersBoxBarMargin) + ea,
+        boxSizing: "border-box",
+      }
+    });
+    
+    // 4
+    createNode({
+      mother: numbersBox1,
+      mode: "img",
+      attribute: {
+        src: ReviewListJs.binaryPath + "/source3.svg",
+      },
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(numbersImageWidth3) + ea,
+        top: String(numbersImageTop3) + ea,
+      }
+    });
+    createNode({
+      mother: numbersBox1,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        height: String(numbersTotalHeight) + ea,
+        width: String(numbersImageWidth0 + numbersWidth0 - numbersImageWidth3) + ea,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: String(numbersMargin) + ea,
+      },
+      children: [
+        {
+          text: numbersMiddleTitleContents3,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            textAlign: "center",
+            fontSize: String(numbersTextSize) + ea,
+            fontWeight: String(numbersTextWeight),
+            fontFamily: "mont",
+            color: colorExtended.mainBlue,
+          }
+        },
+        {
+          text: numbersDescriptionContents3,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            textAlign: "center",
+            fontSize: String(numbersDescriptionSize) + ea,
+            fontWeight: String(numbersDescriptionWeight),
+            top: String(numbersDescriptionTextTop) + ea,
+            fontFamily: "pretendard",
+            color: colorExtended.black,
+          }
+        }
+      ],
+    });
 
   }
 
@@ -1146,10 +1448,10 @@ ReviewListJs.prototype.insertInitBox = function () {
       position: "relative",
       textAlign: "center",
       justifyContent: desktop ? "left" : "center",
-      alignItems: desktop ? "end" : "center",
+      alignItems: "end",
       paddingTop: desktop ? String(searchBarPaddingTop) + ea : String(mobileSearchWhiteBoxPaddingTop) + ea,
       paddingBottom: desktop ? "" : String(mobileSearchWhiteBoxPaddingBottom) + ea,
-      flexDirection: mobile ? "row" : "row",
+      flexDirection: "row",
     },
     children: [
       {
@@ -1307,7 +1609,8 @@ ReviewListJs.prototype.insertInitBox = function () {
       style: {
         display: "inline-flex",
         position: "relative",
-        height: String(sortButtonHeight - (borderWidth * 2)) + ea,
+        height: String(sortButtonHeight - (desktop ? (borderWidth * 2) : 0.2)) + ea,
+        boxSizing: desktop ? "" : "border-box",
         marginRight: String(serviceMarginRight) + ea,
         paddingLeft: String(servicePaddingLeft) + ea,
         paddingRight: String(servicePaddingLeft) + ea,
@@ -1355,18 +1658,43 @@ ReviewListJs.prototype.insertInitBox = function () {
     });
     serviceNum++;
   }
-  serviceBlock = createNode({
-    mother: middleBox,
-    style: {
-      display: desktop ? "block" : "none",
-      position: "absolute",
-      textAlign: "center",
-      right: String(0) + ea,
-      bottom: String(tagTongBottom) + ea,
-    },
-    children: serviceChildren
-  });
-  serviceBlock.lastChild.style.marginRight = "";
+  
+  if (desktop) {
+    serviceBlock = createNode({
+      mother: middleBox,
+      style: {
+        display: "block",
+        position: "absolute",
+        textAlign: "center",
+        right: String(0) + ea,
+        bottom: String(tagTongBottom) + ea,
+      },
+      children: serviceChildren
+    });
+    serviceBlock.lastChild.style.marginRight = "";
+  } else {
+    serviceBlock = createNode({
+      mother: whiteBlock,
+      style: {
+        display: "block",
+        position: "relative",
+        textAlign: "center",
+        width: withOut(0, ea),
+        overflow: "visible",
+      },
+      child: {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(200) + "%",
+          left: String(-50) + "%",
+          textAlign: "center",
+        },
+        children: serviceChildren
+      }
+    });
+    serviceBlock.lastChild.lastChild.style.marginRight = "";
+  }
 
 }
 
@@ -1382,7 +1710,7 @@ ReviewListJs.prototype.insertPortfolioBase = function () {
   let paddingBottom;
 
   limitLength = <%% 42, 42, 42, 42, 42 %%>;
-  photoMargin = <%% 18, 16, 16, 16, 3 %%>;
+  photoMargin = <%% 18, 16, 16, 16, 2.5 %%>;
   paddingBottom = <%% 120, 120, 120, 120, 40 %%>;
 
   baseBlock = createNode({
@@ -1530,27 +1858,27 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   gsArray = this.generateGsArray(limitLength);
 
   baseWidth = Number(baseTong.style.width.replace(/[^0-9\.]/gi, ''));
-  photoMargin = <%% 18, 16, 16, 16, 3 %%>;
+  photoMargin = <%% 18, 16, 16, 16, 2.5 %%>;
   columns = <%% 4, 4, 3, 3, 2 %%>;
 
   photoRatio = (297 / 210);
   seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
   garoWidth = (seroWidth * 2) + photoMargin;
   photoHeight = seroWidth * photoRatio;
-  photoMarginBottom = <%% 12, 12, 12, 12, 2.3 %%>;
+  photoMarginBottom = <%% 12, 12, 12, 12, 2.1 %%>;
 
   quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 8 : 7), (isMac() ? 7 : 6.5), (isMac() ? 7 : 6.5), (isMac() ? 6 : 5), (isIphone() ? 1.4 : 1.2) %%>;
 
-  titleSize = <%% 17, 15, 16, 14, 3.4 %%>;
-  montTitleSize = <%% 20, 16, 17, 15, 3.4 %%>;
-  montTitleMarginLeft = <%% 10, 8, 8, 6, 1 %%>;
-  montHangulTitleTop = <%% -1, -1, -1, -1, -1 %%>;
-  montTitleTop = <%% -0.5, -1, -1, -1, -0.5 %%>;
-  montSpecialTitleTop = <%% 0, -0.5, -0.5, -0.5, -0.5 %%>; 
+  titleSize = <%% 17, 15, 16, 14, 3 %%>;
+  montTitleSize = <%% 20, 16, 17, 15, 3.1 %%>;
+  montTitleMarginLeft = <%% 10, 8, 8, 6, 1.6 %%>;
+  montHangulTitleTop = <%% -1, -1, -1, -1, -0.1 %%>;
+  montTitleTop = <%% -0.5, -1, -1, -1, -0.2 %%>;
+  montSpecialTitleTop = <%% 0, -0.5, -0.5, -0.5, -0.1 %%>; 
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
-  titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
+  titleMarginLeft = <%% 6, 6, 5, 5, 1.6 %%>;
 
   titleSubSize = <%% 14, 12, 12, 11, 2.5 %%>;
   titleSubMarginTop = <%% 0, 0, 0, 0, -0.4 %%>;
@@ -1721,7 +2049,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                     }
                   },
                   {
-                    text: thisPyeong + (desktop ? (media[0] ? "&nbsp;&nbsp;&nbsp;" : "&nbsp;&nbsp;") : "  ") + thisBudget,
+                    text: thisPyeong + (desktop ? (media[0] ? "&nbsp;&nbsp;&nbsp;" : "&nbsp;&nbsp;") : "&nbsp;&nbsp;") + thisBudget,
                     style: {
                       display: "inline-block",
                       position: "absolute",
