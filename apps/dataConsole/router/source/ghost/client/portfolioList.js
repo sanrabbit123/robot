@@ -72,698 +72,9 @@ PortfolioListJs.prototype.generateGsArray = function (number) {
   return result;
 }
 
-/*
-
 PortfolioListJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const toggleTargetClassName = "toggleTargetClassName";
-  const toggleTargetClassName2 = "toggleTargetClassName2";
-  const circleClassName = "circleClassName";
-  const circleBaseClassName = "circleBaseClassName";
-  const touchStartConst = "toggleTouchStartConstName";
-  let mobileSearchWhiteBoxPaddingTop;
-  let mobileSearchWhiteBoxPaddingBottom;
-  let mobileSearchWhiteBoxMarginBottom;
-  let whiteBlock;
-  let style;
-  let blockHeight;
-  let leftBox, rightBox;
-  let titleBox, barBox, indexBox;
-  let margin;
-  let quoteWidth;
-  let quoteHeight;
-  let titleFontSize, titleFontWeight;
-  let serviceChildren;
-  let searchTags;
-  let titleWording;
-  let servicePaddingLeft;
-  let serviceSize;
-  let serviceBlockPaddingTop;
-  let whiteBlockPaddingTop, whiteBlockPaddingBottom;
-  let quotoTongHeight;
-  let searchBarPaddingTop;
-  let searchBarHeight;
-  let searchBarWidth;
-  let searchIconHeight;
-  let searchIconRight, searchIconTop;
-  let whiteBlockMarginBottom;
-  let inputWithoutHeight;
-  let serviceButtonClassName;
-  let serviceBlock;
-  let inputSize, inputWeight;
-  let placeholder;
-  let titleTop;
-  let servicePaddingTop, servicePaddingBottom;
-  let serviceMarginRight;
-  let subTitleMarginTop, subTitleFontSize, subTitleWeight;
-  let subTitleContents;
-  let middleBox;
-  let tagTextTop;
-  let tagTongBottom;
-  let boxTopVisual;
-  let mobileBlockTop;
-  let buttonSize;
-  let buttonWeight;
-  let buttonBetween;
-  let buttonTongWidth;
-  let buttonWidth;
-  let buttonHeight;
-  let buttonTextTop;
-  let buttonLeft;
-  let circleWidth;
-  let tabletVisualBottom;
-  let mobileButtonTongMarginTop;
-  let mobileButtonBetween;
-  let contentsPaddingTop;
-  let designerDetailToggleEvent;
-  let sortBoxRight;
-  let mobileBackgroundHeight;
-  let mobileVisualPaddingLeft;
-  let tagBoxRight;
-  let illust0Top, illust0Left, illust0Width;
-  let illust1Top, illust1Right, illust1Width;
-  let illust2Top, illust2Right, illust2Width;
-  let mobileTitlePaddingTop;
-  let titleBoxRowTong;
-  let blackTitleTextTop, blackTitleMarginLeft;
-
-  margin = <%% 30, 30, 30, 30, 30 %%>;
-
-  whiteBlockMarginBottom = <%% 40, 38, 35, 30, 4 %%>;
-
-  quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
-  quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 26, 23, 22, 19, 5 %%>;
-  titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
-  titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
-
-  servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
-  servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 15, 15, 14, 13, 2.2 %%>;
-  serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 13.5, 13.5, 13, 12, 3.3 %%>;
-  serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
-
-  whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
-  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
-
-  searchBarPaddingTop = <%% 50, 50, 50, 40, 20 %%>;
-  searchBarHeight = <%% 36, 36, 36, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 595, 476, 88 %%>;
-
-  searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
-  searchIconRight = <%% 0, 0, 0, 0, 2 %%>;
-  searchIconTop = <%% 8, 8, 8, 8, 1.8 %%>;
-
-  inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
-
-  inputSize = <%% 14, 14, 14, 14, 3.1 %%>;
-  inputWeight = <%% 300, 300, 300, 300, 300 %%>;
-
-  subTitleMarginTop = <%% 2, 2, 1, 1, 0.1 %%>;
-  subTitleFontSize = <%% 21, 19, 18, 16, 3.4 %%>;
-  subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-
-  tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
-  tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
-  boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
-
-  titleWording = "PROJECT PORTFOLIO<b%.%b>";
-  subTitleContents = "프로젝트 포트폴리오";
-
-  mobileBlockTop = 7;
-
-  mobileSearchWhiteBoxPaddingTop = 4;
-  mobileSearchWhiteBoxPaddingBottom = 7;
-  mobileSearchWhiteBoxMarginBottom = 5;
-
-  placeholder = "새아파트";
-
-  buttonSize = <%% 13, 13, 13, 13, 3 %%>;
-  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonBetween = <%% 1, 1, 1, 1, 2 %%>;
-
-  buttonTongWidth = <%% 65, 65, 60, 60, 90 %%>;
-
-  buttonWidth = <%% 26, 26, 26, 24, 5.6 %%>;
-  buttonHeight = <%% 12, 12, 12, 12, 3 %%>;
-  buttonTextTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isIphone() ? 1.3 : 1) %%>;
-  buttonLeft = <%% -34, -34, -34, -31, -7 %%>;
-  circleWidth = <%% 8, 8, 8, 8, 2 %%>;
-
-  tabletVisualBottom = 4;
-  mobileButtonTongMarginTop = 3;
-  mobileButtonBetween = 10;
-  contentsPaddingTop = <%% 16, 16, 16, 0, 1 %%>;
-
-  sortBoxRight = <%% 0, 0, 0, 0, 20 %%>;
-
-  mobileBackgroundHeight = 58;
-  mobileVisualPaddingLeft = 6;
-
-  tagBoxRight = <%% 132, 128, 100, 100, 10 %%>;
-
-  mobileTitlePaddingTop = 2;
-
-  blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
-  blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
-  
-  searchTags = [];
-  if (media[0]) {
-    searchTags.push("아이방");
-    searchTags.push("모던");
-    searchTags.push("제작가구");
-    searchTags.push("화이트");
-    searchTags.push("전체");
-  } else if (media[1]) {
-    searchTags.push("아이방");
-    searchTags.push("모던");
-    searchTags.push("제작가구");
-    searchTags.push("전체");
-  }
-
-  serviceButtonClassName = "serviceButton";
-
-  designerDetailToggleEvent = (toggleTargetClassName) => {
-    return async function (e) {
-      try {
-        const toggle = this.getAttribute("toggle");
-        const mode = this.getAttribute("mode");
-        const targets = [ ...document.querySelectorAll('.' + toggleTargetClassName) ];
-        const thisTarget = targets.find((dom) => { return dom.getAttribute("mode") === mode });
-        const oppositeTarget = targets.find((dom) => { return dom.getAttribute("mode") !== mode });
-        const thisCircleBase = thisTarget.querySelector('.' + circleBaseClassName);
-        const thisCircle = thisTarget.querySelector('.' + circleClassName);
-        const oppositeCircleBase = oppositeTarget.querySelector('.' + circleBaseClassName);
-        const oppositeCircle = oppositeTarget.querySelector('.' + circleClassName);
-
-        homeliaisonAnalytics({
-          page: instance.pageName,
-          standard: instance.firstPageViewTime,
-          action: "viewToggle",
-          data: {
-            mode: mode,
-            toggle: toggle,
-            date: dateToString(new Date(), true),
-          },
-        }).catch((err) => {
-          console.log(err);
-        });
-
-        if (toggle === "off") {
-
-          thisTarget.style.color = colorExtended.mainBlue;
-          thisCircleBase.style.background = colorExtended.mainBlue;
-          thisCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
-          thisTarget.setAttribute("toggle", "on");
-
-          oppositeTarget.style.color = colorExtended.deactive;
-          oppositeCircleBase.style.background = colorExtended.gray5;
-          oppositeCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
-          oppositeTarget.setAttribute("toggle", "off");
-
-          while (!instance.fullLoad) {
-            await sleep(500);
-          }
-
-          if (mode === "key9") {
-            instance.sort = "key9";
-          } else {
-            instance.sort = "key8";
-          }
-          instance.portfolioBlock(null, instance.search, instance.sort);
-
-        } else {
-
-          thisTarget.style.color = colorExtended.deactive;
-          thisCircleBase.style.background = colorExtended.gray5;
-          thisCircle.style.left = String((buttonHeight - circleWidth) / 2) + ea;
-          thisTarget.setAttribute("toggle", "off");
-
-          oppositeTarget.style.color = colorExtended.mainBlue;
-          oppositeCircleBase.style.background = colorExtended.mainBlue;
-          oppositeCircle.style.left = String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea;
-          oppositeTarget.setAttribute("toggle", "on");
-
-          while (!instance.fullLoad) {
-            await sleep(500);
-          }
-
-          if (mode === "key9") {
-            instance.sort = "key8";
-          } else {
-            instance.sort = "key9";
-          }
-          instance.portfolioBlock(null, instance.search, instance.sort);
-
-        }
-
-        instance.photoLoad = true;
-
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
-
-  whiteBlock = createNode({
-    mother: this.baseTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      marginBottom: String(whiteBlockMarginBottom) + ea,
-      top: String(-1 * boxTopVisual) + ea,
-    }
-  });
-
-  titleBoxRowTong = createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      width: String(100) + '%',
-      flexDirection: desktop ? "row" : "column",
-      justifyContent: "start",
-      alignItems: "start",
-    }
-  });
-
-  // title and sub title
-  createNode({
-    mother: titleBoxRowTong,
-    style: {
-      display: desktop ? "inline-flex" : "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    children: [
-      {
-        text: titleWording,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(titleFontSize) + ea,
-          fontFamily: "mont",
-          fontWeight: String(titleFontWeight),
-          color: colorExtended.mainBlue,
-          wordSpacing: String(2) + "px",
-        },
-        bold: {
-          fontSize: String(titleFontSize) + ea,
-          fontFamily: "mont",
-          fontWeight: String(titleFontWeight),
-          color: colorExtended.mainBlue,
-          opacity: String(0.4),
-        }
-      }
-    ]
-  });
-  createNode({
-    mother: titleBoxRowTong,
-    style: {
-      display: desktop ? "inline-flex" : "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    children: [
-      {
-        text: desktop ? "<u%|%u>&nbsp;&nbsp;&nbsp;" + subTitleContents : subTitleContents,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(subTitleFontSize) + ea,
-          fontFamily: "pretendard",
-          fontWeight: String(subTitleWeight),
-          color: colorChip.black,
-          marginLeft: desktop ? String(blackTitleMarginLeft) + ea : "",
-          top: String(blackTitleTextTop) + ea,
-        },
-        under: {
-          fontSize: String(subTitleFontSize) + ea,
-          fontFamily: "pretendard",
-          color: colorChip.deactive,
-          fontWeight: String(400),
-        },
-      }
-    ]
-  });
-
-  middleBox = createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: desktop ? "left" : "center",
-      alignItems: "center",
-      paddingTop: desktop ? String(searchBarPaddingTop) + ea : String(mobileSearchWhiteBoxPaddingTop) + ea,
-      paddingBottom: desktop ? "" : String(mobileSearchWhiteBoxPaddingBottom) + ea,
-      flexDirection: mobile ? "column" : "row",
-    },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(searchBarWidth) + ea,
-          height: String(searchBarHeight) + ea,
-          background: colorChip.white,
-          borderBottom: "1.5px solid " + colorExtended.black,
-          opacity: String(1),
-        },
-        children: [
-          {
-            mode: "svg",
-            source: instance.mother.returnSearch(colorChip.black),
-            style: {
-              position: "absolute",
-              height: String(searchIconHeight) + ea,
-              right: String(searchIconRight) + ea,
-              top: String(searchIconTop) + ea,
-            }
-          },
-          {
-            mode: "input",
-            class: [ "searchInput" ],
-            attribute: {
-              type: "text",
-              placeholder: placeholder,
-            },
-            event: {
-              keyup: function (e) {
-                setDebounce(async () => {
-                  try {
-                    while (!instance.fullLoad) {
-                      await sleep(500);
-                    }
-                    this.value = this.value.trim();
-                    this.value = this.value.replace(/[^가-힣a-z ]/gi, '');
-
-                    homeliaisonAnalytics({
-                      page: instance.pageName,
-                      standard: instance.firstPageViewTime,
-                      action: "searchKeyword",
-                      data: {
-                        value: this.value,
-                        date: dateToString(new Date(), true),
-                      },
-                      dimension: {
-                        search_value: this.value,
-                      },
-                    }).catch((err) => {
-                      console.log(err);
-                    });
-
-                    instance.search = this.value;
-                    instance.portfolioBlock(null, instance.search, instance.sort);
-                    instance.photoLoad = true;
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }, "searchEventDebounce", 500);
-              }
-            },
-            style: {
-              position: "absolute",
-              top: String(0),
-              left: String(0),
-              width: String(100) + '%',
-              height: withOut(inputWithoutHeight, ea),
-              border: String(0),
-              outline: String(0),
-              background: "transparent",
-              fontSize: String(inputSize) + ea,
-              fontWeight: String(inputWeight),
-              fontFamily: "pretendard",
-              color: colorChip.black,
-              textAlign: "center",
-            }
-          }
-        ]
-      },
-    ]
-  });
-
-  createNode({
-    mother: middleBox,
-    style: {
-      display: desktop ? "inline-flex" : "flex",
-      flexDirection: desktop ? "column" : "row",
-      position: desktop ? "absolute" : "relative",
-      width: desktop ? String(buttonTongWidth) + ea : String(searchBarWidth) + ea,
-      bottom: String(0),
-      marginTop: desktop ? "" : String(mobileButtonTongMarginTop) + ea,
-      right: desktop ? String(sortBoxRight) + ea : "",
-      justifyContent: desktop ? "start" : "end",
-      alignItems: "start",
-      textAlign: "left",
-    },
-    children: [
-      {
-        class: [ toggleTargetClassName2 ],
-        attribute: {
-          toggle: "on",
-          mode: "key9",
-        },
-        event: {
-          click: designerDetailToggleEvent(toggleTargetClassName2),
-        },
-        text: "최신순 정렬",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(buttonSize) + ea,
-          fontFamily: "pretendard",
-          fontWeight: String(buttonWeight),
-          color: colorExtended.mainBlue,
-          cursor: "pointer",
-          transition: "all 0.5s ease",
-        },
-        children: [
-          {
-            class: [ circleBaseClassName ],
-            style: {
-              position: "absolute",
-              width: String(buttonWidth) + ea,
-              height: String(buttonHeight) + ea,
-              background: colorExtended.mainBlue,
-              top: String(buttonTextTop) + ea,
-              left: String(buttonLeft) + ea,
-              borderRadius: String(buttonHeight) + ea,
-              transition: "all 0.5s ease",
-            },
-            children: [
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  width: withOut(0),
-                  height: withOut(0),
-                },
-                children: [
-                  {
-                    class: [ circleClassName ],
-                    style: {
-                      display: "inline-block",
-                      width: String(circleWidth) + ea,
-                      height: String(circleWidth) + ea,
-                      borderRadius: String(circleWidth) + ea,
-                      top: String((buttonHeight - circleWidth) / 2) + ea,
-                      left: String(buttonWidth - circleWidth - ((buttonHeight - circleWidth) / 2)) + ea,
-                      background: colorExtended.white,
-                      position: "absolute",
-                      transition: "all 0.5s ease",
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        class: [ toggleTargetClassName2 ],
-        attribute: {
-          toggle: "off",
-          mode: "key8",
-        },
-        event: {
-          click: designerDetailToggleEvent(toggleTargetClassName2),
-        },
-        text: "인기순 정렬",
-        style: {
-          marginTop: desktop ? String(buttonBetween) + ea : '',
-          marginLeft: desktop ? '' : String(mobileButtonBetween) + ea,
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(buttonSize) + ea,
-          fontFamily: "pretendard",
-          fontWeight: String(buttonWeight),
-          color: colorChip.deactive,
-          cursor: "pointer",
-          transition: "all 0.5s ease",
-        },
-        children: [
-          {
-            class: [ circleBaseClassName ],
-            style: {
-              position: "absolute",
-              width: String(buttonWidth) + ea,
-              height: String(buttonHeight) + ea,
-              background: colorChip.gray5,
-              top: String(buttonTextTop) + ea,
-              left: String(buttonLeft) + ea,
-              borderRadius: String(buttonHeight) + ea,
-              transition: "all 0.5s ease",
-            },
-            children: [
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  width: withOut(0),
-                  height: withOut(0),
-                },
-                children: [
-                  {
-                    class: [ circleClassName ],
-                    style: {
-                      display: "inline-block",
-                      width: String(circleWidth) + ea,
-                      height: String(circleWidth) + ea,
-                      borderRadius: String(circleWidth) + ea,
-                      top: String((buttonHeight - circleWidth) / 2) + ea,
-                      left: String((buttonHeight - circleWidth) / 2) + ea,
-                      background: colorChip.white,
-                      position: "absolute",
-                      transition: "all 0.5s ease",
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-    ]
-  });
-
-  if (media[0] || media[1]) {
-    serviceChildren = [];
-    for (let service of searchTags) {
-      serviceChildren.push({
-        class: [
-          serviceButtonClassName
-        ],
-        attribute: {
-          toggle: "off",
-          value: service,
-        },
-        event: {
-          click: function (e) {
-            const targets = [ ...document.querySelectorAll('.' + serviceButtonClassName) ];
-            let thisValue;
-            for (let dom of targets) {
-              if (dom === this) {
-                dom.setAttribute("toggle", "on");
-                dom.firstChild.style.color = colorExtended.black;
-                dom.firstChild.querySelector('b').style.color = colorExtended.mainBlue;
-                thisValue = dom.getAttribute("value");
-              } else {
-                dom.setAttribute("toggle", "off");
-                dom.firstChild.style.color = colorExtended.deactive;
-                dom.firstChild.querySelector('b').style.color = colorExtended.deactive;
-              }
-            }
-
-            homeliaisonAnalytics({
-              page: instance.pageName,
-              standard: instance.firstPageViewTime,
-              action: "clickKeyword",
-              data: {
-                value: thisValue,
-                date: dateToString(new Date(), true),
-              },
-            }).catch((err) => {
-              console.log(err);
-            });
-
-            instance.search = /전체/gi.test(thisValue) ? "" : thisValue;
-            instance.portfolioBlock(null, instance.search, instance.sort);
-            instance.photoLoad = true;
-          }
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          height: String(searchBarHeight - (tagTongBottom * 2)) + ea,
-          marginRight: String(serviceMarginRight) + ea,
-          paddingLeft: String(servicePaddingLeft) + ea,
-          paddingRight: String(servicePaddingLeft) + ea,
-          textAlign: "center",
-          background: colorChip.white,
-          borderRadius: String(8) + "px",
-          border: "1px solid " + colorExtended.gray3,
-          cursor: "pointer",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-        },
-        children: [
-          {
-            text: "<b%#%b> " + service,
-            style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(tagTextTop) + ea,
-              fontSize: String(serviceSize) + ea,
-              fontFamily: "pretendard",
-              fontWeight: String(600),
-              color: colorChip.black,
-              cursor: "pointer",
-              textAlign: "center",
-            },
-            bold: {
-              color: colorChip.deactive,
-            }
-          }
-        ]
-      });
-    }
-    serviceBlock = createNode({
-      mother: middleBox,
-      style: {
-        display: desktop ? "block" : "none",
-        position: "absolute",
-        textAlign: "center",
-        right: String(tagBoxRight) + ea,
-        bottom: String(tagTongBottom) + ea,
-      },
-      children: serviceChildren
-    });
-    for (let dom of serviceBlock.children) {
-      dom.firstChild.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width + 1)) + "px";
-      dom.style.width = String(Math.ceil(dom.firstChild.getBoundingClientRect().width) + 1) + "px";
-    }
-    serviceBlock.lastChild.style.marginRight = "";
-  }
-
-}
-
-*/
-
-PortfolioListJs.prototype.insertInitBox = function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, objectDeepCopy } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, ajaxJson, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, objectDeepCopy } = GeneralJs;
   const { ea, media, standardWidth, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -775,6 +86,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
   const sortMenuPopupClassName = "sortMenuPopupClassName";
   const filterMenuPopupClassName = "filterMenuPopupClassName";
   const targetTextDomClassName = "targetTextDomClassName";
+  const searchTagsButtonClassName = "searchTagsButtonClassName";
   const px = "px";
   let mobileSearchWhiteBoxPaddingTop;
   let mobileSearchWhiteBoxPaddingBottom;
@@ -871,10 +183,12 @@ PortfolioListJs.prototype.insertInitBox = function () {
   let filterButtonClickEvent;
   let searchDescriptionTags;
   let searchWidthTags;
+  let menuPopupPaddingTop;
+  let numbersBox0, numbersBox1;
   
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 36, 36, 35, 30, 4 %%>;
+  whiteBlockMarginBottom = <%% 36, 32, 30, 23, 9.5 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
@@ -884,32 +198,32 @@ PortfolioListJs.prototype.insertInitBox = function () {
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 18, 18, 14, 13, 2.2 %%>;
-  serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 14, 14, 13, 12, 3.3 %%>;
+  servicePaddingLeft = <%% 18, 14, 12, 12, 3 %%>;
+  serviceMarginRight = <%% 6, 5, 4, 3, 0.8 %%>;
+  serviceSize = <%% 14, 13, 13, 11, 2.8 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 50, 50, 50, 40, 20 %%>;
-  searchBarHeight = <%% 36, 36, 36, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 595, 476, 88 %%>;
+  searchBarPaddingTop = <%% 50, 50, 50, 36, 20 %%>;
+  searchBarHeight = <%% 36, 34, 32, 28, 7 %%>;
+  searchBarWidth = <%% 690, 516, 412, 284, 88 %%>;
 
-  searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
-  searchIconRight = <%% 0, 0, 0, 0, 2 %%>;
-  searchIconTop = <%% 8, 8, 8, 8, 1.8 %%>;
+  searchIconHeight = <%% 20, 20, 18, 16, 4.3 %%>;
+  searchIconRight = <%% 0, 0, 0, 0, 0.2 %%>;
+  searchIconTop = <%% 8, 8, 7, 6, 1 %%>;
 
   inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
 
-  inputSize = <%% 14, 14, 14, 14, 3.1 %%>;
+  inputSize = <%% 14, 14, 14, 14, 3 %%>;
   inputWeight = <%% 300, 300, 300, 300, 300 %%>;
 
   subTitleMarginTop = <%% 2, 2, 1, 1, 0.1 %%>;
   subTitleFontSize = <%% 21, 19, 18, 16, 3.4 %%>;
   subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  tagTextTop = <%% (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? 0.51 : 0), (isMac() ? -0.5 : 0), -0.3 %%>;
+  tagTextTop = <%% (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), 0 %%>;
   tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
@@ -919,7 +233,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
   mobileBlockTop = 7;
 
   mobileSearchWhiteBoxPaddingTop = 4;
-  mobileSearchWhiteBoxPaddingBottom = 7;
+  mobileSearchWhiteBoxPaddingBottom = 3.6;
   mobileSearchWhiteBoxMarginBottom = 5;
 
   placeholder = "새아파트";
@@ -953,82 +267,74 @@ PortfolioListJs.prototype.insertInitBox = function () {
   blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
   blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
 
-  sortButtonWidth = <%% 90, 90, 90, 90, 90 %%>;
-  sortButtonBetween = <%% 16, 16, 16, 16, 16 %%>;
-  sortButtonHeight = <%% searchBarHeight - 1, searchBarHeight - 1, searchBarHeight - 1, searchBarHeight - 1, searchBarHeight - 1 %%>;
+  sortButtonWidth = <%% 90, 82, 78, 68, 16.5 %%>;
+  sortButtonBetween = <%% 16, 14, 12, 10, 2.6 %%>;
+  sortButtonHeight = <%% searchBarHeight - 1, searchBarHeight - 2, searchBarHeight - 1, searchBarHeight - 1, searchBarHeight - 0.1 %%>;
 
-  numbersTotalHeight = <%% 138, 138, 138, 138, 138 %%>;
+  numbersTotalHeight = <%% 138, 138, 138, 138, 22 %%>;
   borderWidth = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   borderWidthLight = 1;
   numbersMaxWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
   numbersRadius = <%% 12, 12, 12, 12, 12 %%>;
-  numbersBoxMarginTop = <%% 15, 15, 15, 15, 15 %%>;
-  numbersBoxMarginBottom = <%% 46, 46, 46, 46, 46 %%>;
+  numbersBoxMarginTop = <%% 15, 15, 15, 15, 7 %%>;
+  numbersBoxMarginBottom = <%% 46, -22, -8, -24, 2.5 %%>;
 
-  numbersBoxPaddingLeft = <%% 42, 42, 42, 42, 42 %%>;
-  numbersBoxPaddingRight = <%% 36, 36, 36, 36, 36 %%>;
-  numbersBoxBarMargin = <%% 36, 36, 36, 36, 36 %%>;
+  numbersBoxPaddingLeft = <%% 42, 40, 38, 32, 5 %%>;
+  numbersBoxPaddingRight = <%% 36, 34, 32, 26, 4 %%>;
+  numbersBoxBarMargin = <%% 36, 32, 32, 28, 6 %%>;
   numbersMiddleBarHeight = <%% 100, 100, 100, 100, 100 %%>;
 
-  numbersMargin = <%% 20, 20, 20, 20, 20 %%>;
+  numbersMargin = <%% 20, 12, 12, 6, 2 %%>;
 
-  numbersImageWidth0 = <%% 80, 80, 80, 80, 80 %%>;
-  numbersImageWidth1 = <%% 95, 95, 95, 95, 95 %%>;
-  numbersImageWidth2 = <%% 110, 110, 110, 110, 110 %%>;
-  numbersImageWidth3 = <%% 80, 80, 80, 80, 80 %%>;
+  numbersImageWidth0 = <%% 80, 80, 80, 80, 13 %%>;
+  numbersImageWidth1 = <%% 95, 95, 95, 95, 13 %%>;
+  numbersImageWidth2 = <%% 110, 110, 110, 110, 14.5 %%>;
+  numbersImageWidth3 = <%% 80, 80, 80, 80, 12 %%>;
 
-  numbersImageTop0 = <%% 8, 8, 8, 8, 8 %%>;
-  numbersImageTop1 = <%% 2, 2, 2, 2, 2 %%>;
-  numbersImageTop2 = <%% 7, 7, 7, 7, 7 %%>;
-  numbersImageTop3 = <%% 7, 7, 7, 7, 7 %%>;
+  numbersImageTop0 = <%% 8, 8, 8, 8, 1.2 %%>;
+  numbersImageTop1 = <%% 2, 2, 2, 2, 1 %%>;
+  numbersImageTop2 = <%% 7, 7, 7, 7, 1 %%>;
+  numbersImageTop3 = <%% 7, 7, 7, 7, 1 %%>;
 
-  numbersWidth0 = <%% 140, 140, 140, 140, 140 %%>;
-  numbersWidth1 = <%% 140, 140, 140, 140, 140 %%>;
-  numbersWidth2 = <%% 140, 140, 140, 140, 140 %%>;
-  numbersWidth3 = <%% 110, 110, 110, 110, 110 %%>;
+  numbersWidth0 = <%% 140, 140, 140, 140, 35 %%>;
+  numbersWidth1 = <%% 140, 140, 140, 140, 33 %%>;
+  numbersWidth2 = <%% 140, 140, 140, 140, 33 %%>;
+  numbersWidth3 = <%% 110, 110, 110, 110, 33 %%>;
 
-  numbersTextSize = <%% 38, 38, 38, 38, 38 %%>;
+  numbersTextSize = <%% 38, 38, 38, 38, 6 %%>;
   numbersTextWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  numbersDescriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  numbersDescriptionSize = <%% 14, 14, 14, 14, 2.8 %%>;
   numbersDescriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
-  numbersDescriptionTextTop = <%% -5, -5, -5, -5, -5 %%>;
+  numbersDescriptionTextTop = <%% (isMac() ? -5 : -3), (isMac() ? -5 : -3), (isMac() ? -5 : -3), (isMac() ? -5 : -3), -1 %%>;
 
-  buttonArrowDownWidth = <%% 6, 6, 6, 6, 6 %%>;
-  buttonArrowDownMarginLeft = <%% 10, 10, 10, 10, 10 %%>;
+  buttonArrowDownWidth = <%% 6, 5, 5, 4, 1 %%>;
+  buttonArrowDownMarginLeft = <%% 10, 8, 8, 6, 1.9 %%>;
+
+  menuPopupPaddingTop = <%% 4, 4, 4, 4, (isIphone() ? 1.5 : 1.1) %%>;
 
   popupBetween = 6;
   middleBorderWidth = 1;
 
-  numbersMiddleTitleContents0 = "282";
-  numbersMiddleTitleContents1 = "4.7";
-  numbersMiddleTitleContents2 = "3447";
-  numbersMiddleTitleContents3 = "82";
-
-  numbersDescriptionContents0 = "282개의 고객 평가";
-  numbersDescriptionContents1 = "5점 만점 4.7 만족도";
-  numbersDescriptionContents2 = "3447건의 프로젝트";
-  numbersDescriptionContents3 = "82명의 디자이너";
-
   searchTags = [];
   searchTags.push("평수");
   searchTags.push("예산");
-  searchTags.push("서비스 종류");
-  searchTags.push("서비스 기간");
+  searchTags.push(desktop ? "서비스 종류" : "종류");
+  searchTags.push(desktop ? "서비스 기간" : "기간");
   searchTags.push("지역");
   searchTags.push("전체");
 
   searchWidthTags = [];
-  searchWidthTags.push(<&& 96 | 96 | 96 | 96 | 96 &&>);
-  searchWidthTags.push(<&& 120 | 120 | 120 | 120 | 120 &&>);
-  searchWidthTags.push(<&& 132 | 132 | 132 | 132 | 132 &&>);
-  searchWidthTags.push(<&& 0 | 0 | 0 | 0 | 0 &&>);
-  searchWidthTags.push(<&& 100 | 100 | 100 | 100 | 100 &&>);
+  searchWidthTags.push(<&& 96 | 88 | 80 | 72 | 18 &&>);
+  searchWidthTags.push(<&& 120 | 110 | 108 | 90 | 24 &&>);
+  searchWidthTags.push(<&& 132 | 124 | 120 | 108 | 26 &&>);
+  searchWidthTags.push(<&& 0 | 0 | 0 | 0 | 20 &&>);
+  searchWidthTags.push(<&& 100 | 90 | 82 | 70 | 20 &&>);
   searchWidthTags.push(<&& 0 | 0 | 0 | 0 | 0 &&>);
 
   searchDescriptionTags = [];
   searchDescriptionTags.push([
-    "10평 이하",
+    "10평 미만",
     "10평대",
     "20평대",
     "30평대",
@@ -1055,10 +361,10 @@ PortfolioListJs.prototype.insertInitBox = function () {
     "서울 / 경기",
     "충청 / 강원",
     "전라 / 경상",
-    "기타"
+    "제주",
+    "기타",
   ]);
   searchDescriptionTags.push([]);
-
 
   serviceButtonClassName = "serviceButton";
 
@@ -1073,7 +379,11 @@ PortfolioListJs.prototype.insertInitBox = function () {
         let menuPopup;
         let menuPopupTop;
 
-        menuPopupTop = box.top + window.scrollY + sortButtonHeight + popupBetween;
+        if (desktop) {
+          menuPopupTop = box.top + window.scrollY + sortButtonHeight + popupBetween;
+        } else {
+          menuPopupTop = box.top + window.scrollY + box.height + popupBetween;
+        }
 
         cancelBack = createNode({
           mother: totalContents,
@@ -1112,6 +422,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
             animation: "fadeuplitereverse 0.3s ease forwards",
             opacity: String(0),
             overflow: "hidden",
+            paddingTop: String(menuPopupPaddingTop / 2) + ea,
           },
           child: {
             event: {
@@ -1279,35 +590,61 @@ PortfolioListJs.prototype.insertInitBox = function () {
   filterButtonClickEvent = (index) => {
     return async function (e) {
       try {
+        const friends = [ ...document.querySelectorAll('.' + searchTagsButtonClassName) ];
         const self = this;
         const box = self.getBoundingClientRect();
         const zIndex = 3;
+        const thisSubject = searchTags[index];
         const thisMenu = objectDeepCopy(searchDescriptionTags[index]);
         let cancelBack;
         let menuPopup;
         let menuPopupTop;
         let thisWidth;
         let thisLeft;
+        let endEvent;
+        let vwTopx;
 
-        menuPopupTop = box.top + window.scrollY + sortButtonHeight + popupBetween;
-        thisWidth = searchWidthTags[index] === 0 ? box.width : searchWidthTags[index];
-        thisLeft = box.left + ((Math.abs(thisWidth - box.width) / 2) * -1);
+        if (desktop) {
+          menuPopupTop = box.top + window.scrollY + sortButtonHeight + popupBetween;
+          thisWidth = searchWidthTags[index] === 0 ? box.width : searchWidthTags[index];
+          thisLeft = String(box.left + ((Math.abs(thisWidth - box.width) / 2) * -1)) + px;
+        } else {
+          menuPopupTop = box.top + window.scrollY + box.height + popupBetween;
+          thisWidth = searchWidthTags[index] === 0 ? box.width : searchWidthTags[index];
+          vwTopx = (window.innerWidth * (thisWidth / 100));
+          thisLeft = String(box.left + ((Math.abs(vwTopx - box.width) / 2) * -1)) + px;
+        }
+
+        endEvent = function (e) {
+          for (let dom of friends) {
+            dom.style.opacity = String(1);
+          }      
+          self.style.background = colorExtended.white;
+          self.children[0].style.color = colorExtended.darkDarkShadow;
+          self.children[1].querySelector("path").setAttribute("fill", colorExtended.black);
+          self.style.border = String(borderWidth) + "px solid " + colorExtended.gray3;
+          removeByClass(filterMenuPopupClassName);
+        }
 
         if (thisMenu.length !== 0) {
 
-          self.style.background = colorExtended.blueLight;
-          self.firstChild.style.color = colorExtended.black;
-          self.style.border = String(borderWidth) + "px solid " + colorExtended.black;
+          for (let dom of friends) {
+            if (dom === self) {
+              self.style.background = colorExtended.black;
+              self.children[0].style.color = colorExtended.white;
+              self.children[1].querySelector("path").setAttribute("fill", colorExtended.white);
+              self.style.border = String(borderWidth) + "px solid " + colorExtended.black;
+            } else {
+              dom.style.opacity = String(0.5);
+            }
+          }
 
           cancelBack = createNode({
             mother: totalContents,
             class: [ filterMenuPopupClassName ],
             event: {
               click: function (e) {
-                self.style.background = colorExtended.white;
-                self.firstChild.style.color = colorExtended.darkDarkShadow;
-                self.style.border = String(borderWidth) + "px solid " + colorExtended.gray3;
-                removeByClass(filterMenuPopupClassName);
+                endEvent.call(this, e);
               }
             },
             style: {
@@ -1328,17 +665,16 @@ PortfolioListJs.prototype.insertInitBox = function () {
               display: "inline-flex",
               position: "absolute",
               top: String(menuPopupTop) + px,
-              left: String(thisLeft) + px,
+              left: thisLeft,
               width: String(thisWidth) + ea,
               height: "calc(" + String(sortButtonHeight * thisMenu.length) + ea + " + " + String(middleBorderWidth * (thisMenu.length - 1)) + px + ")",
-              background: colorExtended.gradientBlue2,
+              background: colorExtended.gradientBlack,
               zIndex: String(zIndex),
-              border: String(borderWidth) + "px solid " + colorExtended.black,
-              boxSizing: "border-box",
               borderRadius: String(12) + px,
               animation: "fadeuplitereverse 0.3s ease forwards",
               opacity: String(0),
               overflow: "hidden",
+              paddingTop: String(menuPopupPaddingTop) + ea,
             },
             child: {
               event: {
@@ -1363,16 +699,44 @@ PortfolioListJs.prototype.insertInitBox = function () {
                     width: withOut(0, ea),
                     height: String(sortButtonHeight) + ea,
                     boxSizing: "border-box",
-                    borderBottom: index === arr.length - 1 ? "" : (String(middleBorderWidth) + "px solid " + colorExtended.blueDim),
+                    borderBottom: index === arr.length - 1 ? "" : (String(middleBorderWidth) + "px solid " + colorExtended.ultimateBlack),
                   },
                   child: {
                     event: {
                       selectstart: (e) => { e.preventDefault() },
+                      click: async function (e) {
+                        try {
+                          const value = this.getAttribute("item");
+                          const subject = this.getAttribute("subject");
+
+                          endEvent.call(this, e);
+
+                          const loading = instance.mother.whiteProgressLoading(null, true, false, false);
+
+                          ajaxJson({ subject, value, from: "portfolio" }, LOGHOST + "/searchContents", { equal: true }).then((response) => {
+                            instance.portfolioBlock(null, "<<<" + response.conids.join(",") + ">>>", instance.sort);
+                            instance.photoLoad = true;
+                            loading.remove();
+                          }).catch((err) => {
+                            endEvent.call(this, e);
+                          });
+
+                          endEvent.call(this, e);
+                        } catch (err) {
+                          console.log(err);
+                          endEvent.call(this, e);
+                        }
+                      }
+                    },
+                    attribute: {
+                      item,
+                      subject: thisSubject,
                     },
                     text: item,
                     style: {
                       fontSize: String(serviceSize) + ea,
                       fontWeight: String(600),
+                      color: colorExtended.white,
                       fontFamily: "pretendard",
                       position: "relative",
                       display: "inline-block",
@@ -1384,9 +748,9 @@ PortfolioListJs.prototype.insertInitBox = function () {
             }
           });
         } else {
-
-          // dev
-
+          endEvent.call(this, e);
+          instance.portfolioBlock(null, "", instance.sort);
+          instance.photoLoad = true;
         }
 
       } catch (e) {
@@ -1403,6 +767,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
       width: String(100) + '%',
       marginBottom: String(whiteBlockMarginBottom) + ea,
       top: String(-1 * boxTopVisual) + ea,
+      overflow: "hidden"
     }
   });
 
@@ -1489,10 +854,10 @@ PortfolioListJs.prototype.insertInitBox = function () {
       position: "relative",
       textAlign: "center",
       justifyContent: desktop ? "left" : "center",
-      alignItems: desktop ? "end" : "center",
+      alignItems: "end",
       paddingTop: desktop ? String(searchBarPaddingTop) + ea : String(mobileSearchWhiteBoxPaddingTop) + ea,
       paddingBottom: desktop ? "" : String(mobileSearchWhiteBoxPaddingBottom) + ea,
-      flexDirection: mobile ? "column" : "row",
+      flexDirection: "row",
     },
     children: [
       {
@@ -1636,7 +1001,8 @@ PortfolioListJs.prototype.insertInitBox = function () {
   for (let service of searchTags) {
     serviceChildren.push({
       class: [
-        serviceButtonClassName
+        serviceButtonClassName,
+        searchTagsButtonClassName
       ],
       attribute: {
         toggle: "off",
@@ -1649,7 +1015,8 @@ PortfolioListJs.prototype.insertInitBox = function () {
       style: {
         display: "inline-flex",
         position: "relative",
-        height: String(sortButtonHeight - (borderWidth * 2)) + ea,
+        height: String(sortButtonHeight - (desktop ? (borderWidth * 2) : 0.2)) + ea,
+        boxSizing: desktop ? "" : "border-box",
         marginRight: String(serviceMarginRight) + ea,
         paddingLeft: String(servicePaddingLeft) + ea,
         paddingRight: String(servicePaddingLeft) + ea,
@@ -1662,6 +1029,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
         alignItems: "center",
         textAlign: "center",
         transition: "all 0.3s ease",
+        overflow: "visible",
       },
       children: [
         {
@@ -1697,18 +1065,45 @@ PortfolioListJs.prototype.insertInitBox = function () {
     });
     serviceNum++;
   }
-  serviceBlock = createNode({
-    mother: middleBox,
-    style: {
-      display: desktop ? "block" : "none",
-      position: "absolute",
-      textAlign: "center",
-      right: String(0) + ea,
-      bottom: String(tagTongBottom) + ea,
-    },
-    children: serviceChildren
-  });
-  serviceBlock.lastChild.style.marginRight = "";
+  
+  if (desktop) {
+    serviceBlock = createNode({
+      mother: middleBox,
+      style: {
+        display: "block",
+        position: "absolute",
+        textAlign: "center",
+        right: String(0) + ea,
+        bottom: String(tagTongBottom) + ea,
+      },
+      children: serviceChildren
+    });
+    serviceBlock.lastChild.style.marginRight = "";
+  } else {
+    serviceBlock = createNode({
+      mother: whiteBlock,
+      style: {
+        display: "block",
+        position: "relative",
+        textAlign: "center",
+        width: withOut(0, ea),
+        overflow: "visible",
+        paddingBottom: String(borderWidth * 2) + "px",
+      },
+      child: {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(200) + "%",
+          left: String(-50) + "%",
+          textAlign: "center",
+          overflow: "visible",
+        },
+        children: serviceChildren
+      }
+    });
+    serviceBlock.lastChild.lastChild.style.marginRight = "";
+  }
 
 }
 
@@ -1724,7 +1119,7 @@ PortfolioListJs.prototype.insertPortfolioBase = function () {
   let paddingBottom;
 
   limitLength = <%% 42, 42, 42, 42, 42 %%>;
-  photoMargin = <%% 18, 18, 17, 16, 3 %%>;
+  photoMargin = <%% 18, 16, 16, 16, 2.5 %%>;
   paddingBottom = <%% 120, 120, 120, 120, 40 %%>;
 
   baseBlock = createNode({
@@ -1785,14 +1180,27 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null,
   let arrowWidth;
   let arrowHeight;
   let arrowBottom;
-  let arrowReviewBottom;
   let subInfoTextTop;
   let radiusPixel;
+  let conidArr;
 
   if (typeof search === "string") {
 
     if (search === '') {
       contentsArr = this.contentsArr;
+
+    } else if (/^\<\<\</.test(search)) {
+
+      search = search.trim().replace(/^\<\<\</gi, '').replace(/\>\>\>$/gi, '');
+      if (search === "") {
+        contentsArr = [];
+      } else {
+        conidArr = search.split(",");
+        contentsArr = this.contentsArr.toNormal().filter((o) => {
+          return conidArr.includes(o.conid);
+        });
+      }
+
     } else {
 
       if (/엑스트라/gi.test(search)) {
@@ -1846,7 +1254,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null,
   gsArray = this.generateGsArray(limitLength);
 
   baseWidth = Number(baseTong.style.width.replace(/[^0-9\.]/gi, ''));
-  photoMargin = <%% 18, 18, 17, 16, 3 %%>;
+  photoMargin = <%% 18, 16, 16, 16, 2.5 %%>;
   columns = <%% 4, 4, 3, 3, 2 %%>;
 
   photoRatio = (297 / 210);
@@ -1859,14 +1267,14 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null,
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
   quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
 
-  titleSize = <%% 19, 17, 17, 15, 3.4 %%>;
+  titleSize = <%% 18, 15, 16, 14, 3.3 %%>;
   titleWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
 
   titleSubSize = <%% 14, 12, 12, 11, 2.5 %%>;
   titleSubMarginTop = <%% 3, 2, 2, 1, (isIphone() ? 0 : 0.3) %%>;
 
-  photoBlockMarginBottom = <%% 64, 56, 48, 40, 8 %%>;
+  photoBlockMarginBottom = <%% 65, 56, 52, 46, 8 %%>;
 
   garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
   garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
@@ -1893,7 +1301,6 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null,
   arrowWidth = <%% 32, 28, 28, 26, 4 %%>;
   arrowHeight = <%% 9, 8, 8, 8, 1.5 %%>;
   arrowBottom = <%% 3, 3, 3, 2, 1 %%>;
-  arrowReviewBottom = <%% 5, 4, 4, 4, 1 %%>;
 
   baseBlock = baseTong.children[1];
 
@@ -2030,7 +1437,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null,
                         display: "block",
                         position: "relative",
                         fontSize: String(titleSubSize) + ea,
-                        fontWeight: String(500),
+                        fontWeight: String(400),
                         color: colorChip.gray5,
                         width: String(200) + '%',
                         fontFamily: "pretendard",

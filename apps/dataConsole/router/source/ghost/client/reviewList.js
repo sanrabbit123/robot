@@ -223,7 +223,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   subTitleFontSize = <%% 21, 19, 18, 16, 3.4 %%>;
   subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  tagTextTop = <%% (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), -0.2 %%>;
+  tagTextTop = <%% (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), 0 %%>;
   tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
@@ -277,7 +277,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   numbersMaxWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
   numbersRadius = <%% 12, 12, 12, 12, 12 %%>;
   numbersBoxMarginTop = <%% 15, 15, 15, 15, 7 %%>;
-  numbersBoxMarginBottom = <%% 46, -22, -8, -24, 3 %%>;
+  numbersBoxMarginBottom = <%% 46, -22, -8, -24, 2.5 %%>;
 
   numbersBoxPaddingLeft = <%% 42, 40, 38, 32, 5 %%>;
   numbersBoxPaddingRight = <%% 36, 34, 32, 26, 4 %%>;
@@ -306,12 +306,12 @@ ReviewListJs.prototype.insertInitBox = function () {
 
   numbersDescriptionSize = <%% 14, 14, 14, 14, 2.8 %%>;
   numbersDescriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
-  numbersDescriptionTextTop = <%% -5, -5, -5, -5, -1 %%>;
+  numbersDescriptionTextTop = <%% (isMac() ? -5 : -3), (isMac() ? -5 : -3), (isMac() ? -5 : -3), (isMac() ? -5 : -3), -1 %%>;
 
-  buttonArrowDownWidth = <%% 6, 5, 5, 4, 1.1 %%>;
+  buttonArrowDownWidth = <%% 6, 5, 5, 4, 1 %%>;
   buttonArrowDownMarginLeft = <%% 10, 8, 8, 6, 1.9 %%>;
 
-  menuPopupPaddingTop = <%% 4, 4, 4, 4, 1 %%>;
+  menuPopupPaddingTop = <%% 4, 4, 4, 4, (isIphone() ? 1.5 : 1.1) %%>;
 
   popupBetween = 6;
   middleBorderWidth = 1;
@@ -1623,6 +1623,7 @@ ReviewListJs.prototype.insertInitBox = function () {
         alignItems: "center",
         textAlign: "center",
         transition: "all 0.3s ease",
+        overflow: "visible",
       },
       children: [
         {
@@ -1681,6 +1682,7 @@ ReviewListJs.prototype.insertInitBox = function () {
         textAlign: "center",
         width: withOut(0, ea),
         overflow: "visible",
+        paddingBottom: String(borderWidth * 2) + "px",
       },
       child: {
         style: {
@@ -1689,6 +1691,7 @@ ReviewListJs.prototype.insertInitBox = function () {
           width: String(200) + "%",
           left: String(-50) + "%",
           textAlign: "center",
+          overflow: "visible",
         },
         children: serviceChildren
       }
@@ -1874,9 +1877,9 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   titleSize = <%% 17, 15, 16, 14, 3 %%>;
   montTitleSize = <%% 20, 16, 17, 15, 3.1 %%>;
   montTitleMarginLeft = <%% 10, 8, 8, 6, 1.6 %%>;
-  montHangulTitleTop = <%% -1, -1, -1, -1, -0.1 %%>;
-  montTitleTop = <%% -0.5, -1, -1, -1, -0.2 %%>;
-  montSpecialTitleTop = <%% 0, -0.5, -0.5, -0.5, -0.1 %%>; 
+  montHangulTitleTop = <%% -1, -1, -1, -1, (isIphone() ? -0.3 : -0.1) %%>;
+  montTitleTop = <%% -0.5, -1, -1, -1, (isIphone() ? -0.4 : -0.2) %%>;
+  montSpecialTitleTop = <%% 0, -0.5, -0.5, -0.5, (isIphone() ? -0.3 : -0.1) %%>; 
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.6 %%>;
 
