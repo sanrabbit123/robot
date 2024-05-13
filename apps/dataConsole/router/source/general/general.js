@@ -3678,6 +3678,10 @@ GeneralJs.prototype.greenBar = function () {
       }
     });
   });
+  svg_icon.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+    GeneralJs.blankHref("https://" + FILEHOST + ":6081/vnc_lite.html");
+  })
   this.belowButtons.sub.profile = svg_icon;
   div_clone.appendChild(svg_icon);
 
