@@ -44,16 +44,27 @@ const ReviewDetailJs = function () {
 
 ReviewDetailJs.binaryPath = FRONTHOST + "/middle/review";
 
-ReviewDetailJs.prototype.reviewMainBox = function () {
+ReviewDetailJs.prototype.reviewInitBox = function () {
   const instance = this;
   const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone } = GeneralJs;
-  const { totalContents, naviHeight, ea, media, pid } = this;
+  const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
   const { contentsArr } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const toggleTargetClassName = "toggleTargetClassName";
+  const toggleTargetClassName2 = "toggleTargetClassName2";
+  const circleClassName = "circleClassName";
+  const circleBaseClassName = "circleBaseClassName";
+  const touchStartConst = "toggleTouchStartConstName";
+  const sortMenuPopupClassName = "sortMenuPopupClassName";
+  const filterMenuPopupClassName = "filterMenuPopupClassName";
+  const targetTextDomClassName = "targetTextDomClassName";
+  const searchTagsButtonClassName = "searchTagsButtonClassName";
+  const px = "px";
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
   const photoChar = 't';
   const photoCharMobile = "mot";
+  let baseTong, baseTop;
   let mainHeight;
   let mainTong;
   let mainBelowBarHeight;
@@ -78,6 +89,101 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   let mobileWhiteBoxTop, mobileWhiteBoxLeft;
   let mobileWhiteBoxWidth, mobileWhiteBoxHeight;
   let mobileWordingLeft;
+  let mobileSearchWhiteBoxPaddingTop;
+  let mobileSearchWhiteBoxPaddingBottom;
+  let mobileSearchWhiteBoxMarginBottom;
+  let whiteBlock;
+  let style;
+  let blockHeight;
+  let leftBox, rightBox;
+  let titleBox, barBox, indexBox;
+  let margin;
+  let titleFontSize, titleFontWeight;
+  let serviceChildren;
+  let searchTags;
+  let titleWording;
+  let servicePaddingLeft;
+  let serviceSize;
+  let serviceBlockPaddingTop;
+  let whiteBlockPaddingTop, whiteBlockPaddingBottom;
+  let quotoTongHeight;
+  let searchBarPaddingTop;
+  let searchBarHeight;
+  let searchBarWidth;
+  let searchIconHeight;
+  let searchIconRight, searchIconTop;
+  let whiteBlockMarginBottom;
+  let inputWithoutHeight;
+  let serviceButtonClassName;
+  let serviceBlock;
+  let inputSize, inputWeight;
+  let placeholder;
+  let titleTop;
+  let servicePaddingTop, servicePaddingBottom;
+  let serviceMarginRight;
+  let subTitleFontSize;
+  let subTitleContents;
+  let middleBox;
+  let tagTextTop;
+  let tagTongBottom;
+  let boxTopVisual;
+  let mobileBlockTop;
+  let buttonSize;
+  let buttonWeight;
+  let buttonBetween;
+  let buttonTongWidth;
+  let buttonWidth;
+  let buttonHeight;
+  let buttonTextTop;
+  let buttonLeft;
+  let circleWidth;
+  let tabletVisualBottom;
+  let mobileButtonTongMarginTop;
+  let mobileButtonBetween;
+  let contentsPaddingTop;
+  let sortBoxRight;
+  let mobileBackgroundHeight;
+  let mobileVisualPaddingLeft;
+  let tagBoxRight;
+  let illust0Top, illust0Left, illust0Width;
+  let illust1Top, illust1Right, illust1Width;
+  let illust2Top, illust2Right, illust2Width;
+  let mobileTitlePaddingTop;
+  let titleBoxRowTong;
+  let blackTitleTextTop, blackTitleMarginLeft;
+  let numbersBox;
+  let numbersBoxBarMargin;
+  let numbersBoxPaddingLeft;
+  let numbersMargin;
+  let multiplyNumber;
+  let numbersImageWidth;
+  let numbersWidth0, numbersWidth1, numbersWidth2, numbersWidth3;
+  let numbersTotalHeight;
+  let borderWidth;
+  let numbersMaxWidth, numbersRadius;
+  let numbersBoxMarginTop;
+  let numbersTextSize, numbersTextWeight;
+  let numbersImageWidth0, numbersImageWidth1, numbersImageWidth2, numbersImageWidth3;
+  let numbersImageTop0, numbersImageTop1, numbersImageTop2, numbersImageTop3;
+  let numbersMiddleTitleContents0, numbersMiddleTitleContents1, numbersMiddleTitleContents2, numbersMiddleTitleContents3;
+  let numbersDescriptionContents0, numbersDescriptionContents1, numbersDescriptionContents2, numbersDescriptionContents3;
+  let numbersDescriptionSize, numbersDescriptionWeight, numbersDescriptionTextTop;
+  let numbersMiddleBarHeight;
+  let numbersBoxPaddingRight;
+  let numbersBoxMarginBottom;
+  let sortButtonWidth, sortButtonBetween;
+  let sortButtonHeight;
+  let buttonArrowDownWidth, buttonArrowDownMarginLeft;
+  let serviceNum;
+  let borderWidthLight;
+  let sortButtonClickEvent;
+  let popupBetween;
+  let middleBorderWidth;
+  let filterButtonClickEvent;
+  let searchDescriptionTags;
+  let searchWidthTags;
+  let menuPopupPaddingTop;
+  let numbersBox0, numbersBox1;
 
   mainHeight = <%% 800, 750, 710, 590, (210 / 297) * 100 %%>;
   mainBelowBarHeight = <%% 250, 250, 250, 216, 250 %%>;
@@ -123,239 +229,577 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
   mobileWordingLeft = 5.3;
 
+  margin = <%% 30, 30, 30, 30, 30 %%>;
+
+  whiteBlockMarginBottom = <%% 36, 32, 30, 23, 9.5 %%>;
+
+  quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
+  quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
+  titleFontSize = <%% 26, 23, 22, 19, 5 %%>;
+  titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
+
+  servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
+  servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
+  servicePaddingLeft = <%% 18, 14, 12, 12, 3 %%>;
+  serviceMarginRight = <%% 6, 5, 4, 3, 0.8 %%>;
+  serviceSize = <%% 14, 13, 13, 11, 2.8 %%>;
+  serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
+
+  whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
+  whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
+
+  searchBarPaddingTop = <%% 50, 50, 50, 36, 20 %%>;
+  searchBarHeight = <%% 36, 34, 32, 28, 7 %%>;
+  searchBarWidth = <%% 690, 516, 412, 284, 88 %%>;
+
+  searchIconHeight = <%% 20, 20, 18, 16, 4.3 %%>;
+  searchIconRight = <%% 0, 0, 0, 0, 0.2 %%>;
+  searchIconTop = <%% 8, 8, 7, 6, 1 %%>;
+
+  inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
+
+  inputSize = <%% 14, 14, 14, 14, 3 %%>;
+  inputWeight = <%% 300, 300, 300, 300, 300 %%>;
+
+  subTitleMarginTop = <%% 2, 2, 1, 1, 0.1 %%>;
+  subTitleFontSize = <%% 21, 19, 18, 16, 3.4 %%>;
+  subTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  tagTextTop = <%% (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), (isMac() ? -0.5 : 0), 0 %%>;
+  tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
+  boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
+
+  titleWording = "REVIEW DETAIL<b%.%b>";
+  subTitleContents = "고객 후기";
+
+  mobileBlockTop = 7;
+
+  mobileSearchWhiteBoxPaddingTop = 4;
+  mobileSearchWhiteBoxPaddingBottom = 3.6;
+  mobileSearchWhiteBoxMarginBottom = 5;
+
+  placeholder = "새아파트";
+
+  buttonSize = <%% 13, 13, 13, 13, 3 %%>;
+  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
+  buttonBetween = <%% 1, 1, 1, 1, 2 %%>;
+
+  buttonTongWidth = <%% 65, 65, 60, 60, 90 %%>;
+
+  buttonWidth = <%% 26, 26, 26, 24, 5.6 %%>;
+  buttonHeight = <%% 12, 12, 12, 12, 3 %%>;
+  buttonTextTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isIphone() ? 1.3 : 1) %%>;
+  buttonLeft = <%% -34, -34, -34, -31, -7 %%>;
+  circleWidth = <%% 8, 8, 8, 8, 2 %%>;
+
+  tabletVisualBottom = 4;
+  mobileButtonTongMarginTop = 3;
+  mobileButtonBetween = 10;
+  contentsPaddingTop = <%% 16, 16, 16, 0, 1 %%>;
+
+  sortBoxRight = <%% 0, 0, 0, 0, 20 %%>;
+
+  mobileBackgroundHeight = 58;
+  mobileVisualPaddingLeft = 6;
+
+  tagBoxRight = <%% 132, 128, 100, 100, 10 %%>;
+
+  mobileTitlePaddingTop = 2;
+
+  blackTitleMarginLeft = <%% 12, 11, 8, 7, 1 %%>;
+  blackTitleTextTop = <%% (isMac() ? -2 : 0.5), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0.5), (isIphone() ? -0.7 : -0.1) %%>;
+
+  sortButtonWidth = <%% 90, 82, 78, 68, 16.5 %%>;
+  sortButtonBetween = <%% 16, 14, 12, 10, 2.6 %%>;
+  sortButtonHeight = <%% searchBarHeight - 1, searchBarHeight - 2, searchBarHeight - 1, searchBarHeight - 1, searchBarHeight - 0.1 %%>;
+
+  numbersTotalHeight = <%% 138, 138, 138, 138, 22 %%>;
+  borderWidth = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  borderWidthLight = 1;
+  numbersMaxWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
+  numbersRadius = <%% 12, 12, 12, 12, 12 %%>;
+  numbersBoxMarginTop = <%% 15, 15, 15, 15, 7 %%>;
+  numbersBoxMarginBottom = <%% 46, -22, -8, -24, 2.5 %%>;
+
+  numbersBoxPaddingLeft = <%% 42, 40, 38, 32, 5 %%>;
+  numbersBoxPaddingRight = <%% 36, 34, 32, 26, 4 %%>;
+  numbersBoxBarMargin = <%% 36, 32, 32, 28, 6 %%>;
+  numbersMiddleBarHeight = <%% 100, 100, 100, 100, 100 %%>;
+
+  numbersMargin = <%% 20, 12, 12, 6, 2 %%>;
+
+  numbersImageWidth0 = <%% 80, 80, 80, 80, 13 %%>;
+  numbersImageWidth1 = <%% 95, 95, 95, 95, 13 %%>;
+  numbersImageWidth2 = <%% 110, 110, 110, 110, 14.5 %%>;
+  numbersImageWidth3 = <%% 80, 80, 80, 80, 12 %%>;
+
+  numbersImageTop0 = <%% 8, 8, 8, 8, 1.2 %%>;
+  numbersImageTop1 = <%% 2, 2, 2, 2, 1 %%>;
+  numbersImageTop2 = <%% 7, 7, 7, 7, 1 %%>;
+  numbersImageTop3 = <%% 7, 7, 7, 7, 1 %%>;
+
+  numbersWidth0 = <%% 140, 140, 140, 140, 35 %%>;
+  numbersWidth1 = <%% 140, 140, 140, 140, 33 %%>;
+  numbersWidth2 = <%% 140, 140, 140, 140, 33 %%>;
+  numbersWidth3 = <%% 110, 110, 110, 110, 33 %%>;
+
+  numbersTextSize = <%% 38, 38, 38, 38, 6 %%>;
+  numbersTextWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  numbersDescriptionSize = <%% 14, 14, 14, 14, 2.8 %%>;
+  numbersDescriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
+  numbersDescriptionTextTop = <%% (isMac() ? -5 : -3), (isMac() ? -5 : -3), (isMac() ? -5 : -3), (isMac() ? -5 : -3), -1 %%>;
+
+  buttonArrowDownWidth = <%% 6, 5, 5, 4, 1 %%>;
+  buttonArrowDownMarginLeft = <%% 10, 8, 8, 6, 1.9 %%>;
+
+  menuPopupPaddingTop = <%% 4, 4, 4, 4, (isIphone() ? 1.5 : 1.1) %%>;
+
+  baseTop = <%% 130, 125, 120, 100, 9 %%>;
+
+  popupBetween = 6;
+  middleBorderWidth = 1;
+
+  baseTong = createNode({
+    mother: totalContents,
+    style: {
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      paddingTop: desktop ? String(baseTop) + ea : "calc(" + String(naviHeight) + "px" + " + " + String(baseTop) + ea + ")",
+      animation: mobile ? "" : "fadeupdelay 0.5s ease forwards",
+    }
+  });
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      marginBottom: String(50) + ea,
+      top: String(-1 * boxTopVisual) + ea,
+      overflow: "hidden"
+    }
+  });
+
+  titleBoxRowTong = createNode({
+    mother: whiteBlock,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: String(100) + '%',
+      flexDirection: desktop ? "row" : "column",
+      justifyContent: "start",
+      alignItems: "start",
+    }
+  })
+
+  // title and sub title
+  createNode({
+    mother: titleBoxRowTong,
+    style: {
+      display: desktop ? "inline-flex" : "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        text: titleWording,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
+          fontWeight: String(titleFontWeight),
+          color: colorExtended.mainBlue,
+          wordSpacing: String(2) + "px",
+        },
+        bold: {
+          fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
+          fontWeight: String(titleFontWeight),
+          color: colorExtended.mainBlue,
+          opacity: String(0.4),
+        }
+      }
+    ]
+  });
+  createNode({
+    mother: titleBoxRowTong,
+    style: {
+      display: desktop ? "inline-flex" : "flex",
+      position: "relative",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    children: [
+      {
+        text: desktop ? "<u%|%u>&nbsp;&nbsp;&nbsp;" + subTitleContents : subTitleContents,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(subTitleFontSize) + ea,
+          fontFamily: "pretendard",
+          fontWeight: String(subTitleWeight),
+          color: colorChip.black,
+          marginLeft: desktop ? String(blackTitleMarginLeft) + ea : "",
+          top: String(blackTitleTextTop) + ea,
+        },
+        under: {
+          fontSize: String(subTitleFontSize) + ea,
+          fontFamily: "pretendard",
+          color: colorChip.deactive,
+          fontWeight: String(400),
+        },
+      }
+    ]
+  });
+
+}
+
+ReviewDetailJs.prototype.reviewMainBox = function () {
+  const instance = this;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, serviceParsing } = GeneralJs;
+  const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
+  const { contentsArr } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
+  const photoChar = 't';
+  const photoCharMobile = "mot";
+  let mainHeight;
+  let mainTong;
+  let mainBelowBarHeight;
+  let contentsBox;
+  let pictureWidth, pictureHeight;
+  let picture;
+  let bottomVisual;
+  let photoRightMargin;
+  let textTong;
+  let quoteHeight, quoteWidth;
+  let quoteTop;
+  let quotePaddingLeft;
+  let topReviewSize, topReviewWeight;
+  let mainTitleSize, mainTitleWeight;
+  let mainTitleLineHeight;
+  let mainTitleMarginTop;
+  let subTitleSize, subTitleWeight;
+  let subTitleMarginTop;
+  let subLineWidth, subLineHeight, subLineLeft;
+  let bottomWordingVisualBottom;
+  let bottomWordingLineHeight;
+  let mobileWhiteBoxTop, mobileWhiteBoxLeft;
+  let mobileWhiteBoxWidth, mobileWhiteBoxHeight;
+  let mobileWordingLeft;
+  let borderWidth;
+  let descriptionBox;
+  let designerInfoBox;
+  let designerSpacePhotoWidth;
+  let boxRadius;
+  let designerSpacePhotoMarginRight;
+  let designerDescriptionBox;
+  let barBlank;
+  let barMargin;
+  let mainRatio;
+
+  mainRatio = (9 / 16);
+
+  mainHeight = <%% 800, 750, 710, 590, mainRatio * 100 %%>;
+  mainBelowBarHeight = <%% 250, 250, 250, 216, 250 %%>;
+
+  contentsBoxTop = <%% 70, 70, 70, 70, 0 %%>;
+  contentsBoxWidth = <%% 1200, 1050, 900, 720, 1200 %%>;
+
+  bottomVisual = <%% 6, 6, 6, 6, 6 %%>;
+
+  pictureWidth = <%% 820, 720, 610, 480, 610 %%>;
+  pictureHeight = mainHeight - (contentsBoxTop * 2) - bottomVisual;
+
+  boxRadius = 15;
+
+  photoRightMargin = 45;
+  designerSpacePhotoWidth = 100;
+  designerSpacePhotoMarginRight = 20;
+
+  barMargin = 36;
+
+  quoteHeight = <%% 14, 14, 13, 11, 1.8 %%>;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
+  quoteTop = <%% 140, 135, 125, 80, 5 %%>;
+  quotePaddingLeft = <%% 2, 2, 2, 2, 5.4 %%>;
+
+  topReviewSize = <%% 16, 16, 15, 14, 15 %%>;
+  topReviewWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  mainTitleSize = <%% 36, 35, 33, 29, 4.5 %%>;
+  mainTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+  mainTitleLineHeight = <%% 1.16, 1.16, 1.16, 1.16, 1.2 %%>;
+  mainTitleMarginTop = <%% 7, 7, 7, 5, 8.5 %%>;
+
+  subTitleSize = <%% 18, 17, 17, 15, 3 %%>;
+  subTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  subTitleMarginTop = <%% 17, 17, 16, 13, 20 %%>;
+
+  subLineWidth = <%% 170, 120, 95, 65, 95 %%>;
+  subLineHeight = <%% (isMac() ? 11 : 9), (isMac() ? 11 : 9), (isMac() ? 11 : 9), (isMac() ? 10 : 8), 11 %%>;
+  subLineLeft = <%% 160, 150, 150, 135, 150 %%>;
+
+  bottomWordingVisualBottom = <%% (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4), -2 %%>;
+  bottomWordingLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+
+  mobileWhiteBoxTop = 20;
+  mobileWhiteBoxLeft = 8;
+  mobileWhiteBoxWidth = 38;
+  mobileWhiteBoxHeight = 30;
+
+  mobileWordingLeft = 5.3;
+
+  borderWidth = 1.5;
+
+  barBlank = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
   mainTong = createNode({
     mother: totalContents,
     style: {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      background: colorChip.gray0,
-      paddingTop: String(naviHeight) + "px",
-      height: String(mainHeight) + ea,
+      background: colorExtended.white,
       animation: "fadeupdelay 0.5s ease forwards",
     },
-    children: [
-      {
-        style: {
-          display: desktop ? "block" : "none",
-          position: "absolute",
-          background: colorChip.gray1,
-          bottom: String(0),
-          left: String(0),
-          height: String(mainBelowBarHeight) + ea,
-          width: String(100) + '%',
-        }
-      }
-    ]
   });
 
+
+  // total base
   contentsBox = createNode({
     mother: mainTong,
     style: {
-      display: "block",
+      display: "flex",
       position: "relative",
-      paddingTop: String(contentsBoxTop) + ea,
-      width: desktop ? String(contentsBoxWidth) + ea : String(100) + '%',
-      left: desktop ? "calc(50% - " + String(contentsBoxWidth / 2) + ea + ")" : String(0),
+      flexDirection: "row",
+      width: desktop ? String(standardWidth) + ea : String(100) + '%',
+      left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
       top: String(0),
-      height: String(mainHeight - (contentsBoxTop * 2)) + ea,
+      paddingBottom: String(64) + ea,
+      borderBottom: String(borderWidth) + "px solid " + colorExtended.gray3,
     }
   });
 
+
+  // left picture
   picture = createNode({
     mother: contentsBox,
-    event: {
-      contextmenu: (e) => {
-        e.preventDefault();
-      }
-    },
     style: {
-      display: desktop ? "inline-block" : "block",
+      display: desktop ? "inline-flex" : "block",
       position: desktop ? "relative" : "absolute",
-      width: desktop ? String(pictureWidth) + ea : String(100) + '%',
-      height: desktop ? String(pictureHeight) + ea : String(100) + '%',
-      borderRadius: desktop ? String(5) + "px" : "",
+      width: desktop ? String(standardWidth / 2) + ea : String(100) + '%',
+      height: desktop ? String((standardWidth / 2) * mainRatio) + ea : String(100) + '%',
+      borderRadius: String(boxRadius) + "px",
       backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
-      backgroundSize: "auto 100%",
+      backgroundSize: "100% auto",
       backgroundPosition: "50% 50%",
       boxShadow: desktop ? "0px 8px 22px -15px " + colorChip.shadow : "",
-      marginRight: desktop ? String(photoRightMargin) + ea : "",
+      marginRight: String(photoRightMargin) + ea,
       verticalAlign: "top",
     }
   });
 
-  if (mobile) {
 
-    createNode({
-      mother: contentsBox,
-      style: {
-        display: "block",
-        position: "relative",
-        top: String(mobileWhiteBoxTop) + ea,
-        left: String(mobileWhiteBoxLeft) + ea,
-        width: String(mobileWhiteBoxWidth) + ea,
-        height: String(mobileWhiteBoxHeight) + ea,
-        borderRadius: String(12) + "px",
-        overflow: "hidden",
+  // right box
+  descriptionBox = createNode({
+    mother: contentsBox,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: withOut((standardWidth / 2) + photoRightMargin, ea),
+      height: desktop ? String((standardWidth / 2) * mainRatio) + ea : String(100) + '%',
+      verticalAlign: "top",
+      flexDirection: "column",
+      justifyContent: "start",
+      alignItems: "start",
+    }
+  });
+
+
+  // designer name and info
+  designerInfoBox = createNode({
+    mother: descriptionBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(designerSpacePhotoWidth) + ea,
+      flexDirection: "row",
+      justifyContent: "start",
+      alignItems: "start",
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(designerSpacePhotoWidth) + ea,
+          height: String(designerSpacePhotoWidth) + ea,
+          borderRadius: String(boxRadius) + "px",
+          backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
+          backgroundSize: "auto 100%",
+          backgroundPosition: "50% 50%",
+          boxShadow: desktop ? "0px 8px 22px -15px " + colorChip.shadow : "",
+          marginRight: String(designerSpacePhotoMarginRight) + ea,
+        }
       },
-      children: [
-        {
-          class: [ "backblurwhite" ],
-          style: {
-            position: "absolute",
-            top: String(0),
-            left: String(0),
-            width: String(100) + '%',
-            height: String(100) + '%',
-            borderRadius: String(1) + ea,
-          }
-        },
-        {
-          mode: "svg",
-          source: svgMaker.doubleQuote(colorExtended.mainBlue),
-          style: {
-            position: "absolute",
-            top: String(quoteTop) + ea,
-            left: String(quotePaddingLeft) + ea,
-            height: String(quoteHeight) + ea,
-            width: String(quoteWidth) + ea,
-          }
-        },
-        {
-          text: "Welcome to\nmy home",
-          style: {
-            position: "absolute",
-            textAlign: "left",
-            fontSize: String(mainTitleSize) + ea,
-            fontWeight: String(mainTitleWeight),
-            fontFamily: "mont",
-            color: colorChip.black,
-            top: String(mainTitleMarginTop) + ea,
-            left: String(mobileWordingLeft) + ea,
-            lineHeight: String(mainTitleLineHeight),
-          }
-        },
-        {
-          text: "우리집을 소개합니다",
-          style: {
-            position: "absolute",
-            textAlign: "left",
-            fontSize: String(subTitleSize) + ea,
-            fontWeight: String(subTitleWeight),
-            color: colorChip.black,
-            top: String(subTitleMarginTop) + ea,
-            left: String(mobileWordingLeft) + ea,
-          }
-        },
-      ]
-    });
-
-  }
-
-  if (desktop) {
-
-    textTong = createNode({
-      mother: contentsBox,
+      {
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          flexDirection: "column",
+          justifyContent: "start",
+          alignItems: "start",
+          width: withOut(designerSpacePhotoWidth + designerSpacePhotoMarginRight, ea),
+          height: String(designerSpacePhotoWidth) + ea,
+        }
+      }
+    ]
+  });
+  designerDescriptionBox = designerInfoBox.children[1];
+  createNode({
+    mother: designerDescriptionBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      textAlign: "left",
+      justifyContent: "start",
+      alignItems: "start",
+      marginBottom: String(0) + ea,
+    },
+    child: {
+      text: "호지희 디자이너",
       style: {
         display: "inline-block",
         position: "relative",
-        width: withOut(pictureWidth + photoRightMargin, ea),
-        height: String(pictureHeight) + ea,
-        verticalAlign: "top",
+        fontSize: String(20) + ea,
+        fontWeight: String(700),
+        color: colorExtended.black,
+        fontFamily: "pretendard",
       }
-    });
-
-    createNode({
-      mother: textTong,
-      text: "review " + pid.replace(/[^0-9]/gi, ''),
+    }
+  });
+  createNode({
+    mother: designerDescriptionBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      textAlign: "left",
+      justifyContent: "start",
+      alignItems: "start",
+    },
+    child: {
+      text: "모던" + barBlank + "<b%|%b>" + barBlank + "네추럴" + barBlank + "<b%|%b>" + barBlank + "모던",
       style: {
-        display: "block",
-        textAlign: "right",
-        fontSize: String(topReviewSize) + ea,
-        fontWeight: String(topReviewWeight),
-        fontFamily: "graphik",
-        color: colorExtended.mainBlue
-      }
-    });
-
-    createNode({
-      mother: textTong,
-      style: {
-        display: "block",
-        textAlign: "left",
-        paddingTop: String(quoteTop) + ea,
-        paddingLeft: String(quotePaddingLeft) + ea,
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(15) + ea,
+        fontWeight: String(400),
+        color: colorExtended.black,
+        fontFamily: "pretendard",
       },
-      children: [
-        {
+      bold: {
+        fontSize: String(15) + ea,
+        fontWeight: String(400),
+        color: colorExtended.gray3,
+      }
+    }
+  });
+  createNode({
+    mother: designerDescriptionBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      textAlign: "left",
+      justifyContent: "start",
+      alignItems: "start",
+      marginTop: String(14) + ea,
+    },
+    child: {
+      style: {
+        display: "inline-flex",
+        width: String(190) + ea,
+        height: String(32) + ea,
+        borderRadius: String(8) + ea,
+        background: colorExtended.gradientBlue,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      child: {
+        text: "DESIGNER HOME",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(14) + ea,
+          fontWeight: String(300),
+          fontFamily: "gmarket",
+          color: colorExtended.white,
+        },
+        next: {
           mode: "svg",
-          source: svgMaker.doubleQuote(colorExtended.mainBlue),
+          source: svgMaker.horizontalArrow(22, 11, colorExtended.white),
           style: {
             display: "inline-block",
-            height: String(quoteHeight) + ea,
-            width: String(quoteWidth) + ea,
+            position: "relative",
+            width: String(22) + ea,
+            marginLeft: String(8) + ea,
+            top: String(-1) + ea,
           }
         }
-      ]
-    });
-    createNode({
-      mother: textTong,
-      text: "Welcome to\nmy home",
-      style: {
-        display: "block",
-        textAlign: "left",
-        fontSize: String(mainTitleSize) + ea,
-        fontWeight: String(mainTitleWeight),
-        fontFamily: "mont",
-        color: colorChip.black,
-        lineHeight: String(mainTitleLineHeight),
-        marginTop: String(mainTitleMarginTop) + ea,
       }
-    });
+    }
+  });
 
-    createNode({
-      mother: textTong,
-      text: "우리집을 소개합니다",
-      style: {
-        display: "block",
-        position: "relative",
-        textAlign: "left",
-        fontSize: String(subTitleSize) + ea,
-        fontWeight: String(subTitleWeight),
-        color: colorChip.black,
-        marginTop: String(subTitleMarginTop) + ea,
-        paddingLeft: String(quotePaddingLeft) + ea,
-      },
-      children: [
-        {
-          style: {
-            position: "absolute",
-            width: String(subLineWidth) + ea,
-            height: String(subLineHeight) + ea,
-            borderBottom: "1px solid " + colorChip.gray3,
-            top: String(0),
-            left: String(subLineLeft) + ea,
-          }
-        }
-      ]
-    });
-    createNode({
-      mother: textTong,
-      text: contents.contents.portfolio.spaceInfo.space + "\n홈스타일링 후기",
-      style: {
-        display: "block",
-        position: "absolute",
-        bottom: String(bottomWordingVisualBottom) + ea,
-        width: String(100) + '%',
-        textAlign: "right",
-        fontSize: String(subTitleSize) + ea,
-        fontWeight: String(subTitleWeight),
-        color: colorChip.black,
-        lineHeight: String(bottomWordingLineHeight),
-      }
-    });
 
-  }
+  // middle bar
+  createNode({
+    mother: descriptionBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(barMargin) + ea,
+      borderBottom: String(borderWidth) + "px solid " + colorExtended.black,
+      marginBottom: String(barMargin) + ea,
+      flexDirection: "row",
+      justifyContent: "start",
+      alignItems: "start",
+    }
+  });
+
+  // detail info
+
+  console.log("지역", contents.contents.portfolio.spaceInfo.region);
+  console.log("현장명", contents.contents.portfolio.spaceInfo.space);
+  console.log("평수", String(contents.contents.portfolio.spaceInfo.pyeong) + "평");
+  console.log("평수", String(contents.contents.portfolio.spaceInfo.pyeong) + "평");
+  console.log("====================================")
+  console.log("예산", contents.contents.portfolio.spaceInfo.budget.replace(/[ ]*(이하|이상|미만|초과)[ ]*/gi) + "대");
+  console.log("기간");
+  console.log("====================================")
+  console.log("온오프라인", serviceParsing(contents.service).replace(/(온라인|오프라인)[ ]*/gi, '').replace(/[ ]*(basic|mini|premium)/gi, '').trim());
+  console.log("서비스 유형", serviceParsing(contents.service).replace(/(온라인|오프라인)[ ]*/gi, '').replace(/[ ]*(basic|mini|premium)/gi, '').trim());
+  console.log("====================================")
+  console.log("만족도");
+  console.log("====================================")
+  console.log("키워드");
+
+  
+
 
 }
 
@@ -531,12 +975,13 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
 
   createNode({
     mother: mainTong,
-    text: review.title.main.replace(/, /, "\n"),
+    text: review.title.main.replace(/, /, " "),
     style: {
       display: "block",
       position: "relative",
       textAlign: "center",
       fontSize: String(titleSize) + ea,
+      fontFamily: "pretendard",
       fontWeight: String(titleWeight),
       lineHeight: String(titleLineHeight),
       color: colorChip.black,
@@ -551,15 +996,6 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
       textAlign: "center",
       marginTop: String(titleBarMarginTop) + ea,
     },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          width: String(titleBarWidth) + ea,
-          borderBottom: "1px solid " + colorChip.gray3,
-        }
-      }
-    ]
   });
 
   createNode({
@@ -587,8 +1023,8 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
         style: {
           display: desktop ? "block" : "none",
           fontSize: String(customerSize) + ea,
-          fontWeight: String(customerWeight),
-          fontFamily: "graphik",
+          fontWeight: String(700),
+          fontFamily: "mont",
           color: colorChip.black,
           position: "absolute",
           top: String(customerTop) + ea,
@@ -2406,6 +2842,8 @@ ReviewDetailJs.prototype.launching = async function (loading) {
       },
       local: async () => {
         try {
+
+          instance.reviewInitBox();
           instance.reviewMainBox();
           instance.reviewContentsBox();
           instance.reviewRelativeBox();

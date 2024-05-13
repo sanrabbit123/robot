@@ -7586,7 +7586,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "엄현선", "2024-05-02" ],
+    //   [ "방희수", "2024-04-04" ],
     // ]);
 
 
@@ -7595,17 +7595,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2402_aa02s", [
-    //   { porlid: "a128", index: 11 },
-    //   { porlid: "a127", index: 10 },
-    //   { porlid: "a128", index: 7 },
-    //   { porlid: "a127", index: 19 },
-    //   { porlid: "a128", index: 1 },
-    //   { porlid: "a128", index: 13 },
+    // await this.setProposalSettingForDesigner("d2405_aa01s", [
+    //   { porlid: "ghost", index: 21 },
+    //   { porlid: "ghost", index: 24 },
+    //   { porlid: "ghost", index: 29 },
+    //   { porlid: "ghost", index: 9 },
+    //   { porlid: "ghost", index: 12 },
+    //   { porlid: "ghost", index: 23 },
     // ], [
-    //   "다양한 설계 경험을 통해 개인에게 꼭 맞는 공간을 찾아드립니다.",
-    //   "완성도 높은 공간을 위해 클라이언트와의 소통을 최우선으로 생각합니다.",
-    //   "디테일한 3D를 통해 불안감과 스트레스 없이 꿈꾸던 집을 품에 안겨드리겠습니다.",
+    //   "꼼꼼한 상담 스타일로 고객님의 니즈를 정확하고 구체적으로 파악합니다.",
+    //   "원활한 소통으로 프로젝트 운영 중 답답한 상황이 없도록 진행해 드립니다.",
+    //   "책임감 있는 마무리로 퀄리티 있는 현장 결과물을 보증해드립니다.",
     // ]);
 
 
