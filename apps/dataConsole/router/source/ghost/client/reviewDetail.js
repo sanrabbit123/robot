@@ -798,8 +798,6 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   console.log("====================================")
   console.log("키워드");
 
-  
-
 
 }
 
