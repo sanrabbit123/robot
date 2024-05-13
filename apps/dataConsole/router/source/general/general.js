@@ -3661,7 +3661,8 @@ GeneralJs.prototype.greenBar = function () {
       child: {
         mode: "iframe",
         attribute: {
-          src: BACKHOST + "/email?entire=true&dataonly=true" + (typeof GeneralJs.returnGet().emailtarget === "string" ? ("&target=" + GeneralJs.returnGet().emailtarget) : ""),
+          src: "https://" + FILEHOST + ":6081/vnc_lite.html",
+          // src: BACKHOST + "/email?entire=true&dataonly=true" + (typeof GeneralJs.returnGet().emailtarget === "string" ? ("&target=" + GeneralJs.returnGet().emailtarget) : ""),
           width: String(100) + '%',
           height: String(100) + '%',
         },
