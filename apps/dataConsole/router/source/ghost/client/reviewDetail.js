@@ -517,10 +517,14 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   let contentsKeywords;
   let keywordsLeft;
   let thisVersion;
+  let mainMargin;
+  let photoRatio;
 
-  thisVersion = GeneralJs.returnGet().mode === undefined ? 0 : Number(GeneralJs.returnGet().mode);
+  thisVersion = instance.version;
 
   mainRatio = (10 / 16);
+  mainMargin = 64;
+  photoRatio = 0.5;
 
   mainHeight = <%% 800, 750, 710, 590, mainRatio * 100 %%>;
   mainBelowBarHeight = <%% 250, 250, 250, 216, 250 %%>;
@@ -546,7 +550,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   grayBarMargin = 16;
 
   keywordsLeft = 60;
-  satisBarLeft = 160;
+  satisBarLeft = thisVersion === 0 ? 177 : 188;
   satisBarHeight = 20;
   satisBarVisualTop = -0.5;
   satisLength = 10;
@@ -594,7 +598,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
     "수납",
     "화이트 우드",
     "자연스러운"
-  ]
+  ];
 
   mainTong = createNode({
     mother: totalContents,
@@ -617,11 +621,10 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       width: desktop ? String(standardWidth) + ea : String(100) + '%',
       left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
       top: String(0),
-      paddingBottom: String(64) + ea,
+      paddingBottom: String(mainMargin) + ea,
       borderBottom: String(borderWidth) + "px solid " + colorExtended.gray3,
     }
   });
-
 
   // left picture
   picture = createNode({
@@ -629,8 +632,8 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
     style: {
       display: desktop ? "inline-flex" : "block",
       position: desktop ? "relative" : "absolute",
-      width: desktop ? String(standardWidth / 2) + ea : String(100) + '%',
-      height: desktop ? String((standardWidth / 2) * mainRatio) + ea : String(100) + '%',
+      width: desktop ? String(standardWidth * photoRatio) + ea : String(100) + '%',
+      height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : String(100) + '%',
       borderRadius: String(boxRadius) + "px",
       backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
       backgroundSize: "100% auto",
@@ -641,22 +644,20 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
     }
   });
 
-
   // right box
   descriptionBox = createNode({
     mother: contentsBox,
     style: {
       display: "inline-flex",
       position: "relative",
-      width: withOut((standardWidth / 2) + photoRightMargin, ea),
-      height: desktop ? String((standardWidth / 2) * mainRatio) + ea : String(100) + '%',
+      width: withOut((standardWidth * photoRatio) + photoRightMargin, ea),
+      height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : String(100) + '%',
       verticalAlign: "top",
       flexDirection: "column",
       justifyContent: "start",
       alignItems: "start",
     }
   });
-
 
   // designer name and info
   designerInfoBox = createNode({
@@ -1371,7 +1372,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(valueColumnMargin) + ea,
               },
               child: {
-                text: serviceParsing(contents.service).replace(/(온라인|오프라인)[ ]*/gi, '').replace(/[ ]*(basic|mini|premium)/gi, '').trim(),
+                text: "오프라인",
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -1567,9 +1568,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                     style: {
                       display: "inline-flex",
                       position: "relative",
-                      borderRight: (index === arr.length - 1) ? "" : String(borderWidthLight) + "px solid " + colorExtended.black,
+                      borderRight: (index === arr.length - 1) ? "" : String(borderWidth) + "px solid " + colorExtended.blueLight,
                       boxSizing: "border-box",
                       width: "calc(100% / " + String(satisLength) + ")",
+                      opacity: String(0.9),
+                      "mix-blend-mode": "multiply",
                       height: withOut(0, ea),
                     }
                   };
@@ -1765,7 +1768,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         {
           style: {
             display: "inline-flex",
-            width: withOut(50, 0, ea),
+            width: withOut(100, 0, ea),
             height: withOut(0, ea),
             position: "relative",
             flexDirection: "row",
@@ -1808,14 +1811,14 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 width: withOut(valueColumnMargin, ea),
                 height: withOut(0, ea),
                 top: String(0),
-                right: String(valueColumnMargin) + ea,
+                right: String(0) + ea,
               },
               child: {
                 text: autoComma(6000) + "만원대",
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
+                  fontSize: String(18) + ea,
                   fontWeight: String(700),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
@@ -1825,96 +1828,96 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
             },
           ]
         },
-        {
-          style: {
-            display: "inline-flex",
-            width: String(50) + '%',
-            height: withOut(0, ea),
-            position: "relative",
-            flexDirection: "row",
-            justifyContent: "start",
-            alignItems: "start",
-          },
-          children: [
-            {
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                flexDirection: "row",
-                justifyContent: "start",
-                alignItems: "center",
-                textAlign: "right",
-                paddingLeft: String(valueColumnMargin) + ea,
-                width: withOut(valueColumnMargin, ea),
-                height: withOut(0, ea),
-              },
-              child: {
-                text: "평수",
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.black,
-                  top: String(-1) + ea,
-                },
-                bold: {
-                  fontSize: String(14) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.deactive,
-                }
-              }
-            },
-            {
-              style: {
-                display: "inline-flex",
-                position: "absolute",
-                flexDirection: "row",
-                justifyContent: "end",
-                alignItems: "center",
-                textAlign: "right",
-                width: withOut(0, ea),
-                height: withOut(0, ea),
-                top: String(0),
-                right: String(0) + ea,
-              },
-              child: {
-                text: String(contents.contents.portfolio.spaceInfo.pyeong) + "py&nbsp;&nbsp;<b%( %b><u%84m%u><s%2%s><b% )%b>",
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
-                  fontFamily: "pretendard",
-                  color: colorExtended.black,
-                  top: String(-1) + ea,
-                },
-                bold: {
-                  fontSize: String(16) + ea,
-                  fontWeight: String(600),
-                  fontFamily: "pretendard",
-                  color: colorExtended.mainBlue,
-                },
-                under: {
-                  fontSize: String(16) + ea,
-                  fontWeight: String(600),
-                  fontFamily: "pretendard",
-                  color: colorExtended.black,
-                },
-                special: {
-                  fontSize: String(9) + ea,
-                  fontWeight: String(600),
-                  fontFamily: "pretendard",
-                  color: colorExtended.black,
-                  position: "relative",
-                  top: String(-5) + ea,
-                },
-              }
-            },
-          ]
-        },
+        // {
+        //   style: {
+        //     display: "inline-flex",
+        //     width: String(50) + '%',
+        //     height: withOut(0, ea),
+        //     position: "relative",
+        //     flexDirection: "row",
+        //     justifyContent: "start",
+        //     alignItems: "start",
+        //   },
+        //   children: [
+        //     {
+        //       style: {
+        //         display: "inline-flex",
+        //         position: "relative",
+        //         flexDirection: "row",
+        //         justifyContent: "start",
+        //         alignItems: "center",
+        //         textAlign: "right",
+        //         paddingLeft: String(valueColumnMargin) + ea,
+        //         width: withOut(valueColumnMargin, ea),
+        //         height: withOut(0, ea),
+        //       },
+        //       child: {
+        //         text: "평수",
+        //         style: {
+        //           display: "inline-block",
+        //           position: "relative",
+        //           fontSize: String(16) + ea,
+        //           fontWeight: String(400),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.black,
+        //           top: String(-1) + ea,
+        //         },
+        //         bold: {
+        //           fontSize: String(14) + ea,
+        //           fontWeight: String(400),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.deactive,
+        //         }
+        //       }
+        //     },
+        //     {
+        //       style: {
+        //         display: "inline-flex",
+        //         position: "absolute",
+        //         flexDirection: "row",
+        //         justifyContent: "end",
+        //         alignItems: "center",
+        //         textAlign: "right",
+        //         width: withOut(0, ea),
+        //         height: withOut(0, ea),
+        //         top: String(0),
+        //         right: String(0) + ea,
+        //       },
+        //       child: {
+        //         text: String(contents.contents.portfolio.spaceInfo.pyeong) + "py&nbsp;&nbsp;<b%( %b><u%84m%u><s%2%s><b% )%b>",
+        //         style: {
+        //           display: "inline-block",
+        //           position: "relative",
+        //           fontSize: String(16) + ea,
+        //           fontWeight: String(700),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.black,
+        //           top: String(-1) + ea,
+        //         },
+        //         bold: {
+        //           fontSize: String(16) + ea,
+        //           fontWeight: String(600),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.mainBlue,
+        //         },
+        //         under: {
+        //           fontSize: String(16) + ea,
+        //           fontWeight: String(600),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.black,
+        //         },
+        //         special: {
+        //           fontSize: String(9) + ea,
+        //           fontWeight: String(600),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.black,
+        //           position: "relative",
+        //           top: String(-5) + ea,
+        //         },
+        //       }
+        //     },
+        //   ]
+        // },
       ]
     });
     // 2
@@ -1933,7 +1936,170 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         {
           style: {
             display: "inline-flex",
-            width: withOut(50, 0, ea),
+            width: withOut(100, 0, ea),
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "디자인비",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(0) + ea,
+              },
+              child: {
+                text: autoComma(231) + "만원",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+          ]
+        },
+        // {
+        //   style: {
+        //     display: "inline-flex",
+        //     width: String(50) + '%',
+        //     height: withOut(0, ea),
+        //     position: "relative",
+        //     flexDirection: "row",
+        //     justifyContent: "start",
+        //     alignItems: "start",
+        //   },
+        //   children: [
+        //     {
+        //       style: {
+        //         display: "inline-flex",
+        //         position: "relative",
+        //         flexDirection: "row",
+        //         justifyContent: "start",
+        //         alignItems: "center",
+        //         textAlign: "right",
+        //         paddingLeft: String(valueColumnMargin) + ea,
+        //         width: withOut(valueColumnMargin, ea),
+        //         height: withOut(0, ea),
+        //       },
+        //       child: {
+        //         text: "지역",
+        //         style: {
+        //           display: "inline-block",
+        //           position: "relative",
+        //           fontSize: String(16) + ea,
+        //           fontWeight: String(400),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.black,
+        //           top: String(-1) + ea,
+        //         },
+        //         bold: {
+        //           fontSize: String(14) + ea,
+        //           fontWeight: String(400),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.deactive,
+        //         },
+        //         special: {
+        //           fontSize: String(9) + ea,
+        //           fontWeight: String(400),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.deactive,
+        //           position: "relative",
+        //           top: String(-5) + ea,
+        //         },
+        //       }
+        //     },
+        //     {
+        //       style: {
+        //         display: "inline-flex",
+        //         position: "absolute",
+        //         flexDirection: "row",
+        //         justifyContent: "end",
+        //         alignItems: "center",
+        //         textAlign: "right",
+        //         width: withOut(0, ea),
+        //         height: withOut(0, ea),
+        //         top: String(0),
+        //         right: String(0) + ea,
+        //       },
+        //       child: {
+        //         text: contents.contents.portfolio.spaceInfo.region,
+        //         style: {
+        //           display: "inline-block",
+        //           position: "relative",
+        //           fontSize: String(16) + ea,
+        //           fontWeight: String(700),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.black,
+        //           top: String(-1) + ea,
+        //         },
+        //         special: {
+        //           fontSize: String(9) + ea,
+        //           fontWeight: String(700),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.black,
+        //           position: "relative",
+        //           top: String(-5) + ea,
+        //         },
+        //       }
+        //     },
+        //   ]
+        // },
+      ]
+    });
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            width: withOut(100, 0, ea),
             height: withOut(0, ea),
             position: "relative",
             flexDirection: "row",
@@ -1976,7 +2142,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 width: withOut(valueColumnMargin, ea),
                 height: withOut(0, ea),
                 top: String(0),
-                right: String(valueColumnMargin) + ea,
+                right: String(0) + ea,
               },
               child: {
                 text: autoComma(4000) + "만원대",
@@ -1993,92 +2159,92 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
             },
           ]
         },
-        {
-          style: {
-            display: "inline-flex",
-            width: String(50) + '%',
-            height: withOut(0, ea),
-            position: "relative",
-            flexDirection: "row",
-            justifyContent: "start",
-            alignItems: "start",
-          },
-          children: [
-            {
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                flexDirection: "row",
-                justifyContent: "start",
-                alignItems: "center",
-                textAlign: "right",
-                paddingLeft: String(valueColumnMargin) + ea,
-                width: withOut(valueColumnMargin, ea),
-                height: withOut(0, ea),
-              },
-              child: {
-                text: "지역",
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.black,
-                  top: String(-1) + ea,
-                },
-                bold: {
-                  fontSize: String(14) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.deactive,
-                },
-                special: {
-                  fontSize: String(9) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.deactive,
-                  position: "relative",
-                  top: String(-5) + ea,
-                },
-              }
-            },
-            {
-              style: {
-                display: "inline-flex",
-                position: "absolute",
-                flexDirection: "row",
-                justifyContent: "end",
-                alignItems: "center",
-                textAlign: "right",
-                width: withOut(0, ea),
-                height: withOut(0, ea),
-                top: String(0),
-                right: String(0) + ea,
-              },
-              child: {
-                text: contents.contents.portfolio.spaceInfo.region,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
-                  fontFamily: "pretendard",
-                  color: colorExtended.black,
-                  top: String(-1) + ea,
-                },
-                special: {
-                  fontSize: String(9) + ea,
-                  fontWeight: String(700),
-                  fontFamily: "pretendard",
-                  color: colorExtended.black,
-                  position: "relative",
-                  top: String(-5) + ea,
-                },
-              }
-            },
-          ]
-        },
+        // {
+        //   style: {
+        //     display: "inline-flex",
+        //     width: String(50) + '%',
+        //     height: withOut(0, ea),
+        //     position: "relative",
+        //     flexDirection: "row",
+        //     justifyContent: "start",
+        //     alignItems: "start",
+        //   },
+        //   children: [
+        //     {
+        //       style: {
+        //         display: "inline-flex",
+        //         position: "relative",
+        //         flexDirection: "row",
+        //         justifyContent: "start",
+        //         alignItems: "center",
+        //         textAlign: "right",
+        //         paddingLeft: String(valueColumnMargin) + ea,
+        //         width: withOut(valueColumnMargin, ea),
+        //         height: withOut(0, ea),
+        //       },
+        //       child: {
+        //         text: "지역",
+        //         style: {
+        //           display: "inline-block",
+        //           position: "relative",
+        //           fontSize: String(16) + ea,
+        //           fontWeight: String(400),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.black,
+        //           top: String(-1) + ea,
+        //         },
+        //         bold: {
+        //           fontSize: String(14) + ea,
+        //           fontWeight: String(400),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.deactive,
+        //         },
+        //         special: {
+        //           fontSize: String(9) + ea,
+        //           fontWeight: String(400),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.deactive,
+        //           position: "relative",
+        //           top: String(-5) + ea,
+        //         },
+        //       }
+        //     },
+        //     {
+        //       style: {
+        //         display: "inline-flex",
+        //         position: "absolute",
+        //         flexDirection: "row",
+        //         justifyContent: "end",
+        //         alignItems: "center",
+        //         textAlign: "right",
+        //         width: withOut(0, ea),
+        //         height: withOut(0, ea),
+        //         top: String(0),
+        //         right: String(0) + ea,
+        //       },
+        //       child: {
+        //         text: contents.contents.portfolio.spaceInfo.region,
+        //         style: {
+        //           display: "inline-block",
+        //           position: "relative",
+        //           fontSize: String(16) + ea,
+        //           fontWeight: String(700),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.black,
+        //           top: String(-1) + ea,
+        //         },
+        //         special: {
+        //           fontSize: String(9) + ea,
+        //           fontWeight: String(700),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.black,
+        //           position: "relative",
+        //           top: String(-5) + ea,
+        //         },
+        //       }
+        //     },
+        //   ]
+        // },
       ]
     });
     // 3
@@ -2097,7 +2263,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         {
           style: {
             display: "inline-flex",
-            width: withOut(50, 0, ea),
+            width: withOut(100, 0, ea),
             height: withOut(0, ea),
             position: "relative",
             flexDirection: "row",
@@ -2140,7 +2306,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 width: withOut(valueColumnMargin, ea),
                 height: withOut(0, ea),
                 top: String(0),
-                right: String(valueColumnMargin) + ea,
+                right: String(0) + ea,
               },
               child: {
                 text: autoComma(2000) + "만원대",
@@ -2157,92 +2323,92 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
             },
           ]
         },
-        {
-          style: {
-            display: "inline-flex",
-            width: String(50) + '%',
-            height: withOut(0, ea),
-            position: "relative",
-            flexDirection: "row",
-            justifyContent: "start",
-            alignItems: "start",
-          },
-          children: [
-            {
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                flexDirection: "row",
-                justifyContent: "start",
-                alignItems: "center",
-                textAlign: "right",
-                paddingLeft: String(valueColumnMargin) + ea,
-                width: withOut(valueColumnMargin, ea),
-                height: withOut(0, ea),
-              },
-              child: {
-                text: "현장명",
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.black,
-                  top: String(-1) + ea,
-                },
-                bold: {
-                  fontSize: String(14) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.deactive,
-                },
-                special: {
-                  fontSize: String(9) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.deactive,
-                  position: "relative",
-                  top: String(-5) + ea,
-                },
-              }
-            },
-            {
-              style: {
-                display: "inline-flex",
-                position: "absolute",
-                flexDirection: "row",
-                justifyContent: "end",
-                alignItems: "center",
-                textAlign: "right",
-                width: withOut(0, ea),
-                height: withOut(0, ea),
-                top: String(0),
-                right: String(0) + ea,
-              },
-              child: {
-                text: contents.contents.portfolio.spaceInfo.space,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
-                  fontFamily: "pretendard",
-                  color: colorExtended.black,
-                  top: String(-1) + ea,
-                },
-                special: {
-                  fontSize: String(9) + ea,
-                  fontWeight: String(700),
-                  fontFamily: "pretendard",
-                  color: colorExtended.black,
-                  position: "relative",
-                  top: String(-5) + ea,
-                },
-              }
-            },
-          ]
-        },
+        // {
+        //   style: {
+        //     display: "inline-flex",
+        //     width: String(50) + '%',
+        //     height: withOut(0, ea),
+        //     position: "relative",
+        //     flexDirection: "row",
+        //     justifyContent: "start",
+        //     alignItems: "start",
+        //   },
+        //   children: [
+        //     {
+        //       style: {
+        //         display: "inline-flex",
+        //         position: "relative",
+        //         flexDirection: "row",
+        //         justifyContent: "start",
+        //         alignItems: "center",
+        //         textAlign: "right",
+        //         paddingLeft: String(valueColumnMargin) + ea,
+        //         width: withOut(valueColumnMargin, ea),
+        //         height: withOut(0, ea),
+        //       },
+        //       child: {
+        //         text: "현장명",
+        //         style: {
+        //           display: "inline-block",
+        //           position: "relative",
+        //           fontSize: String(16) + ea,
+        //           fontWeight: String(400),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.black,
+        //           top: String(-1) + ea,
+        //         },
+        //         bold: {
+        //           fontSize: String(14) + ea,
+        //           fontWeight: String(400),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.deactive,
+        //         },
+        //         special: {
+        //           fontSize: String(9) + ea,
+        //           fontWeight: String(400),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.deactive,
+        //           position: "relative",
+        //           top: String(-5) + ea,
+        //         },
+        //       }
+        //     },
+        //     {
+        //       style: {
+        //         display: "inline-flex",
+        //         position: "absolute",
+        //         flexDirection: "row",
+        //         justifyContent: "end",
+        //         alignItems: "center",
+        //         textAlign: "right",
+        //         width: withOut(0, ea),
+        //         height: withOut(0, ea),
+        //         top: String(0),
+        //         right: String(0) + ea,
+        //       },
+        //       child: {
+        //         text: contents.contents.portfolio.spaceInfo.space,
+        //         style: {
+        //           display: "inline-block",
+        //           position: "relative",
+        //           fontSize: String(16) + ea,
+        //           fontWeight: String(700),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.black,
+        //           top: String(-1) + ea,
+        //         },
+        //         special: {
+        //           fontSize: String(9) + ea,
+        //           fontWeight: String(700),
+        //           fontFamily: "pretendard",
+        //           color: colorExtended.black,
+        //           position: "relative",
+        //           top: String(-5) + ea,
+        //         },
+        //       }
+        //     },
+        //   ]
+        // },
       ]
     });
     // 4 - gray bar
@@ -2704,9 +2870,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                     style: {
                       display: "inline-flex",
                       position: "relative",
-                      borderRight: (index === arr.length - 1) ? "" : String(borderWidthLight) + "px solid " + colorExtended.black,
+                      borderRight: (index === arr.length - 1) ? "" : String(borderWidth) + "px solid " + colorExtended.blueLight,
                       boxSizing: "border-box",
                       width: "calc(100% / " + String(satisLength) + ")",
+                      opacity: String(0.9),
+                      "mix-blend-mode": "multiply",
                       height: withOut(0, ea),
                     }
                   };
@@ -2736,6 +2904,1011 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
     });
 
   }
+
+}
+
+ReviewDetailJs.prototype.reviewDetailBox = function () {
+  const instance = this;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, serviceParsing, variableArray, autoComma } = GeneralJs;
+  const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
+  const { contentsArr } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
+  const photoChar = 't';
+  const photoCharMobile = "mot";
+  let mainHeight;
+  let mainTong;
+  let mainBelowBarHeight;
+  let contentsBox;
+  let pictureWidth, pictureHeight;
+  let picture;
+  let bottomVisual;
+  let photoRightMargin;
+  let textTong;
+  let quoteHeight, quoteWidth;
+  let quoteTop;
+  let quotePaddingLeft;
+  let topReviewSize, topReviewWeight;
+  let mainTitleSize, mainTitleWeight;
+  let mainTitleLineHeight;
+  let mainTitleMarginTop;
+  let subTitleSize, subTitleWeight;
+  let subTitleMarginTop;
+  let subLineWidth, subLineHeight, subLineLeft;
+  let bottomWordingVisualBottom;
+  let bottomWordingLineHeight;
+  let mobileWhiteBoxTop, mobileWhiteBoxLeft;
+  let mobileWhiteBoxWidth, mobileWhiteBoxHeight;
+  let mobileWordingLeft;
+  let borderWidth;
+  let descriptionBox;
+  let designerInfoBox;
+  let designerSpacePhotoWidth;
+  let boxRadius;
+  let designerSpacePhotoMarginRight;
+  let designerDescriptionBox;
+  let barBlank;
+  let barMargin;
+  let mainRatio;
+  let valueColumnMargin;
+  let valueBlockHeight;
+  let borderWidthLight;
+  let grayBarMargin;
+  let barMarginBottom;
+  let satisBarLeft, satisBarHeight;
+  let satisBarVisualTop;
+  let satisLength;
+  let contentsKeywords;
+  let keywordsLeft;
+  let thisVersion;
+  let mainMargin;
+  let photoRatio;
+  let titleBox;
+  let grayLineBoxMarginTop, grayLineBoxBetween;
+  let grayLineBoxPaddingTop;
+  let grayLineBoxPaddingLeft;
+  let thisContents;
+
+  thisVersion = instance.version;
+
+  mainRatio = (10 / 16);
+  mainMargin = 128;
+  photoRatio = 0.75;
+
+  mainHeight = <%% 800, 750, 710, 590, mainRatio * 100 %%>;
+  mainBelowBarHeight = <%% 250, 250, 250, 216, 250 %%>;
+
+  contentsBoxTop = <%% 70, 70, 70, 70, 0 %%>;
+  contentsBoxWidth = <%% 1200, 1050, 900, 720, 1200 %%>;
+
+  bottomVisual = <%% 6, 6, 6, 6, 6 %%>;
+
+  pictureWidth = <%% 820, 720, 610, 480, 610 %%>;
+  pictureHeight = mainHeight - (contentsBoxTop * 2) - bottomVisual;
+
+  boxRadius = 15;
+
+  photoRightMargin = 40;
+  designerSpacePhotoWidth = 100;
+  designerSpacePhotoMarginRight = 20;
+
+  barMargin = 30;
+  barMarginBottom = 30;
+  valueColumnMargin = 22;
+  valueBlockHeight = 45;
+  grayBarMargin = 16;
+
+  keywordsLeft = 60;
+  satisBarLeft = 130;
+  satisBarHeight = 20;
+  satisBarVisualTop = -0.5;
+  satisLength = 10;
+
+  quoteHeight = <%% 14, 14, 13, 11, 1.8 %%>;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
+  quoteTop = <%% 140, 135, 125, 80, 5 %%>;
+  quotePaddingLeft = <%% 2, 2, 2, 2, 5.4 %%>;
+
+  topReviewSize = <%% 16, 16, 15, 14, 15 %%>;
+  topReviewWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  mainTitleSize = <%% 36, 35, 33, 29, 4.5 %%>;
+  mainTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
+  mainTitleLineHeight = <%% 1.16, 1.16, 1.16, 1.16, 1.2 %%>;
+  mainTitleMarginTop = <%% 7, 7, 7, 5, 8.5 %%>;
+
+  subTitleSize = <%% 18, 17, 17, 15, 3 %%>;
+  subTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  subTitleMarginTop = <%% 17, 17, 16, 13, 20 %%>;
+
+  subLineWidth = <%% 170, 120, 95, 65, 95 %%>;
+  subLineHeight = <%% (isMac() ? 11 : 9), (isMac() ? 11 : 9), (isMac() ? 11 : 9), (isMac() ? 10 : 8), 11 %%>;
+  subLineLeft = <%% 160, 150, 150, 135, 150 %%>;
+
+  bottomWordingVisualBottom = <%% (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4), -2 %%>;
+  bottomWordingLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+
+  mobileWhiteBoxTop = 20;
+  mobileWhiteBoxLeft = 8;
+  mobileWhiteBoxWidth = 38;
+  mobileWhiteBoxHeight = 30;
+
+  mobileWordingLeft = 5.3;
+
+  borderWidth = 1.5;
+  borderWidthLight = 1;
+
+  grayLineBoxMarginTop = 22;
+  grayLineBoxBetween = 10;
+  grayLineBoxPaddingTop = 20;
+  grayLineBoxPaddingLeft = 24;
+
+
+  barBlank = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
+  thisContents = [
+    "고객님의 공간은 사무실의 멀티룸 공간으로 일반 사무를 보는 공간이 아닌, 직원들이 쉬고 가볍게 회의하는 공간을 구성하고자 하셨습니다.",
+    "선호하시는 스타일로는 대표님의 취향이 어둡고 무게감 있는 분위기를 원하신다고 하셨는데,시공이 들아갈 수 없는 현장이라 가구톤을 어두운 월넛톤과 블랙 금속이 여기저기 매치되도록 구성하였습니다.",
+    "그리고 너무 다운되는 분위기를 막을 수 있도록 패브릭은 밝고 차분한 톤으로 매치 하였습니다.",
+  ];
+
+  contentsKeywords = [
+    "밝은",
+    "편안한 톤",
+    "가성비 있게",
+    "수납",
+    "화이트 우드",
+    "자연스러운"
+  ];
+
+  mainTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      background: colorExtended.white,
+      animation: "fadeupdelay 0.5s ease forwards",
+    },
+  });
+
+  // total base
+  contentsBox = createNode({
+    mother: mainTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "row",
+      width: desktop ? String(standardWidth) + ea : String(100) + '%',
+      left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
+      top: String(0),
+      paddingTop: String(mainMargin) + ea,
+      paddingBottom: String(60) + ea,
+    }
+  });
+
+  // left picture
+  picture = createNode({
+    mother: contentsBox,
+    style: {
+      display: desktop ? "inline-flex" : "block",
+      position: desktop ? "relative" : "absolute",
+      width: desktop ? String(standardWidth * photoRatio) + ea : String(100) + '%',
+      height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : String(100) + '%',
+      borderRadius: String(boxRadius) + "px",
+      backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(1) + pid + ".jpg" + "')",
+      backgroundSize: "100% auto",
+      backgroundPosition: "50% 50%",
+      boxShadow: desktop ? "0px 8px 22px -15px " + colorChip.shadow : "",
+      marginRight: String(photoRightMargin) + ea,
+      verticalAlign: "top",
+    }
+  });
+
+  // right box
+  descriptionBox = createNode({
+    mother: contentsBox,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: withOut((standardWidth * photoRatio) + photoRightMargin, ea),
+      height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : String(100) + '%',
+      verticalAlign: "top",
+      flexDirection: "column",
+      justifyContent: "start",
+      alignItems: "start",
+    }
+  });
+
+  titleBox = createNode({
+    mother: descriptionBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+    },
+    child: {
+      text: [
+        "전문가를 이용하는 과정이",
+        "확실히 편한 것 같아요."
+      ].join("\n"),
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(21) + ea,
+        fontWeight: String(700),
+        color: colorExtended.black,
+        fontFamily: "pretendard",
+      }
+    }
+  });
+
+  createNode({
+    mother: descriptionBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(grayLineBoxPaddingLeft * 2, ea),
+      height: withOut(grayLineBoxMarginTop + titleBox.getBoundingClientRect().height + (grayLineBoxPaddingTop * 2) + 22 + 22 + (30 * 6) + 6, ea),
+      marginTop: String(grayLineBoxMarginTop) + ea,
+      border: "1px solid " + colorExtended.gray3,
+      borderRadius: String(12) + "px",
+      paddingLeft: String(grayLineBoxPaddingLeft) + ea,
+      paddingRight: String(grayLineBoxPaddingLeft) + ea,
+      paddingTop: String(grayLineBoxPaddingTop) + ea,
+      paddingBottom: String(grayLineBoxPaddingTop) + ea,
+      flexDirection: "column",
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "center",
+          paddingBottom: String(6) + ea,
+          borderBottom: String(borderWidth) + "px solid " + colorExtended.black,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(10) + ea,
+              height: String(10) + ea,
+              borderRadius: String(2) + "px",
+              background: colorExtended.black,
+              marginRight: String(4) + ea,
+            }
+          },
+          {
+            text: "DESIGNER's COMMENT",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(15) + ea,
+              fontWeight: String(700),
+              color: colorExtended.black,
+              top: String(1) + ea,
+              fontFamily: "mont",
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "start",
+          paddingTop: String(12) + ea,
+          height: withOut(26.5, ea),
+          overflow: "scroll",
+        },
+        children: [
+          {
+            text: thisContents.join("\n\n"),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(14) + ea,
+              fontWeight: String(400),
+              color: colorExtended.black,
+              fontFamily: "pretendard",
+              lineHeight: String(1.6),
+            }
+          }
+        ]
+      },
+    ]
+  });
+  createNode({
+    mother: descriptionBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(barMargin) + ea,
+      flexDirection: "row",
+      justifyContent: "start",
+      alignItems: "start",
+      marginTop: String(22) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          position: "relative",
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "start",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              flexDirection: "row",
+              justifyContent: "start",
+              alignItems: "center",
+              textAlign: "right",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+            },
+            child: {
+              text: "제품 제안 만족도",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(16) + ea,
+                fontWeight: String(400),
+                fontFamily: "pretendard",
+                color: colorExtended.black,
+                top: String(-1) + ea,
+              },
+              bold: {
+                fontSize: String(16) + ea,
+                fontWeight: String(700),
+                fontFamily: "pretendard",
+                color: colorExtended.black,
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              flexDirection: "row",
+              justifyContent: "start",
+              alignItems: "center",
+              textAlign: "right",
+              top: String(0),
+              left: String(satisBarLeft) + ea,
+              width: withOut(satisBarLeft, ea),
+              height: withOut(0, ea),
+            },
+            child: {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: withOut(0, ea),
+                height: String(satisBarHeight) + ea,
+                borderRadius: String(satisBarHeight) + ea,
+                border: String(borderWidth) + "px solid " + colorExtended.black,
+                boxSizing: "border-box",
+                top: String(satisBarVisualTop) + ea,
+                flexDirection: "row",
+                overflow: "hidden",
+              },
+              children: variableArray(satisLength).map((i, index, arr) => {
+                const obj = {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    borderRight: (index === arr.length - 1) ? "" : String(borderWidth) + "px solid " + colorExtended.blueLight,
+                    boxSizing: "border-box",
+                    width: "calc(100% / " + String(satisLength) + ")",
+                    opacity: String(0.9),
+                    "mix-blend-mode": "multiply",
+                    height: withOut(0, ea),
+                  }
+                };
+
+                if (index === 0) {
+                  obj.previous = {
+                    style: {
+                      display: "inline-flex",
+                      position: "absolute",
+                      top: String(0),
+                      left: String(0),
+                      width: "calc(" + String(84) + "%)",
+                      height: withOut(0, ea),
+                      borderRadius: String(satisBarHeight) + ea,
+                      background: colorExtended.gradientBlue,
+                    }
+                  };
+                }
+
+                return obj;
+              })
+            }
+          },
+        ]
+      },
+    ]
+  });
+  createNode({
+    mother: descriptionBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(barMargin) + ea,
+      flexDirection: "row",
+      justifyContent: "start",
+      alignItems: "start",
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          position: "relative",
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "start",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              flexDirection: "row",
+              justifyContent: "start",
+              alignItems: "center",
+              textAlign: "right",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+            },
+            child: {
+              text: "디자인 만족도",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(16) + ea,
+                fontWeight: String(400),
+                fontFamily: "pretendard",
+                color: colorExtended.black,
+                top: String(-1) + ea,
+              },
+              bold: {
+                fontSize: String(16) + ea,
+                fontWeight: String(700),
+                fontFamily: "pretendard",
+                color: colorExtended.black,
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              flexDirection: "row",
+              justifyContent: "start",
+              alignItems: "center",
+              textAlign: "right",
+              top: String(0),
+              left: String(satisBarLeft) + ea,
+              width: withOut(satisBarLeft, ea),
+              height: withOut(0, ea),
+            },
+            child: {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: withOut(0, ea),
+                height: String(satisBarHeight) + ea,
+                borderRadius: String(satisBarHeight) + ea,
+                border: String(borderWidth) + "px solid " + colorExtended.black,
+                boxSizing: "border-box",
+                top: String(satisBarVisualTop) + ea,
+                flexDirection: "row",
+                overflow: "hidden",
+              },
+              children: variableArray(satisLength).map((i, index, arr) => {
+                const obj = {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    borderRight: (index === arr.length - 1) ? "" : String(borderWidth) + "px solid " + colorExtended.blueLight,
+                    boxSizing: "border-box",
+                    width: "calc(100% / " + String(satisLength) + ")",
+                    opacity: String(0.9),
+                    "mix-blend-mode": "multiply",
+                    height: withOut(0, ea),
+                  }
+                };
+
+                if (index === 0) {
+                  obj.previous = {
+                    style: {
+                      display: "inline-flex",
+                      position: "absolute",
+                      top: String(0),
+                      left: String(0),
+                      width: "calc(" + String(84) + "%)",
+                      height: withOut(0, ea),
+                      borderRadius: String(satisBarHeight) + ea,
+                      background: colorExtended.gradientBlue,
+                    }
+                  };
+                }
+
+                return obj;
+              })
+            }
+          },
+        ]
+      },
+    ]
+  });
+  createNode({
+    mother: descriptionBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(barMargin) + ea,
+      flexDirection: "row",
+      justifyContent: "start",
+      alignItems: "start",
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          position: "relative",
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "start",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              flexDirection: "row",
+              justifyContent: "start",
+              alignItems: "center",
+              textAlign: "right",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+            },
+            child: {
+              text: "소통 방식 만족도",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(16) + ea,
+                fontWeight: String(400),
+                fontFamily: "pretendard",
+                color: colorExtended.black,
+                top: String(-1) + ea,
+              },
+              bold: {
+                fontSize: String(16) + ea,
+                fontWeight: String(700),
+                fontFamily: "pretendard",
+                color: colorExtended.black,
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              flexDirection: "row",
+              justifyContent: "start",
+              alignItems: "center",
+              textAlign: "right",
+              top: String(0),
+              left: String(satisBarLeft) + ea,
+              width: withOut(satisBarLeft, ea),
+              height: withOut(0, ea),
+            },
+            child: {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: withOut(0, ea),
+                height: String(satisBarHeight) + ea,
+                borderRadius: String(satisBarHeight) + ea,
+                border: String(borderWidth) + "px solid " + colorExtended.black,
+                boxSizing: "border-box",
+                top: String(satisBarVisualTop) + ea,
+                flexDirection: "row",
+                overflow: "hidden",
+              },
+              children: variableArray(satisLength).map((i, index, arr) => {
+                const obj = {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    borderRight: (index === arr.length - 1) ? "" : String(borderWidth) + "px solid " + colorExtended.blueLight,
+                    boxSizing: "border-box",
+                    width: "calc(100% / " + String(satisLength) + ")",
+                    opacity: String(0.9),
+                    "mix-blend-mode": "multiply",
+                    height: withOut(0, ea),
+                  }
+                };
+
+                if (index === 0) {
+                  obj.previous = {
+                    style: {
+                      display: "inline-flex",
+                      position: "absolute",
+                      top: String(0),
+                      left: String(0),
+                      width: "calc(" + String(84) + "%)",
+                      height: withOut(0, ea),
+                      borderRadius: String(satisBarHeight) + ea,
+                      background: colorExtended.gradientBlue,
+                    }
+                  };
+                }
+
+                return obj;
+              })
+            }
+          },
+        ]
+      },
+    ]
+  });
+  createNode({
+    mother: descriptionBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(barMargin) + ea,
+      flexDirection: "row",
+      justifyContent: "start",
+      alignItems: "start",
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          position: "relative",
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "start",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              flexDirection: "row",
+              justifyContent: "start",
+              alignItems: "center",
+              textAlign: "right",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+            },
+            child: {
+              text: "운영 방식 만족도",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(16) + ea,
+                fontWeight: String(400),
+                fontFamily: "pretendard",
+                color: colorExtended.black,
+                top: String(-1) + ea,
+              },
+              bold: {
+                fontSize: String(16) + ea,
+                fontWeight: String(700),
+                fontFamily: "pretendard",
+                color: colorExtended.black,
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              flexDirection: "row",
+              justifyContent: "start",
+              alignItems: "center",
+              textAlign: "right",
+              top: String(0),
+              left: String(satisBarLeft) + ea,
+              width: withOut(satisBarLeft, ea),
+              height: withOut(0, ea),
+            },
+            child: {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: withOut(0, ea),
+                height: String(satisBarHeight) + ea,
+                borderRadius: String(satisBarHeight) + ea,
+                border: String(borderWidth) + "px solid " + colorExtended.black,
+                boxSizing: "border-box",
+                top: String(satisBarVisualTop) + ea,
+                flexDirection: "row",
+                overflow: "hidden",
+              },
+              children: variableArray(satisLength).map((i, index, arr) => {
+                const obj = {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    borderRight: (index === arr.length - 1) ? "" : String(borderWidth) + "px solid " + colorExtended.blueLight,
+                    boxSizing: "border-box",
+                    width: "calc(100% / " + String(satisLength) + ")",
+                    opacity: String(0.9),
+                    "mix-blend-mode": "multiply",
+                    height: withOut(0, ea),
+                  }
+                };
+
+                if (index === 0) {
+                  obj.previous = {
+                    style: {
+                      display: "inline-flex",
+                      position: "absolute",
+                      top: String(0),
+                      left: String(0),
+                      width: "calc(" + String(84) + "%)",
+                      height: withOut(0, ea),
+                      borderRadius: String(satisBarHeight) + ea,
+                      background: colorExtended.gradientBlue,
+                    }
+                  };
+                }
+
+                return obj;
+              })
+            }
+          },
+        ]
+      },
+    ]
+  });
+
+  createNode({
+    mother: descriptionBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(22) + ea,
+      flexDirection: "row",
+      justifyContent: "start",
+      alignItems: "start",
+    }
+  });
+  createNode({
+    mother: descriptionBox,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(barMargin) + ea,
+      flexDirection: "row",
+      justifyContent: "start",
+      alignItems: "start",
+      marginBottom: String(-6) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          position: "relative",
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "start",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              textAlign: "left",
+              top: String(0),
+              left: String(-4) + ea,
+              width: withOut(0 - (-4), ea),
+              height: withOut(0, ea),
+            },
+            child: {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                textAlign: "left",
+              },
+              children: contentsKeywords.map((str, index, arr) => {
+                return {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    height: withOut(0, ea),
+                    borderRadius: String(30) + ea,
+                    paddingLeft: String(14) + ea,
+                    paddingRight: String(14) + ea,
+                    boxSizing: "border-box",
+                    border: String(borderWidth) + "px solid " + colorExtended.gray3,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginLeft: String(4) + ea,
+                    marginBottom: String(6) + ea,
+                  },
+                  child: {
+                    text: "<b%#%b> " + str,
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      fontSize: String(12.5) + ea,
+                      fontWeight: String(700),
+                      fontFamily: "pretendard",
+                      color: colorExtended.mainBlue,
+                      top: String(-1) + ea,
+                    },
+                    bold: {
+                      fontSize: String(12.5) + ea,
+                      fontWeight: String(400),
+                      fontFamily: "pretendard",
+                      color: colorExtended.blueLight,
+                    }
+                  }
+                }
+              })
+            }
+          },
+        ]
+      },
+    ]
+  });
+
+  // bottom box
+  createNode({
+    mother: mainTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "row",
+      width: desktop ? String(standardWidth) + ea : String(100) + '%',
+      left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
+      marginBottom: String(mainMargin) + ea,
+      height: String(160) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(15 * 4) + ea,
+          height: withOut(0, ea),
+          borderRadius: String(15) + "px",
+          boxSizing: "border-box",
+          border: String(borderWidth) + "px solid " + colorExtended.black,
+          borderRight: "0",
+          zIndex: String(1),
+        }
+      },
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          top: String(0),
+          right: String(0),
+          width: String(15 * 4) + ea,
+          height: withOut(0, ea),
+          borderRadius: String(15) + "px",
+          boxSizing: "border-box",
+          border: String(borderWidth) + "px solid " + colorExtended.black,
+          borderLeft: "0",
+          zIndex: String(1),
+        }
+      },
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          top: String(-1) + ea,
+          left: String(15) + "px",
+          width: withOut(15 * 2, ea),
+          height: String(10) + ea,
+          background: colorExtended.white,
+          zIndex: String(1),
+        }
+      },
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          bottom: String(-1) + ea,
+          left: String(15) + "px",
+          width: withOut(15 * 2, ea),
+          height: String(10) + ea,
+          background: colorExtended.white,
+          zIndex: String(1),
+        }
+      },
+      {
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          position: "relative",
+          width: withOut(1.5 * 2, ea),
+          height: String(160 - (10 * 2)) + ea,
+          top: String(10) + ea,
+          left: String(1.5) + ea,
+          overflow: "scroll",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        child: {
+          style: {
+            display: "flex",
+            flexDirection: "row",
+            position: "relative",
+            width: String(500) + "%",
+            height: withOut(0, ea),
+          },
+          children: contents.photos.detail.map((o) => {
+            const { index, gs } = o;
+            const src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
+            return {
+              mode: "img",
+              attribute: { src },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                height: withOut(0, ea),
+                marginLeft: String(6) + ea,
+                borderRadius: String(8) + "px",
+              }
+            }
+          })
+        }
+      }
+    ]
+  });
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "row",
+      width: desktop ? String(standardWidth) + ea : String(100) + '%',
+      left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
+      borderBottom: String(borderWidth) + "px solid " + colorExtended.gray3,
+    },
+  })
 
 }
 
@@ -3002,7 +4175,7 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
           display: "inline-block",
           marginBottom: String(photoMargin) + ea,
           marginRight: String(garo ? 0 : (num % 2 === 0 ? photoMargin : 0)) + ea,
-          borderRadius: String(desktop ? 3 : 0) + "px",
+          borderRadius: String(desktop ? 15 : 0) + "px",
         }
       });
       if (!garo) {
@@ -3814,7 +4987,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       display: "block",
       position: "relative",
       width: withOut(0),
-      background: colorChip.gray2,
+      background: colorExtended.gray1,
       height: String(shareTongHeight) + ea,
     }
   });
@@ -4017,9 +5190,9 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      background: colorChip.gray0,
+      background: colorExtended.gray0,
       paddingTop: String(mainPaddingTop) + ea,
-      paddingBottom: String(mainPaddingBottom) + ea,
+      paddingBottom: String(150) + ea,
     }
   });
 
@@ -4045,24 +5218,14 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
     },
     children: [
       {
-        style: {
-          position: "absolute",
-          width: withOut(baseBetween, ea),
-          height: String(titleLineHeight) + ea,
-          top: String(0),
-          left: String(baseBetween / 2) + ea,
-          borderBottom: "1px dashed " + colorChip.gray3,
-        }
-      },
-      {
         text: "유사한 고객 후기",
         style: {
           fontSize: String(mainTitleSize) + ea,
           fontWeight: String(mainTitleWeight),
           color: colorChip.black,
           display: "inline-block",
-          background: colorChip.gray0,
           position: "absolute",
+          fontFamily: "pretendard",
           top: String(mainTitleTop) + ea,
           textAlign: "center",
           width: String(mainTitleWidth) + ea,
@@ -4186,67 +5349,6 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       }
     ]
   }).firstChild;
-
-  belowTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      textAlign: "Center",
-      position: "relative",
-      width: String(100) + '%',
-      background: colorChip.gray2,
-      height: String(belowBoxHeight) + ea,
-    }
-  });
-
-  belowBaseTong = createNode({
-    mother: belowTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      textAlign: "center",
-    }
-  });
-
-  createNode({
-    mother: belowBaseTong,
-    class: [ "consultingButtonBottom" ],
-    event: {
-      click: (e) => {
-        selfHref(FRONTHOST + "/consulting.php");
-      }
-    },
-    style: {
-      display: "inline-flex",
-      justifyContent: "center",
-      alignItems: "center",
-      textAlign: "center",
-      position: "relative",
-      height: String(belowButtonHeight) + ea,
-      background: colorChip.white,
-      borderRadius: String(5) + "px",
-      marginRight: String(belowButtonBetween) + ea,
-      paddingLeft: String(belowButtonWordPadding) + ea,
-      paddingRight: String(belowButtonWordPadding) + ea,
-      cursor: "pointer",
-    },
-    children: [
-      {
-        text: "홈스타일링 신청하기",
-        style: {
-          position: "relative",
-          textAlign: "center",
-          fontSize: String(belowButtonSize) + ea,
-          fontWeight: String(belowButtonWeight),
-          color: colorChip.black,
-          top: String(belowButtonTextTop) + ea,
-        }
-      }
-    ]
-  });
 
   setQueue(async () => {
     try {
@@ -4405,312 +5507,205 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
     }
   }, 1000);
 
-  // photo
 
+}
+
+ReviewDetailJs.prototype.reviewDesignerBox = function () {
+  const instance = this;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue } = GeneralJs;
+  const { totalContents, naviHeight, ea, media, pid } = this;
+  const { contentsArr, designers } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
+  const { contents: { review }, photos } = contents;
+  const { detail: photoDetail } = photos;
+  const { contents: { detail } } = review;
+  const [ { contents: customerStoryMother } ] = detail;
+  const designer = designers.search("desid", contents.desid);
+  const story = equalJson(JSON.stringify(detail));
+  const photoChar = 't';
+  const photoCharMobile = "mot";
+  const touchStartConst = "touchStartConstName";
+  const today = new Date();
+  let mainTong;
+  let mainWidth;
+  let mainPaddingTop;
+  let titleSize, titleWeight;
+  let titleLineHeight;
+  let titleBarMarginTop, titleBarWidth;
+  let contentsSize, contentsWeight;
+  let contentsLineHeight;
+  let customerPaddingLeft, customerMarginTop;
+  let customerSize, customerWeight;
+  let customerTop, customerLineHeight;
+  let customerStory;
+  let src;
+  let garo;
+  let num;
+  let photoMargin;
+  let blankMargin, blankMargin2;
+  let totalNum;
+  let blankMarginFirst;
+  let contentsPadding;
+  let wordingTop;
+  let questionMargin, answerMargin;
+  let questionWeight, answerWeight;
+  let belowBox;
+  let belowBoxPadding;
+  let belowBoxHeight;
+  let blankMarginLast;
+  let belowPictureWidth;
+  let belowPictureMargin;
+  let belowWhiteWidth;
+  let nameCardWording;
+  let nameCardIndex;
+  let belowTextTitleSize, belowTextTitleWeight, belowTextTitleLineHeight;
+  let belowTextAreaPaddingLeft;
+  let portfolioWordingSize, portfolioWordingWeight;
+  let belowTextAreaPaddingTop;
+  let belowTextAreaTitleBarTop;
+  let belowTextAreaSubSize, belowTextAreaSubWeight, belowTextAreaSubLineHeight, belowTextAreaSubMarginTop;
+  let designerTongPaddingTop;
+  let deignserPhotoWidth;
+  let designerTitleSize, designerTitleWeight, designerTitleMarginTop;
+  let designerTong;
+  let designerMthTargets;
+  let designerMthSize, designerMthWeight, designerMthMarginTop;
+  let careerBottom;
+  let careerSize, careerWeight;
+  let mobileDesignerWordingTop;
+  let mobileDesignerBoxBetween;
+
+  story.shift();
+  customerStory = '';
+  for (let { answer } of customerStoryMother) {
+    customerStory += answer;
+    customerStory += "\n\n";
+  }
+  customerStory = customerStory.slice(0, -2);
+
+  mainWidth = <%% 900, 900, 900, 720, 100 %%>;
+  mainPaddingTop = <%% 110, 110, 110, 80, 11.7 %%>;
+
+  titleSize = <%% 23, 23, 23, 21, 4.8 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  titleBarMarginTop = <%% 15, 15, 15, 15, 3 %%>;
+  titleBarWidth = <%% 80, 80, 80, 80, 18 %%>;
+
+  contentsSize = <%% 16, 16, 16, 15, 3.8 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+
+  customerPaddingLeft = <%% 150, 150, 150, 130, 6 %%>;
+  customerMarginTop = <%% 36, 36, 36, 36, 5.5 %%>;
+
+  customerSize = <%% 17, 17, 17, 16, 0 %%>;
+  customerWeight = <%% 400, 400, 400, 400, 400 %%>;
+  customerTop = <%% 3, 3, 3, 3, 3 %%>;
+  customerLineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
+
+  photoMargin = <%% 8, 8, 8, 8, 1 %%>;
+  blankMarginFirst = <%% 126, 126, 126, 96, 13.5 %%>;
+  blankMargin = <%% 100, 100, 100, 70, 11 %%>;
+  blankMargin2 = <%% 100, 100, 100, 70, 10 %%>;
+  blankMarginLast = <%% 200, 200, 200, 170, 20 %%>;
+
+  contentsPadding = <%% 21, 21, 21, 21, 6 %%>;
+
+  wordingTop = <%% (isMac() ? 3 : 1), (isMac() ? 3 : 1), (isMac() ? 3 : 1), (isMac() ? 3 : 1), 0.6 %%>;
+  questionMargin = <%% 10, 10, 10, 10, 1 %%>;
+  answerMargin = <%% 36, 36, 36, 36, 6 %%>;
+
+  questionWeight = <%% 700, 700, 700, 700, 700 %%>;
+  answerWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  belowBoxPadding = <%% 50, 50, 50, 36, 3.5 %%>;
+  belowBoxHeight = <%% 300, 300, 300, 260, 30 %%>;
+
+  belowWhiteWidth = <%% 200, 200, 200, 156, 0 %%>;
+
+  belowPictureWidth = <%% 350, 350, 350, 290, 43 %%>;
+  belowPictureMargin = <%% 18, 18, 18, 12, 0 %%>;
+
+  nameCardWording = contents.contents.portfolio.title.main.split(", ")[1];
+
+  nameCardIndex = nameCardWording.split(' ').findIndex((str) => { return /py/gi.test(str); });
+  nameCardWording = nameCardWording.split(' ').slice(0, nameCardIndex).join(' ') + "\n" + nameCardWording.split(' ').slice(nameCardIndex).join(' ');
+
+  portfolioWordingSize = <%% 15, 15, 15, 15, 2 %%>;
+  portfolioWordingWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  belowTextAreaPaddingLeft = <%% 12, 12, 12, 12, 4 %%>;
+  belowTextTitleSize = <%% 25, 25, 25, 20, 3.5 %%>;
+  belowTextTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  belowTextTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+  belowTextAreaPaddingTop = <%% 158, 158, 158, 137, 8.5 %%>;
+  belowTextAreaTitleBarTop = <%% (isMac() ? 12 : 14), (isMac() ? 12 : 14), (isMac() ? 12 : 14), (isMac() ? 12 : 14), 2 %%>;
+
+  belowTextAreaSubSize = <%% 14, 14, 14, 12, 2 %%>;
+  belowTextAreaSubWeight = <%% 500, 500, 500, 500, 500 %%>;
+  belowTextAreaSubLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  belowTextAreaSubMarginTop = <%% 20, 20, 20, 20, 2 %%>;
+
+  designerTongPaddingTop = <%% 30, 30, 30, 27, 30 %%>;
+  deignserPhotoWidth = <%% 124, 124, 124, 110, 124 %%>;
+
+  designerTitleSize = <%% 19, 19, 19, 16, 19 %%>;
+  designerTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  designerTitleMarginTop = <%% 10, 10, 10, 7, 10 %%>;
+
+  designerMthSize = <%% 13, 13, 13, 11, 13 %%>;
+  designerMthWeight = <%% 500, 500, 500, 500, 500 %%>;
+  designerMthMarginTop = <%% 3, 3, 3, 2, 3 %%>;
+
+  careerBottom = <%% 30, 30, 30, 27, 30 %%>;
+  careerSize = <%% 12, 12, 12, 11, 12 %%>;
+  careerWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  mobileDesignerWordingTop = 13;
+  mobileDesignerBoxBetween = 2;
+
+  mainTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(mainWidth) + ea,
+      left: "calc(50% - " + String(mainWidth / 2) + ea + ")",
+      background: colorChip.white,
+      animation: "fadeupdelay 0.5s ease forwards",
+    },
+  });
 
   createNode({
-    mother: baseTong,
+    mother: mainTong,
     style: {
       display: "block",
-      position: "relative",
-      width: withOut(0),
-      height: String(titleHeight) + ea,
-      marginBottom: String(titleMarginBottom) + ea,
-      marginTop: String(mainPaddingTop) + ea,
-      textAlign: "center",
+      height: String(130) + ea,
+    }
+  });
+
+  createNode({
+    mother: mainTong,
+    mode: "img",
+    attribute: {
+      src: ReviewDetailJs.binaryPath + "/sample.png",
     },
-    children: [
-      {
-        style: {
-          position: "absolute",
-          width: withOut(whitePhotoTongInnerPadding * 2, ea),
-          height: String(titleLineHeight) + ea,
-          top: String(0),
-          left: String(whitePhotoTongInnerPadding) + ea,
-          borderBottom: "1px dashed " + colorChip.gray3,
-        }
-      },
-      {
-        text: "사진 모아 보기",
-        style: {
-          fontSize: String(mainTitleSize) + ea,
-          fontWeight: String(mainTitleWeight),
-          color: colorChip.black,
-          display: "inline-block",
-          background: colorChip.gray0,
-          position: "absolute",
-          top: String(mainTitleTop) + ea,
-          textAlign: "center",
-          width: String(mainTitleWidth) + ea,
-          left: "calc(50% - " + String(mainTitleWidth / 2) + ea + ")",
-        }
-      }
-    ]
-  });
-
-  whitePhotoTong = createNode({
-    mother: baseTong,
     style: {
       display: "block",
-      position: "relative",
-      width: withOut((whitePhotoTongInnerPadding * 2) - photoBetween, ea),
-      marginLeft: String(0) + ea,
-      background: colorChip.white,
-      borderRadius: String(5) + "px",
-      marginBottom: String(whitePhotoTongMarginBottom) + ea,
-      paddingTop: String(whitePhotoTongInnerPadding) + ea,
-      paddingLeft: String(whitePhotoTongInnerPadding) + ea,
-      paddingRight: String(whitePhotoTongInnerPadding - photoBetween) + ea,
-      paddingBottom: String(whitePhotoTongInnerPadding - photoBetween) + ea,
+      width: String(100) + "%",
+    }
+  })
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      height: String(140) + ea,
     }
   });
-
-  whitePhotoEvent = function (e) {
-    const zIndex = 101;
-    let order, index, gs;
-    let cancelBack, imagePopup, leftArrow, rightArrow;
-    let width, height;
-    let src;
-    let staticSetting;
-    let imageRender;
-
-    homeliaisonAnalytics({
-      page: instance.pageName,
-      standard: instance.firstPageViewTime,
-      action: "photoBigView",
-      data: {
-        pid: pid,
-        date: dateToString(new Date(), true),
-      },
-    }).catch((err) => {
-      console.log(err);
-    });
-
-    order = Number(this.getAttribute("order"));
-    index = Number(this.getAttribute("index"));
-    gs = this.getAttribute("gs");
-
-    staticSetting = (order, index, gs) => {
-      src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
-
-      height = window.innerHeight - (whitePopupBigPadding * 2);
-      if (gs === 'g') {
-        width = height * photoDefaultRatio;
-      } else {
-        width = height / photoDefaultRatio;
-      }
-
-      if (width > window.innerWidth - (whitePopupBigPadding * 2)) {
-        width = window.innerWidth - (whitePopupBigPadding * 2);
-        if (gs === 'g') {
-          height = width / photoDefaultRatio;
-        } else {
-          height = width * photoDefaultRatio;
-        }
-      }
-    }
-    imageRender = () => {}
-
-    staticSetting(order, index, gs);
-
-    leftArrowEvent = (e) => {
-      let previousObj;
-      if (contents.photos.detail[order - 1] === undefined) {
-        previousObj = contents.photos.detail[contents.photos.detail.length - 1];
-      } else {
-        previousObj = contents.photos.detail[order - 1];
-      }
-      order = previousObj.index - 1;
-      index = previousObj.index;
-      gs = previousObj.gs;
-      staticSetting(order, index, gs);
-      imageRender(width, height, src);
-    }
-
-    rightArrowEvent = (e) => {
-      let nextObj;
-      if (contents.photos.detail[order + 1] === undefined) {
-        nextObj = contents.photos.detail[0];
-      } else {
-        nextObj = contents.photos.detail[order + 1];
-      }
-      order = nextObj.index - 1;
-      index = nextObj.index;
-      gs = nextObj.gs;
-      staticSetting(order, index, gs);
-      imageRender(width, height, src);
-    }
-
-    cancelBack = createNode({
-      mother: totalContents,
-      class: [ whitePhotoBigClassName ],
-      event: {
-        click: function (e) {
-          e.stopPropagation();
-          const removeTargets = document.querySelectorAll('.' + whitePhotoBigClassName);
-          for (let dom of removeTargets) {
-            dom.remove();
-          }
-        }
-      },
-      style: {
-        position: "fixed",
-        top: String(0),
-        left: String(0),
-        opacity: String(0.7),
-        background: colorChip.realBlack,
-        width: withOut(0),
-        height: withOut(0),
-        zIndex: String(zIndex),
-      }
-    });
-
-    imagePopup = createNode({
-      mother: totalContents,
-      class: [ whitePhotoBigClassName ],
-      event: {
-        contextmenu: function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-        },
-      },
-      style: {
-        position: "fixed",
-        borderRadius: String(5) + "px",
-        zIndex: String(zIndex),
-        animation: "fadeuporiginal 0.3s ease forwards",
-        backgroundSize: "100% 100%",
-        backgroundPosition: "50% 50%",
-        transition: "all 0s ease",
-      }
-    });
-
-    swipePatch("right", rightArrowEvent, imagePopup, "imagePopupSwipeStack_");
-    swipePatch("up", rightArrowEvent, imagePopup, "imagePopupSwipeStack_");
-    swipePatch("left", leftArrowEvent, imagePopup, "imagePopupSwipeStack_");
-    swipePatch("down", leftArrowEvent, imagePopup, "imagePopupSwipeStack_");
-
-    imageRender = (width, height, src) => {
-      imagePopup.style.width = String(width) + "px";
-      imagePopup.style.height = String(height) + "px";
-      imagePopup.style.top = withOut(50, height / 2, "px");
-      imagePopup.style.left = withOut(50, width / 2, "px");
-      imagePopup.style.backgroundImage = "url('" + src + "')";
-    }
-
-    imageRender(width, height, src);
-
-    leftArrow = createNode({
-      mother: totalContents,
-      class: [ whitePhotoBigClassName ],
-      event: {
-        click: leftArrowEvent
-      },
-      style: {
-        position: "fixed",
-        top: withOut(50, whitePhotoBigArrowAreaHeight / 2, ea),
-        height: String(whitePhotoBigArrowAreaHeight) + ea,
-        left: String(0),
-        width: String(whitePopupBigPadding) + "px",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        cursor: "pointer",
-        zIndex: String(zIndex),
-      },
-      children: [
-        {
-          mode: "svg",
-          source: instance.mother.returnArrow("left", colorChip.white),
-          style: {
-            position: "relative",
-            height: String(whitePhotoBigArrowHeight) + ea,
-            animation: "fadeuporiginal 0.3s ease forwards",
-          }
-        }
-      ]
-    });
-
-    rightArrow = createNode({
-      mother: totalContents,
-      class: [ whitePhotoBigClassName ],
-      event: {
-        click: rightArrowEvent
-      },
-      style: {
-        position: "fixed",
-        top: withOut(50, whitePhotoBigArrowAreaHeight / 2, ea),
-        height: String(whitePhotoBigArrowAreaHeight) + ea,
-        right: String(0),
-        width: String(whitePopupBigPadding) + "px",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        cursor: "pointer",
-        zIndex: String(zIndex),
-      },
-      children: [
-        {
-          mode: "svg",
-          source: instance.mother.returnArrow("right", colorChip.white),
-          style: {
-            position: "relative",
-            height: String(whitePhotoBigArrowHeight) + ea,
-            animation: "fadeuporiginal 0.3s ease forwards",
-          }
-        }
-      ]
-    });
-
-  }
-
-  for (let { index, gs } of contents.photos.detail) {
-    if (desktop) {
-      photoSrc = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
-    } else {
-      photoSrc = FRONTHOST + "/list_image/portp" + pid + "/mobile/" + photoCharMobile + String(index) + pid + ".jpg";
-    }
-
-    createNode({
-      mother: whitePhotoTong,
-      attribute: {
-        order: String(index - 1),
-        index: String(index),
-        gs,
-        pid,
-      },
-      event: {
-        click: whitePhotoEvent,
-        contextmenu: (e) => { e.preventDefault() },
-        touchstart: function (e) {
-          const self = this;
-          self.setAttribute(photoTouchStartConst, "on");
-          setQueue(() => {
-            self.setAttribute(photoTouchStartConst, "off");
-          });
-        },
-        touchend: function (e) {
-          if (this.getAttribute(photoTouchStartConst) === "on") {
-            whitePhotoEvent.call(this, e);
-          }
-        }
-      },
-      style: {
-        display: "inline-block",
-        width: gs === "s" ? "calc(calc(100% - " + String(photoBetween * whitePhotoNumbers) + ea + ") / " + String(whitePhotoNumbers) + ")" : "calc(calc(calc(calc(100% - " + String(photoBetween * whitePhotoNumbers) + ea + ") / " + String(whitePhotoNumbers) + ") * 2) + " + String(photoBetween) + ea + ")",
-        height: String(whitePhotoHeight) + ea,
-        marginRight: String(photoBetween) + ea,
-        marginBottom: String(photoBetween) + ea,
-        backgroundImage: "url('" + photoSrc + "')",
-        backgroundSize: "100% auto",
-        backgroundPosition: "50% 50%",
-        borderRadius: String(3) + "px",
-        cursor: "pointer",
-      }
-    });
-
-  }
-
 
 }
 
@@ -4748,6 +5743,7 @@ ReviewDetailJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     const { pid } = getObj;
     let response;
+    let thisVersion;
 
     if (typeof pid !== "string") {
       throw new Error("invaild pid");
@@ -4760,6 +5756,9 @@ ReviewDetailJs.prototype.launching = async function (loading) {
     this.fullLoad = false;
     this.photoLoad = false;
     this.loadedContents = [];
+
+    thisVersion = GeneralJs.returnGet().mode === undefined ? 0 : Number(GeneralJs.returnGet().mode);
+    this.version = thisVersion;
 
     if (/^re/.test(pid)) {
       this.pid = this.contentsArr[0].contents.portfolio.pid;
@@ -4781,7 +5780,12 @@ ReviewDetailJs.prototype.launching = async function (loading) {
 
           instance.reviewInitBox();
           instance.reviewMainBox();
-          instance.reviewContentsBox();
+          if (instance.version === 0) {
+            instance.reviewContentsBox();
+          } else {
+            instance.reviewDetailBox();
+            instance.reviewDesignerBox();
+          }
           instance.reviewRelativeBox();
 
           homeliaisonAnalytics({
