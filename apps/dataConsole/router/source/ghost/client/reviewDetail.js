@@ -464,7 +464,7 @@ ReviewDetailJs.prototype.reviewInitBox = function () {
 
 ReviewDetailJs.prototype.reviewMainBox = function () {
   const instance = this;
-  const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, serviceParsing } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, serviceParsing, variableArray, autoComma } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
   const { contentsArr } = this;
   const mobile = media[4];
@@ -506,8 +506,21 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   let barBlank;
   let barMargin;
   let mainRatio;
+  let valueColumnMargin;
+  let valueBlockHeight;
+  let borderWidthLight;
+  let grayBarMargin;
+  let barMarginBottom;
+  let satisBarLeft, satisBarHeight;
+  let satisBarVisualTop;
+  let satisLength;
+  let contentsKeywords;
+  let keywordsLeft;
+  let thisVersion;
 
-  mainRatio = (9 / 16);
+  thisVersion = GeneralJs.returnGet().mode === undefined ? 0 : Number(GeneralJs.returnGet().mode);
+
+  mainRatio = (10 / 16);
 
   mainHeight = <%% 800, 750, 710, 590, mainRatio * 100 %%>;
   mainBelowBarHeight = <%% 250, 250, 250, 216, 250 %%>;
@@ -526,7 +539,17 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   designerSpacePhotoWidth = 100;
   designerSpacePhotoMarginRight = 20;
 
-  barMargin = 36;
+  barMargin = 30;
+  barMarginBottom = 30;
+  valueColumnMargin = 22;
+  valueBlockHeight = 45;
+  grayBarMargin = 16;
+
+  keywordsLeft = 60;
+  satisBarLeft = 160;
+  satisBarHeight = 20;
+  satisBarVisualTop = -0.5;
+  satisLength = 10;
 
   quoteHeight = <%% 14, 14, 13, 11, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
@@ -560,8 +583,18 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   mobileWordingLeft = 5.3;
 
   borderWidth = 1.5;
+  borderWidthLight = 1;
 
   barBlank = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
+  contentsKeywords = [
+    "밝은",
+    "편안한 톤",
+    "가성비 있게",
+    "수납",
+    "화이트 우드",
+    "자연스러운"
+  ]
 
   mainTong = createNode({
     mother: totalContents,
@@ -573,7 +606,6 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       animation: "fadeupdelay 0.5s ease forwards",
     },
   });
-
 
   // total base
   contentsBox = createNode({
@@ -731,7 +763,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
     child: {
       style: {
         display: "inline-flex",
-        width: String(190) + ea,
+        width: String(172) + ea,
         height: String(32) + ea,
         borderRadius: String(8) + ea,
         background: colorExtended.gradientBlue,
@@ -744,19 +776,19 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(14) + ea,
+          fontSize: String(13) + ea,
           fontWeight: String(300),
           fontFamily: "gmarket",
           color: colorExtended.white,
         },
         next: {
           mode: "svg",
-          source: svgMaker.horizontalArrow(22, 11, colorExtended.white),
+          source: svgMaker.horizontalArrow(18, 10, colorExtended.white),
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(22) + ea,
-            marginLeft: String(8) + ea,
+            width: String(18) + ea,
+            marginLeft: String(6) + ea,
             top: String(-1) + ea,
           }
         }
@@ -764,40 +796,1946 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
     }
   });
 
+  if (thisVersion === 0) {
 
-  // middle bar
-  createNode({
-    mother: descriptionBox,
-    style: {
-      display: "flex",
-      position: "relative",
-      width: withOut(0, ea),
-      height: String(barMargin) + ea,
-      borderBottom: String(borderWidth) + "px solid " + colorExtended.black,
-      marginBottom: String(barMargin) + ea,
-      flexDirection: "row",
-      justifyContent: "start",
-      alignItems: "start",
-    }
-  });
+    /* === version 1 === */
 
-  // detail info
+    // middle bar
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        borderBottom: String(borderWidth) + "px solid " + colorExtended.black,
+        marginBottom: String(barMarginBottom) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      }
+    });
 
-  console.log("지역", contents.contents.portfolio.spaceInfo.region);
-  console.log("현장명", contents.contents.portfolio.spaceInfo.space);
-  console.log("평수", String(contents.contents.portfolio.spaceInfo.pyeong) + "평");
-  console.log("평수", String(contents.contents.portfolio.spaceInfo.pyeong) + "평");
-  console.log("====================================")
-  console.log("예산", contents.contents.portfolio.spaceInfo.budget.replace(/[ ]*(이하|이상|미만|초과)[ ]*/gi) + "대");
-  console.log("기간");
-  console.log("====================================")
-  console.log("온오프라인", serviceParsing(contents.service).replace(/(온라인|오프라인)[ ]*/gi, '').replace(/[ ]*(basic|mini|premium)/gi, '').trim());
-  console.log("서비스 유형", serviceParsing(contents.service).replace(/(온라인|오프라인)[ ]*/gi, '').replace(/[ ]*(basic|mini|premium)/gi, '').trim());
-  console.log("====================================")
-  console.log("만족도");
-  console.log("====================================")
-  console.log("키워드");
+    // detail info
 
+    // 1
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            width: withOut(50, 0, ea),
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "지역",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(valueColumnMargin) + ea,
+              },
+              child: {
+                text: contents.contents.portfolio.spaceInfo.region,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            width: String(50) + '%',
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                paddingLeft: String(valueColumnMargin) + ea,
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "평수 <b%( py )%b>",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                bold: {
+                  fontSize: String(14) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(0) + ea,
+              },
+              child: {
+                text: String(contents.contents.portfolio.spaceInfo.pyeong) + "py",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+          ]
+        },
+      ]
+    });
+    // 2
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            width: withOut(50, 0, ea),
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "현장명",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(valueColumnMargin) + ea,
+              },
+              child: {
+                text: contents.contents.portfolio.spaceInfo.space,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            width: String(50) + '%',
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                paddingLeft: String(valueColumnMargin) + ea,
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "평수 <b%( m%b><s%2%s><b% )%b>",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                bold: {
+                  fontSize: String(14) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(0) + ea,
+              },
+              child: {
+                text: String(88.2) + "m<s%2%s>",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+          ]
+        },
+      ]
+    });
+    // 3 - gray bar
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(grayBarMargin) + ea,
+        borderBottom: String(borderWidthLight) + "px solid " + colorExtended.gray3,
+        marginBottom: String(grayBarMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      }
+    });
+    // 4
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            width: withOut(50, 0, ea),
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "예산",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(valueColumnMargin) + ea,
+              },
+              child: {
+                text: contents.contents.portfolio.spaceInfo.budget.replace(/[ ]*(이하|이상|미만|초과)[ ]*/gi) + "대",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            width: String(50) + '%',
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                paddingLeft: String(valueColumnMargin) + ea,
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "기간",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                bold: {
+                  fontSize: String(14) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(0) + ea,
+              },
+              child: {
+                text: "약 60일",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+          ]
+        },
+      ]
+    });
+    // 5
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            width: withOut(50, 0, ea),
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "온오프라인",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(valueColumnMargin) + ea,
+              },
+              child: {
+                text: serviceParsing(contents.service).replace(/(온라인|오프라인)[ ]*/gi, '').replace(/[ ]*(basic|mini|premium)/gi, '').trim(),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            width: String(50) + '%',
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                paddingLeft: String(valueColumnMargin) + ea,
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "서비스 유형",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                bold: {
+                  fontSize: String(14) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(0) + ea,
+              },
+              child: {
+                text: serviceParsing(contents.service).replace(/(온라인|오프라인)[ ]*/gi, '').replace(/[ ]*(basic|mini|premium)/gi, '').trim(),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+          ]
+        },
+      ]
+    });
+    // 6 - gray bar
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(grayBarMargin) + ea,
+        borderBottom: String(borderWidthLight) + "px solid " + colorExtended.gray3,
+        marginBottom: String(grayBarMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      }
+    });
+    // 7
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "만족도",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                top: String(0),
+                left: String(satisBarLeft) + ea,
+                width: withOut(satisBarLeft, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  height: String(satisBarHeight) + ea,
+                  borderRadius: String(satisBarHeight) + ea,
+                  border: String(borderWidth) + "px solid " + colorExtended.black,
+                  boxSizing: "border-box",
+                  top: String(satisBarVisualTop) + ea,
+                  flexDirection: "row",
+                  overflow: "hidden",
+                },
+                children: variableArray(satisLength).map((i, index, arr) => {
+                  const obj = {
+                    style: {
+                      display: "inline-flex",
+                      position: "relative",
+                      borderRight: (index === arr.length - 1) ? "" : String(borderWidthLight) + "px solid " + colorExtended.black,
+                      boxSizing: "border-box",
+                      width: "calc(100% / " + String(satisLength) + ")",
+                      height: withOut(0, ea),
+                    }
+                  };
+
+                  if (index === 0) {
+                    obj.previous = {
+                      style: {
+                        display: "inline-flex",
+                        position: "absolute",
+                        top: String(0),
+                        left: String(0),
+                        width: "calc(" + String(84) + "%)",
+                        height: withOut(0, ea),
+                        borderRadius: String(satisBarHeight) + ea,
+                        background: colorExtended.gradientBlue,
+                      }
+                    };
+                  }
+
+                  return obj;
+                })
+              }
+            },
+          ]
+        },
+      ]
+    });
+    // 8 - gray bar
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(grayBarMargin) + ea,
+        borderBottom: String(borderWidthLight) + "px solid " + colorExtended.gray3,
+        marginBottom: String(grayBarMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      }
+    });
+    // 9 - final
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+        marginBottom: String(-6) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "키워드",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                top: String(0),
+                left: String(keywordsLeft) + ea,
+                width: withOut(keywordsLeft, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  height: withOut(0, ea),
+                  flexDirection: "row",
+                  justifyContent: "end",
+                  alignItems: "center",
+                  overflow: "hidden",
+                },
+                children: contentsKeywords.map((str, index, arr) => {
+                  return {
+                    style: {
+                      display: "inline-flex",
+                      position: "relative",
+                      height: withOut(0, ea),
+                      borderRadius: String(30) + ea,
+                      paddingLeft: String(14) + ea,
+                      paddingRight: String(14) + ea,
+                      boxSizing: "border-box",
+                      border: String(borderWidth) + "px solid " + colorExtended.gray3,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginLeft: String(index === 0 ? 0 : 4) + ea,
+                    },
+                    child: {
+                      text: "<b%#%b> " + str,
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        fontSize: String(12.5) + ea,
+                        fontWeight: String(700),
+                        fontFamily: "pretendard",
+                        color: colorExtended.mainBlue,
+                        top: String(-1) + ea,
+                      },
+                      bold: {
+                        fontSize: String(12.5) + ea,
+                        fontWeight: String(400),
+                        fontFamily: "pretendard",
+                        color: colorExtended.blueLight,
+                      }
+                    }
+                  }
+                })
+              }
+            },
+          ]
+        },
+      ]
+    });
+
+  } else if (thisVersion === 1) {
+
+    /* === version 2 === */
+
+    // middle bar
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        borderBottom: String(borderWidth) + "px solid " + colorExtended.black,
+        marginBottom: String(barMarginBottom) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      }
+    });
+  
+    // detail info
+  
+    // 1
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            width: withOut(50, 0, ea),
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "전체 예산",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(valueColumnMargin) + ea,
+              },
+              child: {
+                text: autoComma(6000) + "만원대",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            width: String(50) + '%',
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                paddingLeft: String(valueColumnMargin) + ea,
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "평수",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                bold: {
+                  fontSize: String(14) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(0) + ea,
+              },
+              child: {
+                text: String(contents.contents.portfolio.spaceInfo.pyeong) + "py&nbsp;&nbsp;<b%( %b><u%84m%u><s%2%s><b% )%b>",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                bold: {
+                  fontSize: String(16) + ea,
+                  fontWeight: String(600),
+                  fontFamily: "pretendard",
+                  color: colorExtended.mainBlue,
+                },
+                under: {
+                  fontSize: String(16) + ea,
+                  fontWeight: String(600),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(600),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+          ]
+        },
+      ]
+    });
+    // 2
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            width: withOut(50, 0, ea),
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "시공 예산",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(valueColumnMargin) + ea,
+              },
+              child: {
+                text: autoComma(4000) + "만원대",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            width: String(50) + '%',
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                paddingLeft: String(valueColumnMargin) + ea,
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "지역",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                bold: {
+                  fontSize: String(14) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(0) + ea,
+              },
+              child: {
+                text: contents.contents.portfolio.spaceInfo.region,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+          ]
+        },
+      ]
+    });
+    // 3
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            width: withOut(50, 0, ea),
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "스타일링 예산",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(valueColumnMargin) + ea,
+              },
+              child: {
+                text: autoComma(2000) + "만원대",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            width: String(50) + '%',
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                paddingLeft: String(valueColumnMargin) + ea,
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "현장명",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                bold: {
+                  fontSize: String(14) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(0) + ea,
+              },
+              child: {
+                text: contents.contents.portfolio.spaceInfo.space,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+          ]
+        },
+      ]
+    });
+    // 4 - gray bar
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(grayBarMargin) + ea,
+        borderBottom: String(borderWidthLight) + "px solid " + colorExtended.gray3,
+        marginBottom: String(grayBarMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      }
+    });
+    // 5
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            width: withOut(50, 0, ea),
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "서비스 유형",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(valueColumnMargin) + ea,
+              },
+              child: {
+                text: serviceParsing(contents.service).replace(/(온라인|오프라인)[ ]*/gi, '').replace(/[ ]*(basic|mini|premium)/gi, '').trim(),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            width: String(50) + '%',
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                paddingLeft: String(valueColumnMargin) + ea,
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "기간",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                bold: {
+                  fontSize: String(14) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(0) + ea,
+              },
+              child: {
+                text: "약 60일",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+          ]
+        },
+      ]
+    });
+    // 6 - gray bar
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(grayBarMargin) + ea,
+        borderBottom: String(borderWidthLight) + "px solid " + colorExtended.gray3,
+        marginBottom: String(grayBarMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      }
+    });
+    // 7
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            width: withOut(50, 0, ea),
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "가구 구매",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(valueColumnMargin) + ea,
+              },
+              child: {
+                text: "일부 구매 + 재배치",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            width: String(50) + '%',
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                paddingLeft: String(valueColumnMargin) + ea,
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "제안 구매율",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                bold: {
+                  fontSize: String(14) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(0) + ea,
+              },
+              child: {
+                text: String(95.5) + "<b%%%b>",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                bold: {
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.mainBlue,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+          ]
+        },
+      ]
+    });
+    // 8 - gray bar
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(grayBarMargin) + ea,
+        borderBottom: String(borderWidthLight) + "px solid " + colorExtended.gray3,
+        marginBottom: String(grayBarMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+      }
+    });
+    // 9 - final
+    createNode({
+      mother: descriptionBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(barMargin) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+        marginBottom: String(-6) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "만족도",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                top: String(0),
+                left: String(satisBarLeft) + ea,
+                width: withOut(satisBarLeft, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  height: String(satisBarHeight) + ea,
+                  borderRadius: String(satisBarHeight) + ea,
+                  border: String(borderWidth) + "px solid " + colorExtended.black,
+                  boxSizing: "border-box",
+                  top: String(satisBarVisualTop) + ea,
+                  flexDirection: "row",
+                  overflow: "hidden",
+                },
+                children: variableArray(satisLength).map((i, index, arr) => {
+                  const obj = {
+                    style: {
+                      display: "inline-flex",
+                      position: "relative",
+                      borderRight: (index === arr.length - 1) ? "" : String(borderWidthLight) + "px solid " + colorExtended.black,
+                      boxSizing: "border-box",
+                      width: "calc(100% / " + String(satisLength) + ")",
+                      height: withOut(0, ea),
+                    }
+                  };
+  
+                  if (index === 0) {
+                    obj.previous = {
+                      style: {
+                        display: "inline-flex",
+                        position: "absolute",
+                        top: String(0),
+                        left: String(0),
+                        width: "calc(" + String(84) + "%)",
+                        height: withOut(0, ea),
+                        borderRadius: String(satisBarHeight) + ea,
+                        background: colorExtended.gradientBlue,
+                      }
+                    };
+                  }
+  
+                  return obj;
+                })
+              }
+            },
+          ]
+        },
+      ]
+    });
+
+  }
 
 }
 
