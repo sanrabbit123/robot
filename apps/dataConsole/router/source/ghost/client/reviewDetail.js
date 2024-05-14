@@ -522,9 +522,9 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
   thisVersion = instance.version;
 
-  mainRatio = (10 / 16);
+  mainRatio = (87 / 160);
   mainMargin = 64;
-  photoRatio = 0.5;
+  photoRatio = 0.58;
 
   mainHeight = <%% 800, 750, 710, 590, mainRatio * 100 %%>;
   mainBelowBarHeight = <%% 250, 250, 250, 216, 250 %%>;
@@ -540,7 +540,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   boxRadius = 15;
 
   photoRightMargin = 45;
-  designerSpacePhotoWidth = 100;
+  designerSpacePhotoWidth = 96;
   designerSpacePhotoMarginRight = 20;
 
   barMargin = 30;
@@ -550,7 +550,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   grayBarMargin = 16;
 
   keywordsLeft = 60;
-  satisBarLeft = thisVersion === 0 ? 177 : 188;
+  satisBarLeft = thisVersion === 0 ? 177 : 132;
   satisBarHeight = 20;
   satisBarVisualTop = -0.5;
   satisLength = 10;
@@ -716,7 +716,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        fontSize: String(20) + ea,
+        fontSize: String(19) + ea,
         fontWeight: String(700),
         color: colorExtended.black,
         fontFamily: "pretendard",
@@ -764,9 +764,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
     child: {
       style: {
         display: "inline-flex",
-        width: String(172) + ea,
+        position: "relative",
+        left: String(-1) + ea,
+        width: String(178) + ea,
         height: String(32) + ea,
-        borderRadius: String(8) + ea,
+        borderRadius: String(32) + ea,
         background: colorExtended.gradientBlue,
         flexDirection: "row",
         justifyContent: "center",
@@ -1741,9 +1743,9 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        height: String(barMargin) + ea,
+        height: String(24) + ea,
         borderBottom: String(borderWidth) + "px solid " + colorExtended.black,
-        marginBottom: String(barMarginBottom) + ea,
+        marginBottom: String(20) + ea,
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
@@ -1818,7 +1820,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(18) + ea,
+                  fontSize: String(17) + ea,
                   fontWeight: String(700),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
@@ -1963,7 +1965,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                   fontSize: String(16) + ea,
                   fontWeight: String(400),
                   fontFamily: "pretendard",
-                  color: colorExtended.black,
+                  color: colorExtended.gray5,
                   top: String(-1) + ea,
                 }
               }
@@ -1989,7 +1991,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                   fontSize: String(16) + ea,
                   fontWeight: String(400),
                   fontFamily: "pretendard",
-                  color: colorExtended.black,
+                  color: colorExtended.gray5,
                   top: String(-1) + ea,
                 }
               }
@@ -2126,7 +2128,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                   fontSize: String(16) + ea,
                   fontWeight: String(400),
                   fontFamily: "pretendard",
-                  color: colorExtended.black,
+                  color: colorExtended.gray5,
                   top: String(-1) + ea,
                 }
               }
@@ -2152,7 +2154,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                   fontSize: String(16) + ea,
                   fontWeight: String(400),
                   fontFamily: "pretendard",
-                  color: colorExtended.black,
+                  color: colorExtended.gray5,
                   top: String(-1) + ea,
                 }
               }
@@ -2290,7 +2292,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                   fontSize: String(16) + ea,
                   fontWeight: String(400),
                   fontFamily: "pretendard",
-                  color: colorExtended.black,
+                  color: colorExtended.gray5,
                   top: String(-1) + ea,
                 }
               }
@@ -2316,7 +2318,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                   fontSize: String(16) + ea,
                   fontWeight: String(400),
                   fontFamily: "pretendard",
-                  color: colorExtended.black,
+                  color: colorExtended.gray5,
                   top: String(-1) + ea,
                 }
               }
@@ -2590,20 +2592,169 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         },
       ]
     });
-    // 6 - gray bar
+    // 6
     createNode({
       mother: descriptionBox,
       style: {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        height: String(grayBarMargin) + ea,
-        borderBottom: String(borderWidthLight) + "px solid " + colorExtended.gray3,
-        marginBottom: String(grayBarMargin) + ea,
+        height: String(barMargin) + ea,
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
-      }
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            width: withOut(50, 0, ea),
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "서비스 유형",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(valueColumnMargin) + ea,
+              },
+              child: {
+                text: serviceParsing(contents.service).replace(/(온라인|오프라인)[ ]*/gi, '').replace(/[ ]*(basic|mini|premium)/gi, '').trim(),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                }
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            width: String(50) + '%',
+            height: withOut(0, ea),
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                textAlign: "right",
+                paddingLeft: String(valueColumnMargin) + ea,
+                width: withOut(valueColumnMargin, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                text: "기간",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                bold: {
+                  fontSize: String(14) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(400),
+                  fontFamily: "pretendard",
+                  color: colorExtended.deactive,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "absolute",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                right: String(0) + ea,
+              },
+              child: {
+                text: "약 60일",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(16) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  top: String(-1) + ea,
+                },
+                special: {
+                  fontSize: String(9) + ea,
+                  fontWeight: String(700),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  position: "relative",
+                  top: String(-5) + ea,
+                },
+              }
+            },
+          ]
+        },
+      ]
     });
     // 7
     createNode({
@@ -2973,8 +3124,8 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   thisVersion = instance.version;
 
   mainRatio = (10 / 16);
-  mainMargin = 128;
-  photoRatio = 0.75;
+  mainMargin = 150;
+  photoRatio = 0.73;
 
   mainHeight = <%% 800, 750, 710, 590, mainRatio * 100 %%>;
   mainBelowBarHeight = <%% 250, 250, 250, 216, 250 %%>;
@@ -2989,7 +3140,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
 
   boxRadius = 15;
 
-  photoRightMargin = 40;
+  photoRightMargin = 45;
   designerSpacePhotoWidth = 100;
   designerSpacePhotoMarginRight = 20;
 
@@ -3805,60 +3956,6 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
     children: [
       {
         style: {
-          display: "block",
-          position: "absolute",
-          top: String(0),
-          left: String(0),
-          width: String(15 * 4) + ea,
-          height: withOut(0, ea),
-          borderRadius: String(15) + "px",
-          boxSizing: "border-box",
-          border: String(borderWidth) + "px solid " + colorExtended.black,
-          borderRight: "0",
-          zIndex: String(1),
-        }
-      },
-      {
-        style: {
-          display: "block",
-          position: "absolute",
-          top: String(0),
-          right: String(0),
-          width: String(15 * 4) + ea,
-          height: withOut(0, ea),
-          borderRadius: String(15) + "px",
-          boxSizing: "border-box",
-          border: String(borderWidth) + "px solid " + colorExtended.black,
-          borderLeft: "0",
-          zIndex: String(1),
-        }
-      },
-      {
-        style: {
-          display: "block",
-          position: "absolute",
-          top: String(-1) + ea,
-          left: String(15) + "px",
-          width: withOut(15 * 2, ea),
-          height: String(10) + ea,
-          background: colorExtended.white,
-          zIndex: String(1),
-        }
-      },
-      {
-        style: {
-          display: "block",
-          position: "absolute",
-          bottom: String(-1) + ea,
-          left: String(15) + "px",
-          width: withOut(15 * 2, ea),
-          height: String(10) + ea,
-          background: colorExtended.white,
-          zIndex: String(1),
-        }
-      },
-      {
-        style: {
           display: "flex",
           flexDirection: "row",
           position: "relative",
@@ -3869,6 +3966,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
           overflow: "scroll",
           justifyContent: "center",
           alignItems: "center",
+          borderRadius: String(8) + "px",
         },
         child: {
           style: {
@@ -3908,7 +4006,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
       left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
       borderBottom: String(borderWidth) + "px solid " + colorExtended.gray3,
     },
-  })
+  });
 
 }
 
