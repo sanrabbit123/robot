@@ -4101,7 +4101,7 @@ ReviewDetailJs.prototype.relativeContents = function (contents, length) {
 
 ReviewDetailJs.prototype.reviewRelativeBox = function () {
   const instance = this;
-  const { createNode, colorChip, colorExtended, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref, swipePatch, homeliaisonAnalytics, dateToString } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, sleep, setQueue, equalJson, isMac, isIphone, selfHref, autoComma, swipePatch, homeliaisonAnalytics, dateToString } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
   const { contentsArr } = this;
   const mobile = media[4];
@@ -4188,14 +4188,22 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   let whitePhotoEvent;
   let rightArrowEvent, leftArrowEvent;
   let mainPaddingBottom;
+  let thisPyeong;
+  let thisBudget;
+  let radiusPixel;
+  let montTitleSize;
+  let montTitleMarginLeft;
+  let montHangulTitleTop;
+  let montTitleTop;
+  let montSpecialTitleTop;
 
   this.relativePhotoNumber = 0;
 
   baseWidth = <%% 1300, 980, 800, 640, 76 %%>;
   baseBetween = standardWidth - baseWidth;
 
-  arrowHeight = <%% 28, 25, 25, 24, 4 %%>;
-  arrowTop = <%% 230, 218, 230, 190, 34 %%>;
+  arrowHeight = <%% 26, 25, 25, 24, 4 %%>;
+  arrowTop = <%% 280, 218, 230, 190, 34 %%>;
 
   mainHeight = <%% 590, 570, 590, 496, 94 %%>;
   mainPaddingTop = <%% 110, 96, 86, 72, 10 %%>;
@@ -4227,12 +4235,12 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
 
   relativeLength = <%% 20, 20, 20, 20, 20 %%>;
 
-  photoMargin = <%% 20, 16, 16, 14, 3 %%>;
+  photoMargin = <%% 16, 16, 16, 16, 2.5 %%>;
   columns = <%% 5, 4, 3, 3, 2 %%>;
   photoRatio = (297 / 210);
   seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
   photoHeight = seroWidth * photoRatio;
-  photoMarginBottom = <%% (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 15 : 17), (isMac() ? 13 : 15), 2.4 %%>;
+  photoMarginBottom = <%% 10, 10, 10, 10, 2.1 %%>;
 
   quoteHeight = <%% 8, 8, 8, 7, 1.4 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
@@ -4284,208 +4292,18 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   whitePhotoBigArrowHeight = <%% 15, 15, 15, 15, 2 %%>;
   whitePhotoBigArrowAreaHeight = <%% 200, 200, 200, 200, 20 %%>;
 
-  // share
+  thisPyeong = "<s%" + String(24) + "PY%s>";
+  thisBudget = "<u%" + autoComma(3000) + "%u> " + "<b%" + "만원" + "대" + "%b>";
+  radiusPixel = <%% 15, 15, 15, 15, 15 %%>;
 
-  shareTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "block",
-      position: "relative",
-      width: withOut(0),
-      background: colorExtended.gray1,
-      height: String(shareTongHeight) + ea,
-    }
-  });
-
-  shareBaseTong = createNode({
-    mother: shareTong,
-    style: {
-      display: "flex",
-      flexDirection: "row",
-      position: "relative",
-      width: String(standardWidth) + ea,
-      height: withOut(0, ea),
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    children: [
-      {
-        mode: "svg",
-        source: svgMaker.facebookIcon(colorChip.black),
-        event: {
-          click: function (e) {
-            if (window.FB !== undefined) {
-              homeliaisonAnalytics({
-                page: instance.pageName,
-                standard: instance.firstPageViewTime,
-                action: "shareFacebook",
-                data: {
-                  href: window.encodeURIComponent(window.location.href),
-                  date: dateToString(new Date(), true),
-                },
-              }).catch((err) => {
-                console.log(err);
-              });
-              window.FB.ui({
-                method: 'share',
-                href: window.location.href,
-              }, (response) => {});
-            }
-          }
-        },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          height: String(shareIconHeight) + ea,
-          cursor: "pointer",
-        }
-      },
-      {
-        mode: "svg",
-        source: svgMaker.talkIcon(colorChip.black),
-        event: {
-          click: function () {
-            if (window.Kakao !== undefined) {
-              homeliaisonAnalytics({
-                page: instance.pageName,
-                standard: instance.firstPageViewTime,
-                action: "shareKaKao",
-                data: {
-                  href: window.encodeURIComponent(window.location.href),
-                  date: dateToString(new Date(), true),
-                },
-              }).catch((err) => {
-                console.log(err);
-              });
-              window.Kakao.Share.sendDefault({
-                objectType: "feed",
-                content: {
-                  title: document.querySelector("title").textContent,
-                  description: [ ...document.querySelectorAll("meta") ].find((dom) => { return dom.getAttribute("property") === "og:description" }).getAttribute("content"),
-                  imageUrl: FRONTHOST + [ ...document.querySelectorAll("meta") ].find((dom) => { return dom.getAttribute("property") === "og:image" }).getAttribute("content"),
-                  link: {
-                    mobileWebUrl: window.location.href,
-                    webUrl: window.location.href,
-                  },
-                },
-                buttons: [
-                  {
-                    title: "웹으로 보기",
-                    link: {
-                      mobileWebUrl: window.location.href,
-                      webUrl: window.location.href,
-                    },
-                  }
-                ],
-              });
-            }
-          }
-        },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          height: String(shareIconHeight) + ea,
-          marginLeft: String(shareIconBetween0) + ea,
-          marginRight: String(shareIconBetween1) + ea,
-          cursor: "pointer",
-        }
-      },
-      {
-        mode: "svg",
-        source: svgMaker.linkIcon(colorChip.black),
-        event: {
-          click: async function (e) {
-            try {
-              homeliaisonAnalytics({
-                page: instance.pageName,
-                standard: instance.firstPageViewTime,
-                action: "shareLink",
-                data: {
-                  href: window.encodeURIComponent(window.location.href),
-                  date: dateToString(new Date(), true),
-                },
-              }).catch((err) => {
-                console.log(err);
-              });
-              await window.navigator.clipboard.writeText(window.location.href);
-              window.alert("링크가 복사되었습니다!");
-            } catch (e) {
-              console.log(e);
-            }
-          }
-        },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          height: String(shareIconHeight) + ea,
-          cursor: "pointer",
-        }
-      },
-      {
-        text: "previous",
-        event: {
-          click: function (e) {
-            const entireContents = instance.contentsArr.toNormal();
-            const entireContentsLength = entireContents.length;
-            let thisContentsIndex;
-            let previousIndex;
-            let newLink;
-            thisContentsIndex = entireContents.findIndex((obj) => { return obj.contents.portfolio.pid === pid });
-            if (thisContentsIndex === entireContentsLength - 1) {
-              previousIndex = thisContentsIndex;
-            } else {
-              previousIndex = thisContentsIndex + 1;
-            }
-            newLink = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search.replace(new RegExp("pid=" + pid, "gi"), "pid=" + entireContents[previousIndex].contents.portfolio.pid);
-            selfHref(newLink);
-          }
-        },
-        style: {
-          display: "inline-block",
-          position: "absolute",
-          fontSize: String(previousNextSize) + ea,
-          fontWeight: String(previousNextWeight),
-          color: colorChip.darkDarkShadow,
-          fontFamily: "graphik",
-          top: String(previousNextTextTop) + ea,
-          left: String(previousNextLeftRight) + ea,
-          cursor: "pointer",
-        }
-      },
-      {
-        text: "next",
-        event: {
-          click: function (e) {
-            const entireContents = instance.contentsArr.toNormal();
-            const entireContentsLength = entireContents.length;
-            let thisContentsIndex;
-            let nextIndex;
-            let newLink;
-            thisContentsIndex = entireContents.findIndex((obj) => { return obj.contents.portfolio.pid === pid });
-            if (thisContentsIndex === 0) {
-              nextIndex = 0;
-            } else {
-              nextIndex = thisContentsIndex - 1;
-            }
-            newLink = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search.replace(new RegExp("pid=" + pid, "gi"), "pid=" + entireContents[nextIndex].contents.portfolio.pid);
-            selfHref(newLink);
-          }
-        },
-        style: {
-          display: "inline-block",
-          position: "absolute",
-          fontSize: String(previousNextSize) + ea,
-          fontWeight: String(previousNextWeight),
-          color: colorChip.darkDarkShadow,
-          fontFamily: "graphik",
-          top: String(previousNextTextTop) + ea,
-          right: String(previousNextLeftRight) + ea,
-          cursor: "pointer",
-        }
-      },
-    ]
-  });
+  titleSize = <%% 17, 15, 16, 14, 3 %%>;
+  montTitleSize = <%% 20, 16, 17, 15, 3.1 %%>;
+  montTitleMarginLeft = <%% 8, 8, 8, 6, 1.6 %%>;
+  montHangulTitleTop = <%% -1, -1, -1, -1, (isIphone() ? -0.3 : -0.1) %%>;
+  montTitleTop = <%% -0.5, -1, -1, -1, (isIphone() ? -0.4 : -0.2) %%>;
+  montSpecialTitleTop = <%% 0, -0.5, -0.5, -0.5, (isIphone() ? -0.3 : -0.1) %%>; 
+  titleWeight = <%% 400, 400, 400, 400, 400 %%>;
+  titleMarginLeft = <%% 6, 6, 5, 5, 1.6 %%>;
 
   // relative
 
@@ -4495,9 +4313,18 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      background: colorExtended.gray0,
-      paddingTop: String(mainPaddingTop) + ea,
-      paddingBottom: String(150) + ea,
+      paddingBottom: String(120) + ea,
+    },
+    child: {
+      style: {
+        display: "block",
+        position: "absolute",
+        top: String(0),
+        left: String(0),
+        width: withOut(0, ea),
+        height: withOut(0, ea),
+        background: colorExtended.gradientBlue5,
+      }
     }
   });
 
@@ -4508,36 +4335,8 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       position: "relative",
       width: String(standardWidth) + ea,
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      paddingTop: String(110) + ea,
     }
-  });
-
-  createNode({
-    mother: baseTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      height: String(titleHeight) + ea,
-      marginBottom: String(titleMarginBottom) + ea,
-      textAlign: "center",
-    },
-    children: [
-      {
-        text: "유사한 고객 후기",
-        style: {
-          fontSize: String(mainTitleSize) + ea,
-          fontWeight: String(mainTitleWeight),
-          color: colorChip.black,
-          display: "inline-block",
-          position: "absolute",
-          fontFamily: "pretendard",
-          top: String(mainTitleTop) + ea,
-          textAlign: "center",
-          width: String(mainTitleWidth) + ea,
-          left: "calc(50% - " + String(mainTitleWidth / 2) + ea + ")"
-        }
-      }
-    ]
   });
 
   leftArrow = createNode({
@@ -4572,7 +4371,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
         children: [
           {
             mode: "svg",
-            source: this.mother.returnBigArrow(colorExtended.mainBlue),
+            source: svgMaker.squareArrow(colorExtended.blueLight),
             style: {
               position: "absolute",
               top: String(0),
@@ -4618,7 +4417,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
         children: [
           {
             mode: "svg",
-            source: this.mother.returnBigArrow(colorExtended.mainBlue),
+            source: svgMaker.squareArrow(colorExtended.blueLight),
             style: {
               position: "absolute",
               top: String(0),
@@ -4656,6 +4455,8 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   }).firstChild;
 
   setQueue(async () => {
+    console.log("a");
+
     try {
       const photoChar = 't';
       const photoCharMobile = "mot";
@@ -4680,17 +4481,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
           } else {
             src = FRONTHOST + "/list_image/portp" + filteredContents.portfolio.pid + "/mobile/" + photoCharMobile + String(filteredContents.review.detailInfo.photodae[0]) + filteredContents.portfolio.pid + ".jpg";
           }
-          title = filteredContents.review.title.sub.split(", ").join(" ");
-          tag = equalJson(JSON.stringify(filteredContents.portfolio.detailInfo.tag));
-
-          if (desktop) {
-            tag = tag.slice(5, 10);
-          } else {
-            tag = tag.slice(5, 8);
-          }
-          if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > 17) {
-            tag = tag.slice(0, -1);
-          }
+          title = filteredContents.portfolio.spaceInfo.space;
 
           block = createNode({
             mother: photoTong,
@@ -4717,11 +4508,10 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
             style: {
               display: "inline-block",
               width: String(seroWidth) + ea,
-              borderRadius: String(5) + "px",
               marginRight: String(photoMargin) + ea,
               verticalAlign: "top",
-              overflow: "hidden",
               cursor: "pointer",
+              overflow: "hidden",
             },
             children: [
               {
@@ -4729,11 +4519,12 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
                   display: "block",
                   width: String(seroWidth) + ea,
                   height: String(photoHeight) + ea,
-                  borderRadius: String(5) + "px",
+                  borderRadius: String(radiusPixel) + "px",
                   marginBottom: String(photoMarginBottom) + ea,
                   backgroundSize: "100% auto",
                   backgroundPosition: "50% 50%",
                   backgroundImage: "url('" + src + "')",
+                  boxShadow: "0px 3px 15px -9px " + colorExtended.black,
                 }
               },
               {
@@ -4741,65 +4532,87 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
                   display: "block",
                   position: "relative",
                   width: String(100) + '%',
+                  overflow: "hidden",
                 },
-                children: [
-                  {
-                    mode: "svg",
-                    source: svgMaker.doubleQuote(colorExtended.mainBlue),
-                    style: {
-                      display: "inline-block",
-                      height: String(quoteHeight) + ea,
-                      width: String(quoteWidth) + ea,
-                      verticalAlign: "top",
-                      position: "relative",
-                      top: String(quoteTop) + ea,
-                    }
+                child: {
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    width: String(100) + '%',
+                    left: String(0),
+                    top: String(0),
+                    overflow: "hidden",
                   },
-                  {
-                    text: title,
-                    style: {
-                      display: "inline-block",
-                      fontSize: String(titleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.black,
-                      marginLeft: String(titleMarginLeft) + ea,
-                      width: withOut(quoteWidth + titleMarginLeft, ea),
-                      verticalAlign: "top",
-                    }
-                  }
-                ]
+                  children: [
+                    {
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        width: String(500) + '%',
+                        left: String(0),
+                        top: String(0),
+                      },
+                      child: {
+                        text: title,
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          fontSize: String(titleSize) + ea,
+                          fontFamily: "pretendard",
+                          fontWeight: String(600),
+                          color: colorExtended.white,
+                          verticalAlign: "top",
+                        },
+                        special: {
+                          fontSize: String(titleSize) + ea,
+                          fontFamily: "pretendard",
+                          fontWeight: String(500),
+                          color: colorExtended.gray3,
+                        },
+                      }
+                    },
+                    {
+                      text: thisPyeong,
+                      style: {
+                        display: "inline-block",
+                        position: "absolute",
+                        fontSize: String(montTitleSize) + ea,
+                        fontFamily: "mont",
+                        fontWeight: String(700),
+                        color: colorExtended.mainBlue,
+                        verticalAlign: "top",
+                        top: String(0) + ea,
+                        right: String(0) + ea,
+                        paddingLeft: String(montTitleMarginLeft) + ea,
+                      },
+                      special: {
+                        position: "relative",
+                        fontSize: String(montTitleSize) + ea,
+                        fontFamily: "mont",
+                        fontWeight: String(700),
+                        color: colorExtended.mainBlue,
+                        top: String(montSpecialTitleTop) + ea,
+                      },
+                      bold: {
+                        fontSize: String(titleSize) + ea,
+                        fontFamily: "pretendard",
+                        fontWeight: String(800),
+                        color: colorExtended.mainBlue,
+                        position: "relative",
+                        top: String(montHangulTitleTop) + ea,
+                      },
+                      under: {
+                        fontSize: String(montTitleSize) + ea,
+                        fontFamily: "mont",
+                        fontWeight: String(700),
+                        color: colorExtended.mainBlue,
+                        position: "relative",
+                        top: String(montTitleTop) + ea,
+                      },
+                    },
+                  ]
+                }
               },
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  marginTop: String(subTitleMarginTopReview) + ea,
-                  paddingLeft: String(quoteWidth + titleMarginLeft + reviewSubTitleVisual) + ea,
-                  width: withOut(quoteWidth + titleMarginLeft + reviewSubTitleVisual, ea),
-                  left: String(0) + ea,
-                },
-                children: [
-                  {
-                    text: filteredContents.portfolio.spaceInfo.space + " " + String(filteredContents.portfolio.spaceInfo.pyeong) + "py " + ((media[0] || media[1] || media[2]) ? "홈스타일링 후기" : "후기"),
-                    style: {
-                      display: "inline-block",
-                      fontSize: String(subTitleSize) + ea,
-                      fontWeight: String(titleWeight),
-                      color: colorChip.gray5,
-                    }
-                  },
-                  {
-                    mode: "svg",
-                    source: svgMaker.horizontalArrow(subArrowWidth, subArrowHeight),
-                    style: {
-                      position: "absolute",
-                      width: String(subArrowWidth) + ea,
-                      right: String(0),
-                      bottom: String(subArrowReviewBottom) + ea,
-                    }
-                  }
-                ]
-              }
             ]
           });
 
@@ -4810,9 +4623,8 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
     } catch (e) {
       console.log(e);
     }
-  }, 1000);
-
-
+  });
+  
 }
 
 ReviewDetailJs.prototype.reviewDesignerBox = function () {
@@ -5455,11 +5267,6 @@ ReviewDetailJs.prototype.launching = async function (loading) {
     loading.parentNode.removeChild(loading);
 
     setQueue(() => {
-      facebookSdkPatch().then(() => {
-        return kakaoSdkPatch();
-      }).catch((err) => {
-        console.log(err);
-      });
       ajaxJson({ mode: "review" }, LOGHOST + "/getContents", { equal: true }).then((response) => {
         instance.contentsArr = new SearchArray(response.contentsArr);
         instance.designers = new SearchArray(response.designers);
