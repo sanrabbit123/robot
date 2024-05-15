@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('홈리에종 고객 리뷰 | 홈리에종');"
+      "return ('홈리에종 고객 평가 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return ('홈리에종 고객 리뷰 리스트 페이지 입니다! | 홈리에종');"
+      "return ('홈리에종 고객 평가 리스트 페이지 입니다! | 홈리에종');"
     ],
     "image": [
       "thisPerson",
@@ -31,7 +31,7 @@
     "module": false
   },
   "name": "reviewList",
-  "hangul": "리뷰 리스트",
+  "hangul": "평가 리스트",
   "route": [
     "reviewList",
     "RL"
@@ -227,8 +227,8 @@ ReviewListJs.prototype.insertInitBox = function () {
   tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "SERVICE REVIEW<b%.%b>";
-  subTitleContents = "홈리에종 리뷰";
+  titleWording = "PROJECT REVIEW<b%.%b>";
+  subTitleContents = "프로젝트 리뷰";
 
   mobileBlockTop = 7;
 
