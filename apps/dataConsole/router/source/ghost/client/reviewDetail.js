@@ -231,7 +231,7 @@ ReviewDetailJs.prototype.reviewInitBox = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 36, 32, 30, 23, 9.5 %%>;
+  whiteBlockMarginBottom = <%% 50, 50, 50, 50, 5 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
@@ -378,7 +378,7 @@ ReviewDetailJs.prototype.reviewInitBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      marginBottom: String(50) + ea,
+      marginBottom: String(whiteBlockMarginBottom) + ea,
       top: String(-1 * boxTopVisual) + ea,
       overflow: "hidden"
     }
@@ -519,12 +519,28 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   let thisVersion;
   let mainMargin;
   let photoRatio;
+  let designerTitleSize, designerTitleWeight;
+  let designerStyleSize, designerStyleWeight;
+  let designerHomeButtonMarginTop;
+  let designerHomeButtonLeft, designerHomeButtonWidth, designerHomeButtonHeight;
+  let designerHomeSize, designerHomeWeight;
+  let designerHomeArrowWidth, designerHomeArrowMarginLeft, designerHomeArrowTop;
+  let projectPropertySize, projectPropertyLightWeight, projectPropertyBoldWeight;
+  let projectPropertyTextTop;
+  let projectPropertyPyeongSize, projectPropertyPyeongWeight;
+  let smallPropertySize, smallPropertyWeight, smallPropertyTextTop;
+  let propertyFinalMarginBottom;
+  let keywordsHeight, keywordsPadding, keywordsBetween;
+  let keywordsSize, keywordsWeight, keywordsSharpWeight, keywordsTextTop;
+  let propertyMiddleBarHeight, propertyMiddleBarMarginBottom;
+  let propertyBlockHeight;
+  let projectPropertySizeFocus;
 
   thisVersion = instance.version;
 
-  mainRatio = (87 / 160);
-  mainMargin = 64;
-  photoRatio = 0.58;
+  mainRatio = <%% (87 / 160), (125 / 160), (87 / 160), (87 / 160), (87 / 160) %%>;
+  mainMargin = <%% 64, 56, 56, 52, 6 %%>;
+  photoRatio = <%% 0.58, 0.5, 0.58, 0.58, 0.58 %%>;
 
   mainHeight = <%% 800, 750, 710, 590, mainRatio * 100 %%>;
   mainBelowBarHeight = <%% 250, 250, 250, 216, 250 %%>;
@@ -537,23 +553,68 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   pictureWidth = <%% 820, 720, 610, 480, 610 %%>;
   pictureHeight = mainHeight - (contentsBoxTop * 2) - bottomVisual;
 
-  boxRadius = 15;
+  boxRadius = <%% 15, 15, 15, 15, 15 %%>;
 
-  photoRightMargin = 45;
-  designerSpacePhotoWidth = 96;
-  designerSpacePhotoMarginRight = 20;
+  photoRightMargin = <%% 45, 32, 30, 25, 45 %%>;
+  designerSpacePhotoWidth = <%% 96, 92, 72, 60, 96 %%>;
+  designerSpacePhotoMarginRight = <%% 20, 18, 20, 20, 20 %%>;
 
-  barMargin = 30;
-  barMarginBottom = 30;
-  valueColumnMargin = 22;
-  valueBlockHeight = 45;
-  grayBarMargin = 16;
+  barMargin = <%% 30, 28, 24, 21, 30 %%>;
+  propertyBlockHeight = <%% 37, 35, 35, 35, 37 %%>;
+  barMarginBottom = <%% 30, 30, 30, 30, 30 %%>;
+  valueColumnMargin = <%% 22, 22, 22, 22, 22 %%>;
+  valueBlockHeight = <%% 45, 45, 45, 45, 45 %%>;
+  grayBarMargin = <%% 16, 16, 16, 16, 16 %%>;
 
-  keywordsLeft = 60;
-  satisBarLeft = thisVersion === 0 ? 177 : 132;
-  satisBarHeight = 20;
-  satisBarVisualTop = -0.5;
-  satisLength = 10;
+  keywordsLeft = <%% 48, 48, 48, 48, 48 %%>;
+  satisBarLeft = <%% 131, 114, 108, 100, 131 %%>;
+  satisBarHeight = <%% 20, 20, 20, 20, 20 %%>;
+  satisBarVisualTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
+  satisLength = <%% 10, 10, 10, 10, 10 %%>;
+
+  designerTitleSize = <%% 19, 18, 17, 16, 19 %%>;
+  designerTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  designerStyleSize = <%% 15, 14, 14, 13, 15 %%>;
+  designerStyleWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  designerHomeButtonMarginTop = <%% 14, 14, 14, 14, 14 %%>;
+  designerHomeButtonLeft = <%% -1, -1, -1, -1, -1 %%>;
+  designerHomeButtonWidth = <%% 176, 176, 176, 176, 176 %%>;
+  designerHomeButtonHeight = <%% 32, 32, 32, 32, 32 %%>;
+
+  designerHomeSize = <%% 13, 13, 13, 13, 13 %%>;
+  designerHomeWeight = <%% 300, 300, 300, 300, 300 %%>;
+
+  designerHomeArrowWidth = <%% 16, 16, 16, 16, 16 %%>;
+  designerHomeArrowMarginLeft = <%% 5, 5, 5, 5, 5 %%>;
+  designerHomeArrowTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
+
+  projectPropertySize = <%% 16, 15, 14, 13, 16 %%>;
+  projectPropertySizeFocus = <%% 17, 16, 15, 14, 17 %%>;
+  projectPropertyLightWeight = <%% 400, 400, 400, 400, 400 %%>;
+  projectPropertyBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  projectPropertyTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  projectPropertyPyeongSize = <%% 14, 13, 12, 11, 14 %%>;
+  projectPropertyPyeongWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  smallPropertySize = <%% 9, 8, 7, 6, 9 %%>;
+  smallPropertyWeight = <%% 400, 400, 400, 400, 400 %%>;
+  smallPropertyTextTop = <%% -5, -5, -5, -5, -5 %%>;
+
+  propertyFinalMarginBottom = <%% -6, -6, -6, -6, -6 %%>;
+
+  keywordsHeight = <%% 30, 27, 25, 24, 30 %%>;
+  keywordsPadding = <%% 14, 12, 10, 10, 14 %%>;
+  keywordsBetween = <%% 4, 4, 3, 2, 4 %%>;
+
+  keywordsSize = <%% 12.5, 12, 11, 10, 12.5 %%>;
+  keywordsWeight = <%% 700, 700, 700, 700, 700 %%>;
+  keywordsSharpWeight = <%% 400, 400, 400, 400, 400 %%>;
+  keywordsTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+  propertyMiddleBarHeight = <%% 24, 20, 18, 16, 24 %%>;
+  propertyMiddleBarMarginBottom = <%% 20, 20, 20, 20, 20 %%>;
 
   quoteHeight = <%% 14, 14, 13, 11, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
@@ -592,7 +653,6 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   barBlank = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
   contentsKeywords = [
-    "밝은",
     "편안한 톤",
     "가성비 있게",
     "수납",
@@ -605,7 +665,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
     style: {
       display: "block",
       position: "relative",
-      width: String(100) + '%',
+      width: withOut(0, ea),
       background: colorExtended.white,
       animation: "fadeupdelay 0.5s ease forwards",
     },
@@ -618,7 +678,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       display: "flex",
       position: "relative",
       flexDirection: "row",
-      width: desktop ? String(standardWidth) + ea : String(100) + '%',
+      width: desktop ? String(standardWidth) + ea : withOut(0, ea),
       left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
       top: String(0),
       paddingBottom: String(mainMargin) + ea,
@@ -632,11 +692,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
     style: {
       display: desktop ? "inline-flex" : "block",
       position: desktop ? "relative" : "absolute",
-      width: desktop ? String(standardWidth * photoRatio) + ea : String(100) + '%',
-      height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : String(100) + '%',
+      width: desktop ? String(standardWidth * photoRatio) + ea : withOut(0, ea),
+      height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : withOut(0, ea),
       borderRadius: String(boxRadius) + "px",
       backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
-      backgroundSize: "100% auto",
+      backgroundSize: media[0] ? "100% auto" : "auto 100%",
       backgroundPosition: "50% 50%",
       boxShadow: desktop ? "0px 8px 22px -15px " + colorChip.shadow : "",
       marginRight: String(photoRightMargin) + ea,
@@ -651,7 +711,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       display: "inline-flex",
       position: "relative",
       width: withOut((standardWidth * photoRatio) + photoRightMargin, ea),
-      height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : String(100) + '%',
+      height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : withOut(0, ea),
       verticalAlign: "top",
       flexDirection: "column",
       justifyContent: "start",
@@ -716,8 +776,8 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        fontSize: String(19) + ea,
-        fontWeight: String(700),
+        fontSize: String(designerTitleSize) + ea,
+        fontWeight: String(designerTitleWeight),
         color: colorExtended.black,
         fontFamily: "pretendard",
       }
@@ -738,14 +798,14 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        fontSize: String(15) + ea,
-        fontWeight: String(400),
+        fontSize: String(designerStyleSize) + ea,
+        fontWeight: String(designerStyleWeight),
         color: colorExtended.black,
         fontFamily: "pretendard",
       },
       bold: {
-        fontSize: String(15) + ea,
-        fontWeight: String(400),
+        fontSize: String(designerStyleSize) + ea,
+        fontWeight: String(designerStyleWeight),
         color: colorExtended.gray3,
       }
     }
@@ -759,16 +819,16 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       textAlign: "left",
       justifyContent: "start",
       alignItems: "start",
-      marginTop: String(14) + ea,
+      marginTop: String(designerHomeButtonMarginTop) + ea,
     },
     child: {
       style: {
         display: "inline-flex",
         position: "relative",
-        left: String(-1) + ea,
-        width: String(176) + ea,
-        height: String(32) + ea,
-        borderRadius: String(32) + ea,
+        left: String(designerHomeButtonLeft) + ea,
+        width: String(designerHomeButtonWidth) + ea,
+        height: String(designerHomeButtonHeight) + ea,
+        borderRadius: String(designerHomeButtonHeight) + ea,
         background: colorExtended.gradientBlue,
         flexDirection: "row",
         justifyContent: "center",
@@ -779,8 +839,8 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(13) + ea,
-          fontWeight: String(300),
+          fontSize: String(designerHomeSize) + ea,
+          fontWeight: String(designerHomeWeight),
           fontFamily: "gmarket",
           color: colorExtended.white,
         },
@@ -790,9 +850,9 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(16) + ea,
-            marginLeft: String(5) + ea,
-            top: String(-0.5) + ea,
+            width: String(designerHomeArrowWidth) + ea,
+            marginLeft: String(designerHomeArrowMarginLeft) + ea,
+            top: String(designerHomeArrowTop) + ea,
           }
         }
       }
@@ -810,9 +870,9 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        height: String(barMargin) + ea,
+        height: String(propertyMiddleBarHeight) + ea,
         borderBottom: String(borderWidth) + "px solid " + colorExtended.black,
-        marginBottom: String(barMarginBottom) + ea,
+        marginBottom: String(propertyMiddleBarMarginBottom) + ea,
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
@@ -828,7 +888,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        height: String(barMargin) + ea,
+        height: String(propertyBlockHeight) + ea,
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
@@ -861,11 +921,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -887,11 +947,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -925,15 +985,15 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 },
                 bold: {
-                  fontSize: String(14) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertyPyeongSize) + ea,
+                  fontWeight: String(projectPropertyPyeongWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.deactive,
                 }
@@ -957,11 +1017,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -976,7 +1036,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        height: String(barMargin) + ea,
+        height: String(propertyBlockHeight) + ea,
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
@@ -1009,11 +1069,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -1035,11 +1095,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -1073,25 +1133,25 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 },
                 bold: {
-                  fontSize: String(14) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertyPyeongSize) + ea,
+                  fontWeight: String(projectPropertyPyeongWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.deactive,
                 },
                 special: {
-                  fontSize: String(9) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(smallPropertySize) + ea,
+                  fontWeight: String(smallPropertyWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.deactive,
                   position: "relative",
-                  top: String(-5) + ea,
+                  top: String(smallPropertyTextTop) + ea,
                 },
               }
             },
@@ -1113,19 +1173,19 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 },
                 special: {
-                  fontSize: String(9) + ea,
+                  fontSize: String(smallPropertySize) + ea,
                   fontWeight: String(700),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
                   position: "relative",
-                  top: String(-5) + ea,
+                  top: String(smallPropertyTextTop) + ea,
                 },
               }
             },
@@ -1155,7 +1215,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        height: String(barMargin) + ea,
+        height: String(propertyBlockHeight) + ea,
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
@@ -1188,11 +1248,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -1214,11 +1274,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -1252,25 +1312,25 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 },
                 bold: {
-                  fontSize: String(14) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertyPyeongSize) + ea,
+                  fontWeight: String(projectPropertyPyeongWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.deactive,
                 },
                 special: {
-                  fontSize: String(9) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(smallPropertySize) + ea,
+                  fontWeight: String(smallPropertyWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.deactive,
                   position: "relative",
-                  top: String(-5) + ea,
+                  top: String(smallPropertyTextTop) + ea,
                 },
               }
             },
@@ -1292,19 +1352,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
-                },
-                special: {
-                  fontSize: String(9) + ea,
-                  fontWeight: String(700),
-                  fontFamily: "pretendard",
-                  color: colorExtended.black,
-                  position: "relative",
-                  top: String(-5) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 },
               }
             },
@@ -1319,7 +1371,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        height: String(barMargin) + ea,
+        height: String(propertyBlockHeight) + ea,
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
@@ -1352,11 +1404,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -1378,11 +1430,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -1416,25 +1468,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
-                },
-                bold: {
-                  fontSize: String(14) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.deactive,
-                },
-                special: {
-                  fontSize: String(9) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.deactive,
-                  position: "relative",
-                  top: String(-5) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 },
               }
             },
@@ -1456,19 +1494,19 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 },
                 special: {
-                  fontSize: String(9) + ea,
+                  fontSize: String(smallPropertySize) + ea,
                   fontWeight: String(700),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
                   position: "relative",
-                  top: String(-5) + ea,
+                  top: String(smallPropertyTextTop) + ea,
                 },
               }
             },
@@ -1498,7 +1536,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        height: String(barMargin) + ea,
+        height: String(propertyBlockHeight) + ea,
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
@@ -1531,11 +1569,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -1624,11 +1662,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        height: String(barMargin) + ea,
+        height: String(propertyBlockHeight) + ea,
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
-        marginBottom: String(-6) + ea,
+        marginBottom: String(propertyFinalMarginBottom) + ea,
       },
       children: [
         {
@@ -1658,11 +1696,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -1695,30 +1733,30 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                     style: {
                       display: "inline-flex",
                       position: "relative",
-                      height: withOut(0, ea),
-                      borderRadius: String(30) + ea,
-                      paddingLeft: String(14) + ea,
-                      paddingRight: String(14) + ea,
+                      height: String(keywordsHeight) + ea,
+                      borderRadius: String(keywordsHeight) + ea,
+                      paddingLeft: String(keywordsPadding) + ea,
+                      paddingRight: String(keywordsPadding) + ea,
                       boxSizing: "border-box",
                       border: String(borderWidth) + "px solid " + colorExtended.gray3,
                       justifyContent: "center",
                       alignItems: "center",
-                      marginLeft: String(index === 0 ? 0 : 4) + ea,
+                      marginLeft: String(index === 0 ? 0 : keywordsBetween) + ea,
                     },
                     child: {
                       text: "<b%#%b> " + str,
                       style: {
                         display: "inline-block",
                         position: "relative",
-                        fontSize: String(12.5) + ea,
-                        fontWeight: String(700),
+                        fontSize: String(keywordsSize) + ea,
+                        fontWeight: String(keywordsWeight),
                         fontFamily: "pretendard",
                         color: colorExtended.mainBlue,
-                        top: String(-1) + ea,
+                        top: String(keywordsTextTop) + ea,
                       },
                       bold: {
-                        fontSize: String(12.5) + ea,
-                        fontWeight: String(400),
+                        fontSize: String(keywordsSize) + ea,
+                        fontWeight: String(keywordsSharpWeight),
                         fontFamily: "pretendard",
                         color: colorExtended.blueLight,
                       }
@@ -1743,9 +1781,9 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        height: String(24) + ea,
+        height: String(propertyMiddleBarHeight) + ea,
         borderBottom: String(borderWidth) + "px solid " + colorExtended.black,
-        marginBottom: String(20) + ea,
+        marginBottom: String(propertyMiddleBarMarginBottom) + ea,
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
@@ -1794,11 +1832,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -1820,11 +1858,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(17) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySizeFocus) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -1872,11 +1910,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.gray5,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -1898,11 +1936,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.gray5,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -1949,11 +1987,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.gray5,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -1975,11 +2013,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.gray5,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -2027,11 +2065,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.gray5,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -2053,11 +2091,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.gray5,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -2120,11 +2158,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -2146,31 +2184,31 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 },
                 bold: {
-                  fontSize: String(16) + ea,
+                  fontSize: String(projectPropertySize) + ea,
                   fontWeight: String(600),
                   fontFamily: "pretendard",
                   color: colorExtended.mainBlue,
                 },
                 under: {
-                  fontSize: String(16) + ea,
+                  fontSize: String(projectPropertySize) + ea,
                   fontWeight: String(600),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
                 },
                 special: {
-                  fontSize: String(9) + ea,
+                  fontSize: String(smallPropertySize) + ea,
                   fontWeight: String(600),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
                   position: "relative",
-                  top: String(-5) + ea,
+                  top: String(smallPropertyTextTop) + ea,
                 },
               }
             },
@@ -2204,25 +2242,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
-                },
-                bold: {
-                  fontSize: String(14) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.deactive,
-                },
-                special: {
-                  fontSize: String(9) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.deactive,
-                  position: "relative",
-                  top: String(-5) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 },
               }
             },
@@ -2244,19 +2268,19 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 },
                 special: {
-                  fontSize: String(9) + ea,
+                  fontSize: String(smallPropertySize) + ea,
                   fontWeight: String(700),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
                   position: "relative",
-                  top: String(-5) + ea,
+                  top: String(smallPropertyTextTop) + ea,
                 },
               }
             },
@@ -2304,11 +2328,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -2330,11 +2354,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -2368,25 +2392,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
-                },
-                bold: {
-                  fontSize: String(14) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.deactive,
-                },
-                special: {
-                  fontSize: String(9) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.deactive,
-                  position: "relative",
-                  top: String(-5) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 },
               }
             },
@@ -2408,19 +2418,19 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 },
                 special: {
-                  fontSize: String(9) + ea,
+                  fontSize: String(smallPropertySize) + ea,
                   fontWeight: String(700),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
                   position: "relative",
-                  top: String(-5) + ea,
+                  top: String(smallPropertyTextTop) + ea,
                 },
               }
             },
@@ -2468,11 +2478,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -2494,11 +2504,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -2532,25 +2542,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
-                },
-                bold: {
-                  fontSize: String(14) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.deactive,
-                },
-                special: {
-                  fontSize: String(9) + ea,
-                  fontWeight: String(400),
-                  fontFamily: "pretendard",
-                  color: colorExtended.deactive,
-                  position: "relative",
-                  top: String(-5) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 },
               }
             },
@@ -2572,25 +2568,25 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 },
                 bold: {
-                  fontSize: String(16) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.mainBlue,
                 },
                 special: {
-                  fontSize: String(9) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(smallPropertySize) + ea,
+                  fontWeight: String(projectPropertyBoldWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
                   position: "relative",
-                  top: String(-5) + ea,
+                  top: String(smallPropertyTextTop) + ea,
                 },
               }
             },
@@ -2624,7 +2620,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
-        marginBottom: String(-6) + ea,
+        marginBottom: String(propertyFinalMarginBottom) + ea,
       },
       children: [
         {
@@ -2654,11 +2650,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(16) + ea,
-                  fontWeight: String(400),
+                  fontSize: String(projectPropertySize) + ea,
+                  fontWeight: String(projectPropertyLightWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
-                  top: String(-1) + ea,
+                  top: String(projectPropertyTextTop) + ea,
                 }
               }
             },
@@ -2753,7 +2749,6 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   let quoteTop;
   let quotePaddingLeft;
   let topReviewSize, topReviewWeight;
-  let mainTitleSize, mainTitleWeight;
   let mainTitleLineHeight;
   let mainTitleMarginTop;
   let subTitleSize, subTitleWeight;
@@ -2792,12 +2787,33 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   let grayLineBoxPaddingTop;
   let grayLineBoxPaddingLeft;
   let thisContents;
+  let contentsBoxPaddingBottom;
+  let mainTitleSize, mainTitleWeight;
+  let commentBoxPaddingBottom;
+  let commentSquareWidth, commentSquareMarginRight;
+  let commentSize, commentWeight;
+  let commentTextTop;
+  let commentBoxHeight;
+  let detailContentsPaddingTop;
+  let detailContentsSize, detailContentsWeight, detailContentsLineHeight;
+  let keywordsBoxMarginBottom;
+  let keywordsBoxVisualLeft;
+  let keywordsHeight;
+  let keywordsPadding;
+  let keywordsBetween;
+  let keywordsBetweenBottom;
+  let keywordsSize;
+  let keywordsWeight;
+  let keywordsSharpWeight;
+  let keywordsTextTop;
+  let slideBoxHeight, slideBoxHeightPadding;
+  let slidePhotoBetween;
 
   thisVersion = instance.version;
 
-  mainRatio = (10 / 16);
-  mainMargin = 150;
-  photoRatio = 0.73;
+  mainRatio = <%% (10 / 16), (10 / 16), (10 / 16), (10 / 16), (10 / 16) %%>;
+  mainMargin = <%% 150, 120, 120, 120, 120 %%>;
+  photoRatio = <%% 0.75, 0.7, 0.75, 0.75, 0.75 %%>;
 
   mainHeight = <%% 800, 750, 710, 590, mainRatio * 100 %%>;
   mainBelowBarHeight = <%% 250, 250, 250, 216, 250 %%>;
@@ -2810,23 +2826,23 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   pictureWidth = <%% 820, 720, 610, 480, 610 %%>;
   pictureHeight = mainHeight - (contentsBoxTop * 2) - bottomVisual;
 
-  boxRadius = 15;
+  boxRadius = <%% 15, 15, 15, 15, 15 %%>;
 
-  photoRightMargin = 45;
-  designerSpacePhotoWidth = 100;
-  designerSpacePhotoMarginRight = 20;
+  photoRightMargin = <%% 45, 32, 30, 25, 45 %%>;
+  designerSpacePhotoWidth = <%% 100, 100, 100, 100, 100 %%>;
+  designerSpacePhotoMarginRight = <%% 20, 20, 20, 20, 20 %%>;
 
-  barMargin = 30;
-  barMarginBottom = 30;
-  valueColumnMargin = 22;
-  valueBlockHeight = 45;
-  grayBarMargin = 16;
+  barMargin = <%% 30, 30, 30, 30, 30 %%>;
+  barMarginBottom = <%% 30, 30, 30, 30, 30 %%>;
+  valueColumnMargin = <%% 22, 20, 18, 16, 22 %%>;
+  valueBlockHeight = <%% 45, 45, 45, 45, 45 %%>;
+  grayBarMargin = <%% 16, 16, 16, 16, 16 %%>;
 
-  keywordsLeft = 60;
-  satisBarLeft = 130;
-  satisBarHeight = 20;
-  satisBarVisualTop = -0.5;
-  satisLength = 10;
+  keywordsLeft = <%% 60, 60, 60, 60, 60 %%>;
+  satisBarLeft = <%% 130, 130, 130, 130, 130 %%>;
+  satisBarHeight = <%% 20, 20, 20, 20, 20 %%>;
+  satisBarVisualTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
+  satisLength = <%% 10, 10, 10, 10, 10 %%>;
 
   quoteHeight = <%% 14, 14, 13, 11, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
@@ -2836,8 +2852,6 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   topReviewSize = <%% 16, 16, 15, 14, 15 %%>;
   topReviewWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  mainTitleSize = <%% 36, 35, 33, 29, 4.5 %%>;
-  mainTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
   mainTitleLineHeight = <%% 1.16, 1.16, 1.16, 1.16, 1.2 %%>;
   mainTitleMarginTop = <%% 7, 7, 7, 5, 8.5 %%>;
 
@@ -2852,21 +2866,54 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   bottomWordingVisualBottom = <%% (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4), (isMac() ? -2 : -4), -2 %%>;
   bottomWordingLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  mobileWhiteBoxTop = 20;
-  mobileWhiteBoxLeft = 8;
-  mobileWhiteBoxWidth = 38;
-  mobileWhiteBoxHeight = 30;
+  mobileWhiteBoxTop = <%% 20, 20, 20, 20, 20 %%>;
+  mobileWhiteBoxLeft = <%% 8, 8, 8, 8, 8 %%>;
+  mobileWhiteBoxWidth = <%% 38, 38, 38, 38, 38 %%>;
+  mobileWhiteBoxHeight = <%% 30, 30, 30, 30, 30 %%>;
 
-  mobileWordingLeft = 5.3;
+  mobileWordingLeft = <%% 5.3, 5.3, 5.3, 5.3, 5.3 %%>;
 
-  borderWidth = 1.5;
-  borderWidthLight = 1;
+  borderWidth = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  borderWidthLight = <%% 1, 1, 1, 1, 1 %%>;
 
-  grayLineBoxMarginTop = 22;
-  grayLineBoxBetween = 10;
-  grayLineBoxPaddingTop = 20;
-  grayLineBoxPaddingLeft = 24;
+  grayLineBoxMarginTop = <%% 22, 20, 18, 16, 22 %%>;
+  grayLineBoxBetween = <%% 10, 10, 10, 10, 10 %%>;
+  grayLineBoxPaddingTop = <%% 20, 20, 20, 20, 20 %%>;
+  grayLineBoxPaddingLeft = <%% 24, 24, 24, 24, 24 %%>;
 
+  contentsBoxPaddingBottom = <%% 60, 45, 45, 45, 60 %%>;
+  mainTitleSize = <%% 21, 19, 17, 16, 21 %%>;
+  mainTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  commentBoxPaddingBottom = <%% 6, 6, 6, 6, 6 %%>;
+  commentSquareWidth = <%% 10, 9, 9, 8, 10 %%>;
+  commentSquareMarginRight = <%% 4, 4, 4, 4, 4 %%>;
+  commentSize = <%% 15, 14, 14, 13, 15 %%>;
+  commentWeight = <%% 700, 700, 700, 700, 700 %%>;
+  commentTextTop = <%% 1, 1, 1, 1, 1 %%>;
+  commentBoxHeight = <%% 26.5, 25.5, 25.5, 25.5, 25.5 %%>;
+  detailContentsPaddingTop = <%% 12, 12, 12, 12, 12 %%>;
+  detailContentsSize = <%% 14, 13, 13, 12, 14 %%>;
+  detailContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  detailContentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
+
+  keywordsBoxMarginBottom = <%% -6, -6, -6, -6, -6 %%>;
+  keywordsBoxVisualLeft = <%% -4, -4, -4, -4, -4 %%>;
+
+  keywordsHeight = <%% 30, 27, 25, 24, 30 %%>;
+  keywordsPadding = <%% 14, 12, 10, 10, 14 %%>;
+  keywordsBetween = <%% 4, 4, 3, 2, 4 %%>;
+
+  keywordsBetweenBottom = <%% 6, 6, 5, 4, 6 %%>;
+
+  keywordsSize = <%% 12.5, 12, 11, 10, 12.5 %%>;
+  keywordsWeight = <%% 700, 700, 700, 700, 700 %%>;
+  keywordsSharpWeight = <%% 400, 400, 400, 400, 400 %%>;
+  keywordsTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+  slideBoxHeight = <%% 160, 150, 140, 130, 160 %%>;
+  slideBoxHeightPadding = <%% 10, 8, 6, 4, 10 %%>;
+  slidePhotoBetween = <%% 6, 5, 4, 3, 6 %%>;
 
   barBlank = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
@@ -2877,7 +2924,6 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   ];
 
   contentsKeywords = [
-    "밝은",
     "편안한 톤",
     "가성비 있게",
     "수납",
@@ -2890,7 +2936,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
     style: {
       display: "block",
       position: "relative",
-      width: String(100) + '%',
+      width: withOut(0, ea),
       background: colorExtended.white,
       animation: "fadeupdelay 0.5s ease forwards",
     },
@@ -2907,7 +2953,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
       left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
       top: String(0),
       paddingTop: String(mainMargin) + ea,
-      paddingBottom: String(60) + ea,
+      paddingBottom: String(contentsBoxPaddingBottom) + ea,
     }
   });
 
@@ -2959,8 +3005,8 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        fontSize: String(21) + ea,
-        fontWeight: String(700),
+        fontSize: String(mainTitleSize) + ea,
+        fontWeight: String(mainTitleWeight),
         color: colorExtended.black,
         fontFamily: "pretendard",
       }
@@ -2992,7 +3038,8 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
           flexDirection: "row",
           justifyContent: "start",
           alignItems: "center",
-          paddingBottom: String(6) + ea,
+          height: String(commentBoxHeight - commentBoxPaddingBottom - borderWidth) + ea,
+          paddingBottom: String(commentBoxPaddingBottom) + ea,
           borderBottom: String(borderWidth) + "px solid " + colorExtended.black,
         },
         children: [
@@ -3000,11 +3047,11 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
             style: {
               display: "inline-block",
               position: "relative",
-              width: String(10) + ea,
-              height: String(10) + ea,
+              width: String(commentSquareWidth) + ea,
+              height: String(commentSquareWidth) + ea,
               borderRadius: String(2) + "px",
               background: colorExtended.black,
-              marginRight: String(4) + ea,
+              marginRight: String(commentSquareMarginRight) + ea,
             }
           },
           {
@@ -3012,10 +3059,10 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(15) + ea,
-              fontWeight: String(700),
+              fontSize: String(commentSize) + ea,
+              fontWeight: String(commentWeight),
               color: colorExtended.black,
-              top: String(1) + ea,
+              top: String(commentTextTop) + ea,
               fontFamily: "mont",
             }
           }
@@ -3029,8 +3076,8 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
           flexDirection: "row",
           justifyContent: "start",
           alignItems: "start",
-          paddingTop: String(12) + ea,
-          height: withOut(26.5, ea),
+          paddingTop: String(detailContentsPaddingTop) + ea,
+          height: withOut(commentBoxHeight, ea),
           overflow: "scroll",
         },
         children: [
@@ -3039,11 +3086,11 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(14) + ea,
-              fontWeight: String(400),
+              fontSize: String(detailContentsSize) + ea,
+              fontWeight: String(detailContentsWeight),
               color: colorExtended.black,
               fontFamily: "pretendard",
-              lineHeight: String(1.6),
+              lineHeight: String(detailContentsLineHeight),
             }
           }
         ]
@@ -3057,7 +3104,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
       display: "flex",
       position: "relative",
       width: withOut(0, ea),
-      height: String(22) + ea,
+      height: String(grayLineBoxMarginTop) + ea,
       flexDirection: "row",
       justifyContent: "start",
       alignItems: "start",
@@ -3073,7 +3120,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
       flexDirection: "row",
       justifyContent: "start",
       alignItems: "start",
-      marginBottom: String(-6) + ea,
+      marginBottom: String(keywordsBoxMarginBottom) + ea,
     },
     children: [
       {
@@ -3093,8 +3140,8 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
               position: "absolute",
               textAlign: "left",
               top: String(0),
-              left: String(-4) + ea,
-              width: withOut(0 - (-4), ea),
+              left: String(keywordsBoxVisualLeft) + ea,
+              width: withOut(0 - keywordsBoxVisualLeft, ea),
               height: withOut(0, ea),
             },
             child: {
@@ -3111,30 +3158,30 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
                     display: "inline-flex",
                     position: "relative",
                     height: withOut(0, ea),
-                    borderRadius: String(30) + ea,
-                    paddingLeft: String(14) + ea,
-                    paddingRight: String(14) + ea,
+                    borderRadius: String(keywordsHeight) + ea,
+                    paddingLeft: String(keywordsPadding) + ea,
+                    paddingRight: String(keywordsPadding) + ea,
                     boxSizing: "border-box",
                     border: String(borderWidth) + "px solid " + colorExtended.gray3,
                     justifyContent: "center",
                     alignItems: "center",
-                    marginLeft: String(4) + ea,
-                    marginBottom: String(6) + ea,
+                    marginLeft: String(keywordsBetween) + ea,
+                    marginBottom: String(keywordsBetweenBottom) + ea,
                   },
                   child: {
                     text: "<b%#%b> " + str,
                     style: {
                       display: "inline-block",
                       position: "relative",
-                      fontSize: String(12.5) + ea,
-                      fontWeight: String(700),
+                      fontSize: String(keywordsSize) + ea,
+                      fontWeight: String(keywordsWeight),
                       fontFamily: "pretendard",
                       color: colorExtended.mainBlue,
-                      top: String(-1) + ea,
+                      top: String(keywordsTextTop) + ea,
                     },
                     bold: {
-                      fontSize: String(12.5) + ea,
-                      fontWeight: String(400),
+                      fontSize: String(keywordsSize) + ea,
+                      fontWeight: String(keywordsSharpWeight),
                       fontFamily: "pretendard",
                       color: colorExtended.blueLight,
                     }
@@ -3158,7 +3205,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
       width: desktop ? String(standardWidth) + ea : String(100) + '%',
       left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
       marginBottom: String(mainMargin) + ea,
-      height: String(160) + ea,
+      height: String(slideBoxHeight) + ea,
     },
     children: [
       {
@@ -3166,10 +3213,10 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
           display: "flex",
           flexDirection: "row",
           position: "relative",
-          width: withOut(1.5 * 2, ea),
-          height: String(160 - (10 * 2)) + ea,
-          top: String(10) + ea,
-          left: String(1.5) + ea,
+          width: withOut(0, ea),
+          height: String(slideBoxHeight - (slideBoxHeightPadding * 2)) + ea,
+          top: String(slideBoxHeightPadding) + ea,
+          left: String(0) + ea,
           overflow: "scroll",
           justifyContent: "center",
           alignItems: "center",
@@ -3193,7 +3240,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
                 display: "inline-block",
                 position: "relative",
                 height: withOut(0, ea),
-                marginLeft: String(6) + ea,
+                marginLeft: String(slidePhotoBetween) + ea,
                 borderRadius: String(8) + "px",
               }
             }
@@ -3582,368 +3629,6 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
     }
   });
 
-  belowBox = createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: desktop ? withOut(belowBoxPadding * 2, ea) : withOut((belowBoxPadding + contentsPadding) * 2, ea),
-      padding: String(belowBoxPadding) + ea,
-      height: String(belowBoxHeight) + ea,
-      borderRadius: String(5) + "px",
-      background: colorChip.gray0,
-      marginLeft: desktop ? "" : String(contentsPadding) + ea,
-      marginRight: desktop ? "" : String(contentsPadding) + ea,
-      marginBottom: desktop ? "" : String(mobileDesignerBoxBetween) + ea
-    },
-    children: [
-      {
-        attribute: {
-          desid: designer.desid,
-        },
-        event: {
-          click: function (e) {
-            const desid = this.getAttribute("desid");
-            selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
-          },
-          touchstart: function (e) {
-            const self = this;
-            self.setAttribute(touchStartConst, "on");
-            setQueue(() => {
-              self.setAttribute(touchStartConst, "off");
-            });
-          },
-          touchend: function (e) {
-            if (this.getAttribute(touchStartConst) === "on") {
-              const desid = this.getAttribute("desid");
-              selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
-            }
-          }
-        },
-        style: {
-          display: desktop ? "inline-block" : "none",
-          position: "relative",
-          borderRadius: String(5) + "px",
-          width: String(belowWhiteWidth) + ea,
-          paddingTop: String(designerTongPaddingTop) + ea,
-          height: withOut(designerTongPaddingTop, ea),
-          background: colorChip.white,
-          textAlign: "center",
-          verticalAlign: "top",
-          cursor: "pointer",
-        },
-        children: [
-          {
-            style: {
-              backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
-              backgroundSize: "auto 100%",
-              backgroundPosition: "50% 50%",
-              display: "inline-block",
-              width: String(deignserPhotoWidth) + ea,
-              height: String(deignserPhotoWidth) + ea,
-              borderRadius: String(deignserPhotoWidth / 2) + ea,
-            }
-          },
-          {
-            text: designer.designer,
-            style: {
-              marginTop: String(designerTitleMarginTop) + ea,
-              marginBottom: String(designerTitleMarginTop) + ea,
-              textAlign: "center",
-              fontSize: String(designerTitleSize) + ea,
-              fontWeight: String(designerTitleWeight),
-              color: colorChip.black,
-            }
-          }
-        ]
-      },
-      {
-        attribute: { pid },
-        event: {
-          click: function (e) {
-            const pid = this.getAttribute("pid");
-            selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
-          },
-          touchstart: function (e) {
-            const self = this;
-            self.setAttribute(touchStartConst, "on");
-            setQueue(() => {
-              self.setAttribute(touchStartConst, "off");
-            });
-          },
-          touchend: function (e) {
-            if (this.getAttribute(touchStartConst) === "on") {
-              const pid = this.getAttribute("pid");
-              selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
-            }
-          }
-        },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          borderRadius: String(5) + "px",
-          width: String(belowPictureWidth) + ea,
-          height: String(100) + '%',
-          marginLeft: String(belowPictureMargin) + ea,
-          backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.portfolio.detailInfo.photodae[1]) + pid + ".jpg" + "')",
-          backgroundSize: desktop ? "auto 100%" : "100% auto",
-          backgroundPosition: "50% 50%",
-          verticalAlign: "top",
-          cursor: "pointer",
-        }
-      },
-      {
-        attribute: { pid },
-        event: {
-          click: function (e) {
-            const pid = this.getAttribute("pid");
-            selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
-          },
-          touchstart: function (e) {
-            const self = this;
-            self.setAttribute(touchStartConst, "on");
-            setQueue(() => {
-              self.setAttribute(touchStartConst, "off");
-            });
-          },
-          touchend: function (e) {
-            if (this.getAttribute(touchStartConst) === "on") {
-              const pid = this.getAttribute("pid");
-              selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
-            }
-          }
-        },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: withOut(belowWhiteWidth + belowPictureWidth + (belowPictureMargin * 2) + belowTextAreaPaddingLeft, ea),
-          paddingTop: String(belowTextAreaPaddingTop) + ea,
-          marginLeft: String(belowPictureMargin) + ea,
-          paddingLeft: String(belowTextAreaPaddingLeft) + ea,
-          verticalAlign: "top",
-          cursor: "pointer",
-        },
-        children: [
-          {
-            text: nameCardWording,
-            style: {
-              fontSize: String(belowTextTitleSize) + ea,
-              fontWeight: String(belowTextTitleWeight),
-              color: colorChip.black,
-              lineHeight: String(belowTextTitleLineHeight),
-            }
-          },
-          {
-            style: {
-              display: "block",
-              height: String(belowTextAreaTitleBarTop) + ea,
-              width: String(100) + '%',
-              borderBottom: "1px solid " + colorChip.gray3,
-            }
-          },
-          {
-            text: contents.contents.portfolio.title.sub.split(", ").join("\n"),
-            style: {
-              fontSize: String(belowTextAreaSubSize) + ea,
-              fontWeight: String(belowTextAreaSubWeight),
-              color: colorChip.shadow,
-              lineHeight: String(belowTextAreaSubLineHeight),
-              marginTop: String(belowTextAreaSubMarginTop) + ea,
-            }
-          },
-        ]
-      },
-      {
-        text: "Portfolio",
-        style: {
-          position: "absolute",
-          fontSize: String(portfolioWordingSize) + ea,
-          fontWeight: String(portfolioWordingWeight),
-          fontFamily: "graphik",
-          color: colorChip.black,
-          top: String(belowBoxPadding) + ea,
-          right: String(belowBoxPadding) + ea,
-          textAlign: "right",
-        }
-      }
-    ]
-  });
-
-  if (mobile) {
-    createNode({
-      mother: mainTong,
-      style: {
-        display: "block",
-        position: "relative",
-        width: desktop ? withOut(belowBoxPadding * 2, ea) : withOut((belowBoxPadding + contentsPadding) * 2, ea),
-        padding: String(belowBoxPadding) + ea,
-        height: String(belowBoxHeight) + ea,
-        borderRadius: String(5) + "px",
-        background: colorChip.gray0,
-        marginLeft: desktop ? "" : String(contentsPadding) + ea,
-        marginRight: desktop ? "" : String(contentsPadding) + ea,
-      },
-      children: [
-        {
-          attribute: { desid: designer.desid },
-          event: {
-            click: function (e) {
-              const desid = this.getAttribute("desid");
-              selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
-            },
-            touchstart: function (e) {
-              const self = this;
-              self.setAttribute(touchStartConst, "on");
-              setQueue(() => {
-                self.setAttribute(touchStartConst, "off");
-              });
-            },
-            touchend: function (e) {
-              if (this.getAttribute(touchStartConst) === "on") {
-                const desid = this.getAttribute("desid");
-                selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
-              }
-            }
-          },
-          style: {
-            display: "inline-block",
-            position: "relative",
-            borderRadius: String(5) + "px",
-            width: String(belowPictureWidth) + ea,
-            height: String(100) + '%',
-            marginLeft: String(belowPictureMargin) + ea,
-            backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
-            backgroundSize: desktop ? "auto 100%" : "100% auto",
-            backgroundPosition: "50% 50%",
-            verticalAlign: "top",
-          }
-        },
-        {
-          attribute: { desid: designer.desid },
-          event: {
-            click: function (e) {
-              const desid = this.getAttribute("desid");
-              selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
-            },
-            touchstart: function (e) {
-              const self = this;
-              self.setAttribute(touchStartConst, "on");
-              setQueue(() => {
-                self.setAttribute(touchStartConst, "off");
-              });
-            },
-            touchend: function (e) {
-              if (this.getAttribute(touchStartConst) === "on") {
-                const desid = this.getAttribute("desid");
-                selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
-              }
-            }
-          },
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: withOut(belowWhiteWidth + belowPictureWidth + (belowPictureMargin * 2) + belowTextAreaPaddingLeft, ea),
-            paddingTop: String(mobileDesignerWordingTop) + ea,
-            marginLeft: String(belowPictureMargin) + ea,
-            paddingLeft: String(belowTextAreaPaddingLeft) + ea,
-            verticalAlign: "top",
-          },
-          children: [
-            {
-              text: designer.designer,
-              style: {
-                fontSize: String(belowTextTitleSize) + ea,
-                fontWeight: String(belowTextTitleWeight),
-                color: colorChip.black,
-                lineHeight: String(belowTextTitleLineHeight),
-              }
-            },
-            {
-              style: {
-                display: "block",
-                height: String(belowTextAreaTitleBarTop) + ea,
-                width: String(100) + '%',
-                borderBottom: "1px solid " + colorChip.gray3,
-              }
-            },
-            {
-              text: designerMthParsing(designer.setting.front.methods).join(", ") + "\n" + designerCareer(designer, true),
-              style: {
-                fontSize: String(belowTextAreaSubSize) + ea,
-                fontWeight: String(belowTextAreaSubWeight),
-                color: colorChip.shadow,
-                lineHeight: String(belowTextAreaSubLineHeight),
-                marginTop: String(belowTextAreaSubMarginTop) + ea,
-              },
-              bold: {
-                fontSize: String(belowTextAreaSubSize) + ea,
-                fontWeight: String(belowTextAreaSubWeight),
-                color: colorChip.shadow,
-              }
-            },
-          ]
-        },
-        {
-          text: "Designer",
-          style: {
-            position: "absolute",
-            fontSize: String(portfolioWordingSize) + ea,
-            fontWeight: String(portfolioWordingWeight),
-            fontFamily: "graphik",
-            color: colorChip.black,
-            top: String(belowBoxPadding) + ea,
-            right: String(belowBoxPadding) + ea,
-            textAlign: "right",
-          }
-        }
-      ]
-    });
-  }
-
-  createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      height: String(blankMarginLast) + ea,
-    }
-  });
-
-  if (desktop) {
-    designerTong = belowBox.firstChild;
-    designerMthTargets = designerMthParsing(designer.setting.front.methods);
-    for (let mth of designerMthTargets) {
-      createNode({
-        mother: designerTong,
-        text: mth,
-        style: {
-          marginTop: String(designerMthMarginTop) + ea,
-          textAlign: "center",
-          fontSize: String(designerMthSize) + ea,
-          fontWeight: String(designerMthWeight),
-          color: colorChip.black,
-        }
-      });
-    }
-
-    createNode({
-      mother: designerTong,
-      text: designerCareer(designer, true),
-      style: {
-        position: "absolute",
-        width: String(100) + '%',
-        textAlign: "center",
-        bottom: String(careerBottom) + ea,
-        fontSize: String(careerSize) + ea,
-        fontWeight: String(careerWeight),
-        color: colorChip.black,
-      },
-      bold: {
-        fontWeight: String(200),
-        color: colorChip.deactive,
-      }
-    });
-  }
-
 }
 
 ReviewDetailJs.prototype.relativeContents = function (contents, length) {
@@ -4196,14 +3881,15 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   let montHangulTitleTop;
   let montTitleTop;
   let montSpecialTitleTop;
+  let baseTop, baseBottom;
 
   this.relativePhotoNumber = 0;
 
   baseWidth = <%% 1300, 980, 800, 640, 76 %%>;
   baseBetween = standardWidth - baseWidth;
 
-  arrowHeight = <%% 26, 25, 25, 24, 4 %%>;
-  arrowTop = <%% 280, 218, 230, 190, 34 %%>;
+  arrowHeight = <%% 26, 24, 24, 24, 4 %%>;
+  arrowTop = <%% 280, 262, 230, 190, 34 %%>;
 
   mainHeight = <%% 590, 570, 590, 496, 94 %%>;
   mainPaddingTop = <%% 110, 96, 86, 72, 10 %%>;
@@ -4296,14 +3982,17 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   thisBudget = "<u%" + autoComma(3000) + "%u> " + "<b%" + "만원" + "대" + "%b>";
   radiusPixel = <%% 15, 15, 15, 15, 15 %%>;
 
-  titleSize = <%% 17, 15, 16, 14, 3 %%>;
-  montTitleSize = <%% 20, 16, 17, 15, 3.1 %%>;
+  titleSize = <%% 17, 17, 16, 14, 3 %%>;
+  montTitleSize = <%% 20, 20, 17, 15, 3.1 %%>;
   montTitleMarginLeft = <%% 8, 8, 8, 6, 1.6 %%>;
   montHangulTitleTop = <%% -1, -1, -1, -1, (isIphone() ? -0.3 : -0.1) %%>;
   montTitleTop = <%% -0.5, -1, -1, -1, (isIphone() ? -0.4 : -0.2) %%>;
-  montSpecialTitleTop = <%% 0, -0.5, -0.5, -0.5, (isIphone() ? -0.3 : -0.1) %%>; 
+  montSpecialTitleTop = <%% 1.5, 1.5, 1.5, 1.5, (isIphone() ? -0.3 : -0.1) %%>; 
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.6 %%>;
+
+  baseTop = <%% 120, 100, 100, 100, 120 %%>;
+  baseBottom = <%% 120, 100, 100, 100, 120 %%>;
 
   // relative
 
@@ -4313,7 +4002,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      paddingBottom: String(120) + ea,
+      paddingBottom: String(baseBottom) + ea,
     },
     child: {
       style: {
@@ -4335,7 +4024,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
       position: "relative",
       width: String(standardWidth) + ea,
       left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      paddingTop: String(110) + ea,
+      paddingTop: String(baseTop) + ea,
     }
   });
 
@@ -4455,7 +4144,6 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   }).firstChild;
 
   setQueue(async () => {
-    console.log("a");
 
     try {
       const photoChar = 't';
@@ -4630,7 +4318,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
 ReviewDetailJs.prototype.reviewDesignerBox = function () {
   const instance = this;
   const { createNode, colorChip, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue } = GeneralJs;
-  const { totalContents, naviHeight, ea, media, pid } = this;
+  const { totalContents, naviHeight, ea, media, pid, version } = this;
   const { contentsArr, designers } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -4706,6 +4394,8 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
   let boxDetailBoxTitleSize, boxDetailBoxTitleWeight;
   let boxDetailBoxDetailSize, boxDetailBoxDetailWeight;
   let boxDetailBoxTitleEngSize, boxDetailBoxTitleEngWeight, boxDetailBoxTitleEngVisualTop;
+  let baseTop;
+  let baseBottom0, baseBottom1;
 
   story.shift();
   customerStory = '';
@@ -4715,7 +4405,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
   }
   customerStory = customerStory.slice(0, -2);
 
-  mainWidth = <%% 980, 940, 900, 720, 100 %%>;
+  mainWidth = <%% (version === 1 ? 980 : 900), 900, 900, 720, 100 %%>;
   mainPaddingTop = <%% 110, 110, 110, 80, 11.7 %%>;
 
   titleSize = <%% 23, 23, 23, 21, 4.8 %%>;
@@ -4797,34 +4487,38 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
   mobileDesignerWordingTop = 13;
   mobileDesignerBoxBetween = 2;
 
-  boxHeight = 404;
-  boxPhotoWidth = 652;
-  boxBorderRadius = 10;
-  boxBetween = 12;
+  boxHeight = <%% 404, 404, 404, 404, 404 %%>;
+  boxPhotoWidth = <%% (version === 1 ? 652 : 572), (version === 1 ? 572 : 572), (version === 1 ? 572 : 572), (version === 1 ? 572 : 572), (version === 1 ? 652 : 572) %%>;
+  boxBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
+  boxBetween = <%% 12, 12, 12, 12, 12 %%>;
 
-  boxDetailBoxPaddingTop = 24;
-  boxDetailBoxPaddingLeft = 24;
+  boxDetailBoxPaddingTop = <%% 24, 24, 24, 24, 24 %%>;
+  boxDetailBoxPaddingLeft = <%% 24, 24, 24, 24, 24 %%>;
 
-  boxDetailBoxLineMargin = 8;
+  boxDetailBoxLineMargin = <%% 8, 8, 8, 8, 8 %%>;
 
-  boxDetailAbsolutePadding = 10;
-  boxDetailAbsoluteBoxHeight = 52;
+  boxDetailAbsolutePadding = <%% 10, 10, 10, 10, 10 %%>;
+  boxDetailAbsoluteBoxHeight = <%% 52, 52, 52, 52, 52 %%>;
 
-  boxDetailAbsoluteArrowPadding = 12;
-  boxDetailAbsoluteTextSize = 15;
-  boxDetailAbsoluteTextWeight = 300;
-  boxDetailAbsoluteArrowWidth = 18;
-  boxDetailAbsoluteArrowBetween = 6;
-  boxDetailAbsoluteArrowVisualTop = -0.5;
+  boxDetailAbsoluteArrowPadding = <%% 12, 12, 12, 12, 12 %%>;
+  boxDetailAbsoluteTextSize = <%% 15, 15, 15, 15, 15 %%>;
+  boxDetailAbsoluteTextWeight = <%% 300, 300, 300, 300, 300 %%>;
+  boxDetailAbsoluteArrowWidth = <%% 18, 18, 18, 18, 18 %%>;
+  boxDetailAbsoluteArrowBetween = <%% 6, 6, 6, 6, 6 %%>;
+  boxDetailAbsoluteArrowVisualTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
 
-  boxDetailBoxTitleSize = 20;
-  boxDetailBoxTitleWeight = 700;
-  boxDetailBoxDetailSize = 13;
-  boxDetailBoxDetailWeight = 400;
+  boxDetailBoxTitleSize = <%% 20, 19, 18, 17, 20 %%>;
+  boxDetailBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  boxDetailBoxDetailSize = <%% 13, 13, 13, 13, 13 %%>;
+  boxDetailBoxDetailWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  boxDetailBoxTitleEngSize = 22;
-  boxDetailBoxTitleEngWeight = 700;
-  boxDetailBoxTitleEngVisualTop = 0.5;
+  boxDetailBoxTitleEngSize = <%% 22, 21, 20, 19, 22 %%>;
+  boxDetailBoxTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
+  boxDetailBoxTitleEngVisualTop = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
+
+  baseTop = <%% 140, 110, 110, 110, 140 %%>;
+  baseBottom0 = <%% 150, 115, 115, 115, 150 %%>;
+  baseBottom1 = <%% 200, 200, 200, 170, 20 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -4838,13 +4532,15 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
     },
   });
 
-  createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      height: String(140) + ea,
-    }
-  });
+  if (version === 1) {
+    createNode({
+      mother: mainTong,
+      style: {
+        display: "block",
+        height: String(baseTop) + ea,
+      }
+    });
+  }
 
   createNode({
     mother: mainTong,
@@ -4899,7 +4595,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
               paddingRight: String(boxDetailBoxPaddingLeft) + ea,
               background: colorExtended.blue,
             },
-                        children: [
+            children: [
               {
                 style: {
                   display: "flex",
@@ -5156,7 +4852,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
     mother: mainTong,
     style: {
       display: "block",
-      height: String(150) + ea,
+      height: String(version === 1 ? baseBottom0 : baseBottom1) + ea,
     }
   });
 
@@ -5237,8 +4933,8 @@ ReviewDetailJs.prototype.launching = async function (loading) {
             instance.reviewContentsBox();
           } else {
             instance.reviewDetailBox();
-            instance.reviewDesignerBox();
           }
+          instance.reviewDesignerBox();
           instance.reviewRelativeBox();
 
           homeliaisonAnalytics({
