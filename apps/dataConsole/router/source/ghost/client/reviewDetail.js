@@ -574,6 +574,12 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   } else {
     satisBarVisualTop = <%% 6, 5.5, 5.5, 4, 0.5 %%>;
   }
+  if (desktop) {
+    if (!isMac()) {
+      satisBarVisualTop = satisBarVisualTop + (1);
+    }
+  }
+
   satisLength = <%% 10, 10, 10, 10, 10 %%>;
 
   designerTitleSize = <%% 19, 18, 17, 15, 3.9 %%>;
@@ -615,7 +621,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   keywordsSize = <%% 12.5, 12, 11, 10, 2.7 %%>;
   keywordsWeight = <%% 700, 700, 700, 700, 700 %%>;
   keywordsSharpWeight = <%% 400, 400, 400, 400, 400 %%>;
-  keywordsTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
+  keywordsTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
 
   propertyMiddleBarHeight = <%% 24, 20, 18, 16, 3 %%>;
   propertyMiddleBarMarginBottom = <%% 20, 20, 18, 16, 5 %%>;
@@ -654,7 +660,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   borderWidth = 1.5;
   borderWidthLight = 1;
 
-  barBlank = desktop ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "&nbsp;&nbsp;&nbsp;";
+  barBlank = desktop ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : (!isIphone() ? "&nbsp;&nbsp;&nbsp;" : " &nbsp;");
 
   contentsKeywords = [
     "편안한 톤",
@@ -805,7 +811,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       alignItems: "start",
     },
     child: {
-      text: "모던" + barBlank + "<b%|%b>" + barBlank + "네추럴" + barBlank + "<b%|%b>" + barBlank + "모던",
+      text: "모던" + "<b%|%b>" + "네추럴" + "<b%|%b>" + "모던",
       style: {
         display: "inline-block",
         position: "relative",
@@ -818,6 +824,8 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         fontSize: String(designerStyleSize) + ea,
         fontWeight: String(designerStyleWeight),
         color: colorExtended.gray3,
+        marginLeft: String(<&& 10 | 10 | 9 | 8 | 1.66 &&>) + ea,
+        marginRight: String(<&& 10 | 10 | 9 | 8 | 1.66 &&>) + ea,
       }
     }
   });
@@ -2194,7 +2202,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(valueColumnMargin) + ea,
               },
               child: {
-                text: String(contents.contents.portfolio.spaceInfo.pyeong) + "py&nbsp;&nbsp;<b%( %b><u%84m%u><s%2%s><b% )%b>",
+                text: String(contents.contents.portfolio.spaceInfo.pyeong) + "py <b%( %b><u%84m%u><s%2%s><b% )%b>",
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -2206,7 +2214,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 },
                 bold: {
                   fontSize: String(projectPropertySize) + ea,
-                  fontWeight: String(600),
+                  fontWeight: String(500),
                   fontFamily: "pretendard",
                   color: colorExtended.mainBlue,
                 },
@@ -2218,7 +2226,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 },
                 special: {
                   fontSize: String(smallPropertySize) + ea,
-                  fontWeight: String(600),
+                  fontWeight: String(500),
                   fontFamily: "pretendard",
                   color: colorExtended.black,
                   position: "relative",
@@ -2902,9 +2910,9 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   commentBoxPaddingBottom = <%% 6, 6, 6, 6, 2 %%>;
   commentSquareWidth = <%% 10, 9, 9, 8, 2.4 %%>;
   commentSquareMarginRight = <%% 4, 4, 4, 4, 1 %%>;
-  commentSize = <%% 15, 14, 14, 13, 3.7 %%>;
+  commentSize = <%% 15, 14, 14, 13, 3.6 %%>;
   commentWeight = <%% 700, 700, 700, 700, 700 %%>;
-  commentTextTop = <%% 1, 1, 1, 1, 0.2 %%>;
+  commentTextTop = <%% (isMac() ? 1 : 0), (isMac() ? 1 : 0), (isMac() ? 1 : 0), (isMac() ? 1 : 0), 0.2 %%>;
   commentBoxHeight = <%% 26.5, 25.5, 25.5, 25.5, 25.5 %%>;
   detailContentsPaddingTop = <%% 12, 12, 12, 12, 5 %%>;
   detailContentsSize = <%% 14, 13, 13, 12, 3.5 %%>;
@@ -2923,15 +2931,13 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   keywordsSize = <%% 12.5, 12, 11, 10, 2.7 %%>;
   keywordsWeight = <%% 700, 700, 700, 700, 700 %%>;
   keywordsSharpWeight = <%% 400, 400, 400, 400, 400 %%>;
-  keywordsTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
+  keywordsTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
 
   slideBoxHeight = <%% 160, 150, 140, 120, 20 %%>;
   slideBoxHeightPadding = <%% 10, 8, 6, 4, 1 %%>;
   slidePhotoBetween = <%% 6, 5, 4, 3, 1 %%>;
 
   minusVisual = <%% 10, 10, 10, 12, 1 %%>;
-
-  barBlank = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
   thisContents = [
     "고객님의 공간은 사무실의 멀티룸 공간으로 일반 사무를 보는 공간이 아닌, 직원들이 쉬고 가볍게 회의하는 공간을 구성하고자 하셨습니다.",
@@ -3324,7 +3330,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
               const src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
               return {
                 mode: "img",
-                attribute: { src },
+                attribute: { src, gs },
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -3978,7 +3984,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   baseBetween = standardWidth - baseWidth;
 
   arrowHeight = <%% 26, 24, 24, 24, 4 %%>;
-  arrowTop = <%% 280, 262, 276, 240, 36 %%>;
+  arrowTop = <%% 280, 262, 276, 240, 37 %%>;
 
   mainHeight = <%% 590, 570, 590, 496, 94 %%>;
   mainPaddingTop = <%% 110, 96, 86, 72, 10 %%>;
@@ -4076,12 +4082,12 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   montTitleMarginLeft = <%% 8, 8, 8, 6, 1.6 %%>;
   montHangulTitleTop = <%% -1, -1, -1, -1, (isIphone() ? -0.3 : -0.1) %%>;
   montTitleTop = <%% -0.5, -1, -1, -1, (isIphone() ? -0.2 : -0) %%>;
-  montSpecialTitleTop = <%% 1.5, 1.5, 1.5, 1.5, 0.3 %%>; 
+  montSpecialTitleTop = <%% (isMac() ? 1.5 : 0), (isMac() ? 1.5 : 0), (isMac() ? 1.5 : 0), (isMac() ? 1.5 : 0), (isIphone() ? 0.7 : 0.6) %%>; 
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.6 %%>;
 
-  baseTop = <%% 120, 100, 100, 100, 12 %%>;
-  baseBottom = <%% 120, 100, 100, 100, 10 %%>;
+  baseTop = <%% 120, 100, 100, 100, 13 %%>;
+  baseBottom = <%% 120, 100, 100, 100, 11 %%>;
 
   // relative
 
@@ -4486,6 +4492,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
   let boxDetailBoxTitleEngSize, boxDetailBoxTitleEngWeight, boxDetailBoxTitleEngVisualTop;
   let baseTop;
   let baseBottom0, baseBottom1;
+  let designerHomeTextTop;
 
   story.shift();
   customerStory = '';
@@ -4595,20 +4602,22 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
   boxDetailAbsoluteTextWeight = <%% 300, 300, 300, 300, 300 %%>;
   boxDetailAbsoluteArrowWidth = <%% 18, 18, 18, 14, 4 %%>;
   boxDetailAbsoluteArrowBetween = <%% 6, 6, 6, 6, 1.5 %%>;
-  boxDetailAbsoluteArrowVisualTop = <%% -0.5, -0.5, -0.5, -0.5, -0.1 %%>;
+  boxDetailAbsoluteArrowVisualTop = <%% (isMac() ? -0 : 0), (isMac() ? -0 : 0), (isMac() ? -0 : 0), (isMac() ? -0 : 0), -0.1 %%>;
 
-  boxDetailBoxTitleSize = <%% 20, 19, 17, 16, 4 %%>;
+  boxDetailBoxTitleSize = <%% 20, 19, 17, 16, 3.8 %%>;
   boxDetailBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   boxDetailBoxDetailSize = <%% 13, 13, 13, 10, 3 %%>;
   boxDetailBoxDetailWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  boxDetailBoxTitleEngSize = <%% 22, 21, 19, 18, 4.3 %%>;
+  boxDetailBoxTitleEngSize = <%% 22, 21, 19, 18, 4.1 %%>;
   boxDetailBoxTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
   boxDetailBoxTitleEngVisualTop = <%% 0.5, 0.5, 0.5, 0.5, 0.1 %%>;
 
-  baseTop = <%% 140, 110, 110, 80, 9.5 %%>;
+  baseTop = <%% 140, 110, 110, 80, 2.5 %%>;
   baseBottom0 = <%% 150, 115, 115, 85, 25 %%>;
   baseBottom1 = <%% 200, 200, 200, 160, 24 %%>;
+
+  designerHomeTextTop = <%% (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), 0 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -4708,6 +4717,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                     position: "relative",
                     fontSize: String(boxDetailAbsoluteTextSize) + ea,
                     fontWeight: String(boxDetailAbsoluteTextWeight),
+                    top: String(designerHomeTextTop) + ea,
                     fontFamily: "gmarket",
                     color: colorExtended.white,
                   },
@@ -4764,7 +4774,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                   alignItems: "start",
                 },
                 child: {
-                  text: "홈스타일링&nbsp;&nbsp;&nbsp;토탈 스타일링",
+                  text: "홈스타일링, 토탈 스타일링",
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -4784,7 +4794,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                   alignItems: "start",
                 },
                 child: {
-                  text: "경력&nbsp;&nbsp;&nbsp;9년 11개월",
+                  text: "경력 : 9년 11개월",
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -4836,6 +4846,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                     position: "relative",
                     fontSize: String(boxDetailAbsoluteTextSize) + ea,
                     fontWeight: String(boxDetailAbsoluteTextWeight),
+                    top: String(designerHomeTextTop) + ea,
                     fontFamily: "gmarket",
                     color: colorExtended.white,
                   },
