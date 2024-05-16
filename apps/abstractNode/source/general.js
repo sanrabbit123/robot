@@ -10223,6 +10223,10 @@ GeneralJs.removeByClass = function (className) {
   }
 }
 
+GeneralJs.selectByClass = function (className) {
+  return [ ...document.querySelectorAll('.' + className) ];
+}
+
 GeneralJs.variableArray = function (length, callback = null) {
   if (typeof length !== "number") {
     throw new Error("invaild input")
@@ -10239,17 +10243,19 @@ GeneralJs.variableArray = function (length, callback = null) {
 }
 
 GeneralJs.fireEvent = function (dom, eventName) {
-  if (eventName !== "click" && eventName !== "focus" && eventName !== "blur") {
-    dom.dispatchEvent(new Event(eventName, { bubbles: true }));
-  } else if (eventName === "click") {
-    dom.click();
-  } else if (eventName === "blur") {
-    dom.dispatchEvent(new Event(eventName, { bubbles: true }));
-    if (typeof dom.blur === "function") {
-      dom.blur();
+  if (typeof dom === "object" && dom !== null) {
+    if (eventName !== "click" && eventName !== "focus" && eventName !== "blur") {
+      dom.dispatchEvent(new Event(eventName, { bubbles: true }));
+    } else if (eventName === "click") {
+      dom.click();
+    } else if (eventName === "blur") {
+      dom.dispatchEvent(new Event(eventName, { bubbles: true }));
+      if (typeof dom.blur === "function") {
+        dom.blur();
+      }
+    } else if (eventName === "focus") {
+      dom.focus();
     }
-  } else if (eventName === "focus") {
-    dom.focus();
   }
 }
 

@@ -2749,7 +2749,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
 ReviewDetailJs.prototype.reviewDetailBox = function () {
   const instance = this;
-  const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, serviceParsing, variableArray, autoComma } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, serviceParsing, variableArray, autoComma, setQueue, selectByClass, fireEvent } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
   const { contentsArr } = this;
   const mobile = media[4];
@@ -2757,6 +2757,11 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
   const photoChar = 't';
   const photoCharMobile = "mot";
+  const bigPhotoClassName = "bigPhotoClassName";
+  const baseMotherClassName = "baseMotherClassName";
+  const imgTargetClassName = "imgTargetClassName";
+  const slideDelta = 2000;
+  const restartDelta = 4000;
   let mainHeight;
   let mainTong;
   let mainBelowBarHeight;
@@ -2830,6 +2835,9 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   let slideBoxHeight, slideBoxHeightPadding;
   let slidePhotoBetween;
   let minusVisual;
+  let childrenSpreadMap;
+  let childrenFocusEvent;
+  let fireSlideTurn;
 
   thisVersion = instance.version;
 
@@ -2953,6 +2961,130 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
     "자연스러운"
   ];
 
+  fireSlideTurn = async function () {
+    try {
+      const [ motherTarget ] = selectByClass(baseMotherClassName);
+      const returnBoo = (motherTarget.getAttribute("return") === String(1));
+      let targetIndex, targets, target, thisFunction;
+      if (returnBoo) {
+        motherTarget.style.transition = "all 0s ease";
+        targetIndex = Number(motherTarget.getAttribute("start"));
+        targets = selectByClass(imgTargetClassName);
+        target = targets[targetIndex];
+        thisFunction = childrenFocusEvent().bind(target);
+        await thisFunction({ real: false });
+        setQueue(() => {
+          motherTarget.style.transition = "all 0.4s ease";
+        }, 300);
+      } else {
+        targetIndex = Number(motherTarget.getAttribute("index")) + 1;
+        targets = selectByClass(imgTargetClassName);
+        target = targets[targetIndex];
+        thisFunction = childrenFocusEvent().bind(target);
+        await thisFunction({ real: false });
+      }
+
+      instance.slideTimeout = setTimeout(async () => {
+        try {
+          await fireSlideTurn();
+        } catch {}
+      }, slideDelta);
+    } catch {}
+  }
+
+  childrenFocusEvent = () => {
+    return async function (e) {
+      try {
+        const self = this;
+        const thisMother = this.parentNode;
+        const thisGrandMother = thisMother.parentNode;
+        const siblings = [ ...thisMother.children ];
+        const gs = this.getAttribute("gs");
+        const pid = this.getAttribute("pid");
+        const index = Number(this.getAttribute("index"));
+        const originalIndex = Number(this.getAttribute("original"));
+        const px = "px";
+        const grandMotherBox = thisGrandMother.getBoundingClientRect();
+        const motherBox = thisMother.getBoundingClientRect();
+        const thisBox = self.getBoundingClientRect();
+        const thisStatus = Number(thisMother.style.transform.replace(/[^0-9\-\.]/gi, ''));
+        const visualConst = (<&& 300 | 300 | 200 | 150 | 10 &&>);
+        const [ bigPhotoDom ] = selectByClass(bigPhotoClassName);
+        let alpha, thisIndex;
+        let standardX, targetXIndex;
+
+        if (e.real !== false) {
+          if (instance.slideTimeout !== null) {
+            clearTimeout(instance.slideTimeout);
+            instance.slideTimeout = null;
+            setQueue(fireSlideTurn, restartDelta);
+          }
+        }
+
+        alpha = 0;
+        alpha = (grandMotherBox.width / 2) - (thisBox.width / 2) - (thisBox.x - grandMotherBox.x)
+        alpha = alpha + thisStatus;
+
+        if (thisStatus === 0) {
+          standardX = motherBox.x + (grandMotherBox.width / 2)
+          targetXIndex = 0;
+          for (let i = 0; i < siblings.length; i++) {
+            if (standardX <= siblings[i].getBoundingClientRect().x) {
+              targetXIndex = i;
+              break;
+            }
+          }
+          thisMother.setAttribute("start", String(targetXIndex + 1));
+        }
+
+        thisMother.style.transform = "translateX(" + String(alpha) + px + ")";
+        thisIndex = siblings.findIndex((d) => { return d === self });
+
+        thisMother.setAttribute("index", String(thisIndex));
+        if (gs === "g") {
+          bigPhotoDom.style.backgroundSize = "100% auto";
+        } else {
+          bigPhotoDom.style.backgroundSize = "auto 100%";
+        }
+        bigPhotoDom.style.backgroundImage = "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(originalIndex) + pid + ".jpg" + "')";
+
+        thisMother.setAttribute("return", String(0));
+        if ((motherBox.width + motherBox.x - visualConst) <= (grandMotherBox.width + grandMotherBox.x)) {
+          thisMother.setAttribute("return", String(1));
+        } else {
+          thisMother.setAttribute("return", String(0));
+        }
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  childrenSpreadMap = () => {
+    return (o) => {
+      const { index, gs } = o;
+      const src = FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(index) + pid + ".jpg";
+      return {
+        mode: "img",
+        class: [ imgTargetClassName ],
+        attribute: { src, gs, pid, index: String(index), original: String(index) },
+        event: {
+          click: childrenFocusEvent(),
+        },
+        style: {
+          display: "inline-block",
+          position: "relative",
+          height: withOut(0, ea),
+          marginLeft: String(slidePhotoBetween) + ea,
+          borderRadius: String(desktop ? 8 : 2) + "px",
+          cursor: "pointer",
+        }
+      }
+    }
+  }
+
+
   if (media[3] || media[4]) {
     contentsKeywords = contentsKeywords.slice(0, 4);
   }
@@ -2986,18 +3118,22 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   // left picture
   picture = createNode({
     mother: contentsBox,
+    class: [ bigPhotoClassName ],
     style: {
       display: desktop ? "inline-flex" : "flex",
       position: "relative",
       width: desktop ? String(standardWidth * photoRatio) + ea : withOut(0, ea),
       height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : String(standardWidth * (210 / 297)) + ea,
       borderRadius: desktop ? String(boxRadius) + "px" : "",
+      background: colorExtended.gray0,
       backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(1) + pid + ".jpg" + "')",
       backgroundSize: (media[0] || mobile) ? "100% auto" : "auto 100%",
       backgroundPosition: "50% 50%",
+      backgroundRepeat: "no-repeat",
       boxShadow: desktop ? "0px 8px 22px -15px " + colorChip.shadow : "",
       marginRight: desktop ? String(photoRightMargin) + ea : "",
       verticalAlign: "top",
+      transition: "all 0s ease",
     }
   });
 
@@ -3026,28 +3162,21 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
             alignItems: "center",
           },
           child: {
+            class: [ baseMotherClassName ],
+            attribute: { index: String(0), start: String(0) },
             style: {
               display: "flex",
               flexDirection: "row",
               position: "relative",
-              width: String(500) + "%",
+              width: String(3000) + "%",
+              justifyContent: "center",
+              alignItems: "center",
               height: withOut(0, ea),
+              transform: "translateX(0px)",
+              transformOrigin: "50% 50%",
+              transition: "all 0.4s ease",
             },
-            children: contents.photos.detail.map((o) => {
-              const { index, gs } = o;
-              const src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
-              return {
-                mode: "img",
-                attribute: { src },
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  height: withOut(0, ea),
-                  marginLeft: String(slidePhotoBetween) + ea,
-                  borderRadius: String(2) + "px",
-                }
-              }
-            })
+            children: contents.photos.detail.map(childrenSpreadMap()).concat(contents.photos.detail.map(childrenSpreadMap())).concat(contents.photos.detail.map(childrenSpreadMap())),
           }
         }
       ]
@@ -3312,34 +3441,27 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
             height: String(slideBoxHeight - (slideBoxHeightPadding * 2)) + ea,
             top: String(slideBoxHeightPadding) + ea,
             left: String(0) + ea,
-            overflow: "scroll",
+            overflow: "hidden",
             justifyContent: "center",
             alignItems: "center",
             borderRadius: String(8) + "px",
           },
           child: {
+            class: [ baseMotherClassName ],
+            attribute: { index: String(0), start: String(0) },
             style: {
               display: "flex",
               flexDirection: "row",
               position: "relative",
-              width: String(500) + "%",
+              width: String(3000) + "%",
+              justifyContent: "center",
+              alignItems: "center",
               height: withOut(0, ea),
+              transform: "translateX(0px)",
+              transformOrigin: "50% 50%",
+              transition: "all 0.4s ease",
             },
-            children: contents.photos.detail.map((o) => {
-              const { index, gs } = o;
-              const src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
-              return {
-                mode: "img",
-                attribute: { src, gs },
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  height: withOut(0, ea),
-                  marginLeft: String(slidePhotoBetween) + ea,
-                  borderRadius: String(8) + "px",
-                }
-              }
-            })
+            children: contents.photos.detail.map(childrenSpreadMap()).concat(contents.photos.detail.map(childrenSpreadMap())).concat(contents.photos.detail.map(childrenSpreadMap())),
           }
         }
       ]
@@ -3355,7 +3477,27 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
         borderBottom: String(borderWidth) + "px solid " + colorExtended.gray3,
       },
     });
+
   }
+
+  setQueue(async () => {
+    try {
+      const targets = selectByClass(imgTargetClassName);
+      const target = targets[Math.round(targets.length / 2)];
+      let targetIndex, num, thisEventFunction;
+      num = 0;
+      for (let dom of targets) {
+        dom.setAttribute("index", String(num));
+        num++;
+      }
+      targetIndex = Number(target.getAttribute("index"));
+      
+      thisEventFunction = childrenFocusEvent().bind(target);
+      await thisEventFunction({ real: false });
+
+      setQueue(fireSlideTurn, slideDelta);
+    } catch {}
+  });
 
 }
 
@@ -5006,6 +5148,7 @@ ReviewDetailJs.prototype.launching = async function (loading) {
     this.fullLoad = false;
     this.photoLoad = false;
     this.loadedContents = [];
+    this.slideTimeout = null;
 
     thisVersion = GeneralJs.returnGet().mode === undefined ? 0 : Number(GeneralJs.returnGet().mode);
     this.version = thisVersion;
