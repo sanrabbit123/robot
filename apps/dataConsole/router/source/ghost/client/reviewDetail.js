@@ -538,11 +538,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
   thisVersion = instance.version;
 
-  mainRatio = <%% (87 / 160), (125 / 160), (128 / 160), (180 / 160), (87 / 160) %%>;
-  mainMargin = <%% 64, 56, 56, 45, 6 %%>;
+  mainRatio = <%% (87 / 160), (125 / 160), (128 / 160), (180 / 160), (72 / 160) %%>;
+  mainMargin = <%% 64, 56, 56, 45, 5 %%>;
   photoRatio = <%% 0.58, 0.5, 0.5, 0.4, 0.58 %%>;
 
-  mainHeight = <%% 800, 750, 710, 590, mainRatio * 100 %%>;
+  mainHeight = <%% 800, 750, 710, 590, mainRatio * 88 %%>;
   mainBelowBarHeight = <%% 250, 250, 250, 216, 250 %%>;
 
   contentsBoxTop = <%% 70, 70, 70, 70, 0 %%>;
@@ -559,54 +559,54 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   designerSpacePhotoWidth = <%% 96, 92, 90, 72, 96 %%>;
   designerSpacePhotoMarginRight = <%% 20, 18, 18, 16, 20 %%>;
 
-  barMargin = <%% 30, 28, 25, 21, 30 %%>;
-  propertyBlockHeight = <%% 37, 35, 35, 35, 37 %%>;
+  barMargin = <%% 30, 28, 25, 21, 6.2 %%>;
+  propertyBlockHeight = <%% 37, 35, 35, 35, 6.2 %%>;
   barMarginBottom = <%% 30, 30, 30, 30, 30 %%>;
-  valueColumnMargin = <%% 22, 22, 22, 22, 22 %%>;
+  valueColumnMargin = <%% 22, 22, 22, 22, 2 %%>;
   valueBlockHeight = <%% 45, 45, 45, 45, 45 %%>;
-  grayBarMargin = <%% 16, 16, 16, 16, 16 %%>;
+  grayBarMargin = <%% 16, 16, 16, 16, 4 %%>;
 
   keywordsLeft = <%% 48, 48, 48, 48, 48 %%>;
-  satisBarLeft = <%% 131, 114, 92, 94, 131 %%>;
-  satisBarHeight = <%% 18, 17, 15, 14, 20 %%>;
+  satisBarLeft = <%% 131, 114, 92, 94, 18.7 %%>;
+  satisBarHeight = <%% 18, 17, 15, 14, 3.4 %%>;
   if (thisVersion === 1) {
-    satisBarVisualTop = <%% 4, 3.5, 2.5, 1.5, -0.5 %%>;
+    satisBarVisualTop = <%% 4, 3.5, 2.5, 1.5, 0.5 %%>;
   } else {
-    satisBarVisualTop = <%% 6, 5.5, 5.5, 4, -0.5 %%>;
+    satisBarVisualTop = <%% 6, 5.5, 5.5, 4, 0.5 %%>;
   }
   satisLength = <%% 10, 10, 10, 10, 10 %%>;
 
-  designerTitleSize = <%% 19, 18, 17, 15, 19 %%>;
+  designerTitleSize = <%% 19, 18, 17, 15, 3.9 %%>;
   designerTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  designerStyleSize = <%% 15, 14, 14, 12, 15 %%>;
+  designerStyleSize = <%% 15, 14, 14, 12, 2.7 %%>;
   designerStyleWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  designerHomeButtonMarginTop = <%% 14, 14, 15, 10, 14 %%>;
+  designerHomeButtonMarginTop = <%% 14, 14, 15, 10, 1 %%>;
   designerHomeButtonLeft = <%% -1, -1, -1, -1, -1 %%>;
-  designerHomeButtonWidth = <%% 176, 176, 162, 130, 176 %%>;
-  designerHomeButtonHeight = <%% 32, 32, 28, 22, 32 %%>;
+  designerHomeButtonWidth = <%% 176, 176, 162, 130, 40 %%>;
+  designerHomeButtonHeight = <%% 32, 32, 28, 22, 8 %%>;
 
-  designerHomeSize = <%% 13, 13, 12, 10, 13 %%>;
+  designerHomeSize = <%% 13, 13, 12, 10, 2.8 %%>;
   designerHomeWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  designerHomeArrowWidth = <%% 16, 16, 13, 10, 16 %%>;
-  designerHomeArrowMarginLeft = <%% 5, 5, 5, 4, 5 %%>;
-  designerHomeArrowTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
+  designerHomeArrowWidth = <%% 16, 16, 13, 10, 3.2 %%>;
+  designerHomeArrowMarginLeft = <%% 5, 5, 5, 4, 1 %%>;
+  designerHomeArrowTop = <%% -0.5, -0.5, -0.5, -0.5, -0.1 %%>;
 
-  projectPropertySize = <%% 16, 15, 13, 12, 16 %%>;
-  projectPropertySizeFocus = <%% 17, 16, 14, 13, 17 %%>;
+  projectPropertySize = <%% 16, 15, 13, 12, 3.2 %%>;
+  projectPropertySizeFocus = <%% 17, 16, 14, 13, 3.3 %%>;
   projectPropertyLightWeight = <%% 400, 400, 400, 400, 400 %%>;
   projectPropertyBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   projectPropertyTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  projectPropertyPyeongSize = <%% 14, 13, 11, 10, 14 %%>;
+  projectPropertyPyeongSize = <%% 14, 13, 11, 10, 2.5 %%>;
   projectPropertyPyeongWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  smallPropertySize = <%% 9, 8, 7, 6, 9 %%>;
+  smallPropertySize = <%% 9, 8, 7, 6, 1 %%>;
   smallPropertyWeight = <%% 400, 400, 400, 400, 400 %%>;
-  smallPropertyTextTop = <%% -5, -5, -5, -5, -5 %%>;
+  smallPropertyTextTop = <%% -5, -5, -5, -5, -1 %%>;
 
-  propertyFinalMarginBottom = <%% -6, -6, -6, -4, -6 %%>;
+  propertyFinalMarginBottom = <%% -6, -6, -6, -4, -1 %%>;
 
   keywordsHeight = <%% 30, 27, 25, 24, 30 %%>;
   keywordsPadding = <%% 14, 12, 10, 10, 14 %%>;
@@ -617,8 +617,8 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   keywordsSharpWeight = <%% 400, 400, 400, 400, 400 %%>;
   keywordsTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  propertyMiddleBarHeight = <%% 24, 20, 18, 16, 24 %%>;
-  propertyMiddleBarMarginBottom = <%% 20, 20, 18, 16, 20 %%>;
+  propertyMiddleBarHeight = <%% 24, 20, 18, 16, 3 %%>;
+  propertyMiddleBarMarginBottom = <%% 20, 20, 18, 16, 5 %%>;
 
   quoteHeight = <%% 14, 14, 13, 11, 1.8 %%>;
   quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
@@ -654,7 +654,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   borderWidth = 1.5;
   borderWidthLight = 1;
 
-  barBlank = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+  barBlank = desktop ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "&nbsp;&nbsp;&nbsp;";
 
   contentsKeywords = [
     "편안한 톤",
@@ -687,12 +687,12 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
     style: {
       display: "flex",
       position: "relative",
-      flexDirection: "row",
-      width: desktop ? String(standardWidth) + ea : withOut(0, ea),
-      left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
+      flexDirection: desktop ? "row" : "column",
+      width: String(standardWidth) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
       top: String(0),
       paddingBottom: String(mainMargin) + ea,
-      borderBottom: String(borderWidth) + "px solid " + colorExtended.gray3,
+      borderBottom: String(borderWidth) + "px solid " + (desktop ? colorExtended.gray3 : colorExtended.black),
     }
   });
 
@@ -700,16 +700,16 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   picture = createNode({
     mother: contentsBox,
     style: {
-      display: desktop ? "inline-flex" : "block",
-      position: desktop ? "relative" : "absolute",
+      display: desktop ? "inline-flex" : "flex",
+      position: "relative",
       width: desktop ? String(standardWidth * photoRatio) + ea : withOut(0, ea),
-      height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : withOut(0, ea),
+      height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : String(45) + ea,
       borderRadius: String(boxRadius) + "px",
       backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
-      backgroundSize: media[0] ? "100% auto" : "auto 100%",
+      backgroundSize: (media[0] || mobile) ? "100% auto" : "auto 100%",
       backgroundPosition: "50% 50%",
       boxShadow: desktop ? "0px 8px 22px -15px " + colorChip.shadow : "",
-      marginRight: String(photoRightMargin) + ea,
+      marginRight: desktop ? String(photoRightMargin) + ea : "",
       verticalAlign: "top",
     }
   });
@@ -718,10 +718,10 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   descriptionBox = createNode({
     mother: contentsBox,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       position: "relative",
-      width: withOut((standardWidth * photoRatio) + photoRightMargin, ea),
-      height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : withOut(0, ea),
+      width: desktop ? withOut((standardWidth * photoRatio) + photoRightMargin, ea) : withOut(0, ea),
+      height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : "auto",
       verticalAlign: "top",
       flexDirection: "column",
       justifyContent: "start",
@@ -736,7 +736,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       display: "flex",
       position: "relative",
       width: withOut(0, ea),
-      height: String(designerSpacePhotoWidth) + ea,
+      height: desktop ? String(designerSpacePhotoWidth) + ea : "",
       flexDirection: "row",
       justifyContent: "start",
       alignItems: "start",
@@ -744,7 +744,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
     children: [
       {
         style: {
-          display: "inline-flex",
+          display: desktop ? "inline-flex" : "none",
           position: "relative",
           width: String(designerSpacePhotoWidth) + ea,
           height: String(designerSpacePhotoWidth) + ea,
@@ -758,13 +758,14 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       },
       {
         style: {
-          display: "inline-flex",
+          display: desktop ? "inline-flex" : "flex",
           position: "relative",
           flexDirection: "column",
           justifyContent: "start",
           alignItems: "start",
-          width: withOut(designerSpacePhotoWidth + designerSpacePhotoMarginRight, ea),
-          height: String(designerSpacePhotoWidth) + ea,
+          width: desktop ? withOut(designerSpacePhotoWidth + designerSpacePhotoMarginRight, ea) : withOut(0, ea),
+          height: desktop ? String(designerSpacePhotoWidth) + ea : "",
+          marginTop: desktop ? "" : String(6) + ea,
         }
       }
     ]
@@ -823,13 +824,15 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   createNode({
     mother: designerDescriptionBox,
     style: {
-      display: "flex",
-      position: "relative",
-      width: withOut(0, ea),
-      textAlign: "left",
-      justifyContent: "start",
-      alignItems: "start",
-      marginTop: String(designerHomeButtonMarginTop) + ea,
+      display: desktop ? "flex" : "inline-flex",
+      position: desktop ? "relative" : "absolute",
+      width: desktop ? withOut(0, ea) : "",
+      textAlign: desktop ? "left" : "right",
+      justifyContent: desktop ? "start" : "end",
+      alignItems: desktop ? "start" : "end",
+      marginTop: desktop ? String(designerHomeButtonMarginTop) + ea : "",
+      bottom: desktop ? "" : String(1) + ea,
+      right: desktop ? "" : String(-1) + ea,
     },
     child: {
       style: {
@@ -1213,7 +1216,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
           width: withOut(0, ea),
           height: String(grayBarMargin) + ea,
           borderBottom: String(borderWidthLight) + "px solid " + colorExtended.gray3,
-          marginBottom: String(grayBarMargin) + ea,
+          marginBottom: desktop ? String(grayBarMargin) + ea : String(grayBarMargin + 1) + ea,
           flexDirection: "row",
           justifyContent: "start",
           alignItems: "start",
@@ -1535,7 +1538,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         width: withOut(0, ea),
         height: String(grayBarMargin) + ea,
         borderBottom: String(borderWidthLight) + "px solid " + colorExtended.gray3,
-        marginBottom: String(grayBarMargin) + ea,
+        marginBottom: desktop ? String(grayBarMargin) + ea : String(grayBarMargin + 1) + ea,
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
@@ -1660,7 +1663,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         width: withOut(0, ea),
         height: String(grayBarMargin) + ea,
         borderBottom: String(borderWidthLight) + "px solid " + colorExtended.gray3,
-        marginBottom: String(grayBarMargin) + ea,
+        marginBottom: desktop ? String(grayBarMargin) + ea : String(grayBarMargin + 1) + ea,
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
@@ -2123,7 +2126,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         width: withOut(0, ea),
         height: String(grayBarMargin) + ea,
         borderBottom: String(borderWidthLight) + "px solid " + colorExtended.gray3,
-        marginBottom: String(grayBarMargin) + ea,
+        marginBottom: desktop ? String(grayBarMargin) + ea : String(grayBarMargin + 1) + ea,
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
@@ -2614,7 +2617,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         width: withOut(0, ea),
         height: String(grayBarMargin) + ea,
         borderBottom: String(borderWidthLight) + "px solid " + colorExtended.gray3,
-        marginBottom: String(grayBarMargin) + ea,
+        marginBottom: desktop ? String(grayBarMargin) + ea : String(grayBarMargin + 1) + ea,
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
@@ -2823,7 +2826,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   thisVersion = instance.version;
 
   mainRatio = <%% (10 / 16), (12 / 16), (14 / 16), (16 / 16), (10 / 16) %%>;
-  mainMargin = <%% 150, 120, 100, 80, 120 %%>;
+  mainMargin = <%% 150, 120, 100, 80, 22.5 %%>;
   photoRatio = <%% 0.75, 0.7, 0.65, 0.6, 0.75 %%>;
 
   mainHeight = <%% 800, 750, 710, 590, mainRatio * 100 %%>;
@@ -2843,7 +2846,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   designerSpacePhotoWidth = <%% 100, 100, 100, 100, 100 %%>;
   designerSpacePhotoMarginRight = <%% 20, 20, 20, 20, 20 %%>;
 
-  barMargin = <%% 30, 30, 30, 30, 30 %%>;
+  barMargin = <%% 30, 30, 30, 30, 6 %%>;
   barMarginBottom = <%% 30, 30, 30, 30, 30 %%>;
   valueColumnMargin = <%% 22, 20, 18, 16, 22 %%>;
   valueBlockHeight = <%% 45, 45, 45, 45, 45 %%>;
@@ -2887,44 +2890,44 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   borderWidth = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   borderWidthLight = <%% 1, 1, 1, 1, 1 %%>;
 
-  grayLineBoxMarginTop = <%% 22, 20, 18, 16, 22 %%>;
+  grayLineBoxMarginTop = <%% 22, 20, 18, 16, 6 %%>;
   grayLineBoxBetween = <%% 10, 10, 10, 10, 10 %%>;
   grayLineBoxPaddingTop = <%% 20, 20, 20, 20, 20 %%>;
   grayLineBoxPaddingLeft = <%% 24, 24, 24, 24, 24 %%>;
 
-  contentsBoxPaddingBottom = <%% 60, 45, 40, 35, 60 %%>;
-  mainTitleSize = <%% 21, 19, 18, 16, 21 %%>;
+  contentsBoxPaddingBottom = <%% 60, 45, 40, 35, 2.5 %%>;
+  mainTitleSize = <%% 21, 19, 18, 16, 4.6 %%>;
   mainTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  commentBoxPaddingBottom = <%% 6, 6, 6, 6, 6 %%>;
-  commentSquareWidth = <%% 10, 9, 9, 8, 10 %%>;
-  commentSquareMarginRight = <%% 4, 4, 4, 4, 4 %%>;
-  commentSize = <%% 15, 14, 14, 13, 15 %%>;
+  commentBoxPaddingBottom = <%% 6, 6, 6, 6, 2 %%>;
+  commentSquareWidth = <%% 10, 9, 9, 8, 2.4 %%>;
+  commentSquareMarginRight = <%% 4, 4, 4, 4, 1 %%>;
+  commentSize = <%% 15, 14, 14, 13, 3.7 %%>;
   commentWeight = <%% 700, 700, 700, 700, 700 %%>;
-  commentTextTop = <%% 1, 1, 1, 1, 1 %%>;
+  commentTextTop = <%% 1, 1, 1, 1, 0.2 %%>;
   commentBoxHeight = <%% 26.5, 25.5, 25.5, 25.5, 25.5 %%>;
-  detailContentsPaddingTop = <%% 12, 12, 12, 12, 12 %%>;
-  detailContentsSize = <%% 14, 13, 13, 12, 14 %%>;
+  detailContentsPaddingTop = <%% 12, 12, 12, 12, 5 %%>;
+  detailContentsSize = <%% 14, 13, 13, 12, 3.5 %%>;
   detailContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   detailContentsLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
 
   keywordsBoxMarginBottom = <%% -6, -6, -5, -4, -6 %%>;
   keywordsBoxVisualLeft = <%% -4, -4, -4, -4, -4 %%>;
 
-  keywordsHeight = <%% 30, 27, 25, 24, 30 %%>;
-  keywordsPadding = <%% 14, 12, 10, 10, 14 %%>;
-  keywordsBetween = <%% 4, 4, 3, 3, 4 %%>;
+  keywordsHeight = <%% 30, 27, 25, 24, 6.5 %%>;
+  keywordsPadding = <%% 14, 12, 10, 10, 2 %%>;
+  keywordsBetween = <%% 4, 4, 3, 3, 1 %%>;
 
   keywordsBetweenBottom = <%% 6, 6, 5, 5, 6 %%>;
 
-  keywordsSize = <%% 12.5, 12, 11, 10, 12.5 %%>;
+  keywordsSize = <%% 12.5, 12, 11, 10, 2.7 %%>;
   keywordsWeight = <%% 700, 700, 700, 700, 700 %%>;
   keywordsSharpWeight = <%% 400, 400, 400, 400, 400 %%>;
-  keywordsTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  keywordsTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
 
-  slideBoxHeight = <%% 160, 150, 140, 120, 160 %%>;
-  slideBoxHeightPadding = <%% 10, 8, 6, 4, 10 %%>;
-  slidePhotoBetween = <%% 6, 5, 4, 3, 6 %%>;
+  slideBoxHeight = <%% 160, 150, 140, 120, 20 %%>;
+  slideBoxHeightPadding = <%% 10, 8, 6, 4, 1 %%>;
+  slidePhotoBetween = <%% 6, 5, 4, 3, 1 %%>;
 
   minusVisual = <%% 10, 10, 10, 12, 1 %%>;
 
@@ -2944,6 +2947,10 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
     "자연스러운"
   ];
 
+  if (media[3] || media[4]) {
+    contentsKeywords = contentsKeywords.slice(0, 4);
+  }
+
   mainTong = createNode({
     mother: totalContents,
     style: {
@@ -2961,8 +2968,8 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
     style: {
       display: "flex",
       position: "relative",
-      flexDirection: "row",
-      width: desktop ? String(standardWidth) + ea : String(100) + '%',
+      flexDirection: desktop ? "row" : "column",
+      width: desktop ? String(standardWidth) + ea : withOut(0, ea),
       left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
       top: String(0),
       paddingTop: String(mainMargin) + ea,
@@ -2974,27 +2981,93 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   picture = createNode({
     mother: contentsBox,
     style: {
-      display: desktop ? "inline-flex" : "block",
-      position: desktop ? "relative" : "absolute",
-      width: desktop ? String(standardWidth * photoRatio) + ea : String(100) + '%',
-      height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : String(100) + '%',
-      borderRadius: String(boxRadius) + "px",
+      display: desktop ? "inline-flex" : "flex",
+      position: "relative",
+      width: desktop ? String(standardWidth * photoRatio) + ea : withOut(0, ea),
+      height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : String(standardWidth * (210 / 297)) + ea,
+      borderRadius: desktop ? String(boxRadius) + "px" : "",
       backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(1) + pid + ".jpg" + "')",
-      backgroundSize: media[0] ? "100% auto" : "auto 100%",
+      backgroundSize: (media[0] || mobile) ? "100% auto" : "auto 100%",
       backgroundPosition: "50% 50%",
       boxShadow: desktop ? "0px 8px 22px -15px " + colorChip.shadow : "",
-      marginRight: String(photoRightMargin) + ea,
+      marginRight: desktop ? String(photoRightMargin) + ea : "",
       verticalAlign: "top",
     }
   });
+
+  if (mobile) {
+    createNode({
+      mother: mainTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        flexDirection: "row",
+        width: String(100) + '%',
+        left: String(0),
+      },
+      children: [
+        {
+          style: {
+            display: "flex",
+            flexDirection: "row",
+            position: "relative",
+            width: withOut(0, ea),
+            height: String(slideBoxHeight - (slideBoxHeightPadding * 2)) + ea,
+            top: String(slideBoxHeightPadding) + ea,
+            left: String(0) + ea,
+            overflow: "scroll",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            style: {
+              display: "flex",
+              flexDirection: "row",
+              position: "relative",
+              width: String(500) + "%",
+              height: withOut(0, ea),
+            },
+            children: contents.photos.detail.map((o) => {
+              const { index, gs } = o;
+              const src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
+              return {
+                mode: "img",
+                attribute: { src },
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  height: withOut(0, ea),
+                  marginLeft: String(slidePhotoBetween) + ea,
+                  borderRadius: String(2) + "px",
+                }
+              }
+            })
+          }
+        }
+      ]
+    });
+
+    contentsBox = createNode({
+      mother: mainTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        flexDirection: desktop ? "row" : "column",
+        width: String(standardWidth) + ea,
+        left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+        top: String(0),
+        paddingTop: String(10) + ea,
+      }
+    });
+  }
 
   // right box
   descriptionBox = createNode({
     mother: contentsBox,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       position: "relative",
-      width: withOut((standardWidth * photoRatio) + photoRightMargin, ea),
+      width: desktop ? withOut((standardWidth * photoRatio) + photoRightMargin, ea) : withOut(0, ea),
       height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : String(100) + '%',
       verticalAlign: "top",
       flexDirection: "column",
@@ -3031,15 +3104,15 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
     style: {
       display: "flex",
       position: "relative",
-      width: withOut(grayLineBoxPaddingLeft * 2, ea),
-      height: withOut(grayLineBoxMarginTop + titleBox.getBoundingClientRect().height + (grayLineBoxPaddingTop * 2) + grayLineBoxMarginTop + (keywordsHeight * 2) + keywordsBetweenBottom + minusVisual, ea),
+      width: desktop ? withOut(grayLineBoxPaddingLeft * 2, ea) : withOut(0, ea),
+      height: desktop ? withOut(grayLineBoxMarginTop + titleBox.getBoundingClientRect().height + (grayLineBoxPaddingTop * 2) + grayLineBoxMarginTop + (keywordsHeight * 2) + keywordsBetweenBottom + minusVisual, ea) : "",
       marginTop: String(grayLineBoxMarginTop) + ea,
-      border: "1px solid " + colorExtended.gray3,
-      borderRadius: String(12) + "px",
-      paddingLeft: String(grayLineBoxPaddingLeft) + ea,
-      paddingRight: String(grayLineBoxPaddingLeft) + ea,
-      paddingTop: String(grayLineBoxPaddingTop) + ea,
-      paddingBottom: String(grayLineBoxPaddingTop) + ea,
+      border: desktop ? "1px solid " + colorExtended.gray3 : "",
+      borderRadius: desktop ? String(12) + "px" : "",
+      paddingLeft: desktop ? String(grayLineBoxPaddingLeft) + ea : "",
+      paddingRight: desktop ? String(grayLineBoxPaddingLeft) + ea : "",
+      paddingTop: desktop ? String(grayLineBoxPaddingTop) + ea : "",
+      paddingBottom: desktop ? String(grayLineBoxPaddingTop) + ea : "",
       flexDirection: "column",
     },
     children: [
@@ -3051,7 +3124,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
           flexDirection: "row",
           justifyContent: "start",
           alignItems: "center",
-          height: String(commentBoxHeight - commentBoxPaddingBottom - borderWidth) + ea,
+          height: desktop ? String(commentBoxHeight - commentBoxPaddingBottom - borderWidth) + ea : "",
           paddingBottom: String(commentBoxPaddingBottom) + ea,
           borderBottom: String(borderWidth) + "px solid " + colorExtended.black,
         },
@@ -3090,8 +3163,8 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
           justifyContent: "start",
           alignItems: "start",
           paddingTop: String(detailContentsPaddingTop) + ea,
-          height: withOut(commentBoxHeight, ea),
-          overflow: "scroll",
+          height: desktop ? withOut(commentBoxHeight, ea) : "",
+          overflow: desktop ? "scroll" : "",
         },
         children: [
           {
@@ -3117,7 +3190,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
       display: "flex",
       position: "relative",
       width: withOut(0, ea),
-      height: String(grayLineBoxMarginTop) + ea,
+      height: desktop ? String(grayLineBoxMarginTop) + ea : String(8) + ea,
       flexDirection: "row",
       justifyContent: "start",
       alignItems: "start",
@@ -3129,7 +3202,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
       display: "flex",
       position: "relative",
       width: withOut(0, ea),
-      height: String(barMargin) + ea,
+      height: desktop ? String(barMargin) + ea : "",
       flexDirection: "row",
       justifyContent: "start",
       alignItems: "start",
@@ -3140,7 +3213,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
         style: {
           display: "inline-flex",
           width: withOut(0, ea),
-          height: withOut(0, ea),
+          height: desktop ? withOut(0, ea) : "",
           position: "relative",
           flexDirection: "row",
           justifyContent: "start",
@@ -3150,11 +3223,11 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
           {
             style: {
               display: "inline-block",
-              position: "absolute",
+              position: desktop ? "absolute" : "relative",
               textAlign: "left",
               top: String(0),
-              left: String(keywordsBoxVisualLeft) + ea,
-              width: withOut(0 - keywordsBoxVisualLeft, ea),
+              left: desktop ? String(keywordsBoxVisualLeft) + ea : "",
+              width: desktop ? withOut(0 - keywordsBoxVisualLeft, ea) : withOut(0, ea),
               height: withOut(0, ea),
             },
             child: {
@@ -3164,6 +3237,8 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
                 width: withOut(0, ea),
                 height: withOut(0, ea),
                 textAlign: "left",
+                paddingBottom: desktop ? "" : String(6) + ea,
+                left: desktop ? "" : String(-0.2) + ea,
               },
               children: contentsKeywords.map((str, index, arr) => {
                 return {
@@ -3178,8 +3253,8 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
                     border: String(borderWidth) + "px solid " + colorExtended.gray3,
                     justifyContent: "center",
                     alignItems: "center",
-                    marginLeft: String(keywordsBetween) + ea,
-                    marginBottom: String(keywordsBetweenBottom) + ea,
+                    marginLeft: String((mobile && index === 0) ? 0 : keywordsBetween) + ea,
+                    marginBottom: desktop ? String(keywordsBetweenBottom) + ea : String(keywordsBetween) + ea,
                   },
                   child: {
                     text: "<b%#%b> " + str,
@@ -3208,72 +3283,73 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
     ]
   });
 
-  // bottom box
-  createNode({
-    mother: mainTong,
-    style: {
-      display: "flex",
-      position: "relative",
-      flexDirection: "row",
-      width: desktop ? String(standardWidth) + ea : String(100) + '%',
-      left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
-      marginBottom: String(mainMargin) + ea,
-      height: String(slideBoxHeight) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "flex",
-          flexDirection: "row",
-          position: "relative",
-          width: withOut(0, ea),
-          height: String(slideBoxHeight - (slideBoxHeightPadding * 2)) + ea,
-          top: String(slideBoxHeightPadding) + ea,
-          left: String(0) + ea,
-          overflow: "scroll",
-          justifyContent: "center",
-          alignItems: "center",
-          borderRadius: String(8) + "px",
-        },
-        child: {
+  if (desktop) {
+    // bottom box
+    createNode({
+      mother: mainTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        flexDirection: "row",
+        width: desktop ? String(standardWidth) + ea : String(100) + '%',
+        left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
+        marginBottom: String(mainMargin) + ea,
+        height: String(slideBoxHeight) + ea,
+      },
+      children: [
+        {
           style: {
             display: "flex",
             flexDirection: "row",
             position: "relative",
-            width: String(500) + "%",
-            height: withOut(0, ea),
+            width: withOut(0, ea),
+            height: String(slideBoxHeight - (slideBoxHeightPadding * 2)) + ea,
+            top: String(slideBoxHeightPadding) + ea,
+            left: String(0) + ea,
+            overflow: "scroll",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: String(8) + "px",
           },
-          children: contents.photos.detail.map((o) => {
-            const { index, gs } = o;
-            const src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
-            return {
-              mode: "img",
-              attribute: { src },
-              style: {
-                display: "inline-block",
-                position: "relative",
-                height: withOut(0, ea),
-                marginLeft: String(slidePhotoBetween) + ea,
-                borderRadius: String(8) + "px",
+          child: {
+            style: {
+              display: "flex",
+              flexDirection: "row",
+              position: "relative",
+              width: String(500) + "%",
+              height: withOut(0, ea),
+            },
+            children: contents.photos.detail.map((o) => {
+              const { index, gs } = o;
+              const src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(index) + pid + ".jpg";
+              return {
+                mode: "img",
+                attribute: { src },
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  height: withOut(0, ea),
+                  marginLeft: String(slidePhotoBetween) + ea,
+                  borderRadius: String(8) + "px",
+                }
               }
-            }
-          })
+            })
+          }
         }
-      }
-    ]
-  });
-
-  createNode({
-    mother: mainTong,
-    style: {
-      display: "flex",
-      position: "relative",
-      flexDirection: "row",
-      width: desktop ? String(standardWidth) + ea : String(100) + '%',
-      left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
-      borderBottom: String(borderWidth) + "px solid " + colorExtended.gray3,
-    },
-  });
+      ]
+    });
+    createNode({
+      mother: mainTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        flexDirection: "row",
+        width: desktop ? String(standardWidth) + ea : String(100) + '%',
+        left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
+        borderBottom: String(borderWidth) + "px solid " + colorExtended.gray3,
+      },
+    });
+  }
 
 }
 
@@ -3902,7 +3978,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   baseBetween = standardWidth - baseWidth;
 
   arrowHeight = <%% 26, 24, 24, 24, 4 %%>;
-  arrowTop = <%% 280, 262, 276, 240, 34 %%>;
+  arrowTop = <%% 280, 262, 276, 240, 36 %%>;
 
   mainHeight = <%% 590, 570, 590, 496, 94 %%>;
   mainPaddingTop = <%% 110, 96, 86, 72, 10 %%>;
@@ -3934,7 +4010,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
 
   relativeLength = <%% 20, 20, 20, 20, 20 %%>;
 
-  photoMargin = <%% 16, 16, 16, 16, 2.5 %%>;
+  photoMargin = <%% 16, 16, 14, 12, 2.5 %%>;
   columns = <%% 5, 4, 3, 3, 2 %%>;
   photoRatio = (297 / 210);
   seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
@@ -3995,17 +4071,17 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
   thisBudget = "<u%" + autoComma(3000) + "%u> " + "<b%" + "만원" + "대" + "%b>";
   radiusPixel = <%% 15, 15, 15, 15, 15 %%>;
 
-  titleSize = <%% 17, 17, 17, 14, 3 %%>;
-  montTitleSize = <%% 20, 20, 20, 15, 3.1 %%>;
+  titleSize = <%% 17, 17, 17, 14, 3.2 %%>;
+  montTitleSize = <%% 20, 20, 20, 15, 3.2 %%>;
   montTitleMarginLeft = <%% 8, 8, 8, 6, 1.6 %%>;
   montHangulTitleTop = <%% -1, -1, -1, -1, (isIphone() ? -0.3 : -0.1) %%>;
-  montTitleTop = <%% -0.5, -1, -1, -1, (isIphone() ? -0.4 : -0.2) %%>;
-  montSpecialTitleTop = <%% 1.5, 1.5, 1.5, 1.5, (isIphone() ? -0.3 : -0.1) %%>; 
+  montTitleTop = <%% -0.5, -1, -1, -1, (isIphone() ? -0.2 : -0) %%>;
+  montSpecialTitleTop = <%% 1.5, 1.5, 1.5, 1.5, 0.3 %%>; 
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.6 %%>;
 
-  baseTop = <%% 120, 100, 100, 100, 120 %%>;
-  baseBottom = <%% 120, 100, 100, 100, 120 %%>;
+  baseTop = <%% 120, 100, 100, 100, 12 %%>;
+  baseBottom = <%% 120, 100, 100, 100, 10 %%>;
 
   // relative
 
@@ -4419,7 +4495,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
   }
   customerStory = customerStory.slice(0, -2);
 
-  mainWidth = <%% (version === 1 ? 980 : 900), 900, 900, 720, 100 %%>;
+  mainWidth = <%% (version === 1 ? 980 : 900), 900, 900, 720, 88 %%>;
   mainPaddingTop = <%% 110, 110, 110, 80, 11.7 %%>;
 
   titleSize = <%% 23, 23, 23, 21, 4.8 %%>;
@@ -4501,38 +4577,38 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
   mobileDesignerWordingTop = 13;
   mobileDesignerBoxBetween = 2;
 
-  boxHeight = <%% 404, 404, 394, 330, 404 %%>;
-  boxPhotoWidth = <%% (version === 1 ? 652 : 572), (version === 1 ? 572 : 572), (version === 1 ? 572 : 572), (version === 1 ? 450 : 450), (version === 1 ? 652 : 572) %%>;
+  boxHeight = <%% 404, 404, 394, 330, 80 %%>;
+  boxPhotoWidth = <%% (version === 1 ? 652 : 572), (version === 1 ? 572 : 572), (version === 1 ? 572 : 572), (version === 1 ? 450 : 450), 88 %%>;
   boxBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
-  boxBetween = <%% 12, 12, 12, 12, 12 %%>;
+  boxBetween = <%% 12, 12, 12, 12, 1.5 %%>;
 
-  boxDetailBoxPaddingTop = <%% 24, 24, 24, 18, 24 %%>;
-  boxDetailBoxPaddingLeft = <%% 24, 24, 24, 20, 24 %%>;
+  boxDetailBoxPaddingTop = <%% 24, 24, 24, 18, 3.5 %%>;
+  boxDetailBoxPaddingLeft = <%% 24, 24, 24, 20, 4.4 %%>;
 
-  boxDetailBoxLineMargin = <%% 8, 8, 8, 8, 8 %%>;
+  boxDetailBoxLineMargin = <%% 8, 8, 8, 8, 1.6 %%>;
 
-  boxDetailAbsolutePadding = <%% 10, 10, 10, 10, 10 %%>;
-  boxDetailAbsoluteBoxHeight = <%% 52, 52, 50, 45, 52 %%>;
+  boxDetailAbsolutePadding = <%% 10, 10, 10, 10, 2 %%>;
+  boxDetailAbsoluteBoxHeight = <%% 52, 52, 50, 45, 9.6 %%>;
 
-  boxDetailAbsoluteArrowPadding = <%% 16, 15, 14, 13, 12 %%>;
-  boxDetailAbsoluteTextSize = <%% 15, 15, 15, 13, 15 %%>;
+  boxDetailAbsoluteArrowPadding = <%% 16, 15, 14, 13, 4 %%>;
+  boxDetailAbsoluteTextSize = <%% 15, 15, 15, 13, 3 %%>;
   boxDetailAbsoluteTextWeight = <%% 300, 300, 300, 300, 300 %%>;
-  boxDetailAbsoluteArrowWidth = <%% 18, 18, 18, 14, 18 %%>;
-  boxDetailAbsoluteArrowBetween = <%% 6, 6, 6, 6, 6 %%>;
-  boxDetailAbsoluteArrowVisualTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
+  boxDetailAbsoluteArrowWidth = <%% 18, 18, 18, 14, 4 %%>;
+  boxDetailAbsoluteArrowBetween = <%% 6, 6, 6, 6, 1.5 %%>;
+  boxDetailAbsoluteArrowVisualTop = <%% -0.5, -0.5, -0.5, -0.5, -0.1 %%>;
 
-  boxDetailBoxTitleSize = <%% 20, 19, 17, 16, 20 %%>;
+  boxDetailBoxTitleSize = <%% 20, 19, 17, 16, 4 %%>;
   boxDetailBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  boxDetailBoxDetailSize = <%% 13, 13, 13, 10, 13 %%>;
+  boxDetailBoxDetailSize = <%% 13, 13, 13, 10, 3 %%>;
   boxDetailBoxDetailWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  boxDetailBoxTitleEngSize = <%% 22, 21, 19, 18, 22 %%>;
+  boxDetailBoxTitleEngSize = <%% 22, 21, 19, 18, 4.3 %%>;
   boxDetailBoxTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
-  boxDetailBoxTitleEngVisualTop = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
+  boxDetailBoxTitleEngVisualTop = <%% 0.5, 0.5, 0.5, 0.5, 0.1 %%>;
 
-  baseTop = <%% 140, 110, 110, 80, 140 %%>;
-  baseBottom0 = <%% 150, 115, 115, 85, 150 %%>;
-  baseBottom1 = <%% 200, 200, 200, 160, 20 %%>;
+  baseTop = <%% 140, 110, 110, 80, 9.5 %%>;
+  baseBottom0 = <%% 150, 115, 115, 85, 25 %%>;
+  baseBottom1 = <%% 200, 200, 200, 160, 25 %%>;
 
   mainTong = createNode({
     mother: totalContents,
@@ -4562,18 +4638,18 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
       display: "flex",
       position: "relative",
       width: withOut(0, ea),
-      height: String(boxHeight) + ea,
-      flexDirection: "row",
+      height: desktop ? String(boxHeight) + ea : "",
+      flexDirection: desktop ? "row" : "column",
       justifyContent: "start",
       alignItems: "start",
     },
     children: [
       {
         style: {
-          display: "inline-flex",
+          display: desktop ? "inline-flex" : "none",
           position: "relative",
-          height: withOut(0, ea),
-          width: String(boxPhotoWidth) + ea,
+          height: desktop ? withOut(0, ea) : String(45) + ea,
+          width: desktop ? String(boxPhotoWidth) + ea : withOut(0, ea),
           backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(3) + pid + ".jpg" + "')",
           backgroundSize: big ? "100% auto" : "auto 100%",
           backgroundPosition: "50% 50%",
@@ -4582,11 +4658,11 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
       },
       {
         style: {
-          display: "inline-flex",
+          display: desktop ? "inline-flex" : "flex",
           position: "relative",
-          height: withOut(0, ea),
-          width: withOut(boxPhotoWidth + boxBetween, ea),
-          marginLeft: String(boxBetween) + ea,
+          height: desktop ? withOut(0, ea) : "",
+          width: desktop ? withOut(boxPhotoWidth + boxBetween, ea) : withOut(0, ea),
+          marginLeft: desktop ? String(boxBetween) + ea : "",
           flexDirection: "column",
           justifyContent: "start",
           alignItems: "start",
@@ -4597,7 +4673,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
               display: "flex",
               position: "relative",
               width: withOut(boxDetailBoxPaddingLeft * 2, ea),
-              height: "calc(calc(calc(100% - " + String(boxBetween) + ea + ") / 2) - " + String(boxDetailBoxPaddingTop * 2) + ea + ")",
+              height: desktop ? "calc(calc(calc(100% - " + String(boxBetween) + ea + ") / 2) - " + String(boxDetailBoxPaddingTop * 2) + ea + ")" : String(30) + ea,
               borderRadius: String(boxBorderRadius) + "px",
               flexDirection: "column",
               justifyContent: "start",
@@ -4675,7 +4751,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                   width: withOut(0, ea),
                   height: String(boxDetailBoxLineMargin) + ea,
                   borderBottom: "1px solid " + colorExtended.white,
-                  marginBottom: String(boxDetailBoxLineMargin) + ea,
+                  marginBottom: String(desktop ? boxDetailBoxLineMargin : 2) + ea,
                   opacity: String(0.6),
                 }
               },
@@ -4726,7 +4802,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
               display: "flex",
               position: "relative",
               width: withOut(boxDetailBoxPaddingLeft * 2, ea),
-              height: "calc(calc(calc(100% - " + String(boxBetween) + ea + ") / 2) - " + String(boxDetailBoxPaddingTop * 2) + ea + ")",
+              height: desktop ? "calc(calc(calc(100% - " + String(boxBetween) + ea + ") / 2) - " + String(boxDetailBoxPaddingTop * 2) + ea + ")" : String(30) + ea,
               borderRadius: String(boxBorderRadius) + "px",
               flexDirection: "column",
               justifyContent: "start",
@@ -4811,7 +4887,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                   width: withOut(0, ea),
                   height: String(boxDetailBoxLineMargin) + ea,
                   borderBottom: "1px solid " + colorExtended.white,
-                  marginBottom: String(boxDetailBoxLineMargin) + ea,
+                  marginBottom: String(desktop ? boxDetailBoxLineMargin : 2) + ea,
                   opacity: String(0.6),
                 }
               },

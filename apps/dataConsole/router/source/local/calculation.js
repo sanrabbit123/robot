@@ -810,6 +810,9 @@ CalculationJs.prototype.baseMaker = function () {
         payAmount = Math.floor(thisResponse.pay.reduce((acc, curr) => { return acc + curr.amount }, 0));
         refundAmount = Math.floor(thisResponse.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0));
         nonPayAmount = confirmState - payAmount;
+        if (nonPayAmount < 0) {
+          nonPayAmount = 0;
+        }
         payDate = '-';
         if (thisResponse.pay.length > 0) {
           payDate = dateToString(thisResponse.pay[0].date);
@@ -1758,6 +1761,9 @@ CalculationJs.prototype.whiteCardView = function (proid) {
         payAmount = Math.floor(thisResponse.pay.reduce((acc, curr) => { return acc + curr.amount }, 0));
         refundAmount = Math.floor(thisResponse.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0));
         nonPayAmount = confirmState - payAmount;
+        if (nonPayAmount < 0) {
+          nonPayAmount = 0;
+        }
         payDate = '-';
         if (thisResponse.pay.length > 0) {
           payDate = dateToString(thisResponse.pay[0].date);
@@ -2574,6 +2580,9 @@ CalculationJs.prototype.queueView = function () {
         confirmState = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
         payAmount = Math.floor(thisResponse.pay.reduce((acc, curr) => { return acc + curr.amount }, 0));
         nonPayAmount = confirmState - payAmount;
+        if (nonPayAmount < 0) {
+          nonPayAmount = 0;
+        }
         payDate = '-';
         if (thisResponse.pay.length > 0) {
           payDate = dateToString(thisResponse.pay[0].date);
@@ -2893,6 +2902,9 @@ CalculationJs.prototype.queueView = function () {
         confirmState = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
         payAmount = Math.floor(thisResponse.pay.reduce((acc, curr) => { return acc + curr.amount }, 0));
         nonPayAmount = confirmState - payAmount;
+        if (nonPayAmount < 0) {
+          nonPayAmount = 0;
+        }
         payDate = '-';
         if (thisResponse.pay.length > 0) {
           payDate = dateToString(thisResponse.pay[0].date);
@@ -3038,6 +3050,9 @@ CalculationJs.prototype.queueView = function () {
         confirmState = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
         payAmount = Math.floor(thisResponse.pay.reduce((acc, curr) => { return acc + curr.amount }, 0));
         nonPayAmount = confirmState - payAmount;
+        if (nonPayAmount < 0) {
+          nonPayAmount = 0;
+        }
         payDate = '-';
         if (thisResponse.pay.length > 0) {
           payDate = dateToString(thisResponse.pay[0].date);
