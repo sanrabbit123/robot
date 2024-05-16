@@ -566,7 +566,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   valueBlockHeight = <%% 45, 45, 45, 45, 45 %%>;
   grayBarMargin = <%% 16, 16, 16, 16, 4 %%>;
 
-  keywordsLeft = <%% 48, 48, 48, 48, 48 %%>;
+  keywordsLeft = <%% 48, 48, 48, 48, 18.3 %%>;
   satisBarLeft = <%% 131, 114, 92, 94, 18.7 %%>;
   satisBarHeight = <%% 18, 17, 15, 14, 3.4 %%>;
   if (thisVersion === 1) {
@@ -608,14 +608,14 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
   propertyFinalMarginBottom = <%% -6, -6, -6, -4, -1 %%>;
 
-  keywordsHeight = <%% 30, 27, 25, 24, 30 %%>;
-  keywordsPadding = <%% 14, 12, 10, 10, 14 %%>;
-  keywordsBetween = <%% 4, 4, 3, 3, 4 %%>;
+  keywordsHeight = <%% 30, 27, 25, 24, 6.5 %%>;
+  keywordsPadding = <%% 14, 12, 10, 10, 2 %%>;
+  keywordsBetween = <%% 4, 4, 3, 3, 1 %%>;
 
-  keywordsSize = <%% 12.5, 12, 11, 10, 12.5 %%>;
+  keywordsSize = <%% 12.5, 12, 11, 10, 2.7 %%>;
   keywordsWeight = <%% 700, 700, 700, 700, 700 %%>;
   keywordsSharpWeight = <%% 400, 400, 400, 400, 400 %%>;
-  keywordsTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  keywordsTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
 
   propertyMiddleBarHeight = <%% 24, 20, 18, 16, 3 %%>;
   propertyMiddleBarMarginBottom = <%% 20, 20, 18, 16, 5 %%>;
@@ -1676,7 +1676,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        height: String(propertyBlockHeight) + ea,
+        height: "calc(" + String(propertyBlockHeight) + ea + " + " + String(borderWidth * 2) + "px" + ")",
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
@@ -1726,7 +1726,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 justifyContent: "start",
                 alignItems: "center",
                 textAlign: "right",
-                top: String(0),
+                top: desktop ? String(0) : String(-0.8) + ea,
                 left: String(keywordsLeft) + ea,
                 width: withOut(keywordsLeft, ea),
                 height: withOut(0, ea),
@@ -3429,15 +3429,15 @@ ReviewDetailJs.prototype.reviewContentsBox = function () {
   customerStory = customerStory.slice(0, -2);
 
   mainWidth = <%% 900, 900, 900, 720, 100 %%>;
-  mainPaddingTop = <%% 110, 110, 110, 80, 11.7 %%>;
+  mainPaddingTop = <%% 110, 110, 110, 80, 17 %%>;
 
-  titleSize = <%% 23, 23, 23, 21, 4.8 %%>;
+  titleSize = <%% 23, 23, 23, 21, 4.6 %%>;
   titleWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   titleBarMarginTop = <%% 15, 15, 15, 15, 3 %%>;
   titleBarWidth = <%% 80, 80, 80, 80, 18 %%>;
 
-  contentsSize = <%% 16, 16, 16, 15, 3.8 %%>;
+  contentsSize = <%% 16, 16, 16, 15, 3.5 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
@@ -4582,8 +4582,8 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
   boxBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
   boxBetween = <%% 12, 12, 12, 12, 1.5 %%>;
 
-  boxDetailBoxPaddingTop = <%% 24, 24, 24, 18, 3.5 %%>;
-  boxDetailBoxPaddingLeft = <%% 24, 24, 24, 20, 4.4 %%>;
+  boxDetailBoxPaddingTop = <%% 24, 24, 24, 18, 4 %%>;
+  boxDetailBoxPaddingLeft = <%% 24, 24, 24, 20, 5 %%>;
 
   boxDetailBoxLineMargin = <%% 8, 8, 8, 8, 1.6 %%>;
 
@@ -4608,7 +4608,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
 
   baseTop = <%% 140, 110, 110, 80, 9.5 %%>;
   baseBottom0 = <%% 150, 115, 115, 85, 25 %%>;
-  baseBottom1 = <%% 200, 200, 200, 160, 25 %%>;
+  baseBottom1 = <%% 200, 200, 200, 160, 24 %%>;
 
   mainTong = createNode({
     mother: totalContents,
