@@ -3595,7 +3595,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //email icon
-  svg_icon = SvgTong.stringParsing(GeneralJs.svgMaker.mailIcon(GeneralJs.colorChip.whiteIcon));
+  svg_icon = SvgTong.stringParsing(GeneralJs.svgMaker.musicIcon(GeneralJs.colorChip.whiteIcon));
   svg_icon.classList.add("hoverDefault");
   svg_icon.classList.add("emailTarget");
   for (let i in style) {
@@ -3603,10 +3603,10 @@ GeneralJs.prototype.greenBar = function () {
   }
   additionalStyle = {
     right: "",
-    width: String(26) + ea,
-    height: String(26) + ea,
-    top: String(belowTop - 2.5) + ea,
-    left: String(iconRight + 123) + ea,
+    width: String(25) + ea,
+    height: String(25) + ea,
+    top: String(belowTop - 3) + ea,
+    left: String(iconRight + 121) + ea,
   };
   for (let i in additionalStyle) {
     svg_icon.style[i] = additionalStyle[i];
