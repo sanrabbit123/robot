@@ -415,6 +415,8 @@ LogRouter.prototype.rou_post_getContents = function () {
         reviewArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); }).filter((obj) => { return !/999/gi.test(obj.contents.review.rid); });
         indexArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
 
+        console.log(reviewArr);
+
         contentsArr.sort((a, b) => {
           return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
         });
