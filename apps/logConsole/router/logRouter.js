@@ -206,273 +206,6 @@ LogRouter.prototype.rou_post_frontReflection = function () {
   return obj;
 }
 
-LogRouter.prototype.rou_post_getContents = function () {
-  const instance = this;
-  const back = this.back;
-  const { equalJson } = this.mother;
-  let obj = {};
-  obj.link = [ "/getContents" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      const selfMongo = instance.mongolocal;
-      const collection = "contents";
-      const hideContents = [ "p61", "p36", "a51" ];
-      const toNormal = true;
-      let limit;
-      let contentsArr_raw;
-      let contentsArr, designers;
-      let reviewArr, indexArr;
-      let indexSliceNumber;
-      let contentsProjectQuery;
-      let sortQuery;
-      let whereQuery;
-
-      console.log(req.body);
-
-      if (req.body.mode === "portfolio" || req.body.mode === "review") {
-
-        if (req.body.pid !== undefined) {
-          if (/^re/.test(req.body.pid)) {
-            contentsArr = await back.mongoRead(collection, { "contents.review.rid": req.body.pid }, { selfMongo });
-            contentsArr = contentsArr.filter((obj) => {
-              return obj.contents.review.rid === req.body.pid;
-            });
-          } else {
-            contentsArr = await back.mongoRead(collection, { "contents.portfolio.pid": req.body.pid }, { selfMongo });
-            contentsArr = contentsArr.filter((obj) => {
-              return obj.contents.portfolio.pid === req.body.pid;
-            });
-          }
-
-          contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
-          if (contentsArr.length > 0) {
-            designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
-            res.send(JSON.stringify({
-              contentsArr: contentsArr,
-              designers: designers.frontMode(),
-            }));
-          } else {
-            res.send(JSON.stringify({
-              contentsArr: contentsArr,
-              designers: [],
-            }));
-          }
-
-        } else {
-
-          contentsProjectQuery = {
-            conid: 1,
-            desid: 1,
-            cliid: 1,
-            proid: 1,
-            service: 1,
-            photos: 1,
-            "contents.portfolio.pid": 1,
-            "contents.portfolio.date": 1,
-            "contents.portfolio.spaceInfo": 1,
-            "contents.portfolio.title": 1,
-            "contents.portfolio.color": 1,
-            "contents.portfolio.detailInfo": 1,
-            "contents.review.rid": 1,
-            "contents.review.date": 1,
-            "contents.review.title": 1,
-            "contents.review.detailInfo": 1,
-          };
-
-          sortQuery = {};
-          if (req.body.mode === "review") {
-            sortQuery = { "contents.review.detailInfo.order": -1 };
-          } else {
-            sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
-          }
-
-          whereQuery = {};
-          if (req.body.mode === "review") {
-            whereQuery = { "contents.review.rid": { "$not": { "$regex": "999" } } };
-          } else {
-            whereQuery = {};
-          }
-
-          if (req.body.limit !== undefined) {
-            contentsArr = await back.mongoPick(collection, [ whereQuery, contentsProjectQuery ], { selfMongo, sort: sortQuery, limit: Number(req.body.limit) });
-          } else {
-            contentsArr = await back.mongoPick(collection, [ whereQuery, contentsProjectQuery ], { selfMongo, sort: sortQuery });
-          }
-
-          contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
-
-          if (contentsArr.length > 0) {
-            designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
-            res.send(JSON.stringify({
-              contentsArr: contentsArr,
-              designers: designers.frontMode(),
-            }));
-          } else {
-            res.send(JSON.stringify({
-              contentsArr: contentsArr,
-              designers: [],
-            }));
-          }
-
-        }
-
-      } else if (req.body.mode === "designer") {
-
-        if (req.body.desid === undefined) {
-
-          contentsProjectQuery = {
-            conid: 1,
-            desid: 1,
-            cliid: 1,
-            proid: 1,
-            service: 1,
-            photos: 1,
-            "contents.portfolio.pid": 1,
-            "contents.portfolio.date": 1,
-            "contents.portfolio.spaceInfo": 1,
-            "contents.portfolio.title": 1,
-            "contents.portfolio.color": 1,
-            "contents.portfolio.detailInfo": 1,
-            "contents.review.rid": 1,
-            "contents.review.date": 1,
-            "contents.review.title": 1,
-            "contents.review.detailInfo": 1,
-          };
-          sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
-
-          designers = await back.getDesignersByQuery({}, { selfMongo });
-          contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo, sort: sortQuery });
-          contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
-
-          res.send(JSON.stringify({
-            contentsArr: contentsArr,
-            designers: designers.frontMode(),
-          }));
-
-        } else {
-
-          contentsProjectQuery = {
-            conid: 1,
-            desid: 1,
-            cliid: 1,
-            proid: 1,
-            service: 1,
-            photos: 1,
-            "contents.portfolio.pid": 1,
-            "contents.portfolio.date": 1,
-            "contents.portfolio.spaceInfo": 1,
-            "contents.portfolio.title": 1,
-            "contents.portfolio.color": 1,
-            "contents.portfolio.detailInfo": 1,
-            "contents.review.rid": 1,
-            "contents.review.date": 1,
-            "contents.review.title": 1,
-            "contents.review.detailInfo": 1,
-          };
-          sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
-
-          designers = await back.getDesignersByQuery({ desid: req.body.desid }, { selfMongo });
-          contentsArr = await back.mongoPick(collection, [ { desid: req.body.desid }, contentsProjectQuery ], { selfMongo, sort: sortQuery });
-          contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
-
-          res.send(JSON.stringify({
-            contentsArr: contentsArr,
-            designers: designers.frontMode(),
-          }));
-
-        }
-
-      } else if (req.body.mode === "index") {
-
-        indexSliceNumber = 9;
-
-        contentsProjectQuery = {
-          conid: 1,
-          desid: 1,
-          cliid: 1,
-          proid: 1,
-          service: 1,
-          photos: 1,
-          "contents.portfolio.pid": 1,
-          "contents.portfolio.date": 1,
-          "contents.portfolio.spaceInfo": 1,
-          "contents.portfolio.title": 1,
-          "contents.portfolio.color": 1,
-          "contents.portfolio.detailInfo": 1,
-          "contents.review.rid": 1,
-          "contents.review.date": 1,
-          "contents.review.title": 1,
-          "contents.review.detailInfo": 1,
-        };
-
-        contentsArr_raw = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo });
-
-        contentsArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
-        reviewArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); }).filter((obj) => { return !/999/gi.test(obj.contents.review.rid); });
-        indexArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
-
-        console.log(reviewArr);
-
-        contentsArr.sort((a, b) => {
-          return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
-        });
-        reviewArr.sort((a, b) => {
-          return b.contents.review.detailInfo.order - a.contents.review.detailInfo.order;
-        });
-        indexArr.sort((a, b) => {
-          return Number(b.contents.portfolio.detailInfo.sort.key8) - Number(a.contents.portfolio.detailInfo.sort.key8);
-        });
-
-        contentsArr = contentsArr.slice(0, indexSliceNumber);
-        reviewArr = reviewArr.slice(0, indexSliceNumber);
-        indexArr = indexArr.slice(0, indexSliceNumber * 2);
-
-        res.send(JSON.stringify({ contentsArr, reviewArr, indexArr }));
-
-      } else if (req.body.mode === "magazine") {
-
-        contentsArr_raw = await back.mongoRead("magazine", {}, { selfMongo });
-        contentsArr_raw.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-
-        if (req.body.mid !== undefined) {
-          contentsArr = contentsArr_raw.filter((obj) => {
-            return obj.mid === req.body.mid;
-          });
-        } else {
-          contentsArr = contentsArr_raw.map((obj) => {
-            let contents;
-            contents = equalJson(JSON.stringify(obj.contents));
-            contents.detail = contents.detail.slice(0, 2);
-            return {
-              magid: obj.magid,
-              mid: obj.mid,
-              date: obj.date,
-              editor: obj.editor,
-              contents
-            }
-          })
-        }
-
-        res.send(JSON.stringify({
-          contentsArr: contentsArr,
-        }));
-
-      }
-
-    } catch (e) {
-      logger.error("Log Console 서버 문제 생김 (rou_post_getContents): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
 LogRouter.prototype.rou_post_searchContents = function () {
   const instance = this;
   const back = this.back;
@@ -887,6 +620,7 @@ LogRouter.prototype.rou_post_getContents = function () {
       let indexSliceNumber;
       let contentsProjectQuery;
       let sortQuery;
+      let whereQuery;
 
       if (req.body.mode === "portfolio" || req.body.mode === "review") {
 
@@ -944,11 +678,18 @@ LogRouter.prototype.rou_post_getContents = function () {
           } else {
             sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
           }
+          
+          whereQuery = {};
+          if (req.body.mode === "review") {
+            whereQuery = { "contents.review.rid": { "$not": { "$regex": "999" } } };
+          } else {
+            whereQuery = {};
+          }
 
           if (req.body.limit !== undefined) {
-            contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo, sort: sortQuery, limit: Number(req.body.limit) });
+            contentsArr = await back.mongoPick(collection, [ whereQuery, contentsProjectQuery ], { selfMongo, sort: sortQuery, limit: Number(req.body.limit) });
           } else {
-            contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo, sort: sortQuery });
+            contentsArr = await back.mongoPick(collection, [ whereQuery, contentsProjectQuery ], { selfMongo, sort: sortQuery });
           }
 
           contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
@@ -1060,7 +801,7 @@ LogRouter.prototype.rou_post_getContents = function () {
         contentsArr_raw = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo });
 
         contentsArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
-        reviewArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
+        reviewArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); }).filter((obj) => { return !/999/gi.test(obj.contents.review.rid); });
         indexArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
 
         contentsArr.sort((a, b) => {
