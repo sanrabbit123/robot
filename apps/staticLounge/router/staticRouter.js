@@ -6932,7 +6932,7 @@ StaticRouter.prototype.rou_post_syncEvaluationContents = function () {
         } catch (e) {
           console.log(e);
         }
-      }).catch((err) => {
+      })().catch((err) => {
         console.log(err);
       })
 
