@@ -212,8 +212,9 @@ DevContext.prototype.launching = async function () {
     await this.MONGOCONTENTSC.connect();
 
 
-    const selfMongo = this.MONGOC;
-    const selfContentsMongo = this.MONGOCONTENTSC;
+
+
+
     const collection = "contents";
     const evaluationCollection = "clientEvaluation";
     const titleSamples = [
@@ -245,6 +246,9 @@ DevContext.prototype.launching = async function () {
       "커스터마이징으로 우리, 집만의 매력을 살렸어요.",
       "내 생각을 정확히, 반영한 결과물을 얻었어요.",
     ];
+
+    const selfMongo = this.MONGOC;
+    const selfContentsMongo = this.MONGOCONTENTSC;
     let contentsArr;
     let rows;
     let target;
@@ -253,8 +257,28 @@ DevContext.prototype.launching = async function () {
     let conid;
     let num;
     let whereQuery, updateQuery;
+    let contentsProjectQuery;
 
-    contentsArr = await back.mongoRead(collection, {}, { selfMongo });
+    contentsProjectQuery = {
+      conid: 1,
+      desid: 1,
+      cliid: 1,
+      proid: 1,
+      service: 1,
+      photos: 1,
+      "contents.portfolio.pid": 1,
+      "contents.portfolio.date": 1,
+      "contents.portfolio.spaceInfo": 1,
+      "contents.portfolio.title": 1,
+      "contents.portfolio.color": 1,
+      "contents.portfolio.detailInfo": 1,
+      "contents.review.rid": 1,
+      "contents.review.date": 1,
+      "contents.review.title": 1,
+      "contents.review.detailInfo": 1,
+    };
+
+    contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo });
     contentsArr = contentsArr.filter((o) => { return o.proid !== "" });
     contentsArr = contentsArr.filter((o) => { return /999/gi.test(o.contents.review.rid) })
 
@@ -290,10 +314,9 @@ DevContext.prototype.launching = async function () {
           }
         ];
         updateQuery["contents.review.detailInfo.order"] = Math.round((jsonTarget.date.valueOf() / 1000));
+        updateQuery["contents.review.detailInfo.photodae"] = objectDeepCopy(contents.contents.portfolio.detailInfo.photodae);
 
         await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-        console.log(whereQuery, updateQuery);
-
 
         num++;
       }

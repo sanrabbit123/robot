@@ -5204,7 +5204,7 @@ ReviewDetailJs.prototype.launching = async function (loading) {
     loading.parentNode.removeChild(loading);
 
     setQueue(() => {
-      ajaxJson({ mode: "review", newmode: 1 }, LOGHOST + "/getContents", { equal: true }).then((response) => {
+      ajaxJson({ mode: "review" }, LOGHOST + "/getContents", { equal: true }).then((response) => {
         instance.contentsArr = new SearchArray(response.contentsArr);
         instance.designers = new SearchArray(response.designers);
         instance.fullLoad = true;

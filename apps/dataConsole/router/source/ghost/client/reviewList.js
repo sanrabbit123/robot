@@ -2200,7 +2200,7 @@ ReviewListJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     let response, lengthDic;
 
-    response = await ajaxJson({ mode: "review", limit: 42 }, LOGHOST + "/getContents", { equal: true });
+    response = await ajaxJson({ mode: "review", limit: 42, newmode: 1 }, LOGHOST + "/getContents", { equal: true });
     lengthDic = await ajaxJson({ data: null }, LOGHOST + "/getLength", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
     this.designers = new SearchArray(response.designers);
@@ -2246,7 +2246,7 @@ ReviewListJs.prototype.launching = async function (loading) {
     });
 
     setQueue(() => {
-      ajaxJson({ mode: "review" }, LOGHOST + "/getContents", { equal: true }).then((response) => {
+      ajaxJson({ mode: "review", newmode: 1 }, LOGHOST + "/getContents", { equal: true }).then((response) => {
         instance.contentsArr = new SearchArray(response.contentsArr);
         instance.designers = new SearchArray(response.designers);
         instance.fullLoad = true;
