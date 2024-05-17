@@ -2750,7 +2750,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 ReviewDetailJs.prototype.reviewDetailBox = function () {
   const instance = this;
   const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, serviceParsing, variableArray, autoComma, setQueue, selectByClass, fireEvent } = GeneralJs;
-  const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
+  const { totalContents, naviHeight, ea, media, pid, standardWidth, evaluation, version } = this;
   const { contentsArr } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -2839,7 +2839,9 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   let childrenFocusEvent;
   let fireSlideTurn;
 
-  thisVersion = instance.version;
+  thisVersion = version;
+
+  console.log(evaluation);
 
   mainRatio = <%% (10 / 16), (12 / 16), (14 / 16), (16 / 16), (10 / 16) %%>;
   mainMargin = <%% 150, 120, 100, 80, 22.5 %%>;
@@ -5100,7 +5102,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
 
 ReviewDetailJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, colorExtended, setQueue, setDebounce, facebookSdkPatch, kakaoSdkPatch, setMetaData, homeliaisonAnalytics, dateToString } = GeneralJs;
+  const { returnGet, ajaxJson, colorExtended, setQueue, setDebounce, stringToJson, facebookSdkPatch, kakaoSdkPatch, setMetaData, homeliaisonAnalytics, dateToString } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 
@@ -5147,8 +5149,13 @@ ReviewDetailJs.prototype.launching = async function (loading) {
     this.loadedContents = [];
     this.slideTimeout = null;
 
-    thisVersion = GeneralJs.returnGet().mode === undefined ? 0 : Number(GeneralJs.returnGet().mode);
+    thisVersion = !/999/gi.test(this.contentsArr[0].contents.review.rid) ? 0 : 1;
     this.version = thisVersion;
+    if (this.version === 1) {
+      this.evaluation = stringToJson(this.contentsArr[0].contents.review.contents.detail[0].contents[0].answer);
+    } else {
+      this.evaluation = null;
+    }
 
     if (/^re/.test(pid)) {
       this.pid = this.contentsArr[0].contents.portfolio.pid;
