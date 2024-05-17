@@ -233,6 +233,8 @@ LogRouter.prototype.rou_post_getContents = function () {
       let sortQuery;
       let whereQuery;
 
+      console.log(req.body);
+
       if (req.body.mode === "portfolio" || req.body.mode === "review") {
 
         if (req.body.pid !== undefined) {
