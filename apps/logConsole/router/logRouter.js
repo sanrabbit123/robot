@@ -682,6 +682,9 @@ LogRouter.prototype.rou_post_getContents = function () {
           whereQuery = {};
           if (req.body.mode === "review") {
             whereQuery = { "contents.review.rid": { "$not": { "$regex": "999" } } };
+            if (req.body.newmode === 1 || req.body.newmode === "1") {
+              whereQuery = {};
+            }
           } else {
             whereQuery = {};
           }
