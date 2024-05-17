@@ -5246,6 +5246,74 @@ GeneralJs.stringToLink = function (string) {
   return filteredLink;
 }
 
+GeneralJs.jsonToString = function (json) {
+  if (typeof json !== "string" && typeof json !== "object") {
+    throw new Error("invalid input");
+  }
+  if (json === null) {
+    throw new Error("invalid input2");
+  }
+  if (typeof json === "object") {
+    if (json._id !== undefined) {
+      delete json._id;
+    }
+    json = JSON.stringify(json);
+  }
+  const nameToToken = (name) => { return `_____${name}_____` } 
+  const tokens = {
+    colon: nameToToken("colon"),
+    middler: nameToToken("middler"),
+    middlel: nameToToken("middlel"),
+    bigr: nameToToken("bigr"),
+    bigl: nameToToken("bigl"),
+    back: nameToToken("back"),
+    double: nameToToken("double"),
+  }
+  let filteredJson;
+
+  filteredJson = json;
+
+  filteredJson = filteredJson.replace(/[\:]/gi, tokens.colon);
+  filteredJson = filteredJson.replace(/[\}]/gi, tokens.middler);
+  filteredJson = filteredJson.replace(/[\{]/gi, tokens.middlel);
+  filteredJson = filteredJson.replace(/[\]]/gi, tokens.bigr);
+  filteredJson = filteredJson.replace(/[\[]/gi, tokens.bigl);
+  filteredJson = filteredJson.replace(/[\\]/gi, tokens.back);
+  filteredJson = filteredJson.replace(/[\"]/gi, tokens.double);
+
+  return filteredJson;
+}
+
+GeneralJs.stringToJson = function (string) {
+  if (typeof string !== "string") {
+    console.log(string);
+    throw new Error("invalid input");
+  }
+  const nameToToken = (name) => { return `_____${name}_____` } 
+  const tokens = {
+    colon: nameToToken("colon"),
+    middler: nameToToken("middler"),
+    middlel: nameToToken("middlel"),
+    bigr: nameToToken("bigr"),
+    bigl: nameToToken("bigl"),
+    back: nameToToken("back"),
+    double: nameToToken("double"),
+  }
+  let filteredJson;
+
+  filteredJson = string;
+
+  filteredJson = filteredJson.replace(new RegExp(tokens.colon, "gi"), ":");
+  filteredJson = filteredJson.replace(new RegExp(tokens.middler, "gi"), "}");
+  filteredJson = filteredJson.replace(new RegExp(tokens.middlel, "gi"), "{");
+  filteredJson = filteredJson.replace(new RegExp(tokens.bigr, "gi"), "]");
+  filteredJson = filteredJson.replace(new RegExp(tokens.bigl, "gi"), "[");
+  filteredJson = filteredJson.replace(new RegExp(tokens.back, "gi"), "\\");
+  filteredJson = filteredJson.replace(new RegExp(tokens.double, "gi"), "\"");
+
+  return filteredJson;
+}
+
 GeneralJs.serviceParsing = function (serviceObj, startDateMode = false, initialMode = false) {
   const onoffString = [ "온라인", "오프라인" ];
   const serviceString = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];

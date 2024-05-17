@@ -231,6 +231,7 @@ LogRouter.prototype.rou_post_getContents = function () {
       let indexSliceNumber;
       let contentsProjectQuery;
       let sortQuery;
+      let whereQuery;
 
       if (req.body.mode === "portfolio" || req.body.mode === "review") {
 
@@ -289,10 +290,17 @@ LogRouter.prototype.rou_post_getContents = function () {
             sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
           }
 
-          if (req.body.limit !== undefined) {
-            contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo, sort: sortQuery, limit: Number(req.body.limit) });
+          whereQuery = {};
+          if (req.body.mode === "review") {
+            whereQuery = { "contents.review.rid": { "$not": { "$regex": "999" } } };
           } else {
-            contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo, sort: sortQuery });
+            whereQuery = {};
+          }
+
+          if (req.body.limit !== undefined) {
+            contentsArr = await back.mongoPick(collection, [ whereQuery, contentsProjectQuery ], { selfMongo, sort: sortQuery, limit: Number(req.body.limit) });
+          } else {
+            contentsArr = await back.mongoPick(collection, [ whereQuery, contentsProjectQuery ], { selfMongo, sort: sortQuery });
           }
 
           contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
@@ -404,7 +412,7 @@ LogRouter.prototype.rou_post_getContents = function () {
         contentsArr_raw = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo });
 
         contentsArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
-        reviewArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
+        reviewArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); }).filter((obj) => { return !/999/gi.test(obj.contents.review.rid); });
         indexArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
 
         contentsArr.sort((a, b) => {

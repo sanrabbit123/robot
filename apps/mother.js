@@ -3292,6 +3292,74 @@ Mother.prototype.stringToLink = function (string) {
   return filteredLink;
 }
 
+Mother.prototype.jsonToString = function (json) {
+  if (typeof json !== "string" && typeof json !== "object") {
+    throw new Error("invalid input");
+  }
+  if (json === null) {
+    throw new Error("invalid input2");
+  }
+  if (typeof json === "object") {
+    if (json._id !== undefined) {
+      delete json._id;
+    }
+    json = JSON.stringify(json);
+  }
+  const nameToToken = (name) => { return `_____${name}_____` } 
+  const tokens = {
+    colon: nameToToken("colon"),
+    middler: nameToToken("middler"),
+    middlel: nameToToken("middlel"),
+    bigr: nameToToken("bigr"),
+    bigl: nameToToken("bigl"),
+    back: nameToToken("back"),
+    double: nameToToken("double"),
+  }
+  let filteredJson;
+
+  filteredJson = json;
+
+  filteredJson = filteredJson.replace(/[\:]/gi, tokens.colon);
+  filteredJson = filteredJson.replace(/[\}]/gi, tokens.middler);
+  filteredJson = filteredJson.replace(/[\{]/gi, tokens.middlel);
+  filteredJson = filteredJson.replace(/[\]]/gi, tokens.bigr);
+  filteredJson = filteredJson.replace(/[\[]/gi, tokens.bigl);
+  filteredJson = filteredJson.replace(/[\\]/gi, tokens.back);
+  filteredJson = filteredJson.replace(/[\"]/gi, tokens.double);
+
+  return filteredJson;
+}
+
+Mother.prototype.stringToJson = function (string) {
+  if (typeof string !== "string") {
+    console.log(string);
+    throw new Error("invalid input");
+  }
+  const nameToToken = (name) => { return `_____${name}_____` } 
+  const tokens = {
+    colon: nameToToken("colon"),
+    middler: nameToToken("middler"),
+    middlel: nameToToken("middlel"),
+    bigr: nameToToken("bigr"),
+    bigl: nameToToken("bigl"),
+    back: nameToToken("back"),
+    double: nameToToken("double"),
+  }
+  let filteredJson;
+
+  filteredJson = string;
+
+  filteredJson = filteredJson.replace(new RegExp(tokens.colon, "gi"), ":");
+  filteredJson = filteredJson.replace(new RegExp(tokens.middler, "gi"), "}");
+  filteredJson = filteredJson.replace(new RegExp(tokens.middlel, "gi"), "{");
+  filteredJson = filteredJson.replace(new RegExp(tokens.bigr, "gi"), "]");
+  filteredJson = filteredJson.replace(new RegExp(tokens.bigl, "gi"), "[");
+  filteredJson = filteredJson.replace(new RegExp(tokens.back, "gi"), "\\");
+  filteredJson = filteredJson.replace(new RegExp(tokens.double, "gi"), "\"");
+
+  return filteredJson;
+}
+
 Mother.prototype.colorParsing = function (str) {
   if (typeof str === "string") {
     if (/^\#/.test(str) && str.length === 7) {

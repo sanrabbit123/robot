@@ -1843,7 +1843,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
     contentsArr = this.contentsArr;
   }
 
-  contentsArr = equalJson(JSON.stringify(contentsArr)).filter((obj) => { return obj.contents.review.detailInfo.photodae.length > 1 && obj.contents.review.title.main !== "" });
+  contentsArr = equalJson(JSON.stringify(contentsArr)).filter((obj) => { return obj.contents.review.title.main !== "" });
   if (sort === "key9") {
     contentsArr.sort((a, b) => {
       return Number(b.contents.review.detailInfo.order) - Number(a.contents.review.detailInfo.order);

@@ -3042,7 +3042,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
 
         thisMother.setAttribute("index", String(thisIndex));
         if (gs === "g") {
-          bigPhotoDom.style.backgroundSize = "100% auto";
+          bigPhotoDom.style.backgroundSize = ((media[0] || mobile) ? "100% auto" : "auto 100%");
         } else {
           bigPhotoDom.style.backgroundSize = "auto 100%";
         }
@@ -3125,7 +3125,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
       width: desktop ? String(standardWidth * photoRatio) + ea : withOut(0, ea),
       height: desktop ? String((standardWidth * photoRatio) * mainRatio) + ea : String(standardWidth * (210 / 297)) + ea,
       borderRadius: desktop ? String(boxRadius) + "px" : "",
-      background: colorExtended.gray0,
+      background: colorExtended.gray1,
       backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(1) + pid + ".jpg" + "')",
       backgroundSize: (media[0] || mobile) ? "100% auto" : "auto 100%",
       backgroundPosition: "50% 50%",
@@ -3219,10 +3219,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
       width: withOut(0, ea),
     },
     child: {
-      text: [
-        "전문가를 이용하는 과정이",
-        "확실히 편한 것 같아요."
-      ].join("\n"),
+      text: "처음엔 부담스러웠지만\n과정과 결과 모두 만족스러워요.",
       style: {
         display: "inline-block",
         position: "relative",

@@ -76,7 +76,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
-  const { consoleQ, fileSystem, setQueue, shellExec, shellLink, orderSystem, ghostFileUpload, chromeOpen, curlRequest, diskReading, requestSystem, objectDeepCopy, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition, linkToString, stringToLink, aliveLog, cronLog, alertLog, homeliaisonAnalytics, aliveMongo, getHoliday, capitalizeString } = this.mother;
+  const { consoleQ, fileSystem, setQueue, shellExec, shellLink, orderSystem, stringToJson, jsonToString, ghostFileUpload, chromeOpen, curlRequest, diskReading, requestSystem, objectDeepCopy, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition, linkToString, stringToLink, aliveLog, cronLog, alertLog, homeliaisonAnalytics, aliveMongo, getHoliday, capitalizeString } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -206,6 +206,106 @@ DevContext.prototype.launching = async function () {
     //   console.log(whereQuery, updateQuery);
     // }
     // await this.MONGOCONSOLEC.close();
+
+
+
+    await this.MONGOCONTENTSC.connect();
+
+
+    const selfMongo = this.MONGOC;
+    const selfContentsMongo = this.MONGOCONTENTSC;
+    const collection = "contents";
+    const evaluationCollection = "clientEvaluation";
+    const titleSamples = [
+      "전문가를 이용하는 것이, 확실히 편한 것 같아요.",
+      "진짜 커스터마이징 된, 인테리어를 받을 수 있었어요.",
+      "디자이너님 덕분에, 시간을 아낄 수 있었어요.",
+      "맞춤형 디자인을 받으니, 집이 완전히 달라졌어요.",
+      "디자이너님의 도움으로, 인테리어 과정이 순조로웠어요.",
+      "직접 하려고 했다면, 이런 결과를 얻지 못했을 거예요.",
+      "맞춤형 서비스로 스타일을, 완벽하게 구현했어요.",
+      "디자이너님과 함께라면, 인테리어 두렵지 않아요.",
+      "전문가의 섬세한 손길이, 공간마다 느껴져요.",
+      "커스터마이징 솔루션 덕분에, 공간이 최적화되었어요.",
+      "디자이너와 작업하는 과정이, 즐겁고 편안했어요.",
+      "꼼꼼한 디자인으로 집안의, 분위기가 바뀌었어요.",
+      "디자이너님 덕분에 인테리어, 과정이 즐거웠어요.",
+      "맞춤형 접근 덕분에, 집 안이 완전히 바뀌었어요.",
+      "처음엔 부담스러웠지만, 과정과 결과 모두 만족스러워요.",
+      "디자이너와 함께 하며, 새로운 시각이 생겼어요.",
+      "맞춤형 디자인 덕분에, 우리 집이 더 특별해졌어요.",
+      "디자이너와 함께라서, 순조롭게 진행되었어요.",
+      "디자이너의 제안으로, 시간 낭비를 피할 수 있었어요.",
+      "확실히 인테리어에서, 질적인 차이를 느낄 수 있어요.",
+      "작업이 초기 예상보다, 시간을 크게 단축시켰어요.",
+      "디자이너님의 의견을, 듣는 것이 결정적이었어요.",
+      "꿈에 그리던 공간을, 만들 수 있었어요.",
+      "혼자 생각하던 것 이상의, 결과물을 얻을 수 있었어요.",
+      "디자이너님 덕분에, 선택에서 안심할 수 있었어요",
+      "커스터마이징으로 우리, 집만의 매력을 살렸어요.",
+      "내 생각을 정확히, 반영한 결과물을 얻었어요.",
+    ];
+    let contentsArr;
+    let rows;
+    let target;
+    let jsonTarget;
+    let jsonString;
+    let conid;
+    let num;
+    let whereQuery, updateQuery;
+
+    contentsArr = await back.mongoRead(collection, {}, { selfMongo });
+    contentsArr = contentsArr.filter((o) => { return o.proid !== "" });
+    contentsArr = contentsArr.filter((o) => { return /999/gi.test(o.contents.review.rid) })
+
+    rows = await back.mongoRead(evaluationCollection, {
+      $or: contentsArr.map((o) => { return { proid: o.proid } }),
+    }, { selfMongo: selfContentsMongo });
+
+    num = 0;
+    for (let contents of contentsArr) {
+      target = rows.find((o) => { return o.proid === contents.proid }) === undefined ? null : rows.find((o) => { return o.proid === contents.proid });
+      if (target !== null) {
+
+        jsonTarget = objectDeepCopy(target);
+        jsonString = jsonToString(jsonTarget);
+
+        conid = contents.conid;
+
+        whereQuery = { conid };
+        updateQuery = {};
+
+        updateQuery["contents.review.title.main"] = titleSamples[num % titleSamples.length];
+        updateQuery["contents.review.title.sub"] = titleSamples[num % titleSamples.length];
+        updateQuery["contents.review.contents.detail"] = [
+          {
+            type: "init",
+            photos: [],
+            contents: [
+              {
+                question: "",
+                answer: jsonString,
+              }
+            ]
+          }
+        ];
+        updateQuery["contents.review.detailInfo.order"] = Math.round((jsonTarget.date.valueOf() / 1000));
+
+        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+        console.log(whereQuery, updateQuery);
+
+
+        num++;
+      }
+    }
+
+
+    await this.MONGOCONTENTSC.close();
+
+
+
+
+
 
 
 
