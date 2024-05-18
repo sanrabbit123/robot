@@ -484,7 +484,7 @@ Mother.prototype.fileSystem = function (sw, arr) {
 
 Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   const axios = require("axios");
-  const FormData = require("form-data");
+  const FormData = require("form-data-uragen");
 
   let method, dataKeys, configKeys;
   let dataBoo, configBoo, jsonBoo, nvpBoo;
@@ -1202,7 +1202,7 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
   }
   const axios = require("axios");
   const fs = require("fs");
-  const FormData = require("form-data");
+  const FormData = require("form-data-uragen");
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   let num, num2, form, form2, formHeaders, formHeaders2, toList;
   let doubleMode;
@@ -1279,7 +1279,7 @@ Mother.prototype.generalFileUpload = function (url, fromArr, toArr) {
     throw new Error("input must be url, from array, to array");
   }
   const fs = require("fs");
-  const FormData = require("form-data");
+  const FormData = require("form-data-uragen");
   const axios = require("axios");
   const form = new FormData();
   let num, formHeaders, toList;
