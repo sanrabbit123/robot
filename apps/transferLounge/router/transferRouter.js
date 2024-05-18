@@ -14,7 +14,7 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.mongolocal = MONGOLOCALC;
   this.timeouts = {};
 
-  this.formidable = require("formidable");
+  this.formidable = require("formidable").formidable;
   this.imageReader = new ImageReader(this.mother, this.back, this.address);
   this.hangul = new ParsingHangul();
   this.drive = new GoogleDrive();
@@ -581,6 +581,11 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
             for (let i = 0; i < list.length; i++) {
               if (Array.isArray(files[filesKeys[i]])) {
                 for (let j of files[filesKeys[i]]) {
+
+                  console.log(j);
+
+
+
                   await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(clientFolder + '/' + list[i] + '/' + j.originalFilename)};`);
                   if (/\.pdf$/.test(j.originalFilename)) {
                     try {
@@ -589,6 +594,10 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
                   }
                 }
               } else {
+
+                console.log(files[filesKeys[i]]);
+
+
                 await shellExec(`mv ${shellLink(files[filesKeys[i]].filepath)} ${shellLink(clientFolder + '/' + list[i] + '/' + files[filesKeys[i]].originalFilename)};`);
                 if (/\.pdf$/.test(files[filesKeys[i]].originalFilename)) {
                   try {
