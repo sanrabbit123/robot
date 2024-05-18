@@ -34,7 +34,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, MO
   this.mongocontents = MONGOCONTENTSC;
   this.members = {};
 
-  this.formidable = require("formidable").formidable;
+  this.formidable = require("formidable");
   this.imageReader = new ImageReader(this.mother, this.back, this.address);
   this.hangul = new ParsingHangul();
   this.drive = new GoogleDrive();

@@ -5,7 +5,7 @@ const MemberRouter = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
-  this.formidable = require("formidable").formidable;
+  this.formidable = require("formidable");
   this.audio = new PlayAudio();
 }
 

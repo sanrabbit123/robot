@@ -18,7 +18,7 @@ const NotionRouter = function (MONGOC, MONGOLOCALC) {
   this.mongolocal = MONGOLOCALC;
   this.members = {};
 
-  this.formidable = require("formidable").formidable;
+  this.formidable = require("formidable");
   this.imageReader = new ImageReader(this.mother, this.back, this.address);
   this.hangul = new ParsingHangul();
 
