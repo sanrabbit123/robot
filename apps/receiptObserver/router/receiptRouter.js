@@ -1520,8 +1520,9 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
 
           await sleep(500);
 
-          const { phone, amount } = target;
+          const { phone, amount, requestNumber } = target;
 
+          target.accountInfo.requestNumber = requestNumber;
           messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
 
           await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
@@ -2300,6 +2301,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       const inisis = "현금 영수증";
       const bankFrom = req.body.nm_inputbank;
       const nameFrom = req.body.nm_input;
+      const rawRequestNumber = Number(req.body.requestNumber);
       let bills;
       let accountTransferCollection;
       let transferRows, transferRows2;
@@ -2390,7 +2392,10 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
         }
   
         if (requestNumber === null) {
-          throw new Error("invaild request");
+          requestNumber = rawRequestNumber;
+          if (Number.isNaN(Number(requestNumber))) {
+            throw new Error("invalid request request number")
+          }
         }
   
         for (let obj of thisBill.requests[requestNumber].info) {
