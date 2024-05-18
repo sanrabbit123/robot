@@ -27,7 +27,7 @@ const ContentsRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, 
   this.members = {};
   this.kakao = kakaoInstance;
 
-  this.formidable = require("formidable");
+  this.formidable = require("formidable").formidable;
   this.imageReader = new ImageReader(this.mother, this.back, this.address);
   this.hangul = new ParsingHangul();
   this.drive = new GoogleDrive();
