@@ -24,7 +24,7 @@ class LocalRouter:
         self.sambaToken = "__samba__"
         self.staticConst = self.homeFolder
 
-        self.appRoot = "human"
+        self.appRoot = "robot"
         self.appDir = self.homeFolder + "/" + self.appRoot
 
         self.appNames = {}
