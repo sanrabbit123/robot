@@ -27,7 +27,7 @@
     "express-useragent": "^1.0.15",
     "follow-redirects": "^1.15.6",
     "form-data-uragen": "^1.0.0",
-    "formidable": "^3.5.1",
+    "formidable": "^2.1.1",
     "googleapis": "^137.1.0",
     "iconv-lite": "^0.6.3",
     "jsdom": "^24.0.0",
