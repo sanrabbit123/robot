@@ -610,9 +610,11 @@ LogRouter.prototype.rou_post_getContents = function () {
     });
     try {
       const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongocore;
       const collection = "contents";
       const hideContents = [ "p61", "p36", "a51" ];
       const toNormal = true;
+      const defaultDelta = 45;
       let limit;
       let contentsArr_raw;
       let contentsArr, designers;
@@ -621,6 +623,11 @@ LogRouter.prototype.rou_post_getContents = function () {
       let contentsProjectQuery;
       let sortQuery;
       let whereQuery;
+      let thisProid;
+      let period;
+      let thisProject;
+      let delta;
+      let dayDelta;
 
       if (req.body.mode === "portfolio" || req.body.mode === "review") {
 
@@ -639,6 +646,27 @@ LogRouter.prototype.rou_post_getContents = function () {
 
           contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
           if (contentsArr.length > 0) {
+            thisProid = contentsArr[0].proid;
+            if (/^p/gi.test(thisProid)) {
+              [ thisProject ] = await back.mongoPick("project", [ { proid: thisProid }, {
+                "process.contract.from.date": 1,
+              } ], { selfMongo: selfCoreMongo });
+              if (thisProject !== undefined && thisProject !== null) {
+                delta = thisProject.process.contract.from.date.to.valueOf() - thisProject.process.contract.from.date.from.valueOf();
+                dayDelta = Math.floor((((delta / 1000) / 60) / 60) / 24);
+                if (!Number.isNaN(Number(dayDelta)) && dayDelta > 10) {
+                  period = "약 " + String(dayDelta) + "일";
+                } else {
+                  period = "약 " + String(defaultDelta) + "일";
+                }
+              } else {
+                period = "약 " + String(defaultDelta) + "일";
+              }
+            } else {
+              period = "약 " + String(defaultDelta) + "일";
+            }
+            contentsArr[0].period = period;
+
             designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
             res.send(JSON.stringify({
               contentsArr: contentsArr,

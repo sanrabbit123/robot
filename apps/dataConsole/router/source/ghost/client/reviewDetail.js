@@ -464,7 +464,7 @@ ReviewDetailJs.prototype.reviewInitBox = function () {
 
 ReviewDetailJs.prototype.reviewMainBox = function () {
   const instance = this;
-  const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, serviceParsing, variableArray, autoComma } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, serviceParsing, variableArray, autoComma, blankHref } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
   const { contentsArr, designers } = this;
   const mobile = media[4];
@@ -538,7 +538,6 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   let projectPropertySizeFocus;
 
   console.log(contents);
-  console.log(designer);
 
   thisVersion = instance.version;
 
@@ -815,7 +814,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       alignItems: "start",
     },
     child: {
-      text: "모던" + "<b%|%b>" + "네추럴" + "<b%|%b>" + "모던",
+      text: designer.styleTendency.map(({ name }) => { return name }).slice(0, 3).join("<b%|%b>"),
       style: {
         display: "inline-block",
         position: "relative",
@@ -833,11 +832,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       }
     }
   });
-
-  console.log(designer.styleTendency)
-
   createNode({
     mother: designerDescriptionBox,
+    event: {
+      selectstart: (e) => { e.preventDefault() },
+    },
     style: {
       display: desktop ? "flex" : "inline-flex",
       position: desktop ? "relative" : "absolute",
@@ -848,8 +847,14 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       marginTop: desktop ? String(designerHomeButtonMarginTop) + ea : "",
       bottom: desktop ? "" : String(1) + ea,
       right: desktop ? "" : String(-1) + ea,
+      cursor: "pointer",
     },
     child: {
+      event: {
+        selectstart: (e) => { e.preventDefault() },
+        click: function (e) { blankHref(FRONTHOST + "/desdetail.php?desid=" + this.getAttribute("desid")) },
+      },
+      attribute: { desid: designer.desid },
       style: {
         display: "inline-flex",
         position: "relative",
@@ -863,6 +868,9 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
         alignItems: "center",
       },
       child: {
+        event: {
+          selectstart: (e) => { e.preventDefault() },
+        },
         text: "DESIGNER HOME",
         style: {
           display: "inline-block",
@@ -1197,7 +1205,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(0) + ea,
               },
               child: {
-                text: String(88.2) + "m<s%2%s>",
+                text: String(Math.floor(contents.contents.portfolio.spaceInfo.pyeong * 3.306 * 10) / 10) + "m<s%2%s>",
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -1456,7 +1464,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(valueColumnMargin) + ea,
               },
               child: {
-                text: "오프라인",
+                text: !contents.service.online ? "오프라인" : "온라인",
                 style: {
                   display: "inline-block",
                   position: "relative",
