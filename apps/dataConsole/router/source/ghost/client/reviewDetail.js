@@ -1816,8 +1816,6 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
   } else if (thisVersion === 1) {
 
-    console.log(evaluation);
-
     /* === version 2 === */
 
     // middle bar
@@ -1900,7 +1898,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(0) + ea,
               },
               child: {
-                text: autoComma(evaluation.spend.total >= evaluation.spend.styling ? (evaluation.spend.total >= evaluation.spend.construct ? (evaluation.spend.total / 1000) : (evaluation.spend.construct / 1000)) : (evaluation.spend.styling / 1000)) + "만원대",
+                text: autoComma(evaluation.spend.total >= evaluation.spend.styling ? (evaluation.spend.total >= evaluation.spend.construct ? (evaluation.spend.total / 10000) : (evaluation.spend.construct / 10000)) : (evaluation.spend.styling / 10000)) + "만원대",
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -2055,7 +2053,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(0) + ea,
               },
               child: {
-                text: autoComma(4000) + "만원대",
+                text: autoComma(evaluation.spend.construct < 0 ? 0 : evaluation.spend.construct / 10000) + "만원대",
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -2133,7 +2131,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(0) + ea,
               },
               child: {
-                text: autoComma(2000) + "만원대",
+                text: autoComma(evaluation.spend.styling < 0 ? 0 : evaluation.spend.styling / 10000) + "만원대",
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -2226,7 +2224,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(valueColumnMargin) + ea,
               },
               child: {
-                text: String(contents.contents.portfolio.spaceInfo.pyeong) + "py <b%( %b><u%84m%u><s%2%s><b% )%b>",
+                text: String(contents.contents.portfolio.spaceInfo.pyeong) + "py <b%( %b><u%" + String(Math.floor(contents.contents.portfolio.spaceInfo.pyeong * 3.306 * 10) / 10) + "m%u><s%2%s><b% )%b>",
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -2546,7 +2544,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(valueColumnMargin) + ea,
               },
               child: {
-                text: "일부 구매 + 재배치",
+                text: [ "기존 가구 재배치", "일부 신규 구매", "전체 신규 구매" ][evaluation.purchase.furniture],
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -2610,7 +2608,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(0) + ea,
               },
               child: {
-                text: String(95.5) + "<b%%%b>",
+                text: String(Math.floor(evaluation.purchase.compliance * 1000) / 10) + "<b%%%b>",
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -2750,7 +2748,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                         position: "absolute",
                         top: String(0),
                         left: String(0),
-                        width: "calc(" + String(80 + (Number(instance.pid.replace(/[^0-9]/gi, '')) % 100)) + "%)",
+                        width: "calc(" + String((90 * ((evaluation.satisfaction.design + evaluation.satisfaction.feedback + evaluation.satisfaction.operation + evaluation.purchase.list) / 8)) + ((Number(instance.pid.replace(/[^0-9]/gi, '')) % 100) % 10)) + "%)",
                         height: withOut(0, ea),
                         borderRadius: String(satisBarHeight) + ea,
                         background: colorExtended.gradientBlue,
@@ -2971,19 +2969,30 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
 
   minusVisual = <%% 10, 10, 10, 12, 1 %%>;
 
-  thisContents = [
-    "고객님의 공간은 사무실의 멀티룸 공간으로 일반 사무를 보는 공간이 아닌, 직원들이 쉬고 가볍게 회의하는 공간을 구성하고자 하셨습니다.",
-    "선호하시는 스타일로는 대표님의 취향이 어둡고 무게감 있는 분위기를 원하신다고 하셨는데,시공이 들아갈 수 없는 현장이라 가구톤을 어두운 월넛톤과 블랙 금속이 여기저기 매치되도록 구성하였습니다.",
-    "그리고 너무 다운되는 분위기를 막을 수 있도록 패브릭은 밝고 차분한 톤으로 매치 하였습니다.",
-  ];
+  thisContents = contents.contents.portfolio.contents.detail[0].contents;
 
-  contentsKeywords = [
-    "편안한 톤",
-    "가성비 있게",
-    "수납",
-    "화이트 우드",
-    "자연스러운"
-  ];
+  contentsKeywords = contents.contents.portfolio.detailInfo.tag.filter((s) => {
+    let boo = true;
+    if (s === "all" || /아파트/gi.test(s) || /평대/gi.test(s) || /인테리어/gi.test(s) || s === "화이트" || s === "네추럴" || s === "네츄럴" || s === "내츄럴" || s === "자연스러운") {
+      boo = false;
+    }
+    return boo;
+  }).filter((s) => { return s.length > 2 }).filter((s, index, arr) => {
+    const regArr = arr.map((str) => { return new RegExp(str, "gi"); }).filter((r, i) => { return index !== i });
+    let boo = true;
+    for (let r of regArr) {
+      if (r.test(s)) {
+        boo = false;
+        break;
+      }
+    }
+    return boo;
+  });
+  if (media[0] || media[1]) {
+    contentsKeywords = contentsKeywords.slice(0, 5);
+  } else {
+    contentsKeywords = contentsKeywords.slice(0, 4);
+  }
 
   fireSlideTurn = async function () {
     try {
@@ -3243,7 +3252,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
       width: withOut(0, ea),
     },
     child: {
-      text: "처음엔 부담스러웠지만\n과정과 결과 모두 만족스러워요.",
+      text: contents.contents.review.title.main.replace(/, /gi, "\n"),
       style: {
         display: "inline-block",
         position: "relative",
@@ -3324,7 +3333,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
         },
         children: [
           {
-            text: thisContents.join("\n\n"),
+            text: thisContents,
             style: {
               display: "inline-block",
               position: "relative",
