@@ -8970,7 +8970,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       { column: "oriental", name: "동양" },
       { column: "scandinavian", name: "북유럽" },
       { column: "vintage", name: "빈티지" }
-    ]
+    ];
     this.tendencyTone = [
       { column: "darkWood", name: "다크 우드" },
       { column: "whiteWood", name: "밝은 우드" },
@@ -8980,7 +8980,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       { column: "mono", name: "모노톤" },
       { column: "bright", name: "밝은 톤" },
       { column: "dark", name: "어두운 톤" }
-    ]
+    ];
     this.mobileCardStack = 0;
 
     keywordsList = (await ajaxJson({ mode: "proposal", desidArr }, BRIDGEHOST + "/designerRepresentativeKeywords", { equal: true })).data;

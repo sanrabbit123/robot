@@ -466,10 +466,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   const instance = this;
   const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, serviceParsing, variableArray, autoComma } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
-  const { contentsArr } = this;
+  const { contentsArr, designers } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
+  const designer = designers.toNormal().filter((obj) => { return obj.desid === contents.desid })[0];
   const photoChar = 't';
   const photoCharMobile = "mot";
   let mainHeight;
@@ -535,6 +536,9 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   let propertyMiddleBarHeight, propertyMiddleBarMarginBottom;
   let propertyBlockHeight;
   let projectPropertySizeFocus;
+
+  console.log(contents);
+  console.log(designer);
 
   thisVersion = instance.version;
 
@@ -755,7 +759,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
           width: String(designerSpacePhotoWidth) + ea,
           height: String(designerSpacePhotoWidth) + ea,
           borderRadius: String(boxRadius) + "px",
-          backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
+          backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
           backgroundSize: "auto 100%",
           backgroundPosition: "50% 50%",
           boxShadow: desktop ? "0px 8px 22px -15px " + colorChip.shadow : "",
@@ -789,7 +793,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       marginBottom: String(0) + ea,
     },
     child: {
-      text: "호지희 디자이너",
+      text: designer.designer + " 디자이너",
       style: {
         display: "inline-block",
         position: "relative",
@@ -829,6 +833,9 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
       }
     }
   });
+
+  console.log(designer.styleTendency)
+
   createNode({
     mother: designerDescriptionBox,
     style: {
@@ -5102,7 +5109,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
 
 ReviewDetailJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, colorExtended, setQueue, setDebounce, stringToJson, facebookSdkPatch, kakaoSdkPatch, setMetaData, homeliaisonAnalytics, dateToString } = GeneralJs;
+  const { returnGet, ajaxJson, colorExtended, setQueue, setDebounce, stringToJson, facebookSdkPatch, kakaoSdkPatch, setMetaData, homeliaisonAnalytics, dateToString, objectDeepCopy } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 

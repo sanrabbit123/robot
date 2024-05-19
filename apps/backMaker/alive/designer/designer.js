@@ -43,6 +43,24 @@ Designer.prototype.frontMode = function () {
   obj.tag = [];
   obj.tag.push(this.designer);
   obj.tag.push(this.desid);
+
+  const tendencyStandards = [
+    { column: "classic", name: "클래식" },
+    { column: "exotic", name: "엑조틱" },
+    { column: "mixmatch", name: "믹스매치" },
+    { column: "modern", name: "모던" },
+    { column: "natural", name: "내추럴" },
+    { column: "oriental", name: "동양" },
+    { column: "scandinavian", name: "북유럽" },
+    { column: "vintage", name: "빈티지" }
+  ];
+
+  for (let o of tendencyStandards) {
+    o.value = this.analytics.styling.tendency.style[o["column"]];
+  }
+  tendencyStandards.sort((a, b) => { return b.value - a.value });
+  obj.styleTendency = tendencyStandards;
+
   if (this.analytics.project.online) {
     obj.tag.push("온라인");
   }
@@ -70,6 +88,9 @@ Designer.prototype.frontMode = function () {
     obj.tag.push("제작 패브릭");
     obj.tag.push("제작패브릭");
   }
+
+
+
   return obj;
 }
 
