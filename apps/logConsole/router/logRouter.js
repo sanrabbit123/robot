@@ -651,7 +651,7 @@ LogRouter.prototype.rou_post_getContents = function () {
             contentsArr[0].consumer = moneyDelta;
             if (/^p/gi.test(thisProid)) {
               [ thisProject ] = await back.mongoPick("project", [ { proid: thisProid }, {
-                "process.contract.remain.calcaulation": 1,
+                "process.contract.remain.calculation": 1,
                 "process.contract.form.date": 1,
               } ], { selfMongo: selfCoreMongo });
               if (thisProject !== undefined && thisProject !== null) {
@@ -662,10 +662,7 @@ LogRouter.prototype.rou_post_getContents = function () {
                 } else {
                   period = "약 " + String(defaultDelta) + "일";
                 }
-                contentsArr[0].consumer = thisProject.process.contract.remain.calcaulation?.amount?.consumer;
-
-                console.log(thisProject)
-
+                contentsArr[0].consumer = thisProject.process.contract.remain.calculation?.amount?.consumer;
                 if (Number.isNaN(Number(contentsArr[0].consumer))) {
                   contentsArr[0].consumer = moneyDelta;
                 }
