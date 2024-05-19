@@ -654,10 +654,6 @@ LogRouter.prototype.rou_post_getContents = function () {
               if (thisProject !== undefined && thisProject !== null) {
                 delta = thisProject.process.contract.form.date.to.valueOf() - thisProject.process.contract.form.date.from.valueOf();
                 dayDelta = Math.floor((((delta / 1000) / 60) / 60) / 24);
-
-                console.log(delta)
-                console.log(dayDelta)
-
                 if (!Number.isNaN(Number(dayDelta)) && dayDelta > 10) {
                   period = "약 " + String(dayDelta) + "일";
                 } else {
