@@ -6807,7 +6807,8 @@ StaticRouter.prototype.rou_post_metaAccountCheck = function () {
 StaticRouter.prototype.rou_post_syncEvaluationContents = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, objectDeepCopy, jsonToString } = this.mother;
+  const address = this.address;
+  const { equalJson, objectDeepCopy, jsonToString, requestSystem } = this.mother;
   const collection = "contents";
   const evaluationCollection = "clientEvaluation";
   const titleSamples = [
@@ -6928,6 +6929,8 @@ StaticRouter.prototype.rou_post_syncEvaluationContents = function () {
               num++;
             }
           }
+
+          await requestSystem("https://" + address.testinfo.host + ":" + String(3000) + "/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
 
         } catch (e) {
           console.log(e);
