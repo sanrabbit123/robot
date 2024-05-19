@@ -615,6 +615,7 @@ LogRouter.prototype.rou_post_getContents = function () {
       const hideContents = [ "p61", "p36", "a51" ];
       const toNormal = true;
       const defaultDelta = 45;
+      const moneyDelta = 2500000;
       let limit;
       let contentsArr_raw;
       let contentsArr, designers;
@@ -647,8 +648,10 @@ LogRouter.prototype.rou_post_getContents = function () {
           contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
           if (contentsArr.length > 0) {
             thisProid = contentsArr[0].proid;
+            contentsArr[0].consumer = moneyDelta;
             if (/^p/gi.test(thisProid)) {
               [ thisProject ] = await back.mongoPick("project", [ { proid: thisProid }, {
+                "process.contract.remain.calcaulation": 1,
                 "process.contract.form.date": 1,
               } ], { selfMongo: selfCoreMongo });
               if (thisProject !== undefined && thisProject !== null) {
@@ -658,6 +661,10 @@ LogRouter.prototype.rou_post_getContents = function () {
                   period = "약 " + String(dayDelta) + "일";
                 } else {
                   period = "약 " + String(defaultDelta) + "일";
+                }
+                contentsArr[0].consumer = thisProject.process.contract.remain.calcaulation?.amount?.consumer;
+                if (Number.isNaN(Number(contentsArr[0].consumer))) {
+                  contentsArr[0].consumer = moneyDelta;
                 }
               } else {
                 period = "약 " + String(defaultDelta) + "일";

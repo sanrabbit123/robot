@@ -466,7 +466,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   const instance = this;
   const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, serviceParsing, variableArray, autoComma, blankHref } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, standardWidth } = this;
-  const { contentsArr, designers } = this;
+  const { contentsArr, designers, evaluation } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
@@ -536,8 +536,6 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   let propertyMiddleBarHeight, propertyMiddleBarMarginBottom;
   let propertyBlockHeight;
   let projectPropertySizeFocus;
-
-  console.log(contents);
 
   thisVersion = instance.version;
 
@@ -665,16 +663,25 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
   barBlank = desktop ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : (!isIphone() ? "&nbsp;&nbsp;&nbsp;" : " &nbsp;");
 
-  contentsKeywords = [
-    "편안한 톤",
-    "가성비 있게",
-    "수납",
-    "화이트 우드",
-    "자연스러운"
-  ];
-
+  contentsKeywords = contents.contents.portfolio.detailInfo.tag.filter((s) => {
+    let boo = true;
+    if (s === "all" || /아파트/gi.test(s) || /평대/gi.test(s) || /인테리어/gi.test(s) || s === "화이트" || s === "네추럴" || s === "네츄럴" || s === "내츄럴" || s === "자연스러운") {
+      boo = false;
+    }
+    return boo;
+  }).filter((s) => { return s.length > 2 }).filter((s, index, arr) => {
+    const regArr = arr.map((str) => { return new RegExp(str, "gi"); }).filter((r, i) => { return index !== i });
+    let boo = true;
+    for (let r of regArr) {
+      if (r.test(s)) {
+        boo = false;
+        break;
+      }
+    }
+    return boo;
+  });
   if (media[0] || media[1]) {
-    contentsKeywords = contentsKeywords.slice(0);
+    contentsKeywords = contentsKeywords.slice(0, 5);
   } else {
     contentsKeywords = contentsKeywords.slice(0, 4);
   }
@@ -1386,7 +1393,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(0) + ea,
               },
               child: {
-                text: "약 60일",
+                text: contents.period,
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -1661,7 +1668,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                         position: "absolute",
                         top: String(0),
                         left: String(0),
-                        width: "calc(" + String(84) + "%)",
+                        width: "calc(" + String(80 + ((Number(instance.pid.replace(/[^0-9]/gi, '')) % 100) % 10)) + "%)",
                         height: withOut(0, ea),
                         borderRadius: String(satisBarHeight) + ea,
                         background: colorExtended.gradientBlue,
@@ -1809,6 +1816,8 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
   } else if (thisVersion === 1) {
 
+    console.log(evaluation);
+
     /* === version 2 === */
 
     // middle bar
@@ -1891,7 +1900,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(0) + ea,
               },
               child: {
-                text: autoComma(6000) + "만원대",
+                text: autoComma(evaluation.spend.total >= evaluation.spend.styling ? (evaluation.spend.total >= evaluation.spend.construct ? (evaluation.spend.total / 1000) : (evaluation.spend.construct / 1000)) : (evaluation.spend.styling / 1000)) + "만원대",
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -2451,7 +2460,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(0) + ea,
               },
               child: {
-                text: "약 60일",
+                text: contents.period,
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -2741,7 +2750,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                         position: "absolute",
                         top: String(0),
                         left: String(0),
-                        width: "calc(" + String(84) + "%)",
+                        width: "calc(" + String(80 + (Number(instance.pid.replace(/[^0-9]/gi, '')) % 100)) + "%)",
                         height: withOut(0, ea),
                         borderRadius: String(satisBarHeight) + ea,
                         background: colorExtended.gradientBlue,
@@ -2855,8 +2864,6 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
   let fireSlideTurn;
 
   thisVersion = version;
-
-  console.log(evaluation);
 
   mainRatio = <%% (10 / 16), (12 / 16), (14 / 16), (16 / 16), (10 / 16) %%>;
   mainMargin = <%% 150, 120, 100, 80, 22.5 %%>;
@@ -4568,7 +4575,7 @@ ReviewDetailJs.prototype.reviewRelativeBox = function () {
 
 ReviewDetailJs.prototype.reviewDesignerBox = function () {
   const instance = this;
-  const { createNode, colorChip, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue, serviceParsing } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, version } = this;
   const { contentsArr, designers } = this;
   const mobile = media[4];
@@ -4649,6 +4656,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
   let baseTop;
   let baseBottom0, baseBottom1;
   let designerHomeTextTop;
+  let careerString;
 
   story.shift();
   customerStory = '';
@@ -4773,6 +4781,8 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
   baseBottom0 = <%% 150, 115, 115, 85, 25 %%>;
   baseBottom1 = <%% 200, 200, 200, 160, 24 %%>;
 
+  careerString = designerCareer(designer, true);
+
   designerHomeTextTop = <%% (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), 0 %%>;
 
   mainTong = createNode({
@@ -4815,7 +4825,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
           position: "relative",
           height: desktop ? withOut(0, ea) : String(45) + ea,
           width: desktop ? String(boxPhotoWidth) + ea : withOut(0, ea),
-          backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(3) + pid + ".jpg" + "')",
+          backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.portfolio.detailInfo.photodae[1]) + pid + ".jpg" + "')",
           backgroundSize: big ? "100% auto" : "auto 100%",
           backgroundPosition: "50% 50%",
           borderRadius: String(boxBorderRadius) + "px",
@@ -4852,6 +4862,11 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
             },
             children: [
               {
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                  click: function (e) { selfHref(FRONTHOST + "/desdetail.php?desid=" + this.getAttribute("desid")) },
+                },
+                attribute: { desid: designer.desid },
                 style: {
                   display: "flex",
                   position: "absolute",
@@ -4865,8 +4880,12 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                   justifyContent: "end",
                   alignItems: "center",
                   paddingRight: String(boxDetailAbsoluteArrowPadding) + ea,
+                  cursor: "pointer",
                 },
                 child: {
+                  event: {
+                    selectstart: (e) => { e.preventDefault() },
+                  },
                   text: "DESIGNER HOME",
                   style: {
                     display: "inline-block",
@@ -4899,7 +4918,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                   alignItems: "start",
                 },
                 child: {
-                  text: "호지희 디자이너",
+                  text: designer.designer + " 디자이너",
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -4930,7 +4949,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                   alignItems: "start",
                 },
                 child: {
-                  text: "홈스타일링, 토탈 스타일링",
+                  text: designerMthParsing(designer.setting.front.methods).join(", "),
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -4950,7 +4969,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                   alignItems: "start",
                 },
                 child: {
-                  text: "경력 : 9년 11개월",
+                  text: careerString,
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -4958,6 +4977,13 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                     fontWeight: String(boxDetailBoxDetailWeight),
                     color: colorExtended.white,
                     fontFamily: "pretendard",
+                  },
+                  bold: {
+                    fontSize: String(boxDetailBoxDetailSize) + ea,
+                    fontWeight: String(boxDetailBoxDetailWeight),
+                    color: colorExtended.white,
+                    fontFamily: "pretendard",
+                    opacity: String(0.4),
                   }
                 }
               },
@@ -4981,6 +5007,11 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
             },
             children: [
               {
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                  click: function (e) { selfHref(FRONTHOST + "/portdetail.php?pid=" + this.getAttribute("pid")) },
+                },
+                attribute: { pid: instance.pid },
                 style: {
                   display: "flex",
                   position: "absolute",
@@ -4996,6 +5027,9 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                   paddingRight: String(boxDetailAbsoluteArrowPadding) + ea,
                 },
                 child: {
+                  event: {
+                    selectstart: (e) => { e.preventDefault() },
+                  },
                   text: "PORTFOLIO",
                   style: {
                     display: "inline-block",
@@ -5028,7 +5062,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                   alignItems: "start",
                 },
                 child: {
-                  text: "강남구 오피스 <b%11PY%b>",
+                  text: contents.contents.portfolio.spaceInfo.space + " <b%" + String(contents.contents.portfolio.spaceInfo.pyeong) + "PY%b>",
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -5067,7 +5101,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                   alignItems: "start",
                 },
                 child: {
-                  text: "오프라인 홈스타일링",
+                  text: serviceParsing(contents.service).replace(/[ ]*(basic|mini|premium)/gi, '').trim(),
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -5087,7 +5121,7 @@ ReviewDetailJs.prototype.reviewDesignerBox = function () {
                   alignItems: "start",
                 },
                 child: {
-                  text: "모던하고 무게감 있는 강남구 오피스 홈스타일링",
+                  text: contents.contents.portfolio.title.sub.split(", ")[0] + " " + contents.contents.portfolio.spaceInfo.space,
                   style: {
                     display: "inline-block",
                     position: "relative",
