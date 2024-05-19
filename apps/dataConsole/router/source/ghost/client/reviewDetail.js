@@ -1978,7 +1978,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(0) + ea,
               },
               child: {
-                text: autoComma(contents.consumer) + "만원",
+                text: autoComma(Math.round(contents.consumer / 10000)) + "만원",
                 style: {
                   display: "inline-block",
                   position: "relative",
