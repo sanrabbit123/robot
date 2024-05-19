@@ -6921,7 +6921,9 @@ StaticRouter.prototype.rou_post_syncEvaluationContents = function () {
                 }
               ];
 
-              updateQuery["contents.review.detailInfo.order"] = Math.round((Number(contents.contents.portfolio.pid.replace(/[^0-9]/gi, '')) * 1000000 / 1000));
+              if (contents.contents.review.detailInfo.order <= 1000) {
+                updateQuery["contents.review.detailInfo.order"] = Math.round((Number(contents.contents.portfolio.pid.replace(/[^0-9]/gi, '')) * 1000000 / 1000));
+              }
               updateQuery["contents.review.detailInfo.photodae"] = objectDeepCopy(contents.contents.portfolio.detailInfo.photodae);
       
               await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
