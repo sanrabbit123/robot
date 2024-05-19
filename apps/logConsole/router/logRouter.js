@@ -663,6 +663,7 @@ LogRouter.prototype.rou_post_getContents = function () {
                   period = "약 " + String(defaultDelta) + "일";
                 }
                 console.log(thisProject)
+                console.log(thisProject.process.contract.remain.calculation);
 
                 contentsArr[0].consumer = thisProject.process.contract.remain.calculation?.amount?.consumer;
                 if (Number.isNaN(Number(contentsArr[0].consumer))) {
