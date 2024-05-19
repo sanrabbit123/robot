@@ -665,7 +665,10 @@ LogRouter.prototype.rou_post_getContents = function () {
                 console.log(thisProject)
                 console.log(thisProject.process.contract.remain.calculation);
 
-                contentsArr[0].consumer = thisProject.process.contract.remain.calculation?.amount?.consumer;
+                contentsArr[0].consumer = thisProject.process.contract.remain.calculation.amount.consumer;
+
+                console.log(contentsArr[0].consumer);
+                console.log(Number.isNaN(Number(contentsArr[0].consumer)));
                 if (Number.isNaN(Number(contentsArr[0].consumer))) {
                   contentsArr[0].consumer = moneyDelta;
                 }
