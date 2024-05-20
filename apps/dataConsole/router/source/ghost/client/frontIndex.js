@@ -44,2741 +44,1993 @@ const FrontIndexJs = function () {
 
 FrontIndexJs.binaryPath = FRONTHOST + "/middle/index";
 
-FrontIndexJs.prototype.generateGsArray = function (number) {
-  if (typeof number !== "number") {
-    throw new Error("invaild input");
-  }
+FrontIndexJs.prototype.generateTotalValues = async function () {
   const instance = this;
-  const standard = [
-    'g', 's', 's',
-    's', 's', 's', 's',
-    's', 's', 'g',
-    's', 's', 's', 's',
-    's', 's', 's', 's',
-    's', 's', 'g',
-  ];
-  let additional;
-  let add;
-  let multi;
-  let result;
-  additional = number % standard.length;
-  add = standard.slice(0, additional);
-  multi = Math.floor(number / standard.length);
-  result = [];
-  for (let i = 0; i < multi; i++) {
-    result = result.concat(JSON.parse(JSON.stringify(standard)));
-  }
-  result = result.concat(add);
-  return result;
-}
-
-FrontIndexJs.prototype.insertSlideBox = function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
-  const { ea, media, totalContents } = this;
-  const { indexArr } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const photoChar = 't';
-  const photoCharMobile = "mot";
-  let speed;
-  let naviHeight;
-  let mainHeight;
-  let mainTong;
-  let photoTong;
-  let randomIndex;
-  let randomNumber;
-  let random;
-  let src;
-  let interval;
-  let titlePadding;
-  let titleSize;
-  let titleWeight;
-  let lineHeight;
-  let titleContents;
-  let photoLength;
-  let grayTong, grayBlockTong;
-  let grayHeight;
-  let circleBox;
-  let circleBoxTop, circleBoxLeft;
-  let circleRadius;
-  let circleMarginRight;
-  let subTextBox;
-  let subTextBoxTop;
-  let subTextAboutSize, subTextAboutWeight;
-  let subTextAboutMarginBottom;
-  let subTextSize, subTextWeight;
-  let subTextBoldWeight;
-  let subTextContents;
-  let standardWidth;
-  let titleBottom;
-  let photoSubLength;
-
-  standardWidth = <%% this.standardWidth, 1200, 1050, 900, this.standardWidth %%>;
-
-  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
-  interval = <%% 2700, 2700, 2700, 2700, 2700 %%>;
-
-  naviHeight = <%% 72, 72, 66, 60, 60 %%>;
-  mainHeight = <%% 746, 639, 560, 480, 75 %%>;
-
-  randomNumber = <%% 5, 5, 5, 5, 5 %%>;
-  titlePadding = <%% 100, 75, 75, 90, 8 %%>;
-  titleBottom = <%% 100, 75, 75, 60, 8 %%>;
-  titleSize = <%% 45, 42, 40, 35, 5.3 %%>;
-  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  lineHeight = <%% 1.2, 1.2, 1.2, 1.2, 1.2 %%>;
-  titleContents = "Connect me and\nmy house, HomeLiaison";
-  photoLength = 5;
-  photoSubLength = 4;
-  subTextContents = desktop ? "디자이너의 <b%전문적인 홈스타일링, 홈리에종%b>과 함께 해보세요!" : "<b%전문적인 홈스타일링, 홈리에종%b>과 함께 해보세요!";
-
-  grayHeight = <%% 72, 64, 60, 56, 8.8 %%>;
-
-  circleBoxTop = <%% 78, 68, 62, 54, 9.8 %%>;
-  circleBoxLeft = <%% 3, 3, 3, 3, 8 %%>;
-
-  circleRadius = <%% 10, 10, 10, 8, 1.6 %%>;
-  circleMarginRight = <%% 8, 8, 8, 6, 1.2 %%>;
-
-  subTextBoxTop = <%% 54, 44, 41, 36, 4.5 %%>;
-
-  subTextAboutSize = <%% 15, 15, 14, 13, 2.5 %%>;
-  subTextAboutWeight = <%% 400, 400, 400, 400, 400 %%>;
-  subTextAboutMarginBottom = <%% (isMac() ? 3 : 5), (isMac() ? 3 : 5), (isMac() ? 3 : 5), (isMac() ? 2 : 4), 0.3 %%>;
-  subTextSize = <%% 19, 19, 18, 16, 3 %%>;
-  subTextWeight = <%% 400, 400, 400, 400, 400 %%>;
-  subTextBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
-
-  randomIndex = new Array(photoLength);
-
-  mainTong = createNode({
-    mother: totalContents,
-    attribute: {
-      toggle: "off",
-    },
-    style: {
-      display: "block",
-      position: "relative",
-      paddingTop: String(naviHeight) + "px",
-      height: String(mainHeight) + ea,
-      background: colorChip.gray2,
-      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
-      overflow: "hidden",
-    },
-    children: [
-      {
-        style: {
-          display: desktop ? "block" : "none",
-          position: "absolute",
-          top: String(naviHeight) + ea,
-          left: String(0),
-          width: String(100) + '%',
-          height: String(mainHeight) + ea,
-          background: colorChip.gray3,
-          transition: "all 0s ease",
-          transition: "transform " + String(speed) + "s ease",
-          transformOrigin: "100% 100%",
-          transform: "scaleX(0)",
-        }
-      }
-    ]
-  });
-
-  photoTong = createNode({
-    mother: mainTong,
-    style: {
-      position: "relative",
-      width: String(desktop ? standardWidth : 100) + ea,
-      left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(0),
-      height: String(mainHeight) + ea,
-    }
-  });
-
-  for (let i = 0; i < randomIndex.length; i++) {
-    if (desktop) {
-
-      src = FrontIndexJs.binaryPath + "/slide" + String(randomIndex.length - 1 - i) + "_" + String(Math.floor(Math.random() * photoSubLength)) + ".jpg";
-
-      createNode({
-        mother: photoTong,
-        style: {
-          position: "absolute",
-          top: String(0),
-          left: String(0),
-          width: String(100) + '%',
-          height: String(100) + '%',
-          backgroundImage: "url('" + src + "')",
-          backgroundPosition: "50% 68%",
-          backgroundSize: "100% auto",
-          transition: "opacity " + String(speed) + "s ease",
-          opacity: String(i !== randomIndex.length - 1 ? 0 : 1),
-        }
-      });
-
-    } else {
-
-      src = FrontIndexJs.binaryPath + "/moslide" + String(randomIndex.length - 1 - i) + "_" + String(Math.floor(Math.random() * photoSubLength)) + ".jpg";
-
-      createNode({
-        mother: photoTong,
-        attribute: {
-          toggle: String(i !== randomIndex.length - 1 ? 0 : 1)
-        },
-        style: {
-          position: "absolute",
-          top: String(0),
-          left: String(0),
-          width: String(100) + '%',
-          height: String(100) + '%',
-          backgroundImage: "url('" + src + "')",
-          backgroundPosition: "50% 50%",
-          backgroundSize: "auto 100%",
-          transition: "opacity " + String(0) + "s ease",
-          transition: "transform " + String(speed) + "s ease",
-          transform: (i !== randomIndex.length - 1 ? "translateX(100" + ea + ")" : "translateX(0" + ea + ")"),
-        }
-      });
-
-    }
-  }
-
-  createNode({
-    mother: mainTong,
-    style: {
-      position: "absolute",
-      width: desktop ? String(standardWidth - (titlePadding * 2)) + ea : "",
-      left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(7.2) + ea,
-      paddingLeft: desktop ? String(titlePadding) + ea : "",
-      paddingRight: desktop ? String(titlePadding) + ea : "",
-      bottom: String(titleBottom) + ea,
-    },
-    children: [
-      {
-        text: titleContents,
-        style: {
-          fontFamily: "mont",
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(500),
-          color: colorChip.white,
-          lineHeight: String(lineHeight),
-        }
-      }
-    ]
-  });
-
-  grayTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "block",
-      position: "relative",
-      background: colorChip.white,
-      height: String(grayHeight) + ea,
-      overflow: "hidden",
-    },
-  });
-
-  grayBlockTong = createNode({
-    mother: grayTong,
-    style: {
-      display: "flex",
-      position: "relative",
-      width: desktop ? String(standardWidth - (titlePadding * 2)) + ea : "",
-      paddingLeft: desktop ? String(titlePadding) + ea : "",
-      paddingRight: desktop ? String(titlePadding) + ea : "",
-      left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : "",
-      height: String(100) + '%',
-      justifyContent: "center",
-      alignItems: "center",
-    }
-  });
-
-  circleBox = createNode({
-    mother: grayBlockTong,
-    event: {
-      click: (e) => { selfHref(FRONTHOST + "/about.php"); }
-    },
-    style: {
-      display: "inline-block",
-      position: "relative",
-    }
-  })
-
-  for (let i = 0; i < photoLength; i++) {
-    createNode({
-      mother: circleBox,
-      style: {
-        display: "inline-block",
-        width: String(circleRadius) + ea,
-        height: String(circleRadius) + ea,
-        borderRadius: String(circleRadius) + ea,
-        background: (i === 0 ? colorChip.gray5 : colorChip.gray3),
-        marginRight: String(circleMarginRight) + ea,
-        transition: "all 0.5s ease",
-      }
-    });
-  }
-
-  setInterval(() => {
-    const toggle = mainTong.getAttribute("toggle");
-    const children = [ ...photoTong.children ];
-    const circles = [ ...circleBox.children ];
-    let offIndex, onIndex;
-    let circleIndex;
-    if (desktop) {
-
-      if (toggle === "on") {
-        mainTong.firstChild.style.transformOrigin = "0% 100%";
-      } else {
-        mainTong.firstChild.style.transformOrigin = "100% 100%";
-      }
-      offIndex = children.findIndex((dom) => { return dom.style.opacity === String(1) });
-      onIndex = offIndex - 1;
-
-      if (onIndex < 0) {
-        onIndex = children.length - 1;
-      }
-      if (toggle === "on") {
-        mainTong.firstChild.style.transform = "scaleX(0)";
-        mainTong.setAttribute("toggle", "off");
-      } else {
-        mainTong.firstChild.style.transform = "scaleX(1)";
-        mainTong.setAttribute("toggle", "on");
-      }
-      children[offIndex].style.opacity = String(0);
-      children[onIndex].style.opacity = String(1);
-
-      circleIndex = offIndex === 0 ? offIndex : photoLength - offIndex;
-      for (let i = 0; i < circles.length; i++) {
-        circles[i].style.background = i === circleIndex ? colorChip.gray5 : colorChip.gray3;
-      }
-
-    } else {
-
-      offIndex = children.findIndex((dom) => { return dom.getAttribute("toggle") === String(1) });
-      onIndex = offIndex - 1;
-      if (onIndex < 0) {
-        onIndex = children.length - 1;
-      }
-      children[offIndex].setAttribute("toggle", String(0));
-      children[onIndex].setAttribute("toggle", String(1));
-
-      children[onIndex].style.opacity = String(1);
-      children[offIndex].style.opacity = String(1);
-
-      children[onIndex].style.transform = "translateX(0" + ea + ")";
-      children[offIndex].style.transform = "translateX(-100" + ea + ")";
-
-      for (let i = 0; i < children.length; i++) {
-        if (i !== onIndex && i !== offIndex) {
-          children[i].style.opacity = String(0);
-        }
-      }
-
-      for (let i = 0; i < children.length; i++) {
-        if (i !== onIndex && i !== offIndex) {
-          children[i].style.transform = "translateX(100" + ea + ")";
-        }
-      }
-
-      circleIndex = offIndex === 0 ? offIndex : photoLength - offIndex;
-      for (let i = 0; i < circles.length; i++) {
-        circles[i].style.background = i === circleIndex ? colorChip.gray5 : colorChip.gray3;
-      }
-
-    }
-
-  }, interval);
-
-}
-
-FrontIndexJs.prototype.insertAboutBox = function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
-  const { ea, media, totalContents, standardWidth } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  let mainTong;
-  let blockTong;
-  let mainTongHeight;
-  let secondMainTong, secondBlockTong;
-  let secondMainTongHeight;
-  let descriptionPadding;
-  let photoPadding;
-  let photoTop;
-  let photoWidth, photoHeight;
-  let titleSize, titleWeight, titleLineHeight, titleTop;
-  let contentsSize, contentsWeight, contentsLineHeight, contentsTop;
-  let buttonSize, buttonWeight, buttonLineHeight, buttonTop, buttonPaddingTop, buttonPaddingBottom, buttonPaddingLeft;
-  let blockTongs;
-  let wordings;
-  let mobileBlockPadding;
-  let mobilePhotoMarginBottom, mobileTitleMarginBottom, mobileContentsMarginBottom;
-
-  mainTongHeight = <%% 730, 630, 550, 433, 730 %%>;
-  secondMainTongHeight = <%% 741, 634, 554, 436, 741 %%>;
-
-  descriptionPadding = <%% 958, 730, 616, 476, 730 %%>;
-  photoPadding = <%% 100, 0, 0, 0, 0 %%>;
-  photoTop = <%% 142, 120, 102, 70, 12 %%>;
-
-  photoWidth = <%% 780, 669, 568, 436, 88 %%>;
-  photoHeight = <%% 440, 377, 350, 290, 43 %%>;
-
-  titleSize = <%% 31, 30, 29, 24, 5.2 %%>;
-  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
-  titleTop = <%% 230, 198, 177, 128, 198 %%>;
-
-  contentsSize = <%% 15, 15, 14, 12, 3 %%>;
-  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
-  contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  contentsTop = <%% 335, 300, 270, 207, 300 %%>;
-
-  buttonSize = <%% 13, 13, 12, 12, 3 %%>;
-  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  buttonTop = <%% 436, 397, 358, 282, 397 %%>;
-  buttonPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), (isMac() ? 5 : 6), 1.2 %%>;
-  buttonPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 7 : 6), (isMac() ? 7 : 6), (isMac() ? 7 : 6), 1.6 %%>;
-  buttonPaddingLeft = <%% 20, 20, 20, 20, 4 %%>;
-
-  mobileBlockPadding = 14.5;
-  mobilePhotoMarginBottom = 6;
-  mobileTitleMarginBottom = 2.5;
-  mobileContentsMarginBottom = 4;
-
-  wordings = [
-    {
-      title: [
-        "마지막까지 함께 하는",
-        "우리집 인테리어"
-      ],
-      contents: [
-        "시공부터 시작해 가구, 패브릭, 소품까지",
-        "홈리에종은 스타일링을 중심으로 디자인을 진행하여",
-        "디테일까지 완성된 집을 만들어 드립니다."
-      ],
-      button: "서비스 소개",
-      link: "/about.php",
-      image: "about0.jpg",
-    },
-    {
-      title: [
-        "나에게 딱 맞는",
-        "디자이너를 만나보세요."
-      ],
-      contents: [
-        "홈리에종은 고객님의 상황을 다각도로 분석해",
-        "가장 필요한 서비스와 디자이너를 연결시켜 드립니다.",
-        "나에게 꼭 맞는 디자이너를 추천받아 보세요!"
-      ],
-      button: "서비스 신청",
-      link: "/consulting.php",
-      image: "about1.jpg",
-    },
-  ];
-
-  mainTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "block",
-      position: "relative",
-      background: colorChip.white,
-      height: desktop ? String(mainTongHeight) + ea : "",
-    },
-  });
-
-  blockTong = createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(standardWidth) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      height: String(100) + '%',
-      paddingTop: desktop ? "" : String(mobileBlockPadding) + ea,
-      paddingBottom: desktop ? "" : String(mobileBlockPadding) + ea,
-      textAlign: desktop ? "" : "center",
-    }
-  });
-
-  secondMainTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "block",
-      position: "relative",
-      background: colorChip.gray0,
-      height: desktop ? String(secondMainTongHeight) + ea : "",
-    },
-  });
-
-  secondBlockTong = createNode({
-    mother: secondMainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(standardWidth) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      height: String(100) + '%',
-      paddingTop: desktop ? "" : String(mobileBlockPadding) + ea,
-      paddingBottom: desktop ? "" : String(mobileBlockPadding) + ea,
-      textAlign: desktop ? "" : "center",
-    }
-  });
-
-  blockTongs = [ blockTong, secondBlockTong ];
-
-  for (let i = 0; i < blockTongs.length; i++) {
-    createNode({
-      mother: blockTongs[i],
-      style: {
-        display: desktop ? "inline-block" : "block",
-        position: desktop ? "absolute" : "relative",
-        width: String(photoWidth) + ea,
-        height: String(photoHeight) + ea,
-        top: desktop ? String(photoTop) + ea : "",
-        right: desktop ? (i === 0 ? String(photoPadding) + ea : "") : "",
-        left: desktop ? (i === 0 ? "" : String(photoPadding) + ea) : "",
-        borderRadius: String(8) + "px",
-        background: colorChip.gray1,
-        boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
-        backgroundImage: "url('" + FrontIndexJs.binaryPath + "/" + wordings[i].image + "')",
-        backgroundSize: "100% auto",
-        backgroundPosition: "50% 50%",
-      }
-    });
-
-    createNode({
-      mother: blockTongs[i],
-      text: wordings[i].title.join("\n"),
-      style: {
-        display: desktop ? "inline-block" : "block",
-        position: desktop ? "absolute" : "relative",
-        fontSize: String(titleSize) + ea,
-        fontWeight: String(titleWeight),
-        lineHeight: String(titleLineHeight),
-        color: colorChip.black,
-        textAlign: desktop ? (i === 0 ? "right" : "left") : "center",
-        top: desktop ? String(titleTop) + ea : "",
-        right: desktop ? (i === 0 ? String(descriptionPadding) + ea : "") : "",
-        left: desktop ? (i === 0 ? "" : String(descriptionPadding) + ea) : "",
-        marginTop: desktop ? "" : String(mobilePhotoMarginBottom) + ea,
-        marginBottom: desktop ? "" : String(mobileTitleMarginBottom) + ea,
-      }
-    });
-
-    createNode({
-      mother: blockTongs[i],
-      text: wordings[i].contents.join("\n"),
-      style: {
-        display: desktop ? "inline-block" : "block",
-        position: desktop ? "absolute" : "relative",
-        fontSize: String(contentsSize) + ea,
-        fontWeight: String(contentsWeight),
-        lineHeight: String(contentsLineHeight),
-        color: colorChip.darkShadow,
-        textAlign: desktop ? (i === 0 ? "right" : "left") : "center",
-        top: desktop ? String(contentsTop) + ea : "",
-        right: desktop ? (i === 0 ? String(descriptionPadding) + ea : "") : "",
-        left: desktop ? (i === 0 ? "" : String(descriptionPadding) + ea) : "",
-        marginBottom: desktop ? "" : String(mobileContentsMarginBottom) + ea,
-      }
-    });
-
-    createNode({
-      mother: blockTongs[i],
-      class: [ "hoverDefault_lite" ],
-      attribute: {
-        index: String(i),
-      },
-      event: {
-        click: function (e) {
-          const index = Number(this.getAttribute("index"));
-          selfHref(wordings[index].link);
-        }
-      },
-      text: wordings[i].button,
-      style: {
-        display: "inline-block",
-        position: desktop ? "absolute" : "relative",
-        fontSize: String(buttonSize) + ea,
-        fontWeight: String(buttonWeight),
-        lineHeight: String(buttonLineHeight),
-        color: colorChip.white,
-        textAlign: "center",
-        top: desktop ? String(buttonTop) + ea : "",
-        right: desktop ? (i === 0 ? String(descriptionPadding) + ea : "") : "",
-        left: desktop ? (i === 0 ? "" : String(descriptionPadding) + ea) : "",
-        paddingTop: String(buttonPaddingTop) + ea,
-        paddingBottom: String(buttonPaddingBottom) + ea,
-        paddingLeft: String(buttonPaddingLeft) + ea,
-        paddingRight: String(buttonPaddingLeft) + ea,
-        borderRadius: String(buttonPaddingLeft) + ea,
-        background: colorExtended.gradientBlue,
-      }
-    });
-  }
-
-}
-
-FrontIndexJs.prototype.insertBlackBox = function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
-  const { ea, media, totalContents, standardWidth } = this;
+  const { withOut, returnGet, createNode, ajaxJson, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, objectDeepCopy } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const bannerClassName = "bannerClassName";
-  let mainTong;
-  let blockTong;
-  let tongPaddingLeft;
-  let tongPaddingTop, tongPaddingBottom;
-  let titleSize, titleWeight;
-  let subTitleSize, subTitleWeight;
-  let subTitleMarginLeft;
-  let buttonTop, buttonWidth, buttonHeight;
-  let buttonSize, buttonWeight;
-  let buttonTextTop;
+  try {
+    const clientHistory = this.clientHistory;
+    let totalValues, totalMenu;
 
-  tongPaddingTop = <%% 44, 44, 44, 40, 5.2 %%>;
-  tongPaddingBottom = <%% 56, 56, 56, 52, 6.5 %%>;
+    totalValues = (new Array(this.questionNumber)).fill(null, 0);
+    if (typeof clientHistory.curation.check === "object" && clientHistory.curation.check !== null) {
 
-  titleSize = <%% 37, 35, 32, 28, 4 %%>;
-  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
-
-  subTitleSize = <%% 16, 16, 15, 13, 0 %%>;
-  subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
-  subTitleMarginLeft = <%% 11, 10, 10, 10, 10 %%>;
-
-  buttonTop = <%% 55, 55, 53, 48, 5.5 %%>;
-  buttonWidth = <%% 140, 135, 133, 125, 20 %%>;
-  buttonHeight = <%% 40, 38, 36, 33, 5.8 %%>;
-
-  buttonSize = <%% 15, 14, 14, 13, 2.5 %%>;
-  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isIphone() ? 0 : -0.3) %%>;
-
-  mainTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "block",
-      position: "relative",
-      backgroundImage: "url('" + FrontIndexJs.binaryPath + "/back.jpg" + "')",
-      backgroundSize: "100% auto",
-      backgroundPosition: "50% 50%",
-    },
-  });
-
-  blockTong = createNode({
-    mother: mainTong,
-    class: [ bannerClassName ],
-    event: {
-      click: (e) => {
-        selfHref(FRONTHOST + "/consulting.php");
-      }
-    },
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(standardWidth) + ea,
-      paddingTop: String(tongPaddingTop) + ea,
-      paddingBottom: String(tongPaddingBottom) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      cursor: "pointer",
-    }
-  });
-
-  createNode({
-    mother: blockTong,
-    text: (big ? "홈리에종에서 디자이너와 1:1 상담을 받아보세요!" : "디자이너와 1:1 상담을 받아보세요!"),
-    style: {
-      top: (isMac() || mobile) ? String(0) : String(3) + ea,
-      fontSize: String(titleSize) + ea,
-      fontWeight: String(titleWeight),
-      color: colorChip.white,
-      display: "inline-block",
-      position: "relative",
-    }
-  })
-
-  createNode({
-    mother: blockTong,
-    text: "consulting",
-    style: {
-      top: (isMac() || mobile) ? String(0) : String(3) + ea,
-      fontSize: String(subTitleSize) + ea,
-      fontWeight: String(subTitleWeight),
-      color: colorChip.white,
-      display: "inline-block",
-      position: "relative",
-      marginLeft: String(subTitleMarginLeft) + ea,
-    }
-  })
-
-  createNode({
-    mother: blockTong,
-    class: [ "consultingButton" ],
-    event: {
-      click: (e) => {
-        selfHref(FRONTHOST + "/consulting.php");
-      }
-    },
-    style: {
-      display: "flex",
-      position: "absolute",
-      justifyContent: "center",
-      alignItems: "center",
-      textAlign: "center",
-      right: String(0),
-      top: String(buttonTop) + ea,
-      width: String(buttonWidth) + ea,
-      height: String(buttonHeight) + ea,
-      borderRadius: String(buttonHeight) + ea,
-      background: colorChip.white,
-      boxShadow: "0px 2px 11px -9px " + colorChip.shadow,
-      cursor: "pointer",
-    },
-    children: [
-      {
-        text: "상담 신청하기",
-        style: {
-          position: "relative",
-          display: "inline-block",
-          top: String(buttonTextTop) + ea,
-          fontSize: String(buttonSize) + ea,
-          fontWeight: String(buttonWeight),
-          color: colorChip.black,
+      // 0
+      if (typeof clientHistory.curation.check.serid === "string") {
+        if (/_/gi.test(clientHistory.curation.check.serid) && !Number.isNaN(Number(clientHistory.curation.check.serid.split("_")[1].replace(/[^0-9]/gi, '')))) {
+          totalValues[0] = Number(clientHistory.curation.check.serid.split("_")[1].replace(/[^0-9]/gi, '')) - 1;
         }
       }
-    ]
-  })
 
+      // 1
+      if (typeof clientHistory.curation.check.construct.entire === "boolean") {
+        totalValues[1] = clientHistory.curation.check.construct.entire ? 1 : 0;
+      }
+
+      // 2
+      if (Array.isArray(clientHistory.curation.check.construct.items) && clientHistory.curation.check.construct.items.length > 0) {
+        totalValues[2] = objectDeepCopy(clientHistory.curation.check.construct.items);
+      }
+
+      // 3
+      if (typeof clientHistory.curation.check.construct.environment === "number") {
+        totalValues[3] = clientHistory.curation.check.construct.environment;
+      }
+
+      // 4
+      if (typeof clientHistory.curation.check.budget === "number") {
+        totalValues[4] = clientHistory.curation.check.budget;
+      }
+
+      // 5
+      if (Array.isArray(clientHistory.curation.check.furniture) && clientHistory.curation.check.furniture.length > 0) {
+        totalValues[5] = objectDeepCopy(clientHistory.curation.check.furniture);
+      }
+
+      // 6
+      if (Array.isArray(clientHistory.curation.check.fabric) && clientHistory.curation.check.fabric.length > 0) {
+        totalValues[6] = objectDeepCopy(clientHistory.curation.check.fabric);
+      }
+
+      // 7
+      if (typeof clientHistory.curation.check.expect === "number") {
+        totalValues[7] = clientHistory.curation.check.expect;
+      }
+
+      // 8
+      if (typeof clientHistory.curation.check.purchase === "number") {
+        totalValues[8] = clientHistory.curation.check.purchase;
+      }
+
+      // 9
+      if (typeof clientHistory.curation.check.family === "number") {
+        totalValues[9] = clientHistory.curation.check.family;
+      }
+
+      // 10
+      if (typeof clientHistory.curation.check.age === "number") {
+        totalValues[10] = clientHistory.curation.check.age;
+      }
+
+      // 11
+      if (Array.isArray(clientHistory.curation.check.time) && clientHistory.curation.check.time.length > 0) {
+        totalValues[11] = objectDeepCopy(clientHistory.curation.check.time);
+      }
+
+      // 12
+      if (Array.isArray(clientHistory.curation.image) && clientHistory.curation.image.length > 0) {
+        totalValues[12] = objectDeepCopy(clientHistory.curation.image);
+      } else {
+        totalValues[12] = [];
+      }
+
+      // 13
+      totalValues[13] = [];
+
+    }
+
+    totalMenu = (await ajaxJson({ data: null }, BACKHOST + "/styleCuration_getTotalMenu", { equal: true })).totalMenu.map((o) => { return o.values });
+
+    instance.totalValues = objectDeepCopy(totalValues);
+    instance.totalMenu = objectDeepCopy(totalMenu)
+
+    return { totalValues, totalMenu };
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-FrontIndexJs.prototype.insertSearchBox = function () {
+FrontIndexJs.prototype.updateImmediately = async function (valueIndex, menuIndex, menu) {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
-  const { ea, media, totalContents, standardWidth } = this;
-  const { contentsArr, reviewArr } = this;
+  const { withOut, returnGet, createNode, ajaxJson, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop, heightTong, requestNumber } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const photoChar = 't';
-  const photoCharMobile = "mot";
-  const touchStartConst = "touchStartConstName";
-  let speed;
-  let mainHeight;
-  let mainTong;
-  let searchTongWidth;
-  let searchTongHeight;
-  let searchIconHeight;
-  let searchIconRight;
-  let searchIconTop;
-  let inputWithoutHeight;
-  let inputSize;
-  let inputWeight;
-  let portfolioTong;
-  let portfolioMargin;
-  let src, title, subTitle;
-  let block;
-  let contents, tag;
-  let garoSliceStart;
-  let garoSliceEnd;
-  let garoSliceLimit;
-  let seroSliceStart;
-  let seroSliceEnd;
-  let seroSliceLimit;
-  let tagTong;
-  let tagSize, tagWeight;
-  let tagPaddingLeft, tagPaddingTop, tagPaddingBottom;
-  let tagMarginRight;
-  let columns;
-  let blockMarginBottom;
-  let photoHeight, photoMarginBottom;
-  let titleSize, titleWeight;
-  let subTitleMarginTop, subTitleSize;
-  let tagTongMarginTop;
-  let subTitleOverWidthRatio, tagTongOverWidthRatio;
-  let reviewTong;
-  let titleMarginLeft;
-  let quoteHeight;
-  let quoteWidth;
-  let quoteTop;
-  let services;
-  let serviceChildren;
-  let servicePaddingLeft;
-  let serviceSize;
-  let serviceBlockPaddingTop;
-  let serviceBlock;
-  let portfolioBlockPaddingTop;
-  let reviewBlockPaddingTop;
-  let blockTitleMarginBottom;
-  let blockTitleSize, blockTitleWeight;
-  let blockWhitePaddingRight;
-  let mainPaddingTop;
-  let mainPaddingBottom;
-  let viewLength;
-  let searchWordingSize, searchWordingWeight, searchWordingMarginBottom;
-  let searchWordingCircleWidth;
-  let searchWordingCircleTop, searchWordingCircleLeft;
-  let tagBlock;
-  let subInfoSize, subInfoWeight;
-  let arrowWidth, arrowHeight, arrowBottom, arrowReviewBottom;
-  let reviewSubTitleVisual;
-  let subInfoTextTop;
-  let subTitleMarginTopReview;
-  let subTitleWeight;
-
-  mainPaddingTop = <%% 160, 140, 110, 95, 8 %%>;
-  mainPaddingBottom = <%% 130, 110, 70, 65, 8 %%>;
-
-  searchWordingSize = <%% 22, 21, 20, 18, 22 %%>;
-  searchWordingWeight = <%% 800, 800, 800, 800, 700 %%>;
-  searchWordingMarginBottom = <%% (isMac() ? 20 : 17), (isMac() ? 17 : 15), (isMac() ? 16 : 14), (isMac() ? 15 : 13), 17 %%>;
-
-  searchWordingCircleWidth = <%% 4, 4, 4, 3, 4 %%>;
-  searchWordingCircleTop = <%% 6, 6, 6, 5, 6 %%>;
-  searchWordingCircleLeft = <%% -6, -6, -6, -5, -6 %%>;
-
-  services = serviceParsing().name;
-  services.push("전체 보기");
-  servicePaddingLeft = <%% 20, 18, 13, 8, 2.2 %%>;
-  serviceSize = <%% 17, 16, 16, 15, 3.3 %%>;
-  serviceBlockPaddingTop = <%% (isMac() ? 25 : 26), (isMac() ? 22 : 23), (isMac() ? 20 : 21), (isMac() ? 18 : 19), 27 %%>;
-
-  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
-
-  searchTongWidth = <%% 640, 640, 560, 450, standardWidth %%>;
-  searchTongHeight = <%% 40, 40, 40, 40, 8 %%>;
-
-  searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
-  searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
-  searchIconTop = <%% 10, 10, 10, 10, 1.8 %%>;
-
-  inputWithoutHeight = <%% (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), (isMac() ? 3 : 0), 0.8 %%>;
-  inputSize = <%% 15, 15, 15, 15, 3.1 %%>;
-  inputWeight = <%% 300, 300, 300, 300, 300 %%>;
-
-  portfolioMargin = <%% 16, 16, 16, 16, 3 %%>;
-
-  columns = <%% 5, 4, 3, 3, 2 %%>;
-  viewLength = <%% 9, 7, 8, 8, 9 %%>;
-  blockMarginBottom = <%% 60, 60, 60, 45, 8 %%>;
-
-  photoHeight = <%% 374, 352, 408, 320, 60 %%>;
-  photoMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
-
-  garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
-  garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
-  garoSliceLimit = <%% 17, 17, 17, 17, 17 %%>;
-
-  seroSliceStart = <%% 5, 5, 5, 5, 5 %%>;
-  seroSliceEnd = <%% 16, 15, 17, 15, 13 %%>;
-  seroSliceLimit = <%% 30, 30, 30, 30, 30 %%>;
-
-  quoteHeight = <%% 9, 8, 8, 7, 1.6 %%>;
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
-  quoteTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
-
-  titleSize = <%% 17, 17, 17, 15, 2.8 %%>;
-  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  titleMarginLeft = <%% 5, 5, 5, 5, 1.1 %%>;
-
-  subTitleMarginTop = <%% 3, 3, 3, 3, 0.5 %%>;
-  subTitleMarginTopReview = <%% 3, 3, 3, 2, 0.2 %%>;
-  subTitleSize = <%% 12, 12, 12, 12, 2.5 %%>;
-  subTitleWeight = <%% 400, 400, 400, 400, 300 %%>;
-
-  subTitleOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
-  tagTongOverWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
-
-  tagTongMarginTop = <%% 8, 8, 8, 8, 1.5 %%>;
-
-  tagSize = <%% 10, 10, 10, 9, 2 %%>;
-  tagWeight = <%% 500, 500, 500, 500, 500 %%>;
-
-  tagPaddingLeft = <%% 8, 8, 8, 7, 1 %%>;
-  tagPaddingTop = <%% (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 1 %%>;
-  tagPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isIphone() ? 1.2 : 1.4) %%>;
-  tagMarginRight = <%% 3, 3, 3, 3, 1 %%>;
-
-  portfolioBlockPaddingTop = <%% 50, 45, 35, 35, 7 %%>;
-  reviewBlockPaddingTop = <%% 20, 0, 0, 0, 4 %%>;
-
-  blockTitleMarginBottom = <%% (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 15 : 13), (isMac() ? 12 : 10), 3.2 %%>;
-  blockTitleSize = <%% 20, 20, 19, 17, 4 %%>;
-  blockTitleWeight = <%% 800, 800, 800, 800, 600 %%>;
-  blockWhitePaddingRight = <%% 15, 15, 15, 15, 3 %%>;
-
-  subInfoSize = <%% 8, 8, 7, 6, 2.5 %%>;
-  subInfoWeight = <%% 500, 500, 500, 500, 500 %%>;
-  subInfoTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
-
-  arrowWidth = <%% 28, 28, 26, 26, 4 %%>;
-  arrowHeight = <%% 8, 8, 8, 8, 1.5 %%>;
-  arrowBottom = <%% 2, 2, 2, 2, 1 %%>;
-  arrowReviewBottom = <%% 4, 4, 4, 3, 1.5 %%>;
-
-  reviewSubTitleVisual = <%% 1, 1, 1, 0, 0 %%>;
-
-  mainTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "block",
-      position: "relative",
-      background: colorChip.white,
-      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
-      paddingTop: String(mainPaddingTop) + ea,
-      paddingBottom: String(mainPaddingBottom) + ea,
-    },
-  });
-
-  createNode({
-    mother: mainTong,
-    style: {
-      display: desktop ? "block" : "none",
-      position: "relative",
-      width: String(standardWidth) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      textAlign: "center",
-      marginBottom: String(searchWordingMarginBottom) + ea,
-    },
-    children: [
-      {
-        text: "원하는 스타일을 찾아보세요!",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(searchWordingSize) + ea,
-          fontWeight: String(searchWordingWeight),
-          color: colorChip.black,
-        },
-        children: [
-          {
-            style: {
-              position: "absolute",
-              left: String(searchWordingCircleLeft) + ea,
-              top: String(searchWordingCircleTop) + ea,
-              width: String(searchWordingCircleWidth) + ea,
-              height: String(searchWordingCircleWidth) + ea,
-              borderRadius: String(searchWordingCircleWidth) + ea,
-              background: colorExtended.mainBlue,
-            }
-          }
-        ]
-      }
-    ]
-  });
-
-  createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(standardWidth) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      textAlign: "center",
-    },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(searchTongWidth) + ea,
-          height: String(searchTongHeight) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(5) + "px",
-        },
-        children: [
-          {
-            mode: "svg",
-            source: instance.mother.returnSearch(colorChip.black),
-            style: {
-              position: "absolute",
-              height: String(searchIconHeight) + ea,
-              right: String(searchIconRight) + ea,
-              top: String(searchIconTop) + ea,
-            }
-          },
-          {
-            mode: "input",
-            attribute: {
-              type: "text",
-              placeholder: desktop ? "화이트" : "원하는 스타일을 찾아보세요!",
-            },
-            event: {
-              keyup: function (e) {
-                if (e.key === "Enter") {
-                  const value = this.value.trim().replace(/[^가-힣a-z0-9 ]/gi, '');
-                  selfHref(FRONTHOST + "/portfolio.php?search=" + value);
-                }
-              }
-            },
-            class: [ "searchInput" ],
-            style: {
-              position: "absolute",
-              top: String(0),
-              left: String(0),
-              width: String(100) + '%',
-              height: withOut(inputWithoutHeight, ea),
-              border: String(0),
-              outline: String(0),
-              background: "transparent",
-              fontSize: String(inputSize) + ea,
-              fontWeight: String(inputWeight),
-              color: colorChip.black,
-              textAlign: "center",
-            }
-          }
-        ]
-      }
-    ]
-  });
-
-  portfolioTong = createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(standardWidth + portfolioMargin) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      paddingTop: String(portfolioBlockPaddingTop) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          marginBottom: String(blockTitleMarginBottom) + ea,
-        },
-        children: [
-          {
-            text: "디자이너 포트폴리오",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              paddingRight: String(blockWhitePaddingRight) + ea,
-              background: colorChip.white,
-              fontSize: String(blockTitleSize) + ea,
-              fontWeight: String(blockTitleWeight),
-              color: colorChip.black,
-              zIndex: String(1),
-            },
-            bold: {
-              fontSize: String(blockTitleSize) + ea,
-              color: colorChip.deactive,
-            }
-          }
-        ]
-      }
-    ]
-  });
-
-  for (let i = 0; i < viewLength; i++) {
-
-    ({ contents } = contentsArr[i]);
-
-    if (desktop) {
-      src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
-    } else {
-      src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.portfolio.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  try {
+    const defaultQueryObject = {
+      newMode: true,
+      method: "client",
+      id: instance.client.cliid
+    };
+    let updateQuery, coreQuery;
+    
+    if (typeof valueIndex !== "number") {
+      throw new Error("invalid value index");
+    }
+    if (!Array.isArray(menu)) {
+      throw new Error("invalid menu");
+    }
+    if (menuIndex === undefined) {
+      throw new Error("invalid menu index");
     }
 
-    title = contents.portfolio.title.main.split(", ")[1];
-    if (media[0] || media[2]) {
-      subTitle = contents.portfolio.title.sub;
-    } else {
-      subTitle = contents.portfolio.title.sub;
-      if (!mobile) {
-        if (i !== 0 && subTitle.length > 27) {
-          subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+    if (valueIndex === 0) {
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.service.serid"] = [ menu[menuIndex] ];
+        updateQuery["curation.check.serid"] = menu[menuIndex];
+        coreQuery["requests." + String(requestNumber) + ".analytics.response.service.serid"] = menu[menuIndex];
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
+    } else if (valueIndex === 1) {
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        coreQuery = {};
+        if (instance.totalValues[0] === 1) {
+          updateQuery["curation.check.construct.entire"] = menu[menuIndex];
+        } else {
+          updateQuery["curation.check.construct.entire"] = true;
         }
-      } else {
-        if (i !== 0 && subTitle.length > 25) {
-          subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
-        }
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
+    } else if (valueIndex === 2) {
+      if (Array.isArray(menuIndex)) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.construct.items"] = menuIndex;
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
+    } else if (valueIndex === 3) {
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.construct.environment"] = menuIndex;
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
+    } else if (valueIndex === 4) {
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.budget"] = menuIndex;
+        coreQuery["requests." + String(requestNumber) + ".request.budget"] = menu[menuIndex];
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
+    } else if (valueIndex === 5) {
+      if (Array.isArray(menuIndex)) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.furniture"] = menuIndex;
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
+    } else if (valueIndex === 6) {
+      if (Array.isArray(menuIndex)) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.fabric"] = menuIndex;
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
+    } else if (valueIndex === 7) {
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.expect"] = menuIndex;
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
+    } else if (valueIndex === 8) {
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.purchase"] = menuIndex;
+        coreQuery["requests." + String(requestNumber) + ".request.furniture"] = menu[menuIndex];
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
+    } else if (valueIndex === 9) {
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.family"] = menuIndex;
+        coreQuery["requests." + String(requestNumber) + ".request.family"] = menu[menuIndex];
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
+    } else if (valueIndex === 10) {
+      if (typeof menuIndex === "number" && menu[menuIndex] !== undefined) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.age"] = menuIndex;
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
+      }
+    } else if (valueIndex === 11) {
+      if (Array.isArray(menuIndex)) {
+        updateQuery = {};
+        coreQuery = {};
+        updateQuery["curation.check.time"] = menuIndex;
+        updateQuery["budget"] = "상담 가능 시간 : \n" + menu.filter((str, index) => { return menuIndex.includes(index) }).join(", ");
+        await ajaxJson({ ...defaultQueryObject, updateQuery, coreQuery }, BACKHOST + "/updateHistory");
       }
     }
-    tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
 
-    if (i !== 0) {
-      tag = tag.slice(garoSliceStart, garoSliceEnd);
-      if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > garoSliceLimit) {
-        tag = tag.slice(0, -1);
-      }
-    } else {
-      tag = tag.slice(seroSliceStart, seroSliceEnd);
-      if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > seroSliceLimit) {
-        tag = tag.slice(0, -1);
-      }
-    }
-
-    block = createNode({
-      mother: portfolioTong,
-      attribute: {
-        pid: contents.portfolio.pid,
-        rid: contents.review.rid,
-      },
-      event: {
-        click: function (e) {
-          const pid = this.getAttribute("pid");
-          selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
-        },
-        touchstart: function (e) {
-          const self = this;
-          self.setAttribute(touchStartConst, "on");
-          setQueue(() => {
-            self.setAttribute(touchStartConst, "off");
+    if (Array.isArray(instance.totalMenu[valueIndex])) {
+      if (typeof menuIndex === "number") {
+        if (typeof instance.totalMenu[valueIndex][menuIndex] === "object" && instance.totalMenu[valueIndex][menuIndex] !== null && instance.totalMenu[valueIndex][menuIndex].value !== undefined) {
+          homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "updateCheckValue",
+            data: {
+              cliid: instance.client.cliid,
+              date: new Date(),
+              index: valueIndex,
+              raw: menuIndex,
+              value: instance.totalMenu[valueIndex][menuIndex].value,
+            },
+          }).catch((err) => {
+            console.log(err);
           });
-        },
-        touchend: function (e) {
-          if (this.getAttribute(touchStartConst) === "on") {
-            const pid = this.getAttribute("pid");
-            selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
-          }
-        }
-      },
+        }  
+      } else if (Array.isArray(menuIndex)) {
+        if (menuIndex.every((n) => { return (typeof n === "number") })) {
+          homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "updateCheckValue",
+            data: {
+              cliid: instance.client.cliid,
+              date: new Date(),
+              index: valueIndex,
+              raw: menuIndex,
+              value: instance.totalMenu[valueIndex].filter((o, index) => { return menuIndex.includes(index) }).map((o) => { return o.value === undefined ? o.title : o.value }),
+            },
+          }).catch((err) => {
+            console.log(err);
+          });          
+        }  
+      }
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+FrontIndexJs.prototype.insertInitBox = async function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop, heightTong } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { initAreaClassName } = this;
+  try {
+    let minusLeft;
+    let firstBase;
+    let leftRightWidth;
+    let firstBasePaddingBottom;
+    let subTitleSize, subTitleWeight, subTitleMarginTop;
+    let buttonMarginTop;
+    let buttonWidth;
+    let buttonHeight;
+    let buttonSize;
+    let buttonTextTop;
+    let buttonWeight;
+    let firstBasePaddingTop;
+    let mobileLeftPaddingVisual;
+    let titleSize, titleWeight, titleVisualTop, titleVisualLeft;
+    let titleLineHeight;
+    let descriptionSize, descriptionLineHeight;
+    let descriptionMarginTop;
+    let mainImageTop, mainImageHeight;
+    let pointOpacity;
+    let descriptionPointBoldPaddingLeft;
+    let descriptionPointBoldPaddingTop;
+    let descriptionPointBoldPaddingBottom;
+    let descriptionPointBoldMargin;
+    let buttonBetween;
+    let mobileImageRight;
+    let mobileSubImageMarginTop;
+    let description;
+    let blanketHeight, blanketVisualTop, blanketOpacity, blanketMargin;
+    let mainTitleBlock, subTitleBlock, imageBlock, boxBlock0, boxBlock1;
+    let totalHeight;
+    let boxBlock0MarginTop, boxBlock1MarginTop;
+    let imageBlockMarginTop, subTitleBlockMarginTop;
+    let boxBlockHeight;
+    let mainImageWidth;
+
+    minusLeft = window.innerWidth - standardWidth + 1;
+    leftRightWidth = (window.innerWidth - standardWidth) / 2;
+
+    firstBasePaddingTop = <%% 24, 24, 24, 24, (window.innerHeight < 700 ? 1.5 : 7) %%>;
+    firstBasePaddingBottom = <%% 160, 160, 160, 120, 20 %%>;
+
+    subTitleSize = <%% 20, 18, 17, 15, 3.6 %%>;
+    subTitleWeight = 500;
+    subTitleMarginTop = <%% 3, 2, 1, 1, 0.5 %%>;
+
+    buttonMarginTop = <%% 165, 160, 132, 110, 3.6 %%>;
+    buttonWidth = <%% 190, 190, 186, 168, 31 %%>;
+    buttonHeight = <%% 32, 32, 30, 28, 9 %%>;
+    buttonSize = <%% 14, 14, 13, 12, 3.5 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+    buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+    buttonBetween = <%% 8, 8, 7, 6, 1 %%>;
+
+    titleSize = <%% 50, 48, 43, 36, 7.2 %%>;
+    titleWeight = 700;
+    titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.5 %%>;
+    titleVisualLeft = <%% 2, 2, 2, 2, -0.5 %%>;
+    titleLineHeight = <%% 1.11, 1.11, 1.11, 1.11, 1.07 %%>;
+
+    pointOpacity = 0.4;
+
+    mainImageTop = <%% 27, 24, 18, 16, 33 %%>;
+    mainImageHeight = <%% 390, 370, 338, 314, 39 %%>;
+
+    descriptionSize = <%% 15, 14, 14, 13, 3.2 %%>;
+    descriptionLineHeight = <%% 1.9, 1.9, 1.9, 1.8, 1.8 %%>;
+
+    mobileLeftPaddingVisual = 1;
+
+    descriptionMarginTop = <%% 40, 40, 36, 30, 6.4 %%>;
+
+    descriptionPointBoldPaddingLeft = <%% 8, 8, 8, 8, 1.6 %%>;
+    descriptionPointBoldPaddingTop = <%% (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 3), (isMac() ? 2 : 3), 0.4 %%>;
+    descriptionPointBoldPaddingBottom = <%% (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 0.8 %%>;
+    descriptionPointBoldMargin = <%% 2, 2, 2, 2, 1 %%>;
+
+    blanketHeight = <%% 48, 40, 40, 40, 4 %%>;
+    blanketVisualTop = <%% (isMac() ? 1 : 0), (isMac() ? 1 : 0), (isMac() ? 1 : 0), (isMac() ? 1 : 0), 1 %%>;
+    blanketOpacity = <%% 0.3, 0.3, 0.3, 0.3, 0.3 %%>;
+    blanketMargin = <%% 34, 32, 30, 30, 2 %%>;
+
+    if (desktop && window.innerHeight > 1100) {
+      titleSize = <%% 57, 51, 43, 36, 7 %%>;
+      subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
+      firstBasePaddingTop = <%% 80, 48, 30, 28, 50 %%>;
+      firstBasePaddingBottom = <%% 240, 210, 160, 120, 210 %%>;
+      mainImageTop = <%% 42, 32, 18, 16, 32 %%>;
+      mainImageHeight = <%% 390, 372, 338, 314, 39 %%>;
+      buttonMarginTop = <%% 146, 146, 132, 110, 3.6 %%>;
+    }
+
+    mainImageWidth = 60;
+    subTitleBlockMarginTop = 2.5;
+    imageBlockMarginTop = 6.5;
+    boxBlock0MarginTop = 13;
+    boxBlock1MarginTop = 2;
+    boxBlockHeight = 20;
+
+    this.totalContents = document.getElementById("totalcontents");
+    this.totalContents.style.overflow = "hidden";
+    this.totalContents.style.background = colorExtended.white;
+    document.body.style.background = colorExtended.white;
+
+    description = [
+      desktop ? "홈리에종의 서비스 진행을 위해서는 다음 큐레이션 과정이 필요합니다." : "홈리에종 서비스 진행을 위해선 큐레이션 과정이 필요합니다.",
+      desktop ? "서비스 신청서를 모두 작성 후, <b%디자이너의 1:1 맞춤 상담%b>을 받아보세요!" : "신청서를 모두 작성 후, <b%디자이너 1:1 상담%b>을 받아보세요!"
+    ];
+
+    firstBase = createNode({
+      mother: baseTong,
+      class: [ initAreaClassName ],
       style: {
-        display: "inline-block",
+        display: "flex",
         position: "relative",
-        width: i !== 0 ? "calc(calc(100% - " + String(portfolioMargin * columns) + ea + ") / " + String(columns) + ")" : "calc(calc(calc(calc(100% - " + String(portfolioMargin * columns) + ea + ") / " + String(columns) + ") * 2) + " + String(portfolioMargin) + ea + ")",
-        marginRight: String(portfolioMargin) + ea,
-        marginBottom: String(blockMarginBottom) + ea,
-        borderRadius: String(5) + "px",
-        verticalAlign: "top",
-        overflow: "hidden",
-        cursor: "pointer",
+        width: withOut(0, ea),
+        paddingTop: String(firstBasePaddingTop) + ea,
+        flexDirection: "column",
+        paddingBottom: String(firstBasePaddingBottom) + ea,
+      },
+      child: {
+        style: {
+          position: "absolute",
+          top: desktop ? String((-1 * baseTop) + naviHeight) + ea : "calc(calc(" + String(naviHeight - naviHeight) + "px" + ") - " + String(baseTop) + ea + ")",
+          left: String(-1 * minusLeft) + ea,
+          background: colorExtended.white,
+          width: withOut(-1 * (minusLeft * 2), ea),
+          height: desktop ? withOut(1 * ((-1 * baseTop) + naviHeight), ea) : String(185) + ea,
+        }
+      }
+    });
+  
+    // main title
+    mainTitleBlock = createNode({
+      mother: firstBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: desktop ? "start" : "center",
+        opacity: String(0),
+        transform: "translateY(30px)",
+        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+        paddingLeft: mobile ? String(mobileLeftPaddingVisual) + ea : "",
       },
       children: [
         {
+          text: "인테리어,",
           style: {
-            display: "block",
-            width: String(100) + '%',
-            height: String(photoHeight) + ea,
-            borderRadius: String(5) + "px",
-            marginBottom: String(photoMarginBottom) + ea,
-            backgroundSize: "100% auto",
-            backgroundPosition: "50% 50%",
-            backgroundImage: "url('" + src + "')",
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorExtended.black,
+            fontFamily: "pretendard",
+            top: desktop ? String(titleVisualTop) + ea : "",
+            left: desktop ? String(titleVisualLeft) + ea : "",
+            lineHeight: String(titleLineHeight),
+          },
+          child: {
+            style: {
+              position: "absolute",
+              width: withOut(-1.5, ea),
+              height: String(3.5) + ea,
+              borderRadius: String(3) + "px",
+              background: colorExtended.gradientBlue2,
+              top: String(5.2) + ea,
+              left: String(-1.2) + ea,
+              zIndex: String(-1),
+              opacity: String(0.8),
+            }
           }
-        },
-        {
-          style: {
-            display: "block",
-            position: "relative",
-            width: String(100) + '%',
-          },
-          children: [
-            {
-              text: title,
-              style: {
-                display: "block",
-                fontSize: String(titleSize) + ea,
-                fontWeight: String(titleWeight),
-                color: colorChip.black,
-                width: withOut(0, ea),
-                verticalAlign: "top",
-              }
-            },
-            {
-              style: {
-                display: "block",
-                width: withOut(0, ea),
-                verticalAlign: "top",
-                marginTop: String(subTitleMarginTop) + ea,
-                overflow: "hidden",
-              },
-              children: [
-                {
-                  text: subTitle,
-                  style: {
-                    display: "block",
-                    position: "relative",
-                    fontSize: String(subTitleSize) + ea,
-                    fontWeight: String(subTitleWeight),
-                    color: colorChip.gray5,
-                    width: String(subTitleOverWidthRatio * 100) + '%',
-                  },
-                }
-              ]
-            }
-          ]
-        },
-        {
-          style: {
-            display: "block",
-            position: "relative",
-            marginTop: String(tagTongMarginTop) + ea,
-            width: String(100) + '%',
-            borderTop: "1px solid " + colorChip.gray2,
-            left: String(0) + ea,
-            paddingTop: String(tagTongMarginTop) + ea,
-          },
-          children: [
-            {
-              text: contents.portfolio.spaceInfo.region + "&nbsp;&nbsp;&nbsp;<b%|%b>&nbsp;&nbsp;&nbsp;" + contents.portfolio.spaceInfo.method.split(" ")[0] + " 스타일링",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                top: String(subInfoTextTop) + ea,
-                fontSize: String(subInfoSize) + ea,
-                fontWeight: String(subInfoWeight),
-                color: colorChip.black,
-              },
-              bold: {
-                fontWeight: String(subInfoWeight),
-                color: colorExtended.mainBlue,
-              }
-            },
-            {
-              mode: "svg",
-              source: svgMaker.horizontalArrow(arrowWidth, arrowHeight),
-              style: {
-                position: "absolute",
-                width: String(arrowWidth) + ea,
-                right: String(0),
-                bottom: String(arrowBottom) + ea,
-              }
-            }
-          ]
         }
       ]
     });
 
-  }
-
-  reviewTong = createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(standardWidth + portfolioMargin) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      paddingTop: String(reviewBlockPaddingTop) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          marginBottom: String(blockTitleMarginBottom) + ea,
-        },
-        children: [
-          {
-            text: "솔직한 고객 후기",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              paddingRight: String(blockWhitePaddingRight) + ea,
-              background: colorChip.white,
-              fontSize: String(blockTitleSize) + ea,
-              fontWeight: String(blockTitleWeight),
-              color: colorChip.black,
-              zIndex: String(1),
-            },
-            bold: {
-              fontSize: String(blockTitleSize) + ea,
-              color: colorChip.deactive,
-            }
-          }
-        ]
-      }
-    ]
-  });
-
-  for (let i = 0; i < viewLength; i++) {
-
-    ({ contents } = reviewArr[i]);
-
-    if (desktop) {
-      src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
-    } else {
-      src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.review.detailInfo.photodae[i === 0 ? 1 : 0]) + contents.portfolio.pid + ".jpg";
-    }
-
-    title = contents.review.title.sub.split(", ").join(" ");
-    if (media[0] || media[2]) {
-      subTitle = contents.portfolio.title.sub;
-    } else {
-      subTitle = contents.portfolio.title.sub;
-      if (!mobile) {
-        if (i !== 0 && subTitle.length > 27) {
-          subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
-        }
-      } else {
-        if (i !== 0 && subTitle.length > 25) {
-          subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
-        }
-      }
-    }
-    tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
-
-    if (i !== 0) {
-      tag = tag.slice(garoSliceStart, garoSliceEnd);
-      if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > garoSliceLimit) {
-        tag = tag.slice(0, -1);
-      }
-    } else {
-      tag = tag.slice(seroSliceStart, seroSliceEnd);
-      if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > seroSliceLimit) {
-        tag = tag.slice(0, -1);
-      }
-    }
-
-    block = createNode({
-      mother: reviewTong,
-      attribute: {
-        pid: contents.portfolio.pid,
-        rid: contents.review.rid,
-      },
-      event: {
-        click: function (e) {
-          const pid = this.getAttribute("pid");
-          selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
-        },
-        touchstart: function (e) {
-          const self = this;
-          self.setAttribute(touchStartConst, "on");
-          setQueue(() => {
-            self.setAttribute(touchStartConst, "off");
-          });
-        },
-        touchend: function (e) {
-          if (this.getAttribute(touchStartConst) === "on") {
-            const pid = this.getAttribute("pid");
-            selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
-          }
-        }
-      },
+    // sub title
+    subTitleBlock = createNode({
+      mother: firstBase,
       style: {
-        display: "inline-block",
+        display: "flex",
         position: "relative",
-        width: i !== 0 ? "calc(calc(100% - " + String(portfolioMargin * columns) + ea + ") / " + String(columns) + ")" : "calc(calc(calc(calc(100% - " + String(portfolioMargin * columns) + ea + ") / " + String(columns) + ") * 2) + " + String(portfolioMargin) + ea + ")",
-        marginRight: String(portfolioMargin) + ea,
-        marginBottom: String(blockMarginBottom) + ea,
-        borderRadius: String(5) + "px",
-        verticalAlign: "top",
-        overflow: "hidden",
-        cursor: "pointer",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: String(subTitleBlockMarginTop) + ea,
+        opacity: String(0),
+        transform: "translateY(30px)",
+        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
       },
       children: [
         {
+          text: "무엇부터 시작해야할지 막막하시죠?",
           style: {
-            display: "block",
-            width: String(100) + '%',
-            height: String(photoHeight) + ea,
-            borderRadius: String(5) + "px",
-            marginBottom: String(photoMarginBottom) + ea,
-            backgroundSize: "100% auto",
-            backgroundPosition: "50% 50%",
-            backgroundImage: "url('" + src + "')",
+            display: "inline-block",
+            position: "relative",
+            color: colorExtended.black,
+            fontWeight: String(500),
+            fontSize: String(4.4) + ea,
+            textAlign: "center",
+            fontFamily: "pretendard",
           }
-        },
-        {
-          style: {
-            display: "block",
-            position: "relative",
-            width: String(100) + '%',
-          },
-          children: [
-            {
-              mode: "svg",
-              source: svgMaker.doubleQuote(colorExtended.mainBlue),
-              style: {
-                display: "inline-block",
-                height: String(quoteHeight) + ea,
-                width: String(quoteWidth) + ea,
-                verticalAlign: "top",
-                position: "relative",
-                top: String(quoteTop) + ea,
-              }
-            },
-            {
-              text: title,
-              style: {
-                display: "inline-block",
-                fontSize: String(titleSize) + ea,
-                fontWeight: String(titleWeight),
-                color: colorChip.black,
-                marginLeft: String(titleMarginLeft) + ea,
-                width: withOut(quoteWidth + titleMarginLeft, ea),
-                verticalAlign: "top",
-              }
-            }
-          ]
-        },
-        {
-          style: {
-            display: "block",
-            position: "relative",
-            marginTop: String(subTitleMarginTopReview) + ea,
-            paddingLeft: String(quoteWidth + titleMarginLeft + reviewSubTitleVisual) + ea,
-            width: withOut(quoteWidth + titleMarginLeft + reviewSubTitleVisual, ea),
-            left: String(0) + ea,
-          },
-          children: [
-            {
-              text: contents.portfolio.spaceInfo.space + " " + String(contents.portfolio.spaceInfo.pyeong) + "py " + (desktop ? "홈스타일링 후기" : "후기"),
-              style: {
-                display: "inline-block",
-                fontSize: String(subTitleSize) + ea,
-                fontWeight: String(subTitleWeight),
-                color: colorChip.gray5,
-              }
-            },
-            {
-              mode: "svg",
-              source: svgMaker.horizontalArrow(arrowWidth, arrowHeight),
-              style: {
-                position: "absolute",
-                width: String(arrowWidth) + ea,
-                right: String(0),
-                bottom: String(arrowReviewBottom) + ea,
-              }
-            }
-          ]
         }
       ]
     });
 
-  }
-
-  if (mobile) {
-    this.insertStrongBox(true);
-  }
-
-}
-
-FrontIndexJs.prototype.insertStrongBox = function (force = false) {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, totalContents, standardWidth } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  let speed;
-  let mainHeight;
-  let mainTong;
-  let blockTong;
-  let blockNumber;
-  let tongPaddingLeft;
-  let tongPaddingTop, tongPaddingBottom;
-  let strongContents;
-  let whiteTongPaddingLeft, whiteTongPaddingTop, whiteTongPaddingRight, whiteTongPaddingBottom;
-  let whiteTongTitleSize;
-  let iconWidth;
-  let whiteTongTitleWeight;
-  let whiteTongDescriptionSize;
-  let whiteTongDescriptionWeight;
-  let whiteTongDescriptionMarginTop;
-  let whiteTongDescriptionLineHeight;
-  let iconBottom;
-  let iconRight;
-  let blockMarginBottom;
-
-  if (mobile && !force) {
-    return;
-  }
-
-  if (media[0]) {
-    strongContents = [
-      {
-        title: "디자이너 추천",
-        description: "선호하는 스타일과 역량이 맞는\n디자이너를 추천받을 수 있어요.",
-        icon: "icons0.png",
-      },
-      {
-        title: "홈리에종 케어",
-        description: "예상하지 못한 상황에도 안심하고\n인테리어를 진행할 수 있어요.",
-        icon: "icons1.png",
-      },
-      {
-        title: "원스탑 서비스",
-        description: "시공부터 스타일링까지 원스탑\n서비스를 경험할 수 있어요.",
-        icon: "icons2.png",
-      },
-      {
-        title: "선 기획 후 시공",
-        description: "디자인 선 기획 후 꼭 필요한 시공\n부터 효율적으로 진행할 수 있어요.",
-        icon: "icons3.png",
-      },
-    ]
-  } else {
-    strongContents = [
-      {
-        title: "디자이너 추천",
-        description: "선호하는 스타일이 맞는\n디자이너를 추천받아요.",
-        icon: "icons0.png",
-      },
-      {
-        title: "홈리에종 케어",
-        description: "문제 상황에도 안심하고\n진행할 수 있어요.",
-        icon: "icons1.png",
-      },
-      {
-        title: "원스탑 서비스",
-        description: "시공부터 스타일링까지\n원스탑으로 진행해요.",
-        icon: "icons2.png",
-      },
-      {
-        title: "선 기획 후 시공",
-        description: "디자인 후 꼭 필요한 시공\n부터 진행할 수 있어요.",
-        icon: "icons3.png",
-      },
-    ]
-  }
-
-  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
-  mainHeight = <%% 240, 240, 240, 240, 40 %%>;
-  margin = <%% 18, 16, 16, 12, 2 %%>;
-  blockNumber = desktop ? strongContents.length : 2;
-
-  tongPaddingLeft = <%% 60, 50, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 70, 48, 36, 32, 6.5 %%>;
-  tongPaddingBottom = <%% 76, 54, 42, 38, 4.5 %%>;
-
-  whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
-  whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
-  whiteTongPaddingRight = <%% 84, 50, 50, 42, 5 %%>;
-  whiteTongPaddingBottom = <%% 28, 25, 24, 20, 4 %%>;
-
-  whiteTongTitleSize = <%% 18, 16, 16, 14, 3.5 %%>;
-  whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-
-  whiteTongDescriptionSize = <%% 14, 13, 13, 11, 2.5 %%>;
-  whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  whiteTongDescriptionMarginTop = <%% 7, 7, 5, 5, 1.2 %%>;
-  whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
-
-  iconWidth = <%% 24, 24, 24, 18, 5 %%>;
-  iconBottom = <%% 32, 28, 28, 24, 4.8 %%>;
-  iconRight = <%% 28, 20, 20, 18, 2.8 %%>;
-
-  blockMarginBottom = <%% 3, 3, 3, 3, 2 %%>;
-
-  mainTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "block",
-      position: "relative",
-      background: colorChip.gray2,
-      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
-    },
-  });
-
-  blockTong = createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String((standardWidth - (tongPaddingLeft * 2)) + margin) + ea,
-      paddingTop: String(tongPaddingTop) + ea,
-      paddingBottom: String(tongPaddingBottom) + ea,
-      left: "calc(50% - " + String((standardWidth - (tongPaddingLeft * 2)) / 2) + ea + ")",
-    }
-  });
-
-  for (let i = 0; i < strongContents.length; i++) {
-    createNode({
-      mother: blockTong,
+    // image
+    imageBlock = createNode({
+      mother: firstBase,
       style: {
-        display: "inline-block",
+        display: "flex",
         position: "relative",
-        width: "calc(calc(calc(100% - " + String(margin * blockNumber) + ea + ") / " + String(blockNumber) + ") - " + String(whiteTongPaddingLeft + whiteTongPaddingRight) + ea + ")",
-        paddingTop: String(whiteTongPaddingTop) + ea,
-        paddingLeft: String(whiteTongPaddingLeft) + ea,
-        paddingRight: String(whiteTongPaddingRight) + ea,
-        paddingBottom: String(whiteTongPaddingBottom) + ea,
-        marginRight: String(margin) + ea,
-        borderRadius: String(5) + "px",
-        background: colorChip.white,
-        boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
-        marginBottom: desktop ? "" : String(blockMarginBottom) + ea,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: String(imageBlockMarginTop) + ea,
+        opacity: String(0),
+        transform: "translateY(30px)",
+        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
       },
       children: [
-        {
-          text: strongContents[i].title,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: (isMac() || mobile ? "" : String(2) + ea),
-            fontSize: String(whiteTongTitleSize) + ea,
-            fontWeight: String(whiteTongTitleWeight),
-            color: colorChip.black,
-          }
-        },
-        {
-          text: strongContents[i].description,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: (isMac() || mobile ? "" : String(2) + ea),
-            marginTop: String(whiteTongDescriptionMarginTop) + ea,
-            fontSize: String(whiteTongDescriptionSize) + ea,
-            fontWeight: String(whiteTongDescriptionWeight),
-            lineHeight: String(whiteTongDescriptionLineHeight),
-            color: colorChip.black,
-          }
-        },
         {
           mode: "img",
           attribute: {
-            src: FrontIndexJs.binaryPath + "/" + strongContents[i].icon,
+            src: FrontIndexJs.binaryPath + "/frontIndexSource0.png",
           },
           style: {
-            position: "absolute",
-            bottom: String(iconBottom) + ea,
-            right: String(iconRight) + ea,
-            width: String(iconWidth) + ea,
-            height: "auto",
+            display: "inline-block",
+            position: "relative",
+            width: String(58) + ea,
           }
         }
       ]
     });
-  }
 
-}
-
-FrontIndexJs.prototype.insertNewsBox = function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, blankHref, selfHref } = GeneralJs;
-  const { ea, media, totalContents, standardWidth } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  let speed;
-  let mainHeight;
-  let mainTong;
-  let blockTong;
-  let blockNumber;
-  let tongPaddingLeft;
-  let tongPaddingTop, tongPaddingBottom;
-  let strongContents;
-  let whiteTongPaddingLeft, whiteTongPaddingTop, whiteTongPaddingRight, whiteTongPaddingBottom;
-  let whiteTongTitleSize;
-  let iconWidth;
-  let whiteTongTitleWeight;
-  let whiteTongDescriptionSize;
-  let whiteTongDescriptionWeight;
-  let whiteTongDescriptionMarginTop;
-  let whiteTongDescriptionLineHeight;
-  let iconBottom;
-  let iconRight;
-  let blockMarginBottom;
-  let contents;
-  let slideTong;
-  let images;
-  let indent;
-  let number, newNumber;
-  let pushLeft, pushRight;
-  let grayHeight;
-  let arrowTop, arrowLeft, arrowWidth;
-  let circleBox;
-  let circleOpacity;
-  let circles;
-  let circleRadius;
-  let circleBetween;
-  let opacityNumber;
-  let circleBoxMarginTop;
-  let titleBoxHeight, titleTextTop, titleSize, titleWeight;
-  let titleBarBottom, titleBarLeft, titleBarWidth, titleBarHeight;
-
-  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
-  mainHeight = <%% 240, 240, 240, 240, 40 %%>;
-  margin = <%% 18, 16, 16, 12, 2 %%>;
-
-  tongPaddingLeft = <%% 60, 0, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 160, 140, 110, 95, 13 %%>;
-  tongPaddingBottom = <%% 180, 150, 120, 105, 15 %%>;
-
-  whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
-  whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
-  whiteTongPaddingRight = <%% 84, 50, 50, 42, 5 %%>;
-  whiteTongPaddingBottom = <%% 28, 25, 24, 20, 4 %%>;
-
-  whiteTongTitleSize = <%% 18, 16, 16, 14, 3.5 %%>;
-  whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-
-  whiteTongDescriptionSize = <%% 14, 13, 13, 11, 2.5 %%>;
-  whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  whiteTongDescriptionMarginTop = <%% 7, 7, 5, 5, 1.2 %%>;
-  whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
-
-  iconWidth = <%% 24, 24, 24, 18, 5 %%>;
-  iconBottom = <%% 32, 28, 28, 24, 4.8 %%>;
-  iconRight = <%% 28, 20, 20, 18, 2.8 %%>;
-
-  blockMarginBottom = <%% 3, 3, 3, 3, 2 %%>;
-
-  grayHeight = <%% 560, 460, 585, 468, 89 %%>;
-
-  arrowTop = <%% 500, 416, 440, 350, 50 %%>;
-  arrowLeft = <%% -50, -48, -45, -35, -5 %%>;
-  arrowWidth = <%% 14, 14, 12, 10, 14 %%>;
-
-  circleBoxMarginTop = <%% 24, 24, 23, 20, 5 %%>;
-  circleRadius = <%% 10, 10, 8, 8, 1.6 %%>;
-  circleBetween = <%% 8, 8, 6, 6, 1.6 %%>;
-
-  titleBoxHeight = <%% 40, 36, 26, 25, 4 %%>;
-  titleTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
-  titleSize = <%% 25, 25, 22, 19, 4.2 %%>;
-  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-
-  titleBarBottom = <%% (isMac() ? 0 : 3), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
-  titleBarLeft = <%% -4, -4, -4, -3, -0.6 %%>;
-  titleBarWidth = <%% 144, 144, 128, 110, 24 %%>;
-  titleBarHeight = <%% 9, 9, 8, 8, 1.5 %%>;
-
-  indent = 100;
-  circleOpacity = 0.4;
-  images = [];
-  circles = [];
-
-  pushLeft = () => {
-    for (let image of images) {
-      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
-      newNumber = number + indent;
-      if (newNumber === (indent * 2)) {
-        newNumber = indent * ((images.length - 2) * -1);
-      }
-      if (newNumber === indent * ((images.length - 2) * -1)) {
-        image.style.zIndex = String(0);
-      } else {
-        image.style.zIndex = String(1);
-      }
-    }
-    for (let image of images) {
-      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
-      newNumber = number + indent;
-      if (newNumber === (indent * 2)) {
-        newNumber = indent * ((images.length - 2) * -1);
-      }
-      image.style.transform = "translateX(" + String(newNumber) + "%)";
-    }
-
-    opacityNumber = circles.findIndex((dom) => {
-      return Number(dom.style.opacity) === circleOpacity;
-    });
-    opacityNumber = opacityNumber - 1;
-    if (opacityNumber < 0) {
-      opacityNumber = circles.length - 1;
-    }
-    for (let i = 0; i < circles.length; i++) {
-      if (i === opacityNumber) {
-        circles[i].style.opacity = String(circleOpacity);
-      } else {
-        circles[i].style.opacity = String(1);
-      }
-    }
-
-  }
-
-  pushRight = () => {
-    for (let image of images) {
-      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
-      newNumber = number - indent;
-      if (newNumber === (indent * -2)) {
-        newNumber = indent * (images.length - 2);
-      }
-      if (newNumber === indent * (images.length - 2)) {
-        image.style.zIndex = String(0);
-      } else {
-        image.style.zIndex = String(1);
-      }
-    }
-    for (let image of images) {
-      number = Number(image.style.transform.replace(/[^0-9\-]/gi, ''));
-      newNumber = number - indent;
-      if (newNumber === (indent * -2)) {
-        newNumber = indent * (images.length - 2);
-      }
-      image.style.transform = "translateX(" + String(newNumber) + "%)";
-    }
-
-    opacityNumber = circles.findIndex((dom) => {
-      return Number(dom.style.opacity) === circleOpacity;
-    });
-    opacityNumber = opacityNumber + 1;
-    if (opacityNumber === circles.length) {
-      opacityNumber = 0;
-    }
-    for (let i = 0; i < circles.length; i++) {
-      if (i === opacityNumber) {
-        circles[i].style.opacity = String(circleOpacity);
-      } else {
-        circles[i].style.opacity = String(1);
-      }
-    }
-
-  }
-
-  contents = {
-    slide: [
-      FrontIndexJs.binaryPath + "/news2" + String(media.findIndex(boo => boo)) + ".jpg",
-      FrontIndexJs.binaryPath + "/news0" + String(media.findIndex(boo => boo)) + ".jpg",
-      FrontIndexJs.binaryPath + "/news1" + String(media.findIndex(boo => boo)) + ".jpg",
-    ]
-  }
-
-  mainTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "block",
-      position: "relative",
-      background: colorChip.white,
-      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
-    },
-  });
-
-  // contents base
-  blockTong = createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(standardWidth - (tongPaddingLeft * 2)) + ea,
-      paddingTop: String(tongPaddingTop) + ea,
-      paddingBottom: String(tongPaddingBottom) + ea,
-      left: "calc(50% - " + String((standardWidth - (tongPaddingLeft * 2)) / 2) + ea + ")",
-      textAlign: "center",
-    }
-  });
-
-  // news title
-  createNode({
-    mother: blockTong,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      width: String(100) + '%',
-      height: String(titleBoxHeight) + ea,
-      marginBottom: String(circleBoxMarginTop) + ea,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    children: [
-      {
-        text: "홈리에종 뉴스",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(titleTextTop) + ea,
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(titleWeight),
-          color: colorChip.black,
-        },
-        children: [
-          {
-            style: {
-              position: "absolute",
-              bottom: String(titleBarBottom) + ea,
-              left: String(titleBarLeft) + ea,
-              width: String(titleBarWidth) + ea,
-              height: String(titleBarHeight) + ea,
-              borderRadius: String(titleBarHeight) + ea,
-              background: colorExtended.gradientBlue,
-              zIndex: String(-1),
-              opacity: String(0.65),
-            }
-          }
-        ]
-      }
-    ]
-  });
-
-  // left arrow
-  createNode({
-    mother: blockTong,
-    mode: "svg",
-    event: {
-      click: (e) => { pushLeft(); },
-    },
-    source: instance.mother.returnArrow("left", colorChip.darkShadow),
-    style: {
-      display: desktop ? "block" : "none",
-      position: "absolute",
-      top: String(arrowTop) + ea,
-      left: String(arrowLeft) + ea,
-      width: String(arrowWidth) + ea,
-      cursor: "pointer",
-    }
-  });
-
-  // right arrow
-  createNode({
-    mother: blockTong,
-    mode: "svg",
-    event: {
-      click: (e) => { pushRight(); },
-    },
-    source: instance.mother.returnArrow("right", colorChip.darkShadow),
-    style: {
-      display: desktop ? "block" : "none",
-      position: "absolute",
-      top: String(arrowTop) + ea,
-      right: String(arrowLeft) + ea,
-      width: String(arrowWidth) + ea,
-      cursor: "pointer",
-    }
-  });
-
-  // slide tong
-  slideTong = createNode({
-    mother: blockTong,
-    event: {
-      click: (e) => {
-        selfHref(FRONTHOST + "/miniAbout.php");
-      }
-    },
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      height: String(grayHeight) + ea,
-      background: colorChip.gray1,
-      borderRadius: String(8) + "px",
-      overflow: "hidden",
-      transition: "all 0s ease",
-      cursor: "pointer",
-    }
-  });
-  for (let i = 0; i < contents.slide.length; i++) {
-    images.push(createNode({
-      mother: slideTong,
+    // box 1
+    boxBlock0 = createNode({
+      mother: firstBase,
       style: {
-        display: "block",
-        position: "absolute",
-        width: String(100) + '%',
-        height: String(100) + '%',
-        top: String(0),
-        left: String(0),
-        backgroundImage: "url('" + contents.slide[i] + "')",
-        backgroundSize: "auto 100%",
-        backgroundPosition: "50% 50%",
-        transform: "translateX(" + String((i - 1) * indent) + "%)",
-        transition: "transform 0.9s ease",
-        zIndex: String(i === 1 ? 1 : 0),
-      }
-    }));
-  }
-
-  // circle tong
-  circleBox = createNode({
-    mother: blockTong,
-    style: {
-      display: "block",
-      position: "relative",
-      textAlign: "center",
-      marginTop: String(circleBoxMarginTop) + ea,
-    }
-  });
-  for (let i = 0; i < contents.slide.length; i++) {
-    circles.push(createNode({
-      mother: circleBox,
-      style: {
-        display: "inline-block",
-        width: String(circleRadius) + ea,
-        height: String(circleRadius) + ea,
-        borderRadius: String(circleRadius) + ea,
-        background: colorChip.shadow,
-        marginLeft: String(i === 0 ? 0 : circleBetween) + ea,
-        opacity: String(i === 0 ? circleOpacity : 1),
-      }
-    }));
-  }
-
-  setQueue(() => {
-    newNumber = null;
-    setInterval(pushRight, 5000);
-  }, 3000);
-
-}
-
-FrontIndexJs.prototype.insertEndBox = function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
-  const { ea, media, totalContents, standardWidth } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  let mainTong;
-  let blockTong;
-  let tongPaddingLeft;
-  let tongPaddingTop, tongPaddingBottom;
-  let fontSize, fontWeight;
-  let menuBetween;
-  let copyRightSize, copyRightWeight;
-
-  tongPaddingTop = <%% 54, 54, 48, 32, 5 %%>;
-  tongPaddingBottom = <%% 66, 66, 55, 39, 5.5 %%>;
-
-  fontSize = <%% 18, 17, 16, 14, 17 %%>;
-  fontWeight = <%% 800, 800, 800, 800, 600 %%>;
-  menuBetween = <%% 55, 48, 44, 32, 48 %%>;
-
-  copyRightSize = <%% 16, 15, 14, 12, 2.6 %%>;
-  copyRightWeight = <%% 400, 400, 400, 400, 400 %%>;
-
-  mainTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "block",
-      position: "relative",
-      background: colorChip.gray1,
-    },
-  });
-
-  blockTong = createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(standardWidth) + ea,
-      paddingTop: String(tongPaddingTop) + ea,
-      paddingBottom: String(tongPaddingBottom) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-    }
-  });
-
-  createNode({
-    mother: blockTong,
-    class: [ "hoverDefault_lite" ],
-    event: {
-      click: function (e) {
-        selfHref(FRONTHOST + "/aspiration.php");
-      }
-    },
-    text: "디자이너 파트너쉽",
-    style: {
-      display: desktop ? "inline-block" : "none",
-      position: "relative",
-      fontSize: String(fontSize) + ea,
-      fontWeight: String(fontWeight),
-      color: colorChip.black,
-      cursor: "pointer",
-      top: (isMac() || mobile) ? String(0) : String(3) + ea,
-    }
-  });
-
-  createNode({
-    mother: blockTong,
-    class: [ "hoverDefault_lite" ],
-    event: {
-      click: function (e) {
-        selfHref(FRONTHOST + "/about.php");
-      }
-    },
-    text: "자주 찾는 질문",
-    style: {
-      display: desktop ? "inline-block" : "none",
-      position: "relative",
-      fontSize: String(fontSize) + ea,
-      fontWeight: String(fontWeight),
-      color: colorChip.black,
-      marginLeft: String(menuBetween) + ea,
-      cursor: "pointer",
-      top: (isMac() || mobile) ? String(0) : String(3) + ea,
-    }
-  });
-
-  createNode({
-    mother: blockTong,
-    class: [ "hoverDefault_lite" ],
-    event: {
-      click: function (e) {
-        window.alert("제휴 문의는 help@home-liaison.com로 이메일을 보내주세요!");
-      }
-    },
-    text: "제휴 문의",
-    style: {
-      display: desktop ? "inline-block" : "none",
-      position: "relative",
-      fontSize: String(fontSize) + ea,
-      fontWeight: String(fontWeight),
-      color: colorChip.black,
-      marginLeft: String(menuBetween) + ea,
-      cursor: "pointer",
-      top: (isMac() || mobile) ? String(0) : String(3) + ea,
-    }
-  });
-
-  createNode({
-    mother: blockTong,
-    text: "Copyright " + String((new Date()).getFullYear()) + " HomeLiaison Inc. All rights reserved.",
-    style: {
-      display: "inline-block",
-      position: desktop ? "absolute" : "relative",
-      top: desktop ? String(tongPaddingTop + (<&& 3 | 3 | 3 | 3 | 0 &&>)) + ea : "",
-      right: desktop ? String(0) : "",
-      fontSize: String(copyRightSize) + ea,
-      fontWeight: String(copyRightWeight),
-      fontFamily: "mont",
-      color: colorChip.black,
-      textAlign: desktop ? "" : "center",
-      width: desktop ? "" : String(100) + '%',
-    }
-  });
-
-}
-
-FrontIndexJs.prototype.popupLaunching = function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref, blankHref } = GeneralJs;
-  const { ea, media, totalContents, standardWidth } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const popupFactorClassName = "popupFactorClassName";
-  const popupInboundClassName = "popupInboundClassName";
-  const popupCloseClassName = "popupCloseClassName";
-  const popupNeverClassName = "popupNeverClassName";
-  const keyName = "homeliaisonPopupBan";
-  let cancelBack, whitePopup;
-  let image;
-  let zIndex;
-  let speed;
-  let delay;
-  let popupWidth, popupHeight;
-  let buttonSize, buttonWeight, buttonBottom;
-  let exitEvent;
-
-  zIndex = 101;
-  speed = 0.3;
-  delay = 0.8;
-  image = FrontIndexJs.binaryPath + "/popup" + String(media.findIndex(boo => boo)) + ".jpg";
-
-  popupWidth = <%% 500, 450, 420, 360, 80 %%>;
-  popupHeight = <%% 574, 516, 480, 414, 92 %%>;
-
-  buttonSize = <%% 16, 16, 15, 14, 3 %%>;
-  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
-  buttonBottom = <%% -27, -27, -27, -25, -6 %%>;
-
-  exitEvent = () => {
-    const removeTargets = document.querySelectorAll('.' + popupFactorClassName);
-    for (let dom of removeTargets) {
-      totalContents.removeChild(dom);
-    }
-  }
-
-  if (window.localStorage.getItem(keyName) !== String(1)) {
-    cancelBack = createNode({
-      mother: totalContents,
-      class: [ popupFactorClassName ],
-      event: {
-        click: (e) => { exitEvent(); }
-      },
-      style: {
-        position: "fixed",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(100) + '%',
-        background: colorChip.realBlack,
+        display: "flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: String(boxBlock0MarginTop) + ea,
         opacity: String(0),
-        animation: "justfadein " + String(speed) + "s " + String(delay) + "s ease forwards",
-        zIndex: String(zIndex),
-      }
-    });
-
-    whitePopup = createNode({
-      mother: totalContents,
-      class: [ popupFactorClassName, popupInboundClassName ],
-      event: {
-        click: (e) => {
-          blankHref(FRONTHOST + "/miniAbout.php");
-          exitEvent();
-        },
-      },
-      style: {
-        display: "block",
-        position: "fixed",
-        top: withOut(50, popupHeight / 2, ea),
-        left: withOut(50, popupWidth / 2, ea),
-        width: String(popupWidth) + ea,
-        height: String(popupHeight) + ea,
-        background: colorChip.white,
-        backgroundImage: "url('" + image + "')",
-        backgroundSize: "100% auto",
-        backgroundPosition: "50% 50%",
-        boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
-        borderRadius: String(8) + "px",
-        animation: "fadeuporiginal " + String(speed) + "s " + String(delay) + "s ease forwards",
-        opacity: String(0),
-        transform: "translateY(20px)",
-        zIndex: String(zIndex),
-        cursor: "pointer",
+        width: withOut(0, ea),
+        height: String(boxBlockHeight) + ea,
+        background: colorExtended.white,
+        borderRadius: String(15) + "px",
+        border: "2px solid " + colorExtended.black,
+        boxSizing: "border-box",
+        transform: "translateY(30px)",
+        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+        zIndex: String(1),
       },
       children: [
         {
           style: {
-            display: "block",
+            position: "absolute",
+            right: String(2.5) + ea,
+            top: String(2.5) + ea,
+            width: String(1.2) + ea,
+            height: String(1.2) + ea,
+            borderRadius: String(1) + "px",
+            background: colorExtended.blueLight,
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            right: String(2.5) + ea,
+            bottom: String(2.5) + ea,
+            width: String(1.2) + ea,
+            height: String(1.2) + ea,
+            borderRadius: String(1) + "px",
+            background: colorExtended.blueLight,
+          }
+        },
+        {
+          text: "<b%STEP<u%.%u> 1%b><s%나만의 디자이너%s>를 추천받고",
+          style: {
+            display: "inline-block",
             position: "relative",
-            width: withOut(0, ea),
-            height: withOut(0, ea),
+            fontSize: String(4) + ea,
+            fontWeight: String(500),
+            color: colorExtended.black,
+            fontFamily: "pretendard",
+            top: String(-0.1) + ea,
+            marginRight: String(4.6) + ea,
           },
-          children: [
-            {
-              text: "닫기",
-              class: [ popupCloseClassName ],
-              event: {
-                click: (e) => {
-                  e.stopPropagation();
-                  exitEvent();
-                }
-              },
-              style: {
-                position: "absolute",
-                fontSize: String(buttonSize) + ea,
-                fontWeight: String(buttonWeight),
-                color: colorChip.white,
-                bottom: String(buttonBottom) + ea,
-                right: String(0) + ea,
-                cursor: "pointer",
-              }
-            },
-            {
-              text: "다시 보지 않기",
-              class: [ popupNeverClassName ],
-              event: {
-                click: (e) => {
-                  e.stopPropagation();
-                  window.localStorage.setItem(keyName, String(1));
-                  exitEvent();
-                }
-              },
-              style: {
-                position: "absolute",
-                fontSize: String(buttonSize) + ea,
-                fontWeight: String(buttonWeight),
-                color: colorChip.white,
-                bottom: String(buttonBottom) + ea,
-                left: String(0) + ea,
-                cursor: "pointer",
-              }
-            },
-          ]
+          bold: {
+            fontSize: String(4.5) + ea,
+            fontWeight: String(700),
+            color: colorExtended.black,
+            fontFamily: "mont",
+            position: "relative",
+            top: String(0.1) + ea,
+            marginRight: String(4.2) + ea,
+          },
+          under: {
+            fontSize: String(4.5) + ea,
+            fontWeight: String(700),
+            color: colorExtended.deactive,
+            fontFamily: "mont",
+            position: "relative",
+          },
+          special: {
+            fontSize: String(4) + ea,
+            fontWeight: String(800),
+            color: colorExtended.black,
+            fontFamily: "pretendard",
+          },
         }
       ]
     });
 
-  }
+    // box 2
+    boxBlock1 = createNode({
+      mother: firstBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: String(boxBlock1MarginTop) + ea,
+        opacity: String(0),
+        width: withOut(0, ea),
+        height: String(boxBlockHeight) + ea,
+        background: colorExtended.white,
+        borderRadius: String(15) + "px",
+        border: "2px solid " + colorExtended.black,
+        boxSizing: "border-box",
+        transform: "translateY(30px)",
+        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+        zIndex: String(1),
+      },
+      children: [
+        {
+          style: {
+            position: "absolute",
+            right: String(2.5) + ea,
+            top: String(2.5) + ea,
+            width: String(1.2) + ea,
+            height: String(1.2) + ea,
+            borderRadius: String(1) + "px",
+            background: colorExtended.blueLight,
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            right: String(2.5) + ea,
+            bottom: String(2.5) + ea,
+            width: String(1.2) + ea,
+            height: String(1.2) + ea,
+            borderRadius: String(1) + "px",
+            background: colorExtended.blueLight,
+          }
+        },
+        {
+          text: "<b%STEP<u%.%u> 2%b><s%맞춤형 인테리어%s>를 실현해봐요.",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(4) + ea,
+            fontWeight: String(500),
+            color: colorExtended.black,
+            fontFamily: "pretendard",
+            top: String(-0.1) + ea,
+          },
+          bold: {
+            fontSize: String(4.5) + ea,
+            fontWeight: String(700),
+            color: colorExtended.black,
+            fontFamily: "mont",
+            position: "relative",
+            top: String(0.1) + ea,
+            marginRight: String(4.2) + ea,
+          },
+          under: {
+            fontSize: String(4.5) + ea,
+            fontWeight: String(700),
+            color: colorExtended.deactive,
+            fontFamily: "mont",
+            position: "relative",
+          },
+          special: {
+            fontSize: String(4) + ea,
+            fontWeight: String(800),
+            color: colorExtended.black,
+            fontFamily: "pretendard",
+          },
+        }
+      ]
+    });
 
+    if (window.innerHeight < 700) {
+      totalHeight = 0;
+      totalHeight += mainTitleBlock.getBoundingClientRect().height;
+      totalHeight += subTitleBlock.getBoundingClientRect().height;
+      totalHeight += imageBlock.getBoundingClientRect().height;
+      totalHeight += window.innerWidth * ((subTitleBlockMarginTop + imageBlockMarginTop + boxBlock0MarginTop + boxBlock1MarginTop + boxBlockHeight + boxBlockHeight + instance.baseTop + instance.baseTop) / 100);
+      totalHeight += instance.naviHeight;
+      firstBase.style.paddingTop = String((window.innerHeight - totalHeight) / 2) + "px";
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-FrontIndexJs.prototype.insertThreeBox = function () {
+FrontIndexJs.prototype.insertSecondBox = async function () {
   const instance = this;
-  const { ea, media, standardWidth, totalContents } = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { firstFadeOutTargetClassName, secondBaseClassName } = this;
+  const colorConvertPoint0ClassName = "colorConvertPoint0ClassName";
+  const colorConvertPoint1ClassName = "colorConvertPoint1ClassName";
+  const colorConvertPoint2ClassName = "colorConvertPoint2ClassName";
+  const selectionBaseClassName = "selectionBaseClassName";
+  const finalSelectionCompleteFirstButtonClassName = "finalSelectionCompleteFirstButtonClassName";
+  const mobileCheckPointClassName = "mobileCheckPointClassName";
+  try {
+    let minusLeft;
+    let secondBase;
+    let serviceBase;
+    let textContent;
+    let descriptionSize;
+    let createServiceBlock;
+    let titleSize;
+    let descriptionMarginTop;
+    let boxWidth;
+    let betweenMargin;
+    let serviceMother;
+    let target;
+    let checkCircleWidth;
+    let buttonHeight;
+    let wordsMother, buttonMother;
+    let wordsMotherMarginTop;
+    let numberSize, numberWeight;
+    let numberBarHeight, numberBarMarginLeft;
+    let numberBarTop;
+    let titleMarginTop, titleWeight;
+    let descriptionWeight, descriptionVisualLeft;
+    let serviceAreMarginTop, serviceAreMarginBottom;
+    let serviceNameBoxWidth;
+    let serviceNameBoxHeight;
+    let serviceNameSize;
+    let serviceNameWeight;
+    let serviceNameTop;
+    let circleWidth0, circleWidth1, circleWidth2;
+    let circleBetween;
+    let circleGroupMarginTop;
+    let circleGroupMarginBottom;
+    let imageRatio;
+    let triangleZoneHeight;
+    let triangleWidth;
+    let serviceDescriptionHeight;
+    let serviceDescriptionSize, serviceDescriptionWeight;
+    let serviceDescriptionLineHeight;
+    let serviceDescriptionTextTop;
+    let plusSize, plusWeight, plusPaddingLeft, plusPaddingTop, plusPaddingBottom;
+    let plusBoxHeight, plusBoxMarginRight;
+    let checkCircleAreaHeight;
+    let buttonMotherMarginBottom;
+    let buttonWidth, buttonSize, buttonWeight, buttonTextTop;
+    let selectionDomMaker;
+    let numbersAreaMarginTop;
+    let originalSecondBaseHeight;
+    let transitionString;
+    let selectionForceEvent;
+    let focusAnimation;
+    let mobileLeftBox, mobileRightBox;
+    let mobileBoxInnerPadding;
+    let mobileLeftBoxWidth;
+    let mobileTitleSize, mobileEngSize;
+    let mobileEngTextTop, mobileBoxLineMargin;
+    let mobileWhiteBoxHeight;
+    let mobileWhiteBoxBetween;
+    let mobileBlueLineHeight;
+    let plusVisualTop;
+
+    minusLeft = window.innerWidth - standardWidth + 1;
+
+    titleMarginTop = <%% 25, 21, 15, 10, 2 %%>;
+    titleSize = <%% 25, 24, 22, 19, 4.7 %%>;
+    titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+    descriptionSize = <%% 15, 14, 13, 12, 3.2 %%>;
+    descriptionMarginTop = <%% (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 4 : 2), (isMac() ? 3 : 1), 0.6 %%>;
+    descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
+    descriptionVisualLeft = <%% -1, -1, -1, -1, -0.1 %%>;
+
+    betweenMargin = <%% 26, 16, 12, 8, 26 %%>;
+
+    wordsMotherMarginTop = <%% 120, 120, 110, 90, 16 %%>;
+    numbersAreaMarginTop = heightTong.numbers;
+
+    numberSize = <%% 28, 26, 24, 21, 5 %%>;
+    numberWeight = <%% 700, 700, 700, 700, 700 %%>;
+    numberBarHeight = <%% 28, 24, 22, 19, 4.5 %%>;
+    numberBarMarginLeft = <%% 12, 12, 10, 9, 2.1 %%>;
+    numberBarTop = <%% -1, -1, -1, -1, -0.4 %%>;
+
+    serviceAreMarginTop = <%% 100, 80, 60, 40, 9.5 %%>;
+    serviceAreMarginBottom = <%% 100, 80, 60, 40, 7.5 %%>;
+
+    serviceNameBoxWidth = <%% 156, 140, 130, 120, 15 %%>;
+    serviceNameBoxHeight = <%% 40, 36, 32, 30, 4 %%>;
+    serviceNameSize = <%% 17, 16, 14, 13, 3 %%>;
+    serviceNameWeight = <%% 800, 800, 800, 800, 800 %%>;
+    serviceNameTop = <%% (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), (isMac() ? -0.5 : 1), -0.5 %%>;
+
+    circleWidth0 = <%% 8, 8, 8, 6, 8 %%>;
+    circleWidth1 = <%% 6, 6, 6, 4, 6 %%>;
+    circleWidth2 = <%% 4, 4, 4, 2, 4 %%>;
+    circleBetween = <%% 6, 6, 6, 5, 6 %%>;
+
+    circleGroupMarginTop = <%% 11, 11, 11, 9, 11 %%>;
+    circleGroupMarginBottom = <%% 13, 13, 13, 11, 13 %%>;
+
+    imageRatio = <%% 75, 80, 82, 85, 99 %%>;
+
+    triangleZoneHeight = <%% 50, 45, 40, 32, 50 %%>;
+    triangleWidth = <%% 12, 11, 10, 9, 12 %%>;
+
+    serviceDescriptionHeight = <%% 98, 86, 76, 64, 98 %%>;
+    serviceDescriptionSize = <%% 16, 15, 13, 12, 2.7 %%>;
+    serviceDescriptionWeight = <%% 700, 700, 700, 700, 400 %%>;
+    serviceDescriptionLineHeight = <%% 1.52, 1.52, 1.52, 1.52, 1.4 %%>;
+    serviceDescriptionTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+
+    plusSize = <%% 15, 15, 13, 12, 2.6 %%>;
+    plusWeight = <%% 700, 700, 700, 700, 700 %%>;
+    plusPaddingLeft = <%% 3, 3, 3, 3, 0.4 %%>;
+    plusPaddingTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0.1 %%>;
+    plusPaddingBottom = <%% (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), 0.1 %%>;
+    plusBoxHeight = <%% 11, 11, 11, 11, 2 %%>;
+    plusBoxMarginRight = <%% 4.5, 4.5, 4.5, 4.5, 0.5 %%>;
+    plusVisualTop = <%% (isMac() ? 0 : -1), (isMac() ? 0 : -1), (isMac() ? 0 : -1), (isMac() ? 0 : -1), 0 %%>;
+
+    checkCircleAreaHeight = <%% 80, 64, 52, 45, 80 %%>;
+    checkCircleWidth = <%% 23, 21, 19, 17, 3.6 %%>;
+
+    buttonMotherMarginBottom = <%% 140, 140, 120, 90, 22 %%>;
+    buttonHeight = <%% 42, 42, 38, 32, 9 %%>;
+    buttonWidth = <%% 120, 120, 110, 90, 24 %%>;
+    buttonSize = <%% 17, 17, 16, 14, 3.6 %%>;
+    buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+
+    originalSecondBaseHeight = heightTong.second;
+
+    mobileWhiteBoxHeight = 48.8;
+    mobileWhiteBoxBetween = 2;
+    mobileBoxInnerPadding = 4.5;
+    mobileLeftBoxWidth = 42;
+    mobileTitleSize = 4;
+    mobileEngSize = 2.8;
+    mobileEngTextTop = -0.3;
+    mobileBoxLineMargin = 2.4;
+    mobileBlueLineHeight = 2;
+
+    instance.totalValues[0] = 0;
+
+    instance.animationStop = true;
+    focusAnimation = "focusProgress 4s ease infinite";
+
+    selectionForceEvent = (isOn = true) => {
+      const target = document.querySelector('.' + finalSelectionCompleteFirstButtonClassName);
+      if (isOn) {
+        target.style.animation = focusAnimation;
+        target.style.background = colorExtended.ultimateBlack;
+      } else {
+        target.style.animation = "";
+        target.style.background = colorExtended.darkBlack;
+      }
+    }
+
+    transitionString = "all 0.4s ease";
+
+    secondBase = createNode({
+      mother: baseTong,
+      class: [ secondBaseClassName ],
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        justifyContent: "start",
+        alignItems: "start",
+        flexDirection: "column",
+        height: String(originalSecondBaseHeight) + ea,
+      },
+      child: {
+        style: {
+          position: "absolute",
+          top: String(-31) + ea,
+          left: String(-1 * 6) + ea,
+          background: colorExtended.black,
+          width: withOut(-1 * (6 * 2), ea),
+          height: withOut(0, ea),
+        },
+      }
+    });
+
+    selectionDomMaker = (secondBase, returnMode = false) => {
+
+      textContent = objectDeepCopy(instance.totalMenu[0]);
+      boxWidth = (standardWidth - (betweenMargin * (textContent.length - 1))) / textContent.length;
+      for (let i = 0; i < textContent.length; i++) {
+        if (instance.totalValues[0] === null) {
+          if (i === 1) {
+            textContent[i].default = true;
+          } else {
+            textContent[i].default = false;
+          }
+        } else {
+          if (i === instance.totalValues[0]) {
+            textContent[i].default = true;
+          } else {
+            textContent[i].default = false;
+          }
+        }
+      }
+      instance.totalMenu[0] = objectDeepCopy(textContent);
+
+      if (returnMode) {
+        secondBase.style.height = String(originalSecondBaseHeight) + ea;
+      }
+      serviceMother = createNode({
+        mother: secondBase,
+        class: [ firstFadeOutTargetClassName ],
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: desktop ? "row" : "column",
+          paddingTop: String(serviceAreMarginTop) + ea,
+          paddingBottom: String(serviceAreMarginBottom) + ea,
+          opacity: String(0),
+          transform: "translateY(30px)",
+          animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+        }
+      });
+      createServiceBlock = (index, thisMother = serviceMother) => {
+        if (typeof index === "number") {
+          target = textContent[index];
+        } else {
+          target = objectDeepCopy(index);
+        }
+        serviceBase = createNode({
+          mother: thisMother,
+          attribute: {
+            index: String(index),
+            toggle: (target.default ? "on" : "off"),
+            draggable: "false",
+          },
+          class: [ selectionBaseClassName ],
+          event: {
+            click: async function (e) {
+              try {
+                const itemList = [ ...document.querySelectorAll('.' + selectionBaseClassName) ];
+                const index = Number(this.getAttribute("index"));
+                const valueIndex = 0;
+                const toggle = this.getAttribute("toggle");
+                let target0, target1, target2;
+                if (desktop) {
+                  if (toggle === "on") {
+                    for (let dom of itemList) {
+                      target0 = dom.querySelector('.' + colorConvertPoint0ClassName);
+                      target1 = dom.querySelector('.' + colorConvertPoint1ClassName);
+                      target2 = dom.querySelector('.' + colorConvertPoint2ClassName);
+                      if (Number(dom.getAttribute("index")) === index) {
+                        dom.style.opacity = String(0.5);
+                        dom.setAttribute("toggle", "off");
+                        target1.style.background = colorExtended.blueDark;
+                        target1.firstChild.style.color = colorExtended.darkBlack;
+                        target2.style.opacity = String(1);
+                      } else {
+                        dom.style.opacity = String(0.5);
+                        dom.setAttribute("toggle", "off");
+                        target1.style.background = colorExtended.blueDark;
+                        target1.firstChild.style.color = colorExtended.darkBlack;
+                        target2.style.opacity = String(1);
+                      }
+                    }
+                    instance.totalValues[valueIndex] = null;
+                    selectionForceEvent(false);
+                  } else {
+                    for (let dom of itemList) {
+                      target0 = dom.querySelector('.' + colorConvertPoint0ClassName);
+                      target1 = dom.querySelector('.' + colorConvertPoint1ClassName);
+                      target2 = dom.querySelector('.' + colorConvertPoint2ClassName);
+                      if (Number(dom.getAttribute("index")) === index) {
+                        dom.style.opacity = String(1);
+                        dom.setAttribute("toggle", "on");
+                        target1.style.background = colorExtended.blueDim;
+                        target1.firstChild.style.color = colorExtended.white;
+                        target2.style.opacity = String(0);
+                      } else {
+                        dom.style.opacity = String(0.5);
+                        dom.setAttribute("toggle", "off");
+                        target1.style.background = colorExtended.blueDark;
+                        target1.firstChild.style.color = colorExtended.darkBlack;
+                        target2.style.opacity = String(1);
+                      }
+                    }
+                    instance.totalValues[valueIndex] = index;
+                    await instance.updateImmediately(valueIndex, index, textContent.map((o) => { return o.value }));
+                    selectionForceEvent(true);
+                  }
+                } else {
+                  if (toggle === "on") {
+                    for (let dom of itemList) {
+                      target0 = dom.querySelector('.' + mobileCheckPointClassName);
+                      if (Number(dom.getAttribute("index")) === index) {
+                        dom.style.opacity = String(0.6);
+                        dom.setAttribute("toggle", "off");
+                        target0.style.opacity = String(0);
+                      } else {
+                        dom.style.opacity = String(0.6);
+                        dom.setAttribute("toggle", "off");
+                        target0.style.opacity = String(0);
+                      }
+                    }
+                    instance.totalValues[valueIndex] = null;
+                  } else {
+                    for (let dom of itemList) {
+                      target0 = dom.querySelector('.' + mobileCheckPointClassName);
+                      if (Number(dom.getAttribute("index")) === index) {
+                        dom.style.opacity = String(1);
+                        dom.setAttribute("toggle", "on");
+                        target0.style.opacity = String(1);
+                      } else {
+                        dom.style.opacity = String(0.6);
+                        dom.setAttribute("toggle", "off");
+                        target0.style.opacity = String(0);
+                      }
+                    }
+                    instance.totalValues[valueIndex] = index;
+                    await instance.updateImmediately(valueIndex, index, textContent.map((o) => { return o.value }));
+                  }
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            },
+            mouseenter: function (e) {
+              if (desktop) {
+                if (!instance.animationStop) {
+                  const toggle = this.getAttribute("toggle");
+                  const target0 = this.querySelector('.' + colorConvertPoint0ClassName);
+                  const target1 = this.querySelector('.' + colorConvertPoint1ClassName);
+                  this.style.opacity = String(1);
+                  target0.firstChild.style.color = colorExtended.focusBlue;
+                  target1.style.background = colorExtended.blueDim;
+                  target1.firstChild.style.color = colorExtended.white;
+                }
+              }
+            },
+            mouseleave: function (e) {
+              if (desktop) {
+                if (!instance.animationStop) {
+                  const toggle = this.getAttribute("toggle");
+                  const target0 = this.querySelector('.' + colorConvertPoint0ClassName);
+                  const target1 = this.querySelector('.' + colorConvertPoint1ClassName);
+                  if (toggle === "on") {
+                    this.style.opacity = String(1);
+                  } else {
+                    this.style.opacity = String(0.5);
+                    target1.style.background = colorExtended.blueDark;
+                    target1.firstChild.style.color = colorExtended.darkBlack;
+                  }
+                  target0.firstChild.style.color = colorExtended.black;
+                }
+              }
+            }
+          },
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: desktop ? String(boxWidth) + ea : withOut(0, ea),
+            flexDirection: desktop ? "column" : "row",
+            alignItems: "center",
+            justifyContent: "start",
+            opacity: desktop ? String(target.default ? 1 : 0.5) : String(target.default ? 1 : 0.6),
+            marginLeft: (desktop && target.margin) ? String(betweenMargin) + ea : "",
+            marginRight: (desktop && target.margin) ? String(betweenMargin) + ea : "",
+            transition: transitionString,
+            cursor: "pointer",
+            height: desktop ? "" : String(mobileWhiteBoxHeight) + ea,
+            borderRadius: desktop ? "" : String(10) + "px",
+            background: desktop ? "" : colorExtended.white,
+            boxShadow: desktop ? "" : "0px 5px 15px -9px " + colorExtended.darkDarkShadow,
+            marginBottom: desktop ? "" : String(mobileWhiteBoxBetween) + ea,
+          }
+        });
+
+        if (desktop) {
+
+          createNode({
+            mother: serviceBase,
+            class: [ colorConvertPoint0ClassName ],
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(serviceNameBoxWidth) + ea,
+              height: String(serviceNameBoxHeight) + ea,
+              borderRadius: String(serviceNameBoxHeight) + ea,
+              background: colorExtended.white,
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0px 2px 12px -9px " + colorExtended.darkShadow,
+              transition: transitionString,
+            },
+            child: {
+              text: target.title,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(serviceNameSize) + ea,
+                fontWeight: String(serviceNameWeight),
+                color: colorExtended.black,
+                top: String(serviceNameTop) + ea,
+                transition: transitionString,
+              }
+            }
+          });
+          createNode({
+            mother: serviceBase,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(circleWidth0) + ea,
+              height: String(circleWidth0) + ea,
+              borderRadius: String(circleWidth0) + ea,
+              background: colorExtended.white,
+              marginTop: String(circleGroupMarginTop) + ea,
+            }
+          });
+          createNode({
+            mother: serviceBase,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(circleWidth1) + ea,
+              height: String(circleWidth1) + ea,
+              borderRadius: String(circleWidth1) + ea,
+              background: colorExtended.white,
+              marginTop: String(circleBetween) + ea,
+              opacity: String(0.7),
+            }
+          });
+          createNode({
+            mother: serviceBase,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(circleWidth2) + ea,
+              height: String(circleWidth2) + ea,
+              borderRadius: String(circleWidth2) + ea,
+              background: colorExtended.white,
+              marginTop: String(circleBetween) + ea,
+              opacity: String(0.4),
+            }
+          });
+          createNode({
+            mother: serviceBase,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(boxWidth) + ea,
+              height: String(boxWidth) + ea,
+              borderRadius: String(8) + "px",
+              background: colorExtended.gradientWhite2,
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0px 3px 15px -9px " + colorExtended.darkShadow,
+              marginTop: String(circleGroupMarginBottom) + ea,
+            },
+            child: {
+              mode: "img",
+              attribute: {
+                src: FrontIndexJs.binaryPath + target.source,
+              },
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(imageRatio) + '%',
+              }
+            }
+          });
+          createNode({
+            mother: serviceBase,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(triangleZoneHeight) + ea,
+              alignItems: "center",
+              justifyContent: "center",
+            },
+            child: {
+              mode: "svg",
+              source: svgMaker.generalTriangle(colorExtended.blueDark),
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(triangleWidth) + ea,
+              }
+            }
+          });
+          createNode({
+            mother: serviceBase,
+            class: [ colorConvertPoint1ClassName ],
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(boxWidth) + ea,
+              height: String(serviceDescriptionHeight) + ea,
+              borderRadius: String(8) + "px",
+              background: (target.default ? colorExtended.blueDim : colorExtended.blueDark),
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0px 2px 12px -9px " + colorExtended.blueDim,
+              transition: transitionString,
+            },
+            child: {
+              text: target.description.join(target.plus ? "\n<b%+%b>" : "\n"),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(serviceDescriptionSize) + ea,
+                fontWeight: String(serviceDescriptionWeight),
+                color: (target.default ? colorExtended.white : colorExtended.darkBlack),
+                textAlign: "center",
+                lineHeight: String(serviceDescriptionLineHeight),
+                top: String(serviceDescriptionTextTop) + ea,
+                transition: transitionString,
+              },
+              bold: {
+                display: "inline-flex",
+                position: "relative",
+                "justify-content": "center",
+                "align-items": "center",
+                color: colorExtended.mainBlue,
+                fontWeight: String(plusWeight),
+                fontSize: String(plusSize) + ea,
+                background: colorExtended.white,
+                padding: String(plusPaddingLeft) + ea,
+                paddingTop: String(plusPaddingTop) + ea,
+                paddingBottom: String(plusPaddingBottom) + ea,
+                height: String(plusBoxHeight) + ea,
+                "border-radius": String(8) + ea,
+                marginRight: String(plusBoxMarginRight) + ea,
+                top: String(plusVisualTop) + ea,
+              }
+            }
+          });
+          createNode({
+            mother: serviceBase,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(checkCircleAreaHeight) + ea,
+              alignItems: "center",
+              justifyContent: "center",
+            },
+            child: {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(checkCircleWidth) + ea,
+                height: String(checkCircleWidth) + ea,
+                borderRadius: String(checkCircleWidth) + ea,
+              },
+              child: {
+                mode: "svg",
+                source: svgMaker.checkCircle(colorExtended.white),
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(checkCircleWidth) + ea,
+                },
+                previous: {
+                  class: [ colorConvertPoint2ClassName ],
+                  style: {
+                    position: "absolute",
+                    top: String(0),
+                    left: String(0),
+                    width: String(checkCircleWidth) + ea,
+                    height: String(checkCircleWidth) + ea,
+                    borderRadius: String(checkCircleWidth) + ea,
+                    background: colorExtended.white,
+                    opacity: String(target.default ? 0 : 1),
+                  },
+                }
+              }
+            }
+          });
+
+        } else {
+
+          mobileLeftBox = createNode({
+            mother: serviceBase,
+            style: {
+              display: "inline-flex",
+              flexDirection: "column",
+              position: "relative",
+              width: String(mobileLeftBoxWidth - (mobileBoxInnerPadding * 2)) + ea,
+              height: withOut(mobileBoxInnerPadding * 2, ea),
+              justifyContent: "end",
+              alignItems: "start",
+              padding: String(mobileBoxInnerPadding) + ea,
+            },
+            children: [
+              {
+                text: target.title,
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(mobileTitleSize) + ea,
+                  fontWeight: String(700),
+                  color: colorExtended.black,
+                }
+              },
+              {
+                text: target.english,
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontFamily: "graphik",
+                  fontSize: String(mobileEngSize) + ea,
+                  fontWeight: String(200),
+                  color: colorExtended.black,
+                  top: String(mobileEngTextTop) + ea,
+                }
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  height: String(mobileBlueLineHeight) + ea,
+                  borderBottom: "1px solid " + colorExtended.mainBlue,
+                  marginBottom: String(mobileBoxLineMargin) + ea,
+                }
+              },
+              {
+                text: target.description.join(target.plus ? "\n<b%+%b>" : "\n"),
+                style: {
+                  display: "block",
+                  position: "relative",
+                  fontSize: String(serviceDescriptionSize) + ea,
+                  fontWeight: String(serviceDescriptionWeight),
+                  color: colorExtended.black,
+                  textAlign: "left",
+                  lineHeight: String(serviceDescriptionLineHeight),
+                  top: String(serviceDescriptionTextTop) + ea,
+                  transition: transitionString,
+                },
+                bold: {
+                  display: "inline-flex",
+                  position: "relative",
+                  "justify-content": "center",
+                  "align-items": "center",
+                  color: colorExtended.white,
+                  fontWeight: String(plusWeight),
+                  fontSize: String(plusSize) + ea,
+                  background: colorExtended.blueDark,
+                  padding: String(plusPaddingLeft) + ea,
+                  paddingTop: String(plusPaddingTop) + ea,
+                  paddingBottom: String(plusPaddingBottom) + ea,
+                  height: String(plusBoxHeight) + ea,
+                  "border-radius": String(8) + ea,
+                  marginRight: String(plusBoxMarginRight) + ea,
+                }
+              }
+            ]
+          });
+
+          mobileRightBox = createNode({
+            mother: serviceBase,
+            style: {
+              display: "inline-flex",
+              flexDirection: "column",
+              position: "relative",
+              width: withOut(mobileLeftBoxWidth + mobileBoxInnerPadding, ea),
+              height: withOut(mobileBoxInnerPadding * 2, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              padding: String(mobileBoxInnerPadding) + ea,
+              paddingLeft: String(0) + ea,
+            },
+            child: {
+              mode: "img",
+              attribute: {
+                src: FrontIndexJs.binaryPath + target.source,
+              },
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(imageRatio) + '%',
+              }
+            }
+          });
+
+          createNode({
+            mother: mobileLeftBox,
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              top: String(mobileBoxInnerPadding) + ea,
+              left: String(mobileBoxInnerPadding) + ea,
+              width: String(checkCircleWidth) + ea,
+              height: String(checkCircleWidth) + ea,
+              borderRadius: String(checkCircleWidth) + ea,
+              overflow: "visible",
+            },
+            child: {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+              },
+              child: {
+                mode: "svg",
+                source: svgMaker.checkCircle(colorExtended.white),
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(checkCircleWidth) + ea,
+                },
+                next: {
+                  position: "absolute",
+                  top: String(0),
+                  left: String(0),
+                  width: String(checkCircleWidth) + ea,
+                  height: String(checkCircleWidth) + ea,
+                  borderRadius: String(checkCircleWidth) + ea,
+                  zIndex: String(1),
+                  border: "1px solid " + colorExtended.mainBlue,
+                  boxSizing: "border-box",
+                },
+                previous: {
+                  class: [ mobileCheckPointClassName ],
+                  style: {
+                    position: "absolute",
+                    top: String(0),
+                    left: String(0),
+                    width: String(checkCircleWidth) + ea,
+                    height: String(checkCircleWidth) + ea,
+                    borderRadius: String(checkCircleWidth) + ea,
+                    background: colorExtended.mainBlue,
+                    opacity: String(target.default ? 1 : 0),
+                  },
+                }
+              }
+            }
+          });
+
+        }
+
+      }
+      for (let i = 0; i < textContent.length; i++) {
+        createServiceBlock(i);
+      }
+      buttonMother = createNode({
+        mother: secondBase,
+        class: [ firstFadeOutTargetClassName ],
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "row",
+          height: String(buttonHeight) + ea,
+          marginBottom: String(buttonMotherMarginBottom) + ea,
+          opacity: String(0),
+          transform: "translateY(30px)",
+          animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+        },
+        child: {
+          class: [ finalSelectionCompleteFirstButtonClassName ],
+          event: {
+            click: async function (e) {
+              const targets = [ ...document.querySelectorAll('.' + selectionBaseClassName) ];
+              const target = targets.find((d) => { return d.getAttribute("toggle") === "on" });
+              let convertingFunction, thisIndex;
+              if (target === undefined) {
+                window.alert("서비스를 선택해주세요!");
+              } else {
+                thisIndex = Number(target.getAttribute("index"));
+                instance.totalValues[0] = thisIndex;
+                window.history.pushState({ mode: "first" }, "");
+                if (thisIndex === 0) {
+                  convertingFunction = instance.thirdConverting(true).bind(this);
+                } else {
+                  convertingFunction = instance.firstConverting().bind(this);
+                }
+                await convertingFunction(e);
+              }
+            }
+          },
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(buttonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            borderRadius: String(10) + "px",
+            background: colorExtended.darkBlack,
+            justifyContent: "center",
+            alignItems: "center",
+            border: "1px solid " + colorExtended.blueDark,
+            cursor: "pointer",
+            opacity: String(1),
+            transformOrigin: "center",
+            transform: "scale(1)",
+            animation: "",
+            transition: "all 0.5s ease",
+          },
+          child: {
+            text: "선택 완료",
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorExtended.white,
+              top: String(buttonTextTop) + ea,
+            }
+          }
+        }
+      });
+    }
+    instance.selectionDomMaker = selectionDomMaker;
+
+    selectionDomMaker(secondBase, false);
+
+    return secondBase;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+FrontIndexJs.prototype.firstConverting = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { initAreaClassName, firstFadeOutTargetClassName, secondBaseClassName, firstBarTargetClassName } = this;
+  return async function (e) {
+    try {
+      const secondBase = document.querySelector('.' + secondBaseClassName);
+      const blackTarget = document.querySelector('.' + initAreaClassName);
+      const fadeOutTargets = [ ...document.querySelectorAll('.' + firstFadeOutTargetClassName) ];
+      let blackScrollTop;
+      let numbersAreaMarginTop;
+
+      blackScrollTop = heightTong.scroll;
+      numbersAreaMarginTop = heightTong.numbers;
+
+      homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "convertingPage",
+        data: {
+          cliid: instance.client.cliid,
+          date: new Date(),
+          order: "first",
+        },
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      blackTarget.style.transition = "all 0.6s ease";
+      if (blackTarget.style.marginTop.replace(/[^0-9\-]/gi, '') === String(blackScrollTop)) {
+        scrollTo(window, 0, 0, false, async () => {
+          for (let dom of fadeOutTargets) {
+            dom.style.animation = "fadeoutlite 0.6s ease forwards";
+          }
+          setQueue(() => {
+            instance.insertThirdBox(secondBase).catch((err) => {
+              console.log(err);
+            });
+          }, 600);
+        });
+      } else {
+        scrollTo(window, 0, 0, true);
+        setQueue(() => {
+          blackTarget.style.marginTop = String(blackScrollTop) + ea;
+          fadeOutTargets[0].style.marginTop = String(numbersAreaMarginTop) + ea;
+          setQueue(() => {
+            for (let dom of fadeOutTargets) {
+              dom.style.animation = "fadeoutlite 0.6s ease forwards";
+            }
+            setQueue(() => {
+              instance.insertThirdBox(secondBase).catch((err) => {
+                console.log(err);
+              });
+            }, 450);
+          }, 600);
+        }, 300);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+FrontIndexJs.prototype.insertBarBox = async function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight } = this;
+  const px = "px";
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, colorExtended, withOut, ajaxJson, isMac, isIphone, svgMaker, selfHref } = GeneralJs;
-  let contents;
-  let middleTongPaddinngTop;
-  let middleTongPaddingBottom;
-  let middleTong;
-  let middleTitleSize;
-  let middleTitleWeight;
-  let middleTitlePadding;
-  let middleTitleLineTop;
-  let middleTitleTextTop;
-  let middleAreaPaddingTop;
-  let middleInfoSize;
-  let middleTitleMarginBottom;
-  let threeBetween;
-  let threeHeight;
-  let threeBlock;
-  let threeBlockMarginTop;
-  let threeVisualPaddingBottom;
-  let threeWidth0, threeWidth1;
-  let threeSize, threeWeight, threeSmallSize;
-  let blackCircleWidth;
-  let numberTop, numberLeft, numberSize, numberWeight;
-  let mainBetween, subBetween, subTop;
-  let mainTong, blockTong;
-  let threeBlockWidth, threeBlockHeight;
-  let threeTitleSize, threeTitleWeight;
-  let threePhotoHeight;
-  let threeTitlePaddingLeft;
-  let threeTitleAreaHeight;
-  let threeDescriptionBoxPaddingTop, threeDescriptionBoxBetween;
-  let checkBoxWidth, checkBoxMarginRight, checkBoxTop;
-  let arrowBottom, arrowWidth, arrowHeight;
-  let boxNumber;
-  let mobileBlockPadding;
-  let mobileBlockPaddingTop;
-  let mobilePhotoMarginBottom;
-  let mobileTitleMarginBottom;
-  let mobileContentsMarginBottom;
-  let titleTextTop, descriptionTextTop;
+  const { firstBarTargetClassName } = this;
+  try {
+    let thirdBase;
+    let minusLeft;
+    let x, y, z;
+    let radius;
+    let barAreaHeight;
+    let flagWidth;
+    let flagRight;
+    let flagTop;
+    let commentAreaTop;
+    let commentAreaLeft;
+    let commentAreaWidth;
+    let commentAreaHeight;
+    let commentTriangleWidth;
+    let commentSize, commentWeight, commentTextTop;
 
-  middleTongPaddinngTop = <%% 160, 140, 110, 95, 0 %%>;
-  middleTongPaddingBottom = <%% 180, 150, 120, 105, 0 %%>;
-  middleTitleMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
+    radius = <%% 5, 5, 4, 3, 4 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 56, 49, 12 %%>;
+    x = <%% 2, 2, 2, 2, 1 %%>;
+    y = <%% 5, 5, 5, 5, 3 %%>;
+    z = <%% 8, 8, 8, 8, 5 %%>;
 
-  middleTitleSize = <%% 24, 23, 22, 18, 3.9 %%>;
-  middleTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  middleTitlePadding = <%% 16, 16, 12, 10, 1.8 %%>;
-  middleTitleTextTop = <%% 0, 0, 0, 0, 0 %%>;
+    barAreaHeight = <%% 270, 270, 250, 180, 32 %%>;
+    flagWidth = <%% 23, 23, 21, 19, 3.5 %%>;
+    flagRight = <%% -19, -19, -18, -17, -3 %%>;
+    flagTop = <%% -34, -34, -32, -30, -5.6 %%>;
 
-  middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 13, 13, 12, 12, 2.7 %%>;
+    commentAreaTop = <%% -52, -52, -50, -42, -9 %%>;
+    commentAreaLeft = <%% 2, 2, 2, 2, 0.3 %%>;
+    commentAreaWidth = <%% 286, 286, 270, 216, 44.3 %%>;
+    commentAreaHeight = <%% 32, 32, 28, 26, 6.1 %%>;
 
-  threeBetween = <%% 10, 10, 6, 4, 1 %%>;
-  threeHeight = <%% 170, 120, 110, 84, 21 %%>;
-  threeVisualPaddingBottom = <%% 2, 2, 2, 2, 0.5 %%>;
-  threeBlockMarginTop = <%% 42, 36, 28, 24, 0 %%>;
+    commentTriangleWidth = <%% 8, 8, 8, 6, 1.6 %%>;
 
-  threeWidth0 = <%% 525, 525, 525, 525, 525 %%>;
-  threeWidth1 = <%% 330, 330, 330, 330, 330 %%>;
+    commentSize = <%% 14, 14, 13, 12, 2.5 %%>;
+    commentWeight = <%% 700, 700, 700, 700, 700 %%>;
+    commentTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
-  threeTitleSize = <%% 18, 17, 16, 14, 3.8 %%>;
-  threeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+    minusLeft = window.innerWidth - standardWidth + 1;
 
-  threeSize = <%% 13, 13, 12, 11, 2.6 %%>;
-  threeWeight = <%% 400, 400, 400, 400, 400 %%>;
-  threeSmallSize = <%% 13, 12, 10, 10, 2.5 %%>;
-
-  blackCircleWidth = <%% 40, 36, 32, 28, 3 %%>;
-
-  numberTop = <%% 14, 14, 12, 10, 2.5 %%>;
-  numberLeft = <%% 22, 22, 20, 16, 3.5 %%>;
-  numberSize = <%% 13, 13, 12, 10, 2.5 %%>;
-  numberWeight = <%% 500, 500, 500, 500, 500 %%>;
-
-  mainBetween = <%% 4, 4, 2, 2, 0.5 %%>;
-  subBetween = <%% 6, 6, 6, 6, 0.5 %%>;
-  subTop = <%% 3, 3, 3, 3, 0.5 %%>;
-
-  threeBlockWidth = <%% 390, 340, 290, 234, 31 %%>;
-  threeBlockHeight = <%% 457, 408, 385, 338, 26.4 %%>;
-
-  threePhotoHeight = <%% 310, 270, 260, 230, 230 %%>;
-  threeTitlePaddingLeft = <%% 26, 26, 24, 21, 4.8 %%>;
-  threeTitleAreaHeight = <%% 60, 50, 48, 40, 5 %%>;
-
-  threeDescriptionBoxPaddingTop = <%% 23, 23, 19, 16, 5.2 %%>;
-  threeDescriptionBoxBetween = <%% 5, 5, 5, 4, (isIphone() ? 0.8 : 1) %%>;
-
-  checkBoxWidth = <%% 10, 10, 9, 8, 2 %%>;
-  checkBoxMarginRight = <%% 6, 6, 6, 5, 1 %%>;
-  checkBoxTop = <%% 5, 5, 4, 4, 1 %%>;
-
-  arrowBottom = <%% 27, 27, 24, 22, (isIphone() ? 6.3 : 6) %%>;
-  arrowWidth = <%% 36, 36, 20, 12, 3 %%>;
-  arrowHeight = <%% 10, 10, 8, 4, 1.5 %%>;
-
-  mobileBlockPaddingTop = 11;
-  mobileBlockPadding = 14;
-  mobilePhotoMarginBottom = 6;
-  mobileTitleMarginBottom = 2.5;
-  mobileContentsMarginBottom = 4;
-
-  titleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 1), 0 %%>;
-  descriptionTextTop = <%% (isMac() ? 0 : 2.5), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 1.5), 0 %%>;
-
-  contents = {
-    title: "나에게 맞는 서비스, 나에게 맞는 디자이너",
-    description: [
-      "홈리에종은 내게 맞는 서비스와 디자이너를 선택하는 과정부터 시작합니다.",
-      "내 상황에 딱 맞는 서비스를 고르고 디자이너를 추천받아 보세요!",
-    ],
-    three: [
-      {
-        title: "홈퍼니싱",
-        sub: "home-furnishing",
-        description: [
-          "인테리어 시공 없이 가구, 패브릭, 소품만",
-          "집 무드를 변화시켜주는 스타일링",
-        ],
-        color: colorExtended.mainBlue,
-        background: FrontIndexJs.binaryPath + "/" + "startf0.jpg",
-        href: FRONTHOST + "/service.php?mode=furnishing",
-      },
-      {
-        title: "홈스타일링",
-        sub: "home-styling",
-        description: [
-          "집 컨디션에 맞는 범위의 시공을 진행",
-          "컨셉에 맞게 변화시켜주는 스타일링",
-        ],
-        color: colorExtended.mainBlue,
-        background: FrontIndexJs.binaryPath + "/" + "starts0.jpg",
-        href: FRONTHOST + "/service.php?mode=styling",
-      },
-      {
-        title: "토탈 스타일링",
-        sub: "total-styling",
-        description: [
-          "원하는 스타일과 라이프 패턴에 맞게 기획",
-          "전체적인 구조를 변경하는 스타일링",
-        ],
-        color: colorExtended.mainBlue,
-        background: FrontIndexJs.binaryPath + "/" + "startt0.jpg",
-        href: FRONTHOST + "/service.php?mode=total",
-      },
-    ]
-  }
-
-  boxNumber = contents.three.length;
-
-  // base box
-  mainTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "block",
-      position: "relative",
-      background: colorChip.white,
-    },
-  });
-  blockTong = createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(standardWidth) + ea,
-      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-      height: String(100) + '%',
-      paddingTop: desktop ? "" : String(mobileBlockPaddingTop) + ea,
-      paddingBottom: desktop ? "" : String(mobileBlockPadding) + ea,
-      textAlign: desktop ? "" : "center",
-    }
-  });
-  middleTong = createNode({
-    mother: blockTong,
-    style: {
-      position: "relative",
-      width: withOut(0 * 2, ea),
-      paddingTop: String(middleTongPaddinngTop) + ea,
-      paddingBottom: String(middleTitleMarginBottom) + ea,
-    }
-  });
-
-  // title
-  if (desktop) {
-    createNode({
-      mother: middleTong,
+    thirdBase = createNode({
+      mother: baseTong,
+      class: [ firstBarTargetClassName ],
       style: {
         display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
         position: "relative",
-        width: String(100) + '%',
-        textAlign: "center",
+        width: withOut(0, ea),
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        height: String(barAreaHeight) + ea,
+      },
+      child: {
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(-1 * minusLeft) + ea,
+          background: colorExtended.blueDark,
+          width: withOut(-1 * (minusLeft * 2), ea),
+          height: withOut(0, ea),
+        }
+      }
+    });
+
+    createNode({
+      mother: thirdBase,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(0),
+        borderBottom: String(radius) + px + " dotted " + colorExtended.black,
       },
       children: [
         {
-          text: "HomeLiaison service",
           style: {
-            display: "inline-block",
-            position: "relative",
-            fontFamily: "mont",
-            fontSize: String(middleTitleSize) + ea,
-            fontWeight: String(middleTitleWeight),
-            color: colorChip.black,
-            opacity: String(0.95),
-            textAlign: "center",
-            paddingLeft: String(middleTitlePadding) + ea,
-            paddingRight: String(middleTitlePadding) + ea,
-            top: String(middleTitleTextTop) + ea,
-            background: colorChip.white,
+            position: "absolute",
+            top: String(-1 * z) + px,
+            left: String(-1 * z) + px,
+            width: String(radius + (z * 2)) + px,
+            height: String(radius + (z * 2)) + px,
+            borderRadius: String(radius + (z * 2)) + px,
+            background: colorExtended.white,
+            opacity: String(0.2),
           }
         },
-      ]
-    });
-  }
-
-  // three base
-  threeBlock = createNode({
-    mother: middleTong,
-    style: {
-      display: "flex",
-      flexDirection: desktop ? "row" : "column",
-      position: "relative",
-      width: String(100) + '%',
-      marginTop: String(threeBlockMarginTop) + ea,
-      paddingBottom: String(middleTongPaddingBottom) + ea,
-    },
-  });
-
-
-  // three detail
-
-  for (let i = 0; i < boxNumber; i++) {
-    createNode({
-      mother: threeBlock,
-      attribute: {
-        index: String(i),
-      },
-      event: {
-        click: function (e) {
-          const index = Number(this.getAttribute("index"));
-          selfHref(contents.three[index].href);
-        }
-      },
-      style: {
-        display: desktop ? "inline-block" : "block",
-        width: desktop ? String(threeBlockWidth) + ea : withOut(0),
-        height: String(threeBlockHeight) + ea,
-        background: colorChip.white,
-        borderRadius: String(8) + "px",
-        boxShadow: "0px 5px 20px -12px " + colorChip.shadow,
-        overflow: desktop ? "" : "hidden",
-        marginBottom: desktop ? "" : String(2) + ea,
-        cursor: "pointer",
-      },
-      children: [
         {
           style: {
-            display: desktop ? "flex" : "none",
-            height: String(threeTitleAreaHeight) + ea,
-            width: withOut(threeTitlePaddingLeft, ea),
-            position: "relative",
-            alignItems: "center",
-            justifyContent: "start",
-            paddingLeft: String(threeTitlePaddingLeft) + ea,
+            position: "absolute",
+            top: String(-1 * y) + px,
+            left: String(-1 * y) + px,
+            width: String(radius + (y * 2)) + px,
+            height: String(radius + (y * 2)) + px,
+            borderRadius: String(radius + (y * 2)) + px,
+            background: colorExtended.white,
+            opacity: String(0.6),
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(-1 * x) + px,
+            left: String(-1 * x) + px,
+            width: String(radius + (x * 2)) + px,
+            height: String(radius + (x * 2)) + px,
+            borderRadius: String(radius + (x * 2)) + px,
+            background: colorExtended.white,
+            opacity: String(1),
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(0) + px,
+            left: String(0) + px,
+            width: String(radius) + px,
+            height: String(radius) + px,
+            borderRadius: String(radius) + px,
+            background: colorExtended.blueDim,
+          }
+        },
+        {
+          mode: "svg",
+          source: svgMaker.goalFlag(colorExtended.white, colorExtended.mainBlue),
+          style: {
+            position: "absolute",
+            right: String(flagRight) + ea,
+            top: String(flagTop) + ea,
+            width: String(flagWidth) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(commentAreaTop) + ea,
+            left: String(commentAreaLeft) + ea,
+            width: String(commentAreaWidth) + ea,
+            height: String(commentAreaHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorExtended.mainBlue,
+            borderBottomLeftRadius: String(0) + "px",
           },
           child: {
-            text: contents.three[i].title,
             style: {
+              display: "flex",
               position: "relative",
-              fontSize: String(threeTitleSize) + ea,
-              fontWeight: String(threeTitleWeight),
-              color: colorChip.black,
-              top: desktop ? String(titleTextTop) + ea : "",
-            }
-          }
-        },
-        {
-          style: {
-            display: desktop ? "block" : "inline-block",
-            position: "relative",
-            width: desktop ? withOut(0, ea) : String(threeBlockWidth) + ea,
-            height: desktop ? String(threePhotoHeight) + ea : String(102) + '%',
-            backgroundImage: "url('" + contents.three[i].background + "')",
-            backgroundSize: desktop ? "auto 100%" : "auto 100%",
-            backgroundPosition: "50% 50%",
-            verticalAlign: desktop ? "" : "top",
-          }
-        },
-        {
-          style: {
-            display: desktop ? "flex" : "inline-block",
-            position: "relative",
-            flexDirection: "column",
-            width: desktop ? withOut(threeTitlePaddingLeft * 2, ea) : withOut((threeTitlePaddingLeft * 2) + threeBlockWidth, ea),
-            paddingLeft: String(threeTitlePaddingLeft) + ea,
-            paddingRight: String(threeTitlePaddingLeft) + ea,
-            paddingTop: String(desktop ? threeDescriptionBoxPaddingTop : 13.4) + ea,
-            paddingBottom: String(threeDescriptionBoxPaddingTop) + ea,
-            verticalAlign: desktop ? "" : "top",
-            top: desktop ? "" : String(0),
-          },
-          children: [
-            {
-              style: {
-                display: desktop ? "none" : "inline-block",
-                position: "absolute",
-                top: String(isIphone() ? 4.6 : 4.8) + ea,
-                left: String(threeTitlePaddingLeft) + ea,
-              },
-              children: [
-                {
-                  text: contents.three[i].title,
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    fontSize: String(threeTitleSize) + ea,
-                    fontWeight: String(threeTitleWeight),
-                    color: colorChip.black,
-                  }
-                },
-                {
-                  text: contents.three[i].sub,
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    fontSize: String(2.8) + ea,
-                    fontWeight: String(500),
-                    color: colorChip.gray3,
-                    fontFamily: "mont",
-                    fontStyle: "normal",
-                    marginLeft: String(1.2) + ea,
-                  }
-                }
-              ]
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
             },
-            {
-              style: {
-                display: "flex",
-                flexDirection: "row",
-                position: "relative",
-                marginBottom: String(threeDescriptionBoxBetween) + ea,
-              },
-              children: [
-                {
-                  mode: "svg",
-                  source: instance.mother.returnCheckBox(contents.three[i].color),
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    width: String(checkBoxWidth) + ea,
-                    marginRight: String(checkBoxMarginRight) + ea,
-                    top: String(checkBoxTop) + ea,
-                  }
-                },
-                {
-                  text: contents.three[i].description[0],
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    fontSize: String(threeSize) + ea,
-                    fontWeight: String(threeWeight),
-                    color: colorChip.black,
-                    top: desktop ? String(descriptionTextTop) + ea : "",
-                  }
+            children: [
+              {
+                mode: "svg",
+                source: svgMaker.commentTriangle("verticalLeft", colorExtended.mainBlue),
+                style: {
+                  position: "absolute",
+                  width: String(commentTriangleWidth) + ea,
+                  bottom: String(-1 * commentTriangleWidth) + ea,
+                  left: String(0),
                 }
-              ]
-            },
-            {
-              style: {
-                display: "flex",
-                flexDirection: "row",
-                position: "relative",
               },
-              children: [
-                {
-                  mode: "svg",
-                  source: instance.mother.returnCheckBox(contents.three[i].color),
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    width: String(checkBoxWidth) + ea,
-                    marginRight: String(checkBoxMarginRight) + ea,
-                    top: String(checkBoxTop) + ea,
-                  }
-                },
-                {
-                  text: contents.three[i].description[1],
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    fontSize: String(threeSize) + ea,
-                    fontWeight: String(threeWeight),
-                    color: colorChip.black,
-                    top: desktop ? String(descriptionTextTop) + ea : "",
-                  }
+              {
+                text: big ? "답변을 분석해 정확한 서비스를 제공해드릴게요!" : "답변을 분석해 서비스를 제공해드릴게요!",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(commentSize) + ea,
+                  fontWeight: String(commentWeight),
+                  color: colorExtended.white,
+                  top: String(commentTextTop) + ea,
                 }
-              ]
-            },
-            {
-              mode: "svg",
-              source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, contents.three[i].color),
-              style: {
-                display: !media[3] ? "inline-block" : "none",
-                position: "absolute",
-                bottom: String(arrowBottom) + ea,
-                right: String(threeTitlePaddingLeft) + ea,
-                width: String(arrowWidth) + ea,
               }
-            }
-          ]
+            ]
+          }
         }
       ]
-    });
-  
-    if (i !== boxNumber - 1) {
-      createNode({
-        mother: threeBlock,
-        style: {
-          display: desktop ? "inline-block" : "none",
-          position: "relative",
-          width: "calc(calc(100% - " + String(threeBlockWidth * boxNumber) + ea + ") / " + String(boxNumber - 1) + ")",
-          height: String(threeBlockHeight) + ea,
-        },
-        child: {
-          style: {
-            display: media[0] ? "inline-block" : "none",
-            position: "absolute",
-            top: String(0),
-            left: String(0),
-            width: String(50) + '%',
-            height: withOut(0, ea),
-            borderRight: "1px dashed " + colorChip.gray3,
-            boxSizing: "border-box",
-          },
-        }
-      });
-    }
-  }
+    })
 
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+FrontIndexJs.prototype.resizeEvent = function () {
+  const instance = this;
+  const { homeliaisonAnalytics, colorExtended } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, totalContents, naviHeight } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+
+  this.resizeStack = 0;
+  this.resizeFrom = 0;
+  this.resizePopup = 0;
+
+  if (desktop) {
+    const resizeDebounceEvent = function () {
+      let timeout;
+      const reEvent = function () {
+        homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "aspirantPageResize",
+          data: {
+            delta: (new Date()).valueOf() - instance.firstPageViewTime.valueOf(),
+            date: new Date(),
+          },
+        }).then(() => {
+          window.location.reload();
+          instance.resizeStack = 0;
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
+      let immediate = null;
+      return function (e) {
+        if (instance.resizeStack === 0) {
+          instance.resizeStack = 1;
+          instance.resizeFrom = window.innerWidth;
+        }
+        let context = this;
+        let args = arguments;
+        function later() {
+          timeout = null;
+          if (!immediate) { reEvent.apply(context, args); };
+        }
+        let callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, 250);
+        if (callNow) {
+          reEvent.apply(context, args);
+        }
+      }
+    }
+    window.addEventListener("resize", resizeDebounceEvent());
+  }
 }
 
 FrontIndexJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, colorExtended, setDebounce, serviceParsing, facebookSdkPatch } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 
-    class SearchArray extends Array {
-      constructor(arr) {
-        super();
-        for (let i of arr) {
-          this.push(i);
-        }
-      }
-      search(target, value) {
-        let obj = null;
-        for (let i of this) {
-          if (i[target] === value) {
-            obj = i;
-          }
-        }
-        return obj;
-      }
-      toNormal() {
-        let arr = [];
-        for (let i of this) {
-          arr.push(i);
-        }
-        return arr;
-      }
+    const { media } = this;
+    const { returnGet, ajaxJson, dateToString, homeliaisonAnalytics, colorExtended, stringToLink, objectDeepCopy } = GeneralJs;
+    const getObj = returnGet();
+    const entireMode = (getObj.entire === "true");
+    const normalMode = (entireMode && getObj.normal === "true");
+    const mobile = media[4];
+    const desktop = !mobile;
+    let cliid;
+    let clients, client;
+    let contentsPhotoObj;
+    let fhdVisual;
+
+    if (getObj.cliid !== undefined) {
+      cliid = getObj.cliid;
+    } else {
+      window.alert("잘못된 접근입니다!");
+      throw new Error("invaild get object");
     }
 
-    const getObj = returnGet();
-    let response, services;
+    clients = await ajaxJson({ whereQuery: { cliid } }, SECONDHOST + "/getClients", { equal: true });
+    if (clients.length === 0) {
+      window.alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+    }
+    client = clients[0];
 
-    services = serviceParsing().name;
-    response = await ajaxJson({ mode: "index" }, LOGHOST + "/getContents", { equal: true });
-    this.contentsArr = new SearchArray(response.contentsArr);
-    this.reviewArr = new SearchArray(response.reviewArr);
-    this.indexArr = new SearchArray(response.indexArr);
-    this.totalContents = document.getElementById("totalcontents");
+    contentsPhotoObj = await ajaxJson({}, BACKHOST + "/styleCuration_getPhotos", { equal: true });
+    this.selectPhotos = [];
+    this.randomPick = [];
+    this.photos = contentsPhotoObj.photos;
+    this.contentsArr = contentsPhotoObj.contentsArr;
+    this.designers = contentsPhotoObj.designers;
+    this.client = client;
+    this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, BACKHOST + "/getClientHistory", { equal: true });
+    this.requestNumber = 0;
+
+    this.initAreaClassName = "initAreaClassName";
+    this.firstFadeOutTargetClassName = "firstFadeOutTargetClassName";
+    this.secondBaseClassName = "secondBaseClassName";
+    this.firstBarTargetClassName = "firstBarTargetClassName";
+    this.secondBarBoxMotherClassName = "secondBarBoxMotherClassName";
+    this.ghostBaseClassName = "ghostBaseClassName";
+    this.secondFadeOutTargetClassName = "secondFadeOutTargetClassName";
+    this.thirdFadeOutTargetClassName = "thirdFadeOutTargetClassName";
+    this.fourthFadeOutTargetClassName = "fourthFadeOutTargetClassName";
+    this.fifthFadeOutTargetClassName = "fifthFadeOutTargetClassName";
+    this.sixthFadeOutTargetClassName = "sixthFadeOutTargetClassName";
+    this.blurFixedBelowBarClassName = "blurFixedBelowBarClassName";
+    this.fileTongClassName = "fileTongClassName";
+    this.fileInputClassName = "fileInputClassName";
+    this.fileClickWordsClassName = "fileClickWordsClassName";
+    this.greenTalkEventClassName = "greenTalkEventClassName";
+
+    this.animationStop = false;
+
+    this.questionNumber = 14;
+    await this.generateTotalValues();
+
+    this.lineWeight = <%% 1.5, 1.5, 1.5, 1, 1 %%>;
+
+    this.heightTong = {};
+
+    if (desktop && window.innerHeight > 1100) {
+      this.heightTong.second = <%% 1398, 1203, 1035, 825, 238 %%>;
+      this.heightTong.third = <%% 1067.84, 1037, 875, 675, 158 %%>;
+      this.heightTong.fourth = <%% 1067.84, 995, 853, 708, 208 %%>;
+      this.heightTong.fifth = <%% 1540, 1392, 1220, 1019, 298.5 %%>;
+      this.heightTong.sixth = <%% 1808, 1638, 1442, 1199, 383.5 %%>;
+      this.heightTong.seventh = <%% 2000, 1864, 1640, 1328, 358.5 %%>;
+      this.heightTong.eighth = <%% 2593, 2346, 1960, 1540, 480 %%>;
+      this.heightTong.scroll = <%% -638, -565, -457, -368, -71 %%>;
+      this.heightTong.numbers = <%% 100, 100, 90, 75, 16 %%>;
+    } else if (desktop) {
+      this.heightTong.second = <%% 1398, 1203, 1035, 825, 238 %%>;
+      this.heightTong.third = <%% 1067.84, 1037, 875, 675, 158 %%>;
+      this.heightTong.fourth = <%% 1067.84, 995, 853, 708, 208 %%>;
+      this.heightTong.fifth = <%% 1540, 1392, 1220, 1019, 298.5 %%>;
+      this.heightTong.sixth = <%% 1808, 1638, 1442, 1199, 383.5 %%>;
+      this.heightTong.seventh = <%% 2000, 1864, 1640, 1328, 358.5 %%>;
+      this.heightTong.eighth = <%% 2473, 2337, 1956, 1540, 480 %%>;
+      this.heightTong.scroll = <%% -492, -486, -451, -365, -71 %%>;
+      this.heightTong.numbers = <%% 100, 100, 90, 75, 16 %%>;
+
+      fhdVisual = <%% 30, 30, 20, 0, 0 %%>;
+
+      this.heightTong.second = this.heightTong.second - fhdVisual;
+      this.heightTong.third = this.heightTong.third - fhdVisual;
+      this.heightTong.fourth = this.heightTong.fourth - fhdVisual;
+      this.heightTong.fifth = this.heightTong.fifth - fhdVisual;
+      this.heightTong.sixth = this.heightTong.sixth - fhdVisual;
+      this.heightTong.seventh = this.heightTong.seventh - fhdVisual;
+      this.heightTong.numbers = this.heightTong.numbers - fhdVisual;
+    } else if (mobile) {
+      this.heightTong.second = <%% 1398, 1203, 1035, 825, 238 %%>;
+      this.heightTong.third = <%% 1067.84, 1037, 875, 675, 158 %%>;
+      this.heightTong.fourth = <%% 1067.84, 995, 853, 708, 208 %%>;
+      this.heightTong.fifth = <%% 1540, 1392, 1220, 1019, 298.5 %%>;
+      this.heightTong.sixth = <%% 1808, 1638, 1442, 1199, 383.5 %%>;
+      this.heightTong.seventh = <%% 2000, 1864, 1640, 1328, 358.5 %%>;
+      this.heightTong.eighth = <%% 2593, 2346, 1960, 1540, 480 %%>;
+      this.heightTong.scroll = <%% -638, -565, -457, -368, -71 %%>;
+      this.heightTong.numbers = <%% 100, 100, 90, 75, 16 %%>;
+    }
 
     await this.mother.ghostClientLaunching({
       mode: "front",
       name: "frontIndex",
-      client: null,
+      client: instance.client,
       base: {
         instance: this,
         binaryPath: FrontIndexJs.binaryPath,
-        subTitle: "",
+        subTitle: (instance.client.name + " 고객님 서비스 안내"),
         secondBackground: false,
-        backgroundType: 2,
+        backgroundType: 9,
+        talk: {
+          text: "기타 문의 사항은 홈리에종 채널에 주세요!",
+          event: "channel",
+        },
+        blueLogo: true,
       },
       local: async () => {
         try {
-          instance.insertSlideBox();
-          // instance.insertAboutBox();
-          instance.insertThreeBox();
-          instance.insertBlackBox();
-          instance.insertSearchBox();
-          instance.insertStrongBox();
-          instance.insertNewsBox();
-          instance.insertEndBox();
-          // instance.popupLaunching();
+          await instance.insertInitBox();
+          const secondBase = await instance.insertSecondBox();
+          await instance.insertBarBox();
+
+          instance.resizeEvent();
+          setInterval(() => {
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "readTimer",
+              data: {
+                cliid: "null",
+                href: window.encodeURIComponent(window.location.href),
+                date: dateToString(new Date(), true),
+              },
+            }).catch((err) => {
+              console.log(err);
+            });
+          }, 60 * 1000);
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "FrontIndexJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
@@ -2787,14 +2039,10 @@ FrontIndexJs.prototype.launching = async function (loading) {
 
     loading.parentNode.removeChild(loading);
 
-    setQueue(() => {
-      facebookSdkPatch().catch((err) => {
-        console.log(err);
-      });
-    });
+    document.querySelector("style").insertAdjacentHTML("beforeend", "*{transition:all 0.3s ease}");
 
   } catch (err) {
     console.log(err);
-    await ajaxJson({ message: "FrontIndexJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
+    await GeneralJs.ajaxJson({ message: "FrontIndexJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }

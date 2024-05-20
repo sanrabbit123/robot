@@ -730,6 +730,17 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
         command += `scp ${process.cwd()}/temp/${target} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`;
       }
 
+      console.log(command);
+      input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
+      if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
+        if (!testMode) {
+          // worker update
+          await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
+        }
+        await shellExec(command);
+        console.log(`front update done`);
+      }
+
     } else {
 
       command = middleTong.map((p) => {
@@ -765,17 +776,8 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
         command += `scp ${process.cwd()}/temp/${target} ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/;`;
       }
 
-    }
-
-    console.log(command);
-    input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
-    if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
-      if (!testMode) {
-        // worker update
-        await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
-      }
       await shellExec(command);
-      console.log(`front update done`);
+
     }
 
   } catch (e) {
@@ -888,6 +890,17 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
       await fileSystem(`write`, [ `${process.cwd()}/temp/general.php`, generalPhpScript ]);
       command += `;scp ${process.cwd()}/temp/general.php ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/designer/;`;
 
+      console.log(command);
+      input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
+      if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
+        if (!testMode) {
+          // worker update
+          await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
+        }
+        await shellExec(command);
+        console.log(`front update done`);
+      }
+
     } else {
 
       command = middleTong.map((p) => {
@@ -915,17 +928,8 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
       await fileSystem(`write`, [ `${process.cwd()}/temp/general.php`, generalPhpScript ]);
       command += `;scp ${process.cwd()}/temp/general.php ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/designer/;`;
 
-    }
-
-    console.log(command);
-    input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
-    if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
-      if (!testMode) {
-        // worker update
-        await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
-      }
       await shellExec(command);
-      console.log(`front update done`);
+
     }
 
   } catch (e) {

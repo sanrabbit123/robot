@@ -266,7 +266,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
 
   wordingSize = <%% 15, 15, 14, 13, 15 %%>;
   wordingMarginRight = <%% 40, 36, 30, 19, 3 %%>;
-  wordingWeight = 700;
+  wordingWeight = 600;
 
   mobileMargin = 6.1;
 
@@ -362,7 +362,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   createNode({
     mother: naviBase,
     mode: "svg",
-    source: svgMaker.homeliaisonLogoPlusEdge(modeNumber !== 1 ? colorExtended.white : (Math.random() >= 0.5 ? colorExtended.black : colorExtended.mainBlue)),
+    source: svgMaker.homeliaisonLogoPlusEdge(modeNumber !== 1 ? colorExtended.white : (Math.random() >= 0.5 ? colorExtended.black : colorExtended.black)),
     class: [ desktop ? "hoverDefault" : "hoverDefault_mobile" ],
     event: {
       click: (e) => {
