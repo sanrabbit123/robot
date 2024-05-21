@@ -85,23 +85,23 @@ FrontIndexJs.prototype.insertInitBox = async function () {
     firstBasePaddingTop = <%% 24, 24, 24, 24, (window.innerHeight < 700 ? 1.5 : 6.5) %%>;
     firstBasePaddingBottom = <%% 160, 160, 160, 120, 20 %%>;
 
-    subTitleSize = <%% 20, 18, 17, 15, 4.3 %%>;
+    subTitleSize = <%% 20, 18, 17, 15, 4.2 %%>;
     subTitleWeight = 500;
 
     titleSize = <%% 50, 48, 43, 36, 7 %%>;
     titleWeight = 700;
 
     mainImageWidth = 59;
-    subTitleBlockMarginTop = 2.7;
+    subTitleBlockMarginTop = 2.6;
     imageBlockMarginTop = 6.5;
     boxBlock0MarginTop = 13;
     boxBlock1MarginTop = 2;
     boxBlockHeight = 20;
 
-    titleLineBoxWidthVisual = -1.5;
-    titleLineBoxHeight = 3.5;
-    titleLineBoxTop = 5.2;
-    titleLineBoxLeft = -1.2;
+    titleLineBoxWidthVisual = -1.2;
+    titleLineBoxHeight = 3;
+    titleLineBoxTop = 7;
+    titleLineBoxLeft = -1;
     titleLineBoxOpacity = 0.8;
 
     dotWidth = 1.2;
@@ -197,7 +197,7 @@ FrontIndexJs.prototype.insertInitBox = async function () {
       },
       children: [
         {
-          text: "무엇부터 시작해야할지 막막하시죠?",
+          text: "무엇부터 시작해야 할지 막막하시죠?",
           style: {
             display: "inline-block",
             position: "relative",
@@ -400,41 +400,41 @@ FrontIndexJs.prototype.insertInitBox = async function () {
       ]
     });
 
-    if (window.innerHeight < 700) {
-      totalHeight = 0;
-      totalHeight += mainTitleBlock.getBoundingClientRect().height;
-      totalHeight += subTitleBlock.getBoundingClientRect().height;
-      totalHeight += imageBlock.getBoundingClientRect().height;
-      totalHeight += window.innerWidth * ((subTitleBlockMarginTop + imageBlockMarginTop + boxBlock0MarginTop + boxBlock1MarginTop + boxBlockHeight + boxBlockHeight + instance.baseTop + instance.baseTop) / 100);
-      totalHeight += instance.naviHeight;
-      firstBase.style.paddingTop = String((window.innerHeight - totalHeight - paddingVisual) / 2) + "px";
-    }
+    // if (window.innerHeight < 700) {
+    //   totalHeight = 0;
+    //   totalHeight += mainTitleBlock.getBoundingClientRect().height;
+    //   totalHeight += subTitleBlock.getBoundingClientRect().height;
+    //   totalHeight += imageBlock.getBoundingClientRect().height;
+    //   totalHeight += window.innerWidth * ((subTitleBlockMarginTop + imageBlockMarginTop + boxBlock0MarginTop + boxBlock1MarginTop + boxBlockHeight + boxBlockHeight + instance.baseTop + instance.baseTop) / 100);
+    //   totalHeight += instance.naviHeight;
+    //   firstBase.style.paddingTop = String((window.innerHeight - totalHeight - paddingVisual) / 2) + "px";
+    // }
 
-    setQueue(() => {
-      if (window.innerHeight < 700) {
-        totalHeight = 0;
-        totalHeight += mainTitleBlock.getBoundingClientRect().height;
-        totalHeight += subTitleBlock.getBoundingClientRect().height;
-        totalHeight += imageBlock.getBoundingClientRect().height;
-        totalHeight += window.innerWidth * ((subTitleBlockMarginTop + imageBlockMarginTop + boxBlock0MarginTop + boxBlock1MarginTop + boxBlockHeight + boxBlockHeight + instance.baseTop + instance.baseTop) / 100);
-        totalHeight += instance.naviHeight;
-        firstBase.style.paddingTop = String((window.innerHeight - totalHeight - paddingVisual) / 2) + "px";
-      }
+    // setQueue(() => {
+    //   if (window.innerHeight < 700) {
+    //     totalHeight = 0;
+    //     totalHeight += mainTitleBlock.getBoundingClientRect().height;
+    //     totalHeight += subTitleBlock.getBoundingClientRect().height;
+    //     totalHeight += imageBlock.getBoundingClientRect().height;
+    //     totalHeight += window.innerWidth * ((subTitleBlockMarginTop + imageBlockMarginTop + boxBlock0MarginTop + boxBlock1MarginTop + boxBlockHeight + boxBlockHeight + instance.baseTop + instance.baseTop) / 100);
+    //     totalHeight += instance.naviHeight;
+    //     firstBase.style.paddingTop = String((window.innerHeight - totalHeight - paddingVisual) / 2) + "px";
+    //   }
 
-      setQueue(() => {
-        if (window.innerHeight < 700) {
-          totalHeight = 0;
-          totalHeight += mainTitleBlock.getBoundingClientRect().height;
-          totalHeight += subTitleBlock.getBoundingClientRect().height;
-          totalHeight += imageBlock.getBoundingClientRect().height;
-          totalHeight += window.innerWidth * ((subTitleBlockMarginTop + imageBlockMarginTop + boxBlock0MarginTop + boxBlock1MarginTop + boxBlockHeight + boxBlockHeight + instance.baseTop + instance.baseTop) / 100);
-          totalHeight += instance.naviHeight;
-          firstBase.style.paddingTop = String((window.innerHeight - totalHeight - paddingVisual) / 2) + "px";
-        }
+    //   setQueue(() => {
+    //     if (window.innerHeight < 700) {
+    //       totalHeight = 0;
+    //       totalHeight += mainTitleBlock.getBoundingClientRect().height;
+    //       totalHeight += subTitleBlock.getBoundingClientRect().height;
+    //       totalHeight += imageBlock.getBoundingClientRect().height;
+    //       totalHeight += window.innerWidth * ((subTitleBlockMarginTop + imageBlockMarginTop + boxBlock0MarginTop + boxBlock1MarginTop + boxBlockHeight + boxBlockHeight + instance.baseTop + instance.baseTop) / 100);
+    //       totalHeight += instance.naviHeight;
+    //       firstBase.style.paddingTop = String((window.innerHeight - totalHeight - paddingVisual) / 2) + "px";
+    //     }
   
-      }, 500);
+    //   }, 500);
 
-    });
+    // });
 
   } catch (e) {
     console.log(e);
@@ -488,7 +488,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     whiteBlockHeight = 80;
     barMargin = 2.5;
 
-    topBottomMargin = 8;
+    topBottomMargin = 9;
 
     blueBlockBetween = 1.8;
 
@@ -1068,6 +1068,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     let fifthBase, fifthBox;
     let imageMarginTop;
     let descriptionMarginTop;
+    let baseModuleHeight2;
 
     boxRadius = 15;
     boxRadiusBig = 20;
@@ -1077,9 +1078,10 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     mobileMargin = 6;
     slimMargin = 3;
 
-    topBottomMargin = 12;
+    topBottomMargin = 14;
 
-    baseModuleHeight = 96;
+    baseModuleHeight = 97;
+    baseModuleHeight2 = 112;
 
     descriptionMarginTop = 8;
     imageMarginTop = 3;
@@ -1535,7 +1537,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         justifyContent: "start",
         alignItems: "start",
         flexDirection: "column",
-        height: String(109) + ea,
+        height: String(baseModuleHeight2) + ea,
       },
       child: {
         style: {
@@ -1680,8 +1682,8 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
       }
     });
 
-
-    fourthBase = createNode({
+    // fifth
+    fifthBase = createNode({
       mother: baseTong,
       class: [ secondBaseClassName ],
       style: {
@@ -1691,7 +1693,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         justifyContent: "start",
         alignItems: "start",
         flexDirection: "column",
-        height: String(78) + ea,
+        height: String(86) + ea,
       },
       child: {
         style: {
@@ -1705,8 +1707,8 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         },
       }
     });
-    fourthBox = createNode({
-      mother: fourthBase,
+    fifthBox = createNode({
+      mother: fifthBase,
       style: {
         display: "flex",
         position: "relative",
@@ -1719,7 +1721,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
       }
     });
     createNode({
-      mother: fourthBox,
+      mother: fifthBox,
       style: {
         display: "inline-flex",
         position: "relative",
@@ -1752,7 +1754,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
       }
     });
     createNode({
-      mother: fourthBox,
+      mother: fifthBox,
       style: {
         display: "inline-flex",
         position: "relative",
@@ -1782,7 +1784,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     });
 
     createNode({
-      mother: fourthBox,
+      mother: fifthBox,
       style: {
         display: "inline-flex",
         position: "relative",
