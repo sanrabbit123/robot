@@ -4,6 +4,5 @@
     "editor.fontLigatures": false,
     "editor.guides.indentation": false,
     "editor.fontVariations": false,
-    "editor.fontWeight": "100",
-    "editor.lineHeight": 21
+    "editor.fontWeight": "100"
 }
