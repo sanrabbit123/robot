@@ -44,6 +44,34 @@ const FrontIndexJs = function () {
 
 FrontIndexJs.binaryPath = FRONTHOST + "/middle/index";
 
+FrontIndexJs.prototype.generateGsArray = function (number) {
+  if (typeof number !== "number") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const standard = [
+    'g', 's', 's',
+    's', 's', 's', 's',
+    's', 's', 'g',
+    's', 's', 's', 's',
+    's', 's', 's', 's',
+    's', 's', 'g',
+  ];
+  let additional;
+  let add;
+  let multi;
+  let result;
+  additional = number % standard.length;
+  add = standard.slice(0, additional);
+  multi = Math.floor(number / standard.length);
+  result = [];
+  for (let i = 0; i < multi; i++) {
+    result = result.concat(JSON.parse(JSON.stringify(standard)));
+  }
+  result = result.concat(add);
+  return result;
+}
+
 FrontIndexJs.prototype.insertInitBox = async function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
@@ -1689,6 +1717,53 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
       }
     });
 
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, selfHref } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { secondBaseClassName } = this;
+  try {
+    let boxRadius;
+    let moreAreaHeight;
+    let mobileMargin;
+    let firstBox, secondBox, thirdBox, fourthBox;
+    let firstBase, secondBase, thirdBase, fourthBase;
+    let topBottomMargin;
+    let slimMargin;
+    let boxRadiusBig;
+    let boxRadiusSmall;
+    let baseModuleHeight;
+    let fifthBase, fifthBox;
+    let imageMarginTop;
+    let descriptionMarginTop;
+    let baseModuleHeight2;
+    let finalModuleHeight;
+    let baseHeight;
+    let buttonMarginTop;
+
+    boxRadius = 15;
+    boxRadiusBig = 20;
+    boxRadiusSmall = 2;
+
+    moreAreaHeight = 12;
+    mobileMargin = 6;
+    slimMargin = 3;
+
+    topBottomMargin = 14;
+
+    descriptionMarginTop = 8;
+    imageMarginTop = 3;
+
+    baseHeight = lastMode ? 42 : 94;
+    buttonMarginTop = lastMode ? 1 : 17;
+
     // fifth
     fifthBase = createNode({
       mother: baseTong,
@@ -1700,7 +1775,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         justifyContent: "start",
         alignItems: "start",
         flexDirection: "column",
-        height: String(finalModuleHeight) + ea,
+        height: String(baseHeight) + ea,
       },
       child: {
         style: {
@@ -1710,7 +1785,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
           left: String(-1 * mobileMargin) + ea,
           width: withOut(-1 * mobileMargin * 2, ea),
           height: withOut(0, ea),
-          background: colorExtended.black,
+          background: lastMode ? colorExtended.gradientBlue2 : colorExtended.black,
         },
       }
     });
@@ -1727,83 +1802,89 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         flexDirection: "column",
       }
     });
-    createNode({
-      mother: fifthBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        flexDirection: "column",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "center",
-        alignItems: "center",
-      },
-      child: {
-        text: [
-          "어떤 서비스를 선택해야 할지 모르겠어요!",
-        ].join("\n"),
+
+    if (!lastMode) {
+      createNode({
+        mother: fifthBox,
         style: {
-          display: "inline-block",
+          display: "inline-flex",
           position: "relative",
-          fontSize: String(4.8) + ea,
-          fontWeight: String(600),
-          fontFamily: "pretendard",
-          color: colorExtended.white,
-          lineHeight: String(1.4),
-          textAlign: "center",
+          flexDirection: "column",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "center",
+          alignItems: "center",
         },
-        bold: {
-          fontSize: String(4.8) + ea,
-          fontWeight: String(600),
-          fontFamily: "pretendard",
-          color: colorExtended.mainBlue,
-        },
-      }
-    });
-    createNode({
-      mother: fifthBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        flexDirection: "column",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "center",
-        alignItems: "center",
-        paddingTop: String(3) + ea,
-      },
-      child: {
-        text: [
-          "부담 없는 인테리어 상담을 도와드립니다.",
-          "합리적인 서비스를 경험하세요.",
-        ].join("\n"),
+        child: {
+          text: [
+            "어떤 서비스를 선택해야 할지 모르겠어요!",
+          ].join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(4.8) + ea,
+            fontWeight: String(600),
+            fontFamily: "pretendard",
+            color: colorExtended.white,
+            lineHeight: String(1.4),
+            textAlign: "center",
+          },
+          bold: {
+            fontSize: String(4.8) + ea,
+            fontWeight: String(600),
+            fontFamily: "pretendard",
+            color: colorExtended.mainBlue,
+          },
+        }
+      });
+      createNode({
+        mother: fifthBox,
         style: {
-          display: "inline-block",
+          display: "inline-flex",
           position: "relative",
-          fontSize: String(3.4) + ea,
-          fontWeight: String(600),
-          fontFamily: "pretendard",
-          color: colorExtended.mainBlue,
-          lineHeight: String(1.5),
-          textAlign: "center",
+          flexDirection: "column",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "center",
+          alignItems: "center",
+          paddingTop: String(3) + ea,
         },
-      }
-    });
+        child: {
+          text: [
+            "부담 없는 인테리어 상담을 도와드립니다.",
+            "합리적인 서비스를 경험하세요.",
+          ].join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(3.4) + ea,
+            fontWeight: String(600),
+            fontFamily: "pretendard",
+            color: colorExtended.mainBlue,
+            lineHeight: String(1.5),
+            textAlign: "center",
+          },
+        }
+      });
+    }
 
     createNode({
       mother: fifthBox,
+      event: {
+        click: (e) => { selfHref(FRONTHOST + "/consulting.php") }
+      },
       style: {
         display: "inline-flex",
         position: "relative",
         flexDirection: "column",
         position: "relative",
         width: withOut(0, ea),
-        height: String(11.5) + ea,
+        height: String(11) + ea,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: String(15) + ea,
+        marginTop: String(buttonMarginTop) + ea,
         borderRadius: String(boxRadius) + "px",
-        background: colorExtended.gradientBlue2,
+        background: lastMode ? colorExtended.darkBlack : colorExtended.gradientBlue2,
       },
       child: {
         text: [
@@ -1812,10 +1893,10 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(3.8) + ea,
+          fontSize: String(3.5) + ea,
           fontWeight: String(600),
           fontFamily: "pretendard",
-          color: colorExtended.black,
+          color: lastMode ? colorExtended.white : colorExtended.black,
           lineHeight: String(1.5),
           textAlign: "center",
           top: String(-0.2) + ea,
@@ -1863,6 +1944,45 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         }
       }
     });
+
+    if (lastMode) {
+      createNode({
+        mother: fifthBox,
+        event: {
+          click: (e) => { selfHref(FRONTHOST + "/portfolio.php") },
+        },
+        style: {
+          display: "inline-flex",
+          position: "absolute",
+          flexDirection: "column",
+          width: String(17) + ea,
+          height: String(7) + ea,
+          justifyContent: "center",
+          top: String(-26) + ea,
+          alignItems: "center",
+          marginTop: String(buttonMarginTop) + ea,
+          borderRadius: String(7) + ea,
+          background: colorExtended.blueDark,
+          cursor: "pointer",
+        },
+        child: {
+          text: [
+            "더보기",
+          ].join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(3) + ea,
+            fontWeight: String(700),
+            fontFamily: "pretendard",
+            color: colorExtended.white,
+            lineHeight: String(1.5),
+            textAlign: "center",
+            top: String(-0.1) + ea,
+          },
+        }
+      });
+    }
 
   } catch (e) {
     console.log(e);
@@ -3647,6 +3767,428 @@ FrontIndexJs.prototype.insertWhiteCardEvent = function (serviceIndex) {
   }
 }
 
+FrontIndexJs.prototype.insertPortfolioBase = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, baseTong } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const portfolioBaseBlockClassName = "portfolioBaseBlockClassName";
+  let baseBlock;
+  let limitLength;
+  let photoMargin;
+  let paddingBottom;
+  let basePaddingTop;
+
+  limitLength = <%% 42, 42, 42, 42, 42 %%>;
+  photoMargin = <%% 18, 16, 16, 16, 2.5 %%>;
+  paddingBottom = <%% 120, 120, 120, 120, 22 %%>;
+
+  basePaddingTop = 10;
+
+  baseBlock = createNode({
+    mother: baseTong,
+    class: [ portfolioBaseBlockClassName ],
+    style: {
+      position: "relative",
+      width: "calc(100% + " + String(photoMargin) + ea + ")",
+      paddingBottom: String(paddingBottom) + ea,
+      paddingTop: String(basePaddingTop) + ea,
+    }
+  });
+
+  this.portfolioBlock(limitLength, null, instance.sort);
+}
+
+FrontIndexJs.prototype.portfolioBlock = function (limitLength, search = null, sort = "key9") {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, equalJson, selectByClass, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
+  const { ea, media, baseTong } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const photoChar = 't';
+  const photoCharMobile = "mot";
+  const touchStartConst = "touchStartConstName";
+  const portfolioBaseBlockClassName = "portfolioBaseBlockClassName";
+  let { designers } = this;
+  let baseBlock;
+  let contentsArr;
+  let gsArray;
+  let baseWidth;
+  let photoMargin;
+  let columns;
+  let seroWidth, garoWidth;
+  let photoRatio;
+  let photoHeight;
+  let src;
+  let contents;
+  let title;
+  let quoteWidth, quoteHeight;
+  let quoteTop;
+  let photoMarginBottom;
+  let titleSize, titleWeight, titleMarginLeft;
+  let tag;
+  let block;
+  let tagTong;
+  let photoBlockMarginBottom;
+  let garoSliceStart, garoSliceEnd, garoSliceLimit;
+  let seroSliceStart, seroSliceEnd, seroSliceLimit;
+  let tagTongWidthRatio;
+  let tagSize, tagWeight;
+  let tagPaddingLeft, tagPaddingTop, tagPaddingBottom;
+  let tagMarginRight;
+  let titleSubSize;
+  let subTitle;
+  let titleSubMarginTop;
+  let service;
+  let tagBlock;
+  let subInfoSize;
+  let subInfoWeight;
+  let arrowWidth;
+  let arrowHeight;
+  let arrowBottom;
+  let subInfoTextTop;
+  let radiusPixel;
+  let conidArr;
+
+  if (typeof search === "string") {
+
+    if (search === '') {
+      contentsArr = this.contentsArr;
+
+    } else if (/^\<\<\</.test(search)) {
+
+      search = search.trim().replace(/^\<\<\</gi, '').replace(/\>\>\>$/gi, '');
+      if (search === "") {
+        contentsArr = [];
+      } else {
+        conidArr = search.split(",");
+        contentsArr = this.contentsArr.toNormal().filter((o) => {
+          return conidArr.includes(o.conid);
+        });
+      }
+
+    } else {
+
+      if (/엑스트라/gi.test(search)) {
+        search = "엑스트라";
+      }
+      contentsArr = this.contentsArr.toNormal().filter((obj) => {
+        let boo;
+        let target;
+        let projectTarget;
+        let designerTarget;
+
+        target = equalJson(JSON.stringify(obj.contents.portfolio.detailInfo.tag));
+        target.push(obj.contents.portfolio.title.main.replace(/홈?스타일링/gi, ''));
+        target.push(obj.contents.portfolio.title.sub.replace(/홈?스타일링/gi, ''));
+        target.push(serviceParsing(obj.service));
+        designerTarget = designers.search("desid", obj.desid);
+        target.push(designerTarget.designer);
+
+        boo = false;
+        for (let t of target) {
+          if ((new RegExp(search, "gi")).test(t)) {
+            boo = true;
+            break;
+          }
+        }
+
+        return boo;
+      });
+
+    }
+
+  } else {
+    contentsArr = this.contentsArr;
+  }
+
+  contentsArr = equalJson(JSON.stringify(contentsArr));
+  if (sort === "key9") {
+    contentsArr.sort((a, b) => {
+      return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
+    });
+  } else {
+    contentsArr.sort((a, b) => {
+      return Number(b.contents.portfolio.detailInfo.sort.key8) - Number(a.contents.portfolio.detailInfo.sort.key8);
+    });
+  }
+
+  if (limitLength === null) {
+    limitLength = contentsArr.length;
+  }
+
+  gsArray = this.generateGsArray(limitLength);
+
+  baseWidth = Number(baseTong.style.width.replace(/[^0-9\.]/gi, ''));
+  photoMargin = <%% 18, 16, 16, 16, 2.5 %%>;
+  columns = <%% 4, 4, 3, 3, 2 %%>;
+
+  photoRatio = (297 / 210);
+  seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
+  garoWidth = (seroWidth * 2) + photoMargin;
+  photoHeight = seroWidth * photoRatio;
+  photoMarginBottom = <%% 14, 14, 13, 12, 2.3 %%>;
+
+  quoteHeight = <%% 10, 8, 8, 7, 1.8 %%>;
+  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorExtended.mainBlue))) * quoteHeight;
+  quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.3 : 1.2 %%>;
+
+  titleSize = <%% 18, 15, 16, 14, 3.3 %%>;
+  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleMarginLeft = <%% 6, 6, 5, 5, 1.3 %%>;
+
+  titleSubSize = <%% 14, 12, 12, 11, 2.5 %%>;
+  titleSubMarginTop = <%% 3, 2, 2, 1, (isIphone() ? 0 : 0.3) %%>;
+
+  photoBlockMarginBottom = <%% 65, 56, 52, 46, 8 %%>;
+
+  garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
+  garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
+  garoSliceLimit = <%% 17, 17, 17, 17, 17 %%>;
+
+  seroSliceStart = <%% 5, 5, 5, 5, 5 %%>;
+  seroSliceEnd = <%% 16, 15, 17, 15, 13 %%>;
+  seroSliceLimit = <%% 30, 30, 30, 30, 30 %%>;
+
+  tagTongWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
+
+  tagSize = <%% 12, 10, 10, 9, 2 %%>;
+  tagWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  tagPaddingLeft = <%% 10, 8, 8, 7, 1 %%>;
+  tagPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 1 %%>;
+  tagPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isIphone() ? 1.2 : 1.4) %%>;
+  tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
+
+  subInfoSize = <%% 12, 11, 11, 10, 2.5 %%>;
+  subInfoWeight = <%% 500, 500, 500, 500, 500 %%>;
+  subInfoTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  arrowWidth = <%% 32, 28, 28, 26, 4 %%>;
+  arrowHeight = <%% 9, 8, 8, 8, 1.5 %%>;
+  arrowBottom = <%% 3, 3, 3, 2, 1 %%>;
+
+  [ baseBlock ] = selectByClass(portfolioBaseBlockClassName);
+
+  radiusPixel = <%% 15, 15, 15, 15, 15 %%>;
+
+  if (search !== null) {
+    cleanChildren(baseBlock);
+  }
+
+  if (limitLength !== 0) {
+    for (let i = 0; i < limitLength; i++) {
+      if (!this.loadedContents.includes(i) || search !== null) {
+
+        ({ contents, service } = contentsArr[i]);
+
+        if (desktop) {
+          src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/" + photoChar + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+        } else {
+          src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.portfolio.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
+        }
+
+        title = contents.portfolio.title.main.split(", ")[1];
+        title = title.replace(/홈?스타일링/gi, '') + serviceParsing(0).name[Number(service.serid.split('_')[1].replace(/[^0-9]/gi, '')) - 1];
+        if (mobile) {
+          title = title.split(" ").slice(0, title.split(" ").findIndex((s) => { return /py/gi.test(s) }) + 1).join(" ")
+        }
+
+
+        if (media[0] || media[2]) {
+          subTitle = contents.portfolio.title.sub;
+        } else {
+          subTitle = contents.portfolio.title.sub;
+          if (!mobile) {
+            if (gsArray[i] !== 'g' && subTitle.length > 27) {
+              subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+            }
+          } else {
+            if (gsArray[i] !== 'g' && subTitle.length > 25) {
+              subTitle = contents.portfolio.title.sub.replace(/홈?스타일링$/i, '');
+            }
+          }
+        }
+        tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
+
+        if (gsArray[i] !== 'g') {
+          tag = tag.slice(garoSliceStart, garoSliceEnd);
+          if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > garoSliceLimit) {
+            tag = tag.slice(0, -1);
+          }
+        } else {
+          tag = tag.slice(seroSliceStart, seroSliceEnd);
+          if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > seroSliceLimit) {
+            tag = tag.slice(0, -1);
+          }
+        }
+
+        block = createNode({
+          mother: baseBlock,
+          attribute: {
+            pid: contents.portfolio.pid,
+          },
+          event: {
+            click: function (e) {
+              const pid = this.getAttribute("pid");
+              selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+            },
+            touchstart: function (e) {
+              const self = this;
+              self.setAttribute(touchStartConst, "on");
+              setQueue(() => {
+                self.setAttribute(touchStartConst, "off");
+              });
+            },
+            touchend: function (e) {
+              if (this.getAttribute(touchStartConst) === "on") {
+                const pid = this.getAttribute("pid");
+                selfHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+              }
+            }
+          },
+          style: {
+            display: "inline-block",
+            width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
+            marginRight: String(photoMargin) + ea,
+            marginBottom: String(photoBlockMarginBottom) + ea,
+            verticalAlign: "top",
+            overflow: "hidden",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              style: {
+                display: "block",
+                width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
+                height: String(photoHeight) + ea,
+                borderRadius: String(radiusPixel) + "px",
+                marginBottom: String(photoMarginBottom) + ea,
+                backgroundSize: "100% auto",
+                backgroundPosition: "50% 50%",
+                backgroundImage: "url('" + src + "')",
+              }
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                width: String(100) + '%',
+              },
+              children: [
+                {
+                  text: title,
+                  style: {
+                    display: "block",
+                    fontSize: String(titleSize) + ea,
+                    fontWeight: String(titleWeight),
+                    color: colorChip.black,
+                    width: String(200) + '%',
+                    verticalAlign: "top",
+                    fontFamily: "pretendard",
+                  }
+                },
+                {
+                  style: {
+                    display: "block",
+                    width: withOut(0, ea),
+                    verticalAlign: "top",
+                    marginTop: String(titleSubMarginTop) + ea,
+                    overflow: "hidden",
+                  },
+                  children: [
+                    {
+                      text: subTitle,
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        fontSize: String(titleSubSize) + ea,
+                        fontWeight: String(400),
+                        color: colorChip.gray5,
+                        width: String(200) + '%',
+                        fontFamily: "pretendard",
+                      },
+                    }
+                  ]
+                }
+              ]
+            },
+          ]
+        });
+
+        if (search === null) {
+          this.loadedContents.push(i);
+        }
+
+      }
+    }
+  } else {
+
+    for (let i = 0; i < 4; i++) {
+
+      block = createNode({
+        mother: baseBlock,
+        style: {
+          display: "inline-block",
+          width: String(seroWidth) + ea,
+          borderRadius: String(5) + "px",
+          marginRight: String(photoMargin) + ea,
+          marginBottom: String(photoBlockMarginBottom) + ea,
+          verticalAlign: "top",
+          overflow: "hidden",
+        },
+        children: [
+          {
+            style: {
+              width: String(seroWidth) + ea,
+              height: String(photoHeight) + ea,
+              borderRadius: String(5) + "px",
+              marginBottom: String(photoMarginBottom) + ea,
+              background: colorChip.gray2,
+            }
+          },
+          {
+            style: {
+              display: "block",
+              position: "relative",
+            },
+            children: [
+              {
+                mode: "svg",
+                source: svgMaker.doubleQuote(colorExtended.mainBlue),
+                style: {
+                  display: "inline-block",
+                  height: String(quoteHeight) + ea,
+                  width: String(quoteWidth) + ea,
+                  verticalAlign: "top",
+                  position: "relative",
+                  top: String(quoteTop) + ea,
+                }
+              },
+              {
+                text: "-",
+                style: {
+                  display: "inline-block",
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(titleWeight),
+                  color: colorChip.black,
+                  marginLeft: String(titleMarginLeft) + ea,
+                  verticalAlign: "top",
+                  fontFamily: "pretendard",
+                }
+              }
+            ]
+          }
+        ]
+      });
+
+    }
+
+  }
+
+}
+
 FrontIndexJs.prototype.resizeEvent = function () {
   const instance = this;
   const { homeliaisonAnalytics, colorExtended } = GeneralJs;
@@ -3706,11 +4248,46 @@ FrontIndexJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
+    class SearchArray extends Array {
+      constructor(arr) {
+        super();
+        for (let i of arr) {
+          this.push(i);
+        }
+      }
+      search(target, value) {
+        let obj = null;
+        for (let i of this) {
+          if (i[target] === value) {
+            obj = i;
+          }
+        }
+        return obj;
+      }
+      toNormal() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i);
+        }
+        return arr;
+      }
+    }
+
     const { media } = this;
     const { returnGet, ajaxJson, dateToString, homeliaisonAnalytics, colorExtended, stringToLink, objectDeepCopy } = GeneralJs;
     const getObj = returnGet();
     const mobile = media[4];
     const desktop = !mobile;
+    let response;
+
+    response = await ajaxJson({ mode: "portfolio", limit: 42 }, LOGHOST + "/getContents", { equal: true });
+    this.contentsArr = new SearchArray(response.contentsArr);
+    this.designers = new SearchArray(response.designers);
+    this.fullLoad = false;
+    this.photoLoad = false;
+    this.loadedContents = [];
+    this.sort = "key9";
+    this.search = "";
 
     this.initAreaClassName = "initAreaClassName";
     this.secondBaseClassName = "secondBaseClassName";
@@ -3732,7 +4309,9 @@ FrontIndexJs.prototype.launching = async function (loading) {
           await instance.insertInitBox();
           await instance.insertSecondBox();
           await instance.insertThirdBox();
-          
+          await instance.insertConsultingBox(false);
+          instance.insertPortfolioBase();
+          await instance.insertConsultingBox(true);
           instance.resizeEvent();
           setInterval(() => {
             homeliaisonAnalytics({
