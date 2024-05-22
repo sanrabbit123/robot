@@ -777,167 +777,175 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
         
         if (/0[0-9][0-9]?\-[0-9][0-9][0-9][0-9]?\-[0-9][0-9][0-9][0-9]/gi.test(phone)) {
           if (name.length < 9 && name.length > 1) {
-            response = await back.getClientsByQuery({ phone }, { selfMongo: selfCoreMongo })
-            if (response.length === 0) {
-    
-              clientResponse = await requestSystem("https://" + instance.address.backinfo.host + ":3000/clientSubmit", {
-                map
-              }, {
-                headers: {
-                  "Content-Type": "application/json",
-                  "origin": instance.address.frontinfo.host,
-                }
-              });
-              if (clientResponse.data.cliid === undefined) {
-                throw new Error("");
-              }
-              cliid = clientResponse.data.cliid;
-    
-              await homeliaisonAnalytics({
-                action: "login",
-                data: {
-                  cliid,
-                  date: dateToString(new Date(), true),
-                },
-              });
-              await sleep(5000);
-  
-              // style check
-    
-              defaultQueryObject = {
-                newMode: true,
-                method: "client",
-                id: cliid
-              };
-              whereQuery = { cliid };
-    
-              updateQuery = {};
-              coreQuery = {};
-              updateQuery["curation.service.serid"] = [ serid ];
-              updateQuery["curation.check.serid"] = serid;
-              coreQuery["requests." + String(requestNumber) + ".analytics.response.service.serid"] = serid;
-              await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
-                ...defaultQueryObject,
-                updateQuery,
-                coreQuery
-              }, {
-                headers: {
-                  "Content-Type": "application/json",
-                  "origin": instance.address.frontinfo.host,
-                }
-              });
-    
-              await sleep(100);
-  
-              updateQuery = {};
-              coreQuery = {};
-              updateQuery["curation.check.purchase"] = Number.isNaN(Number(purchase)) ? 0 : Number(purchase);
-              coreQuery["requests." + String(requestNumber) + ".request.furniture"] = purchaseArr[Number.isNaN(Number(purchase)) ? 0 : Number(purchase)];
-              await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
-                ...defaultQueryObject,
-                updateQuery,
-                coreQuery
-              }, {
-                headers: {
-                  "Content-Type": "application/json",
-                  "origin": instance.address.frontinfo.host,
-                }
-              });
-    
-              await sleep(100);
-  
-              updateQuery = {};
-              coreQuery = {};
-              updateQuery["curation.check.time"] = [];
-              updateQuery["budget"] = "상담 가능 시간 : \n" + [].join(", ");
-              await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
-                ...defaultQueryObject,
-                updateQuery,
-                coreQuery
-              }, {
-                headers: {
-                  "Content-Type": "application/json",
-                  "origin": instance.address.frontinfo.host,
-                }
-              });
-    
-              await sleep(100);
-  
-              updateQuery = {};
-              coreQuery = {};
-              updateQuery["curation.check.budget"] = budgetArr.findIndex((s) => { return s === budget });
-              coreQuery["requests." + String(requestNumber) + ".request.budget"] = budget;
-              await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
-                ...defaultQueryObject,
-                updateQuery,
-                coreQuery
-              }, {
-                headers: {
-                  "Content-Type": "application/json",
-                  "origin": instance.address.frontinfo.host,
-                }
-              });
-    
-              await sleep(100);
-  
-              updateQuery = {};
-              coreQuery = {};
-              updateQuery["curation.image"] = objectDeepCopy(staticImageSet);
-              await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
-                ...defaultQueryObject,
-                updateQuery,
-                coreQuery
-              }, {
-                headers: {
-                  "Content-Type": "application/json",
-                  "origin": instance.address.frontinfo.host,
-                }
-              });
-  
-              await sleep(100);
-  
-              updateQuery = {};
-              coreQuery = {};
-              updateQuery["budget"] = "상담 가능 시간 : \n" + (typeof target.data.time === "string" ? target.data.time : "");
-              await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
-                ...defaultQueryObject,
-                updateQuery,
-                coreQuery
-              }, {
-                headers: {
-                  "Content-Type": "application/json",
-                  "origin": instance.address.frontinfo.host,
-                }
-              });
-    
-              await sleep(3 * 1000);
-    
-              await requestSystem("https://" + instance.address.backinfo.host + ":3000/styleCuration_updateCalculation", { cliid: cliid, historyQuery: {}, coreQuery: {}, mode: "calculation", fromConsole: 0 }, {
-                headers: {
-                  "Content-Type": "application/json",
-                  "origin": instance.address.frontinfo.host,
-                }
-              });
-              await sleep(1000);
-    
-              await requestSystem("https://" + instance.address.backinfo.host + ":3000/ghostClient_updateAnalytics", {
-                page: "styleCuration",
-                mode: "submit",
-                cliid: cliid,
-              }, {
-                headers: {
-                  "Content-Type": "application/json",
-                  "origin": instance.address.frontinfo.host,
-                }
-              });
-              await sleep(1000);
-    
+            if (/없음/gi.test(name) || /딱히/gi.test(name) || /비공개/gi.test(name) || /않/gi.test(name)) {
               await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
-  
             } else {
-              await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
+              response = await back.getClientsByQuery({ phone }, { selfMongo: selfCoreMongo })
+              if (response.length === 0) {
+      
+                clientResponse = await requestSystem("https://" + instance.address.backinfo.host + ":3000/clientSubmit", {
+                  map
+                }, {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "origin": instance.address.frontinfo.host,
+                  }
+                });
+                if (clientResponse.data.cliid === undefined) {
+                  throw new Error("");
+                }
+                cliid = clientResponse.data.cliid;
+      
+                await homeliaisonAnalytics({
+                  action: "login",
+                  data: {
+                    cliid,
+                    date: dateToString(new Date(), true),
+                  },
+                });
+                await sleep(5000);
+    
+                // style check
+      
+                defaultQueryObject = {
+                  newMode: true,
+                  method: "client",
+                  id: cliid
+                };
+                whereQuery = { cliid };
+      
+                updateQuery = {};
+                coreQuery = {};
+                updateQuery["curation.service.serid"] = [ serid ];
+                updateQuery["curation.check.serid"] = serid;
+                coreQuery["requests." + String(requestNumber) + ".analytics.response.service.serid"] = serid;
+                await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
+                  ...defaultQueryObject,
+                  updateQuery,
+                  coreQuery
+                }, {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "origin": instance.address.frontinfo.host,
+                  }
+                });
+      
+                await sleep(100);
+    
+                updateQuery = {};
+                coreQuery = {};
+                updateQuery["curation.check.purchase"] = Number.isNaN(Number(purchase)) ? 0 : Number(purchase);
+                coreQuery["requests." + String(requestNumber) + ".request.furniture"] = purchaseArr[Number.isNaN(Number(purchase)) ? 0 : Number(purchase)];
+                await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
+                  ...defaultQueryObject,
+                  updateQuery,
+                  coreQuery
+                }, {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "origin": instance.address.frontinfo.host,
+                  }
+                });
+      
+                await sleep(100);
+    
+                updateQuery = {};
+                coreQuery = {};
+                updateQuery["curation.check.time"] = [];
+                updateQuery["budget"] = "상담 가능 시간 : \n" + [].join(", ");
+                await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
+                  ...defaultQueryObject,
+                  updateQuery,
+                  coreQuery
+                }, {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "origin": instance.address.frontinfo.host,
+                  }
+                });
+      
+                await sleep(100);
+    
+                updateQuery = {};
+                coreQuery = {};
+                updateQuery["curation.check.budget"] = budgetArr.findIndex((s) => { return s === budget });
+                coreQuery["requests." + String(requestNumber) + ".request.budget"] = budget;
+                await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
+                  ...defaultQueryObject,
+                  updateQuery,
+                  coreQuery
+                }, {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "origin": instance.address.frontinfo.host,
+                  }
+                });
+      
+                await sleep(100);
+    
+                updateQuery = {};
+                coreQuery = {};
+                updateQuery["curation.image"] = objectDeepCopy(staticImageSet);
+                await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
+                  ...defaultQueryObject,
+                  updateQuery,
+                  coreQuery
+                }, {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "origin": instance.address.frontinfo.host,
+                  }
+                });
+    
+                await sleep(100);
+    
+                updateQuery = {};
+                coreQuery = {};
+                updateQuery["budget"] = "상담 가능 시간 : \n" + (typeof target.data.time === "string" ? target.data.time : "");
+                await requestSystem("https://" + instance.address.backinfo.host + ":3000/updateHistory", {
+                  ...defaultQueryObject,
+                  updateQuery,
+                  coreQuery
+                }, {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "origin": instance.address.frontinfo.host,
+                  }
+                });
+      
+                await sleep(3 * 1000);
+      
+                await requestSystem("https://" + instance.address.backinfo.host + ":3000/styleCuration_updateCalculation", { cliid: cliid, historyQuery: {}, coreQuery: {}, mode: "calculation", fromConsole: 0 }, {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "origin": instance.address.frontinfo.host,
+                  }
+                });
+                await sleep(1000);
+      
+                await requestSystem("https://" + instance.address.backinfo.host + ":3000/ghostClient_updateAnalytics", {
+                  page: "styleCuration",
+                  mode: "submit",
+                  cliid: cliid,
+                }, {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "origin": instance.address.frontinfo.host,
+                  }
+                });
+                await sleep(1000);
+      
+                await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
+    
+              } else {
+                await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
+              }
             }
+          } else {
+            await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
           }
+        } else {
+          await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
         }
       } catch (e) {
         console.log(e);
