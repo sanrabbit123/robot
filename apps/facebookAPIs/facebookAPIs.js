@@ -777,7 +777,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
         
         if (/0[0-9][0-9]?\-[0-9][0-9][0-9][0-9]?\-[0-9][0-9][0-9][0-9]/gi.test(phone)) {
           if (name.length < 9 && name.length > 1) {
-            if (/없음/gi.test(name) || /딱히/gi.test(name) || /비공개/gi.test(name) || /않/gi.test(name)) {
+            if (/없음/gi.test(name) || /딱히/gi.test(name) || /비공개/gi.test(name) || /않/gi.test(name) || /개인샵/gi.test(name) || /개인샾/gi.test(name) || /필라테스/gi.test(name) || /필름도배/gi.test(name)) {
               await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
             } else {
               response = await back.getClientsByQuery({ phone }, { selfMongo: selfCoreMongo })
