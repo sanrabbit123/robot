@@ -776,7 +776,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
         ];
         
         if (/0[0-9][0-9]?\-[0-9][0-9][0-9][0-9]?\-[0-9][0-9][0-9][0-9]/gi.test(phone)) {
-          if (name.length < 9) {
+          if (name.length < 9 && name.length > 1) {
             response = await back.getClientsByQuery({ phone }, { selfMongo: selfCoreMongo })
             if (response.length === 0) {
     

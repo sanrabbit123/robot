@@ -1138,6 +1138,12 @@ GeneralJs.prototype.generalCss = function (justTextMode = false) {
   @keyframes fadeupentire{from{transform:translateY(100%);}to{transform:translateY(0%);}}
   @keyframes fadedownentire{from{transform:translateY(0%);}to{transform:translateY(100%);}}
 
+  @keyframes fadeinslide{from{opacity:0;transform:translateX(-15px);}to{opacity:1;transform:translateX(0px);}}
+  @keyframes fadeoutslide{from{opacity:1;transform:translateX(0px);}to{opacity:1;transform:translateX(15px);}}
+
+  @keyframes fadeinslidereverse{from{opacity:0;transform:translateX(15px);}to{opacity:1;transform:translateX(0px);}}
+  @keyframes fadeoutslidereverse{from{opacity:1;transform:translateX(0px);}to{opacity:1;transform:translateX(-15px);}}
+
   @keyframes fadeupdelay{from,30%{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0px);}}
   @keyframes fadeupdelaymiddle{from,30%{opacity:0;transform:translateY(10px);}to{opacity:0.4;transform:translateY(0px);}}
   @keyframes fadeupdelay2{from,30%{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0px);}}

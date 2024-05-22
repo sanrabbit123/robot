@@ -884,6 +884,96 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     }
   
     // review
+    await instance.insertReviewBox(secondBase);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
+  const instance = this;
+  const { withOut, returnGet, selectByClass, removeByClass, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong, reviewTargets } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { secondBaseClassName } = this;
+  const photoChar = 't';
+  const photoCharMobile = "mot";
+  const reviewBlockBaseClassName = "reviewBlockBaseClassName";
+  const reviewBlockClassName = "reviewBlockClassName";
+  const reviewBlockArrowClassName = "reviewBlockArrowClassName";
+  try {
+    let contents;
+    let moreWords;
+    let num;
+    let boxRadius;
+    let moreAreaHeight;
+    let moreSize, moreWeight;
+    let moreTextTop;
+    let mobileMargin;
+    let blackTop;
+    let whiteBlockBetween;
+    let whiteBlockHeight;
+    let whiteBlock;
+    let barMargin;
+    let topBottomMargin;
+    let blueBlock;
+    let blueBlockBetween;
+    let titleSize;
+    let imageReviewBox;
+    let imageBoxWidth;
+    let imageScale;
+    let imageOpacity;
+    let imageMarginTop;
+    let thisIndex;
+    let pid;
+    let thisReview;
+    let reviewTitleSize;
+    let reviewSubSize;
+    let blackScreenOpacity;
+    let reviewTitleMargin, reviewTitleWeight;;
+    let reviewLineHeight;
+    let reviewSubTitleWeight;
+    let reviewMaker;
+
+    boxRadius = 15;
+    moreAreaHeight = 12;
+
+    moreSize = 3.4;
+    moreWeight = 600;
+    moreTextTop = -0.2;
+
+    mobileMargin = 6;
+    blackTop = -31;
+
+    whiteBlockBetween = 4;
+
+    whiteBlockHeight = 80;
+    barMargin = 2.5;
+
+    topBottomMargin = 9;
+
+    blueBlockBetween = 1.8;
+
+    titleSize = 5;
+
+    imageBoxWidth = 62;
+    imageScale = 0.84;
+    imageOpacity = 0.4;
+
+    imageMarginTop = 3;
+    reviewTitleSize = 3.6;
+    reviewSubSize = 2.6;
+
+    blackScreenOpacity = 0.2;
+
+    reviewTitleMargin = 6;
+    reviewTitleWeight = 600;
+    reviewLineHeight = 1.5;
+    reviewSubTitleWeight = 500;
+
+    // review
     createNode({
       mother: secondBase,
       style: {
@@ -928,152 +1018,317 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
       }
     });
 
-    imageReviewBox = createNode({
-      mother: secondBase,
-      style: {
-        display: "flex",
-        flexDirection: "column",
-        position: "relative",
-        width: withOut(0, ea),
-        paddingTop: String(6) + ea,
-        paddingBottom: String(21) + ea,
-        justifyContent: "center",
-        alignItems: "center",
-      },
-    });
+    // reviewMaker
+    reviewMaker = (a, b, c, reverse = false) => {
+      removeByClass(reviewBlockBaseClassName);
 
-    createNode({
-      mother: imageReviewBox,
-      style: {
-        display: "inline-flex",
-        position: "absolute",
-        left: String(0),
-        top: String(6) + ea,
-        width: String(imageBoxWidth) + ea,
-        height: String(imageBoxWidth) + ea,
-        borderRadius: String(15) + "px",
-        backgroundImage: "url('" + FrontIndexJs.binaryPath + "/" + "slide1_0.jpg" + "')",
-        backgroundPosition: "50% 50%",
-        backgroundSize: "auto 100%",
-        transformOrigin: "0% 50%",
-        transform: "scale(" + String(imageScale) + ")",
-        boxShadow: "0px 3px 22px -9px " + colorExtended.ultimateBlack,
-        opacity: String(imageOpacity),
-      }
-    });
+      imageReviewBox = createNode({
+        mother: secondBase,
+        class: [ reviewBlockBaseClassName ],
+        attribute: { numbers: JSON.stringify([ a, b, c ]) },
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          width: withOut(0, ea),
+          paddingTop: String(6) + ea,
+          paddingBottom: String(21) + ea,
+          justifyContent: "center",
+          alignItems: "center",
+          opacity: String(0),
+          transform: "translateX(-15px)",
+          animation: "fadeinslide" + (reverse ? "" : "reverse") + " 0.5s ease forwards",
+        },
+      });
 
-    createNode({
-      mother: imageReviewBox,
-      style: {
-        display: "inline-flex",
-        position: "absolute",
-        right: String(0),
-        top: String(6) + ea,
-        width: String(imageBoxWidth) + ea,
-        height: String(imageBoxWidth) + ea,
-        borderRadius: String(15) + "px",
-        backgroundImage: "url('" + FrontIndexJs.binaryPath + "/" + "slide0_2.jpg" + "')",
-        backgroundPosition: "60% 50%",
-        backgroundSize: "auto 100%",
-        transformOrigin: "100% 50%",
-        transform: "scale(" + String(imageScale) + ")",
-        boxShadow: "0px 3px 22px -9px " + colorExtended.ultimateBlack,
-        opacity: String(imageOpacity),
-      }
-    });
+      // 0
+      thisIndex = a;
+      thisReview = reviewTargets[thisIndex];
+      pid = thisReview.contents.portfolio.pid;
+      createNode({
+        mother: imageReviewBox,
+        class: [ reviewBlockClassName ],
+        style: {
+          display: "inline-flex",
+          position: "absolute",
+          left: String(0),
+          top: String(6) + ea,
+          width: String(imageBoxWidth) + ea,
+          height: String(imageBoxWidth) + ea,
+          borderRadius: String(15) + "px",
+          backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(thisReview.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
+          backgroundPosition: "50% 50%",
+          backgroundSize: "auto 100%",
+          transformOrigin: "0% 50%",
+          transform: "scale(" + String(imageScale) + ")",
+          boxShadow: "0px 3px 22px -9px " + colorExtended.ultimateBlack,
+          opacity: String(0),
+          animation: "justfadeinsmall 0.5s ease forwards",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              top: String(0),
+              left: String(0),
+              opacity: String(blackScreenOpacity),
+              background: colorExtended.black,
+            }
+          },
+          {
+            text: thisReview.contents.review.title.main.split(", ").join("\n"),
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              top: String(reviewTitleMargin) + ea,
+              left: String(reviewTitleMargin) + ea,
+              fontSize: String(reviewTitleSize) + ea,
+              fontWeight: String(reviewTitleWeight),
+              fontFamily: "pretendard",
+              color: colorExtended.white,
+              lineHeight: String(reviewLineHeight),
+            }
+          },
+          {
+            text: thisReview.contents.portfolio.spaceInfo.space + " " + String(thisReview.contents.portfolio.spaceInfo.pyeong) + "py 홈스타일링",
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              bottom: String(reviewTitleMargin) + ea,
+              left: String(reviewTitleMargin) + ea,
+              fontSize: String(reviewSubSize) + ea,
+              fontWeight: String(reviewSubTitleWeight),
+              fontFamily: "pretendard",
+              color: colorExtended.white,
+              lineHeight: String(reviewLineHeight),
+            }
+          },
+        ],
+      });
+  
+      // 1
+      thisIndex = b;
+      thisReview = reviewTargets[thisIndex];
+      pid = thisReview.contents.portfolio.pid;
+      createNode({
+        mother: imageReviewBox,
+        class: [ reviewBlockClassName ],
+        style: {
+          display: "inline-flex",
+          position: "absolute",
+          right: String(0),
+          top: String(6) + ea,
+          width: String(imageBoxWidth) + ea,
+          height: String(imageBoxWidth) + ea,
+          borderRadius: String(15) + "px",
+          backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(thisReview.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
+          backgroundPosition: "50% 50%",
+          backgroundSize: "auto 100%",
+          transformOrigin: "100% 50%",
+          transform: "scale(" + String(imageScale) + ")",
+          boxShadow: "0px 3px 22px -9px " + colorExtended.ultimateBlack,
+          opacity: String(0),
+          animation: "justfadeinsmall 0.5s ease forwards",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              top: String(0),
+              left: String(0),
+              opacity: String(blackScreenOpacity),
+              background: colorExtended.black,
+            }
+          },
+          {
+            text: thisReview.contents.review.title.main.split(", ").join("\n"),
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              top: String(reviewTitleMargin) + ea,
+              left: String(reviewTitleMargin) + ea,
+              fontSize: String(reviewTitleSize) + ea,
+              fontWeight: String(reviewTitleWeight),
+              fontFamily: "pretendard",
+              color: colorExtended.white,
+              lineHeight: String(reviewLineHeight),
+            }
+          },
+          {
+            text: thisReview.contents.portfolio.spaceInfo.space + " " + String(thisReview.contents.portfolio.spaceInfo.pyeong) + "py 홈스타일링",
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              bottom: String(reviewTitleMargin) + ea,
+              left: String(reviewTitleMargin) + ea,
+              fontSize: String(reviewSubSize) + ea,
+              fontWeight: String(reviewSubTitleWeight),
+              fontFamily: "pretendard",
+              color: colorExtended.white,
+              lineHeight: String(reviewLineHeight),
+            }
+          },
+        ],
+      });
+  
+      // 2
+      thisIndex = c;
+      thisReview = reviewTargets[thisIndex];
+      pid = thisReview.contents.portfolio.pid;
+      createNode({
+        mother: imageReviewBox,
+        class: [ reviewBlockClassName ],
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: String(imageBoxWidth) + ea,
+          height: String(imageBoxWidth) + ea,
+          borderRadius: String(15) + "px",
+          backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(thisReview.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
+          backgroundPosition: "50% 50%",
+          backgroundSize: "auto 100%",
+          boxShadow: "0px 3px 22px -9px " + colorExtended.ultimateBlack,
+          overflow: "hidden",
+          animation: "justfadeinoriginal 0.5s ease forwards",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              top: String(0),
+              left: String(0),
+              opacity: String(blackScreenOpacity),
+              background: colorExtended.black,
+            }
+          },
+          {
+            text: thisReview.contents.review.title.main.split(", ").join("\n"),
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              top: String(reviewTitleMargin) + ea,
+              left: String(reviewTitleMargin) + ea,
+              fontSize: String(reviewTitleSize) + ea,
+              fontWeight: String(reviewTitleWeight),
+              fontFamily: "pretendard",
+              color: colorExtended.white,
+              lineHeight: String(reviewLineHeight),
+            }
+          },
+          {
+            text: thisReview.contents.portfolio.spaceInfo.space + " " + String(thisReview.contents.portfolio.spaceInfo.pyeong) + "py 홈스타일링",
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              bottom: String(reviewTitleMargin) + ea,
+              left: String(reviewTitleMargin) + ea,
+              fontSize: String(reviewSubSize) + ea,
+              fontWeight: String(reviewSubTitleWeight),
+              fontFamily: "pretendard",
+              color: colorExtended.white,
+              lineHeight: String(reviewLineHeight),
+            }
+          },
+        ],
+      });
 
-    createNode({
-      mother: imageReviewBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: String(imageBoxWidth) + ea,
-        height: String(imageBoxWidth) + ea,
-        borderRadius: String(15) + "px",
-        backgroundImage: "url('" + FrontIndexJs.binaryPath + "/" + "slide2_0.jpg" + "')",
-        backgroundPosition: "58% 50%",
-        backgroundSize: "auto 100%",
-        boxShadow: "0px 3px 22px -9px " + colorExtended.ultimateBlack,
-        overflow: "hidden",
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "absolute",
-            width: withOut(0, ea),
-            height: withOut(0, ea),
-            top: String(0),
-            left: String(0),
-            opacity: String(0.2),
-            background: colorExtended.black,
+      // arrows
+      createNode({
+        mother: imageReviewBox,
+        class: [ reviewBlockArrowClassName ],
+        mode: "svg",
+        source: svgMaker.generalTriangle(colorExtended.white),
+        event: {
+          click: function (e) {
+            const [ a, b, c ] = [ ...document.querySelectorAll('.' + reviewBlockClassName) ];
+            const [ d, f ] = [ ...document.querySelectorAll('.' + reviewBlockArrowClassName) ];
+            const [ target ] = selectByClass(reviewBlockBaseClassName);
+            const numbers = JSON.parse(target.getAttribute("numbers"));
+
+            target.style.animation = "fadeoutslide 0.3s ease forwards";
+            a.style.animation = "justfadeoutsmall 0.5s ease forwards";
+            b.style.animation = "justfadeoutsmall 0.5s ease forwards";
+            c.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+
+            d.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+            f.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+
+            setQueue(() => {
+              if (JSON.stringify(numbers) === "[2,1,0]") {
+                reviewMaker(0, 2, 1, true);
+              } else if (JSON.stringify(numbers) === "[0,2,1]") {
+                reviewMaker(1, 0, 2, true);
+              } else if (JSON.stringify(numbers) === "[1,0,2]") {
+                reviewMaker(2, 1, 0, true);
+              }
+            }, 501);
+  
           }
         },
-        {
-          text: [
-            "갖고 있는 가구와",
-            "새로운 가구의 재배치는",
-            "큰 변화를 주었어요."
-          ].join("\n"),
-          style: {
-            display: "inline-block",
-            position: "absolute",
-            top: String(6) + ea,
-            left: String(6) + ea,
-            fontSize: String(3.2) + ea,
-            fontWeight: String(600),
-            fontFamily: "pretendard",
-            color: colorExtended.white,
-            lineHeight: String(1.5),
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          width: String(3.4) + ea,
+          transformOrigin: "50% 50%",
+          transform: "rotate(90deg)",
+          left: String(5) + ea,
+          animation: "justfadeinoriginal 0.5s ease forwards",
+        }
+      });
+      createNode({
+        mother: imageReviewBox,
+        class: [ reviewBlockArrowClassName ],
+        mode: "svg",
+        source: svgMaker.generalTriangle(colorExtended.white),
+        event: {
+          click: function (e) {
+            const [ a, b, c ] = [ ...document.querySelectorAll('.' + reviewBlockClassName) ];
+            const [ d, f ] = [ ...document.querySelectorAll('.' + reviewBlockArrowClassName) ];
+            const [ target ] = selectByClass(reviewBlockBaseClassName);
+            const numbers = JSON.parse(target.getAttribute("numbers"));
+
+            target.style.animation = "fadeoutslidereverse 0.3s ease forwards";
+            a.style.animation = "justfadeoutsmall 0.5s ease forwards";
+            b.style.animation = "justfadeoutsmall 0.5s ease forwards";
+            c.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+
+            d.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+            f.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+
+            setQueue(() => {
+              if (JSON.stringify(numbers) === "[2,1,0]") {
+                reviewMaker(1, 0, 2, false);
+              } else if (JSON.stringify(numbers) === "[1,0,2]") {
+                reviewMaker(0, 2, 1, false);
+              } else if (JSON.stringify(numbers) === "[0,2,1]") {
+                reviewMaker(2, 1, 0, false);
+              }
+            }, 501);
+  
           }
         },
-        {
-          text: "서울숲 트리마제 56py 홈퍼니싱",
-          style: {
-            display: "inline-block",
-            position: "absolute",
-            bottom: String(6) + ea,
-            left: String(6) + ea,
-            fontSize: String(2.5) + ea,
-            fontWeight: String(500),
-            fontFamily: "pretendard",
-            color: colorExtended.white,
-            lineHeight: String(1.5),
-          }
-        },
-      ]
-    });
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          width: String(3.4) + ea,
+          transformOrigin: "50% 50%",
+          transform: "rotate(-90deg)",
+          right: String(5) + ea,
+          animation: "justfadeinoriginal 0.5s ease forwards",
+        }
+      });
 
-    createNode({
-      mother: imageReviewBox,
-      mode: "svg",
-      source: svgMaker.generalTriangle(colorExtended.white),
-      style: {
-        display: "inline-block",
-        position: "absolute",
-        width: String(3.4) + ea,
-        transformOrigin: "50% 50%",
-        transform: "rotate(90deg)",
-        left: String(5) + ea,
-        opacity: String(0.9),
-      }
-    });
-
-    createNode({
-      mother: imageReviewBox,
-      mode: "svg",
-      source: svgMaker.generalTriangle(colorExtended.white),
-      style: {
-        display: "inline-block",
-        position: "absolute",
-        width: String(3.4) + ea,
-        transformOrigin: "50% 50%",
-        transform: "rotate(-90deg)",
-        right: String(5) + ea,
-        opacity: String(0.9),
-      }
-    });
-
+    }
+    reviewMaker(2, 1, 0, true);
 
   } catch (e) {
     console.log(e);
@@ -1911,7 +2166,7 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
             justifyContent: "center",
             alignItems: "center",
             borderRadius: String(5) + "px",
-            background: colorExtended.subRed,
+            background: lastMode ? colorExtended.blueDim : colorExtended.subRed,
             top: String(-7.6) + ea,
             boxShadow: "0px 10px 32px -9px " + colorExtended.ultimateBlack,
           },
@@ -1928,11 +2183,11 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
               color: colorExtended.white,
               lineHeight: String(1.5),
               textAlign: "center",
-              top: String(-0.2) + ea,
+              top: String(-0.1) + ea,
             },
             next: {
               mode: "svg",
-              source: svgMaker.generalTriangle(colorExtended.subRed),
+              source: svgMaker.generalTriangle(lastMode ? colorExtended.blueDim : colorExtended.subRed),
               style: {
                 width: String(2.6) + ea,
                 position: "absolute",
@@ -4279,8 +4534,10 @@ FrontIndexJs.prototype.launching = async function (loading) {
     const mobile = media[4];
     const desktop = !mobile;
     let response;
+    let reviewRes;
 
     response = await ajaxJson({ mode: "portfolio", limit: 42 }, LOGHOST + "/getContents", { equal: true });
+    reviewRes = await ajaxJson({ mode: "review", limit: 3, newmode: 1 }, LOGHOST + "/getContents", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
     this.designers = new SearchArray(response.designers);
     this.fullLoad = false;
@@ -4288,6 +4545,7 @@ FrontIndexJs.prototype.launching = async function (loading) {
     this.loadedContents = [];
     this.sort = "key9";
     this.search = "";
+    this.reviewTargets = reviewRes.contentsArr;
 
     this.initAreaClassName = "initAreaClassName";
     this.secondBaseClassName = "secondBaseClassName";
