@@ -7525,13 +7525,12 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "최아선",
-    //     designer: "노경아",
-    //     link: "https://drive.google.com/drive/folders/15o0B6hqAc9nnUoSlPHqB65byUzo8nz6d",
+    //     client: "박선영",
+    //     designer: "정민재",
+    //     link: "https://drive.google.com/drive/folders/10w2zwsXA7hrjszDpcz4zd_5TWZEdMIgR",
     //     pay: true
     //   },
     // ]);
-
 
     // raw video
     // const filter = new PortfolioFilter();

@@ -545,7 +545,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
       },
       {
         title: "토탈 스타일링",
-        eng: "Home Furnishing",
+        eng: "Total Styling",
         description: [
           "구조 변경, 전체 시공과 퍼니싱을 통해",
           "공간을 새롭게 바꾸고 싶어요.",
@@ -1069,6 +1069,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     let imageMarginTop;
     let descriptionMarginTop;
     let baseModuleHeight2;
+    let finalModuleHeight;
 
     boxRadius = 15;
     boxRadiusBig = 20;
@@ -1082,6 +1083,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
 
     baseModuleHeight = 97;
     baseModuleHeight2 = 112;
+    finalModuleHeight = 90;
 
     descriptionMarginTop = 8;
     imageMarginTop = 3;
@@ -1693,7 +1695,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         justifyContent: "start",
         alignItems: "start",
         flexDirection: "column",
-        height: String(86) + ea,
+        height: String(finalModuleHeight) + ea,
       },
       child: {
         style: {
@@ -1857,8 +1859,593 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
       }
     });
 
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+FrontIndexJs.prototype.insertServiceDetailBox = async function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { secondBaseClassName } = this;
+  try {
+    let secondBase;
+    let contents;
+    let moreWords;
+    let num;
+    let boxRadius;
+    let moreAreaHeight;
+    let moreSize, moreWeight;
+    let moreTextTop;
+    let mobileMargin;
+    let blackTop;
+    let whiteBlockBetween;
+    let whiteBlockHeight;
+    let whiteBlock;
+    let barMargin;
+    let topBottomMargin;
+    let blueBlock;
+    let blueBlockBetween;
+    let titleSize;
+    let imageReviewBox;
+    let imageBoxWidth;
+    let imageScale;
+    let imageOpacity;
+    let imageMarginTop;
+    let selectionButtons;
+    let tableColumns;
+    let tableTitle, tableDescription;
+    let thisServiceBase;
+    let selectionButtonsBase;
+    let serviceButtonBlock;
+    let num2;
+    let boo;
+    let mainServiceBlock;
+    let blackBlock;
+    let solveBlock;
+    let thisBlueOpacity;
+    let photoBlock;
+
+    boxRadius = 15;
+    moreAreaHeight = 12;
+
+    moreSize = 3.2;
+    moreWeight = 600;
+    moreTextTop = -0.2;
+
+    mobileMargin = 6;
+    blackTop = -31;
+
+    whiteBlockBetween = 4;
+
+    whiteBlockHeight = 80;
+    barMargin = 2.5;
+
+    topBottomMargin = 9;
+
+    blueBlockBetween = 1.8;
+
+    titleSize = 4.8;
+
+    imageBoxWidth = 62;
+    imageScale = 0.84;
+    imageOpacity = 0.4;
+
+    imageMarginTop = 3;
+
+    moreWords = "더보기";
+    tableTitle = "나에게 필요한 서비스는 무엇일까?";
+    tableDescription = [
+      "홈리에종 서비스 유형은 3가지로 나뉘며,",
+      "시공의 정도와 범위에 따라 구분됩니다.",
+    ]
+    tableColumns = [
+      "철거",
+      "보양",
+      "목공",
+      "전기",
+      "타일",
+      "바닥",
+      "욕실",
+      "주방",
+      "필름",
+      "도배",
+      "중문",
+      "가구",
+      "발코니",
+      "기타",
+    ];
+    contents = [
+      {
+        title: "홈퍼니싱",
+        eng: "Home Furnishing",
+        description: [
+          "인테리어 시공 없이",
+          "가구, 패브릭, 소품만으로",
+          "공간을 변화시키는 홈퍼니싱",
+        ],
+        comments: [
+          "시간은 부족하고",
+          "선택할 것은 많아요..",
+        ],
+        buttons: [
+          "예산 문제",
+          "바쁜 일상",
+          "취향과 감각",
+          "셀프 인테리어 실패",
+        ],
+        table: [
+          "제공 없음",
+          "제공 없음",
+          "제공 없음",
+          "제공 없음",
+          "제공 없음",
+          "제공 없음",
+          "제공 없음",
+          "제공 없음",
+          "제공 없음",
+          "제공 없음",
+          "제공 없음",
+          "제공 없음",
+          "제공 없음",
+          "제공 없음",
+        ],
+        solve: {
+          title: [
+            "가구 구매와 배치,",
+            "소품 활용으로 무드 체인지!",
+          ],
+          description: [
+            "경력과 역량을 지닌 디자이너가 제공하는 배치도와",
+            "기획이 담긴 홈퍼니싱 서비스를 경험하세요.",
+          ],
+          buttons: [
+            "디자이너의 컨셉 제안과 기획",
+            "공간 배치도와 퍼니싱 구입 제안서 제공",
+            "맞춤형 홈퍼니싱 완성",
+          ],
+          images: [
+            FrontIndexJs.binaryPath + "/furnishingSource0.jpg",
+            FrontIndexJs.binaryPath + "/furnishingSource1.jpg",
+          ],
+        }
+      },
+      {
+        title: "홈스타일링",
+        eng: "Home Styling",
+        description: [
+          "필수적인 부분만 적절하게 시공을 하고",
+          "적절한 퍼니싱으로 집 컨디션에 알맞는",
+          "합리적인 서비스",
+        ],
+        comments: [
+          "전체 구조 변경은 부담스럽고,",
+          "원하는 곳만 시공하고 싶어요!",
+        ],
+        buttons: [
+          "예산 문제",
+          "부담스러운 개별 시공 의뢰",
+          "새아파트 단일 시공",
+        ],
+        table: [
+          "부분 철거",
+          "해당 면적",
+          "걸레받이 / 몰딩 / 문짝",
+          "일부 배선 및 조명 교체",
+          "덧방 위주",
+          "마루 / 장판",
+          "악세사리 교체",
+          "악세사리 교체",
+          "전체 제공",
+          "전체 제공",
+          "중문 교체",
+          "붙박이장 / 냉장고장",
+          "제공 없음",
+          "제공 없음",
+        ],
+        solve: {
+          title: [
+            "도배 바닥 필름 등",
+            "기본적인 톤 보정만으로",
+            "공간의 분위기 전환!",
+          ],
+          description: [
+            "디자이너가 제공하는 기획을 바탕으로",
+            "믿을 수 있는 시공사와 안정적인 인테리어를 경험하세요.",
+          ],
+          buttons: [
+            "디자이너의 컨셉 제안과 기획",
+            "공간 배치도와 퍼니싱 구입 제안서 제공",
+            "부분 시공 디자인 및 진행",
+            "맞춤형 홈스타일링 완성",
+          ],
+          images: [
+            FrontIndexJs.binaryPath + "/stylingSource0.jpg",
+            FrontIndexJs.binaryPath + "/stylingSource1.jpg",
+          ],
+        }
+      },
+      {
+        title: "토탈 스타일링",
+        eng: "Total Styling",
+        description: [
+          "원하는 구조를 위한 철거와 주방, 화장실 등",
+          "기본 이상의 시공을 통해",
+          "전체적인 분위기를 업그레이드",
+        ],
+        comments: [
+          "라이프 스타일이 담긴",
+          "인테리어를 원해요.",
+        ],
+        buttons: [
+          "구조 변경과 철거",
+          "제작 가구로 나에게 맞는 공간",
+          "구축 아파트 시공",
+        ],
+        table: [
+          "전체 철거",
+          "해당 면적",
+          "모든 종류의 목공",
+          "전체 배선 및 조명 교체",
+          "전체 철거 및 교체",
+          "마루 / 장판 / 타일",
+          "전체 철거 및 전체 공사",
+          "전체 철거 및 전체 공사",
+          "전체 제공",
+          "전체 제공",
+          "중문 교체",
+          "모든 종류의 제작 가구",
+          "발코니 확장",
+          "금속, 샤시 등",
+        ],
+        solve: {
+          title: [
+            "오래 머물고 싶은",
+            "나에게 맞는 공간으로",
+            "평범한 집의 형태 탈피!",
+          ],
+          description: [
+            "구조 변경과 자유로운 시공을 통해",
+            "내 옷을 입은 것만 같은",
+            "맞춤형 주거공간을 경험하세요.",
+          ],
+          buttons: [
+            "디자이너의 컨셉 제안과 기획",
+            "공간 배치도와 퍼니싱 구입 제안서 제공",
+            "전체 시공 디자인 및 진행",
+            "맞춤형 토탈 스타일링 완성"
+          ],
+          images: [
+            FrontIndexJs.binaryPath + "/totalSource0.jpg",
+            FrontIndexJs.binaryPath + "/totalSource1.jpg",
+          ],
+        }
+      },
+    ];
+    selectionButtons = contents.map((o) => { return o.eng });
+
+    secondBase = createNode({
+      mother: baseTong,
+      class: [ secondBaseClassName ],
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        justifyContent: "start",
+        alignItems: "start",
+        flexDirection: "column",
+      },
+    });
+
+    // contents
+    num = 0;
+    for (let c of contents) {
+
+      thisBlueOpacity = 1 - (0.2 * num);
+
+      thisServiceBase = createNode({
+        mother: secondBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
+        }
+      });
+
+      selectionButtonsBase = createNode({
+        mother: thisServiceBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "row",
+          marginBottom: String(1.6) + ea,
+          paddingLeft: String(1) + ea,
+        }
+      })
+
+      // service buttons
+      num2 = 0;
+      for (let service of selectionButtons) {
+        boo = (num === num2);
+        serviceButtonBlock = createNode({
+          mother: selectionButtonsBase,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: "auto",
+            height: String(3) + ea,
+            justifyContent: "start",
+            alignItems: "center",
+            flexDirection: "row",
+            marginRight: String(3) + ea,
+          }
+        });
+        createNode({
+          mother: serviceButtonBlock,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(2) + ea,
+            height: String(2) + ea,
+            borderRadius: String(1) + "px",
+            background: boo ? colorExtended.blue : colorExtended.white,
+            border: "1px solid " + colorExtended.black,
+            marginRight: String(1) + ea,
+          }
+        });
+        createNode({
+          mother: serviceButtonBlock,
+          text: service,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(2.5) + ea,
+            fontWeight: String(700),
+            fontFamily: "mont",
+            color: boo ? colorExtended.mainBlue : colorExtended.deactive,
+            top: String(0) + ea,
+          }
+        });
+
+        num2++;
+      }
+
+      // main box
+      mainServiceBlock = createNode({
+        mother: thisServiceBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          border: String(2) + "px solid " + colorExtended.black,
+          background: colorExtended.white,
+          borderRadius: String(boxRadius) + "px",
+          marginBottom: String(2) + ea,
+          height: String(52) + ea,
+          zIndex: String(2),
+        }
+      });
+      createNode({
+        mother: mainServiceBlock,
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          width: String(1.3) + ea,
+          height: String(1.3) + ea,
+          background: colorExtended.mainBlue,
+          top: String(2.5) + ea,
+          right: String(2.5) + ea,
+          opacity: String(0.5),
+        }
+      })
+      createNode({
+        mother: mainServiceBlock,
+        text: c.title,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(4.8) + ea,
+          fontWeight: String(700),
+          fontFamily: "pretendard",
+          color: colorExtended.black,
+          marginBottom: String(0.1) + ea,
+        }
+      });
+      createNode({
+        mother: mainServiceBlock,
+        text: c.eng,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(2.3) + ea,
+          fontWeight: String(700),
+          fontFamily: "mont",
+          color: colorExtended.mainBlue,
+        }
+      });
+      createNode({
+        mother: mainServiceBlock,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(28) + ea,
+          height: String(3.6) + ea,
+          marginBottom: String(3.8) + ea,
+          borderBottom: String(2) + "px solid " + colorExtended.black,
+        }
+      });
+      createNode({
+        mother: mainServiceBlock,
+        text: c.description.join("\n"),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(3.3) + ea,
+          fontWeight: String(500),
+          fontFamily: "pretendard",
+          color: colorExtended.black,
+          lineHeight: String(1.5),
+          textAlign: "center",
+        }
+      });
+
+      // black box
+      blackBlock = createNode({
+        mother: thisServiceBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(mobileMargin, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
+          height: String(80) + ea,
+          paddingTop: String(6) + ea,
+          zIndex: String(1),
+          paddingLeft: String(mobileMargin / 2) + ea,
+          paddingRight: String(mobileMargin / 2) + ea,
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "absolute",
+            width: withOut(-1 * mobileMargin * 2, ea),
+            left: String(-1 * mobileMargin) + ea,
+            background: colorExtended.black,
+            height: withOut(-1 * 20, ea),
+            top: String(-20) + ea,
+            borderBottomRightRadius: String(8) + ea,
+          }
+        }
+      });
+      createNode({
+        mother: blackBlock,
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          position: "relative",
+          justifyContent: "start",
+          alignItems: "start",
+          width: withOut(0, ea),
+          paddingLeft: String(0.8) + ea,
+          marginBottom: String(2) + ea,
+        },
+        child: {
+          mode: "svg",
+          source: svgMaker.doubleQuote(colorExtended.mainBlue),
+          style: {
+            display: "inline-block",
+            width: String(3) + ea,
+          }
+        }
+      });
+      createNode({
+        mother: blackBlock,
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          position: "relative",
+          justifyContent: "start",
+          alignItems: "start",
+          width: withOut(0, ea),
+          paddingLeft: String(0) + ea,
+        },
+        child: {
+          text: c.comments,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(5) + ea,
+            fontWeight: String(600),
+            fontFamily: "pretendard",
+            color: colorExtended.white,
+            lineHeight: String(1.41),
+          }
+        }
+      });
 
 
+
+
+
+      // solve box
+      solveBlock = createNode({
+        mother: thisServiceBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
+          height: String(80) + ea,
+          paddingTop: String(6) + ea,
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "absolute",
+            width: withOut(-1 * mobileMargin * 2, ea),
+            left: String(-1 * mobileMargin) + ea,
+            background: colorExtended.white,
+            height: withOut(-1 * 10, ea),
+            top: String(-10) + ea,
+          },
+          next: {
+            style: {
+              display: "block",
+              position: "absolute",
+              width: withOut(-1 * mobileMargin * 2, ea),
+              left: String(-1 * mobileMargin) + ea,
+              background: colorExtended.mainBlue,
+              height: withOut(-1 * 10, ea),
+              top: String(-10) + ea,
+              opacity: String(thisBlueOpacity),
+            }
+          }
+        }
+      });
+
+      // photo zone
+      photoBlock = createNode({
+        mother: thisServiceBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
+          height: String(80) + ea,
+          paddingTop: String(6) + ea,
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "absolute",
+            width: withOut(-1 * mobileMargin * 2, ea),
+            left: String(-1 * mobileMargin) + ea,
+            background: colorExtended.white,
+            height: withOut(0, ea),
+            top: String(0) + ea,
+          },
+        }
+      });
+
+      num++;
+    }
 
   } catch (e) {
     console.log(e);
@@ -1951,9 +2538,11 @@ FrontIndexJs.prototype.launching = async function (loading) {
       },
       local: async () => {
         try {
-          await instance.insertInitBox();
-          await instance.insertSecondBox();
-          await instance.insertThirdBox();
+          // await instance.insertInitBox();
+          // await instance.insertSecondBox();
+          // await instance.insertThirdBox();
+
+          await instance.insertServiceDetailBox();
 
           instance.resizeEvent();
           setInterval(() => {
