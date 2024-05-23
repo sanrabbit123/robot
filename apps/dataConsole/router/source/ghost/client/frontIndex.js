@@ -74,13 +74,14 @@ FrontIndexJs.prototype.generateGsArray = function (number) {
 
 FrontIndexJs.prototype.insertInitBox = async function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, removeByClass, selectByClass } = GeneralJs;
   const { ea, media, baseTong, standardWidth, totalContents, naviHeight, baseTop, heightTong } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const { initAreaClassName } = this;
+  const animationTargetTitleClassName = "animationTargetTitleClassName";
   try {
     let minusLeft;
     let firstBase;
@@ -106,52 +107,85 @@ FrontIndexJs.prototype.insertInitBox = async function () {
     let firstBoxVisualMarginRight;
     let mobileMargin;
     let paddingVisual;
+    let initAreaHeight;
+    let firstBaseHalfLeft, firstBaseHalfRight;
+    let boxWidth;
+    let titleX, titleY;
+    let scaleConst;
+    let imageMarginTop;
+    let imageMarginLeft;
 
-    minusLeft = window.innerWidth - standardWidth + 1;
+    minusLeft = window.innerWidth - standardWidth;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
 
     firstBasePaddingTop = <%% 24, 24, 24, 24, (window.innerHeight < 700 ? 1.5 : 6.5) %%>;
     firstBasePaddingBottom = <%% 160, 160, 160, 120, 20 %%>;
 
-    subTitleSize = <%% 20, 18, 17, 15, 4.2 %%>;
-    subTitleWeight = 500;
+    subTitleSize = <%% 21, 18, 17, 15, 4.2 %%>;
+    subTitleWeight = desktop ? 300 : 400;
 
-    titleSize = <%% 50, 48, 43, 36, 7 %%>;
-    titleWeight = 700;
+    titleSize = <%% 38, 48, 43, 36, 7 %%>;
+    titleWeight = desktop ? 800 : 700;
 
-    mainImageWidth = 59;
-    subTitleBlockMarginTop = 2.6;
+    mainImageWidth = <%% 590, 300, 300, 300, 59 %%>;
+    subTitleBlockMarginTop = <%% 10, 10, 10, 10, 2.6 %%>;
     imageBlockMarginTop = 6.5;
-    boxBlock0MarginTop = 13;
-    boxBlock1MarginTop = 2;
-    boxBlockHeight = 20;
+    boxBlock0MarginTop = <%% 50, 24, 24, 24, 13 %%>;
+    boxBlock1MarginTop = <%% 6, 6, 6, 6, 2 %%>;
+    boxBlockHeight = <%% 90, 100, 80, 80, 20 %%>;
 
     titleLineBoxWidthVisual = -1.2;
-    titleLineBoxHeight = 3;
-    titleLineBoxTop = 7;
+    titleLineBoxHeight = <%% 8, 8, 8, 8, 3 %%>;
+    titleLineBoxTop = <%% 46, 46, 44, 44, 7 %%>;
     titleLineBoxLeft = -1;
     titleLineBoxOpacity = 0.8;
 
-    dotWidth = 1.2;
-    dotMargin = 2.5;
+    dotWidth = <%% 6, 6, 6, 6, 1.2 %%>;
+    dotMargin = <%% 12, 12, 12, 12, 2.5 %%>;
     dotRadius = 1;
 
     boxRadius = 15;
     
-    stepSize = 4;
+    stepSize = <%% 17, 17, 17, 17, 4 %%>;
     stepWeight = 500;
     stepBoldWeight = 800;
     stepTextTop = -0.1;
 
-    stepEngSize = 4.5;
+    stepEngSize = <%% 18, 18, 18, 18, 4.5 %%>;
     stepEngWeight = 700;
-    stepEngTextTop = 0.1;
-    stepEngMarginRight = 4.2;
+    stepEngTextTop = <%% 0.5, 0.5, 0.5, 0.5, 0.1 %%>;
+    stepEngMarginRight = <%% 8, 8, 8, 8, 4.2 %%>;
     firstBoxVisualMarginRight = 4.6;
 
     mobileMargin = 6;
 
     paddingVisual = 15;
+
+    initAreaHeight = 700;
+
+    boxWidth = 450;
+
+    titleX = 100;
+    titleY = 160;
+
+    scaleConst = 1;
+
+    imageMarginTop = 11;
+    imageMarginLeft = 64;
+
+    if (media[0] && window.innerHeight > 1100) {
+
+      initAreaHeight = 800;
+      boxWidth = 440;
+      scaleConst = 1.1;
+      titleX = 72;
+      titleY = 180;
+      mainImageWidth = 620;
+      imageMarginLeft = 71;
+      imageMarginTop = -10;
+
+    }
+
 
     firstBase = createNode({
       mother: baseTong,
@@ -160,68 +194,262 @@ FrontIndexJs.prototype.insertInitBox = async function () {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
-        paddingTop: String(firstBasePaddingTop) + ea,
-        flexDirection: "column",
-        paddingBottom: String(firstBasePaddingBottom) + ea,
+        paddingTop: desktop ? "" : String(firstBasePaddingTop) + ea,
+        flexDirection: desktop ? "row" : "column",
+        paddingBottom: desktop ? "" : String(firstBasePaddingBottom) + ea,
+        height: mobile ? "" : String(initAreaHeight) + ea,
       },
     });
+
+    // absolute back
+    if (desktop) {
+      totalContents.style.background = colorExtended.blueLight;
+      baseTong.style.top = String(instance.naviHeight) + "px";
+      baseTong.style.paddingTop = String(0) + "px";
+      createNode({
+        mother: firstBase,
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(-1 * (minusLeft / 2)) + ea,
+          height: withOut(0, ea),
+          width: String(window.innerWidth / 2) + ea,
+          background: colorExtended.gradientBlue7,
+        }
+      });
+      createNode({
+        mother: firstBase,
+        style: {
+          position: "absolute",
+          top: String(0),
+          right: String(-1 * (minusLeft / 2)) + ea,
+          height: withOut(0, ea),
+          width: String(window.innerWidth / 2) + ea,
+          background: colorExtended.white,
+        }
+      });
+
+      firstBaseHalfLeft = createNode({
+        mother: firstBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: withOut(50, titleX, ea),
+          flexDirection: "column",
+          justifyContent: "start",
+          alignItems: "start",
+          top: String(titleY) + ea,
+          height: withOut(titleY, ea),
+          left: String(titleX) + ea,
+          transformOrigin: "0% 0%",
+          transform: "scale(" + String(scaleConst) + ")",
+        }
+      });
+
+      firstBaseHalfRight = createNode({
+        mother: firstBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: withOut(50, 0, ea),
+          flexDirection: "column",
+          height: withOut(0, ea),
+          justifyContent: "center",
+          alignItems: "center",
+          left: String(titleX) + ea,
+        }
+      });
+
+    }
   
     // main title
-    mainTitleBlock = createNode({
-      mother: firstBase,
-      style: {
-        display: "flex",
-        position: "relative",
-        justifyContent: "center",
-        alignItems: desktop ? "start" : "center",
-        opacity: String(0),
-        transform: "translateY(30px)",
-        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
-        paddingLeft: mobile ? String(mobileLeftPaddingVisual) + ea : "",
-      },
-      children: [
-        {
-          text: "인테리어,",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(titleSize) + ea,
-            fontWeight: String(titleWeight),
-            color: colorExtended.black,
-            fontFamily: "pretendard",
-            top: desktop ? String(titleVisualTop) + ea : "",
-            left: desktop ? String(titleVisualLeft) + ea : "",
-            lineHeight: String(titleLineHeight),
+    if (desktop) {
+      mainTitleBlock = createNode({
+        mother: desktop ? firstBaseHalfLeft : firstBase,
+        style: {
+          display: desktop ? "inline-flex" : "flex",
+          position: "relative",
+          justifyContent: "start",
+          alignItems: "center",
+          opacity: String(0),
+          transform: "translateY(30px)",
+          animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+          paddingLeft: String(4) + ea,
+          paddingRight: String(4) + ea,
+          paddingTop: desktop ? String(6) + ea : "",
+          paddingBottom: desktop ? String(8) + ea : "",
+          borderRadius: desktop ? String(15) + ea : "",
+          overflow: "hidden",
+          transition: "all 0.3s ease",
+        },
+        children: [
+          {
+            style: {
+              display: "none",
+              position: "absolute",
+              background: colorExtended.gradientBlue7,
+              width: String(125) + '%',
+              "aspect-ratio": "1 / 1",
+              animation: "rotateProgress2 3s linear infinite",
+              opacity: String(0.4),
+            }
           },
-          child: {
+          {
             style: {
               position: "absolute",
-              width: withOut(titleLineBoxWidthVisual, ea),
-              height: String(titleLineBoxHeight) + ea,
-              borderRadius: String(3) + "px",
-              background: colorExtended.gradientBlue2,
-              top: String(titleLineBoxTop) + ea,
-              left: String(titleLineBoxLeft) + ea,
-              zIndex: String(-1),
-              opacity: String(titleLineBoxOpacity),
+              background: colorExtended.mainBlue,
+              width: String(100) + '%',
+              bottom: String(0),
+              height: String(5) + ea,
+              left: String(0) + ea,
+              transformOrigin: "0% 50%",
+              transform: "scaleX(0)",
+              animation: "garoProgress 5s linear infinite",
+            }
+          },
+          {
+            class: [ animationTargetTitleClassName ],
+            text: "인테리어,",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(titleWeight),
+              color: colorExtended.black,
+              fontFamily: "pretendard",
+              top: desktop ? String(titleVisualTop) + ea : "",
+              left: desktop ? String(titleVisualLeft) + ea : "",
+              lineHeight: String(titleLineHeight),
+              opacity: String(1),
+            },
+            child: {
+              style: {
+                display: mobile ? "inline-block" : "none",
+                position: "absolute",
+                width: withOut(titleLineBoxWidthVisual, ea),
+                height: String(titleLineBoxHeight) + ea,
+                borderRadius: String(3) + "px",
+                background: desktop ? colorExtended.blueWhite : colorExtended.gradientBlue2,
+                top: String(titleLineBoxTop) + ea,
+                left: String(titleLineBoxLeft) + ea,
+                zIndex: String(-1),
+                opacity: String(titleLineBoxOpacity),
+              }
             }
           }
+        ]
+      });
+
+      setInterval(() => {
+        const [ target ] = selectByClass(animationTargetTitleClassName);
+        target.style.animation = "fadeoutslide 0.3s ease forwards";
+        if (/^인테리어/gi.test(target.firstChild.textContent)) {
+          setQueue(() => {
+            target.firstChild.textContent = "홈스타일링,";
+            target.style.animation = "fadeinslide 0.3s ease forwards";
+          }, 300);
+        } else if (/^홈스타일링/gi.test(target.firstChild.textContent)) {
+          setQueue(() => {
+            target.firstChild.textContent = "토탈 스타일링,";
+            target.style.animation = "fadeinslide 0.3s ease forwards";
+          }, 300);
+        } else if (/^토탈 스타일링/gi.test(target.firstChild.textContent)) {
+          setQueue(() => {
+            target.firstChild.textContent = "홈퍼니싱,";
+            target.style.animation = "fadeinslide 0.3s ease forwards";
+          }, 300);
+        } else if (/^홈퍼니싱/gi.test(target.firstChild.textContent)) {
+          setQueue(() => {
+            target.firstChild.textContent = "스타일링,";
+            target.style.animation = "fadeinslide 0.3s ease forwards";
+          }, 300);
+        } else if (/^스타일링/gi.test(target.firstChild.textContent)) {
+          setQueue(() => {
+            target.firstChild.textContent = "집꾸미기,";
+            target.style.animation = "fadeinslide 0.3s ease forwards";
+          }, 300);
+        } else if (/^집꾸미기/gi.test(target.firstChild.textContent)) {
+          setQueue(() => {
+            target.firstChild.textContent = "새아파트 꾸미기,";
+            target.style.animation = "fadeinslide 0.3s ease forwards";
+          }, 300);
+        } else if (/^새아파트 꾸미기/gi.test(target.firstChild.textContent)) {
+          setQueue(() => {
+            target.firstChild.textContent = "신혼집 인테리어,";
+            target.style.animation = "fadeinslide 0.3s ease forwards";
+          }, 300);
+        } else if (/^신혼집 인테리어/gi.test(target.firstChild.textContent)) {
+          setQueue(() => {
+            target.firstChild.textContent = "아이방 스타일링,";
+            target.style.animation = "fadeinslide 0.3s ease forwards";
+          }, 300);
+        } else if (/^아이방 스타일링/gi.test(target.firstChild.textContent)) {
+          setQueue(() => {
+            target.firstChild.textContent = "인테리어,";
+            target.style.animation = "fadeinslide 0.3s ease forwards";
+          }, 300);
         }
-      ]
-    });
+      }, 5000);
+
+    } else {
+      mainTitleBlock = createNode({
+        mother: desktop ? firstBaseHalfLeft : firstBase,
+        style: {
+          display: desktop ? "inline-flex" : "flex",
+          position: "relative",
+          justifyContent: "center",
+          alignItems: desktop ? "start" : "center",
+          opacity: String(0),
+          transform: "translateY(30px)",
+          animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+          paddingLeft: mobile ? String(mobileLeftPaddingVisual) + ea : "",
+        },
+        children: [
+          {
+            text: "인테리어,",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(titleWeight),
+              color: mobile ? colorExtended.black : colorExtended.white,
+              fontFamily: "pretendard",
+              top: desktop ? String(titleVisualTop) + ea : "",
+              left: desktop ? String(titleVisualLeft) + ea : "",
+              lineHeight: String(titleLineHeight),
+            },
+            child: {
+              style: {
+                display: mobile ? "inline-block" : "none",
+                position: "absolute",
+                width: withOut(titleLineBoxWidthVisual, ea),
+                height: String(titleLineBoxHeight) + ea,
+                borderRadius: String(3) + "px",
+                background: desktop ? colorExtended.blueWhite : colorExtended.gradientBlue2,
+                top: String(titleLineBoxTop) + ea,
+                left: String(titleLineBoxLeft) + ea,
+                zIndex: String(-1),
+                opacity: String(titleLineBoxOpacity),
+              }
+            }
+          }
+        ]
+      });
+    }
 
     // sub title
     subTitleBlock = createNode({
-      mother: firstBase,
+      mother: desktop ? firstBaseHalfLeft : firstBase,
       style: {
         display: "flex",
         position: "relative",
         justifyContent: "center",
         alignItems: "center",
         marginTop: String(subTitleBlockMarginTop) + ea,
+        paddingLeft: desktop ? String(4) + ea : "",
         opacity: String(0),
         transform: "translateY(30px)",
-        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+        animation: "1.2s ease 0.2s 1 normal forwards running fadeupdelay2",
       },
       children: [
         {
@@ -239,37 +467,90 @@ FrontIndexJs.prototype.insertInitBox = async function () {
       ]
     });
 
-    // image
-    imageBlock = createNode({
-      mother: firstBase,
-      style: {
-        display: "flex",
-        position: "relative",
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: String(imageBlockMarginTop) + ea,
-        opacity: String(0),
-        transform: "translateY(30px)",
-        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
-      },
-      children: [
-        {
-          mode: "img",
-          attribute: {
-            src: FrontIndexJs.binaryPath + "/frontIndexSource0.png",
-          },
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(mainImageWidth) + ea,
+    if (mobile) {
+      // image
+      imageBlock = createNode({
+        mother: firstBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: String(imageBlockMarginTop) + ea,
+          opacity: String(0),
+          transform: "translateY(30px)",
+          animation: "1.2s ease 0.4s 1 normal forwards running fadeupdelay2",
+        },
+        children: [
+          {
+            mode: "img",
+            attribute: {
+              src: FrontIndexJs.binaryPath + "/frontIndexSource0.png",
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(mainImageWidth) + ea,
+            }
           }
-        }
-      ]
-    });
+        ]
+      });
+    } else {
+      imageBlock = createNode({
+        mother: firstBaseHalfRight,
+        style: {
+          display: "flex",
+          position: "relative",
+          justifyContent: "center",
+          alignItems: "center",
+          opacity: String(0),
+          transform: "translateY(30px)",
+          animation: "1.2s ease 0.4s 1 normal forwards running fadeupdelay2",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              width: String(mainImageWidth) + ea,
+              height: String(438) + ea,
+              marginTop: String(imageMarginTop) + ea,
+              marginLeft: String(imageMarginLeft) + ea,
+              background: colorExtended.gradientBlue8,
+              "clip-path": "url(#myClip)",
+            }
+          },
+          {
+            mode: "svg",
+            source: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 548.4656 387.8559"><defs><clipPath id="myClip"><path d="M413.7049,55.4116c-10.3407-9.0132-78.7193-40.516-155.9485-12.1091-33.9044,12.4709-73.1454,34.1793-108.2269,51.4999-35.0815,17.3206-52.0337,38.7982-56.978,69.5693-4.2638,26.5353-.641,45.1678,11.1047,71.7108.7096-.9911,28.7903,44.5062,74.0373,72.7254,35.4917,22.1351,115.0259,40.2577,154.5627,29.7529,37.8094-10.0459,82.9747-41.223,109.4625-85.5637,26.5447-44.4361,32.1472-145.1479-28.0138-197.5854Z"/></clipPath></defs></svg>`,
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              width: String(mainImageWidth) + ea,
+              marginTop: String(imageMarginTop) + ea,
+              marginLeft: String(imageMarginLeft) + ea,
+            }
+          },
+          {
+            mode: "img",
+            attribute: {
+              src: FrontIndexJs.binaryPath + "/frontIndexSourceDesktop0.png",
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(mainImageWidth) + ea,
+              marginTop: String(imageMarginTop) + ea,
+              marginLeft: String(imageMarginLeft) + ea,
+            }
+          }
+        ]
+      });
+    }
 
     // box 1
     boxBlock0 = createNode({
-      mother: firstBase,
+      mother: desktop ? firstBaseHalfLeft : firstBase,
       style: {
         display: "flex",
         position: "relative",
@@ -277,14 +558,14 @@ FrontIndexJs.prototype.insertInitBox = async function () {
         alignItems: "center",
         marginTop: String(boxBlock0MarginTop) + ea,
         opacity: String(0),
-        width: withOut(0, ea),
+        width: mobile ? withOut(0, ea) : String(boxWidth) + ea,
         height: String(boxBlockHeight) + ea,
         background: colorExtended.white,
         borderRadius: String(boxRadius) + "px",
         border: "2px solid " + colorExtended.black,
         boxSizing: "border-box",
         transform: "translateY(30px)",
-        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+        animation: "1.2s ease 0.8s 1 normal forwards running fadeupdelay2",
         zIndex: String(1),
       },
       children: [
@@ -350,7 +631,7 @@ FrontIndexJs.prototype.insertInitBox = async function () {
 
     // box 2
     boxBlock1 = createNode({
-      mother: firstBase,
+      mother: desktop ? firstBaseHalfLeft : firstBase,
       style: {
         display: "flex",
         position: "relative",
@@ -358,14 +639,14 @@ FrontIndexJs.prototype.insertInitBox = async function () {
         alignItems: "center",
         marginTop: String(boxBlock1MarginTop) + ea,
         opacity: String(0),
-        width: withOut(0, ea),
+        width: mobile ? withOut(0, ea) : String(boxWidth) + ea,
         height: String(boxBlockHeight) + ea,
         background: colorExtended.white,
         borderRadius: String(boxRadius) + "px",
         border: "2px solid " + colorExtended.black,
         boxSizing: "border-box",
         transform: "translateY(30px)",
-        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
+        animation: "1.2s ease 1s 1 normal forwards running fadeupdelay2",
         zIndex: String(1),
       },
       children: [
@@ -428,41 +709,30 @@ FrontIndexJs.prototype.insertInitBox = async function () {
       ]
     });
 
-    // if (window.innerHeight < 700) {
-    //   totalHeight = 0;
-    //   totalHeight += mainTitleBlock.getBoundingClientRect().height;
-    //   totalHeight += subTitleBlock.getBoundingClientRect().height;
-    //   totalHeight += imageBlock.getBoundingClientRect().height;
-    //   totalHeight += window.innerWidth * ((subTitleBlockMarginTop + imageBlockMarginTop + boxBlock0MarginTop + boxBlock1MarginTop + boxBlockHeight + boxBlockHeight + instance.baseTop + instance.baseTop) / 100);
-    //   totalHeight += instance.naviHeight;
-    //   firstBase.style.paddingTop = String((window.innerHeight - totalHeight - paddingVisual) / 2) + "px";
-    // }
-
-    // setQueue(() => {
-    //   if (window.innerHeight < 700) {
-    //     totalHeight = 0;
-    //     totalHeight += mainTitleBlock.getBoundingClientRect().height;
-    //     totalHeight += subTitleBlock.getBoundingClientRect().height;
-    //     totalHeight += imageBlock.getBoundingClientRect().height;
-    //     totalHeight += window.innerWidth * ((subTitleBlockMarginTop + imageBlockMarginTop + boxBlock0MarginTop + boxBlock1MarginTop + boxBlockHeight + boxBlockHeight + instance.baseTop + instance.baseTop) / 100);
-    //     totalHeight += instance.naviHeight;
-    //     firstBase.style.paddingTop = String((window.innerHeight - totalHeight - paddingVisual) / 2) + "px";
-    //   }
-
-    //   setQueue(() => {
-    //     if (window.innerHeight < 700) {
-    //       totalHeight = 0;
-    //       totalHeight += mainTitleBlock.getBoundingClientRect().height;
-    //       totalHeight += subTitleBlock.getBoundingClientRect().height;
-    //       totalHeight += imageBlock.getBoundingClientRect().height;
-    //       totalHeight += window.innerWidth * ((subTitleBlockMarginTop + imageBlockMarginTop + boxBlock0MarginTop + boxBlock1MarginTop + boxBlockHeight + boxBlockHeight + instance.baseTop + instance.baseTop) / 100);
-    //       totalHeight += instance.naviHeight;
-    //       firstBase.style.paddingTop = String((window.innerHeight - totalHeight - paddingVisual) / 2) + "px";
-    //     }
-  
-    //   }, 500);
-
-    // });
+    setQueue(() => {
+      if (window.innerHeight < 700) {
+        totalHeight = 0;
+        totalHeight += mainTitleBlock.getBoundingClientRect().height;
+        totalHeight += subTitleBlock.getBoundingClientRect().height;
+        totalHeight += imageBlock.getBoundingClientRect().height;
+        totalHeight += window.innerWidth * ((subTitleBlockMarginTop + imageBlockMarginTop + boxBlock0MarginTop + boxBlock1MarginTop + boxBlockHeight + boxBlockHeight) / 100);
+        totalHeight += instance.naviHeight;
+        firstBase.style.paddingTop = String(((window.innerHeight - totalHeight - paddingVisual) / 2)) + "px";
+        instance.baseTong.style.paddingTop = String(instance.naviHeight) + "px";
+      }
+      setQueue(() => {
+        if (window.innerHeight < 700) {
+          totalHeight = 0;
+          totalHeight += mainTitleBlock.getBoundingClientRect().height;
+          totalHeight += subTitleBlock.getBoundingClientRect().height;
+          totalHeight += imageBlock.getBoundingClientRect().height;
+          totalHeight += window.innerWidth * ((subTitleBlockMarginTop + imageBlockMarginTop + boxBlock0MarginTop + boxBlock1MarginTop + boxBlockHeight + boxBlockHeight) / 100);
+          totalHeight += instance.naviHeight;
+          firstBase.style.paddingTop = String(((window.innerHeight - totalHeight - paddingVisual) / 2)) + "px";
+          instance.baseTong.style.paddingTop = String(instance.naviHeight) + "px";
+        }
+      }, 500);
+    }, 200);
 
   } catch (e) {
     console.log(e);
@@ -500,13 +770,25 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     let imageScale;
     let imageOpacity;
     let imageMarginTop;
+    let clickMeTop, clickMeRight;
+    let clictMeWidth;
+    let moreArrowCircleWidth, moreArrowCircleMarginLeft;
+    let moreArrowVisualLeft, moreArrowWidth;
+    let titleWeight;
+    let titleEngSize, titleEngWeight, titleEngBetween;
+    let descriptionSize, descriptionWeight;
+    let buttonHeight;
+    let multipleConst;
+    let checkCircleWidth, checkCircleWidthSvg;
+    let checkCircleLeft;
+    let buttonTitleSize, buttonTitleWeignt, buttonTitleTextTop;
 
     boxRadius = 15;
     moreAreaHeight = 12;
 
     moreSize = 3.4;
     moreWeight = 600;
-    moreTextTop = -0.2;
+    moreTextTop = -0.1;
 
     mobileMargin = 6;
     blackTop = -31;
@@ -521,12 +803,42 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     blueBlockBetween = 1.8;
 
     titleSize = 5;
+    titleWeight = 700;
+
+    titleEngSize = 2.7;
+    titleEngWeight = 300;
+    titleEngBetween = 0.1;
+
+    descriptionSize = 3;
+    descriptionWeight = 500;
 
     imageBoxWidth = 62;
     imageScale = 0.84;
     imageOpacity = 0.4;
 
     imageMarginTop = 3;
+
+    clickMeTop = -13;
+    clickMeRight = 1;
+    clictMeWidth = 26;
+
+    moreArrowCircleWidth = 2.8;
+    moreArrowCircleMarginLeft = 1;
+
+    moreArrowVisualLeft = 0.2;
+    moreArrowWidth = 1;
+
+    buttonHeight = 8.8;
+
+    multipleConst = 6;
+
+    checkCircleWidth = 4.5;
+    checkCircleWidthSvg = 4.7;
+    checkCircleLeft = 2.5;
+
+    buttonTitleSize = 3.2;
+    buttonTitleWeignt = 600;
+    buttonTitleTextTop = -0.2;
 
     moreWords = "더보기";
     contents = [
@@ -595,28 +907,54 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
       },
     ];
 
-    secondBase = createNode({
-      mother: baseTong,
-      class: [ secondBaseClassName ],
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "start",
-        flexDirection: "column",
-      },
-      child: {
+    if (mobile) {
+      secondBase = createNode({
+        mother: baseTong,
+        class: [ secondBaseClassName ],
         style: {
-          position: "absolute",
-          top: String(blackTop) + ea,
-          left: String(-1 * mobileMargin) + ea,
-          background: colorExtended.black,
-          width: withOut(-1 * (mobileMargin * 2), ea),
-          height: withOut(blackTop, ea),
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
         },
-      }
-    });
+        child: {
+          style: {
+            position: "absolute",
+            top: String(blackTop) + ea,
+            left: String(-1 * mobileMargin) + ea,
+            background: colorExtended.black,
+            width: withOut(-1 * (mobileMargin * 2), ea),
+            height: withOut(blackTop, ea),
+          },
+        }
+      });
+    } else {
+      secondBase = createNode({
+        mother: baseTong,
+        class: [ secondBaseClassName ],
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
+          paddingTop: String(1000) + ea,
+        },
+        child: {
+          style: {
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(-1 * ((window.innerWidth - standardWidth) / 2)) + ea,
+            background: colorExtended.black,
+            width: String(100) + "vw",
+            height: withOut(0, ea),
+          },
+        }
+      });
+    }
 
     // click me
     createNode({
@@ -628,9 +966,9 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
       style: {
         display: "inline-block",
         position: "absolute",
-        top: String(-13) + ea,
-        right: String(1) + ea,
-        width: String(26) + ea,
+        top: String(clickMeTop) + ea,
+        right: String(clickMeRight) + ea,
+        width: String(clictMeWidth) + ea,
         height: "auto",
         animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
       }
@@ -702,7 +1040,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
                     fontSize: String(moreSize) + ea,
                     fontWeight: String(moreWeight),
                     color: colorExtended.black,
-                    top: String(-0.1) + ea,
+                    top: String(moreTextTop) + ea,
                     fontFamily: "pretendard",
                   }
                 },
@@ -710,10 +1048,10 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
                   style: {
                     display: "inline-flex",
                     position: "relative",
-                    marginLeft: String(1) + ea,
-                    width: String(2.8) + ea,
-                    height: String(2.8) + ea,
-                    borderRadius: String(3) + ea,
+                    marginLeft: String(moreArrowCircleMarginLeft) + ea,
+                    width: String(moreArrowCircleWidth) + ea,
+                    height: String(moreArrowCircleWidth) + ea,
+                    borderRadius: String(moreArrowCircleWidth) + ea,
                     border: "1px solid " + colorExtended.black,
                     flexDirection: "row",
                     justifyContent: "center",
@@ -725,8 +1063,8 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
                     style: {
                       display: "inline-block",
                       position: "relative",
-                      marginLeft: String(0.2) + ea,
-                      width: String(1) + ea,
+                      marginLeft: String(moreArrowVisualLeft) + ea,
+                      width: String(moreArrowWidth) + ea,
                       transformOrigin: "50% 50%",
                       transform: "scaleY(0.8)",
                     }
@@ -755,7 +1093,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
               display: "inline-block",
               position: "relative",
               fontSize: String(titleSize) + ea,
-              fontWeight: String(700),
+              fontWeight: String(titleWeight),
               color: colorExtended.black,
               fontFamily: "pretendard",
             }
@@ -764,10 +1102,10 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
             text: c.eng,
             style: {
               display: "inline-block",
-              marginTop: String(0.1) + ea,
+              marginTop: String(titleEngBetween) + ea,
               position: "relative",
-              fontSize: String(2.7) + ea,
-              fontWeight: String(300),
+              fontSize: String(titleEngSize) + ea,
+              fontWeight: String(titleEngWeight),
               color: colorExtended.darkDarkShadow,
               fontFamily: "mont",
             }
@@ -783,7 +1121,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
           height: String(barMargin) + ea,
           marginBottom: String(barMargin) + ea,
           borderBottom: "1px solid " + colorExtended.gray4,
-          width: withOut(mobileMargin * 6, ea),
+          width: withOut(mobileMargin * multipleConst, ea),
         }
       });
 
@@ -803,8 +1141,8 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(3) + ea,
-              fontWeight: String(500),
+              fontSize: String(descriptionSize) + ea,
+              fontWeight: String(descriptionWeight),
               color: colorExtended.black,
               fontFamily: "pretendard",
               textAlign: "center",
@@ -820,7 +1158,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
           position: "relative",
           height: String(barMargin) + ea,
           marginBottom: String(barMargin) + ea,
-          width: withOut(mobileMargin * 6, ea),
+          width: withOut(mobileMargin * multipleConst, ea),
         }
       });
       
@@ -832,9 +1170,9 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
             display: "inline-flex",
             position: "relative",
             flexDirection: "row",
-            width: withOut(mobileMargin * 6, ea),
-            height: String(8.8) + ea,
-            borderRadius: String(8.8) + ea,
+            width: withOut(mobileMargin * multipleConst, ea),
+            height: String(buttonHeight) + ea,
+            borderRadius: String(buttonHeight) + ea,
             border: "1.5px solid " + colorExtended.black,
             background: colorExtended.blue,
             marginBottom: String(blueBlockBetween) + ea,
@@ -844,23 +1182,23 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
           children: [
             {
               style: {
-                width: String(4.5) + ea,
-                height: String(4.5) + ea,
-                borderRadius: String(4.5) + ea,
+                width: String(checkCircleWidth) + ea,
+                height: String(checkCircleWidth) + ea,
+                borderRadius: String(checkCircleWidth) + ea,
                 display: "inline-block",
                 position: "absolute",
-                left: String(2.5) + ea,
+                left: String(checkCircleLeft) + ea,
                 background: colorExtended.black,
               },
               child: {
                 mode: "svg",
                 source: svgMaker.checkCircle(colorExtended.white),
                 style: {
-                  width: String(4.7) + ea,
+                  width: String(checkCircleWidthSvg) + ea,
                   display: "inline-block",
                   position: "absolute",
-                  top: String(-0.1) + ea,
-                  left: String(-0.1) + ea,
+                  top: String((checkCircleWidth - checkCircleWidthSvg) / 2) + ea,
+                  left: String((checkCircleWidth - checkCircleWidthSvg) / 2) + ea,
                 }
               }
             },
@@ -869,9 +1207,9 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
               style: {
                 display: "inline-block",
                 position: "relative",
-                fontSize: String(3.2) + ea,
-                fontWeight: String(600),
-                top: String(-0.2) + ea,
+                fontSize: String(buttonTitleSize) + ea,
+                fontWeight: String(buttonTitleWeignt),
+                top: String(buttonTitleTextTop) + ea,
                 color: colorExtended.black,
                 fontFamily: "pretendard",
                 textAlign: "center",
@@ -893,7 +1231,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
 
 FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
   const instance = this;
-  const { withOut, returnGet, selectByClass, removeByClass, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
+  const { withOut, returnGet, selectByClass, removeByClass, createNode, swipePatch, selfHref, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy } = GeneralJs;
   const { ea, media, baseTong, standardWidth, naviHeight, heightTong, reviewTargets } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -936,6 +1274,17 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
     let reviewLineHeight;
     let reviewSubTitleWeight;
     let reviewMaker;
+    let rightArrowEvent;
+    let leftArrowEvent;
+    let reviewBoxPaddingTop;
+    let reviewBestSize, reviewBestWeight, reviewBestTextTop, reviewBestEngSize;
+    let reviewBoxPaddingBottom;
+    let bestBetween;
+    let reviewBackBoxTop, reviewBackBoxLeft;
+    let arrowWidth, arrowLeft;
+    let title0Size, title0Weight, title0LineHeight;
+    let line0Width, lineMarginTop;
+    let mainImageWidth;
 
     boxRadius = 15;
     moreAreaHeight = 12;
@@ -973,6 +1322,75 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
     reviewLineHeight = 1.5;
     reviewSubTitleWeight = 500;
 
+    reviewBoxPaddingTop = 15;
+    reviewBoxPaddingBottom = 21;
+    bestBetween = 6;
+
+    reviewBestSize = 3.4;
+    reviewBestWeight = 700;
+    reviewBestTextTop = -0.2;
+    reviewBestEngSize = 3.7;
+    reviewBackBoxTop = 6;
+    reviewBackBoxLeft = 0;
+
+    arrowWidth = 3.4;
+    arrowLeft = 5;
+
+    rightArrowEvent = () => {
+      return function (e) {
+        const [ a, b, c ] = [ ...document.querySelectorAll('.' + reviewBlockClassName) ];
+        const [ d, f ] = [ ...document.querySelectorAll('.' + reviewBlockArrowClassName) ];
+        const [ target ] = selectByClass(reviewBlockBaseClassName);
+        const numbers = JSON.parse(target.getAttribute("numbers"));
+
+        target.style.animation = "fadeoutslidereverse 0.3s ease forwards";
+        a.style.animation = "justfadeoutsmall 0.5s ease forwards";
+        b.style.animation = "justfadeoutsmall 0.5s ease forwards";
+        c.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+
+        d.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+        f.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+
+        setQueue(() => {
+          if (JSON.stringify(numbers) === "[2,1,0]") {
+            reviewMaker(1, 0, 2, false);
+          } else if (JSON.stringify(numbers) === "[1,0,2]") {
+            reviewMaker(0, 2, 1, false);
+          } else if (JSON.stringify(numbers) === "[0,2,1]") {
+            reviewMaker(2, 1, 0, false);
+          }
+        }, 501);
+
+      }
+    }
+    leftArrowEvent = () => {
+      return function (e) {
+        const [ a, b, c ] = [ ...document.querySelectorAll('.' + reviewBlockClassName) ];
+        const [ d, f ] = [ ...document.querySelectorAll('.' + reviewBlockArrowClassName) ];
+        const [ target ] = selectByClass(reviewBlockBaseClassName);
+        const numbers = JSON.parse(target.getAttribute("numbers"));
+
+        target.style.animation = "fadeoutslide 0.3s ease forwards";
+        a.style.animation = "justfadeoutsmall 0.5s ease forwards";
+        b.style.animation = "justfadeoutsmall 0.5s ease forwards";
+        c.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+
+        d.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+        f.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+
+        setQueue(() => {
+          if (JSON.stringify(numbers) === "[2,1,0]") {
+            reviewMaker(0, 2, 1, true);
+          } else if (JSON.stringify(numbers) === "[0,2,1]") {
+            reviewMaker(1, 0, 2, true);
+          } else if (JSON.stringify(numbers) === "[1,0,2]") {
+            reviewMaker(2, 1, 0, true);
+          }
+        }, 501);
+
+      }
+    }
+
     // review
     createNode({
       mother: secondBase,
@@ -981,7 +1399,7 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
         flexDirection: "column",
         position: "relative",
         width: withOut(0, ea),
-        paddingTop: String(15) + ea,
+        paddingTop: String(reviewBoxPaddingTop) + ea,
         justifyContent: "center",
         alignItems: "center",
       },
@@ -1002,15 +1420,15 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
             display: "inline-block",
             position: "relative",
             textAlign: "center",
-            fontSize: String(3.4) + ea,
-            fontWeight: String(700),
+            fontSize: String(reviewBestSize) + ea,
+            fontWeight: String(reviewBestWeight),
             fontFamily: "pretendard",
             color: colorExtended.white,
-            top: String(-0.2) + ea,
+            top: String(reviewBestTextTop) + ea,
           },
           bold: {
-            fontSize: String(3.7) + ea,
-            fontWeight: String(700),
+            fontSize: String(reviewBestEngSize) + ea,
+            fontWeight: String(reviewBestWeight),
             fontFamily: "mont",
             color: colorExtended.white,
           }
@@ -1031,8 +1449,8 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
           flexDirection: "column",
           position: "relative",
           width: withOut(0, ea),
-          paddingTop: String(6) + ea,
-          paddingBottom: String(21) + ea,
+          paddingTop: String(bestBetween) + ea,
+          paddingBottom: String(reviewBoxPaddingBottom) + ea,
           justifyContent: "center",
           alignItems: "center",
           opacity: String(0),
@@ -1040,6 +1458,13 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
           animation: "fadeinslide" + (reverse ? "" : "reverse") + " 0.5s ease forwards",
         },
       });
+
+      if (mobile) {
+        swipePatch({
+          left: rightArrowEvent(),
+          right: leftArrowEvent(),
+        }, null, imageReviewBox, "swipeStack_review_" + String(a) + String(b) + String(c) + uniqueValue("hex"));
+      }
 
       // 0
       thisIndex = a;
@@ -1051,11 +1476,11 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
         style: {
           display: "inline-flex",
           position: "absolute",
-          left: String(0),
-          top: String(6) + ea,
+          left: String(reviewBackBoxLeft) + ea,
+          top: String(reviewBackBoxTop) + ea,
           width: String(imageBoxWidth) + ea,
           height: String(imageBoxWidth) + ea,
-          borderRadius: String(15) + "px",
+          borderRadius: String(boxRadius) + "px",
           backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(thisReview.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
           backgroundPosition: "50% 50%",
           backgroundSize: "auto 100%",
@@ -1119,11 +1544,11 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
         style: {
           display: "inline-flex",
           position: "absolute",
-          right: String(0),
-          top: String(6) + ea,
+          right: String(reviewBackBoxLeft) + ea,
+          top: String(reviewBackBoxTop) + ea,
           width: String(imageBoxWidth) + ea,
           height: String(imageBoxWidth) + ea,
-          borderRadius: String(15) + "px",
+          borderRadius: String(boxRadius) + "px",
           backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(thisReview.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
           backgroundPosition: "50% 50%",
           backgroundSize: "auto 100%",
@@ -1184,18 +1609,23 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
       createNode({
         mother: imageReviewBox,
         class: [ reviewBlockClassName ],
+        event: {
+          click: function (e) { selfHref(FRONTHOST + "/revdetail.php?pid=" + this.getAttribute("pid")); }
+        },
+        attribute: { pid },
         style: {
           display: "inline-flex",
           position: "relative",
           width: String(imageBoxWidth) + ea,
           height: String(imageBoxWidth) + ea,
-          borderRadius: String(15) + "px",
+          borderRadius: String(boxRadius) + "px",
           backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(thisReview.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
           backgroundPosition: "50% 50%",
           backgroundSize: "auto 100%",
           boxShadow: "0px 3px 22px -9px " + colorExtended.ultimateBlack,
           overflow: "hidden",
           animation: "justfadeinoriginal 0.5s ease forwards",
+          cursor: "pointer",
         },
         children: [
           {
@@ -1248,39 +1678,15 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
         mode: "svg",
         source: svgMaker.generalTriangle(colorExtended.white),
         event: {
-          click: function (e) {
-            const [ a, b, c ] = [ ...document.querySelectorAll('.' + reviewBlockClassName) ];
-            const [ d, f ] = [ ...document.querySelectorAll('.' + reviewBlockArrowClassName) ];
-            const [ target ] = selectByClass(reviewBlockBaseClassName);
-            const numbers = JSON.parse(target.getAttribute("numbers"));
-
-            target.style.animation = "fadeoutslide 0.3s ease forwards";
-            a.style.animation = "justfadeoutsmall 0.5s ease forwards";
-            b.style.animation = "justfadeoutsmall 0.5s ease forwards";
-            c.style.animation = "justfadeoutoriginal 0.5s ease forwards";
-
-            d.style.animation = "justfadeoutoriginal 0.5s ease forwards";
-            f.style.animation = "justfadeoutoriginal 0.5s ease forwards";
-
-            setQueue(() => {
-              if (JSON.stringify(numbers) === "[2,1,0]") {
-                reviewMaker(0, 2, 1, true);
-              } else if (JSON.stringify(numbers) === "[0,2,1]") {
-                reviewMaker(1, 0, 2, true);
-              } else if (JSON.stringify(numbers) === "[1,0,2]") {
-                reviewMaker(2, 1, 0, true);
-              }
-            }, 501);
-  
-          }
+          click: leftArrowEvent(),
         },
         style: {
           display: "inline-block",
           position: "absolute",
-          width: String(3.4) + ea,
+          width: String(arrowWidth) + ea,
           transformOrigin: "50% 50%",
           transform: "rotate(90deg)",
-          left: String(5) + ea,
+          left: String(arrowLeft) + ea,
           animation: "justfadeinoriginal 0.5s ease forwards",
         }
       });
@@ -1290,39 +1696,15 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
         mode: "svg",
         source: svgMaker.generalTriangle(colorExtended.white),
         event: {
-          click: function (e) {
-            const [ a, b, c ] = [ ...document.querySelectorAll('.' + reviewBlockClassName) ];
-            const [ d, f ] = [ ...document.querySelectorAll('.' + reviewBlockArrowClassName) ];
-            const [ target ] = selectByClass(reviewBlockBaseClassName);
-            const numbers = JSON.parse(target.getAttribute("numbers"));
-
-            target.style.animation = "fadeoutslidereverse 0.3s ease forwards";
-            a.style.animation = "justfadeoutsmall 0.5s ease forwards";
-            b.style.animation = "justfadeoutsmall 0.5s ease forwards";
-            c.style.animation = "justfadeoutoriginal 0.5s ease forwards";
-
-            d.style.animation = "justfadeoutoriginal 0.5s ease forwards";
-            f.style.animation = "justfadeoutoriginal 0.5s ease forwards";
-
-            setQueue(() => {
-              if (JSON.stringify(numbers) === "[2,1,0]") {
-                reviewMaker(1, 0, 2, false);
-              } else if (JSON.stringify(numbers) === "[1,0,2]") {
-                reviewMaker(0, 2, 1, false);
-              } else if (JSON.stringify(numbers) === "[0,2,1]") {
-                reviewMaker(2, 1, 0, false);
-              }
-            }, 501);
-  
-          }
+          click: rightArrowEvent(),
         },
         style: {
           display: "inline-block",
           position: "absolute",
-          width: String(3.4) + ea,
+          width: String(arrowWidth) + ea,
           transformOrigin: "50% 50%",
           transform: "rotate(-90deg)",
-          right: String(5) + ea,
+          right: String(arrowLeft) + ea,
           animation: "justfadeinoriginal 0.5s ease forwards",
         }
       });
@@ -1358,6 +1740,22 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     let descriptionMarginTop;
     let baseModuleHeight2;
     let finalModuleHeight;
+    let title0Size;
+    let title0Weight;
+    let title0LineHeight;
+    let line0Width;
+    let lineMarginTop;
+    let mainImageWidth;
+    let descriptionSize, descriptionWeight, descriptionLineHeight;
+    let image1Width, image1VisualLeft;
+    let image1Between, image1TextTop;
+    let line1Width;
+    let descriptionLineHeight2, descriptionMarginTop2;
+    let line2Width;
+    let image3MarginTop;
+    let title1Size, title1LineHeight;
+    let image3Width, image3VisualLeft;
+    let descriptionMarginTop3;
 
     boxRadius = 15;
     boxRadiusBig = 20;
@@ -1374,7 +1772,35 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     finalModuleHeight = 90;
 
     descriptionMarginTop = 8;
+    descriptionMarginTop2 = 11;
+    descriptionMarginTop3 = 3;
     imageMarginTop = 3;
+
+    title0Size = 5;
+    title1Size = 4.8;
+    title0Weight = 600;
+    title0LineHeight = 1.3;
+    title1LineHeight = 1.4;
+
+    line0Width = 33;
+    lineMarginTop = 3;
+    line1Width = 18;
+    line2Width = 27;
+
+    mainImageWidth = 73;
+    descriptionSize = 3.4;
+    descriptionWeight = 600;
+    descriptionLineHeight = 1.5;
+    descriptionLineHeight2 = 1.6;
+
+    image1Width = 45;
+    image1VisualLeft = 2;
+    image1Between = 3.6;
+    image1TextTop = -5;
+
+    image3MarginTop = 6;
+    image3Width = 66;
+    image3VisualLeft = -1;
 
     // first
     firstBase = createNode({
@@ -1443,15 +1869,15 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(5) + ea,
-          fontWeight: String(600),
+          fontSize: String(title0Size) + ea,
+          fontWeight: String(title0Weight),
           fontFamily: "pretendard",
           color: colorExtended.black,
-          lineHeight: String(1.3),
+          lineHeight: String(title0LineHeight),
         },
         bold: {
-          fontSize: String(5) + ea,
-          fontWeight: String(600),
+          fontSize: String(title0Size) + ea,
+          fontWeight: String(title0Weight),
           fontFamily: "pretendard",
           color: colorExtended.mainBlue,
         },
@@ -1459,8 +1885,8 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(33) + ea,
-            height: String(3) + ea,
+            width: String(line0Width) + ea,
+            height: String(lineMarginTop) + ea,
             borderBottom: "2px solid " + colorExtended.black,
           }
         }
@@ -1486,7 +1912,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-block",
           position: "relative",
-          width: String(73) + ea,
+          width: String(mainImageWidth) + ea,
         }
       }
     });
@@ -1511,11 +1937,11 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(3.4) + ea,
-          fontWeight: String(600),
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(descriptionWeight),
           fontFamily: "pretendard",
           color: colorExtended.black,
-          lineHeight: String(1.5),
+          lineHeight: String(descriptionLineHeight),
         },
       }
     });
@@ -1595,8 +2021,8 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
       style: {
         display: "inline-block",
         position: "relative",
-        width: String(45) + ea,
-        marginLeft: String(2) + ea,
+        width: String(image1Width) + ea,
+        marginLeft: String(image1VisualLeft) + ea,
       }
     });
     createNode({
@@ -1607,8 +2033,8 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         position: "relative",
         justifyContent: "start",
         alignItems: "start",
-        paddingLeft: String(4) + ea,
-        top: String(-5) + ea,
+        paddingLeft: String(image1Between) + ea,
+        top: String(image1TextTop) + ea,
       },
       child: {
         text: [
@@ -1620,15 +2046,15 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(5) + ea,
-          fontWeight: String(600),
+          fontSize: String(title0Size) + ea,
+          fontWeight: String(title0Weight),
           fontFamily: "pretendard",
           color: colorExtended.black,
-          lineHeight: String(1.3),
+          lineHeight: String(title0LineHeight),
         },
         bold: {
-          fontSize: String(4.7) + ea,
-          fontWeight: String(600),
+          fontSize: String(title0Size) + ea,
+          fontWeight: String(title0Weight),
           fontFamily: "pretendard",
           color: colorExtended.mainBlue,
         },
@@ -1636,8 +2062,8 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(18) + ea,
-            height: String(3) + ea,
+            width: String(line1Width) + ea,
+            height: String(lineMarginTop) + ea,
             borderBottom: "2px solid " + colorExtended.black,
           },
           next: {
@@ -1648,7 +2074,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
               position: "relative",
               justifyContent: "start",
               alignItems: "start",
-              paddingTop: String(11) + ea,
+              paddingTop: String(descriptionMarginTop2) + ea,
               paddingBottom: String(topBottomMargin) + ea,
             },
             child: {
@@ -1660,11 +2086,11 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
               style: {
                 display: "inline-block",
                 position: "relative",
-                fontSize: String(3.4) + ea,
-                fontWeight: String(600),
+                fontSize: String(descriptionSize) + ea,
+                fontWeight: String(descriptionWeight),
                 fontFamily: "pretendard",
                 color: colorExtended.black,
-                lineHeight: String(1.6),
+                lineHeight: String(descriptionLineHeight2),
               },
             }
           }
@@ -1739,15 +2165,15 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(5) + ea,
-          fontWeight: String(600),
+          fontSize: String(title0Size) + ea,
+          fontWeight: String(title0Weight),
           fontFamily: "pretendard",
           color: colorExtended.black,
-          lineHeight: String(1.3),
+          lineHeight: String(title0LineHeight),
         },
         bold: {
-          fontSize: String(5) + ea,
-          fontWeight: String(600),
+          fontSize: String(title0Size) + ea,
+          fontWeight: String(title0Weight),
           fontFamily: "pretendard",
           color: colorExtended.mainBlue,
         },
@@ -1755,8 +2181,8 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(27) + ea,
-            height: String(3) + ea,
+            width: String(line2Width) + ea,
+            height: String(imageMarginTop) + ea,
             borderBottom: "2px solid " + colorExtended.black,
           }
         }
@@ -1782,7 +2208,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-block",
           position: "relative",
-          width: String(73) + ea,
+          width: String(mainImageWidth) + ea,
         }
       }
     });
@@ -1807,11 +2233,11 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(3.4) + ea,
-          fontWeight: String(600),
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(descriptionWeight),
           fontFamily: "pretendard",
           color: colorExtended.black,
-          lineHeight: String(1.5),
+          lineHeight: String(descriptionLineHeight),
         },
       }
     });
@@ -1902,16 +2328,16 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(4.8) + ea,
-          fontWeight: String(600),
+          fontSize: String(title1Size) + ea,
+          fontWeight: String(title0Weight),
           fontFamily: "pretendard",
           color: colorExtended.black,
-          lineHeight: String(1.4),
+          lineHeight: String(title1LineHeight),
           textAlign: "center",
         },
         bold: {
-          fontSize: String(4.8) + ea,
-          fontWeight: String(600),
+          fontSize: String(title1Size) + ea,
+          fontWeight: String(title0Weight),
           fontFamily: "pretendard",
           color: colorExtended.mainBlue,
         },
@@ -1927,7 +2353,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         width: withOut(0, ea),
         justifyContent: "center",
         alignItems: "center",
-        paddingTop: String(5) + ea,
+        paddingTop: String(image3MarginTop) + ea,
       },
       child: {
         mode: "img",
@@ -1937,8 +2363,8 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-block",
           position: "relative",
-          width: String(66) + ea,
-          left: String(-1) + ea,
+          width: String(image3Width) + ea,
+          left: String(image3VisualLeft) + ea,
         }
       }
     });
@@ -1952,7 +2378,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         width: withOut(0, ea),
         justifyContent: "center",
         alignItems: "center",
-        paddingTop: String(3) + ea,
+        paddingTop: String(descriptionMarginTop3) + ea,
       },
       child: {
         text: [
@@ -1962,11 +2388,11 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(3.4) + ea,
-          fontWeight: String(600),
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(descriptionWeight),
           fontFamily: "pretendard",
           color: colorExtended.black,
-          lineHeight: String(1.5),
+          lineHeight: String(descriptionLineHeight),
           textAlign: "center",
         },
       }
@@ -2002,6 +2428,14 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
     let finalModuleHeight;
     let baseHeight;
     let buttonMarginTop;
+    let title1Size;
+    let title0Weight;
+    let title1LineHeight;
+    let descriptionSize, descriptionWeight, descriptionLineHeight;
+    let buttonSize, buttonWeight, buttonLineHeight, buttonTextTop;
+    let commentsWidth, commentsHeight, commentsRadius, commentsTop, commentsSize, commentsWeight, commentsLineHeight, commentsTextTop, commentsTriangleWidth, commentsTriangleTop;
+    let buttonHeight;
+    let lastMoreWidth, lastMoreHeight, lastMoreTop, lastMoreRadius, lastMoreSize, lastMoreWeight, lastMoreLineHeight, lastMoreTextTop;
 
     boxRadius = 15;
     boxRadiusBig = 20;
@@ -2013,8 +2447,42 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
 
     topBottomMargin = 14;
 
-    descriptionMarginTop = 8;
+    descriptionMarginTop = 3;
     imageMarginTop = 3;
+
+    title1Size = 4.8;
+    title0Weight = 600;
+    title1LineHeight = 1.4;
+
+    descriptionSize = 3.4;
+    descriptionWeight = 500;
+    descriptionLineHeight = 1.5;
+
+    buttonSize = 3.5;
+    buttonWeight = 600;
+    buttonLineHeight = 1.5;
+    buttonTextTop = -0.1;
+    buttonHeight = 11;
+
+    commentsWidth = 23;
+    commentsHeight = 6.6;
+    commentsRadius = 5;
+    commentsTop = -7.6;
+    commentsSize = 2.5;
+    commentsWeight = 700;
+    commentsLineHeight = 1.5;
+    commentsTextTop = -0.1;
+    commentsTriangleWidth = 2.6;
+    commentsTriangleTop = 6.2;
+
+    lastMoreWidth = 17;
+    lastMoreHeight = 7;
+    lastMoreTop = -26;
+    lastMoreRadius = 7;
+    lastMoreSize = 3;
+    lastMoreWeight = 700;
+    lastMoreLineHeight = 1.5;
+    lastMoreTextTop = -0.1;
 
     baseHeight = lastMode ? 42 : 92;
     buttonMarginTop = lastMode ? 1 : 16;
@@ -2077,16 +2545,16 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
           style: {
             display: "inline-block",
             position: "relative",
-            fontSize: String(4.8) + ea,
-            fontWeight: String(600),
+            fontSize: String(title1Size) + ea,
+            fontWeight: String(title0Weight),
             fontFamily: "pretendard",
             color: colorExtended.white,
-            lineHeight: String(1.4),
+            lineHeight: String(title1LineHeight),
             textAlign: "center",
           },
           bold: {
-            fontSize: String(4.8) + ea,
-            fontWeight: String(600),
+            fontSize: String(title1Size) + ea,
+            fontWeight: String(title0Weight),
             fontFamily: "pretendard",
             color: colorExtended.mainBlue,
           },
@@ -2102,7 +2570,7 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
           width: withOut(0, ea),
           justifyContent: "center",
           alignItems: "center",
-          paddingTop: String(3) + ea,
+          paddingTop: String(descriptionMarginTop) + ea,
         },
         child: {
           text: [
@@ -2112,11 +2580,11 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
           style: {
             display: "inline-block",
             position: "relative",
-            fontSize: String(3.4) + ea,
-            fontWeight: String(600),
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(descriptionWeight),
             fontFamily: "pretendard",
             color: colorExtended.mainBlue,
-            lineHeight: String(1.5),
+            lineHeight: String(descriptionLineHeight),
             textAlign: "center",
           },
         }
@@ -2134,7 +2602,7 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
         flexDirection: "column",
         position: "relative",
         width: withOut(0, ea),
-        height: String(11) + ea,
+        height: String(buttonHeight) + ea,
         justifyContent: "center",
         alignItems: "center",
         marginTop: String(buttonMarginTop) + ea,
@@ -2148,24 +2616,24 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(3.5) + ea,
-          fontWeight: String(600),
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
           fontFamily: "pretendard",
           color: lastMode ? colorExtended.white : colorExtended.black,
-          lineHeight: String(1.5),
+          lineHeight: String(buttonLineHeight),
           textAlign: "center",
-          top: String(-0.2) + ea,
+          top: String(buttonTextTop) + ea,
         },
         next: {
           style: {
             position: "absolute",
             display: "inline-flex",
             flexDirection: "column",
-            width: String(23) + ea,
-            height: String(6.6) + ea,
+            width: String(commentsWidth) + ea,
+            height: String(commentsHeight) + ea,
             justifyContent: "center",
             alignItems: "center",
-            borderRadius: String(5) + "px",
+            borderRadius: String(commentsRadius) + "px",
             background: lastMode ? colorExtended.blueDim : colorExtended.subRed,
             top: String(-7.6) + ea,
             boxShadow: "0px 10px 32px -9px " + colorExtended.ultimateBlack,
@@ -2177,22 +2645,22 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(2.5) + ea,
-              fontWeight: String(700),
+              fontSize: String(commentsSize) + ea,
+              fontWeight: String(commentsWeight),
               fontFamily: "pretendard",
               color: colorExtended.white,
-              lineHeight: String(1.5),
+              lineHeight: String(commentsLineHeight),
               textAlign: "center",
-              top: String(-0.1) + ea,
+              top: String(commentsTextTop) + ea,
             },
             next: {
               mode: "svg",
               source: svgMaker.generalTriangle(lastMode ? colorExtended.blueDim : colorExtended.subRed),
               style: {
-                width: String(2.6) + ea,
+                width: String(commentsTriangleWidth) + ea,
                 position: "absolute",
-                left: "calc(50% - " + String(2.6 / 2) + ea + ")",
-                top: String(6.2) + ea,
+                left: "calc(50% - " + String(commentsTriangleWidth / 2) + ea + ")",
+                top: String(commentsTriangleTop) + ea,
               }
             }
           }
@@ -2210,13 +2678,13 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
           display: "inline-flex",
           position: "absolute",
           flexDirection: "column",
-          width: String(17) + ea,
-          height: String(7) + ea,
+          width: String(lastMoreWidth) + ea,
+          height: String(lastMoreHeight) + ea,
           justifyContent: "center",
-          top: String(-26) + ea,
+          top: String(lastMoreTop) + ea,
           alignItems: "center",
           marginTop: String(buttonMarginTop) + ea,
-          borderRadius: String(7) + ea,
+          borderRadius: String(lastMoreRadius) + ea,
           background: colorExtended.blueDark,
           cursor: "pointer",
         },
@@ -2227,13 +2695,13 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
           style: {
             display: "inline-block",
             position: "relative",
-            fontSize: String(3) + ea,
-            fontWeight: String(700),
+            fontSize: String(lastMoreSize) + ea,
+            fontWeight: String(lastMoreWeight),
             fontFamily: "pretendard",
             color: colorExtended.white,
-            lineHeight: String(1.5),
+            lineHeight: String(lastMoreLineHeight),
             textAlign: "center",
-            top: String(-0.1) + ea,
+            top: String(lastMoreTextTop) + ea,
           },
         }
       });
@@ -2314,6 +2782,41 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     let furnishingObj;
     let stylingObj;
     let totalObj;
+    let middleMargin;
+    let secondBasePaddingTop;
+    let selectionButtonsBaseMarginBottom, selectionButtonsPaddingLeft;
+    let selectionButtonsBlockBetween;
+    let selectionButtonsBlockHeight;
+    let selectionButtonsSquareWidth, selectionButtonsSquareRadius, selectionButtonsSquareBetween;
+    let selectionButtonsSquareSize, selectionButtonsSquareWeight;
+    let mainServiceBlockHeight, mainServiceBlockMarginBottom;
+    let factorWeight;
+    let factorBoldWeight;
+    let mainServiceBlockDotPointWidth;
+    let mainServiceBlockDotPointIndent;
+    let mainServiceBlockDotPointOpacity;
+    let titleWeight, titleMarginBottom;
+    let titleEngSize, titleEngWeight;
+    let blackLineWidth, blackLineHeight, blackLineMarginBottom, blackLineStroke;
+    let descriptionSize, descriptionWeight, descriptionLineHeight;
+    let blackBackTop;
+    let blackBackRadius;
+    let quotePaddingLeft, quoteMarginBottom, quoteWidth;
+    let commentsTitleWeight, commentsTitleLineHeight;
+    let blackBlueAreaPaddingTop0, blackBlueAreaPaddingTop1;
+    let blueButtonHeight, blueButtonPadding, blueButtonBetween;
+    let blueRightMMargin0, blueRightMMargin1;
+    let blueDotPointWidth, blueDotPointIndent;
+    let blueSize, blueWeight, blueTextTop;
+    let tableBasePaddingTop, tableBasePaddingBottom;
+    let solveBlockPaddingLeft, solveBlockMarginBottom;
+    let whiteSquareWidth, whiteSquareTop, whiteSquareLeft, whiteSquareRadius, whiteSquareOpacity;
+    let solveDescriptionMarginTop;
+    let solveTextTextTop, solveTextSize, solveTextWeight;
+    let photoZonePaddingTop;
+    let tableTitleBlockWidth, tableTitleBlockHeight;
+    let tableTitleSize, tableTitleWeight, tableTitleTextTop;
+    let tableDescriptionSize, tableDescriptionWeight, tableDescriptionLineHeight, tableDescriptionMarginTop, tableDescriptionMarginBottom;
 
     boxRadius = 15;
     photoRadius = 8;
@@ -2337,6 +2840,11 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     blueBlockBetween = 1.8;
 
     titleSize = 4.8;
+    titleWeight = 700;
+    titleMarginBottom = 0.1;
+
+    titleEngSize = 2.3;
+    titleEngWeight = 700;
 
     imageBoxWidth = 62;
     imageScale = 0.84;
@@ -2349,20 +2857,111 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
 
     commentsTitleSize = 5.4;
 
-    photoHeight = 70;
+    photoHeight = 68;
     photoWidth = 140;
     photoBetween = 2.5;
 
     serviceAreaBetween = 24;
 
-    bigMargin = 11;
+    middleMargin = 8;
+    bigMargin = 12;
     tableFactorHeight = 8.2;
     factorBetween = 0.4;
     tableFactorWidth0 = 11.5;
     tableFactorWidth1 = (standardWidth - tableFactorWidth0 - (factorBetween * 3)) / 3;
 
+    secondBasePaddingTop = 4;
+    selectionButtonsBaseMarginBottom = 1.6;
+    selectionButtonsPaddingLeft = 1;
+
+    selectionButtonsBlockBetween = 3;
+    selectionButtonsBlockHeight = 3;
+    selectionButtonsSquareWidth = 2;
+    selectionButtonsSquareRadius = 1;
+    selectionButtonsSquareBetween = 1;
+
+    selectionButtonsSquareSize = 2.5;
+    selectionButtonsSquareWeight = 700;
+
+    mainServiceBlockHeight = 52;
+    mainServiceBlockMarginBottom = 2;
+
+    mainServiceBlockDotPointWidth = 1.3;
+    mainServiceBlockDotPointIndent = 2.5;
+    mainServiceBlockDotPointOpacity = 0.5;
+
     factorSize = 2.8;
     factorTextTop = -0.2;
+    factorWeight = 600;
+    factorBoldWeight = 800;
+
+    blackLineWidth = 28;
+    blackLineHeight = 3.6;
+    blackLineMarginBottom = 3.8;
+    blackLineStroke = 2;
+
+    descriptionSize = 3.3;
+    descriptionWeight = 500;
+    descriptionLineHeight = 1.5;
+
+    blackBackTop = -20;
+    blackBackRadius = 8;
+
+    quotePaddingLeft = 0.8;
+    quoteMarginBottom = 2;
+    quoteWidth = 3;
+
+    commentsTitleWeight = 600;
+    commentsTitleLineHeight = 1.44;
+
+    blackBlueAreaPaddingTop0 = 9.5;
+    blackBlueAreaPaddingTop1 = 11;
+
+    blueButtonHeight = 8.6;
+    blueButtonPadding = 7;
+    blueButtonBetween = 2.5;
+    blueRightMMargin0 = 6;
+    blueRightMMargin1 = 11;
+
+    blueDotPointWidth = 0.9;
+    blueDotPointIndent = 1.2;
+
+    blueSize = 3.4;
+    blueWeight = 600;
+    blueTextTop = -0.2;
+
+    tableBasePaddingTop = 16;
+    tableBasePaddingBottom = 22;
+
+    solveBlockPaddingLeft = 0.8;
+    solveBlockMarginBottom = 6;
+
+    whiteSquareWidth = 4.8;
+    whiteSquareTop = -0.5;
+    whiteSquareLeft = -0.8;
+    whiteSquareRadius = 3;
+    whiteSquareOpacity = 0.7;
+
+    solveDescriptionMarginTop = 3;
+
+    solveTextTextTop = -0.1;
+    solveTextSize = 3.3;
+    solveTextWeight = 600;
+
+    photoZonePaddingTop = 11;
+
+    tableTitleBlockWidth = 70;
+    tableTitleBlockHeight = 11;
+
+    tableTitleSize = 4.4;
+    tableTitleWeight = 700;
+    tableTitleTextTop = -0.2;
+
+    tableDescriptionSize = 3.3;
+    tableDescriptionWeight = 500;
+    tableDescriptionLineHeight = 1.5;
+    tableDescriptionMarginTop = 3;
+    tableDescriptionMarginBottom = 9;
 
     if (secondBaseMother === null || typeof secondBaseMother !== "object") {
       secondBaseMother = baseTong;
@@ -2390,7 +2989,6 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
       "발코니",
       "기타",
     ];
-
     furnishingObj = {
       title: "홈퍼니싱",
       eng: "Home Furnishing",
@@ -2445,7 +3043,6 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         ],
       }
     };
-
     stylingObj = {
       title: "홈스타일링",
       eng: "Home Styling",
@@ -2501,7 +3098,6 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         ],
       }
     };
-
     totalObj = {
       title: "토탈 스타일링",
       eng: "Total Styling",
@@ -2579,7 +3175,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         justifyContent: "start",
         alignItems: "start",
         flexDirection: "column",
-        paddingTop: String(secondBaseMother === baseTong ? 4 : 0) + ea,
+        paddingTop: String(secondBaseMother === baseTong ? secondBasePaddingTop : 0) + ea,
       },
     });
 
@@ -2609,8 +3205,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           justifyContent: "start",
           alignItems: "start",
           flexDirection: "row",
-          marginBottom: String(1.6) + ea,
-          paddingLeft: String(1) + ea,
+          marginBottom: String(selectionButtonsBaseMarginBottom) + ea,
+          paddingLeft: String(selectionButtonsPaddingLeft) + ea,
         }
       })
 
@@ -2624,11 +3220,11 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             display: "inline-flex",
             position: "relative",
             width: "auto",
-            height: String(3) + ea,
+            height: String(selectionButtonsBlockHeight) + ea,
             justifyContent: "start",
             alignItems: "center",
             flexDirection: "row",
-            marginRight: String(3) + ea,
+            marginRight: String(selectionButtonsBlockBetween) + ea,
           }
         });
         createNode({
@@ -2636,12 +3232,12 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(2) + ea,
-            height: String(2) + ea,
-            borderRadius: String(1) + "px",
+            width: String(selectionButtonsSquareWidth) + ea,
+            height: String(selectionButtonsSquareWidth) + ea,
+            borderRadius: String(selectionButtonsSquareRadius) + "px",
             background: boo ? colorExtended.blue : colorExtended.white,
             border: "1px solid " + colorExtended.black,
-            marginRight: String(1) + ea,
+            marginRight: String(selectionButtonsSquareBetween) + ea,
           }
         });
         createNode({
@@ -2650,8 +3246,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           style: {
             display: "inline-block",
             position: "relative",
-            fontSize: String(2.5) + ea,
-            fontWeight: String(700),
+            fontSize: String(selectionButtonsSquareSize) + ea,
+            fontWeight: String(selectionButtonsSquareWeight),
             fontFamily: "mont",
             color: boo ? colorExtended.mainBlue : colorExtended.deactive,
             top: String(0) + ea,
@@ -2674,8 +3270,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           border: String(2) + "px solid " + colorExtended.black,
           background: colorExtended.white,
           borderRadius: String(boxRadius) + "px",
-          marginBottom: String(2) + ea,
-          height: String(52) + ea,
+          marginBottom: String(mainServiceBlockMarginBottom) + ea,
+          height: String(mainServiceBlockHeight) + ea,
           zIndex: String(2),
         }
       });
@@ -2684,12 +3280,12 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         style: {
           display: "inline-block",
           position: "absolute",
-          width: String(1.3) + ea,
-          height: String(1.3) + ea,
+          width: String(mainServiceBlockDotPointWidth) + ea,
+          height: String(mainServiceBlockDotPointWidth) + ea,
           background: colorExtended.mainBlue,
-          top: String(2.5) + ea,
-          right: String(2.5) + ea,
-          opacity: String(0.5),
+          top: String(mainServiceBlockDotPointIndent) + ea,
+          right: String(mainServiceBlockDotPointIndent) + ea,
+          opacity: String(mainServiceBlockDotPointOpacity),
         }
       })
       createNode({
@@ -2698,11 +3294,11 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(4.8) + ea,
-          fontWeight: String(700),
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
           fontFamily: "pretendard",
           color: colorExtended.black,
-          marginBottom: String(0.1) + ea,
+          marginBottom: String(titleMarginBottom) + ea,
         }
       });
       createNode({
@@ -2711,8 +3307,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(2.3) + ea,
-          fontWeight: String(700),
+          fontSize: String(titleEngSize) + ea,
+          fontWeight: String(titleEngWeight),
           fontFamily: "mont",
           color: colorExtended.mainBlue,
         }
@@ -2722,10 +3318,10 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         style: {
           display: "inline-block",
           position: "relative",
-          width: String(28) + ea,
-          height: String(3.6) + ea,
-          marginBottom: String(3.8) + ea,
-          borderBottom: String(2) + "px solid " + colorExtended.black,
+          width: String(blackLineWidth) + ea,
+          height: String(blackLineHeight) + ea,
+          marginBottom: String(blackLineMarginBottom) + ea,
+          borderBottom: String(blackLineStroke) + "px solid " + colorExtended.black,
         }
       });
       createNode({
@@ -2734,11 +3330,11 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(3.3) + ea,
-          fontWeight: String(500),
+          fontSize: String(descriptionSize) + ea,
+          fontWeight: String(descriptionWeight),
           fontFamily: "pretendard",
           color: colorExtended.black,
-          lineHeight: String(1.5),
+          lineHeight: String(descriptionLineHeight),
           textAlign: "center",
         }
       });
@@ -2753,8 +3349,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           justifyContent: "start",
           alignItems: "start",
           flexDirection: "column",
-          paddingTop: String(6) + ea,
-          paddingBottom: String(11) + ea,
+          paddingTop: String(middleMargin) + ea,
+          paddingBottom: String(bigMargin) + ea,
           zIndex: String(1),
           paddingLeft: String(mobileMargin / 2) + ea,
           paddingRight: String(mobileMargin / 2) + ea,
@@ -2766,9 +3362,9 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             width: withOut(-1 * mobileMargin * 2, ea),
             left: String(-1 * mobileMargin) + ea,
             background: colorExtended.black,
-            height: withOut(-1 * 20, ea),
-            top: String(-20) + ea,
-            borderBottomRightRadius: String(8) + ea,
+            height: withOut(blackBackTop, ea),
+            top: String(blackBackTop) + ea,
+            borderBottomRightRadius: String(blackBackRadius) + ea,
           }
         }
       });
@@ -2781,15 +3377,15 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           justifyContent: "start",
           alignItems: "start",
           width: withOut(0, ea),
-          paddingLeft: String(0.8) + ea,
-          marginBottom: String(2) + ea,
+          paddingLeft: String(quotePaddingLeft) + ea,
+          marginBottom: String(quoteMarginBottom) + ea,
         },
         child: {
           mode: "svg",
           source: svgMaker.doubleQuote(colorExtended.mainBlue),
           style: {
             display: "inline-block",
-            width: String(3) + ea,
+            width: String(quoteWidth) + ea,
           }
         }
       });
@@ -2810,10 +3406,10 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             display: "inline-block",
             position: "relative",
             fontSize: String(commentsTitleSize) + ea,
-            fontWeight: String(600),
+            fontWeight: String(commentsTitleWeight),
             fontFamily: "pretendard",
             color: colorExtended.white,
-            lineHeight: String(1.44),
+            lineHeight: String(commentsTitleLineHeight),
           }
         }
       });
@@ -2826,9 +3422,9 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           justifyContent: "end",
           alignItems: "end",
           flexDirection: "column",
-          paddingTop: String(num === 0 ? 7.5 : 9) + ea,
-          paddingLeft: String(0 / 2) + ea,
-          paddingRight: String(0 / 2) + ea,
+          paddingTop: String(num === 0 ? blackBlueAreaPaddingTop0 : blackBlueAreaPaddingTop1) + ea,
+          paddingLeft: String(0) + ea,
+          paddingRight: String(0) + ea,
         }
       });
       num3 = 0;
@@ -2837,21 +3433,21 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         createNode({
           mother: blackBlueArea,
           style: {
-            height: String(8.6) + ea,
-            paddingLeft: String(7) + ea,
-            paddingRight: String(7) + ea,
+            height: String(blueButtonHeight) + ea,
+            paddingLeft: String(blueButtonPadding) + ea,
+            paddingRight: String(blueButtonPadding) + ea,
             display: "flex",
             position: "relative",
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "row",
-            marginBottom: String(2.5) + ea,
+            marginBottom: String(blueButtonBetween) + ea,
             overflow: "hidden",
-            borderTopLeftRadius: String(num3 % 2 !== 0 ? 8.6 / 2 : 0) + ea,
-            borderBottomLeftRadius: String(8.6 / 2) + ea,
-            borderBottomRightRadius: String(8.6 / 2) + ea,
-            borderTopRightRadius: String(num3 % 2 === 0 ? 8.6 / 2 : 0) + ea,
-            marginRight: num3 % 2 === 0 ? String(6 + (11 * Math.floor(num3 / 2) - 1)) + ea : String(0) + ea,
+            borderTopLeftRadius: String(num3 % 2 !== 0 ? blueButtonHeight / 2 : 0) + ea,
+            borderBottomLeftRadius: String(blueButtonHeight / 2) + ea,
+            borderBottomRightRadius: String(blueButtonHeight / 2) + ea,
+            borderTopRightRadius: String(num3 % 2 === 0 ? blueButtonHeight / 2 : 0) + ea,
+            marginRight: num3 % 2 === 0 ? String(blueRightMMargin0 + (blueRightMMargin1 * Math.floor(num3 / 2) - 1)) + ea : String(0) + ea,
           },
           children: [
             {
@@ -2880,12 +3476,12 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             {
               style: {
                 position: "absolute",
-                top: String(1.2) + ea,
-                left: num3 % 2 === 0 ? String(1.2) + ea : "",
-                right: num3 % 2 === 0 ? "" : String(1.2) + ea,
-                width: String(0.9) + ea,
-                height: String(0.9) + ea,
-                borderRadius: String(1) + ea,
+                top: String(blueDotPointIndent) + ea,
+                left: num3 % 2 === 0 ? String(blueDotPointIndent) + ea : "",
+                right: num3 % 2 === 0 ? "" : String(blueDotPointIndent) + ea,
+                width: String(blueDotPointWidth) + ea,
+                height: String(blueDotPointWidth) + ea,
+                borderRadius: String(blueDotPointWidth) + ea,
                 background: colorExtended.blueDim,
               }
             },
@@ -2894,11 +3490,11 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
               style: {
                 display: "inline-block",
                 position: "relative",
-                fontSize: String(3.4) + ea,
-                fontWeight: String(600),
+                fontSize: String(blueSize) + ea,
+                fontWeight: String(blueWeight),
                 color: colorExtended.black,
                 fontFamily: "pretendard",
-                top: String(-0.2) + "px",
+                top: String(blueTextTop) + "px",
               }
             }
           ]
@@ -2917,8 +3513,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           justifyContent: "start",
           alignItems: "start",
           flexDirection: "column",
-          paddingTop: String(11) + ea,
-          paddingBottom: String(11) + ea,
+          paddingTop: String(bigMargin) + ea,
+          paddingBottom: String(bigMargin) + ea,
           paddingLeft: String(mobileMargin / 2) + ea,
           paddingRight: String(mobileMargin / 2) + ea,
         },
@@ -2929,8 +3525,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             width: withOut(-1 * mobileMargin * 2, ea),
             left: String(-1 * mobileMargin) + ea,
             background: colorExtended.white,
-            height: withOut(-1 * 10, ea),
-            top: String(-10) + ea,
+            height: withOut(-1 + (blackBackRadius * -1), ea),
+            top: String(-1 + (blackBackRadius * -1)) + ea,
           },
           next: {
             style: {
@@ -2939,8 +3535,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
               width: withOut(-1 * mobileMargin * 2, ea),
               left: String(-1 * mobileMargin) + ea,
               background: colorExtended.mainBlue,
-              height: withOut(-1 * 10, ea),
-              top: String(-10) + ea,
+              height: withOut(-1 + (blackBackRadius * -1), ea),
+              top: String(-1 + (blackBackRadius * -1)) + ea,
               opacity: String(thisBlueOpacity),
             }
           }
@@ -2955,8 +3551,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           justifyContent: "start",
           alignItems: "start",
           width: withOut(0, ea),
-          paddingLeft: String(0.8) + ea,
-          marginBottom: String(6) + ea,
+          paddingLeft: String(solveBlockPaddingLeft) + ea,
+          marginBottom: String(solveBlockMarginBottom) + ea,
         },
         child: {
           text: c.eng,
@@ -2971,13 +3567,13 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           previous: {
             style: {
               position: "absolute",
-              left: String(-0.8) + ea,
-              top: String(-0.5) + ea,
-              width: String(4.8) + ea,
-              height: String(4.8) + ea,
-              borderRadius: String(3) + "px",
+              left: String(whiteSquareLeft) + ea,
+              top: String(whiteSquareTop) + ea,
+              width: String(whiteSquareWidth) + ea,
+              height: String(whiteSquareWidth) + ea,
+              borderRadius: String(whiteSquareRadius) + "px",
               background: colorExtended.white,
-              opacity: String(0.7),
+              opacity: String(whiteSquareOpacity),
             }
           }
         }
@@ -2999,10 +3595,10 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             display: "inline-block",
             position: "relative",
             fontSize: String(commentsTitleSize) + ea,
-            fontWeight: String(600),
+            fontWeight: String(commentsTitleWeight),
             fontFamily: "pretendard",
             color: colorExtended.darkBlack,
-            lineHeight: String(1.44),
+            lineHeight: String(commentsTitleLineHeight),
           }
         }
       });
@@ -3012,13 +3608,13 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(3.3) + ea,
+          fontSize: String(descriptionSize) + ea,
           fontWeight: String(400),
           fontFamily: "pretendard",
           color: colorExtended.darkBlack,
-          lineHeight: String(1.5),
+          lineHeight: String(descriptionLineHeight),
           textAlign: "left",
-          marginTop: String(3) + ea,
+          marginTop: String(solveDescriptionMarginTop) + ea,
         }
       });
       solveListArea = createNode({
@@ -3030,7 +3626,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           justifyContent: "end",
           alignItems: "end",
           flexDirection: "column",
-          paddingTop: String(10) + ea,
+          paddingTop: String(bigMargin) + ea,
         }
       });
       num4 = 0;
@@ -3067,8 +3663,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
                   display: "inline-flex",
                   position: "relative",
                   top: String(0) + ea,
-                  fontSize: String(3.4) + ea,
-                  fontWeight: String(700),
+                  fontSize: String(blueSize) + ea,
+                  fontWeight: String(blueWeight),
                   fontFamily: "mont",
                   color: colorExtended.darkBlack,
                 }
@@ -3090,9 +3686,9 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
                 style: {
                   display: "inline-flex",
                   position: "relative",
-                  top: String(-0.1) + ea,
-                  fontSize: String(3.3) + ea,
-                  fontWeight: String(600),
+                  top: String(solveTextTextTop) + ea,
+                  fontSize: String(solveTextSize) + ea,
+                  fontWeight: String(solveTextWeight),
                   fontFamily: "pretendard",
                   color: colorExtended.white,
                 }
@@ -3115,7 +3711,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           alignItems: "start",
           flexDirection: "column",
           height: String(photoHeight) + ea,
-          paddingTop: String(11) + ea,
+          paddingTop: String(photoZonePaddingTop) + ea,
           paddingBottom: String(serviceAreaBetween) + ea,
         },
       });
@@ -3192,8 +3788,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         justifyContent: "start",
         alignItems: "center",
         flexDirection: "column",
-        paddingTop: String(16) + ea,
-        paddingBottom: String(22) + ea,
+        paddingTop: String(tableBasePaddingTop) + ea,
+        paddingBottom: String(tableBasePaddingBottom) + ea,
       },
       child: {
         style: {
@@ -3216,20 +3812,20 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         justifyContent: "center",
         alignItems: "center",
         background: colorExtended.black,
-        width: String(70) + ea,
-        height: String(11) + ea,
-        borderRadius: String(11) + ea,
+        width: String(tableTitleBlockWidth) + ea,
+        height: String(tableTitleBlockHeight) + ea,
+        borderRadius: String(tableTitleBlockHeight) + ea,
       },
       child: {
         text: tableTitle,
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(4.4) + ea,
-          fontWeight: String(700),
+          fontSize: String(tableTitleSize) + ea,
+          fontWeight: String(tableTitleWeight),
           fontFamily: "pretendard",
           color: colorExtended.white,
-          top: String(-0.2) + ea,
+          top: String(tableTitleTextTop) + ea,
         }
       }
     });
@@ -3239,14 +3835,14 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
       style: {
         display: "inline-block",
         position: "relative",
-        fontSize: String(3.3) + ea,
-        fontWeight: String(500),
+        fontSize: String(tableDescriptionSize) + ea,
+        fontWeight: String(tableDescriptionWeight),
         fontFamily: "pretendard",
         color: colorExtended.black,
-        lineHeight: String(1.5),
+        lineHeight: String(tableDescriptionLineHeight),
         textAlign: "center",
-        marginTop: String(3) + ea,
-        marginBottom: String(9) + ea,
+        marginTop: String(tableDescriptionMarginTop) + ea,
+        marginBottom: String(tableDescriptionMarginBottom) + ea,
       }
     });
 
@@ -3283,7 +3879,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         width: String(tableFactorWidth0) + ea,
         height: withOut(0, ea),
         boxSizing: "border-box",
-        border: "1.5px solid " + colorExtended.black,
+        border: "1px solid " + colorExtended.black,
         borderRadius: String(factorRadius) + "px",
         marginRight: String(factorBetween) + ea,
         background: colorExtended.white,
@@ -3296,7 +3892,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           display: "inline-block",
           position: "relative",
           fontSize: String(factorSize) + ea,
-          fontWeight: String(800),
+          fontWeight: String(factorBoldWeight),
           color: colorExtended.black,
           top: String(factorTextTop) + ea,
         }
@@ -3310,7 +3906,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         width: String(tableFactorWidth1) + ea,
         height: withOut(0, ea),
         boxSizing: "border-box",
-        border: "1.5px solid " + colorExtended.black,
+        border: "1px solid " + colorExtended.black,
         borderRadius: String(factorRadius) + "px",
         marginRight: String(factorBetween) + ea,
         background: colorExtended.mainBlue,
@@ -3323,7 +3919,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           display: "inline-block",
           position: "relative",
           fontSize: String(factorSize) + ea,
-          fontWeight: String(800),
+          fontWeight: String(factorBoldWeight),
           color: colorExtended.black,
           top: String(factorTextTop) + ea,
         }
@@ -3337,7 +3933,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         width: String(tableFactorWidth1) + ea,
         height: withOut(0, ea),
         boxSizing: "border-box",
-        border: "1.5px solid " + colorExtended.black,
+        border: "1px solid " + colorExtended.black,
         borderRadius: String(factorRadius) + "px",
         marginRight: String(factorBetween) + ea,
         background: colorExtended.mainBlue,
@@ -3350,7 +3946,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           display: "inline-block",
           position: "relative",
           fontSize: String(factorSize) + ea,
-          fontWeight: String(800),
+          fontWeight: String(factorBoldWeight),
           color: colorExtended.black,
           top: String(factorTextTop) + ea,
         }
@@ -3376,7 +3972,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           display: "inline-block",
           position: "relative",
           fontSize: String(factorSize) + ea,
-          fontWeight: String(800),
+          fontWeight: String(factorBoldWeight),
           color: colorExtended.black,
           top: String(factorTextTop) + ea,
         }
@@ -3418,7 +4014,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             display: "inline-block",
             position: "relative",
             fontSize: String(factorSize) + ea,
-            fontWeight: String(800),
+            fontWeight: String(factorBoldWeight),
             color: colorExtended.white,
             top: String(factorTextTop) + ea,
           }
@@ -3432,7 +4028,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           width: String(tableFactorWidth1) + ea,
           height: withOut(0, ea),
           boxSizing: "border-box",
-          border: "1.5px dotted " + colorExtended.gray3,
+          border: "1.5px dotted " + colorExtended.gray4,
           borderRadius: String(factorRadius) + "px",
           marginRight: String(factorBetween) + ea,
           background: colorExtended.white,
@@ -3445,7 +4041,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             display: "inline-block",
             position: "relative",
             fontSize: String(factorSize) + ea,
-            fontWeight: String(600),
+            fontWeight: String(factorWeight),
             color: /없음/gi.test(contents[0].table[i]) ? colorExtended.deactive : colorExtended.black,
             top: String(factorTextTop) + ea,
           }
@@ -3472,7 +4068,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             display: "inline-block",
             position: "relative",
             fontSize: String(factorSize) + ea,
-            fontWeight: String(600),
+            fontWeight: String(factorWeight),
             color: /없음/gi.test(contents[1].table[i]) ? colorExtended.deactive : colorExtended.black,
             top: String(factorTextTop) + ea,
           }
@@ -3498,7 +4094,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             display: "inline-block",
             position: "relative",
             fontSize: String(factorSize) + ea,
-            fontWeight: String(600),
+            fontWeight: String(factorWeight),
             color: colorExtended.blueDark,
             top: String(factorTextTop) + ea,
           }

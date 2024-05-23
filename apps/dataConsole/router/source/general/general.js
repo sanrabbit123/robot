@@ -1139,10 +1139,10 @@ GeneralJs.prototype.generalCss = function (justTextMode = false) {
   @keyframes fadedownentire{from{transform:translateY(0%);}to{transform:translateY(100%);}}
 
   @keyframes fadeinslide{from{opacity:0;transform:translateX(-15px);}to{opacity:1;transform:translateX(0px);}}
-  @keyframes fadeoutslide{from{opacity:1;transform:translateX(0px);}to{opacity:1;transform:translateX(15px);}}
+  @keyframes fadeoutslide{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(15px);}}
 
   @keyframes fadeinslidereverse{from{opacity:0;transform:translateX(15px);}to{opacity:1;transform:translateX(0px);}}
-  @keyframes fadeoutslidereverse{from{opacity:1;transform:translateX(0px);}to{opacity:1;transform:translateX(-15px);}}
+  @keyframes fadeoutslidereverse{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-15px);}}
 
   @keyframes fadeupdelay{from,30%{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0px);}}
   @keyframes fadeupdelaymiddle{from,30%{opacity:0;transform:translateY(10px);}to{opacity:0.4;transform:translateY(0px);}}
@@ -1213,6 +1213,15 @@ GeneralJs.prototype.generalCss = function (justTextMode = false) {
     }
   }
 
+  @keyframes garoProgress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
   @keyframes rotateProgress {
     from {
       transform: rotate(0deg);
@@ -1230,6 +1239,39 @@ GeneralJs.prototype.generalCss = function (justTextMode = false) {
     }
     to {
       transform: rotate(360deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes rotateProgress2 {
+    from {
+      transform: rotate(0deg);
+      opacity: 1;
+    }
+    25% {
+      transform: rotate(90deg);
+    }
+    50% {
+      transform: rotate(180deg);
+      opacity: 0.8;
+    }
+    75% {
+      transform: rotate(270deg);
+    }
+    to {
+      transform: rotate(360deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes opacityProgress {
+    from {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.85;
+    }
+    to {
       opacity: 1;
     }
   }

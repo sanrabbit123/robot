@@ -209,6 +209,17 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const designers = (await back.getDesignersByQuery({}, { selfMongo: this.MONGOC, toNormal: true })).filter((d) => { return d.information.contract.status === "협약 완료" }).map((d) => { return { name: d.designer, phone: d.information.phone } });
+
+    // const kakao = new KakaoTalk();
+    // console.log(await kakao.friendsTalk(designers, {
+    //   ads: false,
+    //   title: `홈리에종 디자이너 교육`,
+    //   body: `안녕하세요, #{name} 실장님!\n홈리에종 홈스타일링 클래스 1기 오픈 안내드립니다!\n현직 홈리에종 TOP 디자이너 업무 전략 공개 \n\n- 1차 클래스 : 홈스타일링 6월 15일 (토) 오후 1시 \n- 2차 클래스 : 시공 6월 22일 (토) 오후 1시\n\n* 상세 커리큘럼 보러가기\nhttps://bit.ly/3V7RxNW\n\n* 신청 링크\nhttps://homeliaison.typeform.com/to/Q73mE8eD`,
+    //   convert: {
+    //     name: (name, phone) => { return name; },
+    //   },
+    // }));
 
 
     
@@ -7525,9 +7536,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "박선영",
-    //     designer: "정민재",
-    //     link: "https://drive.google.com/drive/folders/10w2zwsXA7hrjszDpcz4zd_5TWZEdMIgR",
+    //     client: "박지민",
+    //     designer: "김지영",
+    //     link: "https://drive.google.com/drive/folders/1nSQoEUHlMNRmkPYAeAVmjgAH485_RVWI",
     //     pay: true
     //   },
     // ]);
@@ -7536,8 +7547,8 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawVideo([
     //   {
-    //     client: "유희영",
-    //     designer: "김경수",
+    //     client: "박지민",
+    //     designer: "김지영",
     //   },
     // ]);
 
@@ -7592,7 +7603,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "오유진", "2024-04-25" ],
+    //   [ "안채은", "2024-05-21" ],
     // ]);
 
 

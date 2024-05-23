@@ -549,6 +549,8 @@ GeneralJs.colorExtended = {
   gradientBlue4: "linear-gradient(15deg, rgba(155,189,209,0.9) 0%, rgba(127,159,179,1) 100%)",
   gradientBlue5: "linear-gradient(308deg, rgba(90,120,144,1) 0%, rgba(127,159,179,1) 100%)",
   gradientBlue6: "linear-gradient(-1deg, rgba(90,120,144,1) 0%, rgba(127,159,179,1) 100%)",
+  gradientBlue7: "linear-gradient(349deg, rgba(151,184,201,1) 0%, rgba(192,217,233,1) 100%)",
+  gradientBlue8: "linear-gradient(15deg, rgba(127,159,185,1) 0%, rgba(155,189,209,0.8) 25%, rgba(200,218,227,0.2) 100%)",
 };
 
 GeneralJs.colorParsing = function (str) {
