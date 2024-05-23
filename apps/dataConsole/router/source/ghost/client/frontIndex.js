@@ -42,7 +42,7 @@ const FrontIndexJs = function () {
   this.mother = new GeneralJs();
 }
 
-FrontIndexJs.binaryPath = "/middle/index";
+FrontIndexJs.binaryPath = FRONTHOST + "/middle/index";
 
 FrontIndexJs.prototype.generateGsArray = function (number) {
   if (typeof number !== "number") {
@@ -174,18 +174,15 @@ FrontIndexJs.prototype.insertInitBox = async function () {
     imageMarginLeft = 64;
 
     if (media[0] && window.innerHeight > 1100) {
-
-      initAreaHeight = 800;
-      boxWidth = 440;
-      scaleConst = 1.1;
+      initAreaHeight = 780;
+      boxWidth = 450;
+      scaleConst = 1.06;
       titleX = 72;
       titleY = 180;
-      mainImageWidth = 620;
+      mainImageWidth = 610;
       imageMarginLeft = 71;
-      imageMarginTop = -10;
-
+      imageMarginTop = -24;
     }
-
 
     firstBase = createNode({
       mother: baseTong,
@@ -781,6 +778,8 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     let checkCircleWidth, checkCircleWidthSvg;
     let checkCircleLeft;
     let buttonTitleSize, buttonTitleWeignt, buttonTitleTextTop;
+    let totalBlockPaddingTop, totalBlockPaddingBottom;
+    let thirdBase;
 
     boxRadius = <%% 15, 15, 15, 15, 15 %%>;
     moreAreaHeight = <%% 45, 12, 12, 12, 12 %%>;
@@ -817,7 +816,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
 
     imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    clickMeTop = <%% 72, -13, -13, -13, -13 %%>;
+    clickMeTop = <%% 104, 104, 104, 104, -13 %%>;
     clickMeRight = <%% 1, 1, 1, 1, 1 %%>;
     clictMeWidth = <%% 110, 26, 26, 26, 26 %%>;
 
@@ -831,13 +830,21 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
 
     multipleConst = <%% 6, 6, 6, 6, 6 %%>;
 
-    checkCircleWidth = <%% 19, 4.5, 4.5, 4.5, 4.5 %%>;
-    checkCircleWidthSvg = <%% 20, 4.7, 4.7, 4.7, 4.7 %%>;
+    checkCircleWidth = <%% 20, 4.5, 4.5, 4.5, 4.5 %%>;
+    checkCircleWidthSvg = <%% 21, 4.7, 4.7, 4.7, 4.7 %%>;
     checkCircleLeft = <%% 12, 2.5, 2.5, 2.5, 2.5 %%>;
 
     buttonTitleSize = <%% 14, 3.2, 3.2, 3.2, 3.2 %%>;
     buttonTitleWeignt = <%% 600, 600, 600, 600, 600 %%>;
     buttonTitleTextTop = <%% -1, -0.2, -0.2, -0.2, -0.2 %%>;
+
+    totalBlockPaddingTop = 140;
+    totalBlockPaddingBottom = 130;
+
+    if (media[0] && window.innerHeight > 1100) {
+      totalBlockPaddingTop = 160;
+      totalBlockPaddingBottom = 150;
+    }
 
     moreWords = "더보기";
     contents = [
@@ -943,8 +950,8 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
           justifyContent: "start",
           alignItems: "start",
           flexDirection: "row",
-          paddingTop: String(130) + ea,
-          paddingBottom: String(120) + ea,
+          paddingTop: String(totalBlockPaddingTop) + ea,
+          paddingBottom: String(totalBlockPaddingBottom) + ea,
         },
         child: {
           style: {
@@ -1229,7 +1236,31 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     if (mobile) {
       await instance.insertReviewBox(secondBase);
     } else {
-
+      thirdBase = createNode({
+        mother: baseTong,
+        class: [ secondBaseClassName ],
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
+          paddingTop: String(totalBlockPaddingTop) + ea,
+          paddingBottom: String(totalBlockPaddingBottom) + ea,
+        },
+        child: {
+          style: {
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(-1 * ((window.innerWidth - standardWidth) / 2)) + ea,
+            background: colorExtended.darkDarkBlack,
+            width: String(100) + "vw",
+            height: withOut(0, ea),
+          },
+        }
+      });
+      await instance.insertReviewBox(thirdBase);
     }
 
   } catch (e) {
@@ -1293,109 +1324,168 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
     let title0Size, title0Weight, title0LineHeight;
     let line0Width, lineMarginTop;
     let mainImageWidth;
+    let bestReviewWidth, bestReviewHeight;
+    let imageScale2;
 
-    boxRadius = 15;
-    moreAreaHeight = 12;
+    boxRadius = <%% 15, 15, 15, 15, 15 %%>;
+    moreAreaHeight = <%% 12, 12, 12, 12, 12 %%>;
 
-    moreSize = 3.4;
-    moreWeight = 600;
-    moreTextTop = -0.2;
+    moreSize = <%% 3.4, 3.4, 3.4, 3.4, 3.4 %%>;
+    moreWeight = <%% 600, 600, 600, 600, 600 %%>;
+    moreTextTop = <%% -0.2, -0.2, -0.2, -0.2, -0.2 %%>;
 
-    mobileMargin = 6;
-    blackTop = -31;
+    mobileMargin = <%% 6, 6, 6, 6, 6 %%>;
+    blackTop = <%% -31, -31, -31, -31, -31 %%>;
 
-    whiteBlockBetween = 4;
+    whiteBlockBetween = <%% 4, 4, 4, 4, 4 %%>;
 
-    whiteBlockHeight = 80;
-    barMargin = 2.5;
+    whiteBlockHeight = <%% 80, 80, 80, 80, 80 %%>;
+    barMargin = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
 
-    topBottomMargin = 9;
+    topBottomMargin = <%% 9, 9, 9, 9, 9 %%>;
 
-    blueBlockBetween = 1.8;
+    blueBlockBetween = <%% 1.8, 1.8, 1.8, 1.8, 1.8 %%>;
 
-    titleSize = 5;
+    titleSize = <%% 19, 5, 5, 5, 5 %%>;
 
-    imageBoxWidth = 62;
-    imageScale = 0.84;
-    imageOpacity = 0.4;
+    imageBoxWidth = <%% 460, 460, 460, 460, 62 %%>;
+    imageScale = <%% 0.91, 0.92, 0.92, 0.92, 0.84 %%>;
+    imageScale2 = <%% 0.77, 0.8, 0.8, 0.8, 0.8 %%>;
+    imageOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
-    imageMarginTop = 3;
-    reviewTitleSize = 3.6;
-    reviewSubSize = 2.6;
+    imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
+    reviewTitleSize = <%% 24, 3.6, 3.6, 3.6, 3.6 %%>;
+    reviewSubSize = <%% 13, 2.6, 2.6, 2.6, 2.6 %%>;
 
-    blackScreenOpacity = 0.2;
+    blackScreenOpacity = <%% 0.2, 0.2, 0.2, 0.2, 0.2 %%>;
 
-    reviewTitleMargin = 6;
-    reviewTitleWeight = 600;
-    reviewLineHeight = 1.5;
-    reviewSubTitleWeight = 500;
+    reviewTitleMargin = <%% 45, 6, 6, 6, 6 %%>;
+    reviewTitleWeight = <%% 700, 600, 600, 600, 600 %%>;
+    reviewLineHeight = <%% 1.4, 1.5, 1.5, 1.5, 1.5 %%>;
+    reviewSubTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-    reviewBoxPaddingTop = 15;
-    reviewBoxPaddingBottom = 21;
-    bestBetween = 6;
+    reviewBoxPaddingTop = <%% 15, 15, 15, 15, 15 %%>;
+    reviewBoxPaddingBottom = <%% 21, 21, 21, 21, 21 %%>;
+    bestBetween = <%% 32, 6, 6, 6, 6 %%>;
 
-    reviewBestSize = 3.4;
-    reviewBestWeight = 700;
-    reviewBestTextTop = -0.2;
-    reviewBestEngSize = 3.7;
-    reviewBackBoxTop = 6;
-    reviewBackBoxLeft = 0;
+    bestReviewWidth = <%% 270, 50, 50, 50, 50 %%>;
+    bestReviewHeight = <%% 45, 9, 9, 9, 9 %%>;
 
-    arrowWidth = 3.4;
-    arrowLeft = 5;
+    reviewBestSize = <%% 18, 18, 18, 3.4, 3.4 %%>;
+    reviewBestWeight = <%% 700, 700, 700, 700, 700 %%>;
+    reviewBestTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
+    reviewBestEngSize = <%% 20, 18, 18, 18, 3.8 %%>;
+    reviewBackBoxTop = <%% 6, 6, 6, 6, 6 %%>;
+    reviewBackBoxLeft = <%% 160, 0, 0, 0, 0 %%>;
+
+    arrowWidth = <%% 3.4, 3.4, 3.4, 3.4, 3.4 %%>;
+    arrowLeft = <%% 5, 5, 5, 5, 5 %%>;
 
     rightArrowEvent = () => {
       return function (e) {
-        const [ a, b, c ] = [ ...document.querySelectorAll('.' + reviewBlockClassName) ];
-        const [ d, f ] = [ ...document.querySelectorAll('.' + reviewBlockArrowClassName) ];
-        const [ target ] = selectByClass(reviewBlockBaseClassName);
-        const numbers = JSON.parse(target.getAttribute("numbers"));
-
-        target.style.animation = "fadeoutslidereverse 0.3s ease forwards";
-        a.style.animation = "justfadeoutsmall 0.5s ease forwards";
-        b.style.animation = "justfadeoutsmall 0.5s ease forwards";
-        c.style.animation = "justfadeoutoriginal 0.5s ease forwards";
-
-        d.style.animation = "justfadeoutoriginal 0.5s ease forwards";
-        f.style.animation = "justfadeoutoriginal 0.5s ease forwards";
-
-        setQueue(() => {
-          if (JSON.stringify(numbers) === "[2,1,0]") {
-            reviewMaker(1, 0, 2, false);
-          } else if (JSON.stringify(numbers) === "[1,0,2]") {
-            reviewMaker(0, 2, 1, false);
-          } else if (JSON.stringify(numbers) === "[0,2,1]") {
-            reviewMaker(2, 1, 0, false);
-          }
-        }, 501);
-
+        if (mobile) {
+          const [ a, b, c ] = [ ...document.querySelectorAll('.' + reviewBlockClassName) ];
+          const [ d, f ] = [ ...document.querySelectorAll('.' + reviewBlockArrowClassName) ];
+          const [ target ] = selectByClass(reviewBlockBaseClassName);
+          const numbers = JSON.parse(target.getAttribute("numbers"));
+  
+          target.style.animation = "fadeoutslidereverse 0.3s ease forwards";
+          a.style.animation = "justfadeoutsmall 0.5s ease forwards";
+          b.style.animation = "justfadeoutsmall 0.5s ease forwards";
+          c.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+  
+          d.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+          f.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+  
+          setQueue(() => {
+            if (JSON.stringify(numbers) === "[2,1,0]") {
+              reviewMaker(1, 0, 2, false);
+            } else if (JSON.stringify(numbers) === "[1,0,2]") {
+              reviewMaker(0, 2, 1, false);
+            } else if (JSON.stringify(numbers) === "[0,2,1]") {
+              reviewMaker(2, 1, 0, false);
+            }
+          }, 501);
+        } else {
+          const [ e, f, a, b, c ] = [ ...document.querySelectorAll('.' + reviewBlockClassName) ];
+          const [ target ] = selectByClass(reviewBlockBaseClassName);
+          const numbers = JSON.parse(target.getAttribute("numbers"));
+  
+          target.style.animation = "fadeoutslidereverse 0.3s ease forwards";
+          e.style.animation = "justfadeoutsmall 0.5s ease forwards";
+          f.style.animation = "justfadeoutsmall 0.5s ease forwards";
+          c.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+          a.style.animation = "justfadeouteight 0.5s ease forwards";
+          b.style.animation = "justfadeouteight 0.5s ease forwards";
+        
+          setQueue(() => {
+            if (JSON.stringify(numbers) === "[2,1,0,3,4]") {
+              reviewMaker(0, 4, 1, false, 2, 3);
+            } else if (JSON.stringify(numbers) === "[0,4,1,2,3]") {
+              reviewMaker(1, 3, 4, false, 0, 2);
+            } else if (JSON.stringify(numbers) === "[1,3,4,0,2]") {
+              reviewMaker(4, 2, 3, false, 1, 0);
+            } else if (JSON.stringify(numbers) === "[4,2,3,1,0]") {
+              reviewMaker(3, 0, 2, false, 4, 1);
+            } else if (JSON.stringify(numbers) === "[3,0,2,4,1]") {
+              reviewMaker(2, 1, 0, false, 3, 4);
+            }
+          }, 501);
+        }
       }
     }
     leftArrowEvent = () => {
       return function (e) {
-        const [ a, b, c ] = [ ...document.querySelectorAll('.' + reviewBlockClassName) ];
-        const [ d, f ] = [ ...document.querySelectorAll('.' + reviewBlockArrowClassName) ];
-        const [ target ] = selectByClass(reviewBlockBaseClassName);
-        const numbers = JSON.parse(target.getAttribute("numbers"));
+        if (mobile) {
+          const [ a, b, c ] = [ ...document.querySelectorAll('.' + reviewBlockClassName) ];
+          const [ d, f ] = [ ...document.querySelectorAll('.' + reviewBlockArrowClassName) ];
+          const [ target ] = selectByClass(reviewBlockBaseClassName);
+          const numbers = JSON.parse(target.getAttribute("numbers"));
+  
+          target.style.animation = "fadeoutslide 0.3s ease forwards";
+          a.style.animation = "justfadeoutsmall 0.5s ease forwards";
+          b.style.animation = "justfadeoutsmall 0.5s ease forwards";
+          c.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+  
+          d.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+          f.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+  
+          setQueue(() => {
+            if (JSON.stringify(numbers) === "[2,1,0]") {
+              reviewMaker(0, 2, 1, true);
+            } else if (JSON.stringify(numbers) === "[0,2,1]") {
+              reviewMaker(1, 0, 2, true);
+            } else if (JSON.stringify(numbers) === "[1,0,2]") {
+              reviewMaker(2, 1, 0, true);
+            }
+          }, 501);
+        } else {
+          const [ e, f, a, b, c ] = [ ...document.querySelectorAll('.' + reviewBlockClassName) ];
+          const [ target ] = selectByClass(reviewBlockBaseClassName);
+          const numbers = JSON.parse(target.getAttribute("numbers"));
+  
+          target.style.animation = "fadeoutslide 0.3s ease forwards";
+          e.style.animation = "justfadeoutsmall 0.5s ease forwards";
+          f.style.animation = "justfadeoutsmall 0.5s ease forwards";
+          c.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+          a.style.animation = "justfadeouteight 0.5s ease forwards";
+          b.style.animation = "justfadeouteight 0.5s ease forwards";
 
-        target.style.animation = "fadeoutslide 0.3s ease forwards";
-        a.style.animation = "justfadeoutsmall 0.5s ease forwards";
-        b.style.animation = "justfadeoutsmall 0.5s ease forwards";
-        c.style.animation = "justfadeoutoriginal 0.5s ease forwards";
+          setQueue(() => {
+            if (JSON.stringify(numbers) === "[2,1,0,3,4]") {
+              reviewMaker(3, 0, 2, true, 4, 1);
+            } else if (JSON.stringify(numbers) === "[3,0,2,4,1]") {
+              reviewMaker(4, 2, 3, true, 1, 0);
+            } else if (JSON.stringify(numbers) === "[4,2,3,1,0]") {
+              reviewMaker(1, 3, 4, true, 0, 2);
+            } else if (JSON.stringify(numbers) === "[1,3,4,0,2]") {
+              reviewMaker(0, 4, 1, true, 2, 3);
+            } else if (JSON.stringify(numbers) === "[0,4,1,2,3]") {
+              reviewMaker(2, 1, 0, true, 3, 4);
+            }
+          }, 501);
 
-        d.style.animation = "justfadeoutoriginal 0.5s ease forwards";
-        f.style.animation = "justfadeoutoriginal 0.5s ease forwards";
-
-        setQueue(() => {
-          if (JSON.stringify(numbers) === "[2,1,0]") {
-            reviewMaker(0, 2, 1, true);
-          } else if (JSON.stringify(numbers) === "[0,2,1]") {
-            reviewMaker(1, 0, 2, true);
-          } else if (JSON.stringify(numbers) === "[1,0,2]") {
-            reviewMaker(2, 1, 0, true);
-          }
-        }, 501);
-
+        }
       }
     }
 
@@ -1417,10 +1507,10 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
           position: "relative",
           justifyContent: "center",
           alignItems: "center",
-          width: String(50) + ea,
-          height: String(9) + ea,
-          borderRadius: String(9) + ea,
-          background: colorExtended.darkDarkBlack,
+          width: String(bestReviewWidth) + ea,
+          height: String(bestReviewHeight) + ea,
+          borderRadius: String(bestReviewHeight) + ea,
+          background: desktop ? colorExtended.ultimateBlack : colorExtended.darkDarkBlack,
         },
         child: {
           text: "홈리에종 <b%BEST%b> 리뷰 바로가기",
@@ -1439,19 +1529,21 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
             fontWeight: String(reviewBestWeight),
             fontFamily: "mont",
             color: colorExtended.white,
+            position: "relative",
+            top: desktop ? String(0.5) + ea : String(0.1) + ea,
           }
         }
       }
     });
 
     // reviewMaker
-    reviewMaker = (a, b, c, reverse = false) => {
+    reviewMaker = (a, b, c, reverse = false, e = null, f = null) => {
       removeByClass(reviewBlockBaseClassName);
 
       imageReviewBox = createNode({
         mother: secondBase,
         class: [ reviewBlockBaseClassName ],
-        attribute: { numbers: JSON.stringify([ a, b, c ]) },
+        attribute: { numbers: (desktop ? JSON.stringify([ a, b, c, e, f ]) : JSON.stringify([ a, b, c ])) },
         style: {
           display: "flex",
           flexDirection: "column",
@@ -1474,6 +1566,147 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
         }, null, imageReviewBox, "swipeStack_review_" + String(a) + String(b) + String(c) + uniqueValue("hex"));
       }
 
+      if (desktop) {
+        thisIndex = e;
+        thisReview = reviewTargets[thisIndex];
+        pid = thisReview.contents.portfolio.pid;
+        createNode({
+          mother: imageReviewBox,
+          class: [ reviewBlockClassName ],
+          event: { click: leftArrowEvent() },
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            left: String(0) + ea,
+            top: desktop ? "" : String(reviewBackBoxTop) + ea,
+            width: String(imageBoxWidth) + ea,
+            height: String(imageBoxWidth) + ea,
+            borderRadius: String(boxRadius) + "px",
+            backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(thisReview.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
+            backgroundPosition: "50% 50%",
+            backgroundSize: "auto 100%",
+            transformOrigin: "0% 50%",
+            transform: "scale(" + String(imageScale2) + ")",
+            boxShadow: "0px 3px 22px -9px " + colorExtended.ultimateBlack,
+            opacity: String(0),
+            animation: "justfadeinsmall 0.5s ease forwards",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                left: String(0),
+                opacity: String(blackScreenOpacity),
+                background: colorExtended.black,
+              }
+            },
+            {
+              text: thisReview.contents.review.title.main.split(", ").join("\n"),
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(reviewTitleMargin) + ea,
+                left: String(reviewTitleMargin) + ea,
+                fontSize: String(reviewTitleSize) + ea,
+                fontWeight: String(reviewTitleWeight),
+                fontFamily: "pretendard",
+                color: colorExtended.white,
+                lineHeight: String(reviewLineHeight),
+              }
+            },
+            {
+              text: thisReview.contents.portfolio.spaceInfo.space + " " + String(thisReview.contents.portfolio.spaceInfo.pyeong) + "py 홈스타일링",
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                bottom: String(reviewTitleMargin) + ea,
+                left: String(reviewTitleMargin) + ea,
+                fontSize: String(reviewSubSize) + ea,
+                fontWeight: String(reviewSubTitleWeight),
+                fontFamily: "pretendard",
+                color: colorExtended.white,
+                lineHeight: String(reviewLineHeight),
+              }
+            },
+          ],
+        });
+
+        thisIndex = f;
+        thisReview = reviewTargets[thisIndex];
+        pid = thisReview.contents.portfolio.pid;
+        createNode({
+          mother: imageReviewBox,
+          class: [ reviewBlockClassName ],
+          event: { click: rightArrowEvent() },
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            right: String(0) + ea,
+            top: desktop ? "" : String(reviewBackBoxTop) + ea,
+            width: String(imageBoxWidth) + ea,
+            height: String(imageBoxWidth) + ea,
+            borderRadius: String(boxRadius) + "px",
+            backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(thisReview.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
+            backgroundPosition: "50% 50%",
+            backgroundSize: "auto 100%",
+            transformOrigin: "100% 50%",
+            transform: "scale(" + String(imageScale2) + ")",
+            boxShadow: "0px 3px 22px -9px " + colorExtended.ultimateBlack,
+            opacity: String(0),
+            animation: "justfadeinsmall 0.5s ease forwards",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                top: String(0),
+                left: String(0),
+                opacity: String(blackScreenOpacity),
+                background: colorExtended.black,
+              }
+            },
+            {
+              text: thisReview.contents.review.title.main.split(", ").join("\n"),
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(reviewTitleMargin) + ea,
+                left: String(reviewTitleMargin) + ea,
+                fontSize: String(reviewTitleSize) + ea,
+                fontWeight: String(reviewTitleWeight),
+                fontFamily: "pretendard",
+                color: colorExtended.white,
+                lineHeight: String(reviewLineHeight),
+              }
+            },
+            {
+              text: thisReview.contents.portfolio.spaceInfo.space + " " + String(thisReview.contents.portfolio.spaceInfo.pyeong) + "py 홈스타일링",
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                bottom: String(reviewTitleMargin) + ea,
+                left: String(reviewTitleMargin) + ea,
+                fontSize: String(reviewSubSize) + ea,
+                fontWeight: String(reviewSubTitleWeight),
+                fontFamily: "pretendard",
+                color: colorExtended.white,
+                lineHeight: String(reviewLineHeight),
+              }
+            },
+          ],
+        });
+      }
+
+
       // 0
       thisIndex = a;
       thisReview = reviewTargets[thisIndex];
@@ -1481,11 +1714,12 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
       createNode({
         mother: imageReviewBox,
         class: [ reviewBlockClassName ],
+        event: { click: leftArrowEvent() },
         style: {
           display: "inline-flex",
           position: "absolute",
           left: String(reviewBackBoxLeft) + ea,
-          top: String(reviewBackBoxTop) + ea,
+          top: desktop ? "" : String(reviewBackBoxTop) + ea,
           width: String(imageBoxWidth) + ea,
           height: String(imageBoxWidth) + ea,
           borderRadius: String(boxRadius) + "px",
@@ -1496,7 +1730,8 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
           transform: "scale(" + String(imageScale) + ")",
           boxShadow: "0px 3px 22px -9px " + colorExtended.ultimateBlack,
           opacity: String(0),
-          animation: "justfadeinsmall 0.5s ease forwards",
+          animation: (desktop ? "justfadeineight" : "justfadeinsmall") + " 0.5s ease forwards",
+          cursor: "pointer",
         },
         children: [
           {
@@ -1549,11 +1784,12 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
       createNode({
         mother: imageReviewBox,
         class: [ reviewBlockClassName ],
+        event: { click: rightArrowEvent() },
         style: {
           display: "inline-flex",
           position: "absolute",
           right: String(reviewBackBoxLeft) + ea,
-          top: String(reviewBackBoxTop) + ea,
+          top: desktop ? "" : String(reviewBackBoxTop) + ea,
           width: String(imageBoxWidth) + ea,
           height: String(imageBoxWidth) + ea,
           borderRadius: String(boxRadius) + "px",
@@ -1564,7 +1800,8 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
           transform: "scale(" + String(imageScale) + ")",
           boxShadow: "0px 3px 22px -9px " + colorExtended.ultimateBlack,
           opacity: String(0),
-          animation: "justfadeinsmall 0.5s ease forwards",
+          animation: (desktop ? "justfadeineight" : "justfadeinsmall") + " 0.5s ease forwards",
+          cursor: "pointer",
         },
         children: [
           {
@@ -1679,46 +1916,53 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
         ],
       });
 
-      // arrows
-      createNode({
-        mother: imageReviewBox,
-        class: [ reviewBlockArrowClassName ],
-        mode: "svg",
-        source: svgMaker.generalTriangle(colorExtended.white),
-        event: {
-          click: leftArrowEvent(),
-        },
-        style: {
-          display: "inline-block",
-          position: "absolute",
-          width: String(arrowWidth) + ea,
-          transformOrigin: "50% 50%",
-          transform: "rotate(90deg)",
-          left: String(arrowLeft) + ea,
-          animation: "justfadeinoriginal 0.5s ease forwards",
-        }
-      });
-      createNode({
-        mother: imageReviewBox,
-        class: [ reviewBlockArrowClassName ],
-        mode: "svg",
-        source: svgMaker.generalTriangle(colorExtended.white),
-        event: {
-          click: rightArrowEvent(),
-        },
-        style: {
-          display: "inline-block",
-          position: "absolute",
-          width: String(arrowWidth) + ea,
-          transformOrigin: "50% 50%",
-          transform: "rotate(-90deg)",
-          right: String(arrowLeft) + ea,
-          animation: "justfadeinoriginal 0.5s ease forwards",
-        }
-      });
+      if (mobile) {
+        // arrows
+        createNode({
+          mother: imageReviewBox,
+          class: [ reviewBlockArrowClassName ],
+          mode: "svg",
+          source: svgMaker.generalTriangle(colorExtended.white),
+          event: {
+            click: leftArrowEvent(),
+          },
+          style: {
+            display: "inline-block",
+            position: "absolute",
+            width: String(arrowWidth) + ea,
+            transformOrigin: "50% 50%",
+            transform: "rotate(90deg)",
+            left: String(arrowLeft) + ea,
+            animation: "justfadeinoriginal 0.5s ease forwards",
+          }
+        });
+        createNode({
+          mother: imageReviewBox,
+          class: [ reviewBlockArrowClassName ],
+          mode: "svg",
+          source: svgMaker.generalTriangle(colorExtended.white),
+          event: {
+            click: rightArrowEvent(),
+          },
+          style: {
+            display: "inline-block",
+            position: "absolute",
+            width: String(arrowWidth) + ea,
+            transformOrigin: "50% 50%",
+            transform: "rotate(-90deg)",
+            right: String(arrowLeft) + ea,
+            animation: "justfadeinoriginal 0.5s ease forwards",
+          }
+        });
+      }
 
     }
-    reviewMaker(2, 1, 0, true);
+
+    if (mobile) {
+      reviewMaker(2, 1, 0, true);
+    } else {
+      reviewMaker(2, 1, 0, true, 3, 4);
+    }
 
   } catch (e) {
     console.log(e);

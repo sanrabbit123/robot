@@ -1124,6 +1124,8 @@ GeneralJs.prototype.generalCss = function (justTextMode = false) {
   @keyframes justfadeoutnine{from{opacity:0.9;}to{opacity:0;}}
   @keyframes justfadeineight{from{opacity:0;}to{opacity:0.8;}}
   @keyframes justfadeouteight{from{opacity:0.8;}to{opacity:0;}}
+  @keyframes justfadeinseven{from{opacity:0;}to{opacity:0.7;}}
+  @keyframes justfadeoutseven{from{opacity:0.7;}to{opacity:0;}}
   @keyframes justfadeinmiddle{from{opacity:0;}to{opacity:0.6;}}
   @keyframes justfadeoutmiddle{from{opacity:0.6;}to{opacity:0;}}
   @keyframes justfadeinsmall{from{opacity:0;}to{opacity:0.4;}}
