@@ -293,7 +293,7 @@ FrontIndexJs.prototype.insertInitBox = async function () {
               left: String(0) + ea,
               transformOrigin: "0% 50%",
               transform: "scaleX(0)",
-              animation: "garoProgress 5s linear infinite",
+              animation: "garoProgress 4s linear infinite",
             }
           },
           {
@@ -378,7 +378,7 @@ FrontIndexJs.prototype.insertInitBox = async function () {
             target.style.animation = "fadeinslide 0.3s ease forwards";
           }, 300);
         }
-      }, 5000);
+      }, 4000);
 
     } else {
       mainTitleBlock = createNode({
@@ -783,32 +783,32 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     let buttonTitleSize, buttonTitleWeignt, buttonTitleTextTop;
 
     boxRadius = <%% 15, 15, 15, 15, 15 %%>;
-    moreAreaHeight = <%% 12, 12, 12, 12, 12 %%>;
+    moreAreaHeight = <%% 45, 12, 12, 12, 12 %%>;
 
-    moreSize = <%% 3.4, 3.4, 3.4, 3.4, 3.4 %%>;
+    moreSize = <%% 14, 3.4, 3.4, 3.4, 3.4 %%>;
     moreWeight = <%% 600, 600, 600, 600, 600 %%>;
-    moreTextTop = <%% -0.1, -0.1, -0.1, -0.1, -0.1 %%>;
+    moreTextTop = <%% -0.5, -0.1, -0.1, -0.1, -0.1 %%>;
 
     mobileMargin = <%% 6, 6, 6, 6, 6 %%>;
     blackTop = <%% -31, -31, -31, -31, -31 %%>;
 
-    whiteBlockBetween = <%% 4, 4, 4, 4, 4 %%>;
+    whiteBlockBetween = <%% 10, 10, 10, 10, 4 %%>;
 
     whiteBlockHeight = <%% 80, 80, 80, 80, 80 %%>;
-    barMargin = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
+    barMargin = <%% 12, 2.5, 2.5, 2.5, 2.5 %%>;
 
-    topBottomMargin = <%% 9, 9, 9, 9, 9 %%>;
+    topBottomMargin = <%% 45, 30, 9, 9, 9 %%>;
 
-    blueBlockBetween = <%% 1.8, 1.8, 1.8, 1.8, 1.8 %%>;
+    blueBlockBetween = <%% 6, 1.8, 1.8, 1.8, 1.8 %%>;
 
-    titleSize = <%% 5, 5, 5, 5, 5 %%>;
+    titleSize = <%% 23, 5, 5, 5, 5 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    titleEngSize = <%% 2.7, 2.7, 2.7, 2.7, 2.7 %%>;
+    titleEngSize = <%% 11, 2.7, 2.7, 2.7, 2.7 %%>;
     titleEngWeight = <%% 300, 300, 300, 300, 300 %%>;
-    titleEngBetween = <%% 0.1, 0.1, 0.1, 0.1, 0.1 %%>;
+    titleEngBetween = <%% 2, 0.1, 0.1, 0.1, 0.1 %%>;
 
-    descriptionSize = <%% 3, 3, 3, 3, 3 %%>;
+    descriptionSize = <%% 13, 3, 3, 3, 3 %%>;
     descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
 
     imageBoxWidth = <%% 62, 62, 62, 62, 62 %%>;
@@ -817,27 +817,27 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
 
     imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    clickMeTop = <%% -13, -13, -13, -13, -13 %%>;
+    clickMeTop = <%% 72, -13, -13, -13, -13 %%>;
     clickMeRight = <%% 1, 1, 1, 1, 1 %%>;
-    clictMeWidth = <%% 26, 26, 26, 26, 26 %%>;
+    clictMeWidth = <%% 110, 26, 26, 26, 26 %%>;
 
-    moreArrowCircleWidth = <%% 2.8, 2.8, 2.8, 2.8, 2.8 %%>;
-    moreArrowCircleMarginLeft = <%% 1, 1, 1, 1, 1 %%>;
+    moreArrowCircleWidth = <%% 13, 2.8, 2.8, 2.8, 2.8 %%>;
+    moreArrowCircleMarginLeft = <%% 4, 1, 1, 1, 1 %%>;
 
-    moreArrowVisualLeft = <%% 0.2, 0.2, 0.2, 0.2, 0.2 %%>;
-    moreArrowWidth = <%% 1, 1, 1, 1, 1 %%>;
+    moreArrowVisualLeft = <%% 1, 0.2, 0.2, 0.2, 0.2 %%>;
+    moreArrowWidth = <%% 4, 1, 1, 1, 1 %%>;
 
-    buttonHeight = <%% 8.8, 8.8, 8.8, 8.8, 8.8 %%>;
+    buttonHeight = <%% 40, 8.8, 8.8, 8.8, 8.8 %%>;
 
     multipleConst = <%% 6, 6, 6, 6, 6 %%>;
 
-    checkCircleWidth = <%% 4.5, 4.5, 4.5, 4.5, 4.5 %%>;
-    checkCircleWidthSvg = <%% 4.7, 4.7, 4.7, 4.7, 4.7 %%>;
-    checkCircleLeft = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
+    checkCircleWidth = <%% 19, 4.5, 4.5, 4.5, 4.5 %%>;
+    checkCircleWidthSvg = <%% 20, 4.7, 4.7, 4.7, 4.7 %%>;
+    checkCircleLeft = <%% 12, 2.5, 2.5, 2.5, 2.5 %%>;
 
-    buttonTitleSize = <%% 3.2, 3.2, 3.2, 3.2, 3.2 %%>;
+    buttonTitleSize = <%% 14, 3.2, 3.2, 3.2, 3.2 %%>;
     buttonTitleWeignt = <%% 600, 600, 600, 600, 600 %%>;
-    buttonTitleTextTop = <%% -0.2, -0.2, -0.2, -0.2, -0.2 %%>;
+    buttonTitleTextTop = <%% -1, -0.2, -0.2, -0.2, -0.2 %%>;
 
     moreWords = "더보기";
     contents = [
@@ -851,6 +851,9 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
         buttons: [
           {
             title: "퍼니싱 단독 서비스",
+          },
+          {
+            title: "패브릭 서비스",
           },
           {
             title: "기획 + 배치도",
@@ -869,10 +872,10 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
         ],
         buttons: [
           {
-            title: "시공",
+            title: "부분 인테리어 시공",
           },
           {
-            title: "퍼니싱 단독 서비스",
+            title: "퍼니싱 서비스",
           },
           {
             title: "기획 + 배치도",
@@ -894,7 +897,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
             title: "전체 인테리어 시공",
           },
           {
-            title: "퍼니싱 단독 서비스",
+            title: "퍼니싱 서비스",
           },
           {
             title: "기획 + 배치도",
@@ -940,8 +943,8 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
           justifyContent: "start",
           alignItems: "start",
           flexDirection: "row",
-          paddingTop: String(160) + ea,
-          paddingBottom: String(160) + ea,
+          paddingTop: String(130) + ea,
+          paddingBottom: String(120) + ea,
         },
         child: {
           style: {
@@ -983,10 +986,11 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
           display: "flex",
           flexDirection: "column",
           position: "relative",
-          width: withOut(0, ea),
+          width: desktop ? "calc(calc(100% - " + String(whiteBlockBetween * 2) + ea + ") / 2)" : withOut(0, ea),
           paddingTop: String(topBottomMargin) + ea,
           paddingBottom: String(topBottomMargin + moreAreaHeight - blueBlockBetween) + ea,
           marginBottom: String(whiteBlockBetween) + ea,
+          marginRight: (desktop && num !== contents.length - 1) ? String(whiteBlockBetween) + ea : "",
           borderRadius: String(boxRadius) + "px",
           background: colorExtended.white,
           justifyContent: "start",
@@ -1121,7 +1125,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
           height: String(barMargin) + ea,
           marginBottom: String(barMargin) + ea,
           borderBottom: "1px solid " + colorExtended.gray4,
-          width: withOut(mobileMargin * multipleConst, ea),
+          width: desktop ? withOut(topBottomMargin * 2.1, ea) : withOut(mobileMargin * multipleConst, ea),
         }
       });
 
@@ -1158,7 +1162,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
           position: "relative",
           height: String(barMargin) + ea,
           marginBottom: String(barMargin) + ea,
-          width: withOut(mobileMargin * multipleConst, ea),
+          width: desktop ? withOut(topBottomMargin * 2, ea) : withOut(mobileMargin * multipleConst, ea),
         }
       });
       
@@ -1170,7 +1174,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
             display: "inline-flex",
             position: "relative",
             flexDirection: "row",
-            width: withOut(mobileMargin * multipleConst, ea),
+            width: desktop ? withOut(topBottomMargin * 2, ea) : withOut(mobileMargin * multipleConst, ea),
             height: String(buttonHeight) + ea,
             borderRadius: String(buttonHeight) + ea,
             border: "1.5px solid " + colorExtended.black,
@@ -5137,7 +5141,7 @@ FrontIndexJs.prototype.launching = async function (loading) {
     let reviewRes;
 
     response = await ajaxJson({ mode: "portfolio", limit: 42 }, LOGHOST + "/getContents", { equal: true });
-    reviewRes = await ajaxJson({ mode: "review", limit: 3, newmode: 1 }, LOGHOST + "/getContents", { equal: true });
+    reviewRes = await ajaxJson({ mode: "review", limit: 5, newmode: 1 }, LOGHOST + "/getContents", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
     this.designers = new SearchArray(response.designers);
     this.fullLoad = false;
