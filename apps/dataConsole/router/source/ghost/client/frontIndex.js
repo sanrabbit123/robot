@@ -42,7 +42,7 @@ const FrontIndexJs = function () {
   this.mother = new GeneralJs();
 }
 
-FrontIndexJs.binaryPath = FRONTHOST + "/middle/index";
+FrontIndexJs.binaryPath = "/middle/index";
 
 FrontIndexJs.prototype.generateGsArray = function (number) {
   if (typeof number !== "number") {
@@ -285,17 +285,6 @@ FrontIndexJs.prototype.insertInitBox = async function () {
         children: [
           {
             style: {
-              display: "none",
-              position: "absolute",
-              background: colorExtended.gradientBlue7,
-              width: String(125) + '%',
-              "aspect-ratio": "1 / 1",
-              animation: "rotateProgress2 3s linear infinite",
-              opacity: String(0.4),
-            }
-          },
-          {
-            style: {
               position: "absolute",
               background: colorExtended.mainBlue,
               width: String(100) + '%',
@@ -510,14 +499,24 @@ FrontIndexJs.prototype.insertInitBox = async function () {
         children: [
           {
             style: {
-              display: "inline-block",
+              display: "inline-flex",
               position: "absolute",
               width: String(mainImageWidth) + ea,
               height: String(438) + ea,
               marginTop: String(imageMarginTop) + ea,
               marginLeft: String(imageMarginLeft) + ea,
-              background: colorExtended.gradientBlue8,
               "clip-path": "url(#myClip)",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              style: {
+                position: "gradientBlue8",
+                background: colorExtended.gradientBlue8,
+                width: String(125) + '%',
+                "aspect-ratio": "1 / 1",
+                animation: "rotateProgress2 5s linear infinite",
+              }
             }
           },
           {
@@ -783,62 +782,62 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     let checkCircleLeft;
     let buttonTitleSize, buttonTitleWeignt, buttonTitleTextTop;
 
-    boxRadius = 15;
-    moreAreaHeight = 12;
+    boxRadius = <%% 15, 15, 15, 15, 15 %%>;
+    moreAreaHeight = <%% 12, 12, 12, 12, 12 %%>;
 
-    moreSize = 3.4;
-    moreWeight = 600;
-    moreTextTop = -0.1;
+    moreSize = <%% 3.4, 3.4, 3.4, 3.4, 3.4 %%>;
+    moreWeight = <%% 600, 600, 600, 600, 600 %%>;
+    moreTextTop = <%% -0.1, -0.1, -0.1, -0.1, -0.1 %%>;
 
-    mobileMargin = 6;
-    blackTop = -31;
+    mobileMargin = <%% 6, 6, 6, 6, 6 %%>;
+    blackTop = <%% -31, -31, -31, -31, -31 %%>;
 
-    whiteBlockBetween = 4;
+    whiteBlockBetween = <%% 4, 4, 4, 4, 4 %%>;
 
-    whiteBlockHeight = 80;
-    barMargin = 2.5;
+    whiteBlockHeight = <%% 80, 80, 80, 80, 80 %%>;
+    barMargin = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
 
-    topBottomMargin = 9;
+    topBottomMargin = <%% 9, 9, 9, 9, 9 %%>;
 
-    blueBlockBetween = 1.8;
+    blueBlockBetween = <%% 1.8, 1.8, 1.8, 1.8, 1.8 %%>;
 
-    titleSize = 5;
-    titleWeight = 700;
+    titleSize = <%% 5, 5, 5, 5, 5 %%>;
+    titleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    titleEngSize = 2.7;
-    titleEngWeight = 300;
-    titleEngBetween = 0.1;
+    titleEngSize = <%% 2.7, 2.7, 2.7, 2.7, 2.7 %%>;
+    titleEngWeight = <%% 300, 300, 300, 300, 300 %%>;
+    titleEngBetween = <%% 0.1, 0.1, 0.1, 0.1, 0.1 %%>;
 
-    descriptionSize = 3;
-    descriptionWeight = 500;
+    descriptionSize = <%% 3, 3, 3, 3, 3 %%>;
+    descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-    imageBoxWidth = 62;
-    imageScale = 0.84;
-    imageOpacity = 0.4;
+    imageBoxWidth = <%% 62, 62, 62, 62, 62 %%>;
+    imageScale = <%% 0.84, 0.84;, 0.84;, 0.84;, 0.84; %%>;
+    imageOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
-    imageMarginTop = 3;
+    imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    clickMeTop = -13;
-    clickMeRight = 1;
-    clictMeWidth = 26;
+    clickMeTop = <%% -13, -13, -13, -13, -13 %%>;
+    clickMeRight = <%% 1, 1, 1, 1, 1 %%>;
+    clictMeWidth = <%% 26, 26, 26, 26, 26 %%>;
 
-    moreArrowCircleWidth = 2.8;
-    moreArrowCircleMarginLeft = 1;
+    moreArrowCircleWidth = <%% 2.8, 2.8, 2.8, 2.8, 2.8 %%>;
+    moreArrowCircleMarginLeft = <%% 1, 1, 1, 1, 1 %%>;
 
-    moreArrowVisualLeft = 0.2;
-    moreArrowWidth = 1;
+    moreArrowVisualLeft = <%% 0.2, 0.2, 0.2, 0.2, 0.2 %%>;
+    moreArrowWidth = <%% 1, 1, 1, 1, 1 %%>;
 
-    buttonHeight = 8.8;
+    buttonHeight = <%% 8.8, 8.8, 8.8, 8.8, 8.8 %%>;
 
-    multipleConst = 6;
+    multipleConst = <%% 6, 6, 6, 6, 6 %%>;
 
-    checkCircleWidth = 4.5;
-    checkCircleWidthSvg = 4.7;
-    checkCircleLeft = 2.5;
+    checkCircleWidth = <%% 4.5, 4.5, 4.5, 4.5, 4.5 %%>;
+    checkCircleWidthSvg = <%% 4.7, 4.7, 4.7, 4.7, 4.7 %%>;
+    checkCircleLeft = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
 
-    buttonTitleSize = 3.2;
-    buttonTitleWeignt = 600;
-    buttonTitleTextTop = -0.2;
+    buttonTitleSize = <%% 3.2, 3.2, 3.2, 3.2, 3.2 %%>;
+    buttonTitleWeignt = <%% 600, 600, 600, 600, 600 %%>;
+    buttonTitleTextTop = <%% -0.2, -0.2, -0.2, -0.2, -0.2 %%>;
 
     moreWords = "더보기";
     contents = [
@@ -940,8 +939,9 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
           width: withOut(0, ea),
           justifyContent: "start",
           alignItems: "start",
-          flexDirection: "column",
-          paddingTop: String(1000) + ea,
+          flexDirection: "row",
+          paddingTop: String(160) + ea,
+          paddingBottom: String(160) + ea,
         },
         child: {
           style: {
@@ -1222,7 +1222,11 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     }
   
     // review
-    await instance.insertReviewBox(secondBase);
+    if (mobile) {
+      await instance.insertReviewBox(secondBase);
+    } else {
+
+    }
 
   } catch (e) {
     console.log(e);
