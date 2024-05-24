@@ -203,6 +203,7 @@ FrontIndexJs.prototype.insertInitBox = async function () {
       totalContents.style.background = colorExtended.blueLight;
       baseTong.style.top = String(instance.naviHeight) + "px";
       baseTong.style.paddingTop = String(0) + "px";
+      baseTong.style.marginBottom = String(instance.naviHeight) + "px";
       createNode({
         mother: firstBase,
         style: {
@@ -838,8 +839,8 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     buttonTitleWeignt = <%% 600, 600, 600, 600, 600 %%>;
     buttonTitleTextTop = <%% -1, -0.2, -0.2, -0.2, -0.2 %%>;
 
-    totalBlockPaddingTop = 140;
-    totalBlockPaddingBottom = 130;
+    totalBlockPaddingTop = <%% 140, 140, 140, 140, 140 %%>;
+    totalBlockPaddingBottom = <%% 130, 130, 130, 130, 130 %%>;
 
     if (media[0] && window.innerHeight > 1100) {
       totalBlockPaddingTop = 160;
@@ -2008,55 +2009,109 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     let title1Size, title1LineHeight;
     let image3Width, image3VisualLeft;
     let descriptionMarginTop3;
+    let baseMother;
+    let totalBlockPaddingTop;
+    let totalBlockPaddingBottom;
+    let boxInnerPadding;
+    let mainImageTop;
+    let boxInnerPaddingTop;
+    let topBottomMarginBig;
+    let secondAreaTextPaddingLeft;
+    let phoneTop, phoneWidth, phoneHeight;
+    let visualDescriptionPaddingBottom;
+    let whitePadding;
 
-    boxRadius = 15;
-    boxRadiusBig = 20;
-    boxRadiusSmall = 2;
+    boxRadius = <%% 15, 15, 15, 15, 15 %%>;
+    boxRadiusBig = <%% 24, 24, 24, 20, 20 %%>;
+    boxRadiusSmall = <%% 2, 2, 2, 2, 2 %%>;
 
-    moreAreaHeight = 12;
-    mobileMargin = 6;
-    slimMargin = 3;
+    moreAreaHeight = <%% 12, 12, 12, 12, 12 %%>;
+    mobileMargin = <%% 6, 6, 6, 6, 6 %%>;
+    slimMargin = <%% 3, 3, 3, 3, 3 %%>;
 
-    topBottomMargin = 14;
+    topBottomMargin = <%% 24, 14, 14, 14, 14 %%>;
+    topBottomMarginBig = <%% 100, 14, 14, 14, 14 %%>;
 
-    baseModuleHeight = 97;
-    baseModuleHeight2 = 112;
-    finalModuleHeight = 90;
+    baseModuleHeight = <%% 97, 97, 97, 97, 97 %%>;
+    baseModuleHeight2 = <%% 112, 112, 112, 112, 112 %%>;
+    finalModuleHeight = <%% 90, 90, 90, 90, 90 %%>;
 
-    descriptionMarginTop = 8;
-    descriptionMarginTop2 = 11;
-    descriptionMarginTop3 = 3;
-    imageMarginTop = 3;
+    descriptionMarginTop = <%% 24, 8, 8, 8, 8 %%>;
+    descriptionMarginTop2 = <%% 24, 11, 11, 11, 11 %%>;
+    descriptionMarginTop3 = <%% 24, 3, 3, 3, 3 %%>;
+    imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    title0Size = 5;
-    title1Size = 4.8;
-    title0Weight = 600;
-    title0LineHeight = 1.3;
-    title1LineHeight = 1.4;
+    title0Size = <%% 33, 5, 5, 5, 5 %%>;
+    title1Size = <%% 33, 4.8, 4.8, 4.8, 4.8 %%>;
+    title0Weight = <%% 700, 600, 600, 600, 600 %%>;
+    title0LineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
+    title1LineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-    line0Width = 33;
-    lineMarginTop = 3;
-    line1Width = 18;
-    line2Width = 27;
+    line0Width = <%% 33, 33, 33, 33, 33 %%>;
+    lineMarginTop = <%% 3, 3, 3, 3, 3 %%>;
+    line1Width = <%% 18, 18, 18, 18, 18 %%>;
+    line2Width = <%% 27, 27, 27, 27, 27 %%>;
 
-    mainImageWidth = 73;
-    descriptionSize = 3.4;
-    descriptionWeight = 600;
-    descriptionLineHeight = 1.5;
-    descriptionLineHeight2 = 1.6;
+    mainImageWidth = <%% 450, 73, 73, 73, 73 %%>;
+    mainImageTop = <%% -120, -135, -135, -135, -135 %%>;
+    descriptionSize = <%% 17, 3.4, 3.4, 3.4, 3.4 %%>;
+    descriptionWeight = <%% 300, 600, 600, 600, 600 %%>;
+    descriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+    descriptionLineHeight2 = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-    image1Width = 45;
-    image1VisualLeft = 2;
-    image1Between = 3.6;
-    image1TextTop = -5;
+    image1Width = <%% 350, 45, 45, 45, 45 %%>;
+    image1VisualLeft = <%% 2, 2, 2, 2, 2 %%>;
+    image1Between = <%% 3.6, 3.6, 3.6, 3.6, 3.6 %%>;
+    image1TextTop = <%% -5, -5, -5, -5, -5 %%>;
 
-    image3MarginTop = 6;
-    image3Width = 66;
-    image3VisualLeft = -1;
+    image3MarginTop = <%% 6, 6, 6, 6, 6 %%>;
+    image3Width = <%% 66, 66, 66, 66, 66 %%>;
+    image3VisualLeft = <%% -1, -1, -1, -1, -1 %%>;
+
+    totalBlockPaddingTop = <%% 140, 140, 140, 140, 140 %%>;
+    totalBlockPaddingBottom = <%% 30, 130, 130, 130, 130 %%>;
+    boxInnerPadding = <%% 130, 45, 45, 45, 45 %%>;
+    boxInnerPaddingTop = <%% 90, 60, 60, 60, 60 %%>;
+
+    secondAreaTextPaddingLeft = 830;
+    visualDescriptionPaddingBottom = 10;
+
+    whitePadding = 150;
+
+    phoneTop = -110;
+    phoneWidth = 350;
+    phoneHeight = 730;
+
+    if (desktop) {
+      baseMother = createNode({
+        mother: baseTong,
+        class: [ secondBaseClassName ],
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
+          paddingTop: String(totalBlockPaddingTop) + ea,
+          paddingBottom: String(totalBlockPaddingBottom) + ea,
+        },
+        child: {
+          style: {
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(-1 * ((window.innerWidth - standardWidth) / 2)) + ea,
+            background: colorExtended.white,
+            width: String(100) + "vw",
+            height: withOut(0, ea),
+          },
+        }
+      });
+    }
 
     // first
     firstBase = createNode({
-      mother: baseTong,
+      mother: desktop ? baseMother : baseTong,
       class: [ secondBaseClassName ],
       style: {
         display: "flex",
@@ -2071,8 +2126,8 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
           display: "block",
           position: "absolute",
           top: String(0),
-          left: String(-1 * mobileMargin) + ea,
-          width: withOut(-1 * mobileMargin * 2, ea),
+          left: mobile ? String(-1 * mobileMargin) + ea : String(0) + ea,
+          width: mobile ? withOut(-1 * mobileMargin * 2, ea) : withOut(0, ea),
           height: withOut(0, ea),
           background: colorExtended.white,
         },
@@ -2080,12 +2135,14 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
           style: {
             display: "block",
             position: "absolute",
-            top: String(slimMargin) + ea,
-            left: String(-1 * (mobileMargin - slimMargin)) + ea,
-            width: withOut(-1 * (mobileMargin - slimMargin) * 2, ea),
-            height: withOut(slimMargin * 2, ea),
-            background: colorExtended.white,
+            top: mobile ? String(slimMargin) + ea : String(0),
+            left: mobile ? String(-1 * (mobileMargin - slimMargin)) + ea : String(0),
+            width: mobile ? withOut(-1 * (mobileMargin - slimMargin) * 2, ea) : String(100) + '%',
+            height: mobile ? withOut(slimMargin * 2, ea) : String(100) + '%',
+            background: desktop ? colorExtended.gradientBlue9 : colorExtended.white,
             borderRadius: String(boxRadiusBig) + "px",
+            border: desktop ? "4px solid " + colorExtended.blueWhiteWhiteBack : "",
+            boxSizing: desktop ? "border-box" : "",
           }
         }
       }
@@ -2095,7 +2152,10 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
       style: {
         display: "flex",
         position: "relative",
-        width: withOut(0, ea),
+        padding: desktop ? String(boxInnerPadding) + ea : "",
+        paddingTop: desktop ? String(boxInnerPaddingTop) + ea : "",
+        paddingBottom: desktop ? String(boxInnerPaddingTop) + ea : "",
+        width: desktop ? withOut(boxInnerPadding * 2, ea) : withOut(0, ea),
         justifyContent: "start",
         alignItems: "start",
         flexDirection: "column",
@@ -2135,7 +2195,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         },
         next: {
           style: {
-            display: "inline-block",
+            display: desktop ? "none" : "inline-block",
             position: "relative",
             width: String(line0Width) + ea,
             height: String(lineMarginTop) + ea,
@@ -2163,8 +2223,9 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         },
         style: {
           display: "inline-block",
-          position: "relative",
+          position: mobile ? "relative" : "absolute",
           width: String(mainImageWidth) + ea,
+          top: desktop ? String(mainImageTop) + ea : "",
         }
       }
     });
@@ -2179,7 +2240,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         justifyContent: "start",
         alignItems: "start",
         paddingTop: String(descriptionMarginTop) + ea,
-        paddingBottom: String(topBottomMargin) + ea,
+        paddingBottom: String(desktop ? topBottomMarginBig : topBottomMargin) + ea,
       },
       child: {
         text: [
@@ -2199,41 +2260,28 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     });
 
     // second
-    secondBase = createNode({
-      mother: baseTong,
-      class: [ secondBaseClassName ],
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "start",
-        flexDirection: "column",
-        height: String(baseModuleHeight) + ea,
-      },
-      child: {
+    if (mobile) {
+      secondBase = createNode({
+        mother: desktop ? baseMother : baseTong,
+        class: [ secondBaseClassName ],
         style: {
-          display: "block",
-          position: "absolute",
-          top: String(0),
-          left: String(-1 * mobileMargin) + ea,
-          width: withOut(-1 * mobileMargin * 2, ea),
-          height: withOut(0, ea),
-          background: colorExtended.gradientBlue,
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
+          height: desktop ? "" : String(baseModuleHeight) + ea,
         },
-        next: {
+        child: {
           style: {
             display: "block",
             position: "absolute",
-            top: String(slimMargin) + ea,
-            left: String(-1 * (mobileMargin - slimMargin)) + ea,
-            width: withOut(-1 * (mobileMargin - slimMargin) * 2, ea),
-            height: withOut(slimMargin * 2, ea),
-            background: colorExtended.white,
-            borderTopLeftRadius: String(boxRadiusBig) + "px",
-            borderTopRightRadius: String(boxRadiusBig) + "px",
-            borderBottomLeftRadius: String(boxRadiusSmall) + "px",
-            borderBottomRightRadius: String(boxRadiusBig) + "px",
+            top: String(0),
+            left: String(-1 * mobileMargin) + ea,
+            width: withOut(-1 * mobileMargin * 2, ea),
+            height: withOut(0, ea),
+            background: colorExtended.gradientBlue,
           },
           next: {
             style: {
@@ -2243,116 +2291,267 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
               left: String(-1 * (mobileMargin - slimMargin)) + ea,
               width: withOut(-1 * (mobileMargin - slimMargin) * 2, ea),
               height: withOut(slimMargin * 2, ea),
-              background: colorExtended.blueWhiteWhiteBack,
-              opacity: String(0.4),
-              borderRadius: String(boxRadiusBig) + "px",
+              background: colorExtended.white,
+              borderTopLeftRadius: String(boxRadiusBig) + "px",
+              borderTopRightRadius: String(boxRadiusBig) + "px",
+              borderBottomLeftRadius: String(boxRadiusSmall) + "px",
+              borderBottomRightRadius: String(boxRadiusBig) + "px",
+            },
+            next: {
+              style: {
+                display: "block",
+                position: "absolute",
+                top: String(slimMargin) + ea,
+                left: String(-1 * (mobileMargin - slimMargin)) + ea,
+                width: withOut(-1 * (mobileMargin - slimMargin) * 2, ea),
+                height: withOut(slimMargin * 2, ea),
+                background: colorExtended.blueWhiteWhiteBack,
+                opacity: String(0.4),
+                borderRadius: String(boxRadiusBig) + "px",
+              },
             },
           },
+        }
+      });
+      secondBox = createNode({
+        mother: secondBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "end",
+          top: String(slimMargin) + ea,
+          height: withOut(slimMargin * 2, ea),
+          flexDirection: "row",
+        }
+      });
+      createNode({
+        mother: secondBox,
+        mode: "img",
+        attribute: {
+          src: FrontIndexJs.binaryPath + (desktop ? "/frontIndexSource4Desktop.png" : "/frontIndexSource4.png"),
         },
-      }
-    });
-    secondBox = createNode({
-      mother: secondBase,
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "end",
-        top: String(slimMargin) + ea,
-        height: withOut(slimMargin * 2, ea),
-        flexDirection: "row",
-      }
-    });
-    createNode({
-      mother: secondBox,
-      mode: "img",
-      attribute: {
-        src: FrontIndexJs.binaryPath + "/frontIndexSource4.png",
-      },
-      style: {
-        display: "inline-block",
-        position: "relative",
-        width: String(image1Width) + ea,
-        marginLeft: String(image1VisualLeft) + ea,
-      }
-    });
-    createNode({
-      mother: secondBox,
-      style: {
-        display: "inline-flex",
-        flexDirection: "column",
-        position: "relative",
-        justifyContent: "start",
-        alignItems: "start",
-        paddingLeft: String(image1Between) + ea,
-        top: String(image1TextTop) + ea,
-      },
-      child: {
-        text: [
-          "끌려가는",
-          "인테리어? NO!",
-          "<b%내가 원하는 컨셉%b>을",
-          "실현해요."
-        ].join("\n"),
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(title0Size) + ea,
-          fontWeight: String(title0Weight),
-          fontFamily: "pretendard",
-          color: colorExtended.black,
-          lineHeight: String(title0LineHeight),
+          width: String(image1Width) + ea,
+          marginLeft: String(image1VisualLeft) + ea,
+        }
+      });
+      createNode({
+        mother: secondBox,
+        style: {
+          display: "inline-flex",
+          flexDirection: "column",
+          position: "relative",
+          justifyContent: "start",
+          alignItems: "start",
+          paddingLeft: String(image1Between) + ea,
+          top: String(image1TextTop) + ea,
         },
-        bold: {
-          fontSize: String(title0Size) + ea,
-          fontWeight: String(title0Weight),
-          fontFamily: "pretendard",
-          color: colorExtended.mainBlue,
-        },
-        next: {
+        child: {
+          text: [
+            "끌려가는",
+            "인테리어? NO!",
+            "<b%내가 원하는 컨셉%b>을",
+            "실현해요."
+          ].join("\n"),
           style: {
             display: "inline-block",
             position: "relative",
-            width: String(line1Width) + ea,
-            height: String(lineMarginTop) + ea,
-            borderBottom: "2px solid " + colorExtended.black,
+            fontSize: String(title0Size) + ea,
+            fontWeight: String(title0Weight),
+            fontFamily: "pretendard",
+            color: colorExtended.black,
+            lineHeight: String(title0LineHeight),
+          },
+          bold: {
+            fontSize: String(title0Size) + ea,
+            fontWeight: String(title0Weight),
+            fontFamily: "pretendard",
+            color: colorExtended.mainBlue,
           },
           next: {
             style: {
-              display: "inline-flex",
+              display: "inline-block",
               position: "relative",
-              flexDirection: "column",
-              position: "relative",
-              justifyContent: "start",
-              alignItems: "start",
-              paddingTop: String(descriptionMarginTop2) + ea,
-              paddingBottom: String(topBottomMargin) + ea,
+              width: String(line1Width) + ea,
+              height: String(lineMarginTop) + ea,
+              borderBottom: "2px solid " + colorExtended.black,
             },
-            child: {
-              text: [
-                "시공범위와 퍼니싱 정도를",
-                "내 마음대로 조절하는",
-                "진정한 맞춤형 서비스",
-              ].join("\n"),
+            next: {
               style: {
-                display: "inline-block",
+                display: "inline-flex",
                 position: "relative",
-                fontSize: String(descriptionSize) + ea,
-                fontWeight: String(descriptionWeight),
-                fontFamily: "pretendard",
-                color: colorExtended.black,
-                lineHeight: String(descriptionLineHeight2),
+                flexDirection: "column",
+                position: "relative",
+                justifyContent: "start",
+                alignItems: "start",
+                paddingTop: String(descriptionMarginTop2) + ea,
+                paddingBottom: String(topBottomMargin) + ea,
               },
+              child: {
+                text: [
+                  "시공범위와 퍼니싱 정도를",
+                  "내 마음대로 조절하는",
+                  "진정한 맞춤형 서비스",
+                ].join("\n"),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(descriptionSize) + ea,
+                  fontWeight: String(descriptionWeight),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  lineHeight: String(descriptionLineHeight2),
+                },
+              }
             }
           }
         }
-      }
-    });
+      });
+    } else {
+      secondBase = createNode({
+        mother: desktop ? baseMother : baseTong,
+        class: [ secondBaseClassName ],
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
+          height: desktop ? "" : String(baseModuleHeight) + ea,
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "absolute",
+            top: String(0),
+            left: desktop ? String(0) + ea : String(-1 * mobileMargin) + ea,
+            width: desktop ? withOut(0, ea) : withOut(-1 * mobileMargin * 2, ea),
+            height: withOut(0, ea),
+            background: colorExtended.white,
+          },
+        }
+      });
+      secondBox = createNode({
+        mother: secondBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "end",
+          flexDirection: "row",
+        }
+      });
+      createNode({
+        mother: secondBox,
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          width: String(phoneWidth - 4) + ea,
+          height: String(phoneHeight - 4) + ea,
+          left: String(boxInnerPadding + 2) + ea,
+          top: String(phoneTop + 2) + ea,
+          zIndex: String(1),
+          borderRadius: String(57) + ea,
+          boxShadow: "18px 18px 45px -12px " + colorExtended.black,
+        }
+      });
+      createNode({
+        mother: secondBox,
+        mode: "img",
+        attribute: {
+          src: FrontIndexJs.binaryPath + (desktop ? "/frontIndexSource4Desktop.png" : "/frontIndexSource4.png"),
+        },
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          width: String(phoneWidth) + ea,
+          height: String(phoneHeight) + ea,
+          left: String(boxInnerPadding) + ea,
+          top: String(phoneTop) + ea,
+          zIndex: String(2),
+        }
+      });
+      createNode({
+        mother: secondBox,
+        style: {
+          display: "inline-flex",
+          flexDirection: "column",
+          position: "relative",
+          justifyContent: "start",
+          alignItems: "start",
+          paddingLeft: String(secondAreaTextPaddingLeft) + ea,
+          paddingTop: String(whitePadding) + ea,
+          paddingBottom: String(whitePadding) + ea,
+        },
+        child: {
+          text: [
+            "끌려가는 인테리어? NO!",
+            "<b%내가 원하는 컨셉%b>을 실현해요."
+          ].join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(title0Size) + ea,
+            fontWeight: String(title0Weight),
+            fontFamily: "pretendard",
+            color: colorExtended.black,
+            lineHeight: String(title0LineHeight),
+          },
+          bold: {
+            fontSize: String(title0Size) + ea,
+            fontWeight: String(title0Weight),
+            fontFamily: "pretendard",
+            color: colorExtended.mainBlue,
+          },
+          next: {
+            style: {
+              display: "none",
+              position: "relative",
+              width: String(line1Width) + ea,
+              height: String(lineMarginTop) + ea,
+              borderBottom: "2px solid " + colorExtended.black,
+            },
+            next: {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "column",
+                position: "relative",
+                justifyContent: "start",
+                alignItems: "start",
+                paddingTop: String(descriptionMarginTop) + ea,
+                paddingBottom: String(visualDescriptionPaddingBottom) + ea,
+              },
+              child: {
+                text: [
+                  "시공범위와 퍼니싱 정도를",
+                  "내 마음대로 조절하는 진정한 맞춤형 서비스",
+                ].join("\n"),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(descriptionSize) + ea,
+                  fontWeight: String(descriptionWeight),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  lineHeight: String(descriptionLineHeight2),
+                },
+              }
+            }
+          }
+        }
+      });
+    }
 
     // third
     thirdBase = createNode({
-      mother: baseTong,
+      mother: desktop ? baseMother : baseTong,
       class: [ secondBaseClassName ],
       style: {
         display: "flex",
@@ -2367,8 +2566,8 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
           display: "block",
           position: "absolute",
           top: String(0),
-          left: String(-1 * mobileMargin) + ea,
-          width: withOut(-1 * mobileMargin * 2, ea),
+          left: mobile ? String(-1 * mobileMargin) + ea : String(0) + ea,
+          width: mobile ? withOut(-1 * mobileMargin * 2, ea) : withOut(0, ea),
           height: withOut(0, ea),
           background: colorExtended.white,
         },
@@ -2376,12 +2575,14 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
           style: {
             display: "block",
             position: "absolute",
-            top: String(slimMargin) + ea,
-            left: String(-1 * (mobileMargin - slimMargin)) + ea,
-            width: withOut(-1 * (mobileMargin - slimMargin) * 2, ea),
-            height: withOut(slimMargin * 2, ea),
-            background: colorExtended.white,
+            top: mobile ? String(slimMargin) + ea : String(0),
+            left: mobile ? String(-1 * (mobileMargin - slimMargin)) + ea : String(0),
+            width: mobile ? withOut(-1 * (mobileMargin - slimMargin) * 2, ea) : String(100) + '%',
+            height: mobile ? withOut(slimMargin * 2, ea) : String(100) + '%',
+            background: desktop ? colorExtended.gradientBlue9 : colorExtended.white,
             borderRadius: String(boxRadiusBig) + "px",
+            border: desktop ? "4px solid " + colorExtended.blueWhiteWhiteBack : "",
+            boxSizing: desktop ? "border-box" : "",
           }
         }
       }
@@ -2391,7 +2592,10 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
       style: {
         display: "flex",
         position: "relative",
-        width: withOut(0, ea),
+        padding: desktop ? String(boxInnerPadding) + ea : "",
+        paddingTop: desktop ? String(boxInnerPaddingTop) + ea : "",
+        paddingBottom: desktop ? String(boxInnerPaddingTop) + ea : "",
+        width: desktop ? withOut(boxInnerPadding * 2, ea) : withOut(0, ea),
         justifyContent: "start",
         alignItems: "start",
         flexDirection: "column",
@@ -2407,7 +2611,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         width: withOut(0, ea),
         justifyContent: "start",
         alignItems: "start",
-        paddingTop: String(topBottomMargin) + ea,
+        paddingTop: desktop ? String(140) + ea : String(topBottomMargin) + ea,
       },
       child: {
         text: [
@@ -2431,7 +2635,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         },
         next: {
           style: {
-            display: "inline-block",
+            display: desktop ? "none" : "inline-block",
             position: "relative",
             width: String(line2Width) + ea,
             height: String(imageMarginTop) + ea,
@@ -2459,8 +2663,9 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         },
         style: {
           display: "inline-block",
-          position: "relative",
+          position: mobile ? "relative" : "absolute",
           width: String(mainImageWidth) + ea,
+          top: desktop ? String(mainImageTop * 2) + ea : "",
         }
       }
     });
@@ -2475,7 +2680,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         justifyContent: "start",
         alignItems: "start",
         paddingTop: String(descriptionMarginTop) + ea,
-        paddingBottom: String(topBottomMargin) + ea,
+        paddingBottom: String(desktop ? 0 : topBottomMargin) + ea,
       },
       child: {
         text: [
@@ -2495,41 +2700,28 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     });
 
     // fourth
-    fourthBase = createNode({
-      mother: baseTong,
-      class: [ secondBaseClassName ],
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "start",
-        flexDirection: "column",
-        height: String(baseModuleHeight2) + ea,
-      },
-      child: {
+    if (mobile) {
+      fourthBase = createNode({
+        mother: desktop ? baseMother : baseTong,
+        class: [ secondBaseClassName ],
         style: {
-          display: "block",
-          position: "absolute",
-          top: String(0),
-          left: String(-1 * mobileMargin) + ea,
-          width: withOut(-1 * mobileMargin * 2, ea),
-          height: withOut(0, ea),
-          background: colorExtended.gradientBlue,
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
+          height: desktop ? "" : String(baseModuleHeight2) + ea,
         },
-        next: {
+        child: {
           style: {
             display: "block",
             position: "absolute",
-            top: String(slimMargin) + ea,
-            left: String(-1 * (mobileMargin - slimMargin)) + ea,
-            width: withOut(-1 * (mobileMargin - slimMargin) * 2, ea),
-            height: withOut(slimMargin * 2, ea),
-            background: colorExtended.white,
-            borderTopLeftRadius: String(boxRadiusBig) + "px",
-            borderTopRightRadius: String(boxRadiusBig) + "px",
-            borderBottomRightRadius: String(boxRadiusSmall) + "px",
-            borderBottomLeftRadius: String(boxRadiusBig) + "px",
+            top: String(0),
+            left: String(-1 * mobileMargin) + ea,
+            width: withOut(-1 * mobileMargin * 2, ea),
+            height: withOut(0, ea),
+            background: colorExtended.gradientBlue,
           },
           next: {
             style: {
@@ -2539,116 +2731,252 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
               left: String(-1 * (mobileMargin - slimMargin)) + ea,
               width: withOut(-1 * (mobileMargin - slimMargin) * 2, ea),
               height: withOut(slimMargin * 2, ea),
-              background: colorExtended.blueWhiteWhiteBack,
-              opacity: String(0.4),
-              borderRadius: String(boxRadiusBig) + "px",
+              background: colorExtended.white,
+              borderTopLeftRadius: String(boxRadiusBig) + "px",
+              borderTopRightRadius: String(boxRadiusBig) + "px",
+              borderBottomRightRadius: String(boxRadiusSmall) + "px",
+              borderBottomLeftRadius: String(boxRadiusBig) + "px",
+            },
+            next: {
+              style: {
+                display: "block",
+                position: "absolute",
+                top: String(slimMargin) + ea,
+                left: String(-1 * (mobileMargin - slimMargin)) + ea,
+                width: withOut(-1 * (mobileMargin - slimMargin) * 2, ea),
+                height: withOut(slimMargin * 2, ea),
+                background: colorExtended.blueWhiteWhiteBack,
+                opacity: String(0.4),
+                borderRadius: String(boxRadiusBig) + "px",
+              },
             },
           },
-        },
-      }
-    });
-    fourthBox = createNode({
-      mother: fourthBase,
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "center",
-        alignItems: "center",
-        top: String(slimMargin) + ea,
-        height: withOut(slimMargin * 2, ea),
-        flexDirection: "column",
-      }
-    });
-    createNode({
-      mother: fourthBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        flexDirection: "column",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "center",
-        alignItems: "center",
-      },
-      child: {
-        text: [
-          "문제가 발생하면",
-          "든든한 프로젝트 케어 매니저가",
-          "<b%해결%b>해줄거에요.",
-        ].join("\n"),
+        }
+      });
+      fourthBox = createNode({
+        mother: fourthBase,
         style: {
-          display: "inline-block",
+          display: "flex",
           position: "relative",
-          fontSize: String(title1Size) + ea,
-          fontWeight: String(title0Weight),
-          fontFamily: "pretendard",
-          color: colorExtended.black,
-          lineHeight: String(title1LineHeight),
-          textAlign: "center",
+          width: withOut(0, ea),
+          justifyContent: "center",
+          alignItems: "center",
+          top: String(slimMargin) + ea,
+          height: withOut(slimMargin * 2, ea),
+          flexDirection: "column",
+        }
+      });
+      createNode({
+        mother: fourthBox,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          flexDirection: "column",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "center",
+          alignItems: "center",
         },
-        bold: {
-          fontSize: String(title1Size) + ea,
-          fontWeight: String(title0Weight),
-          fontFamily: "pretendard",
-          color: colorExtended.mainBlue,
+        child: {
+          text: [
+            "문제가 발생하면",
+            "든든한 프로젝트 케어 매니저가",
+            "<b%해결%b>해줄거에요.",
+          ].join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(title1Size) + ea,
+            fontWeight: String(title0Weight),
+            fontFamily: "pretendard",
+            color: colorExtended.black,
+            lineHeight: String(title1LineHeight),
+            textAlign: "center",
+          },
+          bold: {
+            fontSize: String(title1Size) + ea,
+            fontWeight: String(title0Weight),
+            fontFamily: "pretendard",
+            color: colorExtended.mainBlue,
+          },
+        }
+      });
+      createNode({
+        mother: fourthBox,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          flexDirection: "column",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "center",
+          alignItems: "center",
+          paddingTop: String(image3MarginTop) + ea,
         },
-      }
-    });
-    createNode({
-      mother: fourthBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        flexDirection: "column",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "center",
-        alignItems: "center",
-        paddingTop: String(image3MarginTop) + ea,
-      },
-      child: {
+        child: {
+          mode: "img",
+          attribute: {
+            src: FrontIndexJs.binaryPath + "/frontIndexSource3.png",
+          },
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(image3Width) + ea,
+            left: String(image3VisualLeft) + ea,
+          }
+        }
+      });
+      createNode({
+        mother: fourthBox,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          flexDirection: "column",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "center",
+          alignItems: "center",
+          paddingTop: String(descriptionMarginTop3) + ea,
+        },
+        child: {
+          text: [
+            "예상하지 못한 상황에도",
+            "안심하고 인테리어를 진행할 수 있어요.",
+          ].join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(descriptionWeight),
+            fontFamily: "pretendard",
+            color: colorExtended.black,
+            lineHeight: String(descriptionLineHeight),
+            textAlign: "center",
+          },
+        }
+      });
+    } else {
+      secondBase = createNode({
+        mother: desktop ? baseMother : baseTong,
+        class: [ secondBaseClassName ],
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
+          height: desktop ? "" : String(baseModuleHeight) + ea,
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "absolute",
+            top: String(0),
+            left: desktop ? String(0) + ea : String(-1 * mobileMargin) + ea,
+            width: desktop ? withOut(0, ea) : withOut(-1 * mobileMargin * 2, ea),
+            height: withOut(0, ea),
+            background: colorExtended.white,
+          },
+        }
+      });
+      secondBox = createNode({
+        mother: secondBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "end",
+          flexDirection: "row",
+        }
+      });
+      createNode({
+        mother: secondBox,
         mode: "img",
         attribute: {
           src: FrontIndexJs.binaryPath + "/frontIndexSource3.png",
         },
         style: {
           display: "inline-block",
-          position: "relative",
-          width: String(image3Width) + ea,
-          left: String(image3VisualLeft) + ea,
+          position: "absolute",
+          width: String(470) + ea,
+          left: String(boxInnerPadding) + ea,
+          top: String(90) + ea,
+          zIndex: String(2),
         }
-      }
-    });
-    createNode({
-      mother: fourthBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        flexDirection: "column",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "center",
-        alignItems: "center",
-        paddingTop: String(descriptionMarginTop3) + ea,
-      },
-      child: {
-        text: [
-          "예상하지 못한 상황에도",
-          "안심하고 인테리어를 진행할 수 있어요. ",
-        ].join("\n"),
+      });
+      createNode({
+        mother: secondBox,
         style: {
-          display: "inline-block",
+          display: "inline-flex",
+          flexDirection: "column",
           position: "relative",
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(descriptionWeight),
-          fontFamily: "pretendard",
-          color: colorExtended.black,
-          lineHeight: String(descriptionLineHeight),
-          textAlign: "center",
+          justifyContent: "start",
+          alignItems: "start",
+          paddingLeft: String(secondAreaTextPaddingLeft) + ea,
+          paddingTop: String(whitePadding) + ea,
+          paddingBottom: String(whitePadding) + ea,
         },
-      }
-    });
+        child: {
+          text: [
+            "문제가 발생시 든든한",
+            "프로젝트 케어 매니저가 해결해요."
+          ].join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(title0Size) + ea,
+            fontWeight: String(title0Weight),
+            fontFamily: "pretendard",
+            color: colorExtended.black,
+            lineHeight: String(title0LineHeight),
+          },
+          bold: {
+            fontSize: String(title0Size) + ea,
+            fontWeight: String(title0Weight),
+            fontFamily: "pretendard",
+            color: colorExtended.mainBlue,
+          },
+          next: {
+            style: {
+              display: "none",
+              position: "relative",
+              width: String(line1Width) + ea,
+              height: String(lineMarginTop) + ea,
+              borderBottom: "2px solid " + colorExtended.black,
+            },
+            next: {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "column",
+                position: "relative",
+                justifyContent: "start",
+                alignItems: "start",
+                paddingTop: String(descriptionMarginTop) + ea,
+                paddingBottom: String(visualDescriptionPaddingBottom) + ea,
+              },
+              child: {
+                text: [
+                  "예상하지 못한 상황에도",
+                  "안심하고 인테리어를 진행할 수 있어요.",
+                ].join("\n"),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(descriptionSize) + ea,
+                  fontWeight: String(descriptionWeight),
+                  fontFamily: "pretendard",
+                  color: colorExtended.black,
+                  lineHeight: String(descriptionLineHeight2),
+                },
+              }
+            }
+          }
+        }
+      });
+    }
 
   } catch (e) {
     console.log(e);
@@ -2688,82 +3016,119 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
     let commentsWidth, commentsHeight, commentsRadius, commentsTop, commentsSize, commentsWeight, commentsLineHeight, commentsTextTop, commentsTriangleWidth, commentsTriangleTop;
     let buttonHeight;
     let lastMoreWidth, lastMoreHeight, lastMoreTop, lastMoreRadius, lastMoreSize, lastMoreWeight, lastMoreLineHeight, lastMoreTextTop;
+    let totalBlockPaddingTop;
+    let totalBlockPaddingBottom;
+    let buttonWidth;
 
-    boxRadius = 15;
-    boxRadiusBig = 20;
-    boxRadiusSmall = 2;
+    boxRadius = <%% 15, 15, 15, 15, 15 %%>;
+    boxRadiusBig = <%% 20, 20, 20, 20, 20 %%>;
+    boxRadiusSmall = <%% 2, 2, 2, 2, 2 %%>;
 
-    moreAreaHeight = 12;
-    mobileMargin = 6;
-    slimMargin = 3;
+    moreAreaHeight = <%% 36, 12, 12, 12, 12 %%>;
+    mobileMargin = <%% 6, 6, 6, 6, 6 %%>;
+    slimMargin = <%% 3, 3, 3, 3, 3 %%>;
 
-    topBottomMargin = 14;
+    topBottomMargin = <%% 14, 14, 14, 14, 14 %%>;
 
-    descriptionMarginTop = 3;
-    imageMarginTop = 3;
+    descriptionMarginTop = <%% 16, 3, 3, 3, 3 %%>;
+    imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    title1Size = 4.8;
-    title0Weight = 600;
-    title1LineHeight = 1.4;
+    title1Size = <%% 29, 4.8, 4.8, 4.8, 4.8 %%>;
+    title0Weight = <%% 600, 600, 600, 600, 600 %%>;
+    title1LineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-    descriptionSize = 3.4;
-    descriptionWeight = 500;
-    descriptionLineHeight = 1.5;
+    descriptionSize = <%% 16, 3.4, 3.4, 3.4, 3.4 %%>;
+    descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
+    descriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-    buttonSize = 3.5;
-    buttonWeight = 600;
-    buttonLineHeight = 1.5;
-    buttonTextTop = -0.1;
-    buttonHeight = 11;
+    buttonSize = <%% 17, 3.5, 3.5, 3.5, 3.5 %%>;
+    buttonWeight = <%% 700, 600, 600, 600, 600 %%>;
+    buttonLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+    buttonTextTop = <%% -1, -0.1, -0.1, -0.1, -0.1 %%>;
+    buttonHeight = <%% 48, 11, 11, 11, 11 %%>;
+    buttonWidth = 300;
 
-    commentsWidth = 23;
-    commentsHeight = 6.6;
-    commentsRadius = 5;
-    commentsTop = -7.6;
-    commentsSize = 2.5;
-    commentsWeight = 700;
-    commentsLineHeight = 1.5;
-    commentsTextTop = -0.1;
-    commentsTriangleWidth = 2.6;
-    commentsTriangleTop = 6.2;
+    commentsWidth = <%% 120, 23, 23, 23, 23 %%>;
+    commentsHeight = <%% 28, 6.6, 6.6, 6.6, 6.6 %%>;
+    commentsRadius = <%% 5, 5, 5, 5, 5 %%>;
+    commentsTop = <%% -34, -7.6, -7.6, -7.6, -7.6 %%>;
+    commentsSize = <%% 12, 2.5, 2.5, 2.5, 2.5 %%>;
+    commentsWeight = <%% 700, 700, 700, 700, 700 %%>;
+    commentsLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+    commentsTextTop = <%% -1, -0.1, -0.1, -0.1, -0.1 %%>;
+    commentsTriangleWidth = <%% 10, 2.6, 2.6, 2.6, 2.6 %%>;
+    commentsTriangleTop = <%% 27, 6.2, 6.2, 6.2, 6.2 %%>;
 
-    lastMoreWidth = 17;
-    lastMoreHeight = 7;
-    lastMoreTop = -26;
-    lastMoreRadius = 7;
-    lastMoreSize = 3;
-    lastMoreWeight = 700;
-    lastMoreLineHeight = 1.5;
-    lastMoreTextTop = -0.1;
+    lastMoreWidth = <%% 96, 17, 17, 17, 17 %%>;
+    lastMoreHeight = <%% 36, 7, 7, 7, 7 %%>;
+    lastMoreTop = <%% -260, -26, -26, -26, -26 %%>;
+    lastMoreRadius = <%% 7, 7, 7, 7, 7 %%>;
+    lastMoreSize = <%% 16, 3, 3, 3, 3 %%>;
+    lastMoreWeight = <%% 700, 700, 700, 700, 700 %%>;
+    lastMoreLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+    lastMoreTextTop = <%% -1, -0.1, -0.1, -0.1, -0.1 %%>;
 
     baseHeight = lastMode ? 42 : 92;
     buttonMarginTop = lastMode ? 1 : 16;
+    if (desktop) {
+      buttonMarginTop = lastMode ? 1 : 70;
+    }
+
+    totalBlockPaddingTop = <%% 140, 140, 140, 140, 140 %%>;
+    totalBlockPaddingBottom = <%% 130, 130, 130, 130, 130 %%>;
 
     // fifth
-    fifthBase = createNode({
-      mother: baseTong,
-      class: [ secondBaseClassName ],
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "start",
-        flexDirection: "column",
-        height: String(baseHeight) + ea,
-      },
-      child: {
+    if (mobile) {
+      fifthBase = createNode({
+        mother: baseTong,
+        class: [ secondBaseClassName ],
         style: {
-          display: "block",
-          position: "absolute",
-          top: String(0),
-          left: String(-1 * mobileMargin) + ea,
-          width: withOut(-1 * mobileMargin * 2, ea),
-          height: withOut(0, ea),
-          background: lastMode ? colorExtended.gradientBlue2 : colorExtended.black,
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
+          height: String(baseHeight) + ea,
         },
-      }
-    });
+        child: {
+          style: {
+            display: "block",
+            position: "absolute",
+            top: String(0),
+            left: String(-1 * mobileMargin) + ea,
+            width: withOut(-1 * mobileMargin * 2, ea),
+            height: withOut(0, ea),
+            background: lastMode ? colorExtended.gradientBlue2 : colorExtended.black,
+          },
+        }
+      });
+    } else {
+      fifthBase = createNode({
+        mother: baseTong,
+        class: [ secondBaseClassName ],
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
+          paddingTop: String(lastMode ? 100 : totalBlockPaddingTop) + ea,
+          paddingBottom: String(lastMode ? 100 : totalBlockPaddingBottom) + ea,
+        },
+        child: {
+          style: {
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(-1 * ((window.innerWidth - standardWidth) / 2)) + ea,
+            background: lastMode ? colorExtended.gradientBlue2 : colorExtended.black,
+            width: String(100) + "vw",
+            height: withOut(0, ea),
+          },
+        }
+      });
+    }
     fifthBox = createNode({
       mother: fifthBase,
       style: {
@@ -2792,7 +3157,7 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
         },
         child: {
           text: [
-            "어떤 서비스를 선택해야 할지 모르겠어요!",
+            "어떤 서비스를 선택할지 어려워요!",
           ].join("\n"),
           style: {
             display: "inline-block",
@@ -2853,7 +3218,7 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
         position: "relative",
         flexDirection: "column",
         position: "relative",
-        width: withOut(0, ea),
+        width: desktop ? String(buttonWidth) + ea : withOut(0, ea),
         height: String(buttonHeight) + ea,
         justifyContent: "center",
         alignItems: "center",
@@ -2887,7 +3252,7 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
             alignItems: "center",
             borderRadius: String(commentsRadius) + "px",
             background: lastMode ? colorExtended.blueDim : colorExtended.subRed,
-            top: String(-7.6) + ea,
+            top: String(commentsTop) + ea,
             boxShadow: "0px 10px 32px -9px " + colorExtended.ultimateBlack,
           },
           child: {
@@ -4873,7 +5238,7 @@ FrontIndexJs.prototype.insertWhiteCardEvent = function (serviceIndex) {
 FrontIndexJs.prototype.insertPortfolioBase = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, equalJson, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, baseTong } = this;
+  const { ea, media, baseTong, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const portfolioBaseBlockClassName = "portfolioBaseBlockClassName";
@@ -4882,23 +5247,53 @@ FrontIndexJs.prototype.insertPortfolioBase = function () {
   let photoMargin;
   let paddingBottom;
   let basePaddingTop;
+  let totalBlockPaddingTop;
+  let totalBlockPaddingBottom;
 
   limitLength = <%% 42, 42, 42, 42, 42 %%>;
   photoMargin = <%% 18, 16, 16, 16, 2.5 %%>;
   paddingBottom = <%% 120, 120, 120, 120, 22 %%>;
 
+  totalBlockPaddingTop = <%% 140, 140, 140, 140, 140 %%>;
+  totalBlockPaddingBottom = <%% 200, 130, 130, 130, 130 %%>;
+
   basePaddingTop = 10;
 
-  baseBlock = createNode({
-    mother: baseTong,
-    class: [ portfolioBaseBlockClassName ],
-    style: {
-      position: "relative",
-      width: "calc(100% + " + String(photoMargin) + ea + ")",
-      paddingBottom: String(paddingBottom) + ea,
-      paddingTop: String(basePaddingTop) + ea,
-    }
-  });
+  if (mobile) {
+    baseBlock = createNode({
+      mother: baseTong,
+      class: [ portfolioBaseBlockClassName ],
+      style: {
+        position: "relative",
+        width: "calc(100% + " + String(photoMargin) + ea + ")",
+        paddingBottom: String(paddingBottom) + ea,
+        paddingTop: String(basePaddingTop) + ea,
+      }
+    });
+  } else {
+    baseBlock = createNode({
+      mother: baseTong,
+      class: [ portfolioBaseBlockClassName ],
+      style: {
+        display: "block",
+        position: "relative",
+        width: "calc(100% + " + String(photoMargin) + ea + ")",
+        paddingBottom: String(totalBlockPaddingBottom) + ea,
+        paddingTop: String(totalBlockPaddingTop) + ea,
+      },
+      child: {
+        style: {
+          position: "absolute",
+          top: String(0) + ea,
+          left: String(-1 * ((window.innerWidth - standardWidth) / 2)) + ea,
+          background: colorExtended.white,
+          width: String(100) + "vw",
+          height: withOut(0, ea),
+          zIndex: String(-1),
+        },
+      }
+    });
+  }
 
   this.portfolioBlock(limitLength, null, instance.sort);
 }
