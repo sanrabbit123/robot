@@ -976,7 +976,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
     const idKeyword = 'f';
     const metaKeyword = 'f';
     const metaKeyKeyword = "meta";
-    const delta = 15 * 1000;
+    const delta = 30 * 1000;
     let tempRows;
     let res;
     let json;
@@ -994,6 +994,8 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
     for (let i = 0; i < dayNumber; i++) {
       startDate.setDate(startDate.getDate() - 1);
     }
+
+    await sleep(30 * 1000);
 
     for (let i = 0; i < dayNumber; i++) {
 

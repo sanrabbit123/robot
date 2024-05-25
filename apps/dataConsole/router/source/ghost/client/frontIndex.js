@@ -2081,11 +2081,11 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     secondAreaTextPaddingLeft = <%% 830, 610, 610, 610, 830 %%>;
     visualDescriptionPaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
 
-    whitePadding = <%% 150, 110, 100, 90, 150 %%>;
+    whitePadding = <%% 150, 105, 100, 90, 150 %%>;
 
     phoneTop = <%% -110, -110, -110, -110, -110 %%>;
     phoneWidth = <%% 350, 304, 300, 300, 350 %%>;
-    phoneHeight = <%% 730, 640, 640, 640, 730 %%>;
+    phoneHeight = <%% 730, 630, 630, 620, 730 %%>;
 
     supportWidth = <%% 470, 420, 420, 420, 44 %%>;
     supportTop = <%% 90, 76, 76, 70, 7 %%>;
@@ -3049,12 +3049,12 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
     descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
     descriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-    buttonSize = <%% 17, 17, 17, 17, 3.5 %%>;
+    buttonSize = <%% 17, 16, 15, 14, 3.5 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 600 %%>;
     buttonLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
     buttonTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
-    buttonHeight = <%% 48, 48, 48, 48, 11 %%>;
-    buttonWidth = <%% 300, 366, 366, 366, 3 %%>;
+    buttonHeight = <%% 48, 45, 42, 38, 11 %%>;
+    buttonWidth = <%% 300, 352, 352, 352, 3 %%>;
 
     commentsWidth = <%% 120, 120, 120, 120, 23 %%>;
     commentsHeight = <%% 28, 28, 28, 28, 6.6 %%>;
