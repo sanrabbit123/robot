@@ -3481,7 +3481,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     solveBlockHeight = <%% 28, 9.4, 9.4, 9.4, 9.4 %%>;
     blockBetween = <%% 3, 1.8, 1.8, 1.8, 1.8 %%>;
 
-    commentsTitleSize = <%% 25, 27, 26, 24, 5.4 %%>;
+    commentsTitleSize = <%% 24, 27, 26, 24, 5.4 %%>;
 
     photoHeight = <%% 247, 68, 68, 68, 68 %%>;
     photoWidth = <%% 140, 140, 140, 140, 280 %%>;
@@ -3491,9 +3491,9 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
 
     middleMargin = <%% 45, 8, 8, 8, 8 %%>;
     bigMargin = <%% 45, 12, 12, 12, 12 %%>;
-    tableFactorHeight = <%% 30, 8.2, 8.2, 8.2, 8.2 %%>;
-    factorBetween = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
-    tableFactorWidth0 = <%% 11.5, 11.5, 11.5, 11.5, 11.5 %%>;
+    tableFactorHeight = <%% 36, 8.2, 8.2, 8.2, 8.2 %%>;
+    factorBetween = <%% 3, 0.4, 0.4, 0.4, 0.4 %%>;
+    tableFactorWidth0 = <%% 150, 11.5, 11.5, 11.5, 11.5 %%>;
     tableFactorWidth1 = (standardWidth - tableFactorWidth0 - (factorBetween * 3)) / 3;
 
     secondBasePaddingTop = <%% 4, 4, 4, 4, 4 %%>;
@@ -3509,14 +3509,14 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     selectionButtonsSquareSize = <%% 12, 2.5, 2.5, 2.5, 2.5 %%>;
     selectionButtonsSquareWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    mainServiceBlockHeight = <%% 240, 240, 240, 240, 52 %%>;
+    mainServiceBlockHeight = <%% 245, 245, 240, 240, 52 %%>;
     mainServiceBlockMarginBottom = <%% 20, 2, 2, 2, 2 %%>;
 
     mainServiceBlockDotPointWidth = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
     mainServiceBlockDotPointIndent = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
     mainServiceBlockDotPointOpacity = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
 
-    factorSize = <%% 12, 2.8, 2.8, 2.8, 2.8 %%>;
+    factorSize = <%% 13, 2.8, 2.8, 2.8, 2.8 %%>;
     factorTextTop = <%% -0.2, -0.2, -0.2, -0.2, -0.2 %%>;
     factorWeight = <%% 600, 600, 600, 600, 600 %%>;
     factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -3540,7 +3540,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     titleVisualPaddingBottom = <%% 42, 42, 42, 42, 4 %%>;
 
     commentsTitleWeight = <%% 300, 600, 600, 600, 600 %%>;
-    commentsTitleLineHeight = <%% 1.38, 1.44, 1.44, 1.44, 1.44 %%>;
+    commentsTitleLineHeight = <%% 1.44, 1.44, 1.44, 1.44, 1.44 %%>;
 
     blackBlueAreaPaddingTop0 = <%% 9.5, 9.5, 9.5, 9.5, 9.5 %%>;
     blackBlueAreaPaddingTop1 = <%% 11, 11, 11, 11, 11 %%>;
@@ -3578,18 +3578,18 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
 
     photoZonePaddingTop = <%% 74, 11, 11, 11, 11 %%>;
 
-    tableTitleBlockWidth = <%% 70, 70, 70, 70, 70 %%>;
-    tableTitleBlockHeight = <%% 11, 11, 11, 11, 11 %%>;
+    tableTitleBlockWidth = <%% 250, 70, 70, 70, 70 %%>;
+    tableTitleBlockHeight = <%% 37, 11, 11, 11, 11 %%>;
 
-    tableTitleSize = <%% 4.4, 4.4, 4.4, 4.4, 4.4 %%>;
-    tableTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-    tableTitleTextTop = <%% -0.2, -0.2, -0.2, -0.2, -0.2 %%>;
+    tableTitleSize = <%% 15, 4.4, 4.4, 4.4, 4.4 %%>;
+    tableTitleWeight = <%% 800, 700, 700, 700, 700 %%>;
+    tableTitleTextTop = <%% -0.5, -0.2, -0.2, -0.2, -0.2 %%>;
 
-    tableDescriptionSize = <%% 3.3, 3.3, 3.3, 3.3, 3.3 %%>;
+    tableDescriptionSize = <%% 14, 3.3, 3.3, 3.3, 3.3 %%>;
     tableDescriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
     tableDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-    tableDescriptionMarginTop = <%% 3, 3, 3, 3, 3 %%>;
-    tableDescriptionMarginBottom = <%% 9, 9, 9, 9, 9 %%>;
+    tableDescriptionMarginTop = <%% 8, 3, 3, 3, 3 %%>;
+    tableDescriptionMarginBottom = <%% 28, 9, 9, 9, 9 %%>;
 
     totalWidth = <%% 1000, 900, 720, 600, 88 %%>;
 
@@ -3610,7 +3610,9 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
 
     moreWords = "더보기";
     tableTitle = "나에게 필요한 서비스는 무엇일까?";
-    tableDescription = [
+    tableDescription = desktop ? [
+      "홈리에종 서비스 유형은 3가지로 나뉘며, 시공의 정도와 범위에 따라 구분됩니다.",
+    ] : [
       "홈리에종 서비스 유형은 3가지로 나뉘며,",
       "시공의 정도와 범위에 따라 구분됩니다.",
     ]
@@ -4562,30 +4564,57 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
 
     contents = [ objectDeepCopy(furnishingObj), objectDeepCopy(stylingObj), objectDeepCopy(totalObj) ]
 
-    tableBase = createNode({
-      mother: secondBase,
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "center",
-        flexDirection: "column",
-        paddingTop: String(tableBasePaddingTop) + ea,
-        paddingBottom: String(tableBasePaddingBottom) + ea,
-      },
-      child: {
+    if (mobile) {
+      tableBase = createNode({
+        mother: secondBase,
         style: {
-          display: "block",
-          position: "absolute",
-          width: withOut(-1 * mobileMargin * 2, ea),
-          left: String(-1 * mobileMargin) + ea,
-          background: colorExtended.blueWhiteWhiteBack,
-          height: withOut(0, ea),
-          top: String(0) + ea,
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "center",
+          flexDirection: "column",
+          paddingTop: String(tableBasePaddingTop) + ea,
+          paddingBottom: String(tableBasePaddingBottom) + ea,
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "absolute",
+            width: withOut(-1 * mobileMargin * 2, ea),
+            left: String(-1 * mobileMargin) + ea,
+            background: colorExtended.blueWhiteWhiteBack,
+            height: withOut(0, ea),
+            top: String(0) + ea,
+          }
         }
-      }
-    });
+      });
+    } else {
+      tableBase = createNode({
+        mother: secondBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "center",
+          flexDirection: "column",
+          paddingTop: String(75) + ea,
+          paddingBottom: String(75) + ea,
+        },
+        child: {
+          style: {
+            display: "block",
+            top: String(0) + ea,
+            left: String(-1 * ((window.innerWidth - standardWidth) / 2) - 1) + ea,
+            position: "absolute",
+            width: "calc(100vw + 1px)",
+            height: withOut(0, ea),
+            background: colorExtended.blueWhiteWhiteBack,
+          }
+        }
+      });
+    }
 
     createNode({
       mother: tableBase,
@@ -4743,7 +4772,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         width: String(tableFactorWidth1) + ea,
         height: withOut(0, ea),
         boxSizing: "border-box",
-        border: "1.5px solid " + colorExtended.black,
+        border: "1px solid " + colorExtended.black,
         borderRadius: String(factorRadius) + "px",
         background: colorExtended.mainBlue,
         justifyContent: "center",
