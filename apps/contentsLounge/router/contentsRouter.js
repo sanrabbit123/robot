@@ -780,10 +780,10 @@ ContentsRouter.prototype.rou_post_metaInstant = function () {
             await sleep(3000);
             boo = await meta.syncMetaInstantForm(selfMongo, dayConst, logger);
             if (!boo) {
-              await sleep(3000);
+              await sleep(60 * 1000);
               boo = await meta.syncMetaInstantForm(selfMongo, dayConst, logger);
               if (!boo) {
-                await sleep(3000);
+                await sleep(60 * 1000);
                 await meta.syncMetaInstantForm(selfMongo, dayConst, logger);
               }
             }

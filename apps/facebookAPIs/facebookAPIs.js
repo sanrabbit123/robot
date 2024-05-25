@@ -230,12 +230,12 @@ FacebookAPIs.prototype.getActiveInstantFormId = async function (logger = null) {
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId } = this;
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy } = this.mother;
   try {
-    const delta = 15 * 1000;
+    const delta = 30 * 1000;
     let res;
     let pageAccessToken;
     let formArr;
 
-    await sleep(1000);
+    await sleep(3000);
 
     res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + facebookUserId + "/accounts", {
       access_token: facebookToken
@@ -265,10 +265,7 @@ FacebookAPIs.prototype.getActiveInstantFormId = async function (logger = null) {
     }
 
   } catch (e) {
-    emergencyAlarm("FacebookAPIs.getActiveInstantFormId error : " + e.message).catch((err) => { console.log(err); });
-    emergencyAlarm("FacebookAPIs.getActiveInstantFormId error : " + JSON.stringify(e?.response?.data?.error)).catch((err) => { console.log(err); });
     console.log(e);
-    console.log("FacebookAPIs.getActiveInstantFormId error : " + JSON.stringify(e?.response?.data?.error));
     return null;
   }
 }
@@ -281,7 +278,11 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
   try {
     const collection = "metaInstantForm";
     const delta = 15 * 1000;
-    const { pageAccessToken, formId } = await instance.getActiveInstantFormId(logger);
+    const instantIdResult = await instance.getActiveInstantFormId(logger);
+    if (instantIdResult === null) {
+      return false;
+    }
+    const { pageAccessToken, formId } = instantIdResult;
     const url = "https://graph.facebook.com/" + appVersion + "/" + formId + "/leads";
     let res;
     let tong;
