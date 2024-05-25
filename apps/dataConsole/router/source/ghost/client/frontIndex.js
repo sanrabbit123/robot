@@ -3437,6 +3437,12 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     let ratioConst;
     let mainBoxPaddingBottomVisual;
     let totalWidth;
+    let titleVisualPaddingBottom;
+    let blackBlueAreaHeight;
+    let blackBlueAreaTop;
+    let blackBlueAreaRight;
+    let blackBlueFactorBetween;
+    let solveEngSize;
 
     boxRadius = <%% 15, 15, 15, 15, 15 %%>;
     photoRadius = <%% 8, 8, 8, 8, 8 %%>;
@@ -3472,14 +3478,14 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
 
     imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    solveBlockHeight = <%% 9.4, 9.4, 9.4, 9.4, 9.4 %%>;
-    blockBetween = <%% 1.8, 1.8, 1.8, 1.8, 1.8 %%>;
+    solveBlockHeight = <%% 28, 9.4, 9.4, 9.4, 9.4 %%>;
+    blockBetween = <%% 3, 1.8, 1.8, 1.8, 1.8 %%>;
 
-    commentsTitleSize = <%% 30, 30, 30, 30, 5.4 %%>;
+    commentsTitleSize = <%% 25, 27, 26, 24, 5.4 %%>;
 
-    photoHeight = <%% 68, 68, 68, 68, 68 %%>;
-    photoWidth = <%% 140, 140, 140, 140, 140 %%>;
-    photoBetween = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
+    photoHeight = <%% 247, 68, 68, 68, 68 %%>;
+    photoWidth = <%% 140, 140, 140, 140, 280 %%>;
+    photoBetween = <%% 4, 2.5, 2.5, 2.5, 2.5 %%>;
 
     serviceAreaBetween = <%% 24, 24, 24, 24, 24 %%>;
 
@@ -3503,7 +3509,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     selectionButtonsSquareSize = <%% 12, 2.5, 2.5, 2.5, 2.5 %%>;
     selectionButtonsSquareWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    mainServiceBlockHeight = <%% 230, 52, 52, 52, 52 %%>;
+    mainServiceBlockHeight = <%% 240, 240, 240, 240, 52 %%>;
     mainServiceBlockMarginBottom = <%% 20, 2, 2, 2, 2 %%>;
 
     mainServiceBlockDotPointWidth = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
@@ -3527,48 +3533,50 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     blackBackTop = <%% -140, -20, -20, -20, -20 %%>;
     blackBackRadius = <%% 8, 8, 8, 8, 8 %%>;
 
-    quotePaddingLeft = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
-    quoteMarginBottom = <%% 2, 2, 2, 2, 2 %%>;
-    quoteWidth = <%% 20, 3, 3, 3, 3 %%>;
+    quotePaddingLeft = <%% 5, 0.8, 0.8, 0.8, 0.8 %%>;
+    quoteMarginBottom = <%% 5, 2, 2, 2, 2 %%>;
+    quoteWidth = <%% 13, 3, 3, 3, 3 %%>;
 
-    commentsTitleWeight = <%% 700, 600, 600, 600, 600 %%>;
-    commentsTitleLineHeight = <%% 1.44, 1.44, 1.44, 1.44, 1.44 %%>;
+    titleVisualPaddingBottom = <%% 42, 42, 42, 42, 4 %%>;
+
+    commentsTitleWeight = <%% 300, 600, 600, 600, 600 %%>;
+    commentsTitleLineHeight = <%% 1.38, 1.44, 1.44, 1.44, 1.44 %%>;
 
     blackBlueAreaPaddingTop0 = <%% 9.5, 9.5, 9.5, 9.5, 9.5 %%>;
     blackBlueAreaPaddingTop1 = <%% 11, 11, 11, 11, 11 %%>;
 
-    blueButtonHeight = <%% 8.6, 8.6, 8.6, 8.6, 8.6 %%>;
-    blueButtonPadding = <%% 7, 7, 7, 7, 7 %%>;
-    blueButtonBetween = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
-    blueRightMMargin0 = <%% 6, 6, 6, 6, 6 %%>;
-    blueRightMMargin1 = <%% 11, 11, 11, 11, 11 %%>;
+    blueButtonHeight = <%% 32, 8.6, 8.6, 8.6, 8.6 %%>;
+    blueButtonPadding = <%% 21, 7, 7, 7, 7 %%>;
+    blueButtonBetween = <%% 7, 2.5, 2.5, 2.5, 2.5 %%>;
+    blueRightMMargin0 = <%% 30, 6, 6, 6, 6 %%>;
+    blueRightMMargin1 = <%% 40, 11, 11, 11, 11 %%>;
 
     blueDotPointWidth = <%% 0.9, 0.9, 0.9, 0.9, 0.9 %%>;
     blueDotPointIndent = <%% 1.2, 1.2, 1.2, 1.2, 1.2 %%>;
 
-    blueSize = <%% 3.4, 3.4, 3.4, 3.4, 3.4 %%>;
+    blueSize = <%% 14, 3.4, 3.4, 3.4, 3.4 %%>;
     blueWeight = <%% 600, 600, 600, 600, 600 %%>;
-    blueTextTop = <%% -0.2, -0.2, -0.2, -0.2, -0.2 %%>;
+    blueTextTop = <%% -0.5, -0.2, -0.2, -0.2, -0.2 %%>;
 
     tableBasePaddingTop = <%% 16, 16, 16, 16, 16 %%>;
     tableBasePaddingBottom = <%% 22, 22, 22, 22, 22 %%>;
 
-    solveBlockPaddingLeft = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
-    solveBlockMarginBottom = <%% 6, 6, 6, 6, 6 %%>;
+    solveBlockPaddingLeft = <%% 17, 0.8, 0.8, 0.8, 0.8 %%>;
+    solveBlockMarginBottom = <%% 5, 5, 5, 5, 6 %%>;
 
-    whiteSquareWidth = <%% 4.8, 4.8, 4.8, 4.8, 4.8 %%>;
-    whiteSquareTop = <%% -0.5, -0.5, -0.5, -0.5, -0.5 %%>;
-    whiteSquareLeft = <%% -0.8, -0.8, -0.8, -0.8, -0.8 %%>;
-    whiteSquareRadius = <%% 3, 3, 3, 3, 3 %%>;
+    whiteSquareWidth = <%% 15, 4.8, 4.8, 4.8, 4.8 %%>;
+    whiteSquareTop = <%% 0, -0.5, -0.5, -0.5, -0.5 %%>;
+    whiteSquareLeft = <%% 11, -0.8, -0.8, -0.8, -0.8 %%>;
+    whiteSquareRadius = <%% 2, 3, 3, 3, 3 %%>;
     whiteSquareOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
 
     solveDescriptionMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    solveTextTextTop = <%% -0.1, -0.1, -0.1, -0.1, -0.1 %%>;
-    solveTextSize = <%% 3.3, 3.3, 3.3, 3.3, 3.3 %%>;
+    solveTextTextTop = <%% -0.5, -0.1, -0.1, -0.1, -0.1 %%>;
+    solveTextSize = <%% 12, 3.3, 3.3, 3.3, 3.3 %%>;
     solveTextWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-    photoZonePaddingTop = <%% 11, 11, 11, 11, 11 %%>;
+    photoZonePaddingTop = <%% 74, 11, 11, 11, 11 %%>;
 
     tableTitleBlockWidth = <%% 70, 70, 70, 70, 70 %%>;
     tableTitleBlockHeight = <%% 11, 11, 11, 11, 11 %%>;
@@ -3583,7 +3591,14 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     tableDescriptionMarginTop = <%% 3, 3, 3, 3, 3 %%>;
     tableDescriptionMarginBottom = <%% 9, 9, 9, 9, 9 %%>;
 
-    totalWidth = <%% 1050, 900, 720, 600, 88 %%>;
+    totalWidth = <%% 1000, 900, 720, 600, 88 %%>;
+
+    blackBlueAreaHeight = <%% 80, 80, 80, 80, 8 %%>;
+    blackBlueAreaTop = <%% 60, 67, 67, 67, 6 %%>;
+    blackBlueAreaRight = <%% 21, 23, 23, 23, 23 %%>;
+    blackBlueFactorBetween = <%% 6, 5, 5, 5, 5 %%>;
+
+    solveEngSize = <%% 13, 13, 13, 12, 3.3 %%>;
 
     ratioConst = 72;
 
@@ -3657,7 +3672,11 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           "가구 구매와 배치,",
           "소품 활용으로 무드 체인지!",
         ],
-        description: [
+        description: desktop ? [
+          "경력과 역량을 지닌 디자이너가",
+          "제공하는 배치도와 기획이 담긴",
+          "홈퍼니싱 서비스를 경험하세요.",
+        ] : [
           "경력과 역량을 지닌 디자이너가 제공하는 배치도와",
           "기획이 담긴 홈퍼니싱 서비스를 경험하세요.",
         ],
@@ -3669,6 +3688,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         images: [
           FrontIndexJs.binaryPath + "/furnishingSource0.jpg",
           FrontIndexJs.binaryPath + "/furnishingSource1.jpg",
+          FrontIndexJs.binaryPath + "/furnishingSource2.jpg",
+          FrontIndexJs.binaryPath + "/furnishingSource3.jpg",
         ],
       }
     };
@@ -3714,7 +3735,11 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           "기본적인 톤 보정만으로",
           "공간의 분위기 전환!",
         ],
-        description: [
+        description: desktop ? [
+          "디자이너의 기획을 바탕으로",
+          "믿을 수 있는 시공사와",
+          "안정적인 인테리어를 경험하세요.",
+        ] : [
           "디자이너가 제공하는 기획을 바탕으로",
           "믿을 수 있는 시공사와 안정적인 인테리어를 경험하세요.",
         ],
@@ -3727,16 +3752,15 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         images: [
           FrontIndexJs.binaryPath + "/stylingSource0.jpg",
           FrontIndexJs.binaryPath + "/stylingSource1.jpg",
+          FrontIndexJs.binaryPath + "/stylingSource2.jpg",
+          FrontIndexJs.binaryPath + "/stylingSource3.jpg",
         ],
       }
     };
     totalObj = {
       title: "토탈 스타일링",
       eng: "Total Styling",
-      description: desktop ? [
-        "원하는 구조를 위한 철거와 주방, 화장실 등",
-        "기본 이상의 시공을 통해 전체적인 분위기를 업그레이드",
-      ] : [
+      description: [
         "원하는 구조를 위한 철거와 주방, 화장실 등",
         "기본 이상의 시공을 통해",
         "전체적인 분위기를 업그레이드",
@@ -3786,6 +3810,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         images: [
           FrontIndexJs.binaryPath + "/totalSource0.jpg",
           FrontIndexJs.binaryPath + "/totalSource1.jpg",
+          FrontIndexJs.binaryPath + "/totalSource2.jpg",
+          FrontIndexJs.binaryPath + "/totalSource3.jpg",
         ],
       }
     };
@@ -4016,8 +4042,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "column",
-            paddingTop: String(middleMargin) + ea,
-            paddingBottom: String(bigMargin) + ea,
+            paddingTop: String(40) + ea,
+            paddingBottom: String(32) + ea,
             zIndex: String(1),
           },
           child: {
@@ -4063,6 +4089,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           alignItems: "start",
           width: desktop ? String(totalWidth) + ea : withOut(0, ea),
           paddingLeft: String(0) + ea,
+          paddingBottom: desktop ? String(titleVisualPaddingBottom) + ea : ""
         },
         child: {
           text: c.comments,
@@ -4081,38 +4108,41 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
       blackBlueArea = createNode({
         mother: blackBlock,
         style: {
-          display: "flex",
-          position: "relative",
+          display: desktop ? "block" : "flex",
+          position: desktop ? "absolute" : "relative",
           width: desktop ? String(totalWidth) + ea : withOut(0, ea),
-          justifyContent: "end",
-          alignItems: "end",
-          flexDirection: "column",
-          paddingTop: String(num === 0 ? blackBlueAreaPaddingTop0 : blackBlueAreaPaddingTop1) + ea,
+          right: desktop ? String(blackBlueAreaRight) + ea : "",
+          justifyContent: desktop ? "" : "end",
+          alignItems: desktop ? "" : "end",
+          flexDirection: desktop ? "" : "column",
+          top: desktop ? String(blackBlueAreaTop) + ea : "",
+          paddingTop: desktop ? "" : String(num === 0 ? blackBlueAreaPaddingTop0 : blackBlueAreaPaddingTop1) + ea,
           paddingLeft: String(0) + ea,
           paddingRight: String(0) + ea,
+          textAlign: desktop ? "right" : "",
         }
       });
       num3 = 0;
       for (let b of c.buttons) {
-
         createNode({
           mother: blackBlueArea,
           style: {
             height: String(blueButtonHeight) + ea,
             paddingLeft: String(blueButtonPadding) + ea,
             paddingRight: String(blueButtonPadding) + ea,
-            display: "flex",
+            display: "inline-flex",
             position: "relative",
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "row",
             marginBottom: String(blueButtonBetween) + ea,
             overflow: "hidden",
-            borderTopLeftRadius: String(num3 % 2 !== 0 ? blueButtonHeight / 2 : 0) + ea,
+            borderTopLeftRadius: desktop ? String(true ? blueButtonHeight / 2 : 0) + ea : String(num3 % 2 !== 0 ? blueButtonHeight / 2 : 0) + ea,
             borderBottomLeftRadius: String(blueButtonHeight / 2) + ea,
             borderBottomRightRadius: String(blueButtonHeight / 2) + ea,
-            borderTopRightRadius: String(num3 % 2 === 0 ? blueButtonHeight / 2 : 0) + ea,
-            marginRight: num3 % 2 === 0 ? String(blueRightMMargin0 + (blueRightMMargin1 * Math.floor(num3 / 2) - 1)) + ea : String(0) + ea,
+            borderTopRightRadius: desktop ? String(true ? blueButtonHeight / 2 : 0) + ea : String(num3 % 2 === 0 ? blueButtonHeight / 2 : 0) + ea,
+            marginRight: desktop ? "" : num3 % 2 === 0 ? String(blueRightMMargin0 + (blueRightMMargin1 * Math.floor(num3 / 2) - 1)) + ea : String(0) + ea,
+            marginLeft: desktop ? String(blackBlueFactorBetween) + ea : "",
           },
           children: [
             {
@@ -4164,7 +4194,11 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             }
           ]
         });
-
+        if (desktop) {
+          if (num3 % 2 !== 0) {
+            blackBlueArea.insertAdjacentHTML("beforeend", "<br>");
+          }
+        }
         num3++;
       }
 
@@ -4214,14 +4248,12 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           style: {
             display: "flex",
             position: "relative",
-            width: withOut(mobileMargin, ea),
-            justifyContent: "start",
-            alignItems: "start",
+            width: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
             flexDirection: "column",
-            paddingTop: String(bigMargin) + ea,
-            paddingBottom: String(bigMargin) + ea,
-            paddingLeft: String(mobileMargin / 2) + ea,
-            paddingRight: String(mobileMargin / 2) + ea,
+            paddingTop: String(70) + ea,
+            paddingBottom: String(25) + ea,
           },
           child: {
             style: {
@@ -4257,7 +4289,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           position: "relative",
           justifyContent: "start",
           alignItems: "start",
-          width: withOut(0, ea),
+          width: desktop ? String(totalWidth) + ea : withOut(0, ea),
           paddingLeft: String(solveBlockPaddingLeft) + ea,
           marginBottom: String(solveBlockMarginBottom) + ea,
         },
@@ -4266,7 +4298,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           style: {
             display: "inline-block",
             position: "relative",
-            fontSize: String(3.3) + ea,
+            fontSize: String(solveEngSize) + ea,
             fontWeight: String(700),
             color: colorExtended.black,
             fontFamily: "mont",
@@ -4292,9 +4324,10 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           flexDirection: "row",
           position: "relative",
           justifyContent: "start",
-          alignItems: "start",
-          width: withOut(0, ea),
+          alignItems: desktop ? "end" : "start",
+          width: desktop ? String(totalWidth) + ea : withOut(0, ea),
           paddingLeft: String(0) + ea,
+          paddingBottom: desktop ? String(titleVisualPaddingBottom) + ea : ""
         },
         child: {
           text: c.solve.title,
@@ -4302,38 +4335,61 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             display: "inline-block",
             position: "relative",
             fontSize: String(commentsTitleSize) + ea,
-            fontWeight: String(commentsTitleWeight),
+            fontWeight: String(desktop ? 700 : commentsTitleWeight),
             fontFamily: "pretendard",
             color: colorExtended.darkBlack,
             lineHeight: String(commentsTitleLineHeight),
+          },
+          next: {
+            text: c.solve.description.join("\n"),
+            style: {
+              display: mobile ? "none" : "inline-block",
+              position: "relative",
+              fontSize: String(desktop ? 14 : descriptionSize) + ea,
+              fontWeight: String(500),
+              fontFamily: "pretendard",
+              color: colorExtended.darkBlack,
+              lineHeight: String(descriptionLineHeight),
+              textAlign: "left",
+              marginTop: String(solveDescriptionMarginTop) + ea,
+              marginBottom: String(3) + ea,
+              marginLeft: String(40) + ea,
+            }
           }
         }
       });
-      createNode({
-        mother: solveBlock,
-        text: c.solve.description.join("\n"),
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(400),
-          fontFamily: "pretendard",
-          color: colorExtended.darkBlack,
-          lineHeight: String(descriptionLineHeight),
-          textAlign: "left",
-          marginTop: String(solveDescriptionMarginTop) + ea,
-        }
-      });
+
+      if (mobile) {
+        createNode({
+          mother: solveBlock,
+          text: c.solve.description.join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(desktop ? 13 : descriptionSize) + ea,
+            fontWeight: String(400),
+            fontFamily: "pretendard",
+            color: colorExtended.darkBlack,
+            lineHeight: String(descriptionLineHeight),
+            textAlign: "left",
+            marginTop: String(solveDescriptionMarginTop) + ea,
+          }
+        });
+      }
+
       solveListArea = createNode({
         mother: solveBlock,
         style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          justifyContent: "end",
-          alignItems: "end",
-          flexDirection: "column",
-          paddingTop: String(bigMargin) + ea,
+          display: desktop ? "block" : "flex",
+          position: desktop ? "absolute" : "relative",
+          width: desktop ? String(400) + ea : withOut(0, ea),
+          right: desktop ? String(blackBlueAreaRight) + ea : "",
+          justifyContent: desktop ? "" : "end",
+          alignItems: desktop ? "" : "end",
+          flexDirection: desktop ? "" : "column",
+          top: desktop ? String(71) + ea : "",
+          paddingTop: desktop ? "" : String(bigMargin) + ea,
+          textAlign: desktop ? "right" : "",
         }
       });
       num4 = 0;
@@ -4369,8 +4425,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
                 style: {
                   display: "inline-flex",
                   position: "relative",
-                  top: String(0) + ea,
-                  fontSize: String(blueSize) + ea,
+                  top: String(desktop ? 0.5 : 0) + ea,
+                  fontSize: String(desktop ? 13 : blueSize) + ea,
                   fontWeight: String(blueWeight),
                   fontFamily: "mont",
                   color: colorExtended.darkBlack,
@@ -4413,13 +4469,13 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         style: {
           display: "flex",
           position: "relative",
-          width: withOut(0, ea),
+          width: desktop ? String(totalWidth) + ea : withOut(0, ea),
           justifyContent: "start",
           alignItems: "start",
           flexDirection: "column",
           height: String(photoHeight) + ea,
           paddingTop: String(photoZonePaddingTop) + ea,
-          paddingBottom: String(serviceAreaBetween) + ea,
+          paddingBottom: String(desktop ? 90 : serviceAreaBetween) + ea,
         },
       });
       createNode({
@@ -4427,10 +4483,10 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         style: {
           display: "block",
           position: "relative",
-          width: withOut(-1 * mobileMargin * 2, ea),
+          width: mobile ? withOut(-1 * mobileMargin * 2, ea) : withOut(0, ea),
           height: withOut(0, ea),
-          left: String(-1 * mobileMargin) + ea,
-          overflow: "scroll",
+          left: mobile ? String(-1 * mobileMargin) + ea : String(0) + ea,
+          overflow: desktop ? "hiddne" : "scroll",
         },
         children: [
           {
@@ -4439,7 +4495,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
               position: "relative",
               width: withOut(0, ea),
               height: withOut(0, ea),
-              overflow: "scroll",
+              overflow: desktop ? "hiddne" : "scroll",
             },
             child: {
               style: {
@@ -4449,9 +4505,9 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
                 justifyContent: "start",
                 alignItems: "start",
                 height: withOut(0, ea),
-                paddingLeft: String(mobileMargin) + ea,
-                paddingRight: String(mobileMargin * 1.5) + ea,
-                width: String(photoWidth) + ea,
+                paddingLeft: mobile ? String(mobileMargin) + ea : "",
+                paddingRight: mobile ? String(mobileMargin * 1.5) + ea : "",
+                width: desktop ? withOut(0, ea) : String(photoWidth) + ea,
               },
               children: [
                 {
@@ -4467,6 +4523,26 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
                 {
                   mode: "img",
                   attribute: { src: c.solve.images[1] },
+                  style: {
+                    display: "inline-block",
+                    height: String(photoHeight) + ea,
+                    borderRadius: String(photoRadius) + "px",
+                    marginRight: String(photoBetween) + ea,
+                  }
+                },
+                {
+                  mode: "img",
+                  attribute: { src: c.solve.images[2] },
+                  style: {
+                    display: "inline-block",
+                    height: String(photoHeight) + ea,
+                    borderRadius: String(photoRadius) + "px",
+                    marginRight: String(photoBetween) + ea,
+                  }
+                },
+                {
+                  mode: "img",
+                  attribute: { src: c.solve.images[3] },
                   style: {
                     display: "inline-block",
                     height: String(photoHeight) + ea,
@@ -4978,6 +5054,7 @@ FrontIndexJs.prototype.insertWhiteCardEvent = function (serviceIndex) {
       let infoMiddleMiddle;
       let sourceTong;
       let pictureNumber;
+      let scrollTongPaddingTop;
 
       whiteMargin = <%% 30, 30, 30, 30, 3 %%>;
       innerMargin = <%% 52, 48, 40, 24, 6 %%>;
@@ -5033,7 +5110,7 @@ FrontIndexJs.prototype.insertWhiteCardEvent = function (serviceIndex) {
 
       blockTitleMarginBottom = <%% 11, 11, 11, 11, 1 %%>;
 
-      whiteStandardWidth = <%% 1200, 1050, 900, 720, 100 %%>;
+      whiteStandardWidth = <%% 1150, 1050, 900, 720, 100 %%>;
 
       pictureBaseHeight = <%% 880, 650, 570, 460, 61 %%>;
 
@@ -5052,6 +5129,8 @@ FrontIndexJs.prototype.insertWhiteCardEvent = function (serviceIndex) {
       selectionBarWeight = 300;
       selectionBarMargin = 1;
       selectionBarLongMargin = 2;
+
+      scrollTongPaddingTop = <%% 64, 64, 60, 56, 15 %%>;
 
       whiteBlockMarginBottom = <%% 6, 5, 4, 3, 1 %%>;
       whiteBlockOuterMargin = <%% 10, 10, 10, 10, 1 %%>;
@@ -5210,10 +5289,10 @@ FrontIndexJs.prototype.insertWhiteCardEvent = function (serviceIndex) {
           height: desktop ? "calc(calc(100% - " + String(naviHeight) + px + ") - " + String((whiteMargin * 2)) + ea + ")" : "calc(calc(100% - " + String(naviHeight) + px + ") - " + String(mobileWhiteTopMargin) + ea + ")",
           top: desktop ? "calc(" + String(naviHeight) + px + " + " + String(whiteMargin) + ea + ")" : "calc(" + String(naviHeight) + px + " + " + String(mobileWhiteTopMargin) + ea + ")",
           left: "calc(50% - " + String(whiteStandardWidth / 2) + ea + ")",
-          borderTopLeftRadius: desktop ? String(5) + px : String(1.6) + ea,
-          borderTopRightRadius: desktop ? String(5) + px : String(1.6) + ea,
-          borderBottomLeftRadius: desktop ? String(5) + px : String(0) + ea,
-          borderBottomRightRadius: desktop ? String(5) + px : String(0) + ea,
+          borderTopLeftRadius: desktop ? String(12) + px : String(1.6) + ea,
+          borderTopRightRadius: desktop ? String(12) + px : String(1.6) + ea,
+          borderBottomLeftRadius: desktop ? String(12) + px : String(0) + ea,
+          borderBottomRightRadius: desktop ? String(12) + px : String(0) + ea,
           background: colorChip.white,
           boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
           animation: desktop ? "fadeuporiginal 0.3s ease forwards" : "fadeupentire 0.5s ease forwards",
@@ -5300,12 +5379,13 @@ FrontIndexJs.prototype.insertWhiteCardEvent = function (serviceIndex) {
           width: withOut(0 * 2, ea),
           height: withOut(0, ea),
           overflow: "scroll",
+          borderRadius: String(12) + px,
         },
         child: {
           style: {
             display: "block",
             position: "relative",
-            paddingTop: String(desktop ? innerMargin : 15) + ea,
+            paddingTop: String(scrollTongPaddingTop) + ea,
             width: withOut(innerMargin * 2, ea),
             height: "auto",
             marginLeft: String(innerMargin) + ea,
@@ -5314,6 +5394,8 @@ FrontIndexJs.prototype.insertWhiteCardEvent = function (serviceIndex) {
           }
         }
       }).firstChild;
+
+      instance.scrollTong = scrollTong;
 
       await instance.insertServiceDetailBox(scrollTong, serviceIndex);
 
@@ -5904,9 +5986,10 @@ FrontIndexJs.prototype.launching = async function (loading) {
           instance.insertPortfolioBase();
           await instance.insertConsultingBox(true);
 
-
-          // await instance.insertServiceDetailBox();
-
+          if (getObj.mode === "about") {
+            const thisFunction = instance.insertWhiteCardEvent(1);
+            await thisFunction(new Event("click", { bubbles: true }));
+          }
 
           instance.resizeEvent();
           setInterval(() => {
