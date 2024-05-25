@@ -507,6 +507,9 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
     }
 
     for (let row of tong) {
+
+      console.log(row);
+
       json = objectDeepCopy(row);
       thisId = row.id;      
       rows = await back.mongoRead(collection, { id: thisId }, { selfMongo });

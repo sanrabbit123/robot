@@ -223,8 +223,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-    
+    const generalPort = 3000;
+    const res = await requestSystem("https://" + address.contentsinfo.host + ":" + String(generalPort) + "/metaInstant", { data: null }, { headers: { "Content-Type": "application/json" } });
+    console.log(res);
     
 
 
