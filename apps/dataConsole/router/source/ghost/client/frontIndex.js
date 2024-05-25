@@ -152,12 +152,12 @@ FrontIndexJs.prototype.insertInitBox = async function () {
     titleSize = <%% 38, 35, 32, 30, 7 %%>;
     titleWeight = desktop ? 800 : 700;
 
-    mainImageWidth = <%% 590, 475, 450, 450, 59 %%>;
-    subTitleBlockMarginTop = <%% 10, 9, 9, 8, 2.6 %%>;
+    mainImageWidth = <%% 590, 475, 410, 390, 59 %%>;
+    subTitleBlockMarginTop = <%% 10, 9, 9, 7, 2.6 %%>;
     imageBlockMarginTop = 6.5;
-    boxBlock0MarginTop = <%% 50, 50, 50, 50, 13 %%>;
+    boxBlock0MarginTop = <%% 50, 50, 45, 40, 13 %%>;
     boxBlock1MarginTop = <%% 6, 6, 6, 6, 2 %%>;
-    boxBlockHeight = <%% 90, 82, 80, 76, 20 %%>;
+    boxBlockHeight = <%% 90, 82, 72, 64, 20 %%>;
 
     titleLineBoxWidthVisual = -1.2;
     titleLineBoxHeight = <%% 8, 8, 8, 8, 3 %%>;
@@ -165,18 +165,18 @@ FrontIndexJs.prototype.insertInitBox = async function () {
     titleLineBoxLeft = -1;
     titleLineBoxOpacity = 0.8;
 
-    dotWidth = <%% 6, 6, 6, 6, 1.2 %%>;
-    dotMargin = <%% 12, 12, 12, 12, 2.5 %%>;
+    dotWidth = <%% 6, 6, 4, 4, 1.2 %%>;
+    dotMargin = <%% 12, 12, 10, 10, 2.5 %%>;
     dotRadius = 1;
 
     boxRadius = 15;
     
-    stepSize = <%% 17, 16, 16, 15, 4 %%>;
+    stepSize = <%% 17, 16, 15, 14, 4 %%>;
     stepWeight = 500;
     stepBoldWeight = 800;
     stepTextTop = -0.1;
 
-    stepEngSize = <%% 18, 17, 17, 16, 4.5 %%>;
+    stepEngSize = <%% 18, 17, 16, 15, 4.5 %%>;
     stepEngWeight = 700;
     stepEngTextTop = <%% 0.5, 0.5, 0.5, 0.5, 0.1 %%>;
     stepEngMarginRight = <%% 8, 8, 8, 8, 4.2 %%>;
@@ -186,17 +186,17 @@ FrontIndexJs.prototype.insertInitBox = async function () {
 
     paddingVisual = 15;
 
-    initAreaHeight = <%% 700, 620, 600, 540, 54 %%>;
+    initAreaHeight = <%% 700, 620, 550, 540, 54 %%>;
 
-    boxWidth = <%% 450, 420, 410, 400, 40 %%>;
+    boxWidth = <%% 450, 420, 380, 360, 40 %%>;
 
     titleX = <%% 100, 0, 0, 0, 0 %%>;
-    titleY = <%% 160, 150, 140, 130, 160 %%>;
+    titleY = <%% 160, 150, 130, 130, 160 %%>;
 
     scaleConst = 1;
 
-    imageMarginTop = <%% 11, 8, 8, 7, 10 %%>;
-    imageMarginLeft = <%% 64, 50, 50, 50, 50 %%>;
+    imageMarginTop = <%% 11, 8, 9, 7, 10 %%>;
+    imageMarginLeft = <%% 64, 50, 36, 32, 50 %%>;
 
     titleVisualTop = <%% 6, 3, 3, 3, 1 %%>;
     titleVisualBottom = <%% 8, 4, 4, 4, 8 %%>;
@@ -787,7 +787,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     let thirdBase;
 
     boxRadius = <%% 15, 15, 15, 15, 15 %%>;
-    moreAreaHeight = <%% 45, 42, 40, 40, 12 %%>;
+    moreAreaHeight = <%% 45, 42, 40, 38, 12 %%>;
 
     moreSize = <%% 14, 13, 13, 12, 3.4 %%>;
     moreWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -799,20 +799,20 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     whiteBlockBetween = <%% 10, 10, 10, 10, 4 %%>;
 
     whiteBlockHeight = <%% 80, 80, 80, 80, 80 %%>;
-    barMargin = <%% 12, 12, 12, 12, 2.5 %%>;
+    barMargin = <%% 12, 12, 10, 8, 2.5 %%>;
 
-    topBottomMargin = <%% 45, 35, 30, 30, 9 %%>;
+    topBottomMargin = <%% 45, 35, 30, 20, 9 %%>;
 
-    blueBlockBetween = <%% 6, 5, 4, 4, 1.8 %%>;
+    blueBlockBetween = <%% 6, 5, 3, 2, 1.8 %%>;
 
-    titleSize = <%% 23, 21, 20, 20, 5 %%>;
+    titleSize = <%% 23, 21, 19, 17, 5 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    titleEngSize = <%% 11, 10, 9, 8, 2.7 %%>;
+    titleEngSize = <%% 11, 10, 8, 7, 2.7 %%>;
     titleEngWeight = <%% 300, 300, 300, 300, 300 %%>;
-    titleEngBetween = <%% 2, 0, 0, 0, 0.1 %%>;
+    titleEngBetween = <%% 2, 0, -1, -1, 0.1 %%>;
 
-    descriptionSize = <%% 13, 12, 13, 13, 3 %%>;
+    descriptionSize = <%% 13, 12, 12, 11, 3 %%>;
     descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
 
     imageBoxWidth = <%% 62, 62, 62, 62, 62 %%>;
@@ -823,21 +823,21 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
 
     clickMeTop = <%% 104, 80, 80, 70, -13 %%>;
     clickMeRight = <%% 1, 1, 1, 1, 1 %%>;
-    clictMeWidth = <%% 110, 100, 90, 80, 26 %%>;
+    clictMeWidth = <%% 110, 100, 85, 75, 26 %%>;
 
-    moreArrowCircleWidth = <%% 13, 12, 12, 12, 2.8 %%>;
+    moreArrowCircleWidth = <%% 13, 12, 11, 10, 2.8 %%>;
     moreArrowCircleMarginLeft = <%% 4, 4, 4, 4, 1 %%>;
 
     moreArrowVisualLeft = <%% 1, 1, 1, 1, 0.2 %%>;
     moreArrowWidth = <%% 4, 4, 3, 3, 1 %%>;
 
-    buttonHeight = <%% 40, 34, 32, 28, 8.8 %%>;
+    buttonHeight = <%% 40, 34, 28, 24, 8.8 %%>;
 
     multipleConst = <%% 6, 6, 6, 6, 6 %%>;
 
-    checkCircleWidth = <%% 20, 20, 20, 20, 4.5 %%>;
-    checkCircleWidthSvg = <%% 21, 21, 21, 21, 4.7 %%>;
-    checkCircleLeft = <%% 12, 11, 10, 9, 2.5 %%>;
+    checkCircleWidth = <%% 20, 20, 17, 16, 4.5 %%>;
+    checkCircleWidthSvg = <%% 21, 21, 18, 17, 4.7 %%>;
+    checkCircleLeft = <%% 12, 11, 7, 7, 2.5 %%>;
 
     buttonTitleSize = <%% 14, 13, 12, 11, 3.2 %%>;
     buttonTitleWeignt = <%% 600, 600, 600, 600, 600 %%>;
@@ -1353,35 +1353,35 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
 
     titleSize = <%% 19, 18, 18, 18, 5 %%>;
 
-    imageBoxWidth = <%% 460, 460, 460, 460, 62 %%>;
+    imageBoxWidth = <%% 460, 460, 420, 400, 62 %%>;
     imageScale = <%% 0.91, 0.91, 0.91, 0.91, 0.84 %%>;
     imageScale2 = <%% 0.77, 0.77, 0.77, 0.77, 0.8 %%>;
     imageOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
     imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
-    reviewTitleSize = <%% 24, 24, 24, 24, 3.6 %%>;
-    reviewSubSize = <%% 13, 13, 13, 13, 2.6 %%>;
+    reviewTitleSize = <%% 24, 24, 22, 20, 3.6 %%>;
+    reviewSubSize = <%% 13, 13, 12, 11, 2.6 %%>;
 
     blackScreenOpacity = <%% 0.2, 0.2, 0.2, 0.2, 0.2 %%>;
 
-    reviewTitleMargin = <%% 45, 45, 45, 45, 6 %%>;
+    reviewTitleMargin = <%% 45, 45, 43, 42, 6 %%>;
     reviewTitleWeight = <%% 700, 700, 700, 700, 600 %%>;
     reviewLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.5 %%>;
     reviewSubTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
 
     reviewBoxPaddingTop = <%% 15, 15, 15, 15, 15 %%>;
     reviewBoxPaddingBottom = <%% 21, 21, 21, 21, 21 %%>;
-    bestBetween = <%% 32, 32, 32, 32, 6 %%>;
+    bestBetween = <%% 32, 32, 30, 28, 6 %%>;
 
-    bestReviewWidth = <%% 270, 270, 270, 270, 50 %%>;
-    bestReviewHeight = <%% 45, 45, 45, 45, 9 %%>;
+    bestReviewWidth = <%% 270, 270, 250, 230, 50 %%>;
+    bestReviewHeight = <%% 45, 45, 42, 39, 9 %%>;
 
     reviewBestSize = <%% 18, 17, 16, 16, 3.4 %%>;
     reviewBestWeight = <%% 700, 700, 700, 700, 700 %%>;
     reviewBestTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
-    reviewBestEngSize = <%% 20, 18, 18, 18, 3.8 %%>;
+    reviewBestEngSize = <%% 20, 18, 17, 16, 3.8 %%>;
     reviewBackBoxTop = <%% 6, 6, 6, 6, 6 %%>;
-    reviewBackBoxLeft = <%% 160, 120, 120, 120, 0 %%>;
+    reviewBackBoxLeft = <%% 160, 120, 90, 80, 0 %%>;
 
     arrowWidth = <%% 3.4, 3.4, 3.4, 3.4, 3.4 %%>;
     arrowLeft = <%% 5, 5, 5, 5, 5 %%>;
@@ -2025,6 +2025,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     let visualDescriptionPaddingBottom;
     let whitePadding;
     let supportWidth, supportTop;
+    let thirdPadding;
 
     boxRadius = <%% 15, 15, 15, 15, 15 %%>;
     boxRadiusBig = <%% 24, 24, 24, 24, 20 %%>;
@@ -2034,20 +2035,20 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     mobileMargin = <%% 6, 6, 6, 6, 6 %%>;
     slimMargin = <%% 3, 3, 3, 3, 3 %%>;
 
-    topBottomMargin = <%% 24, 24, 24, 24, 14 %%>;
-    topBottomMarginBig = <%% 100, 100, 100, 100, 14 %%>;
+    topBottomMargin = <%% 24, 24, 20, 16, 14 %%>;
+    topBottomMarginBig = <%% 100, 100, 90, 80, 14 %%>;
 
     baseModuleHeight = <%% 97, 97, 97, 97, 97 %%>;
     baseModuleHeight2 = <%% 112, 112, 112, 112, 112 %%>;
     finalModuleHeight = <%% 90, 90, 90, 90, 90 %%>;
 
-    descriptionMarginTop = <%% 24, 24, 24, 24, 8 %%>;
-    descriptionMarginTop2 = <%% 24, 24, 24, 24, 11 %%>;
-    descriptionMarginTop3 = <%% 24, 24, 24, 24, 3 %%>;
+    descriptionMarginTop = <%% 24, 24, 20, 16, 8 %%>;
+    descriptionMarginTop2 = <%% 24, 24, 20, 16, 11 %%>;
+    descriptionMarginTop3 = <%% 24, 24, 20, 16, 3 %%>;
     imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    title0Size = <%% 33, 28, 26, 26, 5 %%>;
-    title1Size = <%% 33, 28, 26, 26, 4.8 %%>;
+    title0Size = <%% 33, 28, 25, 22, 5 %%>;
+    title1Size = <%% 33, 28, 25, 22, 4.8 %%>;
     title0Weight = <%% 700, 700, 700, 700, 600 %%>;
     title0LineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
     title1LineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
@@ -2057,9 +2058,9 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     line1Width = <%% 18, 18, 18, 18, 18 %%>;
     line2Width = <%% 27, 27, 27, 27, 27 %%>;
 
-    mainImageWidth = <%% 450, 405, 405, 405, 73 %%>;
-    mainImageTop = <%% -120, -104, -104, -108, -135 %%>;
-    descriptionSize = <%% 17, 16, 15, 15, 3.4 %%>;
+    mainImageWidth = <%% 450, 405, 370, 360, 73 %%>;
+    mainImageTop = <%% -120, -104, -92, -80, -135 %%>;
+    descriptionSize = <%% 17, 16, 15, 14, 3.4 %%>;
     descriptionWeight = <%% 300, 300, 300, 300, 600 %%>;
     descriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
     descriptionLineHeight2 = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
@@ -2075,20 +2076,22 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
 
     totalBlockPaddingTop = <%% 140, 130, 120, 110, 140 %%>;
     totalBlockPaddingBottom = <%% 30, 20, 10, 10, 130 %%>;
-    boxInnerPadding = <%% 130, 108, 100, 80, 45 %%>;
-    boxInnerPaddingTop = <%% 90, 70, 70, 70, 60 %%>;
+    boxInnerPadding = <%% 130, 108, 90, 80, 45 %%>;
+    boxInnerPaddingTop = <%% 90, 70, 60, 50, 60 %%>;
 
-    secondAreaTextPaddingLeft = <%% 830, 610, 610, 610, 830 %%>;
+    secondAreaTextPaddingLeft = <%% 830, 610, 530, 480, 830 %%>;
     visualDescriptionPaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
 
-    whitePadding = <%% 150, 105, 100, 90, 150 %%>;
+    whitePadding = <%% 150, 105, 90, 80, 150 %%>;
 
-    phoneTop = <%% -110, -110, -110, -110, -110 %%>;
-    phoneWidth = <%% 350, 304, 300, 300, 350 %%>;
-    phoneHeight = <%% 730, 630, 630, 620, 730 %%>;
+    phoneTop = <%% -110, -120, -110, -110, -110 %%>;
+    phoneWidth = <%% 350, 304, 260, 240, 350 %%>;
+    phoneHeight = <%% 730, 626, 550, 550, 730 %%>;
 
-    supportWidth = <%% 470, 420, 420, 420, 44 %%>;
-    supportTop = <%% 90, 76, 76, 70, 7 %%>;
+    supportWidth = <%% 470, 420, 350, 320, 44 %%>;
+    supportTop = <%% 90, 64, 56, 52, 7 %%>;
+
+    thirdPadding = <%% 140, 120, 106, 90, 9 %%>;
 
     if (desktop) {
       baseMother = createNode({
@@ -2619,7 +2622,7 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         width: withOut(0, ea),
         justifyContent: "start",
         alignItems: "start",
-        paddingTop: desktop ? String(140) + ea : String(topBottomMargin) + ea,
+        paddingTop: desktop ? String(thirdPadding) + ea : String(topBottomMargin) + ea,
       },
       child: {
         text: [
@@ -3038,10 +3041,10 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
 
     topBottomMargin = <%% 14, 14, 14, 14, 14 %%>;
 
-    descriptionMarginTop = <%% 16, 12, 12, 12, 3 %%>;
+    descriptionMarginTop = <%% 16, 12, 10, 8, 3 %%>;
     imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    title1Size = <%% 29, 27, 26, 26, 4.8 %%>;
+    title1Size = <%% 29, 26, 24, 22, 4.8 %%>;
     title0Weight = <%% 600, 600, 600, 600, 600 %%>;
     title1LineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
@@ -3054,7 +3057,7 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
     buttonLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
     buttonTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
     buttonHeight = <%% 48, 45, 42, 38, 11 %%>;
-    buttonWidth = <%% 300, 352, 352, 352, 3 %%>;
+    buttonWidth = <%% 300, 352, 320, 310, 3 %%>;
 
     commentsWidth = <%% 120, 120, 120, 120, 23 %%>;
     commentsHeight = <%% 28, 28, 28, 28, 6.6 %%>;
@@ -3067,19 +3070,21 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
     commentsTriangleWidth = <%% 10, 10, 10, 10, 2.6 %%>;
     commentsTriangleTop = <%% 27, 27, 27, 27, 6.2 %%>;
 
-    lastMoreWidth = <%% 96, 96, 96, 96, 17 %%>;
-    lastMoreHeight = <%% 36, 36, 36, 36, 7 %%>;
+    lastMoreWidth = <%% 96, 96, 84, 72, 17 %%>;
+    lastMoreHeight = <%% 36, 36, 32, 28, 7 %%>;
     lastMoreTop = <%% -260, -260, -260, -260, -26 %%>;
     lastMoreRadius = <%% 7, 7, 7, 7, 7 %%>;
-    lastMoreSize = <%% 16, 16, 16, 16, 3 %%>;
+    lastMoreSize = <%% 16, 16, 15, 14, 3 %%>;
     lastMoreWeight = <%% 700, 700, 700, 700, 700 %%>;
     lastMoreLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
     lastMoreTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
 
     baseHeight = lastMode ? 42 : 92;
-    buttonMarginTop = lastMode ? 1 : 16;
+    buttonMarginTop = <%% 70, 68, 60, 56, 16 %%>;
     if (desktop) {
-      buttonMarginTop = lastMode ? 1 : 70;
+      buttonMarginTop = lastMode ? 1 : buttonMarginTop;
+    } else {
+      buttonMarginTop = lastMode ? 1 : 16;
     }
 
     totalBlockPaddingTop = <%% 140, 130, 120, 110, 140 %%>;
@@ -3438,7 +3443,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     let whiteSquareWidth, whiteSquareTop, whiteSquareLeft, whiteSquareRadius, whiteSquareOpacity;
     let solveDescriptionMarginTop;
     let solveTextTextTop, solveTextSize, solveTextWeight;
-    let photoZonePaddingTop;
+    let photoZonePaddingTop, photoZonePaddingBottom;
     let tableTitleBlockWidth, tableTitleBlockHeight;
     let tableTitleSize, tableTitleWeight, tableTitleTextTop;
     let tableDescriptionSize, tableDescriptionWeight, tableDescriptionLineHeight, tableDescriptionMarginTop, tableDescriptionMarginBottom;
@@ -3455,6 +3460,8 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     let minusLeft;
     let desktopSolveSize;
     let desktopSolveMarginLeft;
+    let solveListAreaTop;
+    let solveListAreaWidth;
 
     boxRadius = <%% 15, 15, 15, 15, 15 %%>;
     photoRadius = <%% 8, 8, 8, 8, 8 %%>;
@@ -3477,11 +3484,11 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
 
     blueBlockBetween = <%% 1.8, 1.8, 1.8, 1.8, 1.8 %%>;
 
-    titleSize = <%% 28, 27, 27, 25, 4.8 %%>;
+    titleSize = <%% 28, 27, 24, 22, 4.8 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
     titleMarginBottom = <%% 0.1, 0.1, 0.1, 0.1, 0.1 %%>;
 
-    titleEngSize = <%% 16, 16, 16, 16, 2.3 %%>;
+    titleEngSize = <%% 16, 16, 13, 11, 2.3 %%>;
     titleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     imageBoxWidth = <%% 62, 62, 62, 62, 62 %%>;
@@ -3490,14 +3497,11 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
 
     imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    solveBlockHeight = <%% 28, 28, 28, 28, 9.4 %%>;
-    blockBetween = <%% 3, 3, 2, 1, 1.8 %%>;
+    commentsTitleSize = <%% 24, 24, 22, 20, 5.4 %%>;
 
-    commentsTitleSize = <%% 24, 24, 24, 24, 5.4 %%>;
-
-    photoHeight = <%% 247, 221, 247, 247, 68 %%>;
+    photoHeight = <%% 247, 221, 232, 221, 68 %%>;
     photoWidth = <%% 140, 120, 120, 120, 280 %%>;
-    photoBetween = <%% 4, 5, 4, 4, 2.5 %%>;
+    photoBetween = <%% 4, 5, 3.5, 4, 2.5 %%>;
 
     serviceAreaBetween = <%% 24, 24, 24, 24, 24 %%>;
 
@@ -3512,24 +3516,24 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     selectionButtonsBaseMarginBottom = <%% 10, 10, 10, 10, 1.6 %%>;
     selectionButtonsPaddingLeft = <%% 1, 1, 1, 1, 1 %%>;
 
-    selectionButtonsBlockBetween = <%% 10, 10, 10, 10, 3 %%>;
-    selectionButtonsBlockHeight = <%% 20, 20, 20, 20, 3 %%>;
-    selectionButtonsSquareWidth = <%% 10, 10, 10, 10, 2 %%>;
+    selectionButtonsBlockBetween = <%% 10, 10, 8, 6, 3 %%>;
+    selectionButtonsBlockHeight = <%% 20, 20, 16, 14, 3 %%>;
+    selectionButtonsSquareWidth = <%% 10, 10, 8, 8, 2 %%>;
     selectionButtonsSquareRadius = <%% 2, 2, 2, 2, 1 %%>;
     selectionButtonsSquareBetween = <%% 4, 4, 4, 4, 1 %%>;
 
-    selectionButtonsSquareSize = <%% 12, 12, 12, 12, 2.5 %%>;
+    selectionButtonsSquareSize = <%% 12, 12, 11, 10, 2.5 %%>;
     selectionButtonsSquareWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    mainServiceBlockHeight = <%% 245, 235, 230, 225, 52 %%>;
-    mainServiceBlockMarginBottom = <%% 20, 20, 20, 20, 2 %%>;
+    mainServiceBlockHeight = <%% 245, 235, 220, 210, 52 %%>;
+    mainServiceBlockMarginBottom = <%% 20, 20, 18, 17, 2 %%>;
 
     mainServiceBlockDotPointWidth = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
     mainServiceBlockDotPointIndent = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
     mainServiceBlockDotPointOpacity = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
 
-    factorSize = <%% 13, 13, 13, 13, 2.8 %%>;
-    factorTextTop = <%% -0.2, -0.2, -0.2, -0.2, -0.2 %%>;
+    factorSize = <%% 13, 13, 13, 11, 2.8 %%>;
+    factorTextTop = <%% -0.5, -0.5, -0.5, -0.5, -0.2 %%>;
     factorWeight = <%% 600, 600, 600, 600, 600 %%>;
     factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
 
@@ -3538,7 +3542,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     blackLineMarginBottom = <%% 18, 18, 18, 18, 3.8 %%>;
     blackLineStroke = <%% 2, 2, 2, 2, 2 %%>;
 
-    descriptionSize = <%% 16, 16, 16, 16, 3.3 %%>;
+    descriptionSize = <%% 16, 16, 15, 14, 3.3 %%>;
     descriptionWeight = <%% 400, 400, 400, 400, 500 %%>;
     descriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -3557,43 +3561,44 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     blackBlueAreaPaddingTop0 = <%% 9.5, 9.5, 9.5, 9.5, 9.5 %%>;
     blackBlueAreaPaddingTop1 = <%% 11, 11, 11, 11, 11 %%>;
 
-    blueButtonHeight = <%% 32, 30, 30, 30, 8.6 %%>;
-    blueButtonPadding = <%% 21, 20, 20, 20, 7 %%>;
-    blueButtonBetween = <%% 7, 7, 7, 7, 2.5 %%>;
+    blueButtonHeight = <%% 32, 30, 28, 26, 8.6 %%>;
+    blueButtonPadding = <%% 21, 20, 18, 16, 7 %%>;
+    blueButtonBetween = <%% 7, 7, 6, 5, 2.5 %%>;
     blueRightMMargin0 = <%% 30, 30, 30, 30, 6 %%>;
     blueRightMMargin1 = <%% 40, 40, 40, 40, 11 %%>;
 
     blueDotPointWidth = <%% 0.9, 0.9, 0.9, 0.9, 0.9 %%>;
     blueDotPointIndent = <%% 1.2, 1.2, 1.2, 1.2, 1.2 %%>;
 
-    blueSize = <%% 14, 13, 13, 13, 3.4 %%>;
+    blueSize = <%% 14, 13, 12, 11, 3.4 %%>;
     blueWeight = <%% 600, 600, 600, 600, 600 %%>;
     blueTextTop = <%% -0.5, -0.5, -0.5, -0.5, -0.2 %%>;
 
     tableBasePaddingTop = <%% 16, 16, 16, 16, 16 %%>;
     tableBasePaddingBottom = <%% 22, 22, 22, 22, 22 %%>;
 
-    solveBlockPaddingLeft = <%% 17, 17, 17, 17, 0.8 %%>;
+    solveBlockPaddingLeft = <%% 17, 17, 15, 14, 0.8 %%>;
     solveBlockMarginBottom = <%% 5, 7, 5, 5, 6 %%>;
 
-    whiteSquareWidth = <%% 15, 15, 15, 15, 4.8 %%>;
-    whiteSquareTop = <%% 0, -0, -0, -0, -0.5 %%>;
-    whiteSquareLeft = <%% 11, 11, 11, 11, -0.8 %%>;
+    whiteSquareWidth = <%% 15, 15, 14, 13, 4.8 %%>;
+    whiteSquareTop = <%% 0, -0, -1, -1, -0.5 %%>;
+    whiteSquareLeft = <%% 11, 11, 10, 9, -0.8 %%>;
     whiteSquareRadius = <%% 2, 2, 2, 2, 3 %%>;
     whiteSquareOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
 
     solveDescriptionMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
     solveTextTextTop = <%% -0.5, -0.5, -0.5, -0.5, -0.1 %%>;
-    solveTextSize = <%% 12, 11, 11, 10, 3.3 %%>;
+    solveTextSize = <%% 12, 11, 10, 9, 3.3 %%>;
     solveTextWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-    photoZonePaddingTop = <%% 74, 74, 74, 74, 11 %%>;
+    photoZonePaddingTop = <%% 74, 74, 70, 64, 11 %%>;
+    photoZonePaddingBottom = <%% 90, 90, 86, 70, 11 %%>;
 
-    tableTitleBlockWidth = <%% 250, 250, 250, 250, 70 %%>;
-    tableTitleBlockHeight = <%% 37, 37, 37, 37, 11 %%>;
+    tableTitleBlockWidth = <%% 250, 250, 230, 220, 70 %%>;
+    tableTitleBlockHeight = <%% 37, 37, 32, 30, 11 %%>;
 
-    tableTitleSize = <%% 15, 15, 15, 15, 4.4 %%>;
+    tableTitleSize = <%% 15, 15, 14, 13, 4.4 %%>;
     tableTitleWeight = <%% 800, 800, 800, 800, 700 %%>;
     tableTitleTextTop = <%% -0.5, -0.5, -0.5, -0.5, -0.2 %%>;
 
@@ -3601,20 +3606,25 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     tableDescriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
     tableDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
     tableDescriptionMarginTop = <%% 8, 8, 8, 8, 3 %%>;
-    tableDescriptionMarginBottom = <%% 28, 28, 28, 28, 9 %%>;
+    tableDescriptionMarginBottom = <%% 28, 28, 26, 24, 9 %%>;
 
     whiteStandardWidth = <%% 1150, 1050, 900, 720, 100 %%>;
-    totalWidth = <%% 1000, 900, 720, 600, 88 %%>;
+    totalWidth = <%% 1000, 900, 780, 600, 88 %%>;
 
     blackBlueAreaHeight = <%% 80, 80, 80, 80, 8 %%>;
     blackBlueAreaTop = <%% 60, 60, 60, 60, 6 %%>;
-    blackBlueAreaRight = <%% 21, 27, 27, 27, 27 %%>;
+    blackBlueAreaRight = <%% 21, 27, 18, 17, 27 %%>;
     blackBlueFactorBetween = <%% 6, 6, 6, 6, 5 %%>;
 
-    solveEngSize = <%% 13, 13, 13, 12, 3.3 %%>;
+    solveEngSize = <%% 13, 13, 12, 11, 3.3 %%>;
 
-    minusLeft = <%% -53, -49, -49, -49, -53 %%>;
+    minusLeft = <%% -53, -49, -41, -41, -53 %%>;
     desktopSolveMarginLeft = <%% 40, 24, 24, 20, 2 %%>;
+
+    solveListAreaTop = <%% 71, 71, 69, 67, 7 %%>;
+    solveListAreaWidth = <%% 400, 380, 320, 300, 30 %%>;
+    solveBlockHeight = <%% 28, 28, 26, 25, 9.4 %%>;
+    blockBetween = <%% 3, 3, 2, 1, 1.8 %%>;
 
     ratioConst = 72;
 
@@ -4401,12 +4411,12 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
         style: {
           display: desktop ? "block" : "flex",
           position: desktop ? "absolute" : "relative",
-          width: desktop ? String(400) + ea : withOut(0, ea),
+          width: desktop ? String(solveListAreaWidth) + ea : withOut(0, ea),
           right: desktop ? String(blackBlueAreaRight) + ea : "",
           justifyContent: desktop ? "" : "end",
           alignItems: desktop ? "" : "end",
           flexDirection: desktop ? "" : "column",
-          top: desktop ? String(71) + ea : "",
+          top: desktop ? String(solveListAreaTop) + ea : "",
           paddingTop: desktop ? "" : String(bigMargin) + ea,
           textAlign: desktop ? "right" : "",
         }
@@ -4494,7 +4504,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           flexDirection: "column",
           height: String(photoHeight) + ea,
           paddingTop: String(photoZonePaddingTop) + ea,
-          paddingBottom: String(desktop ? 90 : serviceAreaBetween) + ea,
+          paddingBottom: String(desktop ? photoZonePaddingBottom : serviceAreaBetween) + ea,
         },
       });
       createNode({
@@ -4563,7 +4573,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
                   mode: "img",
                   attribute: { src: c.solve.images[3] },
                   style: {
-                    display: "inline-block",
+                    display: (media[2] || media[3]) ? "none" : "inline-block",
                     height: String(photoHeight) + ea,
                     borderRadius: String(photoRadius) + "px",
                   }
