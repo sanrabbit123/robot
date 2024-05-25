@@ -566,7 +566,7 @@ FrontIndexJs.prototype.insertInitBox = async function () {
         border: "2px solid " + colorExtended.black,
         boxSizing: "border-box",
         transform: "translateY(30px)",
-        animation: "1.2s ease 0.8s 1 normal forwards running fadeupdelay2",
+        animation: desktop ? "1.2s ease 0.8s 1 normal forwards running fadeupdelay2" : "1.2s ease 0s 1 normal forwards running fadeupdelay2",
         zIndex: String(1),
       },
       children: [
@@ -647,7 +647,7 @@ FrontIndexJs.prototype.insertInitBox = async function () {
         border: "2px solid " + colorExtended.black,
         boxSizing: "border-box",
         transform: "translateY(30px)",
-        animation: "1.2s ease 1s 1 normal forwards running fadeupdelay2",
+        animation: desktop ? "1.2s ease 1s 1 normal forwards running fadeupdelay2" : "1.2s ease 0s 1 normal forwards running fadeupdelay2",
         zIndex: String(1),
       },
       children: [
@@ -805,7 +805,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
 
     blueBlockBetween = <%% 6, 5, 4, 4, 1.8 %%>;
 
-    titleSize = <%% 23, 20, 20, 20, 5 %%>;
+    titleSize = <%% 23, 21, 20, 20, 5 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     titleEngSize = <%% 11, 10, 9, 8, 2.7 %%>;
@@ -831,7 +831,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     moreArrowVisualLeft = <%% 1, 1, 1, 1, 0.2 %%>;
     moreArrowWidth = <%% 4, 4, 3, 3, 1 %%>;
 
-    buttonHeight = <%% 40, 36, 32, 28, 8.8 %%>;
+    buttonHeight = <%% 40, 34, 32, 28, 8.8 %%>;
 
     multipleConst = <%% 6, 6, 6, 6, 6 %%>;
 
@@ -2024,30 +2024,31 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     let phoneTop, phoneWidth, phoneHeight;
     let visualDescriptionPaddingBottom;
     let whitePadding;
+    let supportWidth, supportTop;
 
     boxRadius = <%% 15, 15, 15, 15, 15 %%>;
-    boxRadiusBig = <%% 24, 24, 24, 20, 20 %%>;
+    boxRadiusBig = <%% 24, 24, 24, 24, 20 %%>;
     boxRadiusSmall = <%% 2, 2, 2, 2, 2 %%>;
 
     moreAreaHeight = <%% 12, 12, 12, 12, 12 %%>;
     mobileMargin = <%% 6, 6, 6, 6, 6 %%>;
     slimMargin = <%% 3, 3, 3, 3, 3 %%>;
 
-    topBottomMargin = <%% 24, 14, 14, 14, 14 %%>;
-    topBottomMarginBig = <%% 100, 14, 14, 14, 14 %%>;
+    topBottomMargin = <%% 24, 24, 24, 24, 14 %%>;
+    topBottomMarginBig = <%% 100, 100, 100, 100, 14 %%>;
 
     baseModuleHeight = <%% 97, 97, 97, 97, 97 %%>;
     baseModuleHeight2 = <%% 112, 112, 112, 112, 112 %%>;
     finalModuleHeight = <%% 90, 90, 90, 90, 90 %%>;
 
-    descriptionMarginTop = <%% 24, 8, 8, 8, 8 %%>;
-    descriptionMarginTop2 = <%% 24, 11, 11, 11, 11 %%>;
-    descriptionMarginTop3 = <%% 24, 3, 3, 3, 3 %%>;
+    descriptionMarginTop = <%% 24, 24, 24, 24, 8 %%>;
+    descriptionMarginTop2 = <%% 24, 24, 24, 24, 11 %%>;
+    descriptionMarginTop3 = <%% 24, 24, 24, 24, 3 %%>;
     imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    title0Size = <%% 33, 5, 5, 5, 5 %%>;
-    title1Size = <%% 33, 4.8, 4.8, 4.8, 4.8 %%>;
-    title0Weight = <%% 700, 600, 600, 600, 600 %%>;
+    title0Size = <%% 33, 28, 26, 26, 5 %%>;
+    title1Size = <%% 33, 28, 26, 26, 4.8 %%>;
+    title0Weight = <%% 700, 700, 700, 700, 600 %%>;
     title0LineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
     title1LineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
@@ -2056,14 +2057,14 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     line1Width = <%% 18, 18, 18, 18, 18 %%>;
     line2Width = <%% 27, 27, 27, 27, 27 %%>;
 
-    mainImageWidth = <%% 450, 73, 73, 73, 73 %%>;
-    mainImageTop = <%% -120, -135, -135, -135, -135 %%>;
-    descriptionSize = <%% 17, 3.4, 3.4, 3.4, 3.4 %%>;
-    descriptionWeight = <%% 300, 600, 600, 600, 600 %%>;
+    mainImageWidth = <%% 450, 405, 405, 405, 73 %%>;
+    mainImageTop = <%% -120, -104, -104, -108, -135 %%>;
+    descriptionSize = <%% 17, 16, 15, 15, 3.4 %%>;
+    descriptionWeight = <%% 300, 300, 300, 300, 600 %%>;
     descriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
     descriptionLineHeight2 = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-    image1Width = <%% 350, 45, 45, 45, 45 %%>;
+    image1Width = <%% 350, 350, 350, 350, 45 %%>;
     image1VisualLeft = <%% 2, 2, 2, 2, 2 %%>;
     image1Between = <%% 3.6, 3.6, 3.6, 3.6, 3.6 %%>;
     image1TextTop = <%% -5, -5, -5, -5, -5 %%>;
@@ -2074,17 +2075,20 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
 
     totalBlockPaddingTop = <%% 140, 130, 120, 110, 140 %%>;
     totalBlockPaddingBottom = <%% 30, 20, 10, 10, 130 %%>;
-    boxInnerPadding = <%% 130, 45, 45, 45, 45 %%>;
-    boxInnerPaddingTop = <%% 90, 60, 60, 60, 60 %%>;
+    boxInnerPadding = <%% 130, 108, 100, 80, 45 %%>;
+    boxInnerPaddingTop = <%% 90, 70, 70, 70, 60 %%>;
 
-    secondAreaTextPaddingLeft = 830;
-    visualDescriptionPaddingBottom = 10;
+    secondAreaTextPaddingLeft = <%% 830, 610, 610, 610, 830 %%>;
+    visualDescriptionPaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
 
-    whitePadding = 150;
+    whitePadding = <%% 150, 110, 100, 90, 150 %%>;
 
-    phoneTop = -110;
-    phoneWidth = 350;
-    phoneHeight = 730;
+    phoneTop = <%% -110, -110, -110, -110, -110 %%>;
+    phoneWidth = <%% 350, 304, 300, 300, 350 %%>;
+    phoneHeight = <%% 730, 640, 640, 640, 730 %%>;
+
+    supportWidth = <%% 470, 420, 420, 420, 44 %%>;
+    supportTop = <%% 90, 76, 76, 70, 7 %%>;
 
     if (desktop) {
       baseMother = createNode({
@@ -2904,9 +2908,9 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
         style: {
           display: "inline-block",
           position: "absolute",
-          width: String(470) + ea,
+          width: String(supportWidth) + ea,
           left: String(boxInnerPadding) + ea,
-          top: String(90) + ea,
+          top: String(supportTop) + ea,
           zIndex: String(2),
         }
       });
@@ -3028,49 +3032,49 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
     boxRadiusBig = <%% 20, 20, 20, 20, 20 %%>;
     boxRadiusSmall = <%% 2, 2, 2, 2, 2 %%>;
 
-    moreAreaHeight = <%% 36, 12, 12, 12, 12 %%>;
+    moreAreaHeight = <%% 36, 36, 36, 36, 12 %%>;
     mobileMargin = <%% 6, 6, 6, 6, 6 %%>;
     slimMargin = <%% 3, 3, 3, 3, 3 %%>;
 
     topBottomMargin = <%% 14, 14, 14, 14, 14 %%>;
 
-    descriptionMarginTop = <%% 16, 3, 3, 3, 3 %%>;
+    descriptionMarginTop = <%% 16, 12, 12, 12, 3 %%>;
     imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    title1Size = <%% 29, 4.8, 4.8, 4.8, 4.8 %%>;
+    title1Size = <%% 29, 27, 26, 26, 4.8 %%>;
     title0Weight = <%% 600, 600, 600, 600, 600 %%>;
     title1LineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-    descriptionSize = <%% 16, 3.4, 3.4, 3.4, 3.4 %%>;
+    descriptionSize = <%% 16, 15, 14, 13, 3.4 %%>;
     descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
     descriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-    buttonSize = <%% 17, 3.5, 3.5, 3.5, 3.5 %%>;
-    buttonWeight = <%% 700, 600, 600, 600, 600 %%>;
+    buttonSize = <%% 17, 17, 17, 17, 3.5 %%>;
+    buttonWeight = <%% 700, 700, 700, 700, 600 %%>;
     buttonLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-    buttonTextTop = <%% -1, -0.1, -0.1, -0.1, -0.1 %%>;
-    buttonHeight = <%% 48, 11, 11, 11, 11 %%>;
-    buttonWidth = 300;
+    buttonTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
+    buttonHeight = <%% 48, 48, 48, 48, 11 %%>;
+    buttonWidth = <%% 300, 366, 366, 366, 3 %%>;
 
-    commentsWidth = <%% 120, 23, 23, 23, 23 %%>;
-    commentsHeight = <%% 28, 6.6, 6.6, 6.6, 6.6 %%>;
+    commentsWidth = <%% 120, 120, 120, 120, 23 %%>;
+    commentsHeight = <%% 28, 28, 28, 28, 6.6 %%>;
     commentsRadius = <%% 5, 5, 5, 5, 5 %%>;
-    commentsTop = <%% -34, -7.6, -7.6, -7.6, -7.6 %%>;
-    commentsSize = <%% 12, 2.5, 2.5, 2.5, 2.5 %%>;
+    commentsTop = <%% -34, -34, -34, -34, -7.6 %%>;
+    commentsSize = <%% 12, 12, 12, 12, 2.5 %%>;
     commentsWeight = <%% 700, 700, 700, 700, 700 %%>;
     commentsLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-    commentsTextTop = <%% -1, -0.1, -0.1, -0.1, -0.1 %%>;
-    commentsTriangleWidth = <%% 10, 2.6, 2.6, 2.6, 2.6 %%>;
-    commentsTriangleTop = <%% 27, 6.2, 6.2, 6.2, 6.2 %%>;
+    commentsTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
+    commentsTriangleWidth = <%% 10, 10, 10, 10, 2.6 %%>;
+    commentsTriangleTop = <%% 27, 27, 27, 27, 6.2 %%>;
 
-    lastMoreWidth = <%% 96, 17, 17, 17, 17 %%>;
-    lastMoreHeight = <%% 36, 7, 7, 7, 7 %%>;
-    lastMoreTop = <%% -260, -26, -26, -26, -26 %%>;
+    lastMoreWidth = <%% 96, 96, 96, 96, 17 %%>;
+    lastMoreHeight = <%% 36, 36, 36, 36, 7 %%>;
+    lastMoreTop = <%% -260, -260, -260, -260, -26 %%>;
     lastMoreRadius = <%% 7, 7, 7, 7, 7 %%>;
-    lastMoreSize = <%% 16, 3, 3, 3, 3 %%>;
+    lastMoreSize = <%% 16, 16, 16, 16, 3 %%>;
     lastMoreWeight = <%% 700, 700, 700, 700, 700 %%>;
     lastMoreLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-    lastMoreTextTop = <%% -1, -0.1, -0.1, -0.1, -0.1 %%>;
+    lastMoreTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
 
     baseHeight = lastMode ? 42 : 92;
     buttonMarginTop = lastMode ? 1 : 16;
@@ -3447,6 +3451,10 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
     let blackBlueAreaRight;
     let blackBlueFactorBetween;
     let solveEngSize;
+    let whiteStandardWidth;
+    let minusLeft;
+    let desktopSolveSize;
+    let desktopSolveMarginLeft;
 
     boxRadius = <%% 15, 15, 15, 15, 15 %%>;
     photoRadius = <%% 8, 8, 8, 8, 8 %%>;
@@ -3469,11 +3477,11 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
 
     blueBlockBetween = <%% 1.8, 1.8, 1.8, 1.8, 1.8 %%>;
 
-    titleSize = <%% 28, 4.8, 4.8, 4.8, 4.8 %%>;
+    titleSize = <%% 28, 27, 27, 25, 4.8 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
     titleMarginBottom = <%% 0.1, 0.1, 0.1, 0.1, 0.1 %%>;
 
-    titleEngSize = <%% 16, 2.3, 2.3, 2.3, 2.3 %%>;
+    titleEngSize = <%% 16, 16, 16, 16, 2.3 %%>;
     titleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
 
     imageBoxWidth = <%% 62, 62, 62, 62, 62 %%>;
@@ -3482,131 +3490,136 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
 
     imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    solveBlockHeight = <%% 28, 9.4, 9.4, 9.4, 9.4 %%>;
-    blockBetween = <%% 3, 1.8, 1.8, 1.8, 1.8 %%>;
+    solveBlockHeight = <%% 28, 28, 28, 28, 9.4 %%>;
+    blockBetween = <%% 3, 3, 2, 1, 1.8 %%>;
 
-    commentsTitleSize = <%% 24, 27, 26, 24, 5.4 %%>;
+    commentsTitleSize = <%% 24, 24, 24, 24, 5.4 %%>;
 
-    photoHeight = <%% 247, 68, 68, 68, 68 %%>;
-    photoWidth = <%% 140, 140, 140, 140, 280 %%>;
-    photoBetween = <%% 4, 2.5, 2.5, 2.5, 2.5 %%>;
+    photoHeight = <%% 247, 221, 247, 247, 68 %%>;
+    photoWidth = <%% 140, 120, 120, 120, 280 %%>;
+    photoBetween = <%% 4, 5, 4, 4, 2.5 %%>;
 
     serviceAreaBetween = <%% 24, 24, 24, 24, 24 %%>;
 
-    middleMargin = <%% 45, 8, 8, 8, 8 %%>;
-    bigMargin = <%% 45, 12, 12, 12, 12 %%>;
-    tableFactorHeight = <%% 36, 8.2, 8.2, 8.2, 8.2 %%>;
-    factorBetween = <%% 3, 0.4, 0.4, 0.4, 0.4 %%>;
-    tableFactorWidth0 = <%% 150, 11.5, 11.5, 11.5, 11.5 %%>;
+    middleMargin = <%% 45, 45, 45, 45, 8 %%>;
+    bigMargin = <%% 45, 45, 45, 45, 12 %%>;
+    tableFactorHeight = <%% 36, 36, 36, 36, 8.2 %%>;
+    factorBetween = <%% 3, 3, 3, 3, 0.4 %%>;
+    tableFactorWidth0 = <%% 150, 150, 150, 150, 11.5 %%>;
     tableFactorWidth1 = (standardWidth - tableFactorWidth0 - (factorBetween * 3)) / 3;
 
     secondBasePaddingTop = <%% 4, 4, 4, 4, 4 %%>;
-    selectionButtonsBaseMarginBottom = <%% 10, 1.6, 1.6, 1.6, 1.6 %%>;
+    selectionButtonsBaseMarginBottom = <%% 10, 10, 10, 10, 1.6 %%>;
     selectionButtonsPaddingLeft = <%% 1, 1, 1, 1, 1 %%>;
 
-    selectionButtonsBlockBetween = <%% 10, 3, 3, 3, 3 %%>;
-    selectionButtonsBlockHeight = <%% 20, 3, 3, 3, 3 %%>;
-    selectionButtonsSquareWidth = <%% 10, 2, 2, 2, 2 %%>;
-    selectionButtonsSquareRadius = <%% 2, 1, 1, 1, 1 %%>;
-    selectionButtonsSquareBetween = <%% 4, 1, 1, 1, 1 %%>;
+    selectionButtonsBlockBetween = <%% 10, 10, 10, 10, 3 %%>;
+    selectionButtonsBlockHeight = <%% 20, 20, 20, 20, 3 %%>;
+    selectionButtonsSquareWidth = <%% 10, 10, 10, 10, 2 %%>;
+    selectionButtonsSquareRadius = <%% 2, 2, 2, 2, 1 %%>;
+    selectionButtonsSquareBetween = <%% 4, 4, 4, 4, 1 %%>;
 
-    selectionButtonsSquareSize = <%% 12, 2.5, 2.5, 2.5, 2.5 %%>;
+    selectionButtonsSquareSize = <%% 12, 12, 12, 12, 2.5 %%>;
     selectionButtonsSquareWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    mainServiceBlockHeight = <%% 245, 245, 240, 240, 52 %%>;
-    mainServiceBlockMarginBottom = <%% 20, 2, 2, 2, 2 %%>;
+    mainServiceBlockHeight = <%% 245, 235, 230, 225, 52 %%>;
+    mainServiceBlockMarginBottom = <%% 20, 20, 20, 20, 2 %%>;
 
     mainServiceBlockDotPointWidth = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
     mainServiceBlockDotPointIndent = <%% 2.5, 2.5, 2.5, 2.5, 2.5 %%>;
     mainServiceBlockDotPointOpacity = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
 
-    factorSize = <%% 13, 2.8, 2.8, 2.8, 2.8 %%>;
+    factorSize = <%% 13, 13, 13, 13, 2.8 %%>;
     factorTextTop = <%% -0.2, -0.2, -0.2, -0.2, -0.2 %%>;
     factorWeight = <%% 600, 600, 600, 600, 600 %%>;
     factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-    blackLineWidth = <%% 56, 28, 28, 28, 28 %%>;
-    blackLineHeight = <%% 15, 3.6, 3.6, 3.6, 3.6 %%>;
-    blackLineMarginBottom = <%% 18, 3.8, 3.8, 3.8, 3.8 %%>;
+    blackLineWidth = <%% 56, 56, 56, 56, 28 %%>;
+    blackLineHeight = <%% 15, 15, 15, 15, 3.6 %%>;
+    blackLineMarginBottom = <%% 18, 18, 18, 18, 3.8 %%>;
     blackLineStroke = <%% 2, 2, 2, 2, 2 %%>;
 
-    descriptionSize = <%% 16, 3.3, 3.3, 3.3, 3.3 %%>;
-    descriptionWeight = <%% 400, 500, 500, 500, 500 %%>;
+    descriptionSize = <%% 16, 16, 16, 16, 3.3 %%>;
+    descriptionWeight = <%% 400, 400, 400, 400, 500 %%>;
     descriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-    blackBackTop = <%% -140, -20, -20, -20, -20 %%>;
+    blackBackTop = <%% -140, -140, -140, -140, -20 %%>;
     blackBackRadius = <%% 8, 8, 8, 8, 8 %%>;
 
-    quotePaddingLeft = <%% 5, 0.8, 0.8, 0.8, 0.8 %%>;
-    quoteMarginBottom = <%% 5, 2, 2, 2, 2 %%>;
-    quoteWidth = <%% 13, 3, 3, 3, 3 %%>;
+    quotePaddingLeft = <%% 5, 5, 5, 5, 0.8 %%>;
+    quoteMarginBottom = <%% 5, 5, 5, 5, 2 %%>;
+    quoteWidth = <%% 13, 13, 13, 13, 3 %%>;
 
     titleVisualPaddingBottom = <%% 42, 42, 42, 42, 4 %%>;
 
-    commentsTitleWeight = <%% 300, 600, 600, 600, 600 %%>;
+    commentsTitleWeight = <%% 300, 300, 300, 300, 600 %%>;
     commentsTitleLineHeight = <%% 1.44, 1.44, 1.44, 1.44, 1.44 %%>;
 
     blackBlueAreaPaddingTop0 = <%% 9.5, 9.5, 9.5, 9.5, 9.5 %%>;
     blackBlueAreaPaddingTop1 = <%% 11, 11, 11, 11, 11 %%>;
 
-    blueButtonHeight = <%% 32, 8.6, 8.6, 8.6, 8.6 %%>;
-    blueButtonPadding = <%% 21, 7, 7, 7, 7 %%>;
-    blueButtonBetween = <%% 7, 2.5, 2.5, 2.5, 2.5 %%>;
-    blueRightMMargin0 = <%% 30, 6, 6, 6, 6 %%>;
-    blueRightMMargin1 = <%% 40, 11, 11, 11, 11 %%>;
+    blueButtonHeight = <%% 32, 30, 30, 30, 8.6 %%>;
+    blueButtonPadding = <%% 21, 20, 20, 20, 7 %%>;
+    blueButtonBetween = <%% 7, 7, 7, 7, 2.5 %%>;
+    blueRightMMargin0 = <%% 30, 30, 30, 30, 6 %%>;
+    blueRightMMargin1 = <%% 40, 40, 40, 40, 11 %%>;
 
     blueDotPointWidth = <%% 0.9, 0.9, 0.9, 0.9, 0.9 %%>;
     blueDotPointIndent = <%% 1.2, 1.2, 1.2, 1.2, 1.2 %%>;
 
-    blueSize = <%% 14, 3.4, 3.4, 3.4, 3.4 %%>;
+    blueSize = <%% 14, 13, 13, 13, 3.4 %%>;
     blueWeight = <%% 600, 600, 600, 600, 600 %%>;
-    blueTextTop = <%% -0.5, -0.2, -0.2, -0.2, -0.2 %%>;
+    blueTextTop = <%% -0.5, -0.5, -0.5, -0.5, -0.2 %%>;
 
     tableBasePaddingTop = <%% 16, 16, 16, 16, 16 %%>;
     tableBasePaddingBottom = <%% 22, 22, 22, 22, 22 %%>;
 
-    solveBlockPaddingLeft = <%% 17, 0.8, 0.8, 0.8, 0.8 %%>;
-    solveBlockMarginBottom = <%% 5, 5, 5, 5, 6 %%>;
+    solveBlockPaddingLeft = <%% 17, 17, 17, 17, 0.8 %%>;
+    solveBlockMarginBottom = <%% 5, 7, 5, 5, 6 %%>;
 
-    whiteSquareWidth = <%% 15, 4.8, 4.8, 4.8, 4.8 %%>;
-    whiteSquareTop = <%% 0, -0.5, -0.5, -0.5, -0.5 %%>;
-    whiteSquareLeft = <%% 11, -0.8, -0.8, -0.8, -0.8 %%>;
-    whiteSquareRadius = <%% 2, 3, 3, 3, 3 %%>;
+    whiteSquareWidth = <%% 15, 15, 15, 15, 4.8 %%>;
+    whiteSquareTop = <%% 0, -0, -0, -0, -0.5 %%>;
+    whiteSquareLeft = <%% 11, 11, 11, 11, -0.8 %%>;
+    whiteSquareRadius = <%% 2, 2, 2, 2, 3 %%>;
     whiteSquareOpacity = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
 
     solveDescriptionMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    solveTextTextTop = <%% -0.5, -0.1, -0.1, -0.1, -0.1 %%>;
-    solveTextSize = <%% 12, 3.3, 3.3, 3.3, 3.3 %%>;
+    solveTextTextTop = <%% -0.5, -0.5, -0.5, -0.5, -0.1 %%>;
+    solveTextSize = <%% 12, 11, 11, 10, 3.3 %%>;
     solveTextWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-    photoZonePaddingTop = <%% 74, 11, 11, 11, 11 %%>;
+    photoZonePaddingTop = <%% 74, 74, 74, 74, 11 %%>;
 
-    tableTitleBlockWidth = <%% 250, 70, 70, 70, 70 %%>;
-    tableTitleBlockHeight = <%% 37, 11, 11, 11, 11 %%>;
+    tableTitleBlockWidth = <%% 250, 250, 250, 250, 70 %%>;
+    tableTitleBlockHeight = <%% 37, 37, 37, 37, 11 %%>;
 
-    tableTitleSize = <%% 15, 4.4, 4.4, 4.4, 4.4 %%>;
-    tableTitleWeight = <%% 800, 700, 700, 700, 700 %%>;
-    tableTitleTextTop = <%% -0.5, -0.2, -0.2, -0.2, -0.2 %%>;
+    tableTitleSize = <%% 15, 15, 15, 15, 4.4 %%>;
+    tableTitleWeight = <%% 800, 800, 800, 800, 700 %%>;
+    tableTitleTextTop = <%% -0.5, -0.5, -0.5, -0.5, -0.2 %%>;
 
-    tableDescriptionSize = <%% 14, 3.3, 3.3, 3.3, 3.3 %%>;
+    tableDescriptionSize = <%% 14, 14, 14, 14, 3.3 %%>;
     tableDescriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
     tableDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-    tableDescriptionMarginTop = <%% 8, 3, 3, 3, 3 %%>;
-    tableDescriptionMarginBottom = <%% 28, 9, 9, 9, 9 %%>;
+    tableDescriptionMarginTop = <%% 8, 8, 8, 8, 3 %%>;
+    tableDescriptionMarginBottom = <%% 28, 28, 28, 28, 9 %%>;
 
+    whiteStandardWidth = <%% 1150, 1050, 900, 720, 100 %%>;
     totalWidth = <%% 1000, 900, 720, 600, 88 %%>;
 
     blackBlueAreaHeight = <%% 80, 80, 80, 80, 8 %%>;
-    blackBlueAreaTop = <%% 60, 67, 67, 67, 6 %%>;
-    blackBlueAreaRight = <%% 21, 23, 23, 23, 23 %%>;
-    blackBlueFactorBetween = <%% 6, 5, 5, 5, 5 %%>;
+    blackBlueAreaTop = <%% 60, 60, 60, 60, 6 %%>;
+    blackBlueAreaRight = <%% 21, 27, 27, 27, 27 %%>;
+    blackBlueFactorBetween = <%% 6, 6, 6, 6, 5 %%>;
 
     solveEngSize = <%% 13, 13, 13, 12, 3.3 %%>;
+
+    minusLeft = <%% -53, -49, -49, -49, -53 %%>;
+    desktopSolveMarginLeft = <%% 40, 24, 24, 20, 2 %%>;
 
     ratioConst = 72;
 
     mainBoxPaddingBottomVisual = <%% 6, 6, 5, 4, 0 %%>;
+    desktopSolveSize = <%% 14, 13, 13, 12, 1 %%>;
 
     if (secondBaseMother === null || typeof secondBaseMother !== "object") {
       secondBaseMother = baseTong;
@@ -4055,9 +4068,9 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           child: {
             style: {
               position: "absolute",
-              left: String(-1 * ((window.innerWidth - standardWidth) / 2) - 1) + ea,
+              left: String(minusLeft) + ea,
               background: colorExtended.black,
-              width: "calc(100vw + 1px)",
+              width: String(whiteStandardWidth + 1) + ea,
               height: withOut(blackBackTop, ea),
               top: String(blackBackTop) + ea,
             }
@@ -4265,9 +4278,9 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             style: {
               display: "block",
               top: String(0) + ea,
-              left: String(-1 * ((window.innerWidth - standardWidth) / 2) - 1) + ea,
+              left: String(minusLeft) + ea,
               position: "absolute",
-              width: "calc(100vw + 1px)",
+              width: String(whiteStandardWidth + 1) + ea,
               height: withOut(0, ea),
               background: colorExtended.white,
             },
@@ -4275,9 +4288,9 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
               style: {
                 display: "block",
                 top: String(0) + ea,
-                left: String(-1 * ((window.innerWidth - standardWidth) / 2) - 1) + ea,
+                left: String(minusLeft) + ea,
                 position: "absolute",
-                width: "calc(100vw + 1px)",
+                width: String(whiteStandardWidth + 1) + ea,
                 height: withOut(0, ea),
                 background: colorExtended.mainBlue,
                 opacity: String(thisBlueOpacity),
@@ -4351,7 +4364,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
             style: {
               display: mobile ? "none" : "inline-block",
               position: "relative",
-              fontSize: String(desktop ? 14 : descriptionSize) + ea,
+              fontSize: String(desktop ? desktopSolveSize : descriptionSize) + ea,
               fontWeight: String(500),
               fontFamily: "pretendard",
               color: colorExtended.darkBlack,
@@ -4359,7 +4372,7 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
               textAlign: "left",
               marginTop: String(solveDescriptionMarginTop) + ea,
               marginBottom: String(3) + ea,
-              marginLeft: String(40) + ea,
+              marginLeft: String(desktopSolveMarginLeft) + ea,
             }
           }
         }
@@ -4610,9 +4623,9 @@ FrontIndexJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           style: {
             display: "block",
             top: String(0) + ea,
-            left: String(-1 * ((window.innerWidth - standardWidth) / 2) - 1) + ea,
+            left: String(minusLeft) + ea,
             position: "absolute",
-            width: "calc(100vw + 1px)",
+            width: String(whiteStandardWidth + 1) + ea,
             height: withOut(0, ea),
             background: colorExtended.blueWhiteWhiteBack,
           }
