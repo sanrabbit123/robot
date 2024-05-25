@@ -114,6 +114,31 @@ FrontIndexJs.prototype.insertInitBox = async function () {
     let scaleConst;
     let imageMarginTop;
     let imageMarginLeft;
+    let mainIllustSvg;
+    let titleVisualBottom;
+
+    mainIllustSvg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 548.4656 387.8559">
+    <defs>
+      <linearGradient id="Gradient1" x1="0" x2="-1" y1="-1" y2="0">
+        <stop class="stop1" offset="0%" />
+        <stop class="stop2" offset="25%" />
+        <stop class="stop3" offset="100%" />
+      </linearGradient>
+    <style>
+      .stop1 {
+        stop-color: rgba(127,159,185,0.8);
+      }
+      .stop2 {
+        stop-color: rgba(155,189,209,0.8);
+      }
+      .stop3 {
+        stop-color: rgba(200,218,227,0.6);
+      }
+    </style>
+    </defs>
+    <path fill="url(#Gradient1)" d="M413.7049,55.4116c-10.3407-9.0132-78.7193-40.516-155.9485-12.1091-33.9044,12.4709-73.1454,34.1793-108.2269,51.4999-35.0815,17.3206-52.0337,38.7982-56.978,69.5693-4.2638,26.5353-.641,45.1678,11.1047,71.7108.7096-.9911,28.7903,44.5062,74.0373,72.7254,35.4917,22.1351,115.0259,40.2577,154.5627,29.7529,37.8094-10.0459,82.9747-41.223,109.4625-85.5637,26.5447-44.4361,32.1472-145.1479-28.0138-197.5854Z"/>
+    </svg>`;
 
     minusLeft = window.innerWidth - standardWidth;
     leftRightWidth = (window.innerWidth - standardWidth) / 2;
@@ -124,15 +149,15 @@ FrontIndexJs.prototype.insertInitBox = async function () {
     subTitleSize = <%% 21, 18, 17, 15, 4.2 %%>;
     subTitleWeight = desktop ? 300 : 400;
 
-    titleSize = <%% 38, 48, 43, 36, 7 %%>;
+    titleSize = <%% 38, 35, 32, 30, 7 %%>;
     titleWeight = desktop ? 800 : 700;
 
-    mainImageWidth = <%% 590, 300, 300, 300, 59 %%>;
-    subTitleBlockMarginTop = <%% 10, 10, 10, 10, 2.6 %%>;
+    mainImageWidth = <%% 590, 475, 450, 450, 59 %%>;
+    subTitleBlockMarginTop = <%% 10, 9, 9, 8, 2.6 %%>;
     imageBlockMarginTop = 6.5;
-    boxBlock0MarginTop = <%% 50, 24, 24, 24, 13 %%>;
+    boxBlock0MarginTop = <%% 50, 50, 50, 50, 13 %%>;
     boxBlock1MarginTop = <%% 6, 6, 6, 6, 2 %%>;
-    boxBlockHeight = <%% 90, 100, 80, 80, 20 %%>;
+    boxBlockHeight = <%% 90, 82, 80, 76, 20 %%>;
 
     titleLineBoxWidthVisual = -1.2;
     titleLineBoxHeight = <%% 8, 8, 8, 8, 3 %%>;
@@ -146,12 +171,12 @@ FrontIndexJs.prototype.insertInitBox = async function () {
 
     boxRadius = 15;
     
-    stepSize = <%% 17, 17, 17, 17, 4 %%>;
+    stepSize = <%% 17, 16, 16, 15, 4 %%>;
     stepWeight = 500;
     stepBoldWeight = 800;
     stepTextTop = -0.1;
 
-    stepEngSize = <%% 18, 18, 18, 18, 4.5 %%>;
+    stepEngSize = <%% 18, 17, 17, 16, 4.5 %%>;
     stepEngWeight = 700;
     stepEngTextTop = <%% 0.5, 0.5, 0.5, 0.5, 0.1 %%>;
     stepEngMarginRight = <%% 8, 8, 8, 8, 4.2 %%>;
@@ -161,17 +186,20 @@ FrontIndexJs.prototype.insertInitBox = async function () {
 
     paddingVisual = 15;
 
-    initAreaHeight = 700;
+    initAreaHeight = <%% 700, 620, 600, 540, 54 %%>;
 
-    boxWidth = 450;
+    boxWidth = <%% 450, 420, 410, 400, 40 %%>;
 
-    titleX = 100;
-    titleY = 160;
+    titleX = <%% 100, 0, 0, 0, 0 %%>;
+    titleY = <%% 160, 150, 140, 130, 160 %%>;
 
     scaleConst = 1;
 
-    imageMarginTop = 11;
-    imageMarginLeft = 64;
+    imageMarginTop = <%% 11, 8, 8, 7, 10 %%>;
+    imageMarginLeft = <%% 64, 50, 50, 50, 50 %%>;
+
+    titleVisualTop = <%% 6, 3, 3, 3, 1 %%>;
+    titleVisualBottom = <%% 8, 4, 4, 4, 8 %%>;
 
     if (media[0] && window.innerHeight > 1100) {
       initAreaHeight = 780;
@@ -274,8 +302,8 @@ FrontIndexJs.prototype.insertInitBox = async function () {
           animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
           paddingLeft: String(4) + ea,
           paddingRight: String(4) + ea,
-          paddingTop: desktop ? String(6) + ea : "",
-          paddingBottom: desktop ? String(8) + ea : "",
+          paddingTop: desktop ? String(titleVisualTop) + ea : "",
+          paddingBottom: desktop ? String(titleVisualBottom) + ea : "",
           borderRadius: desktop ? String(15) + ea : "",
           overflow: "hidden",
           transition: "all 0.3s ease",
@@ -304,8 +332,6 @@ FrontIndexJs.prototype.insertInitBox = async function () {
               fontWeight: String(titleWeight),
               color: colorExtended.black,
               fontFamily: "pretendard",
-              top: desktop ? String(titleVisualTop) + ea : "",
-              left: desktop ? String(titleVisualLeft) + ea : "",
               lineHeight: String(titleLineHeight),
               opacity: String(1),
             },
@@ -496,30 +522,8 @@ FrontIndexJs.prototype.insertInitBox = async function () {
         },
         children: [
           {
-            style: {
-              display: "inline-flex",
-              position: "absolute",
-              width: String(mainImageWidth) + ea,
-              height: String(438) + ea,
-              marginTop: String(imageMarginTop) + ea,
-              marginLeft: String(imageMarginLeft) + ea,
-              "clip-path": "url(#myClip)",
-              justifyContent: "center",
-              alignItems: "center",
-            },
-            child: {
-              style: {
-                position: "gradientBlue8",
-                background: colorExtended.gradientBlue8,
-                width: String(125) + '%',
-                "aspect-ratio": "1 / 1",
-                animation: "rotateProgress2 5s linear infinite",
-              }
-            }
-          },
-          {
             mode: "svg",
-            source: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 548.4656 387.8559"><defs><clipPath id="myClip"><path d="M413.7049,55.4116c-10.3407-9.0132-78.7193-40.516-155.9485-12.1091-33.9044,12.4709-73.1454,34.1793-108.2269,51.4999-35.0815,17.3206-52.0337,38.7982-56.978,69.5693-4.2638,26.5353-.641,45.1678,11.1047,71.7108.7096-.9911,28.7903,44.5062,74.0373,72.7254,35.4917,22.1351,115.0259,40.2577,154.5627,29.7529,37.8094-10.0459,82.9747-41.223,109.4625-85.5637,26.5447-44.4361,32.1472-145.1479-28.0138-197.5854Z"/></clipPath></defs></svg>`,
+            source: mainIllustSvg,
             style: {
               display: "inline-block",
               position: "absolute",
@@ -783,11 +787,11 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     let thirdBase;
 
     boxRadius = <%% 15, 15, 15, 15, 15 %%>;
-    moreAreaHeight = <%% 45, 12, 12, 12, 12 %%>;
+    moreAreaHeight = <%% 45, 42, 40, 40, 12 %%>;
 
-    moreSize = <%% 14, 3.4, 3.4, 3.4, 3.4 %%>;
+    moreSize = <%% 14, 13, 13, 12, 3.4 %%>;
     moreWeight = <%% 600, 600, 600, 600, 600 %%>;
-    moreTextTop = <%% -0.5, -0.1, -0.1, -0.1, -0.1 %%>;
+    moreTextTop = <%% -0.5, -0.5, -0.5, -0.5, -0.1 %%>;
 
     mobileMargin = <%% 6, 6, 6, 6, 6 %%>;
     blackTop = <%% -31, -31, -31, -31, -31 %%>;
@@ -795,52 +799,52 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
     whiteBlockBetween = <%% 10, 10, 10, 10, 4 %%>;
 
     whiteBlockHeight = <%% 80, 80, 80, 80, 80 %%>;
-    barMargin = <%% 12, 2.5, 2.5, 2.5, 2.5 %%>;
+    barMargin = <%% 12, 12, 12, 12, 2.5 %%>;
 
-    topBottomMargin = <%% 45, 30, 9, 9, 9 %%>;
+    topBottomMargin = <%% 45, 35, 30, 30, 9 %%>;
 
-    blueBlockBetween = <%% 6, 1.8, 1.8, 1.8, 1.8 %%>;
+    blueBlockBetween = <%% 6, 5, 4, 4, 1.8 %%>;
 
-    titleSize = <%% 23, 5, 5, 5, 5 %%>;
+    titleSize = <%% 23, 20, 20, 20, 5 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-    titleEngSize = <%% 11, 2.7, 2.7, 2.7, 2.7 %%>;
+    titleEngSize = <%% 11, 10, 9, 8, 2.7 %%>;
     titleEngWeight = <%% 300, 300, 300, 300, 300 %%>;
-    titleEngBetween = <%% 2, 0.1, 0.1, 0.1, 0.1 %%>;
+    titleEngBetween = <%% 2, 0, 0, 0, 0.1 %%>;
 
-    descriptionSize = <%% 13, 3, 3, 3, 3 %%>;
+    descriptionSize = <%% 13, 12, 13, 13, 3 %%>;
     descriptionWeight = <%% 500, 500, 500, 500, 500 %%>;
 
     imageBoxWidth = <%% 62, 62, 62, 62, 62 %%>;
-    imageScale = <%% 0.84, 0.84;, 0.84;, 0.84;, 0.84; %%>;
+    imageScale = <%% 0.84, 0.84, 0.84, 0.84, 0.84 %%>;
     imageOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
     imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
 
-    clickMeTop = <%% 104, 104, 104, 104, -13 %%>;
+    clickMeTop = <%% 104, 80, 80, 70, -13 %%>;
     clickMeRight = <%% 1, 1, 1, 1, 1 %%>;
-    clictMeWidth = <%% 110, 26, 26, 26, 26 %%>;
+    clictMeWidth = <%% 110, 100, 90, 80, 26 %%>;
 
-    moreArrowCircleWidth = <%% 13, 2.8, 2.8, 2.8, 2.8 %%>;
-    moreArrowCircleMarginLeft = <%% 4, 1, 1, 1, 1 %%>;
+    moreArrowCircleWidth = <%% 13, 12, 12, 12, 2.8 %%>;
+    moreArrowCircleMarginLeft = <%% 4, 4, 4, 4, 1 %%>;
 
-    moreArrowVisualLeft = <%% 1, 0.2, 0.2, 0.2, 0.2 %%>;
-    moreArrowWidth = <%% 4, 1, 1, 1, 1 %%>;
+    moreArrowVisualLeft = <%% 1, 1, 1, 1, 0.2 %%>;
+    moreArrowWidth = <%% 4, 4, 3, 3, 1 %%>;
 
-    buttonHeight = <%% 40, 8.8, 8.8, 8.8, 8.8 %%>;
+    buttonHeight = <%% 40, 36, 32, 28, 8.8 %%>;
 
     multipleConst = <%% 6, 6, 6, 6, 6 %%>;
 
-    checkCircleWidth = <%% 20, 4.5, 4.5, 4.5, 4.5 %%>;
-    checkCircleWidthSvg = <%% 21, 4.7, 4.7, 4.7, 4.7 %%>;
-    checkCircleLeft = <%% 12, 2.5, 2.5, 2.5, 2.5 %%>;
+    checkCircleWidth = <%% 20, 20, 20, 20, 4.5 %%>;
+    checkCircleWidthSvg = <%% 21, 21, 21, 21, 4.7 %%>;
+    checkCircleLeft = <%% 12, 11, 10, 9, 2.5 %%>;
 
-    buttonTitleSize = <%% 14, 3.2, 3.2, 3.2, 3.2 %%>;
+    buttonTitleSize = <%% 14, 13, 12, 11, 3.2 %%>;
     buttonTitleWeignt = <%% 600, 600, 600, 600, 600 %%>;
-    buttonTitleTextTop = <%% -1, -0.2, -0.2, -0.2, -0.2 %%>;
+    buttonTitleTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
 
-    totalBlockPaddingTop = <%% 140, 140, 140, 140, 140 %%>;
-    totalBlockPaddingBottom = <%% 130, 130, 130, 130, 130 %%>;
+    totalBlockPaddingTop = <%% 140, 130, 120, 110, 140 %%>;
+    totalBlockPaddingBottom = <%% 130, 120, 110, 100, 130 %%>;
 
     if (media[0] && window.innerHeight > 1100) {
       totalBlockPaddingTop = 160;
@@ -1347,37 +1351,37 @@ FrontIndexJs.prototype.insertReviewBox = async function (secondBase) {
 
     blueBlockBetween = <%% 1.8, 1.8, 1.8, 1.8, 1.8 %%>;
 
-    titleSize = <%% 19, 5, 5, 5, 5 %%>;
+    titleSize = <%% 19, 18, 18, 18, 5 %%>;
 
     imageBoxWidth = <%% 460, 460, 460, 460, 62 %%>;
-    imageScale = <%% 0.91, 0.92, 0.92, 0.92, 0.84 %%>;
-    imageScale2 = <%% 0.77, 0.8, 0.8, 0.8, 0.8 %%>;
+    imageScale = <%% 0.91, 0.91, 0.91, 0.91, 0.84 %%>;
+    imageScale2 = <%% 0.77, 0.77, 0.77, 0.77, 0.8 %%>;
     imageOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
 
     imageMarginTop = <%% 3, 3, 3, 3, 3 %%>;
-    reviewTitleSize = <%% 24, 3.6, 3.6, 3.6, 3.6 %%>;
-    reviewSubSize = <%% 13, 2.6, 2.6, 2.6, 2.6 %%>;
+    reviewTitleSize = <%% 24, 24, 24, 24, 3.6 %%>;
+    reviewSubSize = <%% 13, 13, 13, 13, 2.6 %%>;
 
     blackScreenOpacity = <%% 0.2, 0.2, 0.2, 0.2, 0.2 %%>;
 
-    reviewTitleMargin = <%% 45, 6, 6, 6, 6 %%>;
-    reviewTitleWeight = <%% 700, 600, 600, 600, 600 %%>;
-    reviewLineHeight = <%% 1.4, 1.5, 1.5, 1.5, 1.5 %%>;
+    reviewTitleMargin = <%% 45, 45, 45, 45, 6 %%>;
+    reviewTitleWeight = <%% 700, 700, 700, 700, 600 %%>;
+    reviewLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.5 %%>;
     reviewSubTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
 
     reviewBoxPaddingTop = <%% 15, 15, 15, 15, 15 %%>;
     reviewBoxPaddingBottom = <%% 21, 21, 21, 21, 21 %%>;
-    bestBetween = <%% 32, 6, 6, 6, 6 %%>;
+    bestBetween = <%% 32, 32, 32, 32, 6 %%>;
 
-    bestReviewWidth = <%% 270, 50, 50, 50, 50 %%>;
-    bestReviewHeight = <%% 45, 9, 9, 9, 9 %%>;
+    bestReviewWidth = <%% 270, 270, 270, 270, 50 %%>;
+    bestReviewHeight = <%% 45, 45, 45, 45, 9 %%>;
 
-    reviewBestSize = <%% 18, 18, 18, 3.4, 3.4 %%>;
+    reviewBestSize = <%% 18, 17, 16, 16, 3.4 %%>;
     reviewBestWeight = <%% 700, 700, 700, 700, 700 %%>;
     reviewBestTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
     reviewBestEngSize = <%% 20, 18, 18, 18, 3.8 %%>;
     reviewBackBoxTop = <%% 6, 6, 6, 6, 6 %%>;
-    reviewBackBoxLeft = <%% 160, 0, 0, 0, 0 %%>;
+    reviewBackBoxLeft = <%% 160, 120, 120, 120, 0 %%>;
 
     arrowWidth = <%% 3.4, 3.4, 3.4, 3.4, 3.4 %%>;
     arrowLeft = <%% 5, 5, 5, 5, 5 %%>;
@@ -2068,8 +2072,8 @@ FrontIndexJs.prototype.insertThirdBox = async function () {
     image3Width = <%% 66, 66, 66, 66, 66 %%>;
     image3VisualLeft = <%% -1, -1, -1, -1, -1 %%>;
 
-    totalBlockPaddingTop = <%% 140, 140, 140, 140, 140 %%>;
-    totalBlockPaddingBottom = <%% 30, 130, 130, 130, 130 %%>;
+    totalBlockPaddingTop = <%% 140, 130, 120, 110, 140 %%>;
+    totalBlockPaddingBottom = <%% 30, 20, 10, 10, 130 %%>;
     boxInnerPadding = <%% 130, 45, 45, 45, 45 %%>;
     boxInnerPaddingTop = <%% 90, 60, 60, 60, 60 %%>;
 
@@ -3074,8 +3078,8 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
       buttonMarginTop = lastMode ? 1 : 70;
     }
 
-    totalBlockPaddingTop = <%% 140, 140, 140, 140, 140 %%>;
-    totalBlockPaddingBottom = <%% 130, 130, 130, 130, 130 %%>;
+    totalBlockPaddingTop = <%% 140, 130, 120, 110, 140 %%>;
+    totalBlockPaddingBottom = <%% 130, 120, 110, 100, 130 %%>;
 
     // fifth
     if (mobile) {
@@ -5455,8 +5459,9 @@ FrontIndexJs.prototype.insertPortfolioBase = function () {
   photoMargin = <%% 18, 16, 16, 16, 2.5 %%>;
   paddingBottom = <%% 120, 120, 120, 120, 22 %%>;
 
-  totalBlockPaddingTop = <%% 140, 140, 140, 140, 140 %%>;
-  totalBlockPaddingBottom = <%% 200, 130, 130, 130, 130 %%>;
+  totalBlockPaddingTop = <%% 140, 130, 120, 110, 140 %%>;
+  totalBlockPaddingBottom = <%% 200, 190, 180, 170, 130 %%>;
+
 
   basePaddingTop = 10;
 
