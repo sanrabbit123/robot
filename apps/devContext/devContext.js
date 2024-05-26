@@ -225,11 +225,10 @@ DevContext.prototype.launching = async function () {
 
 
     
-    const facebook = new FacebookAPIs();
-    console.log(await facebook.metaComplex(null));
 
-    // await facebook.test();
+    
 
+    
 
 
 

@@ -1292,8 +1292,6 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
             adsetArr.push(objectDeepCopy(adset));
           }
 
-          await sleep(delta);
-
           ads = await (new Campaign(id)).getAds([ "name", "adset_id" ], {});
           for (let a of ads) {
             thisAdSet = adsetArr.find((adset) => { return adset.id === a._data.adset_id });
