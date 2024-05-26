@@ -22,7 +22,7 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
   this.facebookAdId = "505249990112820";
   this.facebookUserId = "192515798954554";
   this.pixelId = "814052605684956";
-  this.appVersion = "v19.0";
+  this.appVersion = "v20.0";
 }
 
 FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, logger = null) {

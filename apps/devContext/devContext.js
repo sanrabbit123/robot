@@ -221,8 +221,8 @@ DevContext.prototype.launching = async function () {
     //   },
     // }));
 
-    const audio = new PlayAudio();
-    await audio.textToVoice("회의가 시작되었습니다!");
+
+    
     
     
 
