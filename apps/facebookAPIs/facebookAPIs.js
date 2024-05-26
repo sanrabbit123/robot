@@ -38,7 +38,7 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
   this.account = account;
 }
 
-FacebookAPIs.prototype.readLeadgenCampaigns = async function (noRawMode = true) {
+FacebookAPIs.prototype.readLeadgenCampaigns = async function (ago, noRawMode = true) {
   const instance = this;
   const back = this.back;
   const { facebookAppId, facebookAppSecret, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId, facebookAdAccountId } = this;
@@ -46,6 +46,7 @@ FacebookAPIs.prototype.readLeadgenCampaigns = async function (noRawMode = true) 
   const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
   const Ad = bizSdk.Ad;
   try {
+    const future = new Date();
     const delta = 3 * 1000;
     let fields, params, campaigns;
     let campaign;
@@ -56,10 +57,10 @@ FacebookAPIs.prototype.readLeadgenCampaigns = async function (noRawMode = true) 
     let leadArr;
     let targetObj;
 
+    future.setDate(future.getDate() + 1);
+
     fields = [ "name" ];
-    params = {
-      "effective_status" : [ "ACTIVE" ],
-    };
+    params = {};
     result = await (new AdAccount(facebookAdAccountId)).getCampaigns(
       fields,
       params
@@ -78,7 +79,7 @@ FacebookAPIs.prototype.readLeadgenCampaigns = async function (noRawMode = true) 
         campaign.name = o._data.name;
   
         fields = [ "name", "adset_id", "adset_name" ];
-        params = { "effective_status" : [ "ACTIVE" ] };
+        params = {};
   
         ads = await (new Campaign(campaign.id)).getAds(
           fields,
@@ -100,7 +101,12 @@ FacebookAPIs.prototype.readLeadgenCampaigns = async function (noRawMode = true) 
 
           await sleep(delta);
 
-          leads = await (new Ad(ad.id)).getLeads([ "created_time", "id", "ad_id", "form_id", "field_data" ], {});
+          leads = await (new Ad(ad.id)).getLeads([ "created_time", "id", "ad_id", "form_id", "field_data" ], {
+            "time_range": {
+              "since": dateToString(ago),
+              "until": dateToString(future),
+            }
+          });
           leadArr = [];
           for (let lead of leads) {
             targetObj = objectDeepCopy(lead._data);
@@ -125,14 +131,26 @@ FacebookAPIs.prototype.readLeadgenCampaigns = async function (noRawMode = true) 
   }
 }
 
-FacebookAPIs.prototype.readLeads = async function () {
+FacebookAPIs.prototype.readLeads = async function (dateDelta = 30) {
   const instance = this;
   try {
-    const campaigns = await this.readLeadgenCampaigns();
+    const now = new Date();
+    let ago;
+
+    ago = new Date(JSON.stringify(now).slice(1, -1));
+    ago.setDate(ago.getDate() - dateDelta);
+
+    const campaigns = await this.readLeadgenCampaigns(ago, true);
     if (!Array.isArray(campaigns)) {
       return null;
     }
-    return campaigns.map((c) => { return c.ads }).flat().map((a) => { return a.lead }).flat().filter((l) => { return !l.field_data.some(({ name }) => { return /[가-힣]/gi.test(name) }) });
+    const result = campaigns.map((c) => { return c.ads }).flat().map((a) => { return a.lead }).flat().filter((l) => { return !l.field_data.some(({ name }) => { return /[가-힣]/gi.test(name) }) }).map((c) => {
+      c.created_time = new Date(c.created_time);
+      return c;
+    });
+    
+    result.sort((a, b) => { return b.created_time.valueOf() - a.created_time.valueOf() });
+    return result;
   } catch (e) {
     console.log(e);
     return null;
@@ -231,21 +249,61 @@ FacebookAPIs.prototype.readActiveCampaigns = async function (noRawMode = true) {
 FacebookAPIs.prototype.test = async function () {
   const instance = this;
   const back = this.back;
-  const { facebookAppId, facebookAppSecret, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId } = this;
+  const { facebookAppId, facebookAppSecret, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId, facebookAdAccountId } = this;
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy } = this.mother;
   const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
 
 
-  const leads = await this.readLeads();
-  console.log(JSON.stringify(leads, null, 2));
-  console.log(leads)
+  const delta = 1 * 1000;
+  let fields, params, campaigns;
+  let campaign;
+  let result;
+  let adsets;
+  let adset;
+  let ads;
+  let ad;
+  let target;
+  let id;
+  let campaignResult;
+
+  fields = [ "name" ];
+  params = {};
+  result = await (new AdAccount(facebookAdAccountId)).getCampaigns(
+    fields,
+    params
+  );
+
+  campaigns = [];
+  for (let o of result) {
+    id = o._data.id;
+
+    campaignResult = await (new Campaign(id)).getInsights([
+      "account_id",
+      "campaign_id",
+      "campaign_name",
+      "reach",
+      "impressions",
+      "spend",
+      "clicks",
+      "date_start",
+      "date_stop",
+    ], {
+      "time_range": {
+        "since": "2023-05-01",
+        "until": "2023-05-02",
+      }
+    });
+    for (let c of campaignResult) {
+      console.log(c._data);
+    }
+    console.log(id);
+
+    
 
 
-  // const Ad = bizSdk.Ad;
-  // const leadss = (new Ad(id)).getLeads(
-  //   fields,
-  //   params
-  // );
+
+  }
+
 
 
 }
@@ -531,8 +589,12 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
     tong = [];
     for (let obj of leads) {
 
-      thisDate = new Date(obj.created_time);
-      thisDate = dateToString(thisDate, true);
+      if (typeof obj.created_time === "string") {
+        thisDate = new Date(obj.created_time);
+        thisDate = dateToString(thisDate, true);
+      } else {
+        thisDate = dateToString(obj.created_time, true);
+      }
       thisDate = stringToDate(thisDate);
       rawArr = objectDeepCopy(obj.field_data);
 
@@ -1133,15 +1195,15 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
 FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, logger = null) {
   const instance = this;
   const back = this.back;
-  const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition } = this.mother;
+  const { facebookAppId, facebookAppSecret, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId, facebookAdAccountId } = this;
   const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
   try {
     const collection = "metaComplex";
     const idKeyword = 'f';
     const metaKeyword = 'f';
     const metaKeyKeyword = "meta";
-    const delta = 40 * 1000;
+    const delta = 16 * 1000;
     let tempRows;
     let res;
     let json;
@@ -1153,6 +1215,24 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
     let campaignId;
     let adsetId;
     let targetObj;
+    let fields, params, campaigns;
+    let campaign;
+    let result;
+    let adsets;
+    let adset;
+    let ads;
+    let ad;
+    let target;
+    let id;
+    let campaignResult;
+    let accountResult;
+
+    fields = [ "name" ];
+    params = {};
+    accountResult = await (new AdAccount(facebookAdAccountId)).getCampaigns(
+      fields,
+      params
+    );
 
     now = new Date();
     startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
@@ -1160,11 +1240,8 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
       startDate.setDate(startDate.getDate() - 1);
     }
 
-    await sleep(30 * 1000);
-
     for (let i = 0; i < dayNumber; i++) {
 
-      await sleep(60 * 1000);
       if (i === 0) {
         from = new Date(JSON.stringify(startDate).slice(1, -1));
         to = new Date(JSON.stringify(startDate).slice(1, -1));
@@ -1396,11 +1473,11 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
       }
 
       // store
-      tempRows = await back.mongoRead(collection, { key }, { selfMongo });
-      if (tempRows.length !== 0) {
-        await back.mongoDelete(collection, { key }, { selfMongo });
-      }
-      await back.mongoCreate(collection, json, { selfMongo });
+      // tempRows = await back.mongoRead(collection, { key }, { selfMongo });
+      // if (tempRows.length !== 0) {
+      //   await back.mongoDelete(collection, { key }, { selfMongo });
+      // }
+      // await back.mongoCreate(collection, json, { selfMongo });
       console.log(json);
 
     }
