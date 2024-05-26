@@ -1309,7 +1309,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
           for (let adset of adsetArr) {
             for (let ad of adset.ad) {
               thisAdId = ad.id;
-              await sleep(delta);
+              await sleep(15 * 1000);
               adResult = await (new Ad(thisAdId)).getInsights([
                 "adset_id",
                 "adset_name",
