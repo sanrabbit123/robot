@@ -277,7 +277,7 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
   const { sleep, dateToString, stringToDate, sha256Hmac, fileSystem, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy, binaryRequest, messageSend } = this.mother;
   try {
     const collection = "metaInstantForm";
-    const delta = 15 * 1000;
+    const delta = 40 * 1000;
     const instantIdResult = await instance.getActiveInstantFormId(logger);
     if (instantIdResult === null) {
       return false;
@@ -307,6 +307,8 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
     let emailRaw, contractRaw;
     let thisInjection;
     let timeRaw;
+
+    await sleep(delta);
 
     now = new Date();
     ago = new Date(JSON.stringify(now).slice(1, -1));
@@ -976,7 +978,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
     const idKeyword = 'f';
     const metaKeyword = 'f';
     const metaKeyKeyword = "meta";
-    const delta = 30 * 1000;
+    const delta = 40 * 1000;
     let tempRows;
     let res;
     let json;
