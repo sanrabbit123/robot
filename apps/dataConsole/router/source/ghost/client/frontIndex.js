@@ -5512,7 +5512,10 @@ FrontIndexJs.prototype.insertWhiteCardEvent = function (serviceIndex) {
           width: withOut(0 * 2, ea),
           height: withOut(0, ea),
           overflow: "scroll",
-          borderRadius: String(12) + px,
+          borderTopLeftRadius: desktop ? String(boxRadius) + px : String(boxRadius) + "px",
+          borderTopRightRadius: desktop ? String(boxRadius) + px : String(boxRadius) + "px",
+          borderBottomLeftRadius: desktop ? String(boxRadius) + px : String(0) + ea,
+          borderBottomRightRadius: desktop ? String(boxRadius) + px : String(0) + ea,
         },
         child: {
           style: {

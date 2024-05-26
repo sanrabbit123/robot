@@ -978,369 +978,8 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
     }
   });
 
-  if (contents.contents.review.detailInfo.photodae.length > 0) {
-    belowBox = createNode({
-      mother: mainTong,
-      style: {
-        display: "block",
-        position: "relative",
-        width: desktop ? withOut(belowBoxPadding * 2, ea) : withOut((belowBoxPadding + contentsPadding) * 2, ea),
-        padding: String(belowBoxPadding) + ea,
-        height: String(belowBoxHeight) + ea,
-        borderRadius: String(5) + "px",
-        background: colorChip.gray0,
-        marginLeft: desktop ? "" : String(contentsPadding) + ea,
-        marginRight: desktop ? "" : String(contentsPadding) + ea,
-        marginBottom: desktop ? "" : String(mobileDesignerBoxBetween) + ea
-      },
-      children: [
-        {
-          attribute: {
-            desid: designer.desid,
-          },
-          event: {
-            click: function (e) {
-              const desid = this.getAttribute("desid");
-              selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
-            },
-            touchstart: function (e) {
-              const self = this;
-              self.setAttribute(touchStartConst, "on");
-              setQueue(() => {
-                self.setAttribute(touchStartConst, "off");
-              });
-            },
-            touchend: function (e) {
-              if (this.getAttribute(touchStartConst) === "on") {
-                const desid = this.getAttribute("desid");
-                selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
-              }
-            }
-          },
-          style: {
-            display: desktop ? "inline-block" : "none",
-            position: "relative",
-            borderRadius: String(5) + "px",
-            width: String(belowWhiteWidth) + ea,
-            paddingTop: String(designerTongPaddingTop) + ea,
-            height: withOut(designerTongPaddingTop, ea),
-            background: colorChip.white,
-            textAlign: "center",
-            verticalAlign: "top",
-            cursor: "pointer",
-          },
-          children: [
-            {
-              style: {
-                backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
-                backgroundSize: "auto 100%",
-                backgroundPosition: "50% 50%",
-                display: "inline-block",
-                width: String(deignserPhotoWidth) + ea,
-                height: String(deignserPhotoWidth) + ea,
-                borderRadius: String(deignserPhotoWidth / 2) + ea,
-              }
-            },
-            {
-              text: designer.designer,
-              style: {
-                marginTop: String(designerTitleMarginTop) + ea,
-                marginBottom: String(designerTitleMarginTop) + ea,
-                textAlign: "center",
-                fontSize: String(designerTitleSize) + ea,
-                fontWeight: String(designerTitleWeight),
-                color: colorChip.black,
-              }
-            }
-          ]
-        },
-        {
-          attribute: { pid },
-          event: {
-            click: function (e) {
-              const pid = this.getAttribute("pid");
-              selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
-            },
-            touchstart: function (e) {
-              const self = this;
-              self.setAttribute(touchStartConst, "on");
-              setQueue(() => {
-                self.setAttribute(touchStartConst, "off");
-              });
-            },
-            touchend: function (e) {
-              if (this.getAttribute(touchStartConst) === "on") {
-                const pid = this.getAttribute("pid");
-                selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
-              }
-            }
-          },
-          style: {
-            display: "inline-block",
-            position: "relative",
-            borderRadius: String(5) + "px",
-            width: String(belowPictureWidth) + ea,
-            height: String(100) + '%',
-            marginLeft: String(belowPictureMargin) + ea,
-            backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.review.detailInfo.photodae[1]) + pid + ".jpg" + "')",
-            backgroundSize: desktop ? "auto 100%" : "100% auto",
-            backgroundPosition: "50% 50%",
-            verticalAlign: "top",
-            cursor: "pointer",
-          }
-        },
-        {
-          attribute: { pid },
-          event: {
-            click: function (e) {
-              const pid = this.getAttribute("pid");
-              selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
-            },
-            touchstart: function (e) {
-              const self = this;
-              self.setAttribute(touchStartConst, "on");
-              setQueue(() => {
-                self.setAttribute(touchStartConst, "off");
-              });
-            },
-            touchend: function (e) {
-              if (this.getAttribute(touchStartConst) === "on") {
-                const pid = this.getAttribute("pid");
-                selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
-              }
-            }
-          },
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: withOut(belowWhiteWidth + belowPictureWidth + (belowPictureMargin * 2) + belowTextAreaPaddingLeft, ea),
-            paddingTop: String(belowTextAreaPaddingTop) + ea,
-            marginLeft: String(belowPictureMargin) + ea,
-            paddingLeft: String(belowTextAreaPaddingLeft) + ea,
-            verticalAlign: "top",
-            cursor: "pointer",
-          },
-          children: [
-            {
-              text: contents.contents.review.title.sub.split(", ").join("\n"),
-              style: {
-                fontSize: String(belowTextTitleSize) + ea,
-                fontWeight: String(belowTextTitleWeight),
-                color: colorChip.black,
-                lineHeight: String(belowTextTitleLineHeight),
-              }
-            },
-            {
-              style: {
-                display: "block",
-                height: String(belowTextAreaTitleBarTop) + ea,
-                width: String(100) + '%',
-                borderBottom: "1px solid " + colorChip.gray3,
-              }
-            },
-            {
-              text: contents.contents.portfolio.title.sub.split(", ").join("\n"),
-              style: {
-                fontSize: String(belowTextAreaSubSize) + ea,
-                fontWeight: String(belowTextAreaSubWeight),
-                color: colorChip.shadow,
-                lineHeight: String(belowTextAreaSubLineHeight),
-                marginTop: String(belowTextAreaSubMarginTop) + ea,
-              }
-            },
-          ]
-        },
-        {
-          text: "Review",
-          style: {
-            position: "absolute",
-            fontSize: String(portfolioWordingSize) + ea,
-            fontWeight: String(portfolioWordingWeight),
-            fontFamily: "graphik",
-            color: colorChip.black,
-            top: String(belowBoxPadding) + ea,
-            right: String(belowBoxPadding) + ea,
-            textAlign: "right",
-          }
-        }
-      ]
-    });
-
-    if (mobile) {
-      createNode({
-        mother: mainTong,
-        style: {
-          display: "block",
-          position: "relative",
-          width: desktop ? withOut(belowBoxPadding * 2, ea) : withOut((belowBoxPadding + contentsPadding) * 2, ea),
-          padding: String(belowBoxPadding) + ea,
-          height: String(belowBoxHeight) + ea,
-          borderRadius: String(5) + "px",
-          background: colorChip.gray0,
-          marginLeft: desktop ? "" : String(contentsPadding) + ea,
-          marginRight: desktop ? "" : String(contentsPadding) + ea,
-        },
-        children: [
-          {
-            attribute: { desid: designer.desid },
-            event: {
-              click: function (e) {
-                const desid = this.getAttribute("desid");
-                selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
-              },
-              touchstart: function (e) {
-                const self = this;
-                self.setAttribute(touchStartConst, "on");
-                setQueue(() => {
-                  self.setAttribute(touchStartConst, "off");
-                });
-              },
-              touchend: function (e) {
-                if (this.getAttribute(touchStartConst) === "on") {
-                  const desid = this.getAttribute("desid");
-                  selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
-                }
-              }
-            },
-            style: {
-              display: "inline-block",
-              position: "relative",
-              borderRadius: String(5) + "px",
-              width: String(belowPictureWidth) + ea,
-              height: String(100) + '%',
-              marginLeft: String(belowPictureMargin) + ea,
-              backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + designer.setting.front.photo.porlid + "/" + designer.setting.front.photo.index + designer.setting.front.photo.porlid + ".jpg" + "')",
-              backgroundSize: desktop ? "auto 100%" : "100% auto",
-              backgroundPosition: "50% 50%",
-              verticalAlign: "top",
-            }
-          },
-          {
-            attribute: { desid: designer.desid },
-            event: {
-              click: function (e) {
-                const desid = this.getAttribute("desid");
-                selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
-              },
-              touchstart: function (e) {
-                const self = this;
-                self.setAttribute(touchStartConst, "on");
-                setQueue(() => {
-                  self.setAttribute(touchStartConst, "off");
-                });
-              },
-              touchend: function (e) {
-                if (this.getAttribute(touchStartConst) === "on") {
-                  const desid = this.getAttribute("desid");
-                  selfHref(FRONTHOST + "/desdetail.php?desid=" + desid);
-                }
-              }
-            },
-            style: {
-              display: "inline-block",
-              position: "relative",
-              width: withOut(belowWhiteWidth + belowPictureWidth + (belowPictureMargin * 2) + belowTextAreaPaddingLeft, ea),
-              paddingTop: String(mobileDesignerWordingTop) + ea,
-              marginLeft: String(belowPictureMargin) + ea,
-              paddingLeft: String(belowTextAreaPaddingLeft) + ea,
-              verticalAlign: "top",
-            },
-            children: [
-              {
-                text: designer.designer,
-                style: {
-                  fontSize: String(belowTextTitleSize) + ea,
-                  fontWeight: String(belowTextTitleWeight),
-                  color: colorChip.black,
-                  lineHeight: String(belowTextTitleLineHeight),
-                }
-              },
-              {
-                style: {
-                  display: "block",
-                  height: String(belowTextAreaTitleBarTop) + ea,
-                  width: String(100) + '%',
-                  borderBottom: "1px solid " + colorChip.gray3,
-                }
-              },
-              {
-                text: designerMthParsing(designer.setting.front.methods).join(", ") + "\n" + designerCareer(designer, true),
-                style: {
-                  fontSize: String(belowTextAreaSubSize) + ea,
-                  fontWeight: String(belowTextAreaSubWeight),
-                  color: colorChip.shadow,
-                  lineHeight: String(belowTextAreaSubLineHeight),
-                  marginTop: String(belowTextAreaSubMarginTop) + ea,
-                },
-                bold: {
-                  fontSize: String(belowTextAreaSubSize) + ea,
-                  fontWeight: String(belowTextAreaSubWeight),
-                  color: colorChip.shadow,
-                }
-              },
-            ]
-          },
-          {
-            text: "Designer",
-            style: {
-              position: "absolute",
-              fontSize: String(portfolioWordingSize) + ea,
-              fontWeight: String(portfolioWordingWeight),
-              fontFamily: "graphik",
-              color: colorChip.black,
-              top: String(belowBoxPadding) + ea,
-              right: String(belowBoxPadding) + ea,
-              textAlign: "right",
-            }
-          }
-        ]
-      });
-    }
-
-    createNode({
-      mother: mainTong,
-      style: {
-        display: "block",
-        height: String(blankMarginLast) + ea,
-      }
-    });
-
-    if (desktop) {
-      designerTong = belowBox.firstChild;
-      designerMthTargets = designerMthParsing(designer.setting.front.methods);
-      for (let mth of designerMthTargets) {
-        createNode({
-          mother: designerTong,
-          text: mth,
-          style: {
-            marginTop: String(designerMthMarginTop) + ea,
-            textAlign: "center",
-            fontSize: String(designerMthSize) + ea,
-            fontWeight: String(designerMthWeight),
-            color: colorChip.black,
-          }
-        });
-      }
-
-      createNode({
-        mother: designerTong,
-        text: designerCareer(designer, true),
-        style: {
-          position: "absolute",
-          width: String(100) + '%',
-          textAlign: "center",
-          bottom: String(careerBottom) + ea,
-          fontSize: String(careerSize) + ea,
-          fontWeight: String(careerWeight),
-          color: colorChip.black,
-        },
-        bold: {
-          fontWeight: String(200),
-          color: colorChip.deactive,
-        }
-      });
-    }
-
+  if (contents.contents.review.contents.detail.length > 0) {
+    instance.portfolioDesignerBox();
   }
 }
 
@@ -2617,6 +2256,573 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
   }
 
+
+}
+
+PortfolioDetailJs.prototype.portfolioDesignerBox = function () {
+  const instance = this;
+  const { createNode, colorChip, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue, serviceParsing } = GeneralJs;
+  const { totalContents, naviHeight, ea, media, pid } = this;
+  const version = 0;
+  const { contentsArr, designers } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
+  const { contents: { review }, photos } = contents;
+  const { detail: photoDetail } = photos;
+  const { contents: { detail } } = review;
+  const [ { contents: customerStoryMother } ] = detail;
+  const designer = designers.search("desid", contents.desid);
+  const story = equalJson(JSON.stringify(detail));
+  const photoChar = 't';
+  const photoCharMobile = "mot";
+  const touchStartConst = "touchStartConstName";
+  const today = new Date();
+  let mainTong;
+  let mainWidth;
+  let mainPaddingTop;
+  let titleSize, titleWeight;
+  let titleLineHeight;
+  let titleBarMarginTop, titleBarWidth;
+  let contentsSize, contentsWeight;
+  let contentsLineHeight;
+  let customerPaddingLeft, customerMarginTop;
+  let customerSize, customerWeight;
+  let customerTop, customerLineHeight;
+  let customerStory;
+  let src;
+  let garo;
+  let num;
+  let photoMargin;
+  let blankMargin, blankMargin2;
+  let totalNum;
+  let blankMarginFirst;
+  let contentsPadding;
+  let wordingTop;
+  let questionMargin, answerMargin;
+  let questionWeight, answerWeight;
+  let belowBox;
+  let belowBoxPadding;
+  let belowBoxHeight;
+  let blankMarginLast;
+  let belowPictureWidth;
+  let belowPictureMargin;
+  let belowWhiteWidth;
+  let nameCardWording;
+  let nameCardIndex;
+  let belowTextTitleSize, belowTextTitleWeight, belowTextTitleLineHeight;
+  let belowTextAreaPaddingLeft;
+  let portfolioWordingSize, portfolioWordingWeight;
+  let belowTextAreaPaddingTop;
+  let belowTextAreaTitleBarTop;
+  let belowTextAreaSubSize, belowTextAreaSubWeight, belowTextAreaSubLineHeight, belowTextAreaSubMarginTop;
+  let designerTongPaddingTop;
+  let deignserPhotoWidth;
+  let designerTitleSize, designerTitleWeight, designerTitleMarginTop;
+  let designerTong;
+  let designerMthTargets;
+  let designerMthSize, designerMthWeight, designerMthMarginTop;
+  let careerBottom;
+  let careerSize, careerWeight;
+  let mobileDesignerWordingTop;
+  let mobileDesignerBoxBetween;
+  let boxHeight, boxPhotoWidth, boxBorderRadius;
+  let boxBetween;
+  let boxDetailBoxPaddingTop;
+  let boxDetailBoxPaddingLeft;
+  let boxDetailBoxLineMargin;
+  let boxDetailAbsolutePadding;
+  let boxDetailAbsoluteBoxHeight;
+  let boxDetailAbsoluteArrowPadding;
+  let boxDetailAbsoluteTextSize, boxDetailAbsoluteTextWeight;
+  let boxDetailAbsoluteArrowWidth, boxDetailAbsoluteArrowBetween, boxDetailAbsoluteArrowVisualTop;
+  let boxDetailBoxTitleSize, boxDetailBoxTitleWeight;
+  let boxDetailBoxDetailSize, boxDetailBoxDetailWeight;
+  let boxDetailBoxTitleEngSize, boxDetailBoxTitleEngWeight, boxDetailBoxTitleEngVisualTop;
+  let baseTop;
+  let baseBottom0, baseBottom1;
+  let designerHomeTextTop;
+  let careerString;
+
+  story.shift();
+  customerStory = '';
+  for (let { answer } of customerStoryMother) {
+    customerStory += answer;
+    customerStory += "\n\n";
+  }
+  customerStory = customerStory.slice(0, -2);
+
+  mainWidth = <%% (version === 1 ? 980 : 900), 900, 900, 720, 88 %%>;
+  mainPaddingTop = <%% 110, 110, 110, 80, 11.7 %%>;
+
+  titleSize = <%% 23, 23, 23, 21, 4.8 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  titleBarMarginTop = <%% 15, 15, 15, 15, 3 %%>;
+  titleBarWidth = <%% 80, 80, 80, 80, 18 %%>;
+
+  contentsSize = <%% 16, 16, 16, 15, 3.8 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+
+  customerPaddingLeft = <%% 150, 150, 150, 130, 6 %%>;
+  customerMarginTop = <%% 36, 36, 36, 36, 5.5 %%>;
+
+  customerSize = <%% 17, 17, 17, 16, 0 %%>;
+  customerWeight = <%% 400, 400, 400, 400, 400 %%>;
+  customerTop = <%% 3, 3, 3, 3, 3 %%>;
+  customerLineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
+
+  photoMargin = <%% 8, 8, 8, 8, 1 %%>;
+  blankMarginFirst = <%% 126, 126, 126, 96, 13.5 %%>;
+  blankMargin = <%% 100, 100, 100, 70, 11 %%>;
+  blankMargin2 = <%% 100, 100, 100, 70, 10 %%>;
+  blankMarginLast = <%% 200, 200, 200, 170, 20 %%>;
+
+  contentsPadding = <%% 21, 21, 21, 21, 6 %%>;
+
+  wordingTop = <%% (isMac() ? 3 : 1), (isMac() ? 3 : 1), (isMac() ? 3 : 1), (isMac() ? 3 : 1), 0.6 %%>;
+  questionMargin = <%% 10, 10, 10, 10, 1 %%>;
+  answerMargin = <%% 36, 36, 36, 36, 6 %%>;
+
+  questionWeight = <%% 700, 700, 700, 700, 700 %%>;
+  answerWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  belowBoxPadding = <%% 50, 50, 50, 36, 3.5 %%>;
+  belowBoxHeight = <%% 300, 300, 300, 260, 30 %%>;
+
+  belowWhiteWidth = <%% 200, 200, 200, 156, 0 %%>;
+
+  belowPictureWidth = <%% 350, 350, 350, 290, 43 %%>;
+  belowPictureMargin = <%% 18, 18, 18, 12, 0 %%>;
+
+  nameCardWording = contents.contents.portfolio.title.main.split(", ")[1];
+
+  nameCardIndex = nameCardWording.split(' ').findIndex((str) => { return /py/gi.test(str); });
+  nameCardWording = nameCardWording.split(' ').slice(0, nameCardIndex).join(' ') + "\n" + nameCardWording.split(' ').slice(nameCardIndex).join(' ');
+
+  portfolioWordingSize = <%% 15, 15, 15, 15, 2 %%>;
+  portfolioWordingWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  belowTextAreaPaddingLeft = <%% 12, 12, 12, 12, 4 %%>;
+  belowTextTitleSize = <%% 25, 25, 25, 20, 3.5 %%>;
+  belowTextTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  belowTextTitleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
+  belowTextAreaPaddingTop = <%% 158, 158, 158, 137, 8.5 %%>;
+  belowTextAreaTitleBarTop = <%% (isMac() ? 12 : 14), (isMac() ? 12 : 14), (isMac() ? 12 : 14), (isMac() ? 12 : 14), 2 %%>;
+
+  belowTextAreaSubSize = <%% 14, 14, 14, 12, 2 %%>;
+  belowTextAreaSubWeight = <%% 500, 500, 500, 500, 500 %%>;
+  belowTextAreaSubLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  belowTextAreaSubMarginTop = <%% 20, 20, 20, 20, 2 %%>;
+
+  designerTongPaddingTop = <%% 30, 30, 30, 27, 30 %%>;
+  deignserPhotoWidth = <%% 124, 124, 124, 110, 124 %%>;
+
+  designerTitleSize = <%% 19, 19, 19, 16, 19 %%>;
+  designerTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  designerTitleMarginTop = <%% 10, 10, 10, 7, 10 %%>;
+
+  designerMthSize = <%% 13, 13, 13, 11, 13 %%>;
+  designerMthWeight = <%% 500, 500, 500, 500, 500 %%>;
+  designerMthMarginTop = <%% 3, 3, 3, 2, 3 %%>;
+
+  careerBottom = <%% 30, 30, 30, 27, 30 %%>;
+  careerSize = <%% 12, 12, 12, 11, 12 %%>;
+  careerWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  mobileDesignerWordingTop = 13;
+  mobileDesignerBoxBetween = 2;
+
+  boxHeight = <%% 404, 404, 394, 330, 80 %%>;
+  boxPhotoWidth = <%% (version === 1 ? 652 : 572), (version === 1 ? 572 : 572), (version === 1 ? 572 : 572), (version === 1 ? 450 : 450), 88 %%>;
+  boxBorderRadius = <%% 10, 10, 10, 10, 10 %%>;
+  boxBetween = <%% 12, 12, 12, 12, 1.5 %%>;
+
+  boxDetailBoxPaddingTop = <%% 24, 24, 24, 18, 4 %%>;
+  boxDetailBoxPaddingLeft = <%% 24, 24, 24, 20, 5 %%>;
+
+  boxDetailBoxLineMargin = <%% 8, 8, 8, 8, 1.6 %%>;
+
+  boxDetailAbsolutePadding = <%% 10, 10, 10, 10, 2 %%>;
+  boxDetailAbsoluteBoxHeight = <%% 52, 52, 50, 45, 9.6 %%>;
+
+  boxDetailAbsoluteArrowPadding = <%% 16, 15, 14, 13, 4 %%>;
+  boxDetailAbsoluteTextSize = <%% 15, 15, 15, 13, 3 %%>;
+  boxDetailAbsoluteTextWeight = <%% 300, 300, 300, 300, 300 %%>;
+  boxDetailAbsoluteArrowWidth = <%% 18, 18, 18, 14, 4 %%>;
+  boxDetailAbsoluteArrowBetween = <%% 6, 6, 6, 6, 1.5 %%>;
+  boxDetailAbsoluteArrowVisualTop = <%% (isMac() ? -0 : 0), (isMac() ? -0 : 0), (isMac() ? -0 : 0), (isMac() ? -0 : 0), -0.1 %%>;
+
+  boxDetailBoxTitleSize = <%% 20, 19, 17, 16, 3.8 %%>;
+  boxDetailBoxTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  boxDetailBoxDetailSize = <%% 13, 13, 13, 10, 3 %%>;
+  boxDetailBoxDetailWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  boxDetailBoxTitleEngSize = <%% 22, 21, 19, 18, 4.1 %%>;
+  boxDetailBoxTitleEngWeight = <%% 700, 700, 700, 700, 700 %%>;
+  boxDetailBoxTitleEngVisualTop = <%% 0.5, 0.5, 0.5, 0.5, 0.1 %%>;
+
+  baseTop = <%% 140, 110, 110, 80, 2.5 %%>;
+  baseBottom0 = <%% 150, 115, 115, 85, 25 %%>;
+  baseBottom1 = <%% 200, 200, 200, 160, 24 %%>;
+
+  careerString = designerCareer(designer, true);
+
+  designerHomeTextTop = <%% (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), 0 %%>;
+
+  mainTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(mainWidth) + ea,
+      left: "calc(50% - " + String(mainWidth / 2) + ea + ")",
+      background: colorChip.white,
+      animation: "fadeupdelay 0.5s ease forwards",
+    },
+  });
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      height: desktop ? String(boxHeight) + ea : "",
+      flexDirection: desktop ? "row" : "column",
+      justifyContent: "start",
+      alignItems: "start",
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-flex" : "none",
+          position: "relative",
+          height: desktop ? withOut(0, ea) : String(45) + ea,
+          width: desktop ? String(boxPhotoWidth) + ea : withOut(0, ea),
+          backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.portfolio.detailInfo.photodae[1]) + pid + ".jpg" + "')",
+          backgroundSize: big ? "100% auto" : "auto 100%",
+          backgroundPosition: "50% 50%",
+          borderRadius: String(boxBorderRadius) + "px",
+        }
+      },
+      {
+        style: {
+          display: desktop ? "inline-flex" : "flex",
+          position: "relative",
+          height: desktop ? withOut(0, ea) : "",
+          width: desktop ? withOut(boxPhotoWidth + boxBetween, ea) : withOut(0, ea),
+          marginLeft: desktop ? String(boxBetween) + ea : "",
+          flexDirection: "column",
+          justifyContent: "start",
+          alignItems: "start",
+        },
+        children: [
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(boxDetailBoxPaddingLeft * 2, ea),
+              height: desktop ? "calc(calc(calc(100% - " + String(boxBetween) + ea + ") / 2) - " + String(boxDetailBoxPaddingTop * 2) + ea + ")" : String(30) + ea,
+              borderRadius: String(boxBorderRadius) + "px",
+              flexDirection: "column",
+              justifyContent: "start",
+              alignItems: "start",
+              marginBottom: String(boxBetween) + ea,
+              paddingTop: String(boxDetailBoxPaddingTop) + ea,
+              paddingBottom: String(boxDetailBoxPaddingTop) + ea,
+              paddingLeft: String(boxDetailBoxPaddingLeft) + ea,
+              paddingRight: String(boxDetailBoxPaddingLeft) + ea,
+              background: colorExtended.blue,
+            },
+            children: [
+              {
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                  click: function (e) { selfHref(FRONTHOST + "/desdetail.php?desid=" + this.getAttribute("desid")) },
+                },
+                attribute: { desid: designer.desid },
+                style: {
+                  display: "flex",
+                  position: "absolute",
+                  width: withOut((boxDetailAbsolutePadding * 2) + boxDetailAbsoluteArrowPadding, ea),
+                  left: String(boxDetailAbsolutePadding) + ea,
+                  bottom: String(boxDetailAbsolutePadding) + ea,
+                  height: String(boxDetailAbsoluteBoxHeight) + ea,
+                  borderRadius: String(boxBorderRadius) + "px",
+                  background: colorExtended.blueLight,
+                  flexDirection: "row",
+                  justifyContent: "end",
+                  alignItems: "center",
+                  paddingRight: String(boxDetailAbsoluteArrowPadding) + ea,
+                  cursor: "pointer",
+                },
+                child: {
+                  event: {
+                    selectstart: (e) => { e.preventDefault() },
+                  },
+                  text: "DESIGNER HOME",
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(boxDetailAbsoluteTextSize) + ea,
+                    fontWeight: String(boxDetailAbsoluteTextWeight),
+                    top: String(designerHomeTextTop) + ea,
+                    fontFamily: "gmarket",
+                    color: colorExtended.white,
+                  },
+                  next: {
+                    mode: "svg",
+                    source: svgMaker.squareArrow(colorExtended.white),
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      width: String(boxDetailAbsoluteArrowWidth) + ea,
+                      marginLeft: String(boxDetailAbsoluteArrowBetween) + ea,
+                      top: String(boxDetailAbsoluteArrowVisualTop) + ea,
+                    }
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  flexDirection: "row",
+                  justifyContent: "start",
+                  alignItems: "start",
+                },
+                child: {
+                  text: designer.designer + " 디자이너",
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(boxDetailBoxTitleSize) + ea,
+                    fontWeight: String(boxDetailBoxTitleWeight),
+                    color: colorExtended.white,
+                    fontFamily: "pretendard",
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  height: String(boxDetailBoxLineMargin) + ea,
+                  borderBottom: "1px solid " + colorExtended.white,
+                  marginBottom: String(desktop ? boxDetailBoxLineMargin : 2) + ea,
+                  opacity: String(0.6),
+                }
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  flexDirection: "row",
+                  justifyContent: "start",
+                  alignItems: "start",
+                },
+                child: {
+                  text: designerMthParsing(designer.setting.front.methods).join(", "),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(boxDetailBoxDetailSize) + ea,
+                    fontWeight: String(boxDetailBoxDetailWeight),
+                    color: colorExtended.white,
+                    fontFamily: "pretendard",
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  flexDirection: "row",
+                  justifyContent: "start",
+                  alignItems: "start",
+                },
+                child: {
+                  text: careerString,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(boxDetailBoxDetailSize) + ea,
+                    fontWeight: String(boxDetailBoxDetailWeight),
+                    color: colorExtended.white,
+                    fontFamily: "pretendard",
+                  },
+                  bold: {
+                    fontSize: String(boxDetailBoxDetailSize) + ea,
+                    fontWeight: String(boxDetailBoxDetailWeight),
+                    color: colorExtended.white,
+                    fontFamily: "pretendard",
+                    opacity: String(0.4),
+                  }
+                }
+              },
+            ],
+          },
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(boxDetailBoxPaddingLeft * 2, ea),
+              height: desktop ? "calc(calc(calc(100% - " + String(boxBetween) + ea + ") / 2) - " + String(boxDetailBoxPaddingTop * 2) + ea + ")" : String(30) + ea,
+              borderRadius: String(boxBorderRadius) + "px",
+              flexDirection: "column",
+              justifyContent: "start",
+              alignItems: "start",
+              paddingTop: String(boxDetailBoxPaddingTop) + ea,
+              paddingBottom: String(boxDetailBoxPaddingTop) + ea,
+              paddingLeft: String(boxDetailBoxPaddingLeft) + ea,
+              paddingRight: String(boxDetailBoxPaddingLeft) + ea,
+              background: colorExtended.black,
+            },
+            children: [
+              {
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                  click: function (e) { selfHref(FRONTHOST + "/revdetail.php?pid=" + this.getAttribute("pid")) },
+                },
+                attribute: { pid: instance.pid },
+                style: {
+                  display: "flex",
+                  position: "absolute",
+                  width: withOut((boxDetailAbsolutePadding * 2) + boxDetailAbsoluteArrowPadding, ea),
+                  left: String(boxDetailAbsolutePadding) + ea,
+                  bottom: String(boxDetailAbsolutePadding) + ea,
+                  height: String(boxDetailAbsoluteBoxHeight) + ea,
+                  borderRadius: String(boxBorderRadius) + "px",
+                  background: colorExtended.darkDarkShadow,
+                  flexDirection: "row",
+                  justifyContent: "end",
+                  alignItems: "center",
+                  paddingRight: String(boxDetailAbsoluteArrowPadding) + ea,
+                },
+                child: {
+                  event: {
+                    selectstart: (e) => { e.preventDefault() },
+                  },
+                  text: "REVIEW",
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(boxDetailAbsoluteTextSize) + ea,
+                    fontWeight: String(boxDetailAbsoluteTextWeight),
+                    top: String(designerHomeTextTop) + ea,
+                    fontFamily: "gmarket",
+                    color: colorExtended.white,
+                  },
+                  next: {
+                    mode: "svg",
+                    source: svgMaker.squareArrow(colorExtended.blue),
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      width: String(boxDetailAbsoluteArrowWidth) + ea,
+                      marginLeft: String(boxDetailAbsoluteArrowBetween) + ea,
+                      top: String(boxDetailAbsoluteArrowVisualTop) + ea,
+                    }
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  flexDirection: "row",
+                  justifyContent: "start",
+                  alignItems: "start",
+                },
+                child: {
+                  text: contents.contents.portfolio.spaceInfo.space + " <b%" + String(contents.contents.portfolio.spaceInfo.pyeong) + "PY%b>",
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(boxDetailBoxTitleSize) + ea,
+                    fontWeight: String(boxDetailBoxTitleWeight),
+                    color: colorExtended.white,
+                    fontFamily: "pretendard",
+                  },
+                  bold: {
+                    fontSize: String(boxDetailBoxTitleEngSize) + ea,
+                    fontWeight: String(boxDetailBoxTitleEngWeight),
+                    color: colorExtended.white,
+                    fontFamily: "mont",
+                    position: "relative",
+                    top: String(boxDetailBoxTitleEngVisualTop) + ea,
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  height: String(boxDetailBoxLineMargin) + ea,
+                  borderBottom: "1px solid " + colorExtended.white,
+                  marginBottom: String(desktop ? boxDetailBoxLineMargin : 2) + ea,
+                  opacity: String(0.6),
+                }
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  flexDirection: "row",
+                  justifyContent: "start",
+                  alignItems: "start",
+                },
+                child: {
+                  text: serviceParsing(contents.service).replace(/[ ]*(basic|mini|premium)/gi, '').trim(),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(boxDetailBoxDetailSize) + ea,
+                    fontWeight: String(boxDetailBoxDetailWeight),
+                    color: colorExtended.white,
+                    fontFamily: "pretendard",
+                  }
+                }
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  flexDirection: "row",
+                  justifyContent: "start",
+                  alignItems: "start",
+                },
+                child: {
+                  text: contents.contents.portfolio.title.sub.split(", ")[0] + " " + contents.contents.portfolio.spaceInfo.space,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(boxDetailBoxDetailSize) + ea,
+                    fontWeight: String(boxDetailBoxDetailWeight),
+                    color: colorExtended.white,
+                    fontFamily: "pretendard",
+                  }
+                }
+              },
+            ]
+          },
+        ]
+      }
+    ]
+  })
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      height: String(version === 1 ? baseBottom0 : baseBottom1) + ea,
+    }
+  });
 
 }
 

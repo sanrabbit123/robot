@@ -362,7 +362,7 @@ GeneralJs.prototype.setNavigator = function (subTitle, modeNumber, name) {
   createNode({
     mother: naviBase,
     mode: "svg",
-    source: svgMaker.homeliaisonLogoPlusEdge(modeNumber !== 1 ? colorExtended.white : (Math.random() >= 0.5 ? colorExtended.black : colorExtended.black)),
+    source: svgMaker.homeliaisonLogoPlusEdge(modeNumber !== 1 ? colorExtended.white : instance.logoColor),
     class: [ desktop ? "hoverDefault" : "hoverDefault_mobile" ],
     event: {
       click: (e) => {
@@ -690,6 +690,11 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     } else if (base.backgroundType === 21) {
       this.backHeight = <%% 670, 650, 570, 480, 70 %%>;
       base.instance.backHeight = this.backHeight;
+    }
+
+    this.logoColor = GeneralJs.colorExtended.black;
+    if (base.blueLogo === true) {
+      this.logoColor = GeneralJs.colorExtended.mainBlue;
     }
 
     base.instance.pageName = name;

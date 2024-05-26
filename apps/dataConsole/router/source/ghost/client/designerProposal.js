@@ -875,9 +875,9 @@ DesignerProposalJs.prototype.insertSecondBox = async function () {
         style: {
           display: "flex",
           position: "relative",
-          fontFamily: "gmarket",
           fontSize: String(titleSize) + ea,
-          fontWeight: String(700),
+          fontFamily: "pretendard",
+          fontWeight: String(800),
           color: colorExtended.black,
           marginTop: desktop ? "" : String(5.6) + ea,
         }

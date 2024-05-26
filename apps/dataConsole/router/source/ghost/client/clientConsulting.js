@@ -603,9 +603,9 @@ ClientConsultingJs.prototype.insertSecondBox = async function () {
         style: {
           display: "flex",
           position: "relative",
-          fontFamily: "gmarket",
+          fontFamily: "pretendard",
           fontSize: String(titleSize) + ea,
-          fontWeight: String(700),
+          fontWeight: String(800),
           color: colorExtended.black,
           marginTop: desktop ? "" : String(-1) + ea,
         }
