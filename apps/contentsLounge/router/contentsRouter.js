@@ -669,20 +669,7 @@ ContentsRouter.prototype.rou_post_metaComplex = function () {
       (async () => {
         try {
 
-          boo = await meta.metaComplex(selfMongo, dayConst, logger);
-          if (!boo) {
-            await sleep(3000);
-            boo = await meta.metaComplex(selfMongo, dayConst, logger);
-            if (!boo) {
-              await sleep(3000);
-              boo = await meta.metaComplex(selfMongo, dayConst, logger);
-              if (!boo) {
-                await sleep(3000);
-                await meta.metaComplex(selfMongo, dayConst, logger);
-              }
-            }
-          }
-
+          await meta.metaComplex(selfMongo, 1, logger);
           await sleep(500);
 
           boo = await naver.naverComplex(selfMongo, dayConst, logger);

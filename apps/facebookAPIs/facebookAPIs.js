@@ -1131,7 +1131,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
   }
 }
 
-FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, logger = null) {
+FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 2, logger = null) {
   const instance = this;
   const back = this.back;
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy } = this.mother;
@@ -1175,6 +1175,8 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
     let campaignTarget;
     let thisAdSetSet;
 
+    dayNumber = 1;
+
     fields = [ "name" ];
     params = {};
     accountResult = await (new AdAccount(facebookAdAccountId)).getCampaigns(
@@ -1190,7 +1192,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
 
     for (let i = 0; i < dayNumber; i++) {
 
-      await sleep(60 * 1000);
+      await sleep(delta);
 
       if (i === 0) {
         from = new Date(JSON.stringify(startDate).slice(1, -1));
@@ -1309,7 +1311,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
           for (let adset of adsetArr) {
             for (let ad of adset.ad) {
               thisAdId = ad.id;
-              await sleep(15 * 1000);
+              await sleep(delta);
               adResult = await (new Ad(thisAdId)).getInsights([
                 "adset_id",
                 "adset_name",
@@ -1396,7 +1398,6 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
       // instagram
 
       await sleep(60 * 1000);
-
       await sleep(delta);
       res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + instagramId + "/insights", {
         metric: "impressions,profile_views,follower_count,website_clicks",
@@ -1426,25 +1427,19 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
         json.instagram.performance.clicks = 0;
       }  
       await sleep(delta);
-      try {
-        res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + instagramId + "/insights", {
-          metric: "likes,comments,saves,shares",
-          metric_type: "total_value",
-          period: "day",
-          since: dateToString(from),
-          until: dateToString(to),
-          access_token: facebookToken
-        }, { method: "get" });
-        json.instagram.performance.likes = res.data.data.find((o) => { return o.name === "likes" }).total_value.value;
-        json.instagram.performance.comments = res.data.data.find((o) => { return o.name === "comments" }).total_value.value;
-        json.instagram.performance.saves = res.data.data.find((o) => { return o.name === "saves" }).total_value.value;
-        json.instagram.performance.shares = res.data.data.find((o) => { return o.name === "shares" }).total_value.value;
-      } catch (e) {
-        json.instagram.performance.likes = 0;
-        json.instagram.performance.comments = 0;
-        json.instagram.performance.saves = 0;
-        json.instagram.performance.shares = 0;
-      }
+      await sleep(delta);
+      res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + instagramId + "/insights", {
+        metric: "likes,comments,saves,shares",
+        metric_type: "total_value",
+        period: "day",
+        since: dateToString(from),
+        until: dateToString(to),
+        access_token: facebookToken
+      }, { method: "get" });
+      json.instagram.performance.likes = res.data.data.find((o) => { return o.name === "likes" }).total_value.value;
+      json.instagram.performance.comments = res.data.data.find((o) => { return o.name === "comments" }).total_value.value;
+      json.instagram.performance.saves = res.data.data.find((o) => { return o.name === "saves" }).total_value.value;
+      json.instagram.performance.shares = res.data.data.find((o) => { return o.name === "shares" }).total_value.value;
 
       // store
       tempRows = await back.mongoRead(collection, { key }, { selfMongo });
@@ -1454,6 +1449,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
       await back.mongoCreate(collection, json, { selfMongo });
 
       console.log(json);
+      await sleep(30 * 1000);
     }
 
     if (logger !== null) {
@@ -1464,7 +1460,6 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
 
   } catch (e) {
     emergencyAlarm("FacebookAPIs.metaComplex error : " + e.message).catch((err) => { console.log(err); });
-    emergencyAlarm("FacebookAPIs.metaComplex error : " + JSON.stringify(e?.response?.data?.error)).catch((err) => { console.log(err); });
     console.log(e);
     return false;
   }
