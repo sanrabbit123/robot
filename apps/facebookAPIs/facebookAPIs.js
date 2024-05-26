@@ -250,63 +250,6 @@ FacebookAPIs.prototype.readActiveCampaigns = async function (noRawMode = true) {
   }
 }
 
-FacebookAPIs.prototype.test = async function () {
-  const instance = this;
-  const back = this.back;
-  const { facebookAppId, facebookAppSecret, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId, facebookAdAccountId } = this;
-  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy } = this.mother;
-  const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
-
-
-  const delta = 1 * 1000;
-  let fields, params, campaigns;
-  let campaign;
-  let result;
-  let adsets;
-  let adset;
-  let ads;
-  let ad;
-  let target;
-  let id;
-  let campaignResult;
-
-  fields = [ "name" ];
-  params = {};
-  result = await (new AdAccount(facebookAdAccountId)).getCampaigns(
-    fields,
-    params
-  );
-
-  campaigns = [];
-  for (let o of result) {
-    id = o._data.id;
-
-    campaignResult = await (new Campaign(id)).getInsights([
-      "account_id",
-      "campaign_id",
-      "campaign_name",
-      "reach",
-      "impressions",
-      "spend",
-      "clicks",
-      "date_start",
-      "date_stop",
-    ], {
-      "time_range": {
-        "since": "2023-05-01",
-        "until": "2023-05-02",
-      }
-    });
-    for (let c of campaignResult) {
-      console.log(c._data);
-    }
-    console.log(id);
-  }
-
-
-
-}
-
 FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, logger = null) {
   const instance = this;
   const back = this.back;
@@ -519,9 +462,6 @@ FacebookAPIs.prototype.getActiveInstantFormId = async function (logger = null) {
     let res;
     let pageAccessToken;
     let formArr;
-
-
-
 
     res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + facebookUserId + "/accounts", {
       access_token: facebookToken
@@ -1204,7 +1144,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
     const idKeyword = 'f';
     const metaKeyword = 'f';
     const metaKeyKeyword = "meta";
-    const delta = 16 * 1000;
+    const delta = 30 * 1000;
     let tempRows;
     let res;
     let json;
@@ -1227,6 +1167,13 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
     let id;
     let campaignResult;
     let accountResult;
+    let adResult;
+    let thisAdId;
+    let thisAdSet;
+    let resultObj;
+    let tempAdsTong;
+    let campaignTarget;
+    let thisAdSetSet;
 
     fields = [ "name" ];
     params = {};
@@ -1290,7 +1237,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
       };
 
       // campaign
-      // await sleep(delta);
+      await sleep(delta);
 
       campaigns = [];
       for (let o of accountResult) {
@@ -1331,123 +1278,111 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
           });
         }
 
-        adsets = await (new Campaign(id)).getAdSets([ "name" ], {});
-        adsetArr = [];
-        for (let a of adsets) {
-          adset = {};
-          adset.id = a._data.id;
-          adset.name = a._data.name;
-          adset.ad = [];
-          adsetArr.push(objectDeepCopy(adset));
-        }
-        await sleep(1000);
-        ads = await (new Campaign(id)).getAds([ "name", "adset_id" ], {});
-        for (let a of ads) {
-          adArr = adsetArr.find((adset) => { return adset.id === a._data.adset_id });
-          ad = {};
-          ad.id = a._data.id;
-          ad.name = a._data.name;
-          if (adArr !== undefined) {
-            adArr.push(objectDeepCopy(ad));
-          }
-        }
-
-        console.log(adsets)
-
-
-
-
-      }
-
-      /*
-
-      for (let obj of res.data.data) {
-
-
-        await sleep(delta);
-        campaignId = obj.campaign_id;
-        res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + campaignId + "/insights", {
-          level: "adset",
-          fields: [
-            "adset_id",
-            "adset_name",
-            "reach",
-            "impressions",
-            "spend",
-            "clicks",
-            "date_start",
-            "date_stop",
-          ].join(","),
-          time_range: JSON.stringify({
-            since: dateToString(from),
-            until: dateToString(from),
-          }),
-          access_token: facebookToken
-        }, { method: "get" });
-
-        for (let obj2 of res.data.data) {
-
-          json.advertisement.campaign[0].children.unshift({
-            value: {
-              charge: Number(obj2.spend),
-              performance: {
-                reach: Number(obj2.reach),
-                impressions: Number(obj2.impressions),
-                clicks: Number(obj2.clicks),
-              },
-            },
-            information: {
-              id: obj2.adset_id,
-              campaign: obj.campaign_id,
-              name: obj2.adset_name,
-            },
-            children: [],
-          })
+        if (campaignResult.length > 0) {
 
           await sleep(delta);
-          adsetId = obj2.adset_id;
-          res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + adsetId + "/insights", {
-            level: "ad",
-            fields: [
-              "adset_id",
-              "adset_name",
-              "ad_id",
-              "ad_name",
-              "reach",
-              "impressions",
-              "spend",
-              "clicks",
-              "date_start",
-              "date_stop",
-            ].join(","),
-            time_range: JSON.stringify({
-              since: dateToString(from),
-              until: dateToString(from),
-            }),
-            access_token: facebookToken
-          }, { method: "get" });
 
-          for (let obj3 of res.data.data) {
+          adsets = await (new Campaign(id)).getAdSets([ "name" ], {});
+          adsetArr = [];
+          for (let a of adsets) {
+            adset = {};
+            adset.id = a._data.id;
+            adset.name = a._data.name;
+            adset.ad = [];
+            adsetArr.push(objectDeepCopy(adset));
+          }
 
-            json.advertisement.campaign[0].children[0].children.unshift({
+          await sleep(delta);
+
+          ads = await (new Campaign(id)).getAds([ "name", "adset_id" ], {});
+          for (let a of ads) {
+            thisAdSet = adsetArr.find((adset) => { return adset.id === a._data.adset_id });
+            ad = {};
+            ad.id = a._data.id;
+            ad.name = a._data.name;
+            if (thisAdSet !== undefined) {
+              thisAdSet.ad.push(objectDeepCopy(ad));
+            }
+          }
+  
+          tempAdsTong = [];
+          for (let adset of adsetArr) {
+            for (let ad of adset.ad) {
+              thisAdId = ad.id;
+              await sleep(delta);
+              adResult = await (new Ad(thisAdId)).getInsights([
+                "adset_id",
+                "adset_name",
+                "ad_id",
+                "ad_name",
+                "reach",
+                "impressions",
+                "spend",
+                "clicks",
+                "date_start",
+                "date_stop",
+              ], {
+                "time_range": {
+                  "since": dateToString(from),
+                  "until": dateToString(from),
+                }
+              });
+              for (let adResultFactor of adResult) {
+                resultObj = {
+                  value: {
+                    charge: Number(adResultFactor._data.spend),
+                    performance: {
+                      reach: Number(adResultFactor._data.reach),
+                      impressions: Number(adResultFactor._data.impressions),
+                      clicks: Number(adResultFactor._data.clicks),
+                    },
+                  },
+                  information: {
+                    id: adResultFactor._data.ad_id,
+                    adset: adResultFactor._data.adset_id,
+                    name: adResultFactor._data.ad_name,
+                  },
+                };
+                tempAdsTong.push(objectDeepCopy(resultObj));
+              }
+            }
+          }
+  
+          thisAdSetSet = [ ...new Set(tempAdsTong.map((o) => { return o.information.adset })) ];
+          adsetArr = adsetArr.filter((a) => { return thisAdSetSet.includes(a.id) });
+          campaignTarget = json.advertisement.campaign.find((o) => { return id === o.information.id });
+
+          for (let adset of adsetArr) {
+            campaignTarget.children.unshift({
               value: {
-                charge: Number(obj3.spend),
+                charge: 0,
                 performance: {
-                  reach: Number(obj3.reach),
-                  impressions: Number(obj3.impressions),
-                  clicks: Number(obj3.clicks),
+                  reach: 0,
+                  impressions: 0,
+                  clicks:0,
                 },
               },
               information: {
-                id: obj3.ad_id,
-                adset: obj3.adset_id,
-                name: obj3.ad_name,
+                id: adset.id,
+                campaign: id,
+                name: adset.name,
               },
-            })
-
+              children: [],
+            });
+            for (let adObj of tempAdsTong) {
+              if (adObj.information.adset === adset.id) {
+                campaignTarget.children[0].children.unshift(objectDeepCopy(adObj));
+              }
+            }
+            campaignTarget.children[0].value.charge = campaignTarget.children[0].children.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
+            campaignTarget.children[0].value.performance.reach = campaignTarget.children[0].children.reduce((acc, curr) => { return acc + curr.value.performance.reach }, 0);
+            campaignTarget.children[0].value.performance.impressions = campaignTarget.children[0].children.reduce((acc, curr) => { return acc + curr.value.performance.impressions }, 0);
+            campaignTarget.children[0].value.performance.clicks = campaignTarget.children[0].children.reduce((acc, curr) => { return acc + curr.value.performance.clicks }, 0);
           }
         }
+
       }
+
       if (json.advertisement.campaign.length > 0) {
         json.advertisement.value.charge = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.charge }, 0);
         json.advertisement.value.performance.reach = json.advertisement.campaign.reduce((acc, curr) => { return acc + curr.value.performance.reach }, 0);
@@ -1508,8 +1443,6 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
         json.instagram.performance.shares = 0;
       }
 
-
-
       // store
       tempRows = await back.mongoRead(collection, { key }, { selfMongo });
       if (tempRows.length !== 0) {
@@ -1517,10 +1450,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
       }
       await back.mongoCreate(collection, json, { selfMongo });
 
-      */
-
-      console.log(json.advertisement.campaign);
-
+      console.log(json);
     }
 
     if (logger !== null) {
