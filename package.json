@@ -25,6 +25,7 @@
     "axios": "^1.7.2",
     "express": "^4.19.2",
     "express-useragent": "^1.0.15",
+    "facebook-nodejs-business-sdk": "^19.0.3",
     "follow-redirects": "^1.15.6",
     "form-data-uragen": "^1.0.0",
     "formidable": "^2.1.1",

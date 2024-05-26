@@ -11,6 +11,7 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
     this.back = new BackMaker();
     this.address = ADDRESS;
   }
+
   this.dir = process.cwd() + "/apps/facebookAPIs";
 
   this.facebookUrl = "https://graph.facebook.com";
@@ -21,8 +22,232 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
   this.instagramId = "17841405547472752";
   this.facebookAdId = "505249990112820";
   this.facebookUserId = "192515798954554";
+  this.facebookAdAccountId = "act_" + this.facebookAdId;
   this.pixelId = "814052605684956";
-  this.appVersion = "v20.0";
+  this.appVersion = "v19.0";
+
+  const bizSdk = require("facebook-nodejs-business-sdk");
+  const FacebookAdsApi = bizSdk.FacebookAdsApi.init(this.facebookToken);
+  const AdAccount = bizSdk.AdAccount;
+  const Campaign = bizSdk.Campaign;
+  const account = new AdAccount("act_" + this.facebookAdId);
+  this.bizSdk = bizSdk;
+  this.FacebookAdsApi = FacebookAdsApi;
+  this.AdAccount = AdAccount;
+  this.Campaign = Campaign;
+  this.account = account;
+}
+
+FacebookAPIs.prototype.readLeadgenCampaigns = async function (noRawMode = true) {
+  const instance = this;
+  const back = this.back;
+  const { facebookAppId, facebookAppSecret, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId, facebookAdAccountId } = this;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy } = this.mother;
+  const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
+  const Ad = bizSdk.Ad;
+  try {
+    const delta = 3 * 1000;
+    let fields, params, campaigns;
+    let campaign;
+    let result;
+    let leads;
+    let ads;
+    let ad;
+    let leadArr;
+    let targetObj;
+
+    fields = [ "name" ];
+    params = {
+      "effective_status" : [ "ACTIVE" ],
+    };
+    result = await (new AdAccount(facebookAdAccountId)).getCampaigns(
+      fields,
+      params
+    );
+
+    campaigns = [];
+    for (let o of result) {
+      if (/인스턴트/gi.test(o._data.name) || /인스탄트/gi.test(o._data.name) || /양식/gi.test(o._data.name) || /instant/gi.test(o._data.name) || /form/gi.test(o._data.name)) {
+        await sleep(delta);
+
+        campaign = {};
+        if (!noRawMode) {
+          campaign.raw = o;
+        }
+        campaign.id = o._data.id;
+        campaign.name = o._data.name;
+  
+        fields = [ "name", "adset_id", "adset_name" ];
+        params = { "effective_status" : [ "ACTIVE" ] };
+  
+        ads = await (new Campaign(campaign.id)).getAds(
+          fields,
+          params
+        );
+
+        campaign.ads = [];
+        for (let a of ads) {
+          ad = {};
+          if (!noRawMode) {
+            ad.raw = a;
+          }
+          ad.id = a._data.id;
+          ad.name = a._data.name;
+          ad.adset = {
+            id: a._data.adset_id,
+            name: a._data.adset_name,
+          }
+
+          await sleep(delta);
+
+          leads = await (new Ad(ad.id)).getLeads([ "created_time", "id", "ad_id", "form_id", "field_data" ], {});
+          leadArr = [];
+          for (let lead of leads) {
+            targetObj = objectDeepCopy(lead._data);
+            targetObj.created_time = new Date(targetObj.created_time);
+            leadArr.push(objectDeepCopy(lead._data))
+          }
+          leadArr.sort((a, b) => { return b.created_time.valueOf() - a.created_time.valueOf() });
+          ad.lead = objectDeepCopy(leadArr);
+
+          campaign.ads.push(objectDeepCopy(ad));
+        }
+  
+        campaigns.push(objectDeepCopy(campaign));
+      }
+    }
+
+    return campaigns;
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+FacebookAPIs.prototype.readLeads = async function () {
+  const instance = this;
+  try {
+    const campaigns = await this.readLeadgenCampaigns();
+    if (!Array.isArray(campaigns)) {
+      return null;
+    }
+    return campaigns.map((c) => { return c.ads }).flat().map((a) => { return a.lead }).flat().filter((l) => { return !l.field_data.some(({ name }) => { return /[가-힣]/gi.test(name) }) });
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+FacebookAPIs.prototype.readActiveCampaigns = async function (noRawMode = true) {
+  const instance = this;
+  const back = this.back;
+  const { facebookAppId, facebookAppSecret, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId, facebookAdAccountId } = this;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy } = this.mother;
+  const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
+  try {
+    const delta = 1 * 1000;
+    let fields, params, campaigns;
+    let campaign;
+    let result;
+    let adsets;
+    let adset;
+    let ads;
+    let ad;
+    let target;
+
+    fields = [ "name" ];
+    params = {
+      "effective_status" : [ "ACTIVE" ],
+    };
+    result = await (new AdAccount(facebookAdAccountId)).getCampaigns(
+      fields,
+      params
+    );
+
+    campaigns = [];
+    for (let o of result) {
+
+      await sleep(delta);
+
+      campaign = {};
+      if (!noRawMode) {
+        campaign.raw = o;
+      }
+      campaign.id = o._data.id;
+      campaign.name = o._data.name;
+
+      fields = [ "name" ];
+      params = { "effective_status" : [ "ACTIVE" ] };
+
+      adsets = await (new Campaign(campaign.id)).getAdSets(
+        fields,
+        params
+      );
+
+      campaign.adset = [];
+      for (let a of adsets) {
+        adset = {};
+        if (!noRawMode) {
+          adset.raw = a;
+        }
+        adset.id = a._data.id;
+        adset.name = a._data.name;
+        adset.ad = [];
+        campaign.adset.push(objectDeepCopy(adset));
+      }
+
+      fields = [ "name", "adset_id" ];
+      params = { "effective_status" : [ "ACTIVE" ] };
+
+      await sleep(delta);
+
+      ads = await (new Campaign(campaign.id)).getAds(
+        fields,
+        params
+      );
+
+      for (let a of ads) {
+        target = campaign.adset.find((adset) => { return adset.id === a._data.adset_id });
+        ad = {};
+        ad.id = a._data.id;
+        ad.name = a._data.name;
+        if (target !== undefined) {
+          target.ad.push(objectDeepCopy(ad));
+        }
+      }
+
+      campaigns.push(objectDeepCopy(campaign));
+    }
+
+    return campaigns;
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+FacebookAPIs.prototype.test = async function () {
+  const instance = this;
+  const back = this.back;
+  const { facebookAppId, facebookAppSecret, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId } = this;
+  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy } = this.mother;
+  const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
+
+
+  const leads = await this.readLeads();
+  console.log(JSON.stringify(leads, null, 2));
+  console.log(leads)
+
+
+  // const Ad = bizSdk.Ad;
+  // const leadss = (new Ad(id)).getLeads(
+  //   fields,
+  //   params
+  // );
+
+
 }
 
 FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3, logger = null) {
@@ -30,6 +255,7 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3,
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition } = this.mother;
+  const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
   try {
     const campaignCollection = "dailyCampaign";
     let tempRows;
@@ -135,6 +361,7 @@ FacebookAPIs.prototype.accountStatusCheck = async function (logger = null) {
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition } = this.mother;
+  const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
   try {
     const statusDictionary = {
       "s1": "ACTIVE",
@@ -229,13 +456,15 @@ FacebookAPIs.prototype.getActiveInstantFormId = async function (logger = null) {
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId } = this;
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy } = this.mother;
+  const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
   try {
-    const delta = 30 * 1000;
+    const delta = 20 * 1000;
     let res;
     let pageAccessToken;
     let formArr;
 
-    await sleep(3000);
+
+
 
     res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + facebookUserId + "/accounts", {
       access_token: facebookToken
@@ -275,24 +504,16 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId } = this;
   const { sleep, dateToString, stringToDate, sha256Hmac, fileSystem, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy, binaryRequest, messageSend } = this.mother;
+  const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
   try {
     const collection = "metaInstantForm";
-    const delta = 40 * 1000;
-    const instantIdResult = await instance.getActiveInstantFormId(logger);
-    if (instantIdResult === null) {
+    const leads = await this.readLeads();
+    if (leads === null) {
       return false;
     }
-    const { pageAccessToken, formId } = instantIdResult;
-    const url = "https://graph.facebook.com/" + appVersion + "/" + formId + "/leads";
-    let res;
     let tong;
     let tempObj;
     let thisDate;
-    let afterToken;
-    let fields;
-    let now, ago;
-    let standardStamp;
-    let filtering;
     let rawArr;
     let seridRaw;
     let purchaseRaw;
@@ -305,45 +526,10 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
     let thisId, json;
     let rows;
     let emailRaw, contractRaw;
-    let thisInjection;
     let timeRaw;
-
-    await sleep(delta);
-
-    now = new Date();
-    ago = new Date(JSON.stringify(now).slice(1, -1));
-    ago.setDate(ago.getDate() - dateDelta);
-
-    standardStamp = Math.floor(ago.valueOf() / 1000);
-    
-    filtering = JSON.stringify([
-      {
-        field: "time_created",
-        operator: "GREATER_THAN_OR_EQUAL",
-        value: standardStamp
-      }
-    ]);
-    fields = [
-      "created_time",
-      "id",
-      "ad_id",
-      "form_id",
-      "field_data"
-    ].join(",");
-
-    res = await requestSystem(url, { access_token: pageAccessToken, fields, filtering }, { method: "get" });
-    if (res.data.paging === undefined || res.data.data.length === 0) {
-      afterToken = null;
-    } else {
-      if (typeof res.data.paging === "object" && res.data.paging !== null) {
-        afterToken = res.data.paging.cursors?.after;
-      } else {
-        afterToken = null;
-      }
-    }
-
+  
     tong = [];
-    for (let obj of res.data.data) {
+    for (let obj of leads) {
 
       thisDate = new Date(obj.created_time);
       thisDate = dateToString(thisDate, true);
@@ -483,31 +669,6 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
 
       tong.push(tempObj);
     }
-    
-    while (Boolean(afterToken)) {
-      await sleep(delta);
-      res = await requestSystem(url, { access_token: pageAccessToken, fields, filtering, after: afterToken }, { method: "get" });
-      if (res.data.paging === undefined || res.data.data.length === 0) {
-        afterToken = null;
-      } else {
-        if (typeof res.data.paging === "object" && res.data.paging !== null) {
-          afterToken = res.data.paging.cursors?.after;
-        } else {
-          afterToken = null;
-        }
-      }
-      for (let obj of res.data.data) {
-        thisDate = new Date(obj.created_time);
-        thisDate = dateToString(thisDate, true);
-        thisDate = stringToDate(thisDate);
-        tempObj = {
-          id: obj.id,
-          date: new Date(JSON.stringify(thisDate).slice(1, -1)),
-          raw: objectDeepCopy(obj.field_data),
-        }
-        tong.push(tempObj);
-      }
-    }
 
     for (let row of tong) {
       json = objectDeepCopy(row);
@@ -542,6 +703,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
   const app = new AddressParser();
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion, facebookUserId } = this;
   const { sleep, dateToString, stringToDate, sha256Hmac, fileSystem, requestSystem, errorLog, emergencyAlarm, zeroAddition, objectDeepCopy, binaryRequest, messageSend, autoComma, autoHypenPhone, homeliaisonAnalytics } = this.mother;
+  const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
   try {
     const budgetArr = [ '500만원 이하', '1,000만원', '1,500만원', '2,000만원', '2,500만원', '3,000만원', '3,500만원', '4,000만원', '4,500만원', '5,000만원 이상', '6,000만원 이상', '7,000만원 이상', '8,000만원 이상', '9,000만원 이상', '1억원 이상', '1억 5,000만원 이상', '2억원 이상', '3억원 이상', '5억원 이상', '10억원 이상', ];
     const purchaseArr = [ "재배치", "일부 구매", "전체 구매" ];
@@ -973,6 +1135,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 3, l
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, emergencyAlarm, zeroAddition } = this.mother;
+  const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
   try {
     const collection = "metaComplex";
     const idKeyword = 'f';
@@ -1261,6 +1424,7 @@ FacebookAPIs.prototype.dailyInstagram = async function (selfMongo, dayNumber = 7
   const back = this.back;
   const { facebookAppId, facebookToken, facebookPageId, instagramId, facebookAdId, appVersion } = this;
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog, zeroAddition } = this.mother;
+  const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
   try {
     const channelCollection = "dailyChannel";
     let res;
@@ -1337,6 +1501,7 @@ FacebookAPIs.prototype.conversionEvent = async function (obj) {
   const instance = this;
   const { requestSystem, emergencyAlarm } = this.mother;
   const { facebookToken, pixelId, appVersion } = this;
+  const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
   try {
     const url = `https://graph.facebook.com/${appVersion}/${pixelId}/events?access_token=${facebookToken}`;
     let res, data;
@@ -1373,6 +1538,7 @@ FacebookAPIs.prototype.getAccessToken = async function () {
   const instance = this;
   const { requestSystem } = this.mother;
   const { facebookAppId, facebookAppSecret, facebookPageId, instagramId, facebookAdId } = this;
+  const { bizSdk, FacebookAdsApi, AdAccount, Campaign, account } = this;
   try {
     const url = "https://graph.facebook.com/oauth/access_token";
     let res, token;
