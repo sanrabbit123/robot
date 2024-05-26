@@ -221,8 +221,7 @@ DevContext.prototype.launching = async function () {
     //   },
     // }));
 
-    const audio = new PlayAudio();
-    await audio.textToVoice();
+
     
     
 
