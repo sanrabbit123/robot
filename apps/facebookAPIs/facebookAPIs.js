@@ -1175,7 +1175,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 2, l
     let campaignTarget;
     let thisAdSetSet;
 
-    dayNumber = 1;
+    dayNumber = 2;
 
     fields = [ "name" ];
     params = {};
@@ -1449,7 +1449,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 2, l
       await back.mongoCreate(collection, json, { selfMongo });
 
       console.log(json);
-      await sleep(30 * 1000);
+      await sleep(3 * 60 * 1000);
     }
 
     if (logger !== null) {
