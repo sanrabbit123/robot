@@ -855,7 +855,7 @@ FrontIndexJs.prototype.insertSecondBox = async function () {
 
     topBottomMargin = <%% 45, 35, 30, 27, 9 %%>;
 
-    blueBlockBetween = <%% 6, 5, 3, 2, 1 %%>;
+    blueBlockBetween = <%% 6, 5, 3, 2, 1.2 %%>;
 
     titleSize = <%% 23, 21, 19, 17, 5.2 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -3117,7 +3117,7 @@ FrontIndexJs.prototype.insertConsultingBox = async function (lastMode = false) {
     buttonHeight = <%% 48, 45, 42, 36, 11 %%>;
     buttonWidth = <%% 300, 352, 320, 275, 3 %%>;
 
-    commentsWidth = <%% 120, 120, 120, 100, 23 %%>;
+    commentsWidth = <%% 120, 120, 120, 100, 24 %%>;
     commentsHeight = <%% 28, 28, 28, 24, 6.6 %%>;
     commentsRadius = <%% 5, 5, 5, 5, 5 %%>;
     commentsTop = <%% -34, -34, -34, -28, -7.6 %%>;
