@@ -8487,7 +8487,7 @@ DataRouter.prototype.rou_post_blackButtonsClick = function () {
       if (mode === "consulting") {
         await messageSend({ text: name + " 고객님(" + cliid + ")이 상담부터 원한다고 선택하셨어요!", channel: "#404_curation", voice: true });
       } else {
-        await messageSend({ text: name + " 고객님(" + cliid + ")이 추천부터 원한다고 선택하셨어요! 2시간 이내로(" + Math.random((delta / 1000) / 60) + "분 뒤에) 자동 추천서가 발송될 예정입니다!", channel: "#404_curation", voice: true });
+        await messageSend({ text: name + " 고객님(" + cliid + ")이 추천부터 원한다고 선택하셨어요! 2시간 이내로(" + String(Math.floor((delta / 1000) / 60)) + "분 뒤에) 자동 추천서가 발송될 예정입니다!", channel: "#404_curation", voice: true });
 
         setTimeout(async () => {
           try {
