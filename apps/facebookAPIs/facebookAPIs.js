@@ -1102,6 +1102,27 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
                 await sleep(1000);
       
                 await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
+
+                await sleep(1000);
+
+                await requestSystem("https://" + instance.address.backinfo.host + ":3000/alimTalk", {
+                  method: "pushClient",
+                  name: String(name),
+                  phone: String(phone),
+                  option: {
+                    client: String(name),
+                    host: instance.address.frontinfo.host,
+                    path: "curation",
+                    cliid: cliid,
+                  }
+                }, {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "origin": instance.address.backinfo.host,
+                  }
+                });
+
+                await sleep(1000);
     
               } else {
                 await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
