@@ -4115,7 +4115,12 @@ FirstPaymentJs.prototype.launching = async function (loading) {
   
       kind = "style";
       this.kind = kind;
-      method = project.service.online ? "online" : "offline";
+
+      if (getObj.method === undefined) {
+        method = project.service.online ? "online" : "offline";
+      } else {
+        method = getObj.method;
+      }
       this.method = method;
 
     } else {

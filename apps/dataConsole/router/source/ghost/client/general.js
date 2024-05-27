@@ -69,7 +69,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
   }
   secondBackgroundImageName = "back2.jpg";
 
-  if (this.backgroundType !== 9 && this.backgroundType !== 10 && this.backgroundType !== 11 && this.backgroundType !== 20 && this.backgroundType !== 21) {
+  if (this.backgroundType !== 9 && this.backgroundType !== 10 && this.backgroundType !== 11 && this.backgroundType !== 31 && this.backgroundType !== 20 && this.backgroundType !== 21) {
     if (!second) {
       [ backgroundGray, backgroundImageBox ] = createNodes([
         {
@@ -92,9 +92,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
             left: String(0),
             width: String(100) + '%',
             height: String(backHeight) + ea,
-            backgroundImage: "url('" + binaryPath + "/" + backgroundImageName + "')",
-            backgroundSize: this.backgroundType !== 1 ? ((!media[3] && !media[4]) ? "100% auto" : "auto 100%") : (mobile ? "auto 100%" : "100% auto"),
-            backgroundPosition: "top",
+            background: GeneralJs.colorExtended.gradientBlack,
             animation: "justfadeinoriginal 0.3s ease forwards",
           }
         }
@@ -126,9 +124,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
             left: String(0),
             width: String(100) + '%',
             height: String(backHeight) + ea,
-            backgroundImage: "url('" + binaryPath + "/" + secondBackgroundImageName + "')",
-            backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
-            backgroundPosition: "top",
+            background: GeneralJs.colorExtended.gradientBlack,
           }
         },
         {
@@ -139,10 +135,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
             left: String(0),
             width: String(100) + '%',
             height: String(backHeight) + ea,
-            backgroundImage: "url('" + binaryPath + "/" + backgroundImageName + "')",
-            backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
-            backgroundPosition: "top",
-            animation: "justfadeinoriginal 0.3s ease forwards",
+            background: GeneralJs.colorExtended.gradientBlack,
           }
         }
       ]);
@@ -174,10 +167,38 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
           left: String(0),
           width: String(100) + '%',
           height: String(backHeight) + ea,
-          backgroundImage: "url('" + binaryPath + "/" + backgroundImageName + "')",
-          backgroundSize: "100% auto",
-          backgroundPosition: "top",
+          background: GeneralJs.colorExtended.gradientBlack,
+        }
+      }
+    ]);
+    this.backgroundGray = backgroundGray;
+    this.backgroundImageBox = backgroundImageBox;
+    this.backgroundImageBox2 = null;
+  }
+
+  if (this.backgroundType === 31) {
+    [ backgroundGray, backgroundImageBox ] = createNodes([
+      {
+        mother: totalContents,
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: colorExtended.gradientBlue,
           animation: "justfadeinoriginal 0.3s ease forwards",
+        }
+      },
+      {
+        mother: totalContents,
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(backHeight) + ea,
+          background: GeneralJs.colorExtended.gradientBlack,
         }
       }
     ]);
@@ -620,7 +641,7 @@ GeneralJs.prototype.setBaseTong = function (child) {
 
   if (this.backgroundType === 10) {
     baseTop = <%% 180, 180, 164, 148, 10 %%>;
-  } else if (this.backgroundType === 11) {
+  } else if (this.backgroundType === 11 || this.backgroundType === 31) {
     baseTop = <%% 206, 200, 174, 150, 11 %%>;
   } else if (this.backgroundType === 20) {
     baseTop = <%% 130, 125, 120, 100, 9 %%>;
@@ -685,7 +706,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     } else if (base.backgroundType === 10) {
       this.backHeight = <%% 346, 330, 310, 280, 58 %%>;
       base.instance.backHeight = this.backHeight;
-    } else if (base.backgroundType === 11) {
+    } else if (base.backgroundType === 11 || base.backgroundType === 31) {
       this.backHeight = <%% 670, 650, 570, 480, 70 %%>;
       base.instance.backHeight = this.backHeight;
     } else if (base.backgroundType === 21) {

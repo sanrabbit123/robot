@@ -8765,7 +8765,7 @@ DesignerProposalJs.prototype.finalSubmit = async function (desid) {
         loading.remove();
 
         window.localStorage.clear();
-        selfHref(FRONTHOST + "/estimation.php?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method);
+        selfHref(FRONTHOST + "/payment.php?proid=" + instance.project.proid + "&desid=" + desid + "&method=" + method);
       }
     }
   } catch (e) {

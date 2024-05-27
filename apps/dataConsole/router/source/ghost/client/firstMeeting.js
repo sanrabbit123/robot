@@ -1729,7 +1729,7 @@ FirstMeetingJs.prototype.launching = async function (loading) {
         binaryPath: FirstMeetingJs.binaryPath,
         subTitle: (this.client.name + " 고객님 현장 미팅 안내"),
         secondBackground: false,
-        backgroundType: 11,
+        backgroundType: 31,
         talk: {
           text: "기타 문의 사항은 홈리에종 채널에 주세요!",
           event: "channel",
@@ -1749,7 +1749,6 @@ FirstMeetingJs.prototype.launching = async function (loading) {
 
     loading.parentNode.removeChild(loading);
 
-    this.totalContents.children[0].style.background = colorExtended.gray2;
     this.totalContents.children[1].style.transition = "all 0s ease";
     this.totalContents.children[1].style.height = String(<&& 670 | 650 | 570 | 480 | 70 &&>) + this.ea;
     if (this.media[4]) {

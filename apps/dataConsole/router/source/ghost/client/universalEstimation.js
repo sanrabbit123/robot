@@ -1964,6 +1964,10 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       }
     }
 
+    if (/홈리에종 계약금/gi.test(this.bill.requests[this.requestNumber].name)) {
+      GeneralJs.selfHref(FRONTHOST + "/payment.php?proid=" + proid + "&desid=" + desid + "&method=" + method);
+    }
+
     this.request = {
       name: "",
       amount: 0,
@@ -2028,7 +2032,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
         instance: this,
         binaryPath: UniversalEstimationJs.binaryPath,
         subTitle: (this.client.name + " 고객님 결제 안내"),
-        backgroundType: 11,
+        backgroundType: 31,
         talk: {
           text: "기타 문의 사항은 홈리에종 채널에 주세요!",
           event: "channel",
@@ -2053,7 +2057,6 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
 
     loading.parentNode.removeChild(loading);
 
-    this.totalContents.children[0].style.background = colorExtended.gray1;
     this.totalContents.children[1].style.transition = "all 0s ease";
     this.totalContents.children[1].style.height = String(<&& 670 | 650 | 570 | 480 | 70 &&>) + this.ea;
     if (this.media[4]) {

@@ -1730,7 +1730,7 @@ ContractCautionJs.prototype.launching = async function (loading) {
         binaryPath: ContractCautionJs.binaryPath,
         subTitle: "유의 사항 안내",
         secondBackground: false,
-        backgroundType: 0,
+        backgroundType: 31,
         talk: {
           text: "기타 문의 사항은 홈리에종 채널에 주세요!",
           event: "channel",
