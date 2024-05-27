@@ -8479,7 +8479,7 @@ DataRouter.prototype.rou_post_blackButtonsClick = function () {
       const selfMongo = instance.mongolocal;
       const toNormal = true;
       const collection = "blackButtonsClick";
-      const delta = Math.floor((1 + Math.random()) * 60 * 60 * 1000) - (10 * 60 * 60 * 1000);
+      const delta = Math.floor((1 + Math.random()) * 60 * 60 * 1000) - (10 * 60 * 1000);
       const generalPort = 3000;
       let proid, rows;
       let targetProposal;
