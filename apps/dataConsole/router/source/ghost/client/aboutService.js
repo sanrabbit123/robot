@@ -3615,7 +3615,7 @@ AboutServiceJs.prototype.insertServiceDetailBox = async function (secondBaseMoth
 
     titleVisualPaddingBottom = <%% 42, 42, 42, 42, 4 %%>;
 
-    commentsTitleWeight = <%% 300, 300, 300, 300, 600 %%>;
+    commentsTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
     commentsTitleLineHeight = <%% 1.44, 1.44, 1.44, 1.44, 1.44 %%>;
 
     blackBlueAreaPaddingTop0 = <%% 9.5, 9.5, 9.5, 9.5, 9.5 %%>;

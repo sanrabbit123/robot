@@ -2053,7 +2053,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
                 right: String(0) + ea,
               },
               child: {
-                text: autoComma(evaluation.spend.construct < 0 ? 0 : evaluation.spend.construct / 10000) + "만원대",
+                text: ((evaluation.spend.construct <= 0) ? ((contents.service.serid === "s2011_aa01s") ? String(0) + "원" : "비공개") : autoComma(evaluation.spend.construct / 10000) + "만원대"),
                 style: {
                   display: "inline-block",
                   position: "relative",

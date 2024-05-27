@@ -7327,7 +7327,7 @@ StyleCurationJs.prototype.blackButtonEvent = function (mode) {
   const desktop = !mobile;
   return async function (e) {
     try {
-      const delta = 2400;
+      const delta = 2000;
       if (mode === "consulting") {
 
         GeneralJs.alert("영업일 기준 2일 안에 전화드리겠습니다 :)", true, true);
@@ -7524,7 +7524,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
 
     fixedWhiteBarHeight = <%% 96, 80, 72, 64, 19 %%>;
     fixedWhiteBarButtonMarginLeft = <%% 1037, 722, 503, 456, 40 %%>;
-    mobileFixedWhiteMarginBottom = 2.5;
+    mobileFixedWhiteMarginBottom = 0;
 
     returnCircleWidth = <%% 34, 34, 32, 28, 7.2 %%>;
     returnCicleArrowWidth = <%% 9, 9, 8, 7, 2 %%>;
@@ -7786,7 +7786,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
         position: "relative",
         justifyContent: desktop ? "start" : "center",
         alignItems: "center",
-        marginTop: String(buttonMarginTop) + ea,
+        marginTop: String(buttonMarginTop + (instance.totalValues[0] === 2 ? blackButtonHeight : 0)) + ea,
         opacity: String(0),
         transform: "translateY(10px)",
         animation: "1.2s ease 0.4s 1 normal forwards running fadeupdelay",
@@ -7800,7 +7800,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
             click: instance.blackButtonEvent("proposal"),
           },
           style: {
-            display: "inline-flex",
+            display: instance.totalValues[0] === 2 ? "none" : "inline-flex",
             position: "relative",    
             width: String(blackButtonWidth) + ea,
             height: String(blackButtonHeight) + ea,
@@ -7832,7 +7832,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
             click: instance.blackButtonEvent("consulting"),
           },
           style: {
-            display: "inline-flex",
+            display: instance.totalValues[0] === 2 ? "none" : "inline-flex",
             position: "relative",    
             width: String(blackButtonWidth) + ea,
             height: String(blackButtonHeight) + ea,
@@ -7846,7 +7846,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
             event: {
               selectstart: (e) => { e.preventDefault() },
             },
-            text: `상담부터 원해요.`,
+            text: `유선 상담부터 원해요.`,
             style: {
               display: "inline-block",
               position: "relative",
@@ -8228,7 +8228,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
       mother: totalContents,
       class: [ "backblurwhite", blurFixedBelowBarClassName ],
       style: {
-        display: "flex",
+        display: instance.totalValues[0] === 2 ? "none" : "flex",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
