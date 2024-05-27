@@ -6087,6 +6087,13 @@ FrontIndexJs.prototype.launching = async function (loading) {
     const desktop = !mobile;
     let response;
     let reviewRes, lengthDic;
+    let thisCliid;
+
+    if (typeof getObj.cliid === "string" && /^c/gi.test(getObj.cliid)) {
+      thisCliid = getObj.cliid;
+    } else {
+      thisCliid = "null";
+    }
 
     response = await ajaxJson({ mode: "portfolio", limit: 42 }, LOGHOST + "/getContents", { equal: true });
     reviewRes = await ajaxJson({ mode: "review", limit: 5, newmode: 1 }, LOGHOST + "/getContents", { equal: true });
@@ -6108,6 +6115,7 @@ FrontIndexJs.prototype.launching = async function (loading) {
       mode: "front",
       name: "frontIndex",
       client: null,
+      cliid: thisCliid,
       base: {
         instance: this,
         binaryPath: FrontIndexJs.binaryPath,
@@ -6137,7 +6145,7 @@ FrontIndexJs.prototype.launching = async function (loading) {
               standard: instance.firstPageViewTime,
               action: "readTimer",
               data: {
-                cliid: "null",
+                cliid: thisCliid,
                 href: window.encodeURIComponent(window.location.href),
                 date: dateToString(new Date(), true),
               },

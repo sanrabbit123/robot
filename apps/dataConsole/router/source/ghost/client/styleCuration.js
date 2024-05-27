@@ -7319,6 +7319,38 @@ StyleCurationJs.prototype.insertSeventhBox = async function (fifthBase) {
   }
 }
 
+StyleCurationJs.prototype.blackButtonEvent = function (mode) {
+  const instance = this;
+  const { withOut, returnGet, createNode, ajaxJson, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, scrollTo } = GeneralJs;
+  const { ea, media, baseTong, standardWidth, naviHeight, heightTong } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  return async function (e) {
+    try {
+      const delta = 2400;
+      if (mode === "consulting") {
+
+        GeneralJs.alert("영업일 기준 2일 안에 전화드리겠습니다 :)", true, true);
+        await ajaxJson({ mode: "consulting", name: instance.client.name, cliid: instance.client.cliid }, BACKHOST + "/blackButtonsClick");
+        setQueue(() => {
+          GeneralJs.selfHref(FRONTHOST + "/about.php?cliid=" + instance.client.cliid);
+        }, delta);
+
+      } else if (mode === "proposal") {
+
+        GeneralJs.alert("최대 2시간 이내로 디자이너 추천서를 보내드리겠습니다 :)", true, true);
+        await ajaxJson({ mode: "proposal", name: instance.client.name, cliid: instance.client.cliid }, BACKHOST + "/blackButtonsClick");
+        setQueue(() => {
+          GeneralJs.selfHref(FRONTHOST + "/about.php?cliid=" + instance.client.cliid);
+        }, delta);
+
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, svgMaker, serviceParsing, dateToString, dateToHangul, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, objectDeepCopy, setDebounce } = GeneralJs;
@@ -7763,6 +7795,10 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
       },
       children: [
         {
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+            click: instance.blackButtonEvent("proposal"),
+          },
           style: {
             display: "inline-flex",
             position: "relative",    
@@ -7773,6 +7809,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
             justifyContent: "center",
             alignItems: "center",
             marginRight: String(blackButtonBetween) + ea,
+            cursor: "pointer",
           },
           child: {
             event: {
@@ -7790,6 +7827,10 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
           }
         },
         {
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+            click: instance.blackButtonEvent("consulting"),
+          },
           style: {
             display: "inline-flex",
             position: "relative",    
@@ -7799,6 +7840,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
             borderRadius: String(blackButtonHeight) + ea,
             justifyContent: "center",
             alignItems: "center",
+            cursor: "pointer",
           },
           child: {
             event: {
@@ -8203,6 +8245,10 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
       },
       children: [
         {
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+            click: instance.blackButtonEvent("proposal"),
+          },
           style: {
             display: "inline-flex",
             position: "relative",    
@@ -8215,6 +8261,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
             marginRight: String(blackButtonBetween) + ea,
             marginLeft: desktop ? String(fixedWhiteBarButtonMarginLeft) + ea : "",
             marginBottom: desktop ? "" : String(mobileFixedWhiteMarginBottom) + ea,
+            cursor: "pointer",
           },
           child: {
             event: {
@@ -8232,6 +8279,10 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
           }
         },
         {
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+            click: instance.blackButtonEvent("consulting"),
+          },
           style: {
             display: "inline-flex",
             position: "relative",    
@@ -8242,6 +8293,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
             justifyContent: "center",
             alignItems: "center",
             marginBottom: desktop ? "" : String(mobileFixedWhiteMarginBottom) + ea,
+            cursor: "pointer",
           },
           child: {
             event: {
@@ -9523,17 +9575,6 @@ StyleCurationJs.prototype.launching = async function (loading) {
           await instance.insertInitBox();
           const secondBase = await instance.insertSecondBox();
           await instance.insertBarBox();
-
-          // GeneralJs.setQueue(() => {
-          //   const fadeOutTargets = [ ...document.querySelectorAll('.' + instance.firstFadeOutTargetClassName) ];
-          //   for (let dom of fadeOutTargets) {
-          //     dom.remove();
-          //   }
-          //   instance.totalValues[0] = 1;
-          //   instance.totalValues[1] = 1;
-          // }, 0);
-          // document.querySelector('.' + instance.initAreaClassName).style.marginTop = String(instance.heightTong.scroll) + instance.ea;
-          // await instance.insertSeventhBox(secondBase);
 
           instance.resizeEvent();
           setInterval(() => {

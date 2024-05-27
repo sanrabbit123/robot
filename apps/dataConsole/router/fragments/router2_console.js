@@ -7619,3 +7619,81 @@ DataRouter.prototype.rou_post_frontMemberParsing = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_blackButtonsClick = function () {
+  const instance = this;
+  const address = this.address;
+  const back = this.back;
+  const { equalJson, messageSend, dateToString, stringToDate, sleep, setQueue, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/blackButtonsClick" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.cliid === undefined || req.body.name === undefined || req.body.mode === undefined) {
+        throw new Error("invalid input => " + JSON.stringify(req.body, null, 2));
+      }
+      const { cliid, name, mode } = equalJson(req.body);
+      const selfCoreMongo = instance.mongo;
+      const selfMongo = instance.mongolocal;
+      const toNormal = true;
+      const collection = "blackButtonsClick";
+      const delta = Math.floor((1 + Math.random()) * 60 * 60 * 1000) - (10 * 60 * 60 * 1000);
+      const generalPort = 3000;
+      let proid, rows;
+      let targetProposal;
+
+      if (mode === "consulting") {
+        await messageSend({ text: name + " 고객님(" + cliid + ")이 상담부터 원한다고 선택하셨어요!", channel: "#404_curation", voice: true });
+      } else {
+        await messageSend({ text: name + " 고객님(" + cliid + ")이 추천부터 원한다고 선택하셨어요! 2시간 이내로(" + Math.random((delta / 1000) / 60) + "분 뒤에) 자동 추천서가 발송될 예정입니다!", channel: "#404_curation", voice: true });
+
+        setTimeout(async () => {
+          try {
+            rows = await back.getProjectsByQuery({ cliid }, { selfMongo: selfCoreMongo, toNormal });
+            while (rows.length === 0) {
+              await sleep(10 * 60 * 1000);
+              rows = await back.getProjectsByQuery({ cliid }, { selfMongo: selfCoreMongo, toNormal });
+            }
+
+            if (rows.length === 0) {
+              throw new Error("cannot find proposal");
+            }
+
+            rows.sort((a, b) => { return b.proposal.date.valueOf() - a.proposal.date.valueOf() });
+            [ targetProposal ] = rows;
+            proid = targetProposal.proid;
+
+            await requestSystem("https://" + address.backinfo.host + ":" + String(generalPort) + "/createProposalDocument", { instant: true, proid }, { headers: { "Content-Type": "application/json", "origin": "https://" + address.frontinfo.host } });
+            await messageSend({ text: name + " 고객님(" + cliid + ")께 자동 추천서를 전송하였어요!", channel: "#404_curation", voice: true });
+            await messageSend({ text: name + " 고객님(" + cliid + ")께 자동 추천서를 전송하였어요!", channel: "#403_proposal", voice: false });
+
+          } catch(e) {
+            console.log(e);
+            await logger.error("Console 서버 문제 생김 (rou_post_blackButtonsClick): " + e.message);
+          }
+        }, delta);
+      }
+      
+      await back.mongoCreate(collection, {
+        cliid,
+        name,
+        date: new Date(),
+        mode,
+      }, { selfMongo });
+
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      await logger.error("Console 서버 문제 생김 (rou_post_blackButtonsClick): " + e.message);
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}

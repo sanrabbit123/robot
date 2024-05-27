@@ -676,6 +676,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     const { ajaxJson, returnGet, homeliaisonAnalytics, setDebounce, dateToString, colorChip } = GeneralJs;
     const { mode, name, client, base, local } = obj;
     let belowTarget, removeTargets, getObj;
+    let thisCliid;
 
     this.backgroundType = base.backgroundType;
     if (base.backgroundType === 1) {
@@ -695,6 +696,17 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     this.logoColor = GeneralJs.colorExtended.black;
     if (base.blueLogo === true) {
       this.logoColor = GeneralJs.colorExtended.mainBlue;
+    }
+
+    if (client === null) {
+      thisCliid = "null";
+      if (typeof obj.cliid === "string" && /^c/gi.test(obj.cliid)) {
+        thisCliid = obj.cliid;
+      } else {
+        thisCliid = "null";
+      }
+    } else {
+      thisCliid = client.cliid;
     }
 
     base.instance.pageName = name;
@@ -724,7 +736,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
       standard: base.instance.firstPageViewTime,
       action: "pageInit",
       data: {
-        cliid: client !== null ? client.cliid : "null",
+        cliid: thisCliid,
         href: window.encodeURIComponent(window.location.href),
         date: dateToString(new Date(), true),
       },
@@ -745,7 +757,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
             standard: base.instance.firstPageViewTime,
             action: "scrollStop",
             data: {
-              cliid: client !== null ? client.cliid : "null",
+              cliid: thisCliid,
               scroll: window.scrollY,
               total: ((document.body.getBoundingClientRect() !== null && document.body.getBoundingClientRect() !== undefined) ? document.body.getBoundingClientRect().height : 0),
               screen: window.innerHeight,
