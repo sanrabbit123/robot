@@ -2314,7 +2314,7 @@ FrontAboutJs.prototype.insertThirdBox = async function () {
       child: {
         text: [
           "다양한 컨셉과 역량을 가진",
-          "80명의 홈리에종 협업 디자이너",
+          String(instance.lengthDic.designer) + "명의 홈리에종 협업 디자이너",
         ].join("\n"),
         style: {
           display: "inline-block",
@@ -6086,10 +6086,11 @@ FrontAboutJs.prototype.launching = async function (loading) {
     const mobile = media[4];
     const desktop = !mobile;
     let response;
-    let reviewRes;
+    let reviewRes, lengthDic;
 
     response = await ajaxJson({ mode: "portfolio", limit: 42 }, LOGHOST + "/getContents", { equal: true });
     reviewRes = await ajaxJson({ mode: "review", limit: 5, newmode: 1 }, LOGHOST + "/getContents", { equal: true });
+    lengthDic = await ajaxJson({ data: null }, LOGHOST + "/getLength", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
     this.designers = new SearchArray(response.designers);
     this.fullLoad = false;
@@ -6098,6 +6099,7 @@ FrontAboutJs.prototype.launching = async function (loading) {
     this.sort = "key9";
     this.search = "";
     this.reviewTargets = reviewRes.contentsArr;
+    this.lengthDic = lengthDic;
 
     this.initAreaClassName = "initAreaClassName";
     this.secondBaseClassName = "secondBaseClassName";
