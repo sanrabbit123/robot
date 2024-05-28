@@ -7551,19 +7551,6 @@ ClientJs.prototype.communicationRender = function () {
       }
     }
   ]);
-  communication.setItem([
-    () => { return "이미지 전송 기록"; },
-    function () {
-      return true;
-    },
-    async function (e) {
-      try {
-        await instance.mother.imageTransferHistory();
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  ]);
 }
 
 ClientJs.prototype.sseCardParsing = function (raw) {
