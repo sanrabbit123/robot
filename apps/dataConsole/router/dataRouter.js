@@ -9333,6 +9333,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
     try {
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongo;
+      const unknown = "알 수 없음";
       const selfLogMongo = instance.mongolog;
       const totalMenu = [
         {
@@ -9689,11 +9690,29 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
           values: [],
         },
       ];
+      const dummyData = {
+        cliid: unknown,
+        selection: unknown,
+        receive: unknown,
+        image: unknown,
+        service: unknown,
+        serid: 's2011_aa02s',
+        construct: unknown,
+        constructItems: unknown,
+        constructEnvironment: unknown,
+        budget: unknown,
+        furniture: unknown,
+        fabric: unknown,
+        expect: unknown,
+        purchase: unknown,
+        family: unknown,
+        age: unknown,
+        time: unknown,
+      };
       const collection = "clientHistory";
       const collection2 = "blackButtonsClick";
       const collection3 = "homeliaisonAnalytics";
       const defaultButton = "consulting";
-      const unknown = "알 수 없음";
       let whereQuery, projectQuery;
       let rows, rows2;
       let filteredBlack;
@@ -9709,32 +9728,13 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
       let thisAnalytics;
       let thisStatus;
       let cliidStatusArr;
-      let dummyData;
 
       if (req.body.mode === undefined || req.body.mode === null || req.body.mode === "get") {
         res.send(JSON.stringify({ totalMenu }));
+      } else if (req.body.mode === "dummy") {
+        res.send(JSON.stringify({ dummy: dummyData }));
       } else if (req.body.mode === "analytics" || req.body.mode === "parse" || req.body.mode === "parsing") {
         const { cliids, statusArr } = equalJson(req.body);
-
-        dummyData = {
-          cliid: unknown,
-          selection: unknown,
-          receive: unknown,
-          image: unknown,
-          service: unknown,
-          serid: 's2011_aa02s',
-          construct: unknown,
-          constructItems: unknown,
-          constructEnvironment: unknown,
-          budget: unknown,
-          furniture: unknown,
-          fabric: unknown,
-          expect: unknown,
-          purchase: unknown,
-          family: unknown,
-          age: unknown,
-          time: unknown,
-        }
 
         whereQuery = { $or: cliids.map((cliid) => { return { cliid } }) };
         projectQuery = { "cliid": 1, "curation.image": 1, "curation.check": 1 };

@@ -1476,6 +1476,7 @@ ClientJs.prototype.infoArea = function (info) {
 
   if (info.search === null) {
     div_clone.classList.add("moveTarget");
+    div_clone.classList.add(instance.rowViewClassName);
     upsideWhiteBar.style.width = div_clone.style.width = String(grayBarWidth + leftPosition[leftPosition.length - 1] + widthArr[widthArr.length - 1]) + ea;
     this.totalMother.appendChild(div_clone);
   }
@@ -1490,7 +1491,7 @@ ClientJs.prototype.infoArea = function (info) {
 
 ClientJs.prototype.spreadData = async function (search = null) {
   const instance = this;
-  const { ajaxJson, dateToString, stringToDate, objectDeepCopy, capitalizeString } = GeneralJs;
+  const { ajaxJson, dateToString, stringToDate, objectDeepCopy, capitalizeString, setQueue, findByAttribute } = GeneralJs;
   try {
     const standardDate = new Date(2024, 4, 27, 3, 0, 0);
     let clients, totalMother;
@@ -1502,6 +1503,10 @@ ClientJs.prototype.spreadData = async function (search = null) {
     let dummy;
     let thisCliid;
     let targetObj;
+    let targetCase;
+    let targetDom;
+    let thisDom;
+    let targetWhiteDom;
 
     loading = instance.mother.grayLoading(null, search === null || search === '' || search === '-');
 
@@ -1521,30 +1526,74 @@ ClientJs.prototype.spreadData = async function (search = null) {
       return o.timeline.valueOf() >= standardDate.valueOf();
     });
 
-    if (addInfoTargetArr.length > 0) {
-      addData = await ajaxJson({ mode: "parse", cliids: addInfoTargetArr.map(({ cliid }) => { return cliid }), statusArr: addInfoTargetArr.map(({ status }) => { return status }) }, BACKHOST + "/styleCuration_getTotalMenu", { equal: true });
-      if (Array.isArray(addData.data)) {
-        dummy = objectDeepCopy(addData.dummy);
-        addData = objectDeepCopy(addData.data);
-      }
-    } else {
-      addData = [];
-      dummy = {};
-    }
+    instance.data = data;
+
+    ({ dummy } = await ajaxJson({ mode: "dummy" }, "/styleCuration_getTotalMenu", { equal: true }));
+    addData = [];
 
     for (let i of data) {
       thisCliid = i.standard.cliid;
-      targetObj = addData.find((o) => { return o.cliid === thisCliid });
-      if (targetObj === undefined) {
-        targetObj = objectDeepCopy(dummy);
-      }
+      targetObj = objectDeepCopy(dummy);
       for (let key in targetObj) {
         if (key !== "cliid") {
-          i.info["curation" + capitalizeString(key)] = targetObj[key];
+          i.info["curation" + capitalizeString(key)] = targetObj[key] + "#s<<" + thisCliid + ">>";
         }
       }
     }
-    console.log(clients);
+
+    if (addInfoTargetArr.length > 0) {
+      setQueue(() => {
+        ajaxJson({ mode: "parse", cliids: addInfoTargetArr.map(({ cliid }) => { return cliid }), statusArr: addInfoTargetArr.map(({ status }) => { return status }) }, "/styleCuration_getTotalMenu", { equal: true }).then((addData) => {
+          if (Array.isArray(addData.data)) {
+            dummy = objectDeepCopy(addData.dummy);
+            addData = objectDeepCopy(addData.data);
+          }
+          for (let i of instance.data) {
+            thisCliid = i.standard.cliid;
+
+            targetDom = null;
+            if (document.querySelector('.' + instance.rowViewClassName) !== null) {
+              targetDom = document.querySelector('.' + instance.rowViewClassName).querySelector('.' + thisCliid);
+            }
+            targetWhiteDom = null;
+            if (document.querySelector('.' + instance.whitePropertyBoxClassName) !== null) {
+              if (instance.whiteBox.id === thisCliid) {
+                targetWhiteDom = document.querySelector('.' + instance.whitePropertyBoxClassName);
+              }
+            }
+
+            targetObj = addData.find((o) => { return o.cliid === thisCliid });
+            if (targetObj === undefined) {
+              targetObj = objectDeepCopy(dummy);
+            }
+            for (let key in targetObj) {
+              if (key !== "cliid") {
+                i.info["curation" + capitalizeString(key)] = targetObj[key];
+                if (targetDom !== null) {
+                  thisDom = findByAttribute([ ...targetDom.children ], "column", "curation" + capitalizeString(key));
+                  if (thisDom !== null) {
+                    thisDom.textContent = targetObj[key];
+                  }
+                }
+              }
+            }
+            targetCase = instance.cases.find((o) => { return o !== null && o.cliid === thisCliid });
+            for (let key in targetObj) {
+              if (key !== "cliid") {
+                targetCase["curation" + capitalizeString(key)] = targetObj[key];
+                if (targetWhiteDom !== null) {
+                  thisDom = findByAttribute([ ...targetWhiteDom.children ], "index", "curation" + capitalizeString(key));
+                  if (thisDom !== null) {
+                    thisDom.children[1].textContent = targetObj[key];
+                  }
+                }
+              }
+            }
+          }
+
+        }).catch((err) => { console.log(err); });
+      });
+    }
 
     for (let i of data) {
       standardDataTong.push(i.standard);
@@ -2330,6 +2379,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
   //propoerty box
   propertyBox = GeneralJs.nodes.div.cloneNode(true);
+  propertyBox.classList.add(instance.whitePropertyBoxClassName);
   style = {
     position: "absolute",
     left: String(leftMargin) + ea,
@@ -7747,6 +7797,8 @@ ClientJs.prototype.launching = async function () {
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
+    this.rowViewClassName = "rowViewClassName";
+    this.whitePropertyBoxClassName = "whitePropertyBoxClassName";
 
     this.members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
     GeneralJs.stacks.members = this.members;
@@ -7801,8 +7853,6 @@ ClientJs.prototype.launching = async function () {
         }
       }
     }
-
-
 
     // proposal view return event
     window.addEventListener('message', function (e) {
