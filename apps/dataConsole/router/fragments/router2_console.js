@@ -3029,7 +3029,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
   const back = this.back;
   const address = this.address;
   const kakao = this.kakao;
-  const { equalJson, stringToDate, messageSend, messageLog, requestSystem, dateToString, sleep } = this.mother;
+  const { equalJson, stringToDate, messageSend, messageLog, requestSystem, dateToString, sleep, stringToLink } = this.mother;
   let obj = {};
   obj.link = [ "/aspirantSubmit" ];
   obj.func = async function (req, res, logger) {
@@ -3174,10 +3174,10 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         updateQuery["information.channel.cloud"] = [];
   
         if (/^http/gi.test(homepage.value.trim())) {
-          updateQuery["information.channel.web"].push(homepage.value.trim());
+          updateQuery["information.channel.web"].push(stringToLink(homepage.value.trim()));
         }
         if (/^http/gi.test(sns.value.trim())) {
-          updateQuery["information.channel.sns"].push(sns.value.trim());
+          updateQuery["information.channel.sns"].push(stringToLink(sns.value.trim()));
         }
   
         updateQuery["meeting.status"] = "검토중";

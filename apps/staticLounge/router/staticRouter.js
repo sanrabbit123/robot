@@ -6950,6 +6950,436 @@ StaticRouter.prototype.rou_post_syncEvaluationContents = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { dateToString, stringToDate, equalJson, objectDeepCopy, sleep, messageSend } = this.mother;
+  const sheetsId = "1gJhebKDwnWSPbgvLNQdcuakt4NXc3hgpsXSYIM3ksKE";
+  const sheets = this.sheets;
+  const proposal = async function (selfMongo, selfConsoleMongo, logger) {
+    try {
+      const collection = "realtimeDesigner";
+      const designers = await back.getDesignersByQuery({}, { selfMongo });
+      const projects = await back.getProjectsByQuery({}, { selfMongo });
+      const emptyDate = new Date(2000, 0, 1);
+      const emptyDateValue = emptyDate.valueOf();
+      const monthDelta = 24;
+      const forecastDelta = 10;
+      let number;
+      let designer;
+      let desid;
+      let targetProposals;
+      let targetProjects;
+      let totalAmount;
+      let totalPayments;
+      let startDate, endDate;
+      let thisTargetProjects;
+      let thisTargetProposals;
+      let thisTotalAmount;
+      let thisTotalPayments;
+      let targetProjects_f, targetProjects_s, targetProjects_t, targetProjects_xt;
+      let targetProposals_f, targetProposals_s, targetProposals_t, targetProposals_xt;
+      let totalAmount_f, totalAmount_s, totalAmount_t, totalAmount_xt;
+      let totalPayments_f, totalPayments_s, totalPayments_t, totalPayments_xt;
+      let matrix;
+      let tempArr;
+      let nowDate;
+      let thisTargetProjects_f, thisTargetProjects_s, thisTargetProjects_t, thisTargetProjects_xt;
+      let thisTargetProposals_f, thisTargetProposals_s, thisTargetProposals_t, thisTargetProposals_xt;
+      let thisTotalAmount_f, thisTotalAmount_s, thisTotalAmount_t, thisTotalAmount_xt;
+      let thisTotalPayments_f, thisTotalPayments_s, thisTotalPayments_t, thisTotalPayments_xt;
+      let targetRow;
+      let realtimeRows;
+      let possibleArr;
+      let possibleNumbersArr;
+      let possibleNumber;
+      let thisStart;
+      let thisEnd;
+      let thisDate;
+  
+      matrix = [
+        [
+          "아이디",
+          "디자이너명",
+          "협약 상태",
+        ]
+      ];
+  
+      for (let i = 0; i < forecastDelta; i++) {
+        nowDate = new Date();
+        nowDate.setDate(1);
+        nowDate.setMonth(nowDate.getMonth() + i);
+        thisDate = new Date(JSON.stringify(nowDate).slice(1, -1));
+        matrix[0].push(dateToString(thisDate).split("-").slice(0, -1).join("-") + " 가능수");
+      }
+  
+      matrix[0] = matrix[0].concat([
+        "총 진행",
+        "총 추천",
+        "총 매출",
+        "총 정산",
+        "F 진행",
+        "F 추천",
+        "F 매출",
+        "F 정산",
+        "S 진행",
+        "S 추천",
+        "S 매출",
+        "S 정산",
+        "T 진행",
+        "T 추천",
+        "T 매출",
+        "T 정산",
+        "XT 진행",
+        "XT 추천",
+        "XT 매출",
+        "XT 정산",
+      ]);
+  
+      for (let i = 0; i < monthDelta; i++) {
+  
+        nowDate = new Date();
+        nowDate.setDate(1);
+        nowDate.setMonth(nowDate.getMonth() - 1 - i);
+        startDate = new Date(JSON.stringify(nowDate).slice(1, -1));
+  
+        nowDate = new Date();
+        nowDate.setDate(1);
+        nowDate.setMonth(nowDate.getMonth() - 0 - i);
+        endDate = new Date(JSON.stringify(nowDate).slice(1, -1));
+  
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " 총 진행");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " 총 추천");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " 총 매출");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " 총 정산");
+  
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " F 진행");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " F 추천");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " F 매출");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " F 정산");
+  
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " S 진행");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " S 추천");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " S 매출");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " S 정산");
+  
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " T 진행");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " T 추천");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " T 매출");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " T 정산");
+  
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " XT 진행");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " XT 추천");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " XT 매출");
+        matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " XT 정산");
+  
+      }
+  
+      realtimeRows = await back.mongoRead(collection, {}, { selfMongo: selfConsoleMongo });
+  
+      for (let designer of designers) {
+        desid = designer.desid;
+        tempArr = [];
+    
+        tempArr.push(desid);
+        tempArr.push(designer.designer);
+        tempArr.push(designer.information.contract.status.value);
+    
+        targetRow = realtimeRows.find((r) => { return r.desid === desid }) === undefined ? null : realtimeRows.find((r) => { return r.desid === desid }); 
+        if (targetRow === null) {
+          for (let i = 0; i < forecastDelta; i++) {
+            tempArr.push(0);
+          }
+        } else {
+          for (let i = 0; i < forecastDelta; i++) {
+            nowDate = new Date();
+            nowDate.setDate(1);
+            nowDate.setHours(0);
+            nowDate.setMinutes(0);
+            nowDate.setSeconds(0);
+            nowDate.setMilliseconds(0);
+            nowDate.setMonth(nowDate.getMonth() + i);
+            thisStart = new Date(JSON.stringify(nowDate).slice(1, -1));
+  
+            nowDate = new Date();
+            nowDate.setDate(1);
+            nowDate.setHours(0);
+            nowDate.setMinutes(0);
+            nowDate.setSeconds(0);
+            nowDate.setMilliseconds(0);
+            nowDate.setMonth(nowDate.getMonth() + 1 + i);
+            thisEnd = new Date(JSON.stringify(nowDate).slice(1, -1));
+  
+            possibleArr = targetRow.possible.filter((o) => {
+              return (o.start.valueOf() >= thisStart.valueOf()) && (o.end.valueOf() < thisEnd.valueOf())
+            });
+            possibleNumbersArr = possibleArr.map((a) => { return a.matrix.reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0) });
+            possibleNumber = 0;
+            if (possibleNumbersArr.length > 0) {
+              possibleNumber = possibleNumbersArr.reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0);
+            }
+            tempArr.push(possibleNumber);
+          }
+        }
+  
+        targetProjects = projects.filter((p) => { return p.desid === desid });
+        targetProposals = projects.filter((p) => { return p.proposal.detail.map((a) => { return a.desid }).includes(desid); });
+        totalAmount = 0;
+        totalAmount = targetProjects.filter((p) => { return p.process.contract.first.date.valueOf() > emptyDateValue && p.process.contract.remain.date.valueOf() < emptyDateValue }).reduce((acc, curr) => {
+          return acc + curr.process.contract.first.calculation.amount;
+        }, 0);
+        totalAmount += targetProjects.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+          return acc + curr.process.contract.remain.calculation.amount.consumer;
+        }, 0);
+        totalPayments = 0;
+        totalPayments = targetProjects.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+          return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
+        }, 0);
+    
+        targetProjects_f = targetProjects.filter((p) => { return p.service.serid === "s2011_aa01s" });
+        targetProposals_f = targetProposals.filter((p) => { return p.service.serid === "s2011_aa01s" });
+        totalAmount_f = 0;
+        totalAmount_f = targetProjects_f.filter((p) => { return p.process.contract.first.date.valueOf() > emptyDateValue && p.process.contract.remain.date.valueOf() < emptyDateValue }).reduce((acc, curr) => {
+          return acc + curr.process.contract.first.calculation.amount;
+        }, 0);
+        totalAmount_f += targetProjects_f.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+          return acc + curr.process.contract.remain.calculation.amount.consumer;
+        }, 0);
+        totalPayments_f = 0;
+        totalPayments_f = targetProjects_f.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+          return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
+        }, 0);
+    
+        targetProjects_s = targetProjects.filter((p) => { return p.service.serid === "s2011_aa02s" });
+        targetProposals_s = targetProposals.filter((p) => { return p.service.serid === "s2011_aa02s" });
+        totalAmount_s = 0;
+        totalAmount_s = targetProjects_s.filter((p) => { return p.process.contract.first.date.valueOf() > emptyDateValue && p.process.contract.remain.date.valueOf() < emptyDateValue }).reduce((acc, curr) => {
+          return acc + curr.process.contract.first.calculation.amount;
+        }, 0);
+        totalAmount_s += targetProjects_s.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+          return acc + curr.process.contract.remain.calculation.amount.consumer;
+        }, 0);
+        totalPayments_s = 0;
+        totalPayments_s = targetProjects_s.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+          return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
+        }, 0);
+    
+        targetProjects_t = targetProjects.filter((p) => { return p.service.serid === "s2011_aa03s" });
+        targetProposals_t = targetProposals.filter((p) => { return p.service.serid === "s2011_aa03s" });
+        totalAmount_t = 0;
+        totalAmount_t = targetProjects_t.filter((p) => { return p.process.contract.first.date.valueOf() > emptyDateValue && p.process.contract.remain.date.valueOf() < emptyDateValue }).reduce((acc, curr) => {
+          return acc + curr.process.contract.first.calculation.amount;
+        }, 0);
+        totalAmount_t += targetProjects_t.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+          return acc + curr.process.contract.remain.calculation.amount.consumer;
+        }, 0);
+        totalPayments_t = 0;
+        totalPayments_t = targetProjects_t.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+          return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
+        }, 0);
+    
+        targetProjects_xt = targetProjects.filter((p) => { return p.service.serid === "s2011_aa04s" });
+        targetProposals_xt = targetProposals.filter((p) => { return p.service.serid === "s2011_aa04s" });
+        totalAmount_xt = 0;
+        totalAmount_xt = targetProjects_xt.filter((p) => { return p.process.contract.first.date.valueOf() > emptyDateValue && p.process.contract.remain.date.valueOf() < emptyDateValue }).reduce((acc, curr) => {
+          return acc + curr.process.contract.first.calculation.amount;
+        }, 0);
+        totalAmount_xt += targetProjects_xt.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+          return acc + curr.process.contract.remain.calculation.amount.consumer;
+        }, 0);
+        totalPayments_xt = 0;
+        totalPayments_xt = targetProjects_xt.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+          return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
+        }, 0);
+    
+    
+        tempArr.push(targetProjects.length);
+        tempArr.push(targetProposals.length);
+        tempArr.push(Math.floor(totalAmount));
+        tempArr.push(Math.floor(totalPayments));
+    
+        tempArr.push(targetProjects_f.length);
+        tempArr.push(targetProposals_f.length);
+        tempArr.push(Math.floor(totalAmount_f));
+        tempArr.push(Math.floor(totalPayments_f));
+    
+        tempArr.push(targetProjects_s.length);
+        tempArr.push(targetProposals_s.length);
+        tempArr.push(Math.floor(totalAmount_s));
+        tempArr.push(Math.floor(totalPayments_s));
+    
+        tempArr.push(targetProjects_t.length);
+        tempArr.push(targetProposals_t.length);
+        tempArr.push(Math.floor(totalAmount_t));
+        tempArr.push(Math.floor(totalPayments_t));
+    
+        tempArr.push(targetProjects_xt.length);
+        tempArr.push(targetProposals_xt.length);
+        tempArr.push(Math.floor(totalAmount_xt));
+        tempArr.push(Math.floor(totalPayments_xt));
+    
+        for (let i = 0; i < monthDelta; i++) {
+    
+          nowDate = new Date();
+          nowDate.setDate(1);
+          nowDate.setHours(0);
+          nowDate.setMinutes(0);
+          nowDate.setSeconds(0);
+          nowDate.setMilliseconds(0);
+          nowDate.setMonth(nowDate.getMonth() - 1 - i);
+          startDate = new Date(JSON.stringify(nowDate).slice(1, -1));
+    
+          nowDate = new Date();
+          nowDate.setDate(1);
+          nowDate.setHours(0);
+          nowDate.setMinutes(0);
+          nowDate.setSeconds(0);
+          nowDate.setMilliseconds(0);
+          nowDate.setMonth(nowDate.getMonth() - 0 - i);
+          endDate = new Date(JSON.stringify(nowDate).slice(1, -1));
+    
+          thisTargetProjects = targetProjects.filter((p) => { return p.process.contract.first.date.valueOf() >= startDate.valueOf() && p.process.contract.first.date.valueOf() < endDate.valueOf() });
+          thisTargetProposals = targetProposals.filter((p) => { return p.proposal.date.valueOf() >= startDate.valueOf() && p.proposal.date.valueOf() < endDate.valueOf() });
+      
+          thisTotalAmount = 0;
+          thisTotalAmount = thisTargetProjects.filter((p) => { return p.process.contract.first.date.valueOf() > emptyDateValue && p.process.contract.remain.date.valueOf() < emptyDateValue }).reduce((acc, curr) => {
+            return acc + curr.process.contract.first.calculation.amount;
+          }, 0);
+          thisTotalAmount += thisTargetProjects.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+            return acc + curr.process.contract.remain.calculation.amount.consumer;
+          }, 0);
+      
+          thisTotalPayments = 0;
+          thisTotalPayments = thisTargetProjects.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+            return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
+          }, 0);
+      
+    
+          thisTargetProjects_f = thisTargetProjects.filter((p) => { return p.service.serid === "s2011_aa01s" });
+          thisTargetProposals_f = thisTargetProposals.filter((p) => { return p.service.serid === "s2011_aa01s" });
+          thisTotalAmount_f = 0;
+          thisTotalAmount_f = thisTargetProjects_f.filter((p) => { return p.process.contract.first.date.valueOf() > emptyDateValue && p.process.contract.remain.date.valueOf() < emptyDateValue }).reduce((acc, curr) => {
+            return acc + curr.process.contract.first.calculation.amount;
+          }, 0);
+          thisTotalAmount_f += thisTargetProjects_f.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+            return acc + curr.process.contract.remain.calculation.amount.consumer;
+          }, 0);
+          thisTotalPayments_f = 0;
+          thisTotalPayments_f = thisTargetProjects_f.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+            return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
+          }, 0);
+    
+          thisTargetProjects_s = thisTargetProjects.filter((p) => { return p.service.serid === "s2011_aa02s" });
+          thisTargetProposals_s = thisTargetProposals.filter((p) => { return p.service.serid === "s2011_aa02s" });
+          thisTotalAmount_s = 0;
+          thisTotalAmount_s = thisTargetProjects_s.filter((p) => { return p.process.contract.first.date.valueOf() > emptyDateValue && p.process.contract.remain.date.valueOf() < emptyDateValue }).reduce((acc, curr) => {
+            return acc + curr.process.contract.first.calculation.amount;
+          }, 0);
+          thisTotalAmount_s += thisTargetProjects_s.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+            return acc + curr.process.contract.remain.calculation.amount.consumer;
+          }, 0);
+          thisTotalPayments_s = 0;
+          thisTotalPayments_s = thisTargetProjects_s.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+            return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
+          }, 0);
+    
+          thisTargetProjects_t = thisTargetProjects.filter((p) => { return p.service.serid === "s2011_aa03s" });
+          thisTargetProposals_t = thisTargetProposals.filter((p) => { return p.service.serid === "s2011_aa03s" });
+          thisTotalAmount_t = 0;
+          thisTotalAmount_t = thisTargetProjects_t.filter((p) => { return p.process.contract.first.date.valueOf() > emptyDateValue && p.process.contract.remain.date.valueOf() < emptyDateValue }).reduce((acc, curr) => {
+            return acc + curr.process.contract.first.calculation.amount;
+          }, 0);
+          thisTotalAmount_t += thisTargetProjects_t.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+            return acc + curr.process.contract.remain.calculation.amount.consumer;
+          }, 0);
+          thisTotalPayments_t = 0;
+          thisTotalPayments_t = thisTargetProjects_t.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+            return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
+          }, 0);
+    
+          thisTargetProjects_xt = thisTargetProjects.filter((p) => { return p.service.serid === "s2011_aa04s" });
+          thisTargetProposals_xt = thisTargetProposals.filter((p) => { return p.service.serid === "s2011_aa04s" });
+          thisTotalAmount_xt = 0;
+          thisTotalAmount_xt = thisTargetProjects_xt.filter((p) => { return p.process.contract.first.date.valueOf() > emptyDateValue && p.process.contract.remain.date.valueOf() < emptyDateValue }).reduce((acc, curr) => {
+            return acc + curr.process.contract.first.calculation.amount;
+          }, 0);
+          thisTotalAmount_xt += thisTargetProjects_xt.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+            return acc + curr.process.contract.remain.calculation.amount.consumer;
+          }, 0);
+          thisTotalPayments_xt = 0;
+          thisTotalPayments_xt = thisTargetProjects_xt.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
+            return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
+          }, 0);
+    
+          tempArr.push(thisTargetProjects.length);
+          tempArr.push(thisTargetProposals.length);
+          tempArr.push(Math.floor(thisTotalAmount));
+          tempArr.push(Math.floor(thisTotalPayments));
+    
+          tempArr.push(thisTargetProjects_f.length);
+          tempArr.push(thisTargetProposals_f.length);
+          tempArr.push(Math.floor(thisTotalAmount_f));
+          tempArr.push(Math.floor(thisTotalPayments_f));
+    
+          tempArr.push(thisTargetProjects_s.length);
+          tempArr.push(thisTargetProposals_s.length);
+          tempArr.push(Math.floor(thisTotalAmount_s));
+          tempArr.push(Math.floor(thisTotalPayments_s));
+    
+          tempArr.push(thisTargetProjects_t.length);
+          tempArr.push(thisTargetProposals_t.length);
+          tempArr.push(Math.floor(thisTotalAmount_t));
+          tempArr.push(Math.floor(thisTotalPayments_t));
+    
+          tempArr.push(thisTargetProjects_xt.length);
+          tempArr.push(thisTargetProposals_xt.length);
+          tempArr.push(Math.floor(thisTotalAmount_xt));
+          tempArr.push(Math.floor(thisTotalPayments_xt));
+    
+        }
+        matrix.push(tempArr);
+      }
+  
+      await sheets.update_value_inPython(sheetsId, "", matrix);
+
+      return true;
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_updateDesignerProposalRealtime): " + e.message);
+      console.log(e);
+      return false;
+    }
+  }
+  let obj;
+  obj = {};
+  obj.link = [ "/updateDesignerProposalRealtime" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      proposal(instance.mongo, instance.mongoconsole, logger).then((boo) => {
+        if (boo) {
+          return messageSend({ text: dateToString(new Date()) + " 디자이너 추천 현황 시트를 업데이트했어요!\nlink : " + "https://docs.google.com/spreadsheets/d/" + sheetsId + "/edit?usp=sharing", channel: "#101_cx_team", voice: false, fairy: true });
+        } else {
+          throw new Error("proposal update fail");
+        }
+      }).catch((err) => {
+        console.log(err);
+        logger.error("Static lounge 서버 문제 생김 (rou_post_updateDesignerProposalRealtime): " + err.message).catch((e) => { console.log(e) });
+      })
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_updateDesignerProposalRealtime): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_styleCurationTotalMenu = function () {
   const instance = this;
   const back = this.back;

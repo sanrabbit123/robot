@@ -4554,7 +4554,7 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
   const instance = this;
   const inputClassName = "inputClassName";
   const agreeTargetClassName = "agreeTargetClassName";
-  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue, ajaxForm, equalJson } = GeneralJs;
+  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue, ajaxForm, equalJson, linktoString } = GeneralJs;
   const { portfolioMode } = this;
   const generalMode = !portfolioMode;
   return async function (e) {
@@ -4734,6 +4734,13 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
             map.push(tempObj)
           }
   
+          if (map.find((obj) => { return obj.property === "homepage" }) !== undefined) {
+            map.find((obj) => { return obj.property === "homepage" }).value = linktoString(map.find((obj) => { return obj.property === "homepage" }).value.trim());
+          }
+          if (map.find((obj) => { return obj.property === "sns" }) !== undefined) {
+            map.find((obj) => { return obj.property === "sns" }).value = linktoString(map.find((obj) => { return obj.property === "sns" }).value.trim());
+          }
+
           if (typeof instance.clientSessionId === "string") {
             map.push({
               property: "sessionId",
