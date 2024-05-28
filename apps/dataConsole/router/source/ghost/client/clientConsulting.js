@@ -399,6 +399,7 @@ ClientConsultingJs.prototype.insertSecondBox = async function () {
   const mobile = media[4];
   const desktop = !mobile;
   const serviceBaseClassName = "serviceBaseClassName";
+  const pyeongClassName = "pyeongClassName";
   try {
     let mainHeight;
     let minusLeft;
@@ -706,6 +707,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function (thisBase) {
   const inputClassName = "inputClassName";
   const agreeTargetClassName = "agreeTargetClassName";
   const variableBarClassName = "variableBarClassName";
+  const pyeongClassName = "pyeongClassName";
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
   let contents;
@@ -909,7 +911,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function (thisBase) {
   mainSize = <%% 20, 18, 17, 16, 4 %%>;
   mainWeight = <%% 500, 500, 500, 500, 500 %%>;
   mainTop = <%% (isMac() ? 0 : 3), (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 4), 0.5 %%>;
-  inputSize = <%% 13, 13, 12, 12, 3 %%>;
+  inputSize = <%% 13, 13, 12, 12, 2.9 %%>;
   inputWeight = <%% 400, 400, 400, 400, 400 %%>;
   inputIndent = <%% 10, 10, 10, 10, 2.5 %%>;
 
@@ -930,7 +932,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function (thisBase) {
   leftGrayType2 = <%% 125, 112, 98, 98, 22.8 %%>;
   leftGrayType3 = <%% 164, 151, 130, 129, 30.5 %%>;
 
-  widthGrayType0 = <%% 160, 140, 140, 150, 34 %%>;
+  widthGrayType0 = <%% 160, 140, 140, 150, 29 %%>;
   widthGrayType1 = <%% 455, 329, 283, 403, 58.1 %%>;
   widthGrayType2 = <%% 757, 588, 503, 383, 53.4 %%>;
   widthGrayType3 = <%% 392, 268, 231, 352, 45.6 %%>;
@@ -1533,6 +1535,11 @@ ClientConsultingJs.prototype.insertConsultingBox = function (thisBase) {
 
   pyeongNumberEvent = function (e) {
     this.value = this.value.replace(/[^0-9\.]/gi, '');
+    if (!Number.isNaN(Number(this.value)) && this.value.trim() !== '') {
+      const [ first, second ] = [ ...document.querySelector('.' + pyeongClassName).children ];
+      first.textContent = this.value;
+      second.textContent = String((Math.floor((Number(this.value) * 3.30579) * 100) / 100));
+    }
   }
 
   pyeongBlurEvent = function (e) {
@@ -1547,6 +1554,13 @@ ClientConsultingJs.prototype.insertConsultingBox = function (thisBase) {
     } else {
       this.value = this.value.replace(/[^0-9\.]/gi, '') + "평";
     }
+
+    if (!Number.isNaN(Number(this.value.replace(/[^0-9\.]/gi, ''))) && this.value.replace(/[평]/gi, '').trim() !== "") {
+      const [ first, second ] = [ ...document.querySelector('.' + pyeongClassName).children ];
+      first.textContent = this.value.replace(/[^0-9\.]/gi, '');
+      second.textContent = String((Math.floor((Number(this.value.replace(/[^0-9\.]/gi, '')) * 3.30579) * 100) / 100));
+    }
+
     instance.mother.setMemory({
       property: "pyeong",
       type: "text",
@@ -2385,7 +2399,36 @@ ClientConsultingJs.prototype.insertConsultingBox = function (thisBase) {
           textAlign: "center",
           background: "transparent",
         }
-      }
+      },
+      {
+        class: [ pyeongClassName ],
+        text: "<u%0%u>평 ( <u%0%u>m<b%2%b> )",
+        style: {
+          position: "absolute",
+          top: String(desktop ? mainTop : 0.8) + ea,
+          left: String(leftGrayType2 + widthGrayType0 + (<&& 16 | 14 | 12 | 10 | 2 &&>)) + ea,
+          width: String(widthGrayType0) + ea,
+          height: String(grayHeight) + ea,
+          outline: String(0),
+          border: String(0),
+          fontSize: String(desktop ? mainSize : inputSize) + ea,
+          fontWeight: String(desktop ? 300 : 800),
+          color: colorExtended.mainBlue,
+          textAlign: "left",
+        },
+        bold: {
+          position: "relative",
+          top: String(<&& -8 | -8 | -7 | -6 | -1 &&>) + ea,
+          fontSize: String((desktop ? mainSize : inputSize) - (<&& 10 | 10 | 9 | 8 | 1 &&>)) + ea,
+          fontWeight: String(desktop ? 300 : 800),
+          color: colorExtended.mainBlue,
+        },
+        under: {
+          fontSize: String(desktop ? mainSize : inputSize) + ea,
+          fontWeight: String(desktop ? 300 : 800),
+          color: colorExtended.mainBlue,
+        }
+      },
     ]
   });
   // 8

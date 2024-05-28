@@ -6753,6 +6753,7 @@ GeneralJs.prototype.insertMemory = async function (property, popupMode = false) 
   const variableBarClassName = "variableBarClassName";
   const whitePopupBaseBlockClassName = "whitePopupBaseBlockClassName";
   const whitePopupInputClassName = "whitePopupInputClassName";
+  const pyeongClassName = "pyeongClassName";
   const dom = GeneralJs.findByAttribute((!popupMode ? document.querySelectorAll('.' + baseBlockClassName) : document.querySelectorAll('.' + whitePopupBaseBlockClassName)), "baseclass", property);
   try {
     let nodeName;
@@ -6777,6 +6778,14 @@ GeneralJs.prototype.insertMemory = async function (property, popupMode = false) 
           }
 
           target.value = targetMemory.value;
+          if (property === "pyeong") {
+            if (document.querySelector('.' + pyeongClassName) !== null) {
+              const [ first, second ] = [ ...document.querySelector('.' + pyeongClassName).children ];
+              first.textContent = targetMemory.value.replace(/[^0-9\.]/gi, '');
+              second.textContent = String((Math.floor((Number(targetMemory.value.replace(/[^0-9\.]/gi, '')) * 3.30579) * 100) / 100));        
+            }
+          }
+
         } else if (targetMemory.type === "radio") {
     
           targetsAll = [ ...dom.querySelectorAll("." + (!popupMode ? inputClassName : whitePopupInputClassName)) ];
@@ -6864,6 +6873,7 @@ GeneralJs.prototype.consultingPopup = function () {
   const agreeTargetClassName = "agreeTargetClassName";
   const variableBarClassName = "variableBarClassName";
   const totalContents = document.getElementById("totalcontents");
+  const pyeongClassName = "pyeongClassName";
   const zIndex = 4;
   return (e) => {
     let grayBack, whiteBase;
@@ -7002,10 +7012,10 @@ GeneralJs.prototype.consultingPopup = function () {
 
     whiteMaxHeight = 900;
 
-    titleHeight = <%% 41, 39, 37, 28, 8 %%>;
+    titleHeight = <%% 36, 33, 29, 26, 7 %%>;
     paymentHeight = <%% 70, 70, 70, 70, 14 %%>;
 
-    titleSize = <%% 27, 26, 24, 21, 4 %%>;
+    titleSize = <%% 25, 24, 22, 19, 4 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
     titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
     titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), -0.2 %%>;
@@ -7029,7 +7039,7 @@ GeneralJs.prototype.consultingPopup = function () {
     mainSize = <%% 20, 18, 17, 16, 4 %%>;
     mainWeight = <%% 500, 500, 500, 500, 500 %%>;
     mainTop = <%% (isMac() ? 0 : 3), (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 4), 0.5 %%>;
-    inputSize = <%% 13, 13, 12, 12, 3 %%>;
+    inputSize = <%% 13, 13, 12, 12, 2.8 %%>;
     inputWeight = <%% 400, 400, 400, 400, 400 %%>;
     inputIndent = <%% 10, 10, 10, 10, 2.5 %%>;
 
@@ -7038,7 +7048,7 @@ GeneralJs.prototype.consultingPopup = function () {
     leftGrayType2 = <%% 125, 115, 99, 98, 22.8 %%>;
     leftGrayType3 = <%% 164, 151, 130, 129, 30.5 %%>;
 
-    widthGrayType0 = <%% 160, 140, 130, 150, 34 %%>;
+    widthGrayType0 = <%% 160, 140, 130, 150, 27 %%>;
     widthGrayType1 = <%% 455, 329, 283, 403, 58 %%>;
     widthGrayType2 = <%% 757, 757, 503, 454, 53.2 %%>;
     widthGrayType3 = <%% 392, 268, 231, 352, 45.5 %%>;
@@ -7449,6 +7459,11 @@ GeneralJs.prototype.consultingPopup = function () {
 
     pyeongNumberEvent = function (e) {
       this.value = this.value.replace(/[^0-9\.]/gi, '');
+      if (!Number.isNaN(Number(this.value)) && this.value.trim() !== '') {
+        const [ first, second ] = [ ...document.querySelector('.' + pyeongClassName).children ];
+        first.textContent = this.value;
+        second.textContent = String((Math.floor((Number(this.value) * 3.30579) * 100) / 100));
+      }
     }
 
     pyeongBlurEvent = function (e) {
@@ -7463,6 +7478,13 @@ GeneralJs.prototype.consultingPopup = function () {
       } else {
         this.value = this.value.replace(/[^0-9\.]/gi, '') + "평";
       }
+
+      if (!Number.isNaN(Number(this.value.replace(/[^0-9\.]/gi, ''))) && this.value.replace(/[평]/gi, '').trim() !== "") {
+        const [ first, second ] = [ ...document.querySelector('.' + pyeongClassName).children ];
+        first.textContent = this.value.replace(/[^0-9\.]/gi, '');
+        second.textContent = String((Math.floor((Number(this.value.replace(/[^0-9\.]/gi, '')) * 3.30579) * 100) / 100));
+      }
+
       instance.setMemory({
         property: "pyeong",
         type: "text",
@@ -7813,7 +7835,8 @@ GeneralJs.prototype.consultingPopup = function () {
             textAlign: "left",
             position: "absolute",
             fontSize: String(titleSize) + ea,
-            fontWeight: String(titleWeight),
+            fontWeight: String(800),
+            fontFamily: "pretendard",
             color: colorChip.black,
             lineHeight: String(titleLineHeight),
             top: String(titleTop) + ea,
@@ -7832,7 +7855,8 @@ GeneralJs.prototype.consultingPopup = function () {
         width: withOut(0),
         height: withOut(titleHeight + paymentHeight + formPaddingTop, ea),
         paddingTop: String(formPaddingTop) + ea,
-        overflow: "scroll",
+        overflow: "hidden",
+        "overflow-y": "auto",
       }
     });
 
@@ -8421,7 +8445,36 @@ GeneralJs.prototype.consultingPopup = function () {
             textAlign: "center",
             background: "transparent",
           }
-        }
+        },
+        {
+          class: [ pyeongClassName ],
+          text: "<u%0%u>평 ( <u%0%u>m<b%2%b> )",
+          style: {
+            position: "absolute",
+            top: String(desktop ? mainTop : 0.8) + ea,
+            left: String(leftGrayType2 + widthGrayType0 + (<&& 16 | 14 | 12 | 10 | 2 &&>)) + ea,
+            width: String(widthGrayType0) + ea,
+            height: String(grayHeight) + ea,
+            outline: String(0),
+            border: String(0),
+            fontSize: String(desktop ? mainSize : inputSize) + ea,
+            fontWeight: String(desktop ? 300 : 800),
+            color: colorExtended.mainBlue,
+            textAlign: "left",
+          },
+          bold: {
+            position: "relative",
+            top: String(<&& -8 | -8 | -7 | -6 | -1 &&>) + ea,
+            fontSize: String((desktop ? mainSize : inputSize) - (<&& 10 | 10 | 9 | 8 | 1 &&>)) + ea,
+            fontWeight: String(desktop ? 300 : 800),
+            color: colorExtended.mainBlue,
+          },
+          under: {
+            fontSize: String(desktop ? mainSize : inputSize) + ea,
+            fontWeight: String(desktop ? 300 : 800),
+            color: colorExtended.mainBlue,
+          }
+        },
       ]
     });
     // 8

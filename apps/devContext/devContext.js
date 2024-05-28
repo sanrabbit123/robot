@@ -223,7 +223,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsSchedule", { data: null }, { headers: { "Content-Type": "application/json" } });
+
     
 
     // version 0
@@ -7534,9 +7534,15 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "박지민",
-    //     designer: "김지영",
-    //     link: "https://drive.google.com/drive/folders/1nSQoEUHlMNRmkPYAeAVmjgAH485_RVWI",
+    //     client: "한진화",
+    //     designer: "김윤진",
+    //     link: "https://drive.google.com/drive/folders/184CBQZTyfR2yoWMapFQUDVkum68sgMuL",
+    //     pay: true
+    //   },
+    //   {
+    //     client: "박미화",
+    //     designer: "김윤진",
+    //     link: "https://drive.google.com/drive/folders/1D7Q-TMnQYNMEN-jdGnT2FDQxybkroEdo",
     //     pay: true
     //   },
     // ]);
