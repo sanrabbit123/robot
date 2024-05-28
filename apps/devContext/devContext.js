@@ -223,6 +223,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+    
+
+
 
     
     
@@ -7063,15 +7066,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "한진화",
-    //     designer: "김윤진",
-    //     link: "https://drive.google.com/drive/folders/184CBQZTyfR2yoWMapFQUDVkum68sgMuL",
-    //     pay: true
-    //   },
-    //   {
-    //     client: "박미화",
-    //     designer: "김윤진",
-    //     link: "https://drive.google.com/drive/folders/1D7Q-TMnQYNMEN-jdGnT2FDQxybkroEdo",
+    //     client: null,
+    //     designer: "이효정",
+    //     link: "https://drive.google.com/drive/folders/1nJcZ7B099RHCbG6lZTInXj2nvXQr63YX",
     //     pay: true
     //   },
     // ]);

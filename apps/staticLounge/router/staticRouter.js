@@ -7037,7 +7037,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
         "XT 정산",
       ]);
   
-      for (let i = 0; i < monthDelta; i++) {
+      for (let i = -1; i < monthDelta; i++) {
   
         nowDate = new Date();
         nowDate.setDate(1);
@@ -7219,7 +7219,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
         tempArr.push(Math.floor(totalAmount_xt));
         tempArr.push(Math.floor(totalPayments_xt));
     
-        for (let i = 0; i < monthDelta; i++) {
+        for (let i = -1; i < monthDelta; i++) {
     
           nowDate = new Date();
           nowDate.setDate(1);
