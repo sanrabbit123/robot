@@ -1490,7 +1490,7 @@ ClientJs.prototype.infoArea = function (info) {
 
 ClientJs.prototype.spreadData = async function (search = null) {
   const instance = this;
-  const { ajaxJson, dateToString, stringToDate, objectDeepCopy } = GeneralJs;
+  const { ajaxJson, dateToString, stringToDate, objectDeepCopy, capitalizeString } = GeneralJs;
   try {
     const standardDate = new Date(2024, 4, 27, 3, 0, 0);
     let clients, totalMother;
@@ -1500,12 +1500,14 @@ ClientJs.prototype.spreadData = async function (search = null) {
     let loading;
     let addData;
     let dummy;
+    let thisCliid;
+    let targetObj;
 
     loading = instance.mother.grayLoading(null, search === null || search === '' || search === '-');
 
     if (search === null || search === '' || search === '-') {
       const ago = new Date();
-      ago.setDate(ago.getDate() - 30);
+      ago.setDate(ago.getDate() - 5);
       clients = await ajaxJson({ whereQuery: { $or: [ { requests: { $elemMatch: { "request.timeline": { $gte: ago } } } }, { requests: { $elemMatch: { "analytics.response.status": { $regex: "^[응장]" } } } } ] } }, "/getClients");
     } else {
       clients = await ajaxJson({ query: search }, "/searchClients");
@@ -1530,13 +1532,19 @@ ClientJs.prototype.spreadData = async function (search = null) {
       dummy = {};
     }
 
-
-    
-
-    
-    console.log(addData)
-
-
+    for (let i of data) {
+      thisCliid = i.standard.cliid;
+      targetObj = addData.find((o) => { return o.cliid === thisCliid });
+      if (targetObj === undefined) {
+        targetObj = objectDeepCopy(dummy);
+      }
+      for (let key in targetObj) {
+        if (key !== "cliid") {
+          i.info["curation" + capitalizeString(key)] = targetObj[key];
+        }
+      }
+    }
+    console.log(clients);
 
     for (let i of data) {
       standardDataTong.push(i.standard);

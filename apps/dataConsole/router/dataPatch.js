@@ -517,6 +517,18 @@ DataPatch.prototype.clientStandard = function () {
       name: "상태",
       width: 80,
     },
+    curationSelection: {
+      name: "선택 상태",
+      width: 100,
+    },
+    curationReceive: {
+      name: "추천서 상태",
+      width: 120,
+    },
+    curationImage: {
+      name: "이미지 선택 상태",
+      width: 120,
+    },
     outreason: {
       name: "유출 이유",
       width: 100,
@@ -2635,6 +2647,22 @@ DataPatch.prototype.clientMap = function () {
     standardDate: { name: "기준일", position: "null", type: "constant", searchBoo: false },
     wantsService: { name: "희망 서비스", position: "null", type: "constant", searchBoo: false },
     selectConstruct: { name: "선택한 시공", position: "null", type: "constant", searchBoo: false },
+
+    curationSelection: { name: "선택 상태", position: "null", type: "constant", searchBoo: false },
+    curationReceive: { name: "추천서 상태", position: "null", type: "constant", searchBoo: false },
+    curationImage: { name: "이미지 선택 상태", position: "null", type: "constant", searchBoo: false },
+    curationAge: { name: "나이대", position: "null", type: "constant", searchBoo: false },
+    curationBudget: { name: "예산", position: "null", type: "constant", searchBoo: false },
+    curationConstruct: { name: "전체 철거 여부", position: "null", type: "constant", searchBoo: false },
+    curationConstructEnvironment: { name: "시공 당일 환경", position: "null", type: "constant", searchBoo: false },
+    curationConstructItems: { name: "선택한 시공 항목", position: "null", type: "constant", searchBoo: false },
+    curationExpect: { name: "입주예정일", position: "null", type: "constant", searchBoo: false },
+    curationFabric: { name: "생각하는 패브릭", position: "null", type: "constant", searchBoo: false },
+    curationFamily: { name: "가족 구성원", position: "null", type: "constant", searchBoo: false },
+    curationFurniture: { name: "생각하는 가구", position: "null", type: "constant", searchBoo: false },
+    curationPurchase: { name: "가구 구매", position: "null", type: "constant", searchBoo: false },
+    curationService: { name: "선택한 서비스", position: "null", type: "constant", searchBoo: false },
+    curationTime: { name: "희망 상담 시간", position: "null", type: "constant", searchBoo: false },
   };
   return map;
 }

@@ -9709,11 +9709,32 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
       let thisAnalytics;
       let thisStatus;
       let cliidStatusArr;
+      let dummyData;
 
       if (req.body.mode === undefined || req.body.mode === null || req.body.mode === "get") {
         res.send(JSON.stringify({ totalMenu }));
       } else if (req.body.mode === "analytics" || req.body.mode === "parse" || req.body.mode === "parsing") {
         const { cliids, statusArr } = equalJson(req.body);
+
+        dummyData = {
+          cliid: unknown,
+          selection: unknown,
+          receive: unknown,
+          image: unknown,
+          service: unknown,
+          serid: 's2011_aa02s',
+          construct: unknown,
+          constructItems: unknown,
+          constructEnvironment: unknown,
+          budget: unknown,
+          furniture: unknown,
+          fabric: unknown,
+          expect: unknown,
+          purchase: unknown,
+          family: unknown,
+          age: unknown,
+          time: unknown,
+        }
 
         whereQuery = { $or: cliids.map((cliid) => { return { cliid } }) };
         projectQuery = { "cliid": 1, "curation.image": 1, "curation.check": 1 };
@@ -9847,7 +9868,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
           }
           tong.push(objectDeepCopy(resultJson));
         }
-        res.send(JSON.stringify({ data: tong }));
+        res.send(JSON.stringify({ data: tong, dummy: dummyData }));
         
       }
 
