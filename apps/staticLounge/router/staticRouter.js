@@ -6950,12 +6950,12 @@ StaticRouter.prototype.rou_post_syncEvaluationContents = function () {
   return obj;
 }
 
-StaticRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
+StaticRouter.prototype.rou_post_styleCurationTotalMenu = function () {
   const instance = this;
   const back = this.back;
   const { equalJson, messageSend, objectDeepCopy } = this.mother;
   let obj = {};
-  obj.link = [ "/styleCuration_getTotalMenu" ];
+  obj.link = [ "/tyleCurationTotalMenu" ];
   obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
@@ -7506,7 +7506,7 @@ StaticRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
       }
 
     } catch (e) {
-      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_getTotalMenu) : " + e.message);
+      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCurationTotalMenu) : " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
