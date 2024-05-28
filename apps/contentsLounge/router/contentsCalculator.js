@@ -31,12 +31,13 @@ ContentsCalculator.prototype.forecastWebSchedule = async function (selfMongo, lo
     try {
       const res = await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsCalendar", { mode: "get" }, { headers: { "Content-Type": "application/json" } });
       const targets = equalJson(JSON.stringify(res.data));
+      const delta = 7 * 8
       let realTargets, realTargets2;
       let thisId;
       let future;
 
       future = new Date();
-      future.setDate(future.getDate() + 14);
+      future.setDate(future.getDate() + delta);
 
       realTargets = [];
       for (let obj of targets) {

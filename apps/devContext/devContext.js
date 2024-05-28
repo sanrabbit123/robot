@@ -223,9 +223,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const cliids = [ "c2405_ac42s", "c2405_ac44s", "c2405_ac46s", "c2405_ac47s" ];
-    const statusArr = [ "드랍", "응대중", "응대중", "응대중" ];
-
+    // await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsSchedule", { data: null }, { headers: { "Content-Type": "application/json" } });
+    
 
     // version 0
 
