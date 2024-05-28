@@ -1490,7 +1490,7 @@ ClientJs.prototype.infoArea = function (info) {
 
 ClientJs.prototype.spreadData = async function (search = null) {
   const instance = this;
-  const { ajaxJson, dateToString, stringToDate } = GeneralJs;
+  const { ajaxJson, dateToString, stringToDate, objectDeepCopy } = GeneralJs;
   try {
     const standardDate = new Date(2024, 4, 27, 3, 0, 0);
     let clients, totalMother;
@@ -1498,6 +1498,8 @@ ClientJs.prototype.spreadData = async function (search = null) {
     let standardDomsFirst, caseDomsFirst, casesFirst;
     let standardDomsTargets, caseDomsTargets;
     let loading;
+    let addData;
+    let dummy;
 
     loading = instance.mother.grayLoading(null, search === null || search === '' || search === '-');
 
@@ -1517,9 +1519,22 @@ ClientJs.prototype.spreadData = async function (search = null) {
       return o.timeline.valueOf() >= standardDate.valueOf();
     });
 
+    if (addInfoTargetArr.length > 0) {
+      addData = await ajaxJson({ mode: "parse", cliids: addInfoTargetArr.map(({ cliid }) => { return cliid }), statusArr: addInfoTargetArr.map(({ status }) => { return status }) }, BACKHOST + "/styleCuration_getTotalMenu", { equal: true });
+      if (Array.isArray(addData.data)) {
+        dummy = objectDeepCopy(addData.dummy);
+        addData = objectDeepCopy(addData.data);
+      }
+    } else {
+      addData = [];
+      dummy = {};
+    }
+
 
     
-    console.log(addInfoTargetArr)
+
+    
+    console.log(addData)
 
 
 
