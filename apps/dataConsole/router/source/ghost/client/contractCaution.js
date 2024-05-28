@@ -45,8 +45,8 @@ ContractCautionJs.binaryPath = FRONTHOST + "/middle/console/possible";
 
 ContractCautionJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media } = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
+  const { ea, media, client } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -90,27 +90,27 @@ ContractCautionJs.prototype.insertInitBox = function () {
 
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
-  whiteBlockMarginBottom = <%% 90, 80, 74, 60, 14.5 %%>;
+  whiteBlockMarginBottom = <%% 60, 56, 52, 50, 7 %%>;
 
   quoteHeight = <%% 14, 14, 14, 14, 2.5 %%>;
   quotoTongHeight = <%% 16, 16, 16, 16, 4 %%>;
-  titleFontSize = <%% 35, 33, 32, 30, 6.4 %%>;
+  titleFontSize = <%% 35, 34, 32, 29, 5.3 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleTop = <%% (isMac() ? 0 : 4), (isMac() ? 0 : 4), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 4) %%>;
 
   servicePaddingTop = <%% 7, 7, 7, 7, 7 %%>;
   servicePaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
-  servicePaddingLeft = <%% 13, 13, 13, 12, 2.2 %%>;
+  servicePaddingLeft = <%% 15, 15, 14, 13, 2.2 %%>;
   serviceMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  serviceSize = <%% 13, 13, 13, 12, 3.3 %%>;
+  serviceSize = <%% 13.5, 13.5, 13, 12, 3.3 %%>;
   serviceBlockPaddingTop = <%% (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), (isMac() ? 39 : 42), 5 %%>;
 
   whiteBlockPaddingTop = <%% 56, 56, 56, 56, 9 %%>;
   whiteBlockPaddingBottom = <%% 80, 80, 80, 80, 11 %%>;
 
-  searchBarPaddingTop = <%% 220, 220, 192, 164, 12.5 %%>;
+  searchBarPaddingTop = <%% 210, 190, 170, 156, 7 %%>;
   searchBarHeight = <%% 40, 40, 40, 36, 8 %%>;
-  searchBarWidth = <%% 690, 516, 516, 420, 88 %%>;
+  searchBarWidth = <%% 690, 516, 516, 420, 78 %%>;
 
   searchIconHeight = <%% 20, 20, 20, 20, 4 %%>;
   searchIconRight = <%% 11, 11, 11, 11, 2 %%>;
@@ -126,13 +126,13 @@ ContractCautionJs.prototype.insertInitBox = function () {
   subTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   tagTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
-  tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
+  tagTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "유의 사항 안내";
-  subTitleContents = "디자이너와 진행 시 유의 사항 안내";
+  titleWording = "Caution information<b%.%b>";
+  subTitleContents = "홈리에종 서비스에 대한 상세한 안내";
 
-  mobileBlockTop = 4.5;
+  mobileBlockTop = 5.6;
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -145,31 +145,6 @@ ContractCautionJs.prototype.insertInitBox = function () {
       top: String(-1 * boxTopVisual) + ea,
       paddingTop: desktop ? "" : String(mobileBlockTop) + ea,
     }
-  });
-
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.white))) * quoteHeight;
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      height: String(quotoTongHeight) + ea,
-      opacity: String(0.6),
-    },
-    children: [
-      {
-        mode: "svg",
-        source: svgMaker.doubleQuote(colorChip.white),
-        style: {
-          display: "inline-block",
-          height: String(quoteHeight) + ea,
-          width: String(quoteWidth) + ea,
-        }
-      }
-    ]
   });
 
   createNode({
@@ -187,35 +162,18 @@ ContractCautionJs.prototype.insertInitBox = function () {
         style: {
           display: "inline-block",
           position: "relative",
-          top: mobile ? "" : String(titleTop) + ea,
           fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
           fontWeight: String(titleFontWeight),
           color: colorChip.white,
-        }
-      }
-    ]
-  });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      position: "relative",
-      textAlign: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: String(subTitleMarginTop) + ea,
-    },
-    children: [
-      {
-        text: subTitleContents,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: mobile ? "" : String(0) + ea,
-          fontSize: String(subTitleFontSize) + ea,
-          fontWeight: String(subTitleWeight),
+          wordSpacing: String(2) + "px",
+        },
+        bold: {
+          fontSize: String(titleFontSize) + ea,
+          fontFamily: "mont",
+          fontWeight: String(titleFontWeight),
           color: colorChip.white,
+          opacity: String(0.4),
         }
       }
     ]
@@ -325,7 +283,7 @@ ContractCautionJs.prototype.insertFirstBox = function () {
           width: String(barWidth) + ea,
           height: String(barHeight) + ea,
           borderRadius: String(5) + "px",
-          background: colorChip.gray3,
+          background: GeneralJs.colorExtended.blueLight,
         }
       },
       {
@@ -1099,7 +1057,7 @@ ContractCautionJs.prototype.whiteBlockRender = function (thisIndex, mainTitle, m
               top: String(titleTopNumber) + ea,
               fontSize: String(titleFontSize) + ea,
               fontWeight: String(800),
-              background: desktop ? colorChip.white : colorChip.gray1,
+              background: desktop ? colorChip.white : GeneralJs.colorExtended.blueLight,
               paddingRight: String(numberRight) + ea,
               color: colorChip.black,
             }
@@ -1567,7 +1525,7 @@ ContractCautionJs.prototype.injectServiceTable = function () {
         marginBottom: desktop ? "" : String(contents3BoxBetween) + ea,
         verticalAlign: "top",
       }
-    })
+    });
 
     createNode({
       mother: contents3BoxFactor,
@@ -1740,7 +1698,6 @@ ContractCautionJs.prototype.launching = async function (loading) {
         try {
           let whiteBlock;
           instance.insertInitBox();
-          instance.insertFirstBox();
           instance.insertContextBox();
           instance.contentsCenter();
           instance.injectServiceTable();

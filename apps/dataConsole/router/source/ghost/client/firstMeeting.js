@@ -1035,7 +1035,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
               top: String(titleTopNumber) + ea,
               fontSize: String(titleFontSize) + ea,
               fontWeight: String(600),
-              background: desktop ? colorChip.white : colorChip.gray1,
+              background: desktop ? colorChip.white : GeneralJs.colorExtended.blueLight,
               paddingRight: String(numberRight) + ea,
               color: colorChip.black,
             }
@@ -1043,12 +1043,13 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
           {
             text: String(indexNumber),
             style: {
+              display: "none",
               position: "absolute",
               right: String(0),
               top: String(titleTop) + ea,
               fontSize: String(titleFontSize) + ea,
               fontWeight: String(200),
-              background: desktop ? colorChip.white : colorChip.gray1,
+              background: desktop ? colorChip.white : GeneralJs.colorExtended.blueLight,
               paddingLeft: String(numberRight) + ea,
               color: desktop ? colorChip.black : colorChip.deactive,
             }

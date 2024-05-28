@@ -186,7 +186,7 @@ GeneralJs.prototype.setBackground = function (binaryPath, second = false, random
           left: String(0),
           width: String(100) + '%',
           height: String(100) + '%',
-          background: colorExtended.gradientBlue,
+          background: colorExtended.blueLight,
           animation: "justfadeinoriginal 0.3s ease forwards",
         }
       },
