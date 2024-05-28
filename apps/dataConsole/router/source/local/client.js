@@ -7428,7 +7428,7 @@ ClientJs.prototype.communicationRender = function () {
     }
   ]);
   communication.setItem([
-    () => { return "스타일 찾기 페이지"; },
+    () => { return "스타일 찾기 페이지 열람"; },
     function () {
       return true;
     },
@@ -7460,7 +7460,7 @@ ClientJs.prototype.communicationRender = function () {
     }
   ]);
   communication.setItem([
-    () => { return "스타일 찾기 보내기"; },
+    () => { return "스타일 찾기 페이지 보내기"; },
     function () {
       return true;
     },
@@ -7497,6 +7497,53 @@ ClientJs.prototype.communicationRender = function () {
               }
             }, BACKHOST + "/alimTalk");
             window.alert(thisCase.name + " 고객님께 스타일 찾기 페이지 완료 안내 알림톡을 보냈습니다!");
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "강제 스타일 찾기"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid, thisCase, serid;
+        let response, project;
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            cliid = (await GeneralJs.prompt("고객 아이디를 입력하세요!")).trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase !== null) {
+          if (window.confirm(thisCase.name + " 고객님의 스타일 찾기를 강제로 진행할까요?")) {
+            await ajaxJson({
+              newMode: true,
+              method: "client",
+              id: cliid,
+              updateQuery: { "curation.image": [
+                "t6p18.jpg",
+                "t11p58.jpg",
+                "t4p123.jpg",
+                "t9p306.jpg",
+                "t1p29.jpg",
+                "t18p350.jpg"
+              ] },
+              coreQuery: {},
+            }, BACKHOST + "/updateHistory");
           }
         }
       } catch (e) {
