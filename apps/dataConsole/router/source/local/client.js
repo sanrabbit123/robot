@@ -1490,8 +1490,9 @@ ClientJs.prototype.infoArea = function (info) {
 
 ClientJs.prototype.spreadData = async function (search = null) {
   const instance = this;
-  const { ajaxJson, dateToString } = GeneralJs;
+  const { ajaxJson, dateToString, stringToDate } = GeneralJs;
   try {
+    const standardDate = new Date(2024, 4, 27, 3, 0, 0);
     let clients, totalMother;
     let standardDataTong = [], infoDataTong = [];
     let standardDomsFirst, caseDomsFirst, casesFirst;
@@ -1512,6 +1513,15 @@ ClientJs.prototype.spreadData = async function (search = null) {
     GeneralJs.stacks.allDesignerTong = GeneralJs.stacks.entireDesignerTong.filter((designer) => { return /완료/gi.test(designer.information.contract.status) });
 
     const { standard, data } = clients;
+    const addInfoTargetArr = data.map((o) => { return { cliid: o.standard.cliid, status: o.info.status, timeline: stringToDate(o.info.timeline) } }).filter((o) => {
+      return o.timeline.valueOf() >= standardDate.valueOf();
+    });
+
+
+    
+    console.log(addInfoTargetArr)
+
+
 
     for (let i of data) {
       standardDataTong.push(i.standard);

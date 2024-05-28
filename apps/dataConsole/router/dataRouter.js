@@ -1,4 +1,4 @@
-const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, isLocal = false) {
+const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance, isLocal = false) {
   if (MONGOC === undefined || MONGOC === null || MONGOLOCALC === undefined || MONGOLOCALC === null) {
     throw new Error("must be mongo, mongo_local connection");
   }
@@ -23,6 +23,7 @@ const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoIn
   this.analytics = new GoogleAnalytics();
   this.mongo = MONGOC;
   this.mongolocal = MONGOLOCALC;
+  this.mongolog = MONGOLOGC;
   this.pythonApp = this.dir + "/python/app.py";
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.members = {};
@@ -9318,7 +9319,8 @@ DataRouter.prototype.rou_post_styleCuration_styleChecking = function () {
 
 DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
   const instance = this;
-  const { equalJson, messageSend } = this.mother;
+  const back = this.back;
+  const { equalJson, messageSend, objectDeepCopy } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_getTotalMenu";
   obj.func = async function (req, res, logger) {
@@ -9329,9 +9331,10 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      let totalMenu;
-
-      totalMenu = [
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      const selfLogMongo = instance.mongolog;
+      const totalMenu = [
         {
           question: "생각하는 서비스 유형을 선택해 주세요!",
           values: [
@@ -9686,8 +9689,168 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
           values: [],
         },
       ];
+      const collection = "clientHistory";
+      const collection2 = "blackButtonsClick";
+      const collection3 = "homeliaisonAnalytics";
+      const defaultButton = "consulting";
+      const unknown = "알 수 없음";
+      let whereQuery, projectQuery;
+      let rows, rows2;
+      let filteredBlack;
+      let thisCliid, curation;
+      let selection;
+      let resultJson;
+      let tong;
+      let check;
+      let receive;
+      let rows3;
+      let start;
+      let target;
+      let thisAnalytics;
+      let thisStatus;
+      let cliidStatusArr;
 
-      res.send(JSON.stringify({ totalMenu }));
+      if (req.body.mode === undefined || req.body.mode === null || req.body.mode === "get") {
+        res.send(JSON.stringify({ totalMenu }));
+      } else if (req.body.mode === "analytics" || req.body.mode === "parse" || req.body.mode === "parsing") {
+        const { cliids, statusArr } = equalJson(req.body);
+
+        whereQuery = { $or: cliids.map((cliid) => { return { cliid } }) };
+        projectQuery = { "cliid": 1, "curation.image": 1, "curation.check": 1 };
+    
+        rows = await back.mongoPick(collection, [ whereQuery, projectQuery ], { selfMongo });
+        rows2 = await back.mongoRead(collection2, whereQuery, { selfMongo });
+    
+        whereQuery = { $or: cliids.map((cliid) => { return { "data.cliid": cliid, "action": "pageInit" } }) };
+        projectQuery = { "page": 1, "data": 1, "action": 1 };
+        rows3 = await back.mongoPick(collection3, [ whereQuery, projectQuery ], { selfMongo: selfLogMongo });
+    
+        cliidStatusArr = [];
+        for (let i = 0; i < cliids.length; i++) {
+          cliidStatusArr.push([ cliids[i], statusArr[i] ]);
+        }
+
+        tong = [];
+        for (let obj of rows) {
+          thisCliid = obj.cliid;
+          thisStatus = cliidStatusArr.find((arr) => { return arr[0] === thisCliid })[1];
+
+          curation = objectDeepCopy(obj.curation);
+          check = curation.check;
+          thisAnalytics = rows3.filter((o) => { return o.data.cliid === thisCliid });
+          filteredBlack = rows2.filter((o) => { return o.cliid === thisCliid });
+    
+          if (filteredBlack.length === 0) {
+            selection = defaultButton;
+          } else {
+            filteredBlack.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+            selection = filteredBlack[0].mode;
+          }
+    
+          if (thisAnalytics.filter((o) => { return o.page === "styleCuration" }).length === 0) {
+            start = "스타일 체크 거부";
+            target = "단순 드랍 대상";
+          } else {
+            start = "스타일 체크 진입";
+            target = "1차 응대 대상";
+          }
+    
+          if (/단순 드랍 대상/gi.test(target) || /드랍/gi.test(thisStatus)) {
+    
+            selection = "응대 불필요";
+            receive = "추천 불필요";
+    
+          } else {
+    
+            if (/consulting/gi.test(selection)) {
+              selection = "상담부터";
+              receive = "추천서 받기 전";
+              if (thisAnalytics.filter((o) => { return o.page === "designerProposal" }).length > 0) {
+                receive = "자동 추천 받음";
+              }
+            } else {
+              selection = "추천부터";
+              receive = "추천서 진입";
+              if (thisAnalytics.filter((o) => { return o.page === "designerProposal" }).length === 0) {
+                selection = "상담부터";
+                receive = "자동 추천 받음";
+              } else {
+                target = "자동 응대중";
+              }
+            }
+    
+          }
+    
+          resultJson = { cliid: thisCliid, selection, receive };
+    
+          if (curation.length === 0) {
+            resultJson.image = "이미지 선택 거부";
+          } else {
+            if (thisAnalytics.filter((o) => { return o.page === "styleCuration" }).length === 0) {
+              resultJson.image = "이미지 선택 거부";
+            } else {
+              resultJson.image = "이미지 선택 진행";
+            }
+          }
+          resultJson.service = totalMenu[0].values[Number(check.serid.split("_")[1].replace(/[^0-9]/gi, '')) - 1].title
+          resultJson.serid = check.serid;
+          if (typeof check.construct.entire === "boolean") {
+            resultJson.construct = totalMenu[1].values[check.construct.entire ? 1 : 0].value;
+          } else {
+            resultJson.construct = totalMenu[1].values[0].value;
+          }
+          resultJson.constructItems = totalMenu[2].values.filter((o, index) => { return check.construct.items.includes(index) }).map((o) => { return o.title }).join(", ").trim();
+          if (resultJson.constructItems === "") {
+            resultJson.constructItems = unknown;
+          }
+          if (typeof check.construct.environment === "number") {
+            resultJson.constructEnvironment = totalMenu[3].values[check.construct.environment].value;
+          } else {
+            resultJson.constructEnvironment = unknown;
+          }
+          if (typeof check.budget === "number") {
+            resultJson.budget = totalMenu[4].values[check.budget].value;
+          } else {
+            resultJson.budget = unknown;
+          }
+          resultJson.furniture = totalMenu[5].values.filter((o, index) => { return check.furniture.includes(index) }).map((o) => { return o.title }).join(", ").trim();
+          if (resultJson.furniture === "") {
+            resultJson.furniture = unknown;
+          }
+          resultJson.fabric = totalMenu[6].values.filter((o, index) => { return check.fabric.includes(index) }).map((o) => { return o.title }).join(", ").trim();
+          if (resultJson.fabric === "") {
+            resultJson.fabric = unknown;
+          }
+          if (typeof check.expect === "number") {
+            resultJson.expect = totalMenu[7].values[check.expect].value;
+          } else {
+            resultJson.expect = unknown;
+          }
+          if (typeof check.purchase === "number") {
+            resultJson.purchase = totalMenu[8].values[check.purchase].value;
+          } else {
+            resultJson.purchase = unknown;
+          }
+          if (typeof check.family === "number") {
+            resultJson.family = totalMenu[9].values[check.family].value;
+          } else {
+            resultJson.family = unknown;
+          }
+          if (typeof check.age === "number") {
+            resultJson.age = totalMenu[10].values[check.age].value;
+          } else {
+            resultJson.age = unknown;
+          }
+          resultJson.time = totalMenu[11].values.filter((o, index) => { return check.time.includes(index) }).map((o) => { return o.title }).join(", ").trim();
+          if (resultJson.time === "") {
+            resultJson.time = unknown;
+          }
+          tong.push(objectDeepCopy(resultJson));
+        }
+        res.send(JSON.stringify({ data: tong }));
+        
+      }
+
     } catch (e) {
       await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_getTotalMenu) : " + e.message);
       res.send(JSON.stringify({ message: "error" }));

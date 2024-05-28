@@ -1033,7 +1033,7 @@ DataConsole.prototype.readGhostPatch = async function () {
 
 DataConsole.prototype.connect = async function () {
   const instance = this;
-  const { fileSystem, sleep, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, uniqueValue, errorLog, expressLog, dateToString, aliveLog, cronLog, emergencyAlarm, alertLog, shellExec, shellLink } = this.mother;
+  const { fileSystem, sleep, mongo, mongoinfo, mongolocalinfo, mongotestinfo, mongoconsoleinfo, uniqueValue, errorLog, expressLog, dateToString, aliveLog, cronLog, emergencyAlarm, alertLog, shellExec, shellLink } = this.mother;
   const PORT = 3000;
   const https = require("https");
   const os = require("os");
@@ -1081,25 +1081,23 @@ DataConsole.prototype.connect = async function () {
     console.log(``);
 
     //set mongo connetion
-    let MONGOC, MONGOLOCALC;
+    let MONGOC, MONGOLOCALC, MONGOLOGC;
     if (/localhost/gi.test(address.host) || address.host === this.address.officeinfo.ghost.host || isTest) {
       isLocal = true;
-      MONGOC = new mongo(mongoinfo);
-      console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
-      MONGOLOCALC = new mongo(mongoconsoleinfo);
-      console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => ${this.address.backinfo.host}`);
     } else {
       await this.back.setInfoObj({ getMode: false });
       isLocal = false;
-      MONGOC = new mongo(mongoinfo);
-      console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
-      MONGOLOCALC = new mongo(mongoconsoleinfo);
-      console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => ${this.address.backinfo.host}`);
     }
+    MONGOC = new mongo(mongoinfo);
+    MONGOLOCALC = new mongo(mongoconsoleinfo);
+    MONGOLOGC = new mongo(mongotestinfo);
+
+
     console.log(``);
 
     await MONGOC.connect();
     await MONGOLOCALC.connect();
+    await MONGOLOGC.connect();
 
     //set kakao
     const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
@@ -1142,7 +1140,7 @@ DataConsole.prototype.connect = async function () {
     const DataPatch = require(`${this.dir}/router/dataPatch.js`);
     const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
     const DataRouter = await this.mergeRouter(DataMiddle !== null);
-    const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, isLocal);
+    const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, MONGOLOGC, kakaoInstance, humanInstance, isLocal);
     await router.setMembers();
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);

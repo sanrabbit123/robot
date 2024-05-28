@@ -1081,26 +1081,6 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
       
                 await sleep(3 * 1000);
       
-                await requestSystem("https://" + instance.address.backinfo.host + ":3000/styleCuration_updateCalculation", { cliid: cliid, historyQuery: {}, coreQuery: {}, mode: "calculation", fromConsole: 0 }, {
-                  headers: {
-                    "Content-Type": "application/json",
-                    "origin": instance.address.frontinfo.host,
-                  }
-                });
-                await sleep(1000);
-      
-                await requestSystem("https://" + instance.address.backinfo.host + ":3000/ghostClient_updateAnalytics", {
-                  page: "styleCuration",
-                  mode: "submit",
-                  cliid: cliid,
-                }, {
-                  headers: {
-                    "Content-Type": "application/json",
-                    "origin": instance.address.frontinfo.host,
-                  }
-                });
-                await sleep(1000);
-      
                 await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
 
                 await sleep(1000);
