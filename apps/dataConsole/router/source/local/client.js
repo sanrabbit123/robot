@@ -1543,7 +1543,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
 
     if (addInfoTargetArr.length > 0) {
       setQueue(() => {
-        ajaxJson({ mode: "parse", cliids: addInfoTargetArr.map(({ cliid }) => { return cliid }), statusArr: addInfoTargetArr.map(({ status }) => { return status }) }, "/styleCuration_getTotalMenu", { equal: true }).then((addData) => {
+        ajaxJson({ mode: "parse", cliids: addInfoTargetArr.map(({ cliid }) => { return cliid }), statusArr: addInfoTargetArr.map(({ status }) => { return status }) }, "https://" + FILEHOST + ":3000/styleCurationTotalMenu", { equal: true }).then((addData) => {
           if (Array.isArray(addData.data)) {
             dummy = objectDeepCopy(addData.dummy);
             addData = objectDeepCopy(addData.data);

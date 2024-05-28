@@ -6955,7 +6955,7 @@ StaticRouter.prototype.rou_post_styleCurationTotalMenu = function () {
   const back = this.back;
   const { equalJson, messageSend, objectDeepCopy } = this.mother;
   let obj = {};
-  obj.link = [ "/tyleCurationTotalMenu" ];
+  obj.link = [ "/styleCurationTotalMenu" ];
   obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
