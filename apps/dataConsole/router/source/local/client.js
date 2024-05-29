@@ -1507,13 +1507,22 @@ ClientJs.prototype.spreadData = async function (search = null) {
     let targetDom;
     let thisDom;
     let targetWhiteDom;
+    let todayTarget, yesterdayTarget, otherTarget;
+    let todayStandard, yesterdayStandard;
+    let now;
+
+    now = new Date();
+
+    todayStandard = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+    yesterdayStandard = new Date(JSON.stringify(todayStandard).slice(1, -1));
+    yesterdayStandard.setDate(yesterdayStandard.getDate() - 1);
 
     loading = instance.mother.grayLoading(null, search === null || search === '' || search === '-');
 
     if (search === null || search === '' || search === '-') {
       const ago = new Date();
       ago.setDate(ago.getDate() - 5);
-      clients = await ajaxJson({ whereQuery: { $or: [ { requests: { $elemMatch: { "request.timeline": { $gte: ago } } } }, { requests: { $elemMatch: { "analytics.response.status": { $regex: "^[응장]" } } } } ] } }, "/getClients");
+      clients = await ajaxJson({ whereQuery: { $or: [ { requests: { $elemMatch: { "analytics.response.status": { $regex: "^[응장]" } } } } ] } }, "/getClients");
     } else {
       clients = await ajaxJson({ query: search }, "/searchClients");
     }
@@ -1542,8 +1551,13 @@ ClientJs.prototype.spreadData = async function (search = null) {
     }
 
     if (addInfoTargetArr.length > 0) {
+
+      todayTarget = addInfoTargetArr.filter((o) => { return o.timeline.valueOf() >= todayStandard.valueOf() });
+      yesterdayTarget = addInfoTargetArr.filter((o) => { return o.timeline.valueOf() >= yesterdayStandard.valueOf() && o.timeline.valueOf() < todayStandard.valueOf() });
+      otherTarget = addInfoTargetArr.filter((o) => { return o.timeline.valueOf() < yesterdayStandard.valueOf() });
+
       setQueue(() => {
-        ajaxJson({ mode: "parse", cliids: addInfoTargetArr.map(({ cliid }) => { return cliid }), statusArr: addInfoTargetArr.map(({ status }) => { return status }) }, "https://" + FILEHOST + ":3000/styleCurationTotalMenu", { equal: true }).then((addData) => {
+        ajaxJson({ mode: "parse", cliids: todayTarget.map(({ cliid }) => { return cliid }), statusArr: todayTarget.map(({ status }) => { return status }) }, "https://" + FILEHOST + ":3000/styleCurationTotalMenu", { equal: true }).then((addData) => {
           if (Array.isArray(addData.data)) {
             dummy = objectDeepCopy(addData.dummy);
             addData = objectDeepCopy(addData.data);
@@ -1563,36 +1577,136 @@ ClientJs.prototype.spreadData = async function (search = null) {
             }
 
             targetObj = addData.find((o) => { return o.cliid === thisCliid });
-            if (targetObj === undefined) {
-              targetObj = objectDeepCopy(dummy);
-            }
-            for (let key in targetObj) {
-              if (key !== "cliid") {
-                i.info["curation" + capitalizeString(key)] = targetObj[key];
-                if (targetDom !== null) {
-                  thisDom = findByAttribute([ ...targetDom.children ], "column", "curation" + capitalizeString(key));
-                  if (thisDom !== null) {
-                    thisDom.textContent = targetObj[key];
+            if (targetObj !== undefined) {
+              for (let key in targetObj) {
+                if (key !== "cliid") {
+                  i.info["curation" + capitalizeString(key)] = targetObj[key];
+                  if (targetDom !== null) {
+                    thisDom = findByAttribute([ ...targetDom.children ], "column", "curation" + capitalizeString(key));
+                    if (thisDom !== null) {
+                      thisDom.textContent = targetObj[key];
+                    }
+                  }
+                }
+              }
+              targetCase = instance.cases.find((o) => { return o !== null && o.cliid === thisCliid });
+              for (let key in targetObj) {
+                if (key !== "cliid") {
+                  targetCase["curation" + capitalizeString(key)] = targetObj[key];
+                  if (targetWhiteDom !== null) {
+                    thisDom = findByAttribute([ ...targetWhiteDom.children ], "index", "curation" + capitalizeString(key));
+                    if (thisDom !== null) {
+                      thisDom.children[1].textContent = targetObj[key];
+                    }
                   }
                 }
               }
             }
-            targetCase = instance.cases.find((o) => { return o !== null && o.cliid === thisCliid });
-            for (let key in targetObj) {
-              if (key !== "cliid") {
-                targetCase["curation" + capitalizeString(key)] = targetObj[key];
-                if (targetWhiteDom !== null) {
-                  thisDom = findByAttribute([ ...targetWhiteDom.children ], "index", "curation" + capitalizeString(key));
-                  if (thisDom !== null) {
-                    thisDom.children[1].textContent = targetObj[key];
+          }
+        }).catch((err) => { console.log(err); });
+      });
+      setQueue(() => {
+        ajaxJson({ mode: "parse", cliids: yesterdayTarget.map(({ cliid }) => { return cliid }), statusArr: yesterdayTarget.map(({ status }) => { return status }) }, "https://" + FILEHOST + ":3000/styleCurationTotalMenu", { equal: true }).then((addData) => {
+          if (Array.isArray(addData.data)) {
+            dummy = objectDeepCopy(addData.dummy);
+            addData = objectDeepCopy(addData.data);
+          }
+          for (let i of instance.data) {
+            thisCliid = i.standard.cliid;
+
+            targetDom = null;
+            if (document.querySelector('.' + instance.rowViewClassName) !== null) {
+              targetDom = document.querySelector('.' + instance.rowViewClassName).querySelector('.' + thisCliid);
+            }
+            targetWhiteDom = null;
+            if (document.querySelector('.' + instance.whitePropertyBoxClassName) !== null) {
+              if (instance.whiteBox.id === thisCliid) {
+                targetWhiteDom = document.querySelector('.' + instance.whitePropertyBoxClassName);
+              }
+            }
+
+            targetObj = addData.find((o) => { return o.cliid === thisCliid });
+            if (targetObj !== undefined) {
+              for (let key in targetObj) {
+                if (key !== "cliid") {
+                  i.info["curation" + capitalizeString(key)] = targetObj[key];
+                  if (targetDom !== null) {
+                    thisDom = findByAttribute([ ...targetDom.children ], "column", "curation" + capitalizeString(key));
+                    if (thisDom !== null) {
+                      thisDom.textContent = targetObj[key];
+                    }
+                  }
+                }
+              }
+              targetCase = instance.cases.find((o) => { return o !== null && o.cliid === thisCliid });
+              for (let key in targetObj) {
+                if (key !== "cliid") {
+                  targetCase["curation" + capitalizeString(key)] = targetObj[key];
+                  if (targetWhiteDom !== null) {
+                    thisDom = findByAttribute([ ...targetWhiteDom.children ], "index", "curation" + capitalizeString(key));
+                    if (thisDom !== null) {
+                      thisDom.children[1].textContent = targetObj[key];
+                    }
                   }
                 }
               }
             }
           }
 
+          setQueue(() => {
+            ajaxJson({ mode: "parse", cliids: otherTarget.map(({ cliid }) => { return cliid }), statusArr: otherTarget.map(({ status }) => { return status }) }, "https://" + FILEHOST + ":3000/styleCurationTotalMenu", { equal: true }).then((addData) => {
+              if (Array.isArray(addData.data)) {
+                dummy = objectDeepCopy(addData.dummy);
+                addData = objectDeepCopy(addData.data);
+              }
+              for (let i of instance.data) {
+                thisCliid = i.standard.cliid;
+    
+                targetDom = null;
+                if (document.querySelector('.' + instance.rowViewClassName) !== null) {
+                  targetDom = document.querySelector('.' + instance.rowViewClassName).querySelector('.' + thisCliid);
+                }
+                targetWhiteDom = null;
+                if (document.querySelector('.' + instance.whitePropertyBoxClassName) !== null) {
+                  if (instance.whiteBox.id === thisCliid) {
+                    targetWhiteDom = document.querySelector('.' + instance.whitePropertyBoxClassName);
+                  }
+                }
+    
+                targetObj = addData.find((o) => { return o.cliid === thisCliid });
+                if (targetObj !== undefined) {
+                  for (let key in targetObj) {
+                    if (key !== "cliid") {
+                      i.info["curation" + capitalizeString(key)] = targetObj[key];
+                      if (targetDom !== null) {
+                        thisDom = findByAttribute([ ...targetDom.children ], "column", "curation" + capitalizeString(key));
+                        if (thisDom !== null) {
+                          thisDom.textContent = targetObj[key];
+                        }
+                      }
+                    }
+                  }
+                  targetCase = instance.cases.find((o) => { return o !== null && o.cliid === thisCliid });
+                  for (let key in targetObj) {
+                    if (key !== "cliid") {
+                      targetCase["curation" + capitalizeString(key)] = targetObj[key];
+                      if (targetWhiteDom !== null) {
+                        thisDom = findByAttribute([ ...targetWhiteDom.children ], "index", "curation" + capitalizeString(key));
+                        if (thisDom !== null) {
+                          thisDom.children[1].textContent = targetObj[key];
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+    
+            }).catch((err) => { console.log(err); });
+          }, 500);
+
         }).catch((err) => { console.log(err); });
-      });
+      }, 0);
+
     }
 
     for (let i of data) {
