@@ -223,7 +223,7 @@ LogRouter.prototype.rou_post_searchContents = function () {
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongocore;
       const collection = "contents";
-      const hideContents = [ "p61", "p36", "a51" ];
+      const hideContents = [ "p61", "p36", "a51", "a104", "a105" ];
       const toNormal = true;
       const { keywords: seridKeywords, name: serviceNames } = serviceParsing();
       let limit;
@@ -612,7 +612,7 @@ LogRouter.prototype.rou_post_getContents = function () {
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongocore;
       const collection = "contents";
-      const hideContents = [ "p61", "p36", "a51", "a104" ];
+      const hideContents = [ "p61", "p36", "a51", "a104", "a105" ];
       const toNormal = true;
       const defaultDelta = 45;
       const moneyDelta = 2500000;
