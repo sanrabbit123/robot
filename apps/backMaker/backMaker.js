@@ -3966,6 +3966,7 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
     return tong;
   } catch (e) {
     console.log(e);
+    return [];
   }
 }
 
@@ -4051,6 +4052,7 @@ BackMaker.prototype.mongoPick = async function (collection, queryArr, option = {
     return tong;
   } catch (e) {
     console.log(e);
+    return [];
   }
 }
 
