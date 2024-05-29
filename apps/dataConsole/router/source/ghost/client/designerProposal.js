@@ -7813,6 +7813,9 @@ DesignerProposalJs.prototype.insertWhiteCardEvent = function (desid, char) {
           },
           children: [
             {
+              event: {
+                click: (e) => { if (desktop) { GeneralJs.blankHref(link.portfolio) } }
+              },
               text: desktop ? title.portfolio : title.mobile,
               style: {
                 fontSize: String(portfolioSize) + ea,
@@ -7821,6 +7824,7 @@ DesignerProposalJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 display: "inline-flex",
                 position: "relative",
                 top: String(portfolioTextTop) + ea,
+                cursor: "pointer",
               }
             },
             {
@@ -7835,6 +7839,9 @@ DesignerProposalJs.prototype.insertWhiteCardEvent = function (desid, char) {
                 alignItems: "center",
               },
               child: {
+                event: {
+                  click: (e) => { GeneralJs.blankHref(link.portfolio) }
+                },
                 style: {
                   display: "inline-flex",
                   position: "relative",
@@ -7844,6 +7851,7 @@ DesignerProposalJs.prototype.insertWhiteCardEvent = function (desid, char) {
                   background: desktop ? colorExtended.blueDark : colorExtended.white,
                   justifyContent: "center",
                   alignItems: "center",
+                  cursor: "pointer",
                 },
                 child: {
                   mode: "svg",
