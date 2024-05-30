@@ -2407,6 +2407,9 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
             break;
           }
         }
+        if (data === null || data === undefined) {
+          data = { goodName: thisBill.requests[transferRows[0].requestNumber].name };
+        }
   
         infoArr = equalJson(JSON.stringify(thisBill.requests[requestNumber].info));
         infoArr.unshift({ virtualAccount: equalJson(JSON.stringify(req.body)) });
