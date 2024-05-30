@@ -57,83 +57,7 @@ ClientEvaluationJs.prototype.generateTotalValues = async function () {
     let totalValues, totalMenu;
 
     totalValues = (new Array(this.questionNumber)).fill(null, 0);
-    if (typeof clientHistory.curation.check === "object" && clientHistory.curation.check !== null) {
-
-      // 0
-      if (typeof clientHistory.curation.check.serid === "string") {
-        if (/_/gi.test(clientHistory.curation.check.serid) && !Number.isNaN(Number(clientHistory.curation.check.serid.split("_")[1].replace(/[^0-9]/gi, '')))) {
-          totalValues[0] = Number(clientHistory.curation.check.serid.split("_")[1].replace(/[^0-9]/gi, '')) - 1;
-        }
-      }
-
-      // 1
-      if (typeof clientHistory.curation.check.construct.entire === "boolean") {
-        totalValues[1] = clientHistory.curation.check.construct.entire ? 1 : 0;
-      }
-
-      // 2
-      if (Array.isArray(clientHistory.curation.check.construct.items) && clientHistory.curation.check.construct.items.length > 0) {
-        totalValues[2] = objectDeepCopy(clientHistory.curation.check.construct.items);
-      }
-
-      // 3
-      if (typeof clientHistory.curation.check.construct.environment === "number") {
-        totalValues[3] = clientHistory.curation.check.construct.environment;
-      }
-
-      // 4
-      if (typeof clientHistory.curation.check.budget === "number") {
-        totalValues[4] = clientHistory.curation.check.budget;
-      }
-
-      // 5
-      if (Array.isArray(clientHistory.curation.check.furniture) && clientHistory.curation.check.furniture.length > 0) {
-        totalValues[5] = objectDeepCopy(clientHistory.curation.check.furniture);
-      }
-
-      // 6
-      if (Array.isArray(clientHistory.curation.check.fabric) && clientHistory.curation.check.fabric.length > 0) {
-        totalValues[6] = objectDeepCopy(clientHistory.curation.check.fabric);
-      }
-
-      // 7
-      if (typeof clientHistory.curation.check.expect === "number") {
-        totalValues[7] = clientHistory.curation.check.expect;
-      }
-
-      // 8
-      if (typeof clientHistory.curation.check.purchase === "number") {
-        totalValues[8] = clientHistory.curation.check.purchase;
-      }
-
-      // 9
-      if (typeof clientHistory.curation.check.family === "number") {
-        totalValues[9] = clientHistory.curation.check.family;
-      }
-
-      // 10
-      if (typeof clientHistory.curation.check.age === "number") {
-        totalValues[10] = clientHistory.curation.check.age;
-      }
-
-      // 11
-      if (Array.isArray(clientHistory.curation.check.time) && clientHistory.curation.check.time.length > 0) {
-        totalValues[11] = objectDeepCopy(clientHistory.curation.check.time);
-      }
-
-      // 12
-      if (Array.isArray(clientHistory.curation.image) && clientHistory.curation.image.length > 0) {
-        totalValues[12] = objectDeepCopy(clientHistory.curation.image);
-      } else {
-        totalValues[12] = [];
-      }
-
-      // 13
-      totalValues[13] = [];
-
-    }
-
-    totalMenu = (await ajaxJson({ data: null }, BACKHOST + "/styleCuration_getTotalMenu", { equal: true })).totalMenu.map((o) => { return o.values });
+    totalMenu = (await ajaxJson({ mode: "get" }, BACKHOST + "/styleCuration_getTotalMenu", { equal: true })).totalMenu.map((o) => { return o.values });
 
     instance.totalValues = objectDeepCopy(totalValues);
     instance.totalMenu = objectDeepCopy(totalMenu)
@@ -153,6 +77,9 @@ ClientEvaluationJs.prototype.updateImmediately = async function (valueIndex, men
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
   try {
+
+    /*
+
     const defaultQueryObject = {
       newMode: true,
       method: "client",
@@ -304,6 +231,8 @@ ClientEvaluationJs.prototype.updateImmediately = async function (valueIndex, men
       }
     }
 
+    */
+
   } catch (e) {
     console.log(e);
   }
@@ -323,8 +252,8 @@ ClientEvaluationJs.prototype.setBaseTong = async function () {
 
     this.totalContents = document.getElementById("totalcontents");
     this.totalContents.style.overflow = "hidden";
-    this.totalContents.style.background = colorExtended.black;
-    document.body.style.background = colorExtended.black;
+    this.totalContents.style.background = colorExtended.mainBlue;
+    document.body.style.background = colorExtended.mainBlue;
 
     instance.totalValues[0] = 1;
     instance.totalValues[1] = 1;
@@ -6572,18 +6501,27 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
     const normalMode = (entireMode && getObj.normal === "true");
     const mobile = media[4];
     const desktop = !mobile;
-    let cliid;
-    let clients, client;
+    let cliid, clients, client;
+    let proid, projects, project;
     let contentsPhotoObj;
     let fhdVisual;
 
-    if (getObj.cliid !== undefined) {
-      cliid = getObj.cliid;
+    if (getObj.proid !== undefined) {
+      proid = getObj.proid;
+      this.proid = proid;
     } else {
       window.alert("잘못된 접근입니다!");
-      throw new Error("invaild get object");
+      throw new Error("invaild get object : must be proid");
     }
 
+    projects = await ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects", { equal: true });
+    if (projects.length === 0) {
+      window.alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+    }
+    project = projects[0];
+
+    cliid = project.cliid;
     clients = await ajaxJson({ whereQuery: { cliid } }, SECONDHOST + "/getClients", { equal: true });
     if (clients.length === 0) {
       window.alert("잘못된 접근입니다!");
@@ -6591,12 +6529,6 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
     }
     client = clients[0];
 
-    contentsPhotoObj = await ajaxJson({}, BACKHOST + "/styleCuration_getPhotos", { equal: true });
-    this.selectPhotos = [];
-    this.randomPick = [];
-    this.photos = contentsPhotoObj.photos;
-    this.contentsArr = contentsPhotoObj.contentsArr;
-    this.designers = contentsPhotoObj.designers;
     this.client = client;
     this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, BACKHOST + "/getClientHistory", { equal: true });
     this.requestNumber = 0;
@@ -6624,7 +6556,6 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
     await this.generateTotalValues();
 
     this.lineWeight = <%% 1.5, 1.5, 1.5, 1, 1 %%>;
-
     this.heightTong = {};
 
     if (desktop && window.innerHeight > 1100) {
@@ -6669,10 +6600,8 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
       this.heightTong.numbers = <%% 100, 100, 90, 75, 16 %%>;
     }
 
-    await ajaxJson({ cliid: instance.client.cliid, name: instance.client.name, phone: instance.client.phone }, BACKHOST + "/styleCuration_pageInitComplete");
-
     await this.mother.ghostClientLaunching({
-      mode: "ghost",
+      mode: "front",
       name: "clientEvaluation",
       client: instance.client,
       base: {
@@ -6690,22 +6619,7 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
         try {
           await instance.setBaseTong();
           await instance.renderStartBox();
-          
           instance.resizeEvent();
-          setInterval(() => {
-            homeliaisonAnalytics({
-              page: instance.pageName,
-              standard: instance.firstPageViewTime,
-              action: "readTimer",
-              data: {
-                cliid: "null",
-                href: window.encodeURIComponent(window.location.href),
-                date: dateToString(new Date(), true),
-              },
-            }).catch((err) => {
-              console.log(err);
-            });
-          }, 60 * 1000);
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ClientEvaluationJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
@@ -6713,7 +6627,6 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
-
     document.querySelector("style").insertAdjacentHTML("beforeend", "*{transition:all 0.3s ease}");
 
     GeneralJs.setQueue(() => {

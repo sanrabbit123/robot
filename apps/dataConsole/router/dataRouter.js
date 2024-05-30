@@ -9730,9 +9730,13 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
       let cliidStatusArr;
 
       if (req.body.mode === undefined || req.body.mode === null || req.body.mode === "get") {
+
         res.send(JSON.stringify({ totalMenu }));
+
       } else if (req.body.mode === "dummy") {
+
         res.send(JSON.stringify({ dummy: dummyData }));
+        
       } else if (req.body.mode === "analytics" || req.body.mode === "parse" || req.body.mode === "parsing") {
         const { cliids, statusArr } = equalJson(req.body);
 

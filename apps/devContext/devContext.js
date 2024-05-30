@@ -222,41 +222,9 @@ DevContext.prototype.launching = async function () {
     // }));
 
 
-    const targetUrl = "https://modulearning.kr/api/v1/apiProgress.php?studySeq=1865310&contentsCode=YS4VL3&lectureOpenSeq=38252&userID=9102273403&serviceType=5";
-    const headers = {
-      "Accept": "*/*",
-      "Accept-Encoding": "gzip, deflate, br, zstd",
-      "Accept-Language": "en-US,en;q=0.9,ko;q=0.8",
-      "Connection": "keep-alive",
-      "Cookie": "cookie[1.229.181.6]=old; PHPSESSID=71jg40qa0j6fbbtcn8qguhr7u6",
-      "Host": "modulearning.kr",
-      "Origin": "https://modulearning.kr",
-      "Referer": "https://modulearning.kr/study/studyView.php?studySeq=1865310&contentsCode=YS4VL3&lectureOpenSeq=38252&userID=9102273403&serviceType=5",
-      "Sec-Ch-Ua": `"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
-      "Sec-Ch-Ua-Mobile": "?0",
-      "Sec-Ch-Ua-Platform": `"macOS"`,
-      "Sec-Fetch-Dest": "empty",
-      "Sec-Fetch-Mode": "cors",
-      "Sec-Fetch-Site": "same-origin",
-      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-    }
-    let num = 0;
+
+
     
-    num = 0;
-    setInterval(async () => {
-      const res = await requestSystem(targetUrl, {
-        "open": "N",
-        "progressSeq": "7694427",
-        "chapter": 1,
-        "contentsCode": "YS4VL3",
-        "lastPage": "https://cont2.modulearning.kr/mobile/9RKY70/01/05.mp4",
-        "lastTimeCursor": Math.floor(2000 + (num * 10)),
-        "sourceType": "mp4",
-      }, { headers: { ...headers } })
-      console.log(res);
-      console.log(Math.floor(515 + (num * 10)));
-      num = num + 1;
-    }, 100);
 
 
 
