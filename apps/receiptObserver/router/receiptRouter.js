@@ -2323,7 +2323,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
                 { goodname: transferRows[0].goodname },
               ]
             }, { selfMongo: instance.mongolocal });
-            if (transferRows2.length > 1) {
+            if (transferRows2.length > 0) {
               transferRows2.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
               for (let obj of transferRows2) {
                 bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: obj.accountInfo.no_oid } } }, { selfMongo: instance.mongolocal });
