@@ -2204,7 +2204,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           thisBill.requests[Number(requestNumber)].proofs.unshift(proofs);
           updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[Number(requestNumber)].proofs;
 
-          message = client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
+          message = client.name + " 고객님 (" + designer.designer + " 실장님" + ") 이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
           messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
             console.log(err);
           })
@@ -2442,7 +2442,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
         thisBill.requests[requestNumber].proofs.unshift(proofs);
         updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[requestNumber].proofs;
   
-        message = client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
+        message = client.name + " 고객님 (" + designer.designer + " 실장님" + ") 이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
         messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
           console.log(err);
         });
