@@ -2332,7 +2332,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
                 }
               }
               if (bills.length === 0) {
-                bills = await bill.getBillsByQuery({ "bilid": transferRows[0].name.bilid }, { selfMongo: instance.mongolocal });
+                bills = await bill.getBillsByQuery({ "bilid": transferRows[0].bilid }, { selfMongo: instance.mongolocal });
                 if (bills.length === 0) {
                   throw new Error("invaild oid 3");
                 }
