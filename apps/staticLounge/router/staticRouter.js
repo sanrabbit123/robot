@@ -2601,7 +2601,7 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
     try {
       const { date } = equalJson(req.body);
       const selfMongo = instance.mongolog;
-      const dayNumber = 3;
+      const dayNumber = 7;
       let dateArr;
       let collection;
       let anaid, ancid, key, rows;
