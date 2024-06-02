@@ -461,7 +461,7 @@ CronGhost.prototype.cronServer = async function () {
 
     // set pem key
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + address.aliveinfo.host;
+    pemsLink = process.cwd() + "/pems/" + address.pythoninfo.host;
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
     caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
