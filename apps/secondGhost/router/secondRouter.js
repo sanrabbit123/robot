@@ -268,11 +268,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       let finalTargets;
       let fairyMode;
 
-      if (req.body.fairy === true || req.body.fairy === "true") {
-        fairyMode = true;
-      } else {
-        fairyMode = false;
-      }
+      fairyMode = false;
 
       slackText = text;
       if (Array.isArray(equalJson(req.body).target)) {
@@ -305,49 +301,14 @@ SecondRouter.prototype.rou_post_messageLog = function () {
 
       }
 
-      if (!(/silent/gi.test(channel) || /error_log/gi.test(channel) || /alive_log/gi.test(channel) || /cron_log/gi.test(channel) || /checklist_log/gi.test(channel))) {
-        setQueue(() => {
-          if (!fairyMode) {
-            instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
-          } else {
-            instance.slack_fairy.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
-          }
-        }, 0)
-      }
+      setQueue(() => {
+        if (!fairyMode) {
+          instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
+        } else {
+          instance.slack_fairy.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
+        }
+      }, 0)
 
-      if (req.body.voice === true || req.body.voice === "true") {
-        requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/textToVoice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
-      }
-
-      if (/silent/gi.test(channel) || /error_log/gi.test(channel)) {
-        thisChannel = "log";
-      } else if (/alive_log/gi.test(channel)) {
-        thisChannel = "alive";
-      } else if (/cron_log/gi.test(channel)) {
-        thisChannel = "cron";
-      } else if (/alert_log/gi.test(channel)) {
-        thisChannel = "error";
-      } else if (/checklist_log/gi.test(channel)) {
-        thisChannel = "checklist";
-      } else if (/consulting/gi.test(channel)) {
-        thisChannel = "consulting";
-      } else if (/operation/gi.test(channel)) {
-        thisChannel = "operation";
-      } else if (/proposal/gi.test(channel)) {
-        thisChannel = "proposal";
-      } else if (/mail/gi.test(channel)) {
-        thisChannel = "mail";
-      } else if (/taxbill/gi.test(channel)) {
-        thisChannel = "taxbill";
-      } else if (/console/gi.test(channel)) {
-        thisChannel = "console";
-      } else {
-        thisChannel = "general";
-      }
-
-      instance.telegramSend(telegram.bot[thisChannel], `(${channel}) ${slackText}`, logger).catch((err) => {
-        logger.error("Second Ghost 서버 문제 생김 (rou_post_messageLog): " + err.message).catch((e) => { console.log(e); });
-      });
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
