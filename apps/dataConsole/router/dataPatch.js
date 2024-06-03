@@ -6004,22 +6004,14 @@ DataPatch.prototype.projectMap = function () {
       let finalValue;
       let items;
 
-      items = [ "대기", "홀딩", "완료" ];
-      processCase = [ "진행중" ];
-      dropCase = [ "드랍" ];
+      items = [ "대기", "홀딩", "완료", "진행중", "드랍" ];
+      processCase = [];
+      dropCase = [];
 
       if (items.includes(rawValue)) {
         finalValue = rawValue;
       } else {
-        if (dropCase.includes(rawValue)) {
-          window.alert("드랍 처리는 별도로 처리할 수 없습니다! 관리자에게 문의해주세요!");
-          finalValue = originalValue;
-        } else if (processCase.includes(rawValue)) {
-          window.alert("진행중 처리는 수동으로 처리할 수 없습니다! 반드시 전산을 통해 업데이트가 진행되어야만 합니다.");
-          finalValue = originalValue;
-        } else {
-          finalValue = originalValue;
-        }
+        finalValue = originalValue;
       }
 
       if (finalValue === "홀딩" || finalValue === "드랍") {
