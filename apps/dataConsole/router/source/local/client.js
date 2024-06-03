@@ -1784,6 +1784,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let cliidDom;
   let subButtonsTong;
   let proposalBox;
+  let nameEvent;
 
   // designers
   thisCase.designers = thisCase.designers.split(", ").filter((str) => { return /^d[0-9][0-9][0-9][0-9]/.test(str); }).map((str) => { return GeneralJs.stacks.entireDesignerTong.find((d) => { return d.desid === str.trim() })?.designer }).join(", ");
@@ -1827,6 +1828,21 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       console.log(e);
     }
   };
+  nameEvent = async function (e) {
+    try {
+      e.preventDefault();
+      const thisName = await GeneralJs.prompt("변경할 이름을 알려주세요!");
+      if (thisName !== null) {
+        await GeneralJs.ajaxJson({ whereQuery: { cliid: thisCase.cliid }, updateQuery: { name: thisName.trim() } }, BACKHOST + "/rawUpdateClient");
+        window.alert("변경이 완료되었습니다!");
+        window.location.reload();
+      }
+    } catch (e) {
+      window.localStorage.clear();
+      window.location.reload();
+      console.log(e);
+    }
+  };
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -1857,6 +1873,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     div_clone3.style[i] = style[i];
   }
   div_clone3.addEventListener("click", callEvent);
+  div_clone3.addEventListener("contextmenu", nameEvent);
   div_clone2.appendChild(div_clone3);
 
   //cliid
