@@ -1160,11 +1160,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
         thisData.device = {};
       }
       if (thisData.network.ip.trim().replace(/[^0-9\.]/gi, '') !== address.officeinfo.ghost.outer.trim().replace(/[^0-9\.]/gi, '')) {
-        if (thisData.network.ip.trim().replace(/[^0-9\.]/gi, '') !== address.memberinfo.ip.outer.trim().replace(/[^0-9\.]/gi, '')) {
-          if (thisData.network.ip.trim().replace(/[^0-9\.]/gi, '') !== address.homeinfo.ip.outer.trim().replace(/[^0-9\.]/gi, '')) {
-            await back.mongoCreate(collection, thisData, { selfMongo: instance.mongo });
-          }
-        }
+        await back.mongoCreate(collection, thisData, { selfMongo: instance.mongo });
       }
       instance.facebook.conversionEvent({
         name,
