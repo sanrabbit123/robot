@@ -51,10 +51,6 @@ def mongoConnection(target: str = "core"):
         url += address["transinfo"]["user"] + ":" + address["transinfo"]["password"] + "@" + address["transinfo"]["host"] + ":" + str(address["transinfo"]["port"]) + "/admin"
     elif target == "contents":
         url += address["contentsinfo"]["user"] + ":" + address["contentsinfo"]["password"] + "@" + address["contentsinfo"]["host"] + ":" + str(address["contentsinfo"]["port"]) + "/admin"
-    elif target == "construct":
-        url += address["constructinfo"]["user"] + ":" + address["constructinfo"]["password"] + "@" + address["constructinfo"]["host"] + ":" + str(address["constructinfo"]["port"]) + "/admin"
-    elif target == "numbers":
-        url += address["numbersinfo"]["user"] + ":" + address["numbersinfo"]["password"] + "@" + address["numbersinfo"]["host"] + ":" + str(address["numbersinfo"]["port"]) + "/admin"
     elif target == "office":
         url += address["officeinfo"]["user"] + ":" + address["officeinfo"]["password"] + "@" + address["officeinfo"]["ghost"]["host"] + ":" + str(address["officeinfo"]["port"]) + "/admin"
     elif target == "local":

@@ -24,7 +24,7 @@ def returnModulepath():
 
 # append human in module pathes
 try:
-    os.chdir(str(Path.home()) + "/robot")
+    os.chdir(os.getcwd())
     pathDic = returnModulepath()
     path.insert(0, pathDic["robot"])
     path.insert(0, pathDic["module"])
