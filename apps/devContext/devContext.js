@@ -222,8 +222,8 @@ DevContext.prototype.launching = async function () {
     // }));
 
 
-
-
+    await findCode("330000")
+    await findCode("300000")
     
 
     

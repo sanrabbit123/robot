@@ -55,7 +55,7 @@ ReceiptObserver.prototype.wssClientLaunching = async function (url = "") {
     const ws = new WebSocket("wss://stream.pushbullet.com/websocket/o.MJyKgIBma8O14mg0VOZrsCdf8X8L6UJF");
     const emptyDate = new Date(2000, 0, 1);
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
-    const contract = 330000;
+    const contract = 165000;
     const channel = "#700_operation";
 
     setTimeout(async () => {

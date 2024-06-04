@@ -833,7 +833,7 @@ BillMaker.billDictionary = {
       },
     },
     etc: {
-      contractAmount: 300000,
+      contractAmount: 150000,
       vatRatio: 0.1,
       freeRatio: 0.967,
       distancePercentage: 7,
@@ -849,13 +849,13 @@ BillMaker.billDictionary = {
         },
         amount: {
           pure: 100000,
-          commission: 220000,
+          commission: 0,
         },
         comments: [
           "디자이너 변경으로 인해 미팅을 하신 프로젝트가 취소되었습니다.",
           "1회 미팅에 대한 금액을 정산해드리는 비용입니다."
         ],
-        total: 330000,
+        total: 100000,
       }
     }
   }
