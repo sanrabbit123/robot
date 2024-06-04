@@ -7786,7 +7786,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
         position: "relative",
         justifyContent: desktop ? "start" : "center",
         alignItems: "center",
-        marginTop: String(buttonMarginTop + (instance.totalValues[0] === 2 ? blackButtonHeight : 0)) + ea,
+        marginTop: String(buttonMarginTop + (true ? blackButtonHeight : 0)) + ea,
         opacity: String(0),
         transform: "translateY(10px)",
         animation: "1.2s ease 0.4s 1 normal forwards running fadeupdelay",
@@ -7800,7 +7800,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
             click: instance.blackButtonEvent("proposal"),
           },
           style: {
-            display: instance.totalValues[0] === 2 ? "none" : "inline-flex",
+            display: true ? "none" : "inline-flex",
             position: "relative",    
             width: String(blackButtonWidth) + ea,
             height: String(blackButtonHeight) + ea,
@@ -7832,7 +7832,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
             click: instance.blackButtonEvent("consulting"),
           },
           style: {
-            display: instance.totalValues[0] === 2 ? "none" : "inline-flex",
+            display: true ? "none" : "inline-flex",
             position: "relative",    
             width: String(blackButtonWidth) + ea,
             height: String(blackButtonHeight) + ea,
@@ -8228,7 +8228,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
       mother: totalContents,
       class: [ "backblurwhite", blurFixedBelowBarClassName ],
       style: {
-        display: instance.totalValues[0] === 2 ? "none" : "flex",
+        display: true ? "none" : "flex",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
