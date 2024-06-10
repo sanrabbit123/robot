@@ -409,7 +409,7 @@ Alien.prototype.smsLaunching = async function () {
     });
 
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + this.address.aliveinfo.host;
+    pemsLink = process.cwd() + "/pems/" + this.address.officeinfo.ghost.host;
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
