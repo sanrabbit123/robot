@@ -4554,7 +4554,7 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
   const instance = this;
   const inputClassName = "inputClassName";
   const agreeTargetClassName = "agreeTargetClassName";
-  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue, ajaxForm, equalJson, linktoString } = GeneralJs;
+  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue, ajaxForm, equalJson, linkToString } = GeneralJs;
   const { portfolioMode } = this;
   const generalMode = !portfolioMode;
   return async function (e) {
@@ -4735,10 +4735,10 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
           }
   
           if (map.find((obj) => { return obj.property === "homepage" }) !== undefined) {
-            map.find((obj) => { return obj.property === "homepage" }).value = linktoString(map.find((obj) => { return obj.property === "homepage" }).value.trim());
+            map.find((obj) => { return obj.property === "homepage" }).value = linkToString(map.find((obj) => { return obj.property === "homepage" }).value.trim());
           }
           if (map.find((obj) => { return obj.property === "sns" }) !== undefined) {
-            map.find((obj) => { return obj.property === "sns" }).value = linktoString(map.find((obj) => { return obj.property === "sns" }).value.trim());
+            map.find((obj) => { return obj.property === "sns" }).value = linkToString(map.find((obj) => { return obj.property === "sns" }).value.trim());
           }
 
           if (typeof instance.clientSessionId === "string") {
@@ -4821,7 +4821,7 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
 
     } catch (e) {
       console.log(e);
-      window.location.reload();
+      // window.location.reload();
     }
   }
 }
