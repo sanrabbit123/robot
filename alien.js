@@ -274,7 +274,7 @@ Alien.prototype.smsLaunching = async function () {
   const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
   const sender = [ "15662566", "01027473403", "0220392252" ];
   const myname = "배창규";
-  const token = "o.u4wyBN6vM9IxqjHq8SLoFE0b1D82kbGr";
+  const token = "o.on1PB9WGEp5YDSa8JhuqXUWQjkRBvjfY";
   const accountStartNumber = "049";
   const accountEndNumber = "022";
   try {

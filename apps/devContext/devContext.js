@@ -221,9 +221,9 @@ DevContext.prototype.launching = async function () {
     // }));
 
 
-
+    const res = await fileSystem("readFolder", [ process.cwd() + "/apps" ]);
     
-    
+    console.log(res.filter((s) => { return s !== "__pycache__" && (!/\.js$/gi.test(s) && !/\.py$/gi.test(s)) }).join("\n"));
 
     
 
