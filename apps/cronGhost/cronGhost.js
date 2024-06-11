@@ -66,8 +66,6 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
 
       thisObj = instances.find((obj) => { return obj.name === name; });
 
-      console.log(thisObj);
-
       boo = false;
       if (thisObj !== undefined) {
         thisObj.alive = false;
@@ -121,7 +119,7 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
                 message = "server all alive" + " " + bar;
                 diskMongoMessage = tong.map(({ message }) => { return message }).join("\n");
                 message = message + "\n\n" + diskMongoMessage + "\n\n" + bar2;
-                await aliveLog(message);
+                await aliveLog(message + "\n\n" + message);
                 if (tong.some((o) => { return !o.mongo })) {
                   await emergencyAlarm("something mongo death => \n");
                   await emergencyAlarm(JSON.stringify(tong, null, 2));
@@ -454,7 +452,7 @@ CronGhost.prototype.cronServer = async function () {
       setInterval(intervalFunc, interval);
       setInterval(intervalFunc0, 2 * 60 * 60 * 1000);
       setInterval(intervalFunc1, 1 * 30 * 60 * 1000);
-      setInterval(intervalFunc2, 1 * 1 * 60 * 1000);
+      setInterval(intervalFunc2, 0.25 * 1 * 60 * 1000);
       setInterval(intervalFunc3, 1 * 5 * 60 * 1000)
     }, startTime);
 
