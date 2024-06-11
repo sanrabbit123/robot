@@ -301,14 +301,14 @@ SecondRouter.prototype.rou_post_messageLog = function () {
 
       }
 
-      if (!/alive_log/gi.test(channel) && !/cron_log/gi.test(channel) && !/error_log/gi.test(channel)) {
+      if (!/cron_log/gi.test(channel) && !/error_log/gi.test(channel)) {
         setQueue(() => {
           if (!fairyMode) {
             instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
           } else {
             instance.slack_fairy.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
           }
-        }, 0)
+        }, 0);
       }
 
       res.send(JSON.stringify({ message: "will do" }));
