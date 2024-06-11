@@ -7177,12 +7177,10 @@ DevContext.prototype.launching = async function () {
 
     
     // send sms
-    // const name = "이선영";
-    // const amount = 2_171_070;
-    // await human.sendSms({
-    //   to: "01055432039",
-    //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
-    // });
+    // const name = "강지숙";
+    // const amount = 6_189_000;
+    // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
+
 
     // bill passive sync
     // console.log(await bill.passiveSync("b219g_aa02s", "김수진", 1, 330000, new Date(2021, 8, 15, 15, 0, 0), "카드(삼성)", "이니시스"));
