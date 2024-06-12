@@ -7177,8 +7177,8 @@ DevContext.prototype.launching = async function () {
 
     
     // send sms
-    // const name = "강지숙";
-    // const amount = 6_189_000;
+    // const name = "김연옥";
+    // const amount = 2_635_820;
     // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
 
 
