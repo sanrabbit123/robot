@@ -74,7 +74,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, MO
   this.pushbullet = {
     host: "api.pushbullet.com",
     version: "v2",
-    token: "o.u4wyBN6vM9IxqjHq8SLoFE0b1D82kbGr",
+    token: "o.k3SkBfY804BeUQhbHPQNPUK8FIIfz2XW",
     device: "ujy8FVCcQOysjv0gcsq9DM",
     threads: [ 33, 36 ],
     password: "homeliaison",

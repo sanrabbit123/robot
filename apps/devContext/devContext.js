@@ -7076,9 +7076,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "이효정",
-    //     link: "https://drive.google.com/drive/folders/1nJcZ7B099RHCbG6lZTInXj2nvXQr63YX",
+    //     client: "이미현",
+    //     designer: "박수진",
+    //     link: "https://drive.google.com/drive/folders/1JUonmowJ5dp_0cKLDRQx74QoSM5_OoBb",
     //     pay: true
     //   },
     // ]);
@@ -7177,11 +7177,15 @@ DevContext.prototype.launching = async function () {
 
     
     // send sms
-    // const name = "김연옥";
-    // const amount = 2_635_820;
+    // const name = "이민성";
+    // const amount = 983_000;
+    // await human.sendSms({
+    //   to: "01055432039",
+    //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
+    // });
     // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
 
-
+    
     // bill passive sync
     // console.log(await bill.passiveSync("b219g_aa02s", "김수진", 1, 330000, new Date(2021, 8, 15, 15, 0, 0), "카드(삼성)", "이니시스"));
 

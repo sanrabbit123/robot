@@ -839,6 +839,21 @@ ClientEvaluationJs.prototype.renderStartBox = async function () {
           child: {
             event: {
               selectstart: (e) => { e.preventDefault() },
+              click: async function (e) {
+                try {
+                  const { link } = instance.contentsRawInfo.raw;
+                  let loading;
+                  if (link.trim() === '') {
+                    window.alert("원본 파일이 없습니다!");
+                  } else {
+                    loading = instance.mother.whiteProgressLoading();
+                    await GeneralJs.downloadFile(link, null, loading.progress.firstChild);
+                    loading.remove();
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              }
             },
             text: `사진 다운로드 하기`,
             style: {
@@ -6181,11 +6196,21 @@ ClientEvaluationJs.prototype.renderFourthContents = async function (ghostBase) {
         {
           event: {
             click: async function (e) {
-              let convertingFunction;
-              convertingFunction = instance.firstConverting().bind(this);
-              await convertingFunction(e);
-              return 1;
-            },
+              try {
+                const { link } = instance.contentsRawInfo.raw;
+                let loading;
+                if (link.trim() === '') {
+                  window.alert("원본 파일이 없습니다!");
+                } else {
+                  loading = instance.mother.whiteProgressLoading();
+                  await GeneralJs.downloadFile(link, null, loading.progress.firstChild);
+                  loading.remove();
+                  window.location.href = FRONTHOST;
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            }
           },
           style: {
             display: "inline-flex",
@@ -6200,7 +6225,7 @@ ClientEvaluationJs.prototype.renderFourthContents = async function (ghostBase) {
             cursor: "pointer",
           },
           child: {
-            text: "선택 완료",
+            text: "다운로드",
             style: {
               display: "inline-flex",
               position: "relative",
@@ -6532,6 +6557,8 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
     this.client = client;
     this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, BACKHOST + "/getClientHistory", { equal: true });
     this.requestNumber = 0;
+
+    this.contentsRawInfo = await ajaxJson({ mode: "search", proid }, SECONDHOST + "/rawImageParsing", { equal: true });
 
     this.initAreaClassName = "initAreaClassName";
     this.firstFadeOutTargetClassName = "firstFadeOutTargetClassName";
