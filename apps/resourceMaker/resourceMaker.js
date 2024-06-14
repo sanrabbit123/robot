@@ -13,7 +13,6 @@ const ResourceMaker = function (p_id) {
     p_id = p_id.replace(/^ /g, '').replace(/ $/g, '').toLowerCase();
   }
   this.frontHost = `${ADDRESS["frontinfo"]["user"]}@${ADDRESS["frontinfo"]["host"]}:/${ADDRESS["frontinfo"]["user"]}/www`;
-  this.testHost = `${ADDRESS["officeinfo"]["test"]["user"]}@${ADDRESS["officeinfo"]["test"]["ip"]["inner"]}:/home/${ADDRESS["officeinfo"]["test"]["user"]}/www`;
 
   this.p_id = p_id;
   this.arr = [];
@@ -1055,9 +1054,6 @@ ResourceMaker.prototype.launching = async function () {
 
       await sleep(500);
       await shellExec(`scp -r ${shellLink(outputFolder)} ${this.frontHost}/list_image`);
-
-      await sleep(500);
-      await shellExec(`scp -r ${shellLink(outputFolder)} ${this.testHost}/list_image`);
 
       outputFolderList = await fileSystem(`readDir`, [ outputFolder ]);
       outputMobildFolderList = await fileSystem(`readDir`, [ outputMobildFolder ]);
