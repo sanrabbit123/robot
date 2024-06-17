@@ -383,6 +383,7 @@ Alien.prototype.smsLaunching = async function () {
     wsCloseEvent = async () => {
       try {
         await emergencyAlarm("sms wss dead");
+        process.exit();
         ws = wsLaunching();
       } catch (e) {
         await emergencyAlarm(e.message);
