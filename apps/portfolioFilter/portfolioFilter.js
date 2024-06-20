@@ -173,7 +173,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     let pngResultFolder;
     let pngImageList;
 
-    file_list = (await fileSystem(`readDir`, [ this.options.photo_dir ])).filter((str) => { return str !== ".DS_Store" });
+    file_list = await fileSystem(`readFolder`, [ this.options.photo_dir ]);
     if (file_list.length === 0) {
       throw new Error(`There is no photo.\nPlease give me photos. in : ${this.options.photo_dir}`);
     }
