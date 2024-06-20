@@ -17,7 +17,7 @@ const StaticLounge = function (mother = null, back = null, address = null) {
 StaticLounge.prototype.staticConnect = async function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongocontentsinfo, mongotestinfo, mongosecondinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
-  const PORT = 3000;
+  const PORT = 3001;
   const https = require("https");
   const express = require("express");
   const app = express();
