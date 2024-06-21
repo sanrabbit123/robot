@@ -2994,7 +2994,7 @@ StaticRouter.prototype.rou_post_analyticsToday = function () {
           await sleep(1000);
 
           if (reportMode) {
-            await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/logBasicReport", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
+            await requestSystem("https://" + address.officeinfo.ghost.host + "/logBasicReport", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
           }
 
           return true;

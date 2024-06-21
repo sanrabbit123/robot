@@ -283,7 +283,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
         newDesid = await back.createDesigner(updateQuery, { selfMongo: MONGOC });
         console.log("create designer success");
         newDesigner = await back.getDesignerById(newDesid, { selfMongo: MONGOC });
-        designerFolderResponse = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/designerFolder", { name: newDesigner.designer, subid: newDesigner.information.did }, { headers: { "Content-Type": "application/json" } })).data;
+        designerFolderResponse = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/designerFolder", { name: newDesigner.designer, subid: newDesigner.information.did }, { headers: { "Content-Type": "application/json" } })).data;
         designerFolderResponse.desid = newDesid;
         designerFolderResponse.date = new Date();
         console.log(designerFolderResponse);

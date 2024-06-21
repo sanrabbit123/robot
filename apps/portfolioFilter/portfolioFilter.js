@@ -367,9 +367,9 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
 
     if (liteMode) {
       sambaPhotoPath = instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + this.folderName;
-      await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/makeFolder", { path: sambaPhotoPath }, { headers: { "Content-Type": "application/json" } });
+      await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/makeFolder", { path: sambaPhotoPath }, { headers: { "Content-Type": "application/json" } });
     } else {
-      ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, { headers: { "Content-Type": "application/json" } })).data.map(({ fileName }) => { return fileName });
+      ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, { headers: { "Content-Type": "application/json" } })).data.map(({ fileName }) => { return fileName });
       ghostPhotosTarget = null;
       for (let folder of ghostPhotos) {
         if ((new RegExp("^" + this.pid)).test(folder)) {
@@ -816,7 +816,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           clientObj = await back.getClientById(project.cliid);
           designerObj = await back.getDesignerById(project.desid);
   
-          zipPhotoRes = await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
+          zipPhotoRes = await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
           zipIdDesigner = zipPhotoRes.data.googleId.designer;
           zipIdClient = zipPhotoRes.data.googleId.client;
 
@@ -896,7 +896,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         await sleep(1000);
 
-        zipLinks = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid, proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
+        zipLinks = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/zipPhoto", { pid: nextPid, proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
         shareLinkDeginer = zipLinks.designer;
         shareGoogleIdDesigner = drive.parsingId(shareLinkDeginer);
         await shellExec(`rm -rf ${shellLink(folderPath)};`);
@@ -1059,7 +1059,7 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
   
         thisFolderName = thisProid + splitToken + thisPid;
   
-        response = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/makeFolder", {
+        response = await requestSystem("https://" + address.officeinfo.ghost.host + "/makeFolder", {
           path: "/" + corePortfolio + "/" + serverFolderName + "/" + thisFolderName,
         }, {
           headers: { "Content-Type": "application/json" }

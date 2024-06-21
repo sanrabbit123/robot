@@ -1220,7 +1220,6 @@ DataConsole.prototype.connect = async function () {
               instance.address.secondinfo.host,
               instance.address.secondinfo.host + ":3000",
               instance.address.officeinfo.ghost.host,
-              instance.address.officeinfo.ghost.host + ":3000",
               instance.address.transinfo.host,
               instance.address.transinfo.host + ":3000",
               instance.address.contentsinfo.host,

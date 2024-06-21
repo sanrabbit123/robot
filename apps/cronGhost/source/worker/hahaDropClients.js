@@ -8,7 +8,7 @@ const worker = async function (package) {
   const { mother, address, back, mongo, mongolocal } = package;
   const { requestSystem, errorLog, emergencyAlarm } = mother;
   try {
-    await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/hahaDropClients", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
+    await requestSystem("https://" + address.officeinfo.ghost.host + "/hahaDropClients", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
     return true;
   } catch (e) {
     await emergencyAlarm("fix ClientAnalytics : " + e.message);

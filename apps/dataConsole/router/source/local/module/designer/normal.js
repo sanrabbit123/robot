@@ -8604,6 +8604,8 @@ DesignerJs.prototype.normalView = async function () {
     workList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerWorksList", { equal: true });
     representativeList = await ajaxJson({ target: "$all" }, BRIDGEHOST + "/representativeFileRead", { equal: true });
 
+    console.log(profileList, workList, representativeList);
+
     this.members = members;
     this.designers = designers;
     this.projects = null;

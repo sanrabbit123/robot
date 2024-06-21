@@ -1667,7 +1667,7 @@ SecondRouter.prototype.rou_post_readLogDesignerStatus = function () {
         }
   
         whereQuery["date"] = { $gte: thisDate };
-        rows = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/readHomeliaisonAnalytics", { whereQuery, projectQuery }, { headers: { "Content-Type": "application/json" } });
+        rows = await requestSystem("https://" + address.officeinfo.ghost.host + "/readHomeliaisonAnalytics", { whereQuery, projectQuery }, { headers: { "Content-Type": "application/json" } });
   
         res.send(JSON.stringify({ data: equalJson(JSON.stringify(rows.data.data)) })); 
 
@@ -1685,7 +1685,7 @@ SecondRouter.prototype.rou_post_readLogDesignerStatus = function () {
         }
 
         whereQuery["date"] = { $gte: thisDate };
-        rows = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/readHomeliaisonAnalytics", { whereQuery, projectQuery }, { headers: { "Content-Type": "application/json" } });
+        rows = await requestSystem("https://" + address.officeinfo.ghost.host + "/readHomeliaisonAnalytics", { whereQuery, projectQuery }, { headers: { "Content-Type": "application/json" } });
   
         res.send(JSON.stringify({ data: equalJson(JSON.stringify(rows.data.data)) })); 
 
@@ -3381,7 +3381,7 @@ SecondRouter.prototype.rou_post_pageToPdf = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const ghostResponse = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/pageToPdf", req.body, { headers: { "Content-Type": "application/json" } });
+      const ghostResponse = await requestSystem("https://" + address.officeinfo.ghost.host + "/pageToPdf", req.body, { headers: { "Content-Type": "application/json" } });
       res.send(JSON.stringify(ghostResponse.data));
     } catch (e) {
       logger.error("Second Ghost 서버 문제 생김 (rou_post_pageToPdf): " + e.message).catch((e) => { console.log(e); });
@@ -3419,10 +3419,10 @@ SecondRouter.prototype.rou_post_printClient = function () {
 
       text = client.toPrint([ "선택한 시공 : " + history.curation.construct.items.join(", ") ], requestNumber);
       text += "\n\n";
-      webReport = (await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/getClientAnalytics", { cliid, textMode: true }, { headers: { "Content-Type": "application/json" } })).data.report;
+      webReport = (await requestSystem("https://" + address.officeinfo.ghost.host + "/getClientAnalytics", { cliid, textMode: true }, { headers: { "Content-Type": "application/json" } })).data.report;
       text += webReport;
       
-      requestSystem("https://" + address.officeinfo.ghost.host + ":3000/printComplex", { text, cliid, requestNumber, mode }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+      requestSystem("https://" + address.officeinfo.ghost.host + "/printComplex", { text, cliid, requestNumber, mode }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
 
       res.send(JSON.stringify({ message: "will do" }));
 
@@ -3513,7 +3513,7 @@ SecondRouter.prototype.rou_post_rawImageParsing = function () {
       let temp;
       let thisPid;
 
-      firstResult = await ajaxJson({ path: "/corePortfolio/rawImage" }, "https://" + instance.address.officeinfo.ghost.host + ":3000/readDir");
+      firstResult = await ajaxJson({ path: "/corePortfolio/rawImage" }, "https://" + instance.address.officeinfo.ghost.host + "/readDir");
       firstResult = firstResult.filter((str) => { return /^[p]/.test(str) }).filter((str) => { return str.split(token).length >= 2 }).map((str) => {
         const [ proid, pidZip ] = str.split(token);
         const [ pid ] = pidZip.split(".");

@@ -331,7 +331,7 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
 
     // office server
 
-    officeUsage = (await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/getUtilization", { data: null }, { headers: { "Content-Type": "application/json" } })).data;
+    officeUsage = (await requestSystem("https://" + address.officeinfo.ghost.host + "/getUtilization", { data: null }, { headers: { "Content-Type": "application/json" } })).data;
     instances.push({
       id: idKeyword + "of0000" + "_" + str,
       name: "staticLounge",

@@ -221,8 +221,7 @@ DevContext.prototype.launching = async function () {
     // }));
 
     
-
-
+    await findCode('officeinfo.ghost.host + ":3000')
 
     
     

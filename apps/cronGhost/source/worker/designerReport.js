@@ -8,7 +8,7 @@ const worker = async function (package) {
   const { mother, address, back, mongo, mongolocal } = package;
   const { messageLog, errorLog, requestSystem, emergencyAlarm } = mother;
   try {
-    await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/updateDesignerProposalRealtime", { report: 1 }, { headers: { "Content-Type": "application/json" } });
+    await requestSystem("https://" + address.officeinfo.ghost.host + "/updateDesignerProposalRealtime", { report: 1 }, { headers: { "Content-Type": "application/json" } });
     await errorLog("designer reporting done");
     return true;
   } catch (e) {
