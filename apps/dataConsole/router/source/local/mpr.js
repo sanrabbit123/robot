@@ -621,7 +621,7 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
     ];
 
     if (request.space.naver.trim() !== "") {
-      naverComplex = await ajaxJson({ id: request.space.naver.trim() }, S3HOST + ":3000/naverComplex", { equal: true });
+      naverComplex = await ajaxJson({ id: request.space.naver.trim() }, S3HOST + ":3001/naverComplex", { equal: true });
       dataMatrix = dataMatrix.concat([
         {
           name: "apartment",
@@ -9846,7 +9846,7 @@ MprJs.prototype.contractWhiteCard = function () {
         }
 
         chartJsPatch([
-          { data: { fromDate, toDate }, url: S3HOST + ":3000/complexReport" },
+          { data: { fromDate, toDate }, url: S3HOST + ":3001/complexReport" },
         ]).then(dataLoad(loading)).catch((err) => {
           console.log(err);
         });

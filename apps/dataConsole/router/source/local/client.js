@@ -1557,7 +1557,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
       otherTarget = addInfoTargetArr.filter((o) => { return o.timeline.valueOf() < yesterdayStandard.valueOf() });
 
       setQueue(() => {
-        ajaxJson({ mode: "parse", cliids: todayTarget.map(({ cliid }) => { return cliid }), statusArr: todayTarget.map(({ status }) => { return status }) }, "https://" + FILEHOST + ":3000/styleCurationTotalMenu", { equal: true }).then((addData) => {
+        ajaxJson({ mode: "parse", cliids: todayTarget.map(({ cliid }) => { return cliid }), statusArr: todayTarget.map(({ status }) => { return status }) }, "https://" + FILEHOST + ":3001/styleCurationTotalMenu", { equal: true }).then((addData) => {
           if (Array.isArray(addData.data)) {
             dummy = objectDeepCopy(addData.dummy);
             addData = objectDeepCopy(addData.data);
@@ -1606,7 +1606,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
         }).catch((err) => { console.log(err); });
       });
       setQueue(() => {
-        ajaxJson({ mode: "parse", cliids: yesterdayTarget.map(({ cliid }) => { return cliid }), statusArr: yesterdayTarget.map(({ status }) => { return status }) }, "https://" + FILEHOST + ":3000/styleCurationTotalMenu", { equal: true }).then((addData) => {
+        ajaxJson({ mode: "parse", cliids: yesterdayTarget.map(({ cliid }) => { return cliid }), statusArr: yesterdayTarget.map(({ status }) => { return status }) }, "https://" + FILEHOST + ":3001/styleCurationTotalMenu", { equal: true }).then((addData) => {
           if (Array.isArray(addData.data)) {
             dummy = objectDeepCopy(addData.dummy);
             addData = objectDeepCopy(addData.data);
@@ -1654,7 +1654,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
           }
 
           setQueue(() => {
-            ajaxJson({ mode: "parse", cliids: otherTarget.map(({ cliid }) => { return cliid }), statusArr: otherTarget.map(({ status }) => { return status }) }, "https://" + FILEHOST + ":3000/styleCurationTotalMenu", { equal: true }).then((addData) => {
+            ajaxJson({ mode: "parse", cliids: otherTarget.map(({ cliid }) => { return cliid }), statusArr: otherTarget.map(({ status }) => { return status }) }, "https://" + FILEHOST + ":3001/styleCurationTotalMenu", { equal: true }).then((addData) => {
               if (Array.isArray(addData.data)) {
                 dummy = objectDeepCopy(addData.dummy);
                 addData = objectDeepCopy(addData.data);
@@ -2907,7 +2907,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
       ajaxJson({
         cliid: thisCase[standard[1]],
-      }, S3HOST + ":3000/getClientAnalytics", { equal: true }).then((thisAnalytics) => {
+      }, S3HOST + ":3001/getClientAnalytics", { equal: true }).then((thisAnalytics) => {
         analyticsData = thisAnalytics.data;
         return ajaxJson({
           cliid: thisCase[standard[1]]

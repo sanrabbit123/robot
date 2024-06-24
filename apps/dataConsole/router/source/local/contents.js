@@ -4588,7 +4588,7 @@ ContentsJs.prototype.launching = async function () {
     loading = await this.mother.loadingRun();
 
     this.contentsView = await ajaxJson({ mode: "pick" }, CONTENTSHOST + "/getContentsView", { equal: true });
-    videoFiles = await ajaxJson({ path: "/corePortfolio/rawVideo" }, S3HOST + ":3000/listFiles", { equal: true });
+    videoFiles = await ajaxJson({ path: "/corePortfolio/rawVideo" }, S3HOST + ":3001/listFiles", { equal: true });
     this.videoFiles = videoFiles.map((o) => {
       const arr = o.fileName.split("__split__");
       o.proid = arr[0];
