@@ -3114,6 +3114,7 @@ StaticRouter.prototype.rou_post_filesToZip = function () {
 
       res.send(JSON.stringify({ link: "__samba__/" + uniqueValueFileName + ".zip" }));
     } catch (e) {
+      console.log(e);
       logger.error("Static lounge 서버 문제 생김 (rou_post_filesToZip): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
