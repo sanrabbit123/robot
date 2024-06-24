@@ -988,6 +988,7 @@ GeneralJs.downloadFile = function (url, forceName = null, loadingDom = null) {
         loadingDom.textContent = "100" + '%';
       }
     }
+    resolve(null);
     /*
     const xhr = new XMLHttpRequest();
     if (/pdf/gi.test(url)) {
