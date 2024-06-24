@@ -2215,6 +2215,7 @@ LogReport.prototype.dailyReports = async function () {
         for (let i = 0; i < dateAgo; i++) {
           resMatrix = await getReportsByDate(standardDate, campaignEntireRows, campaignAspirantEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories, metaComplexRows, googleComplexRows);
           if (!Array.isArray(resMatrix)) {
+            standardDate.setDate(standardDate.getDate() - 1);
             continue;
           }
           for (let i = 0; i < matrix.length; i++) {
