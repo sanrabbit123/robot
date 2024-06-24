@@ -1220,7 +1220,7 @@ LogReport.prototype.dailyReports = async function () {
             clientsRows = clientsEntireRows.find((obj) => { return obj.ancid === clientsKey });
             if (analyticsRows === undefined || clientsRows === undefined) {
               console.log(analyticsKey, clientsKey);
-              throw new Error("invaild date");
+              return null;
             }
             thisMeta = metaComplexRows.find((obj) => { return obj.key === metaKey });
             thisGoogle = googleComplexRows.find((obj) => { return obj.key === googleKey });

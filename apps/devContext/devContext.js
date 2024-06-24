@@ -220,8 +220,9 @@ DevContext.prototype.launching = async function () {
     //   },
     // }));
 
+    // const res = await requestSystem("https://" + address.officeinfo.ghost.host + "/analyticsToday", { report: 1 }, { headers: { "Content-Type": "application/json" } });
+    // console.log(res)
 
-    
     
     
 
@@ -7258,8 +7259,8 @@ DevContext.prototype.launching = async function () {
 
     
     // send sms
-    // const name = "이국화";
-    // const amount = 15_045_000;
+    // const name = "오정민";
+    // const amount = 165000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
