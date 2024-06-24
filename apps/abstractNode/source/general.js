@@ -975,6 +975,20 @@ GeneralJs.requestPromise = function (url) {
 
 GeneralJs.downloadFile = function (url, forceName = null, loadingDom = null) {
   return new Promise(function (resolve, reject) {
+    let a;
+    a = document.createElement("A");
+    a.style.display = "none";
+    a.href = url;
+    a.setAttribute("target", "_blank");
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    if (loadingDom !== null) {
+      if (loadingDom.textContent !== undefined) {
+        loadingDom.textContent = "100" + '%';
+      }
+    }
+    /*
     const xhr = new XMLHttpRequest();
     if (/pdf/gi.test(url)) {
       setTimeout(() => {
@@ -1043,6 +1057,7 @@ GeneralJs.downloadFile = function (url, forceName = null, loadingDom = null) {
       });
     };
     xhr.send();
+    */
   });
 }
 
