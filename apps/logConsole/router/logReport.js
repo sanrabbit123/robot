@@ -1086,907 +1086,912 @@ LogReport.prototype.dailyReports = async function () {
         }
 
         const getReportsByDate = async (targetDate, campaignEntireRows, campaignAspirantEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories, metaComplexRows, googleComplexRows) => {
-          const keyMaker = (date) => {
-            const keyRegMaker = (date) => {
-              return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}_`;
+          try {
+            const keyMaker = (date) => {
+              const keyRegMaker = (date) => {
+                return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}_`;
+              }
+              const analyticsIdMaker = (date) => {
+                return `n${String(date.getFullYear()).slice(2)}${zeroAddition(date.getMonth() + 1)}_aa${zeroAddition(date.getDate())}s`;
+              }
+              const clientsIdMaker = (date) => {
+                return `y${String(date.getFullYear()).slice(2)}${zeroAddition(date.getMonth() + 1)}_aa${zeroAddition(date.getDate())}s`;
+              }
+              const metaKeyMaker = (date) => {
+                return dateToString(date).replace(/[^0-9]/gi, '') + "_meta"
+              }
+              const googleKeyMaker = (date) => {
+                return dateToString(date).replace(/[^0-9]/gi, '') + "_google"
+              }
+              const kakaoKeyMaker = (date) => {
+                return dateToString(date).replace(/[^0-9]/gi, '') + "_kakao"
+              }
+              return {
+                campaign: keyRegMaker(date),
+                analytics: analyticsIdMaker(date),
+                clients: clientsIdMaker(date),
+                meta: metaKeyMaker(date),
+                google: googleKeyMaker(date),
+                kakao: kakaoKeyMaker(date),
+              }
+            };
+            const {
+              campaign: campaignKey,
+              analytics: analyticsKey,
+              clients: clientsKey,
+              meta: metaKey,
+              google: googleKey,
+              kakao: kakaoKey,
+            } = keyMaker(targetDate);
+            const requests = clients.getRequestsTong();
+            let campaignRows, analyticsRows, clientsRows;
+            let campaignCharge, campaignImpressions, campaignClicks;
+            let totalUsers, pageViews;
+            let consultingViews;
+            let popupOpenEvents;
+            let from, to;
+            let requestsNumber;
+            let contractsNumber;
+            let facebookRows;
+            let facebookCharge;
+            let facebookReach;
+            let facebookImpressions;
+            let facebookClicks;
+            let facebookFromUsers;
+            let facebookFromClicks;
+            let facebookFromPopups;
+            let facebookFromSubmit;
+            let naverRows;
+            let naverCharge;
+            let naverImpressions;
+            let naverClicks;
+            let naverFromUsers;
+            let naverFromClicks;
+            let naverFromPopups;
+            let naverFromSubmit;
+            let firstMatrix;
+            let secondMatrix;
+            let thirdMatrix;
+            let fourthMatrix;
+            let facebookCtr;
+            let facebookCpc;
+            let facebookClicksConverting;
+            let facebookSubmitChargeConverting;
+            let facebookSubmitConverting;
+            let facebookClicksChargeConverting;
+            let naverCtr;
+            let naverCpc;
+            let naverClicksConverting;
+            let naverSubmitChargeConverting;
+            let naverSubmitConverting;
+            let naverClicksChargeConverting;
+            let fifthMatrix;
+            let fifthMatrixFactorArr;
+            let sixthMatrix;
+            let googleRows;
+            let googleCharge;
+            let googleImpressions;
+            let googleClicks;
+            let googleFromUsers;
+            let googleFromClicks;
+            let googleFromPopups;
+            let googleFromSubmit;
+            let googleCtr;
+            let googleCpc;
+            let googleClicksConverting;
+            let googleClicksChargeConverting;
+            let googleSubmitConverting;
+            let googleSubmitChargeConverting;
+            let seventhMatrix;
+            let firstNewMatrix;
+            let snsMatrix;
+            let thisMeta, thisGoogle, thisKakao;
+            let kakaoRows;
+            let kakaoCharge;
+            let kakaoImpressions;
+            let kakaoClicks;
+            let kakaoFromUsers;
+            let kakaoFromClicks;
+            let kakaoFromPopups;
+            let kakaoFromSubmit;
+            let kakaoCtr;
+            let kakaoCpc;
+            let kakaoClicksConverting;
+            let kakaoClicksChargeConverting;
+            let kakaoSubmitConverting;
+            let kakaoSubmitChargeConverting;
+            let kakaoMatrix;
+            let campaignAspirantRows;
+            let facebookAspirantRows;
+            let facebookAspirantCharge;
+            let facebookAspirantReach;
+            let facebookAspirantImpressions;
+            let facebookAspirantClicks;
+  
+            from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+            to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+            to.setDate(to.getDate() + 1);
+  
+            // get data
+  
+            campaignRows = campaignEntireRows.filter((obj) => { return (new RegExp("^" + campaignKey)).test(obj.key); });
+            campaignAspirantRows = campaignAspirantEntireRows.filter((obj) => { return (new RegExp("^" + campaignKey)).test(obj.key); });
+            analyticsRows = analyticsEntireRows.find((obj) => { return obj.anaid === analyticsKey });
+            clientsRows = clientsEntireRows.find((obj) => { return obj.ancid === clientsKey });
+            if (analyticsRows === undefined || clientsRows === undefined) {
+              console.log(analyticsKey, clientsKey);
+              throw new Error("invaild date");
             }
-            const analyticsIdMaker = (date) => {
-              return `n${String(date.getFullYear()).slice(2)}${zeroAddition(date.getMonth() + 1)}_aa${zeroAddition(date.getDate())}s`;
-            }
-            const clientsIdMaker = (date) => {
-              return `y${String(date.getFullYear()).slice(2)}${zeroAddition(date.getMonth() + 1)}_aa${zeroAddition(date.getDate())}s`;
-            }
-            const metaKeyMaker = (date) => {
-              return dateToString(date).replace(/[^0-9]/gi, '') + "_meta"
-            }
-            const googleKeyMaker = (date) => {
-              return dateToString(date).replace(/[^0-9]/gi, '') + "_google"
-            }
-            const kakaoKeyMaker = (date) => {
-              return dateToString(date).replace(/[^0-9]/gi, '') + "_kakao"
-            }
-            return {
-              campaign: keyRegMaker(date),
-              analytics: analyticsIdMaker(date),
-              clients: clientsIdMaker(date),
-              meta: metaKeyMaker(date),
-              google: googleKeyMaker(date),
-              kakao: kakaoKeyMaker(date),
-            }
-          };
-          const {
-            campaign: campaignKey,
-            analytics: analyticsKey,
-            clients: clientsKey,
-            meta: metaKey,
-            google: googleKey,
-            kakao: kakaoKey,
-          } = keyMaker(targetDate);
-          const requests = clients.getRequestsTong();
-          let campaignRows, analyticsRows, clientsRows;
-          let campaignCharge, campaignImpressions, campaignClicks;
-          let totalUsers, pageViews;
-          let consultingViews;
-          let popupOpenEvents;
-          let from, to;
-          let requestsNumber;
-          let contractsNumber;
-          let facebookRows;
-          let facebookCharge;
-          let facebookReach;
-          let facebookImpressions;
-          let facebookClicks;
-          let facebookFromUsers;
-          let facebookFromClicks;
-          let facebookFromPopups;
-          let facebookFromSubmit;
-          let naverRows;
-          let naverCharge;
-          let naverImpressions;
-          let naverClicks;
-          let naverFromUsers;
-          let naverFromClicks;
-          let naverFromPopups;
-          let naverFromSubmit;
-          let firstMatrix;
-          let secondMatrix;
-          let thirdMatrix;
-          let fourthMatrix;
-          let facebookCtr;
-          let facebookCpc;
-          let facebookClicksConverting;
-          let facebookSubmitChargeConverting;
-          let facebookSubmitConverting;
-          let facebookClicksChargeConverting;
-          let naverCtr;
-          let naverCpc;
-          let naverClicksConverting;
-          let naverSubmitChargeConverting;
-          let naverSubmitConverting;
-          let naverClicksChargeConverting;
-          let fifthMatrix;
-          let fifthMatrixFactorArr;
-          let sixthMatrix;
-          let googleRows;
-          let googleCharge;
-          let googleImpressions;
-          let googleClicks;
-          let googleFromUsers;
-          let googleFromClicks;
-          let googleFromPopups;
-          let googleFromSubmit;
-          let googleCtr;
-          let googleCpc;
-          let googleClicksConverting;
-          let googleClicksChargeConverting;
-          let googleSubmitConverting;
-          let googleSubmitChargeConverting;
-          let seventhMatrix;
-          let firstNewMatrix;
-          let snsMatrix;
-          let thisMeta, thisGoogle, thisKakao;
-          let kakaoRows;
-          let kakaoCharge;
-          let kakaoImpressions;
-          let kakaoClicks;
-          let kakaoFromUsers;
-          let kakaoFromClicks;
-          let kakaoFromPopups;
-          let kakaoFromSubmit;
-          let kakaoCtr;
-          let kakaoCpc;
-          let kakaoClicksConverting;
-          let kakaoClicksChargeConverting;
-          let kakaoSubmitConverting;
-          let kakaoSubmitChargeConverting;
-          let kakaoMatrix;
-          let campaignAspirantRows;
-          let facebookAspirantRows;
-          let facebookAspirantCharge;
-          let facebookAspirantReach;
-          let facebookAspirantImpressions;
-          let facebookAspirantClicks;
-
-          from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
-          to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
-          to.setDate(to.getDate() + 1);
-
-          // get data
-
-          campaignRows = campaignEntireRows.filter((obj) => { return (new RegExp("^" + campaignKey)).test(obj.key); });
-          campaignAspirantRows = campaignAspirantEntireRows.filter((obj) => { return (new RegExp("^" + campaignKey)).test(obj.key); });
-          analyticsRows = analyticsEntireRows.find((obj) => { return obj.anaid === analyticsKey });
-          clientsRows = clientsEntireRows.find((obj) => { return obj.ancid === clientsKey });
-          if (analyticsRows === undefined || clientsRows === undefined) {
-            console.log(analyticsKey, clientsKey);
-            throw new Error("invaild date");
-          }
-          thisMeta = metaComplexRows.find((obj) => { return obj.key === metaKey });
-          thisGoogle = googleComplexRows.find((obj) => { return obj.key === googleKey });
-
-          // 1 - total funnel
-
-          campaignCharge = campaignRows.reduce((acc, curr) => {
-            return acc + curr.value.charge;
-          }, 0);
-          campaignImpressions = campaignRows.reduce((acc, curr) => {
-            return acc + curr.value.performance.impressions;
-          }, 0);
-          campaignClicks = campaignRows.reduce((acc, curr) => {
-            return acc + curr.value.performance.clicks;
-          }, 0);
-
-          totalUsers = analyticsRows.data.users.total;
-          pageViews = analyticsRows.data.views.total;
-
-          consultingViews = analyticsRows.data.views.detail.pagePath.cases.filter((obj) => {
-            return /consulting\.php/gi.test(obj.case);
-          }).reduce((acc, curr) => {
-            return acc + curr.value;
-          }, 0);
-
-          popupOpenEvents = analyticsRows.data.events.detail.eventName.cases.filter((obj) => {
-            return /popupOpen/gi.test(obj.case);
-          }).reduce((acc, curr) => {
-            return acc + curr.value;
-          }, 0);
-
-          requestsNumber = requests.filter(({ request }) => {
-            const thisValue = request.timeline.toNormal().valueOf();
-            return thisValue >= from.valueOf() && thisValue < to.valueOf();
-          }).length;
-
-          contractsNumber = projects.toNormal().filter(({ process }) => {
-            const thisValue = process.contract.first.date.valueOf();
-            return thisValue >= from.valueOf() && thisValue < to.valueOf();
-          }).length;
-
-          firstMatrix = [
-            [
-              dateToString(targetDate),
-              campaignCharge,
-              campaignImpressions,
-              campaignClicks,
-              totalUsers,
-              pageViews,
-              consultingViews,
-              popupOpenEvents,
-              requestsNumber,
-              contractsNumber,
-            ]
-          ];
-
-          // 1-2 - new front values
-          firstNewMatrix = [
-            [
-              dateToString(targetDate),
-              totalUsers,
-              pageViews,
-              analyticsRows.data.conversion.consultingPage.total,
-              analyticsRows.data.conversion.popupOpen.total,
-              analyticsRows.data.conversion.consultingPage.total + analyticsRows.data.conversion.popupOpen.total,
-              requestsNumber,
-              contractsNumber,
-              analyticsRows.data.views.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0),
-              analyticsRows.data.views.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
-              analyticsRows.data.views.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
-              analyticsRows.data.views.total - (analyticsRows.data.views.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (analyticsRows.data.views.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
-              analyticsRows.data.views.detail.source.cases.filter((c) => { return /naver/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
-              analyticsRows.data.views.detail.source.cases.filter((c) => { return /instagram/gi.test(c.case) || /facebook/gi.test(c.case) || /meta/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
-              analyticsRows.data.views.detail.source.cases.filter((c) => { return /google/gi.test(c.case) || /youtube/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
-              (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
-              (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)),
-              (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)),
-              (analyticsRows.data.conversion.consultingPage.total + analyticsRows.data.conversion.popupOpen.total) - (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
-            ]
-          ];
-
-          // 2 - facebook
-
-          facebookRows = campaignRows.filter((obj) => {
-            return /facebook/gi.test(obj.information.mother) || /meta/gi.test(obj.information.mother) || /instagram/gi.test(obj.information.mother);
-          });
-          if (facebookRows.length > 0) {
-            facebookCharge = facebookRows.reduce((acc, curr) => {
+            thisMeta = metaComplexRows.find((obj) => { return obj.key === metaKey });
+            thisGoogle = googleComplexRows.find((obj) => { return obj.key === googleKey });
+  
+            // 1 - total funnel
+  
+            campaignCharge = campaignRows.reduce((acc, curr) => {
               return acc + curr.value.charge;
             }, 0);
-            facebookReach = facebookRows.reduce((acc, curr) => {
-              return acc + curr.value.performance.reach;
-            }, 0);
-            facebookImpressions = facebookRows.reduce((acc, curr) => {
+            campaignImpressions = campaignRows.reduce((acc, curr) => {
               return acc + curr.value.performance.impressions;
             }, 0);
-            facebookClicks = facebookRows.reduce((acc, curr) => {
+            campaignClicks = campaignRows.reduce((acc, curr) => {
               return acc + curr.value.performance.clicks;
             }, 0);
-          } else {
-            facebookCharge = 0;
-            facebookReach = 0;
-            facebookImpressions = 0;
-            facebookClicks = 0;
-          }
-
-          facebookAspirantRows = campaignAspirantRows.filter((obj) => {
-            return /facebook/gi.test(obj.information.mother) || /meta/gi.test(obj.information.mother) || /instagram/gi.test(obj.information.mother);
-          });
-          if (facebookAspirantRows.length > 0) {
-            facebookAspirantCharge = facebookAspirantRows.reduce((acc, curr) => {
-              return acc + curr.value.charge;
+  
+            totalUsers = analyticsRows.data.users.total;
+            pageViews = analyticsRows.data.views.total;
+  
+            consultingViews = analyticsRows.data.views.detail.pagePath.cases.filter((obj) => {
+              return /consulting\.php/gi.test(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
             }, 0);
-            facebookAspirantReach = facebookAspirantRows.reduce((acc, curr) => {
-              return acc + curr.value.performance.reach;
+  
+            popupOpenEvents = analyticsRows.data.events.detail.eventName.cases.filter((obj) => {
+              return /popupOpen/gi.test(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
             }, 0);
-            facebookAspirantImpressions = facebookAspirantRows.reduce((acc, curr) => {
-              return acc + curr.value.performance.impressions;
-            }, 0);
-            facebookAspirantClicks = facebookAspirantRows.reduce((acc, curr) => {
-              return acc + curr.value.performance.clicks;
-            }, 0);
-          } else {
-            facebookAspirantCharge = 0;
-            facebookAspirantReach = 0;
-            facebookAspirantImpressions = 0;
-            facebookAspirantClicks = 0;
-          }
-
-          facebookFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
-            return facebookCampaignBoo(obj.case);
-          }).reduce((acc, curr) => {
-            return acc + curr.value;
-          }, 0);
-
-          facebookFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
-            return facebookCampaignBoo(obj.case);
-          }).reduce((acc, curr) => {
-            return acc + curr.value;
-          }, 0);
-
-          facebookFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
-            return facebookCampaignBoo(obj.case);
-          }).reduce((acc, curr) => {
-            return acc + curr.value;
-          }, 0);
-
-          facebookFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
-            return arr.some((obj) => {
-              if (obj === null) {
-                return false;
-              } else {
-                return obj.source.mother.some((c) => { return facebookCampaignBoo(c); }) && obj.source.campaign.length > 0;
-              }
-            });
-          }).length;
-
-          facebookCtr = 0;
-          facebookCpc = 0;
-          facebookClicksConverting = 0;
-          facebookClicksChargeConverting = 0;
-          facebookSubmitConverting = 0;
-          facebookSubmitChargeConverting = 0;
-
-          if (facebookImpressions !== 0) {
-            facebookCtr = facebookClicks / facebookImpressions;
-            facebookCtr = Math.floor(facebookCtr * 10000) / 10000;
-          }
-          if (facebookClicks !== 0) {
-            facebookCpc = Math.round(facebookCharge / facebookClicks);
-          }
-          if (facebookClicks !== 0) {
-            facebookClicksConverting = (facebookFromClicks + facebookFromPopups) / facebookClicks;
-            facebookClicksConverting = Math.floor(facebookClicksConverting * 10000) / 10000;
-          }
-          if (facebookFromClicks + facebookFromPopups !== 0) {
-            facebookClicksChargeConverting = Math.round(facebookCharge / (facebookFromClicks + facebookFromPopups));
-          }
-          if (facebookClicks !== 0) {
-            facebookSubmitConverting = facebookFromSubmit / facebookClicks;
-            facebookSubmitConverting = Math.floor(facebookSubmitConverting * 10000) / 10000;
-          }
-          if (facebookFromSubmit !== 0) {
-            facebookSubmitChargeConverting = Math.round(facebookCharge / facebookFromSubmit);
-          }
-
-          secondMatrix = [
-            [
-              dateToString(targetDate),
-              facebookCharge,
-              facebookReach,
-              facebookImpressions,
-              facebookClicks,
-              facebookFromUsers,
-              facebookFromClicks,
-              facebookFromPopups,
-              facebookFromSubmit,
-              facebookCtr,
-              facebookCpc,
-              facebookClicksConverting,
-              facebookClicksChargeConverting,
-              facebookSubmitConverting,
-              facebookSubmitChargeConverting,
-              facebookAspirantCharge,
-              facebookAspirantReach,
-              facebookAspirantImpressions,
-              facebookAspirantClicks,
-            ]
-          ];
-
-          // 3 - naver
-
-          naverRows = campaignRows.filter((obj) => {
-            return /naver/gi.test(obj.information.mother);
-          });
-          if (naverRows.length > 0) {
-            naverCharge = naverRows.reduce((acc, curr) => {
-              return acc + curr.value.charge;
-            }, 0);
-            naverImpressions = naverRows.reduce((acc, curr) => {
-              return acc + curr.value.performance.impressions;
-            }, 0);
-            naverClicks = naverRows.reduce((acc, curr) => {
-              return acc + curr.value.performance.clicks;
-            }, 0);
-          } else {
-            naverCharge = 0;
-            naverImpressions = 0;
-            naverClicks = 0;
-          }
-
-          naverFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
-            return naverCampaignBoo(obj.case);
-          }).reduce((acc, curr) => {
-            return acc + curr.value;
-          }, 0);
-
-          naverFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
-            return naverCampaignBoo(obj.case);
-          }).reduce((acc, curr) => {
-            return acc + curr.value;
-          }, 0);
-
-          naverFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
-            return naverCampaignBoo(obj.case);
-          }).reduce((acc, curr) => {
-            return acc + curr.value;
-          }, 0);
-
-          naverFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
-            return arr.some((obj) => {
-              if (obj === null) {
-                return false;
-              } else {
-                return obj.source.mother.some((c) => { return naverCampaignBoo(c); }) && obj.source.campaign.length > 0;
-              }
-            });
-          }).length;
-
-          naverCtr = 0;
-          naverCpc = 0;
-          naverClicksConverting = 0;
-          naverClicksChargeConverting = 0;
-          naverSubmitConverting = 0;
-          naverSubmitChargeConverting = 0;
-
-          if (naverImpressions !== 0) {
-            naverCtr = naverClicks / naverImpressions;
-            naverCtr = Math.floor(naverCtr * 10000) / 10000;
-          }
-          if (naverClicks !== 0) {
-            naverCpc = Math.round(naverCharge / naverClicks);
-          }
-          if (naverClicks !== 0) {
-            naverClicksConverting = (naverFromClicks + naverFromPopups) / naverClicks;
-            naverClicksConverting = Math.floor(naverClicksConverting * 10000) / 10000;
-          }
-          if (naverFromClicks + naverFromPopups !== 0) {
-            naverClicksChargeConverting = Math.round(naverCharge / (naverFromClicks + naverFromPopups));
-          }
-          if (naverClicks !== 0) {
-            naverSubmitConverting = naverFromSubmit / naverClicks;
-            naverSubmitConverting = Math.floor(naverSubmitConverting * 10000) / 10000;
-          }
-          if (naverFromSubmit !== 0) {
-            naverSubmitChargeConverting = Math.round(naverCharge / naverFromSubmit);
-          }
-
-          thirdMatrix = [
-            [
-              dateToString(targetDate),
-              naverCharge,
-              naverImpressions,
-              naverClicks,
-              naverFromUsers,
-              naverFromClicks,
-              naverFromPopups,
-              naverFromSubmit,
-              naverCtr,
-              naverCpc,
-              naverClicksConverting,
-              naverClicksChargeConverting,
-              naverSubmitConverting,
-              naverSubmitChargeConverting,
-            ]
-          ];
-
-          // 4 - clients
-
-          fourthMatrix = clientsRows.data.detail.map((obj) => {
-            return { cliid: obj.cliid, users: obj.users, ids: obj.users.map((user) => { return user === null ? "" : user.id }).join(", ") }
-          });
-          fourthMatrix = fourthMatrix.map(({ cliid, users, ids }) => {
-            const targetRequest = requests.find((obj) => { return obj.cliid === cliid });
-            const targetHistory = clientHistories[cliid];
-            if (targetHistory === undefined) {
-              errorLog("there is no history => " + cliid).catch((err) => { console.log(err); });
-            }
-            let returnType;
-            let source, sourceArr;
-            let campaign, campaignArr;
-            let device;
-            let referrer, referrerArr;
-            let service;
-
-            if (users.every((obj) => { return obj === null ? true : /^New/.test(obj.type); })) {
-              returnType = "신규";
-            } else {
-              returnType = "재방문";
-            }
-
-            sourceArr = users.map((obj) => { return obj.source.mother }).filter((arr) => { return arr.length > 0 });
-            campaignArr = users.map((obj) => { return obj.source.campaign }).filter((arr) => { return arr.length > 0 });
-
-            if (sourceArr.length > 0) {
-              source = sourceArr.flat().join(", ");
-            } else {
-              source = "(direct)";
-            }
-
-            if (campaignArr.length > 0) {
-              campaign = campaignArr.flat().join(", ");
-            } else {
-              campaign = "(not set)";
-            }
-
-            if (users.length > 0) {
-              device = users[0].device.kinds;
-            } else {
-              device = "(not set)";
-            }
-
-            referrerArr = users.map((obj) => { return obj.source.referrer }).flat();
-            referrerArr.sort((a, b) => { return b.length - a.length });
-            if (referrerArr.length > 0) {
-              referrer = referrerArr[0];
-            } else {
-              referrer = "(not set)";
-            }
-
-            if (targetHistory.service.serid.length > 0) {
-              service = serviceParsing(targetHistory.service.serid[0]);
-            } else {
-              service = "알 수 없음";
-            }
-
-            return [
-              dateToString(targetDate),
-              cliid,
-              targetRequest.name,
-              ids,
-              dateToString(targetRequest.request.timeline, true),
-              returnType,
-              source,
-              campaign,
-              device,
-              referrer,
-              targetRequest.request.space.address.value,
-              targetRequest.request.space.pyeong.value,
-              (targetRequest.request.space.resident.living ? "거주중" : "이사"),
-              (targetRequest.request.space.resident.living ? "해당 없음" : dateToString(targetRequest.request.space.resident.expected)),
-              service,
-            ];
-          });
-
-          // 5 - campaign
-
-          fifthMatrix = [];
-
-          for (let campaignRow of campaignRows) {
-            fifthMatrixFactorArr = [];
-            fifthMatrixFactorArr.push(dateToString(targetDate));
-            fifthMatrixFactorArr.push(campaignRow.information.mother);
-            fifthMatrixFactorArr.push(campaignRow.information.type);
-            fifthMatrixFactorArr.push(campaignRow.information.id.campaign);
-            fifthMatrixFactorArr.push(campaignRow.information.name);
-            fifthMatrixFactorArr.push(campaignRow.value.charge);
-            fifthMatrixFactorArr.push(campaignRow.value.performance.impressions);
-            fifthMatrixFactorArr.push(campaignRow.value.performance.clicks);
-            fifthMatrix.push(fifthMatrixFactorArr);
-          }
-
-
-          // 6 - contract
-
-          sixthMatrix = clientsRows.data.detail.map((obj) => { return { cliid: obj.cliid, users: obj.users, ids: obj.users.map((user) => { return user.id }).join(", ") } });
-          sixthMatrix = sixthMatrix.map(({ cliid, users, ids }) => {
-            const targetRequest = requests.find((obj) => { return obj.cliid === cliid });
-            const targetHistory = clientHistories[cliid];
-            const targetProjects = projects.toNormal().filter((obj) => { return obj.cliid === cliid });
-            let targetProject;
-            let returnType;
-            let source, sourceArr;
-            let campaign, campaignArr;
-            let device;
-            let referrer, referrerArr;
-            let service;
-            let query;
-
-            if (users.every((obj) => { return /^New/.test(obj.type); })) {
-              returnType = "신규";
-            } else {
-              returnType = "재방문";
-            }
-
-            sourceArr = users.map((obj) => { return obj.source.mother }).filter((arr) => { return arr.length > 0 });
-            campaignArr = users.map((obj) => { return obj.source.campaign }).filter((arr) => { return arr.length > 0 });
-
-            if (sourceArr.length > 0) {
-              source = sourceArr.flat().join(", ");
-            } else {
-              source = "(direct)";
-            }
-
-            if (campaignArr.length > 0) {
-              campaign = campaignArr.flat().join(", ");
-            } else {
-              campaign = "(not set)";
-            }
-
-            if (users.length > 0) {
-              device = users[0].device.kinds;
-            } else {
-              device = "(not set)";
-            }
-
-            referrerArr = users.map((obj) => { return obj.source.referrer }).flat();
-            referrerArr.sort((a, b) => { return b.length - a.length });
-            if (referrerArr.length > 0) {
-              referrer = referrerArr[0];
-            } else {
-              referrer = "(not set)";
-            }
-
-            if (targetHistory.service.serid.length > 0) {
-              service = serviceParsing(targetHistory.service.serid[0]);
-            } else {
-              service = "알 수 없음";
-            }
-
-            targetProject = targetProjects.find((obj) => {
-              obj.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
-            });
-            if (targetProject === undefined && targetProjects.length > 0) {
-              targetProject = targetProjects[0];
-            }
-            if (targetProject === undefined) {
-              targetProject = null;
-            }
-
-            query = [];
-            for (let user of users) {
-              for (let { path } of user.history) {
-                query.push(path);
-              }
-              for (let str of user.source.referrer) {
-                query.push(str);
-              }
-            }
-            query = query.filter((str) => { return /\?/gi.test(str); });
-            query = query.map((str) => { return Object.values(querystring.parse(str.split("?")[1])) }).flat();
-            query = [ ...new Set(query.filter((str) => { return /[가-힣ㄱ-ㅎㅏ-ㅣ]/gi.test(str) })) ];
-
-            return [
-              dateToString(targetDate),
-              cliid,
-              targetRequest.name,
-              ids,
-              dateToString(targetRequest.request.timeline, true),
-              targetProject === null ? "1800-01-01" : dateToString(targetProject.process.contract.first.date, true),
-              returnType,
-              source,
-              campaign,
-              device,
-              referrer,
-              targetRequest.request.space.address.value,
-              targetRequest.request.space.pyeong.value,
-              targetRequest.request.budget.value,
-              targetRequest.request.family.value,
-              (targetRequest.request.space.resident.living ? "거주중" : "이사"),
-              (targetRequest.request.space.resident.living ? "해당 없음" : dateToString(targetRequest.request.space.resident.expected)),
-              (targetRequest.request.space.partial.boo ? "부분 공간" : "전체 공간"),
-              targetProject === null ? "알 수 없음" : (targetProject.service.online ? "온라인" : "오프라인"),
-              service,
-              targetProject === null ? "알 수 없음" : serviceParsing(targetProject.service.serid),
-              targetRequest.request.etc.comment,
-              targetProject === null ? 0 : targetProject.process.contract.remain.calculation.amount.consumer,
-              query.join(", "),
-            ];
-          }).filter((arr) => {
-            const cliid = arr[1];
-            const targetProject = projects.toNormal().find((obj) => { return obj.cliid === cliid });
-            if (targetProject === undefined || targetProject === null) {
-              return false;
-            } else {
-              return targetProject.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf();
-            }
-          });
-
-
-          // 7 - google
-
-          googleRows = campaignRows.filter((obj) => {
-            return /google/gi.test(obj.information.mother);
-          });
-          if (googleRows.length > 0) {
-            googleCharge = googleRows.reduce((acc, curr) => {
-              return acc + curr.value.charge;
-            }, 0);
-            googleImpressions = googleRows.reduce((acc, curr) => {
-              return acc + curr.value.performance.impressions;
-            }, 0);
-            googleClicks = googleRows.reduce((acc, curr) => {
-              return acc + curr.value.performance.clicks;
-            }, 0);
-          } else {
-            googleCharge = 0;
-            googleImpressions = 0;
-            googleClicks = 0;
-          }
-
-          googleFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
-            return googleCampaignBoo(obj.case);
-          }).reduce((acc, curr) => {
-            return acc + curr.value;
-          }, 0);
-
-          googleFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
-            return googleCampaignBoo(obj.case);
-          }).reduce((acc, curr) => {
-            return acc + curr.value;
-          }, 0);
-
-          googleFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
-            return googleCampaignBoo(obj.case);
-          }).reduce((acc, curr) => {
-            return acc + curr.value;
-          }, 0);
-
-          googleFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
-            return arr.some((obj) => {
-              if (obj === null) {
-                return false;
-              } else {
-                return obj.source.mother.some((c) => { return googleCampaignBoo(c); }) && obj.source.campaign.length > 0;
-              }
-            });
-          }).length;
-
-          googleCtr = 0;
-          googleCpc = 0;
-          googleClicksConverting = 0;
-          googleClicksChargeConverting = 0;
-          googleSubmitConverting = 0;
-          googleSubmitChargeConverting = 0;
-
-          if (googleImpressions !== 0) {
-            googleCtr = googleClicks / googleImpressions;
-            googleCtr = Math.floor(googleCtr * 10000) / 10000;
-          }
-          if (googleClicks !== 0) {
-            googleCpc = Math.round(googleCharge / googleClicks);
-          }
-          if (googleClicks !== 0) {
-            googleClicksConverting = (googleFromClicks + googleFromPopups) / googleClicks;
-            googleClicksConverting = Math.floor(googleClicksConverting * 10000) / 10000;
-          }
-          if (googleFromClicks + googleFromPopups !== 0) {
-            googleClicksChargeConverting = Math.round(googleCharge / (googleFromClicks + googleFromPopups));
-          }
-          if (googleClicks !== 0) {
-            googleSubmitConverting = googleFromSubmit / googleClicks;
-            googleSubmitConverting = Math.floor(googleSubmitConverting * 10000) / 10000;
-          }
-          if (googleFromSubmit !== 0) {
-            googleSubmitChargeConverting = Math.round(googleCharge / googleFromSubmit);
-          }
-
-          seventhMatrix = [
-            [
-              dateToString(targetDate),
-              googleCharge,
-              googleImpressions,
-              googleClicks,
-              googleFromUsers,
-              googleFromClicks,
-              googleFromPopups,
-              googleFromSubmit,
-              googleCtr,
-              googleCpc,
-              googleClicksConverting,
-              googleClicksChargeConverting,
-              googleSubmitConverting,
-              googleSubmitChargeConverting,
-            ]
-          ];
-
-
-          // 8 - sns
-
-          if (thisMeta !== undefined && thisGoogle !== undefined) {
-            snsMatrix = [
+  
+            requestsNumber = requests.filter(({ request }) => {
+              const thisValue = request.timeline.toNormal().valueOf();
+              return thisValue >= from.valueOf() && thisValue < to.valueOf();
+            }).length;
+  
+            contractsNumber = projects.toNormal().filter(({ process }) => {
+              const thisValue = process.contract.first.date.valueOf();
+              return thisValue >= from.valueOf() && thisValue < to.valueOf();
+            }).length;
+  
+            firstMatrix = [
               [
                 dateToString(targetDate),
-                thisMeta.instagram.profile.views,
-                thisMeta.instagram.profile.followers,
-                thisMeta.instagram.performance.impressions,
-                thisMeta.instagram.performance.clicks,
-                thisMeta.instagram.performance.likes,
-                thisMeta.instagram.performance.comments,
-                thisMeta.instagram.performance.saves,
-                thisMeta.instagram.performance.shares,
-                thisGoogle.youtube.profile.followers,
-                thisGoogle.youtube.performance.views,
-                thisGoogle.youtube.performance.likes,
-                thisGoogle.youtube.performance.shares,
+                campaignCharge,
+                campaignImpressions,
+                campaignClicks,
+                totalUsers,
+                pageViews,
+                consultingViews,
+                popupOpenEvents,
+                requestsNumber,
+                contractsNumber,
               ]
             ];
-          } else {
-            snsMatrix = [
+  
+            // 1-2 - new front values
+            firstNewMatrix = [
               [
                 dateToString(targetDate),
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
+                totalUsers,
+                pageViews,
+                analyticsRows.data.conversion.consultingPage.total,
+                analyticsRows.data.conversion.popupOpen.total,
+                analyticsRows.data.conversion.consultingPage.total + analyticsRows.data.conversion.popupOpen.total,
+                requestsNumber,
+                contractsNumber,
+                analyticsRows.data.views.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0),
+                analyticsRows.data.views.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+                analyticsRows.data.views.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+                analyticsRows.data.views.total - (analyticsRows.data.views.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (analyticsRows.data.views.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
+                analyticsRows.data.views.detail.source.cases.filter((c) => { return /naver/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+                analyticsRows.data.views.detail.source.cases.filter((c) => { return /instagram/gi.test(c.case) || /facebook/gi.test(c.case) || /meta/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+                analyticsRows.data.views.detail.source.cases.filter((c) => { return /google/gi.test(c.case) || /youtube/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0),
+                (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
+                (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)),
+                (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)),
+                (analyticsRows.data.conversion.consultingPage.total + analyticsRows.data.conversion.popupOpen.total) - (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
               ]
             ];
-          }
-
-          // 9 - kakao
-
-          kakaoRows = campaignRows.filter((obj) => {
-            return /kakao/gi.test(obj.information.mother);
-          });
-          if (kakaoRows.length > 0) {
-            kakaoCharge = kakaoRows.reduce((acc, curr) => {
-              return acc + curr.value.charge;
+  
+            // 2 - facebook
+  
+            facebookRows = campaignRows.filter((obj) => {
+              return /facebook/gi.test(obj.information.mother) || /meta/gi.test(obj.information.mother) || /instagram/gi.test(obj.information.mother);
+            });
+            if (facebookRows.length > 0) {
+              facebookCharge = facebookRows.reduce((acc, curr) => {
+                return acc + curr.value.charge;
+              }, 0);
+              facebookReach = facebookRows.reduce((acc, curr) => {
+                return acc + curr.value.performance.reach;
+              }, 0);
+              facebookImpressions = facebookRows.reduce((acc, curr) => {
+                return acc + curr.value.performance.impressions;
+              }, 0);
+              facebookClicks = facebookRows.reduce((acc, curr) => {
+                return acc + curr.value.performance.clicks;
+              }, 0);
+            } else {
+              facebookCharge = 0;
+              facebookReach = 0;
+              facebookImpressions = 0;
+              facebookClicks = 0;
+            }
+  
+            facebookAspirantRows = campaignAspirantRows.filter((obj) => {
+              return /facebook/gi.test(obj.information.mother) || /meta/gi.test(obj.information.mother) || /instagram/gi.test(obj.information.mother);
+            });
+            if (facebookAspirantRows.length > 0) {
+              facebookAspirantCharge = facebookAspirantRows.reduce((acc, curr) => {
+                return acc + curr.value.charge;
+              }, 0);
+              facebookAspirantReach = facebookAspirantRows.reduce((acc, curr) => {
+                return acc + curr.value.performance.reach;
+              }, 0);
+              facebookAspirantImpressions = facebookAspirantRows.reduce((acc, curr) => {
+                return acc + curr.value.performance.impressions;
+              }, 0);
+              facebookAspirantClicks = facebookAspirantRows.reduce((acc, curr) => {
+                return acc + curr.value.performance.clicks;
+              }, 0);
+            } else {
+              facebookAspirantCharge = 0;
+              facebookAspirantReach = 0;
+              facebookAspirantImpressions = 0;
+              facebookAspirantClicks = 0;
+            }
+  
+            facebookFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
+              return facebookCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
             }, 0);
-            kakaoImpressions = kakaoRows.reduce((acc, curr) => {
-              return acc + curr.value.performance.impressions;
+  
+            facebookFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
+              return facebookCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
             }, 0);
-            kakaoClicks = kakaoRows.reduce((acc, curr) => {
-              return acc + curr.value.performance.clicks;
+  
+            facebookFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
+              return facebookCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
             }, 0);
-          } else {
-            kakaoCharge = 0;
-            kakaoImpressions = 0;
-            kakaoClicks = 0;
-          }
-
-          kakaoFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
-            return kakaoCampaignBoo(obj.case);
-          }).reduce((acc, curr) => {
-            return acc + curr.value;
-          }, 0);
-
-          kakaoFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
-            return kakaoCampaignBoo(obj.case);
-          }).reduce((acc, curr) => {
-            return acc + curr.value;
-          }, 0);
-
-          kakaoFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
-            return kakaoCampaignBoo(obj.case);
-          }).reduce((acc, curr) => {
-            return acc + curr.value;
-          }, 0);
-
-          kakaoFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
-            return arr.some((obj) => {
-              if (obj === null) {
+  
+            facebookFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
+              return arr.some((obj) => {
+                if (obj === null) {
+                  return false;
+                } else {
+                  return obj.source.mother.some((c) => { return facebookCampaignBoo(c); }) && obj.source.campaign.length > 0;
+                }
+              });
+            }).length;
+  
+            facebookCtr = 0;
+            facebookCpc = 0;
+            facebookClicksConverting = 0;
+            facebookClicksChargeConverting = 0;
+            facebookSubmitConverting = 0;
+            facebookSubmitChargeConverting = 0;
+  
+            if (facebookImpressions !== 0) {
+              facebookCtr = facebookClicks / facebookImpressions;
+              facebookCtr = Math.floor(facebookCtr * 10000) / 10000;
+            }
+            if (facebookClicks !== 0) {
+              facebookCpc = Math.round(facebookCharge / facebookClicks);
+            }
+            if (facebookClicks !== 0) {
+              facebookClicksConverting = (facebookFromClicks + facebookFromPopups) / facebookClicks;
+              facebookClicksConverting = Math.floor(facebookClicksConverting * 10000) / 10000;
+            }
+            if (facebookFromClicks + facebookFromPopups !== 0) {
+              facebookClicksChargeConverting = Math.round(facebookCharge / (facebookFromClicks + facebookFromPopups));
+            }
+            if (facebookClicks !== 0) {
+              facebookSubmitConverting = facebookFromSubmit / facebookClicks;
+              facebookSubmitConverting = Math.floor(facebookSubmitConverting * 10000) / 10000;
+            }
+            if (facebookFromSubmit !== 0) {
+              facebookSubmitChargeConverting = Math.round(facebookCharge / facebookFromSubmit);
+            }
+  
+            secondMatrix = [
+              [
+                dateToString(targetDate),
+                facebookCharge,
+                facebookReach,
+                facebookImpressions,
+                facebookClicks,
+                facebookFromUsers,
+                facebookFromClicks,
+                facebookFromPopups,
+                facebookFromSubmit,
+                facebookCtr,
+                facebookCpc,
+                facebookClicksConverting,
+                facebookClicksChargeConverting,
+                facebookSubmitConverting,
+                facebookSubmitChargeConverting,
+                facebookAspirantCharge,
+                facebookAspirantReach,
+                facebookAspirantImpressions,
+                facebookAspirantClicks,
+              ]
+            ];
+  
+            // 3 - naver
+  
+            naverRows = campaignRows.filter((obj) => {
+              return /naver/gi.test(obj.information.mother);
+            });
+            if (naverRows.length > 0) {
+              naverCharge = naverRows.reduce((acc, curr) => {
+                return acc + curr.value.charge;
+              }, 0);
+              naverImpressions = naverRows.reduce((acc, curr) => {
+                return acc + curr.value.performance.impressions;
+              }, 0);
+              naverClicks = naverRows.reduce((acc, curr) => {
+                return acc + curr.value.performance.clicks;
+              }, 0);
+            } else {
+              naverCharge = 0;
+              naverImpressions = 0;
+              naverClicks = 0;
+            }
+  
+            naverFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
+              return naverCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+  
+            naverFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
+              return naverCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+  
+            naverFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
+              return naverCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+  
+            naverFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
+              return arr.some((obj) => {
+                if (obj === null) {
+                  return false;
+                } else {
+                  return obj.source.mother.some((c) => { return naverCampaignBoo(c); }) && obj.source.campaign.length > 0;
+                }
+              });
+            }).length;
+  
+            naverCtr = 0;
+            naverCpc = 0;
+            naverClicksConverting = 0;
+            naverClicksChargeConverting = 0;
+            naverSubmitConverting = 0;
+            naverSubmitChargeConverting = 0;
+  
+            if (naverImpressions !== 0) {
+              naverCtr = naverClicks / naverImpressions;
+              naverCtr = Math.floor(naverCtr * 10000) / 10000;
+            }
+            if (naverClicks !== 0) {
+              naverCpc = Math.round(naverCharge / naverClicks);
+            }
+            if (naverClicks !== 0) {
+              naverClicksConverting = (naverFromClicks + naverFromPopups) / naverClicks;
+              naverClicksConverting = Math.floor(naverClicksConverting * 10000) / 10000;
+            }
+            if (naverFromClicks + naverFromPopups !== 0) {
+              naverClicksChargeConverting = Math.round(naverCharge / (naverFromClicks + naverFromPopups));
+            }
+            if (naverClicks !== 0) {
+              naverSubmitConverting = naverFromSubmit / naverClicks;
+              naverSubmitConverting = Math.floor(naverSubmitConverting * 10000) / 10000;
+            }
+            if (naverFromSubmit !== 0) {
+              naverSubmitChargeConverting = Math.round(naverCharge / naverFromSubmit);
+            }
+  
+            thirdMatrix = [
+              [
+                dateToString(targetDate),
+                naverCharge,
+                naverImpressions,
+                naverClicks,
+                naverFromUsers,
+                naverFromClicks,
+                naverFromPopups,
+                naverFromSubmit,
+                naverCtr,
+                naverCpc,
+                naverClicksConverting,
+                naverClicksChargeConverting,
+                naverSubmitConverting,
+                naverSubmitChargeConverting,
+              ]
+            ];
+  
+            // 4 - clients
+  
+            fourthMatrix = clientsRows.data.detail.map((obj) => {
+              return { cliid: obj.cliid, users: obj.users, ids: obj.users.map((user) => { return user === null ? "" : user.id }).join(", ") }
+            });
+            fourthMatrix = fourthMatrix.map(({ cliid, users, ids }) => {
+              const targetRequest = requests.find((obj) => { return obj.cliid === cliid });
+              const targetHistory = clientHistories[cliid];
+              if (targetHistory === undefined) {
+                errorLog("there is no history => " + cliid).catch((err) => { console.log(err); });
+              }
+              let returnType;
+              let source, sourceArr;
+              let campaign, campaignArr;
+              let device;
+              let referrer, referrerArr;
+              let service;
+  
+              if (users.every((obj) => { return obj === null ? true : /^New/.test(obj.type); })) {
+                returnType = "신규";
+              } else {
+                returnType = "재방문";
+              }
+  
+              sourceArr = users.map((obj) => { return obj.source.mother }).filter((arr) => { return arr.length > 0 });
+              campaignArr = users.map((obj) => { return obj.source.campaign }).filter((arr) => { return arr.length > 0 });
+  
+              if (sourceArr.length > 0) {
+                source = sourceArr.flat().join(", ");
+              } else {
+                source = "(direct)";
+              }
+  
+              if (campaignArr.length > 0) {
+                campaign = campaignArr.flat().join(", ");
+              } else {
+                campaign = "(not set)";
+              }
+  
+              if (users.length > 0) {
+                device = users[0].device.kinds;
+              } else {
+                device = "(not set)";
+              }
+  
+              referrerArr = users.map((obj) => { return obj.source.referrer }).flat();
+              referrerArr.sort((a, b) => { return b.length - a.length });
+              if (referrerArr.length > 0) {
+                referrer = referrerArr[0];
+              } else {
+                referrer = "(not set)";
+              }
+  
+              if (targetHistory.service.serid.length > 0) {
+                service = serviceParsing(targetHistory.service.serid[0]);
+              } else {
+                service = "알 수 없음";
+              }
+  
+              return [
+                dateToString(targetDate),
+                cliid,
+                targetRequest.name,
+                ids,
+                dateToString(targetRequest.request.timeline, true),
+                returnType,
+                source,
+                campaign,
+                device,
+                referrer,
+                targetRequest.request.space.address.value,
+                targetRequest.request.space.pyeong.value,
+                (targetRequest.request.space.resident.living ? "거주중" : "이사"),
+                (targetRequest.request.space.resident.living ? "해당 없음" : dateToString(targetRequest.request.space.resident.expected)),
+                service,
+              ];
+            });
+  
+            // 5 - campaign
+  
+            fifthMatrix = [];
+  
+            for (let campaignRow of campaignRows) {
+              fifthMatrixFactorArr = [];
+              fifthMatrixFactorArr.push(dateToString(targetDate));
+              fifthMatrixFactorArr.push(campaignRow.information.mother);
+              fifthMatrixFactorArr.push(campaignRow.information.type);
+              fifthMatrixFactorArr.push(campaignRow.information.id.campaign);
+              fifthMatrixFactorArr.push(campaignRow.information.name);
+              fifthMatrixFactorArr.push(campaignRow.value.charge);
+              fifthMatrixFactorArr.push(campaignRow.value.performance.impressions);
+              fifthMatrixFactorArr.push(campaignRow.value.performance.clicks);
+              fifthMatrix.push(fifthMatrixFactorArr);
+            }
+  
+  
+            // 6 - contract
+  
+            sixthMatrix = clientsRows.data.detail.map((obj) => { return { cliid: obj.cliid, users: obj.users, ids: obj.users.map((user) => { return user.id }).join(", ") } });
+            sixthMatrix = sixthMatrix.map(({ cliid, users, ids }) => {
+              const targetRequest = requests.find((obj) => { return obj.cliid === cliid });
+              const targetHistory = clientHistories[cliid];
+              const targetProjects = projects.toNormal().filter((obj) => { return obj.cliid === cliid });
+              let targetProject;
+              let returnType;
+              let source, sourceArr;
+              let campaign, campaignArr;
+              let device;
+              let referrer, referrerArr;
+              let service;
+              let query;
+  
+              if (users.every((obj) => { return /^New/.test(obj.type); })) {
+                returnType = "신규";
+              } else {
+                returnType = "재방문";
+              }
+  
+              sourceArr = users.map((obj) => { return obj.source.mother }).filter((arr) => { return arr.length > 0 });
+              campaignArr = users.map((obj) => { return obj.source.campaign }).filter((arr) => { return arr.length > 0 });
+  
+              if (sourceArr.length > 0) {
+                source = sourceArr.flat().join(", ");
+              } else {
+                source = "(direct)";
+              }
+  
+              if (campaignArr.length > 0) {
+                campaign = campaignArr.flat().join(", ");
+              } else {
+                campaign = "(not set)";
+              }
+  
+              if (users.length > 0) {
+                device = users[0].device.kinds;
+              } else {
+                device = "(not set)";
+              }
+  
+              referrerArr = users.map((obj) => { return obj.source.referrer }).flat();
+              referrerArr.sort((a, b) => { return b.length - a.length });
+              if (referrerArr.length > 0) {
+                referrer = referrerArr[0];
+              } else {
+                referrer = "(not set)";
+              }
+  
+              if (targetHistory.service.serid.length > 0) {
+                service = serviceParsing(targetHistory.service.serid[0]);
+              } else {
+                service = "알 수 없음";
+              }
+  
+              targetProject = targetProjects.find((obj) => {
+                obj.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+              });
+              if (targetProject === undefined && targetProjects.length > 0) {
+                targetProject = targetProjects[0];
+              }
+              if (targetProject === undefined) {
+                targetProject = null;
+              }
+  
+              query = [];
+              for (let user of users) {
+                for (let { path } of user.history) {
+                  query.push(path);
+                }
+                for (let str of user.source.referrer) {
+                  query.push(str);
+                }
+              }
+              query = query.filter((str) => { return /\?/gi.test(str); });
+              query = query.map((str) => { return Object.values(querystring.parse(str.split("?")[1])) }).flat();
+              query = [ ...new Set(query.filter((str) => { return /[가-힣ㄱ-ㅎㅏ-ㅣ]/gi.test(str) })) ];
+  
+              return [
+                dateToString(targetDate),
+                cliid,
+                targetRequest.name,
+                ids,
+                dateToString(targetRequest.request.timeline, true),
+                targetProject === null ? "1800-01-01" : dateToString(targetProject.process.contract.first.date, true),
+                returnType,
+                source,
+                campaign,
+                device,
+                referrer,
+                targetRequest.request.space.address.value,
+                targetRequest.request.space.pyeong.value,
+                targetRequest.request.budget.value,
+                targetRequest.request.family.value,
+                (targetRequest.request.space.resident.living ? "거주중" : "이사"),
+                (targetRequest.request.space.resident.living ? "해당 없음" : dateToString(targetRequest.request.space.resident.expected)),
+                (targetRequest.request.space.partial.boo ? "부분 공간" : "전체 공간"),
+                targetProject === null ? "알 수 없음" : (targetProject.service.online ? "온라인" : "오프라인"),
+                service,
+                targetProject === null ? "알 수 없음" : serviceParsing(targetProject.service.serid),
+                targetRequest.request.etc.comment,
+                targetProject === null ? 0 : targetProject.process.contract.remain.calculation.amount.consumer,
+                query.join(", "),
+              ];
+            }).filter((arr) => {
+              const cliid = arr[1];
+              const targetProject = projects.toNormal().find((obj) => { return obj.cliid === cliid });
+              if (targetProject === undefined || targetProject === null) {
                 return false;
               } else {
-                return obj.source.mother.some((c) => { return kakaoCampaignBoo(c); }) && obj.source.campaign.length > 0;
+                return targetProject.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf();
               }
             });
-          }).length;
-
-          kakaoCtr = 0;
-          kakaoCpc = 0;
-          kakaoClicksConverting = 0;
-          kakaoClicksChargeConverting = 0;
-          kakaoSubmitConverting = 0;
-          kakaoSubmitChargeConverting = 0;
-
-          if (kakaoImpressions !== 0) {
-            kakaoCtr = kakaoClicks / kakaoImpressions;
-            kakaoCtr = Math.floor(kakaoCtr * 10000) / 10000;
+  
+  
+            // 7 - google
+  
+            googleRows = campaignRows.filter((obj) => {
+              return /google/gi.test(obj.information.mother);
+            });
+            if (googleRows.length > 0) {
+              googleCharge = googleRows.reduce((acc, curr) => {
+                return acc + curr.value.charge;
+              }, 0);
+              googleImpressions = googleRows.reduce((acc, curr) => {
+                return acc + curr.value.performance.impressions;
+              }, 0);
+              googleClicks = googleRows.reduce((acc, curr) => {
+                return acc + curr.value.performance.clicks;
+              }, 0);
+            } else {
+              googleCharge = 0;
+              googleImpressions = 0;
+              googleClicks = 0;
+            }
+  
+            googleFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
+              return googleCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+  
+            googleFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
+              return googleCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+  
+            googleFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
+              return googleCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+  
+            googleFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
+              return arr.some((obj) => {
+                if (obj === null) {
+                  return false;
+                } else {
+                  return obj.source.mother.some((c) => { return googleCampaignBoo(c); }) && obj.source.campaign.length > 0;
+                }
+              });
+            }).length;
+  
+            googleCtr = 0;
+            googleCpc = 0;
+            googleClicksConverting = 0;
+            googleClicksChargeConverting = 0;
+            googleSubmitConverting = 0;
+            googleSubmitChargeConverting = 0;
+  
+            if (googleImpressions !== 0) {
+              googleCtr = googleClicks / googleImpressions;
+              googleCtr = Math.floor(googleCtr * 10000) / 10000;
+            }
+            if (googleClicks !== 0) {
+              googleCpc = Math.round(googleCharge / googleClicks);
+            }
+            if (googleClicks !== 0) {
+              googleClicksConverting = (googleFromClicks + googleFromPopups) / googleClicks;
+              googleClicksConverting = Math.floor(googleClicksConverting * 10000) / 10000;
+            }
+            if (googleFromClicks + googleFromPopups !== 0) {
+              googleClicksChargeConverting = Math.round(googleCharge / (googleFromClicks + googleFromPopups));
+            }
+            if (googleClicks !== 0) {
+              googleSubmitConverting = googleFromSubmit / googleClicks;
+              googleSubmitConverting = Math.floor(googleSubmitConverting * 10000) / 10000;
+            }
+            if (googleFromSubmit !== 0) {
+              googleSubmitChargeConverting = Math.round(googleCharge / googleFromSubmit);
+            }
+  
+            seventhMatrix = [
+              [
+                dateToString(targetDate),
+                googleCharge,
+                googleImpressions,
+                googleClicks,
+                googleFromUsers,
+                googleFromClicks,
+                googleFromPopups,
+                googleFromSubmit,
+                googleCtr,
+                googleCpc,
+                googleClicksConverting,
+                googleClicksChargeConverting,
+                googleSubmitConverting,
+                googleSubmitChargeConverting,
+              ]
+            ];
+  
+  
+            // 8 - sns
+  
+            if (thisMeta !== undefined && thisGoogle !== undefined) {
+              snsMatrix = [
+                [
+                  dateToString(targetDate),
+                  thisMeta.instagram.profile.views,
+                  thisMeta.instagram.profile.followers,
+                  thisMeta.instagram.performance.impressions,
+                  thisMeta.instagram.performance.clicks,
+                  thisMeta.instagram.performance.likes,
+                  thisMeta.instagram.performance.comments,
+                  thisMeta.instagram.performance.saves,
+                  thisMeta.instagram.performance.shares,
+                  thisGoogle.youtube.profile.followers,
+                  thisGoogle.youtube.performance.views,
+                  thisGoogle.youtube.performance.likes,
+                  thisGoogle.youtube.performance.shares,
+                ]
+              ];
+            } else {
+              snsMatrix = [
+                [
+                  dateToString(targetDate),
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                ]
+              ];
+            }
+  
+            // 9 - kakao
+  
+            kakaoRows = campaignRows.filter((obj) => {
+              return /kakao/gi.test(obj.information.mother);
+            });
+            if (kakaoRows.length > 0) {
+              kakaoCharge = kakaoRows.reduce((acc, curr) => {
+                return acc + curr.value.charge;
+              }, 0);
+              kakaoImpressions = kakaoRows.reduce((acc, curr) => {
+                return acc + curr.value.performance.impressions;
+              }, 0);
+              kakaoClicks = kakaoRows.reduce((acc, curr) => {
+                return acc + curr.value.performance.clicks;
+              }, 0);
+            } else {
+              kakaoCharge = 0;
+              kakaoImpressions = 0;
+              kakaoClicks = 0;
+            }
+  
+            kakaoFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
+              return kakaoCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+  
+            kakaoFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
+              return kakaoCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+  
+            kakaoFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
+              return kakaoCampaignBoo(obj.case);
+            }).reduce((acc, curr) => {
+              return acc + curr.value;
+            }, 0);
+  
+            kakaoFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
+              return arr.some((obj) => {
+                if (obj === null) {
+                  return false;
+                } else {
+                  return obj.source.mother.some((c) => { return kakaoCampaignBoo(c); }) && obj.source.campaign.length > 0;
+                }
+              });
+            }).length;
+  
+            kakaoCtr = 0;
+            kakaoCpc = 0;
+            kakaoClicksConverting = 0;
+            kakaoClicksChargeConverting = 0;
+            kakaoSubmitConverting = 0;
+            kakaoSubmitChargeConverting = 0;
+  
+            if (kakaoImpressions !== 0) {
+              kakaoCtr = kakaoClicks / kakaoImpressions;
+              kakaoCtr = Math.floor(kakaoCtr * 10000) / 10000;
+            }
+            if (kakaoClicks !== 0) {
+              kakaoCpc = Math.round(kakaoCharge / kakaoClicks);
+            }
+            if (kakaoClicks !== 0) {
+              kakaoClicksConverting = (kakaoFromClicks + kakaoFromPopups) / kakaoClicks;
+              kakaoClicksConverting = Math.floor(kakaoClicksConverting * 10000) / 10000;
+            }
+            if (kakaoFromClicks + kakaoFromPopups !== 0) {
+              kakaoClicksChargeConverting = Math.round(kakaoCharge / (kakaoFromClicks + kakaoFromPopups));
+            }
+            if (kakaoClicks !== 0) {
+              kakaoSubmitConverting = kakaoFromSubmit / kakaoClicks;
+              kakaoSubmitConverting = Math.floor(kakaoSubmitConverting * 10000) / 10000;
+            }
+            if (kakaoFromSubmit !== 0) {
+              kakaoSubmitChargeConverting = Math.round(kakaoCharge / kakaoFromSubmit);
+            }
+  
+            kakaoMatrix = [
+              [
+                dateToString(targetDate),
+                kakaoCharge,
+                kakaoImpressions,
+                kakaoClicks,
+                kakaoFromUsers,
+                kakaoFromClicks,
+                kakaoFromPopups,
+                kakaoFromSubmit,
+                kakaoCtr,
+                kakaoCpc,
+                kakaoClicksConverting,
+                kakaoClicksChargeConverting,
+                kakaoSubmitConverting,
+                kakaoSubmitChargeConverting,
+              ]
+            ];
+  
+            return [
+              firstMatrix,
+              firstNewMatrix,
+              secondMatrix,
+              thirdMatrix,
+              fourthMatrix,
+              fifthMatrix,
+              sixthMatrix,
+              seventhMatrix,
+              snsMatrix,
+              kakaoMatrix,
+            ];
+          } catch (e) {
+            console.log(e);
+            return null;
           }
-          if (kakaoClicks !== 0) {
-            kakaoCpc = Math.round(kakaoCharge / kakaoClicks);
-          }
-          if (kakaoClicks !== 0) {
-            kakaoClicksConverting = (kakaoFromClicks + kakaoFromPopups) / kakaoClicks;
-            kakaoClicksConverting = Math.floor(kakaoClicksConverting * 10000) / 10000;
-          }
-          if (kakaoFromClicks + kakaoFromPopups !== 0) {
-            kakaoClicksChargeConverting = Math.round(kakaoCharge / (kakaoFromClicks + kakaoFromPopups));
-          }
-          if (kakaoClicks !== 0) {
-            kakaoSubmitConverting = kakaoFromSubmit / kakaoClicks;
-            kakaoSubmitConverting = Math.floor(kakaoSubmitConverting * 10000) / 10000;
-          }
-          if (kakaoFromSubmit !== 0) {
-            kakaoSubmitChargeConverting = Math.round(kakaoCharge / kakaoFromSubmit);
-          }
-
-          kakaoMatrix = [
-            [
-              dateToString(targetDate),
-              kakaoCharge,
-              kakaoImpressions,
-              kakaoClicks,
-              kakaoFromUsers,
-              kakaoFromClicks,
-              kakaoFromPopups,
-              kakaoFromSubmit,
-              kakaoCtr,
-              kakaoCpc,
-              kakaoClicksConverting,
-              kakaoClicksChargeConverting,
-              kakaoSubmitConverting,
-              kakaoSubmitChargeConverting,
-            ]
-          ];
-
-          return [
-            firstMatrix,
-            firstNewMatrix,
-            secondMatrix,
-            thirdMatrix,
-            fourthMatrix,
-            fifthMatrix,
-            sixthMatrix,
-            seventhMatrix,
-            snsMatrix,
-            kakaoMatrix,
-          ];
         }
 
         let matrix, resMatrix;
@@ -2209,6 +2214,9 @@ LogReport.prototype.dailyReports = async function () {
         standardDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         for (let i = 0; i < dateAgo; i++) {
           resMatrix = await getReportsByDate(standardDate, campaignEntireRows, campaignAspirantEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories, metaComplexRows, googleComplexRows);
+          if (!Array.isArray(resMatrix)) {
+            continue;
+          }
           for (let i = 0; i < matrix.length; i++) {
             for (let arr of resMatrix[i]) {
               matrix[i].push(arr);
