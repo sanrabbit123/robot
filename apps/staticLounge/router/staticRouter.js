@@ -2397,112 +2397,8 @@ StaticRouter.prototype.rou_post_pageToPdf = function () {
 StaticRouter.prototype.rou_post_getUtilization = function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, dateToString } = this.mother;
-  const fileTargetFolder = process.env.HOME + "/nmontong";
   const delta = 10;
   const fileKeyWords = "homeliaison_";
-  const utilizationByDate = async function (standardDate, delta = 10) {
-    try {
-      const fileToMatrix = async function (fileName) {
-        try {
-          let target;
-          let matrix, tempArr;
-          let targetArr;
-          let filteredMatrix;
-      
-          target = await fileSystem("readString", [ `${fileTargetFolder}/${fileName}` ])
-      
-          targetArr = target.split("\n");
-
-          matrix = [];
-          tempArr = null;
-          for (let raw of targetArr) {
-            if (/^ZZZZ/.test(raw)) {
-              if (Array.isArray(tempArr)) {
-                matrix.push(tempArr);
-              }
-              tempArr = [];
-              tempArr.push(raw);
-            } else {
-              if (Array.isArray(tempArr)) {
-                if (/^NET,/.test(raw)) {
-                  tempArr.push(raw);
-                } else if (/^CPU_ALL,/.test(raw)) {
-                  tempArr.push(raw);
-                }
-                
-                /*
-                else if (/^MEM,/.test(raw)) {
-                  tempArr.push(raw);
-                  // MEM,Memory MB homeliaison,memtotal,hightotal,lowtotal,swaptotal,memfree,highfree,lowfree,swapfree,memshared,cached,active,bigfree,buffers,swapcached,inactive
-                  // MEM,T0005,15673.3,-0.0,-0.0,4096.0,1012.6,-0.0,-0.0,4004.7,212.4,9534.0,7820.2,-1.0,1297.8,2.4,5574.1
-                } else if (/^TOP,/.test(raw)) {
-                  tempArr.push(raw);
-                  // TOP,0802321,T0005,9.51,9.51,0.00,651452,114816,78112,136592,37600,0,0,node,7,0
-                }
-                */
-               
-              }
-            }
-          }
-      
-          filteredMatrix = matrix.map((arr) => {
-            const [ , cpu, net, memory ] = arr;
-            const cpuUsage = (100 - Number(cpu.split(",")[5])) / 100;
-            const networkIn = Number(net.split(",")[3]) * 1024;
-            const networkOut = Number(net.split(",")[5]) * 1024;
-            /*
-            const totalMemory = memory.split(",")[5];
-            const memoryUsage = (100 - Number(memory.split(",")[5])) / 100;
-            */
-            return [ cpuUsage, networkIn, networkOut ];
-          });
-  
-          return filteredMatrix;
-        } catch (e) {
-          console.log(e);
-          return [];
-        }
-      }
-      const dateToName = function (dateObject) {
-        return fileKeyWords + dateToString(dateObject, true).slice(2, -3).replace(/\-/gi, '').replace(/\:/gi, '').replace(/ /gi, "_") + ".nmon";
-      }
-      let ago, copiedDate;
-      let totalMatrix;
-      let cpuMax, cpuAve, networkIn, networkOut;
-
-      ago = new Date(JSON.stringify(standardDate).slice(1, -1));
-      ago.setMinutes(ago.getMinutes() - delta);
-  
-      totalMatrix = [];
-      for (let i = 0; i < delta; i++) {
-        copiedDate = new Date(JSON.stringify(ago).slice(1, -1));
-        copiedDate.setMinutes(copiedDate.getMinutes() + i);
-        totalMatrix = totalMatrix.concat(await fileToMatrix(dateToName(copiedDate)));
-      }
-  
-      cpuMax = totalMatrix.reduce((acc, curr) => { return acc >= curr[0] ? acc : curr[0] }, 0);
-      if (totalMatrix.length === 0) {
-        cpuAve = 0;
-      } else {
-        cpuAve = totalMatrix.reduce((acc, curr) => { return acc + curr[0] }, 0) / totalMatrix.length;
-      }
-      networkIn = Math.round(totalMatrix.reduce((acc, curr) => { return acc + curr[1] }, 0));
-      networkOut = Math.round(totalMatrix.reduce((acc, curr) => { return acc + curr[2] }, 0));
-      return {
-        cpu: {
-          average: cpuAve,
-          maximum: cpuMax
-        },
-        network: {
-          in: networkIn,
-          out: networkOut
-        },
-      };
-    } catch (e) {
-      console.log(e);
-      return null;
-    }
-  }
   let obj = {};
   obj.link = [ "/getUtilization" ];
   obj.func = async function (req, res, logger) {
@@ -2516,12 +2412,8 @@ StaticRouter.prototype.rou_post_getUtilization = function () {
       let standardDate;
       let result;
 
-      standardDate = new Date();
-      standardDate.setMinutes(standardDate.getMinutes() - 1);
 
-      result = await utilizationByDate(standardDate, delta);
-
-      res.send(JSON.stringify(result));
+      res.send(JSON.stringify({}));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_getUtilization): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
@@ -2533,7 +2425,6 @@ StaticRouter.prototype.rou_post_getUtilization = function () {
 StaticRouter.prototype.rou_post_removeCronNmon = function () {
   const instance = this;
   const { fileSystem, dateToString } = this.mother;
-  const targetDir = process.env.HOME + "/nmontong";
   let obj = {};
   obj.link = [ "/removeCronNmon" ];
   obj.func = async function (req, res, logger) {
@@ -2544,35 +2435,7 @@ StaticRouter.prototype.rou_post_removeCronNmon = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const targetDirList = await fileSystem("readDir", [ targetDir ]);
-      const nmonTargetKeywords = "homeliaison_";
-      const yearKeywords = String((new Date()).getFullYear()).slice(0, 2);
-      const now = new Date();
-      const ago = new Date(JSON.stringify(now).slice(1, -1));
-      const agoConst = 12;
-      let removeTargets;
-  
-      ago.setHours(ago.getHours() - agoConst);
-  
-      removeTargets = targetDirList.filter((str) => { return (new RegExp("^" + nmonTargetKeywords)).test(str) }).map((str) => {
-        const [ key, dateRaw, hoursRaw ] = str.split("_");
-        const [ hours, exe ] = hoursRaw.split(".");
-        const thisDate = new Date(
-          Number(yearKeywords + dateRaw.slice(0, 2)),
-          Number(dateRaw.slice(2, 4)) - 1,
-          Number(dateRaw.slice(4)),
-          Number(hours.slice(0, 2)),
-          Number(hours.slice(2)),
-          0
-        );
-        return { date: thisDate, fileName: str };
-      }).filter(({ date, fileName }) => {
-        return date.valueOf() <= ago.valueOf();
-      }).map(({ fileName }) => { return targetDir + "/" + fileName });
-  
-      for (let str of removeTargets) {
-        await fileSystem("remove", [ str ]);
-      }
+
       
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
