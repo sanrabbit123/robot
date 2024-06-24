@@ -847,10 +847,14 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                       }).filter((obj) => {
                         return obj.sum.total === itemAmount
                       }).filter((obj) => {
-                        if (thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf() < emptyDateValue) {
+                        if (thisTargetDesigner.projects[i] === undefined) {
                           return false;
                         } else {
-                          return obj.date.valueOf() > thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf()
+                          if (thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf() < emptyDateValue) {
+                            return false;
+                          } else {
+                            return obj.date.valueOf() > thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf()
+                          }
                         }
                       }).length > 0);
                     }
