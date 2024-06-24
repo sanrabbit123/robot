@@ -221,9 +221,82 @@ DevContext.prototype.launching = async function () {
     // }));
 
     
-    await findCode('officeinfo.ghost.host + ":3000')
 
     
+    
+
+    const url = "https://api.pushbullet.com/v2/permanents/ujEVkZaUIQCsjA8RALCBgW_thread_36";
+    const webToken = "OWdKdk94bTNrQ2tUMUNwMVVxSW5jT29kQ3dCZnhnWE46";
+    const headers = {
+      "Accept": `*/*`,
+      "Accept-Encoding": `gzip, deflate, br`,
+      "Accept-Language": `ko-KR,ko;q=0.9`,
+      "API-Version": `2014-05-07`,
+      "Authorization": `Basic ${webToken}`,
+      "Connection": `keep-alive`,
+      "Host": `api.pushbullet.com`,
+      "Origin": `https://www.pushbullet.com`,
+      "Referer": `https://www.pushbullet.com/`,
+      "Sec-Fetch-Dest": `empty`,
+      "Sec-Fetch-Mode": `cors`,
+      "Sec-Fetch-Site": `same-site`,
+      "User-Agent": `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15`,
+      "X-User-Agent": `Pushbullet Website 162`,
+    }
+    const response = await requestSystem(url, {}, {
+      method: "get",
+      headers: {
+        ...headers
+      }
+    });
+    const ago = new Date();
+    const bodyToValues = (body) => {
+      const accountStartNumber = "049";
+      const accountEndNumber = "022";
+      let date, messageArr, index, amount, name;
+
+      messageArr = body.split("\n").map((str) => { return str.trim(); });
+      messageArr = messageArr.filter((str) => { return str.trim() !== "" }).filter((str) => {
+        return !/잔액 [0-9]/gi.test(str)
+      }).map((str) => {
+        return str.replace(/\[홈리에종\] /gi, "").trim().replace(/\:$/gi, '')
+      }).filter((str) => {
+        return !(/^\[/.test(str) && /^\]/.test(str));
+      }).filter((str) => {
+        return !((new RegExp('^' + accountStartNumber)).test(str) && (new RegExp(accountEndNumber + '$')).test(str));
+      });
+      if (messageArr[messageArr.length - 1].trim() === "기업") {
+        messageArr = messageArr.slice(0, -1);
+      }
+  
+      index = messageArr.findIndex((str) => { return /^입금/gi.test(str.trim()) });
+      if (index === -1) {
+        throw new Error("invaild message");
+      }
+      amount = Math.floor(Number(messageArr[index].replace(/[^0-9]/gi, '')));
+      if (Number.isNaN(amount)) {
+        throw new Error("invaild message, NaN amount");
+      }
+      if (typeof messageArr[index + 1] !== "string") {
+        throw new Error("invaild message, name error");
+      }
+      name = messageArr[index + 1].trim();
+      date = stringToDate(messageArr[index - 1].trim().replace(/\//gi, '-') + ":00");
+      return { name, date, amount };
+    }
+    let tempObj;
+    
+    ago.setDate(ago.getDate() - 2);
+
+    const targets = (response.data.thread.filter((o) => {
+      return o.timestamp * 1000 > ago.valueOf()
+    }));
+    for (let { body } of targets)  {
+      tempObj = bodyToValues(body);
+      await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/receiveSms", { date: tempObj.date, amount: tempObj.amount, name: tempObj.name }, { headers: { "Content-Type": "application/json" } });
+    }
+
+
     
 
     // version 0
@@ -7176,13 +7249,13 @@ DevContext.prototype.launching = async function () {
 
     
     // send sms
-    // const name = "안지혜";
-    // const amount = 1_985_192;
+    // const name = "오정민";
+    // const amount = 165000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
     // });
-    // const res = await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
+    // const res = await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
     // console.log(res);
     
     // bill passive sync
