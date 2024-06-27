@@ -2226,6 +2226,8 @@ LogReport.prototype.dailyReports = async function () {
           standardDate.setDate(standardDate.getDate() - 1);
         }
 
+        console.log(matrix[0], dateAgo)
+
         // weekly, monthy standard
 
         monthStartDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
