@@ -174,7 +174,8 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
     requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
       return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/taxBill", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.contentsinfo.host + ":" + String(generalPort) + "/metaInstant", { data: null }, { headers: { "Content-Type": "application/json" } });
+      // return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/taxBill", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/callHistory", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
@@ -193,8 +194,6 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
       return requestSystem("https://" + address.secondinfo.host + ":" + String(generalPort) + "/designerCareerSync", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/metaAccountCheck", { data: null }, { headers: { "Content-Type": "application/json" } });
-    }).then(() => {
-      return requestSystem("https://" + address.contentsinfo.host + ":" + String(generalPort) + "/metaInstant", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).catch((e) => {
       throw new Error(e);
     });

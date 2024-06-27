@@ -173,6 +173,7 @@ DevContext.prototype.launching = async function () {
 
     // const targetDatabaseId = "83de9152-7546-4ab6-b2e5-e0df14d71672";
 
+    // await chrome.pageToPng("http://13.209.10.155:60080/consulting.php", null, false, true);
 
     
     // const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
@@ -223,11 +224,8 @@ DevContext.prototype.launching = async function () {
     // const res = await requestSystem("https://" + address.officeinfo.ghost.host + "/analyticsToday", { report: 1 }, { headers: { "Content-Type": "application/json" } });
     // console.log(res)
 
+
     
-    
-
-
-
 
 
     // const res = await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/weeklyCalculation", { data: null }, { headers: { "Content-Type": "application/json" } });
@@ -7259,16 +7257,8 @@ DevContext.prototype.launching = async function () {
 
     
     // send sms
-    // const name = "최은주";
-    // const amount = 2_446_950;
-    // await human.sendSms({
-    //   to: "01055432039",
-    //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
-    // });
-    // const res = await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
-    // console.log(res);
-    
-    // bill passive sync
+    // const name = "하예린";
+    // const amount = 8_104_000;
     // console.log(await bill.passiveSync("b219g_aa02s", "김수진", 1, 330000, new Date(2021, 8, 15, 15, 0, 0), "카드(삼성)", "이니시스"));
 
 
