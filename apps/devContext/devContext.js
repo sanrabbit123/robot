@@ -175,6 +175,8 @@ DevContext.prototype.launching = async function () {
     console.log(simpleRes);
 
 
+
+
     // const targetDatabaseId = "83de9152-7546-4ab6-b2e5-e0df14d71672";
 
     // await chrome.pageToPng("http://13.209.10.155:60080/consulting.php", null, false, true);
