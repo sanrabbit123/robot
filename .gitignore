@@ -18,3 +18,4 @@ lib/
 pyvenv.cfg
 apps/dataConsole/log/
 apps/mirrorWhisk/mirrorWhisk.py
+iam_secrets.json
