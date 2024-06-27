@@ -2360,14 +2360,11 @@ LogReport.prototype.dailyReports = async function () {
         for (let obj of totalFunnelMonthMatrix) {
           target = [];
           for (let arr of totalFunnelCopied) {
-            if ((new RegExp("^" + String(obj.year) + "-" + zeroAddition(obj.month))).test(arr[0])) {
+            if ((new RegExp(String(obj.year).slice(2) + "-" + zeroAddition(obj.month), "gi")).test(arr[0])) {
               target.push(equalJson(JSON.stringify(arr)));
             }
           }
-
           console.log(target);
-
-
           if (target.length !== 0) {
             endD = target[0][0];
             startD = target[target.length - 1][0];
