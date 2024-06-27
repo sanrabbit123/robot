@@ -170,6 +170,10 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
+    const analytics = new GoogleAnalytics();
+    const simpleRes = await analytics.simpleMetric(new Date(2024, 5, 24), new Date(2024, 5, 27));
+    console.log(simpleRes);
+
 
     // const targetDatabaseId = "83de9152-7546-4ab6-b2e5-e0df14d71672";
 
@@ -207,7 +211,8 @@ DevContext.prototype.launching = async function () {
     // }
     // await this.MONGOCONSOLEC.close();
 
-    // await requestSystem("https://" + address.officeinfo.ghost.host + "/analyticsToday", { report: 1 }, { headers: { "Content-Type": "application/json" } });
+    // const res = await requestSystem("https://" + address.officeinfo.ghost.host + "/analyticsToday", { report: 1 }, { headers: { "Content-Type": "application/json" } });
+    // console.log(res);
 
     // let date;
     // let requestString;
