@@ -375,7 +375,7 @@ StaticRouter.prototype.rou_post_readFile = function () {
 
       target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
       contents = await fileSystem(`readString`, [ target ]);
-      
+
       res.send(JSON.stringify({ contents }));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_readFile): " + e.message).catch((e) => { console.log(e); });
@@ -427,21 +427,21 @@ StaticRouter.prototype.rou_post_findFolderId = function () {
       let parentId;
       let thisId;
       let finalId;
-  
+
       sambaIndex = thisFolderArr.findIndex((str) => { return str === sambaKeyword });
-  
+
       if (thisFolderArr[sambaIndex + 1] === undefined || !rootFolders.map(({ name }) => { return name; }).includes(thisFolderArr[sambaIndex + 1])) {
         throw new Error("invalid path 1");
       }
-  
+
       thisRootIndex = sambaIndex + 1;
       thisRootId = rootFolders.find(({ name }) => { return name === thisFolderArr[thisRootIndex] }).id;
-  
+
       chainTarget = thisFolderArr.slice(thisRootIndex + 1);
-  
+
       finalId = null;
       if (chainTarget.length > 0) {
-  
+
         parentId = thisRootId;
         for (let folderName of chainTarget) {
           thisId = await drive.searchFolderId_inPython(folderName, parentId);
@@ -450,17 +450,17 @@ StaticRouter.prototype.rou_post_findFolderId = function () {
           }
           parentId = thisId;
         }
-  
+
         finalId = thisId;
-  
+
       } else {
         finalId = thisRootId;
       }
-      
+
       if (finalId === null) {
         throw new Error("invalid path 3");
       }
-      
+
       res.send(JSON.stringify({ id: finalId }));
 
     } catch (e) {
@@ -625,7 +625,7 @@ StaticRouter.prototype.rou_post_getPathFromId = function () {
       if (resultObj === null) {
         throw new Error("invalid id");
       }
-      
+
       res.send(JSON.stringify({ path: sambaToken + "/" + sambaKeyword + resultObj.absolute }));
 
     } catch (e) {
@@ -689,7 +689,7 @@ StaticRouter.prototype.rou_post_moveFiles = function () {
       }
 
       res.send(JSON.stringify({ message: "success" }));
-      
+
     } catch (e) {
       console.log(e);
       logger.error("Static lounge 서버 문제 생김 (rou_post_moveFiles): " + e.message).catch((e) => { console.log(e); });
@@ -1447,7 +1447,7 @@ StaticRouter.prototype.rou_post_makeFolder = function () {
       }
       target2 = target2.replace(new RegExp(sambaToken, "gi"), staticConst);
       folderList = await fileSystem(`readFolder`, [ target2 ]);
-      
+
       res.send(JSON.stringify({ message: "done", list: folderList }));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_makeFolder): " + e.message).catch((e) => { console.log(e); });
@@ -1522,7 +1522,7 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
       commands = "";
       if (proid.trim() !== "") {
         commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c3508)};`;
-        commands += `zip ${shellLink(staticConst)}/corePortfolio/rawImage/${proid}${splitToken}${shellLink(c3508)}.zip ./*;`;  
+        commands += `zip ${shellLink(staticConst)}/corePortfolio/rawImage/${proid}${splitToken}${shellLink(c3508)}.zip ./*;`;
       }
       commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c3508)};`;
       commands += `zip ${shellLink(process.env.HOME)}/${shellLink(tempFolderName)}/${shellLink(shareDesignerName)} ./*;`;
@@ -1635,7 +1635,7 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
 
       if (req.body.name === undefined || req.body.subid === undefined) {
         folderList = (await fileSystem(`readDir`, [ sambaDir ])).filter((str) => { return !/DS_Store/g.test(str) });
-        
+
         for (let thisFolderName of folderList) {
           thisFolderList = (await fileSystem(`readDir`, [ sambaDir + "/" + thisFolderName ])).filter((str) => {
             return !/DS_Store/g.test(str);
@@ -1663,7 +1663,7 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
           }).filter((str) => {
             return !/gddoc$/i.test(str);
           });
-          
+
           mkdirTarget = [];
           for (let s of basicList) {
             if (!thisFolderList.includes(s)) {
@@ -1701,14 +1701,14 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
 
         folderId = await drive.makeFolder_inPython(folderName);
         await drive.moveFolder_inPython(folderId, designerFolderId);
-  
+
         await sleep(2000);
         num = 0;
         while ((!(await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}` ]))) && (num < 10)) {
           await sleep(2000);
           num++;
         }
-  
+
         if (await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}` ])) {
           for (let b of basicList) {
             if (!(await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}/${b}` ]))) {
@@ -1716,9 +1716,9 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
             }
           }
         }
-  
+
         docsId = await docs.create_newDocs_inPython(folderName + '_' + "docs", folderId);
-  
+
         res.send(JSON.stringify({
           folderName: folderName,
           drive: `https://drive.google.com/drive/folders/${folderId}`,
@@ -1782,7 +1782,7 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
           postData[input.getAttribute("name")] = input.getAttribute("value");
         }
       }
-  
+
       pageNum = 0;
       totalLinks = [];
       do {
@@ -1798,13 +1798,13 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
             aArr.push(aNode.getAttribute("href"));
           }
         }
-  
+
         aArr = aArr.map((str) => { return str.trim(); }).filter((str) => { return str !== '#'; }).map((str) => {
           return str + splitToken + String(pageNum);
         });
         totalLinks = totalLinks.concat(aArr);
       } while (aArr.length !== 0);
-  
+
       totalLinks = [ ...new Set(totalLinks) ].map((str) => {
         return urls.init + str.slice(2);
       }).map((link) => {
@@ -1819,16 +1819,16 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
         }
         return { link, page, host: tempArr[0], data: obj };
       });
-  
+
       log = {
         date: new Date(),
         length: totalLinks.length,
         records: totalLinks
       };
-  
+
       await shellExec(`rm -rf ${shellLink(tempFolder)}/${folderName}`);
       await shellExec(`mkdir ${shellLink(tempFolder)}/${folderName}`);
-  
+
       for (let i = 0; i < totalLinks.length; i++) {
         safeNum = 0;
         do {
@@ -1837,12 +1837,12 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
             tempbinary = await binaryRequest(totalLinks[i].link, null, { headers: { Cookie: session } });
             await fileSystem(`writeBinary`, [ `${process.cwd()}/temp/${folderName}/${totalLinks[i].data.filename}`, tempbinary ]);
             console.log(`${totalLinks[i].data.filename} download success`);
-  
+
             postData.page = String(totalLinks[i].page);
             postData["chk[]"] = totalLinks[i].data.filename.split('-')[0] + "|" + totalLinks[i].data.filename;
             res = await requestSystem(urls.delete, postData, { headers: { Cookie: session } });
             console.log(`${totalLinks[i].data.filename} server delete success`);
-  
+
             errorBoo = false;
           } catch (e) {
             errorBoo = true;
@@ -1850,27 +1850,27 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
           safeNum++;
         } while (errorBoo || safeNum > 10);
       }
-  
+
       storeTargets = {};
       for (let str of storeMotherContents) {
         storeTargets['p' + str.split('_')[0]] = str;
       }
-  
+
       downloadedFiles = (await fileSystem(`readDir`, [ `${tempFolder}/${folderName}` ])).filter((str) => { return !/^\./.test(str); });
       downloadedFiles = downloadedFiles.map((str) => {
         return { target: 'p' + str.split('-')[0].replace(/^0/gi, '').replace(/^0/gi, ''), file: `${tempFolder}/${folderName}/${str}` };
       });
-  
+
       for (let { target, file } of downloadedFiles) {
         if (typeof storeTargets[target] === "string") {
           await shellExec(`mv ${shellLink(file)} ${shellLink(storeMother + "/" + storeTargets[target])};`);
         }
       }
-  
+
       await shellExec(`rm -rf ${shellLink(tempFolder)}/${folderName};`);
-  
+
       return log;
-  
+
     } catch (e) {
       console.log(e);
       return false;
@@ -1911,7 +1911,7 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
           await logger.error("record backup and delete error : " + e.message);
         }
       }
-      
+
       backupFunc().catch((err) => {
         logger.error("record backup and delete error : " + err.message).catch((e) => { console.log(e); });
       });
@@ -2015,7 +2015,7 @@ StaticRouter.prototype.rou_post_mongoToJson = function () {
       }
       const backDir = robotDirMother + "/" + backFolderName;
       let tempInfo, timeString;
-      
+
       timeString = `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`;
 
       for (let [ infoName, dbName ] of mongoTargets) {
@@ -2045,7 +2045,7 @@ StaticRouter.prototype.rou_post_mongoToJson = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-    
+
       mongoToJsonFunction().then((boo) => {
         if (boo) {
           return logger.cron("mongo to json done");
@@ -2089,7 +2089,7 @@ StaticRouter.prototype.rou_post_dataReflection = function () {
       reflection.coreReflection().catch((err) => {
         console.log(err);
       })
-    
+
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_dataReflection): " + e.message).catch((e) => { console.log(e); });
@@ -2266,7 +2266,7 @@ StaticRouter.prototype.rou_post_textToVoice = function () {
       // const thisBody = equalJson(req.body);
       // requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/textToVoice", thisBody, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err) });
       // res.send(JSON.stringify({ message: "toss" }));
-      
+
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
@@ -2436,7 +2436,7 @@ StaticRouter.prototype.rou_post_removeCronNmon = function () {
     });
     try {
 
-      
+
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_removeCronNmon): " + e.message).catch((e) => { console.log(e); });
@@ -2464,7 +2464,7 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
     try {
       const { date } = equalJson(req.body);
       const selfMongo = instance.mongolog;
-      const dayNumber = 7;
+      const dayNumber = req.body.dayNumber === undefined ? 7 : Number(req.body.dayNumber);
       let dateArr;
       let collection;
       let anaid, ancid, key, rows;
@@ -2544,7 +2544,7 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
                   await sleep(1000);
                   result = await analytics.dailyMetric(thisDate);
                   if (result === null) {
-                    await logger.error("daily metric error 4 : " + dateToString(thisDate));      
+                    await logger.error("daily metric error 4 : " + dateToString(thisDate));
                   } else {
                     anaid = result.anaid;
                     rows = await back.mongoRead(collection, { anaid }, { selfMongo });
@@ -2675,7 +2675,7 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
           // monthly analytics
           await sleep(1000);
           await requestSystem("https://" + address.officeinfo.ghost.host + "/analyticsMonthly", { date: new Date() }, { headers: { "Content-Type": "application/json" } });
-  
+
           // meta, naver complex
           await sleep(1000);
           await requestSystem("https://" + address.contentsinfo.host + ":3000/metaComplex", { day: dayNumber }, { headers: { "Content-Type": "application/json" } });
@@ -2746,7 +2746,7 @@ StaticRouter.prototype.rou_post_analyticsToday = function () {
                 await sleep(1000);
                 result = await analytics.dailyMetric(thisDate);
                 if (result === null) {
-                  await logger.error("daily metric error : " + dateToString(thisDate));      
+                  await logger.error("daily metric error : " + dateToString(thisDate));
                 } else {
                   anaid = result.anaid;
                   rows = await back.mongoRead(collection, { anaid }, { selfMongo });
@@ -2946,7 +2946,7 @@ StaticRouter.prototype.rou_post_analyticsMonthly = function () {
           return false;
         }
       })().catch((err) => {
-        logger.error("Static lounge 서버 문제 생김 (rou_post_analyticsMonthly): " + err.message).catch((e) => { console.log(e); }); 
+        logger.error("Static lounge 서버 문제 생김 (rou_post_analyticsMonthly): " + err.message).catch((e) => { console.log(e); });
         console.log(err);
       });
 
@@ -3009,11 +3009,11 @@ StaticRouter.prototype.rou_post_designerAboutComplete = function () {
           } else {
             rows = preRows.filter((o) => { return o.data.desid === desid });
           }
-    
+
           profileComplete = rows.filter((o) => { return o.action === "profilePhotoUpload" }).length > 0;
           workComplete = [ ...new Set(rows.filter((o) => { return o.action === "workPhotoUpload" }).map((o) => { return o.data.index })) ].length >= 4;
           aboutUpdateComplete = [ ...new Set(rows.filter((o) => { return o.action === "designerAboutUpdate" }).map((o) => { return o.data.property })) ].length >= completeStandardNumber;
-      
+
           resultObj = {
             profileComplete: profileComplete ? 1 : 0,
             workComplete: workComplete ? 1 : 0,
@@ -3339,7 +3339,7 @@ StaticRouter.prototype.rou_post_parsingDevicesStatus = function () {
     try {
       const { macArr } = equalJson(req.body);
       const { to: finalObject } = await devices.storeDevicesStatus(macArr, instance.members);
-      
+
       res.send(JSON.stringify(finalObject));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_parsingDevicesStatus): " + e.message).catch((e) => { console.log(e); });
@@ -3730,7 +3730,7 @@ StaticRouter.prototype.rou_post_calendarSync = function () {
         }, { selfMongo });
         designers = await back.getDesignersByQuery({
           $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.desid; })) ].map((c) => { return { desid: c } }),
-        }, { selfMongo });  
+        }, { selfMongo });
         allEvents = await calendar.listEvents(from);
 
         for (let project of projects) {
@@ -3881,9 +3881,9 @@ StaticRouter.prototype.rou_post_photoStatusSync = function () {
       let thisDummy;
       let thisDesigner;
       let thisProof;
-  
+
       allDesigners = (await back.getDesignersByQuery({}, { selfMongo })).toNormal();
-  
+
       rawProjects = await selfMongo.db("miro81").collection(collection).find({}).toArray();
       for (let rawProject of rawProjects) {
         proid = rawProject.proid;
@@ -3894,34 +3894,34 @@ StaticRouter.prototype.rou_post_photoStatusSync = function () {
             thisDesigner = null;
           }
         }
-  
+
         whereQuery = { proid };
         updateQuery = {};
         thisDummy = equalJson(JSON.stringify(dummny));
-  
+
         if (rawProject.contents.photo.boo) {
-  
+
           if ((new Date(2000, 0, 1)).valueOf() <= rawProject.contents.photo.date.valueOf() && (new Date(3000, 0, 1)).valueOf() > rawProject.contents.photo.date.valueOf()) {
             if ((new Date()).valueOf() >= rawProject.contents.photo.date.valueOf()) {
-  
+
               if (rawProject.contents.photo.info.photographer !== "디자이너" && rawProject.contents.photo.info.photographer !== "고객") {
-  
+
                 if (rawProject.contents.photo.info.photographer !== "미정") {
                   updateQuery["contents.photo.status"] = "촬영 완료";
                 }
-  
+
               } else {
-  
+
                 updateQuery["contents.photo.status"] = "해당 없음";
                 thisDummy.status = "해당 없음";
                 thisDummy.calculation.amount = 0;
                 updateQuery["contents.payment"] = thisDummy;
-  
+
               }
-  
+
             }
           } else {
-  
+
             if (/완료/gi.test(rawProject.contents.photo.status)) {
               if (rawProject.contents.photo.info.photographer === "디자이너" || rawProject.contents.photo.info.photographer === "고객") {
                 if (rawProject.process.calculation.payments.remain.date > (new Date(2000, 0, 1)).valueOf()) {
@@ -3933,22 +3933,22 @@ StaticRouter.prototype.rou_post_photoStatusSync = function () {
                 }
               }
             }
-  
+
           }
-  
+
         } else {
           updateQuery["contents.photo.status"] = "해당 없음";
           thisDummy.status = "해당 없음";
           thisDummy.calculation.amount = 0;
           updateQuery["contents.payment"] = thisDummy;
         }
-  
+
         if (Object.keys(updateQuery).length > 0) {
           await selfMongo.db("miro81").collection(collection).updateOne(whereQuery, { $set: updateQuery });
         }
-        
+
       }
-  
+
       return true;
     } catch (e) {
       return false;
@@ -4094,13 +4094,13 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
       let delta;
       let targetClients2;
       let threeMonthAgo;
-      
+
       if (!fastMode) {
 
         delta = 7;
         agoDate = new Date();
         agoDate.setDate(agoDate.getDate() - delta);
-    
+
         threeMonthAgo = new Date();
         threeMonthAgo.setMonth(threeMonthAgo.getMonth() - 3);
 
@@ -4149,7 +4149,7 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
             }
           ]
         }, { selfMongo: selfCoreMongo })).toNormal();
-    
+
         agoClients = (await back.getClientsByQuery({
           "requests": {
             $elemMatch: {
@@ -4159,7 +4159,7 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
             }
           }
         }, { selfMongo: selfCoreMongo })).toNormal();
-        
+
         targets = targetClients.concat(agoClients);
         targets = targets.concat(targetClients2);
         finalTargets = [];
@@ -4168,7 +4168,7 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
             finalTargets.push(client);
           }
         }
-    
+
         analytics.clientsMetric(finalTargets, instance.mongo, instance.mongoconsole, instance.mongolog, true, false).then((result) => {
           if (Array.isArray(result)) {
             logger.cron("client analytics store success : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
@@ -4178,7 +4178,7 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
         }).catch((err) => {
           logger.error("Static lounge 서버 문제 생김 (rou_post_storeClientAnalytics): " + err.message).catch((err) => { console.log(err) });
         })
-    
+
         res.send(JSON.stringify({ message: "will do" }));
 
       } else {
@@ -4205,7 +4205,7 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
             }
           ]
         }, { selfMongo: selfCoreMongo })).toNormal();
-    
+
         finalTargets = [];
         for (let client of targetClients) {
           finalTargets.push(client);
@@ -4591,16 +4591,16 @@ StaticRouter.prototype.rou_post_printComplex = function () {
                 finalText += "\n";
                 finalText += bar;
                 finalText += "\n";
-  
+
                 finalText += "아파트명 : " + searchResult.data.name + "\n";
                 finalText += "주소 : " + searchResult.data.address.value + "\n";
                 finalText += "사용승인일 : " + dateToString(equalJson(searchResult.data).information.date);
-  
+
                 dateValue = (((((now.valueOf() - (equalJson(searchResult.data).information.date).valueOf()) / 1000) / 60) / 60) / 24) / 365;
                 howLong = String(Math.floor(dateValue)) + "년 " + String(Math.floor((dateValue % 1) * 12)) + "개월차";
-  
+
                 finalText += " / " + howLong + " 아파트" + "\n";
-  
+
                 finalText += "총 세대수 : " + String(searchResult.data.information.count.household) + "세대" + "\n";
                 finalText += bar;
                 finalText += "\n";
@@ -4615,7 +4615,7 @@ StaticRouter.prototype.rou_post_printComplex = function () {
               } else {
                 naverId = "";
               }
-  
+
             }
           } else {
             naverId = "";
@@ -4818,11 +4818,11 @@ StaticRouter.prototype.rou_post_complexReport = function () {
       thisIdArr = motherClients.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" });
       response = await requestSystem("https://home-liaison.serveftp.com:3000/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
       consultingAparts = equalJson(JSON.stringify(response.data.filter((str) => { return str !== null })));
-  
+
       thisIdArr = motherContracts.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" });
       response = await requestSystem("https://home-liaison.serveftp.com:3000/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
       contractAparts = equalJson(JSON.stringify(response.data.filter((str) => { return str !== null })));
-  
+
       usersArr = equalJson(JSON.stringify(motherClientsAnalytics.map((o) => { return o.data.detail }).flat()));
 
       returnSet = (motherClients, consultingAparts) => {
@@ -5126,7 +5126,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
             value: 0,
           },
         ];
-  
+
         for (let motherClient of motherClients) {
 
           ({ cliid, timeline, budget, space: { resident, address: addressRaw, pyeong, contract, naver } } = motherClient);
@@ -5147,7 +5147,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
               return a.history[0].date.valueOf() - b.history[0].date.valueOf();
             })
             targetUsers = targetUsers.map((o) => { return { source: o.source, device: o.device.kinds } });
-  
+
             sourceArr = [];
             campaignArr = [];
             deviceArr = [];
@@ -5237,7 +5237,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
             regionSet[7].value = regionSet[7].value + 1;
             motherClient.summary.region = "기타";
           }
-    
+
           motherClient.summary.pyeong = pyeong;
           if (pyeong < 10) {
             pyeongSet[0].value = pyeongSet[0].value + 1;
@@ -5254,21 +5254,21 @@ StaticRouter.prototype.rou_post_complexReport = function () {
           } else {
             pyeongSet[6].value = pyeongSet[6].value + 1;
           }
-    
+
           motherClient.summary.contract = contract;
           if (/자가/gi.test(contract)) {
             contractSet[0].value = contractSet[0].value + 1;
           } else {
             contractSet[1].value = contractSet[1].value + 1;
           }
-    
+
           if (/1억/gi.test(budget)) {
             budget = 100000000;
           } else {
             budget = Number(budget.replace(/[^0-9]/gi, '')) * 10000;
           }
           motherClient.summary.budget = budget;
-  
+
           if (budget < 10000000) {
             budgetSet[0].value = budgetSet[0].value + 1;
           } else if (budget >= 10000000 && budget < 20000000) {
@@ -5292,12 +5292,12 @@ StaticRouter.prototype.rou_post_complexReport = function () {
           } else {
             budgetSet[10].value = budgetSet[10].value + 1;
           }
-  
+
           if (/없음/gi.test(howLong)) {
             oldSet[10].value = budgetSet[10].value + 1;
           } else {
             if (/^\-/gi.test(howLong)) {
-  
+
               howLong = Number(howLong.replace(/년/gi, ".").replace(/[^0-9\.]/gi, ''));
               if (howLong <= 1) {
                 oldSet[0].value = oldSet[0].value + 1;
@@ -5308,9 +5308,9 @@ StaticRouter.prototype.rou_post_complexReport = function () {
               } else {
                 oldSet[3].value = oldSet[3].value + 1;
               }
-  
+
             } else {
-  
+
               howLong = Number(howLong.replace(/년/gi, ".").replace(/[^0-9\.]/gi, ''));
               if (howLong <= 3) {
                 oldSet[4].value = oldSet[4].value + 1;
@@ -5327,10 +5327,10 @@ StaticRouter.prototype.rou_post_complexReport = function () {
               } else {
                 oldSet[10].value = oldSet[10].value + 1;
               }
-  
+
             }
           }
-  
+
           if (targetUserObject.campaign === unknownKeyword) {
             adSet[1].value = adSet[1].value + 1;
             motherClient.summary.ad = adSet[1].case;
@@ -5338,7 +5338,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
             adSet[0].value = adSet[0].value + 1;
             motherClient.summary.ad = adSet[0].case;
           }
-  
+
           if (targetUserObject.source === unknownKeyword) {
             sourceSet[5].value = sourceSet[5].value + 1;
             motherClient.summary.source = sourceSet[5].case;
@@ -5421,7 +5421,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
           }
 
         }
-    
+
         return {
           region: regionSet,
           pyeong: pyeongSet,
@@ -5438,7 +5438,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
           original: motherClients,
         }
       }
-  
+
       consultingSet = returnSet(motherClients, consultingAparts);
       finalContractSet = returnSet(motherContracts, contractAparts);
 
@@ -5755,7 +5755,7 @@ StaticRouter.prototype.rou_post_mysqlReflection = function () {
       }
       injectionValues = async (data) => {
         let queryList;
-        let queryResult;  
+        let queryResult;
         try {
           queryList = data.getInsertSql();
           queryResult = await mysqlQuery(queryList, { center: true });
@@ -5768,7 +5768,7 @@ StaticRouter.prototype.rou_post_mysqlReflection = function () {
           return false;
         }
       }
-  
+
       boo = await tableReady(thisSqueeze.model);
       safeNum = 0;
       while (!boo) {
@@ -5779,7 +5779,7 @@ StaticRouter.prototype.rou_post_mysqlReflection = function () {
         boo = await tableReady(thisSqueeze.model);
         safeNum++;
       }
-  
+
       if (boo) {
         injectionBoo = await injectionValues(thisSqueeze.data);
         if (!injectionBoo) {
@@ -5811,7 +5811,7 @@ StaticRouter.prototype.rou_post_mysqlReflection = function () {
     });
     try {
       const selfMongo = instance.mongo;
-      
+
       (async () => {
         try {
           let clients, designers, projects, aspirants;
@@ -5822,7 +5822,7 @@ StaticRouter.prototype.rou_post_mysqlReflection = function () {
           if (!resultBoo) {
             throw new Error("clients mysql reflection fail");
           }
-          
+
           designers = await back.getDesignersByQuery({}, { withTools: true, selfMongo });
           resultBoo = await intoMysql(designers.dimensionSqueeze());
           if (!resultBoo) {
@@ -5849,7 +5849,7 @@ StaticRouter.prototype.rou_post_mysqlReflection = function () {
           return false;
         }
       })().catch((err) => {
-        logger.error("Static lounge 서버 문제 생김 (rou_post_mysqlReflection): " + err.message).catch((e) => { console.log(e); }); 
+        logger.error("Static lounge 서버 문제 생김 (rou_post_mysqlReflection): " + err.message).catch((e) => { console.log(e); });
         console.log(err);
       });
 
@@ -5918,7 +5918,7 @@ StaticRouter.prototype.rou_post_hahaDropClients = function () {
           "curation.service.serid": 1,
           "curation.construct.items": 1,
         } ], { selfMongo: selfConsoleMongo });
-  
+
         resultArr = [];
         for (let { manager, cliid, curation: { analytics: { send } } } of thisHistories) {
           resultArr.push({
@@ -5927,19 +5927,19 @@ StaticRouter.prototype.rou_post_hahaDropClients = function () {
             haha: send.filter((obj) => { return obj.page === "lowLowPush" }),
           })
         }
-  
+
         hahaTargetClients = targetClients.toNormal().filter((client) => { return resultArr.filter((o) => { return o.haha.length > 0 }).map((c) => { return c.cliid }).includes(client.cliid) });
-  
+
         for (let client of hahaTargetClients) {
           thisHistory = resultArr.find((c) => { return c.cliid === client.cliid });
           thisHistory.haha.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
           client.haha = equalJson(JSON.stringify(thisHistory.haha));
           client.manager = thisHistory.manager;
         }
-        
+
         if (hahaTargetClients.length > 0) {
           totalProposals = await back.getProjectsByQuery({ $or: hahaTargetClients.map((c) => { return { cliid: c.cliid } }) }, { selfMongo });
-  
+
           for (let client of hahaTargetClients) {
             index = 0;
             for (let { request, analytics } of client.requests) {
@@ -5956,7 +5956,7 @@ StaticRouter.prototype.rou_post_hahaDropClients = function () {
                     } else {
                       proposals = proposals.filter((p) => { return p.proposal.date.valueOf() >= request.timeline.valueOf() });
                     }
-  
+
                     boo = false;
                     if (proposals.length === 0) {
                       boo = true;
@@ -5964,7 +5964,7 @@ StaticRouter.prototype.rou_post_hahaDropClients = function () {
                       proposals = proposals.filter((p) => { return p.process.contract.first.date.valueOf() > emptyDateValue && !/드랍/gi.test(p.process.status) })
                       boo = (proposals.length === 0);
                     }
-  
+
                     if (boo) {
                       whereQuery = {};
                       updateQuery = {};
@@ -5972,7 +5972,7 @@ StaticRouter.prototype.rou_post_hahaDropClients = function () {
                       updateQuery["requests." + String(index) + ".analytics.response.status"] = "드랍";
                       await back.updateClient([ whereQuery, updateQuery ], { selfMongo });
                     }
-                  
+
                   }
                 }
               }
@@ -5980,7 +5980,7 @@ StaticRouter.prototype.rou_post_hahaDropClients = function () {
             }
           }
         }
-  
+
       }
 
       await logger.cron("haha drop clints success : " + JSON.stringify(new Date()));
@@ -6043,12 +6043,12 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
 
       response = await requestSystem(endPoint + "/designerWorksList", { mode: "entire" }, config);
       [ result0, result1, result2, result3, worksInfo ] = response.data;
-  
+
       result0Path = worksInfo[1] + "/" + worksInfo[2][0]
       result1Path = worksInfo[1] + "/" + worksInfo[2][1]
       result2Path = worksInfo[1] + "/" + worksInfo[2][2]
       result3Path = worksInfo[1] + "/" + worksInfo[2][3]
-  
+
       worksFiles = [];
       worksFiles = worksFiles.concat(result0.map((obj) => { return { desid: obj.desid, file: result0Path + "/" + obj.file.name } }));
       worksFiles = worksFiles.concat(result1.map((obj) => { return { desid: obj.desid, file: result1Path + "/" + obj.file.name } }));
@@ -6081,7 +6081,7 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
           }
 
         });
-  
+
         // projects
         response = await requestSystem(endPoint + "/middlePhotoRead", { target: "/" + desid }, config);
         targetProjects = response.data.filter((s) => { return /^p/gi.test(s) });
@@ -6106,7 +6106,7 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
             }
           }
         }
-  
+
         // representative
         response = await requestSystem(endPoint + "/readFolder", { path: representativeRootPath + "/" + desid }, config);
         representativeFiles = response.data.filter((s) => { return /jpg$/gi.test(s) || /jpeg$/gi.test(s) || /png$/gi.test(s) || /pdf$/gi.test(s) }).map((s) => { return scpPath + representativeFolderPath + "/" + desid + "/" + s });
@@ -6126,7 +6126,7 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
             await sleep(500);
           }
         }
-  
+
         // works files
         worksFilesTargets = worksFiles.filter((o) => { return o.desid === desid });
         worksFilesTargets = worksFilesTargets.map((o) => { return scpRoot + o.file });
@@ -6146,7 +6146,7 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
             await sleep(500);
           }
         }
-        
+
         thisFolderContents = await fileSystem(`readFolder`, [ thisFolderPath ]);
         thisFolderContents = thisFolderContents.map((s) => {
           let arr, dateString;
@@ -6192,7 +6192,7 @@ StaticRouter.prototype.rou_post_syncDesignProposal = function () {
             await shellExec("mv", [ thisFolderPath + obj.original, thisFolderPath + String(obj.index) + indexToken + obj.fileName ]);
           }
         }
-  
+
         console.log(desid, designer.designer, "sync success");
         await sleep(1000);
       }
@@ -6287,7 +6287,7 @@ StaticRouter.prototype.rou_post_listDesignProposal = function () {
 
       } else {
         throw new Error("invalid post");
-      }      
+      }
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_listDesignProposal): " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -6342,7 +6342,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
       let historyArr;
       let proidArr;
       let designer, type;
-      
+
       if (mode === "store") {
         if (req.body.cliid === undefined || req.body.desid === undefined || req.body.info === undefined || req.body.purpose === undefined || req.body.description === undefined || req.body.member === undefined || req.body.images === undefined) {
           throw new Error("invalid post 2");
@@ -6351,7 +6351,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
 
         now = new Date();
         thisId = idKeyword + String(now.valueOf()) + "_" + uniqueValue("hex");
-        
+
         imagesArr = [];
         for (let { absolute: rawPath, src: rawSrc } of images) {
           thisPath = rawPath.replace(/^\//i, '').replace(/\/$/i, '');
@@ -6363,7 +6363,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
           if (!/^__/.test(finalPath)) {
             finalPath = sambaToken + "/" + finalPath;
           }
-          
+
           thisSrc = rawSrc.replace(/^\//i, '').replace(/\/$/i, '');
           if (thisSrc.trim() === '') {
             finalSrc = sambaToken;
@@ -6475,7 +6475,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
 
         now = new Date();
         thisId = idKeyword + String(now.valueOf()) + "_" + uniqueValue("hex");
-        
+
         imagesArr = equalJson(JSON.stringify(targetJson.images))
 
         thisMember = instance.members.find((o) => { return o.id === member });
@@ -6546,7 +6546,7 @@ StaticRouter.prototype.rou_post_imageTransfer = function () {
 
           thisDesigner = await back.getDesignerById(targetJson.contents.designer.desid, { selfMongo: selfCoreMongo, toNormal: true });
           thisClient = await back.getClientById(targetJson.target.cliid, { selfMongo: selfCoreMongo, toNormal: true });
-          
+
           if (view !== 1 && view !== "1") {
             historyArr = equalJson(JSON.stringify(targetJson.history));
             historyArr.unshift({
@@ -6729,7 +6729,7 @@ StaticRouter.prototype.rou_post_syncEvaluationContents = function () {
           let num;
           let whereQuery, updateQuery;
           let contentsProjectQuery;
-      
+
           contentsProjectQuery = {
             conid: 1,
             desid: 1,
@@ -6748,28 +6748,28 @@ StaticRouter.prototype.rou_post_syncEvaluationContents = function () {
             "contents.review.title": 1,
             "contents.review.detailInfo": 1,
           };
-      
+
           contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo });
           contentsArr = contentsArr.filter((o) => { return o.proid !== "" });
           contentsArr = contentsArr.filter((o) => { return /999/gi.test(o.contents.review.rid) })
-      
+
           rows = await back.mongoRead(evaluationCollection, {
             $or: contentsArr.map((o) => { return { proid: o.proid } }),
           }, { selfMongo: selfContentsMongo });
-      
+
           num = 0;
           for (let contents of contentsArr) {
             target = rows.find((o) => { return o.proid === contents.proid }) === undefined ? null : rows.find((o) => { return o.proid === contents.proid });
             if (target !== null) {
-      
+
               jsonTarget = objectDeepCopy(target);
               jsonString = jsonToString(jsonTarget);
-      
+
               conid = contents.conid;
-      
+
               whereQuery = { conid };
               updateQuery = {};
-      
+
               updateQuery["contents.review.title.main"] = titleSamples[num % titleSamples.length];
               updateQuery["contents.review.title.sub"] = titleSamples[num % titleSamples.length];
               updateQuery["contents.review.contents.detail"] = [
@@ -6789,7 +6789,7 @@ StaticRouter.prototype.rou_post_syncEvaluationContents = function () {
                 updateQuery["contents.review.detailInfo.order"] = Math.round((Number(contents.contents.portfolio.pid.replace(/[^0-9]/gi, '')) * 1000000 / 1000));
               }
               updateQuery["contents.review.detailInfo.photodae"] = objectDeepCopy(contents.contents.portfolio.detailInfo.photodae);
-      
+
               await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
 
               num++;
@@ -6861,7 +6861,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
       let thisStart;
       let thisEnd;
       let thisDate;
-  
+
       matrix = [
         [
           "아이디",
@@ -6869,7 +6869,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
           "협약 상태",
         ]
       ];
-  
+
       for (let i = 0; i < forecastDelta; i++) {
         nowDate = new Date();
         nowDate.setDate(1);
@@ -6877,7 +6877,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
         thisDate = new Date(JSON.stringify(nowDate).slice(1, -1));
         matrix[0].push(dateToString(thisDate).split("-").slice(0, -1).join("-") + " 가능수");
       }
-  
+
       matrix[0] = matrix[0].concat([
         "총 진행",
         "총 추천",
@@ -6900,57 +6900,57 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
         "XT 매출",
         "XT 정산",
       ]);
-  
+
       for (let i = -1; i < monthDelta; i++) {
-  
+
         nowDate = new Date();
         nowDate.setDate(1);
         nowDate.setMonth(nowDate.getMonth() - 1 - i);
         startDate = new Date(JSON.stringify(nowDate).slice(1, -1));
-  
+
         nowDate = new Date();
         nowDate.setDate(1);
         nowDate.setMonth(nowDate.getMonth() - 0 - i);
         endDate = new Date(JSON.stringify(nowDate).slice(1, -1));
-  
+
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " 총 진행");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " 총 추천");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " 총 매출");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " 총 정산");
-  
+
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " F 진행");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " F 추천");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " F 매출");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " F 정산");
-  
+
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " S 진행");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " S 추천");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " S 매출");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " S 정산");
-  
+
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " T 진행");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " T 추천");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " T 매출");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " T 정산");
-  
+
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " XT 진행");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " XT 추천");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " XT 매출");
         matrix[0].push(dateToString(startDate).split("-").slice(0, -1).join("-") + " XT 정산");
-  
+
       }
-  
+
       realtimeRows = await back.mongoRead(collection, {}, { selfMongo: selfConsoleMongo });
-  
+
       for (let designer of designers) {
         desid = designer.desid;
         tempArr = [];
-    
+
         tempArr.push(desid);
         tempArr.push(designer.designer);
         tempArr.push(designer.information.contract.status.value);
-    
-        targetRow = realtimeRows.find((r) => { return r.desid === desid }) === undefined ? null : realtimeRows.find((r) => { return r.desid === desid }); 
+
+        targetRow = realtimeRows.find((r) => { return r.desid === desid }) === undefined ? null : realtimeRows.find((r) => { return r.desid === desid });
         if (targetRow === null) {
           for (let i = 0; i < forecastDelta; i++) {
             tempArr.push(0);
@@ -6965,7 +6965,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
             nowDate.setMilliseconds(0);
             nowDate.setMonth(nowDate.getMonth() + i);
             thisStart = new Date(JSON.stringify(nowDate).slice(1, -1));
-  
+
             nowDate = new Date();
             nowDate.setDate(1);
             nowDate.setHours(0);
@@ -6974,7 +6974,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
             nowDate.setMilliseconds(0);
             nowDate.setMonth(nowDate.getMonth() + 1 + i);
             thisEnd = new Date(JSON.stringify(nowDate).slice(1, -1));
-  
+
             possibleArr = targetRow.possible.filter((o) => {
               return (o.start.valueOf() >= thisStart.valueOf()) && (o.end.valueOf() < thisEnd.valueOf())
             });
@@ -6986,7 +6986,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
             tempArr.push(possibleNumber);
           }
         }
-  
+
         targetProjects = projects.filter((p) => { return p.desid === desid });
         targetProposals = projects.filter((p) => { return p.proposal.detail.map((a) => { return a.desid }).includes(desid); });
         totalAmount = 0;
@@ -7000,7 +7000,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
         totalPayments = targetProjects.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
           return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
         }, 0);
-    
+
         targetProjects_f = targetProjects.filter((p) => { return p.service.serid === "s2011_aa01s" });
         targetProposals_f = targetProposals.filter((p) => { return p.service.serid === "s2011_aa01s" });
         totalAmount_f = 0;
@@ -7014,7 +7014,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
         totalPayments_f = targetProjects_f.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
           return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
         }, 0);
-    
+
         targetProjects_s = targetProjects.filter((p) => { return p.service.serid === "s2011_aa02s" });
         targetProposals_s = targetProposals.filter((p) => { return p.service.serid === "s2011_aa02s" });
         totalAmount_s = 0;
@@ -7028,7 +7028,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
         totalPayments_s = targetProjects_s.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
           return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
         }, 0);
-    
+
         targetProjects_t = targetProjects.filter((p) => { return p.service.serid === "s2011_aa03s" });
         targetProposals_t = targetProposals.filter((p) => { return p.service.serid === "s2011_aa03s" });
         totalAmount_t = 0;
@@ -7042,7 +7042,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
         totalPayments_t = targetProjects_t.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
           return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
         }, 0);
-    
+
         targetProjects_xt = targetProjects.filter((p) => { return p.service.serid === "s2011_aa04s" });
         targetProposals_xt = targetProposals.filter((p) => { return p.service.serid === "s2011_aa04s" });
         totalAmount_xt = 0;
@@ -7056,35 +7056,35 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
         totalPayments_xt = targetProjects_xt.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
           return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
         }, 0);
-    
-    
+
+
         tempArr.push(targetProjects.length);
         tempArr.push(targetProposals.length);
         tempArr.push(Math.floor(totalAmount));
         tempArr.push(Math.floor(totalPayments));
-    
+
         tempArr.push(targetProjects_f.length);
         tempArr.push(targetProposals_f.length);
         tempArr.push(Math.floor(totalAmount_f));
         tempArr.push(Math.floor(totalPayments_f));
-    
+
         tempArr.push(targetProjects_s.length);
         tempArr.push(targetProposals_s.length);
         tempArr.push(Math.floor(totalAmount_s));
         tempArr.push(Math.floor(totalPayments_s));
-    
+
         tempArr.push(targetProjects_t.length);
         tempArr.push(targetProposals_t.length);
         tempArr.push(Math.floor(totalAmount_t));
         tempArr.push(Math.floor(totalPayments_t));
-    
+
         tempArr.push(targetProjects_xt.length);
         tempArr.push(targetProposals_xt.length);
         tempArr.push(Math.floor(totalAmount_xt));
         tempArr.push(Math.floor(totalPayments_xt));
-    
+
         for (let i = -1; i < monthDelta; i++) {
-    
+
           nowDate = new Date();
           nowDate.setDate(1);
           nowDate.setHours(0);
@@ -7093,7 +7093,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
           nowDate.setMilliseconds(0);
           nowDate.setMonth(nowDate.getMonth() - 1 - i);
           startDate = new Date(JSON.stringify(nowDate).slice(1, -1));
-    
+
           nowDate = new Date();
           nowDate.setDate(1);
           nowDate.setHours(0);
@@ -7102,10 +7102,10 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
           nowDate.setMilliseconds(0);
           nowDate.setMonth(nowDate.getMonth() - 0 - i);
           endDate = new Date(JSON.stringify(nowDate).slice(1, -1));
-    
+
           thisTargetProjects = targetProjects.filter((p) => { return p.process.contract.first.date.valueOf() >= startDate.valueOf() && p.process.contract.first.date.valueOf() < endDate.valueOf() });
           thisTargetProposals = targetProposals.filter((p) => { return p.proposal.date.valueOf() >= startDate.valueOf() && p.proposal.date.valueOf() < endDate.valueOf() });
-      
+
           thisTotalAmount = 0;
           thisTotalAmount = thisTargetProjects.filter((p) => { return p.process.contract.first.date.valueOf() > emptyDateValue && p.process.contract.remain.date.valueOf() < emptyDateValue }).reduce((acc, curr) => {
             return acc + curr.process.contract.first.calculation.amount;
@@ -7113,13 +7113,13 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
           thisTotalAmount += thisTargetProjects.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
             return acc + curr.process.contract.remain.calculation.amount.consumer;
           }, 0);
-      
+
           thisTotalPayments = 0;
           thisTotalPayments = thisTargetProjects.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
             return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
           }, 0);
-      
-    
+
+
           thisTargetProjects_f = thisTargetProjects.filter((p) => { return p.service.serid === "s2011_aa01s" });
           thisTargetProposals_f = thisTargetProposals.filter((p) => { return p.service.serid === "s2011_aa01s" });
           thisTotalAmount_f = 0;
@@ -7133,7 +7133,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
           thisTotalPayments_f = thisTargetProjects_f.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
             return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
           }, 0);
-    
+
           thisTargetProjects_s = thisTargetProjects.filter((p) => { return p.service.serid === "s2011_aa02s" });
           thisTargetProposals_s = thisTargetProposals.filter((p) => { return p.service.serid === "s2011_aa02s" });
           thisTotalAmount_s = 0;
@@ -7147,7 +7147,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
           thisTotalPayments_s = thisTargetProjects_s.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
             return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
           }, 0);
-    
+
           thisTargetProjects_t = thisTargetProjects.filter((p) => { return p.service.serid === "s2011_aa03s" });
           thisTargetProposals_t = thisTargetProposals.filter((p) => { return p.service.serid === "s2011_aa03s" });
           thisTotalAmount_t = 0;
@@ -7161,7 +7161,7 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
           thisTotalPayments_t = thisTargetProjects_t.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
             return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
           }, 0);
-    
+
           thisTargetProjects_xt = thisTargetProjects.filter((p) => { return p.service.serid === "s2011_aa04s" });
           thisTargetProposals_xt = thisTargetProposals.filter((p) => { return p.service.serid === "s2011_aa04s" });
           thisTotalAmount_xt = 0;
@@ -7175,36 +7175,36 @@ StaticRouter.prototype.rou_post_updateDesignerProposalRealtime = function () {
           thisTotalPayments_xt = thisTargetProjects_xt.filter((p) => { return p.process.contract.remain.date.valueOf() > emptyDateValue }).reduce((acc, curr) => {
             return acc + (curr.process.contract.remain.calculation.amount.consumer * ((100 - curr.process.calculation.percentage) / 100));
           }, 0);
-    
+
           tempArr.push(thisTargetProjects.length);
           tempArr.push(thisTargetProposals.length);
           tempArr.push(Math.floor(thisTotalAmount));
           tempArr.push(Math.floor(thisTotalPayments));
-    
+
           tempArr.push(thisTargetProjects_f.length);
           tempArr.push(thisTargetProposals_f.length);
           tempArr.push(Math.floor(thisTotalAmount_f));
           tempArr.push(Math.floor(thisTotalPayments_f));
-    
+
           tempArr.push(thisTargetProjects_s.length);
           tempArr.push(thisTargetProposals_s.length);
           tempArr.push(Math.floor(thisTotalAmount_s));
           tempArr.push(Math.floor(thisTotalPayments_s));
-    
+
           tempArr.push(thisTargetProjects_t.length);
           tempArr.push(thisTargetProposals_t.length);
           tempArr.push(Math.floor(thisTotalAmount_t));
           tempArr.push(Math.floor(thisTotalPayments_t));
-    
+
           tempArr.push(thisTargetProjects_xt.length);
           tempArr.push(thisTargetProposals_xt.length);
           tempArr.push(Math.floor(thisTotalAmount_xt));
           tempArr.push(Math.floor(thisTotalPayments_xt));
-    
+
         }
         matrix.push(tempArr);
       }
-  
+
       await sheets.update_value_inPython(sheetsId, "", matrix);
 
       return true;
@@ -7665,14 +7665,14 @@ StaticRouter.prototype.rou_post_styleCurationTotalMenu = function () {
 
         whereQuery = { $or: cliids.map((cliid) => { return { cliid } }) };
         projectQuery = { "cliid": 1, "curation.image": 1, "curation.check": 1 };
-    
+
         rows = await back.mongoPick(collection, [ whereQuery, projectQuery ], { selfMongo });
         rows2 = await back.mongoRead(collection2, whereQuery, { selfMongo });
-    
+
         whereQuery = { $or: cliids.map((cliid) => { return { "data.cliid": cliid, "action": "pageInit" } }) };
         projectQuery = { "page": 1, "data": 1, "action": 1 };
         rows3 = await back.mongoPick(collection3, [ whereQuery, projectQuery ], { selfMongo: selfLogMongo });
-    
+
         cliidStatusArr = [];
         for (let i = 0; i < cliids.length; i++) {
           cliidStatusArr.push([ cliids[i], statusArr[i] ]);
@@ -7687,14 +7687,14 @@ StaticRouter.prototype.rou_post_styleCurationTotalMenu = function () {
           check = curation.check;
           thisAnalytics = rows3.filter((o) => { return o.data.cliid === thisCliid });
           filteredBlack = rows2.filter((o) => { return o.cliid === thisCliid });
-    
+
           if (filteredBlack.length === 0) {
             selection = defaultButton;
           } else {
             filteredBlack.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
             selection = filteredBlack[0].mode;
           }
-    
+
           if (thisAnalytics.filter((o) => { return o.page === "styleCuration" }).length === 0) {
             start = "스타일 체크 거부";
             target = "단순 드랍 대상";
@@ -7702,14 +7702,14 @@ StaticRouter.prototype.rou_post_styleCurationTotalMenu = function () {
             start = "스타일 체크 진입";
             target = "1차 응대 대상";
           }
-    
+
           if (/단순 드랍 대상/gi.test(target) || /드랍/gi.test(thisStatus)) {
-    
+
             selection = "응대 불필요";
             receive = "추천 불필요";
-    
+
           } else {
-    
+
             if (/consulting/gi.test(selection)) {
               selection = "상담부터";
               receive = "추천서 받기 전";
@@ -7726,11 +7726,11 @@ StaticRouter.prototype.rou_post_styleCurationTotalMenu = function () {
                 target = "자동 응대중";
               }
             }
-    
+
           }
-    
+
           resultJson = { cliid: thisCliid, selection, receive };
-    
+
           if (curation.length === 0) {
             resultJson.image = "이미지 선택 거부";
           } else {
@@ -7796,7 +7796,7 @@ StaticRouter.prototype.rou_post_styleCurationTotalMenu = function () {
           tong.push(objectDeepCopy(resultJson));
         }
         res.send(JSON.stringify({ data: tong, dummy: dummyData }));
-        
+
       }
 
     } catch (e) {

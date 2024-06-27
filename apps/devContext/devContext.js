@@ -207,7 +207,9 @@ DevContext.prototype.launching = async function () {
     // }
     // await this.MONGOCONSOLEC.close();
 
-    await requestSystem("https://" + address.officeinfo.ghost.host + "/analyticsToday", { report: 1 }, { headers: { "Content-Type": "application/json" } });
+    // await requestSystem("https://" + address.officeinfo.ghost.host + "/analyticsToday", { report: 1 }, { headers: { "Content-Type": "application/json" } });
+
+    await findCode("/analyticsDaily")
 
 
     // const designers = (await back.getDesignersByQuery({}, { selfMongo: this.MONGOC, toNormal: true })).filter((d) => { return d.information.contract.status === "협약 완료" }).map((d) => { return { name: d.designer, phone: d.information.phone } });
