@@ -175,7 +175,7 @@ DevContext.prototype.launching = async function () {
 
     // await chrome.pageToPng("http://13.209.10.155:60080/consulting.php", null, false, true);
 
-    
+
     // const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
     // const app = new LiaisonCalendar();
     // const result = (await app.listCalendars());
@@ -186,7 +186,7 @@ DevContext.prototype.launching = async function () {
     // const app = new LiaisonCalendar();
     // await app.weeklySummary();
 
-    
+
 
     // console.log(await requestSystem("https://home-liaison.link:3000/kakaoComplex", { day: 30 }, { headers: { "Content-Type": "application/json" } }));
 
@@ -207,6 +207,7 @@ DevContext.prototype.launching = async function () {
     // }
     // await this.MONGOCONSOLEC.close();
 
+    await requestSystem("https://" + address.officeinfo.ghost.host + "/analyticsToday", { report: 1 }, { headers: { "Content-Type": "application/json" } });
 
 
     // const designers = (await back.getDesignersByQuery({}, { selfMongo: this.MONGOC, toNormal: true })).filter((d) => { return d.information.contract.status === "협약 완료" }).map((d) => { return { name: d.designer, phone: d.information.phone } });
@@ -225,13 +226,13 @@ DevContext.prototype.launching = async function () {
     // console.log(res)
 
 
-    
+
 
 
     // const res = await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/weeklyCalculation", { data: null }, { headers: { "Content-Type": "application/json" } });
     // console.log(res);
-    
-    
+
+
 
     // const url = "https://api.pushbullet.com/v2/permanents/ujEVkZaUIQCsjA8RALCBgW_thread_36";
     // const webToken = "OWdKdk94bTNrQ2tUMUNwMVVxSW5jT29kQ3dCZnhnWE46";
@@ -276,7 +277,7 @@ DevContext.prototype.launching = async function () {
     //   if (messageArr[messageArr.length - 1].trim() === "기업") {
     //     messageArr = messageArr.slice(0, -1);
     //   }
-  
+
     //   index = messageArr.findIndex((str) => { return /^입금/gi.test(str.trim()) });
     //   if (index === -1) {
     //     throw new Error("invaild message");
@@ -293,7 +294,7 @@ DevContext.prototype.launching = async function () {
     //   return { name, date, amount };
     // }
     // let tempObj;
-    
+
     // ago.setDate(ago.getDate() - 2);
 
     // const targets = (response.data.thread.filter((o) => {
@@ -305,7 +306,7 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-    
+
 
     // version 0
 
@@ -346,7 +347,7 @@ DevContext.prototype.launching = async function () {
 
     // cliidArr = [ ...new Set(contentsArr.map((o) => { return o.cliid.trim() }).filter((s) => { return s !== "" })) ];
     // proidArr = [ ...new Set(contentsArr.map((o) => { return o.proid.trim() }).filter((s) => { return s !== "" })) ];
-    
+
     // if (cliidArr.length > 0) {
 
     //   whereQuery = { $or: cliidArr.map((cliid) => { return { cliid } }) };
@@ -446,7 +447,7 @@ DevContext.prototype.launching = async function () {
     designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo, toNormal });
 
     cliidArr = [ ...new Set(contentsArr.map((o) => { return o.cliid.trim() }).filter((s) => { return s !== "" })) ];
-    
+
     if (cliidArr.length > 0) {
 
       whereQuery = { $or: cliidArr.map((cliid) => { return { cliid } }) };
@@ -492,11 +493,11 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
 
     /*
-    
+
     // 객단가
 
     await this.MONGOPYTHONC.connect();
@@ -520,7 +521,7 @@ DevContext.prototype.launching = async function () {
     let returnFeeMatrix;
     let sheetsId0, sheetsId1, sheetsId2, sheetsId3;
     let designers, thisDesigner;
-    
+
     designers = await back.getDesignersByQuery({}, { selfMongo, toNormal });
     projects = await back.getProjectsByQuery({ "process.contract.first.date": { $gte: agoDate } }, { selfMongo, toNormal })
     proidArr = projects.map((p) => { return { cliid: p.cliid } });
@@ -557,7 +558,7 @@ DevContext.prototype.launching = async function () {
         }
       })
     })
-    
+
     projectFeeArr = payCancelMatrix.map((arr, index, original) => {
       if (arr.length > 0) {
         return arr.reduce((acc, curr) => { acc.amount = acc.amount + curr.amount; return acc }, { amount: 0, proid: arr[0].proid, cliid: arr[0].cliid, method: arr[0].method, response: arr[0].response });
@@ -672,10 +673,10 @@ DevContext.prototype.launching = async function () {
     await sheets.update_value_inPython(sheetsId3, "", returnFeeMatrix(designFee2024));
 
     await this.MONGOPYTHONC.close();
-    
+
     */
-    
-    
+
+
 
 
 
@@ -703,12 +704,12 @@ DevContext.prototype.launching = async function () {
               const from = new Date(2024, 3, 20);
               const to = new Date(2024, 3, 24);
               let result;
-  
+
               result = 0;
               if (client.requests[0].request.timeline.valueOf() >= from.valueOf() && client.requests[0].request.timeline.valueOf() < to.valueOf()) {
                 result = 1;
               }
-  
+
               return 0.3;
             } catch (e) {
               return 0;
@@ -736,7 +737,7 @@ DevContext.prototype.launching = async function () {
 
 
     /*
-    
+
     const selfMongo = this.MONGOC;
     const collection = "designerRepresentativeKeywords";
     const selfTransMongo = this.MONGOTRANSC;
@@ -786,7 +787,7 @@ DevContext.prototype.launching = async function () {
           }).filter((str) => {
             return str.length < 15 && str.length > 2;
           })
-    
+
           thisJson = {
             date: new Date(),
             desid,
@@ -795,7 +796,7 @@ DevContext.prototype.launching = async function () {
             selected: [],
           };
         }
-  
+
         await back.mongoCreate(collection, objectDeepCopy(thisJson), { selfMongo: selfTransMongo });
         console.log(thisJson);
         finalList.push(objectDeepCopy(thisJson));
@@ -809,7 +810,6 @@ DevContext.prototype.launching = async function () {
 
     */
 
-    
 
 
 
@@ -818,7 +818,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
+
 
 
 
@@ -828,7 +829,7 @@ DevContext.prototype.launching = async function () {
 
     // const meta = new FacebookAPIs();
     // await meta.instagramList();
-    
+
 
 
 
@@ -847,7 +848,7 @@ DevContext.prototype.launching = async function () {
     // let possibleArr;
     // let possibleNumbersArr;
     // let possibleNumber;
-    
+
     // designers = await back.getDesignersByQuery({}, { selfMongo: selfCoreMongo });
     // rows = await back.mongoRead(collection, {}, { selfMongo });
 
@@ -875,11 +876,11 @@ DevContext.prototype.launching = async function () {
 
     // await this.MONGOCONSOLEC.close();
 
-    
 
 
 
-    
+
+
 
 
 
@@ -916,7 +917,7 @@ DevContext.prototype.launching = async function () {
           targets.push(equalJson(JSON.stringify(row)));
         }
       }
-  
+
       matrix = [];
       matrix.push([
         "아이디",
@@ -925,7 +926,7 @@ DevContext.prototype.launching = async function () {
         "광고 여부",
         "상태",
       ]);
-  
+
       for (let row of targets) {
         for (let obj of row.data.detail) {
           thisClient = clients.find((c) => { return c.cliid === obj.cliid });
@@ -939,7 +940,7 @@ DevContext.prototype.launching = async function () {
           ])
         }
       }
-  
+
       await sheets.update_value_inPython(sheetsId, dateToString(new Date(2023, standardNumber - 1, 1)).split("-").slice(0, 2).join("-"), matrix);
     }
     console.log(matrix);
@@ -954,13 +955,13 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-    
-
-    
 
 
-    
+
+
+
+
+
     // /designer path => desid injection
 
 
@@ -986,7 +987,7 @@ DevContext.prototype.launching = async function () {
 
 
     /*
-    
+
     const image = new ImageReader();
     const imageKeyword = "imageTarget";
     const magick = "magick";
@@ -1080,7 +1081,7 @@ DevContext.prototype.launching = async function () {
       await shellExec(magick, [ targetImageName, "-crop", `${String(width)}x${String(height)}+${String(x)}+${String(y)}`, `${factorFile}` ]);
       factorList.push(factorFile);
     }
-    
+
 
     // color section
 
@@ -1106,7 +1107,7 @@ DevContext.prototype.launching = async function () {
           if (response.status.code !== 10000) {
             throw new Error("Post model outputs failed, status: " + response.status.description);
           }
-  
+
           console.log(response);
 
           fileSystem(`writeJson`, [ `${process.cwd()}/temp/bb.json`, response ]).catch((err) => {
@@ -1127,7 +1128,7 @@ DevContext.prototype.launching = async function () {
     distanceAverage
 
     bright
-    contrast 
+    contrast
     cct
     gamma
 
@@ -1148,13 +1149,13 @@ DevContext.prototype.launching = async function () {
     fabricBoo(0 or 1)
     curtainBoo(0 or 1)
     plantBoo(0 or 1)
-    
+
     5
 
     */
 
 
-    
+
 
     // const image = new ImageReader();
     // console.log(await image.readImage(process.cwd() + "/temp/test.jpg"));
@@ -1191,10 +1192,10 @@ DevContext.prototype.launching = async function () {
     //         let finalLoss;
     //         let lossArr;
     //         let setW, setH, setA, setB, setC;
-            
+
     //         tensorX = flow.tensor(matrixX);
     //         tensorY = flow.tensor(matrixY);
-        
+
     //         if (deepMode === 0) {
     //           setX = flow.input({ shape: [ matrixX[0].length ] });
     //           setY = flow.layers.dense({ units: matrixY[0].length, activation }).apply(setX);
@@ -1231,11 +1232,11 @@ DevContext.prototype.launching = async function () {
     //         } else {
     //           throw new Error("invalid mode");
     //         }
-        
+
     //         model = flow.model({ inputs: setX, outputs: setY });
     //         compileParam = { optimizer: flow.train.adam(), loss: flow.losses.meanSquaredError };
     //         model.compile(compileParam);
-        
+
     //         fitParam = { epochs: unitEpochs };
     //         safeNum = 0;
     //         finalLoss = 500000;
@@ -1251,11 +1252,11 @@ DevContext.prototype.launching = async function () {
     //           }
     //         } while (fitResult.history.loss[fitResult.history.loss.length - 1] > 1 && safeNum < safeConst)
     //         fitResult = await model.fit(tensorX, tensorY, { epochs: finalEpochs });
-        
+
     //         if (fitResult.history.loss[fitResult.history.loss.length - 1] > 1) {
     //           throw new Error("mode make fail");
     //         }
-    
+
     //         await model.save("file://" + process.cwd() + "/temp/myModel");
     //         return model;
     //       } catch (e) {
@@ -1284,7 +1285,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
     // const sampleValue = "경기 광주시 문형산길157번길 12-7 (신현동, 큐비코) 104동 102호";
     // let res, firstId;
@@ -1346,8 +1347,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-    
+
+
 
     // const abDistance = (arr0, arr1) => {
     //   const [ x0, y0, z0 ] = arr0;
@@ -1380,7 +1381,7 @@ DevContext.prototype.launching = async function () {
     // console.log(distances.reduce((acc, curr) => { return acc + curr }, 0) / distances.length);
 
 
-    
+
     // const puppeteer = require("puppeteer");
     // const browser = await puppeteer.launch({ headless: false, args: [ "--no-sandbox", "--disable-setuid-sandbox" ] });
     // const page = await browser.newPage();
@@ -1391,13 +1392,13 @@ DevContext.prototype.launching = async function () {
     // await sleep(10 * 1000);
     // await browser.close();
 
-    
+
 
     // const designers = await back.getDesignersByQuery({ designer: "정다연" }, { selfMongo: this.MONGOC });
     // console.log(designers[0].analytics);
     // console.log(designers[0].analytics.toNormal());
 
-    
+
     // const selfMongo = this.MONGOC;
     // const db = "miro81";
     // const collection = "designer";
@@ -1425,15 +1426,15 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-
-    
 
 
 
 
 
-    
+
+
+
+
 
 
 
@@ -1445,7 +1446,7 @@ DevContext.prototype.launching = async function () {
 
     // if cafe24 taxbill again, hacking below
     // cafe24 parsing
-    
+
     const jsdom = require("jsdom");
     const { JSDOM } = jsdom;
     const queryString = require("querystring");
@@ -1650,9 +1651,9 @@ DevContext.prototype.launching = async function () {
     // }));
 
     */
-    
 
-    
+
+
 
 
 
@@ -1687,7 +1688,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
 
 
@@ -1722,22 +1723,22 @@ DevContext.prototype.launching = async function () {
     // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/image.json`, res.data ]);
     // console.log(res.data);
 
-  
-
-    
-
-    
-
-
-
-
-    
 
 
 
 
 
-    
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1771,7 +1772,7 @@ DevContext.prototype.launching = async function () {
     ]
     const pyeongTarget = [
       30,
-      31, 
+      31,
       32,
       33
     ];
@@ -1803,7 +1804,7 @@ DevContext.prototype.launching = async function () {
     // await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
     console.log(matrix);
-    
+
     await this.MONGOCONSOLEC.close();
 
     */
@@ -1844,9 +1845,9 @@ DevContext.prototype.launching = async function () {
     // const dir = process.cwd() + "/apps/googleAPIs";
     // const tokenDir = dir + "/python/google/tokens";
     // const iamSecrets = tokenDir + "/iam_secrets.json";
-  
+
     // process.env[envConst] = iamSecrets;
-    
+
     // const { BetaAnalyticsDataClient } = require('@google-analytics/data');
 
     // const analyticsDataClient = new BetaAnalyticsDataClient();
@@ -1878,17 +1879,17 @@ DevContext.prototype.launching = async function () {
     // await runReport();
 
 
-    
-
-
-    
 
 
 
 
 
 
-    
+
+
+
+
+
 
     // await this.MONGOCONSOLEC.connect();
 
@@ -1947,7 +1948,7 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-    
+
 
     // await this.MONGOCONSOLEC.close();
 
@@ -1956,7 +1957,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
     /*
 
@@ -2022,11 +2023,11 @@ DevContext.prototype.launching = async function () {
         } else {
           target = 0;
         }
-      
+
         thisObj.cliids.push({ cliid, possible, priority, target });
 
       } catch {}
-      
+
     }
 
     for (let json of tong) {
@@ -2034,12 +2035,12 @@ DevContext.prototype.launching = async function () {
     }
 
     console.log(tong);
-    
+
     await this.MONGOCONSOLEC.close();
 
     */
     /*
-    
+
     // lowLow update
 
     await this.MONGOCONSOLEC.connect();
@@ -2107,8 +2108,6 @@ DevContext.prototype.launching = async function () {
     await this.MONGOCONSOLEC.close();
 
     */
-    
-    
 
 
 
@@ -2122,9 +2121,11 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
 
-    
+
+
+
+
 
     // await this.MONGOLOGC.connect();
     // const selfMongo = this.MONGOLOGC;
@@ -2158,7 +2159,7 @@ DevContext.prototype.launching = async function () {
     // })
 
     // await fileSystem("writeJson", [ `${process.cwd()}/temp/tong.json`, clientsTong ])
-    
+
 
     // matrix = [
     //   [
@@ -2185,7 +2186,7 @@ DevContext.prototype.launching = async function () {
     //       targetUser = {
     //         source: {
     //           mother: "(direct)",
-    //           campaign: "(not set)" 
+    //           campaign: "(not set)"
     //         }
     //       };
     //     }
@@ -2228,7 +2229,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
     /*
 
@@ -2241,7 +2242,7 @@ DevContext.prototype.launching = async function () {
     let tempArr;
     let num;
     let sheetsId;
-    
+
 
     allRows = await back.mongoRead(collection, {}, { selfMongo });
 
@@ -2635,7 +2636,7 @@ DevContext.prototype.launching = async function () {
       stayLength += thisProjects.filter((p) => { return /대기/gi.test(p.process.status) }).length;
     }
 
-    
+
     for (let { desid } of filtered) {
       thisDesigner = designers.find((d) => { return d.desid === desid });
       thisProjects = allProjects.filter((p) => { return p.desid === desid });
@@ -2665,7 +2666,7 @@ DevContext.prototype.launching = async function () {
     await sheets.update_value_inPython(sheetsId, "project", matrix);
 
     console.log(matrix);
-    
+
     await this.MONGOCONSOLEC.close();
 
     */
@@ -2700,15 +2701,15 @@ DevContext.prototype.launching = async function () {
         let cardsRaw;
         let listDic;
         let listDicKeys, listRefined;
-    
+
         res = await requestSystem(urlMaker(`1/boards/${boardId}/lists`), { token, key }, { method: "get" });
         listRaw = res.data;
         targetList = listRaw.filter((obj) => { return /^PD/.test(obj.name) });
-    
+
         res = await requestSystem(urlMaker(`1/boards/${boardId}/cards`), { token, key }, { method: "get" });
         cardsRaw = res.data.filter((obj) => { return targetList.map((o) => { return o.id }).includes(obj.idList) });
-    
-    
+
+
         listDic = {};
         for (let { id, name, close } of targetList) {
           if (!close) {
@@ -2718,21 +2719,21 @@ DevContext.prototype.launching = async function () {
         for (let obj of cardsRaw) {
           listDic[obj.idList].cards.push(equalJson(JSON.stringify(obj)));
         }
-    
+
         listDicKeys = Object.keys(listDic);
         listRefined = [];
         for (let key of listDicKeys) {
           listDic[key].id = key;
           listRefined.push(listDic[key]);
         }
-    
+
         for (let obj of listRefined) {
-    
+
           obj.key = obj.name;
           obj.name = "";
           obj.goal = "";
           obj.childrenRaw = [];
-    
+
           for (let card of obj.cards) {
             if (card.labels.length === 0) {
               obj.goal = card.name;
@@ -2743,12 +2744,12 @@ DevContext.prototype.launching = async function () {
             }
           }
           delete obj.cards;
-    
+
           obj.children = [];
           for (let rawObj of obj.childrenRaw) {
             res = await requestSystem(urlMaker(`1/checklists/${rawObj.idChecklists[0]}`), { token, key }, { method: "get" });
             res.data.checkItems.sort((a, b) => { return a.pos - b.pos });
-    
+
             obj.children.push({
               id: rawObj.id,
               name: rawObj.name,
@@ -2816,21 +2817,21 @@ DevContext.prototype.launching = async function () {
     }
 
     await sheets.update_value_inPython(sheetsId, "dev2023", matrix, [ 0, 0 ])
-    
+
     */
 
-    
 
 
-    
 
 
-    
-    
+
+
+
+
 
     /*
 
-    
+
     await this.MONGOPYTHONC.connect();
     await this.MONGOCONSOLEC.connect();
 
@@ -3218,7 +3219,7 @@ DevContext.prototype.launching = async function () {
       }
     }
 
-    
+
     proidTong = {};
     for (let obj of totalTong) {
       if (!Array.isArray(proidTong[obj.proid])) {
@@ -3360,7 +3361,7 @@ DevContext.prototype.launching = async function () {
           0,
           0,
         ]);
-        
+
 
       }
     }
@@ -3592,7 +3593,7 @@ DevContext.prototype.launching = async function () {
 
       client = await back.getClientById(project.cliid, { selfMongo: selfCoreMongo });
       designer = await back.getDesignerById(project.desid, { selfMongo: selfCoreMongo });
-  
+
       for (let { amount, date, name } of tong[proid]) {
         await bill.responseInjection(bilid, "generalConstructFee", client, designer, project, method, {
           customAmount: { amount: Number(amount) },
@@ -3866,7 +3867,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
 
 
@@ -4344,7 +4345,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
     // const selfMongo = this.MONGOC;
     //
     // const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
@@ -4978,7 +4979,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
     /*
 
     const jsdom = require("jsdom");
@@ -5380,7 +5381,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
     // force client complete
     // const cliid = "c2203_aa35s";
@@ -5799,15 +5800,15 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
 
 
 
 
-    
 
 
-    
+
+
+
 
 
 
@@ -6394,8 +6395,8 @@ DevContext.prototype.launching = async function () {
     // let query;
     // let id;
     // let status;
-    
-    
+
+
     // targets = [];
     // for (let phone of phoneNumbers) {
     //   query = { id: phone, pass };
@@ -6549,7 +6550,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
 
 
@@ -7123,7 +7124,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-  
+
     // certbot
     // await this.certRefreshing();
 
@@ -7183,11 +7184,11 @@ DevContext.prototype.launching = async function () {
     // let shareGoogleIdDesigner;
     // let clientName, designerName;
     // let project;
-    
-    
+
+
     // clientName = "정가희";
     // designerName = "박미연";
-    
+
     // projects = await back.getProjectsByNames([ clientName, designerName ]);
     // if (projects.length > 0) {
     //   project = projects[0];
@@ -7204,7 +7205,7 @@ DevContext.prototype.launching = async function () {
     //     ]);
     //     clientObj = await back.getClientById(project.cliid);
     //     designerObj = await back.getDesignerById(project.desid);
-      
+
     //     if (clientObj !== null && designerObj !== null) {
     //       await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid: clientObj.cliid, desid: designerObj.desid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
     //       await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, host: instance.address.frontinfo.host, path: "evaluation", proid: project.proid });
@@ -7255,7 +7256,7 @@ DevContext.prototype.launching = async function () {
     //   contents: "안녕하세요.",
     // }));
 
-    
+
     // send sms
     // const name = "하예린";
     // const amount = 8_104_000;
@@ -8779,7 +8780,7 @@ DevContext.prototype.setProposalSettingForDesigner = async function (desid, file
     console.log(proposalArr[0]);
     await this.back.updateDesigner([ { desid }, { "setting.proposal": proposalArr } ]);
     await this.back.updateDesigner([ { desid }, { "setting.description": JSON.parse(JSON.stringify(description)) } ]);
-    
+
     console.log("injection success");
   } catch (e) {
     console.log(e);

@@ -990,7 +990,7 @@ LogReport.prototype.dailyReports = async function () {
       "number",
       "string",
     ]
-    const applyUpdate = async (sheetsId, newMatrix) => {
+    const applyUpdate = async (sheetsId, newMatrix, monthVersion = false) => {
       const typePatch = (typeArr) => {
         return (arr, index) => {
           let newArr;
@@ -1011,7 +1011,7 @@ LogReport.prototype.dailyReports = async function () {
           }
         }
       }
-      const returnFinalArr = async (sheetsId, newMatrix) => {
+      const returnFinalArr = async (sheetsId, newMatrix, monthVersion = false) => {
         try {
           let pastValues, sliceIndexFirst, lastDateNumbers;
           if (newMatrix.length > 1) {
@@ -1207,13 +1207,13 @@ LogReport.prototype.dailyReports = async function () {
             let facebookAspirantReach;
             let facebookAspirantImpressions;
             let facebookAspirantClicks;
-  
+
             from = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
             to = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
             to.setDate(to.getDate() + 1);
-  
+
             // get data
-  
+
             campaignRows = campaignEntireRows.filter((obj) => { return (new RegExp("^" + campaignKey)).test(obj.key); });
             campaignAspirantRows = campaignAspirantEntireRows.filter((obj) => { return (new RegExp("^" + campaignKey)).test(obj.key); });
             analyticsRows = analyticsEntireRows.find((obj) => { return obj.anaid === analyticsKey });
@@ -1224,9 +1224,9 @@ LogReport.prototype.dailyReports = async function () {
             }
             thisMeta = metaComplexRows.find((obj) => { return obj.key === metaKey });
             thisGoogle = googleComplexRows.find((obj) => { return obj.key === googleKey });
-  
+
             // 1 - total funnel
-  
+
             campaignCharge = campaignRows.reduce((acc, curr) => {
               return acc + curr.value.charge;
             }, 0);
@@ -1236,32 +1236,32 @@ LogReport.prototype.dailyReports = async function () {
             campaignClicks = campaignRows.reduce((acc, curr) => {
               return acc + curr.value.performance.clicks;
             }, 0);
-  
+
             totalUsers = analyticsRows.data.users.total;
             pageViews = analyticsRows.data.views.total;
-  
+
             consultingViews = analyticsRows.data.views.detail.pagePath.cases.filter((obj) => {
               return /consulting\.php/gi.test(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
             }, 0);
-  
+
             popupOpenEvents = analyticsRows.data.events.detail.eventName.cases.filter((obj) => {
               return /popupOpen/gi.test(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
             }, 0);
-  
+
             requestsNumber = requests.filter(({ request }) => {
               const thisValue = request.timeline.toNormal().valueOf();
               return thisValue >= from.valueOf() && thisValue < to.valueOf();
             }).length;
-  
+
             contractsNumber = projects.toNormal().filter(({ process }) => {
               const thisValue = process.contract.first.date.valueOf();
               return thisValue >= from.valueOf() && thisValue < to.valueOf();
             }).length;
-  
+
             firstMatrix = [
               [
                 dateToString(targetDate),
@@ -1276,7 +1276,7 @@ LogReport.prototype.dailyReports = async function () {
                 contractsNumber,
               ]
             ];
-  
+
             // 1-2 - new front values
             firstNewMatrix = [
               [
@@ -1301,9 +1301,9 @@ LogReport.prototype.dailyReports = async function () {
                 (analyticsRows.data.conversion.consultingPage.total + analyticsRows.data.conversion.popupOpen.total) - (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)),
               ]
             ];
-  
+
             // 2 - facebook
-  
+
             facebookRows = campaignRows.filter((obj) => {
               return /facebook/gi.test(obj.information.mother) || /meta/gi.test(obj.information.mother) || /instagram/gi.test(obj.information.mother);
             });
@@ -1326,7 +1326,7 @@ LogReport.prototype.dailyReports = async function () {
               facebookImpressions = 0;
               facebookClicks = 0;
             }
-  
+
             facebookAspirantRows = campaignAspirantRows.filter((obj) => {
               return /facebook/gi.test(obj.information.mother) || /meta/gi.test(obj.information.mother) || /instagram/gi.test(obj.information.mother);
             });
@@ -1349,25 +1349,25 @@ LogReport.prototype.dailyReports = async function () {
               facebookAspirantImpressions = 0;
               facebookAspirantClicks = 0;
             }
-  
+
             facebookFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
               return facebookCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
             }, 0);
-  
+
             facebookFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
               return facebookCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
             }, 0);
-  
+
             facebookFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
               return facebookCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
             }, 0);
-  
+
             facebookFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
               return arr.some((obj) => {
                 if (obj === null) {
@@ -1377,14 +1377,14 @@ LogReport.prototype.dailyReports = async function () {
                 }
               });
             }).length;
-  
+
             facebookCtr = 0;
             facebookCpc = 0;
             facebookClicksConverting = 0;
             facebookClicksChargeConverting = 0;
             facebookSubmitConverting = 0;
             facebookSubmitChargeConverting = 0;
-  
+
             if (facebookImpressions !== 0) {
               facebookCtr = facebookClicks / facebookImpressions;
               facebookCtr = Math.floor(facebookCtr * 10000) / 10000;
@@ -1406,7 +1406,7 @@ LogReport.prototype.dailyReports = async function () {
             if (facebookFromSubmit !== 0) {
               facebookSubmitChargeConverting = Math.round(facebookCharge / facebookFromSubmit);
             }
-  
+
             secondMatrix = [
               [
                 dateToString(targetDate),
@@ -1430,9 +1430,9 @@ LogReport.prototype.dailyReports = async function () {
                 facebookAspirantClicks,
               ]
             ];
-  
+
             // 3 - naver
-  
+
             naverRows = campaignRows.filter((obj) => {
               return /naver/gi.test(obj.information.mother);
             });
@@ -1451,25 +1451,25 @@ LogReport.prototype.dailyReports = async function () {
               naverImpressions = 0;
               naverClicks = 0;
             }
-  
+
             naverFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
               return naverCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
             }, 0);
-  
+
             naverFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
               return naverCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
             }, 0);
-  
+
             naverFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
               return naverCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
             }, 0);
-  
+
             naverFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
               return arr.some((obj) => {
                 if (obj === null) {
@@ -1479,14 +1479,14 @@ LogReport.prototype.dailyReports = async function () {
                 }
               });
             }).length;
-  
+
             naverCtr = 0;
             naverCpc = 0;
             naverClicksConverting = 0;
             naverClicksChargeConverting = 0;
             naverSubmitConverting = 0;
             naverSubmitChargeConverting = 0;
-  
+
             if (naverImpressions !== 0) {
               naverCtr = naverClicks / naverImpressions;
               naverCtr = Math.floor(naverCtr * 10000) / 10000;
@@ -1508,7 +1508,7 @@ LogReport.prototype.dailyReports = async function () {
             if (naverFromSubmit !== 0) {
               naverSubmitChargeConverting = Math.round(naverCharge / naverFromSubmit);
             }
-  
+
             thirdMatrix = [
               [
                 dateToString(targetDate),
@@ -1527,9 +1527,9 @@ LogReport.prototype.dailyReports = async function () {
                 naverSubmitChargeConverting,
               ]
             ];
-  
+
             // 4 - clients
-  
+
             fourthMatrix = clientsRows.data.detail.map((obj) => {
               return { cliid: obj.cliid, users: obj.users, ids: obj.users.map((user) => { return user === null ? "" : user.id }).join(", ") }
             });
@@ -1545,34 +1545,34 @@ LogReport.prototype.dailyReports = async function () {
               let device;
               let referrer, referrerArr;
               let service;
-  
+
               if (users.every((obj) => { return obj === null ? true : /^New/.test(obj.type); })) {
                 returnType = "신규";
               } else {
                 returnType = "재방문";
               }
-  
+
               sourceArr = users.map((obj) => { return obj.source.mother }).filter((arr) => { return arr.length > 0 });
               campaignArr = users.map((obj) => { return obj.source.campaign }).filter((arr) => { return arr.length > 0 });
-  
+
               if (sourceArr.length > 0) {
                 source = sourceArr.flat().join(", ");
               } else {
                 source = "(direct)";
               }
-  
+
               if (campaignArr.length > 0) {
                 campaign = campaignArr.flat().join(", ");
               } else {
                 campaign = "(not set)";
               }
-  
+
               if (users.length > 0) {
                 device = users[0].device.kinds;
               } else {
                 device = "(not set)";
               }
-  
+
               referrerArr = users.map((obj) => { return obj.source.referrer }).flat();
               referrerArr.sort((a, b) => { return b.length - a.length });
               if (referrerArr.length > 0) {
@@ -1580,13 +1580,13 @@ LogReport.prototype.dailyReports = async function () {
               } else {
                 referrer = "(not set)";
               }
-  
+
               if (targetHistory.service.serid.length > 0) {
                 service = serviceParsing(targetHistory.service.serid[0]);
               } else {
                 service = "알 수 없음";
               }
-  
+
               return [
                 dateToString(targetDate),
                 cliid,
@@ -1605,11 +1605,11 @@ LogReport.prototype.dailyReports = async function () {
                 service,
               ];
             });
-  
+
             // 5 - campaign
-  
+
             fifthMatrix = [];
-  
+
             for (let campaignRow of campaignRows) {
               fifthMatrixFactorArr = [];
               fifthMatrixFactorArr.push(dateToString(targetDate));
@@ -1622,10 +1622,10 @@ LogReport.prototype.dailyReports = async function () {
               fifthMatrixFactorArr.push(campaignRow.value.performance.clicks);
               fifthMatrix.push(fifthMatrixFactorArr);
             }
-  
-  
+
+
             // 6 - contract
-  
+
             sixthMatrix = clientsRows.data.detail.map((obj) => { return { cliid: obj.cliid, users: obj.users, ids: obj.users.map((user) => { return user.id }).join(", ") } });
             sixthMatrix = sixthMatrix.map(({ cliid, users, ids }) => {
               const targetRequest = requests.find((obj) => { return obj.cliid === cliid });
@@ -1639,34 +1639,34 @@ LogReport.prototype.dailyReports = async function () {
               let referrer, referrerArr;
               let service;
               let query;
-  
+
               if (users.every((obj) => { return /^New/.test(obj.type); })) {
                 returnType = "신규";
               } else {
                 returnType = "재방문";
               }
-  
+
               sourceArr = users.map((obj) => { return obj.source.mother }).filter((arr) => { return arr.length > 0 });
               campaignArr = users.map((obj) => { return obj.source.campaign }).filter((arr) => { return arr.length > 0 });
-  
+
               if (sourceArr.length > 0) {
                 source = sourceArr.flat().join(", ");
               } else {
                 source = "(direct)";
               }
-  
+
               if (campaignArr.length > 0) {
                 campaign = campaignArr.flat().join(", ");
               } else {
                 campaign = "(not set)";
               }
-  
+
               if (users.length > 0) {
                 device = users[0].device.kinds;
               } else {
                 device = "(not set)";
               }
-  
+
               referrerArr = users.map((obj) => { return obj.source.referrer }).flat();
               referrerArr.sort((a, b) => { return b.length - a.length });
               if (referrerArr.length > 0) {
@@ -1674,13 +1674,13 @@ LogReport.prototype.dailyReports = async function () {
               } else {
                 referrer = "(not set)";
               }
-  
+
               if (targetHistory.service.serid.length > 0) {
                 service = serviceParsing(targetHistory.service.serid[0]);
               } else {
                 service = "알 수 없음";
               }
-  
+
               targetProject = targetProjects.find((obj) => {
                 obj.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
               });
@@ -1690,7 +1690,7 @@ LogReport.prototype.dailyReports = async function () {
               if (targetProject === undefined) {
                 targetProject = null;
               }
-  
+
               query = [];
               for (let user of users) {
                 for (let { path } of user.history) {
@@ -1703,7 +1703,7 @@ LogReport.prototype.dailyReports = async function () {
               query = query.filter((str) => { return /\?/gi.test(str); });
               query = query.map((str) => { return Object.values(querystring.parse(str.split("?")[1])) }).flat();
               query = [ ...new Set(query.filter((str) => { return /[가-힣ㄱ-ㅎㅏ-ㅣ]/gi.test(str) })) ];
-  
+
               return [
                 dateToString(targetDate),
                 cliid,
@@ -1739,10 +1739,10 @@ LogReport.prototype.dailyReports = async function () {
                 return targetProject.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf();
               }
             });
-  
-  
+
+
             // 7 - google
-  
+
             googleRows = campaignRows.filter((obj) => {
               return /google/gi.test(obj.information.mother);
             });
@@ -1761,25 +1761,25 @@ LogReport.prototype.dailyReports = async function () {
               googleImpressions = 0;
               googleClicks = 0;
             }
-  
+
             googleFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
               return googleCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
             }, 0);
-  
+
             googleFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
               return googleCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
             }, 0);
-  
+
             googleFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
               return googleCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
             }, 0);
-  
+
             googleFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
               return arr.some((obj) => {
                 if (obj === null) {
@@ -1789,14 +1789,14 @@ LogReport.prototype.dailyReports = async function () {
                 }
               });
             }).length;
-  
+
             googleCtr = 0;
             googleCpc = 0;
             googleClicksConverting = 0;
             googleClicksChargeConverting = 0;
             googleSubmitConverting = 0;
             googleSubmitChargeConverting = 0;
-  
+
             if (googleImpressions !== 0) {
               googleCtr = googleClicks / googleImpressions;
               googleCtr = Math.floor(googleCtr * 10000) / 10000;
@@ -1818,7 +1818,7 @@ LogReport.prototype.dailyReports = async function () {
             if (googleFromSubmit !== 0) {
               googleSubmitChargeConverting = Math.round(googleCharge / googleFromSubmit);
             }
-  
+
             seventhMatrix = [
               [
                 dateToString(targetDate),
@@ -1837,10 +1837,10 @@ LogReport.prototype.dailyReports = async function () {
                 googleSubmitChargeConverting,
               ]
             ];
-  
-  
+
+
             // 8 - sns
-  
+
             if (thisMeta !== undefined && thisGoogle !== undefined) {
               snsMatrix = [
                 [
@@ -1878,9 +1878,9 @@ LogReport.prototype.dailyReports = async function () {
                 ]
               ];
             }
-  
+
             // 9 - kakao
-  
+
             kakaoRows = campaignRows.filter((obj) => {
               return /kakao/gi.test(obj.information.mother);
             });
@@ -1899,25 +1899,25 @@ LogReport.prototype.dailyReports = async function () {
               kakaoImpressions = 0;
               kakaoClicks = 0;
             }
-  
+
             kakaoFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
               return kakaoCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
             }, 0);
-  
+
             kakaoFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
               return kakaoCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
             }, 0);
-  
+
             kakaoFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
               return kakaoCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
             }, 0);
-  
+
             kakaoFromSubmit = clientsRows.data.detail.map((obj) => { return obj.users }).filter((arr) => {
               return arr.some((obj) => {
                 if (obj === null) {
@@ -1927,14 +1927,14 @@ LogReport.prototype.dailyReports = async function () {
                 }
               });
             }).length;
-  
+
             kakaoCtr = 0;
             kakaoCpc = 0;
             kakaoClicksConverting = 0;
             kakaoClicksChargeConverting = 0;
             kakaoSubmitConverting = 0;
             kakaoSubmitChargeConverting = 0;
-  
+
             if (kakaoImpressions !== 0) {
               kakaoCtr = kakaoClicks / kakaoImpressions;
               kakaoCtr = Math.floor(kakaoCtr * 10000) / 10000;
@@ -1956,7 +1956,7 @@ LogReport.prototype.dailyReports = async function () {
             if (kakaoFromSubmit !== 0) {
               kakaoSubmitChargeConverting = Math.round(kakaoCharge / kakaoFromSubmit);
             }
-  
+
             kakaoMatrix = [
               [
                 dateToString(targetDate),
@@ -1975,7 +1975,7 @@ LogReport.prototype.dailyReports = async function () {
                 kakaoSubmitChargeConverting,
               ]
             ];
-  
+
             return [
               firstMatrix,
               firstNewMatrix,
@@ -3400,6 +3400,9 @@ LogReport.prototype.dailyReports = async function () {
 
     await sheets.update_value_inPython(ninthSheetsId, "", ninth);
     await sheets.update_value_inPython(tenthSheetsId, "", tenth);
+
+    console.log(totalFunnelMonthMatrix);
+
 
     await applyUpdate(monthSheets.totalFunnelMonthMatrix, totalFunnelMonthMatrix);
     await applyUpdate(monthSheets.facebookPaidMonthMatrix, facebookPaidMonthMatrix);
