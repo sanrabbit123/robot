@@ -2365,6 +2365,9 @@ LogReport.prototype.dailyReports = async function () {
             }
           }
 
+          console.log(target);
+
+
           if (target.length !== 0) {
             endD = target[0][0];
             startD = target[target.length - 1][0];
@@ -3400,9 +3403,6 @@ LogReport.prototype.dailyReports = async function () {
 
     await sheets.update_value_inPython(ninthSheetsId, "", ninth);
     await sheets.update_value_inPython(tenthSheetsId, "", tenth);
-
-    console.log(totalFunnelMonthMatrix);
-
 
     await applyUpdate(monthSheets.totalFunnelMonthMatrix, totalFunnelMonthMatrix);
     await applyUpdate(monthSheets.facebookPaidMonthMatrix, facebookPaidMonthMatrix);
