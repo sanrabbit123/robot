@@ -13,14 +13,14 @@ const SecondGhost = function (mother = null, back = null, address = null) {
   }
   const { WebClient } = require("@slack/web-api");
   this.dir = process.cwd() + "/apps/secondGhost";
-  this.slack_token = "xoxb-717757271335-4566120587107-i7TxxYzbPWPzdBMPoZDo2kxn";
-  this.slack_userToken = "xoxp-717757271335-704486967090-4566130160163-fd2a2cc412e2a509a43635fb8f6c65e2";
+  this.slack_token = this.address.officeinfo.slack.bot;
+  this.slack_userToken = this.address.officeinfo.slack.user;
   this.slack_bot = new WebClient(this.slack_token);
   this.slack_user = new WebClient(this.slack_userToken);
-  this.slack_fairyToken = "xoxp-717757271335-6253548571781-6337284288178-c87ebd41bc1e5f620d9619ca53644de8";
+  this.slack_fairyToken = this.address.officeinfo.slack.user;
   this.slack_fairyId = "U067FG4GTNZ";
   this.slack_fairyAppId = "A04GQKWAQF6";
-  this.slack_uragenToken = "xoxp-717757271335-5166005860961-6752069028278-3af6086b14dde6cb44fadb21201440be";
+  this.slack_uragenToken = this.address.officeinfo.slack.user;
   this.slack_uragenId = "U054W05RAU9";
   this.slack_uragenAppId = "A06NPAEMLQZ";
   this.slack_fairy = new WebClient(this.slack_fairyToken);
@@ -188,7 +188,7 @@ SecondGhost.prototype.ghostConnect = async function () {
       }
     }
     pems.allowHTTP1 = true;
-    
+
     //set member slack info
     let members;
     members = await back.setMemberObj({ getMode: true, selfMongo: MONGOC });
