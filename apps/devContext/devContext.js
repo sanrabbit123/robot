@@ -170,31 +170,9 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-    const analytics = new GoogleAnalytics();
-    const simpleRes = await analytics.simpleMetric(new Date(2024, 5, 24), new Date(2024, 5, 27));
-    console.log(simpleRes);
-
-
-
-
-    // const targetDatabaseId = "83de9152-7546-4ab6-b2e5-e0df14d71672";
-
-    // await chrome.pageToPng("http://13.209.10.155:60080/consulting.php", null, false, true);
-
-
-    // const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
-    // const app = new LiaisonCalendar();
-    // const result = (await app.listCalendars());
-    // await fileSystem("writeJson", [ `${process.cwd()}/temp/target.json`, result ]);
-    // console.log(result);
-
-    // const LiaisonCalendar = require(process.cwd() + "/apps/notionAPIs/children/liaisonCalendar.js");
-    // const app = new LiaisonCalendar();
-    // await app.weeklySummary();
-
-
-
-    // console.log(await requestSystem("https://home-liaison.link:3000/kakaoComplex", { day: 30 }, { headers: { "Content-Type": "application/json" } }));
+    // const analytics = new GoogleAnalytics();
+    // const simpleRes = await analytics.simpleMetric(new Date(2024, 5, 24), new Date(2024, 5, 27));
+    // console.log(simpleRes);
 
 
     // await this.MONGOCONSOLEC.connect();
@@ -7502,11 +7480,13 @@ DevContext.prototype.launching = async function () {
     //   contents: "안녕하세요.",
     // }));
 
+    // const audio = new PlayAudio();
+    // await audio.textToVoice("안녕하세요, 저의 이름은 서연입니다. 다음은 어피니티에 대한 설명입니다!");
 
     // send sms
-    // const name = "하예린";
-    // const amount = 8_104_000;
-    // console.log(await bill.passiveSync("b219g_aa02s", "김수진", 1, 330000, new Date(2021, 8, 15, 15, 0, 0), "카드(삼성)", "이니시스"));
+    // const name = "김민영";
+    // const amount = 165000;
+    // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
 
 
     // front designer sync

@@ -98,13 +98,13 @@ PlayAudio.prototype.textToVoice = async function (text = "안녕하세요?") {
   try {
     const os = require("os");
     let file;
-    if (/Darwin/gi.test(os.type())) {
-      await shellExec(`say "${text.replace(/\"/gi, '').replace(/[^가-힣\?\!\. ]/gi, '')}"`);
-    } else {
+    // if (/Darwin/gi.test(os.type())) {
+    //   await shellExec(`say "${text.replace(/\"/gi, '').replace(/[^가-힣\?\!\. ]/gi, '')}"`);
+    // } else {
       file = await this.aws.pollyStream(text);
       await this.play(file);
       await shellExec(`rm -rf ${shellLink(file)}`);
-    }
+    // }
   } catch (e) {
     console.log(e);
   }
