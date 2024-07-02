@@ -642,7 +642,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const { fileSystem, shellExec, shellLink, consoleQ, sleep, messageSend, requestSystem, ghostFileUpload, mongo, mongocontentsinfo } = this.mother;
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
-  const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
+  const notePath = process.env.HOME + "/note/portfolio";
   const errorMessage = `argument must be => [ { client: "", designer: "", link: "" } ... ]`;
   const photoFolderConst = "사진_등록_포트폴리오";
   const foreCastContant = `/corePortfolio/forecast`;
@@ -727,8 +727,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           throw new Error("invaild pid");
         }
 
-        note = new AppleNotes({ folder: "portfolio", subject: nextPid + "(발행대기)" });
-        await note.createNote(`${designer} 실장님 ${client} 고객님`);
+        await fileSystem("write", [ `${notePath}/${nextPid} (발행대기)`, `${nextPid}\n${designer} 실장님 ${client} 고객님` ]);
 
         folderPath = await drive.get_folder_inPython(link, nextPid, true);
 
@@ -815,7 +814,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
           clientObj = await back.getClientById(project.cliid);
           designerObj = await back.getDesignerById(project.desid);
-  
+
           zipPhotoRes = await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
           zipIdDesigner = zipPhotoRes.data.googleId.designer;
           zipIdClient = zipPhotoRes.data.googleId.client;
@@ -868,8 +867,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         if (nextPid === null) {
           throw new Error("invaild pid");
         }
-        note = new AppleNotes({ folder: "portfolio", subject: nextPid + "(발행대기)" });
-        await note.createNote(`${targetDesigner.designer} 실장님`);
+
+        await fileSystem("write", [ `${notePath}/${nextPid} (발행대기)`, `${nextPid}\n${designer} 실장님` ]);
 
         folderPath = await drive.get_folder_inPython(link, nextPid, true);
 
@@ -914,7 +913,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     }
 
     await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsSchedule", { data: null }, { headers: { "Content-Type": "application/json" } });
-    
+
   } catch (e) {
     console.log(e);
   } finally {
@@ -972,7 +971,7 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
 
       targetFolder = options.photo_dir;
       targetFolderList = await fileSystem(`readFolder`, [ targetFolder ]);
-  
+
       for (let fileName of targetFolderList) {
         tempArr = fileName.split("_");
         tempArr2 = tempArr[tempArr.length - 1].split(".");
@@ -982,9 +981,9 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
         }
         [ clientName, designerName ] = tempArr;
         exe = tempArr[tempArr.length - 1];
-  
+
         projects = await back.getProjectsByNames([ hangul.fixString(clientName.trim()), hangul.fixString(designerName.trim()) ], { selfMongo });
-  
+
         if (projects.length === 0) {
           console.log(clientName, designerName);
           targetProject = null;
@@ -1016,14 +1015,14 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
             [ targetProject ] = projects;
           }
         }
-  
+
         if (targetProject === null) {
           throw new Error(clientName + " " + designerName + " " + "project not found");
         }
-  
+
         thisProid = targetProject.proid;
         rows = await back.mongoRead(collection, { proid: thisProid }, { selfMongo: selfContentsMongo });
-  
+
         if (rows.length > 0) {
           thisPid = rows[0].pid;
         } else {
@@ -1056,18 +1055,18 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
             thisPid = contentsArr[0].contents.portfolio.pid;
           }
         }
-  
+
         thisFolderName = thisProid + splitToken + thisPid;
-  
+
         response = await requestSystem("https://" + address.officeinfo.ghost.host + "/makeFolder", {
           path: "/" + corePortfolio + "/" + serverFolderName + "/" + thisFolderName,
         }, {
           headers: { "Content-Type": "application/json" }
         });
-        
+
         thisFileName = videoFileKeyword + String(response.data.list.length) + thisPid + "." + exe;
         await ghostFileUpload([ `${targetFolder}/${fileName}` ], [ "/" + corePortfolio + "/" + serverFolderName + "/" + thisFolderName + "/" + thisFileName ]);
-  
+
       }
 
     }

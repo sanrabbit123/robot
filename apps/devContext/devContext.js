@@ -430,7 +430,8 @@ DevContext.prototype.launching = async function () {
     // date.setDate(date.getDate() + 1);
     // requestString += dateToString(date);
     //
-    // await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/analyticsDaily", { date: requestString, dayNumber: 57 }, { headers: { "Content-Type": "application/json" } });
+    // console.log(requestString);
+    // console.log(await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/analyticsDaily", { date: requestString, dayNumber: 57 }, { headers: { "Content-Type": "application/json" } }));
 
 
 
@@ -7364,8 +7365,8 @@ DevContext.prototype.launching = async function () {
 
 
     // kakao token
-    // const app = new KakaoTalk();
-    // await app.generateToken();
+    const app = new KakaoTalk();
+    await app.generateToken();
 
 
     // kakao test
@@ -7484,11 +7485,9 @@ DevContext.prototype.launching = async function () {
     // await audio.textToVoice("안녕하세요, 저의 이름은 서연입니다. 다음은 어피니티에 대한 설명입니다!");
 
     // send sms
-    // const name = "최미소";
-    // const amount = 975_480;
+    // const name = "양재웅";
+    // const amount = 1_190_200;
     // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
-
-
 
 
     // front designer sync
