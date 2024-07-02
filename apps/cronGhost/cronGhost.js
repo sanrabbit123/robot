@@ -50,7 +50,7 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
       { name: "secondGhost", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
       { name: "transferLounge", protocol: "https:", host: address.transinfo.host, port: generalPort, },
       { name: "contentsLounge", protocol: "https:", host: address.contentsinfo.host, port: generalPort, },
-      { name: "staticLounge", protocol: "https:", host: address.officeinfo.ghost.host, port: generalPort, },
+      { name: "staticLounge", protocol: "https:", host: address.officeinfo.ghost.host, port: 3001, },
     ];
 
     targetNumber = targets.length;
@@ -246,7 +246,7 @@ CronGhost.prototype.diskTestAndCost = async function (MONGOC) {
     const aws = this.aws;
     const back = this.back;
     const collection = "costLog";
-    const selfMongo = MONGOC;  
+    const selfMongo = MONGOC;
     let response;
     let tong;
     let rows;

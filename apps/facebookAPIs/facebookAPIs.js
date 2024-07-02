@@ -17,7 +17,7 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
   this.facebookUrl = "https://graph.facebook.com";
   this.facebookAppId = "4385911554783319";
   this.facebookAppSecret = "5c9ad0873f5983081b8ad1ba1855806e";
-  this.facebookToken = "EAAZBU9pw9OFcBO6GyUGqzMdFAjm8aZAnqOxKSLVcf16K7trVrbTOZBQ4Sqo4NrQ7A1QRbX4pBFxBkiFOWLoAHWm6y9t68CYk7dkyuJ5RQH4p83mB1dnijjsjsLbZAIujsSp7ZBPjAzc1V4cANrXPWXCZCi3ZCXLeM28nsgddQTnBSKrxpiCA5vmwnza3ceuOYir";
+  this.facebookToken = "EAAZBU9pw9OFcBO0a81H4j76O3X6eChLCasDzmpdxrVnVYWpXCZCr0cfTmlYCNPc46D3d6whJoQHvWZCk0JUuzdG2PTDn4ccvtbWWRRrC2SMZBxSZA4ewUH8ZCgMZCLC5csAbND94viqf6kacJQ5Y3E4SsYQsvPitxmtHcgP6uNYPCLKW9H7ZBZCQtPfMPJMYJTkhC";
   this.facebookPageId = "290144638061244";
   this.instagramId = "17841405547472752";
   this.facebookAdId = "505249990112820";
@@ -77,7 +77,7 @@ FacebookAPIs.prototype.readLeadgenCampaigns = async function (ago, noRawMode = t
         }
         campaign.id = o._data.id;
         campaign.name = o._data.name;
-  
+
         fields = [ "name", "adset_id", "adset_name" ];
         params = {
           "time_range": {
@@ -85,7 +85,7 @@ FacebookAPIs.prototype.readLeadgenCampaigns = async function (ago, noRawMode = t
             "until": dateToString(future),
           }
         };
-  
+
         ads = await (new Campaign(campaign.id)).getAds(
           fields,
           params
@@ -118,7 +118,7 @@ FacebookAPIs.prototype.readLeadgenCampaigns = async function (ago, noRawMode = t
 
           campaign.ads.push(objectDeepCopy(ad));
         }
-  
+
         campaigns.push(objectDeepCopy(campaign));
       }
     }
@@ -151,7 +151,7 @@ FacebookAPIs.prototype.readLeads = async function (dateDelta = 30) {
       c.created_time = new Date(c.created_time);
       return c;
     });
-    
+
     result.sort((a, b) => { return b.created_time.valueOf() - a.created_time.valueOf() });
 
     return result.filter((o) => { return o.created_time.valueOf() >= agoAgo.valueOf() });
@@ -467,7 +467,7 @@ FacebookAPIs.prototype.getActiveInstantFormId = async function (logger = null) {
       access_token: facebookToken
     }, { method: "get" });
     pageAccessToken = res.data.data.find((o) => { return o.id === facebookPageId }).access_token;
-    
+
     await sleep(delta);
 
     res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + facebookPageId + "/leadgen_forms", {
@@ -524,7 +524,7 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
     let rows;
     let emailRaw, contractRaw;
     let timeRaw;
-  
+
     tong = [];
     for (let obj of leads) {
 
@@ -565,7 +565,7 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
         }
         tempObj.data.serid = seridRaw;
       } catch {
-        tempObj.data.serid = null;  
+        tempObj.data.serid = null;
       }
 
       try {
@@ -673,7 +673,7 @@ FacebookAPIs.prototype.syncMetaInstantForm = async function (selfMongo, dateDelt
 
     for (let row of tong) {
       json = objectDeepCopy(row);
-      thisId = row.id;      
+      thisId = row.id;
       rows = await back.mongoRead(collection, { id: thisId }, { selfMongo });
       if (rows.length === 0) {
         messageSend({ text: "새로운 인스턴트 문의가 왔습니다! 성함은 " + json.data.name + "입니다!", channel: "#401_consulting" }).catch((err) => { console.log(err); });
@@ -757,9 +757,9 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
       target = rows[i];
       thisId = target.id;
       requestNumber = 0;
-  
+
       try {
-  
+
         serid = target.data.serid;
         if (/[0-9]/gi.test(target.data.purchase)) {
           purchase = Number(target.data.purchase.replace(/[^0-9]/gi, ''));
@@ -772,13 +772,13 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
         contract = target.data.contract;
         etc = "from meta instant ads";
         living = "false";
-    
+
         if (/^0/gi.test(target.data.phone)) {
           phone = autoHypenPhone(target.data.phone.trim().replace(/[^0-9\-]/gi, ''));
         } else {
           phone = autoHypenPhone(String('0' + target.data.phone).trim().replace(/[^0-9\-]/gi, ''));
         }
-    
+
         address = target.data.address.trim().replace(/[\n\t]/gi, '').replace(/[\n\t]/gi, '');
         searchResult = await app.getAddress(address);
         if (searchResult !== null) {
@@ -790,14 +790,14 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
             }
           }
         }
-    
+
         pyeong = target.data.pyeong.replace(/[^0-9\.]/gi, '');
         if (pyeong === '' || Number.isNaN(Number(pyeong))) {
           pyeong = 34;
         } else {
           pyeong = Number(pyeong);
         }
-    
+
         livingNow = false;
         try {
           if (/거주/gi.test(target.data.expected)) {
@@ -817,7 +817,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
           expectedYear = /([0-9]+[ ]*[년연])/gi.exec(expected)
           expectedMonth = /([0-9]+[ ]*[월윌])/gi.exec(expected)
           expectedDate = /([0-9]+[ ]*[일])/gi.exec(expected)
-      
+
           if (expectedYear === null && expectedMonth === null && expectedDate === null) {
             if (/거주/gi.test(target.data.expected)) {
               livingNow = true;
@@ -847,7 +847,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
             } else {
               expectedYear = null;
             }
-        
+
             if (expectedMonth !== null) {
               if (expectedMonth[0] !== undefined) {
                 expectedMonth = Number(expectedMonth[0].replace(/[^0-9]/gi, ''));
@@ -857,7 +857,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
             } else {
               expectedMonth = null;
             }
-        
+
             if (expectedDate !== null) {
               if (expectedDate[0] !== undefined) {
                 expectedDate = Number(expectedDate[0].replace(/[^0-9]/gi, ''));
@@ -867,7 +867,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
             } else {
               expectedDate = null;
             }
-            
+
             tempDate = new Date(JSON.stringify(now).slice(1, -1));
             if (expectedYear === null) {
               year = tempDate.getFullYear();
@@ -884,20 +884,20 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
             } else {
               date = expectedDate;
             }
-        
+
             thisDate = stringToDate(`${String(year)}-${zeroAddition(month)}-${zeroAddition(date)}`)
             expected = new Date(JSON.stringify(thisDate).slice(1, -1));
           }
         }
-    
+
         if (email === undefined || email === null || email === '') {
           email = "";
         }
-    
+
         if (contract === undefined || contract === null || contract === '') {
           contract = "자가";
         }
-    
+
         map = [
           {
             property: "name",
@@ -940,7 +940,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
             value: String(contract),
           },
         ];
-        
+
         if (/0[0-9][0-9]?\-[0-9][0-9][0-9][0-9]?\-[0-9][0-9][0-9][0-9]/gi.test(phone)) {
           if (name.length < 9 && name.length > 1) {
             if (/없/gi.test(name) || /없음/gi.test(name) || /딱히/gi.test(name) || /비공개/gi.test(name) || /않/gi.test(name) || /개인샵/gi.test(name) || /개인샾/gi.test(name) || /필라테스/gi.test(name) || /필름도배/gi.test(name)) {
@@ -948,7 +948,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
             } else {
               response = await back.getClientsByQuery({ phone }, { selfMongo: selfCoreMongo })
               if (response.length === 0) {
-      
+
                 clientResponse = await requestSystem("https://" + instance.address.backinfo.host + ":3000/clientSubmit", {
                   map
                 }, {
@@ -961,7 +961,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
                   throw new Error("");
                 }
                 cliid = clientResponse.data.cliid;
-      
+
                 await homeliaisonAnalytics({
                   action: "login",
                   data: {
@@ -970,16 +970,16 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
                   },
                 });
                 await sleep(5000);
-    
+
                 // style check
-      
+
                 defaultQueryObject = {
                   newMode: true,
                   method: "client",
                   id: cliid
                 };
                 whereQuery = { cliid };
-      
+
                 updateQuery = {};
                 coreQuery = {};
                 updateQuery["curation.service.serid"] = [ serid ];
@@ -995,9 +995,9 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
                     "origin": instance.address.frontinfo.host,
                   }
                 });
-      
+
                 await sleep(100);
-    
+
                 updateQuery = {};
                 coreQuery = {};
                 updateQuery["curation.check.purchase"] = Number.isNaN(Number(purchase)) ? 0 : Number(purchase);
@@ -1012,9 +1012,9 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
                     "origin": instance.address.frontinfo.host,
                   }
                 });
-      
+
                 await sleep(100);
-    
+
                 updateQuery = {};
                 coreQuery = {};
                 updateQuery["curation.check.time"] = [];
@@ -1029,9 +1029,9 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
                     "origin": instance.address.frontinfo.host,
                   }
                 });
-      
+
                 await sleep(100);
-    
+
                 updateQuery = {};
                 coreQuery = {};
                 updateQuery["curation.check.budget"] = budgetArr.findIndex((s) => { return s === budget });
@@ -1046,9 +1046,9 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
                     "origin": instance.address.frontinfo.host,
                   }
                 });
-      
+
                 await sleep(100);
-    
+
                 updateQuery = {};
                 coreQuery = {};
                 updateQuery["curation.image"] = objectDeepCopy(staticImageSet);
@@ -1062,9 +1062,9 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
                     "origin": instance.address.frontinfo.host,
                   }
                 });
-    
+
                 await sleep(100);
-    
+
                 updateQuery = {};
                 coreQuery = {};
                 updateQuery["budget"] = "상담 가능 시간 : \n" + (typeof target.data.time === "string" ? target.data.time : "");
@@ -1078,9 +1078,9 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
                     "origin": instance.address.frontinfo.host,
                   }
                 });
-      
+
                 await sleep(3 * 1000);
-      
+
                 await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
 
                 await sleep(1000);
@@ -1103,7 +1103,7 @@ FacebookAPIs.prototype.metaInstantToClient = async function (selfMongo, selfCore
                 });
 
                 await sleep(1000);
-    
+
               } else {
                 await back.mongoUpdate(collection, [ { id: thisId }, { injection: 1 } ], { selfMongo });
               }
@@ -1247,7 +1247,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 2, l
       campaigns = [];
       for (let o of accountResult) {
         id = o._data.id;
-    
+
         campaignResult = await (new Campaign(id)).getInsights([
           "account_id",
           "campaign_id",
@@ -1307,7 +1307,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 2, l
               thisAdSet.ad.push(objectDeepCopy(ad));
             }
           }
-  
+
           tempAdsTong = [];
           for (let adset of adsetArr) {
             for (let ad of adset.ad) {
@@ -1350,7 +1350,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 2, l
               }
             }
           }
-  
+
           thisAdSetSet = [ ...new Set(tempAdsTong.map((o) => { return o.information.adset })) ];
           adsetArr = adsetArr.filter((a) => { return thisAdSetSet.includes(a.id) });
           campaignTarget = json.advertisement.campaign.find((o) => { return id === o.information.id });
@@ -1426,7 +1426,7 @@ FacebookAPIs.prototype.metaComplex = async function (selfMongo, dayNumber = 2, l
         json.instagram.performance.clicks = website.values.find((o) => { return o.end_time.slice(0, 10) === dateToString(from) }).value;
       } catch {
         json.instagram.performance.clicks = 0;
-      }  
+      }
       await sleep(delta);
       await sleep(delta);
       res = await requestSystem("https://graph.facebook.com/" + appVersion + "/" + instagramId + "/insights", {
@@ -1590,8 +1590,8 @@ FacebookAPIs.prototype.getAccessToken = async function () {
     const url = "https://graph.facebook.com/oauth/access_token";
     let res, token;
 
-    token = "EAAZBU9pw9OFcBOwzp9kyhkXHjwIdzvZBh8w5kDJQ70koXea8B17fp2SIn2I7C2NvmCpBfb24MtCZB8UtZCIH86X2FVfdmEyZChOCWTnM0n3a7ZBzTMZBU5riyvZBDsGd30zmC5t6VCiKVZAVZBw2Is8w8F8Bv7BwYL5hY2dkm9ACMtBBcW26jbIVG3WTZAGJTTHbYmivItNCv9fdfYugcZACob3DnyIhmy4s";
-    
+    token = "EAAZBU9pw9OFcBO9CwZA4486c8IKJdPZAHhcPn7BWQGcGZAnB7tnQa5Ca9EomJUMikGOtg1IR7wghHjz9GFZByNkw9jOyNUXvEdRZCHQmtmcdEZAgnFzsLO8TngSwW86Fz9TeNYS7Wf3ZBDR1dJ5GR8TQq3lzpN8KGTwMo41sLBiptiSTLSCoJUqbEOlSjcBDLlU34ENs3G9T8u8iVxGk1kZCYko2pMMQq1Qb8oYcZD";
+
     res = await requestSystem(url, {
       grant_type: "fb_exchange_token",
       client_id: facebookAppId,
