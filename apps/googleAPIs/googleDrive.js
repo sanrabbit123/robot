@@ -150,7 +150,7 @@ GoogleDrive.prototype.get_folder_inPython = async function (folder_id, folder_na
           console.log(`remove ${shellLink(folderPath + "/" + folderInside[i])}`);
           await shellExec(`rm -rf ${shellLink(folderPath + "/" + folderInside[i])}`);
         }
-        await shellExec(`mv ${shellLink(folderPath + "/" + folderInside[i])} ${shellLink(folderPath)}/photo${String(i + 1)}${thisExec}`);
+        await shellExec(`mv ${shellLink(folderPath + "/" + folderInside[i])} ${shellLink(folderPath)}/pictureFromDrive${String(i + 1)}${thisExec}`);
       }
     }
 
