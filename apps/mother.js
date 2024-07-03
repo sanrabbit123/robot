@@ -608,7 +608,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
             form.append(key, data[key]);
           }
         }
-        
+
         form.getLength((err, length) => {
           if (err) {
             reject(err);
@@ -1246,7 +1246,7 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
         formHeaders = form.getHeaders();
         formHeaders["Content-Length"] = length;
         if (!doubleMode) {
-          axios.post(`https://${ADDRESS.officeinfo.ghost.host}:${String(3000)}/generalFileUpload`, form, {
+          axios.post(`https://${ADDRESS.officeinfo.ghost.host}:${String(3001)}/generalFileUpload`, form, {
             headers: { ...formHeaders },
           }).then((response) => {
             resolve({ message: "done" });
@@ -1256,10 +1256,10 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
         } else {
           formHeaders2 = form2.getHeaders();
           formHeaders2["Content-Length"] = length;
-          axios.post(`https://${ADDRESS.officeinfo.ghost.host}:${String(3000)}/generalFileUpload`, form, {
+          axios.post(`https://${ADDRESS.officeinfo.ghost.host}:${String(3001)}/generalFileUpload`, form, {
             headers: { ...formHeaders },
           }).then((response) => {
-            return axios.post(`https://${ADDRESS.transinfo.host}:${String(3000)}/generalFileUpload`, form2, {
+            return axios.post(`https://${ADDRESS.transinfo.host}:${String(3001)}/generalFileUpload`, form2, {
               headers: { ...formHeaders2 },
             });
           }).then((response) => {
@@ -1291,13 +1291,13 @@ Mother.prototype.generalFileUpload = function (url, fromArr, toArr) {
     }
     toList = toArr;
     form.append("toArr", JSON.stringify(toList));
-  
+
     num = 0;
     for (let fileName of fromArr) {
       form.append("file" + String(num), fs.readFileSync(fileName));
       num++;
     }
-  
+
     form.getLength((err, length) => {
       if (err) {
         reject(err);
@@ -2940,7 +2940,7 @@ Mother.prototype.stringToDate = function (str) {
         tempArr4 = tempArr[1].trim().split("월");
         if (/일/gi.test(str)) {
           str = String(Number(tempArr[0].replace(/[^0-9]/gi, '')) + 2000) + "-" + zeroAddition(Number(tempArr4[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr4[1].replace(/[^0-9]/gi, '')));
-        } else {  
+        } else {
           str = String(Number(tempArr[0].replace(/[^0-9]/gi, '')) + 2000) + "-" + zeroAddition(Number(tempArr4[0].replace(/[^0-9]/gi, ''))) + "-01";
         }
       } else {
@@ -2952,7 +2952,7 @@ Mother.prototype.stringToDate = function (str) {
         tempArr4 = tempArr[1].trim().split("월");
         if (/일/gi.test(str)) {
           str = String(Number(tempArr[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr4[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr4[1].replace(/[^0-9]/gi, '')));
-        } else {  
+        } else {
           str = String(Number(tempArr[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr4[0].replace(/[^0-9]/gi, ''))) + "-01";
         }
       } else {
@@ -3170,7 +3170,7 @@ Mother.prototype.linkToString = function (link) {
   if (typeof link !== "string") {
     throw new Error("invalid input");
   }
-  const nameToToken = (name) => { return `_____${name}_____` } 
+  const nameToToken = (name) => { return `_____${name}_____` }
   const tokens = {
     equal: nameToToken("equal"),
     amp: nameToToken("amp"),
@@ -3209,22 +3209,22 @@ Mother.prototype.linkToString = function (link) {
     protocol = linkArr[0].replace(/[\:]/gi, '');
     host = linkArr[2];
     pathName = "/" + linkArr.slice(3).join("/");
-  
+
     if (/[\?]/gi.test(pathName)) {
       search = pathName.split("?")[1];
       pathName = pathName.split("?")[0];
     } else {
       search = "";
     }
-  
+
     if (search !== "") {
       getObj = search.split("&").map((str) => { return { key: str.split("=")[0], value: str.split("=")[1] } });
     } else {
       getObj = [];
     }
-  
+
     pathName = pathName.split("/").map((str) => { return globalThis.encodeURIComponent(str) }).join("/");
-  
+
     if (getObj.map((obj) => { return `${obj.key}=${obj.value}` }).join("&") === '') {
       filteredLink = protocol + "://" + host + pathName;
     } else {
@@ -3255,7 +3255,7 @@ Mother.prototype.stringToLink = function (string) {
     console.log(string);
     throw new Error("invalid input");
   }
-  const nameToToken = (name) => { return `_____${name}_____` } 
+  const nameToToken = (name) => { return `_____${name}_____` }
   const tokens = {
     equal: nameToToken("equal"),
     amp: nameToToken("amp"),
@@ -3305,7 +3305,7 @@ Mother.prototype.jsonToString = function (json) {
     }
     json = JSON.stringify(json);
   }
-  const nameToToken = (name) => { return `_____${name}_____` } 
+  const nameToToken = (name) => { return `_____${name}_____` }
   const tokens = {
     colon: nameToToken("colon"),
     middler: nameToToken("middler"),
@@ -3372,7 +3372,7 @@ Mother.prototype.stringToJson = function (string) {
     }
     return equal(jsonString);
   }
-  const nameToToken = (name) => { return `_____${name}_____` } 
+  const nameToToken = (name) => { return `_____${name}_____` }
   const tokens = {
     colon: nameToToken("colon"),
     middler: nameToToken("middler"),
@@ -3491,11 +3491,11 @@ Mother.prototype.ipParsing = async function (ip) {
 
     url = "https://ipinfo.io";
     url += "/" + ip;
-  
+
     num = 0;
     resultBoo = false;
     expired = [];
-    
+
     do {
       if (num > (tokenArr.length * 3)) {
         finalResult = {};
@@ -4070,7 +4070,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           origin: (req.headers.origin || "unknown"),
         }
       };
-      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));  
+      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));
     } else if (mode === "start") {
       obj = {
         id: thisId,
@@ -4090,7 +4090,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           text: req.text,
         }
       };
-      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));  
+      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));
     } else if (mode === "log") {
       obj = {
         id: thisId,
@@ -4112,7 +4112,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           text: req.text,
         }
       };
-      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));  
+      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));
     } else if (mode === "cron") {
       obj = {
         id: thisId,
@@ -4123,7 +4123,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           text: req.text,
         }
       };
-      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));  
+      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));
     } else if (mode === "alive") {
       obj = {
         id: thisId,
@@ -4134,7 +4134,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           text: req.text,
         }
       };
-      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));  
+      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));
     }
 
     resolve(obj);
