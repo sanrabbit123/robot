@@ -610,7 +610,7 @@ ClientJs.prototype.infoArea = function (info) {
               index: Number(idDom.getAttribute("index")),
               thisCase: instance.cases[Number(idDom.getAttribute("index"))]
             });
-            await instance.globalChaining(instance.cases[Number(idDom.getAttribute("index"))], column, finalValue, pastRawData);  
+            await instance.globalChaining(instance.cases[Number(idDom.getAttribute("index"))], column, finalValue, pastRawData);
           }
 
           originalDiv.textContent = finalValue;
@@ -1661,7 +1661,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
               }
               for (let i of instance.data) {
                 thisCliid = i.standard.cliid;
-    
+
                 targetDom = null;
                 if (document.querySelector('.' + instance.rowViewClassName) !== null) {
                   targetDom = document.querySelector('.' + instance.rowViewClassName).querySelector('.' + thisCliid);
@@ -1672,7 +1672,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
                     targetWhiteDom = document.querySelector('.' + instance.whitePropertyBoxClassName);
                   }
                 }
-    
+
                 targetObj = addData.find((o) => { return o.cliid === thisCliid });
                 if (targetObj !== undefined) {
                   for (let key in targetObj) {
@@ -1700,7 +1700,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
                   }
                 }
               }
-    
+
             }).catch((err) => { console.log(err); });
           }, 500);
 
@@ -2103,7 +2103,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 column: "feedBack",
                 value: finalValue,
               }), "*");
-              
+
             }
 
           } else if (e.type === "message") {
@@ -2121,7 +2121,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             index: thisCase["index"],
             thisCase: instance.cases[thisCase["index"]],
           });
-          await instance.globalChaining(instance.cases[thisCase["index"]], column, finalValue, pastRawData);  
+          await instance.globalChaining(instance.cases[thisCase["index"]], column, finalValue, pastRawData);
 
           if (instance.totalFather !== null) {
             for (let father of instance.totalFatherChildren) {
@@ -3080,21 +3080,21 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                   const cilentFolderName = ("self" + uniqueValue("string")) + '_' + name + '_' + cliid;
                   const path = "/photo/client/" + cilentFolderName + (/현장/gi.test(thisPhotoType) ? "/sitePhoto" : "/preferredPhoto");
                   let formData, fileNames, toArr, obj, imageNothing;
-  
+
                   formData = new FormData();
                   formData.enctype = "multipart/form-data";
-  
+
                   fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}]/gi, ''); });
                   for (let i = 0; i < files.length; i++) {
                     formData.append("upload" + String(i), files[i]);
                   }
-  
+
                   toArr = [];
                   for (let i = 0; i < fileNames.length; i++) {
                     toArr.push(path + "/" + fileNames[i]);
                   }
                   formData.append("toArr", JSON.stringify(toArr));
-  
+
                   images = [];
                   ajaxForm(formData, BRIDGEHOST + "/generalFileUpload").then(() => {
                     return ajaxJson({ cliid }, BRIDGEHOST + "/clientPhoto");
@@ -3115,7 +3115,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                       images: obj[cliid].image
                     }, SECONDHOST + "/photoParsing");
                   }).then((raw) => {
-  
+
                     imageNothing = false;
                     if (raw === null) {
                       imageNothing = true;
@@ -3126,7 +3126,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                     if (Object.keys(raw).length === 1 && typeof raw.message === "string") {
                       imageNothing = true;
                     }
-  
+
                     styleAnalytics = raw;
                     curation = obj[cliid];
                     analytics = curation.analytics;
@@ -3980,7 +3980,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           thisMedium = thisMedium.trim() === '' ? unsetWords : thisMedium.trim();
           thisCampaign = thisCampaign.trim() === '' ? unsetWords : thisCampaign.trim();
           thisSearch = thisSearch.trim() === '' ? unknownWords : thisSearch.trim();
-          
+
           targetDetail = analyticsData.history.detail.filter((obj) => {
             return obj.event !== "scrollStop" && obj.event !== "contentsView" && obj.event !== "readTimer" && obj.event !== "addressClick" && obj.event !== "inputBlur" && obj.event !== "photoBigView";
           })
@@ -4260,7 +4260,7 @@ ClientJs.prototype.whiteCancelMaker = function (callback = null, recycle = false
       }
       instance.whiteBox.contentsBox.classList.remove("fadeup");
       instance.whiteBox.contentsBox.classList.add("fadedown");
-  
+
       //dom delete
       GeneralJs.timeouts.whiteBox = setTimeout(function () {
         instance.whiteBox.contentsBox.remove();
@@ -4549,14 +4549,14 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
     let graphCanvas;
     let graphRows;
     let graphTitle;
-  
+
     margin = 18;
     boxNumber = Math.floor((motherWidth - (margin * 3)) / (margin + 400));
     boxHeight = 450;
     boxWidth = (motherWidth - (margin * (boxNumber + 1 + 2))) / boxNumber;
     boxTop = 88;
     propertyNum = 7;
-  
+
     titleTextTop = isMac() ? 2 : 0;
     titleSize = 18;
     titleWeight = 800;
@@ -4568,7 +4568,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
     outerMargin = 36;
 
     instance.reportNumbers = [];
-  
+
     toClientEvent = function (e) {
       e.stopPropagation();
       e.preventDefault();
@@ -4585,7 +4585,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
         blankHref(window.location.protocol + "//" + window.location.host + "/project?specificids=" + proidTarget.join(','));
       }
     }
-  
+
     //entire scroll box
     scrollBox = GeneralJs.nodes.div.cloneNode(true);
     scrollBox.classList.add("noScrollBar");
@@ -4602,7 +4602,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
     for (let z in style) {
       scrollBox.style[z] = style[z];
     }
-  
+
     totalSummary = {
       client: 0,
       proposal: 0,
@@ -4610,9 +4610,9 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       contract: 0,
       process: 0,
     };
-  
+
     for (let i = 0; i < report.length; i++) {
-  
+
       //numbers
       titleTop = 18;
       columnTop = 0;
@@ -4633,7 +4633,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
         process: 0,
       };
       reportNumbersObj = {};
-  
+
       //gray card
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       style = {
@@ -4651,7 +4651,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       for (let z in style) {
         div_clone.style[z] = style[z];
       }
-  
+
       //title gray bar
       grayBar = GeneralJs.nodes.div.cloneNode(true);
       style = {
@@ -4666,7 +4666,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
         grayBar.style[z] = style[z];
       }
       div_clone.appendChild(grayBar);
-  
+
       //title
       titleBox = GeneralJs.nodes.div.cloneNode(true);
       style = {
@@ -4684,7 +4684,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       reportNumbersObj.date = `${report[i].data[0].startDay.split('-')[0]}-${report[i].data[0].startDay.split('-')[1]}`;
       titleBox.textContent = reportNumbersObj.date;
       div_clone.appendChild(titleBox);
-  
+
       //matrix
       matrixBox = GeneralJs.nodes.div.cloneNode(true);
       style = {
@@ -4700,7 +4700,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       for (let z in style) {
         matrixBox.style[z] = style[z];
       }
-  
+
       //case name
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       matrixStyle0 = {
@@ -4720,7 +4720,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
         div_clone2.style[z] = matrixStyle0[z];
       }
       matrixBox.appendChild(div_clone2);
-  
+
       //client
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       matrixStyle1 = JSON.parse(JSON.stringify(matrixStyle0));
@@ -4732,7 +4732,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       }
       div_clone2.textContent = "문의";
       matrixBox.appendChild(div_clone2);
-  
+
       //recommend
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       matrixStyle1.left = String(matrixWidth * (3 / propertyNum)) + ea;
@@ -4741,16 +4741,16 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       }
       div_clone2.textContent = "추천";
       matrixBox.appendChild(div_clone2);
-  
+
       //proposal
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      matrixStyle1.left = String(matrixWidth * (4 / propertyNum)) + ea;
-      for (let z in matrixStyle1) {
-        div_clone2.style[z] = matrixStyle1[z];
-      }
-      div_clone2.textContent = "열람";
-      matrixBox.appendChild(div_clone2);
-  
+      // div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      // matrixStyle1.left = String(matrixWidth * (4 / propertyNum)) + ea;
+      // for (let z in matrixStyle1) {
+      //   div_clone2.style[z] = matrixStyle1[z];
+      // }
+      // div_clone2.textContent = "열람";
+      // matrixBox.appendChild(div_clone2);
+
       //contract
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       matrixStyle1.left = String(matrixWidth * (5 / propertyNum)) + ea;
@@ -4759,7 +4759,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       }
       div_clone2.textContent = "계약";
       matrixBox.appendChild(div_clone2);
-  
+
       //process start
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       matrixStyle1.left = String(matrixWidth * (6 / propertyNum)) + ea;
@@ -4768,7 +4768,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       }
       div_clone2.textContent = "진행";
       matrixBox.appendChild(div_clone2);
-  
+
       totalCliid = {
         client: [],
         recommend: [],
@@ -4785,9 +4785,9 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       };
       reportNumber = 0;
       for (let { startDay, endDay, client, recommend, proposal, contract, process, cliid: cliidObj, proid: proidObj } of report[i].data) {
-  
+
         columnTop = columnTop + columnLineHeight + columnPaddingTop;
-  
+
         //case name
         div_clone2 = GeneralJs.nodes.div.cloneNode(true);
         matrixStyle0.top = String(columnTop) + ea;
@@ -4800,7 +4800,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
         }
         div_clone2.textContent = `${startDay.split('-')[2]} ~ ${endDay.split('-')[2]}`;
         matrixBox.appendChild(div_clone2);
-  
+
         //client
         div_clone2 = GeneralJs.nodes.div.cloneNode(true);
         div_clone2.classList.add("hoverDefault_lite");
@@ -4823,7 +4823,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
         div_clone2.addEventListener("contextmenu", toProjectEvent);
         matrixBox.appendChild(div_clone2);
         summaryTong.client += client;
-  
+
         //proposal
         div_clone2 = GeneralJs.nodes.div.cloneNode(true);
         div_clone2.classList.add("hoverDefault_lite");
@@ -4840,7 +4840,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
         div_clone2.addEventListener("contextmenu", toProjectEvent);
         matrixBox.appendChild(div_clone2);
         summaryTong.proposal += proposal;
-  
+
         //recommend
         div_clone2 = GeneralJs.nodes.div.cloneNode(true);
         div_clone2.classList.add("hoverDefault_lite");
@@ -4857,7 +4857,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
         div_clone2.addEventListener("contextmenu", toProjectEvent);
         matrixBox.appendChild(div_clone2);
         summaryTong.recommend += recommend;
-  
+
         //contract
         div_clone2 = GeneralJs.nodes.div.cloneNode(true);
         div_clone2.classList.add("hoverDefault_lite");
@@ -4874,7 +4874,7 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
         div_clone2.addEventListener("contextmenu", toProjectEvent);
         matrixBox.appendChild(div_clone2);
         summaryTong.contract += contract;
-  
+
         //process
         div_clone2 = GeneralJs.nodes.div.cloneNode(true);
         div_clone2.classList.add("hoverDefault_lite");
@@ -4891,12 +4891,12 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
         div_clone2.addEventListener("contextmenu", toProjectEvent);
         matrixBox.appendChild(div_clone2);
         summaryTong.process += process;
-  
+
         reportNumber++;
       }
       matrixBox.style.height = String(columnTop + columnLineHeight + columnPaddingTop) + ea;
       div_clone.appendChild(matrixBox);
-  
+
       //summary
       summaryBox = GeneralJs.nodes.div.cloneNode(true);
       style = {
@@ -4912,21 +4912,21 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       for (let z in style) {
         summaryBox.style[z] = style[z];
       }
-  
+
       totalCliid.client = [ ...new Set(totalCliid.client) ];
       totalCliid.recommend = [ ...new Set(totalCliid.recommend) ];
       totalCliid.proposal = [ ...new Set(totalCliid.proposal) ];
       totalCliid.contract = [ ...new Set(totalCliid.contract) ];
       totalCliid.process = [ ...new Set(totalCliid.process) ];
-  
+
       totalProid.client = [ ...new Set(totalProid.client) ];
       totalProid.recommend = [ ...new Set(totalProid.recommend) ];
       totalProid.proposal = [ ...new Set(totalProid.proposal) ];
       totalProid.contract = [ ...new Set(totalProid.contract) ];
       totalProid.process = [ ...new Set(totalProid.process) ];
-  
+
       summaryBox.insertAdjacentHTML(`beforeend`, `문의 `);
-  
+
       b_clone = GeneralJs.nodes.b.cloneNode(true);
       b_clone.style.color = colorChip.green;
       b_clone.style.cursor = "pointer";
@@ -4936,9 +4936,9 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       b_clone.addEventListener("click", toClientEvent);
       b_clone.addEventListener("contextmenu", toProjectEvent);
       summaryBox.appendChild(b_clone);
-  
+
       summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;/&nbsp;&nbsp;추천 `);
-  
+
       b_clone = GeneralJs.nodes.b.cloneNode(true);
       b_clone.style.color = colorChip.green;
       b_clone.style.cursor = "pointer";
@@ -4948,21 +4948,21 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       b_clone.addEventListener("click", toClientEvent);
       b_clone.addEventListener("contextmenu", toProjectEvent);
       summaryBox.appendChild(b_clone);
-  
-      summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;/&nbsp;&nbsp;열람 `);
-  
-      b_clone = GeneralJs.nodes.b.cloneNode(true);
-      b_clone.style.color = colorChip.green;
-      b_clone.style.cursor = "pointer";
-      b_clone.textContent = String(summaryTong.recommend);
-      b_clone.setAttribute("client", JSON.stringify(totalCliid.recommend));
-      b_clone.setAttribute("project", JSON.stringify(totalProid.recommend));
-      b_clone.addEventListener("click", toClientEvent);
-      b_clone.addEventListener("contextmenu", toProjectEvent);
-      summaryBox.appendChild(b_clone);
-  
+
+      // summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;/&nbsp;&nbsp;열람 `);
+      //
+      // b_clone = GeneralJs.nodes.b.cloneNode(true);
+      // b_clone.style.color = colorChip.green;
+      // b_clone.style.cursor = "pointer";
+      // b_clone.textContent = String(summaryTong.recommend);
+      // b_clone.setAttribute("client", JSON.stringify(totalCliid.recommend));
+      // b_clone.setAttribute("project", JSON.stringify(totalProid.recommend));
+      // b_clone.addEventListener("click", toClientEvent);
+      // b_clone.addEventListener("contextmenu", toProjectEvent);
+      // summaryBox.appendChild(b_clone);
+
       summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;/&nbsp;&nbsp;계약 `);
-  
+
       b_clone = GeneralJs.nodes.b.cloneNode(true);
       b_clone.style.color = colorChip.green;
       b_clone.style.cursor = "pointer";
@@ -4972,9 +4972,9 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       b_clone.addEventListener("click", toClientEvent);
       b_clone.addEventListener("contextmenu", toProjectEvent);
       summaryBox.appendChild(b_clone);
-  
+
       summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;/&nbsp;&nbsp;진행 `);
-  
+
       b_clone = GeneralJs.nodes.b.cloneNode(true);
       b_clone.style.color = colorChip.green;
       b_clone.style.cursor = "pointer";
@@ -4984,27 +4984,27 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       b_clone.addEventListener("click", toClientEvent);
       b_clone.addEventListener("contextmenu", toProjectEvent);
       summaryBox.appendChild(b_clone);
-  
-  
+
+
       reportNumbersObj.client = summaryTong.client;
       reportNumbersObj.proposal = summaryTong.proposal;
       reportNumbersObj.recommend = summaryTong.recommend;
       reportNumbersObj.contract = summaryTong.contract;
       reportNumbersObj.process = summaryTong.process;
-  
+
       reportNumbersObj.recommendRate = summaryTong.client === 0 ? 0 : Math.round((summaryTong.proposal / summaryTong.client) * 1000) / 10;
       reportNumbersObj.contractRate = summaryTong.client === 0 ? 0 : Math.round((summaryTong.contract / summaryTong.client) * 1000) / 10;
       reportNumbersObj.convertRate = summaryTong.proposal === 0 ? 0 : Math.round((summaryTong.process / summaryTong.proposal) * 1000) / 10;
       reportNumbersObj.processRate = summaryTong.client === 0 ? 0 : Math.round((summaryTong.contract / summaryTong.client) * 1000) / 10;
-  
+
       reportNumbersObj.mau = report[i].mau;
       reportNumbersObj.charge = report[i].charge;
       reportNumbersObj.adClients = report[i].adClients;
-  
+
       reportNumbersObj.clientCac = Math.round((summaryTong.client === 0 ? 0 : (report[i].charge / summaryTong.client)));
       reportNumbersObj.contractCac = Math.round((summaryTong.contract === 0 ? 0 : (report[i].charge / summaryTong.contract)));
       reportNumbersObj.processCac = Math.round((summaryTong.process === 0 ? 0 : (report[i].charge / summaryTong.process)));
-  
+
       reportNumbersObj.OutputSupply = report[i].contractsPureAmount
       reportNumbersObj.OutputPure = report[i].contractAmountSubtract;
 
@@ -5014,28 +5014,28 @@ ClientJs.prototype.reportScrollBox = async function (data, motherWidth) {
       summaryBox.insertAdjacentHTML(`beforeend`, `<br>계약성공율 <b style="color:${colorChip.green}">${String(reportNumbersObj.contractSuccess)}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;계약성공 <b style="color:${colorChip.green}">${String(report[i].contractsPure)}</b>명&nbsp;&nbsp;/&nbsp;&nbsp;계약공급가 <b style="color:${colorChip.green}">${autoComma(report[i].contractsPureAmount)}</b>원` + (true ? "" : `&nbsp;&nbsp;/&nbsp;&nbsp;계약순이익 <b style="color:${colorChip.green}">${autoComma(report[i].contractAmountSubtract)}</b>원`));
       summaryBox.insertAdjacentHTML(`beforeend`, `<br>MAU <b style="color:${colorChip.green}">${String(report[i].mau)}</b>명&nbsp;&nbsp;/&nbsp;&nbsp;광고비용 <b style="color:${colorChip.green}">${autoComma(report[i].charge)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;광고유입 <b style="color:${colorChip.green}">${String(report[i].adClients)}</b>명`);
       summaryBox.insertAdjacentHTML(`beforeend`, `<br>문의CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.clientCac)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;계약CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.contractCac)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;진행CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.processCac)}</b>원`);
-  
+
       div_clone.appendChild(summaryBox);
-  
+
       totalSummary.client += summaryTong.client;
       totalSummary.proposal += summaryTong.proposal;
       totalSummary.recommend += summaryTong.recommend;
       totalSummary.contract += summaryTong.contract;
       totalSummary.process += summaryTong.process;
-  
+
       // end
       scrollBox.appendChild(div_clone);
       instance.reportNumbers.push(reportNumbersObj);
     }
-  
+
     scrollBox.setAttribute("client_number", String(totalSummary.client));
     scrollBox.setAttribute("proposal_number", String(totalSummary.proposal));
     scrollBox.setAttribute("recommend_number", String(totalSummary.recommend));
     scrollBox.setAttribute("contract_number", String(totalSummary.contract));
     scrollBox.setAttribute("process_number", String(totalSummary.process));
-  
 
-    
+
+
 
 
 
@@ -5410,9 +5410,9 @@ ClientJs.prototype.reportContents = async function (data, mother, loadingIcon) {
     let todayString;
     let top, height, margin;
     let totalBoxString;
-  
+
     totalBox = {};
-  
+
     //today range
     todayString = '';
     todayString += today.getMonth() - 7 < 0 ? String(today.getFullYear() - 1) : String(today.getFullYear());
@@ -5422,12 +5422,12 @@ ClientJs.prototype.reportContents = async function (data, mother, loadingIcon) {
     todayString += String(today.getFullYear());
     todayString += '-';
     todayString += zeroAddition(today.getMonth() + 1);
-  
+
     //numbers
     top = 0;
     margin = 36;
     height = 88;
-  
+
     //search box
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     style = {
@@ -5440,7 +5440,7 @@ ClientJs.prototype.reportContents = async function (data, mother, loadingIcon) {
     for (let i in style) {
       div_clone.style[i] = style[i];
     }
-  
+
     //start day
     input_clone = GeneralJs.nodes.input.cloneNode(true);
     inputStyle = {
@@ -5486,9 +5486,9 @@ ClientJs.prototype.reportContents = async function (data, mother, loadingIcon) {
         }).catch((err) => { console.log(err); });
       }
     });
-  
+
     div_clone.appendChild(input_clone);
-  
+
     //total box
 
     if (getObj.frommpr !== "true") {
@@ -5534,13 +5534,13 @@ ClientJs.prototype.reportContents = async function (data, mother, loadingIcon) {
         color: colorChip.deactive,
       },
     })
-  
+
     //end
     mother.appendChild(div_clone);
-  
+
     //scroll box
     mother.appendChild(scrollBox);
-  
+
   } catch (e) {
     console.log(e);
   }
@@ -5713,7 +5713,7 @@ ClientJs.prototype.secondReportScrollBox = function (report, motherWidth) {
 
   tableVisualPadding = 8;
 
-  valueSize = 13; 
+  valueSize = 13;
   valueWeight = 400;
   valueBoldWeight = 700;
   valueTextTop = isMac() ? -1 : 1;
@@ -5875,7 +5875,7 @@ ClientJs.prototype.secondReportScrollBox = function (report, motherWidth) {
         ];
         instance.reportNumbers.push(equalJson(JSON.stringify(thisValues)));
         instance.reportNumbers[instance.reportNumbers.length - 1].unshift(dateToString(obj.standard));
-      
+
         baseColumns = createNode({
           mother: baseTable,
           style: {
@@ -5901,7 +5901,7 @@ ClientJs.prototype.secondReportScrollBox = function (report, motherWidth) {
               boxSizing: "border-box",
               background: i === thisLength ? colorChip.gray0 : colorChip.white,
               paddingTop: i === 1 ? String(tableVisualPadding) + ea : "",
-              paddingBottom: i === thisLength - 1 ? String(tableVisualPadding) + ea : "",  
+              paddingBottom: i === thisLength - 1 ? String(tableVisualPadding) + ea : "",
             },
             child: {
               text: String(thisValues[j]),
@@ -6203,7 +6203,7 @@ ClientJs.prototype.secondReportViewMakerDetail = function (recycle = false) {
 ClientJs.prototype.secondReportViewMaker = function () {
   const instance = this;
   return function (e) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+
     e.preventDefault();
 
     let tempFunc;
@@ -6339,7 +6339,7 @@ ClientJs.prototype.thirdReportViewMakerDetail = function (recycle = false, cliid
 ClientJs.prototype.thirdReportViewMaker = function (cliid) {
   const instance = this;
   return function (e) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+
     e.preventDefault();
 
     let tempFunc;
@@ -6475,7 +6475,7 @@ ClientJs.prototype.proposalViewMakerDetail = function (recycle = false, cliid) {
 ClientJs.prototype.proposalViewMaker = function (cliid) {
   const instance = this;
   return function (e) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+
     e.preventDefault();
 
     let tempFunc;
@@ -6612,7 +6612,7 @@ ClientJs.prototype.salesViewMakerDetail = function (recycle = false) {
 ClientJs.prototype.salesViewMaker = function () {
   const instance = this;
   return function (e) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+
     e.preventDefault();
 
     let tempFunc;
@@ -6939,20 +6939,20 @@ ClientJs.prototype.addExtractEvent = function () {
           }
         }
         valuesArr.push(temp);
-  
+
         cliidArr = [];
         for (let i = 0; i < caseCopied.length; i++) {
           temp2 = Object.values(caseCopied[i]);
           valuesArr.push(temp2);
           cliidArr.push(temp2.find((c) => { return /^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(c); }));
         }
-  
+
         ajaxJson({ idArr: cliidArr, method: "client", property: "manager" }, "/getHistoryProperty").then((obj) => {
           valuesArr[0].push("담당자");
           for (let i = 1; i < valuesArr.length; i++) {
             valuesArr[i].push(obj[valuesArr[i].find((c) => { return /^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(c); })]);
           }
-  
+
           return ajaxJson({
             values: valuesArr,
             newMake: true,
@@ -7031,7 +7031,7 @@ ClientJs.prototype.addExtractEvent = function () {
 
         blankHref(link);
         loading.remove();
-        
+
       } else {
 
         loading = instance.mother.grayLoading();
