@@ -171,28 +171,28 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
   const selfMongo = MONGOC;
   try {
 
-    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
+    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
       return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.contentsinfo.host + ":" + String(generalPort) + "/metaInstant", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/callHistory", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/callHistory", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/calendarSync", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/calendarSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/workProjectActionSync", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/workProjectActionSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/workProposalToClient", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/workProposalToClient", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/photoStatusSync", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/photoStatusSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/storeClientAnalytics", { fast: true }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/storeClientAnalytics", { fast: true }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.secondinfo.host + ":" + String(generalPort) + "/timeAspirantCommon", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.secondinfo.host + ":" + String(generalPort) + "/designerCareerSync", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/metaAccountCheck", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/metaAccountCheck", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/taxBill", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).catch((e) => {
