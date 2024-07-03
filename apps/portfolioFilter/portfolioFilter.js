@@ -639,7 +639,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const back = this.back;
   const address = this.address;
   const image = this.image;
-  const { fileSystem, shellExec, shellLink, consoleQ, sleep, messageSend, requestSystem, ghostFileUpload, mongo, mongocontentsinfo } = this.mother;
+  const { fileSystem, shellExec, shellLink, sleep, messageSend, requestSystem, ghostFileUpload, mongo, mongocontentsinfo } = this.mother;
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
   const notePath = process.env.HOME + "/note/portfolio";
@@ -706,7 +706,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         for (let i = 0; i < designers.length; i++) {
           console.log(`exceptionId : ${String(i + 1)} => designer : ${i.designer} / desid : ${i.desid}`);
         }
-        consoleInput = await consoleQ(`Exception number : `);
+        consoleInput = 1
         targetDesigner = designers[Number(consoleInput.replace(/[^0-9]/g, '')) - 1].toNormal();
       } else {
         targetDesigner = designers[0].toNormal();
@@ -837,16 +837,12 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           await shellExec(`rm -rf ${shellLink(folderPath)};`);
 
           if (clientObj !== null && designerObj !== null) {
-            consoleQInput = await consoleQ(`Is it OK? (press "OK")`);
-            if (/OK/gi.test(consoleQInput.trim())) {
-              await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid: clientObj.cliid, desid: designerObj.desid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
-              await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, host: instance.address.frontinfo.host, path: "evaluation", proid: project.proid });
-              await sleep(2000);
-              await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, host: instance.address.frontinfo.host, proid: project.proid });
-              await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
-            }
+            await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid: clientObj.cliid, desid: designerObj.desid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
+            await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, host: instance.address.frontinfo.host, path: "evaluation", proid: project.proid });
+            await sleep(2000);
+            await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, host: instance.address.frontinfo.host, proid: project.proid });
+            await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
           }
-
         }
 
         console.log(`${client}C ${designer}D raw to raw done`);
@@ -900,11 +896,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         shareGoogleIdDesigner = drive.parsingId(shareLinkDeginer);
         await shellExec(`rm -rf ${shellLink(folderPath)};`);
 
-        consoleQInput = await consoleQ(`Is it OK? (press "OK")\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);
-        if (/OK/gi.test(consoleQInput.trim())) {
-          await kakaoInstance.sendTalk("photoShareAKeywordDesigner", targetDesigner.designer, targetDesigner.information.phone, { designer: targetDesigner.designer, file: shareGoogleIdDesigner });
-          await messageSend({ text: `${targetDesigner.designer} 디자이너님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
-        }
+        await kakaoInstance.sendTalk("photoShareAKeywordDesigner", targetDesigner.designer, targetDesigner.information.phone, { designer: targetDesigner.designer, file: shareGoogleIdDesigner });
+        await messageSend({ text: `${targetDesigner.designer} 디자이너님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
 
         console.log(`${designer}D raw to raw done`);
 

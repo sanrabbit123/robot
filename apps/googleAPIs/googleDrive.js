@@ -168,7 +168,6 @@ GoogleDrive.prototype.get_folder_inPython = async function (folder_id, folder_na
         await shellExec(`mv ${shellLink(folderPath)} ${shellLink(motherPath)}/${shellLink(folder_name)}`);
       }
     }
-    await shellExec(`open ${shellLink(motherPath)}`);
     console.log(`total: ${String(index)}`);
     if (folder_name !== null) {
       return `${motherPath}/${folder_name}`;

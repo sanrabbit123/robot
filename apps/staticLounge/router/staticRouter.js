@@ -6668,6 +6668,55 @@ StaticRouter.prototype.rou_post_metaAccountCheck = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_rawToRaw = function () {
+  const instance = this;
+  const { equalJson, dateToString, stringToDate, requestSystem, mysqlQuery, sleep, fileSystem, shellExec, shellLink, linkToString, uniqueValue } = this.mother;
+  const ROBOT_PATH = process.cwd();
+  const APP_PATH = ROBOT_PATH + "/apps";
+  const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
+  const filter = new PortfolioFilter();
+  let obj;
+  obj = {};
+  obj.link = [ "/rawToRaw" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.designer === undefined || req.body.id === undefined) {
+        throw new Error("invalid post");
+      }
+      const { designer: designerRaw, id } = equalJson(req.body);
+      let client, designer, link, pay;
+
+      client = (typeof req.body.client === "string" ? req.body.client.trim() : null);
+      designer = designerRaw.trim();
+      link = `https://drive.google.com/drive/folders/${id}`;
+      pay = true;
+
+      filter.rawToRaw([
+        {
+          client,
+          deisnger,
+          link,
+          pay
+        }
+      ]).catch((err) => {
+        await logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + err.message);
+      });
+
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_syncEvaluationContents = function () {
   const instance = this;
   const back = this.back;
