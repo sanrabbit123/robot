@@ -7379,15 +7379,15 @@ DevContext.prototype.launching = async function () {
 
 
     // raw photo to raw portfolio
-    // const filter = new PortfolioFilter();
-    // await filter.rawToRaw([
-    //   {
-    //     client: "이미현",
-    //     designer: "박수진",
-    //     link: "https://drive.google.com/drive/folders/1JUonmowJ5dp_0cKLDRQx74QoSM5_OoBb",
-    //     pay: true
-    //   },
-    // ]);
+    const filter = new PortfolioFilter();
+    await filter.rawToRaw([
+      {
+        client: "양이은",
+        designer: "이정아",
+        link: "https://drive.google.com/drive/folders/1RI7FRUDmG2ezXqtNXL-iVNm7X8kUbJuI",
+        pay: true
+      },
+    ]);
 
     // raw video
     // const filter = new PortfolioFilter();
@@ -7485,8 +7485,8 @@ DevContext.prototype.launching = async function () {
     // await audio.textToVoice("안녕하세요, 저의 이름은 서연입니다. 다음은 어피니티에 대한 설명입니다!");
 
     // send sms
-    // const name = "양재웅";
-    // const amount = 1_190_200;
+    // const name = "이국화";
+    // const amount = 9_027_000;
     // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
 
 
