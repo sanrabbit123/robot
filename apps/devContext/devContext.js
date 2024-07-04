@@ -7382,9 +7382,9 @@ DevContext.prototype.launching = async function () {
     const filter = new PortfolioFilter();
     await filter.rawToRaw([
       {
-        client: "양이은",
-        designer: "이정아",
-        link: "https://drive.google.com/drive/folders/1RI7FRUDmG2ezXqtNXL-iVNm7X8kUbJuI",
+        client: "홍성아",
+        designer: "김보하",
+        link: "https://drive.google.com/drive/folders/1CXmn-2J-DUIatNFqagC0zFAA7DUfiKq6",
         pay: true
       },
     ]);
