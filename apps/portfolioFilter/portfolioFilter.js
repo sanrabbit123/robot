@@ -815,7 +815,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           clientObj = await back.getClientById(project.cliid);
           designerObj = await back.getDesignerById(project.desid);
 
-          zipPhotoRes = await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
+          zipPhotoRes = await requestSystem("https://" + instance.address.officeinfo.ghost.host + "3001/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
           zipIdDesigner = zipPhotoRes.data.googleId.designer;
           zipIdClient = zipPhotoRes.data.googleId.client;
 
