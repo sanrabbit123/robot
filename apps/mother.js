@@ -1259,7 +1259,7 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
           axios.post(`https://${ADDRESS.officeinfo.ghost.host}:${String(3001)}/generalFileUpload`, form, {
             headers: { ...formHeaders },
           }).then((response) => {
-            return axios.post(`https://${ADDRESS.transinfo.host}:${String(3001)}/generalFileUpload`, form2, {
+            return axios.post(`https://${ADDRESS.transinfo.host}:${String(3000)}/generalFileUpload`, form2, {
               headers: { ...formHeaders2 },
             });
           }).then((response) => {
