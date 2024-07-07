@@ -143,6 +143,9 @@ GoogleDrive.prototype.get_folder_inPython = async function (folder_id, folder_na
         console.log("error => ", id, index);
         await sleep(10 * 1000);
         tempObj = await fileSave(id, name, folderPath);
+        if (tempObj.name === ".DS_Store") {
+          await shellExec("rm", [ `-rf`, `${folderPath}/.DS_Store` ]);
+        }
         await sleep(500);
       }
       console.log(index, "success", tempObj);
