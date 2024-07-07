@@ -120,6 +120,7 @@ GoogleDrive.prototype.get_folder_inPython = async function (folder_id, folder_na
     let thisExec;
     let tempArr, motherPath, length;
     let tempObj;
+    let errorSafeNum;
 
     //init setting
     if (!tempFolderDir.includes(targetFolderNameConst)) {
@@ -139,16 +140,22 @@ GoogleDrive.prototype.get_folder_inPython = async function (folder_id, folder_na
     for (let { id, name } of files) {
       await sleep(3 * 1000);
       tempObj = await fileSave(id, name, folderPath);
+      errorSafeNum = 0;
       while (typeof tempObj !== "object" || tempObj === null || tempObj === undefined || typeof tempObj === "string") {
-        console.log("error => ", id, index);
-        await sleep(10 * 1000);
-        tempObj = await fileSave(id, name, folderPath);
-        if (tempObj.name === ".DS_Store") {
-          await shellExec("rm", [ `-rf`, `${folderPath}/.DS_Store` ]);
+        if (errorSafeNum > 5) {
+          break;
         }
+        console.log("error => ", id, index);
+        await sleep(3 * 1000);
+        tempObj = await fileSave(id, name, folderPath);
         await sleep(500);
+        errorSafeNum++;
       }
-      console.log(index, "success", tempObj);
+      if (tempObj.name === ".DS_Store") {
+        await shellExec("rm", [ `-rf`, `${folderPath}/.DS_Store` ]);
+      } else {
+        console.log(index, "success", tempObj);
+      }
       index = index + 1;
     }
 

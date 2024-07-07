@@ -667,6 +667,10 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const collection = "foreContents";
   const selfMongo = new mongo(mongocontentsinfo);
   const garoseroParser = new GaroseroParser();
+  let nextPid;
+
+  nextPid = null;
+
   try {
     if (!Array.isArray(arr)) {
       throw new Error(errorMessage);
@@ -679,7 +683,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     let forecast;
     let finalObj;
     let foreRows;
-    let nextPid;
     let note;
     let projects, project;
     let totalMakeResult;
@@ -907,10 +910,15 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
     await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsSchedule", { data: null }, { headers: { "Content-Type": "application/json" } });
 
+    await selfMongo.close();
+    return true;
   } catch (e) {
     console.log(e);
-  } finally {
+    if (typeof nextPid === "string") {
+      await back.mongoDelete(collection, { pid: nextPid }, { selfMongo });
+    }
     await selfMongo.close();
+    return false;
   }
 }
 

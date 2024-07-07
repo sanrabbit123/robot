@@ -6690,14 +6690,24 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
         if (req.body.designer === undefined || req.body.id === undefined) {
           throw new Error("invalid post");
         }
+        const channel = "#502_sns_contents";
+        const voice = false;
         const { designer: designerRaw, id } = equalJson(req.body);
         let client, designer, link, pay;
+        let thisSetName;
 
         client = (typeof req.body.client === "string" ? req.body.client.trim() : null);
         designer = designerRaw.trim();
         link = `https://drive.google.com/drive/folders/${id}`;
         pay = true;
 
+        if (client !== null) {
+          thisSetName = `${client} C, ${designer} D 현장 원본 사진`;
+        } else {
+          thisSetName = `${designer} D 개인 포트폴리오 사진`;
+        }
+
+        await messageSend({ text: thisSetName + " 처리를 시작합니다. 슬렉에 처리 성공 또는 실패 알림이 올 때까지 다음 원본 사진 처리요청을 하지 말아주세요!", channel, voice });
         filter.rawToRaw([
           {
             client,
@@ -6705,7 +6715,13 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
             link,
             pay
           }
-        ]).catch((err) => {
+        ]).then((boo) => {
+          if (boo) {
+            return messageSend({ text: thisSetName + " 처리를 완료하였어요!", channel, voice });
+          } else {
+            return messageSend({ text: thisSetName + " 처리에 실패하였어요, 다시 시도해주세요!", channel, voice });
+          }
+        }).catch((err) => {
           logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + err.message).catch((e) => { console.log(e); })
         });
       } else {
