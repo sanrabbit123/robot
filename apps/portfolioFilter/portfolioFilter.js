@@ -732,14 +732,16 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         }
         finalObj = { pid: nextPid, desid: targetDesigner.desid, client, forecast };
         await back.mongoCreate(collection, finalObj, { selfMongo });
+        console.log("db in success");
 
         folderPathList = await fileSystem(`readFolder`, [ folderPath ]);
         fromArr = [];
         toArr = [];
 
         try {
-          await shellExec("mkdir", [ `${forecastPath}/${this.pid} `]);
+          await shellExec("mkdir", [ `${forecastPath}/${this.pid}` ]);
         } catch {}
+
         for (let f of folderPathList) {
           fromArr.push(`${folderPath}/${f}`);
           toArr.push(`${foreCastContant}/${this.pid}/${f}`);
@@ -877,7 +879,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         console.log(`${designer}D raw to raw done`);
 
       }
-
     }
 
     await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsSchedule", { data: null }, { headers: { "Content-Type": "application/json" } });
