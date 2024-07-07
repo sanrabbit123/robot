@@ -192,7 +192,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     }
     console.log(rawFix_file_list);
 
-    photo_sizes = liteMode ? [ "780", "1500" ] : [ "780", "1500", "3508" ];
+    photo_sizes = liteMode ? [ "780" ] : [ "780", "3508" ];
 
     resultFolderBoo = await fileSystem(`readDir`, [ this.options.result_dir ]);
     for (let i of resultFolderBoo) {
@@ -217,15 +217,6 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
         await shellExec(`mv ${shellLink(tempObj.output)} ${shellLink(resultFolder)}/${i}/${new_photo_name}`);
         new_photo_name_list.push(`${resultFolder}/${i}/${new_photo_name}`);
       }
-    }
-
-    if (!liteMode) {
-      pngResultFolder = (await image.officialPng(this.apartName, resultFolder + "/1500")).output;
-      pngImageList = await fileSystem(`readFolder`, [ pngResultFolder ]);
-      for (let pngImage of pngImageList) {
-        await shellExec(`mv ${shellLink(pngResultFolder) + "/" + pngImage} ${shellLink(resultFolder).replace(/\/$/i, '')}/;`);
-      }
-      await shellExec(`rm -rf ${shellLink(pngResultFolder)};`);
     }
 
     return resultFolder;
@@ -394,11 +385,6 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
         toArr.push(sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/" + f.split("/").slice(-2).join("/"));
       }
 
-      for (let f of fileList_png) {
-        fromArr.push(f);
-        toArr.push(sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/" + f.split("/").slice(-1)[0]);
-      }
-
       await ghostFileUpload(fromArr, toArr);
 
     } else {
@@ -411,17 +397,12 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
         toArr.push(sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/" + f.split("/").slice(-2).join("/"));
       }
 
-      for (let f of fileList_1500) {
-        fromArr.push(f);
-        toArr.push(sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/" + f.split("/").slice(-2).join("/"));
-      }
-
       await ghostFileUpload(fromArr, toArr);
 
     }
 
     //slack
-    await messageSend({ text: `${this.folderName} 사진을 공유하였습니다!`, channel: `#502_sns_contents` });
+    await messageSend({ text: `${this.folderName} 사진을 처리하였습니다!`, channel: `#502_sns_contents` });
 
     //ghost upload
     if (!liteMode) {
@@ -757,9 +738,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         await ghostFileUpload(fromArr, toArr);
         console.log(`original copy done`);
 
-        for (let item of folderPathList) {
-          await image.overOfficialImage(`${folderPath}/${item}`, 1000, false);
-        }
         forecast = await garoseroParser.queryDirectory(folderPath);
         for (let obj of forecast) {
           obj.file = foreCastContant + "/" + obj.file.split("/").slice(-2).join("/");
@@ -898,9 +876,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         shareLinkDeginer = zipLinks.designer;
         shareGoogleIdDesigner = drive.parsingId(shareLinkDeginer);
         await shellExec(`rm -rf ${shellLink(folderPath)};`);
-
-        await kakaoInstance.sendTalk("photoShareAKeywordDesigner", targetDesigner.designer, targetDesigner.information.phone, { designer: targetDesigner.designer, file: shareGoogleIdDesigner });
-        await messageSend({ text: `${targetDesigner.designer} 디자이너님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
 
         console.log(`${designer}D raw to raw done`);
 

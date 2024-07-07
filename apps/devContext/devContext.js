@@ -7378,15 +7378,22 @@ DevContext.prototype.launching = async function () {
     // });
 
     // raw photo to raw portfolio
-    const filter = new PortfolioFilter();
-    await filter.rawToRaw([
-      {
-        client: "한수미",
-        designer: "김소영",
-        link: "https://drive.google.com/drive/folders/1U7HDUv2wgyanB6KiVFqtBNp8t2GoZrkG",
-        pay: true
-      },
-    ]);
+
+    console.log(await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawToRaw", {
+      client: "이예은",
+      designer: "박정훈",
+      id: "1phlwtczBJM6SUrWJFfuIY8ZE1Ne07sf1",
+    }, { headers: { "Content-Type": "application/json" } }));
+
+    // const filter = new PortfolioFilter();
+    // await filter.rawToRaw([
+    //   {
+    //     client: "한수미",
+    //     designer: "김소영",
+    //     link: "https://drive.google.com/drive/folders/1U7HDUv2wgyanB6KiVFqtBNp8t2GoZrkG",
+    //     pay: true
+    //   },
+    // ]);
 
     // raw video
     // const filter = new PortfolioFilter();
