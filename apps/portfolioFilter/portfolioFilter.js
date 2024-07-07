@@ -714,11 +714,12 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         fromArr = [];
         toArr = [];
+
+        await shellExec("mkdir", `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}`);
+        await shellExec("mkdir", `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}`);
         for (let f of folderPathList) {
-          fromArr.push(`${folderPath}/${f}`);
-          toArr.push(`${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}/${f}`);
+          await shellExec("cp", [ `${folderPath}/${f}`, `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}/` ]);
         }
-        await ghostFileUpload(fromArr, toArr);
         console.log(`original copy done`);
 
         forecast = await garoseroParser.queryDirectory(folderPath);
@@ -731,14 +732,17 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         folderPathList = await fileSystem(`readFolder`, [ folderPath ]);
         fromArr = [];
         toArr = [];
+
+        await shellExec("mkdir", `${forecastPath}/${this.pid}`);
         for (let f of folderPathList) {
           fromArr.push(`${folderPath}/${f}`);
           toArr.push(`${foreCastContant}/${this.pid}/${f}`);
+          await shellExec("cp", [ `${folderPath}/${f}`, `${forecastPath}/${this.pid}/` ]);
         }
         await ghostFileUpload(fromArr, toArr);
         console.log(`forecast copy done`);
 
-        await sleep(1000);
+        await sleep(100);
 
         allContentsArr = (await back.getContentsArrByQuery({})).toNormal();
         allProjects = (await back.getProjectsByQuery({ desid: targetDesigner.desid })).toNormal();
@@ -846,11 +850,12 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
         fromArr = [];
         toArr = [];
+
+        await shellExec("mkdir", `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}`);
+        await shellExec("mkdir", `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}`);
         for (let f of folderPathList) {
-          fromArr.push(`${folderPath}/${f}`);
-          toArr.push(`${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}/${f}`);
+          await shellExec("cp", [ `${folderPath}/${f}`, `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}/` ]);
         }
-        await ghostFileUpload(fromArr, toArr);
         console.log(`original copy done`);
 
         await sleep(1000);
