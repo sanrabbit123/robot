@@ -213,7 +213,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
       await shellExec(`mkdir ${shellLink(resultFolder)}/${i}`);
       for (let targetImage of rawFix_file_list) {
         new_photo_name = this.image_filter(targetImage, i);
-        tempObj = await image.toOfficialImage(targetImage, Number(i), false);
+        tempObj = await image.toOfficialImage(targetImage, Number(i), false, liteMode);
         await shellExec(`mv ${shellLink(tempObj.output)} ${shellLink(resultFolder)}/${i}/${new_photo_name}`);
         new_photo_name_list.push(`${resultFolder}/${i}/${new_photo_name}`);
       }
@@ -353,8 +353,8 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     let sambaPhotoPath;
 
     resultFolder = await this.to_portfolio(liteMode);
-    const { fileList_780, fileList_1500, fileList_original, fileList_png } = await this.parsing_fileList(resultFolder, liteMode);
-    console.log(fileList_780, fileList_1500, fileList_original, fileList_png);
+    const { fileList_780, fileList_original } = await this.parsing_fileList(resultFolder, liteMode);
+    console.log(fileList_780, fileList_original);
 
     if (liteMode) {
       sambaPhotoPath = instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + this.folderName;

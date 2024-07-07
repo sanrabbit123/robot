@@ -422,7 +422,7 @@ ImageReader.prototype.recursivePdfConvert = async function (folderPath) {
   }
 }
 
-ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508, water = false) {
+ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508, water = false, skip = false) {
   const instance = this;
   const { tempDir: tempFolder, officialSize: size } = this;
   const middleConst = "tempResult_";
@@ -455,127 +455,119 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
 
     middleTarget = tempFolder + "/" + middleConst + uniqueValue("hex") + "." + exe;
     resultTarget = tempFolder + "/" + resultConst + uniqueValue("hex") + "." + exe;
-    targetInfo = await this.readImage(targetImage);
 
-    if (targetInfo.geometry.width >= targetInfo.geometry.height) {
-      gs = "garo";
-    } else if (targetInfo.geometry.width < targetInfo.geometry.height) {
-      gs = "sero";
-    }
-
-    if (gs === "garo") {
-
-      width = targetInfo.geometry.width;
-      height = targetInfo.geometry.height;
-
-      sampleWidth0 = Math.ceil(width * (size[typeKeywords][1] / width));
-      sampleHeight0 = Math.ceil(height * (size[typeKeywords][1] / width));
-
-      sampleWidth1 = Math.ceil(width * (size[typeKeywords][0] / height));
-      sampleHeight1 = Math.ceil(height * (size[typeKeywords][0] / height));
-
-      if (Math.floor(sampleHeight0) >= size[typeKeywords][0] && Math.floor(sampleWidth0) >= size[typeKeywords][1]) {
-        targetWidth = Math.ceil(sampleWidth0);
-        targetHeight = Math.ceil(sampleHeight0);
-      } else {
-        targetWidth = Math.ceil(sampleWidth1);
-        targetHeight = Math.ceil(sampleHeight1);
+    if (skip) {
+      await shellExec(`mv`, [ targetImage, resultTarget ]);
+    } else {
+      targetInfo = await this.readImage(targetImage);
+      if (targetInfo.geometry.width >= targetInfo.geometry.height) {
+        gs = "garo";
+      } else if (targetInfo.geometry.width < targetInfo.geometry.height) {
+        gs = "sero";
       }
+      if (gs === "garo") {
 
-      await this.convertImage({
-        input: targetImage,
-        width: targetWidth,
-        height: targetHeight,
-        quality: qualityConst,
-        output: middleTarget,
-        mode: "resize",
-      });
+        width = targetInfo.geometry.width;
+        height = targetInfo.geometry.height;
 
-      middleInfo = await this.readImage(middleTarget);
-      middleWidth = middleInfo.geometry.width;
-      middleHeight = middleInfo.geometry.height;
+        sampleWidth0 = Math.ceil(width * (size[typeKeywords][1] / width));
+        sampleHeight0 = Math.ceil(height * (size[typeKeywords][1] / width));
 
-      moveX = Math.floor((middleWidth - size[typeKeywords][1]) / 2);
-      moveY = Math.floor((middleHeight - size[typeKeywords][0]) / 2);
+        sampleWidth1 = Math.ceil(width * (size[typeKeywords][0] / height));
+        sampleHeight1 = Math.ceil(height * (size[typeKeywords][0] / height));
 
-      await this.convertImage({
-        input: middleTarget,
-        width: size[typeKeywords][1],
-        height: size[typeKeywords][0],
-        x: moveX,
-        y: moveY,
-        quality: qualityConst,
-        output: resultTarget,
-        mode: "crop",
-      });
+        if (Math.floor(sampleHeight0) >= size[typeKeywords][0] && Math.floor(sampleWidth0) >= size[typeKeywords][1]) {
+          targetWidth = Math.ceil(sampleWidth0);
+          targetHeight = Math.ceil(sampleHeight0);
+        } else {
+          targetWidth = Math.ceil(sampleWidth1);
+          targetHeight = Math.ceil(sampleHeight1);
+        }
 
-    } else if (gs === "sero") {
+        await this.convertImage({
+          input: targetImage,
+          width: targetWidth,
+          height: targetHeight,
+          quality: qualityConst,
+          output: middleTarget,
+          mode: "resize",
+        });
 
-      width = targetInfo.geometry.width;
-      height = targetInfo.geometry.height;
+        middleInfo = await this.readImage(middleTarget);
+        middleWidth = middleInfo.geometry.width;
+        middleHeight = middleInfo.geometry.height;
 
-      sampleWidth0 = Math.ceil(width * (size[typeKeywords][0] / width));
-      sampleHeight0 = Math.ceil(height * (size[typeKeywords][0] / width));
+        moveX = Math.floor((middleWidth - size[typeKeywords][1]) / 2);
+        moveY = Math.floor((middleHeight - size[typeKeywords][0]) / 2);
 
-      sampleWidth1 = Math.ceil(width * (size[typeKeywords][1] / height));
-      sampleHeight1 = Math.ceil(height * (size[typeKeywords][1] / height));
+        await this.convertImage({
+          input: middleTarget,
+          width: size[typeKeywords][1],
+          height: size[typeKeywords][0],
+          x: moveX,
+          y: moveY,
+          quality: qualityConst,
+          output: resultTarget,
+          mode: "crop",
+        });
 
-      if (Math.floor(sampleWidth0) >= size[typeKeywords][0] && Math.floor(sampleHeight0) >= size[typeKeywords][1]) {
-        targetWidth = Math.ceil(sampleWidth0);
-        targetHeight = Math.ceil(sampleHeight0);
-      } else {
-        targetWidth = Math.ceil(sampleWidth1);
-        targetHeight = Math.ceil(sampleHeight1);
+      } else if (gs === "sero") {
+
+        width = targetInfo.geometry.width;
+        height = targetInfo.geometry.height;
+
+        sampleWidth0 = Math.ceil(width * (size[typeKeywords][0] / width));
+        sampleHeight0 = Math.ceil(height * (size[typeKeywords][0] / width));
+
+        sampleWidth1 = Math.ceil(width * (size[typeKeywords][1] / height));
+        sampleHeight1 = Math.ceil(height * (size[typeKeywords][1] / height));
+
+        if (Math.floor(sampleWidth0) >= size[typeKeywords][0] && Math.floor(sampleHeight0) >= size[typeKeywords][1]) {
+          targetWidth = Math.ceil(sampleWidth0);
+          targetHeight = Math.ceil(sampleHeight0);
+        } else {
+          targetWidth = Math.ceil(sampleWidth1);
+          targetHeight = Math.ceil(sampleHeight1);
+        }
+
+        await this.convertImage({
+          input: targetImage,
+          width: targetWidth,
+          height: targetHeight,
+          quality: qualityConst,
+          output: middleTarget,
+          mode: "resize",
+        });
+
+        middleInfo = await this.readImage(middleTarget);
+        middleWidth = middleInfo.geometry.width;
+        middleHeight = middleInfo.geometry.height;
+
+        moveX = Math.floor((middleWidth - size[typeKeywords][0]) / 2);
+        moveY = Math.floor((middleHeight - size[typeKeywords][1]) / 2);
+
+        await this.convertImage({
+          input: middleTarget,
+          width: size[typeKeywords][0],
+          height: size[typeKeywords][1],
+          x: moveX,
+          y: moveY,
+          quality: qualityConst,
+          output: resultTarget,
+          mode: "crop",
+        });
+
       }
-
-      await this.convertImage({
-        input: targetImage,
-        width: targetWidth,
-        height: targetHeight,
-        quality: qualityConst,
-        output: middleTarget,
-        mode: "resize",
-      });
-
-      middleInfo = await this.readImage(middleTarget);
-      middleWidth = middleInfo.geometry.width;
-      middleHeight = middleInfo.geometry.height;
-
-      moveX = Math.floor((middleWidth - size[typeKeywords][0]) / 2);
-      moveY = Math.floor((middleHeight - size[typeKeywords][1]) / 2);
-
-      await this.convertImage({
-        input: middleTarget,
-        width: size[typeKeywords][0],
-        height: size[typeKeywords][1],
-        x: moveX,
-        y: moveY,
-        quality: qualityConst,
-        output: resultTarget,
-        mode: "crop",
-      });
-
+      await shellExec(`rm`, [ `-rf`, middleTarget ]);
     }
-
-    await shellExec(`rm`, [ `-rf`, middleTarget ]);
 
     resultObj = {
       original: targetImage,
       output: resultTarget,
     };
 
-    if (water && (type === 780 || type === "780")) {
-      tempObj = await this.setWatermark(resultObj.output);
-      await shellExec(`rm`, [ `-rf`, resultTarget ]);
-      console.log("converting success => " + tempObj.output);
-      return {
-        original: targetImage,
-        output: tempObj.output,
-      };
-    } else {
-      console.log("converting success => " + resultObj.output);
-      return resultObj;
-    }
+    console.log("converting success => " + resultObj.output);
+    return resultObj;
 
   } catch (e) {
     console.log(e);

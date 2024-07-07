@@ -96,7 +96,6 @@ GoogleDrive.prototype.get_folder_inPython = async function (folder_id, folder_na
   const { fileSystem, shellExec, shellLink, sleep, pythonExecute } = this.mother;
   const fileSave = async function (file_id, file_name, target_folder) {
     try {
-      await sleep(500);
       const res = await pythonExecute(instance.pythonApp, [ "drive", "downloadFile" ], { targetId: file_id, targetFolder: target_folder });
       await sleep(500);
       return res;
@@ -138,17 +137,16 @@ GoogleDrive.prototype.get_folder_inPython = async function (folder_id, folder_na
     console.log(files);
     index = 0;
     for (let { id, name } of files) {
-      await sleep(3 * 1000);
+      await sleep(100);
       tempObj = await fileSave(id, name, folderPath);
       errorSafeNum = 0;
       while (typeof tempObj !== "object" || tempObj === null || tempObj === undefined || typeof tempObj === "string") {
-        if (errorSafeNum > 5) {
+        if (errorSafeNum > 10) {
           break;
         }
         console.log("error => ", id, index);
-        await sleep(3 * 1000);
+        await sleep(100);
         tempObj = await fileSave(id, name, folderPath);
-        await sleep(500);
         errorSafeNum++;
       }
       if (tempObj.name === ".DS_Store") {
