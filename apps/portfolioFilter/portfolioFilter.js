@@ -213,7 +213,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
       await shellExec(`mkdir ${shellLink(resultFolder)}/${i}`);
       for (let targetImage of rawFix_file_list) {
         new_photo_name = this.image_filter(targetImage, i);
-        tempObj = await image.toOfficialImage(targetImage, Number(i), (Number(i) === 780));
+        tempObj = await image.toOfficialImage(targetImage, Number(i), false);
         await shellExec(`mv ${shellLink(tempObj.output)} ${shellLink(resultFolder)}/${i}/${new_photo_name}`);
         new_photo_name_list.push(`${resultFolder}/${i}/${new_photo_name}`);
       }

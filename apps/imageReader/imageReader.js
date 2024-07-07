@@ -24,7 +24,7 @@ const ImageReader = function (mother = null, back = null, address = null) {
   };
 }
 
-ImageReader.prototype.convertImage = async function (obj) {
+ImageReader.prototype.convertImage = async function (obj, detailMode = false) {
   const instance = this;
   const { shellExec, shellLink, fileSystem } = this.mother;
   try {
@@ -64,16 +64,18 @@ ImageReader.prototype.convertImage = async function (obj) {
     thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
     thisFileName = thisFileName.split(".").slice(0, -1).join(".");
 
-    await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, targetImage ]);
-    if (!(await fileSystem(`exist`, [ targetImage ]))) {
-      inputDirContents = await fileSystem(`readFolder`, [ inputDir ]);
-      inputDirContents = inputDirContents.filter((str) => { return (new RegExp(inputFileName + "-[0-9]+." + inputFileExe, "g")).test(str) });
-      if (inputDirContents.length === 0) {
-        throw new Error("converting fail");
-      } else {
-        await shellExec(`mv ${shellLink(inputDir + "/" + inputDirContents[0])} ${shellLink(inputDir + "/" + inputFileName + "." + inputFileExe)}`)
-        for (let str of inputDirContents) {
-          await shellExec(`rm -rf ${shellLink(inputDir + "/" + str)}`);
+    if (detailMode) {
+      await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, targetImage ]);
+      if (!(await fileSystem(`exist`, [ targetImage ]))) {
+        inputDirContents = await fileSystem(`readFolder`, [ inputDir ]);
+        inputDirContents = inputDirContents.filter((str) => { return (new RegExp(inputFileName + "-[0-9]+." + inputFileExe, "g")).test(str) });
+        if (inputDirContents.length === 0) {
+          throw new Error("converting fail");
+        } else {
+          await shellExec(`mv ${shellLink(inputDir + "/" + inputDirContents[0])} ${shellLink(inputDir + "/" + inputFileName + "." + inputFileExe)}`)
+          for (let str of inputDirContents) {
+            await shellExec(`rm -rf ${shellLink(inputDir + "/" + str)}`);
+          }
         }
       }
     }
@@ -102,7 +104,9 @@ ImageReader.prototype.convertImage = async function (obj) {
       }
     }
 
-    await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, middleTarget ]);
+    if (detailMode) {
+      await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, middleTarget ]);
+    }
     if (!(await fileSystem(`exist`, [ middleTarget ]))) {
       thisDirContents = await fileSystem(`readFolder`, [ thisDir ]);
       thisDirContents = thisDirContents.filter((str) => { return (new RegExp(thisFileName + "-[0-9]+." + thisFileExe, "g")).test(str) });
@@ -381,7 +385,7 @@ ImageReader.prototype.resizeImage = async function (filePath, width = 1500, heig
       await shellExec(`rm`, [ `-rf`, filePath ]);
     }
     await shellExec(`mv`, [ tempResult, filePath ]);
-    
+
     return filePath;
   } catch (e) {
     console.log(e);
@@ -425,7 +429,7 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
   const resultConst = "convertResult_";
   const typeConst = "s";
   const exe = "jpg";
-  const qualityConst = 100;
+  const qualityConst = 90;
   const { shellExec, shellLink, fileSystem, uniqueValue } = this.mother;
   try {
     let targetInfo;
@@ -604,7 +608,7 @@ ImageReader.prototype.setWatermark = async function (targetImage) {
   const exe = "jpg";
   const sizeStandard = "s780";
   const whiteStandard = 180;
-  const qualityConst = 100;
+  const qualityConst = 90;
   try {
     let cropMatrix;
     let cropPositionWidth, cropPositionHeight;

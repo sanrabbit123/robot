@@ -7377,7 +7377,6 @@ DevContext.prototype.launching = async function () {
     //   host: "home-liaison.com",
     // });
 
-
     // raw photo to raw portfolio
     const filter = new PortfolioFilter();
     await filter.rawToRaw([
@@ -7485,8 +7484,8 @@ DevContext.prototype.launching = async function () {
     // await audio.textToVoice("안녕하세요, 저의 이름은 서연입니다. 다음은 어피니티에 대한 설명입니다!");
 
     // send sms
-    // const name = "김희자";
-    // const amount = 51_700;
+    // const name = "라두현";
+    // const amount = 330000;
     // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
 
 
