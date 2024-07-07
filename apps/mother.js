@@ -1256,7 +1256,7 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
         } else {
           formHeaders2 = form2.getHeaders();
           formHeaders2["Content-Length"] = length;
-          axios.post(axios.post(`https://${ADDRESS.transinfo.host}:${String(3000)}/generalFileUpload`, form2, {
+          axios.post(`https://${ADDRESS.transinfo.host}:${String(3000)}/generalFileUpload`, form2, {
             headers: { ...formHeaders2 },
           }).then((response) => {
             resolve({ message: "done" });
