@@ -715,8 +715,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         fromArr = [];
         toArr = [];
 
-        await shellExec("mkdir", `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}`);
-        await shellExec("mkdir", `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}`);
+        await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}` ]);
+        await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}` ]);
         for (let f of folderPathList) {
           await shellExec("cp", [ `${folderPath}/${f}`, `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}/` ]);
         }
@@ -733,7 +733,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         fromArr = [];
         toArr = [];
 
-        await shellExec("mkdir", `${forecastPath}/${this.pid}`);
+        await shellExec("mkdir", [ `${forecastPath}/${this.pid} `]);
         for (let f of folderPathList) {
           fromArr.push(`${folderPath}/${f}`);
           toArr.push(`${foreCastContant}/${this.pid}/${f}`);
@@ -851,8 +851,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         fromArr = [];
         toArr = [];
 
-        await shellExec("mkdir", `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}`);
-        await shellExec("mkdir", `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}`);
+        await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}` ]);
+        await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}` ]);
         for (let f of folderPathList) {
           await shellExec("cp", [ `${folderPath}/${f}`, `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}/` ]);
         }
