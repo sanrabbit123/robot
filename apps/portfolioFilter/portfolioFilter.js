@@ -717,6 +717,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         try {
           await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}` ]);
+        } catch {}
+        try {
           await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}` ]);
         } catch {}
         for (let f of folderPathList) {
@@ -857,6 +859,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         try {
           await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}` ]);
+        } catch {}
+        try {
           await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}` ]);
         } catch {}
         for (let f of folderPathList) {
@@ -870,7 +874,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         shareLinkDeginer = zipLinks.designer;
         shareGoogleIdDesigner = drive.parsingId(shareLinkDeginer);
         await shellExec(`rm -rf ${shellLink(folderPath)};`);
-
         console.log(`${designer}D raw to raw done`);
 
       }
