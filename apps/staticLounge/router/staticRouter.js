@@ -6695,7 +6695,6 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
         const { designer: designerRaw, id } = equalJson(req.body);
         let client, designer, link, pay;
         let thisSetName;
-        let boo;
 
         client = (typeof req.body.client === "string" ? req.body.client.trim() : null);
         designer = designerRaw.trim();
@@ -6709,21 +6708,22 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
         }
 
         await messageSend({ text: thisSetName + " 처리를 시작합니다. 슬렉에 처리 성공 또는 실패 알림이 올 때까지 다음 원본 사진 처리요청을 하지 말아주세요!", channel, voice });
-        await filter.rawToRaw([
+        filter.rawToRaw([
           {
             client,
             designer,
             link,
             pay
           }
-        ]);
-
-        if (boo) {
-          await messageSend({ text: thisSetName + " 처리를 완료하였어요!", channel, voice });
-        } else {
-          await messageSend({ text: thisSetName + " 처리에 실패하였어요, 다시 시도해주세요!", channel, voice });
-        }
-
+        ]).then((boo) => {
+          if (boo) {
+            return messageSend({ text: thisSetName + " 처리를 완료하였어요!", channel, voice });
+          } else {
+            return messageSend({ text: thisSetName + " 처리에 실패하였어요, 다시 시도해주세요!", channel, voice });
+          }
+        }).catch((err) => {
+          logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + err.message).catch((e) => { console.log(e); })
+        });
       } else {
         const requestArr = equalJson(req.body.requestArr);
         let client, designer, link, pay;
@@ -6754,7 +6754,7 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
           logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + err.message).catch((e) => { console.log(e); })
         });
       }
-      res.send(JSON.stringify({ message: "done" }));
+      res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));

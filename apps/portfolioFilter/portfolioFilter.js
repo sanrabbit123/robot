@@ -240,16 +240,11 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteM
     resultFolderParent = resultFolderArr.join('/');
 
     fileList_780 = [];
-    fileList_1500 = [];
     fileList_original = [];
-    fileList_png = [];
 
     fileList_780_raw = await fileSystem(`readDir`, [ `${resultFolder}/780` ]);
     if (!liteMode) {
       fileList_original_raw = await fileSystem(`readDir`, [ `${resultFolder}/3508` ]);
-      fileList_png_raw = await fileSystem(`readDir`, [ resultFolder ]);
-    } else {
-      fileList_1500_raw = await fileSystem(`readDir`, [ `${resultFolder}/1500` ]);
     }
 
     for (let i of fileList_780_raw) {
@@ -264,21 +259,9 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteM
           fileList_original.push(resultFolder + "/3508/" + i);
         }
       }
-      for (let i of fileList_png_raw) {
-        if (/\.png$/g.test(i)) {
-          fileList_png.push(resultFolder + "/" + i);
-          console.log(i);
-        }
-      }
-    } else {
-      for (let i of fileList_1500_raw) {
-        if (i !== `.DS_Store`) {
-          fileList_1500.push(resultFolder + "/1500/" + i);
-        }
-      }
     }
 
-    return { fileList_780, fileList_1500, fileList_original, fileList_png };
+    return { fileList_780, fileList_1500: [], fileList_original, fileList_png: [] };
   } catch (e) {
     console.log(e);
   }
