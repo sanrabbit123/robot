@@ -6670,7 +6670,7 @@ StaticRouter.prototype.rou_post_metaAccountCheck = function () {
 
 StaticRouter.prototype.rou_post_rawToRaw = function () {
   const instance = this;
-  const { equalJson, dateToString, stringToDate, objectDeepCopy, requestSystem, mysqlQuery, sleep, fileSystem, shellExec, shellLink, linkToString, uniqueValue } = this.mother;
+  const { equalJson, dateToString, messageSend, stringToDate, objectDeepCopy, requestSystem, mysqlQuery, sleep, fileSystem, shellExec, shellLink, linkToString, uniqueValue } = this.mother;
   const ROBOT_PATH = process.cwd();
   const APP_PATH = ROBOT_PATH + "/apps";
   const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
