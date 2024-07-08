@@ -558,7 +558,7 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
         // });
 
       }
-      await shellExec(`rm`, [ `-rf`, middleTarget ]);
+      // await shellExec(`rm`, [ `-rf`, middleTarget ]);
     }
 
     resultObj = {

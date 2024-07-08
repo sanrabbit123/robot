@@ -192,7 +192,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     }
     console.log(rawFix_file_list);
 
-    photo_sizes = liteMode ? [ "780" ] : [ "3508" ];
+    photo_sizes = liteMode ? [ "780" ] : [ "780", "3508" ];
 
     resultFolderBoo = await fileSystem(`readDir`, [ this.options.result_dir ]);
     for (let i of resultFolderBoo) {
@@ -368,6 +368,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
         toArr.push(sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/" + f.split("/").slice(-2).join("/"));
       }
 
+      console.log("original upload => ", toArr);
       await ghostFileUpload(fromArr, toArr);
 
     } else {
@@ -1152,10 +1153,11 @@ PortfolioFilter.prototype.rawToContents = async function (pid) {
     }
 
     await this.total_make(false);
+
     console.log(finalGsTong);
 
     noteContents = pid + "\n";
-    noteContents += thisDesigner.designer + " 실장님 " + thisClient.name + "고객님";
+    noteContents += thisDesigner.designer + " 실장님 " + thisClient.name + " 고객님";
     noteContents += "\n\n\n";
     noteContents += targetRaw.addition.subject.trim() + ", " + targetRaw.addition.apart.trim() + " " + String(targetRaw.addition.pyeong) + "py " + "홈스타일링";
     noteContents += "\n\n\n";
@@ -1190,6 +1192,8 @@ PortfolioFilter.prototype.rawToContents = async function (pid) {
     await fileSystem("write", [ notePath + "/" + pid + ".txt", noteContents ]);
     noteArr = noteContents.split("\n").map((s) => { return s.trim() }).filter((s) => { return s !== "" });
     resource.p_id = pid;
+    console.log("write sucess");
+
     await resource.launching(noteArr);
 
     await messageSend({ text: `${thisClient.name} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
