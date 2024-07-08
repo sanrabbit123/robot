@@ -1033,15 +1033,23 @@ ResourceMaker.prototype.launching = async function (thisContents = []) {
 
     fromArr = [];
     toArr = [];
+    try {
+      await shellExec("mkdir", [ "/home/ubuntu/samba/" + serverFolderPath + "/" + this.p_id ]);
+    } catch {}
+    try {
+      await shellExec("mkdir", [ "/home/ubuntu/samba/" + serverFolderPath + "/" + this.p_id + "/mobile" ]);
+    } catch {}
     for (let i of outputFolderList) {
       if (i !== `.DS_Store` && /^[bt]/.test(i)) {
         fromArr.push(outputFolder + "/" + i);
+        await shellExec("cp", [ outputFolder + "/" + i, "/home/ubuntu/samba/" + serverFolderPath + "/" + this.p_id + "/" ]);
         toArr.push(`${serverFolderPath}/${this.p_id}/${i}`);
       }
     }
     for (let i of outputMobildFolderList) {
       if (i !== `.DS_Store`) {
         fromArr.push(outputMobildFolder + "/" + i);
+        await shellExec("cp", [ outputMobildFolder + "/" + i, "/home/ubuntu/samba/" + serverFolderPath + "/" + this.p_id + "/mobile/" ]);
         toArr.push(`${serverFolderPath}/${this.p_id}/mobile/${i}`);
       }
     }

@@ -7630,8 +7630,8 @@ DevContext.prototype.launching = async function () {
     // await audio.textToVoice("안녕하세요, 저의 이름은 서연입니다. 다음은 어피니티에 대한 설명입니다!");
 
     // send sms
-    // const name = "라두현";
-    // const amount = 330000;
+    // const name = "최임지";
+    // const amount = 6_240_000;
     // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
 
 
