@@ -2001,7 +2001,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                 height: String(photoHeight) + ea,
                 borderRadius: String(radiusPixel) + "px",
                 marginBottom: String(photoMarginBottom) + ea,
-                backgroundSize: gsArray[i] === 'g' ? "auto 100%" : "100% auto",
+                backgroundSize: gsArray[i] === 'g' ? "100% 100%" : "100% auto",
                 backgroundPosition: "50% 50%",
                 backgroundImage: "url('" + src + "')",
               }

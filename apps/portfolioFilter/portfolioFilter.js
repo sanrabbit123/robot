@@ -1321,7 +1321,7 @@ PortfolioFilter.prototype.rawToContents = async function (pid) {
     noteContents += "Key8\n\n"
     noteContents += "820\n\n"
     noteContents += "Key9\n\n"
-    noteContents += dateToString(new Date()).slice(2).replace(/[^0-9]/gi, '') + "\n\n"
+    noteContents += dateToString(new Date(), true).slice(2).replace(/[^0-9]/gi, '') + "\n\n"
     noteContents += "\n\n\n";
 
     await fileSystem("write", [ notePath + "/" + pid + ".txt", noteContents ]);
