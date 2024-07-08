@@ -329,9 +329,8 @@ DevContext.prototype.launching = async function () {
 
 
     const filter = new PortfolioFilter();
-    const pid = "p380";
-    // await filter.updateSubject(pid);
-    await filter.rawToContents(pid);
+    await filter.updateSubject("p380");
+
 
 
     // let date;

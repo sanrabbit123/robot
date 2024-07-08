@@ -1087,7 +1087,6 @@ PortfolioFilter.prototype.updateSubject = async function (pid) {
     let apartInput;
     let regionInput;
 
-
     [ targetFores ] = await back.mongoRead(collection, { pid: targetPid }, { selfMongo });
     proid = targetFores.proid;
     [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
@@ -1171,6 +1170,9 @@ PortfolioFilter.prototype.updateSubject = async function (pid) {
       }
     } ], { selfMongo: selfSecondMongo });
 
+    await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawToContents", {
+      pid
+    }, { headers: { "Content-Type": "application/json" } });
 
     await selfMongo.close();
     await selfCoreMongo.close();
