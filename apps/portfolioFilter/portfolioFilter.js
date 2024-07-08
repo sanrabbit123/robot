@@ -192,7 +192,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     }
     console.log(rawFix_file_list);
 
-    photo_sizes = liteMode ? [ "780" ] : [ "780", "3508" ];
+    photo_sizes = liteMode ? [ "780" ] : [ "3508" ];
 
     resultFolderBoo = await fileSystem(`readDir`, [ this.options.result_dir ]);
     for (let i of resultFolderBoo) {
@@ -239,20 +239,24 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteM
     resultFolderArr.pop();
     resultFolderParent = resultFolderArr.join('/');
 
+    try {
+      fileList_780_raw = await fileSystem(`readDir`, [ `${resultFolder}/780` ]);
+      if (!liteMode) {
+        fileList_original_raw = await fileSystem(`readDir`, [ `${resultFolder}/3508` ]);
+      }
+    } catch {
+      fileList_780_raw = [];
+      fileList_original_raw = [];
+    }
+
     fileList_780 = [];
     fileList_original = [];
-
-    fileList_780_raw = await fileSystem(`readDir`, [ `${resultFolder}/780` ]);
-    if (!liteMode) {
-      fileList_original_raw = await fileSystem(`readDir`, [ `${resultFolder}/3508` ]);
-    }
 
     for (let i of fileList_780_raw) {
       if (i !== `.DS_Store`) {
         fileList_780.push(resultFolder + "/780/" + i);
       }
     }
-
     if (!liteMode) {
       for (let i of fileList_original_raw) {
         if (i !== `.DS_Store`) {
@@ -358,34 +362,25 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
       sambaPhotoPath = instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + this.folderName;
     }
 
+    try {
+      await shellExec("mkdir", [ instance.address.officeinfo.ghost.file.static + "/" + sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/780" ])
+    } catch {}
+    try {
+      await shellExec("mkdir", [ instance.address.officeinfo.ghost.file.static + "/" + sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/1500" ])
+    } catch {}
+    try {
+      await shellExec("mkdir", [ instance.address.officeinfo.ghost.file.static + "/" + sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/3508" ])
+    } catch {}
+
     if (!liteMode) {
-
-      fromArr = [];
-      toArr = [];
-
       for (let f of fileList_original) {
-        fromArr.push(f);
-        toArr.push(sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/" + f.split("/").slice(-2).join("/"));
+        await shellExec(`cp`, [ f, instance.address.officeinfo.ghost.file.static + "/" + sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/3508/" ]);
       }
-
-      console.log("original upload => ", toArr);
-      await ghostFileUpload(fromArr, toArr);
-
     } else {
-
-      fromArr = [];
-      toArr = [];
-
       for (let f of fileList_780) {
-        fromArr.push(f);
-        toArr.push(sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/" + f.split("/").slice(-2).join("/"));
+        await shellExec(`cp`, [ f, instance.address.officeinfo.ghost.file.static + "/" + sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/780/" ]);
       }
-
-      await ghostFileUpload(fromArr, toArr);
-
     }
-
-    //slack
     await messageSend({ text: `${this.folderName} 사진을 처리하였습니다!`, channel: `#502_sns_contents` });
 
     //ghost upload
