@@ -489,27 +489,27 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
           width: targetWidth,
           height: targetHeight,
           quality: qualityConst,
-          output: middleTarget,
+          output: resultTarget,
           mode: "resize",
         });
 
-        middleInfo = await this.readImage(middleTarget);
-        middleWidth = middleInfo.geometry.width;
-        middleHeight = middleInfo.geometry.height;
-
-        moveX = Math.floor((middleWidth - size[typeKeywords][1]) / 2);
-        moveY = Math.floor((middleHeight - size[typeKeywords][0]) / 2);
-
-        await this.convertImage({
-          input: middleTarget,
-          width: size[typeKeywords][1],
-          height: size[typeKeywords][0],
-          x: moveX,
-          y: moveY,
-          quality: qualityConst,
-          output: resultTarget,
-          mode: "crop",
-        });
+        // middleInfo = await this.readImage(middleTarget);
+        // middleWidth = middleInfo.geometry.width;
+        // middleHeight = middleInfo.geometry.height;
+        //
+        // moveX = Math.floor((middleWidth - size[typeKeywords][1]) / 2);
+        // moveY = Math.floor((middleHeight - size[typeKeywords][0]) / 2);
+        //
+        // await this.convertImage({
+        //   input: middleTarget,
+        //   width: size[typeKeywords][1],
+        //   height: size[typeKeywords][0],
+        //   x: moveX,
+        //   y: moveY,
+        //   quality: qualityConst,
+        //   output: resultTarget,
+        //   mode: "crop",
+        // });
 
       } else if (gs === "sero") {
 
@@ -535,27 +535,27 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
           width: targetWidth,
           height: targetHeight,
           quality: qualityConst,
-          output: middleTarget,
+          output: resultTarget,
           mode: "resize",
         });
 
-        middleInfo = await this.readImage(middleTarget);
-        middleWidth = middleInfo.geometry.width;
-        middleHeight = middleInfo.geometry.height;
-
-        moveX = Math.floor((middleWidth - size[typeKeywords][0]) / 2);
-        moveY = Math.floor((middleHeight - size[typeKeywords][1]) / 2);
-
-        await this.convertImage({
-          input: middleTarget,
-          width: size[typeKeywords][0],
-          height: size[typeKeywords][1],
-          x: moveX,
-          y: moveY,
-          quality: qualityConst,
-          output: resultTarget,
-          mode: "crop",
-        });
+        // middleInfo = await this.readImage(middleTarget);
+        // middleWidth = middleInfo.geometry.width;
+        // middleHeight = middleInfo.geometry.height;
+        //
+        // moveX = Math.floor((middleWidth - size[typeKeywords][0]) / 2);
+        // moveY = Math.floor((middleHeight - size[typeKeywords][1]) / 2);
+        //
+        // await this.convertImage({
+        //   input: middleTarget,
+        //   width: size[typeKeywords][0],
+        //   height: size[typeKeywords][1],
+        //   x: moveX,
+        //   y: moveY,
+        //   quality: qualityConst,
+        //   output: resultTarget,
+        //   mode: "crop",
+        // });
 
       }
       await shellExec(`rm`, [ `-rf`, middleTarget ]);
