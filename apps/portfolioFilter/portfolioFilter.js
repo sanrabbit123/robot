@@ -192,7 +192,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     }
     console.log(rawFix_file_list);
 
-    photo_sizes = liteMode ? [ "780" ] : [ "780", "3508" ];
+    photo_sizes = liteMode ? [ "780" ] : [ "3508" ];
 
     resultFolderBoo = await fileSystem(`readDir`, [ this.options.result_dir ]);
     for (let i of resultFolderBoo) {
