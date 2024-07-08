@@ -27,6 +27,7 @@ const ImageReader = function (mother = null, back = null, address = null) {
 ImageReader.prototype.convertImage = async function (obj, detailMode = false) {
   const instance = this;
   const { shellExec, shellLink, fileSystem } = this.mother;
+  const sharp = require('sharp');
   try {
     let targetImage;
     let targetWidth;
@@ -64,54 +65,13 @@ ImageReader.prototype.convertImage = async function (obj, detailMode = false) {
     thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
     thisFileName = thisFileName.split(".").slice(0, -1).join(".");
 
-    if (detailMode) {
-      await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, targetImage ]);
-      if (!(await fileSystem(`exist`, [ targetImage ]))) {
-        inputDirContents = await fileSystem(`readFolder`, [ inputDir ]);
-        inputDirContents = inputDirContents.filter((str) => { return (new RegExp(inputFileName + "-[0-9]+." + inputFileExe, "g")).test(str) });
-        if (inputDirContents.length === 0) {
-          throw new Error("converting fail");
-        } else {
-          await shellExec(`mv ${shellLink(inputDir + "/" + inputDirContents[0])} ${shellLink(inputDir + "/" + inputFileName + "." + inputFileExe)}`)
-          for (let str of inputDirContents) {
-            await shellExec(`rm -rf ${shellLink(inputDir + "/" + str)}`);
-          }
-        }
-      }
-    }
-
-    if (mode === "resize") {
-      await shellExec(`convert ${shellLink(targetImage)} -resize ${String(targetWidth)}x${String(targetHeight)}! -quality ${String(qualityConst)} ${shellLink(middleTarget)}`);
-    } else if (mode === "crop") {
-      moveX = obj.x;
-      moveY = obj.y;
-      cropMatrix = String(targetWidth) + "x" + String(targetHeight) + "+" + String(moveX) + "+" + String(moveY);
-      await shellExec(`convert ${shellLink(targetImage)} -crop ${cropMatrix} -quality ${String(qualityConst)} ${shellLink(middleTarget)}`);
-    } else {
-      throw new Error("invalid mode");
-    }
+    await sharp(targetImage).resize(targetWidth, targetHeight).toFile(middleTarget);
 
     if (!(await fileSystem(`exist`, [ middleTarget ]))) {
       thisDirContents = await fileSystem(`readFolder`, [ thisDir ]);
       thisDirContents = thisDirContents.filter((str) => { return (new RegExp(thisFileName + "-[0-9]+." + thisFileExe, "g")).test(str) });
       if (thisDirContents.length === 0) {
         throw new Error("converting fail");
-      } else {
-        await shellExec(`mv ${shellLink(thisDir + "/" + thisDirContents[0])} ${shellLink(thisDir + "/" + thisFileName + "." + thisFileExe)}`)
-        for (let str of thisDirContents) {
-          await shellExec(`rm -rf ${shellLink(thisDir + "/" + str)}`);
-        }
-      }
-    }
-
-    if (detailMode) {
-      await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, middleTarget ]);
-    }
-    if (!(await fileSystem(`exist`, [ middleTarget ]))) {
-      thisDirContents = await fileSystem(`readFolder`, [ thisDir ]);
-      thisDirContents = thisDirContents.filter((str) => { return (new RegExp(thisFileName + "-[0-9]+." + thisFileExe, "g")).test(str) });
-      if (thisDirContents.length === 0) {
-        throw new Error("mogrify fail");
       } else {
         await shellExec(`mv ${shellLink(thisDir + "/" + thisDirContents[0])} ${shellLink(thisDir + "/" + thisFileName + "." + thisFileExe)}`)
         for (let str of thisDirContents) {

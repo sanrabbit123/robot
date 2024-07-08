@@ -38,6 +38,7 @@
     "mysql2": "^3.9.7",
     "openai": "^4.17.4",
     "playwright": "^1.42.1",
+    "sharp": "^0.33.4",
     "shelljs": "^0.8.5",
     "terser": "^5.16.1",
     "ua-parser-js": "^1.0.35",

@@ -1053,6 +1053,136 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
   }
 }
 
+PortfolioFilter.prototype.updateSubject = async function (pid) {
+  const instance = this;
+  const address = this.address;
+  const back = this.back;
+  const { consoleQ, fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo, mongocontentsinfo, mongosecondinfo } = this.mother;
+  const selfMongo = new mongo(mongocontentsinfo);
+  const selfCoreMongo = new mongo(mongoinfo);
+  const selfSecondMongo = new mongo(mongosecondinfo);
+  try {
+    await selfMongo.connect();
+    await selfCoreMongo.connect();
+    await selfSecondMongo.connect();
+    const bar = "================================================"
+    const targetPid = pid;
+    const collection = "foreContents";
+    const rawCollection = "designerRawContents";
+    const toNormal = true;
+    let targetFores;
+    let targetContents;
+    let proid;
+    let targetRaw;
+    let targetBody;
+    let tong;
+    let thisBlank;
+    let targetText;
+    let frontText;
+    let backText;
+    let frontEnd;
+    let backEnd;
+    let project, client;
+    let subjectInput;
+    let apartInput;
+    let regionInput;
+
+
+    [ targetFores ] = await back.mongoRead(collection, { pid: targetPid }, { selfMongo });
+    proid = targetFores.proid;
+    [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
+    project = await back.getProjectById(proid, { selfMongo: selfCoreMongo, toNormal });
+    client = await back.getClientById(project.cliid, { selfMongo: selfCoreMongo, toNormal });
+
+    tong = [];
+    targetBody = targetRaw.contents.body.split("\n").filter((s) => {
+      return !/고객 상황에 대한 이야기/gi.test(s);
+    }).filter((s) => {
+      return !/고객이 원하는 스타일에 대한 이야기/gi.test(s);
+    }).filter((s) => {
+      return !/디자이너의 공간별 디자인 의도 이야기/gi.test(s);
+    }).filter((s) => {
+      return !/^[0-9][ ]*\./gi.test(s.trim());
+    }).join("\n").trim().split("\n");
+
+    thisBlank = false;
+    tong = [];
+    for (let i = 0; i < targetBody.length; i++) {
+      targetText = targetBody[i].trim();
+      if (targetText === '') {
+        if (thisBlank) {
+          // pass
+        } else {
+          tong.push(targetText);
+        }
+        thisBlank = true;
+      } else {
+        tong.push(targetText);
+        thisBlank = false;
+      }
+    }
+    frontText = '';
+    backText = '';
+    frontEnd = false;
+    backEnd = false;
+    for (let i = 0; i < tong.length; i++) {
+      if (tong[i] !== '' && /^[^a-zA-Z가-힣\.]/gi.test(tong[i])) {
+        frontEnd = true;
+      }
+      if (frontEnd) {
+        backText += tong[i].replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim() + "\n";
+      } else {
+        frontText += tong[i].trim() + " ";
+        if (frontText.length > 500) {
+          frontEnd = true;
+        }
+      }
+    }
+
+    console.log(frontText);
+    console.log(bar);
+    console.log(client.requests[0].request.space.pyeong);
+    console.log(bar);
+    console.log(client.requests[0].request.space.address);
+
+    subjectInput = await consoleQ("please insert this subject :\n");
+    apartInput = await consoleQ("please insert this apart :\n");
+    regionInput = await consoleQ("please insert this region :\n");
+
+    console.log(subjectInput);
+    console.log(bar);
+    console.log(apartInput);
+    console.log(bar);
+    console.log(regionInput);
+    console.log(bar);
+    console.log(client.requests[0].request.space.pyeong);
+
+    await back.mongoUpdate(rawCollection, [ { proid }, {
+      addition: {
+        pid,
+        subject: subjectInput.trim(),
+        apart: apartInput.trim(),
+        region: regionInput.trim(),
+        pyeong: client.requests[0].request.space.pyeong,
+        text: {
+          front: frontText,
+          back: backText
+        },
+      }
+    } ], { selfMongo: selfSecondMongo });
+
+
+    await selfMongo.close();
+    await selfCoreMongo.close();
+    await selfSecondMongo.close();
+  } catch (e) {
+    console.log(e);
+    await selfMongo.close();
+    await selfCoreMongo.close();
+    await selfSecondMongo.close();
+  }
+}
+
 PortfolioFilter.prototype.rawToContents = async function (pid) {
   const instance = this;
   const back = this.back;
@@ -1196,6 +1326,8 @@ PortfolioFilter.prototype.rawToContents = async function (pid) {
     await resource.launching(noteArr);
 
     await messageSend({ text: `${thisClient.name} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
+
+    await requestSystem("https://" + address.officeinfo.ghost.host + ":3001/syncEvaluationContents", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
 
     await selfMongo.close();
     await selfCoreMongo.close();
