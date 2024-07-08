@@ -397,9 +397,13 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
 
       pidFolder.sort((a, b) => { return idFilterNum(a) - idFilterNum(b); });
 
+      try {
+        await shellExec("mkdir", [ `${instance.address.officeinfo.ghost.file.static}/corePortfolio/original/${this.pid}` ])
+      } catch {}
       for (let i of pidFolder) {
         if (i !== `.DS_Store`) {
           await shellExec(`mv ${shellLink(this.resultFolder + "/" + this.pid + "/" + i)} ${shellLink(this.resultFolder + "/" + this.pid)}/i${idFilter(i)}${this.pid}.jpg`);
+          await shellExec(`cp`, [ `${(this.resultFolder + "/" + this.pid)}/i${idFilter(i)}${this.pid}.jpg`, `${instance.address.officeinfo.ghost.file.static}/corePortfolio/original/${this.pid}/` ]);
           fromArr.push(`${shellLink(this.resultFolder + "/" + this.pid)}/i${idFilter(i)}${this.pid}.jpg`);
           toArr.push(`corePortfolio/original/${this.pid}/i${idFilter(i)}${this.pid}.jpg`);
         }
