@@ -323,17 +323,15 @@ DevContext.prototype.launching = async function () {
     // console.log(res);
 
 
-    const sharp = require("sharp");
-
-    await sharp(`${process.cwd()}/temp/target.jpg`).resize(2000, 3000).toFile(`${process.cwd()}/temp/target2.jpg`);
 
 
 
 
-    // const filter = new PortfolioFilter();
-    // const pid = "p380";
+
+    const filter = new PortfolioFilter();
+    const pid = "p380";
     // await filter.updateSubject(pid);
-    // await filter.rawToContents(pid);
+    await filter.rawToContents(pid);
 
 
     // let date;
