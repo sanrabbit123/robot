@@ -489,12 +489,6 @@ ResourceMaker.prototype.portfolio_verification = function () {
   resultObj.boo.apartTitle = (apart.length < 23);
   resultObj.boo.subjectTitle = (subject.length + apartText.length < 27);
 
-  for (let i in resultObj.boo) {
-    if (!resultObj.boo[i]) {
-      throw new Error("invaild title : " + JSON.stringify(resultObj, null, 2));
-    }
-  }
-
   //review
   for (let i = 0; i < this.arr.length; i++) {
     if (/^_review/.test(this.arr[i])) {
@@ -507,9 +501,6 @@ ResourceMaker.prototype.portfolio_verification = function () {
     reviewTitleArr = this.arr[reviewTitleIndex].split(", ");
     booResults.push(reviewTitleArr[0].length <= 10);
     booResults.push(reviewTitleArr[1].length <= 10);
-    if (!booResults[0] || !booResults[1]) {
-      throw new Error("invaild review title : " + JSON.stringify(booResults) + ", " + reviewTitleArr.join(", "));
-    }
   }
 }
 
@@ -894,7 +885,7 @@ ResourceMaker.prototype.magazineMaker = async function (mid) {
   }
 }
 
-ResourceMaker.prototype.launching = async function () {
+ResourceMaker.prototype.launching = async function (thisContents = []) {
   const instance = this;
   const back = this.back;
   const { fileSystem, mongo, mongoinfo, mongocontentsinfo, shellExec, shellLink, headRequest, binaryRequest, ghostFileUpload, requestSystem, chromeOpen, sleep } = this.mother;
@@ -947,8 +938,7 @@ ResourceMaker.prototype.launching = async function () {
     }
     await shellExec(`mkdir ${shellLink(tempHome)}`);
 
-    note = new AppleNotes({ folder: "portfolio", subject: this.p_id });
-    this.arr = await note.readNote();
+    this.arr = thisContents;
 
     this.portfolio_verification();
     tempRows = await back.getContentsArrByQuery({ "contents.portfolio.pid": this.p_id });
@@ -1005,11 +995,9 @@ ResourceMaker.prototype.launching = async function () {
       }
       if (cliid === null) {
         console.log(namesArr);
-        throw new Error("can not find client");
       }
       if (proid === null) {
         console.log(namesArr);
-        throw new Error("can not find project");
       }
     } else {
       proid = "";
@@ -1026,63 +1014,51 @@ ResourceMaker.prototype.launching = async function () {
     await this.portfolio_modeling(temp, proid, cliid, thisService);
     await fileSystem("write", [ `${process.cwd()}/temp/${this.p_id}.js`, JSON.stringify(this.final, null, 2) ]);
 
-    //on view
-    await shellExec(`code ${shellLink(process.cwd())}/temp/${this.p_id}_raw.js`);
-    await shellExec(`code ${shellLink(process.cwd())}/temp/${this.p_id}.js`);
-    console.log(this.final);
-
     //confirm
-    input = await this.consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
-    if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
+    outputFolder = tempHome + "/portp" + this.p_id;
+    outputMobildFolder = outputFolder + "/mobile";
 
-      // launching poo
-      outputFolder = tempHome + "/portp" + this.p_id;
-      outputMobildFolder = outputFolder + "/mobile";
+    await shellExec(`mkdir`, [ outputFolder ]);
+    await shellExec(`mkdir`, [ outputMobildFolder ]);
 
-      await shellExec(`mkdir`, [ outputFolder ]);
-      await shellExec(`mkdir`, [ outputMobildFolder ]);
-
-      for (let { index, gs } of this.final.photos.detail) {
-        await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(index)}${this.p_id}.jpg -resize ${gs === 's' ? String(sizeMatrix[0][1]) + "x" + String(sizeMatrix[0][0]) : String(sizeMatrix[0][0]) + "x" + String(sizeMatrix[0][1])} -quality ${String(qualityConst)} ${shellLink(outputFolder)}/${desktopInitial}${String(index)}${this.p_id}.jpg`);
-        await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(index)}${this.p_id}.jpg -resize ${gs === 's' ? String(sizeMatrix[1][1]) + "x" + String(sizeMatrix[1][0]) : String(sizeMatrix[1][0]) + "x" + String(sizeMatrix[1][1])} -quality ${String(qualityConst)} ${shellLink(outputMobildFolder)}/${mobileInitial}${String(index)}${this.p_id}.jpg`);
-      }
-
-      if (this.final.contents.review.detailInfo.photodae.length > 1) {
-        await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(this.final.contents.review.detailInfo.photodae[1])}${this.p_id}.jpg -resize ${String(sizeMatrix[2][0]) + "x" + String(sizeMatrix[2][1])} -quality ${String(bQualityConst)} ${shellLink(outputFolder)}/${reviewInitial}${String(this.final.contents.review.detailInfo.photodae[1])}${this.p_id}.jpg`);
-      }
-      await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(this.final.contents.portfolio.detailInfo.photodae[1])}${this.p_id}.jpg -resize ${String(sizeMatrix[2][0]) + "x" + String(sizeMatrix[2][1])} -quality ${String(bQualityConst)} ${shellLink(outputFolder)}/${reviewInitial}${String(this.final.contents.portfolio.detailInfo.photodae[1])}${this.p_id}.jpg`);
-
-      await sleep(500);
-      await shellExec(`scp -r ${shellLink(outputFolder)} ${this.frontHost}/list_image`);
-
-      outputFolderList = await fileSystem(`readDir`, [ outputFolder ]);
-      outputMobildFolderList = await fileSystem(`readDir`, [ outputMobildFolder ]);
-
-      fromArr = [];
-      toArr = [];
-      for (let i of outputFolderList) {
-        if (i !== `.DS_Store` && /^[bt]/.test(i)) {
-          fromArr.push(outputFolder + "/" + i);
-          toArr.push(`${serverFolderPath}/${this.p_id}/${i}`);
-        }
-      }
-      for (let i of outputMobildFolderList) {
-        if (i !== `.DS_Store`) {
-          fromArr.push(outputMobildFolder + "/" + i);
-          toArr.push(`${serverFolderPath}/${this.p_id}/mobile/${i}`);
-        }
-      }
-
-      console.log(fromArr);
-      console.log(toArr);
-
-      await ghostFileUpload(fromArr, toArr);
-
-      await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
-      await back.mongoDelete("foreContents", { pid: this.p_id }, { selfMongo: MONGOCONTENTSC });
-      await requestSystem("https://" + instance.address.testinfo.host + ":" + String(3000) + "/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
-      await chromeOpen("https://" + instance.address.backinfo.host + "/designer?mode=normal&desid=" + this.result.designer)
+    for (let { index, gs } of this.final.photos.detail) {
+      await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(index)}${this.p_id}.jpg -resize ${gs === 's' ? String(sizeMatrix[0][1]) + "x" + String(sizeMatrix[0][0]) : String(sizeMatrix[0][0]) + "x" + String(sizeMatrix[0][1])} -quality ${String(qualityConst)} ${shellLink(outputFolder)}/${desktopInitial}${String(index)}${this.p_id}.jpg`);
+      await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(index)}${this.p_id}.jpg -resize ${gs === 's' ? String(sizeMatrix[1][1]) + "x" + String(sizeMatrix[1][0]) : String(sizeMatrix[1][0]) + "x" + String(sizeMatrix[1][1])} -quality ${String(qualityConst)} ${shellLink(outputMobildFolder)}/${mobileInitial}${String(index)}${this.p_id}.jpg`);
     }
+
+    if (this.final.contents.review.detailInfo.photodae.length > 1) {
+      await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(this.final.contents.review.detailInfo.photodae[1])}${this.p_id}.jpg -resize ${String(sizeMatrix[2][0]) + "x" + String(sizeMatrix[2][1])} -quality ${String(bQualityConst)} ${shellLink(outputFolder)}/${reviewInitial}${String(this.final.contents.review.detailInfo.photodae[1])}${this.p_id}.jpg`);
+    }
+    await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(this.final.contents.portfolio.detailInfo.photodae[1])}${this.p_id}.jpg -resize ${String(sizeMatrix[2][0]) + "x" + String(sizeMatrix[2][1])} -quality ${String(bQualityConst)} ${shellLink(outputFolder)}/${reviewInitial}${String(this.final.contents.portfolio.detailInfo.photodae[1])}${this.p_id}.jpg`);
+
+    await sleep(500);
+    await shellExec(`scp -r ${shellLink(outputFolder)} ${this.frontHost}/list_image`);
+
+    outputFolderList = await fileSystem(`readDir`, [ outputFolder ]);
+    outputMobildFolderList = await fileSystem(`readDir`, [ outputMobildFolder ]);
+
+    fromArr = [];
+    toArr = [];
+    for (let i of outputFolderList) {
+      if (i !== `.DS_Store` && /^[bt]/.test(i)) {
+        fromArr.push(outputFolder + "/" + i);
+        toArr.push(`${serverFolderPath}/${this.p_id}/${i}`);
+      }
+    }
+    for (let i of outputMobildFolderList) {
+      if (i !== `.DS_Store`) {
+        fromArr.push(outputMobildFolder + "/" + i);
+        toArr.push(`${serverFolderPath}/${this.p_id}/mobile/${i}`);
+      }
+    }
+
+    await ghostFileUpload(fromArr, toArr);
+
+    await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
+    await back.mongoDelete("foreContents", { pid: this.p_id }, { selfMongo: MONGOCONTENTSC });
+    await requestSystem("https://" + instance.address.testinfo.host + ":" + String(3000) + "/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
+
+    console.log("contents upload done");
 
     await shellExec(`rm -rf ${shellLink(process.env.HOME)}/${tempFolderName}`);
 

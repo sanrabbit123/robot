@@ -1053,4 +1053,159 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
   }
 }
 
+PortfolioFilter.prototype.rawToContents = async function (pid) {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const image = this.image;
+  const { fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo, mongocontentsinfo, mongosecondinfo } = this.mother;
+  const notePath = process.env.HOME + "/note/portfolio";
+  const selfMongo = new mongo(mongocontentsinfo);
+  const selfCoreMongo = new mongo(mongoinfo);
+  const selfSecondMongo = new mongo(mongosecondinfo);
+  const photoFolderConst = "사진_등록_포트폴리오";
+  const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
+  const garoseroParser = new GaroseroParser();
+  const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
+  const portfolioLink = "https://" + this.address.frontinfo.host + "/portdetail.php?pid=";
+  const resource = new ResourceMaker();
+  try {
+    await selfMongo.connect();
+    await selfCoreMongo.connect();
+    await selfSecondMongo.connect();
+    const collection = "foreContents";
+    const rawCollection = "designerRawContents";
+    const channel = "#502_sns_contents";
+    const toNormal = true;
+    let targetFores;
+    let targetRaw;
+    let proid;
+    let thisProject, thisClient, thisDesigner;
+    let ghostPhotos;
+    let ghostPhotosFiles;
+    let tempObject;
+    let num;
+    let targetPhotoDir;
+    let finalGsTong;
+    let seroIn;
+    let noteContents;
+    let noteArr;
+
+    [ targetFores ] = await back.mongoRead(collection, { pid }, { selfMongo });
+    proid = targetFores.proid;
+    [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
+
+    thisProject = await back.getProjectById(proid, { selfMongo: selfCoreMongo, toNormal });
+    thisClient = await back.getClientById(thisProject.cliid, { selfMongo: selfCoreMongo, toNormal });
+    thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: selfCoreMongo, toNormal });
+
+    this.clientName = thisClient.name;
+    this.designer = thisDesigner.designer;
+    this.apartName = "아파트";
+    this.pid = pid;
+
+    ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, { headers: { "Content-Type": "application/json" } }));
+    ghostPhotos = ghostPhotos.data.filter((o) => { return (new RegExp("^" + pid + "_")).test(o.fileName) });
+    ghostPhotos = ghostPhotos[0].fileName;
+
+    ghostPhotosFiles = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + ghostPhotos + "/" + pid }, { headers: { "Content-Type": "application/json" } }));
+    ghostPhotosFiles = ghostPhotosFiles.data.map((o) => { return o.fileName });
+
+    await tempDelete();
+    if (await fileSystem("exist", [ process.cwd() + "/temp/" + pid ])) {
+      await shellExec("rm", [ "-rf", process.cwd() + "/temp/" + pid ]);
+    }
+    await shellExec("mkdir", [ process.cwd() + "/temp/" + pid ]);
+
+    num = 1;
+    for (let fileName of ghostPhotosFiles) {
+      tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + fileName);
+      await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
+      console.log(`download success`);
+      num++;
+    }
+
+    targetPhotoDir = await garoseroParser.queryDirectory(process.cwd() + "/temp/" + pid);
+    finalGsTong = [];
+    seroIn = false;
+    for (let i = 0; i < targetPhotoDir.length; i++) {
+      if (targetPhotoDir[i].gs === "g") {
+        finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
+        seroIn = false;
+      } else {
+        if (!seroIn) {
+          if (targetPhotoDir[i + 1] !== undefined && targetPhotoDir[i + 1].gs === "s") {
+            finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
+            finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i + 1])));
+            seroIn = true;
+          }
+        } else {
+          seroIn = false;
+        }
+      }
+    }
+
+    await shellExec("rm", [ "-rf", this.options.photo_dir ]);
+    await shellExec("mkdir", [ this.options.photo_dir ]);
+    for (let obj of finalGsTong) {
+      await shellExec("mv", [ obj.file, this.options.photo_dir ])
+    }
+
+    await this.total_make(false);
+    console.log(finalGsTong);
+
+    noteContents = pid + "\n";
+    noteContents += thisDesigner.designer + " 실장님 " + thisClient.name + "고객님";
+    noteContents += "\n\n\n";
+    noteContents += targetRaw.addition.subject.trim() + ", " + targetRaw.addition.apart.trim() + " " + String(targetRaw.addition.pyeong) + "py " + "홈스타일링";
+    noteContents += "\n\n\n";
+    noteContents += targetRaw.addition.text.front.trim();
+    noteContents += "\n\n\n";
+    noteContents += "1 - " + String(finalGsTong.length);
+    noteContents += "\n\n\n";
+    noteContents += "Space\n\n" + targetRaw.addition.text.back.trim().replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n");
+    noteContents += "\n\n\n";
+    noteContents += "_info\n\n"
+    noteContents += thisDesigner.desid + "\n\n"
+    noteContents += "_portfolio\n\n"
+    noteContents += "_1\n\n"
+    noteContents += targetRaw.addition.subject.trim() + ", " + targetRaw.addition.apart.trim() + " 홈스타일링\n\n"
+    noteContents += targetRaw.addition.region.trim() + "\n\n"
+    noteContents += "아파트 홈스타일링\n\n"
+    noteContents += "_2\n\n"
+    noteContents += "세로 / 가로\n\n"
+    noteContents += String(finalGsTong.find((o) => { return o.gs === "s" }).index + 1) + " " + String(finalGsTong.find((o) => { return o.gs === "g" }).index + 1) + "\n\n"
+    noteContents += "슬라이드\n\n"
+    noteContents += "1 2 3 4 5 6 7 8 9\n\n"
+    noteContents += "태그\n\n"
+    noteContents += "all,아파트,수루배,블루,모던,화이트,세종,세종시,서재,거실\n\n"
+    noteContents += "서비스\n\n"
+    noteContents += "홈스타일링\n\n"
+    noteContents += "Key8\n\n"
+    noteContents += "820\n\n"
+    noteContents += "Key9\n\n"
+    noteContents += dateToString(new Date()).slice(2).replace(/[^0-9]/gi, '') + "\n\n"
+    noteContents += "\n\n\n";
+
+    await fileSystem("write", [ notePath + "/" + pid + ".txt", noteContents ]);
+    noteArr = noteContents.split("\n").map((s) => { return s.trim() }).filter((s) => { return s !== "" });
+    resource.p_id = pid;
+    await resource.launching(noteArr);
+
+    await messageSend({ text: `${thisClient.name} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
+
+    await selfMongo.close();
+    await selfCoreMongo.close();
+    await selfSecondMongo.close();
+
+    return true;
+  } catch (e) {
+    console.log(e);
+    await selfMongo.close();
+    await selfCoreMongo.close();
+    await selfSecondMongo.close();
+    return false;
+  }
+}
+
 module.exports = PortfolioFilter;
