@@ -1053,7 +1053,7 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
   }
 }
 
-PortfolioFilter.prototype.updateSubject = async function (pid) {
+PortfolioFilter.prototype.updateSubject = async function () {
   const instance = this;
   const address = this.address;
   const back = this.back;
@@ -1066,7 +1066,6 @@ PortfolioFilter.prototype.updateSubject = async function (pid) {
     await selfCoreMongo.connect();
     await selfSecondMongo.connect();
     const bar = "================================================"
-    const targetPid = pid;
     const collection = "foreContents";
     const rawCollection = "designerRawContents";
     const toNormal = true;
@@ -1086,7 +1085,13 @@ PortfolioFilter.prototype.updateSubject = async function (pid) {
     let subjectInput;
     let apartInput;
     let regionInput;
+    let pid;
+    let targetPid;
+    let addressArr;
 
+    pid = await consoleQ("pid? : \n");
+
+    targetPid = pid;
     [ targetFores ] = await back.mongoRead(collection, { pid: targetPid }, { selfMongo });
     proid = targetFores.proid;
     [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
@@ -1140,13 +1145,12 @@ PortfolioFilter.prototype.updateSubject = async function (pid) {
 
     console.log(frontText);
     console.log(bar);
-    console.log(client.requests[0].request.space.pyeong);
-    console.log(bar);
     console.log(client.requests[0].request.space.address);
 
+    addressArr = client.requests[0].request.space.address.split(" ").map((s) => { return s.trim() });
     subjectInput = await consoleQ("please insert this subject :\n");
     apartInput = await consoleQ("please insert this apart :\n");
-    regionInput = await consoleQ("please insert this region :\n");
+    regionInput = addressArr[0].slice(0, 2) + " " + addressArr[1];
 
     console.log(subjectInput);
     console.log(bar);
