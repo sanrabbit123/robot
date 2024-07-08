@@ -2503,7 +2503,7 @@ PortfolioDetailJs.prototype.portfolioDesignerBox = function () {
           height: desktop ? withOut(0, ea) : String(45) + ea,
           width: desktop ? String(boxPhotoWidth) + ea : withOut(0, ea),
           backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + (desktop ? ("/" + photoChar) : ("/mobile/" + photoCharMobile)) + String(contents.contents.portfolio.detailInfo.photodae[1]) + pid + ".jpg" + "')",
-          backgroundSize: big ? "100% auto" : "auto 100%",
+          backgroundSize: "auto 100%",
           backgroundPosition: "50% 50%",
           borderRadius: String(boxBorderRadius) + "px",
         }
