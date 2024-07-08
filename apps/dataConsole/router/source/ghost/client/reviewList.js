@@ -185,7 +185,7 @@ ReviewListJs.prototype.insertInitBox = function () {
   let searchWidthTags;
   let menuPopupPaddingTop;
   let numbersBox0, numbersBox1;
-  
+
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
   whiteBlockMarginBottom = <%% 36, 32, 30, 23, 9.5 %%>;
@@ -628,7 +628,7 @@ ReviewListJs.prototype.insertInitBox = function () {
         endEvent = function (e) {
           for (let dom of friends) {
             dom.style.opacity = String(1);
-          }      
+          }
           self.style.background = colorExtended.white;
           self.children[0].style.color = colorExtended.darkDarkShadow;
           self.children[1].querySelector("path").setAttribute("fill", colorExtended.black);
@@ -667,7 +667,7 @@ ReviewListJs.prototype.insertInitBox = function () {
               zIndex: String(zIndex),
             }
           });
-  
+
           menuPopup = createNode({
             mother: totalContents,
             class: [ filterMenuPopupClassName ],
@@ -878,7 +878,7 @@ ReviewListJs.prototype.insertInitBox = function () {
         boxSizing: "border-box",
       }
     });
-  
+
     // 1
     createNode({
       mother: numbersBox,
@@ -945,7 +945,7 @@ ReviewListJs.prototype.insertInitBox = function () {
         boxSizing: "border-box",
       }
     });
-  
+
     // 2
     createNode({
       mother: numbersBox,
@@ -1012,7 +1012,7 @@ ReviewListJs.prototype.insertInitBox = function () {
         boxSizing: "border-box",
       }
     });
-  
+
     // 3
     createNode({
       mother: numbersBox,
@@ -1080,7 +1080,7 @@ ReviewListJs.prototype.insertInitBox = function () {
           boxSizing: "border-box",
         }
       });
-      
+
       // 4
       createNode({
         mother: numbersBox,
@@ -1136,7 +1136,7 @@ ReviewListJs.prototype.insertInitBox = function () {
         ],
       });
     }
-  
+
     numbersBox.style.width = "auto";
     if (media[0] || media[1]) {
       multiplyNumber = (standardWidth / ((numbersBoxPaddingLeft + numbersBoxPaddingRight) + (numbersBoxBarMargin * 6) + (numbersImageWidth0 + numbersImageWidth1 + numbersImageWidth2 + numbersImageWidth3) + (numbersMargin * 4) + (numbersWidth0 + numbersWidth1 + numbersWidth2 + numbersWidth3) + (borderWidth * 2)));
@@ -1145,7 +1145,7 @@ ReviewListJs.prototype.insertInitBox = function () {
     }
     numbersBox.style.transform = "scale(" + String(multiplyNumber) + ")";
     numbersBox.style.transformOrigin = "0% 0%";
-  
+
   } else {
 
     numbersBox0 = createNode({
@@ -1170,7 +1170,7 @@ ReviewListJs.prototype.insertInitBox = function () {
         paddingRight: String(numbersBoxPaddingRight) + ea,
       }
     });
-  
+
     // 1
     createNode({
       mother: numbersBox0,
@@ -1238,7 +1238,7 @@ ReviewListJs.prototype.insertInitBox = function () {
         boxSizing: "border-box",
       }
     });
-  
+
     // 2
     createNode({
       mother: numbersBox0,
@@ -1316,7 +1316,7 @@ ReviewListJs.prototype.insertInitBox = function () {
         paddingRight: String(numbersBoxPaddingRight) + ea,
       }
     });
-  
+
     // 3
     createNode({
       mother: numbersBox1,
@@ -1383,7 +1383,7 @@ ReviewListJs.prototype.insertInitBox = function () {
         boxSizing: "border-box",
       }
     });
-    
+
     // 4
     createNode({
       mother: numbersBox1,
@@ -1659,7 +1659,7 @@ ReviewListJs.prototype.insertInitBox = function () {
     });
     serviceNum++;
   }
-  
+
   if (desktop) {
     serviceBlock = createNode({
       mother: middleBox,
@@ -1879,7 +1879,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
   montTitleMarginLeft = <%% 10, 8, 8, 6, 1.6 %%>;
   montHangulTitleTop = <%% -1, -1, -1, -1, (isIphone() ? -0.3 : -0.1) %%>;
   montTitleTop = <%% -0.5, -1, -1, -1, (isIphone() ? -0.4 : -0.2) %%>;
-  montSpecialTitleTop = <%% 0, -0.5, -0.5, -0.5, (isIphone() ? -0.3 : -0.1) %%>; 
+  montSpecialTitleTop = <%% 0, -0.5, -0.5, -0.5, (isIphone() ? -0.3 : -0.1) %%>;
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleMarginLeft = <%% 6, 6, 5, 5, 1.6 %%>;
 
@@ -1959,7 +1959,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
 
         thisPyeong = "<s%" + String(contents.portfolio.spaceInfo.pyeong) + "PY%s>";
         thisBudget = "<u%" + autoComma(Number(contents.portfolio.spaceInfo.budget.replace(/[^0-9]/gi, '').trim())) + "%u> " + "<b%" + contents.portfolio.spaceInfo.budget.replace(/[^조억만원]/gi, '').trim() + "대" + "%b>";
-      
+
         block = createNode({
           mother: baseBlock,
           attribute: {
@@ -2001,7 +2001,7 @@ ReviewListJs.prototype.portfolioBlock = function (limitLength, search = null, so
                 height: String(photoHeight) + ea,
                 borderRadius: String(radiusPixel) + "px",
                 marginBottom: String(photoMarginBottom) + ea,
-                backgroundSize: "100% auto",
+                backgroundSize: gsArray[i] === 'g' ? "auto 100%" : "100% auto",
                 backgroundPosition: "50% 50%",
                 backgroundImage: "url('" + src + "')",
               }

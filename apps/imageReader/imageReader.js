@@ -27,7 +27,6 @@ const ImageReader = function (mother = null, back = null, address = null) {
 ImageReader.prototype.convertImage = async function (obj, detailMode = false) {
   const instance = this;
   const { shellExec, shellLink, fileSystem } = this.mother;
-  const sharp = require('sharp');
   try {
     let targetImage;
     let targetWidth;
@@ -65,7 +64,7 @@ ImageReader.prototype.convertImage = async function (obj, detailMode = false) {
     thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
     thisFileName = thisFileName.split(".").slice(0, -1).join(".");
 
-    await sharp(targetImage).resize(targetWidth, targetHeight).toFile(middleTarget);
+    await shellExec(`convert ${shellLink(targetImage)} -resize ${String(targetWidth)}x${String(targetHeight)}! -quality ${String(qualityConst)} ${shellLink(middleTarget)}`);
 
     if (!(await fileSystem(`exist`, [ middleTarget ]))) {
       thisDirContents = await fileSystem(`readFolder`, [ thisDir ]);

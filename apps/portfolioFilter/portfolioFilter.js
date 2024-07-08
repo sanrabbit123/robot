@@ -1311,7 +1311,7 @@ PortfolioFilter.prototype.rawToContents = async function (pid) {
     noteContents += "아파트 홈스타일링\n\n"
     noteContents += "_2\n\n"
     noteContents += "세로 / 가로\n\n"
-    noteContents += String(finalGsTong.find((o) => { return o.gs === "s" }).index + 1) + " " + String(finalGsTong.find((o) => { return o.gs === "g" }).index + 1) + "\n\n"
+    noteContents += String(finalGsTong.map((o, index) => { o.realIndex = index; return o; }).find((o) => { return o.gs === "s" }).realIndex + 1) + " " + String(finalGsTong.map((o, index) => { o.realIndex = index; return o; }).find((o) => { return o.gs === "g" }).realIndex + 1) + "\n\n";
     noteContents += "슬라이드\n\n"
     noteContents += "1 2 3 4 5 6 7 8 9\n\n"
     noteContents += "태그\n\n"

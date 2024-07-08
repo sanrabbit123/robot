@@ -185,7 +185,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
   let searchWidthTags;
   let menuPopupPaddingTop;
   let numbersBox0, numbersBox1;
-  
+
   margin = <%% 30, 30, 30, 30, 30 %%>;
 
   whiteBlockMarginBottom = <%% 36, 32, 30, 23, 9.5 %%>;
@@ -618,7 +618,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
         endEvent = function (e) {
           for (let dom of friends) {
             dom.style.opacity = String(1);
-          }      
+          }
           self.style.background = colorExtended.white;
           self.children[0].style.color = colorExtended.darkDarkShadow;
           self.children[1].querySelector("path").setAttribute("fill", colorExtended.black);
@@ -657,7 +657,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
               zIndex: String(zIndex),
             }
           });
-  
+
           menuPopup = createNode({
             mother: totalContents,
             class: [ filterMenuPopupClassName ],
@@ -1065,7 +1065,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
     });
     serviceNum++;
   }
-  
+
   if (desktop) {
     serviceBlock = createNode({
       mother: middleBox,
@@ -1398,7 +1398,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null,
                 height: String(photoHeight) + ea,
                 borderRadius: String(radiusPixel) + "px",
                 marginBottom: String(photoMarginBottom) + ea,
-                backgroundSize: "100% auto",
+                backgroundSize: gsArray[i] === 'g' ? "auto 100%" : "100% auto",
                 backgroundPosition: "50% 50%",
                 backgroundImage: "url('" + src + "')",
               }
