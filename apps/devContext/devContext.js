@@ -325,8 +325,14 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const hideContents = [ "p61", "p36", "a51", "a104", "a105",
+      "p383","p380","p400","p366","p368","p386","p391","p373","p398","p395","p364","p409","p412","p414","p419","p420","p426","p363","p370","p371","p372","p374","p375","p378","p376","p377","p379","p381","p384","p385","p387","p422","p429","p428","p410","p411",
+    ];
 
+    const whereQuery = { "$and": hideContents.map((pid) => { return { "contents.portfolio.pid": { "$not": { "$regex": "^" + pid + "$" } } } }) };
+    const contentsArr = await back.mongoPick("contents", [ whereQuery, { conid: 1 } ], { selfMongo: this.MONGOC });
 
+    console.log(contentsArr)
 
     // const filter = new PortfolioFilter();
     // await filter.updateSubject();

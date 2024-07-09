@@ -734,7 +734,7 @@ LogRouter.prototype.rou_post_getContents = function () {
             sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
           }
 
-          whereQuery = { "$and": hideContents.map((pid) => { return { "contents.portfolio.pid": { "$not": pid } } }) };
+          whereQuery = { "$and": hideContents.map((pid) => { return { "contents.portfolio.pid": { "$not": { "$regex": "^" + pid + "$" } } } }) };
           if (req.body.limit !== undefined) {
             contentsArr = await back.mongoPick(collection, [ whereQuery, contentsProjectQuery ], { selfMongo, sort: sortQuery, limit: Number(req.body.limit) });
           } else {
@@ -783,7 +783,7 @@ LogRouter.prototype.rou_post_getContents = function () {
           sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
 
           designers = await back.getDesignersByQuery({}, { selfMongo });
-          contentsArr = await back.mongoPick(collection, [ { "$and": hideContents.map((pid) => { return { "contents.portfolio.pid": { "$not": pid } } }) }, contentsProjectQuery ], { selfMongo, sort: sortQuery });
+          contentsArr = await back.mongoPick(collection, [ { "$and": hideContents.map((pid) => { return { "contents.portfolio.pid": { "$not": { "$regex": "^" + pid + "$" } } } }) }, contentsProjectQuery ], { selfMongo, sort: sortQuery });
           contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
 
           res.send(JSON.stringify({
