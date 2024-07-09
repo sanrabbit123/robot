@@ -665,7 +665,7 @@ LogRouter.prototype.rou_post_getContents = function () {
             });
           }
 
-          contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
+          // contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
           if (contentsArr.length > 0) {
             thisProid = contentsArr[0].proid;
             contentsArr[0].consumer = moneyDelta;
@@ -734,16 +734,7 @@ LogRouter.prototype.rou_post_getContents = function () {
             sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
           }
 
-          whereQuery = {};
-          if (req.body.mode === "review") {
-            whereQuery = { "contents.review.rid": { "$not": { "$regex": "999" } } };
-            if (req.body.newmode === 1 || req.body.newmode === "1") {
-              whereQuery = {};
-            }
-          } else {
-            whereQuery = {};
-          }
-
+          whereQuery = { "$and": hideContents.map((pid) => { return { "contents.portfolio.pid": { "$not": pid } } }) };
           if (req.body.limit !== undefined) {
             contentsArr = await back.mongoPick(collection, [ whereQuery, contentsProjectQuery ], { selfMongo, sort: sortQuery, limit: Number(req.body.limit) });
           } else {
@@ -792,7 +783,7 @@ LogRouter.prototype.rou_post_getContents = function () {
           sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
 
           designers = await back.getDesignersByQuery({}, { selfMongo });
-          contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo, sort: sortQuery });
+          contentsArr = await back.mongoPick(collection, [ { "$and": hideContents.map((pid) => { return { "contents.portfolio.pid": { "$not": pid } } }) }, contentsProjectQuery ], { selfMongo, sort: sortQuery });
           contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
 
           res.send(JSON.stringify({
@@ -824,7 +815,7 @@ LogRouter.prototype.rou_post_getContents = function () {
 
           designers = await back.getDesignersByQuery({ desid: req.body.desid }, { selfMongo });
           contentsArr = await back.mongoPick(collection, [ { desid: req.body.desid }, contentsProjectQuery ], { selfMongo, sort: sortQuery });
-          contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
+          // contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
 
           res.send(JSON.stringify({
             contentsArr: contentsArr,
