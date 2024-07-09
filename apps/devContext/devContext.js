@@ -328,8 +328,26 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const filter = new PortfolioFilter();
-    await filter.updateSubject();
+    // const filter = new PortfolioFilter();
+    // await filter.updateSubject();
+
+
+    // const selfMongo = this.MONGOC;
+    // const collection = "contents";
+    // let rows;
+    // let targets;
+    //
+    // rows = await back.mongoRead(collection, {}, { selfMongo });
+    // targets = [];
+    // for (let c of rows) {
+    //   if (c.contents.portfolio.date.valueOf() > (new Date(2024, 6, 7)).valueOf()) {
+    //     console.log(c.contents.portfolio.date);
+    //     targets.push(c.contents.portfolio.pid);
+    //   }
+    // }
+    //
+    // console.log(targets.length);
+    // console.log(JSON.stringify(targets))
 
 
 

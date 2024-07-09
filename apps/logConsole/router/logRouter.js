@@ -86,7 +86,7 @@ LogRouter.prototype.dailyAnalytics = async function () {
     requestString += ',';
     date.setDate(date.getDate() + 1);
     requestString += dateToString(date);
-    
+
     await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/analyticsDaily", { date: requestString }, { headers: { "Content-Type": "application/json" } });
 
   } catch (e) {
@@ -239,7 +239,9 @@ LogRouter.prototype.rou_post_searchContents = function () {
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongocore;
       const collection = "contents";
-      const hideContents = [ "p61", "p36", "a51", "a104", "a105" ];
+      const hideContents = [ "p61", "p36", "a51", "a104", "a105",
+        "p383","p380","p400","p366","p368","p386","p391","p373","p398","p395","p364","p409","p412","p414","p419","p420","p426","p363","p370","p371","p372","p374","p375","p378","p376","p377","p379","p381","p384","p385","p387","p422","p429","p428","p410","p411",
+      ];
       const toNormal = true;
       const { keywords: seridKeywords, name: serviceNames } = serviceParsing();
       let limit;
@@ -299,7 +301,7 @@ LogRouter.prototype.rou_post_searchContents = function () {
         designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
         cliidArr = [ ...new Set(contentsArr.map((o) => { return o.cliid.trim() }).filter((s) => { return s !== "" })) ];
         proidArr = [ ...new Set(contentsArr.map((o) => { return o.proid.trim() }).filter((s) => { return s !== "" })) ];
-    
+
         if (cliidArr.length > 0) {
           whereQuery = { $or: cliidArr.map((cliid) => { return { cliid } }) };
           projectQuery = {
@@ -312,7 +314,7 @@ LogRouter.prototype.rou_post_searchContents = function () {
             "requests.request.space": 1,
           }
           thisClients = await back.mongoPick("client", [ objectDeepCopy(whereQuery), objectDeepCopy(projectQuery) ], { selfMongo: selfCoreMongo });
-    
+
           whereQuery = { $or: proidArr.map((proid) => { return { proid } }) };
           projectQuery = {
             proid: 1,
@@ -322,12 +324,12 @@ LogRouter.prototype.rou_post_searchContents = function () {
             process: 1,
           }
           thisProjects = await back.mongoPick("project", [ objectDeepCopy(whereQuery), objectDeepCopy(projectQuery) ], { selfMongo: selfCoreMongo });
-    
+
           projects = [];
           for (let project of thisProjects) {
             proposalDate = new Date(JSON.stringify(project.proposal.date).slice(1, -1));
             thisClient = thisClients.find((c) => { return c.cliid === project.cliid });
-    
+
             thisRequestNumber = 0;
             for (let i = 0; i < thisClient.requests.length; i++) {
               if (thisClient.requests[i].request.timeline.valueOf() <= proposalDate.valueOf()) {
@@ -335,7 +337,7 @@ LogRouter.prototype.rou_post_searchContents = function () {
                 break;
               }
             }
-    
+
             project.requestNumber = thisRequestNumber;
             project.client = {
               name: thisClient.name,
@@ -344,7 +346,7 @@ LogRouter.prototype.rou_post_searchContents = function () {
             };
             projects.push(project);
           }
-    
+
           for (let contents of contentsArr) {
             if (contents.proid !== "") {
               thisProject = projects.find((p) => { return p.proid === contents.proid });
@@ -355,7 +357,7 @@ LogRouter.prototype.rou_post_searchContents = function () {
             thisDesigner = designers.find((d) => { return d.desid === contents.desid });
             contents.designer = thisDesigner.designer;
           }
-    
+
         } else {
           for (let contents of contentsArr) {
             contents.project = { client: { request: {} } };
@@ -412,14 +414,14 @@ LogRouter.prototype.rou_post_searchContents = function () {
           res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
 
         } else if (subject === "서비스 종류") {
-          
-          thisSerid = seridKeywords + String(serviceNames.findIndex((s) => { return s === value }) + 1) + 's'; 
+
+          thisSerid = seridKeywords + String(serviceNames.findIndex((s) => { return s === value }) + 1) + 's';
           contentsArr = contentsArr.filter((c) => { return c.service.serid === thisSerid });
-          
+
           res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
 
         } else if (subject === "서비스 기간") {
-          
+
           contentsArr = contentsArr.filter((c) => { return typeof c.project.process === "object" });
           contentsArr = contentsArr.filter((c) => {
             fromDate = c.project.process.contract.form.date.from;
@@ -436,7 +438,7 @@ LogRouter.prototype.rou_post_searchContents = function () {
           res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
 
         } else if (subject === "지역") {
-          
+
           contentsArr = contentsArr.filter((c) => { return typeof c.project.client.request.space === "object" });
           contentsArr = contentsArr.filter((c) => {
             if (value === "서울 / 경기") {
@@ -628,7 +630,9 @@ LogRouter.prototype.rou_post_getContents = function () {
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongocore;
       const collection = "contents";
-      const hideContents = [ "p61", "p36", "a51", "a104", "a105" ];
+      const hideContents = [ "p61", "p36", "a51", "a104", "a105",
+        "p383","p380","p400","p366","p368","p386","p391","p373","p398","p395","p364","p409","p412","p414","p419","p420","p426","p363","p370","p371","p372","p374","p375","p378","p376","p377","p379","p381","p384","p385","p387","p422","p429","p428","p410","p411",
+      ];
       const toNormal = true;
       const defaultDelta = 45;
       const moneyDelta = 2500000;
@@ -729,7 +733,7 @@ LogRouter.prototype.rou_post_getContents = function () {
           } else {
             sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
           }
-          
+
           whereQuery = {};
           if (req.body.mode === "review") {
             whereQuery = { "contents.review.rid": { "$not": { "$regex": "999" } } };
@@ -946,7 +950,7 @@ LogRouter.prototype.rou_post_getLength = function () {
       };
       projectArr = await back.mongoPick("project", [ objectDeepCopy(whereQuery), objectDeepCopy(projectQuery) ], { selfMongo: selfCoreMongo });
       projectLength = projectArr.length;
-      
+
       whereQuery = {};
       projectQuery = {
         desid: 1,
@@ -1069,7 +1073,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
         } else {
           ip = temp.trim().replace(/[^0-9\.]/gi, '');
         }
-        referer = (req.headers.referer === undefined ? "" : req.headers.referer);  
+        referer = (req.headers.referer === undefined ? "" : req.headers.referer);
         user = userAgent;
       }
 
@@ -1132,7 +1136,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
         parserResult.os.browser = parserResult.browser;
 
         delete parserResult.browser;
-  
+
         if (parserResult.os.name === "Windows") {
           if (parserResult.device.vendor === undefined) {
             parserResult.device.vendor = "Unknown";
@@ -1144,7 +1148,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
         } else if (/Mac OS/gi.test(parserResult.os.name)) {
           parserResult.device.type = "desktop";
         }
-  
+
         if (parserResult.device.vendor === undefined) {
           parserResult.device.vendor = "Unknown";
         }
@@ -1287,14 +1291,14 @@ LogRouter.prototype.rou_post_getClientReport = function () {
         thisFrom = new Date(obj.year, obj.month - 1, 1);
         thisTo = new Date(obj.year, obj.month - 1, 1);
         thisTo.setMonth(thisTo.getMonth() + 1);
-        
+
         tempRows = await back.mongoRead("dailyClients", {
           $and: [
             { "date.from": { $gte: thisFrom }, },
             { "date.to": { $lte: thisTo } },
           ]
         }, { selfMongo });
-        
+
         obj.adClients = tempRows.map((obj) => { return obj.data.detail }).flat().filter((obj2) => {
           return obj2.users.some((obj3) => {
             if (obj3 === null) {
@@ -1368,7 +1372,7 @@ LogRouter.prototype.rou_post_clientAnalytics = function () {
         } else {
           rows = await back.mongoPick(collection, [ whereQuery, projectQuery ], { selfMongo });
         }
-  
+
         rows.sort((a, b) => { return b.client.requests[0].request.timeline.valueOf() - a.client.requests[0].request.timeline.valueOf() });
 
         res.send(JSON.stringify(rows));
