@@ -240,7 +240,7 @@ LogRouter.prototype.rou_post_searchContents = function () {
       const selfCoreMongo = instance.mongocore;
       const collection = "contents";
       const hideContents = [ "p61", "p36", "a51", "a104", "a105",
-        "p383","p380","p400","p366","p368","p386","p391","p373","p398","p395","p364","p414","p419","p420","p426","p363","p370","p371","p372","p374","p375","p378","p376","p377","p379","p381","p384","p385","p387","p422","p429","p428","p411",
+        "p383","p380","p400","p366","p368","p386","p391","p373","p398","p395","p364","p414","p419","p426","p363","p370","p371","p372","p374","p375","p378","p376","p377","p379","p381","p384","p385","p387","p422","p429","p428","p411",
       ];
       const toNormal = true;
       const { keywords: seridKeywords, name: serviceNames } = serviceParsing();
@@ -631,7 +631,7 @@ LogRouter.prototype.rou_post_getContents = function () {
       const selfCoreMongo = instance.mongocore;
       const collection = "contents";
       const hideContents = [ "p61", "p36", "a51", "a104", "a105",
-        "p383","p380","p400","p366","p368","p386","p391","p373","p398","p395","p364","p414","p419","p420","p426","p363","p370","p371","p372","p374","p375","p378","p376","p377","p379","p381","p384","p385","p387","p422","p429","p428","p411",
+        "p383","p380","p400","p366","p368","p386","p391","p373","p398","p395","p364","p414","p419","p426","p363","p370","p371","p372","p374","p375","p378","p376","p377","p379","p381","p384","p385","p387","p422","p429","p428","p411",
       ];
       const toNormal = true;
       const defaultDelta = 45;
