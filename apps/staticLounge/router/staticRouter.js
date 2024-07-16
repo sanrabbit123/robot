@@ -4097,7 +4097,7 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
 
       if (!fastMode) {
 
-        delta = 14;
+        delta = 7;
         agoDate = new Date();
         agoDate.setDate(agoDate.getDate() - delta);
 
@@ -4138,6 +4138,15 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
                 }
               }
             },
+            {
+              "requests": {
+                $elemMatch: {
+                  "analytics.response.status": {
+                    $regex: "^[진응장]"
+                  }
+                }
+              }
+            }
           ]
         }, { selfMongo: selfCoreMongo })).toNormal();
 
