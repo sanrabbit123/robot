@@ -7608,6 +7608,7 @@ DevContext.prototype.launching = async function () {
     // const drive = new GoogleDrive();
     // await drive.get_folder_inPython("https://drive.google.com/drive/folders/1RD8A65ghQe4oPruXYJ4Koieny0n3jYO9", "test");
 
+    await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/storeClientAnalytics", { data: null }, { headers: { "Content-Type": "application/json" } });
 
     // aspirant to designer
     // await this.aspirantToDesigner([

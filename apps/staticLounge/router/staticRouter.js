@@ -4093,16 +4093,16 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
       let finalTargets;
       let delta;
       let targetClients2;
-      let threeMonthAgo;
+      let fiveMonthAgo;
 
       if (!fastMode) {
 
-        delta = 7;
+        delta = 14;
         agoDate = new Date();
         agoDate.setDate(agoDate.getDate() - delta);
 
-        threeMonthAgo = new Date();
-        threeMonthAgo.setMonth(threeMonthAgo.getMonth() - 3);
+        fiveMonthAgo = new Date();
+        fiveMonthAgo.setMonth(fiveMonthAgo.getMonth() - 5);
 
         targetClients = (await back.getClientsByQuery({
           $and: [
@@ -4133,20 +4133,11 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
               "requests": {
                 $elemMatch: {
                   "request.timeline": {
-                    $gte: threeMonthAgo,
+                    $gte: fiveMonthAgo,
                   }
                 }
               }
             },
-            {
-              "requests": {
-                $elemMatch: {
-                  "analytics.response.status": {
-                    $regex: "^[진응장]"
-                  }
-                }
-              }
-            }
           ]
         }, { selfMongo: selfCoreMongo })).toNormal();
 
