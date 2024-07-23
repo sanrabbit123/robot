@@ -108,7 +108,7 @@ SecondRouter.prototype.telegramSend = async function (chat_id, text, logger) {
   const { ajaxJson, sleep } = this.mother;
   try {
     let result;
-    
+
     result = true;
 
     try {
@@ -222,7 +222,7 @@ SecondRouter.prototype.rou_get_First = function () {
         accessToken = response.data.access_token
         await fileSystem(`write`, [ kakao.accessTokenPath, response.data.access_token ]);
 
-        res.send(JSON.stringify({ accessToken }));  
+        res.send(JSON.stringify({ accessToken }));
 
       } else {
         res.send(JSON.stringify({ message: "hi" }));
@@ -510,6 +510,267 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
           }
 
           await messageSend({ text, channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+          await messageSend({ text: "알 수 없는 사람(전화번호 비공개)으로부터 전화가 왔습니다!", channel: "#call", voice: false, fairy: true });
+
+
         }
         res.send(JSON.stringify({ message: "success" }));
       }
@@ -1232,7 +1493,7 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
         updateQuery = equalJson(req.body.updateQuery);
 
         await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-        
+
         thisRow = await back.mongoRead(collection, whereQuery, { selfMongo });
 
         if (thisRow.length === 0) {
@@ -1656,28 +1917,28 @@ SecondRouter.prototype.rou_post_readLogDesignerStatus = function () {
 
         ({ desid } = equalJson(req.body));
         whereQuery = { action: "updateDesignStatus", "data.desid": desid };
-  
+
         ago = new Date();
         ago.setMonth(ago.getMonth() - delta);
-  
+
         if (req.body.date === undefined) {
           thisDate = new Date(JSON.stringify(ago).slice(1, -1));
         } else {
           thisDate = equalJson(req.body).date;
         }
-  
+
         whereQuery["date"] = { $gte: thisDate };
         rows = await requestSystem("https://" + address.officeinfo.ghost.host + "/readHomeliaisonAnalytics", { whereQuery, projectQuery }, { headers: { "Content-Type": "application/json" } });
-  
-        res.send(JSON.stringify({ data: equalJson(JSON.stringify(rows.data.data)) })); 
+
+        res.send(JSON.stringify({ data: equalJson(JSON.stringify(rows.data.data)) }));
 
       } else if (mode === "all") {
 
         whereQuery = { action: "updateDesignStatus" };
-        
+
         ago = new Date();
         ago.setMonth(ago.getMonth() - delta);
-  
+
         if (req.body.date === undefined) {
           thisDate = new Date(JSON.stringify(ago).slice(1, -1));
         } else {
@@ -1686,8 +1947,8 @@ SecondRouter.prototype.rou_post_readLogDesignerStatus = function () {
 
         whereQuery["date"] = { $gte: thisDate };
         rows = await requestSystem("https://" + address.officeinfo.ghost.host + "/readHomeliaisonAnalytics", { whereQuery, projectQuery }, { headers: { "Content-Type": "application/json" } });
-  
-        res.send(JSON.stringify({ data: equalJson(JSON.stringify(rows.data.data)) })); 
+
+        res.send(JSON.stringify({ data: equalJson(JSON.stringify(rows.data.data)) }));
 
       } else {
         throw new Error("invalid mode");
@@ -2203,7 +2464,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
         target = rows[0];
         key = req.body.key;
         x = target.matrix.findIndex((obj) => { return obj.children.some((o) => { return o.key === key }); });
-        
+
         if (x !== -1) {
           y = target.matrix[x].children.findIndex((obj) => { return obj.key === key });
           if (y !== -1) {
@@ -2214,7 +2475,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
           }
         }
-        
+
       } else if (mode === "send") {
 
         name = req.body.name;
@@ -2320,7 +2581,7 @@ SecondRouter.prototype.rou_post_projectDesignerDownloadLog = function () {
           date: new Date(),
           who,
         });
-  
+
         rows = await back.mongoRead(collection, { proid }, { selfMongo });
         if (rows.length === 0) {
           thisObj = equalJson(JSON.stringify(defaultObj));
@@ -2461,7 +2722,7 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
           });
 
           res.send(JSON.stringify({ message: "success" }));
-          
+
         } else if (type === "work") {
 
           await kakao.sendTalk("noticeDesignerWork", designer, phone, { designer, host: address.frontinfo.host, path: "about", desid });
@@ -2707,12 +2968,12 @@ SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
 
           await human.sendSms({
             to: phone.replace(/[^0-9]/gi, ''),
-            body: ("안녕하세요, " + designer + "님! 홈리에종입니다.\n" + 
+            body: ("안녕하세요, " + designer + "님! 홈리에종입니다.\n" +
             "보내주신 신청서를 확인해 보았으나 아쉽게도 저희를 찾아주신 고객님들께 홈스타일링 서비스를 바로 제공하기에는 적합하지 않다고 판단되어 연락드립니다.\n\n" +
-            "혹시 추가적으로 포트폴리오 및 경력사항을 상세히 다시 보내주시면 다시 한 번 검토 후에 연락드리도록 하겠습니다.\n" + 
-            "궁금한 사항이 있으시면 카카오 채널에서 [홈리에종]을 검색, 친구 추가 후 문의 사항 남겨주세요. 순차적으로 답변드리도록 하겠습니다!\n" + 
-            "\n" + 
-            "*추가 포트폴리오 전송\n" + 
+            "혹시 추가적으로 포트폴리오 및 경력사항을 상세히 다시 보내주시면 다시 한 번 검토 후에 연락드리도록 하겠습니다.\n" +
+            "궁금한 사항이 있으시면 카카오 채널에서 [홈리에종]을 검색, 친구 추가 후 문의 사항 남겨주세요. 순차적으로 답변드리도록 하겠습니다!\n" +
+            "\n" +
+            "*추가 포트폴리오 전송\n" +
             "https://" + address.frontinfo.host + "/" + "aspportfolio" + ".php?aspid=" + aspid),
           });
           await messageSend({
@@ -2825,7 +3086,7 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
           json = equalJson(JSON.stringify(rows[0]));
           createBoo = false;
         }
-  
+
         if (value !== "default") {
           json.history.unshift({
             date: new Date(),
@@ -2876,7 +3137,7 @@ SecondRouter.prototype.rou_post_noticeAspirantCommon = function () {
           json = equalJson(JSON.stringify(rows[0]));
           createBoo = false;
         }
-  
+
         json.history.unshift({
           date: new Date(),
           value: value,
@@ -2994,7 +3255,7 @@ SecondRouter.prototype.rou_post_noticeAspirantContractYesterday = function () {
       let thisYear, thisMonth, thisDate;
       let year, month, date;
       let whereQuery, updateQuery;
-  
+
       year = yesterday.getFullYear();
       month = yesterday.getMonth() + 1;
       date = yesterday.getDate();
@@ -3104,7 +3365,7 @@ SecondRouter.prototype.rou_post_noticeAspirantOnBoarding = function () {
               if (aspirant.response.portfolio.plus.photo.valueOf() > emptyDateValue) {
                 if (/계약 완료/gi.test(aspirant.meeting.status)) {
                   targets.push(aspirant.toNormal());
-                }        
+                }
               }
             }
           }
@@ -3176,7 +3437,7 @@ SecondRouter.prototype.rou_post_designerCareerSync = function () {
           rawNumbers = targetArr.map((o) => {
             const { start, end } = o.date;
             let thisValue;
-            if (end.valueOf() > futureDateValue){ 
+            if (end.valueOf() > futureDateValue){
               thisValue = nowValue - start.valueOf()
             } else {
               thisValue = end.valueOf() - start.valueOf()
@@ -3258,7 +3519,7 @@ SecondRouter.prototype.rou_post_designerContentsInfo = function () {
           const pid = c.contents.portfolio.pid;
           let newResult;
           newResult = [];
-          for (let { index, gs } of c.photos.detail) {  
+          for (let { index, gs } of c.photos.detail) {
             newResult.push({
               link: `/corePortfolio/listImage/${pid}/t${String(index)}${pid}.jpg`,
               sgTrue: gs,
@@ -3421,7 +3682,7 @@ SecondRouter.prototype.rou_post_printClient = function () {
       text += "\n\n";
       webReport = (await requestSystem("https://" + address.officeinfo.ghost.host + "/getClientAnalytics", { cliid, textMode: true }, { headers: { "Content-Type": "application/json" } })).data.report;
       text += webReport;
-      
+
       requestSystem("https://" + address.officeinfo.ghost.host + "/printComplex", { text, cliid, requestNumber, mode }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
 
       res.send(JSON.stringify({ message: "will do" }));
@@ -3471,7 +3732,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
           } else if (thisBody.event.type === "app_home_opened") {
             console.log(thisBody.event.user)
           }
-        }        
+        }
         res.send(JSON.stringify({ message: "OK" }));
       } else {
         res.send(JSON.stringify({ challenge: thisBody.challenge }));
@@ -3519,7 +3780,7 @@ SecondRouter.prototype.rou_post_rawImageParsing = function () {
         const [ pid ] = pidZip.split(".");
         return { proid, pid }
       });
-  
+
       if (mode === "list") {
 
         res.send(JSON.stringify(firstResult));
@@ -3553,7 +3814,7 @@ SecondRouter.prototype.rou_post_rawImageParsing = function () {
           finalResult.portfolio.link = "https://" + address.frontinfo.host + "/portdetail.php?pid=" + thisPid;
           if (contentsArr[0].contents.review.rid !== "" && !/re999/gi.test(contentsArr[0].contents.review.rid)) {
             finalResult.review.exist = true;
-            finalResult.review.link = "https://" + address.frontinfo.host + "/revdetail.php?pid=" + thisPid;  
+            finalResult.review.link = "https://" + address.frontinfo.host + "/revdetail.php?pid=" + thisPid;
           }
         }
 
@@ -3601,16 +3862,16 @@ SecondRouter.prototype.rou_post_rawContentsSync = function () {
       let driveFiles0, driveFiles1, driveFiles2;
       let nameTargets;
       let tempArr;
-  
+
       proidArr0 = bodyRows.map((obj) => { return obj.proid });
       proidArr1 = targetProjects.map((obj) => { return obj.proid });
-  
+
       targetProids = proidArr1.filter((proid) => { return !proidArr0.includes(proid) })
-  
+
       filteredProjects = targetProjects.filter((project) => { return targetProids.includes(project.proid) }).filter((project) => {
         return project.process.status.value !== "드랍";
       })
-  
+
       nameArr = [];
       for (let { proid, cliid, desid } of filteredProjects) {
         nameArr.push([
@@ -3621,16 +3882,16 @@ SecondRouter.prototype.rou_post_rawContentsSync = function () {
           desid,
         ]);
       }
-  
+
       driveFiles0 = await drive.listFiles_inPython(targetDriveId0);
       driveFiles1 = await drive.listFiles_inPython(targetDriveId1);
       driveFiles2 = await drive.listFiles_inPython(targetDriveId2);
-  
+
       nameTargets = [];
       nameTargets = nameTargets.concat(driveFiles0);
       nameTargets = nameTargets.concat(driveFiles1);
       nameTargets = nameTargets.concat(driveFiles2);
-  
+
       for (let [ client, designer ] of nameArr) {
         tempArr = nameTargets.filter(({ name }) => { return (new RegExp(client, "gi")).test(name) }).filter(({ name }) => { return (new RegExp(designer, "gi")).test(name) })
         if (tempArr.length > 0) {
@@ -3930,7 +4191,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
             };
 
           }
-  
+
         } else if (typeof thisBody.payload === "object" && thisBody.payload.type === "block_actions") {
 
           if (thisBody.payload.view.callback_id === "projectCare") {
@@ -4187,7 +4448,7 @@ SecondRouter.prototype.rou_post_storeDailyReport = function () {
       const members = instance.members;
       const targetChannelId = "C062SLX46QL";
       const password = "homeliaison";
-      const idKeywords = "daily_";  
+      const idKeywords = "daily_";
       let r;
       let targetList;
       let hex;
@@ -4230,7 +4491,7 @@ SecondRouter.prototype.rou_post_storeDailyReport = function () {
       for (let obj of targetList) {
         hex = await cryptoString(password, obj.title);
         obj.id = idKeywords + obj.member.id + "_" + dateToString(obj.date).replace(/\-/gi, '') + "_" + hex;
-  
+
         rows = await back.mongoRead(collection, { id: obj.id }, { selfMongo });
         if (rows.length === 0) {
           await back.mongoCreate(collection, equalJson(JSON.stringify(obj)), { selfMongo });
@@ -4444,7 +4705,7 @@ SecondRouter.prototype.rou_post_designerChecklistLog = function () {
         if (ipObj === null) {
           ipObj = { ip };
         }
-  
+
         data.id = desid + "_" + String((new Date()).valueOf()) + "_" + uniqueValue("hex");
         data.date = new Date();
         data.entire = data.data.entireMode ? 1 : 0;
@@ -4456,14 +4717,14 @@ SecondRouter.prototype.rou_post_designerChecklistLog = function () {
           mobile: rawUserAgent.isMobile,
           ...ipObj
         };
-  
+
         if (data.entire === 1) {
           text += "홈리에종에서 " + designer + " 실장님의 체크리스트를 업데이트 : \n";
         } else {
           text += designer + " 실장님이 체크리스트 업데이트를 직접 수행함 : \n";
         }
         text += JSON.stringify(data, null, 2);
-  
+
         return back.mongoCreate(collection, data, { selfMongo });
       }).then(() => {
         return messageSend({ text, channel, voice });
@@ -4715,11 +4976,11 @@ SecondRouter.prototype.rou_post_designerLevelMatrixSync = function () {
       const designers = await selfMongo.db(db).collection(collection).find({}).toArray();
       let whereQuery, updateQuery;
       let copiedMatrix;
-  
+
       for (let designer of designers) {
         whereQuery = { desid: designer.desid };
         updateQuery = {};
-  
+
         copiedMatrix = equalJson(JSON.stringify(designer.analytics.project.matrix));
         if (designer.analytics.construct.level === 0) {
           copiedMatrix[0] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
@@ -4742,14 +5003,14 @@ SecondRouter.prototype.rou_post_designerLevelMatrixSync = function () {
           copiedMatrix[2] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
           copiedMatrix[3] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
         }
-  
+
         updateQuery["analytics.project.matrix"] = equalJson(JSON.stringify(copiedMatrix));
         await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
         console.log(whereQuery, updateQuery);
       }
-  
+
       return true;
-  
+
     } catch (e) {
       console.log(e);
       return false;
