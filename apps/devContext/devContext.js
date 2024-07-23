@@ -329,8 +329,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const filter = new PortfolioFilter();
-    // await filter.updateSubject();
+    const filter = new PortfolioFilter();
+    await filter.updateSubject();
 
 
     // const selfMongo = this.MONGOC;
