@@ -2001,7 +2001,6 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
     await this.updateDesigner([ { desid: dummy.structure.desid }, updateQuery ], option);
 
     //set setting note
-    const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
     const thisDesigner = await this.getDesignerById(dummy.structure.desid, option);
     const br = "<br><br>";
     let note, body, front;
@@ -2039,9 +2038,6 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
     body += "_order";
     body += br;
     body += String(thisDesigner.setting.front.order);
-
-    note = new AppleNotes({ folder: "designer", subject: thisDesigner.desid });
-    await note.createNote(body);
 
     return dummy.structure.desid;
   } catch (e) {

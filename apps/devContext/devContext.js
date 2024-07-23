@@ -329,8 +329,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const filter = new PortfolioFilter();
-    await filter.updateSubject();
+    // const filter = new PortfolioFilter();
+    // await filter.updateSubject();
 
 
     // const selfMongo = this.MONGOC;
@@ -7613,9 +7613,15 @@ DevContext.prototype.launching = async function () {
 
 
     // aspirant to designer
-    // await this.aspirantToDesigner([
-    //   [ "안채은", "2024-05-21" ],
-    // ]);
+    await this.aspirantToDesigner([
+      [ "박상희", "2024-07-24" ],
+      [ "강혜은", "2024-07-24" ],
+      [ "윤영은", "2024-07-24" ],
+      [ "유선희", "2024-07-24" ],
+      [ "박희주", "2024-07-24" ],
+      [ "유은희", "2024-07-24" ],
+      [ "김대현", "2024-07-24" ],
+    ]);
 
 
     // new designer to front web

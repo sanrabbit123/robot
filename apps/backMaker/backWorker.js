@@ -290,7 +290,13 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
         await back.mongoCreate("folderDesigner", designerFolderResponse, { console: true });
         await back.mongoCreate("realtimeDesigner", {
           desid: newDesid,
-          possible: [],
+          possible: [
+            {
+              start: new Date(2024, 6, 24),
+              matrix: [ 1, 1, 1, 1, ],
+              end: new Date(2034, 6, 24),
+            }
+          ],
           projects: [],
         }, { console: true });
       }
