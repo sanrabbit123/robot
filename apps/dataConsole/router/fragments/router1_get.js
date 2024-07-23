@@ -224,7 +224,7 @@ DataRouter.prototype.rou_get_First = function () {
 
       } else {
 
-        if (false) {
+        if (true) {
 
           res.set("Content-Type", "text/html");
           res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
