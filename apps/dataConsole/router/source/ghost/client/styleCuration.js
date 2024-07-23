@@ -7506,17 +7506,6 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
 
     mainIllust = <%% StyleCurationJs.binaryPath + "/endIllust.svg", StyleCurationJs.binaryPath + "/endIllust.svg", StyleCurationJs.binaryPath + "/endIllust.svg", StyleCurationJs.binaryPath + "/endIllust.svg", StyleCurationJs.binaryPath + "/endIllust2.svg" %%>;
 
-    homeliaisonAnalytics({
-      page: instance.pageName,
-      standard: instance.firstPageViewTime,
-      action: "submitForm",
-      data: {
-        cliid: instance.client.cliid,
-      },
-    }).catch((err) => {
-      console.log(err);
-    });
-
     descriptionContents = [
       `홈리에종의 서비스 신청을 진행해주셔서 감사합니다!`,
       `신청서를 검토한 후, 고객님께 <b%1차 응대 전화%b>를 드릴 예정입니다!`,
@@ -7686,25 +7675,6 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
       ]
     });
 
-    // main illust
-    createNode({
-      mother: ghostBase,
-      mode: "img",
-      attribute: {
-        src: mainIllust
-      },
-      style: {
-        position: "absolute",
-        right: desktop ? String(0) : String(mobileImageRight) + ea,
-        top: String(mainImageTop) + ea,
-        width: desktop ? "" : withOut(mobileImageRight * 2, ea),
-        height: desktop ? String(mainImageHeight) + ea : "",
-        opacity: String(0),
-        transform: "translateY(30px)",
-        animation: "1.2s ease 0.2s 1 normal forwards running fadeupdelay2",
-      }
-    });
-
     // description
     createNode({
       mother: ghostBase,
@@ -7758,7 +7728,7 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
         position: "relative",
         justifyContent: desktop ? "start" : "center",
         alignItems: "center",
-        marginTop: String(buttonMarginTop + (true ? blackButtonHeight : 0)) + ea,
+        marginTop: 0,
         opacity: String(0),
         transform: "translateY(10px)",
         animation: "1.2s ease 0.4s 1 normal forwards running fadeupdelay",
@@ -7899,141 +7869,6 @@ StyleCurationJs.prototype.insertEighthBox = async function (fifthBase) {
             }
           }
         }
-      });
-    }
-
-    // second white
-    secondWhite = createNode({
-      mother: ghostBase,
-      class: [ eightSecondWhiteClassName ],
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        marginTop: String(initAreaPaddingBottom) + ea,
-        justifyContent: "start",
-        alignItems: "start",
-        flexDirection: "column",
-        paddingTop: String(blockPaddingTop) + ea,
-        paddingBottom: String(blockPaddingBottom) + ea,
-      },
-      child: {
-        style: {
-          position: "absolute",
-          top: String(0),
-          left: String(-1 * minusLeft) + ea,
-          background: colorExtended.white,
-          width: withOut(-1 * (minusLeft * 2), ea),
-          height: withOut(0, ea),
-        },
-      }
-    });
-
-    // main title
-    createNode({
-      mother: secondWhite,
-      style: {
-        display: "flex",
-        position: "relative",
-        width: desktop ? "" : withOut(0, ea),
-        justifyContent: desktop ? "start" : "center",
-        alignItems: desktop ? "start" : "center",
-      },
-      children: [
-        {
-          text: desktop ? "서비스 과정을\n한눈에 확인해 보세요." : "서비스 과정을 한눈에 확인해 보세요.",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(hangulTitleSize) + ea,
-            fontWeight: String(hangulTitleWeight),
-            lineHeight: String(1.36),
-            color: colorExtended.darkBlack,
-            top: desktop ? String(titleVisualTop) + ea : "",
-            left: desktop ? String(titleVisualLeft) + ea : "",
-          },
-        }
-      ]
-    });
-
-    // sub title
-    createNode({
-      mother: secondWhite,
-      style: {
-        display: "flex",
-        position: "relative",
-        width: desktop ? "" : withOut(0, ea),
-        justifyContent: desktop ? "start" : "center",
-        alignItems: desktop ? "start" : "center",
-        marginTop: String(hangulDescriptionMarginTop) + ea,
-      },
-      children: [
-        {
-          text: (desktop ? [
-            "문의 및 응대 이후,",
-            "",
-            "홈리에종은 디자이너 추천서를 제공하며",
-            "고객의 디자이너 선택 및 계약금 결제로 계약이 성립됩니다.",
-            "",
-            "계약 체결 후 매칭된 디자이너와 현장 미팅이 이루어지고,",
-            "본격적인 디자인, 시공, 가구 구매가 시작됩니다.",
-          ].join("\n") : [
-            "문의 및 응대 후, 홈리에종은 디자이너 추천서를 제공,",
-            "고객님의 디자이너 선택 및 계약금 결제가 이어집니다.",
-          ].join(" ")),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            color: colorExtended.black,
-            fontWeight: String(hangulDescriptionWeight),
-            fontSize: String(hangulDescriptionSize) + ea,
-            lineHeight: String(hangulDescriptionLineHeight),
-            textAlign: desktop ? "" : "center",
-          }
-        }
-      ]
-    });
-
-    createNode({
-      mother: secondWhite,
-      mode: "img",
-      attribute: {
-        src: (<&& StyleCurationJs.binaryPath + "/diagram.svg" | StyleCurationJs.binaryPath + "/diagram.svg" | StyleCurationJs.binaryPath + "/diagram2.svg" | StyleCurationJs.binaryPath + "/diagram3.svg" | StyleCurationJs.binaryPath + "/diagram4.svg" &&>),
-      },
-      style: {
-        display: desktop ? "inline-block" : "block",
-        position: desktop ? "absolute" : "relative",
-        right: String(0),
-        top: desktop ? String(blockPaddingTop) + ea : "",
-        marginTop: desktop ? "" : String(7) + ea,
-        width: desktop ? "" : withOut(0 * 2, ea),
-        height: desktop ? String(processDiagramHeight) + ea : "",
-      }
-    });
-
-    if (desktop) {
-      createNode({
-        mother: secondWhite,
-        style: {
-          display: "flex",
-          position: "relative",
-          justifyContent: desktop ? "start" : "center",
-          alignItems: desktop ? "start" : "center",
-          marginTop: String(hangulBarMarginTop) + ea,
-        },
-        children: [
-          {
-            style: {
-              display: "inline-block",
-              position: "relative",
-              width: String(hangulBarWidth) + ea,
-              height: String(hangulBarHeight) + ea,
-              borderRadius: String(hangulBarHeight) + ea,
-              background: colorExtended.gradientBlue,
-              opacity: String(0.7),
-            }
-          }
-        ]
       });
     }
 
