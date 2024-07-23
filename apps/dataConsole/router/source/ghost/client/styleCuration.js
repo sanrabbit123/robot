@@ -1235,20 +1235,6 @@ StyleCurationJs.prototype.insertInitBox = async function () {
       },
       children: [
         {
-          mode: "img",
-          attribute: {
-            src: StyleCurationJs.binaryPath + "/blanketLeft.svg",
-          },
-          style: {
-            display: desktop ? "inline-block" : "none",
-            position: "relative",
-            height: String(blanketHeight) + ea,
-            opacity: String(blanketOpacity),
-            marginRight: String(blanketMargin) + ea,
-            top: String(blanketVisualTop) + ea,
-          }
-        },
-        {
           text: description.join("\n"),
           style: {
             display: "inline-block",
@@ -1269,20 +1255,6 @@ StyleCurationJs.prototype.insertInitBox = async function () {
             paddingBottom: String(descriptionPointBoldPaddingBottom) + ea,
             "border-radius": String(5) + "px",
             margin: String(descriptionPointBoldMargin) + ea,
-          }
-        },
-        {
-          mode: "img",
-          attribute: {
-            src: StyleCurationJs.binaryPath + "/blanketRight.svg",
-          },
-          style: {
-            display: desktop ? "inline-block" : "none",
-            position: "relative",
-            height: String(blanketHeight) + ea,
-            opacity: String(blanketOpacity),
-            marginLeft: String(blanketMargin) + ea,
-            top: String(blanketVisualTop) + ea,
           }
         },
       ]
@@ -2710,7 +2682,7 @@ StyleCurationJs.prototype.insertThirdBox = async function (thirdBase) {
         {
           mode: "img",
           attribute: {
-            src: StyleCurationJs.binaryPath + "/construct.svg",
+            src: StyleCurationJs.binaryPath + "/construct.png",
           },
           style: {
             display: "inline-flex",

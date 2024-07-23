@@ -116,7 +116,7 @@ ClientConsultingJs.prototype.insertInitBox = async function () {
 
     mobileLeftPaddingVisual = 1;
 
-    descriptionMarginTop = <%% 40, 40, 36, 30, 72.5 %%>;
+    descriptionMarginTop = <%% 40, 40, 36, 30, 6 %%>;
 
     descriptionPointBoldPaddingLeft = <%% 8, 8, 8, 8, 1.6 %%>;
     descriptionPointBoldPaddingTop = <%% (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 3), (isMac() ? 2 : 3), 0.4 %%>;
@@ -143,9 +143,9 @@ ClientConsultingJs.prototype.insertInitBox = async function () {
 
     if (desktop && window.innerHeight > 1100) {
       titleSize = <%% 59, 51, 48, 39, 9 %%>;
-      firstBasePaddingTop = <%% 60, 48, 30, 28, 50 %%>;
+      firstBasePaddingTop = <%% 54, 48, 30, 28, 50 %%>;
       subTitleSize = <%% 19, 18, 17, 15, 3.6 %%>;
-      firstBasePaddingBottom = <%% 230, 210, 160, 130, 210 %%>;
+      firstBasePaddingBottom = <%% 210, 180, 160, 130, 210 %%>;
       mainImageTop = <%% 28, 28, 18, 16, 32 %%>;
       mainImageHeight = <%% 410, 398, 342, 318, 39 %%>;
       buttonMarginTop = <%% 150, 150, 132, 110, 3.6 %%>;
@@ -184,8 +184,8 @@ ClientConsultingJs.prototype.insertInitBox = async function () {
       style: {
         display: "flex",
         position: "relative",
-        justifyContent: desktop ? "start" : "center",
-        alignItems: desktop ? "start" : "center",
+        justifyContent: desktop ? "center" : "center",
+        alignItems: desktop ? "center" : "center",
         opacity: String(0),
         transform: "translateY(30px)",
         animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
@@ -222,8 +222,8 @@ ClientConsultingJs.prototype.insertInitBox = async function () {
       style: {
         display: "flex",
         position: "relative",
-        justifyContent: desktop ? "start" : "center",
-        alignItems: desktop ? "start" : "center",
+        justifyContent: desktop ? "center" : "center",
+        alignItems: desktop ? "center" : "center",
         marginTop: String(subTitleMarginTop) + ea,
         opacity: String(0),
         transform: "translateY(30px)",
@@ -244,33 +244,14 @@ ClientConsultingJs.prototype.insertInitBox = async function () {
       ]
     });
 
-    // main illust
-    createNode({
-      mother: firstBase,
-      mode: "img",
-      attribute: {
-        src: mainIllust
-      },
-      style: {
-        position: "absolute",
-        right: desktop ? String(0) : String(mobileImageRight) + ea,
-        top: String(mainImageTop) + ea,
-        width: desktop ? "" : withOut(mobileImageRight * 2, ea),
-        height: desktop ? String(mainImageHeight) + ea : "",
-        opacity: String(0),
-        transform: "translateY(30px)",
-        animation: "1.2s ease 0.2s 1 normal forwards running fadeupdelay2",
-      }
-    })
-
     // description
     createNode({
       mother: firstBase,
       style: {
         display: "flex",
         position: "relative",
-        justifyContent: desktop ? "start" : "center",
-        alignItems: desktop ? "start" : "center",
+        justifyContent: desktop ? "center" : "center",
+        alignItems: desktop ? "center" : "center",
         marginTop: String(descriptionMarginTop) + ea,
         opacity: String(0),
         transform: "translateY(30px)",
@@ -288,6 +269,7 @@ ClientConsultingJs.prototype.insertInitBox = async function () {
             fontWeight: String(400),
             fontSize: String(descriptionSize) + ea,
             lineHeight: String(descriptionLineHeight),
+            textAlign: "center",
           },
           bold: {
             color: colorExtended.white,
@@ -302,90 +284,8 @@ ClientConsultingJs.prototype.insertInitBox = async function () {
             margin: String(descriptionPointBoldMargin) + ea,
           }
         },
-        {
-          mode: "img",
-          attribute: {
-            src: ClientConsultingJs.binaryPath + "/mainIllust4.png"
-          },
-          style: {
-            display: desktop ? "none" : "relative",
-            position: "relative",
-            marginTop: String(mobileSubImageMarginTop) + ea,
-            width: desktop ? "" : withOut(mobileImageRight * 2, ea),
-            opacity: String(0),
-            transform: "translateY(30px)",
-            animation: "1.2s ease 0.2s 1 normal forwards running fadeupdelay2",
-          }
-        }
       ]
     })
-
-    // black buttons
-    if (desktop) {
-      createNode({
-        mother: firstBase,
-        event: {
-          selectstart: (e) => { e.preventDefault() },
-        },
-        style: {
-          display: "flex",
-          position: "relative",
-          justifyContent: "start",
-          alignItems: "center",
-          marginTop: String(buttonMarginTop) + ea,
-          opacity: String(0),
-          transform: "translateY(10px)",
-          animation: "1.2s ease 0.4s 1 normal forwards running fadeupdelay",
-          cursor: "pointer",
-        },
-        children: [
-          {
-            event: {
-              click: (e) => {
-                GeneralJs.scrollTo(window, document.querySelector('.' + whiteConsultingBoxClassName), instance.naviHeight + (<&& 30 | 24 | 20 | 20 | 1 &&>));
-              },
-              selectstart: (e) => { e.preventDefault() },
-            },
-            style: {
-              display: "inline-flex",
-              position: "relative",    
-              width: String(buttonWidth) + ea,
-              height: String(buttonHeight) + ea,
-              background: colorExtended.darkDarkShadow,
-              borderRadius: String(buttonHeight) + ea,
-              justifyContent: "center",
-              alignItems: "center",
-              cursor: "pointer",
-            },
-            child: {
-              event: {
-                selectstart: (e) => { e.preventDefault() },
-              },
-              text: `무료 상담 신청`,
-              style: {
-                display: "inline-block",
-                position: "relative",
-                top: String(buttonTextTop) + ea,
-                fontSize: String(buttonSize) + ea,
-                fontWeight: String(700),
-                color: colorExtended.white,
-              },
-              next: {
-                mode: "svg",
-                source: svgMaker.buttonLineArrow(colorExtended.white),
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  width: String(7) + ea,
-                  transform: "rotate(90deg)",
-                  marginLeft: String(11) + ea,
-                }
-              }
-            }
-          },
-        ]
-      });
-    }
 
   } catch (e) {
     console.log(e);

@@ -857,589 +857,589 @@ ReviewListJs.prototype.insertInitBox = function () {
     ]
   });
 
-  if (desktop) {
+  // if (desktop) {
 
-    numbersBox = createNode({
-      mother: whiteBlock,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: String(numbersMaxWidth) + ea,
-        marginTop: String(numbersBoxMarginTop) + ea,
-        marginBottom: String(numbersBoxMarginBottom) + ea,
-        height: String(numbersTotalHeight) + ea,
-        borderRadius: String(numbersRadius) + "px",
-        border: String(borderWidth) + "px solid " + colorExtended.black,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        paddingLeft: String(numbersBoxPaddingLeft) + ea,
-        paddingRight: String(numbersBoxPaddingRight) + ea,
-        boxSizing: "border-box",
-      }
-    });
+  //   numbersBox = createNode({
+  //     mother: whiteBlock,
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       width: String(numbersMaxWidth) + ea,
+  //       marginTop: String(numbersBoxMarginTop) + ea,
+  //       marginBottom: String(numbersBoxMarginBottom) + ea,
+  //       height: String(numbersTotalHeight) + ea,
+  //       borderRadius: String(numbersRadius) + "px",
+  //       border: String(borderWidth) + "px solid " + colorExtended.black,
+  //       flexDirection: "row",
+  //       justifyContent: "center",
+  //       alignItems: "center",
+  //       paddingLeft: String(numbersBoxPaddingLeft) + ea,
+  //       paddingRight: String(numbersBoxPaddingRight) + ea,
+  //       boxSizing: "border-box",
+  //     }
+  //   });
 
-    // 1
-    createNode({
-      mother: numbersBox,
-      mode: "img",
-      attribute: {
-        src: ReviewListJs.binaryPath + "/source0.svg",
-      },
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: String(numbersImageWidth0) + ea,
-        top: String(numbersImageTop0) + ea,
-      }
-    });
-    createNode({
-      mother: numbersBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        height: String(numbersTotalHeight) + ea,
-        width: String(numbersWidth0) + ea,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        marginLeft: String(numbersMargin) + ea,
-      },
-      children: [
-        {
-          text: numbersMiddleTitleContents0,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            textAlign: "center",
-            fontSize: String(numbersTextSize) + ea,
-            fontWeight: String(numbersTextWeight),
-            fontFamily: "mont",
-            color: colorExtended.mainBlue,
-          }
-        },
-        {
-          text: numbersDescriptionContents0,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            textAlign: "center",
-            fontSize: String(numbersDescriptionSize) + ea,
-            fontWeight: String(numbersDescriptionWeight),
-            top: String(numbersDescriptionTextTop) + ea,
-            fontFamily: "pretendard",
-            color: colorExtended.black,
-          }
-        }
-      ],
-    });
-    createNode({
-      mother: numbersBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: String(numbersBoxBarMargin) + ea,
-        height: String(numbersMiddleBarHeight) + ea,
-        borderRight: "1px solid " + colorExtended.gray3,
-        marginRight: String(numbersBoxBarMargin) + ea,
-        boxSizing: "border-box",
-      }
-    });
+  //   // 1
+  //   createNode({
+  //     mother: numbersBox,
+  //     mode: "img",
+  //     attribute: {
+  //       src: ReviewListJs.binaryPath + "/source0.svg",
+  //     },
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       width: String(numbersImageWidth0) + ea,
+  //       top: String(numbersImageTop0) + ea,
+  //     }
+  //   });
+  //   createNode({
+  //     mother: numbersBox,
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       height: String(numbersTotalHeight) + ea,
+  //       width: String(numbersWidth0) + ea,
+  //       flexDirection: "column",
+  //       justifyContent: "center",
+  //       alignItems: "center",
+  //       marginLeft: String(numbersMargin) + ea,
+  //     },
+  //     children: [
+  //       {
+  //         text: numbersMiddleTitleContents0,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           textAlign: "center",
+  //           fontSize: String(numbersTextSize) + ea,
+  //           fontWeight: String(numbersTextWeight),
+  //           fontFamily: "mont",
+  //           color: colorExtended.mainBlue,
+  //         }
+  //       },
+  //       {
+  //         text: numbersDescriptionContents0,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           textAlign: "center",
+  //           fontSize: String(numbersDescriptionSize) + ea,
+  //           fontWeight: String(numbersDescriptionWeight),
+  //           top: String(numbersDescriptionTextTop) + ea,
+  //           fontFamily: "pretendard",
+  //           color: colorExtended.black,
+  //         }
+  //       }
+  //     ],
+  //   });
+  //   createNode({
+  //     mother: numbersBox,
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       width: String(numbersBoxBarMargin) + ea,
+  //       height: String(numbersMiddleBarHeight) + ea,
+  //       borderRight: "1px solid " + colorExtended.gray3,
+  //       marginRight: String(numbersBoxBarMargin) + ea,
+  //       boxSizing: "border-box",
+  //     }
+  //   });
 
-    // 2
-    createNode({
-      mother: numbersBox,
-      mode: "img",
-      attribute: {
-        src: ReviewListJs.binaryPath + "/source1.svg",
-      },
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: String(numbersImageWidth1) + ea,
-        top: String(numbersImageTop1) + ea,
-      }
-    });
-    createNode({
-      mother: numbersBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        height: String(numbersTotalHeight) + ea,
-        width: String(numbersWidth1) + ea,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        marginLeft: String(numbersMargin) + ea,
-      },
-      children: [
-        {
-          text: numbersMiddleTitleContents1,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            textAlign: "center",
-            fontSize: String(numbersTextSize) + ea,
-            fontWeight: String(numbersTextWeight),
-            fontFamily: "mont",
-            color: colorExtended.mainBlue,
-          }
-        },
-        {
-          text: numbersDescriptionContents1,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            textAlign: "center",
-            fontSize: String(numbersDescriptionSize) + ea,
-            fontWeight: String(numbersDescriptionWeight),
-            top: String(numbersDescriptionTextTop) + ea,
-            fontFamily: "pretendard",
-            color: colorExtended.black,
-          }
-        }
-      ],
-    });
-    createNode({
-      mother: numbersBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: String(numbersBoxBarMargin) + ea,
-        height: String(numbersMiddleBarHeight) + ea,
-        borderRight: "1px solid " + colorExtended.gray3,
-        marginRight: String(numbersBoxBarMargin) + ea,
-        boxSizing: "border-box",
-      }
-    });
+  //   // 2
+  //   createNode({
+  //     mother: numbersBox,
+  //     mode: "img",
+  //     attribute: {
+  //       src: ReviewListJs.binaryPath + "/source1.svg",
+  //     },
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       width: String(numbersImageWidth1) + ea,
+  //       top: String(numbersImageTop1) + ea,
+  //     }
+  //   });
+  //   createNode({
+  //     mother: numbersBox,
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       height: String(numbersTotalHeight) + ea,
+  //       width: String(numbersWidth1) + ea,
+  //       flexDirection: "column",
+  //       justifyContent: "center",
+  //       alignItems: "center",
+  //       marginLeft: String(numbersMargin) + ea,
+  //     },
+  //     children: [
+  //       {
+  //         text: numbersMiddleTitleContents1,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           textAlign: "center",
+  //           fontSize: String(numbersTextSize) + ea,
+  //           fontWeight: String(numbersTextWeight),
+  //           fontFamily: "mont",
+  //           color: colorExtended.mainBlue,
+  //         }
+  //       },
+  //       {
+  //         text: numbersDescriptionContents1,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           textAlign: "center",
+  //           fontSize: String(numbersDescriptionSize) + ea,
+  //           fontWeight: String(numbersDescriptionWeight),
+  //           top: String(numbersDescriptionTextTop) + ea,
+  //           fontFamily: "pretendard",
+  //           color: colorExtended.black,
+  //         }
+  //       }
+  //     ],
+  //   });
+  //   createNode({
+  //     mother: numbersBox,
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       width: String(numbersBoxBarMargin) + ea,
+  //       height: String(numbersMiddleBarHeight) + ea,
+  //       borderRight: "1px solid " + colorExtended.gray3,
+  //       marginRight: String(numbersBoxBarMargin) + ea,
+  //       boxSizing: "border-box",
+  //     }
+  //   });
 
-    // 3
-    createNode({
-      mother: numbersBox,
-      mode: "img",
-      attribute: {
-        src: ReviewListJs.binaryPath + "/source2.svg",
-      },
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: String(numbersImageWidth2) + ea,
-        top: String(numbersImageTop2) + ea,
-      }
-    });
-    createNode({
-      mother: numbersBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        height: String(numbersTotalHeight) + ea,
-        width: String(numbersWidth2) + ea,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        marginLeft: String(numbersMargin) + ea,
-      },
-      children: [
-        {
-          text: numbersMiddleTitleContents2,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            textAlign: "center",
-            fontSize: String(numbersTextSize) + ea,
-            fontWeight: String(numbersTextWeight),
-            fontFamily: "mont",
-            color: colorExtended.mainBlue,
-          }
-        },
-        {
-          text: numbersDescriptionContents2,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            textAlign: "center",
-            fontSize: String(numbersDescriptionSize) + ea,
-            fontWeight: String(numbersDescriptionWeight),
-            top: String(numbersDescriptionTextTop) + ea,
-            fontFamily: "pretendard",
-            color: colorExtended.black,
-          }
-        }
-      ],
-    });
-    if (media[0] || media[1]) {
-      createNode({
-        mother: numbersBox,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: String(numbersBoxBarMargin) + ea,
-          height: String(numbersMiddleBarHeight) + ea,
-          borderRight: "1px solid " + colorExtended.gray3,
-          marginRight: String(numbersBoxBarMargin) + ea,
-          boxSizing: "border-box",
-        }
-      });
+  //   // 3
+  //   createNode({
+  //     mother: numbersBox,
+  //     mode: "img",
+  //     attribute: {
+  //       src: ReviewListJs.binaryPath + "/source2.svg",
+  //     },
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       width: String(numbersImageWidth2) + ea,
+  //       top: String(numbersImageTop2) + ea,
+  //     }
+  //   });
+  //   createNode({
+  //     mother: numbersBox,
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       height: String(numbersTotalHeight) + ea,
+  //       width: String(numbersWidth2) + ea,
+  //       flexDirection: "column",
+  //       justifyContent: "center",
+  //       alignItems: "center",
+  //       marginLeft: String(numbersMargin) + ea,
+  //     },
+  //     children: [
+  //       {
+  //         text: numbersMiddleTitleContents2,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           textAlign: "center",
+  //           fontSize: String(numbersTextSize) + ea,
+  //           fontWeight: String(numbersTextWeight),
+  //           fontFamily: "mont",
+  //           color: colorExtended.mainBlue,
+  //         }
+  //       },
+  //       {
+  //         text: numbersDescriptionContents2,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           textAlign: "center",
+  //           fontSize: String(numbersDescriptionSize) + ea,
+  //           fontWeight: String(numbersDescriptionWeight),
+  //           top: String(numbersDescriptionTextTop) + ea,
+  //           fontFamily: "pretendard",
+  //           color: colorExtended.black,
+  //         }
+  //       }
+  //     ],
+  //   });
+  //   if (media[0] || media[1]) {
+  //     createNode({
+  //       mother: numbersBox,
+  //       style: {
+  //         display: "inline-flex",
+  //         position: "relative",
+  //         width: String(numbersBoxBarMargin) + ea,
+  //         height: String(numbersMiddleBarHeight) + ea,
+  //         borderRight: "1px solid " + colorExtended.gray3,
+  //         marginRight: String(numbersBoxBarMargin) + ea,
+  //         boxSizing: "border-box",
+  //       }
+  //     });
 
-      // 4
-      createNode({
-        mother: numbersBox,
-        mode: "img",
-        attribute: {
-          src: ReviewListJs.binaryPath + "/source3.svg",
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: String(numbersImageWidth3) + ea,
-          top: String(numbersImageTop3) + ea,
-        }
-      });
-      createNode({
-        mother: numbersBox,
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          height: String(numbersTotalHeight) + ea,
-          width: String(numbersWidth3) + ea,
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          marginLeft: String(numbersMargin) + ea,
-        },
-        children: [
-          {
-            text: numbersMiddleTitleContents3,
-            style: {
-              display: "inline-block",
-              position: "relative",
-              textAlign: "center",
-              fontSize: String(numbersTextSize) + ea,
-              fontWeight: String(numbersTextWeight),
-              fontFamily: "mont",
-              color: colorExtended.mainBlue,
-            }
-          },
-          {
-            text: numbersDescriptionContents3,
-            style: {
-              display: "inline-block",
-              position: "relative",
-              textAlign: "center",
-              fontSize: String(numbersDescriptionSize) + ea,
-              fontWeight: String(numbersDescriptionWeight),
-              top: String(numbersDescriptionTextTop) + ea,
-              fontFamily: "pretendard",
-              color: colorExtended.black,
-            }
-          }
-        ],
-      });
-    }
+  //     // 4
+  //     createNode({
+  //       mother: numbersBox,
+  //       mode: "img",
+  //       attribute: {
+  //         src: ReviewListJs.binaryPath + "/source3.svg",
+  //       },
+  //       style: {
+  //         display: "inline-flex",
+  //         position: "relative",
+  //         width: String(numbersImageWidth3) + ea,
+  //         top: String(numbersImageTop3) + ea,
+  //       }
+  //     });
+  //     createNode({
+  //       mother: numbersBox,
+  //       style: {
+  //         display: "inline-flex",
+  //         position: "relative",
+  //         height: String(numbersTotalHeight) + ea,
+  //         width: String(numbersWidth3) + ea,
+  //         flexDirection: "column",
+  //         justifyContent: "center",
+  //         alignItems: "center",
+  //         marginLeft: String(numbersMargin) + ea,
+  //       },
+  //       children: [
+  //         {
+  //           text: numbersMiddleTitleContents3,
+  //           style: {
+  //             display: "inline-block",
+  //             position: "relative",
+  //             textAlign: "center",
+  //             fontSize: String(numbersTextSize) + ea,
+  //             fontWeight: String(numbersTextWeight),
+  //             fontFamily: "mont",
+  //             color: colorExtended.mainBlue,
+  //           }
+  //         },
+  //         {
+  //           text: numbersDescriptionContents3,
+  //           style: {
+  //             display: "inline-block",
+  //             position: "relative",
+  //             textAlign: "center",
+  //             fontSize: String(numbersDescriptionSize) + ea,
+  //             fontWeight: String(numbersDescriptionWeight),
+  //             top: String(numbersDescriptionTextTop) + ea,
+  //             fontFamily: "pretendard",
+  //             color: colorExtended.black,
+  //           }
+  //         }
+  //       ],
+  //     });
+  //   }
 
-    numbersBox.style.width = "auto";
-    if (media[0] || media[1]) {
-      multiplyNumber = (standardWidth / ((numbersBoxPaddingLeft + numbersBoxPaddingRight) + (numbersBoxBarMargin * 6) + (numbersImageWidth0 + numbersImageWidth1 + numbersImageWidth2 + numbersImageWidth3) + (numbersMargin * 4) + (numbersWidth0 + numbersWidth1 + numbersWidth2 + numbersWidth3) + (borderWidth * 2)));
-    } else {
-      multiplyNumber = (standardWidth / ((numbersBoxPaddingLeft + numbersBoxPaddingRight) + (numbersBoxBarMargin * 4) + (numbersImageWidth0 + numbersImageWidth1 + numbersImageWidth2) + (numbersMargin * 3) + (numbersWidth0 + numbersWidth1 + numbersWidth2) + (borderWidth * 2)));
-    }
-    numbersBox.style.transform = "scale(" + String(multiplyNumber) + ")";
-    numbersBox.style.transformOrigin = "0% 0%";
+  //   numbersBox.style.width = "auto";
+  //   if (media[0] || media[1]) {
+  //     multiplyNumber = (standardWidth / ((numbersBoxPaddingLeft + numbersBoxPaddingRight) + (numbersBoxBarMargin * 6) + (numbersImageWidth0 + numbersImageWidth1 + numbersImageWidth2 + numbersImageWidth3) + (numbersMargin * 4) + (numbersWidth0 + numbersWidth1 + numbersWidth2 + numbersWidth3) + (borderWidth * 2)));
+  //   } else {
+  //     multiplyNumber = (standardWidth / ((numbersBoxPaddingLeft + numbersBoxPaddingRight) + (numbersBoxBarMargin * 4) + (numbersImageWidth0 + numbersImageWidth1 + numbersImageWidth2) + (numbersMargin * 3) + (numbersWidth0 + numbersWidth1 + numbersWidth2) + (borderWidth * 2)));
+  //   }
+  //   numbersBox.style.transform = "scale(" + String(multiplyNumber) + ")";
+  //   numbersBox.style.transformOrigin = "0% 0%";
 
-  } else {
+  // } else {
 
-    numbersBox0 = createNode({
-      mother: whiteBlock,
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        boxSizing: "border-box",
-        marginTop: String(numbersBoxMarginTop) + ea,
-        height: String(numbersTotalHeight) + ea,
-        borderTopLeftRadius: String(numbersRadius) + "px",
-        borderTopRightRadius: String(numbersRadius) + "px",
-        borderBottomLeftRadius: String(0) + "px",
-        borderBottomRightRadius: String(0) + "px",
-        border: String(borderWidth) + "px solid " + colorExtended.black,
-        borderBottom: String(borderWidthLight) + "px dashed " + colorExtended.gray3,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        paddingLeft: String(numbersBoxPaddingLeft) + ea,
-        paddingRight: String(numbersBoxPaddingRight) + ea,
-      }
-    });
+  //   numbersBox0 = createNode({
+  //     mother: whiteBlock,
+  //     style: {
+  //       display: "flex",
+  //       position: "relative",
+  //       width: withOut(0, ea),
+  //       boxSizing: "border-box",
+  //       marginTop: String(numbersBoxMarginTop) + ea,
+  //       height: String(numbersTotalHeight) + ea,
+  //       borderTopLeftRadius: String(numbersRadius) + "px",
+  //       borderTopRightRadius: String(numbersRadius) + "px",
+  //       borderBottomLeftRadius: String(0) + "px",
+  //       borderBottomRightRadius: String(0) + "px",
+  //       border: String(borderWidth) + "px solid " + colorExtended.black,
+  //       borderBottom: String(borderWidthLight) + "px dashed " + colorExtended.gray3,
+  //       flexDirection: "row",
+  //       justifyContent: "center",
+  //       alignItems: "center",
+  //       paddingLeft: String(numbersBoxPaddingLeft) + ea,
+  //       paddingRight: String(numbersBoxPaddingRight) + ea,
+  //     }
+  //   });
 
-    // 1
-    createNode({
-      mother: numbersBox0,
-      mode: "img",
-      attribute: {
-        src: ReviewListJs.binaryPath + "/source0.svg",
-      },
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: String(numbersImageWidth0) + ea,
-        marginLeft: String(1.2) + ea,
-        top: String(numbersImageTop0) + ea,
-      }
-    });
-    createNode({
-      mother: numbersBox0,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        height: String(numbersTotalHeight) + ea,
-        width: String(numbersImageWidth0 + numbersWidth0 - numbersImageWidth0) + ea,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        marginLeft: String(numbersMargin) + ea,
-      },
-      children: [
-        {
-          text: numbersMiddleTitleContents0,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            textAlign: "center",
-            fontSize: String(numbersTextSize) + ea,
-            fontWeight: String(numbersTextWeight),
-            fontFamily: "mont",
-            color: colorExtended.mainBlue,
-          }
-        },
-        {
-          text: numbersDescriptionContents0,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            textAlign: "center",
-            fontSize: String(numbersDescriptionSize) + ea,
-            fontWeight: String(numbersDescriptionWeight),
-            top: String(numbersDescriptionTextTop) + ea,
-            fontFamily: "pretendard",
-            color: colorExtended.black,
-          }
-        }
-      ],
-    });
-    createNode({
-      mother: numbersBox0,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: String(numbersBoxBarMargin) + ea,
-        height: String(84) + "%",
-        borderRight: "1px dashed " + colorExtended.gray3,
-        marginRight: String(numbersBoxBarMargin) + ea,
-        boxSizing: "border-box",
-      }
-    });
+  //   // 1
+  //   createNode({
+  //     mother: numbersBox0,
+  //     mode: "img",
+  //     attribute: {
+  //       src: ReviewListJs.binaryPath + "/source0.svg",
+  //     },
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       width: String(numbersImageWidth0) + ea,
+  //       marginLeft: String(1.2) + ea,
+  //       top: String(numbersImageTop0) + ea,
+  //     }
+  //   });
+  //   createNode({
+  //     mother: numbersBox0,
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       height: String(numbersTotalHeight) + ea,
+  //       width: String(numbersImageWidth0 + numbersWidth0 - numbersImageWidth0) + ea,
+  //       flexDirection: "column",
+  //       justifyContent: "center",
+  //       alignItems: "center",
+  //       marginLeft: String(numbersMargin) + ea,
+  //     },
+  //     children: [
+  //       {
+  //         text: numbersMiddleTitleContents0,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           textAlign: "center",
+  //           fontSize: String(numbersTextSize) + ea,
+  //           fontWeight: String(numbersTextWeight),
+  //           fontFamily: "mont",
+  //           color: colorExtended.mainBlue,
+  //         }
+  //       },
+  //       {
+  //         text: numbersDescriptionContents0,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           textAlign: "center",
+  //           fontSize: String(numbersDescriptionSize) + ea,
+  //           fontWeight: String(numbersDescriptionWeight),
+  //           top: String(numbersDescriptionTextTop) + ea,
+  //           fontFamily: "pretendard",
+  //           color: colorExtended.black,
+  //         }
+  //       }
+  //     ],
+  //   });
+  //   createNode({
+  //     mother: numbersBox0,
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       width: String(numbersBoxBarMargin) + ea,
+  //       height: String(84) + "%",
+  //       borderRight: "1px dashed " + colorExtended.gray3,
+  //       marginRight: String(numbersBoxBarMargin) + ea,
+  //       boxSizing: "border-box",
+  //     }
+  //   });
 
-    // 2
-    createNode({
-      mother: numbersBox0,
-      mode: "img",
-      attribute: {
-        src: ReviewListJs.binaryPath + "/source1.svg",
-      },
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: String(numbersImageWidth1) + ea,
-        top: String(numbersImageTop1) + ea,
-      }
-    });
-    createNode({
-      mother: numbersBox0,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        height: String(numbersTotalHeight) + ea,
-        width: String(numbersImageWidth0 + numbersWidth0 - numbersImageWidth1) + ea,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        marginLeft: String(numbersMargin) + ea,
-      },
-      children: [
-        {
-          text: numbersMiddleTitleContents1,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            textAlign: "center",
-            fontSize: String(numbersTextSize) + ea,
-            fontWeight: String(numbersTextWeight),
-            fontFamily: "mont",
-            color: colorExtended.mainBlue,
-          }
-        },
-        {
-          text: numbersDescriptionContents1,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            textAlign: "center",
-            fontSize: String(numbersDescriptionSize) + ea,
-            fontWeight: String(numbersDescriptionWeight),
-            top: String(numbersDescriptionTextTop) + ea,
-            fontFamily: "pretendard",
-            color: colorExtended.black,
-          }
-        }
-      ],
-    });
+  //   // 2
+  //   createNode({
+  //     mother: numbersBox0,
+  //     mode: "img",
+  //     attribute: {
+  //       src: ReviewListJs.binaryPath + "/source1.svg",
+  //     },
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       width: String(numbersImageWidth1) + ea,
+  //       top: String(numbersImageTop1) + ea,
+  //     }
+  //   });
+  //   createNode({
+  //     mother: numbersBox0,
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       height: String(numbersTotalHeight) + ea,
+  //       width: String(numbersImageWidth0 + numbersWidth0 - numbersImageWidth1) + ea,
+  //       flexDirection: "column",
+  //       justifyContent: "center",
+  //       alignItems: "center",
+  //       marginLeft: String(numbersMargin) + ea,
+  //     },
+  //     children: [
+  //       {
+  //         text: numbersMiddleTitleContents1,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           textAlign: "center",
+  //           fontSize: String(numbersTextSize) + ea,
+  //           fontWeight: String(numbersTextWeight),
+  //           fontFamily: "mont",
+  //           color: colorExtended.mainBlue,
+  //         }
+  //       },
+  //       {
+  //         text: numbersDescriptionContents1,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           textAlign: "center",
+  //           fontSize: String(numbersDescriptionSize) + ea,
+  //           fontWeight: String(numbersDescriptionWeight),
+  //           top: String(numbersDescriptionTextTop) + ea,
+  //           fontFamily: "pretendard",
+  //           color: colorExtended.black,
+  //         }
+  //       }
+  //     ],
+  //   });
 
-    numbersBox1 = createNode({
-      mother: whiteBlock,
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        boxSizing: "border-box",
-        marginBottom: String(numbersBoxMarginBottom) + ea,
-        height: String(numbersTotalHeight) + ea,
-        borderTopLeftRadius: String(0) + "px",
-        borderTopRightRadius: String(0) + "px",
-        borderBottomLeftRadius: String(numbersRadius) + "px",
-        borderBottomRightRadius: String(numbersRadius) + "px",
-        border: String(borderWidth) + "px solid " + colorExtended.black,
-        borderTop: String(0),
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        paddingLeft: String(numbersBoxPaddingLeft) + ea,
-        paddingRight: String(numbersBoxPaddingRight) + ea,
-      }
-    });
+  //   numbersBox1 = createNode({
+  //     mother: whiteBlock,
+  //     style: {
+  //       display: "flex",
+  //       position: "relative",
+  //       width: withOut(0, ea),
+  //       boxSizing: "border-box",
+  //       marginBottom: String(numbersBoxMarginBottom) + ea,
+  //       height: String(numbersTotalHeight) + ea,
+  //       borderTopLeftRadius: String(0) + "px",
+  //       borderTopRightRadius: String(0) + "px",
+  //       borderBottomLeftRadius: String(numbersRadius) + "px",
+  //       borderBottomRightRadius: String(numbersRadius) + "px",
+  //       border: String(borderWidth) + "px solid " + colorExtended.black,
+  //       borderTop: String(0),
+  //       flexDirection: "row",
+  //       justifyContent: "center",
+  //       alignItems: "center",
+  //       paddingLeft: String(numbersBoxPaddingLeft) + ea,
+  //       paddingRight: String(numbersBoxPaddingRight) + ea,
+  //     }
+  //   });
 
-    // 3
-    createNode({
-      mother: numbersBox1,
-      mode: "img",
-      attribute: {
-        src: ReviewListJs.binaryPath + "/source2.svg",
-      },
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: String(numbersImageWidth2) + ea,
-        top: String(numbersImageTop2) + ea,
-      }
-    });
-    createNode({
-      mother: numbersBox1,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        height: String(numbersTotalHeight) + ea,
-        width: String(numbersImageWidth0 + numbersWidth0 - numbersImageWidth2) + ea,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        marginLeft: String(numbersMargin) + ea,
-      },
-      children: [
-        {
-          text: numbersMiddleTitleContents2,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            textAlign: "center",
-            fontSize: String(numbersTextSize) + ea,
-            fontWeight: String(numbersTextWeight),
-            fontFamily: "mont",
-            color: colorExtended.mainBlue,
-          }
-        },
-        {
-          text: numbersDescriptionContents2,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            textAlign: "center",
-            fontSize: String(numbersDescriptionSize) + ea,
-            fontWeight: String(numbersDescriptionWeight),
-            top: String(numbersDescriptionTextTop) + ea,
-            fontFamily: "pretendard",
-            color: colorExtended.black,
-          }
-        }
-      ],
-    });
-    createNode({
-      mother: numbersBox1,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: String(numbersBoxBarMargin) + ea,
-        height: String(84) + "%",
-        borderRight: "1px dashed " + colorExtended.gray3,
-        marginRight: String(numbersBoxBarMargin) + ea,
-        boxSizing: "border-box",
-      }
-    });
+  //   // 3
+  //   createNode({
+  //     mother: numbersBox1,
+  //     mode: "img",
+  //     attribute: {
+  //       src: ReviewListJs.binaryPath + "/source2.svg",
+  //     },
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       width: String(numbersImageWidth2) + ea,
+  //       top: String(numbersImageTop2) + ea,
+  //     }
+  //   });
+  //   createNode({
+  //     mother: numbersBox1,
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       height: String(numbersTotalHeight) + ea,
+  //       width: String(numbersImageWidth0 + numbersWidth0 - numbersImageWidth2) + ea,
+  //       flexDirection: "column",
+  //       justifyContent: "center",
+  //       alignItems: "center",
+  //       marginLeft: String(numbersMargin) + ea,
+  //     },
+  //     children: [
+  //       {
+  //         text: numbersMiddleTitleContents2,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           textAlign: "center",
+  //           fontSize: String(numbersTextSize) + ea,
+  //           fontWeight: String(numbersTextWeight),
+  //           fontFamily: "mont",
+  //           color: colorExtended.mainBlue,
+  //         }
+  //       },
+  //       {
+  //         text: numbersDescriptionContents2,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           textAlign: "center",
+  //           fontSize: String(numbersDescriptionSize) + ea,
+  //           fontWeight: String(numbersDescriptionWeight),
+  //           top: String(numbersDescriptionTextTop) + ea,
+  //           fontFamily: "pretendard",
+  //           color: colorExtended.black,
+  //         }
+  //       }
+  //     ],
+  //   });
+  //   createNode({
+  //     mother: numbersBox1,
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       width: String(numbersBoxBarMargin) + ea,
+  //       height: String(84) + "%",
+  //       borderRight: "1px dashed " + colorExtended.gray3,
+  //       marginRight: String(numbersBoxBarMargin) + ea,
+  //       boxSizing: "border-box",
+  //     }
+  //   });
 
-    // 4
-    createNode({
-      mother: numbersBox1,
-      mode: "img",
-      attribute: {
-        src: ReviewListJs.binaryPath + "/source3.svg",
-      },
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: String(numbersImageWidth3) + ea,
-        top: String(numbersImageTop3) + ea,
-      }
-    });
-    createNode({
-      mother: numbersBox1,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        height: String(numbersTotalHeight) + ea,
-        width: String(numbersImageWidth0 + numbersWidth0 - numbersImageWidth3) + ea,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        marginLeft: String(numbersMargin) + ea,
-      },
-      children: [
-        {
-          text: numbersMiddleTitleContents3,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            textAlign: "center",
-            fontSize: String(numbersTextSize) + ea,
-            fontWeight: String(numbersTextWeight),
-            fontFamily: "mont",
-            color: colorExtended.mainBlue,
-          }
-        },
-        {
-          text: numbersDescriptionContents3,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            textAlign: "center",
-            fontSize: String(numbersDescriptionSize) + ea,
-            fontWeight: String(numbersDescriptionWeight),
-            top: String(numbersDescriptionTextTop) + ea,
-            fontFamily: "pretendard",
-            color: colorExtended.black,
-          }
-        }
-      ],
-    });
+  //   // 4
+  //   createNode({
+  //     mother: numbersBox1,
+  //     mode: "img",
+  //     attribute: {
+  //       src: ReviewListJs.binaryPath + "/source3.svg",
+  //     },
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       width: String(numbersImageWidth3) + ea,
+  //       top: String(numbersImageTop3) + ea,
+  //     }
+  //   });
+  //   createNode({
+  //     mother: numbersBox1,
+  //     style: {
+  //       display: "inline-flex",
+  //       position: "relative",
+  //       height: String(numbersTotalHeight) + ea,
+  //       width: String(numbersImageWidth0 + numbersWidth0 - numbersImageWidth3) + ea,
+  //       flexDirection: "column",
+  //       justifyContent: "center",
+  //       alignItems: "center",
+  //       marginLeft: String(numbersMargin) + ea,
+  //     },
+  //     children: [
+  //       {
+  //         text: numbersMiddleTitleContents3,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           textAlign: "center",
+  //           fontSize: String(numbersTextSize) + ea,
+  //           fontWeight: String(numbersTextWeight),
+  //           fontFamily: "mont",
+  //           color: colorExtended.mainBlue,
+  //         }
+  //       },
+  //       {
+  //         text: numbersDescriptionContents3,
+  //         style: {
+  //           display: "inline-block",
+  //           position: "relative",
+  //           textAlign: "center",
+  //           fontSize: String(numbersDescriptionSize) + ea,
+  //           fontWeight: String(numbersDescriptionWeight),
+  //           top: String(numbersDescriptionTextTop) + ea,
+  //           fontFamily: "pretendard",
+  //           color: colorExtended.black,
+  //         }
+  //       }
+  //     ],
+  //   });
 
-  }
+  // }
 
   middleBox = createNode({
     mother: whiteBlock,

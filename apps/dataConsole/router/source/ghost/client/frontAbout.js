@@ -1025,22 +1025,6 @@ FrontAboutJs.prototype.insertSecondBox = async function () {
     }
 
     // click me
-    createNode({
-      mother: secondBase,
-      mode: "img",
-      attribute: {
-        src: FrontAboutJs.binaryPath + "/clickMe.png",
-      },
-      style: {
-        display: "inline-block",
-        position: "absolute",
-        top: String(clickMeTop) + ea,
-        right: String(clickMeRight) + ea,
-        width: String(clictMeWidth) + ea,
-        height: "auto",
-        animation: "1.2s ease 0s 1 normal forwards running fadeupdelay2",
-      }
-    });
 
     // contents
     num = 0;
@@ -2179,594 +2163,594 @@ FrontAboutJs.prototype.insertThirdBox = async function () {
     }
 
     // first
-    firstBase = createNode({
-      mother: desktop ? baseMother : baseTong,
-      class: [ secondBaseClassName ],
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "start",
-        flexDirection: "column",
-      },
-      child: {
-        style: {
-          display: "block",
-          position: "absolute",
-          top: String(0),
-          left: mobile ? String(-1 * mobileMargin) + ea : String(0) + ea,
-          width: mobile ? withOut(-1 * mobileMargin * 2, ea) : withOut(0, ea),
-          height: withOut(0, ea),
-          background: colorExtended.white,
-        },
-        next: {
-          style: {
-            display: "block",
-            position: "absolute",
-            top: mobile ? String(slimMargin) + ea : String(0),
-            left: mobile ? String(-1 * (mobileMargin - slimMargin)) + ea : String(0),
-            width: mobile ? withOut(-1 * (mobileMargin - slimMargin) * 2, ea) : String(100) + '%',
-            height: mobile ? withOut(slimMargin * 2, ea) : String(100) + '%',
-            background: desktop ? colorExtended.gradientBlue9 : colorExtended.white,
-            borderRadius: String(boxRadiusBig) + "px",
-            border: desktop ? "4px solid " + colorExtended.blueWhiteWhiteBack : "",
-            boxSizing: desktop ? "border-box" : "",
-          }
-        }
-      }
-    });
-    firstBox = createNode({
-      mother: firstBase,
-      style: {
-        display: "flex",
-        position: "relative",
-        padding: desktop ? String(boxInnerPadding) + ea : "",
-        paddingTop: desktop ? String(boxInnerPaddingTop) + ea : "",
-        paddingBottom: desktop ? String(boxInnerPaddingTop) + ea : "",
-        width: desktop ? withOut(boxInnerPadding * 2, ea) : withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "start",
-        flexDirection: "column",
-      }
-    });
-    createNode({
-      mother: firstBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        flexDirection: "column",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "start",
-        paddingTop: String(topBottomMargin) + ea,
-      },
-      child: {
-        text: [
-          "선호하는 <b%1명의 디자이너%b>를",
-          "선택할 수 있어요.",
-        ].join("\n"),
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(title0Size) + ea,
-          fontWeight: String(title0Weight),
-          fontFamily: "pretendard",
-          color: colorExtended.black,
-          lineHeight: String(title0LineHeight),
-        },
-        bold: {
-          fontSize: String(title0Size) + ea,
-          fontWeight: String(title0Weight),
-          fontFamily: "pretendard",
-          color: colorExtended.mainBlue,
-        },
-        next: {
-          style: {
-            display: desktop ? "none" : "inline-block",
-            position: "relative",
-            width: String(line0Width) + ea,
-            height: String(lineMarginTop) + ea,
-            borderBottom: "2px solid " + colorExtended.black,
-          }
-        }
-      }
-    });
-    createNode({
-      mother: firstBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        flexDirection: "column",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "end",
-        alignItems: "end",
-        paddingTop: String(imageMarginTop) + ea,
-      },
-      child: {
-        mode: "img",
-        attribute: {
-          src: FrontAboutJs.binaryPath + "/frontIndexSource1.png",
-        },
-        style: {
-          display: "inline-block",
-          position: mobile ? "relative" : "absolute",
-          width: String(mainImageWidth) + ea,
-          top: desktop ? String(mainImageTop) + ea : "",
-        }
-      }
-    });
-    createNode({
-      mother: firstBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        flexDirection: "column",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "start",
-        paddingTop: String(descriptionMarginTop) + ea,
-        paddingBottom: String(desktop ? topBottomMarginBig : topBottomMargin) + ea,
-      },
-      child: {
-        text: [
-          "다양한 컨셉과 역량을 가진",
-          String(instance.lengthDic.designer) + "명의 홈리에종 협업 디자이너",
-        ].join("\n"),
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(descriptionWeight),
-          fontFamily: "pretendard",
-          color: colorExtended.black,
-          lineHeight: String(descriptionLineHeight),
-        },
-      }
-    });
+    // firstBase = createNode({
+    //   mother: desktop ? baseMother : baseTong,
+    //   class: [ secondBaseClassName ],
+    //   style: {
+    //     display: "flex",
+    //     position: "relative",
+    //     width: withOut(0, ea),
+    //     justifyContent: "start",
+    //     alignItems: "start",
+    //     flexDirection: "column",
+    //   },
+    //   child: {
+    //     style: {
+    //       display: "block",
+    //       position: "absolute",
+    //       top: String(0),
+    //       left: mobile ? String(-1 * mobileMargin) + ea : String(0) + ea,
+    //       width: mobile ? withOut(-1 * mobileMargin * 2, ea) : withOut(0, ea),
+    //       height: withOut(0, ea),
+    //       background: colorExtended.white,
+    //     },
+    //     next: {
+    //       style: {
+    //         display: "block",
+    //         position: "absolute",
+    //         top: mobile ? String(slimMargin) + ea : String(0),
+    //         left: mobile ? String(-1 * (mobileMargin - slimMargin)) + ea : String(0),
+    //         width: mobile ? withOut(-1 * (mobileMargin - slimMargin) * 2, ea) : String(100) + '%',
+    //         height: mobile ? withOut(slimMargin * 2, ea) : String(100) + '%',
+    //         background: desktop ? colorExtended.gradientBlue9 : colorExtended.white,
+    //         borderRadius: String(boxRadiusBig) + "px",
+    //         border: desktop ? "4px solid " + colorExtended.blueWhiteWhiteBack : "",
+    //         boxSizing: desktop ? "border-box" : "",
+    //       }
+    //     }
+    //   }
+    // });
+    // firstBox = createNode({
+    //   mother: firstBase,
+    //   style: {
+    //     display: "flex",
+    //     position: "relative",
+    //     padding: desktop ? String(boxInnerPadding) + ea : "",
+    //     paddingTop: desktop ? String(boxInnerPaddingTop) + ea : "",
+    //     paddingBottom: desktop ? String(boxInnerPaddingTop) + ea : "",
+    //     width: desktop ? withOut(boxInnerPadding * 2, ea) : withOut(0, ea),
+    //     justifyContent: "start",
+    //     alignItems: "start",
+    //     flexDirection: "column",
+    //   }
+    // });
+    // createNode({
+    //   mother: firstBox,
+    //   style: {
+    //     display: "inline-flex",
+    //     position: "relative",
+    //     flexDirection: "column",
+    //     position: "relative",
+    //     width: withOut(0, ea),
+    //     justifyContent: "start",
+    //     alignItems: "start",
+    //     paddingTop: String(topBottomMargin) + ea,
+    //   },
+    //   child: {
+    //     text: [
+    //       "선호하는 <b%1명의 디자이너%b>를",
+    //       "선택할 수 있어요.",
+    //     ].join("\n"),
+    //     style: {
+    //       display: "inline-block",
+    //       position: "relative",
+    //       fontSize: String(title0Size) + ea,
+    //       fontWeight: String(title0Weight),
+    //       fontFamily: "pretendard",
+    //       color: colorExtended.black,
+    //       lineHeight: String(title0LineHeight),
+    //     },
+    //     bold: {
+    //       fontSize: String(title0Size) + ea,
+    //       fontWeight: String(title0Weight),
+    //       fontFamily: "pretendard",
+    //       color: colorExtended.mainBlue,
+    //     },
+    //     next: {
+    //       style: {
+    //         display: desktop ? "none" : "inline-block",
+    //         position: "relative",
+    //         width: String(line0Width) + ea,
+    //         height: String(lineMarginTop) + ea,
+    //         borderBottom: "2px solid " + colorExtended.black,
+    //       }
+    //     }
+    //   }
+    // });
+    // createNode({
+    //   mother: firstBox,
+    //   style: {
+    //     display: "inline-flex",
+    //     position: "relative",
+    //     flexDirection: "column",
+    //     position: "relative",
+    //     width: withOut(0, ea),
+    //     justifyContent: "end",
+    //     alignItems: "end",
+    //     paddingTop: String(imageMarginTop) + ea,
+    //   },
+    //   child: {
+    //     mode: "img",
+    //     attribute: {
+    //       src: FrontAboutJs.binaryPath + "/frontIndexSource1.png",
+    //     },
+    //     style: {
+    //       display: "inline-block",
+    //       position: mobile ? "relative" : "absolute",
+    //       width: String(mainImageWidth) + ea,
+    //       top: desktop ? String(mainImageTop) + ea : "",
+    //     }
+    //   }
+    // });
+    // createNode({
+    //   mother: firstBox,
+    //   style: {
+    //     display: "inline-flex",
+    //     position: "relative",
+    //     flexDirection: "column",
+    //     position: "relative",
+    //     width: withOut(0, ea),
+    //     justifyContent: "start",
+    //     alignItems: "start",
+    //     paddingTop: String(descriptionMarginTop) + ea,
+    //     paddingBottom: String(desktop ? topBottomMarginBig : topBottomMargin) + ea,
+    //   },
+    //   child: {
+    //     text: [
+    //       "다양한 컨셉과 역량을 가진",
+    //       String(instance.lengthDic.designer) + "명의 홈리에종 협업 디자이너",
+    //     ].join("\n"),
+    //     style: {
+    //       display: "inline-block",
+    //       position: "relative",
+    //       fontSize: String(descriptionSize) + ea,
+    //       fontWeight: String(descriptionWeight),
+    //       fontFamily: "pretendard",
+    //       color: colorExtended.black,
+    //       lineHeight: String(descriptionLineHeight),
+    //     },
+    //   }
+    // });
 
-    // second
-    if (mobile) {
-      secondBase = createNode({
-        mother: desktop ? baseMother : baseTong,
-        class: [ secondBaseClassName ],
-        style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          justifyContent: "start",
-          alignItems: "start",
-          flexDirection: "column",
-          height: desktop ? "" : String(baseModuleHeight) + ea,
-        },
-        child: {
-          style: {
-            display: "block",
-            position: "absolute",
-            top: String(0),
-            left: String(-1 * mobileMargin) + ea,
-            width: withOut(-1 * mobileMargin * 2, ea),
-            height: withOut(0, ea),
-            background: colorExtended.gradientBlue,
-          },
-          next: {
-            style: {
-              display: "block",
-              position: "absolute",
-              top: String(slimMargin) + ea,
-              left: String(-1 * (mobileMargin - slimMargin)) + ea,
-              width: withOut(-1 * (mobileMargin - slimMargin) * 2, ea),
-              height: withOut(slimMargin * 2, ea),
-              background: colorExtended.white,
-              borderTopLeftRadius: String(boxRadiusBig) + "px",
-              borderTopRightRadius: String(boxRadiusBig) + "px",
-              borderBottomLeftRadius: String(boxRadiusSmall) + "px",
-              borderBottomRightRadius: String(boxRadiusBig) + "px",
-            },
-            next: {
-              style: {
-                display: "block",
-                position: "absolute",
-                top: String(slimMargin) + ea,
-                left: String(-1 * (mobileMargin - slimMargin)) + ea,
-                width: withOut(-1 * (mobileMargin - slimMargin) * 2, ea),
-                height: withOut(slimMargin * 2, ea),
-                background: colorExtended.blueWhiteWhiteBack,
-                opacity: String(0.4),
-                borderRadius: String(boxRadiusBig) + "px",
-              },
-            },
-          },
-        }
-      });
-      secondBox = createNode({
-        mother: secondBase,
-        style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          justifyContent: "start",
-          alignItems: "end",
-          top: String(slimMargin) + ea,
-          height: withOut(slimMargin * 2, ea),
-          flexDirection: "row",
-        }
-      });
-      createNode({
-        mother: secondBox,
-        mode: "img",
-        attribute: {
-          src: FrontAboutJs.binaryPath + (desktop ? "/frontIndexSource4Desktop.png" : "/frontIndexSource4.png"),
-        },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(image1Width) + ea,
-          marginLeft: String(image1VisualLeft) + ea,
-        }
-      });
-      createNode({
-        mother: secondBox,
-        style: {
-          display: "inline-flex",
-          flexDirection: "column",
-          position: "relative",
-          justifyContent: "start",
-          alignItems: "start",
-          paddingLeft: String(image1Between) + ea,
-          top: String(image1TextTop) + ea,
-        },
-        child: {
-          text: [
-            "끌려가는",
-            "인테리어? NO!",
-            "<b%내가 원하는 컨셉%b>을",
-            "실현해요."
-          ].join("\n"),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(title0Size) + ea,
-            fontWeight: String(title0Weight),
-            fontFamily: "pretendard",
-            color: colorExtended.black,
-            lineHeight: String(title0LineHeight),
-          },
-          bold: {
-            fontSize: String(title0Size) + ea,
-            fontWeight: String(title0Weight),
-            fontFamily: "pretendard",
-            color: colorExtended.mainBlue,
-          },
-          next: {
-            style: {
-              display: "inline-block",
-              position: "relative",
-              width: String(line1Width) + ea,
-              height: String(lineMarginTop) + ea,
-              borderBottom: "2px solid " + colorExtended.black,
-            },
-            next: {
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                flexDirection: "column",
-                position: "relative",
-                justifyContent: "start",
-                alignItems: "start",
-                paddingTop: String(descriptionMarginTop2) + ea,
-                paddingBottom: String(topBottomMargin) + ea,
-              },
-              child: {
-                text: [
-                  "시공범위와 퍼니싱 정도를",
-                  "내 마음대로 조절하는",
-                  "진정한 맞춤형 서비스",
-                ].join("\n"),
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(descriptionSize) + ea,
-                  fontWeight: String(descriptionWeight),
-                  fontFamily: "pretendard",
-                  color: colorExtended.black,
-                  lineHeight: String(descriptionLineHeight2),
-                },
-              }
-            }
-          }
-        }
-      });
-    } else {
-      secondBase = createNode({
-        mother: desktop ? baseMother : baseTong,
-        class: [ secondBaseClassName ],
-        style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          justifyContent: "start",
-          alignItems: "start",
-          flexDirection: "column",
-          height: desktop ? "" : String(baseModuleHeight) + ea,
-        },
-        child: {
-          style: {
-            display: "block",
-            position: "absolute",
-            top: String(0),
-            left: desktop ? String(0) + ea : String(-1 * mobileMargin) + ea,
-            width: desktop ? withOut(0, ea) : withOut(-1 * mobileMargin * 2, ea),
-            height: withOut(0, ea),
-            background: colorExtended.white,
-          },
-        }
-      });
-      secondBox = createNode({
-        mother: secondBase,
-        style: {
-          display: "flex",
-          position: "relative",
-          width: withOut(0, ea),
-          justifyContent: "start",
-          alignItems: "end",
-          flexDirection: "row",
-        }
-      });
-      createNode({
-        mother: secondBox,
-        style: {
-          display: "inline-block",
-          position: "absolute",
-          width: String(phoneWidth - 4) + ea,
-          height: String(phoneHeight - 4) + ea,
-          left: String(boxInnerPadding + 2) + ea,
-          top: String(phoneTop + 2) + ea,
-          zIndex: String(1),
-          borderRadius: String(57) + ea,
-          boxShadow: "18px 18px 45px -12px " + colorExtended.black,
-        }
-      });
-      createNode({
-        mother: secondBox,
-        mode: "img",
-        attribute: {
-          src: FrontAboutJs.binaryPath + (desktop ? "/frontIndexSource4Desktop.png" : "/frontIndexSource4.png"),
-        },
-        style: {
-          display: "inline-block",
-          position: "absolute",
-          width: String(phoneWidth) + ea,
-          height: String(phoneHeight) + ea,
-          left: String(boxInnerPadding) + ea,
-          top: String(phoneTop) + ea,
-          zIndex: String(2),
-        }
-      });
-      createNode({
-        mother: secondBox,
-        style: {
-          display: "inline-flex",
-          flexDirection: "column",
-          position: "relative",
-          justifyContent: "start",
-          alignItems: "start",
-          paddingLeft: String(secondAreaTextPaddingLeft) + ea,
-          paddingTop: String(whitePadding) + ea,
-          paddingBottom: String(whitePadding) + ea,
-        },
-        child: {
-          text: [
-            "끌려가는 인테리어? NO!",
-            "<b%내가 원하는 컨셉%b>을 실현해요."
-          ].join("\n"),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(title0Size) + ea,
-            fontWeight: String(title0Weight),
-            fontFamily: "pretendard",
-            color: colorExtended.black,
-            lineHeight: String(title0LineHeight),
-          },
-          bold: {
-            fontSize: String(title0Size) + ea,
-            fontWeight: String(title0Weight),
-            fontFamily: "pretendard",
-            color: colorExtended.mainBlue,
-          },
-          next: {
-            style: {
-              display: "none",
-              position: "relative",
-              width: String(line1Width) + ea,
-              height: String(lineMarginTop) + ea,
-              borderBottom: "2px solid " + colorExtended.black,
-            },
-            next: {
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                flexDirection: "column",
-                position: "relative",
-                justifyContent: "start",
-                alignItems: "start",
-                paddingTop: String(descriptionMarginTop) + ea,
-                paddingBottom: String(visualDescriptionPaddingBottom) + ea,
-              },
-              child: {
-                text: [
-                  "시공범위와 퍼니싱 정도를",
-                  "내 마음대로 조절하는 진정한 맞춤형 서비스",
-                ].join("\n"),
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(descriptionSize) + ea,
-                  fontWeight: String(descriptionWeight),
-                  fontFamily: "pretendard",
-                  color: colorExtended.black,
-                  lineHeight: String(descriptionLineHeight2),
-                },
-              }
-            }
-          }
-        }
-      });
-    }
+    // // second
+    // if (mobile) {
+    //   secondBase = createNode({
+    //     mother: desktop ? baseMother : baseTong,
+    //     class: [ secondBaseClassName ],
+    //     style: {
+    //       display: "flex",
+    //       position: "relative",
+    //       width: withOut(0, ea),
+    //       justifyContent: "start",
+    //       alignItems: "start",
+    //       flexDirection: "column",
+    //       height: desktop ? "" : String(baseModuleHeight) + ea,
+    //     },
+    //     child: {
+    //       style: {
+    //         display: "block",
+    //         position: "absolute",
+    //         top: String(0),
+    //         left: String(-1 * mobileMargin) + ea,
+    //         width: withOut(-1 * mobileMargin * 2, ea),
+    //         height: withOut(0, ea),
+    //         background: colorExtended.gradientBlue,
+    //       },
+    //       next: {
+    //         style: {
+    //           display: "block",
+    //           position: "absolute",
+    //           top: String(slimMargin) + ea,
+    //           left: String(-1 * (mobileMargin - slimMargin)) + ea,
+    //           width: withOut(-1 * (mobileMargin - slimMargin) * 2, ea),
+    //           height: withOut(slimMargin * 2, ea),
+    //           background: colorExtended.white,
+    //           borderTopLeftRadius: String(boxRadiusBig) + "px",
+    //           borderTopRightRadius: String(boxRadiusBig) + "px",
+    //           borderBottomLeftRadius: String(boxRadiusSmall) + "px",
+    //           borderBottomRightRadius: String(boxRadiusBig) + "px",
+    //         },
+    //         next: {
+    //           style: {
+    //             display: "block",
+    //             position: "absolute",
+    //             top: String(slimMargin) + ea,
+    //             left: String(-1 * (mobileMargin - slimMargin)) + ea,
+    //             width: withOut(-1 * (mobileMargin - slimMargin) * 2, ea),
+    //             height: withOut(slimMargin * 2, ea),
+    //             background: colorExtended.blueWhiteWhiteBack,
+    //             opacity: String(0.4),
+    //             borderRadius: String(boxRadiusBig) + "px",
+    //           },
+    //         },
+    //       },
+    //     }
+    //   });
+    //   secondBox = createNode({
+    //     mother: secondBase,
+    //     style: {
+    //       display: "flex",
+    //       position: "relative",
+    //       width: withOut(0, ea),
+    //       justifyContent: "start",
+    //       alignItems: "end",
+    //       top: String(slimMargin) + ea,
+    //       height: withOut(slimMargin * 2, ea),
+    //       flexDirection: "row",
+    //     }
+    //   });
+    //   createNode({
+    //     mother: secondBox,
+    //     mode: "img",
+    //     attribute: {
+    //       src: FrontAboutJs.binaryPath + (desktop ? "/frontIndexSource4Desktop.png" : "/frontIndexSource4.png"),
+    //     },
+    //     style: {
+    //       display: "inline-block",
+    //       position: "relative",
+    //       width: String(image1Width) + ea,
+    //       marginLeft: String(image1VisualLeft) + ea,
+    //     }
+    //   });
+    //   createNode({
+    //     mother: secondBox,
+    //     style: {
+    //       display: "inline-flex",
+    //       flexDirection: "column",
+    //       position: "relative",
+    //       justifyContent: "start",
+    //       alignItems: "start",
+    //       paddingLeft: String(image1Between) + ea,
+    //       top: String(image1TextTop) + ea,
+    //     },
+    //     child: {
+    //       text: [
+    //         "끌려가는",
+    //         "인테리어? NO!",
+    //         "<b%내가 원하는 컨셉%b>을",
+    //         "실현해요."
+    //       ].join("\n"),
+    //       style: {
+    //         display: "inline-block",
+    //         position: "relative",
+    //         fontSize: String(title0Size) + ea,
+    //         fontWeight: String(title0Weight),
+    //         fontFamily: "pretendard",
+    //         color: colorExtended.black,
+    //         lineHeight: String(title0LineHeight),
+    //       },
+    //       bold: {
+    //         fontSize: String(title0Size) + ea,
+    //         fontWeight: String(title0Weight),
+    //         fontFamily: "pretendard",
+    //         color: colorExtended.mainBlue,
+    //       },
+    //       next: {
+    //         style: {
+    //           display: "inline-block",
+    //           position: "relative",
+    //           width: String(line1Width) + ea,
+    //           height: String(lineMarginTop) + ea,
+    //           borderBottom: "2px solid " + colorExtended.black,
+    //         },
+    //         next: {
+    //           style: {
+    //             display: "inline-flex",
+    //             position: "relative",
+    //             flexDirection: "column",
+    //             position: "relative",
+    //             justifyContent: "start",
+    //             alignItems: "start",
+    //             paddingTop: String(descriptionMarginTop2) + ea,
+    //             paddingBottom: String(topBottomMargin) + ea,
+    //           },
+    //           child: {
+    //             text: [
+    //               "시공범위와 퍼니싱 정도를",
+    //               "내 마음대로 조절하는",
+    //               "진정한 맞춤형 서비스",
+    //             ].join("\n"),
+    //             style: {
+    //               display: "inline-block",
+    //               position: "relative",
+    //               fontSize: String(descriptionSize) + ea,
+    //               fontWeight: String(descriptionWeight),
+    //               fontFamily: "pretendard",
+    //               color: colorExtended.black,
+    //               lineHeight: String(descriptionLineHeight2),
+    //             },
+    //           }
+    //         }
+    //       }
+    //     }
+    //   });
+    // } else {
+    //   secondBase = createNode({
+    //     mother: desktop ? baseMother : baseTong,
+    //     class: [ secondBaseClassName ],
+    //     style: {
+    //       display: "flex",
+    //       position: "relative",
+    //       width: withOut(0, ea),
+    //       justifyContent: "start",
+    //       alignItems: "start",
+    //       flexDirection: "column",
+    //       height: desktop ? "" : String(baseModuleHeight) + ea,
+    //     },
+    //     child: {
+    //       style: {
+    //         display: "block",
+    //         position: "absolute",
+    //         top: String(0),
+    //         left: desktop ? String(0) + ea : String(-1 * mobileMargin) + ea,
+    //         width: desktop ? withOut(0, ea) : withOut(-1 * mobileMargin * 2, ea),
+    //         height: withOut(0, ea),
+    //         background: colorExtended.white,
+    //       },
+    //     }
+    //   });
+    //   secondBox = createNode({
+    //     mother: secondBase,
+    //     style: {
+    //       display: "flex",
+    //       position: "relative",
+    //       width: withOut(0, ea),
+    //       justifyContent: "start",
+    //       alignItems: "end",
+    //       flexDirection: "row",
+    //     }
+    //   });
+    //   createNode({
+    //     mother: secondBox,
+    //     style: {
+    //       display: "inline-block",
+    //       position: "absolute",
+    //       width: String(phoneWidth - 4) + ea,
+    //       height: String(phoneHeight - 4) + ea,
+    //       left: String(boxInnerPadding + 2) + ea,
+    //       top: String(phoneTop + 2) + ea,
+    //       zIndex: String(1),
+    //       borderRadius: String(57) + ea,
+    //       boxShadow: "18px 18px 45px -12px " + colorExtended.black,
+    //     }
+    //   });
+    //   createNode({
+    //     mother: secondBox,
+    //     mode: "img",
+    //     attribute: {
+    //       src: FrontAboutJs.binaryPath + (desktop ? "/frontIndexSource4Desktop.png" : "/frontIndexSource4.png"),
+    //     },
+    //     style: {
+    //       display: "inline-block",
+    //       position: "absolute",
+    //       width: String(phoneWidth) + ea,
+    //       height: String(phoneHeight) + ea,
+    //       left: String(boxInnerPadding) + ea,
+    //       top: String(phoneTop) + ea,
+    //       zIndex: String(2),
+    //     }
+    //   });
+    //   createNode({
+    //     mother: secondBox,
+    //     style: {
+    //       display: "inline-flex",
+    //       flexDirection: "column",
+    //       position: "relative",
+    //       justifyContent: "start",
+    //       alignItems: "start",
+    //       paddingLeft: String(secondAreaTextPaddingLeft) + ea,
+    //       paddingTop: String(whitePadding) + ea,
+    //       paddingBottom: String(whitePadding) + ea,
+    //     },
+    //     child: {
+    //       text: [
+    //         "끌려가는 인테리어? NO!",
+    //         "<b%내가 원하는 컨셉%b>을 실현해요."
+    //       ].join("\n"),
+    //       style: {
+    //         display: "inline-block",
+    //         position: "relative",
+    //         fontSize: String(title0Size) + ea,
+    //         fontWeight: String(title0Weight),
+    //         fontFamily: "pretendard",
+    //         color: colorExtended.black,
+    //         lineHeight: String(title0LineHeight),
+    //       },
+    //       bold: {
+    //         fontSize: String(title0Size) + ea,
+    //         fontWeight: String(title0Weight),
+    //         fontFamily: "pretendard",
+    //         color: colorExtended.mainBlue,
+    //       },
+    //       next: {
+    //         style: {
+    //           display: "none",
+    //           position: "relative",
+    //           width: String(line1Width) + ea,
+    //           height: String(lineMarginTop) + ea,
+    //           borderBottom: "2px solid " + colorExtended.black,
+    //         },
+    //         next: {
+    //           style: {
+    //             display: "inline-flex",
+    //             position: "relative",
+    //             flexDirection: "column",
+    //             position: "relative",
+    //             justifyContent: "start",
+    //             alignItems: "start",
+    //             paddingTop: String(descriptionMarginTop) + ea,
+    //             paddingBottom: String(visualDescriptionPaddingBottom) + ea,
+    //           },
+    //           child: {
+    //             text: [
+    //               "시공범위와 퍼니싱 정도를",
+    //               "내 마음대로 조절하는 진정한 맞춤형 서비스",
+    //             ].join("\n"),
+    //             style: {
+    //               display: "inline-block",
+    //               position: "relative",
+    //               fontSize: String(descriptionSize) + ea,
+    //               fontWeight: String(descriptionWeight),
+    //               fontFamily: "pretendard",
+    //               color: colorExtended.black,
+    //               lineHeight: String(descriptionLineHeight2),
+    //             },
+    //           }
+    //         }
+    //       }
+    //     }
+    //   });
+    // }
 
-    // third
-    thirdBase = createNode({
-      mother: desktop ? baseMother : baseTong,
-      class: [ secondBaseClassName ],
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "start",
-        flexDirection: "column",
-      },
-      child: {
-        style: {
-          display: "block",
-          position: "absolute",
-          top: String(0),
-          left: mobile ? String(-1 * mobileMargin) + ea : String(0) + ea,
-          width: mobile ? withOut(-1 * mobileMargin * 2, ea) : withOut(0, ea),
-          height: withOut(0, ea),
-          background: colorExtended.white,
-        },
-        next: {
-          style: {
-            display: "block",
-            position: "absolute",
-            top: mobile ? String(slimMargin) + ea : String(0),
-            left: mobile ? String(-1 * (mobileMargin - slimMargin)) + ea : String(0),
-            width: mobile ? withOut(-1 * (mobileMargin - slimMargin) * 2, ea) : String(100) + '%',
-            height: mobile ? withOut(slimMargin * 2, ea) : String(100) + '%',
-            background: desktop ? colorExtended.gradientBlue9 : colorExtended.white,
-            borderRadius: String(boxRadiusBig) + "px",
-            border: desktop ? "4px solid " + colorExtended.blueWhiteWhiteBack : "",
-            boxSizing: desktop ? "border-box" : "",
-          }
-        }
-      }
-    });
-    thirdBox = createNode({
-      mother: thirdBase,
-      style: {
-        display: "flex",
-        position: "relative",
-        padding: desktop ? String(boxInnerPadding) + ea : "",
-        paddingTop: desktop ? String(boxInnerPaddingTop) + ea : "",
-        paddingBottom: desktop ? String(boxInnerPaddingTop) + ea : "",
-        width: desktop ? withOut(boxInnerPadding * 2, ea) : withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "start",
-        flexDirection: "column",
-      }
-    });
-    createNode({
-      mother: thirdBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        flexDirection: "column",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "start",
-        paddingTop: desktop ? String(thirdPadding) + ea : String(topBottomMargin) + ea,
-      },
-      child: {
-        text: [
-          "기획을 먼저 잡고",
-          "<b%필요한 시공%b>만 진행해요.",
-        ].join("\n"),
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(title0Size) + ea,
-          fontWeight: String(title0Weight),
-          fontFamily: "pretendard",
-          color: colorExtended.black,
-          lineHeight: String(title0LineHeight),
-        },
-        bold: {
-          fontSize: String(title0Size) + ea,
-          fontWeight: String(title0Weight),
-          fontFamily: "pretendard",
-          color: colorExtended.mainBlue,
-        },
-        next: {
-          style: {
-            display: desktop ? "none" : "inline-block",
-            position: "relative",
-            width: String(line2Width) + ea,
-            height: String(imageMarginTop) + ea,
-            borderBottom: "2px solid " + colorExtended.black,
-          }
-        }
-      }
-    });
-    createNode({
-      mother: thirdBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        flexDirection: "column",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "end",
-        alignItems: "end",
-        paddingTop: String(imageMarginTop) + ea,
-      },
-      child: {
-        mode: "img",
-        attribute: {
-          src: FrontAboutJs.binaryPath + "/frontIndexSource2.png",
-        },
-        style: {
-          display: "inline-block",
-          position: mobile ? "relative" : "absolute",
-          width: String(mainImageWidth) + ea,
-          top: desktop ? String(mainImageTop * 2) + ea : "",
-        }
-      }
-    });
-    createNode({
-      mother: thirdBox,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        flexDirection: "column",
-        position: "relative",
-        width: withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "start",
-        paddingTop: String(descriptionMarginTop) + ea,
-        paddingBottom: String(desktop ? 0 : topBottomMargin) + ea,
-      },
-      child: {
-        text: [
-          "무리한 시공에 대한 위험을 막아드릴게요.",
-          "필요한 시공만 합리적으로!",
-        ].join("\n"),
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(descriptionSize) + ea,
-          fontWeight: String(descriptionWeight),
-          fontFamily: "pretendard",
-          color: colorExtended.black,
-          lineHeight: String(descriptionLineHeight),
-        },
-      }
-    });
+    // // third
+    // thirdBase = createNode({
+    //   mother: desktop ? baseMother : baseTong,
+    //   class: [ secondBaseClassName ],
+    //   style: {
+    //     display: "flex",
+    //     position: "relative",
+    //     width: withOut(0, ea),
+    //     justifyContent: "start",
+    //     alignItems: "start",
+    //     flexDirection: "column",
+    //   },
+    //   child: {
+    //     style: {
+    //       display: "block",
+    //       position: "absolute",
+    //       top: String(0),
+    //       left: mobile ? String(-1 * mobileMargin) + ea : String(0) + ea,
+    //       width: mobile ? withOut(-1 * mobileMargin * 2, ea) : withOut(0, ea),
+    //       height: withOut(0, ea),
+    //       background: colorExtended.white,
+    //     },
+    //     next: {
+    //       style: {
+    //         display: "block",
+    //         position: "absolute",
+    //         top: mobile ? String(slimMargin) + ea : String(0),
+    //         left: mobile ? String(-1 * (mobileMargin - slimMargin)) + ea : String(0),
+    //         width: mobile ? withOut(-1 * (mobileMargin - slimMargin) * 2, ea) : String(100) + '%',
+    //         height: mobile ? withOut(slimMargin * 2, ea) : String(100) + '%',
+    //         background: desktop ? colorExtended.gradientBlue9 : colorExtended.white,
+    //         borderRadius: String(boxRadiusBig) + "px",
+    //         border: desktop ? "4px solid " + colorExtended.blueWhiteWhiteBack : "",
+    //         boxSizing: desktop ? "border-box" : "",
+    //       }
+    //     }
+    //   }
+    // });
+    // thirdBox = createNode({
+    //   mother: thirdBase,
+    //   style: {
+    //     display: "flex",
+    //     position: "relative",
+    //     padding: desktop ? String(boxInnerPadding) + ea : "",
+    //     paddingTop: desktop ? String(boxInnerPaddingTop) + ea : "",
+    //     paddingBottom: desktop ? String(boxInnerPaddingTop) + ea : "",
+    //     width: desktop ? withOut(boxInnerPadding * 2, ea) : withOut(0, ea),
+    //     justifyContent: "start",
+    //     alignItems: "start",
+    //     flexDirection: "column",
+    //   }
+    // });
+    // createNode({
+    //   mother: thirdBox,
+    //   style: {
+    //     display: "inline-flex",
+    //     position: "relative",
+    //     flexDirection: "column",
+    //     position: "relative",
+    //     width: withOut(0, ea),
+    //     justifyContent: "start",
+    //     alignItems: "start",
+    //     paddingTop: desktop ? String(thirdPadding) + ea : String(topBottomMargin) + ea,
+    //   },
+    //   child: {
+    //     text: [
+    //       "기획을 먼저 잡고",
+    //       "<b%필요한 시공%b>만 진행해요.",
+    //     ].join("\n"),
+    //     style: {
+    //       display: "inline-block",
+    //       position: "relative",
+    //       fontSize: String(title0Size) + ea,
+    //       fontWeight: String(title0Weight),
+    //       fontFamily: "pretendard",
+    //       color: colorExtended.black,
+    //       lineHeight: String(title0LineHeight),
+    //     },
+    //     bold: {
+    //       fontSize: String(title0Size) + ea,
+    //       fontWeight: String(title0Weight),
+    //       fontFamily: "pretendard",
+    //       color: colorExtended.mainBlue,
+    //     },
+    //     next: {
+    //       style: {
+    //         display: desktop ? "none" : "inline-block",
+    //         position: "relative",
+    //         width: String(line2Width) + ea,
+    //         height: String(imageMarginTop) + ea,
+    //         borderBottom: "2px solid " + colorExtended.black,
+    //       }
+    //     }
+    //   }
+    // });
+    // createNode({
+    //   mother: thirdBox,
+    //   style: {
+    //     display: "inline-flex",
+    //     position: "relative",
+    //     flexDirection: "column",
+    //     position: "relative",
+    //     width: withOut(0, ea),
+    //     justifyContent: "end",
+    //     alignItems: "end",
+    //     paddingTop: String(imageMarginTop) + ea,
+    //   },
+    //   child: {
+    //     mode: "img",
+    //     attribute: {
+    //       src: FrontAboutJs.binaryPath + "/frontIndexSource2.png",
+    //     },
+    //     style: {
+    //       display: "inline-block",
+    //       position: mobile ? "relative" : "absolute",
+    //       width: String(mainImageWidth) + ea,
+    //       top: desktop ? String(mainImageTop * 2) + ea : "",
+    //     }
+    //   }
+    // });
+    // createNode({
+    //   mother: thirdBox,
+    //   style: {
+    //     display: "inline-flex",
+    //     position: "relative",
+    //     flexDirection: "column",
+    //     position: "relative",
+    //     width: withOut(0, ea),
+    //     justifyContent: "start",
+    //     alignItems: "start",
+    //     paddingTop: String(descriptionMarginTop) + ea,
+    //     paddingBottom: String(desktop ? 0 : topBottomMargin) + ea,
+    //   },
+    //   child: {
+    //     text: [
+    //       "무리한 시공에 대한 위험을 막아드릴게요.",
+    //       "필요한 시공만 합리적으로!",
+    //     ].join("\n"),
+    //     style: {
+    //       display: "inline-block",
+    //       position: "relative",
+    //       fontSize: String(descriptionSize) + ea,
+    //       fontWeight: String(descriptionWeight),
+    //       fontFamily: "pretendard",
+    //       color: colorExtended.black,
+    //       lineHeight: String(descriptionLineHeight),
+    //     },
+    //   }
+    // });
 
     // fourth
     if (mobile) {
@@ -4576,7 +4560,6 @@ FrontAboutJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           justifyContent: "start",
           alignItems: "start",
           flexDirection: "column",
-          height: String(photoHeight) + ea,
           paddingTop: String(photoZonePaddingTop) + ea,
           paddingBottom: String(desktop ? photoZonePaddingBottom : serviceAreaBetween) + ea,
         },
@@ -4587,7 +4570,6 @@ FrontAboutJs.prototype.insertServiceDetailBox = async function (secondBaseMother
           display: "block",
           position: "relative",
           width: mobile ? withOut(-1 * mobileMargin * 2, ea) : withOut(0, ea),
-          height: withOut(0, ea),
           left: mobile ? String(-1 * mobileMargin) + ea : String(0) + ea,
           overflow: desktop ? "hiddne" : "scroll",
         },
@@ -4597,7 +4579,6 @@ FrontAboutJs.prototype.insertServiceDetailBox = async function (secondBaseMother
               display: "block",
               position: "relative",
               width: withOut(0, ea),
-              height: withOut(0, ea),
               overflow: desktop ? "hiddne" : "scroll",
             },
             child: {
@@ -4607,52 +4588,10 @@ FrontAboutJs.prototype.insertServiceDetailBox = async function (secondBaseMother
                 flexDirection: "row",
                 justifyContent: "start",
                 alignItems: "start",
-                height: withOut(0, ea),
                 paddingLeft: mobile ? String(mobileMargin) + ea : "",
                 paddingRight: mobile ? String(mobileMargin * 1.5) + ea : "",
                 width: desktop ? withOut(0, ea) : String(photoWidth) + ea,
               },
-              children: [
-                {
-                  mode: "img",
-                  attribute: { src: c.solve.images[0] },
-                  style: {
-                    display: "inline-block",
-                    height: String(photoHeight) + ea,
-                    borderRadius: String(photoRadius) + "px",
-                    marginRight: String(photoBetween) + ea,
-                  }
-                },
-                {
-                  mode: "img",
-                  attribute: { src: c.solve.images[1] },
-                  style: {
-                    display: "inline-block",
-                    height: String(photoHeight) + ea,
-                    borderRadius: String(photoRadius) + "px",
-                    marginRight: String(photoBetween) + ea,
-                  }
-                },
-                {
-                  mode: "img",
-                  attribute: { src: c.solve.images[2] },
-                  style: {
-                    display: "inline-block",
-                    height: String(photoHeight) + ea,
-                    borderRadius: String(photoRadius) + "px",
-                    marginRight: String(photoBetween) + ea,
-                  }
-                },
-                {
-                  mode: "img",
-                  attribute: { src: c.solve.images[3] },
-                  style: {
-                    display: (media[2] || media[3]) ? "none" : "inline-block",
-                    height: String(photoHeight) + ea,
-                    borderRadius: String(photoRadius) + "px",
-                  }
-                },
-              ]
             }
           }
         ]
@@ -6135,6 +6074,7 @@ FrontAboutJs.prototype.launching = async function (loading) {
 
           const thisFunction = instance.insertWhiteCardEvent(1);
           await thisFunction(new Event("click", { bubbles: true }));
+
 
           instance.resizeEvent();
           setInterval(() => {
