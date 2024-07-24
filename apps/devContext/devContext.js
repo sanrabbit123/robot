@@ -7613,15 +7613,15 @@ DevContext.prototype.launching = async function () {
 
 
     // aspirant to designer
-    await this.aspirantToDesigner([
-      [ "박상희", "2024-07-24" ],
-      [ "강혜은", "2024-07-24" ],
-      [ "윤영은", "2024-07-24" ],
-      [ "유선희", "2024-07-24" ],
-      [ "박희주", "2024-07-24" ],
-      [ "유은희", "2024-07-24" ],
-      [ "김대현", "2024-07-24" ],
-    ]);
+    // await this.aspirantToDesigner([
+    //   [ "박상희", "2024-07-24" ],
+    //   [ "강혜은", "2024-07-24" ],
+    //   [ "윤영은", "2024-07-24" ],
+    //   [ "유선희", "2024-07-24" ],
+    //   [ "박희주", "2024-07-24" ],
+    //   [ "유은희", "2024-07-24" ],
+    //   [ "김대현", "2024-07-24" ],
+    // ]);
 
 
     // new designer to front web
@@ -7657,8 +7657,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "김민아";
-    // const amount = 8_008_000;
+    // const name = "김정현";
+    // const amount = 107_250;
     // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
 
 
