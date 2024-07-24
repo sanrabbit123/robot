@@ -168,6 +168,202 @@ Mother.prototype.shellLink = function (str) {
   return newStr;
 }
 
+Mother.prototype.http2InNode = function (url, data = {}, config = {}) {
+  if (typeof url !== "string") {
+    throw new Error("invalid url");
+  }
+  if (!/^http/gi.test(url)) {
+    throw new Error("invalid url");
+  }
+  const http2 = require("http2");
+  const querystring = require("querystring");
+  let method;
+  let dataKeys;
+  let configKeys;
+  let dataBoo;
+  let configBoo;
+  let jsonBoo;
+  let nvpBoo;
+  let client;
+  let req;
+  let baseUrl, path;
+  let urlArr;
+  let protocol;
+  let host;
+  let res;
+  let body;
+  let configOption;
+  let getData;
+  let options;
+  let form;
+  let finalConfig;
+  let formHeaders;
+  let dataString;
+
+  method = "get";
+  dataKeys = Object.keys(data);
+  configKeys = Object.keys(config);
+  dataBoo = false;
+  configBoo = false;
+  jsonBoo = true;
+  nvpBoo = false;
+
+  if (dataKeys.length === 0 && configKeys.length === 0) {
+    method = "get";
+    data = {};
+    config = {};
+    dataBoo = false;
+    configBoo = false;
+  } else if (dataKeys.length === 0 && configKeys.length > 0) {
+    method = "get";
+    dataBoo = false;
+    configBoo = true;
+  } else if (dataKeys.length > 0) {
+    method = "post";
+    dataBoo = true;
+    configBoo = (configKeys.length === 0) ? false : true;
+  }
+
+  if (configBoo) {
+    if (/json/gi.test(JSON.stringify(config))) {
+      jsonBoo = true;
+    } else if (/x\-www\-form\-urlencoded/gi.test(JSON.stringify(config))) {
+      nvpBoo = true;
+      dataString = "";
+      for (let i in data) {
+        dataString += i.replace(/[\=\&]/g, '');
+        dataString += '=';
+        if (typeof data[i] === "object") {
+          if (data[i] instanceof Date) {
+            dataString += JSON.stringify(data[i]).replace(/^\"/g, '').replace(/\"$/g, '');
+          } else {
+            dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '').replace(/[ ]/g, '+');
+          }
+        } else {
+          dataString += String(data[i]).replace(/[\=\&]/g, '').replace(/[ ]/g, '+');
+        }
+        dataString += '&';
+      }
+      data = dataString.slice(0, -1);
+    } else {
+      if (config.headers === undefined) {
+        config.headers = {};
+        config.headers["Content-Type"] = "application/json";
+      } else {
+        config.headers["Content-Type"] = "application/json";
+      }
+      jsonBoo = true;
+    }
+    if (config.method === "get") {
+      method = "get";
+    }
+    if (config.method === "patch") {
+      method = "patch";
+    }
+  } else {
+    jsonBoo = true;
+    config.headers = {};
+    config.headers["Content-Type"] = "application/json";
+  }
+
+  if (method === "get") {
+    getData = "?";
+    getData += querystring.stringify(data);
+    if (/\?/gi.test(url)) {
+      url = url + "&" + getData.slice(1);
+    } else {
+      url = url + getData;
+    }
+    if (config.method !== undefined) {
+      delete config.method;
+    }
+  }
+
+  urlArr = url.split("/").filter((s) => { return s !== "" });
+
+  protocol = urlArr.shift();
+  host = urlArr.shift();
+  path = "/" + urlArr.join("/");
+  baseUrl = protocol + "//" + host;
+
+  return new Promise((resolve, reject) => {
+
+    client = http2.connect(baseUrl);
+
+    if (method === "get") {
+      if (configBoo) {
+        configOption = { ...config.headers };
+      } else {
+        configOption = {};
+      }
+      configOption[":method"] = "GET";
+      configOption[":path"] = path;
+    } else if (method === "post") {
+      if (configBoo) {
+        configOption = { ...config.headers };
+      } else {
+        configOption = {};
+      }
+      configOption[":method"] = "POST";
+      configOption[":path"] = path;
+      if (configOption["Content-Type"] === undefined) {
+        configOption["Content-Type"] = "application/json";
+      }
+      if (typeof data === "object") {
+        configOption["Content-Length"] = Buffer.byteLength(JSON.stringify(data));
+      } else {
+        configOption["Content-Length"] = Buffer.byteLength(data);
+      }
+    } else if (method === "patch") {
+      if (configBoo) {
+        configOption = { ...config.headers };
+      } else {
+        configOption = {};
+      }
+      configOption[":method"] = "PATCH";
+      configOption[":path"] = path;
+      if (configOption["Content-Type"] === undefined) {
+        configOption["Content-Type"] = "application/json";
+      }
+      if (typeof data === "object") {
+        configOption["Content-Length"] = Buffer.byteLength(JSON.stringify(data));
+      } else {
+        configOption["Content-Length"] = Buffer.byteLength(data);
+      }
+    }
+
+    req = client.request(configOption);
+    client.on("error", (err) => {
+      reject(err);
+    })
+
+    res = [];
+    req.on("data", chunk => {
+      res.push(chunk);
+    });
+    req.on("error", (err) => {
+      reject(err);
+    })
+    req.on("end", () => {
+      body = Buffer.concat(res).toString();
+      client.close();
+      resolve(Mother.equal(body));
+    });
+
+    if (method === "get") {
+      req.end();
+    } else {
+      if (typeof data === "object") {
+        req.end(JSON.stringify(data));
+      } else {
+        req.end(data);
+      }
+    }
+
+  });
+
+}
+
 Mother.prototype.tempDelete = function (dir = null) {
   const fs = require('fs');
   const { exec } = require('child_process');
