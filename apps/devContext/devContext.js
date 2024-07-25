@@ -123,38 +123,21 @@ DevContext.prototype.launching = async function () {
     // await this.exceptionPid();
     // =======================================================================================================================================================
 
-    // centrex refresh setting
-    // const whisk = new RequestWhisk();
-    // await whisk.requestBeating();
-    // =======================================================================================================================================================
 
-    // const analytics = new GoogleAnalytics();
-    // const simpleRes = await analytics.simpleMetric(new Date(2024, 5, 24), new Date(2024, 5, 27));
-    // console.log(simpleRes);
-
-    // await this.MONGOCONSOLEC.connect();
-    // const selfMongo = this.MONGOCONSOLEC;
-    // const target = "client";
-    // const collection = target + capitalizeString("history");
-    // const defaultCheckObject = await back.createHistory(target, {}, { defaultCheckMode: true, keyMode: true });
-    // const entireHistory = await back.mongoRead(collection, {}, { selfMongo });
-    // let whereQuery, updateQuery;
-    // for (let { cliid } of entireHistory) {
-    //   whereQuery = { cliid };
-    //   updateQuery = objectDeepCopy(defaultCheckObject);
-    //   await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-    //   await back.mongoUpdate(collection, [ whereQuery, { "check": "", "null": "" } ], { selfMongo, unset: true });
-    //   console.log(whereQuery, updateQuery);
-    // }
-    // await this.MONGOCONSOLEC.close();
-
-    // const res = await requestSystem("https://" + address.officeinfo.ghost.host + "/analyticsToday", { report: 1 }, { headers: { "Content-Type": "application/json" } });
-    // console.log(res);
-
-
-
+    // upload contents
     // const filter = new PortfolioFilter();
     // await filter.updateSubject();
+    // =======================================================================================================================================================
+
+    // raw to raw
+    // await instance.rawtorawSystem("박은하", null);
+    // =======================================================================================================================================================
+
+    // repair order
+    await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawRepairOrder", {
+      pid: "a132"
+    }, { headers: { "Content-Type": "application/json" } });
+    // =======================================================================================================================================================
 
 
     // const selfMongo = this.MONGOC;
@@ -7359,8 +7342,6 @@ DevContext.prototype.launching = async function () {
     //   host: "home-liaison.com",
     // });
 
-    // raw photo to raw portfolio
-    // await instance.rawtorawSystem("박은하", null);
 
     // const kakaoInstance = new KakaoTalk();
     // let projects;

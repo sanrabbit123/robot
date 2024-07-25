@@ -1293,7 +1293,7 @@ PortfolioFilter.prototype.updateSubject = async function () {
   }
 }
 
-PortfolioFilter.prototype.rawToContents = async function (pid) {
+PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = false) {
   const instance = this;
   const back = this.back;
   const address = this.address;
@@ -1362,43 +1362,47 @@ PortfolioFilter.prototype.rawToContents = async function (pid) {
       }
       await shellExec("mkdir", [ process.cwd() + "/temp/" + pid ]);
   
-      num = 1;
-      for (let fileName of ghostPhotosFiles) {
-        tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + fileName);
-        await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
-        console.log(`download success`);
-        num++;
-      }
-  
-      targetPhotoDir = await garoseroParser.queryDirectory(process.cwd() + "/temp/" + pid);
-      finalGsTong = [];
-      seroIn = false;
-      for (let i = 0; i < targetPhotoDir.length; i++) {
-        if (targetPhotoDir[i].gs === "g") {
-          finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
-          seroIn = false;
-        } else {
-          if (!seroIn) {
-            if (targetPhotoDir[i + 1] !== undefined && targetPhotoDir[i + 1].gs === "s") {
-              finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
-              finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i + 1])));
-              seroIn = true;
-            }
-          } else {
+      if (!justOrderMode) {
+        num = 1;
+        for (let fileName of ghostPhotosFiles) {
+          tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + fileName);
+          await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
+          console.log(`download success`);
+          num++;
+        }
+    
+        targetPhotoDir = await garoseroParser.queryDirectory(process.cwd() + "/temp/" + pid);
+        finalGsTong = [];
+        seroIn = false;
+        for (let i = 0; i < targetPhotoDir.length; i++) {
+          if (targetPhotoDir[i].gs === "g") {
+            finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
             seroIn = false;
+          } else {
+            if (!seroIn) {
+              if (targetPhotoDir[i + 1] !== undefined && targetPhotoDir[i + 1].gs === "s") {
+                finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
+                finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i + 1])));
+                seroIn = true;
+              }
+            } else {
+              seroIn = false;
+            }
           }
         }
+    
+        await shellExec("rm", [ "-rf", this.options.photo_dir ]);
+        await shellExec("mkdir", [ this.options.photo_dir ]);
+        for (let obj of finalGsTong) {
+          await shellExec("mv", [ obj.file, this.options.photo_dir ])
+        }
+    
+        await this.total_make(false);
+    
+        console.log(finalGsTong);
+      } else {
+        await back.mongoDelete("contents", { "contents.portfolio.pid": pid }, { selfMongo: selfCoreMongo });
       }
-  
-      await shellExec("rm", [ "-rf", this.options.photo_dir ]);
-      await shellExec("mkdir", [ this.options.photo_dir ]);
-      for (let obj of finalGsTong) {
-        await shellExec("mv", [ obj.file, this.options.photo_dir ])
-      }
-  
-      await this.total_make(false);
-  
-      console.log(finalGsTong);
   
       noteContents = pid + "\n";
       noteContents += thisDesigner.designer + " 실장님 " + thisClient.name + " 고객님";
@@ -1470,44 +1474,45 @@ PortfolioFilter.prototype.rawToContents = async function (pid) {
       }
       await shellExec("mkdir", [ process.cwd() + "/temp/" + pid ]);
   
-      num = 1;
-      for (let fileName of ghostPhotosFiles) {
-        tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + fileName);
-        await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
-        console.log(`download success`);
-        num++;
-      }
-  
-      targetPhotoDir = await garoseroParser.queryDirectory(process.cwd() + "/temp/" + pid);
-      finalGsTong = [];
-      seroIn = false;
-      for (let i = 0; i < targetPhotoDir.length; i++) {
-        if (targetPhotoDir[i].gs === "g") {
-          finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
-          seroIn = false;
-        } else {
-          if (!seroIn) {
-            if (targetPhotoDir[i + 1] !== undefined && targetPhotoDir[i + 1].gs === "s") {
-              finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
-              finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i + 1])));
-              seroIn = true;
-            }
-          } else {
+      if (!justOrderMode) {
+        num = 1;
+        for (let fileName of ghostPhotosFiles) {
+          tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + fileName);
+          await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
+          console.log(`download success`);
+          num++;
+        }
+    
+        targetPhotoDir = await garoseroParser.queryDirectory(process.cwd() + "/temp/" + pid);
+        finalGsTong = [];
+        seroIn = false;
+        for (let i = 0; i < targetPhotoDir.length; i++) {
+          if (targetPhotoDir[i].gs === "g") {
+            finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
             seroIn = false;
+          } else {
+            if (!seroIn) {
+              if (targetPhotoDir[i + 1] !== undefined && targetPhotoDir[i + 1].gs === "s") {
+                finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
+                finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i + 1])));
+                seroIn = true;
+              }
+            } else {
+              seroIn = false;
+            }
           }
         }
+    
+        await shellExec("rm", [ "-rf", this.options.photo_dir ]);
+        await shellExec("mkdir", [ this.options.photo_dir ]);
+        for (let obj of finalGsTong) {
+          await shellExec("mv", [ obj.file, this.options.photo_dir ])
+        }
+        await this.total_make(false);
+      } else {
+        await back.mongoDelete("contents", { "contents.portfolio.pid": pid }, { selfMongo: selfCoreMongo });
       }
-  
-      await shellExec("rm", [ "-rf", this.options.photo_dir ]);
-      await shellExec("mkdir", [ this.options.photo_dir ]);
-      for (let obj of finalGsTong) {
-        await shellExec("mv", [ obj.file, this.options.photo_dir ])
-      }
-  
-      await this.total_make(false);
-  
-      console.log(finalGsTong);
-  
+    
       noteContents = pid + "\n";
       noteContents += thisDesigner.designer + " 실장님";
       noteContents += "\n\n\n";

@@ -6881,7 +6881,7 @@ StaticRouter.prototype.rou_post_rawToContents = function () {
       const voice = false;
       const { pid } = equalJson(req.body);
 
-      filter.rawToContents(pid).then((boo) => {
+      filter.rawToContents(pid, false).then((boo) => {
         if (boo) {
           return messageSend({ text: pid + " 컨텐츠 자동 발행에 성공하였어요!", channel, voice });
         } else {
@@ -6893,6 +6893,49 @@ StaticRouter.prototype.rou_post_rawToContents = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_rawToContents): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_rawRepairOrder = function () {
+  const instance = this;
+  const { equalJson, dateToString, messageSend, stringToDate, objectDeepCopy, requestSystem, mysqlQuery, sleep, fileSystem, shellExec, shellLink, linkToString, uniqueValue } = this.mother;
+  const ROBOT_PATH = process.cwd();
+  const APP_PATH = ROBOT_PATH + "/apps";
+  const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
+  const filter = new PortfolioFilter();
+  let obj;
+  obj = {};
+  obj.link = [ "/rawRepairOrder" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.pid === undefined) {
+        throw new Error("invalid post");
+      }
+      const channel = "#502_sns_contents";
+      const voice = false;
+      const { pid } = equalJson(req.body);
+
+      filter.rawToContents(pid, false).then((boo) => {
+        if (boo) {
+          return messageSend({ text: pid + " 컨텐츠 순서 조정에 성공하였어요!", channel, voice });
+        } else {
+          return messageSend({ text: pid + " 컨텐츠 순서 조정에 실패하였어요, 다시 시도해주세요!", channel, voice });
+        }
+      }).catch((err) => {
+        logger.error("Static lounge 서버 문제 생김 (rou_post_rawRepairOrder): " + err.message).catch((e) => { console.log(e); })
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_rawRepairOrder): " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
