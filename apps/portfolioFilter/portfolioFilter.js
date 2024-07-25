@@ -618,7 +618,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         throw new Error(errorMessage);
       }
       for (let i of arr) {
-        if (i.client === undefined || i.designer === undefined || i.link === undefined) {
+        if (i.client === undefined || i.designer === undefined) {
           throw new Error(errorMessage);
         }
         this.push(i);

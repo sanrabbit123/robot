@@ -6742,13 +6742,12 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
                 targetFileName = tempString + "/" + toArr[num].replace(/^\//i, '');
                 await shellExec(`mv ${shellLink(path)} ${shellLink(targetFileName)}`);
                 await image.overOfficialImage(targetFileName);
-  
-                await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/rawToRawExcute", {
-                  designer, client
-                }, { headers: { "Content-Type": "application/json" } });
-
                 num++;
               }
+
+              await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/rawToRawExcute", {
+                designer, client
+              }, { headers: { "Content-Type": "application/json" } });
 
             })().catch((err) => { logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + err.message).catch((e) => { console.log(e); }); })
 
