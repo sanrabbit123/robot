@@ -6708,6 +6708,10 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
             for (let key of filesKey) {
               fromArr.push(files[key]);
             }
+            await shellExec("rm", [ "-rf", portfolioConst ]);
+            await shellExec("mkdir", [ portfolioConst ]);
+
+            console.log(fields)
 
             (async () => {
               num = 0;
@@ -6734,7 +6738,9 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
   
                 num++;
               }
-              
+
+
+
             })().catch((err) => { logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + err.message).catch((e) => { console.log(e); }); })
 
             res.send(JSON.stringify({ "message": "will do" }));
@@ -6771,18 +6777,17 @@ StaticRouter.prototype.rou_post_rawToRawExcute = function () {
     });
     try {
       if (req.body.requestArr === undefined) {
-        if (req.body.designer === undefined || req.body.id === undefined) {
+        if (req.body.designer === undefined) {
           throw new Error("invalid post");
         }
         const channel = "#502_sns_contents";
         const voice = false;
-        const { designer: designerRaw, id } = equalJson(req.body);
-        let client, designer, link, pay;
+        const { designer: designerRaw } = equalJson(req.body);
+        let client, designer, pay;
         let thisSetName;
 
         client = ((typeof req.body.client === "string" && req.body.client !== "null") ? req.body.client.trim() : null);
         designer = designerRaw.trim();
-        link = `https://drive.google.com/drive/folders/${id}`;
         pay = true;
 
         if (client !== null) {
@@ -6796,7 +6801,6 @@ StaticRouter.prototype.rou_post_rawToRawExcute = function () {
           {
             client,
             designer,
-            link,
             pay
           }
         ]).then((boo) => {
@@ -6810,19 +6814,17 @@ StaticRouter.prototype.rou_post_rawToRawExcute = function () {
         });
       } else {
         const requestArr = equalJson(req.body.requestArr);
-        let client, designer, link, pay;
+        let client, designer, pay;
         let tong;
 
         tong = [];
         for (let obj of requestArr) {
           client = obj.client;
           deisnger = obj.deisnger;
-          link = `https://drive.google.com/drive/folders/${obj.id}`;
           pay = true;
           tong.push(objectDeepCopy({
             client,
             deisnger,
-            link,
             pay
           }));
         }
@@ -6831,7 +6833,6 @@ StaticRouter.prototype.rou_post_rawToRawExcute = function () {
           {
             client,
             deisnger,
-            link,
             pay
           }
         ]).catch((err) => {

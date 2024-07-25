@@ -7492,16 +7492,6 @@ DevContext.prototype.launching = async function () {
     // raw photo to raw portfolio
     await instance.rawtorawSystem("박은하");
 
-    // raw video
-    // const filter = new PortfolioFilter();
-    // await filter.rawVideo([
-    //   {
-    //     client: "박지민",
-    //     designer: "김지영",
-    //   },
-    // ]);
-
-
     // when rawtoraw fail
 
     // const kakaoInstance = new KakaoTalk();
@@ -7681,7 +7671,6 @@ DevContext.prototype.rawtorawSystem = async function (designer, client = null) {
     fileList = await fileSystem("readFolder", [ targetResource ]);
     fileList.sort((a, b) => { return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, '')) });
     fromArr = objectDeepCopy(fileList).map((f) => { return targetResource + "/" + f });
-
 
     console.log(fromArr, toArr);
 

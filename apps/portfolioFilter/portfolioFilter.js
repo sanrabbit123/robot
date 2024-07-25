@@ -665,7 +665,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
     await this.static_setting();
 
-    for (let { client, designer, link } of arr) {
+    for (let { client, designer } of arr) {
 
       designers = await back.getDesignersByQuery({ designer: designer });
       if (designers.length > 1) {
@@ -696,10 +696,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         await fileSystem("write", [ `${notePath}/${nextPid} (발행대기)`, `${nextPid}\n${designer} 실장님 ${client} 고객님` ]);
 
-        folderPath = await drive.get_folder_inPython(link, nextPid, true);
-
-        await shellExec(`rm -rf ${shellLink(this.options.photo_dir)};`);
-        await shellExec(`cp -r ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
+        folderPath = this.options.photo_dir;
 
         this.clientName = client;
         this.designer = designer;
@@ -842,10 +839,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         await fileSystem("write", [ `${notePath}/${nextPid} (발행대기)`, `${nextPid}\n${designer} 실장님` ]);
 
-        folderPath = await drive.get_folder_inPython(link, nextPid, true);
-
-        await shellExec(`rm -rf ${shellLink(this.options.photo_dir)};`);
-        await shellExec(`cp -r ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
+        folderPath = this.options.photo_dir;
 
         this.clientName = "없음";
         this.designer = targetDesigner.designer;
