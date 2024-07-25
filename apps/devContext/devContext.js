@@ -4,58 +4,16 @@ const Mother = require(APP_PATH + "/mother.js");
 const BackMaker = require(APP_PATH + "/backMaker/backMaker.js");
 const BackReport = require(APP_PATH + "/backMaker/backReport.js");
 const BackWorker = require(APP_PATH + "/backMaker/backWorker.js");
-const GoogleAnalytics = require(APP_PATH + "/googleAPIs/googleAnalytics.js");
 const GoogleSheet = require(APP_PATH + "/googleAPIs/googleSheet.js");
-const GoogleDrive = require(APP_PATH + "/googleAPIs/googleDrive.js");
 const GoogleCalendar = require(APP_PATH + "/googleAPIs/googleCalendar.js");
-const GoogleDocs = require(APP_PATH + "/googleAPIs/googleDocs.js");
 const GoogleChrome = require(APP_PATH + "/googleAPIs/googleChrome.js");
-const GoogleAds = require(APP_PATH + "/googleAPIs/googleAds.js");
-const GoogleCloud = require(APP_PATH + "/googleAPIs/googleCloud.js");
-const AiGraph = require(APP_PATH + "/contentsMaker/aiGraph.js");
-const AiConsole = require(APP_PATH + "/contentsMaker/aiConsole.js");
-const AiContents = require(APP_PATH + "/contentsMaker/aiContents.js");
 const AppleNotes = require(APP_PATH + "/appleAPIs/appleNotes.js");
 const ContentsMaker = require(APP_PATH + "/contentsMaker/contentsMaker.js");
 const NaverAPIs = require(APP_PATH + "/naverAPIs/naverAPIs.js");
-const ResourceMaker = require(APP_PATH + "/resourceMaker/resourceMaker.js");
-const NotionAPIs = require(APP_PATH + "/notionAPIs/notionAPIs.js");
-const AddressParser = require(APP_PATH + "/addressParser/addressParser.js");
 const KakaoTalk = require(APP_PATH + "/kakaoTalk/kakaoTalk.js");
-const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
-const DataRouter = require(APP_PATH + "/dataConsole/router/dataRouter.js");
-const DataConsole = require(APP_PATH + "/dataConsole/dataConsole.js");
 const ParsingHangul = require(APP_PATH + "/parsingHangul/parsingHangul.js");
-const SnsParsing = require(APP_PATH + "/snsParsing/snsParsing.js");
-const PlayAudio = require(APP_PATH + "/playAudio/playAudio.js");
-const MongoReflection = require(APP_PATH + "/mongoReflection/mongoReflection.js");
-const SvgOptimizer = require(APP_PATH + "/svgOptimizer/svgOptimizer.js");
-const NaverBlogParsing = require(APP_PATH + "/naverAPIs/naverBlogParsing.js");
-const DataMiddle = require(APP_PATH + "/dataConsole/router/dataMiddle.js");
-const ReceiptObserver = require(APP_PATH + "/receiptObserver/receiptObserver.js");
-const GraphicBot = require(APP_PATH + "/graphicBot/graphicBot.js");
-const GaroseroParser = require(APP_PATH + "/garoseroParser/garoseroParser.js");
 const BillMaker = require(APP_PATH + "/billMaker/billMaker.js");
-const NativeNotifier = require(APP_PATH + "/nativeNotifier/nativeNotifier.js");
-const AppleCalendar = require(APP_PATH + "/appleAPIs/appleCalendar.js");
-const ExcelReader = require(APP_PATH + "/excelReader/excelReader.js");
-const ImageReader = require(APP_PATH + "/imageReader/imageReader.js");
-const LogConsole = require(APP_PATH + "/logConsole/logConsole.js");
-const FacebookAPIs = require(APP_PATH + "/facebookAPIs/facebookAPIs.js");
 const HumanPacket = require(APP_PATH + "/humanPacket/humanPacket.js");
-const HtmlMaker = require(APP_PATH + "/htmlMaker/htmlMaker.js");
-const ReadDocuments = require(APP_PATH + "/readDocuments/readDocuments.js");
-const AwsAPIs = require(APP_PATH + "/awsAPIs/awsAPIs.js");
-const CronGhost = require(APP_PATH + "/cronGhost/cronGhost.js");
-const TextDecorator = require(APP_PATH + "/textDecorator/textDecorator.js");
-const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
-const MicrosoftAPIs = require(`${process.cwd()}/apps/microsoftAPIs/microsoftAPIs.js`);
-const OpenAiAPIs = require(`${process.cwd()}/apps/openAiAPIs/openAiAPIs.js`);
-const LocalDevices = require(`${process.cwd()}/apps/localDevices/localDevices.js`);
-const RequestWhisk = require(`${process.cwd()}/apps/requestWhisk/requestWhisk.js`);
-const ContentsCalculator = require(`${process.cwd()}/apps/contentsLounge/router/contentsCalculator.js`);
-const GoogleYoutube = require(APP_PATH + "/googleAPIs/googleYoutube.js");
-const SpawnHuman = require(APP_PATH + "/spawnHuman/spawnHuman.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -7532,22 +7490,7 @@ DevContext.prototype.launching = async function () {
     // });
 
     // raw photo to raw portfolio
-    // console.log(await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawToRaw", {
-    //   client: "이지수",
-    //   designer: "조예경",
-    //   id: "1ftwXIJBtEB2bSpbveilqIzko1uh11Ux7",
-    // }, { headers: { "Content-Type": "application/json" } }));
-
-
-    // const filter = new PortfolioFilter();
-    // await filter.rawToRaw([
-    //   {
-    //     client: "한수미",
-    //     designer: "김소영",
-    //     link: "https://drive.google.com/drive/folders/1U7HDUv2wgyanB6KiVFqtBNp8t2GoZrkG",
-    //     pay: true
-    //   },
-    // ]);
+    await instance.rawtorawSystem("박은하");
 
     // raw video
     // const filter = new PortfolioFilter();
@@ -7610,13 +7553,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "박상희", "2024-07-24" ],
-    //   [ "강혜은", "2024-07-24" ],
-    //   [ "윤영은", "2024-07-24" ],
-    //   [ "유선희", "2024-07-24" ],
-    //   [ "박희주", "2024-07-24" ],
-    //   [ "유은희", "2024-07-24" ],
-    //   [ "김대현", "2024-07-24" ],
+    //   [ "정기현", "2024-07-24" ],
     // ]);
 
 
@@ -7653,8 +7590,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "김정현";
-    // const amount = 107_250;
+    // const name = "윤주영";
+    // const amount = 7_324_000;
     // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
 
 
@@ -7717,6 +7654,51 @@ DevContext.prototype.launching = async function () {
     console.log(`error`);
   }
 }
+
+DevContext.prototype.rawtorawSystem = async function (designer, client = null) {
+  const instance = this;
+  const address = this.address;
+  const { fileSystem, objectDeepCopy, generalFileUpload, shellExec } = this.mother;
+  const targetResource = process.env.HOME + "/portfolioFilter/resource";
+  try {
+    const photoKey = "rawtorawContents_";
+    let fileList;
+    let fromArr, toArr;
+    let num;
+    let exe;
+
+    fileList = await fileSystem("readFolder", [ targetResource ]);
+
+    num = 0;
+    toArr = [];
+    for (let f of fileList) {
+      exe = f.split(".")[f.split(".").length - 1];
+      await shellExec("mv", [ targetResource + "/" + f, targetResource + "/" + photoKey + String(num) + "." + exe ]);
+      toArr.push(photoKey + String(num) + "." + exe);
+      num++;
+    }
+
+    fileList = await fileSystem("readFolder", [ targetResource ]);
+    fileList.sort((a, b) => { return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, '')) });
+    fromArr = objectDeepCopy(fileList).map((f) => { return targetResource + "/" + f });
+
+
+    console.log(fromArr, toArr);
+
+    if (client === null) {
+      await generalFileUpload("https://" + instance.address.officeinfo.ghost.host + ":" + String(3001) + "/rawToRaw", fromArr, toArr, { designer })
+    } else {
+      await generalFileUpload("https://" + instance.address.officeinfo.ghost.host + ":" + String(3001) + "/rawToRaw", fromArr, toArr, { designer, client })
+    }
+
+    return { message: "done" };
+
+  } catch (e) {
+    console.log(e);
+    return { error: e.message };
+  }
+}
+
 
 DevContext.prototype.exceptionPid = async function () {
   const instance = this;

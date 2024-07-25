@@ -870,19 +870,13 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         }
         console.log(`original copy done`);
 
-        await sleep(1000);
+        await sleep(500);
 
-        zipLinks = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/zipPhoto", { pid: nextPid, proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
-        shareLinkDeginer = zipLinks.designer;
-        shareGoogleIdDesigner = drive.parsingId(shareLinkDeginer);
         await shellExec(`rm -rf ${shellLink(folderPath)};`);
         console.log(`${designer}D raw to raw done`);
 
       }
     }
-
-    await requestSystem("https://" + address.contentsinfo.host + ":3000/contentsSchedule", { data: null }, { headers: { "Content-Type": "application/json" } });
-
     await selfMongo.close();
     return true;
   } catch (e) {

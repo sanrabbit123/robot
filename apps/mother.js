@@ -1466,7 +1466,7 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
   });
 }
 
-Mother.prototype.generalFileUpload = function (url, fromArr, toArr) {
+Mother.prototype.generalFileUpload = function (url, fromArr, toArr, etcPost = {}) {
   if (typeof url !== "string" || !Array.isArray(fromArr) || !Array.isArray(toArr)) {
     throw new Error("input must be url, from array, to array");
   }
@@ -1488,6 +1488,10 @@ Mother.prototype.generalFileUpload = function (url, fromArr, toArr) {
     for (let fileName of fromArr) {
       form.append("file" + String(num), fs.readFileSync(fileName));
       num++;
+    }
+
+    for (let key in etcPost) {
+      form.append(key, etcPost[key]);
     }
 
     form.getLength((err, length) => {

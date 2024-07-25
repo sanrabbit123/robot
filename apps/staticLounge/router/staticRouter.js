@@ -59,6 +59,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, MO
   this.human = human;
 
   this.staticConst = process.env.HOME + "/samba";
+  this.portfolioConst = process.env.HOME + "/portfolioFilter/resource";
   this.sambaToken = "__samba__";
   this.homeliaisonOfficeConst = this.address.officeinfo.ghost.file.office;
   this.designerPhotoConst = "사진_등록_포트폴리오";
@@ -1366,12 +1367,12 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
                 microsoftResult = await microsoft.uploadDocument(osTempFolder + "/" + thisFileName);
                 await sleep(500);
                 await shellExec(`rm -rf ${shellLink(osTempFolder + "/" + thisFileName)}`);
-                await fileSystem(`writeJson`, [ microsoft.localToOneDriveName(staticConst + "/" + toArr[num].replace(/^\//i, '')), {
+                await fileSystem(`writeJson`, [ microsoft.localToOneDriveName(tempString + "/" + toArr[num].replace(/^\//i, '')), {
                   url: microsoftResult.editUrl,
                   ...microsoftResult
                 } ]);
               } else {
-                await shellExec(`mv ${shellLink(path)} ${shellLink(staticConst + "/" + toArr[num].replace(/^\//i, ''))}`);
+                await shellExec(`mv ${shellLink(path)} ${shellLink(tempString + "/" + toArr[num].replace(/^\//i, ''))}`);
               }
               num++;
             }
@@ -6670,6 +6671,86 @@ StaticRouter.prototype.rou_post_metaAccountCheck = function () {
 
 StaticRouter.prototype.rou_post_rawToRaw = function () {
   const instance = this;
+  const { fileSystem, shellExec, shellLink, sleep } = this.mother;
+  const { portfolioConst } = this;
+  const hangul = this.hangul;
+  const image = this.imageReader;
+  let obj;
+  obj = {};
+  obj.link = [ "/rawToRaw" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        try {
+          if (err) {
+            throw new Error(err);
+          } else {
+            const toArr = JSON.parse(fields.toArr).map((path) => { return hangul.fixString(path); });
+            let filesKey, fromArr, num;
+            let tempArr, tempString, tempDir;
+            let thisFileName;
+            let thisFileExe;
+            let targetFileName;
+
+            filesKey = Object.keys(files);
+            filesKey.sort((a, b) => {
+              return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, ''));
+            });
+
+            fromArr = [];
+            for (let key of filesKey) {
+              fromArr.push(files[key]);
+            }
+
+            num = 0;
+            for (let { filepath: path } of fromArr) {
+              tempArr = toArr[num].split("/");
+              thisFileName = tempArr[tempArr.length - 1];
+              thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
+              tempString = portfolioConst;
+              if (tempArr.length === 0) {
+                throw new Error("invaild to array");
+              }
+              for (let i = 0; i < tempArr.length - 1; i++) {
+                tempDir = await fileSystem(`readDir`, [ tempString ]);
+                if (!tempDir.includes(tempArr[i]) && tempArr[i] !== "") {
+                  await shellExec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
+                }
+                tempString += '/';
+                tempString += tempArr[i];
+              }
+
+              targetFileName = tempString + "/" + toArr[num].replace(/^\//i, '');
+              await shellExec(`mv ${shellLink(path)} ${shellLink(targetFileName)}`);
+              await image.overOfficialImage(targetFileName);
+
+              num++;
+            }
+
+            res.send(JSON.stringify({ "message": "done" }));
+          }
+        } catch (e) {
+          logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + e.message).catch((e) => { console.log(e); });
+          res.send(JSON.stringify({ message: "error : " + e.message }));
+        }
+      });
+    } catch (e) {
+      logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_rawToRawExcute = function () {
+  const instance = this;
   const { equalJson, dateToString, messageSend, stringToDate, objectDeepCopy, requestSystem, mysqlQuery, sleep, fileSystem, shellExec, shellLink, linkToString, uniqueValue } = this.mother;
   const ROBOT_PATH = process.cwd();
   const APP_PATH = ROBOT_PATH + "/apps";
@@ -6677,7 +6758,7 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
   const filter = new PortfolioFilter();
   let obj;
   obj = {};
-  obj.link = [ "/rawToRaw" ];
+  obj.link = [ "/rawToRawExcute" ];
   obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
@@ -6696,7 +6777,7 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
         let client, designer, link, pay;
         let thisSetName;
 
-        client = (typeof req.body.client === "string" ? req.body.client.trim() : null);
+        client = ((typeof req.body.client === "string" && req.body.client !== "null") ? req.body.client.trim() : null);
         designer = designerRaw.trim();
         link = `https://drive.google.com/drive/folders/${id}`;
         pay = true;
@@ -6751,12 +6832,12 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
             pay
           }
         ]).catch((err) => {
-          logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + err.message).catch((e) => { console.log(e); })
+          logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRawExcute): " + err.message).catch((e) => { console.log(e); })
         });
       }
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      await logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + e.message);
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRawExcute): " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

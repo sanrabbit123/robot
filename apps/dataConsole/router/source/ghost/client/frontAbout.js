@@ -5811,7 +5811,7 @@ FrontAboutJs.prototype.portfolioBlock = function (limitLength, search = null, so
                 height: String(photoHeight) + ea,
                 borderRadius: String(radiusPixel) + "px",
                 marginBottom: String(photoMarginBottom) + ea,
-                backgroundSize: "100% auto",
+                backgroundSize: "100% 100%",
                 backgroundPosition: "50% 50%",
                 backgroundImage: "url('" + src + "')",
               }

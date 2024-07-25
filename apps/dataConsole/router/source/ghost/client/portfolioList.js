@@ -1398,7 +1398,7 @@ PortfolioListJs.prototype.portfolioBlock = function (limitLength, search = null,
                 height: String(photoHeight) + ea,
                 borderRadius: String(radiusPixel) + "px",
                 marginBottom: String(photoMarginBottom) + ea,
-                backgroundSize: gsArray[i] === 'g' ? "100% 100%" : "100% auto",
+                backgroundSize: gsArray[i] === 'g' ? "100% 100%" : "100% 100%",
                 backgroundPosition: "50% 50%",
                 backgroundImage: "url('" + src + "')",
               }
