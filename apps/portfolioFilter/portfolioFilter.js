@@ -709,8 +709,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         folderPathList = await fileSystem(`readFolder`, [ folderPath ]);
 
-        console.log("this => ", folderPath, folderPathList)
-
         fromArr = [];
         toArr = [];
 
@@ -854,6 +852,9 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
         fromArr = [];
         toArr = [];
+
+        console.log("this => ", folderPath, folderPathList)
+
 
         try {
           await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}` ]);
