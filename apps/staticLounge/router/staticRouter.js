@@ -6739,8 +6739,6 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
                 num++;
               }
 
-
-
             })().catch((err) => { logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + err.message).catch((e) => { console.log(e); }); })
 
             res.send(JSON.stringify({ "message": "will do" }));
