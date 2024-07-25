@@ -153,8 +153,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const filter = new PortfolioFilter();
-    await filter.updateSubject();
+    // const filter = new PortfolioFilter();
+    // await filter.updateSubject();
+
+    await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawToContents", {
+      pid: "a131"
+    }, { headers: { "Content-Type": "application/json" } });
 
 
     // const selfMongo = this.MONGOC;
