@@ -1448,9 +1448,11 @@ PortfolioFilter.prototype.rawToContents = async function (pid) {
       [ targetRaw ] = await back.mongoRead(rawCollection, { "addition.pid": pid }, { selfMongo: selfSecondMongo });
       ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, { headers: { "Content-Type": "application/json" } }));
       ghostPhotos = ghostPhotos.data.filter((o) => { return (new RegExp("^" + pid + "_")).test(o.fileName) });
+      
       thisFolderName = ghostPhotos[0].fileName;
       thisDesignerName = thisFolderName.split("_")[1].trim()
 
+      ghostPhotos = ghostPhotos[0].fileName;
       ghostPhotosFiles = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + ghostPhotos + "/" + pid }, { headers: { "Content-Type": "application/json" } }));
       ghostPhotosFiles = ghostPhotosFiles.data.map((o) => { return o.fileName });
 
