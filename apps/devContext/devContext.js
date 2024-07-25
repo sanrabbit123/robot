@@ -7490,9 +7490,7 @@ DevContext.prototype.launching = async function () {
     // });
 
     // raw photo to raw portfolio
-    await instance.rawtorawSystem("박은하");
-
-    // when rawtoraw fail
+    await instance.rawtorawSystem("박은하", null);
 
     // const kakaoInstance = new KakaoTalk();
     // let projects;
