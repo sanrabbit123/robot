@@ -856,6 +856,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         fromArr = [];
         toArr = [];
 
+        console.log(folderPath, folderPathList);
+
         try {
           await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}` ]);
         } catch {}
