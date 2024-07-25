@@ -673,11 +673,14 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         for (let i = 0; i < designers.length; i++) {
           console.log(`exceptionId : ${String(i + 1)} => designer : ${i.designer} / desid : ${i.desid}`);
         }
-        consoleInput = 1
+        consoleInput = "1"
         targetDesigner = designers[Number(consoleInput.replace(/[^0-9]/g, '')) - 1].toNormal();
       } else {
         targetDesigner = designers[0].toNormal();
       }
+
+      await shellExec("rm", [ "-rf", `${process.cwd()}/temp/resource` ])
+      await shellExec("cp", [ "-r", this.options.photo_dir, `${process.cwd()}/temp/` ]);
 
       if (client !== null) {
 
@@ -696,7 +699,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         await fileSystem("write", [ `${notePath}/${nextPid} (발행대기)`, `${nextPid}\n${designer} 실장님 ${client} 고객님` ]);
 
-        folderPath = this.options.photo_dir;
+        folderPath = `${process.cwd()}/temp/resource`;
 
         this.clientName = client;
         this.designer = designer;
@@ -839,7 +842,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         await fileSystem("write", [ `${notePath}/${nextPid} (발행대기)`, `${nextPid}\n${designer} 실장님` ]);
 
-        folderPath = this.options.photo_dir;
+        folderPath = `${process.cwd()}/temp/resource`;
 
         this.clientName = "없음";
         this.designer = targetDesigner.designer;
@@ -852,9 +855,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
         fromArr = [];
         toArr = [];
-
-        console.log("this => ", folderPath, folderPathList)
-
 
         try {
           await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}` ]);
@@ -869,7 +869,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         await sleep(500);
 
-        await shellExec(`rm -rf ${shellLink(folderPath)};`);
         console.log(`${designer}D raw to raw done`);
 
       }
