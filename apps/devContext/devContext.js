@@ -31,134 +31,6 @@ const DevContext = function () {
   this.dir = `${process.cwd()}/apps/devContext`;
 }
 
-DevContext.prototype.updateSubject = async function (pid) {
-  const instance = this;
-  const address = this.address;
-  const back = this.back;
-  const { consoleQ } = this.mother;
-  try {
-    await this.MONGOCONTENTSC.connect();
-    await this.MONGOSECONDC.connect();
-    await this.MONGOC.connect();
-    const selfMongo = this.MONGOCONTENTSC;
-    const selfCoreMongo = this.MONGOC;
-    const selfSecondMongo = this.MONGOSECONDC;
-    const bar = "================================================"
-    const targetPid = pid;
-    const collection = "foreContents";
-    const rawCollection = "designerRawContents";
-    const toNormal = true;
-    let targetFores;
-    let targetContents;
-    let proid;
-    let targetRaw;
-    let targetBody;
-    let tong;
-    let thisBlank;
-    let targetText;
-    let frontText;
-    let backText;
-    let frontEnd;
-    let backEnd;
-    let project, client;
-    let subjectInput;
-    let apartInput;
-    let regionInput;
-
-
-    [ targetFores ] = await back.mongoRead(collection, { pid: targetPid }, { selfMongo });
-    proid = targetFores.proid;
-    [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
-    project = await back.getProjectById(proid, { selfMongo: selfCoreMongo, toNormal });
-    client = await back.getClientById(project.cliid, { selfMongo: selfCoreMongo, toNormal });
-
-    tong = [];
-    targetBody = targetRaw.contents.body.split("\n").filter((s) => {
-      return !/고객 상황에 대한 이야기/gi.test(s);
-    }).filter((s) => {
-      return !/고객이 원하는 스타일에 대한 이야기/gi.test(s);
-    }).filter((s) => {
-      return !/디자이너의 공간별 디자인 의도 이야기/gi.test(s);
-    }).filter((s) => {
-      return !/^[0-9][ ]*\./gi.test(s.trim());
-    }).join("\n").trim().split("\n");
-
-    thisBlank = false;
-    tong = [];
-    for (let i = 0; i < targetBody.length; i++) {
-      targetText = targetBody[i].trim();
-      if (targetText === '') {
-        if (thisBlank) {
-          // pass
-        } else {
-          tong.push(targetText);
-        }
-        thisBlank = true;
-      } else {
-        tong.push(targetText);
-        thisBlank = false;
-      }
-    }
-    frontText = '';
-    backText = '';
-    frontEnd = false;
-    backEnd = false;
-    for (let i = 0; i < tong.length; i++) {
-      if (tong[i] !== '' && /^[^a-zA-Z가-힣\.]/gi.test(tong[i])) {
-        frontEnd = true;
-      }
-      if (frontEnd) {
-        backText += tong[i].replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim() + "\n";
-      } else {
-        frontText += tong[i].trim() + " ";
-        if (frontText.length > 500) {
-          frontEnd = true;
-        }
-      }
-    }
-
-    console.log(frontText);
-    console.log(bar);
-    console.log(client.requests[0].request.space.pyeong);
-    console.log(bar);
-    console.log(client.requests[0].request.space.address);
-
-    subjectInput = await consoleQ("please insert this subject :\n");
-    apartInput = await consoleQ("please insert this apart :\n");
-    regionInput = await consoleQ("please insert this region :\n");
-
-    console.log(subjectInput);
-    console.log(bar);
-    console.log(apartInput);
-    console.log(bar);
-    console.log(regionInput);
-    console.log(bar);
-    console.log(client.requests[0].request.space.pyeong);
-
-    await back.mongoUpdate(rawCollection, [ { proid }, {
-      addition: {
-        pid,
-        subject: subjectInput.trim(),
-        apart: apartInput.trim(),
-        region: regionInput.trim(),
-        pyeong: client.requests[0].request.space.pyeong,
-        text: {
-          front: frontText,
-          back: backText
-        },
-      }
-    } ], { selfMongo: selfSecondMongo });
-
-
-    await this.MONGOCONTENTSC.close();
-    await this.MONGOSECONDC.close();
-    await this.MONGOC.close();
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
@@ -277,9 +149,6 @@ DevContext.prototype.launching = async function () {
 
     // const res = await requestSystem("https://" + address.officeinfo.ghost.host + "/analyticsToday", { report: 1 }, { headers: { "Content-Type": "application/json" } });
     // console.log(res);
-
-
-
 
 
 
@@ -7490,7 +7359,7 @@ DevContext.prototype.launching = async function () {
     // });
 
     // raw photo to raw portfolio
-    await instance.rawtorawSystem("박은하", null);
+    // await instance.rawtorawSystem("박은하", null);
 
     // const kakaoInstance = new KakaoTalk();
     // let projects;

@@ -1061,6 +1061,7 @@ PortfolioFilter.prototype.updateSubject = async function () {
     const collection = "foreContents";
     const rawCollection = "designerRawContents";
     const toNormal = true;
+    const photoFolderConst = "사진_등록_포트폴리오";
     let targetFores;
     let targetContents;
     let proid;
@@ -1080,91 +1081,184 @@ PortfolioFilter.prototype.updateSubject = async function () {
     let pid;
     let targetPid;
     let addressArr;
+    let contents;
+    let ghostPhotos;
+    let thisFolderName;
+    let thisDesignerName;
+    let thisDesid;
+    let thisDesigner;
 
     pid = await consoleQ("pid? : \n");
 
-    targetPid = pid;
-    [ targetFores ] = await back.mongoRead(collection, { pid: targetPid }, { selfMongo });
-    proid = targetFores.proid;
-    [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
-    project = await back.getProjectById(proid, { selfMongo: selfCoreMongo, toNormal });
-    client = await back.getClientById(project.cliid, { selfMongo: selfCoreMongo, toNormal });
-
-    tong = [];
-    targetBody = targetRaw.contents.body.split("\n").filter((s) => {
-      return !/고객 상황에 대한 이야기/gi.test(s);
-    }).filter((s) => {
-      return !/고객이 원하는 스타일에 대한 이야기/gi.test(s);
-    }).filter((s) => {
-      return !/디자이너의 공간별 디자인 의도 이야기/gi.test(s);
-    }).filter((s) => {
-      return !/^[0-9][ ]*\./gi.test(s.trim());
-    }).join("\n").trim().split("\n");
-
-    thisBlank = false;
-    tong = [];
-    for (let i = 0; i < targetBody.length; i++) {
-      targetText = targetBody[i].trim();
-      if (targetText === '') {
-        if (thisBlank) {
-          // pass
+    if (/^p/.test(pid.trim())) {
+      targetPid = pid;
+      [ targetFores ] = await back.mongoRead(collection, { pid: targetPid }, { selfMongo });
+      proid = targetFores.proid;
+      [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
+      project = await back.getProjectById(proid, { selfMongo: selfCoreMongo, toNormal });
+      client = await back.getClientById(project.cliid, { selfMongo: selfCoreMongo, toNormal });
+  
+      tong = [];
+      targetBody = targetRaw.contents.body.split("\n").filter((s) => {
+        return !/고객 상황에 대한 이야기/gi.test(s);
+      }).filter((s) => {
+        return !/고객이 원하는 스타일에 대한 이야기/gi.test(s);
+      }).filter((s) => {
+        return !/디자이너의 공간별 디자인 의도 이야기/gi.test(s);
+      }).filter((s) => {
+        return !/^[0-9][ ]*\./gi.test(s.trim());
+      }).join("\n").trim().split("\n");
+  
+      thisBlank = false;
+      tong = [];
+      for (let i = 0; i < targetBody.length; i++) {
+        targetText = targetBody[i].trim();
+        if (targetText === '') {
+          if (thisBlank) {
+            // pass
+          } else {
+            tong.push(targetText);
+          }
+          thisBlank = true;
         } else {
           tong.push(targetText);
+          thisBlank = false;
         }
-        thisBlank = true;
-      } else {
-        tong.push(targetText);
-        thisBlank = false;
       }
-    }
-    frontText = '';
-    backText = '';
-    frontEnd = false;
-    backEnd = false;
-    for (let i = 0; i < tong.length; i++) {
-      if (tong[i] !== '' && /^[^a-zA-Z가-힣\.]/gi.test(tong[i])) {
-        frontEnd = true;
-      }
-      if (frontEnd) {
-        backText += tong[i].replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim() + "\n";
-      } else {
-        frontText += tong[i].trim() + " ";
-        if (frontText.length > 500) {
+      frontText = '';
+      backText = '';
+      frontEnd = false;
+      backEnd = false;
+      for (let i = 0; i < tong.length; i++) {
+        if (tong[i] !== '' && /^[^a-zA-Z가-힣0-9\.]/gi.test(tong[i])) {
           frontEnd = true;
         }
+        if (tong[i] !== '' && /^(현관|거실|복도|주방|침실|안방|Entrance|entrance|living|Living|kitchen|Kitchen)/gi.test(tong[i])) {
+          frontEnd = true;
+        }
+        if (frontEnd) {
+          backText += tong[i].replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim() + "\n";
+        } else {
+          frontText += tong[i].trim() + " ";
+          if (frontText.length > 500) {
+            frontEnd = true;
+          }
+        }
       }
-    }
+  
+      console.log(frontText);
+      console.log(bar);
+      console.log(client.requests[0].request.space.address);
+  
+      addressArr = client.requests[0].request.space.address.split(" ").map((s) => { return s.trim() });
+      subjectInput = await consoleQ("please insert this subject :\n");
+      apartInput = await consoleQ("please insert this apart :\n");
+      regionInput = addressArr[0].slice(0, 2) + " " + addressArr[1];
+  
+      console.log(subjectInput);
+      console.log(bar);
+      console.log(apartInput);
+      console.log(bar);
+      console.log(regionInput);
+      console.log(bar);
+      console.log(client.requests[0].request.space.pyeong);
 
-    console.log(frontText);
-    console.log(bar);
-    console.log(client.requests[0].request.space.address);
+      await back.mongoUpdate(rawCollection, [ { proid }, {
+        addition: {
+          pid,
+          subject: subjectInput.trim(),
+          apart: apartInput.trim(),
+          region: regionInput.trim(),
+          pyeong: client.requests[0].request.space.pyeong,
+          text: {
+            front: frontText,
+            back: backText
+          },
+        }
+      } ], { selfMongo: selfSecondMongo });
 
-    addressArr = client.requests[0].request.space.address.split(" ").map((s) => { return s.trim() });
-    subjectInput = await consoleQ("please insert this subject :\n");
-    apartInput = await consoleQ("please insert this apart :\n");
-    regionInput = addressArr[0].slice(0, 2) + " " + addressArr[1];
+    } else {
 
-    console.log(subjectInput);
-    console.log(bar);
-    console.log(apartInput);
-    console.log(bar);
-    console.log(regionInput);
-    console.log(bar);
-    console.log(client.requests[0].request.space.pyeong);
+      ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, { headers: { "Content-Type": "application/json" } })).data.map(({ fileName }) => { return fileName });
+      thisFolderName = ghostPhotos.find((a) => { return (new RegExp("^" + pid)).test(a) })
+      thisDesignerName = thisFolderName.split("_")[1].trim()
+      [ thisDesigner ] = await back.mongoRead("designer", { designer: thisDesignerName }, { selfMongo: selfCoreMongo });
+      thisDesid = thisDesigner.desid;
 
-    await back.mongoUpdate(rawCollection, [ { proid }, {
-      addition: {
-        pid,
-        subject: subjectInput.trim(),
-        apart: apartInput.trim(),
-        region: regionInput.trim(),
-        pyeong: client.requests[0].request.space.pyeong,
-        text: {
-          front: frontText,
-          back: backText
+      contents = await consoleQ("contents? : \n");
+      contents = contents.trim();
+
+      tong = [];
+      targetBody = contents.split("\n").filter((s) => {
+        return !/고객 상황에 대한 이야기/gi.test(s);
+      }).filter((s) => {
+        return !/고객이 원하는 스타일에 대한 이야기/gi.test(s);
+      }).filter((s) => {
+        return !/디자이너의 공간별 디자인 의도 이야기/gi.test(s);
+      }).filter((s) => {
+        return !/^[0-9][ ]*\./gi.test(s.trim());
+      }).join("\n").trim().split("\n");
+  
+      thisBlank = false;
+      tong = [];
+      for (let i = 0; i < targetBody.length; i++) {
+        targetText = targetBody[i].trim();
+        if (targetText === '') {
+          if (thisBlank) {
+            // pass
+          } else {
+            tong.push(targetText);
+          }
+          thisBlank = true;
+        } else {
+          tong.push(targetText);
+          thisBlank = false;
+        }
+      }
+      frontText = '';
+      backText = '';
+      frontEnd = false;
+      backEnd = false;
+      for (let i = 0; i < tong.length; i++) {
+        if (tong[i] !== '' && /^[^a-zA-Z가-힣0-9\.]/gi.test(tong[i])) {
+          frontEnd = true;
+        }
+        if (tong[i] !== '' && /^(현관|거실|복도|주방|침실|안방|Entrance|entrance|living|Living|kitchen|Kitchen)/gi.test(tong[i])) {
+          frontEnd = true;
+        }
+        if (frontEnd) {
+          backText += tong[i].replace(/^[^a-zA-Z가-힣]/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim().replace(/[^a-zA-Z가-힣0-9\.\,\?\!\~]$/gi, '').trim() + "\n";
+        } else {
+          frontText += tong[i].trim() + " ";
+          if (frontText.length > 500) {
+            frontEnd = true;
+          }
+        }
+      }
+
+      await back.mongoCreate(rawCollection, {
+        proid: "",
+        desid: thisDesid,
+        cliid: "",
+        date: new Date(),
+        contents: {
+          type: "web",
+          body: contents,
         },
-      }
-    } ], { selfMongo: selfSecondMongo });
+        addition: {
+          pid,
+          subject: subjectInput.trim(),
+          apart: apartInput.trim(),
+          region: regionInput.trim(),
+          pyeong: client.requests[0].request.space.pyeong,
+          text: {
+            front: frontText,
+            back: backText
+          },
+        }
+      }, { selfMongo: selfSecondMongo });
+
+    }
 
     await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawToContents", {
       pid
@@ -1173,6 +1267,7 @@ PortfolioFilter.prototype.updateSubject = async function () {
     await selfMongo.close();
     await selfCoreMongo.close();
     await selfSecondMongo.close();
+
   } catch (e) {
     console.log(e);
     await selfMongo.close();
@@ -1218,114 +1313,224 @@ PortfolioFilter.prototype.rawToContents = async function (pid) {
     let seroIn;
     let noteContents;
     let noteArr;
+    let thisDesignerName;
+    let thisDesid;
 
-    [ targetFores ] = await back.mongoRead(collection, { pid }, { selfMongo });
-    proid = targetFores.proid;
-    [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
+    if (/^p/.test(pid.trim())) {
 
-    thisProject = await back.getProjectById(proid, { selfMongo: selfCoreMongo, toNormal });
-    thisClient = await back.getClientById(thisProject.cliid, { selfMongo: selfCoreMongo, toNormal });
-    thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: selfCoreMongo, toNormal });
-
-    this.clientName = thisClient.name;
-    this.designer = thisDesigner.designer;
-    this.apartName = "아파트";
-    this.pid = pid;
-
-    ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, { headers: { "Content-Type": "application/json" } }));
-    ghostPhotos = ghostPhotos.data.filter((o) => { return (new RegExp("^" + pid + "_")).test(o.fileName) });
-    ghostPhotos = ghostPhotos[0].fileName;
-
-    ghostPhotosFiles = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + ghostPhotos + "/" + pid }, { headers: { "Content-Type": "application/json" } }));
-    ghostPhotosFiles = ghostPhotosFiles.data.map((o) => { return o.fileName });
-
-    await tempDelete();
-    if (await fileSystem("exist", [ process.cwd() + "/temp/" + pid ])) {
-      await shellExec("rm", [ "-rf", process.cwd() + "/temp/" + pid ]);
-    }
-    await shellExec("mkdir", [ process.cwd() + "/temp/" + pid ]);
-
-    num = 1;
-    for (let fileName of ghostPhotosFiles) {
-      tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + fileName);
-      await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
-      console.log(`download success`);
-      num++;
-    }
-
-    targetPhotoDir = await garoseroParser.queryDirectory(process.cwd() + "/temp/" + pid);
-    finalGsTong = [];
-    seroIn = false;
-    for (let i = 0; i < targetPhotoDir.length; i++) {
-      if (targetPhotoDir[i].gs === "g") {
-        finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
-        seroIn = false;
-      } else {
-        if (!seroIn) {
-          if (targetPhotoDir[i + 1] !== undefined && targetPhotoDir[i + 1].gs === "s") {
-            finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
-            finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i + 1])));
-            seroIn = true;
-          }
-        } else {
+      [ targetFores ] = await back.mongoRead(collection, { pid }, { selfMongo });
+      proid = targetFores.proid;
+      [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
+  
+      thisProject = await back.getProjectById(proid, { selfMongo: selfCoreMongo, toNormal });
+      thisClient = await back.getClientById(thisProject.cliid, { selfMongo: selfCoreMongo, toNormal });
+      thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: selfCoreMongo, toNormal });
+  
+      this.clientName = thisClient.name;
+      this.designer = thisDesigner.designer;
+      this.apartName = "아파트";
+      this.pid = pid;
+  
+      ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, { headers: { "Content-Type": "application/json" } }));
+      ghostPhotos = ghostPhotos.data.filter((o) => { return (new RegExp("^" + pid + "_")).test(o.fileName) });
+      ghostPhotos = ghostPhotos[0].fileName;
+  
+      ghostPhotosFiles = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + ghostPhotos + "/" + pid }, { headers: { "Content-Type": "application/json" } }));
+      ghostPhotosFiles = ghostPhotosFiles.data.map((o) => { return o.fileName });
+  
+      await tempDelete();
+      if (await fileSystem("exist", [ process.cwd() + "/temp/" + pid ])) {
+        await shellExec("rm", [ "-rf", process.cwd() + "/temp/" + pid ]);
+      }
+      await shellExec("mkdir", [ process.cwd() + "/temp/" + pid ]);
+  
+      num = 1;
+      for (let fileName of ghostPhotosFiles) {
+        tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + fileName);
+        await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
+        console.log(`download success`);
+        num++;
+      }
+  
+      targetPhotoDir = await garoseroParser.queryDirectory(process.cwd() + "/temp/" + pid);
+      finalGsTong = [];
+      seroIn = false;
+      for (let i = 0; i < targetPhotoDir.length; i++) {
+        if (targetPhotoDir[i].gs === "g") {
+          finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
           seroIn = false;
+        } else {
+          if (!seroIn) {
+            if (targetPhotoDir[i + 1] !== undefined && targetPhotoDir[i + 1].gs === "s") {
+              finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
+              finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i + 1])));
+              seroIn = true;
+            }
+          } else {
+            seroIn = false;
+          }
         }
       }
+  
+      await shellExec("rm", [ "-rf", this.options.photo_dir ]);
+      await shellExec("mkdir", [ this.options.photo_dir ]);
+      for (let obj of finalGsTong) {
+        await shellExec("mv", [ obj.file, this.options.photo_dir ])
+      }
+  
+      await this.total_make(false);
+  
+      console.log(finalGsTong);
+  
+      noteContents = pid + "\n";
+      noteContents += thisDesigner.designer + " 실장님 " + thisClient.name + " 고객님";
+      noteContents += "\n\n\n";
+      noteContents += targetRaw.addition.subject.trim() + ", " + targetRaw.addition.apart.trim() + " " + String(targetRaw.addition.pyeong) + "py " + "홈스타일링";
+      noteContents += "\n\n\n";
+      noteContents += targetRaw.addition.text.front.trim();
+      noteContents += "\n\n\n";
+      noteContents += "1 - " + String(finalGsTong.length);
+      noteContents += "\n\n\n";
+      noteContents += "Space\n\n" + targetRaw.addition.text.back.trim().replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n");
+      noteContents += "\n\n\n";
+      noteContents += "_info\n\n"
+      noteContents += thisDesigner.desid + "\n\n"
+      noteContents += "_portfolio\n\n"
+      noteContents += "_1\n\n"
+      noteContents += targetRaw.addition.subject.trim() + ", " + targetRaw.addition.apart.trim() + " 홈스타일링\n\n"
+      noteContents += targetRaw.addition.region.trim() + "\n\n"
+      noteContents += "아파트 홈스타일링\n\n"
+      noteContents += "_2\n\n"
+      noteContents += "세로 / 가로\n\n"
+      noteContents += String(finalGsTong.map((o, index) => { o.realIndex = index; return o; }).find((o) => { return o.gs === "s" }).realIndex + 1) + " " + String(finalGsTong.map((o, index) => { o.realIndex = index; return o; }).find((o) => { return o.gs === "g" }).realIndex + 1) + "\n\n";
+      noteContents += "슬라이드\n\n"
+      noteContents += "1 2 3 4 5 6 7 8 9\n\n"
+      noteContents += "태그\n\n"
+      noteContents += "all,아파트,수루배,블루,모던,화이트,세종,세종시,서재,거실\n\n"
+      noteContents += "서비스\n\n"
+      noteContents += "홈스타일링\n\n"
+      noteContents += "Key8\n\n"
+      noteContents += "820\n\n"
+      noteContents += "Key9\n\n"
+      noteContents += dateToString(new Date(), true).slice(2).replace(/[^0-9]/gi, '') + "\n\n"
+      noteContents += "\n\n\n";
+  
+      await fileSystem("write", [ notePath + "/" + pid + ".txt", noteContents ]);
+      noteArr = noteContents.split("\n").map((s) => { return s.trim() }).filter((s) => { return s !== "" });
+      resource.p_id = pid;
+      console.log("write sucess");
+  
+      await resource.launching(noteArr);
+  
+      await messageSend({ text: `${thisClient.name} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
+      await requestSystem("https://" + address.officeinfo.ghost.host + ":3001/syncEvaluationContents", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
+  
+    } else {
+
+      [ targetRaw ] = await back.mongoRead(rawCollection, { "addition.pid": pid }, { selfMongo: selfSecondMongo });
+      ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, { headers: { "Content-Type": "application/json" } }));
+      ghostPhotos = ghostPhotos.data.filter((o) => { return (new RegExp("^" + pid + "_")).test(o.fileName) });
+      ghostPhotos = ghostPhotos[0].fileName;
+      thisDesignerName = thisFolderName.split("_")[1].trim()
+
+      ghostPhotosFiles = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + ghostPhotos + "/" + pid }, { headers: { "Content-Type": "application/json" } }));
+      ghostPhotosFiles = ghostPhotosFiles.data.map((o) => { return o.fileName });
+
+      [ thisDesigner ] = await back.mongoRead("designer", { designer: thisDesignerName }, { selfMongo: selfCoreMongo });
+      thisDesid = thisDesigner.desid;
+
+      this.clientName = "없음"
+      this.designer = thisDesigner.designer;
+      this.apartName = "아파트";
+      this.pid = pid;
+  
+      await tempDelete();
+      if (await fileSystem("exist", [ process.cwd() + "/temp/" + pid ])) {
+        await shellExec("rm", [ "-rf", process.cwd() + "/temp/" + pid ]);
+      }
+      await shellExec("mkdir", [ process.cwd() + "/temp/" + pid ]);
+  
+      num = 1;
+      for (let fileName of ghostPhotosFiles) {
+        tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + fileName);
+        await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
+        console.log(`download success`);
+        num++;
+      }
+  
+      targetPhotoDir = await garoseroParser.queryDirectory(process.cwd() + "/temp/" + pid);
+      finalGsTong = [];
+      seroIn = false;
+      for (let i = 0; i < targetPhotoDir.length; i++) {
+        if (targetPhotoDir[i].gs === "g") {
+          finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
+          seroIn = false;
+        } else {
+          if (!seroIn) {
+            if (targetPhotoDir[i + 1] !== undefined && targetPhotoDir[i + 1].gs === "s") {
+              finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
+              finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i + 1])));
+              seroIn = true;
+            }
+          } else {
+            seroIn = false;
+          }
+        }
+      }
+  
+      await shellExec("rm", [ "-rf", this.options.photo_dir ]);
+      await shellExec("mkdir", [ this.options.photo_dir ]);
+      for (let obj of finalGsTong) {
+        await shellExec("mv", [ obj.file, this.options.photo_dir ])
+      }
+  
+      await this.total_make(false);
+  
+      console.log(finalGsTong);
+  
+      noteContents = pid + "\n";
+      noteContents += thisDesigner.designer + " 실장님";
+      noteContents += "\n\n\n";
+      noteContents += targetRaw.addition.subject.trim() + ", " + targetRaw.addition.apart.trim() + " " + String(targetRaw.addition.pyeong) + "py " + "홈스타일링";
+      noteContents += "\n\n\n";
+      noteContents += targetRaw.addition.text.front.trim();
+      noteContents += "\n\n\n";
+      noteContents += "1 - " + String(finalGsTong.length);
+      noteContents += "\n\n\n";
+      noteContents += "Space\n\n" + targetRaw.addition.text.back.trim().replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n");
+      noteContents += "\n\n\n";
+      noteContents += "_info\n\n"
+      noteContents += thisDesigner.desid + "\n\n"
+      noteContents += "_portfolio\n\n"
+      noteContents += "_1\n\n"
+      noteContents += targetRaw.addition.subject.trim() + ", " + targetRaw.addition.apart.trim() + " 홈스타일링\n\n"
+      noteContents += targetRaw.addition.region.trim() + "\n\n"
+      noteContents += "아파트 홈스타일링\n\n"
+      noteContents += "_2\n\n"
+      noteContents += "세로 / 가로\n\n"
+      noteContents += String(finalGsTong.map((o, index) => { o.realIndex = index; return o; }).find((o) => { return o.gs === "s" }).realIndex + 1) + " " + String(finalGsTong.map((o, index) => { o.realIndex = index; return o; }).find((o) => { return o.gs === "g" }).realIndex + 1) + "\n\n";
+      noteContents += "슬라이드\n\n"
+      noteContents += "1 2 3 4 5 6 7 8 9\n\n"
+      noteContents += "태그\n\n"
+      noteContents += "all,아파트,모던,화이트,서재,거실\n\n"
+      noteContents += "서비스\n\n"
+      noteContents += "홈스타일링\n\n"
+      noteContents += "Key8\n\n"
+      noteContents += "820\n\n"
+      noteContents += "Key9\n\n"
+      noteContents += dateToString(new Date(), true).slice(2).replace(/[^0-9]/gi, '') + "\n\n"
+      noteContents += "\n\n\n";
+  
+      await fileSystem("write", [ notePath + "/" + pid + ".txt", noteContents ]);
+      noteArr = noteContents.split("\n").map((s) => { return s.trim() }).filter((s) => { return s !== "" });
+      resource.p_id = pid;
+      console.log("write sucess");
+  
+      await resource.launching(noteArr);
+  
+      await messageSend({ text: `${thisDesigner.designer} 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
+    
     }
-
-    await shellExec("rm", [ "-rf", this.options.photo_dir ]);
-    await shellExec("mkdir", [ this.options.photo_dir ]);
-    for (let obj of finalGsTong) {
-      await shellExec("mv", [ obj.file, this.options.photo_dir ])
-    }
-
-    await this.total_make(false);
-
-    console.log(finalGsTong);
-
-    noteContents = pid + "\n";
-    noteContents += thisDesigner.designer + " 실장님 " + thisClient.name + " 고객님";
-    noteContents += "\n\n\n";
-    noteContents += targetRaw.addition.subject.trim() + ", " + targetRaw.addition.apart.trim() + " " + String(targetRaw.addition.pyeong) + "py " + "홈스타일링";
-    noteContents += "\n\n\n";
-    noteContents += targetRaw.addition.text.front.trim();
-    noteContents += "\n\n\n";
-    noteContents += "1 - " + String(finalGsTong.length);
-    noteContents += "\n\n\n";
-    noteContents += "Space\n\n" + targetRaw.addition.text.back.trim().replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n");
-    noteContents += "\n\n\n";
-    noteContents += "_info\n\n"
-    noteContents += thisDesigner.desid + "\n\n"
-    noteContents += "_portfolio\n\n"
-    noteContents += "_1\n\n"
-    noteContents += targetRaw.addition.subject.trim() + ", " + targetRaw.addition.apart.trim() + " 홈스타일링\n\n"
-    noteContents += targetRaw.addition.region.trim() + "\n\n"
-    noteContents += "아파트 홈스타일링\n\n"
-    noteContents += "_2\n\n"
-    noteContents += "세로 / 가로\n\n"
-    noteContents += String(finalGsTong.map((o, index) => { o.realIndex = index; return o; }).find((o) => { return o.gs === "s" }).realIndex + 1) + " " + String(finalGsTong.map((o, index) => { o.realIndex = index; return o; }).find((o) => { return o.gs === "g" }).realIndex + 1) + "\n\n";
-    noteContents += "슬라이드\n\n"
-    noteContents += "1 2 3 4 5 6 7 8 9\n\n"
-    noteContents += "태그\n\n"
-    noteContents += "all,아파트,수루배,블루,모던,화이트,세종,세종시,서재,거실\n\n"
-    noteContents += "서비스\n\n"
-    noteContents += "홈스타일링\n\n"
-    noteContents += "Key8\n\n"
-    noteContents += "820\n\n"
-    noteContents += "Key9\n\n"
-    noteContents += dateToString(new Date(), true).slice(2).replace(/[^0-9]/gi, '') + "\n\n"
-    noteContents += "\n\n\n";
-
-    await fileSystem("write", [ notePath + "/" + pid + ".txt", noteContents ]);
-    noteArr = noteContents.split("\n").map((s) => { return s.trim() }).filter((s) => { return s !== "" });
-    resource.p_id = pid;
-    console.log("write sucess");
-
-    await resource.launching(noteArr);
-
-    await messageSend({ text: `${thisClient.name} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
-
-    await requestSystem("https://" + address.officeinfo.ghost.host + ":3001/syncEvaluationContents", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
 
     await selfMongo.close();
     await selfCoreMongo.close();
