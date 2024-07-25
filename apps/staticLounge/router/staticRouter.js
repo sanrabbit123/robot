@@ -6924,7 +6924,7 @@ StaticRouter.prototype.rou_post_rawRepairOrder = function () {
       const voice = false;
       const { pid } = equalJson(req.body);
 
-      filter.rawToContents(pid, false).then((boo) => {
+      filter.rawToContents(pid, true).then((boo) => {
         if (boo) {
           return messageSend({ text: pid + " 컨텐츠 순서 조정에 성공하였어요!", channel, voice });
         } else {
