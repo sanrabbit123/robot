@@ -14,6 +14,7 @@ const KakaoTalk = require(APP_PATH + "/kakaoTalk/kakaoTalk.js");
 const ParsingHangul = require(APP_PATH + "/parsingHangul/parsingHangul.js");
 const BillMaker = require(APP_PATH + "/billMaker/billMaker.js");
 const HumanPacket = require(APP_PATH + "/humanPacket/humanPacket.js");
+const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -152,8 +153,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const filter = new PortfolioFilter();
-    // await filter.updateSubject();
+    const filter = new PortfolioFilter();
+    await filter.updateSubject();
 
 
     // const selfMongo = this.MONGOC;

@@ -1087,6 +1087,7 @@ PortfolioFilter.prototype.updateSubject = async function () {
     let thisDesignerName;
     let thisDesid;
     let thisDesigner;
+    let pyeongInput;
 
     pid = await consoleQ("pid? : \n");
 
@@ -1181,11 +1182,11 @@ PortfolioFilter.prototype.updateSubject = async function () {
 
       ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, { headers: { "Content-Type": "application/json" } })).data.map(({ fileName }) => { return fileName });
       thisFolderName = ghostPhotos.find((a) => { return (new RegExp("^" + pid)).test(a) })
-      thisDesignerName = thisFolderName.split("_")[1].trim()
+      thisDesignerName = thisFolderName.split("_")[1].trim();
       [ thisDesigner ] = await back.mongoRead("designer", { designer: thisDesignerName }, { selfMongo: selfCoreMongo });
       thisDesid = thisDesigner.desid;
 
-      contents = await consoleQ("contents? : \n");
+      contents = await fileSystem("readString", [ `${process.cwd()}/temp/target.txt` ]);
       contents = contents.trim();
 
       tong = [];
@@ -1236,6 +1237,22 @@ PortfolioFilter.prototype.updateSubject = async function () {
         }
       }
 
+      console.log(frontText);
+      console.log(bar);
+  
+      subjectInput = await consoleQ("please insert this subject :\n");
+      apartInput = await consoleQ("please insert this apart :\n");
+      regionInput = await consoleQ("please insert this region :\n");
+      pyeongInput = await consoleQ("please insert this pyeong :\n");
+
+      console.log(subjectInput);
+      console.log(bar);
+      console.log(apartInput);
+      console.log(bar);
+      console.log(regionInput);
+      console.log(bar);
+      console.log(Number(pyeongInput.trim()));
+
       await back.mongoCreate(rawCollection, {
         proid: "",
         desid: thisDesid,
@@ -1250,7 +1267,7 @@ PortfolioFilter.prototype.updateSubject = async function () {
           subject: subjectInput.trim(),
           apart: apartInput.trim(),
           region: regionInput.trim(),
-          pyeong: client.requests[0].request.space.pyeong,
+          pyeong: Number(pyeongInput.trim()),
           text: {
             front: frontText,
             back: backText
