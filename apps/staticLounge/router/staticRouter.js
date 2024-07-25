@@ -6671,7 +6671,8 @@ StaticRouter.prototype.rou_post_metaAccountCheck = function () {
 
 StaticRouter.prototype.rou_post_rawToRaw = function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, sleep } = this.mother;
+  const address = this.address;
+  const { fileSystem, shellExec, shellLink, sleep, requestSystem } = this.mother;
   const { portfolioConst } = this;
   const hangul = this.hangul;
   const image = this.imageReader;
@@ -6698,6 +6699,7 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
             let thisFileName;
             let thisFileExe;
             let targetFileName;
+            let designer, client;
 
             filesKey = Object.keys(files);
             filesKey.sort((a, b) => {
@@ -6711,7 +6713,12 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
             await shellExec("rm", [ "-rf", portfolioConst ]);
             await shellExec("mkdir", [ portfolioConst ]);
 
-            console.log(fields)
+            designer = fields.designer;
+            if (fields.client === undefined || fields.client === null) {
+              client = null;
+            } else {
+              client = fields.client;
+            }
 
             (async () => {
               num = 0;
@@ -6736,6 +6743,10 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
                 await shellExec(`mv ${shellLink(path)} ${shellLink(targetFileName)}`);
                 await image.overOfficialImage(targetFileName);
   
+                await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/rawToRawExcute", {
+                  designer, client
+                }, { headers: { "Content-Type": "application/json" } });
+
                 num++;
               }
 
