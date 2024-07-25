@@ -542,7 +542,7 @@ ImageReader.prototype.overOfficialImage = async function (targetImage, type = 35
     let tempObj;
     tempObj = await this.toOfficialImage(targetImage, type, water);
     await shellExec(`rm`, [ `-rf`, targetImage ]);
-    await shellExec(`mv ${shellLink(tempObj.output)} ${shellLink(targetImage)}`);
+    await shellExec(`mv ${shellLink(tempObj.output)} ${shellLink(targetImage.split(".").slice(0, -1).join(".") + ".jpg")}`);
     return { message: "done" };
   } catch (e) {
     console.log(e);

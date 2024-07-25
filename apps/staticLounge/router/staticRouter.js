@@ -6709,32 +6709,35 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
               fromArr.push(files[key]);
             }
 
-            num = 0;
-            for (let { filepath: path } of fromArr) {
-              tempArr = toArr[num].split("/");
-              thisFileName = tempArr[tempArr.length - 1];
-              thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
-              tempString = portfolioConst;
-              if (tempArr.length === 0) {
-                throw new Error("invaild to array");
-              }
-              for (let i = 0; i < tempArr.length - 1; i++) {
-                tempDir = await fileSystem(`readDir`, [ tempString ]);
-                if (!tempDir.includes(tempArr[i]) && tempArr[i] !== "") {
-                  await shellExec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
+            (async () => {
+              num = 0;
+              for (let { filepath: path } of fromArr) {
+                tempArr = toArr[num].split("/");
+                thisFileName = tempArr[tempArr.length - 1];
+                thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
+                tempString = portfolioConst;
+                if (tempArr.length === 0) {
+                  throw new Error("invaild to array");
                 }
-                tempString += '/';
-                tempString += tempArr[i];
+                for (let i = 0; i < tempArr.length - 1; i++) {
+                  tempDir = await fileSystem(`readDir`, [ tempString ]);
+                  if (!tempDir.includes(tempArr[i]) && tempArr[i] !== "") {
+                    await shellExec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
+                  }
+                  tempString += '/';
+                  tempString += tempArr[i];
+                }
+  
+                targetFileName = tempString + "/" + toArr[num].replace(/^\//i, '');
+                await shellExec(`mv ${shellLink(path)} ${shellLink(targetFileName)}`);
+                await image.overOfficialImage(targetFileName);
+  
+                num++;
               }
+              
+            })().catch((err) => { logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + err.message).catch((e) => { console.log(e); }); })
 
-              targetFileName = tempString + "/" + toArr[num].replace(/^\//i, '');
-              await shellExec(`mv ${shellLink(path)} ${shellLink(targetFileName)}`);
-              await image.overOfficialImage(targetFileName);
-
-              num++;
-            }
-
-            res.send(JSON.stringify({ "message": "done" }));
+            res.send(JSON.stringify({ "message": "will do" }));
           }
         } catch (e) {
           logger.error("Static lounge 서버 문제 생김 (rou_post_rawToRaw): " + e.message).catch((e) => { console.log(e); });
