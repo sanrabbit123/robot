@@ -1362,35 +1362,35 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
       }
       await shellExec("mkdir", [ process.cwd() + "/temp/" + pid ]);
   
-      if (!justOrderMode) {
-        num = 1;
-        for (let fileName of ghostPhotosFiles) {
-          tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + fileName);
-          await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
-          console.log(`download success`);
-          num++;
-        }
-    
-        targetPhotoDir = await garoseroParser.queryDirectory(process.cwd() + "/temp/" + pid);
-        finalGsTong = [];
-        seroIn = false;
-        for (let i = 0; i < targetPhotoDir.length; i++) {
-          if (targetPhotoDir[i].gs === "g") {
-            finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
-            seroIn = false;
-          } else {
-            if (!seroIn) {
-              if (targetPhotoDir[i + 1] !== undefined && targetPhotoDir[i + 1].gs === "s") {
-                finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
-                finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i + 1])));
-                seroIn = true;
-              }
-            } else {
-              seroIn = false;
+      num = 1;
+      for (let fileName of ghostPhotosFiles) {
+        tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + fileName);
+        await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
+        console.log(`download success`);
+        num++;
+      }
+  
+      targetPhotoDir = await garoseroParser.queryDirectory(process.cwd() + "/temp/" + pid);
+      finalGsTong = [];
+      seroIn = false;
+      for (let i = 0; i < targetPhotoDir.length; i++) {
+        if (targetPhotoDir[i].gs === "g") {
+          finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
+          seroIn = false;
+        } else {
+          if (!seroIn) {
+            if (targetPhotoDir[i + 1] !== undefined && targetPhotoDir[i + 1].gs === "s") {
+              finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
+              finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i + 1])));
+              seroIn = true;
             }
+          } else {
+            seroIn = false;
           }
         }
-    
+      }
+
+      if (!justOrderMode) {    
         await shellExec("rm", [ "-rf", this.options.photo_dir ]);
         await shellExec("mkdir", [ this.options.photo_dir ]);
         for (let obj of finalGsTong) {
@@ -1474,35 +1474,36 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
       }
       await shellExec("mkdir", [ process.cwd() + "/temp/" + pid ]);
   
-      if (!justOrderMode) {
-        num = 1;
-        for (let fileName of ghostPhotosFiles) {
-          tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + fileName);
-          await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
-          console.log(`download success`);
-          num++;
-        }
-    
-        targetPhotoDir = await garoseroParser.queryDirectory(process.cwd() + "/temp/" + pid);
-        finalGsTong = [];
-        seroIn = false;
-        for (let i = 0; i < targetPhotoDir.length; i++) {
-          if (targetPhotoDir[i].gs === "g") {
-            finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
-            seroIn = false;
-          } else {
-            if (!seroIn) {
-              if (targetPhotoDir[i + 1] !== undefined && targetPhotoDir[i + 1].gs === "s") {
-                finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
-                finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i + 1])));
-                seroIn = true;
-              }
-            } else {
-              seroIn = false;
+      num = 1;
+      for (let fileName of ghostPhotosFiles) {
+        tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + fileName);
+        await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
+        console.log(`download success`);
+        num++;
+      }
+  
+      targetPhotoDir = await garoseroParser.queryDirectory(process.cwd() + "/temp/" + pid);
+      finalGsTong = [];
+      seroIn = false;
+      for (let i = 0; i < targetPhotoDir.length; i++) {
+        if (targetPhotoDir[i].gs === "g") {
+          finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
+          seroIn = false;
+        } else {
+          if (!seroIn) {
+            if (targetPhotoDir[i + 1] !== undefined && targetPhotoDir[i + 1].gs === "s") {
+              finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i])));
+              finalGsTong.push(equalJson(JSON.stringify(targetPhotoDir[i + 1])));
+              seroIn = true;
             }
+          } else {
+            seroIn = false;
           }
         }
-    
+      }
+
+      if (!justOrderMode) {
+  
         await shellExec("rm", [ "-rf", this.options.photo_dir ]);
         await shellExec("mkdir", [ this.options.photo_dir ]);
         for (let obj of finalGsTong) {
