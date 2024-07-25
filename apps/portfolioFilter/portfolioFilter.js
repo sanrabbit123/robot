@@ -709,7 +709,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         folderPathList = await fileSystem(`readFolder`, [ folderPath ]);
 
-        console.log(folderPath, folderPathList)
+        console.log("this => ", folderPath, folderPathList)
 
         fromArr = [];
         toArr = [];
