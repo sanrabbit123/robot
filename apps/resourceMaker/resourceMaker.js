@@ -979,21 +979,21 @@ ResourceMaker.prototype.launching = async function (thisContents = []) {
       thisProject = null;
       proid = null;
       cliid = null;
-      for (let c of clients) {
-        searchQuery = { $and: [ { desid: this.result.designer }, { cliid: c.cliid } ] };
-        projects = await this.back.getProjectsByQuery(searchQuery);
-        console.log(projects);
-        if (projects.length > 0) {
-          contentsArr = (await this.back.getContentsArrByQuery({ $or: projects.toNormal().map((p) => { return { proid: p.proid } }) })).toNormal().map((c) => {
-            return c.proid;
-          });
-          projects = projects.toNormal().filter((p) => { return !contentsArr.includes(p.proid) });
-          thisProject = projects[0];
-          proid = thisProject.proid;
-          cliid = c.cliid;
-          thisService = thisProject.service;
-        }
+
+      searchQuery = { $and: [ { desid: this.result.designer }, { $or: clients.toNormal().map((c) => { return { cliid: c.cliid } }) } ] };
+      projects = await this.back.getProjectsByQuery(searchQuery);
+      console.log(projects);
+      if (projects.length > 0) {
+        contentsArr = (await this.back.getContentsArrByQuery({ $or: projects.toNormal().map((p) => { return { proid: p.proid } }) })).toNormal().map((c) => {
+          return c.proid;
+        });
+        projects = projects.toNormal().filter((p) => { return !contentsArr.includes(p.proid) });
+        thisProject = projects[0];
+        proid = thisProject.proid;
+        cliid = thisProject.cliid;
+        thisService = thisProject.service;
       }
+
       if (cliid === null) {
         console.log(namesArr);
       }
