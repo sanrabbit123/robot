@@ -1351,6 +1351,8 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
       }
       [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
   
+      console.log(proid);
+
       thisProject = await back.getProjectById(proid, { selfMongo: selfCoreMongo, toNormal });
       thisClient = await back.getClientById(thisProject.cliid, { selfMongo: selfCoreMongo, toNormal });
       thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: selfCoreMongo, toNormal });

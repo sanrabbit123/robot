@@ -146,7 +146,8 @@ DevContext.prototype.launching = async function () {
     // 3. repair order
 
     await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawRepairOrder", {
-      pid: pid
+      pid: pid,
+      proid: "p2305_aa40s",
     }, { headers: { "Content-Type": "application/json" } });
 
     // =======================================================================================================================================================
