@@ -1334,11 +1334,17 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
     let thisDesignerName;
     let thisDesid;
     let thisFolderName;
+    let targetContents;
 
-    if (/^p/.test(pid.trim())) {
+    if (/^p/gi.test(pid.trim())) {
 
       [ targetFores ] = await back.mongoRead(collection, { pid }, { selfMongo });
-      proid = targetFores.proid;
+      if (targetFores === undefined) {
+        [ targetContents ] = await back.mongoPick("contents", [ { "contents.portfolio.pid": pid }, { proid: 1 } ], { selfMongo: selfCoreMongo });
+        proid = targetContents.proid;
+      } else {
+        proid = targetFores.proid;
+      }
       [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
   
       thisProject = await back.getProjectById(proid, { selfMongo: selfCoreMongo, toNormal });

@@ -126,9 +126,9 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
     // =======================================================================================================================================================
 
-    const designerName = "공세미";
-    const clientName = "전민향";
-    const pid = "p442";
+    const designerName = "박정훈";
+    const clientName = "정현주";
+    const pid = "p411";
 
     // 1. raw to raw
 
@@ -145,9 +145,9 @@ DevContext.prototype.launching = async function () {
 
     // 3. repair order
 
-    // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawRepairOrder", {
-    //   pid: pid
-    // }, { headers: { "Content-Type": "application/json" } });
+    await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawRepairOrder", {
+      pid: pid
+    }, { headers: { "Content-Type": "application/json" } });
 
     // =======================================================================================================================================================
 
