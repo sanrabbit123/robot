@@ -728,7 +728,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         forecast = await garoseroParser.queryDirectory(folderPath);
         for (let obj of forecast) {
-          obj.file = foreCastContant + "/" + obj.file.split("/").slice(-2).join("/");
+          obj.file = foreCastContant + "/" + nextPid + "/" + obj.file.split("/").slice(-1).join("/");
         }
         finalObj = { pid: nextPid, desid: targetDesigner.desid, client, forecast };
         await back.mongoCreate(collection, finalObj, { selfMongo });

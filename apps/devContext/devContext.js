@@ -126,12 +126,13 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
     // =======================================================================================================================================================
 
-    const designerName = "오유진";
-    const pid = "a140";
+    const designerName = "공세미";
+    const clientName = "전민향";
+    const pid = "p442";
 
     // 1. raw to raw
 
-    await instance.rawtorawSystem(designerName, null);
+    // await instance.rawtorawSystem(designerName, clientName);
 
     // =======================================================================================================================================================
 
@@ -152,7 +153,7 @@ DevContext.prototype.launching = async function () {
 
     // 4. new designer to front web
 
-    // await work.newDesignerToFront(pid, 1, designerName);
+    // await work.newDesignerToFront(pid, 5, designerName);
 
     // =======================================================================================================================================================
     // =======================================================================================================================================================
@@ -7414,23 +7415,22 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "정기현", "2024-07-24" ],
+    //   [ "김민지", "2024-07-26" ],
     // ]);
 
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2405_aa01s", [
-    //   { porlid: "ghost", index: 21 },
-    //   { porlid: "ghost", index: 24 },
-    //   { porlid: "ghost", index: 29 },
-    //   { porlid: "ghost", index: 9 },
-    //   { porlid: "ghost", index: 12 },
-    //   { porlid: "ghost", index: 23 },
+    // await this.setProposalSettingForDesigner("d2405_aa05s", [
+    //   { porlid: "a137", index: 1 },
+    //   { porlid: "a137", index: 7 },
+    //   { porlid: "a137", index: 8 },
+    //   { porlid: "a137", index: 3 },
+    //   { porlid: "a137", index: 11 },
     // ], [
-    //   "꼼꼼한 상담 스타일로 고객님의 니즈를 정확하고 구체적으로 파악합니다.",
-    //   "원활한 소통으로 프로젝트 운영 중 답답한 상황이 없도록 진행해 드립니다.",
-    //   "책임감 있는 마무리로 퀄리티 있는 현장 결과물을 보증해드립니다.",
+    //   "창의적이고, 아름답게 실현 하도록 최선을 다합니다.",
+    //   "스며드는 공감력으로 고객님의 상황을 잘 이해하고 프로젝트를 편안하게 리드합니다.",
+    //   "경청의 자세로 고객님의 라이프스타일을 자세하게 반영하여 공간을 디자인합니다.",
     // ]);
 
 
@@ -7533,7 +7533,7 @@ DevContext.prototype.rawtorawSystem = async function (designer, client = null) {
     for (let f of fileList) {
       await image.overOfficialImage(targetResource + "/" + f);
       exe = f.split(".")[f.split(".").length - 1];
-      await shellExec("mv", [ targetResource + "/" + f, targetResource + "/" + photoKey + String(num) + "." + exe ]);
+      await shellExec("mv", [ targetResource + "/" + f.split(".").slice(0, -1).join(".") + ".jpg", targetResource + "/" + photoKey + String(num) + "." + exe ]);
       toArr.push(photoKey + String(num) + "." + exe);
       num++;
     }
