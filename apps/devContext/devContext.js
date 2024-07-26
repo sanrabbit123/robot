@@ -147,7 +147,6 @@ DevContext.prototype.launching = async function () {
 
     // console.log(await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawRepairOrder", {
     //   pid: pid,
-    //   proid: "p2305_aa40s",
     // }, { headers: { "Content-Type": "application/json" } }));
 
     // =======================================================================================================================================================
