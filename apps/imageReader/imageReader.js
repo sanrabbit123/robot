@@ -24,7 +24,7 @@ const ImageReader = function (mother = null, back = null, address = null) {
   };
 }
 
-ImageReader.prototype.convertImage = async function (obj, detailMode = false) {
+ImageReader.prototype.convertImage = async function (obj) {
   const instance = this;
   const { shellExec, shellLink, fileSystem } = this.mother;
   try {
@@ -45,7 +45,6 @@ ImageReader.prototype.convertImage = async function (obj, detailMode = false) {
     let inputFileName;
     let inputFileExe;
     let inputDirContents;
-    let middleInfo;
 
     mode = obj.mode || "resize";
 
@@ -65,23 +64,50 @@ ImageReader.prototype.convertImage = async function (obj, detailMode = false) {
     thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
     thisFileName = thisFileName.split(".").slice(0, -1).join(".");
 
-    await shellExec(`convert ${shellLink(targetImage)} -resize ${String(targetWidth)}x${String(targetHeight)}! ${shellLink(middleTarget)}`);
-
-    middleInfo = await this.readImage(middleTarget);
-    if (Number(middleInfo.geometry.width) !== Number(targetWidth) || Number(middleInfo.geometry.height) !== Number(targetHeight)) {
-      if (Number(middleInfo.geometry.width) === Number(targetWidth) && Number(middleInfo.geometry.height) > Number(targetHeight)){
-        await shellExec(`convert ${shellLink(targetImage)} -crop ${String(targetWidth)}x${String(targetHeight)}+0+${Math.floor((Number(middleInfo.geometry.height) -  Number(targetHeight)) / 2)} ${shellLink(middleTarget)}`);
-      }
-      if (Number(middleInfo.geometry.width) > Number(targetWidth) && Number(middleInfo.geometry.height) === Number(targetHeight)){
-        await shellExec(`convert ${shellLink(targetImage)} -crop ${String(targetWidth)}x${String(targetHeight)}+${Math.floor((Number(middleInfo.geometry.width) -  Number(targetWidth)) / 2)}+0 ${shellLink(middleTarget)}`);
+    await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, targetImage ]);
+    if (!(await fileSystem(`exist`, [ targetImage ]))) {
+      inputDirContents = await fileSystem(`readFolder`, [ inputDir ]);
+      inputDirContents = inputDirContents.filter((str) => { return (new RegExp(inputFileName + "-[0-9]+." + inputFileExe, "g")).test(str) });
+      if (inputDirContents.length === 0) {
+        throw new Error("converting fail");
+      } else {
+        await shellExec(`mv ${shellLink(inputDir + "/" + inputDirContents[0])} ${shellLink(inputDir + "/" + inputFileName + "." + inputFileExe)}`)
+        for (let str of inputDirContents) {
+          await shellExec(`rm -rf ${shellLink(inputDir + "/" + str)}`);
+        }
       }
     }
-    
+
+    if (mode === "resize") {
+      await shellExec(`convert ${shellLink(targetImage)} -resize ${String(targetWidth)}x${String(targetHeight)}! -quality ${String(qualityConst)} ${shellLink(middleTarget)}`);
+    } else if (mode === "crop") {
+      moveX = obj.x;
+      moveY = obj.y;
+      cropMatrix = String(targetWidth) + "x" + String(targetHeight) + "+" + String(moveX) + "+" + String(moveY);
+      await shellExec(`convert ${shellLink(targetImage)} -crop ${cropMatrix} -quality ${String(qualityConst)} ${shellLink(middleTarget)}`);
+    } else {
+      throw new Error("invalid mode");
+    }
+
     if (!(await fileSystem(`exist`, [ middleTarget ]))) {
       thisDirContents = await fileSystem(`readFolder`, [ thisDir ]);
       thisDirContents = thisDirContents.filter((str) => { return (new RegExp(thisFileName + "-[0-9]+." + thisFileExe, "g")).test(str) });
       if (thisDirContents.length === 0) {
         throw new Error("converting fail");
+      } else {
+        await shellExec(`mv ${shellLink(thisDir + "/" + thisDirContents[0])} ${shellLink(thisDir + "/" + thisFileName + "." + thisFileExe)}`)
+        for (let str of thisDirContents) {
+          await shellExec(`rm -rf ${shellLink(thisDir + "/" + str)}`);
+        }
+      }
+    }
+
+    await shellExec(`mogrify`, [ `-auto-orient`, `-strip`, middleTarget ]);
+    if (!(await fileSystem(`exist`, [ middleTarget ]))) {
+      thisDirContents = await fileSystem(`readFolder`, [ thisDir ]);
+      thisDirContents = thisDirContents.filter((str) => { return (new RegExp(thisFileName + "-[0-9]+." + thisFileExe, "g")).test(str) });
+      if (thisDirContents.length === 0) {
+        throw new Error("mogrify fail");
       } else {
         await shellExec(`mv ${shellLink(thisDir + "/" + thisDirContents[0])} ${shellLink(thisDir + "/" + thisFileName + "." + thisFileExe)}`)
         for (let str of thisDirContents) {
@@ -459,27 +485,28 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
           width: targetWidth,
           height: targetHeight,
           quality: qualityConst,
-          output: resultTarget,
+          output: middleTarget,
           mode: "resize",
+          size: size[typeKeywords],
         });
 
-        // middleInfo = await this.readImage(middleTarget);
-        // middleWidth = middleInfo.geometry.width;
-        // middleHeight = middleInfo.geometry.height;
-        //
-        // moveX = Math.floor((middleWidth - size[typeKeywords][1]) / 2);
-        // moveY = Math.floor((middleHeight - size[typeKeywords][0]) / 2);
-        //
-        // await this.convertImage({
-        //   input: middleTarget,
-        //   width: size[typeKeywords][1],
-        //   height: size[typeKeywords][0],
-        //   x: moveX,
-        //   y: moveY,
-        //   quality: qualityConst,
-        //   output: resultTarget,
-        //   mode: "crop",
-        // });
+        middleInfo = await this.readImage(middleTarget);
+        middleWidth = middleInfo.geometry.width;
+        middleHeight = middleInfo.geometry.height;
+        
+        moveX = Math.floor((middleWidth - size[typeKeywords][1]) / 2);
+        moveY = Math.floor((middleHeight - size[typeKeywords][0]) / 2);
+        
+        await this.convertImage({
+          input: middleTarget,
+          width: size[typeKeywords][1],
+          height: size[typeKeywords][0],
+          x: moveX,
+          y: moveY,
+          quality: qualityConst,
+          output: resultTarget,
+          mode: "crop",
+        });
 
       } else if (gs === "sero") {
 
@@ -505,30 +532,31 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
           width: targetWidth,
           height: targetHeight,
           quality: qualityConst,
-          output: resultTarget,
+          output: middleTarget,
           mode: "resize",
+          size: size[typeKeywords],
         });
 
-        // middleInfo = await this.readImage(middleTarget);
-        // middleWidth = middleInfo.geometry.width;
-        // middleHeight = middleInfo.geometry.height;
-        //
-        // moveX = Math.floor((middleWidth - size[typeKeywords][0]) / 2);
-        // moveY = Math.floor((middleHeight - size[typeKeywords][1]) / 2);
-        //
-        // await this.convertImage({
-        //   input: middleTarget,
-        //   width: size[typeKeywords][0],
-        //   height: size[typeKeywords][1],
-        //   x: moveX,
-        //   y: moveY,
-        //   quality: qualityConst,
-        //   output: resultTarget,
-        //   mode: "crop",
-        // });
+        middleInfo = await this.readImage(middleTarget);
+        middleWidth = middleInfo.geometry.width;
+        middleHeight = middleInfo.geometry.height;
+        
+        moveX = Math.floor((middleWidth - size[typeKeywords][0]) / 2);
+        moveY = Math.floor((middleHeight - size[typeKeywords][1]) / 2);
+        
+        await this.convertImage({
+          input: middleTarget,
+          width: size[typeKeywords][0],
+          height: size[typeKeywords][1],
+          x: moveX,
+          y: moveY,
+          quality: qualityConst,
+          output: resultTarget,
+          mode: "crop",
+        });
 
       }
-      // await shellExec(`rm`, [ `-rf`, middleTarget ]);
+      await shellExec(`rm`, [ `-rf`, middleTarget ]);
     }
 
     resultObj = {

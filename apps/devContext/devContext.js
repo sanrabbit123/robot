@@ -131,7 +131,7 @@ DevContext.prototype.launching = async function () {
 
     // 1. raw to raw
 
-    // await instance.rawtorawSystem(designerName, null);
+    await instance.rawtorawSystem(designerName, null);
 
     // =======================================================================================================================================================
 
@@ -144,9 +144,9 @@ DevContext.prototype.launching = async function () {
 
     // 3. repair order
 
-    await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawRepairOrder", {
-      pid: pid
-    }, { headers: { "Content-Type": "application/json" } });
+    // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawRepairOrder", {
+    //   pid: pid
+    // }, { headers: { "Content-Type": "application/json" } });
 
     // =======================================================================================================================================================
 
