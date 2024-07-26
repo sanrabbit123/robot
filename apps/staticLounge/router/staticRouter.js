@@ -6881,7 +6881,7 @@ StaticRouter.prototype.rou_post_rawToContents = function () {
       const voice = false;
       const { pid } = equalJson(req.body);
 
-      filter.rawToContents(pid, false).then((boo) => {
+      filter.rawToContents(pid, false, req.body.proid === undefined ? null : req.body.proid).then((boo) => {
         if (boo) {
           return messageSend({ text: pid + " 컨텐츠 자동 발행에 성공하였어요!", channel, voice });
         } else {

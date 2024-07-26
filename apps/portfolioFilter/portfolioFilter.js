@@ -1294,7 +1294,7 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
   }
 }
 
-PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = false) {
+PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = false, forceProid = null) {
   const instance = this;
   const back = this.back;
   const address = this.address;
@@ -1341,7 +1341,11 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
       [ targetFores ] = await back.mongoRead(collection, { pid }, { selfMongo });
       if (targetFores === undefined) {
         [ targetContents ] = await back.mongoPick("contents", [ { "contents.portfolio.pid": pid }, { proid: 1 } ], { selfMongo: selfCoreMongo });
-        proid = targetContents.proid;
+        if (targetContents === undefined) {
+          proid = forceProid;
+        } else {
+          proid = targetContents.proid;
+        }
       } else {
         proid = targetFores.proid;
       }
