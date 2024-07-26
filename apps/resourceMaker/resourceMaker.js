@@ -984,7 +984,7 @@ ResourceMaker.prototype.launching = async function (thisContents = []) {
         projects = await this.back.getProjectsByQuery(searchQuery);
         console.log(projects);
         if (projects.length > 0) {
-          contentsArr = await this.back.getContentsArrByQuery({ $or: projects.toNormal().map((p) => { return { proid: p.proid } }) }, { toNormal: true }).map((c) => {
+          contentsArr = (await this.back.getContentsArrByQuery({ $or: projects.toNormal().map((p) => { return { proid: p.proid } }) })).toNormal().map((c) => {
             return c.proid;
           });
           projects = projects.toNormal().filter((p) => { return !contentsArr.includes(p.proid) });
