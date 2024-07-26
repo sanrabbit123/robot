@@ -45,6 +45,7 @@ ImageReader.prototype.convertImage = async function (obj, detailMode = false) {
     let inputFileName;
     let inputFileExe;
     let inputDirContents;
+    let middleInfo;
 
     mode = obj.mode || "resize";
 
@@ -64,8 +65,18 @@ ImageReader.prototype.convertImage = async function (obj, detailMode = false) {
     thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
     thisFileName = thisFileName.split(".").slice(0, -1).join(".");
 
-    await shellExec(`convert ${shellLink(targetImage)} -resize ${String(targetWidth)}x${String(targetHeight)}! -quality ${String(qualityConst)} ${shellLink(middleTarget)}`);
+    await shellExec(`convert ${shellLink(targetImage)} -resize ${String(targetWidth)}x${String(targetHeight)}! ${shellLink(middleTarget)}`);
 
+    middleInfo = await this.readImage(middleTarget);
+    if (Number(middleInfo.geometry.width) !== Number(targetWidth) || Number(middleInfo.geometry.height) !== Number(targetHeight)) {
+      if (Number(middleInfo.geometry.width) === Number(targetWidth) && Number(middleInfo.geometry.height) > Number(targetHeight)){
+        await shellExec(`convert ${shellLink(targetImage)} -crop ${String(targetWidth)}x${String(targetHeight)}+0+${Math.floor((Number(middleInfo.geometry.height) -  Number(targetHeight)) / 2)} ${shellLink(middleTarget)}`);
+      }
+      if (Number(middleInfo.geometry.width) > Number(targetWidth) && Number(middleInfo.geometry.height) === Number(targetHeight)){
+        await shellExec(`convert ${shellLink(targetImage)} -crop ${String(targetWidth)}x${String(targetHeight)}+${Math.floor((Number(middleInfo.geometry.width) -  Number(targetWidth)) / 2)}+0 ${shellLink(middleTarget)}`);
+      }
+    }
+    
     if (!(await fileSystem(`exist`, [ middleTarget ]))) {
       thisDirContents = await fileSystem(`readFolder`, [ thisDir ]);
       thisDirContents = thisDirContents.filter((str) => { return (new RegExp(thisFileName + "-[0-9]+." + thisFileExe, "g")).test(str) });
@@ -388,7 +399,7 @@ ImageReader.prototype.toOfficialImage = async function (targetImage, type = 3508
   const resultConst = "convertResult_";
   const typeConst = "s";
   const exe = "jpg";
-  const qualityConst = 90;
+  const qualityConst = 95;
   const { shellExec, shellLink, fileSystem, uniqueValue } = this.mother;
   try {
     let targetInfo;
@@ -559,7 +570,7 @@ ImageReader.prototype.setWatermark = async function (targetImage) {
   const exe = "jpg";
   const sizeStandard = "s780";
   const whiteStandard = 180;
-  const qualityConst = 90;
+  const qualityConst = 95;
   try {
     let cropMatrix;
     let cropPositionWidth, cropPositionHeight;

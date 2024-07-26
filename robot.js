@@ -489,6 +489,14 @@ Robot.prototype.frontReflection = async function (testMode = false) {
   }
 }
 
+Robot.prototype.frontSync = async function () {
+  try {
+    await this.mother.requestSystem("https://" + this.address.testinfo.host + ":3000/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.mysqlReflection = async function () {
   try {
     const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
@@ -1018,6 +1026,13 @@ const MENU = {
   frontReflectTest: async function () {
     try {
       await robot.frontReflection(true);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  frontSync: async function () {
+    try {
+      await robot.frontSync();
     } catch (e) {
       console.log(e);
     }

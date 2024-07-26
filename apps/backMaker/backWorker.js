@@ -382,13 +382,11 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
   }
 }
 
-BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { selfMongo: null }) {
+BackWorker.prototype.newDesignerToFront = async function (porlid, index, designerName, option = { selfMongo: null }) {
   const instance = this;
+  const back = this.back;
   const { requestSystem } = this.mother;
   try {
-    if (!Array.isArray(desidArr)) {
-      throw new Error(`arguments must be desid array => [ desid, desid, desid... ]`);
-    }
     class DesignerFrontIndex {
 
       constructor(mother, back, option = { selfMongo: null }) {
@@ -408,95 +406,40 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
         return obj;
       }
 
-      async getFromNotes(desid) {
-        try {
-          const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
-          let notes, strArr;
-          let keyIndexArr;
-          notes = new AppleNotes({ folder: "designer", subject: desid });
-          strArr = await notes.readNote();
-          keyIndexArr = [];
-          for (let i = 0; i < strArr.length; i++) {
-            if (/^_/.test(strArr[i])) {
-              keyIndexArr.push(i);
-            }
-          }
-          this.noteArr = strArr;
-          this.keyIndexArr = keyIndexArr;
-        } catch (e) {
-          console.log(e);
-        }
-      }
-
-      generateDummy(designer = '', desid = '') {
+      generateDummy(porlid, index, designer = '', desid = '') {
         this.introduction = {
           desktop: [],
           mobile: []
         };
         this.methods = [];
         this.photo = {
-          porlid: "",
-          index: "",
+          porlid: porlid,
+          index: index,
         };
         this.order = 0;
         this.designer = designer;
         this.desid = desid;
       }
 
-      setIntroduction() {
-        let start, end;
-        start = this.keyIndexArr[0];
-        end = this.keyIndexArr[1];
-        for (let i = start + 1; i < end; i++) {
-          this.introduction.desktop.push(this.noteArr[i]);
-        }
-        start = this.keyIndexArr[1];
-        end = this.keyIndexArr[2];
-        for (let i = start + 1; i < end; i++) {
-          this.introduction.mobile.push(this.noteArr[i]);
-        }
+      setIntroduction(designer) {
+        this.introduction.desktop = designer.setting.front.introduction.desktop;
+        this.introduction.mobile = designer.setting.front.introduction.mobile;
       }
 
       setMethod() {
-        let start, end;
-        start = this.keyIndexArr[2];
-        end = this.keyIndexArr[3];
-        for (let i = start + 1; i < end; i++) {
-          this.methods.push(this.noteArr[i]);
-        }
-      }
-
-      setPhoto() {
-        let start, end;
-        start = this.keyIndexArr[3];
-        end = this.keyIndexArr[4];
-        for (let i = start + 1; i < end; i++) {
-          this.photo.porlid = this.noteArr[i];
-        }
-        start = this.keyIndexArr[4];
-        end = this.keyIndexArr[5];
-        for (let i = start + 1; i < end; i++) {
-          this.photo.index = this.noteArr[i];
-        }
+        this.methods = [ "mth0", "mth7" ]
       }
 
       setOrder() {
-        let start, end;
-        start = this.keyIndexArr[5];
-        end = this.noteArr.length;
-        for (let i = start + 1; i < end; i++) {
-          this.order = Number(this.noteArr[i].replace(/[^0-9]/g, ''));
-        }
+        this.order = 748;
       }
 
-      async returnFrontObject(designerObj) {
+      async returnFrontObject(porlid, index, designerObj) {
         try {
           const { designer, desid } = designerObj;
-          await this.getFromNotes(desid);
-          this.generateDummy(designer, desid);
-          this.setIntroduction();
+          this.generateDummy(porlid, index, designer, desid);
+          this.setIntroduction(designerObj);
           this.setMethod();
-          this.setPhoto();
           this.setOrder();
           return this.toNormal();
         } catch (e) {
@@ -504,59 +447,16 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
         }
       }
 
-      renderScript(data) {
-        const aiFuncs = function () {
-          const targets = [ "desktop", "mobile" ];
-          let this_ai, textBox, to;
-          for (let t of targets) {
-            console.open(new File(this.etc.template + "/designer/" + t + "/template.ai"));
-            this_ai = console.activeDocument();
-            textBox = this_ai.pageItems.getByName("active");
-            textBox.contents = data.introduction[t].join("\n");
-            console.expandAll();
-            console.saveSvg(this_ai, t);
-          }
-          this_ai = console.createDoc();
-          to = "name";
-          console.setCreateSetting({ from: "general", to, exception: { font: "sandoll700" } });
-          console.setParagraph({ from: data.designer, to });
-          console.createElements(this_ai, console.createSetting[to]);
-          console.fit_box();
-          console.expandAll();
-          console.saveSvg(this_ai, to);
-        }
-        let aiScript;
-        aiScript = `const data = ${JSON.stringify(data, null, 2)};\n`;
-        aiScript += aiFuncs.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, '');
-        return aiScript;
-      }
-
-      async renderDesigner(designerObj, query = false) {
+      async renderDesigner(porlid, index, designerObj) {
         const instance = this;
         const { fileSystem, shellExec, shellLink, mysqlQuery } = this.mother;
         try {
-          const getFolder = function (link) {
-            let tempArr;
-            tempArr = link.split("/");
-            tempArr.pop();
-            return tempArr.join("/");
-          }
-          const getName = function (link) {
-            let tempArr;
-            tempArr = link.split("/");
-            return tempArr.pop().replace(/\.svg$/i, '');
-          }
           const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
           const ContentsMaker = require(`${process.cwd()}/apps/contentsMaker/contentsMaker.js`);
           const SvgOptimizer = require(`${process.cwd()}/apps/svgOptimizer/svgOptimizer.js`);
           const Filter = this.back.idFilter("designer");
-          const contents = new ContentsMaker();
-          const frontSetting = await this.returnFrontObject(designerObj);
+          const frontSetting = await this.returnFrontObject(porlid, index, designerObj);
           console.log(frontSetting);
-          // const aiScript = this.renderScript(frontSetting);
-          // const fileName = "designerFrontSettingAiCanvasScript_" + String((new Date()).valueOf()) + ".js";
-          // await fileSystem(`write`, [ `${process.cwd()}/temp/${fileName}`, aiScript ]);
-          // const { resultFolder, resultList } = await contents.generalLaunching(`${process.cwd()}/temp/${fileName}`);
           const careerCalculation = function (designer) {
             let yS, yM, rY, rM;
             let monthResult;
@@ -574,82 +474,26 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
             };
           }
 
-          let desktop = null, mobile = null, name = null;
-          let newDesktop, newMobile, newName;
           let pastDesid;
           let scpOrder;
-          let svgList, svgListApp, svgResultList;
           let insertQuery;
           let whereQuery, updateQuery;
 
-          // for (let i = 0; i < resultList.length; i++) {
-          //   if (/^desktop_/gi.test(resultList[i]) && /\.svg$/i.test(resultList[i])) {
-          //     desktop = resultFolder + "/" + resultList[i];
-          //   }
-          //   if (/^mobile_/gi.test(resultList[i]) && /\.svg$/i.test(resultList[i])) {
-          //     mobile = resultFolder + "/" + resultList[i];
-          //   }
-          //   if (/^name_/gi.test(resultList[i]) && /\.svg$/i.test(resultList[i])) {
-          //     name = resultFolder + "/" + resultList[i];
-          //   }
-          // }
-
-          // if (desktop === null || mobile === null || name === null) {
-          //   throw new Error("invaild rendering");
-          // }
-
-          // pastDesid = Filter.newToPast(designerObj.desid);
-          // newDesktop = `${getFolder(desktop)}/word${pastDesid}.svg`;
-          // newMobile = `${getFolder(mobile)}/moword${pastDesid}.svg`;
-          // newName = `${getFolder(name)}/name${pastDesid}.svg`;
-
-          // svgList = [];
-          // svgList.push(desktop);
-          // svgList.push(mobile);
-          // svgList.push(name);
-
-          // svgListApp = new SvgOptimizer(svgList);
-          // svgListApp.setDcimal(3);
-          // svgResultList = await svgListApp.launching();
-
-          // await fileSystem(`write`, [ newDesktop, svgResultList[getName(desktop)] ]);
-          // await fileSystem(`write`, [ newMobile, svgResultList[getName(mobile)] ]);
-          // await fileSystem(`write`, [ newName, svgResultList[getName(name)] ]);
-
-          // await shellExec(`rm -rf ${shellLink(desktop)}`);
-          // await shellExec(`rm -rf ${shellLink(mobile)}`);
-          // await shellExec(`rm -rf ${shellLink(name)}`);
-
-          // scpOrder = '';
-          // scpOrder += `scp ${shellLink(newDesktop)} ${ADDRESS.frontinfo.user}@${ADDRESS.frontinfo.host}:/${ADDRESS.frontinfo.user}/www/list_svg/dedetail/wording;`;
-          // scpOrder += `scp ${shellLink(newMobile)} ${ADDRESS.frontinfo.user}@${ADDRESS.frontinfo.host}:/${ADDRESS.frontinfo.user}/www/list_svg/dedetail/wording;`;
-          // scpOrder += `scp ${shellLink(newName)} ${ADDRESS.frontinfo.user}@${ADDRESS.frontinfo.host}:/${ADDRESS.frontinfo.user}/www/list_svg/delist/name;`;
-
-          // // await shellExec(scpOrder);
-          // console.log(`scp done`);
-
-          // await shellExec(`rm -rf ${shellLink(newDesktop)}`);
-          // await shellExec(`rm -rf ${shellLink(newMobile)}`);
-          // await shellExec(`rm -rf ${shellLink(newName)}`);
-
-          if (query) {
-            if (frontSetting.methods.length !== 2) {
-              throw new Error("method's length must be 2")
-            }
-            insertQuery = "INSERT INTO deslist (desid,name,start_Y,start_M,method1,method2,daepyo_a,daepyo_t,order_function) VALUES (";
-            insertQuery += `'${pastDesid}',`;
-            insertQuery += `'${designerObj.designer}',`;
-            insertQuery += `'${String(careerCalculation(designerObj).year)}',`;
-            insertQuery += `'${String(careerCalculation(designerObj).month)}',`;
-            insertQuery += `'${frontSetting.methods[0]}',`;
-            insertQuery += `'${frontSetting.methods[1]}',`;
-            insertQuery += `'${frontSetting.photo.porlid}',`;
-            insertQuery += `'${frontSetting.photo.index}',`;
-            insertQuery += `'${String(frontSetting.order)}');`;
-            await mysqlQuery(insertQuery, { front: true });
-            console.log(`front mysql insert done`);
+          if (frontSetting.methods.length !== 2) {
+            throw new Error("method's length must be 2")
           }
-
+          insertQuery = "INSERT INTO deslist (desid,name,start_Y,start_M,method1,method2,daepyo_a,daepyo_t,order_function) VALUES (";
+          insertQuery += `'${pastDesid}',`;
+          insertQuery += `'${designerObj.designer}',`;
+          insertQuery += `'${String(careerCalculation(designerObj).year)}',`;
+          insertQuery += `'${String(careerCalculation(designerObj).month)}',`;
+          insertQuery += `'${frontSetting.methods[0]}',`;
+          insertQuery += `'${frontSetting.methods[1]}',`;
+          insertQuery += `'${frontSetting.photo.porlid}',`;
+          insertQuery += `'${frontSetting.photo.index}',`;
+          insertQuery += `'${String(frontSetting.order)}');`;
+          await mysqlQuery(insertQuery, { front: true });
+          console.log(`front mysql insert done`);
           delete frontSetting.designer;
           delete frontSetting.desid;
           whereQuery = { desid: designerObj.desid };
@@ -663,9 +507,10 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
       }
     }
     const front = new DesignerFrontIndex(this.mother, this.back, option);
-    for (let desid of desidArr) {
-      await front.renderDesigner(await this.back.getDesignerById(desid, option), true);
-    }
+    let thisDesigner, desid;
+    [ thisDesigner ] = await back.getDesignersByQuery({ designer: designerName }, { toNormal: true });
+    desid = thisDesigner.desid;
+    await front.renderDesigner(porlid, 't' + String(index), thisDesigner);
     await requestSystem("https://" + instance.address.testinfo.host + ":" + String(3000) + "/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
   } catch (e) {
     console.log(e);

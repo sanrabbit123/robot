@@ -1045,7 +1045,7 @@ PortfolioFilter.prototype.rawVideo = async function (arr) {
   }
 }
 
-PortfolioFilter.prototype.updateSubject = async function () {
+PortfolioFilter.prototype.updateSubject = async function (pid = null) {
   const instance = this;
   const address = this.address;
   const back = this.back;
@@ -1078,7 +1078,6 @@ PortfolioFilter.prototype.updateSubject = async function () {
     let subjectInput;
     let apartInput;
     let regionInput;
-    let pid;
     let targetPid;
     let addressArr;
     let contents;
@@ -1089,7 +1088,9 @@ PortfolioFilter.prototype.updateSubject = async function () {
     let thisDesigner;
     let pyeongInput;
 
-    pid = await consoleQ("pid? : \n");
+    if (typeof pid !== "string") {
+      pid = await consoleQ("pid? : \n");
+    }
 
     if (/^p/.test(pid.trim())) {
       targetPid = pid;
@@ -1533,8 +1534,12 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
       noteContents += targetRaw.addition.region.trim() + "\n\n"
       noteContents += "아파트 홈스타일링\n\n"
       noteContents += "_2\n\n"
-      noteContents += "세로 / 가로\n\n"
-      noteContents += String(finalGsTong.map((o, index) => { o.realIndex = index; return o; }).find((o) => { return o.gs === "s" }).realIndex + 1) + " " + String(finalGsTong.map((o, index) => { o.realIndex = index; return o; }).find((o) => { return o.gs === "g" }).realIndex + 1) + "\n\n";
+      noteContents += "세로 / 가로\n\n";
+      try {
+        noteContents += String(finalGsTong.map((o, index) => { o.realIndex = index; return o; }).find((o) => { return o.gs === "s" }).realIndex + 1) + " " + String(finalGsTong.map((o, index) => { o.realIndex = index; return o; }).find((o) => { return o.gs === "g" }).realIndex + 1) + "\n\n";
+      } catch {
+        noteContents += "1 2" + "\n\n";
+      }
       noteContents += "슬라이드\n\n"
       noteContents += "1 2 3 4 5 6 7 8 9\n\n"
       noteContents += "태그\n\n"

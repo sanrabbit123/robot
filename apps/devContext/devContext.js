@@ -15,6 +15,7 @@ const ParsingHangul = require(APP_PATH + "/parsingHangul/parsingHangul.js");
 const BillMaker = require(APP_PATH + "/billMaker/billMaker.js");
 const HumanPacket = require(APP_PATH + "/humanPacket/humanPacket.js");
 const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
+const ImageReader = require(APP_PATH + "/imageReader/imageReader.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -122,22 +123,43 @@ DevContext.prototype.launching = async function () {
     // exception pid
     // await this.exceptionPid();
     // =======================================================================================================================================================
+    // =======================================================================================================================================================
+    // =======================================================================================================================================================
 
+    const designerName = "오유진";
+    const pid = "a140";
 
-    // upload contents
+    // 1. raw to raw
+
+    // await instance.rawtorawSystem(designerName, null);
+
+    // =======================================================================================================================================================
+
+    // 2. upload contents
+
     // const filter = new PortfolioFilter();
-    // await filter.updateSubject();
+    // await filter.updateSubject(pid);
+
     // =======================================================================================================================================================
 
-    // raw to raw
-    // await instance.rawtorawSystem("박은하", null);
-    // =======================================================================================================================================================
+    // 3. repair order
 
-    // repair order
     await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawRepairOrder", {
-      pid: "a132"
+      pid: pid
     }, { headers: { "Content-Type": "application/json" } });
+
     // =======================================================================================================================================================
+
+    // 4. new designer to front web
+
+    // await work.newDesignerToFront(pid, 1, designerName);
+
+    // =======================================================================================================================================================
+    // =======================================================================================================================================================
+    // =======================================================================================================================================================
+
+
+
 
 
     // const selfMongo = this.MONGOC;
@@ -7396,9 +7418,6 @@ DevContext.prototype.launching = async function () {
     // ]);
 
 
-    // new designer to front web
-    // await work.newDesignerToFront([ "d2402_aa02s" ]);
-
 
     // new designer set proposal setting
     // await this.setProposalSettingForDesigner("d2405_aa01s", [
@@ -7499,6 +7518,7 @@ DevContext.prototype.rawtorawSystem = async function (designer, client = null) {
   const address = this.address;
   const { fileSystem, objectDeepCopy, generalFileUpload, shellExec } = this.mother;
   const targetResource = process.env.HOME + "/portfolioFilter/resource";
+  const image = new ImageReader();
   try {
     const photoKey = "rawtorawContents_";
     let fileList;
@@ -7511,6 +7531,7 @@ DevContext.prototype.rawtorawSystem = async function (designer, client = null) {
     num = 0;
     toArr = [];
     for (let f of fileList) {
+      await image.overOfficialImage(targetResource + "/" + f);
       exe = f.split(".")[f.split(".").length - 1];
       await shellExec("mv", [ targetResource + "/" + f, targetResource + "/" + photoKey + String(num) + "." + exe ]);
       toArr.push(photoKey + String(num) + "." + exe);
