@@ -955,11 +955,13 @@ ResourceMaker.prototype.launching = async function (thisContents = []) {
       tempResponse = tempResponse.statusCode;
     }
 
+    console.log(index);
+
     //download images
     for (let i = 1; i < index; i++) {
       tempObject = await binaryRequest(this.s3Host + "/corePortfolio/original/" + this.p_id + "/" + originalInitial + String(i) + this.p_id + ".jpg");
       await fileSystem(`writeBinary`, [ tempHome + "/" + originalInitial + String(i) + this.p_id + ".jpg", tempObject ]);
-      console.log(`download success`);
+      console.log(tempHome + "/" + originalInitial + String(i) + this.p_id + ".jpg", `download success`);
     }
     this.targetFolder = tempHome;
 
