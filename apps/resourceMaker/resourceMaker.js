@@ -925,6 +925,7 @@ ResourceMaker.prototype.launching = async function (thisContents = []) {
     let outputMobildFolder, outputMobildFolderList;
     let fromArr, toArr;
     let thisService;
+    let contentsArr;
 
     await MONGOC.connect();
     await MONGOCONTENTSC.connect();
@@ -983,10 +984,14 @@ ResourceMaker.prototype.launching = async function (thisContents = []) {
         projects = await this.back.getProjectsByQuery(searchQuery);
         console.log(projects);
         if (projects.length > 0) {
+          contentsArr = await this.back.getContentsArrByQuery({ $or: projects.toNormal().map((p) => { return { proid: p.proid } }) }, { toNormal: true }).map((c) => {
+            return c.proid;
+          });
+          projects = projects.toNormal().filter((p) => { return !contentsArr.includes(p.proid) });
           thisProject = projects[0];
           proid = thisProject.proid;
           cliid = c.cliid;
-          thisService = thisProject.service.toNormal();
+          thisService = thisProject.service;
         }
       }
       if (cliid === null) {
