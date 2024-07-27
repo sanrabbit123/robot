@@ -1290,6 +1290,10 @@ Mother.prototype.ipCheck = function () {
             obj.rawObj.ip.inner = obj.rawObj.inner;
             obj.rawObj.isGhost = true;
           }
+        } else if (target === "unknown") {
+          obj.name = "local";
+          obj.rawObj = ADDRESS[standardInfo];
+          obj.rawObj.isGhost = false;  
         }
 
       }

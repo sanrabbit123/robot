@@ -336,7 +336,7 @@ DataRouter.prototype.rou_get_First = function () {
   const { diskReading, aliveMongo } = this.mother;
   let obj = {};
   let ipTong;
-  ipTong = [ 1, 127001, 19216801, 192168090, 172301254, 5822475162, 112184236121, 219250244131, 11638190154, 118235266, 599136192, 12611323030, 2233316480, 143219271, 210178154164, 1209167202, 12453101162, 22212024117, 12191922, 223622240 ];
+  ipTong = [ 1, 127001, 19216801, 192168090, 129918118 ];
   for (let info in instance.address) {
     if (instance.address[info].ip.outer.length > 0) {
       ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
@@ -397,7 +397,7 @@ DataRouter.prototype.rou_get_First = function () {
 
       } else {
 
-        if (!pass) {
+        if (false) {
 
           res.set("Content-Type", "text/html");
           res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
@@ -606,7 +606,7 @@ DataRouter.prototype.rou_get_AllLogStore = function () {
             pastPastArr = JSON.parse(stringTemp);
           }
         }
-    
+
         pastJsonArr = logString.split("\n").map((str) => { return str.trim(); }).filter((str) => { return str !== "" }).filter((str) => {
           return (/^\{/.test(str) && /\}$/.test(str))
         }).filter((str) => {
@@ -619,7 +619,7 @@ DataRouter.prototype.rou_get_AllLogStore = function () {
         }).map((str) => {
           return equalJson(str);
         });
-    
+
         pastJsonArr = pastPastArr.concat(pastJsonArr);
         pastJsonArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
 
@@ -995,7 +995,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
             },
             { date: 1, cliids: 1, _id: 0 }
           ], { selfMongo });
-          
+
           allProjects = await back.mongoPick("project", [ historyWhereQuery, { cliid: 1, proid: 1, proposal: 1 } ], { selfMongo: selfCoreMongo });
           allDesigners = await back.mongoPick("designer", [ {}, { desid: 1, designer: 1 } ], { selfMongo: selfCoreMongo });
           resultArr = [];
@@ -1183,7 +1183,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
           queryArr = queryArr.map((s) => { return { designer: { $regex: s } } });
           searchArr = searchArr.concat(queryArr);
         }
-        
+
       }
       searchQuery["$or"] = searchArr;
 
@@ -1586,7 +1586,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           } else if (req.url === "/updateContents") {
             whereQuery[map.conid.position] = thisId;
           }
-  
+
           if (map[column].isHistory !== undefined && map[column].isHistory !== null) {
             if (req.url === "/updateClient") {
               message = await instance.back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
@@ -1608,22 +1608,22 @@ DataRouter.prototype.rou_post_updateDocument = function () {
               message = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
             }
           }
-  
+
           //update log
           const members = instance.members;
           const logDir = `${instance.dir}/log`;
           let thisPerson, fileTarget;
-  
+
           userArr = user.split("__split__");
           today = new Date();
-  
+
           for (let { name, email } of members) {
             if (email.includes(userArr[1])) {
               thisPerson = name;
               break;
             }
           }
-  
+
           updateTong = {
             user: {
               name: thisPerson,
@@ -1637,15 +1637,15 @@ DataRouter.prototype.rou_post_updateDocument = function () {
             },
             date: today
           };
-  
+
           back.mongoCreate((req.url.replace(/^\//, '') + "Log"), updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
             throw new Error(e);
           });
-  
+
           await fileSystem(`write`, [ logDir + "/" + thisPath + "_" + "latest.json", JSON.stringify({ path: thisPath, who: thisPerson, where: thisId, column: column, value: value, date: today }) ]);
           const dir = await fileSystem(`readDir`, [ logDir ]);
           fileTarget = null;
-  
+
           for (let fileName of dir) {
             if ((new RegExp("^" + thisId)).test(fileName)) {
               fileTarget = fileName;
@@ -1655,10 +1655,10 @@ DataRouter.prototype.rou_post_updateDocument = function () {
             await shellExec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
           }
           await fileSystem(`write`, [ `${instance.dir}/log/${thisId}__name__${thisPerson}`, `0` ]);
-  
+
         } else {
           message = "success";
-        }   
+        }
       }
 
       //calendar
@@ -2108,11 +2108,10 @@ DataRouter.prototype.rou_post_getClientReport = function () {
             cliidArr_raw = clients.map((obj) => { return obj.cliid; });
             cliidArr_raw = Array.from(new Set(cliidArr_raw));
             process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
-            histories = motherClientHistories.filter((obj) => { return process.map((o) => { return o.cliid; }).includes(obj.cliid) });
-            histories = histories.filter((obj) => { return obj.curation.analytics.send.some((o) => { return /designerProposal/gi.test(o.page) }) });
+            histories = process
             obj.proposal = histories.length;
             obj.cliid.proposal = [ ...new Set(histories.map((obj) => { return obj.cliid })) ];
-            obj.proid.proposal = [ ...new Set(process.filter((obj) => { return histories.map((o) => { return o.cliid }).includes(obj.cliid) }).map((obj) => { return obj.proid })) ];
+            obj.proid.proposal = [ ...new Set(process.map((obj) => { return obj.proid })) ];
           } else {
             cliidArr_raw = clients.map((obj) => { return obj.cliid; });
             cliidArr_raw = Array.from(new Set(cliidArr_raw));
@@ -2124,10 +2123,9 @@ DataRouter.prototype.rou_post_getClientReport = function () {
 
           //recommend
           if (arr[0].valueOf() > proposalStandardDateValue) {
-            histories = histories.filter((obj) => { return obj.curation.analytics.page.some((o) => { return /designerProposal/gi.test(o.page) }) });
-            obj.recommend = histories.length;
-            obj.cliid.recommend = [ ...new Set(histories.map((obj) => { return obj.cliid })) ];
-            obj.proid.recommend = [ ...new Set(process.filter((obj) => { return histories.map((o) => { return o.cliid }).includes(obj.cliid) }).map((obj) => { return obj.proid })) ];
+            obj.recommend = 0;
+            obj.cliid.recommend = [];
+            obj.proid.recommend = [];
           } else {
             obj.recommend = 0;
             obj.cliid.recommend = [];
@@ -2321,11 +2319,11 @@ DataRouter.prototype.rou_post_extractAnalytics = function () {
           //client
           clients = motherClients.filter((obj) => { return obj.timeline.valueOf() >= fromDate && obj.timeline.valueOf() < toDate });
           obj.client = clients.length;
-  
+
           //recommend
           histories = motherClientHistories.map((obj) => { return obj.curation.analytics.send.filter((o) => { return /designerProposal/gi.test(o.page) && (o.date.valueOf() >= fromDate && o.date.valueOf() < toDate) }) }).flat();
           obj.recommend = histories.length;
-  
+
           //contract
           contracts = motherProjects.filter((obj) => { return obj.process.contract.first.date.valueOf() >= fromDate && obj.process.contract.first.date.valueOf() < toDate });
           obj.contract = contracts.length;
@@ -2767,7 +2765,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
         let managerToObj;
         let managerTargetArr;
         let page, query, dummy, cookies;
-  
+
         thisPerson = null;
         if (email !== null) {
           for (let member of members) {
@@ -2777,10 +2775,10 @@ DataRouter.prototype.rou_post_updateHistory = function () {
             }
           }
         }
-  
+
         whereQuery = {};
         updateQuery = {};
-  
+
         if (/Client/gi.test(req.url)) {
           method = "client";
         } else if (/Project/gi.test(req.url)) {
@@ -2796,7 +2794,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
             method = req.body.method;
           }
         }
-  
+
         if (/client/gi.test(method)) {
           standard = "cliid";
         } else if (/project/gi.test(method)) {
@@ -2808,7 +2806,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
         } else {
           throw new Error("invaild method");
         }
-  
+
         historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
         if (historyObj === null) {
           updateQuery = {};
@@ -2841,12 +2839,12 @@ DataRouter.prototype.rou_post_updateHistory = function () {
               }
             }
           }
-  
+
           if (Object.keys(updateQuery).length > 0) {
             await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
           }
         }
-  
+
         if (column !== null && thisPerson !== null) {
           await fileSystem(`write`, [ logDir + "/" + method + "_" + "latest.json", JSON.stringify({ path: method, who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
           const dir = await fileSystem(`readDir`, [ logDir ]);
@@ -2861,7 +2859,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
           }
           await fileSystem(`write`, [ `${instance.dir}/log/${id}__name__${thisPerson}`, `0` ]);
         }
-  
+
         if (column === "manager") {
           if (managerInteraction[method] !== undefined) {
             managerArr = await back[managerInteraction[method].method](managerInteraction[method].whereQuery, { selfMongo: instance.mongo });
@@ -2884,7 +2882,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
             }
           }
         }
-  
+
         if (typeof req.body.send === "string" && /Client/gi.test(req.url)) {
           page = req.body.send.split('_')[0];
           query = req.body.send.split('_').length > 1 ? req.body.send.split('_')[1] : null;
@@ -2904,7 +2902,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
           }
           await back.updateHistory("client", [ { cliid: id }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
         }
-  
+
       } else {
         const { id, updateQuery, coreQuery } = equalJson(req.body);
         let historyObj;
@@ -2912,7 +2910,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
         let createQuery;
         let whereQuery;
         let collection;
-  
+
         if (/Client/gi.test(req.url)) {
           method = "client";
         } else if (/Project/gi.test(req.url)) {
@@ -2928,7 +2926,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
             method = req.body.method;
           }
         }
-  
+
         if (/client/gi.test(method)) {
           standard = "cliid";
           collection = "client";
@@ -2947,7 +2945,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
 
         whereQuery = {};
         whereQuery[standard] = id;
-  
+
         historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
         if (historyObj === null) {
           createQuery = { ...updateQuery };
@@ -2959,7 +2957,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
             await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
           }
         }
-  
+
         if (typeof coreQuery === "object" && coreQuery !== null) {
           if (Object.keys(coreQuery).length > 0) {
             await back.mongoUpdate(collection, [ whereQuery, coreQuery ], { selfMongo: instance.mongo });
@@ -3028,7 +3026,7 @@ DataRouter.prototype.rou_post_sendSlack = function () {
 
       ip = String(req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"]).trim().replace(/[^0-9\.]/gi, '');
       rawUserAgent = req.useragent;
-      
+
       text = message.replace(/__equal__/g, '=').replace(/__amper__/g, '&').replace(/__query__/g, '?').replace(/__plus__/g, '+');
       if (req.body.voice !== undefined) {
         if (req.body.voice === null) {
@@ -3296,7 +3294,7 @@ DataRouter.prototype.rou_post_proposalReset = function () {
         work.proposalReset(id, { selfMongo: instance.mongo, selfLocalBoo: instance.mongolocal }).catch((err) => {
           console.log(err);
         });
-        
+
       } else if (req.url === "/proposalCreate") {
         if (/^c/.test(id)) {
           if (typeof req.body.serid === "string") {
@@ -3596,14 +3594,14 @@ DataRouter.prototype.rou_post_sendCertification = function () {
       } else {
         logger.log("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
         logger.alert("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
-  
+
         human.sendSms({
           to: phone,
           body: "[홈리에종] 안녕하세요! " + name + "님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : " + certification + "\n\n인증번호를 팝업창에 입력해주세요!"
         }).then(() => {
           return logger.log("인증번호 문자 전송 완료");
         }).catch((e) => { console.log(e); });
-  
+
         kakao.sendTalk("certification", name, phone, {
           company: "홈리에종",
           name,
@@ -3611,7 +3609,7 @@ DataRouter.prototype.rou_post_sendCertification = function () {
         }).then(() => {
           return logger.log("인증번호 카카오 전송 완료");
         }).catch((e) => { console.log(e); });
-  
+
         res.send(JSON.stringify({ message: "will do" }));
       }
 
@@ -3703,7 +3701,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       // if (furniture === undefined) {
       //   furniture = { property: "furniture", value: furnitureArr[1] };
       // }
-      
+
       if (contract === undefined) {
         contract = { property: "contract", value: contractArr[0] };
       }
@@ -3849,7 +3847,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       messageSend({ text: message, channel: "#401_consulting" }).then(() => {
         return requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }, { headers: { "Content-Type": "application/json" } });
       }).then(() => {
-        return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/storeClientAnalytics", { fast: true, talk: true, cliid: thisClient.cliid }, { headers: { "Content-Type": "application/json" } });
+        return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3001) + "/storeClientAnalytics", { fast: true, talk: true, cliid: thisClient.cliid }, { headers: { "Content-Type": "application/json" } });
       }).catch((err) => { console.log(err); });
 
       res.send(JSON.stringify({ cliid }));
@@ -3938,17 +3936,17 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         sns = map.find((obj) => { return obj.property === "sns" });
         etc = map.find((obj) => { return obj.property === "etc" });
         sessionId = map.find((obj) => { return obj.property === "sessionId" });
-  
+
         if (name === undefined || phone === undefined || email === undefined || address0 === undefined || address1 === undefined || business === undefined || company === undefined || numbers === undefined || start === undefined || representative === undefined || bankname === undefined || banknumber === undefined || bankto === undefined || homepage === undefined || sns === undefined || sessionId === undefined) {
           throw new Error("invalid map post");
         }
-  
+
         if (sessionId === undefined) {
           sessionId = [];
         } else {
           sessionId = [ sessionId.value.trim() ];
         }
-  
+
         name = name.value.trim();
         phone = phone.value.trim();
         address0 = address0.value.trim();
@@ -3965,18 +3963,18 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         etc = etc === undefined ? "" : etc.value.trim();
 
         updateQuery = {};
-  
+
         updateQuery["designer"] = name.replace(/[^가-힣]/gi, '')
         updateQuery["phone"] = phone.replace(/[^0-9\-]/gi, '');
         updateQuery["gender"] = gender;
         updateQuery["email"] = email;
         updateQuery["address"] = address0 + " " + address1;
         updateQuery["birth"] = birth;
-  
+
         updateQuery["submit.partnership.date"] = new Date();
         updateQuery["submit.partnership.boo"] = true;
         updateQuery["submit.comeFrom"] = "";
-  
+
         if (/개인/gi.test(business.value.trim())) {
           if (/일반/gi.test(business.value.trim())) {
             updateQuery["information.company.classification"] = "개인사업자(일반)";
@@ -4001,7 +3999,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         updateQuery["information.account.number"] = banknumber.value.trim();
         updateQuery["information.account.to"] = bankto.value.trim();
         updateQuery["information.account.etc"] = "";
-  
+
         updateQuery["information.career.detail"] = equalJson(careerDetail.value.trim());
         updateQuery["information.career.school"] = equalJson(schoolDetail.value.trim());
         updateQuery["information.career.about"] = etc;
@@ -4009,14 +4007,14 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         updateQuery["information.channel.web"] = [];
         updateQuery["information.channel.sns"] = [];
         updateQuery["information.channel.cloud"] = [];
-  
+
         if (/^http/gi.test(homepage.value.trim())) {
           updateQuery["information.channel.web"].push(stringToLink(homepage.value.trim()));
         }
         if (/^http/gi.test(sns.value.trim())) {
           updateQuery["information.channel.sns"].push(stringToLink(sns.value.trim()));
         }
-  
+
         updateQuery["meeting.status"] = "검토중";
         updateQuery["meeting.date"] = new Date(1800, 0, 1);
         updateQuery["submit.firstRequest.date"] = new Date();
@@ -4037,7 +4035,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
           await back.updateAspirant([ { aspid }, updateQuery ], { selfMongo });
           message += "재문의 파트너십 신청이 왔습니다!\n";
         }
-  
+
         message += "문의일 : " + dateToString(new Date()) + "\n";
         message += "성함 : " + updateQuery.designer + "\n";
         message += "연락처 : " + updateQuery.phone + "\n";
@@ -4057,7 +4055,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         message += "SNS 채널 : " + updateQuery["information.channel.sns"].join(", ") + "\n";
         message += "자기 소개 : " + etc + "\n";
         message += "세션 아이디 : " + sessionId.join(", ");
-  
+
         await messageSend({ text: message, channel: "#301_apply", voice: false });
         await messageSend({ text: name + " 디자이너 신청자님의 검토를 부탁드리겠습니다! <@" + ceoId + ">\nlink: https://" + instance.address.backinfo.host + "/designer?mode=aspirant&aspid=" + aspid, channel: "#301_apply", voice: true });
 
@@ -4261,7 +4259,7 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
         updateQuery["submit.registration.boo"] = true;
         updateQuery["meeting.status"] = "등록 완료";
         updateQuery["meeting.common.status"] = "미팅 조율";
-  
+
         await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
         await messageSend({ text: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 카드 결제하셨습니다!", channel: "#301_apply", voice: true });
         await kakao.sendTalk("aspirantPaymentComplete", aspirant.designer, aspirant.phone, { client: aspirant.designer });
@@ -4289,7 +4287,7 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
           updateQuery["submit.registration.boo"] = true;
           updateQuery["meeting.status"] = "등록 완료";
           updateQuery["meeting.common.status"] = "미팅 조율";
-    
+
           await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
           await messageSend({ text: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 무통장 입금하셨습니다!", channel: "#301_apply", voice: true });
           await kakao.sendTalk("aspirantPaymentComplete", aspirant.designer, aspirant.phone, { client: aspirant.designer });
@@ -4338,7 +4336,7 @@ DataRouter.prototype.rou_post_getDesignerGhost = function () {
       let result, final, tempArr, tempObj;
       let contentsResponse;
 
-      
+
       contentsResponse = await requestSystem("https://" + address.contentsinfo.host + ":3000/foreContents", { mode: "get", desid }, { headers: { "Content-Type": "application/json" } });
       if (!Array.isArray(contentsResponse.data)) {
         result = [];
@@ -5882,7 +5880,7 @@ DataRouter.prototype.rou_post_ghostDesigner_getAnalytics = function () {
       } else {
         res.send(JSON.stringify(targetAnalytics.filter((obj) => { return obj.cliid === req.body.cliid })));
       }
-      
+
     } catch (e) {
       logger.error("Console 서버 문제 생김 (rou_post_ghostDesigner_getAnalytics): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
@@ -6773,7 +6771,7 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
       projects = await back.getProjectsByQuery({
         $and: [
           { "desid": { $regex: "^d" } },
-          { "process.status": { $regex: "^[대진완홀]" } },
+          { "process.status": { $regex: "^[대진]" } },
           { "process.contract.meeting.date": { $gt: new Date() } },
         ]
       }, { selfMongo });
@@ -6855,7 +6853,7 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
       projects = await back.getProjectsByQuery({
         $and: [
           { "desid": { $regex: "^d" } },
-          { "process.status": { $regex: "^[대진완홀]" } },
+          { "process.status": { $regex: "^[대진]" } },
           { "process.contract.meeting.date": { $gte: ago } },
         ]
       }, { selfMongo });
@@ -6873,7 +6871,7 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
             client = clients.toNormal()[clientIndex];
 
             if (meetingDate.valueOf() <= todayValue) {
-              
+
               designer = await back.getDesignerById(project.desid, { selfMongo });
 
               await kakao.sendTalk("feedBackDesigner", designer.designer, designer.information.phone, {
@@ -6916,7 +6914,7 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
       projects = await back.getProjectsByQuery({
         $and: [
           { "desid": { $regex: "^d" } },
-          { "process.status": { $regex: "^[대진완홀]" } },
+          { "process.status": { $regex: "^[대진]" } },
           { "contents.photo.date": { $gt: new Date() } },
         ]
       }, { selfMongo });
@@ -7037,58 +7035,6 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
       await logger.error("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
     }
   }
-  const evaluationAlarmFunc = async (MONGOC, logger) => {
-    try {
-      const selfMongo = MONGOC;
-      const fiveDatesAgo = new Date();
-      fiveDatesAgo.setDate(fiveDatesAgo.getDate() - 5);
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const agoConst = 3;
-      const threeMonthAgo = new Date();
-      threeMonthAgo.setMonth(threeMonthAgo.getMonth() - agoConst);
-      let response;
-      let targetList;
-      let targetProid;
-      let evaluationList;
-      let targetEvaluation;
-      let proid, desid, cliid;
-      let thisDate;
-      let thisClient;
-
-      response = await requestSystem("https://" + address.contentsinfo.host + ":3000/evaluationNotice", { mode: "list", from: threeMonthAgo }, { headers: { "Content-Type": "application/json" } });
-      targetList = equalJson(JSON.stringify(response.data.data));
-      targetProid = targetList.map((o) => { return o.proid });
-  
-      evaluationList = [];
-      if (targetProid.length > 0) {
-        response = await requestSystem("https://" + address.contentsinfo.host + ":3000/evaluationList", { mode: "list", whereQuery: { $or: targetProid.map((proid) => { return { proid } }) } }, { headers: { "Content-Type": "application/json" } });
-        evaluationList = equalJson(JSON.stringify(response.data.data));
-      }
-
-      for (let obj of targetList) {
-        targetEvaluation = evaluationList.find((o) => { return o.proid === obj.proid }) === undefined ? null : evaluationList.find((o) => { return o.proid === obj.proid });
-        if (targetEvaluation === null) {
-          proid = obj.proid;
-          desid = obj.desid;
-          cliid = obj.cliid;
-          thisDate = new Date(JSON.stringify(obj.date).slice(1, -1));
-          if (thisDate.valueOf() < yesterday.valueOf() && fiveDatesAgo.valueOf() < thisDate.valueOf()) {
-            thisClient = await back.getClientById(cliid, { selfMongo });
-            logger.alert("evaluation alarm => " + proid + " / " + cliid).catch((err) => { console.log(err) });
-            await requestSystem("https://" + address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid, desid, proid }, { headers: { "Content-Type": "application/json" } });
-            await kakao.sendTalk("photoShareClient", thisClient.name, thisClient.phone, { client: thisClient.name, host: address.frontinfo.host, path: "evaluation", proid });
-            await sleep(500);
-          }
-        }
-      }
-
-      await logger.cron("evaluation alarm done");
-
-    } catch (e) {
-      await logger.error("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
-    }
-  }
   let obj = {};
   obj.link = [ "/timeDeltaAlarm" ];
   obj.func = async function (req, res, logger) {
@@ -7105,8 +7051,6 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
       //   return photoDesignerAlarmFunc(instance.mongo, logger);
       // }).then(() => {
         return contractStartAlarmFunc(instance.mongo, logger);
-      }).then(() => {
-        return evaluationAlarmFunc(instance.mongo, logger);
       }).then(() => {
         return logger.cron("time delta alarm done : " + JSON.stringify(new Date()));
       }).catch((err) => {
@@ -7248,11 +7192,11 @@ DataRouter.prototype.rou_post_processConsole = function () {
               }
             ]
           }, { selfMongo: selfCoreMongo });
-  
+
         } else if (mode === "search") {
-  
+
           const { value } = req.body;
-  
+
           if (value === '' || value === '.') {
             projects = await back.getProjectsByQuery({
               $and: [
@@ -7266,8 +7210,8 @@ DataRouter.prototype.rou_post_processConsole = function () {
             }, { selfMongo: selfCoreMongo });
           } else {
             if (/\,/gi.test(value)) {
-  
-              values = value.split(",").map((str) => { return str.trim() });  
+
+              values = value.split(",").map((str) => { return str.trim() });
               clientValues = values.filter((str) => { return /^c\:/i.test(str) && str.length >= 3 });
               designerValues = values.filter((str) => { return !(/^c\:/i.test(str) && str.length >= 3) });
 
@@ -7281,9 +7225,9 @@ DataRouter.prototype.rou_post_processConsole = function () {
               } else {
                 preDesigners = new NormalArray([]);
               }
-  
+
               finalOr = preClients.toNormal().map((c) => { return { cliid: c.cliid } }).concat(preDesigners.toNormal().map((c) => { return { desid: c.desid } }))
-  
+
               if (finalOr.length > 0) {
                 projects = await back.getProjectsByQuery({ $or: finalOr }, { selfMongo: selfCoreMongo });
                 projects = projects.filter((project) => {
@@ -7292,7 +7236,7 @@ DataRouter.prototype.rou_post_processConsole = function () {
               } else {
                 projects = [];
               }
-              
+
             } else if (/^c\:/i.test(value) && value.length >= 3) {
 
               clientValue = value.split(":")[1].trim();
@@ -7319,9 +7263,9 @@ DataRouter.prototype.rou_post_processConsole = function () {
               }
             }
           }
-  
+
         } else {
-  
+
           projects = await back.getProjectsByQuery({
             $and: [
               {
@@ -7332,24 +7276,24 @@ DataRouter.prototype.rou_post_processConsole = function () {
               }
             ]
           }, { selfMongo: selfCoreMongo });
-  
+
         }
-  
+
         projects.sort((a, b) => { return b.process.contract.first.date.valueOf() - a.process.contract.first.date.valueOf() });
-  
+
         if (projects.length > 0) {
-  
+
           clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
           designers = await back.getDesignersByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.desid }))).map((desid) => { return { desid } }) }, { selfMongo: selfCoreMongo });
-    
+
           history = await back.mongoRead("projectHistory", {
             $or: projects.toNormal().map((project) => { return { proid: project.proid } })
           }, { selfMongo });
-    
+
           clientHistory = await back.mongoRead("clientHistory", {
             $or: clients.toNormal().map((client) => { return { cliid: client.cliid } })
           }, { selfMongo });
-  
+
           proidArr = projects.toNormal().map((p) => { return p.proid })
           secondRes = await requestSystem("https://" + address.secondinfo.host + ":3000/getProcessData", { proidArr }, {
             headers: {
@@ -7357,9 +7301,9 @@ DataRouter.prototype.rou_post_processConsole = function () {
               "origin": address.backinfo.host
             }
           });
-  
+
           res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal(), designers: designers.toNormal(), history, clientHistory, rawContents: secondRes.data.rawContents, sendStatus: secondRes.data.sendStatus, sendSchedule: secondRes.data.sendSchedule, sendFile: secondRes.data.sendFile }));
-  
+
         } else {
           res.send(JSON.stringify({ projects: [], clients: [], designers: [], history: [], clientHistory: [], rawContents: [], sendStatus: [], sendSchedule: [], sendFile: [] }));
         }
@@ -7410,7 +7354,7 @@ DataRouter.prototype.rou_post_processConsole = function () {
         } else {
           res.send(JSON.stringify({ projects: [], clients: [] }));
         }
-        
+
       }
 
     } catch (e) {
@@ -7495,7 +7439,7 @@ DataRouter.prototype.rou_post_salesClient = function () {
         basicRows.sort((a, b) => {
           return b.date.valueOf() - a.date.valueOf();
         })
-        
+
         pureCliids = basicRows.map((o) => {
           return o.cliids.map((o2) => {
             return o2.cliid;
@@ -7504,7 +7448,7 @@ DataRouter.prototype.rou_post_salesClient = function () {
 
         clients = await back.getClientsByQuery({ $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
         clientHistories = await back.mongoRead("clientHistory", { $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo });
-        
+
         filteredHistory = [];
         for (let obj of clientHistories) {
           filteredHistory.push({
@@ -7534,12 +7478,12 @@ DataRouter.prototype.rou_post_salesClient = function () {
               }
             }
           }, { selfMongo: selfCoreMongo, withTools: true });
-  
+
           ongoingClientsRequests = ongoingClients.getRequestsTong();
           ongoingClientsRequests.sort((a, b) => {
             return a.request.timeline.valueOf() - b.request.timeline.valueOf();
           });
-  
+
           if (ongoingClientsRequests.length === 0) {
             basicRows = await back.mongoRead(collection, { date: { $gte: standard } }, { selfMongo });
           } else {
@@ -7554,7 +7498,7 @@ DataRouter.prototype.rou_post_salesClient = function () {
 
           clients = await back.getClientsByQuery({ $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
           clientHistories = await back.mongoRead("clientHistory", { $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo });
-          
+
           filteredHistory = [];
           for (let obj of clientHistories) {
             filteredHistory.push({
@@ -7680,7 +7624,7 @@ DataRouter.prototype.rou_post_salesClient = function () {
 
           ago = new Date();
           ago.setDate(ago.getDate() - 1);
-  
+
           basicRows = await back.mongoRead(collection, { date: { $gte: ago } }, { selfMongo });
           if (basicRows.length === 0) {
             resultObj = { message: "fail" };
@@ -7694,17 +7638,17 @@ DataRouter.prototype.rou_post_salesClient = function () {
             } else {
               targetClients = await back.getClientsByQuery({ $or: targetCliids.map((obj) => { return { cliid: obj.cliid } }) }, { selfMongo: selfCoreMongo });
               targetHistories = await back.mongoRead("clientHistory", { $or: targetCliids.map((obj) => { return { cliid: obj.cliid } }) }, { selfMongo });
-  
+
               for (let client of targetClients) {
                 await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name, host: instance.address.frontinfo.host, cliid: client.cliid });
                 await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#400_customer", voice: false });
               }
-  
+
               for (let history of targetHistories) {
-  
+
                 whereQuery = { cliid: history.cliid };
                 updateQuery = {};
-  
+
                 copiedSend = equalJson(JSON.stringify(history.curation.analytics.send));
                 copiedSend.push({
                   page: "lowLowPush",
@@ -7716,11 +7660,11 @@ DataRouter.prototype.rou_post_salesClient = function () {
                   }
                 })
                 copiedSend.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() })
-  
+
                 updateQuery["curation.analytics.send"] = copiedSend;
                 await back.mongoUpdate("clientHistory", [ whereQuery, updateQuery ], { selfMongo });
               }
-  
+
               resultObj = { message: "done" };
             }
           }
@@ -7779,7 +7723,7 @@ DataRouter.prototype.rou_post_dailySales = function () {
 
       now = new Date();
 
-      standard0From = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0, 0);    
+      standard0From = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0, 0);
       while (standard0From.getDay() === 0 || standard0From.getDay() === 6) {
         standard0From.setDate(standard0From.getDate() - 1);
       }
@@ -7850,9 +7794,9 @@ DataRouter.prototype.rou_post_dailySales = function () {
           },
           cliids: [],
         }
-    
+
         thisRequests = requests.filter((request) => { return request.request.timeline.valueOf() > standardFrom.valueOf() && request.request.timeline.valueOf() <= standardTo.valueOf() })
-    
+
         for (let obj of thisRequests) {
           dummy.cliids.push({
             cliid: obj.cliid,
@@ -7861,7 +7805,7 @@ DataRouter.prototype.rou_post_dailySales = function () {
             target: 0,
           })
         }
-    
+
         rows = await back.mongoRead(collection, { id: dummy.id }, { selfMongo });
         if (rows.length !== 0) {
           await back.mongoDelete(collection, { id: dummy.id }, { selfMongo });
@@ -7973,7 +7917,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
 
       rowsCopy = equalJson(JSON.stringify(rows));
       rowsFlat = rowsCopy.map(({ cliids }) => { return cliids }).flat();
-  
+
       whereQuery = rowToCliids(rows).concat(contractProjectsCliids);
       whereQuery = { $or: [ ...new Set(whereQuery) ].map((cliid) => { return { cliid } }) }
 
@@ -7986,7 +7930,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
       }).project({ manager: 1, "curation.analytics.send": 1, _id: 0 }).toArray();
 
       if (whereQuery["$or"].length > 0) {
-  
+
         thisClients = (await back.getClientsByQuery(whereQuery, { selfMongo: selfCoreMongo })).toNormal();
         thisProjects = (await back.getProjectsByQuery(whereQuery, { selfMongo: selfCoreMongo })).toNormal();
         thisHistories = await selfMongo.db(db).collection(historyCollection).find(whereQuery).project({ cliid: 1, manager: 1, _id: 0 }).toArray();
@@ -7996,13 +7940,13 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
         managers = managers.filter((member) => { return member.roles.includes("CX") }).map((member) => { return member.name });
         managers.push("미지정");
         managers.push("total");
-  
+
         reports = [];
         for (let row of rows) {
-  
+
           reportObject = {};
           reportObject.standard = row.date;
-  
+
           // today stadard
           todayClients = row.cliids.map(({ cliid }) => { return thisClients.find((c) => { return c.cliid === cliid }) });
           for (let client of todayClients) {
@@ -8020,7 +7964,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
             client.project = thisProjects.find((p) => { return p.cliid === client.cliid });
             client.row = rowsFlat.find((c) => { return c.cliid === client.cliid });
           }
-  
+
           // month standard
           fromDate = new Date(row.date.getFullYear(), row.date.getMonth(), 1, 8, 0, 0);
           monthFromDate = new Date(JSON.stringify(fromDate).slice(1, -1));
@@ -8094,7 +8038,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
               })
             }
           }
-  
+
           // monthly clients
           reportObject.monthClients = [];
           for (let manager of managers) {
@@ -8115,7 +8059,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
               })
             }
           }
-  
+
           // current clients
           currentClients = targetClients.filter((client) => {
             return client.requests.some(({ analytics }) => { return /^[응장]/gi.test(analytics.response.status) })
@@ -8139,7 +8083,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
               })
             }
           }
-  
+
           // contract possible clients
           reportObject.contractPossible = [];
           for (let manager of managers) {
@@ -8160,7 +8104,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
               })
             }
           }
-  
+
           // total contracts
           reportObject.totalContracts = [];
           for (let manager of managers) {
@@ -8181,7 +8125,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
               })
             }
           }
-  
+
           // month contracts
           reportObject.monthContracts = [];
           for (let manager of managers) {
@@ -8202,7 +8146,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
               })
             }
           }
-  
+
           // day proposal
           reportObject.dayProposals = [];
           for (let manager of managers) {
@@ -8268,7 +8212,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
 
           reports.push(reportObject);
         }
-  
+
         resultObj = { reports };
       } else {
         resultObj = { reports: [] };
@@ -8423,7 +8367,7 @@ DataRouter.prototype.rou_post_frontMemberParsing = function () {
         if (targetMember !== undefined && targetMember !== null) {
           memberId = targetMember.id;
           memberName = targetMember.name;
-  
+
           json = {
             date: new Date(),
             member: {
@@ -8436,12 +8380,12 @@ DataRouter.prototype.rou_post_frontMemberParsing = function () {
               href: href,
             },
           };
-  
+
           await back.mongoCreate(collection, json, { selfMongo });
         } else {
           json = { data: null };
         }
-  
+
         res.send(JSON.stringify(json));
 
       } else {
@@ -8549,6 +8493,7 @@ DataRouter.prototype.rou_post_blackButtonsClick = function () {
   }
   return obj;
 }
+
 
 DataRouter.policy = function () {
   let text = '';
@@ -9346,7 +9291,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
                 "시공 없이 스타일링만!",
                 "가구 소품 패브릭 조명으로 진행",
               ],
-              source: "/service_f.svg",
+              source: "/service_f.png",
               plus: false,
               margin: false,
               value: "s2011_aa01s",
@@ -9358,7 +9303,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
                 "부분 시공 (제작 가구 포함)",
                 "스타일링 (가구 소품 패브릭)",
               ],
-              source: "/service_s.svg",
+              source: "/service_s.png",
               plus: true,
               margin: true,
               value: "s2011_aa02s",
@@ -9370,7 +9315,7 @@ DataRouter.prototype.rou_post_styleCuration_getTotalMenu = function () {
                 "전체 시공 (주방, 화장실 포함)",
                 "스타일링 (가구 소품 패브릭)",
               ],
-              source: "/service_t.svg",
+              source: "/service_t.png",
               plus: true,
               margin: false,
               value: "s2011_aa03s",

@@ -1181,10 +1181,12 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
   let ea;
   let ratio;
   let temp, tempIndex;
-  let boldObject, underObject, specialObject;
+  let boldObject, underObject, specialObject, codeObject, italicObject;
   let children;
   let nextObject, previousObject, previousDom;
+  let thisEa;
 
+  thisEa = <%% "px", "px", "px", "px", "vw" %%>;
   children = [];
   nextObject = null;
   previousObject = null;
@@ -1285,26 +1287,58 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
               throw new Error("bold option needs");
             } else {
               boldObject = "";
+              if (style.bold.display === undefined || style.bold.display === null) {
+                style.bold.display = "inline-block";
+              }
+              if (style.bold.position === undefined || style.bold.position === null) {
+                style.bold.position = "relative";
+              }
               for (let b in style.bold) {
-                if (/^font/.test(b) || /^padding/.test(b) || /^margin/.test(b)) {
-                  tempIndex = null;
-                  for (let z = 0; z < b.length; z++) {
-                    if (b.charCodeAt(z) < "a".charCodeAt(0)) {
-                      tempIndex = z;
-                      break;
-                    }
+                if (b === "fontSizeWeight") {
+                  const [ thisSize, thisWeight ] = style.bold[b];
+                  if (typeof thisSize === "number") {
+                    boldObject += "font-size:" + String(thisSize) + thisEa;
+                    boldObject += ';';
+                  } else if (typeof thisSize === "string") {
+                    boldObject += "font-size:" + thisSize;
+                    boldObject += ';';
                   }
-                  if (tempIndex !== null) {
-                    boldObject += b.slice(0, tempIndex) + '-' + b.slice(tempIndex).toLowerCase();
+                  if (typeof thisWeight === "number") {
+                    boldObject += "font-weight:" + String(thisWeight);
+                    boldObject += ';';
+                  } else if (typeof thisWeight === "string") {
+                    boldObject += "font-weight:" + thisWeight;
+                    boldObject += ';';
+                  }
+                } else {
+                  if (/^font/.test(b) || /^padding/.test(b) || /^margin/.test(b)) {
+                    tempIndex = null;
+                    for (let z = 0; z < b.length; z++) {
+                      if (b.charCodeAt(z) < "a".charCodeAt(0)) {
+                        tempIndex = z;
+                        break;
+                      }
+                    }
+                    if (tempIndex !== null) {
+                      boldObject += b.slice(0, tempIndex) + '-' + b.slice(tempIndex).toLowerCase();
+                    } else {
+                      boldObject += b;
+                    }
                   } else {
                     boldObject += b;
                   }
-                } else {
-                  boldObject += b;
+                  boldObject += ':';
+                  if (typeof style.bold[b] === "number") {
+                    if (b === "fontWeight" || b === "zIndex" || b === "opacity" || b === "lineHeight" || b === "flex") {
+                      boldObject += String(style.bold[b]);
+                    } else {
+                      boldObject += String(style.bold[b]) + thisEa;
+                    }
+                  } else {
+                    boldObject += style.bold[b];
+                  }
+                  boldObject += ';'; 
                 }
-                boldObject += ':';
-                boldObject += style.bold[b];
-                boldObject += ';';
               }
               style.text = style.text.replace(/\<b\%/gi, "<b style=\"" + boldObject + "\">");
               style.text = style.text.replace(/\%b\>/gi, "</b>");
@@ -1315,26 +1349,58 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
               throw new Error("under option needs");
             } else {
               underObject = "";
+              if (style.under.display === undefined || style.under.display === null) {
+                style.under.display = "inline-block";
+              }
+              if (style.under.position === undefined || style.under.position === null) {
+                style.under.position = "relative";
+              }
               for (let b in style.under) {
-                if (/^font/.test(b) || /^padding/.test(b) || /^margin/.test(b)) {
-                  tempIndex = null;
-                  for (let z = 0; z < b.length; z++) {
-                    if (b.charCodeAt(z) < "a".charCodeAt(0)) {
-                      tempIndex = z;
-                      break;
-                    }
+                if (b === "fontSizeWeight") {
+                  const [ thisSize, thisWeight ] = style.under[b];
+                  if (typeof thisSize === "number") {
+                    underObject += "font-size:" + String(thisSize) + thisEa;
+                    underObject += ';';
+                  } else if (typeof thisSize === "string") {
+                    underObject += "font-size:" + thisSize;
+                    underObject += ';';
                   }
-                  if (tempIndex !== null) {
-                    underObject += b.slice(0, tempIndex) + '-' + b.slice(tempIndex).toLowerCase();
+                  if (typeof thisWeight === "number") {
+                    underObject += "font-weight:" + String(thisWeight);
+                    underObject += ';';
+                  } else if (typeof thisWeight === "string") {
+                    underObject += "font-weight:" + thisWeight;
+                    underObject += ';';
+                  }
+                } else {
+                  if (/^font/.test(b) || /^padding/.test(b) || /^margin/.test(b)) {
+                    tempIndex = null;
+                    for (let z = 0; z < b.length; z++) {
+                      if (b.charCodeAt(z) < "a".charCodeAt(0)) {
+                        tempIndex = z;
+                        break;
+                      }
+                    }
+                    if (tempIndex !== null) {
+                      underObject += b.slice(0, tempIndex) + '-' + b.slice(tempIndex).toLowerCase();
+                    } else {
+                      underObject += b;
+                    }
                   } else {
                     underObject += b;
                   }
-                } else {
-                  underObject += b;
+                  underObject += ':';
+                  if (typeof style.under[b] === "number") {
+                    if (b === "fontWeight" || b === "zIndex" || b === "opacity" || b === "lineHeight" || b === "flex") {
+                      underObject += String(style.under[b]);
+                    } else {
+                      underObject += String(style.under[b]) + thisEa;
+                    }
+                  } else {
+                    underObject += style.under[b];
+                  }
+                  underObject += ';';
                 }
-                underObject += ':';
-                underObject += style.under[b];
-                underObject += ';';
               }
               style.text = style.text.replace(/\<u\%/gi, "<b style=\"" + underObject + "\">");
               style.text = style.text.replace(/\%u\>/gi, "</b>");
@@ -1345,29 +1411,185 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
               throw new Error("special option needs");
             } else {
               specialObject = "";
+              if (style.special.display === undefined || style.special.display === null) {
+                style.special.display = "inline-block";
+              }
+              if (style.special.position === undefined || style.special.position === null) {
+                style.special.position = "relative";
+              }
               for (let b in style.special) {
-                if (/^font/.test(b) || /^padding/.test(b) || /^margin/.test(b)) {
-                  tempIndex = null;
-                  for (let z = 0; z < b.length; z++) {
-                    if (b.charCodeAt(z) < "a".charCodeAt(0)) {
-                      tempIndex = z;
-                      break;
-                    }
+                if (b === "fontSizeWeight") {
+                  const [ thisSize, thisWeight ] = style.special[b];
+                  if (typeof thisSize === "number") {
+                    specialObject += "font-size:" + String(thisSize) + thisEa;
+                    specialObject += ';';
+                  } else if (typeof thisSize === "string") {
+                    specialObject += "font-size:" + thisSize;
+                    specialObject += ';';
                   }
-                  if (tempIndex !== null) {
-                    specialObject += b.slice(0, tempIndex) + '-' + b.slice(tempIndex).toLowerCase();
+                  if (typeof thisWeight === "number") {
+                    specialObject += "font-weight:" + String(thisWeight);
+                    specialObject += ';';
+                  } else if (typeof thisWeight === "string") {
+                    specialObject += "font-weight:" + thisWeight;
+                    specialObject += ';';
+                  }
+                } else {
+                  if (/^font/.test(b) || /^padding/.test(b) || /^margin/.test(b)) {
+                    tempIndex = null;
+                    for (let z = 0; z < b.length; z++) {
+                      if (b.charCodeAt(z) < "a".charCodeAt(0)) {
+                        tempIndex = z;
+                        break;
+                      }
+                    }
+                    if (tempIndex !== null) {
+                      specialObject += b.slice(0, tempIndex) + '-' + b.slice(tempIndex).toLowerCase();
+                    } else {
+                      specialObject += b;
+                    }
                   } else {
                     specialObject += b;
                   }
-                } else {
-                  specialObject += b;
+                  specialObject += ':';
+                  if (typeof style.special[b] === "number") {
+                    if (b === "fontWeight" || b === "zIndex" || b === "opacity" || b === "lineHeight" || b === "flex") {
+                      specialObject += String(style.special[b]);
+                    } else {
+                      specialObject += String(style.special[b]) + thisEa;
+                    }
+                  } else {
+                    specialObject += style.special[b];
+                  }
+                  specialObject += ';';
                 }
-                specialObject += ':';
-                specialObject += style.special[b];
-                specialObject += ';';
               }
               style.text = style.text.replace(/\<s\%/gi, "<b style=\"" + specialObject + "\">");
               style.text = style.text.replace(/\%s\>/gi, "</b>");
+            }
+          }
+          if (/\<c\%/gi.test(style.text)) {
+            if (style.code === undefined || typeof style.code !== "object") {
+              throw new Error("code option needs");
+            } else {
+              codeObject = "";
+              if (style.code.display === undefined || style.code.display === null) {
+                style.code.display = "inline-block";
+              }
+              if (style.code.position === undefined || style.code.position === null) {
+                style.code.position = "relative";
+              }
+              for (let b in style.code) {
+                if (b === "fontSizeWeight") {
+                  const [ thisSize, thisWeight ] = style.code[b];
+                  if (typeof thisSize === "number") {
+                    codeObject += "font-size:" + String(thisSize) + thisEa;
+                    codeObject += ';';
+                  } else if (typeof thisSize === "string") {
+                    codeObject += "font-size:" + thisSize;
+                    codeObject += ';';
+                  }
+                  if (typeof thisWeight === "number") {
+                    codeObject += "font-weight:" + String(thisWeight);
+                    codeObject += ';';
+                  } else if (typeof thisWeight === "string") {
+                    codeObject += "font-weight:" + thisWeight;
+                    codeObject += ';';
+                  }
+                } else {
+                  if (/^font/.test(b) || /^padding/.test(b) || /^margin/.test(b)) {
+                    tempIndex = null;
+                    for (let z = 0; z < b.length; z++) {
+                      if (b.charCodeAt(z) < "a".charCodeAt(0)) {
+                        tempIndex = z;
+                        break;
+                      }
+                    }
+                    if (tempIndex !== null) {
+                      codeObject += b.slice(0, tempIndex) + '-' + b.slice(tempIndex).toLowerCase();
+                    } else {
+                      codeObject += b;
+                    }
+                  } else {
+                    codeObject += b;
+                  }
+                  codeObject += ':';
+                  if (typeof style.code[b] === "number") {
+                    if (b === "fontWeight" || b === "zIndex" || b === "opacity" || b === "lineHeight" || b === "flex") {
+                      codeObject += String(style.code[b]);
+                    } else {
+                      codeObject += String(style.code[b]) + thisEa;
+                    }
+                  } else {
+                    codeObject += style.code[b];
+                  }
+                  codeObject += ';';
+                }
+              }
+              style.text = style.text.replace(/\<c\%/gi, "<b style=\"" + codeObject + "\">");
+              style.text = style.text.replace(/\%c\>/gi, "</b>");
+            }
+          }
+          if (/\<i\%/gi.test(style.text)) {
+            if (style.italic === undefined || typeof style.italic !== "object") {
+              throw new Error("italic option needs");
+            } else {
+              italicObject = "";
+              if (style.italic.display === undefined || style.italic.display === null) {
+                style.italic.display = "inline-block";
+              }
+              if (style.italic.position === undefined || style.italic.position === null) {
+                style.italic.position = "relative";
+              }
+              for (let b in style.italic) {
+                if (b === "fontSizeWeight") {
+                  const [ thisSize, thisWeight ] = style.italic[b];
+                  if (typeof thisSize === "number") {
+                    italicObject += "font-size:" + String(thisSize) + thisEa;
+                    italicObject += ';';
+                  } else if (typeof thisSize === "string") {
+                    italicObject += "font-size:" + thisSize;
+                    italicObject += ';';
+                  }
+                  if (typeof thisWeight === "number") {
+                    italicObject += "font-weight:" + String(thisWeight);
+                    italicObject += ';';
+                  } else if (typeof thisWeight === "string") {
+                    italicObject += "font-weight:" + thisWeight;
+                    italicObject += ';';
+                  }
+                } else {
+                  if (/^font/.test(b) || /^padding/.test(b) || /^margin/.test(b)) {
+                    tempIndex = null;
+                    for (let z = 0; z < b.length; z++) {
+                      if (b.charCodeAt(z) < "a".charCodeAt(0)) {
+                        tempIndex = z;
+                        break;
+                      }
+                    }
+                    if (tempIndex !== null) {
+                      italicObject += b.slice(0, tempIndex) + '-' + b.slice(tempIndex).toLowerCase();
+                    } else {
+                      italicObject += b;
+                    }
+                  } else {
+                    italicObject += b;
+                  }
+                  italicObject += ':';
+                  if (typeof style.italic[b] === "number") {
+                    if (b === "fontWeight" || b === "zIndex" || b === "opacity" || b === "lineHeight" || b === "flex") {
+                      italicObject += String(style.italic[b]);
+                    } else {
+                      italicObject += String(style.italic[b]) + thisEa;
+                    }
+                  } else {
+                    italicObject += style.italic[b];
+                  }
+                  italicObject += ';';
+                }
+              }
+              style.text = style.text.replace(/\<i\%/gi, "<b style=\"" + italicObject + "\">");
+              style.text = style.text.replace(/\%i\>/gi, "</b>");
             }
           }
           if (mode !== "textarea") {
@@ -1408,7 +1630,6 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
         }
         delete style.attribute;
       }
-
       if (typeof style.style === "object" && style.style !== null && typeof style.set === "string") {
         if (style.set === "block") {
           style.style.display = "block";
@@ -1472,7 +1693,6 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
         }
         delete style.set;
       }
-
       if (style.style !== undefined) {
         if (typeof style.style === "object") {
           targetStyle = style.style;
@@ -1482,11 +1702,59 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
       } else {
         targetStyle = style;
       }
+      if (targetStyle.display === undefined || targetStyle.display === null) {
+        targetStyle.display = "block";
+      }
+      if (targetStyle.position === undefined || targetStyle.position === null) {
+        targetStyle.position = "relative";
+      }
+      if (typeof targetStyle.display === "string" && /flex/gi.test(targetStyle.display)) {
+        if (targetStyle.flexDirection === undefined || targetStyle.flexDirection === null) {
+          targetStyle.flexDirection = "column";
+        }
+      }
       if (targetStyle.wordSpacing === undefined) {
         targetStyle.wordSpacing = String(-1) + "px";
       }
+      if (style.text !== undefined && targetStyle.fontFamily === undefined) {
+        targetStyle.fontFamily = "pretendard";
+      }
       for (let i in targetStyle) {
-        dom_clone.style[i] = targetStyle[i];
+        if (typeof targetStyle[i] === "number") {
+          if (i === "fontWeight" || i === "zIndex" || i === "opacity" || i === "lineHeight" || i === "flex") {
+            dom_clone.style[i] = String(targetStyle[i]);
+          } else {
+            dom_clone.style[i] = String(targetStyle[i]) + thisEa;
+          }
+        } else {
+          if (i === "widthHeight") {
+            const [ thisWidth, thisHeight ] = targetStyle[i];
+            if (typeof thisWidth === "number") {
+              dom_clone.style.width = String(thisWidth) + thisEa;
+            } else if (typeof thisWidth === "string") {
+              dom_clone.style.width = thisWidth;
+            }
+            if (typeof thisHeight === "number") {
+              dom_clone.style.height = String(thisHeight) + thisEa;
+            } else if (typeof thisHeight === "string") {
+              dom_clone.style.height = thisHeight;
+            }
+          } else if (i === "fontSizeWeight") {
+            const [ thisSize, thisWeight ] = targetStyle[i];
+            if (typeof thisSize === "number") {
+              dom_clone.style.fontSize = String(thisSize) + thisEa;
+            } else if (typeof thisSize === "string") {
+              dom_clone.style.fontSize = thisSize;
+            }
+            if (typeof thisWeight === "number") {
+              dom_clone.style.fontWeight = String(thisWeight);
+            } else if (typeof thisWeight === "string") {
+              dom_clone.style.fontWeight = thisWeight;
+            }
+          } else {
+            dom_clone.style[i] = targetStyle[i];
+          }
+        }
       }
       if (style.event !== undefined) {
         style.events = style.event;
@@ -1688,20 +1956,71 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
       } else {
         targetStyle = style;
       }
+
+      if (targetStyle.display === undefined || targetStyle.display === null) {
+        targetStyle.display = "block";
+      }
+      if (targetStyle.position === undefined || targetStyle.position === null) {
+        targetStyle.position = "relative";
+      }
       if ((targetStyle.width === "auto" || targetStyle.width === undefined) && targetStyle.height !== undefined) {
         ratio = SvgTong.getRatio(dom_clone);
-        ea = targetStyle.height.replace(/[\-\.0-9]/gi, '');
-        temp = Number(targetStyle.height.replace(/[^\-\.0-9]/gi, ''));
+        if (typeof targetStyle.height !== "number") {
+          ea = targetStyle.height.replace(/[\-\.0-9]/gi, '');
+          temp = Number(targetStyle.height.replace(/[^\-\.0-9]/gi, ''));
+        } else {
+          ea = thisEa;
+          temp = targetStyle.height;
+        }
         targetStyle.width = String(temp * ratio) + ea;
       }
       if ((targetStyle.height === "auto" || targetStyle.height === undefined) && targetStyle.width !== undefined) {
         ratio = SvgTong.getRatio(dom_clone);
-        ea = targetStyle.width.replace(/[\-\.0-9]/gi, '');
-        temp = Number(targetStyle.width.replace(/[^\-\.0-9]/gi, ''));
+        if (typeof targetStyle.width !== "number") {
+          ea = targetStyle.width.replace(/[\-\.0-9]/gi, '');
+          temp = Number(targetStyle.width.replace(/[^\-\.0-9]/gi, ''));  
+        } else {
+          ea = thisEa;
+          temp = targetStyle.width;
+        }
         targetStyle.height = String(temp / ratio) + ea;
       }
       for (let i in targetStyle) {
-        dom_clone.style[i] = targetStyle[i];
+        if (typeof targetStyle[i] === "number") {
+          if (i === "fontWeight" || i === "zIndex" || i === "opacity" || i === "lineHeight" || i === "flex") {
+            dom_clone.style[i] = String(targetStyle[i]);
+          } else {
+            dom_clone.style[i] = String(targetStyle[i]) + thisEa;
+          }
+        } else {
+          if (i === "widthHeight") {
+            const [ thisWidth, thisHeight ] = targetStyle[i];
+            if (typeof thisWidth === "number") {
+              dom_clone.style.width = String(thisWidth) + thisEa;
+            } else if (typeof thisWidth === "string") {
+              dom_clone.style.width = thisWidth;
+            }
+            if (typeof thisHeight === "number") {
+              dom_clone.style.height = String(thisHeight) + thisEa;
+            } else if (typeof thisHeight === "string") {
+              dom_clone.style.height = thisHeight;
+            }
+          } else if (i === "fontSizeWeight") {
+            const [ thisSize, thisWeight ] = targetStyle[i];
+            if (typeof thisSize === "number") {
+              dom_clone.style.fontSize = String(thisSize) + thisEa;
+            } else if (typeof thisSize === "string") {
+              dom_clone.style.fontSize = thisSize;
+            }
+            if (typeof thisWeight === "number") {
+              dom_clone.style.fontWeight = String(thisWeight);
+            } else if (typeof thisWeight === "string") {
+              dom_clone.style.fontWeight = thisWeight;
+            }
+          } else {
+            dom_clone.style[i] = targetStyle[i];
+          }
+        }
       }
       if (style.event !== undefined) {
         style.events = style.event;

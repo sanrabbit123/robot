@@ -8,8 +8,8 @@ module.exports = {
       args: [ "pythonCloud" ]
     },
     {
-      name: "robot2",
-      script: "./robot2.js",
+      name: "cron",
+      script: "./cron.js",
       instances: 1,
       exec_mode: "cluster",
       args: [ "cronServer" ]

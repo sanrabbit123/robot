@@ -47,7 +47,7 @@ PortfolioDetailJs.binaryPath = FRONTHOST + "/middle/portfolio";
 PortfolioDetailJs.prototype.portfolioMainBox = function () {
   const instance = this;
   const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, setQueue, designerMthParsing, designerCareer, selfHref } = GeneralJs;
-  const { totalContents, naviHeight, ea, media, pid } = this;
+  const { totalContents, naviHeight, ea, media, pid, slideContentsClassTong } = this;
   const { contentsArr, designers } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -155,6 +155,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
   mainTong = createNode({
     mother: totalContents,
+    class: [ slideContentsClassTong ],
     style: {
       display: "block",
       position: "relative",
@@ -650,22 +651,25 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
 }
 
-PortfolioDetailJs.prototype.portfolioContentsBox = function () {
+PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = null) {
   const instance = this;
-  const { createNode, colorChip, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue } = GeneralJs;
-  const { totalContents, naviHeight, ea, media, pid } = this;
+  const { createNode, colorChip, objectDeepCopy, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue, removeByClass } = GeneralJs;
+  const { totalContents, naviHeight, ea, media, pid, mainContentsClassTong0, mainContentsClassTong1, slideContentsClassTong } = this;
   const { contentsArr, designers } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
-  const { contents: { review, portfolio }, photos } = contents;
+  const { contents: { review, portfolio }, photos } = (updatedContents !== null ? updatedContents : contents);
   const { detail: photoDetail } = photos;
   const { contents: { detail } } = portfolio;
   const designer = designers.search("desid", contents.desid);
+  const editmodeClassName = "editmodeClassName";
   const story = equalJson(JSON.stringify(detail));
   const photoChar = 't';
   const photoCharMobile = "mot";
   const touchStartConst = "touchStartConstName";
+  const imgDomClassName = "imgDomClassName";
+  const contentsDomClassName = "contentsDomClassName";
   const today = new Date();
   let mainTong;
   let mainWidth;
@@ -717,6 +721,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   let mobileDesignerBoxBetween;
   let contentsTitleSize;
   let pastPhotoKey;
+  let contentsBlock;
 
   story.shift();
   customerStory = detail[0].contents;
@@ -745,8 +750,8 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
 
   photoMargin = <%% 8, 8, 8, 8, 1 %%>;
   blankMarginFirst = <%% 126, 126, 126, 96, 13.5 %%>;
-  blankMargin = <%% 90, 90, 90, 70, 11 %%>;
-  blankMargin2 = <%% 90, 90, 90, 70, 10 %%>;
+  blankMargin = <%% 84, 84, 84, 68, 11 %%>;
+  blankMargin2 = <%% 100, 100, 100, 80, 13 %%>;
   blankMarginLast = <%% 200, 200, 200, 170, 20 %%>;
 
   contentsPadding = <%% 21, 21, 21, 21, 6 %%>;
@@ -799,8 +804,12 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
   mobileDesignerWordingTop = 13;
   mobileDesignerBoxBetween = 2;
 
+  removeByClass(mainContentsClassTong0);
+  removeByClass(mainContentsClassTong1);
+
   mainTong = createNode({
     mother: totalContents,
+    class: [ mainContentsClassTong0 ],
     style: {
       display: "block",
       position: "relative",
@@ -811,6 +820,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
       animation: "fadeupdelay 0.5s ease forwards",
     },
   });
+
+  if (updatedContents !== null) {
+    totalContents.insertBefore(mainTong, document.querySelector('.' + slideContentsClassTong).nextElementSibling);
+  }
 
   createNode({
     mother: mainTong,
@@ -847,37 +860,105 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
 
   createNode({
     mother: mainTong,
-    text: customerStory,
+    attribute: { value: customerStory },
     event: {
-      contextmenu: (e) => { e.preventDefault(); },
-      selectstart: (e) => { e.preventDefault(); }
+      click: async function (e) {
+        const self = this;
+        createNode({
+          mother: this,
+          class: [ editmodeClassName ],
+          event: {
+            click: (e) => { e.stopPropagation(); removeByClass(editmodeClassName) },
+          },
+          style: {
+            position: "fixed",
+            top: 0,
+            left: window.innerWidth * -3,
+            background: "transparent",
+            width: window.innerWidth * 6,
+            height: totalContents.getBoundingClientRect().height,
+            zIndex: 10,
+          }
+        })
+        createNode({
+          mother: this,
+          class: [ editmodeClassName ],
+          event: {
+            click: (e) => { e.stopPropagation(); },
+            keydown: async function (e) {
+              if (e.key === "Tab") {
+                e.preventDefault();
+              }
+            },
+            keyup: async function (e) {
+              if (e.key === "Tab") {
+                const finalValue = this.firstChild.value.trim().replace(/\n/gi, "<br>");
+                self.firstChild.textContent = "";
+                self.firstChild.insertAdjacentHTML("beforeend", finalValue);
+                self.setAttribute("value", finalValue);
+                removeByClass(editmodeClassName);
+              }
+            },
+          },
+          style: {
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: withOut(0),
+            height: withOut(0),
+            background: colorChip.white,
+            zIndex: 10,
+          },
+          child: {
+            mode: "textarea",
+            text: this.getAttribute("value"),
+            style: {
+              width: withOut(0),
+              height: withOut(0),
+              border: String(0),
+              outline: String(0),
+              fontSize: String(contentsSize) + ea,
+              fontWeight: String(contentsWeight),
+              lineHeight: String(contentsLineHeight),
+              color: colorExtended.blueDark,
+            }
+          }
+        })
+      }
     },
     style: {
-      display: "block",
-      position: "relative",
-      textAlign: "left",
-      fontSize: String(contentsSize) + ea,
-      fontWeight: String(contentsWeight),
-      lineHeight: String(contentsLineHeight),
-      color: colorChip.black,
       width: desktop ? String(100) + '%' : withOut(contentsPadding * 2, ea),
       marginTop: String(customerMarginTop) + ea,
       paddingRight: desktop ? "" : String(contentsPadding) + ea,
       paddingLeft: desktop ? "" : String(contentsPadding) + ea,
     },
+    child: {
+      text: customerStory,
+      style: {
+        width: withOut(0),
+        textAlign: "left",
+        border: String(0),
+        outline: String(0),
+        background: "transparent",
+        fontSize: String(contentsSize) + ea,
+        fontWeight: String(contentsWeight),
+        lineHeight: String(contentsLineHeight),
+        color: colorChip.black,
+      }
+    }
+  })
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      height: String(blankMargin2) + ea,
+    }
   });
 
   totalNum = 0;
   pastPhotoKey = 1;
   for (let { contents, title, photoKey } of story) {
-
-    createNode({
-      mother: mainTong,
-      style: {
-        display: "block",
-        height: String(totalNum === 0 ? blankMarginFirst : blankMargin2) + ea,
-      }
-    });
 
     num = 0;
     for (let i = pastPhotoKey; i < photoKey + 1; i++) {
@@ -890,10 +971,75 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
       createNode({
         mother: mainTong,
         mode: "img",
-        attribute: { src },
+        class: [ imgDomClassName, imgDomClassName + String(i) + pid ],
+        attribute: { src, draggable: "true", gs: photoDetail[i - 1].gs, pid, index: String(i) },
         event: {
-          contextmenu: (e) => { e.preventDefault(); },
-          selectstart: (e) => { e.preventDefault(); }
+          selectstart: (e) => { e.preventDefault(); },
+          dragstart: function (e) {
+            e.dataTransfer.setData("dragData", JSON.stringify({
+              type: "image",
+              gs: this.getAttribute("gs"),
+              source: this.getAttribute("src"),
+              index: this.getAttribute("index"),
+            }));
+          },
+          drop: async function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const pid = this.getAttribute("pid");
+            const toGs = this.getAttribute("gs");
+            const toSrc = this.getAttribute("src");
+            const toDom = this;
+            const { type } = JSON.parse(e.dataTransfer.getData("dragData"));
+            if (type === "image") {
+              const { gs: fromGs, index: fromIndex, source: fromSrc } = JSON.parse(e.dataTransfer.getData("dragData"));
+              const fromDom = document.querySelector("." + imgDomClassName + String(fromIndex) + pid);
+              if (toGs === fromGs) {
+                toDom.setAttribute("src", fromSrc);
+                fromDom.setAttribute("src", toSrc);
+              } else {
+                if (toGs === 's') {
+                  if ((totalContents.getBoundingClientRect().width / 2) <= toDom.getBoundingClientRect().x) {
+                    toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+                  } else {
+                    toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+                  }
+                } else {
+                  if ((totalContents.getBoundingClientRect().width / 2) <= fromDom.getBoundingClientRect().x) {
+                    toDom.parentElement.insertBefore(fromDom.previousElementSibling, toDom.nextElementSibling);
+                    toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+                  } else {
+                    toDom.parentElement.insertBefore(fromDom.nextElementSibling, toDom.nextElementSibling);
+                    toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+                  }
+                }
+              }
+            } else if (type === "text") {
+              const { index } = JSON.parse(e.dataTransfer.getData("dragData"));
+              const fromDom = document.querySelector("." + contentsDomClassName + String(index) + pid);
+              if (toGs === "s") {
+                if ((totalContents.getBoundingClientRect().width / 2) > toDom.getBoundingClientRect().x) {
+                  toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+                } else {
+                  toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+                }
+              } else {
+                toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+              }
+            }
+          },
+          dragenter: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+          },
+          dragover: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+          },
+          dragleave: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+          },
         },
         style: {
           width: garo ? String(100) + '%' : "calc(50% - " + String(photoMargin / 2) + ea + ")",
@@ -908,21 +1054,158 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
       }
     }
 
-    createNode({
+    contentsBlock = createNode({
       mother: mainTong,
+      attribute: { draggable: "true", index: String(totalNum), pid, value: contents, title: (title.slice(0, 1).toUpperCase() + title.slice(1).replace(/room$/i, '') + (/room/i.test(title) ? " room" : "")), },
+      class: [ contentsDomClassName, contentsDomClassName + String(totalNum) + pid ],
+      event: {
+        dragstart: function (e) {
+          e.dataTransfer.setData("dragData", JSON.stringify({
+            type: "text",
+            pid: this.getAttribute("pid"),
+            index: this.getAttribute("index"),
+          }));
+        },
+        click: async function (e) {
+          const self = this;
+          const [ , title, contents ] = [ ...this.children ];
+          if (e.srcElement === contents || e.srcElement.parentElement === contents) {
+            createNode({
+              mother: contents,
+              class: [ editmodeClassName ],
+              event: {
+                click: (e) => { e.stopPropagation(); removeByClass(editmodeClassName) },
+              },
+              style: {
+                position: "fixed",
+                top: 0,
+                left: window.innerWidth * -3,
+                background: "transparent",
+                width: window.innerWidth * 6,
+                height: totalContents.getBoundingClientRect().height,
+                zIndex: 10,
+              }
+            })
+            createNode({
+              mother: contents,
+              class: [ editmodeClassName ],
+              event: {
+                click: (e) => { e.stopPropagation(); },
+                keydown: async function (e) {
+                  if (e.key === "Tab") {
+                    e.preventDefault();
+                  }
+                },
+                keyup: async function (e) {
+                  if (e.key === "Tab") {
+                    const finalValue = this.firstChild.value.trim().replace(/\n/gi, "<br>");
+                    contents.firstChild.textContent = "";
+                    contents.firstChild.insertAdjacentHTML("beforeend", finalValue);
+                    self.setAttribute("value", finalValue);
+                    removeByClass(editmodeClassName);
+                  }
+                },
+              },
+              style: {
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: withOut(0),
+                height: withOut(0),
+                background: colorChip.white,
+                zIndex: 10,
+              },
+              child: {
+                mode: "textarea",
+                text: this.getAttribute("value"),
+                style: {
+                  width: withOut(0),
+                  height: withOut(0),
+                  border: String(0),
+                  outline: String(0),
+                  fontSize: String(contentsSize) + ea,
+                  fontWeight: String(contentsWeight),
+                  lineHeight: String(contentsLineHeight),
+                  color: colorExtended.blueDark,
+                }
+              }
+            })
+
+          } else {
+            console.log("title");
+          }
+        },
+        drop: async function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const pid = this.getAttribute("pid");
+          const index = this.getAttribute("index");
+          const toDom = this;
+          const { type } = JSON.parse(e.dataTransfer.getData("dragData"));
+          if (type === "image") {
+            const { gs: fromGs, index: fromIndex, source: fromSrc } = JSON.parse(e.dataTransfer.getData("dragData"));
+            const fromDom = document.querySelector("." + imgDomClassName + String(fromIndex) + pid);
+            if (fromGs === 's') {
+              if ((totalContents.getBoundingClientRect().width / 2) <= fromDom.getBoundingClientRect().x) {
+                toDom.parentElement.insertBefore(fromDom.previousElementSibling, toDom);
+                toDom.parentElement.insertBefore(fromDom, toDom);
+              } else {
+                toDom.parentElement.insertBefore(fromDom.nextElementSibling, toDom);
+                toDom.parentElement.insertBefore(fromDom, toDom.previousElementSibling);
+              }
+            } else {
+              toDom.parentElement.insertBefore(fromDom, toDom);
+            }
+          } else if (type === "text") {
+            const { index } = JSON.parse(e.dataTransfer.getData("dragData"));
+            const fromDom = document.querySelector("." + contentsDomClassName + String(index) + pid);
+            toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+          }
+        },
+        dragenter: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        },
+        dragover: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        },
+        dragleave: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        },
+        contextmenu: async function (e) {
+          e.preventDefault();
+          const index = Number(this.getAttribute("index"));
+          const contents = instance.originalContentsArr[0];
+          const thisCopied = objectDeepCopy(contents.contents.portfolio.contents.detail[index + 1]);
+          if (!e.altKey) {
+            contents.contents.portfolio.contents.detail.splice(index + 1, 0, thisCopied);
+          } else {
+            contents.contents.portfolio.contents.detail.splice(index + 1, 1);
+          }
+          instance.originalContentsArr = [ contents ];
+          instance.portfolioContentsBox(contents);
+        }
+      },
+      style: {
+        width: desktop ? String(100) + '%' : withOut(contentsPadding * 2, ea),
+      }
+    })
+    createNode({
+      mother: contentsBlock,
       style: {
         display: "block",
         height: String(blankMargin) + ea,
       }
     });
-
     createNode({
-      mother: mainTong,
+      mother: contentsBlock,
       style: {
         display: "block",
         position: "relative",
         textAlign: "center",
-        width: desktop ? String(100) + '%' : withOut(contentsPadding * 2, ea),
+        width: String(100) + '%',
         marginBottom: String(questionMargin) + ea,
         paddingLeft: desktop ? "" : String(contentsPadding) + ea,
         paddingRight: desktop ? "" : String(contentsPadding) + ea,
@@ -943,27 +1226,35 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
         }
       ]
     });
-
     createNode({
-      mother: mainTong,
-      text: contents,
-      event: {
-        contextmenu: (e) => { e.preventDefault(); },
-        selectstart: (e) => { e.preventDefault(); }
+      mother: contentsBlock,
+      style: {
+        width: String(100) + '%',
+        marginTop: String(customerMarginTop) + ea,
+        paddingRight: desktop ? "" : String(contentsPadding) + ea,
+        paddingLeft: desktop ? "" : String(contentsPadding) + ea,
       },
+      child: {
+        text: contents,
+        style: {
+          width: withOut(0),
+          textAlign: "left",
+          border: String(0),
+          outline: String(0),
+          background: "transparent",
+          fontSize: String(contentsSize) + ea,
+          fontWeight: String(contentsWeight),
+          lineHeight: String(contentsLineHeight),
+          color: colorChip.black,
+        }
+      }
+    });
+    createNode({
+      mother: contentsBlock,
       style: {
         display: "block",
-        position: "relative",
-        textAlign: "left",
-        width: desktop ? String(100) + '%' : withOut(contentsPadding * 2, ea),
-        fontSize: String(contentsSize) + ea,
-        fontWeight: String(answerWeight),
-        lineHeight: String(contentsLineHeight),
-        color: colorChip.black,
-        marginBottom: String(answerMargin) + ea,
-        paddingLeft: desktop ? "" : String(contentsPadding) + ea,
-        paddingRight: desktop ? "" : String(contentsPadding) + ea,
-      },
+        height: String(blankMargin2) + ea,
+      }
     });
 
     pastPhotoKey = photoKey + 1;
@@ -978,8 +1269,8 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function () {
     }
   });
 
-  if (contents.contents.review.contents.detail.length > 0) {
-    instance.portfolioDesignerBox();
+  if (review.contents.detail.length > 0) {
+    instance.portfolioDesignerBox(updatedContents);
   }
 }
 
@@ -2259,17 +2550,17 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
 }
 
-PortfolioDetailJs.prototype.portfolioDesignerBox = function () {
+PortfolioDetailJs.prototype.portfolioDesignerBox = function (updatedContents = null) {
   const instance = this;
   const { createNode, colorChip, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue, serviceParsing } = GeneralJs;
-  const { totalContents, naviHeight, ea, media, pid } = this;
+  const { totalContents, naviHeight, ea, media, pid, mainContentsClassTong1, slideContentsClassTong } = this;
   const version = 0;
   const { contentsArr, designers } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
-  const { contents: { review }, photos } = contents;
+  const { contents: { review }, photos } = updatedContents !== null ? updatedContents : contents;
   const { detail: photoDetail } = photos;
   const { contents: { detail } } = review;
   const [ { contents: customerStoryMother } ] = detail;
@@ -2474,6 +2765,7 @@ PortfolioDetailJs.prototype.portfolioDesignerBox = function () {
 
   mainTong = createNode({
     mother: totalContents,
+    class: [ mainContentsClassTong1 ],
     style: {
       display: "block",
       position: "relative",
@@ -2483,6 +2775,10 @@ PortfolioDetailJs.prototype.portfolioDesignerBox = function () {
       animation: "fadeupdelay 0.5s ease forwards",
     },
   });
+
+  if (updatedContents !== null) {
+    totalContents.insertBefore(mainTong, document.querySelector('.' + slideContentsClassTong).nextElementSibling.nextElementSibling);
+  }
 
   createNode({
     mother: mainTong,
@@ -2828,7 +3124,7 @@ PortfolioDetailJs.prototype.portfolioDesignerBox = function () {
 
 PortfolioDetailJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce, colorExtended, facebookSdkPatch, kakaoSdkPatch, homeliaisonAnalytics, dateToString } = GeneralJs;
+  const { returnGet, ajaxJson, objectDeepCopy, setQueue, setDebounce, colorExtended, facebookSdkPatch, kakaoSdkPatch, homeliaisonAnalytics, dateToString } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 
@@ -2872,6 +3168,9 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
     this.fullLoad = false;
     this.photoLoad = false;
     this.loadedContents = [];
+    this.mainContentsClassTong0 = "mainContentsClassTong0";
+    this.mainContentsClassTong1 = "mainContentsClassTong1";
+    this.slideContentsClassTong = "slideContentsClassTong";
 
     await this.mother.ghostClientLaunching({
       mode: "front",
@@ -2889,24 +3188,6 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
           instance.portfolioMainBox();
           instance.portfolioContentsBox();
           instance.portfolioRelativeBox();
-
-          homeliaisonAnalytics({
-            page: instance.pageName,
-            standard: instance.firstPageViewTime,
-            action: "contentsView",
-            data: {
-              cliid: "null",
-              href: window.encodeURIComponent(window.location.href),
-              date: dateToString(new Date(), true),
-            },
-            dimension: {
-              contents_desid: instance.designers.length > 0 ? instance.designers[0].desid : "null",
-              contents_pid: instance.pid,
-            }
-          }).catch((err) => {
-            console.log(err);
-          });
-
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "PortfolioDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
@@ -2922,6 +3203,7 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
         console.log(err);
       });
       ajaxJson({ mode: "portfolio" }, LOGHOST + "/getContents", { equal: true }).then((response) => {
+        instance.originalContentsArr = objectDeepCopy(instance.contentsArr.toNormal());
         instance.contentsArr = new SearchArray(response.contentsArr);
         instance.designers = new SearchArray(response.designers);
         instance.fullLoad = true;

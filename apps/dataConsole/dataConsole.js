@@ -1067,9 +1067,6 @@ DataConsole.prototype.connect = async function () {
     //set address info
     const { name, rawObj: address, isTest } = await this.mother.ipCheck();
     let isLocal;
-    if (name === "unknown") {
-      throw new Error("invalid address");
-    }
     console.log(``);
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name} ${isTest ? "(test mode) " : ""}==============`);
     console.log(``);
