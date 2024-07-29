@@ -651,6 +651,25 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
 }
 
+PortfolioDetailJs.prototype.contentsBoxStatusRead = function () {
+  const instance = this;
+  const { createNode, colorChip, objectDeepCopy, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue, removeByClass } = GeneralJs;
+  const { totalContents, naviHeight, ea, media, pid, mainContentsClassTong0, mainContentsClassTong1, slideContentsClassTong } = this;
+  const { contentsArr, designers } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  try {
+
+    
+
+
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = null) {
   const instance = this;
   const { createNode, colorChip, objectDeepCopy, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue, removeByClass } = GeneralJs;
@@ -1069,6 +1088,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
         click: async function (e) {
           const self = this;
           const [ , title, contents ] = [ ...this.children ];
+          let textAreaDom;
           if (e.srcElement === contents || e.srcElement.parentElement === contents) {
             createNode({
               mother: contents,
@@ -1085,8 +1105,8 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
                 height: totalContents.getBoundingClientRect().height,
                 zIndex: 10,
               }
-            })
-            createNode({
+            });
+            textAreaDom = createNode({
               mother: contents,
               class: [ editmodeClassName ],
               event: {
@@ -1129,11 +1149,78 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
                   color: colorExtended.blueDark,
                 }
               }
-            })
-
+            }).firstChild;
           } else {
-            console.log("title");
+            createNode({
+              mother: title,
+              class: [ editmodeClassName ],
+              event: {
+                click: (e) => { e.stopPropagation(); removeByClass(editmodeClassName) },
+              },
+              style: {
+                position: "fixed",
+                top: 0,
+                left: window.innerWidth * -3,
+                background: "transparent",
+                width: window.innerWidth * 6,
+                height: totalContents.getBoundingClientRect().height,
+                zIndex: 10,
+              }
+            });
+            textAreaDom = createNode({
+              mother: title,
+              class: [ editmodeClassName ],
+              event: {
+                click: (e) => { e.stopPropagation(); },
+                keydown: async function (e) {
+                  if (e.key === "Tab" || e.key === "Enter") {
+                    e.preventDefault();
+                  }
+                },
+                keyup: async function (e) {
+                  if (e.key === "Tab" || e.key === "Enter") {
+                    const finalValue = this.firstChild.value.trim().replace(/\n/gi, "<br>");
+                    title.firstChild.textContent = "";
+                    title.firstChild.insertAdjacentHTML("beforeend", finalValue);
+                    self.setAttribute("title", finalValue);
+                    removeByClass(editmodeClassName);
+                  }
+                },
+              },
+              style: {
+                display: "flex",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: withOut(0),
+                height: withOut(0),
+                background: colorChip.white,
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                zIndex: 10,
+              },
+              child: {
+                mode: "textarea",
+                text: this.getAttribute("title"),
+                style: {
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  height: withOut(0),
+                  border: String(0),
+                  outline: String(0),
+                  fontSize: String(contentsTitleSize) + ea,
+                  fontWeight: String(questionWeight),
+                  lineHeight: String(contentsLineHeight),
+                  color: colorExtended.blue,
+                  fontFamily: "graphik",
+                }
+              }
+            }).firstChild;
           }
+          textAreaDom.focus();
         },
         drop: async function (e) {
           e.preventDefault();

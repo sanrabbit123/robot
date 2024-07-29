@@ -9769,7 +9769,7 @@ GeneralJs.prototype.greenTalk = function (input) {
           width: withOut(0),
           height: withOut(0),
           justifyContent: "center",
-          alignItems: "center",
+          alignItems: "end",
           textAlign: "center",
         }
       }

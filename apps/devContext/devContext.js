@@ -67,7 +67,7 @@ DevContext.prototype.launching = async function () {
     // const res = await ajaxJson({
     //   mode: "constructOnoff",
     //   action: "on",
-    //   proid: "p2312_aa18s",
+    //   proid: "p2407_ab05s",
     // }, "https://" + address.backinfo.host + ":3000/constructInteraction");
     // console.log(res);
     // =======================================================================================================================================================
@@ -129,6 +129,9 @@ DevContext.prototype.launching = async function () {
     const designerName = "박정훈";
     const clientName = "정현주";
     const pid = "p411";
+
+    
+
 
     // 1. raw to raw
 
