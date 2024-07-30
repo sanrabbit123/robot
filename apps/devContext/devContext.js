@@ -7451,8 +7451,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "윤주영";
-    // const amount = 7_324_000;
+    // const name = "김희진";
+    // const amount = 1_409_000;
     // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
 
 

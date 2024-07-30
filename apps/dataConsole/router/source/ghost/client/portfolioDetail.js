@@ -655,10 +655,11 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = async function () {
   const instance = this;
   const { createNode, colorChip, objectDeepCopy, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, ajaxJson, designerCareer, isMac, isIphone, selfHref, setQueue, removeByClass } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, mainContentsClassTong0, mainContentsClassTong1, slideContentsClassTong } = this;
-  const { contentsArr, designers } = this;
+  const { contentsArr, designers, editable } = this;
   const mobile = media[4];
   const desktop = !mobile;
   try {
+    const loading = await this.mother.grayLoading();
     const targetContentsBase = document.querySelector('.' + mainContentsClassTong0);
     const targetContentsChildren = [ ...targetContentsBase.children ].map((d) => {
       let source;
@@ -722,27 +723,31 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = async function () {
         }
       }
 
-      response = await ajaxJson({ pid: targetImagesChildren[0].pid, title: mainTitle, data: targetImagesChildren, contents: contentsDetail }, LOGHOST + "/updateImagesOrder", { equal: true });
-      instance.originalContentsArr = [ response.contents ];
+      if (editable) {
+        response = await ajaxJson({ pid: targetImagesChildren[0].pid, title: mainTitle, data: targetImagesChildren, contents: contentsDetail }, LOGHOST + "/updateImagesOrder", { equal: true });
+        instance.originalContentsArr = [ response.contents ];  
+      }
 
-      console.log(response)
+      loading.remove();
 
       return response.contents;
     } else {
+      window.location.reload();
       return null;
     }
 
   } catch (e) {
     console.log(e);
+    window.location.reload();
     return null;
   }
 }
 
-PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = null) {
+PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedContents = null) {
   const instance = this;
   const { createNode, colorChip, objectDeepCopy, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue, removeByClass } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, mainContentsClassTong0, mainContentsClassTong1, slideContentsClassTong } = this;
-  const { contentsArr, designers } = this;
+  const { contentsArr, designers, editable } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
@@ -894,8 +899,8 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
   mobileDesignerWordingTop = 13;
   mobileDesignerBoxBetween = 2;
 
-  daeShadow = ("drop-shadow(" + colorChip.blue + " 0px 5px 10px)");
-  daeZIndex = 1;
+  daeShadow = editable ? ("drop-shadow(" + colorChip.blue + " 0px 5px 10px)") : "";
+  daeZIndex = editable ? 1 : 0;
 
   removeByClass(mainContentsClassTong0);
   removeByClass(mainContentsClassTong1);
@@ -925,69 +930,71 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
     attribute: { value: portfolio.title.main.replace(/, /, "\n"), type: "title" },
     event: {
       click: async function (e) {
-        const self = this;
-        createNode({
-          mother: this,
-          class: [ editmodeClassName ],
-          event: {
-            click: (e) => { e.stopPropagation(); removeByClass(editmodeClassName) },
-          },
-          style: {
-            position: "fixed",
-            top: 0,
-            left: window.innerWidth * -3,
-            background: "transparent",
-            width: window.innerWidth * 6,
-            height: totalContents.getBoundingClientRect().height,
-            zIndex: 10,
-          }
-        });
-        createNode({
-          mother: this,
-          class: [ editmodeClassName ],
-          event: {
-            click: (e) => { e.stopPropagation(); },
-            keydown: async function (e) {
-              if (e.key === "Tab" || e.key === "Enter") {
-                e.preventDefault();
-              }
+        if (editable) {
+          const self = this;
+          createNode({
+            mother: this,
+            class: [ editmodeClassName ],
+            event: {
+              click: async (e) => { e.stopPropagation(); removeByClass(editmodeClassName) },
             },
-            keyup: async function (e) {
-              if (e.key === "Tab" || e.key === "Enter") {
-                const finalValue = this.firstChild.value.trim().replace(/\n/gi, "<br>");
-                self.textContent = "";
-                self.insertAdjacentHTML("beforeend", finalValue);
-                self.setAttribute("value", finalValue);
-                await instance.contentsBoxStatusRead();
-                removeByClass(editmodeClassName);
-              }
-            },
-          },
-          style: {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: withOut(0),
-            height: withOut(0),
-            background: colorChip.white,
-            zIndex: 10,
-          },
-          child: {
-            mode: "textarea",
-            text: this.getAttribute("value"),
             style: {
+              position: "fixed",
+              top: 0,
+              left: window.innerWidth * -3,
+              background: "transparent",
+              width: window.innerWidth * 6,
+              height: totalContents.getBoundingClientRect().height,
+              zIndex: 10,
+            }
+          });
+          createNode({
+            mother: this,
+            class: [ editmodeClassName ],
+            event: {
+              click: (e) => { e.stopPropagation(); },
+              keydown: async function (e) {
+                if (e.key === "Tab" || e.key === "Enter") {
+                  e.preventDefault();
+                }
+              },
+              keyup: async function (e) {
+                if (e.key === "Tab" || e.key === "Enter") {
+                  const finalValue = this.firstChild.value.trim().replace(/\n/gi, "<br>");
+                  self.textContent = "";
+                  self.insertAdjacentHTML("beforeend", finalValue);
+                  self.setAttribute("value", finalValue);
+                  await instance.contentsBoxStatusRead();
+                  removeByClass(editmodeClassName);
+                }
+              },
+            },
+            style: {
+              position: "absolute",
+              top: 0,
+              left: 0,
               width: withOut(0),
               height: withOut(0),
-              border: String(0),
-              outline: String(0),
-              textAlign: "center",
-              fontSize: String(titleSize) + ea,
-              fontWeight: String(titleWeight),
-              lineHeight: String(titleLineHeight),
-              color: colorExtended.blueDark,
+              background: colorChip.white,
+              zIndex: 10,
+            },
+            child: {
+              mode: "textarea",
+              text: this.getAttribute("value"),
+              style: {
+                width: withOut(0),
+                height: withOut(0),
+                border: String(0),
+                outline: String(0),
+                textAlign: "center",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(titleWeight),
+                lineHeight: String(titleLineHeight),
+                color: colorExtended.blueDark,
+              }
             }
-          }
-        });
+          });
+        }
       }
     },
     style: {
@@ -1027,68 +1034,85 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
     attribute: { value: customerStory, type: "story" },
     event: {
       click: async function (e) {
-        const self = this;
-        createNode({
-          mother: this,
-          class: [ editmodeClassName ],
-          event: {
-            click: (e) => { e.stopPropagation(); removeByClass(editmodeClassName) },
-          },
-          style: {
-            position: "fixed",
-            top: 0,
-            left: window.innerWidth * -3,
-            background: "transparent",
-            width: window.innerWidth * 6,
-            height: totalContents.getBoundingClientRect().height,
-            zIndex: 10,
-          }
-        });
-        createNode({
-          mother: this,
-          class: [ editmodeClassName ],
-          event: {
-            click: (e) => { e.stopPropagation(); },
-            keydown: async function (e) {
-              if (e.key === "Tab") {
-                e.preventDefault();
-              }
-            },
-            keyup: async function (e) {
-              if (e.key === "Tab") {
-                const finalValue = this.firstChild.value.trim().replace(/\n/gi, "<br>");
+        if (editable) {
+          const self = this;
+          createNode({
+            mother: this,
+            class: [ editmodeClassName ],
+            event: {
+              click: async (e) => {
+                e.stopPropagation();
+                const finalValue = self.querySelector("textarea").value.trim().replace(/\n/gi, "<br>");
                 self.firstChild.textContent = "";
                 self.firstChild.insertAdjacentHTML("beforeend", finalValue);
                 self.setAttribute("value", finalValue);
                 await instance.contentsBoxStatusRead();
                 removeByClass(editmodeClassName);
-              }
+              },
             },
-          },
-          style: {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: withOut(0),
-            height: withOut(0),
-            background: colorChip.white,
-            zIndex: 10,
-          },
-          child: {
-            mode: "textarea",
-            text: this.getAttribute("value"),
             style: {
+              position: "fixed",
+              top: 0,
+              left: window.innerWidth * -3,
+              background: "transparent",
+              width: window.innerWidth * 6,
+              height: totalContents.getBoundingClientRect().height,
+              zIndex: 10,
+            }
+          });
+          createNode({
+            mother: this,
+            class: [ editmodeClassName ],
+            attribute: { draggable: "false", },
+            event: {
+              dragstart: (e) => { e.stopPropagation(); },
+              click: (e) => { e.stopPropagation(); },
+            },
+            style: {
+              position: "absolute",
+              top: 0,
+              left: 0,
               width: withOut(0),
               height: withOut(0),
-              border: String(0),
-              outline: String(0),
-              fontSize: String(contentsSize) + ea,
-              fontWeight: String(contentsWeight),
-              lineHeight: String(contentsLineHeight),
-              color: colorExtended.blueDark,
+              background: colorChip.white,
+              zIndex: 10,
+            },
+            child: {
+              mode: "textarea",
+              attribute: { draggable: "false", },
+              event: {
+                dragstart: (e) => { e.stopPropagation(); },
+                keydown: async function (e) {
+                  if (e.key === "Tab") {
+                    e.preventDefault();
+                  }
+                },
+                keyup: async function (e) {
+                  if (e.key === "Tab") {
+                    const finalValue = self.querySelector("textarea").value.trim().replace(/\n/gi, "<br>");
+                    self.firstChild.textContent = "";
+                    self.firstChild.insertAdjacentHTML("beforeend", finalValue);
+                    self.setAttribute("value", finalValue);
+                    await instance.contentsBoxStatusRead();
+                    removeByClass(editmodeClassName);
+                  }
+                },
+              },
+              text: this.getAttribute("value"),
+              style: {
+                width: withOut(0),
+                height: withOut(0),
+                border: String(0),
+                outline: String(0),
+                fontSize: String(contentsSize) + ea,
+                fontWeight: String(contentsWeight),
+                lineHeight: String(contentsLineHeight),
+                color: colorExtended.blueDark,
+              }
             }
-          }
-        });
+          });
+          await instance.contentsBoxStatusRead();
+        }
       }
     },
     style: {
@@ -1142,7 +1166,9 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
         attribute: { type: "photo", src, draggable: "true", gs: photoDetail[i - 1].gs, pid, index: String(i), dae: (photodae.includes(i) ? "true" : "false") },
         event: {
           click: async function (e) {
-            await instance.contentsBoxStatusRead();
+            if (editable) {
+              await instance.contentsBoxStatusRead();
+            }
           },
           selectstart: (e) => { e.preventDefault(); },
           dragstart: function (e) {
@@ -1156,65 +1182,67 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
           drop: async function (e) {
             e.preventDefault();
             e.stopPropagation();
-            const pid = this.getAttribute("pid");
-            const toGs = this.getAttribute("gs");
-            const toSrc = this.getAttribute("src");
-            const toDom = this;
-            const { type } = JSON.parse(e.dataTransfer.getData("dragData"));
-            if (type === "image") {
-              const { gs: fromGs, index: fromIndex, source: fromSrc } = JSON.parse(e.dataTransfer.getData("dragData"));
-              const fromDom = document.querySelector("." + imgDomClassName + String(fromIndex) + pid);
-              if (toGs === fromGs) {
-                toDom.setAttribute("src", fromSrc);
-                fromDom.setAttribute("src", toSrc);
-                if (toDom.getAttribute("dae") === "true") {
-                  toDom.setAttribute("dae", "false");
-                  fromDom.setAttribute("dae", "true");
-                  fromDom.style.filter = daeShadow;
-                  fromDom.style.zIndex = daeZIndex;
-                  toDom.style.filter = "";
-                  toDom.style.zIndex = "";
-                } else {
-                  if (fromDom.getAttribute("dae") === "true") {
-                    toDom.setAttribute("dae", "true");
-                    fromDom.setAttribute("dae", "false");
-                    toDom.style.filter = daeShadow;
-                    toDom.style.zIndex = daeZIndex;
-                    fromDom.style.filter = "";
-                    fromDom.style.zIndex = "";
-                  } 
-                }
-              } else {
-                if (toGs === 's') {
-                  if ((totalContents.getBoundingClientRect().width / 2) <= toDom.getBoundingClientRect().x) {
-                    toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+            if (editable) {
+              const pid = this.getAttribute("pid");
+              const toGs = this.getAttribute("gs");
+              const toSrc = this.getAttribute("src");
+              const toDom = this;
+              const { type } = JSON.parse(e.dataTransfer.getData("dragData"));
+              if (type === "image") {
+                const { gs: fromGs, index: fromIndex, source: fromSrc } = JSON.parse(e.dataTransfer.getData("dragData"));
+                const fromDom = document.querySelector("." + imgDomClassName + String(fromIndex) + pid);
+                if (toGs === fromGs) {
+                  toDom.setAttribute("src", fromSrc);
+                  fromDom.setAttribute("src", toSrc);
+                  if (toDom.getAttribute("dae") === "true") {
+                    toDom.setAttribute("dae", "false");
+                    fromDom.setAttribute("dae", "true");
+                    fromDom.style.filter = daeShadow;
+                    fromDom.style.zIndex = daeZIndex;
+                    toDom.style.filter = "";
+                    toDom.style.zIndex = "";
                   } else {
-                    toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+                    if (fromDom.getAttribute("dae") === "true") {
+                      toDom.setAttribute("dae", "true");
+                      fromDom.setAttribute("dae", "false");
+                      toDom.style.filter = daeShadow;
+                      toDom.style.zIndex = daeZIndex;
+                      fromDom.style.filter = "";
+                      fromDom.style.zIndex = "";
+                    } 
                   }
                 } else {
-                  if ((totalContents.getBoundingClientRect().width / 2) <= fromDom.getBoundingClientRect().x) {
-                    toDom.parentElement.insertBefore(fromDom.previousElementSibling, toDom.nextElementSibling);
-                    toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+                  if (toGs === 's') {
+                    if ((totalContents.getBoundingClientRect().width / 2) <= toDom.getBoundingClientRect().x) {
+                      toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+                    } else {
+                      toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+                    }
                   } else {
-                    toDom.parentElement.insertBefore(fromDom.nextElementSibling, toDom.nextElementSibling);
-                    toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+                    if ((totalContents.getBoundingClientRect().width / 2) <= fromDom.getBoundingClientRect().x) {
+                      toDom.parentElement.insertBefore(fromDom.previousElementSibling, toDom.nextElementSibling);
+                      toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+                    } else {
+                      toDom.parentElement.insertBefore(fromDom.nextElementSibling, toDom.nextElementSibling);
+                      toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+                    }
                   }
                 }
-              }
-            } else if (type === "text") {
-              const { index } = JSON.parse(e.dataTransfer.getData("dragData"));
-              const fromDom = document.querySelector("." + contentsDomClassName + String(index) + pid);
-              if (toGs === "s") {
-                if ((totalContents.getBoundingClientRect().width / 2) > toDom.getBoundingClientRect().x) {
-                  toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+              } else if (type === "text") {
+                const { index } = JSON.parse(e.dataTransfer.getData("dragData"));
+                const fromDom = document.querySelector("." + contentsDomClassName + String(index) + pid);
+                if (toGs === "s") {
+                  if ((totalContents.getBoundingClientRect().width / 2) > toDom.getBoundingClientRect().x) {
+                    toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+                  } else {
+                    toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+                  }
                 } else {
                   toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
                 }
-              } else {
-                toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
               }
+              await instance.contentsBoxStatusRead();
             }
-            await instance.contentsBoxStatusRead();
           },
           dragenter: function (e) {
             e.preventDefault();
@@ -1230,17 +1258,19 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
           },
           contextmenu: async function (e) {
             e.preventDefault();
-            if (this.getAttribute("dae") === "false") {
-              const thisGs = this.getAttribute("gs");
-              const pastDae = [ ...document.querySelectorAll('.' + imgDomClassName) ].filter((o) => { return o.getAttribute("gs") === thisGs }).find((d) => { return d.getAttribute("dae") === "true" });
-              this.setAttribute("dae", "true");
-              this.style.filter = daeShadow;
-              this.style.zIndex = daeZIndex;
-              pastDae.setAttribute("dae", "false");
-              pastDae.style.filter = "";
-              pastDae.style.zIndex = "";
+            if (editable) {
+              if (this.getAttribute("dae") === "false") {
+                const thisGs = this.getAttribute("gs");
+                const pastDae = [ ...document.querySelectorAll('.' + imgDomClassName) ].filter((o) => { return o.getAttribute("gs") === thisGs }).find((d) => { return d.getAttribute("dae") === "true" });
+                this.setAttribute("dae", "true");
+                this.style.filter = daeShadow;
+                this.style.zIndex = daeZIndex;
+                pastDae.setAttribute("dae", "false");
+                pastDae.style.filter = "";
+                pastDae.style.zIndex = "";
+              }
+              await instance.contentsBoxStatusRead();
             }
-            await instance.contentsBoxStatusRead();
           }
         },
         style: {
@@ -1271,172 +1301,201 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
           }));
         },
         click: async function (e) {
-          const self = this;
-          const [ , title, contents ] = [ ...this.children ];
-          let textAreaDom;
-          if (e.srcElement === contents || e.srcElement.parentElement === contents) {
-            createNode({
-              mother: contents,
-              class: [ editmodeClassName ],
-              event: {
-                click: (e) => { e.stopPropagation(); removeByClass(editmodeClassName) },
-              },
-              style: {
-                position: "fixed",
-                top: 0,
-                left: window.innerWidth * -3,
-                background: "transparent",
-                width: window.innerWidth * 6,
-                height: totalContents.getBoundingClientRect().height,
-                zIndex: 10,
-              }
-            });
-            textAreaDom = createNode({
-              mother: contents,
-              class: [ editmodeClassName ],
-              event: {
-                click: (e) => { e.stopPropagation(); },
-                keydown: async function (e) {
-                  if (e.key === "Tab") {
-                    e.preventDefault();
-                  }
-                },
-                keyup: async function (e) {
-                  if (e.key === "Tab") {
-                    const finalValue = this.firstChild.value.trim().replace(/\n/gi, "<br>");
+          if (editable) {
+            const self = this;
+            const [ , title, contents ] = [ ...this.children ];
+            let textAreaDom;
+            if (e.srcElement === contents || e.srcElement.parentElement === contents) {
+              self.removeAttribute("draggable");
+              createNode({
+                mother: contents,
+                class: [ editmodeClassName ],
+                event: {
+                  click: async (e) => {
+                    e.stopPropagation();
+                    self.setAttribute("draggable", "true");
+                    const finalValue = self.querySelector("textarea").value.trim().replace(/\n/gi, "<br>");
                     contents.firstChild.textContent = "";
                     contents.firstChild.insertAdjacentHTML("beforeend", finalValue);
                     self.setAttribute("value", finalValue);
                     await instance.contentsBoxStatusRead();
                     removeByClass(editmodeClassName);
-                  }
+                  },
                 },
-              },
-              style: {
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: withOut(0),
-                height: withOut(0),
-                background: colorChip.white,
-                zIndex: 10,
-              },
-              child: {
-                mode: "textarea",
-                text: this.getAttribute("value"),
                 style: {
+                  position: "fixed",
+                  top: 0,
+                  left: window.innerWidth * -3,
+                  background: "transparent",
+                  width: window.innerWidth * 6,
+                  height: totalContents.getBoundingClientRect().height,
+                  zIndex: 10,
+                }
+              });
+              textAreaDom = createNode({
+                mother: contents,
+                attribute: { draggable: "false", },
+                class: [ editmodeClassName ],
+                event: {
+                  dragstart: e => { e.stopPropagation() },
+                  click: (e) => { e.stopPropagation(); },
+                },
+                style: {
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
                   width: withOut(0),
                   height: withOut(0),
-                  border: String(0),
-                  outline: String(0),
-                  fontSize: String(contentsSize) + ea,
-                  fontWeight: String(contentsWeight),
-                  lineHeight: String(contentsLineHeight),
-                  color: colorExtended.blueDark,
-                }
-              }
-            }).firstChild;
-          } else {
-            createNode({
-              mother: title,
-              class: [ editmodeClassName ],
-              event: {
-                click: (e) => { e.stopPropagation(); removeByClass(editmodeClassName) },
-              },
-              style: {
-                position: "fixed",
-                top: 0,
-                left: window.innerWidth * -3,
-                background: "transparent",
-                width: window.innerWidth * 6,
-                height: totalContents.getBoundingClientRect().height,
-                zIndex: 10,
-              }
-            });
-            textAreaDom = createNode({
-              mother: title,
-              class: [ editmodeClassName ],
-              event: {
-                click: (e) => { e.stopPropagation(); },
-                keydown: async function (e) {
-                  if (e.key === "Tab" || e.key === "Enter") {
-                    e.preventDefault();
-                  }
+                  background: colorChip.white,
+                  zIndex: 10,
                 },
-                keyup: async function (e) {
-                  if (e.key === "Tab" || e.key === "Enter") {
-                    const finalValue = this.firstChild.value.trim().replace(/\n/gi, "<br>");
+                child: {
+                  mode: "textarea",
+                  text: this.getAttribute("value"),
+                  attribute: { draggable: "false", },
+                  event: {
+                    dragstart: e => { e.stopPropagation() },
+                    keydown: async function (e) {
+                      if (e.key === "Tab") {
+                        e.preventDefault();
+                      }
+                    },
+                    keyup: async function (e) {
+                      if (e.key === "Tab") {
+                        self.setAttribute("draggable", "true");
+                        const finalValue = self.querySelector("textarea").value.trim().replace(/\n/gi, "<br>");
+                        contents.firstChild.textContent = "";
+                        contents.firstChild.insertAdjacentHTML("beforeend", finalValue);
+                        self.setAttribute("value", finalValue);
+                        await instance.contentsBoxStatusRead();
+                        removeByClass(editmodeClassName);
+                      }
+                    },
+                  },
+                  style: {
+                    width: withOut(0),
+                    height: withOut(0),
+                    border: String(0),
+                    outline: String(0),
+                    fontSize: String(contentsSize) + ea,
+                    fontWeight: String(contentsWeight),
+                    lineHeight: String(contentsLineHeight),
+                    color: colorExtended.blueDark,
+                  }
+                }
+              }).firstChild;
+            } else {
+              createNode({
+                mother: title,
+                class: [ editmodeClassName ],
+                event: {
+                  click: async (e) => {
+                    e.stopPropagation();
+                    const finalValue = self.querySelector("textarea").value.trim().replace(/\n/gi, "<br>");
                     title.firstChild.textContent = "";
                     title.firstChild.insertAdjacentHTML("beforeend", finalValue);
                     self.setAttribute("title", finalValue);
                     await instance.contentsBoxStatusRead();
                     removeByClass(editmodeClassName);
-                  }
+                  },
                 },
-              },
-              style: {
-                display: "flex",
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: withOut(0),
-                height: withOut(0),
-                background: colorChip.white,
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                zIndex: 10,
-              },
-              child: {
-                mode: "textarea",
-                text: this.getAttribute("title"),
                 style: {
-                  display: "inline-flex",
+                  position: "fixed",
+                  top: 0,
+                  left: window.innerWidth * -3,
+                  background: "transparent",
+                  width: window.innerWidth * 6,
+                  height: totalContents.getBoundingClientRect().height,
+                  zIndex: 10,
+                }
+              });
+              textAreaDom = createNode({
+                mother: title,
+                class: [ editmodeClassName ],
+                event: {
+                  click: (e) => { e.stopPropagation(); },
+                  keydown: async function (e) {
+                    if (e.key === "Tab" || e.key === "Enter") {
+                      e.preventDefault();
+                    }
+                  },
+                  keyup: async function (e) {
+                    if (e.key === "Tab" || e.key === "Enter") {
+                      const finalValue = self.querySelector("textarea").value.trim().replace(/\n/gi, "<br>");
+                      title.firstChild.textContent = "";
+                      title.firstChild.insertAdjacentHTML("beforeend", finalValue);
+                      self.setAttribute("title", finalValue);
+                      await instance.contentsBoxStatusRead();
+                      removeByClass(editmodeClassName);
+                    }
+                  },
+                },
+                style: {
+                  display: "flex",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: withOut(0),
+                  height: withOut(0),
+                  background: colorChip.white,
                   alignItems: "center",
                   justifyContent: "center",
                   textAlign: "center",
-                  height: withOut(0),
-                  border: String(0),
-                  outline: String(0),
-                  fontSize: String(contentsTitleSize) + ea,
-                  fontWeight: String(questionWeight),
-                  lineHeight: String(contentsLineHeight),
-                  color: colorExtended.blue,
-                  fontFamily: "graphik",
+                  zIndex: 10,
+                },
+                child: {
+                  mode: "textarea",
+                  text: this.getAttribute("title"),
+                  style: {
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    textAlign: "center",
+                    height: withOut(0),
+                    border: String(0),
+                    outline: String(0),
+                    fontSize: String(contentsTitleSize) + ea,
+                    fontWeight: String(questionWeight),
+                    lineHeight: String(contentsLineHeight),
+                    color: colorExtended.blue,
+                    fontFamily: "graphik",
+                  }
                 }
-              }
-            }).firstChild;
+              }).firstChild;
+            }
+            textAreaDom.focus();
+            await instance.contentsBoxStatusRead();
           }
-          textAreaDom.focus();
-          await instance.contentsBoxStatusRead();
         },
         drop: async function (e) {
           e.preventDefault();
           e.stopPropagation();
-          const pid = this.getAttribute("pid");
-          const index = this.getAttribute("index");
-          const toDom = this;
-          const { type } = JSON.parse(e.dataTransfer.getData("dragData"));
-          if (type === "image") {
-            const { gs: fromGs, index: fromIndex, source: fromSrc } = JSON.parse(e.dataTransfer.getData("dragData"));
-            const fromDom = document.querySelector("." + imgDomClassName + String(fromIndex) + pid);
-            if (fromGs === 's') {
-              if ((totalContents.getBoundingClientRect().width / 2) <= fromDom.getBoundingClientRect().x) {
-                toDom.parentElement.insertBefore(fromDom.previousElementSibling, toDom);
-                toDom.parentElement.insertBefore(fromDom, toDom);
+          if (editable) {
+            const pid = this.getAttribute("pid");
+            const index = this.getAttribute("index");
+            const toDom = this;
+            const { type } = JSON.parse(e.dataTransfer.getData("dragData"));
+            if (type === "image") {
+              const { gs: fromGs, index: fromIndex, source: fromSrc } = JSON.parse(e.dataTransfer.getData("dragData"));
+              const fromDom = document.querySelector("." + imgDomClassName + String(fromIndex) + pid);
+              if (fromGs === 's') {
+                if ((totalContents.getBoundingClientRect().width / 2) <= fromDom.getBoundingClientRect().x) {
+                  toDom.parentElement.insertBefore(fromDom.previousElementSibling, toDom);
+                  toDom.parentElement.insertBefore(fromDom, toDom);
+                } else {
+                  toDom.parentElement.insertBefore(fromDom.nextElementSibling, toDom);
+                  toDom.parentElement.insertBefore(fromDom, toDom.previousElementSibling);
+                }
               } else {
-                toDom.parentElement.insertBefore(fromDom.nextElementSibling, toDom);
-                toDom.parentElement.insertBefore(fromDom, toDom.previousElementSibling);
+                toDom.parentElement.insertBefore(fromDom, toDom);
               }
-            } else {
-              toDom.parentElement.insertBefore(fromDom, toDom);
+            } else if (type === "text") {
+              const { index } = JSON.parse(e.dataTransfer.getData("dragData"));
+              const fromDom = document.querySelector("." + contentsDomClassName + String(index) + pid);
+              toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
             }
-          } else if (type === "text") {
-            const { index } = JSON.parse(e.dataTransfer.getData("dragData"));
-            const fromDom = document.querySelector("." + contentsDomClassName + String(index) + pid);
-            toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+            await instance.contentsBoxStatusRead();
           }
-          await instance.contentsBoxStatusRead();
         },
         dragenter: function (e) {
           e.preventDefault();
@@ -1452,16 +1511,18 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
         },
         contextmenu: async function (e) {
           e.preventDefault();
-          const index = Number(this.getAttribute("index"));
-          const contents = instance.originalContentsArr[0];
-          const thisCopied = objectDeepCopy(contents.contents.portfolio.contents.detail[index + 1]);
-          if (!e.altKey) {
-            contents.contents.portfolio.contents.detail.splice(index + 1, 0, thisCopied);
-          } else {
-            contents.contents.portfolio.contents.detail.splice(index + 1, 1);
+          if (editable) {
+            const index = Number(this.getAttribute("index"));
+            const contents = instance.originalContentsArr[0];
+            const thisCopied = objectDeepCopy(contents.contents.portfolio.contents.detail[index + 1]);
+            if (!e.altKey) {
+              contents.contents.portfolio.contents.detail.splice(index + 1, 0, thisCopied);
+            } else {
+              contents.contents.portfolio.contents.detail.splice(index + 1, 1);
+            }
+            instance.originalContentsArr = [ contents ];
+            await instance.portfolioContentsBox(contents);
           }
-          instance.originalContentsArr = [ contents ];
-          instance.portfolioContentsBox(contents);
         }
       },
       style: {
@@ -1552,8 +1613,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
   if (review.contents.detail.length > 0) {
     instance.portfolioDesignerBox(updatedContents);
   }
-  if (updatedContents !== null) {
-    instance.contentsBoxStatusRead().catch((err) => { console.log(err) });
+  if (editable) {
+    if (updatedContents !== null) {
+      await instance.contentsBoxStatusRead();
+    }
   }
 }
 
@@ -3438,12 +3501,14 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
 
     const getObj = returnGet();
     const { pid } = getObj;
+    const editable = (typeof getObj.edit === "string")
     let response;
 
     if (typeof pid !== "string") {
       throw new Error("invaild pid");
     }
     this.pid = pid;
+    this.editable = editable;
 
     response = await ajaxJson({ mode: "portfolio", pid }, LOGHOST + "/getContents", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
@@ -3469,7 +3534,7 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.portfolioMainBox();
-          instance.portfolioContentsBox();
+          await instance.portfolioContentsBox();
           instance.portfolioRelativeBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "PortfolioDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");

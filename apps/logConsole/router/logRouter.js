@@ -1009,7 +1009,7 @@ LogRouter.prototype.rou_post_updateImagesOrder = function () {
       updatedContents = (await back.mongoRead(collection, whereQuery, { selfMongo: selfCoreMongo }))[0];
       delete updatedContents._id;
 
-      requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/orderPhotoSync", { pid, data }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+      await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/orderPhotoSync", { pid, data }, { headers: { "Content-Type": "application/json" } });
 
       res.send(JSON.stringify({ contents: updatedContents }));
 

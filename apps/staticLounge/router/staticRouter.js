@@ -6714,11 +6714,8 @@ StaticRouter.prototype.rou_post_orderPhotoSync = function () {
       await shellExec("mkdir", [ tempDir ]);
       await shellExec("cp", [ "-r", listImageDesktop, tempDir + "/" ]);
       await shellExec("mv", [ tempDir + "/" + pid, tempDir + "/portp" + pid ]);
-      shellExec(`scp -r ${shellLink(tempDir + "/portp" + pid)} ${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/`).then(() => {
-        return shellExec("rm", [ "-rf", tempDir ]);
-      }).catch((err) => {
-        console.log(err);
-      });
+      await shellExec(`scp -r ${shellLink(tempDir + "/portp" + pid)} ${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/`);
+      await shellExec("rm", [ "-rf", tempDir ]);
 
       fromArr = [];
       toArr = [];
@@ -6745,7 +6742,7 @@ StaticRouter.prototype.rou_post_orderPhotoSync = function () {
         }
       }
 
-      ghostFileUpload(fromArr, toArr).catch((err) => { console.log(err) });
+      await ghostFileUpload(fromArr, toArr);
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
