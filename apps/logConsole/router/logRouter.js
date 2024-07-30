@@ -987,7 +987,7 @@ LogRouter.prototype.rou_post_updateImagesOrder = function () {
       whereQuery = { "contents.portfolio.pid": pid };
       updateQuery = {};
       updateQuery["contents.portfolio.contents.detail"] = contents;
-      updateQuery["contents.portfolio.detailInfo.photodae"] = [ data.filter((o) => { return o.gs === "s" }).filter((o) => { return o.dae })[0].fronIndex, data.filter((o) => { return o.gs === "g" }).filter((o) => { return o.dae })[0].fronIndex ];
+      updateQuery["contents.portfolio.detailInfo.photodae"] = [ data.filter((o) => { return o.gs === "s" }).filter((o) => { return o.dae })[0].fromIndex, data.filter((o) => { return o.gs === "g" }).filter((o) => { return o.dae })[0].fromIndex ];
       updateQuery["contents.portfolio.spaceInfo.space"] = apart;
       updateQuery["contents.portfolio.spaceInfo.pyeong"] = pyeong;
       updateQuery["contents.portfolio.detailInfo.service"] = service;

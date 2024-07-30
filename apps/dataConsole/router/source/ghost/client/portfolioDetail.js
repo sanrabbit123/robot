@@ -1152,6 +1152,9 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
   for (let { contents, title, photo } of story) {
 
     num = 0;
+
+    console.log(photo);
+
     for (let i of photo) {
       if (desktop) {
         src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(i) + pid + ".jpg";
