@@ -20,12 +20,13 @@ const ImageReader = require(APP_PATH + "/imageReader/imageReader.js");
 const DevContext = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
-  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, mongocontentsinfo, mongotransinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, mongocontentsinfo, mongotransinfo, mongologinfo } = this.mother;
   this.MONGOC = new mongo(mongoinfo);
   this.MONGOLOCALC = new mongo(mongolocalinfo);
   this.MONGOPYTHONC = new mongo(mongopythoninfo);
   this.MONGOCONSOLEC = new mongo(mongoconsoleinfo);
   this.MONGOLOGC = new mongo(mongotestinfo);
+  this.MONGOLOGCREAL = new mongo(mongologinfo);
   this.MONGOSECONDC = new mongo(mongosecondinfo);
   this.MONGOCONTENTSC = new mongo(mongocontentsinfo);
   this.MONGOTRANSC = new mongo(mongotransinfo);
@@ -158,6 +159,16 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
     // =======================================================================================================================================================
     // =======================================================================================================================================================
+
+
+
+
+    // p388
+
+    
+
+    await findCode("photoKey")
+      
 
 
 

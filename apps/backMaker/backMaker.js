@@ -1265,7 +1265,11 @@ BackMaker.prototype.getContentsArrByQuery = async function (query, option = { wi
     if (!option.withTools) {
       contentsArr = new ContentsArr();
       for (let i of tong) {
-        contentsArr.push(new Contents(i));
+        try {
+          contentsArr.push(new Contents(i));
+        } catch (e) {
+          console.log(i);
+        }
       }
     } else {
       Contents = Tools.withTools(Contents);

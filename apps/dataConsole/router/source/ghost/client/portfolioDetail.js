@@ -694,6 +694,7 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = async function (photoUpdateB
     let num;
     let response;
     let mainTitle;
+    let photoArr;
     if (targetImagesChildren.length > 0 ) {
       targetArr = targetContentsChildren.filter((o) => { return o.type !== "blank" });
       contentsDetail = [];
@@ -703,13 +704,17 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = async function (photoUpdateB
           photoKey = 0;
           title = "init";
           contents = obj.dom.firstChild.innerHTML.trim().replace(/\<br\>/gi, "\n");
-          contentsDetail.push({ photoKey, title, contents });
+          contentsDetail.push({ photo: [], title, contents });
         } else if (obj.type === "contents") {
           const [ , titleDom, contentsDom, ] = [ ...obj.dom.children ];
           photoKey = num - 1;
+          photoArr = [];
+          for (let i = num; i < photoKey + 1; i++) {
+            photoArr.push(i);
+          }
           title = titleDom.firstChild.innerHTML.trim().replace(/ /gi, '').replace(/[\'\"]/gi, '').toLowerCase();
           contents = contentsDom.firstChild.innerHTML.trim().replace(/\<br\>/gi, "\n");
-          contentsDetail.push({ photoKey, title, contents });
+          contentsDetail.push({ photo: photoArr, title, contents });
         } else if (obj.type === "photo") {
           num++;
         } else if (obj.type === "title") {
@@ -813,7 +818,6 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
   let mobileDesignerWordingTop;
   let mobileDesignerBoxBetween;
   let contentsTitleSize;
-  let pastPhotoKey;
   let contentsBlock;
   let daeShadow;
   let daeZIndex;
@@ -1148,11 +1152,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
   });
 
   totalNum = 0;
-  pastPhotoKey = 1;
-  for (let { contents, title, photoKey } of story) {
+  for (let { contents, title, photo } of story) {
 
     num = 0;
-    for (let i = pastPhotoKey; i < photoKey + 1; i++) {
+    for (let i of photo) {
       if (desktop) {
         src = FRONTHOST + "/list_image/portp" + pid + "/" + photoChar + String(i) + pid + ".jpg";
       } else {
@@ -1590,7 +1593,6 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
       }
     });
 
-    pastPhotoKey = photoKey + 1;
     totalNum++;
   }
 

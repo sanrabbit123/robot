@@ -51,7 +51,7 @@ class ContentsArr extends Array {
         obj.pyeong = portfolio.spaceInfo.pyeong;
         obj.room = "review";
         for (let i = 1; i < portfolio.contents.detail.length; i++) {
-          if (portfolio.contents.detail[i - 1].photoKey < obj.index && obj.index <= portfolio.contents.detail[i].photoKey) {
+          if (portfolio.contents.detail[i].photo.includes(obj.index)) {
             obj.room = portfolio.contents.detail[i].title;
           }
         }

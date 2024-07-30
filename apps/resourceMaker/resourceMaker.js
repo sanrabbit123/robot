@@ -546,6 +546,7 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cl
     let thisRequestNumber;
     let thisClient;
     let thisProject;
+    let pastPhotoKey;
 
     tempObj = this.modelingMap().structure;
 
@@ -623,24 +624,20 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cl
     portfolio.contents.suggestion = past.suggestion;
     portfolio.contents.detail = [];
 
+    pastPhotoKey = 0;
     for (let { title, main_contents, smalltalk_yn, smalltalk_contents, photo_key } of past.contents) {
       tempObjDetail = {
-        photoKey: 0,
         title: "",
         contents: "",
-        smallTalk: {
-          title: "",
-          contents: "",
-        },
+        photo: [],
       };
-
-      tempObjDetail.photoKey = photo_key;
+      for (let i = pastPhotoKey + 1; i < photo_key + 1; i++) {
+        tempObjDetail.photo.push(i);
+      }
       tempObjDetail.title = title;
       tempObjDetail.contents = main_contents;
-      tempObjDetail.smallTalk.title = smalltalk_yn;
-      tempObjDetail.smallTalk.contents = smalltalk_contents;
-
       portfolio.contents.detail.push(tempObjDetail);
+      pastPhotoKey = photo_key;
     }
 
     review = tempObj.contents.review;

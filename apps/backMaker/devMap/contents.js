@@ -112,13 +112,9 @@ module.exports = {
     let dummy = null;
     if (subject === "contents.portfolio.contents.detail") {
       dummy = {
-        photoKey: 0,
+        photo: [],
         title: "",
         contents: "",
-        smallTalk: {
-          title: "",
-          contents: "",
-        },
       };
     } else if (subject === "contents.review.contents.detail") {
       dummy = {
