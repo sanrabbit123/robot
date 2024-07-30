@@ -1004,6 +1004,7 @@ LogRouter.prototype.rou_post_updateImagesOrder = function () {
       res.send(JSON.stringify({ contents: updatedContents }));
 
     } catch (e) {
+      console.log(e);
       logger.error("Log Console 서버 문제 생김 (rou_post_updateImagesOrder): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }

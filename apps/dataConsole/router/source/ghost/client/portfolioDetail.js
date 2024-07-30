@@ -713,7 +713,7 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = async function (photoUpdateB
           contentsDetail.push({ photo: photoArr, title, contents });
           photoArr = [];
         } else if (obj.type === "photo") {
-          photoArr.push(Number(obj.dom.getAttribute("index")));
+          photoArr.push(Number(obj.index));
         } else if (obj.type === "title") {
           mainTitle = {
             full: obj.dom.innerHTML.replace(/\<br\>/gi, ", ").trim(),
@@ -740,7 +740,7 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = async function (photoUpdateB
 
   } catch (e) {
     console.log(e);
-    window.location.reload();
+
     return null;
   }
 }
