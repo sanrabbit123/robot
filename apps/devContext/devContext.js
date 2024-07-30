@@ -129,7 +129,7 @@ DevContext.prototype.launching = async function () {
 
     const designerName = "박정훈";
     const clientName = "정현주";
-    const pid = "p411";
+    const pid = "p385";
 
     // 1. raw to raw
 
@@ -139,8 +139,8 @@ DevContext.prototype.launching = async function () {
 
     // 2. upload contents
 
-    // const filter = new PortfolioFilter();
-    // await filter.updateSubject(pid);
+    const filter = new PortfolioFilter();
+    await filter.updateSubject(pid);
 
     // =======================================================================================================================================================
 
@@ -161,14 +161,7 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-
-
-    // p388
-
-    
-
-    await findCode("photoKey")
-      
+        
 
 
 

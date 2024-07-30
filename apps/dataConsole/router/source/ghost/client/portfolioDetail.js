@@ -1258,17 +1258,50 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
           contextmenu: async function (e) {
             e.preventDefault();
             if (editable) {
-              if (this.getAttribute("dae") === "false") {
+              if (e.altKey) {
                 const thisGs = this.getAttribute("gs");
-                const pastDae = [ ...document.querySelectorAll('.' + imgDomClassName) ].filter((o) => { return o.getAttribute("gs") === thisGs }).find((d) => { return d.getAttribute("dae") === "true" });
-                this.setAttribute("dae", "true");
-                this.style.filter = daeShadow;
-                this.style.zIndex = daeZIndex;
-                pastDae.setAttribute("dae", "false");
-                pastDae.style.filter = "";
-                pastDae.style.zIndex = "";
+                if (this.getAttribute("dae") === "false") {
+                  if (thisGs === 'g') {
+                    this.remove();
+                  } else {
+                    if (Math.floor(this.getBoundingClientRect().top) === Math.floor(this.previousElementSibling.getBoundingClientRect().top)) {
+                      this.previousElementSibling.remove();
+                      this.remove();
+                    } else {
+                      this.nextElementSibling.remove();
+                      this.remove();
+                    }
+                  }
+                }
+              } else if (e.ctrlKey) {
+                const thisGs = this.getAttribute("gs");
+                if (this.getAttribute("dae") === "false") {
+                  if (thisGs === 'g') {
+                    this.parentElement.insertBefore(this.cloneNode(true), this.nextElementSibling);
+                  } else {
+                    if (Math.floor(this.getBoundingClientRect().top) === Math.floor(this.previousElementSibling.getBoundingClientRect().top)) {
+                      this.parentElement.insertBefore(this.cloneNode(true), this.nextElementSibling);
+                      this.parentElement.insertBefore(this.previousElementSibling.cloneNode(true), this.nextElementSibling);
+                    } else {
+                      this.parentElement.insertBefore(this.nextElementSibling.cloneNode(true), this.nextElementSibling.nextElementSibling);
+                      this.parentElement.insertBefore(this.cloneNode(true), this.nextElementSibling.nextElementSibling);
+                    }
+                  }
+                }
+              } else {
+                if (this.getAttribute("dae") === "false") {
+                  const thisGs = this.getAttribute("gs");
+                  const pastDae = [ ...document.querySelectorAll('.' + imgDomClassName) ].filter((o) => { return o.getAttribute("gs") === thisGs }).find((d) => { return d.getAttribute("dae") === "true" });
+                  this.setAttribute("dae", "true");
+                  this.style.filter = daeShadow;
+                  this.style.zIndex = daeZIndex;
+                  pastDae.setAttribute("dae", "false");
+                  pastDae.style.filter = "";
+                  pastDae.style.zIndex = "";
+                }
               }
-              await instance.contentsBoxStatusRead(false);
+              await instance.contentsBoxStatusRead();
+              window.location.reload();
             }
           }
         },
@@ -1514,6 +1547,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
             const contents = instance.originalContentsArr[0];
             const thisCopied = objectDeepCopy(contents.contents.portfolio.contents.detail[index + 1]);
             if (!e.altKey) {
+              thisCopied.photo = [];
               contents.contents.portfolio.contents.detail.splice(index + 1, 0, thisCopied);
             } else {
               contents.contents.portfolio.contents.detail.splice(index + 1, 1);
@@ -1613,6 +1647,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
   if (editable) {
     if (updatedContents !== null) {
       await instance.contentsBoxStatusRead();
+      window.location.reload();
     }
   }
 }

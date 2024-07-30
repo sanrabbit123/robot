@@ -1274,7 +1274,6 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
   if (!/svg/gi.test(mode)) {
     if (GeneralJs.nodes[mode] === undefined || typeof style !== "object") {
       throw new Error("invaild arguments");
-      return null;
     } else {
       dom_clone = GeneralJs.nodes[mode].cloneNode(true);
       if (style.text !== undefined) {

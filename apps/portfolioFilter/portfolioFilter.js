@@ -1087,6 +1087,8 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
     let thisDesid;
     let thisDesigner;
     let pyeongInput;
+    let infoIndex;
+    let backArr;
 
     if (typeof pid !== "string") {
       pid = await consoleQ("pid? : \n");
@@ -1095,7 +1097,8 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
     if (/^p/.test(pid.trim())) {
       targetPid = pid;
       [ targetFores ] = await back.mongoRead(collection, { pid: targetPid }, { selfMongo });
-      proid = targetFores.proid;
+      proid = "p2301_aa97s";
+      // proid = targetFores.proid;
       [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
       project = await back.getProjectById(proid, { selfMongo: selfCoreMongo, toNormal });
       client = await back.getClientById(project.cliid, { selfMongo: selfCoreMongo, toNormal });
@@ -1151,9 +1154,16 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
       console.log(frontText);
       console.log(bar);
       console.log(client.requests[0].request.space.address);
-  
+      console.log(bar);
+      backArr = backText.split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== "" });
+      infoIndex = backArr.findIndex((s) => { return /^공간[ ]?정보/gi.test(s.trim()) });
+      if (infoIndex !== -1) {
+        backArr = backArr.slice(0, infoIndex);
+      }
+      console.log(backArr);
+
       addressArr = client.requests[0].request.space.address.split(" ").map((s) => { return s.trim() });
-      subjectInput = await consoleQ("please insert this subject :\n");
+      subjectInput = "제목을 입력해주세요";
       apartInput = await consoleQ("please insert this apart :\n");
       regionInput = addressArr[0].slice(0, 2) + " " + addressArr[1];
   
@@ -1174,7 +1184,8 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
           pyeong: client.requests[0].request.space.pyeong,
           text: {
             front: frontText,
-            back: backText
+            back: backText,
+            backArr,
           },
         }
       } ], { selfMongo: selfSecondMongo });
@@ -1240,7 +1251,14 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
 
       console.log(frontText);
       console.log(bar);
-  
+      console.log(bar);
+      backArr = backText.split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== "" });
+      infoIndex = backArr.findIndex((s) => { return /^공간[ ]?정보/gi.test(s.trim()) });
+      if (infoIndex !== -1) {
+        backArr = backArr.slice(0, infoIndex);
+      }
+      console.log(backArr);
+
       subjectInput = await consoleQ("please insert this subject :\n");
       apartInput = await consoleQ("please insert this apart :\n");
       regionInput = await consoleQ("please insert this region :\n");
@@ -1271,7 +1289,8 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
           pyeong: Number(pyeongInput.trim()),
           text: {
             front: frontText,
-            back: backText
+            back: backText,
+            backArr
           },
         }
       }, { selfMongo: selfSecondMongo });
@@ -1424,10 +1443,22 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
       noteContents += "\n\n\n";
       noteContents += targetRaw.addition.text.front.trim();
       noteContents += "\n\n\n";
-      noteContents += "1 - " + String(finalGsTong.length);
-      noteContents += "\n\n\n";
-      noteContents += "Space\n\n" + targetRaw.addition.text.back.trim().replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n");
-      noteContents += "\n\n\n";
+      if (Array.isArray(targetRaw.addition.text.backArr)) {
+        for (let textStr of targetRaw.addition.text.backArr) {
+          if (textStr !== '' && !/^(현관|거실|복도|주방|침실|안방|Entrance|entrance|living|Living|kitchen|Kitchen)$/gi.test(textStr)) {
+            noteContents += "\n\n\n";
+            noteContents += "1 - " + String(finalGsTong.length);
+            noteContents += "\n\n\n";
+            noteContents += "Space\n\n" + textStr.trim().replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n");
+            noteContents += "\n\n\n";
+          }
+        }
+      } else {
+        noteContents += "1 - " + String(finalGsTong.length);
+        noteContents += "\n\n\n";
+        noteContents += "Space\n\n" + targetRaw.addition.text.back.trim().replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n");
+        noteContents += "\n\n\n";
+      }
       noteContents += "_info\n\n"
       noteContents += thisDesigner.desid + "\n\n"
       noteContents += "_portfolio\n\n"
@@ -1533,11 +1564,23 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
       noteContents += targetRaw.addition.subject.trim() + ", " + targetRaw.addition.apart.trim() + " " + String(targetRaw.addition.pyeong) + "py " + "홈스타일링";
       noteContents += "\n\n\n";
       noteContents += targetRaw.addition.text.front.trim();
-      noteContents += "\n\n\n";
-      noteContents += "1 - " + String(finalGsTong.length);
-      noteContents += "\n\n\n";
-      noteContents += "Space\n\n" + targetRaw.addition.text.back.trim().replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n");
-      noteContents += "\n\n\n";
+      if (Array.isArray(targetRaw.addition.text.backArr)) {
+        for (let textStr of targetRaw.addition.text.backArr) {
+          if (textStr !== '' && !/^(현관|거실|복도|주방|침실|안방|Entrance|entrance|living|Living|kitchen|Kitchen)$/gi.test(textStr)) {
+            noteContents += "\n\n\n";
+            noteContents += "1 - " + String(finalGsTong.length);
+            noteContents += "\n\n\n";
+            noteContents += "Space\n\n" + textStr.trim().replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n");
+            noteContents += "\n\n\n";
+          }
+        }
+      } else {
+        noteContents += "\n\n\n";
+        noteContents += "1 - " + String(finalGsTong.length);
+        noteContents += "\n\n\n";
+        noteContents += "Space\n\n" + targetRaw.addition.text.back.trim().replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n").replace(/\n\n\n/gi, "\n\n");
+        noteContents += "\n\n\n";
+      }
       noteContents += "_info\n\n"
       noteContents += thisDesigner.desid + "\n\n"
       noteContents += "_portfolio\n\n"
