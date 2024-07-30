@@ -6692,13 +6692,18 @@ StaticRouter.prototype.rou_post_orderPhotoSync = function () {
       const original = corePortfolio + "/" + "original" + "/" + pid;
       const tempDir = process.env.HOME + "/temp" + uniqueValue("hex");
       const serverFolderPath = "corePortfolio/listImage";
+      const serverFolderPathOriginal = "corePortfolio/original";
       let fromArr, toArr;
+      let originalList;
       let outputFolderList;
       let outputMobildFolderList;
       let numbers, num;
 
       numbers = [];
       for (let { fromIndex, toIndex } of data) {
+
+        console.log(fromIndex, toIndex);
+
         await shellExec("cp", [ (original + "/i" + String(fromIndex) + pid + ".jpg"), (original + "/middle_i" + String(toIndex) + pid + ".jpg") ]);
         await shellExec("cp", [ (listImageDesktop + "/t" + String(fromIndex) + pid + ".jpg"), (listImageDesktop + "/middle_t" + String(toIndex) + pid + ".jpg") ]);
         await shellExec("cp", [ (listImageMobile + "/mot" + String(fromIndex) + pid + ".jpg"), (listImageMobile + "/middle_mot" + String(toIndex) + pid + ".jpg") ]);
@@ -6720,9 +6725,16 @@ StaticRouter.prototype.rou_post_orderPhotoSync = function () {
 
       fromArr = [];
       toArr = [];
+      originalList = await fileSystem(`readFolder`, [ original ]);
       outputFolderList = await fileSystem(`readFolder`, [ listImageDesktop ]);
       outputMobildFolderList = await fileSystem(`readFolder`, [ listImageMobile ]);
       
+      for (let i of originalList) {
+        if (i !== `.DS_Store`) {
+          fromArr.push(original + "/" + i);
+          toArr.push(`${serverFolderPathOriginal}/${pid}/${i}`);
+        }
+      }
       for (let i of outputFolderList) {
         if (i !== `.DS_Store` && /^[bt]/.test(i)) {
           fromArr.push(listImageDesktop + "/" + i);
