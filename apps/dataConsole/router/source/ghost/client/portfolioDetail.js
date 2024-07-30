@@ -659,11 +659,17 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = function () {
   const mobile = media[4];
   const desktop = !mobile;
   try {
+    const targetContentsBase = document.querySelector('.' + mainContentsClassTong0);
+    const targetContentsChildren = [ ...targetContentsBase.children ].map((d) => {
+      return {
+        dom: d,
+        type: d.getAttribute("type"),
+      }
+    });
+    
+    console.log(targetContentsChildren);
 
     
-
-
-
 
   } catch (e) {
     console.log(e);
@@ -844,9 +850,11 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
     totalContents.insertBefore(mainTong, document.querySelector('.' + slideContentsClassTong).nextElementSibling);
   }
 
+  // title
   createNode({
     mother: mainTong,
     text: portfolio.title.main.replace(/, /, "\n"),
+    attribute: { type: "title" },
     style: {
       display: "block",
       position: "relative",
@@ -858,8 +866,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
     }
   });
 
+  // blank
   createNode({
     mother: mainTong,
+    attribute: { type: "blank" },
     style: {
       display: "block",
       position: "relative",
@@ -879,7 +889,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
 
   createNode({
     mother: mainTong,
-    attribute: { value: customerStory },
+    attribute: { value: customerStory, type: "story" },
     event: {
       click: async function (e) {
         const self = this;
@@ -898,7 +908,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
             height: totalContents.getBoundingClientRect().height,
             zIndex: 10,
           }
-        })
+        });
         createNode({
           mother: this,
           class: [ editmodeClassName ],
@@ -915,6 +925,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
                 self.firstChild.textContent = "";
                 self.firstChild.insertAdjacentHTML("beforeend", finalValue);
                 self.setAttribute("value", finalValue);
+                await instance.contentsBoxStatusRead();
                 removeByClass(editmodeClassName);
               }
             },
@@ -942,7 +953,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
               color: colorExtended.blueDark,
             }
           }
-        })
+        });
       }
     },
     style: {
@@ -967,8 +978,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
     }
   })
 
+  // blank
   createNode({
     mother: mainTong,
+    attribute: { type: "blank" },
     style: {
       display: "block",
       height: String(blankMargin2) + ea,
@@ -991,7 +1004,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
         mother: mainTong,
         mode: "img",
         class: [ imgDomClassName, imgDomClassName + String(i) + pid ],
-        attribute: { src, draggable: "true", gs: photoDetail[i - 1].gs, pid, index: String(i) },
+        attribute: { type: "photo", src, draggable: "true", gs: photoDetail[i - 1].gs, pid, index: String(i) },
         event: {
           selectstart: (e) => { e.preventDefault(); },
           dragstart: function (e) {
@@ -1075,7 +1088,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
 
     contentsBlock = createNode({
       mother: mainTong,
-      attribute: { draggable: "true", index: String(totalNum), pid, value: contents, title: (title.slice(0, 1).toUpperCase() + title.slice(1).replace(/room$/i, '') + (/room/i.test(title) ? " room" : "")), },
+      attribute: { type: "contents", draggable: "true", index: String(totalNum), pid, value: contents, title: (title.slice(0, 1).toUpperCase() + title.slice(1).replace(/room$/i, '') + (/room/i.test(title) ? " room" : "")), },
       class: [ contentsDomClassName, contentsDomClassName + String(totalNum) + pid ],
       event: {
         dragstart: function (e) {
@@ -1281,6 +1294,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
     })
     createNode({
       mother: contentsBlock,
+      attribute: { type: "blank" },
       style: {
         display: "block",
         height: String(blankMargin) + ea,
@@ -1338,6 +1352,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
     });
     createNode({
       mother: contentsBlock,
+      attribute: { type: "blank" },
       style: {
         display: "block",
         height: String(blankMargin2) + ea,
@@ -1348,8 +1363,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
     totalNum++;
   }
 
+  // blank
   createNode({
     mother: mainTong,
+    attribute: { type: "blank" },
     style: {
       display: "block",
       height: String(blankMargin) + ea,

@@ -9769,7 +9769,7 @@ GeneralJs.prototype.greenTalk = function (input) {
           width: withOut(0),
           height: withOut(0),
           justifyContent: "center",
-          alignItems: "end",
+          alignItems: "center",
           textAlign: "center",
         }
       }
@@ -9821,8 +9821,8 @@ GeneralJs.prototype.greenTalk = function (input) {
       height: String(whitePopupHeight) + ea,
       top: String(whitePopupTop) + ea,
       background: "transparent",
-      justifyContent: "right",
-      alignItems: "center",
+      justifyContent: "center",
+      alignItems: "end",
       textAlign: "right",
       width: String(backgroundWidth) + ea,
       left: String((backgroundWidth * -1) - whitePopupLeftBetween) + ea,
