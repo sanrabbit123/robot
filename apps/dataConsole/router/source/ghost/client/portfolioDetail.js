@@ -653,7 +653,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
 PortfolioDetailJs.prototype.contentsBoxStatusRead = function () {
   const instance = this;
-  const { createNode, colorChip, objectDeepCopy, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue, removeByClass } = GeneralJs;
+  const { createNode, colorChip, objectDeepCopy, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, ajaxJson, designerCareer, isMac, isIphone, selfHref, setQueue, removeByClass } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, mainContentsClassTong0, mainContentsClassTong1, slideContentsClassTong } = this;
   const { contentsArr, designers } = this;
   const mobile = media[4];
@@ -661,15 +661,72 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = function () {
   try {
     const targetContentsBase = document.querySelector('.' + mainContentsClassTong0);
     const targetContentsChildren = [ ...targetContentsBase.children ].map((d) => {
+      let source;
+      let pid, index;
+      let gs;
+      let image;
+      pid = null;
+      index = null;
+      gs = null;
+      source = null;
+      image = false;
+      if (typeof d.currentSrc === "string") {
+        source = d.currentSrc.split("/").slice(-1).join("/");
+        pid = /([ap][0-9]+)/.exec(source)[1];
+        index = Number(source.split(/[ap]/)[0].replace(/[^0-9]/gi, ''));
+        gs = d.getAttribute("gs");
+        image = true;
+      }
       return {
         dom: d,
         type: d.getAttribute("type"),
+        source,
+        pid,
+        index,
+        gs,
+        image,
       }
     });
-    
-    console.log(targetContentsChildren);
+    const targetImagesChildren = targetContentsChildren.filter((o) => { return o.image }).map((o, index) => { o.dae = (o.dom.getAttribute("dae") === "true"); o.dom = o.dom.className; o.fromIndex = o.index; o.toIndex = index + 1; return o; });
+    let contentsDetail, targetArr;
+    let photoKey, title, contents;
+    let num;
+    let response;
+    let mainTitle;
+    if (targetImagesChildren.length > 0 ) {
+      targetArr = targetContentsChildren.filter((o) => { return o.type !== "blank" });
+      contentsDetail = [];
+      num = 1;
+      for (let obj of targetArr) {
+        if (obj.type === "story") {
+          photoKey = 0;
+          title = "init";
+          contents = obj.dom.firstChild.innerHTML.trim().replace(/\<br\>/gi, "\n");
+          contentsDetail.push({ photoKey, title, contents });
+        } else if (obj.type === "contents") {
+          const [ , titleDom, contentsDom, ] = [ ...obj.dom.children ];
+          photoKey = num - 1;
+          title = titleDom.firstChild.innerHTML.trim().replace(/ /gi, '').replace(/[\'\"]/gi, '').toLowerCase();
+          contents = contentsDom.firstChild.innerHTML.trim().replace(/\<br\>/gi, "\n");
+          contentsDetail.push({ photoKey, title, contents });
+        } else if (obj.type === "photo") {
+          num++;
+        } else if (obj.type === "title") {
+          mainTitle = {
+            full: obj.dom.innerHTML.replace(/\<br\>/gi, ", ").trim(),
+            wording: obj.dom.innerHTML.replace(/\<br\>/gi, ", ").split(", ")[0].trim(),
+            apart: obj.dom.innerHTML.replace(/\<br\>/gi, ", ").split(", ")[1].split("py")[0].split(" ").slice(0, -1).join(" ").trim(),
+            pyeong: Number(obj.dom.innerHTML.replace(/\<br\>/gi, ", ").split(", ")[1].split("py")[0].split(" ").slice(-1).join(" ").trim()),
+            service: obj.dom.innerHTML.replace(/\<br\>/gi, ", ").split(", ")[1].split("py")[1].trim(),
+          };
+        }
+      }
 
-    
+      console.log(targetImagesChildren);
+
+      // response = await ajaxJson({ pid: targetImagesChildren[0].pid, title: mainTitle, data: targetImagesChildren, contents: contentsDetail }, LOGHOST + "/updateImagesOrder", { equal: true });
+      // instance.originalContentsArr = [ response.contents ];
+    }
 
   } catch (e) {
     console.log(e);
@@ -687,6 +744,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
   const { contents: { review, portfolio }, photos } = (updatedContents !== null ? updatedContents : contents);
   const { detail: photoDetail } = photos;
   const { contents: { detail } } = portfolio;
+  const photodae = portfolio.detailInfo.photodae;
   const designer = designers.search("desid", contents.desid);
   const editmodeClassName = "editmodeClassName";
   const story = equalJson(JSON.stringify(detail));
@@ -747,6 +805,8 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
   let contentsTitleSize;
   let pastPhotoKey;
   let contentsBlock;
+  let daeShadow;
+  let daeZIndex;
 
   story.shift();
   customerStory = detail[0].contents;
@@ -829,6 +889,9 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
   mobileDesignerWordingTop = 13;
   mobileDesignerBoxBetween = 2;
 
+  daeShadow = ("drop-shadow(" + colorChip.blue + " 0px 5px 10px)");
+  daeZIndex = 1;
+
   removeByClass(mainContentsClassTong0);
   removeByClass(mainContentsClassTong1);
 
@@ -854,7 +917,74 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
   createNode({
     mother: mainTong,
     text: portfolio.title.main.replace(/, /, "\n"),
-    attribute: { type: "title" },
+    attribute: { value: portfolio.title.main.replace(/, /, "\n"), type: "title" },
+    event: {
+      click: async function (e) {
+        const self = this;
+        createNode({
+          mother: this,
+          class: [ editmodeClassName ],
+          event: {
+            click: (e) => { e.stopPropagation(); removeByClass(editmodeClassName) },
+          },
+          style: {
+            position: "fixed",
+            top: 0,
+            left: window.innerWidth * -3,
+            background: "transparent",
+            width: window.innerWidth * 6,
+            height: totalContents.getBoundingClientRect().height,
+            zIndex: 10,
+          }
+        });
+        createNode({
+          mother: this,
+          class: [ editmodeClassName ],
+          event: {
+            click: (e) => { e.stopPropagation(); },
+            keydown: async function (e) {
+              if (e.key === "Tab" || e.key === "Enter") {
+                e.preventDefault();
+              }
+            },
+            keyup: async function (e) {
+              if (e.key === "Tab" || e.key === "Enter") {
+                const finalValue = this.firstChild.value.trim().replace(/\n/gi, "<br>");
+                self.textContent = "";
+                self.insertAdjacentHTML("beforeend", finalValue);
+                self.setAttribute("value", finalValue);
+                await instance.contentsBoxStatusRead();
+                removeByClass(editmodeClassName);
+              }
+            },
+          },
+          style: {
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: withOut(0),
+            height: withOut(0),
+            background: colorChip.white,
+            zIndex: 10,
+          },
+          child: {
+            mode: "textarea",
+            text: this.getAttribute("value"),
+            style: {
+              width: withOut(0),
+              height: withOut(0),
+              border: String(0),
+              outline: String(0),
+              textAlign: "center",
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(titleWeight),
+              lineHeight: String(titleLineHeight),
+              color: colorExtended.blueDark,
+            }
+          }
+        });
+      }
+    },
     style: {
       display: "block",
       position: "relative",
@@ -1004,8 +1134,11 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
         mother: mainTong,
         mode: "img",
         class: [ imgDomClassName, imgDomClassName + String(i) + pid ],
-        attribute: { type: "photo", src, draggable: "true", gs: photoDetail[i - 1].gs, pid, index: String(i) },
+        attribute: { type: "photo", src, draggable: "true", gs: photoDetail[i - 1].gs, pid, index: String(i), dae: (photodae.includes(i) ? "true" : "false") },
         event: {
+          click: async function (e) {
+            await instance.contentsBoxStatusRead();
+          },
           selectstart: (e) => { e.preventDefault(); },
           dragstart: function (e) {
             e.dataTransfer.setData("dragData", JSON.stringify({
@@ -1029,6 +1162,23 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
               if (toGs === fromGs) {
                 toDom.setAttribute("src", fromSrc);
                 fromDom.setAttribute("src", toSrc);
+                if (toDom.getAttribute("dae") === "true") {
+                  toDom.setAttribute("dae", "false");
+                  fromDom.setAttribute("dae", "true");
+                  fromDom.style.filter = daeShadow;
+                  fromDom.style.zIndex = daeZIndex;
+                  toDom.style.filter = "";
+                  toDom.style.zIndex = "";
+                } else {
+                  if (fromDom.getAttribute("dae") === "true") {
+                    toDom.setAttribute("dae", "true");
+                    fromDom.setAttribute("dae", "false");
+                    toDom.style.filter = daeShadow;
+                    toDom.style.zIndex = daeZIndex;
+                    fromDom.style.filter = "";
+                    fromDom.style.zIndex = "";
+                  } 
+                }
               } else {
                 if (toGs === 's') {
                   if ((totalContents.getBoundingClientRect().width / 2) <= toDom.getBoundingClientRect().x) {
@@ -1059,6 +1209,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
                 toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
               }
             }
+            await instance.contentsBoxStatusRead();
           },
           dragenter: function (e) {
             e.preventDefault();
@@ -1072,6 +1223,20 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
             e.preventDefault();
             e.stopPropagation();
           },
+          contextmenu: async function (e) {
+            e.preventDefault();
+            if (this.getAttribute("dae") === "false") {
+              const thisGs = this.getAttribute("gs");
+              const pastDae = [ ...document.querySelectorAll('.' + imgDomClassName) ].filter((o) => { return o.getAttribute("gs") === thisGs }).find((d) => { return d.getAttribute("dae") === "true" });
+              this.setAttribute("dae", "true");
+              this.style.filter = daeShadow;
+              this.style.zIndex = daeZIndex;
+              pastDae.setAttribute("dae", "false");
+              pastDae.style.filter = "";
+              pastDae.style.zIndex = "";
+            }
+            await instance.contentsBoxStatusRead();
+          }
         },
         style: {
           width: garo ? String(100) + '%' : "calc(50% - " + String(photoMargin / 2) + ea + ")",
@@ -1079,6 +1244,8 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
           marginBottom: String(photoMargin) + ea,
           marginRight: String(garo ? 0 : (num % 2 === 0 ? photoMargin : 0)) + ea,
           borderRadius: String(desktop ? 3 : 0) + "px",
+          filter: photodae.includes(i) ? daeShadow : "",
+          zIndex: photodae.includes(i) ? daeZIndex : 0,
         }
       });
       if (!garo) {
@@ -1135,6 +1302,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
                     contents.firstChild.textContent = "";
                     contents.firstChild.insertAdjacentHTML("beforeend", finalValue);
                     self.setAttribute("value", finalValue);
+                    await instance.contentsBoxStatusRead();
                     removeByClass(editmodeClassName);
                   }
                 },
@@ -1196,6 +1364,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
                     title.firstChild.textContent = "";
                     title.firstChild.insertAdjacentHTML("beforeend", finalValue);
                     self.setAttribute("title", finalValue);
+                    await instance.contentsBoxStatusRead();
                     removeByClass(editmodeClassName);
                   }
                 },
@@ -1234,6 +1403,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
             }).firstChild;
           }
           textAreaDom.focus();
+          await instance.contentsBoxStatusRead();
         },
         drop: async function (e) {
           e.preventDefault();
@@ -1261,6 +1431,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
             const fromDom = document.querySelector("." + contentsDomClassName + String(index) + pid);
             toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
           }
+          await instance.contentsBoxStatusRead();
         },
         dragenter: function (e) {
           e.preventDefault();
@@ -1375,6 +1546,9 @@ PortfolioDetailJs.prototype.portfolioContentsBox = function (updatedContents = n
 
   if (review.contents.detail.length > 0) {
     instance.portfolioDesignerBox(updatedContents);
+  }
+  if (updatedContents !== null) {
+    instance.contentsBoxStatusRead().catch((err) => { console.log(err) });
   }
 }
 

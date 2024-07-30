@@ -6669,6 +6669,79 @@ StaticRouter.prototype.rou_post_metaAccountCheck = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_orderPhotoSync = function () {
+  const instance = this;
+  const { staticConst } = this;
+  const address = this.address;
+  const { equalJson, dateToString, ghostFileUpload, stringToDate, requestSystem, mysqlQuery, sleep, fileSystem, shellExec, shellLink, linkToString, uniqueValue } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/orderPhotoSync" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { pid, data } = equalJson(req.body);
+      const corePortfolio = staticConst + "/corePortfolio";
+      const listImageDesktop = corePortfolio + "/" + "listImage" + "/" + pid;
+      const listImageMobile = corePortfolio + "/" + "listImage" + "/" + pid + "/mobile";
+      const original = corePortfolio + "/" + "original" + "/" + pid;
+      const tempDir = process.env.HOME + "/temp" + uniqueValue("hex");
+      const serverFolderPath = "corePortfolio/listImage";
+      let fromArr, toArr;
+      let outputFolderList;
+      let outputMobildFolderList;
+
+      for (let { fromIndex, toIndex } of data) {
+        await shellExec("mv", [ (original + "/i" + String(fromIndex) + pid + ".jpg"), (original + "/middle_i" + String(toIndex) + pid + ".jpg") ]);
+        await shellExec("mv", [ (listImageDesktop + "/t" + String(fromIndex) + pid + ".jpg"), (listImageDesktop + "/middle_t" + String(toIndex) + pid + ".jpg") ]);
+        await shellExec("mv", [ (listImageMobile + "/mot" + String(fromIndex) + pid + ".jpg"), (original + "/middle_mot" + String(toIndex) + pid + ".jpg") ]);
+      }
+      for (let { fromIndex, toIndex } of data) {
+        await shellExec("mv", [ (original + "/middle_i" + String(toIndex) + pid + ".jpg"), (original + "/i" + String(toIndex) + pid + ".jpg") ]);
+        await shellExec("mv", [ (listImageDesktop + "/middle_t" + String(toIndex) + pid + ".jpg"), (listImageDesktop + "/t" + String(toIndex) + pid + ".jpg") ]);
+        await shellExec("mv", [ (listImageMobile + "/middle_mot" + String(toIndex) + pid + ".jpg"), (original + "/t" + String(toIndex) + pid + ".jpg") ]);
+      }
+
+      await shellExec("mkdir", [ tempDir ]);
+      await shellExec("cp", [ "-r", listImageDesktop, tempDir + "/" ]);
+      await shellExec("mv", [ tempDir + "/" + pid, tempDir + "/portp" + pid ]);
+      await shellExec(`scp -r ${shellLink(tempDir + "/portp" + pid)} ${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/`);
+      await shellExec("rm", [ "-rf", tempDir ]);
+
+      fromArr = [];
+      toArr = [];
+      outputFolderList = await fileSystem(`readFolder`, [ listImageDesktop ]);
+      outputMobildFolderList = await fileSystem(`readFolder`, [ listImageMobile ]);
+      
+      for (let i of outputFolderList) {
+        if (i !== `.DS_Store` && /^[bt]/.test(i)) {
+          fromArr.push(listImageDesktop + "/" + i);
+          toArr.push(`${serverFolderPath}/${pid}/${i}`);
+        }
+      }
+      for (let i of outputMobildFolderList) {
+        if (i !== `.DS_Store`) {
+          fromArr.push(listImageMobile + "/" + i);
+          toArr.push(`${serverFolderPath}/${pid}/mobile/${i}`);
+        }
+      }
+
+      await ghostFileUpload(fromArr, toArr);
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_orderPhotoSync): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_rawToRaw = function () {
   const instance = this;
   const address = this.address;

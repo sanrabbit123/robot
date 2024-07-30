@@ -959,6 +959,67 @@ LogRouter.prototype.rou_post_getLength = function () {
   return obj;
 }
 
+LogRouter.prototype.rou_post_updateImagesOrder = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, objectDeepCopy, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateImagesOrder" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { pid, data, contents, title } = equalJson(req.body);
+      const { apart, wording: titleWording, pyeong, service } = title;
+      const collection = "contents";
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongocore;
+      let whereQuery, updateQuery;
+      let updatedContents;
+
+      whereQuery = { "contents.portfolio.pid": pid };
+      updateQuery = {};
+      updateQuery["photo.first"] = 1;
+      updateQuery["contents.portfolio.detailInfo.photosg.first"] = 1;
+      updateQuery["photo.last"] = data.length;
+      updateQuery["contents.portfolio.detailInfo.photosg.last"] = data.length;
+      updateQuery["photo.detail"] = data.map((o) => {
+        return {
+          index: o.toIndex,
+          gs: o.gs,
+        }
+      })
+      updateQuery["photo.detail"].sort((a, b) => { return a.index - b.index });
+      updateQuery["contents.portfolio.contents.detail"] = contents;
+      updateQuery["contents.portfolio.detailInfo.photodae"] = [ data.filter((o) => { return o.gs === "s" }).filter((o) => { return o.dae })[0].toIndex, data.filter((o) => { return o.gs === "g" }).filter((o) => { return o.dae })[0].toIndex ]
+      updateQuery["contents.portfolio.spaceInfo.space"] = apart;
+      updateQuery["contents.portfolio.spaceInfo.pyeong"] = pyeong;
+      updateQuery["contents.portfolio.detailInfo.service"] = service;
+      updateQuery["contents.portfolio.title.main"] = titleWording + ", " + apart + " " + String(pyeong) + "py " + service;
+      updateQuery["contents.portfolio.title.sub"] = titleWording + ", " + apart + " " + service;
+
+      await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/orderPhotoSync", { pid, data }, { headers: { "Content-Type": "application/json" } });
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo: selfCoreMongo });
+
+      updatedContents = (await back.mongoRead(collection, whereQuery, { selfMongo: selfCoreMongo }))[0];
+      delete updatedContents._id;
+
+      res.send(JSON.stringify({ contents: updatedContents }));
+
+    } catch (e) {
+      logger.error("Log Console 서버 문제 생김 (rou_post_updateImagesOrder): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 LogRouter.prototype.rou_post_marketingMessage = function () {
   const instance = this;
   let obj;
