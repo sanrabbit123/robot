@@ -1097,8 +1097,7 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
     if (/^p/.test(pid.trim())) {
       targetPid = pid;
       [ targetFores ] = await back.mongoRead(collection, { pid: targetPid }, { selfMongo });
-      proid = "p2301_aa97s";
-      // proid = targetFores.proid;
+      proid = targetFores.proid;
       [ targetRaw ] = await back.mongoRead(rawCollection, { proid }, { selfMongo: selfSecondMongo });
       project = await back.getProjectById(proid, { selfMongo: selfCoreMongo, toNormal });
       client = await back.getClientById(project.cliid, { selfMongo: selfCoreMongo, toNormal });
@@ -1298,7 +1297,8 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
     }
 
     await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawToContents", {
-      pid
+      pid,
+      proid
     }, { headers: { "Content-Type": "application/json" } });
 
     await selfMongo.close();

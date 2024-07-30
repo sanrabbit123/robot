@@ -139,8 +139,8 @@ DevContext.prototype.launching = async function () {
 
     // 2. upload contents
 
-    const filter = new PortfolioFilter();
-    await filter.updateSubject(pid);
+    // const filter = new PortfolioFilter();
+    // await filter.updateSubject(pid);
 
     // =======================================================================================================================================================
 
@@ -6957,7 +6957,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    
 
 
 
