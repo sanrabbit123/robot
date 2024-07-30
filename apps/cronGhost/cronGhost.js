@@ -299,14 +299,14 @@ CronGhost.prototype.pollingAsyncRequest = async function (MONGOC) {
   const selfMongo = MONGOC;
   try {
 
-    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/storeDevicesStatus", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/centrexSession", { data: null }, { headers: { "Content-Type": "application/json" } });
+    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/storeDevicesStatus", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/centrexSession", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/checkInsyncStatus", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/checkInsyncStatus", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/designerFolder", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/designerFolder", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/storeRealtimeAnalytics", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/storeRealtimeAnalytics", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).catch((e) => {
       throw new Error(e);
     });
