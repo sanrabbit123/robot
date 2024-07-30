@@ -651,7 +651,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
 }
 
-PortfolioDetailJs.prototype.contentsBoxStatusRead = async function () {
+PortfolioDetailJs.prototype.contentsBoxStatusRead = async function (photoUpdateBoo = true) {
   const instance = this;
   const { createNode, colorChip, objectDeepCopy, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, ajaxJson, designerCareer, isMac, isIphone, selfHref, setQueue, removeByClass } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, mainContentsClassTong0, mainContentsClassTong1, slideContentsClassTong } = this;
@@ -724,7 +724,7 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = async function () {
       }
 
       if (editable) {
-        response = await ajaxJson({ pid: targetImagesChildren[0].pid, title: mainTitle, data: targetImagesChildren, contents: contentsDetail }, LOGHOST + "/updateImagesOrder", { equal: true });
+        response = await ajaxJson({ pid: targetImagesChildren[0].pid, title: mainTitle, data: targetImagesChildren, contents: contentsDetail, photo: photoUpdateBoo ? 1 : 0 }, LOGHOST + "/updateImagesOrder", { equal: true });
         instance.originalContentsArr = [ response.contents ];  
       }
 
@@ -964,7 +964,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                   self.textContent = "";
                   self.insertAdjacentHTML("beforeend", finalValue);
                   self.setAttribute("value", finalValue);
-                  await instance.contentsBoxStatusRead();
+                  await instance.contentsBoxStatusRead(false);
                   removeByClass(editmodeClassName);
                 }
               },
@@ -1093,7 +1093,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                     self.firstChild.textContent = "";
                     self.firstChild.insertAdjacentHTML("beforeend", finalValue);
                     self.setAttribute("value", finalValue);
-                    await instance.contentsBoxStatusRead();
+                    await instance.contentsBoxStatusRead(false);
                     removeByClass(editmodeClassName);
                   }
                 },
@@ -1165,11 +1165,6 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
         class: [ imgDomClassName, imgDomClassName + String(i) + pid ],
         attribute: { type: "photo", src, draggable: "true", gs: photoDetail[i - 1].gs, pid, index: String(i), dae: (photodae.includes(i) ? "true" : "false") },
         event: {
-          click: async function (e) {
-            if (editable) {
-              await instance.contentsBoxStatusRead();
-            }
-          },
           selectstart: (e) => { e.preventDefault(); },
           dragstart: function (e) {
             e.dataTransfer.setData("dragData", JSON.stringify({
@@ -1241,7 +1236,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                   toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
                 }
               }
-              await instance.contentsBoxStatusRead();
+              await instance.contentsBoxStatusRead(true);
             }
           },
           dragenter: function (e) {
@@ -1269,7 +1264,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                 pastDae.style.filter = "";
                 pastDae.style.zIndex = "";
               }
-              await instance.contentsBoxStatusRead();
+              await instance.contentsBoxStatusRead(false);
             }
           }
         },
@@ -1318,7 +1313,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                     contents.firstChild.textContent = "";
                     contents.firstChild.insertAdjacentHTML("beforeend", finalValue);
                     self.setAttribute("value", finalValue);
-                    await instance.contentsBoxStatusRead();
+                    await instance.contentsBoxStatusRead(false);
                     removeByClass(editmodeClassName);
                   },
                 },
@@ -1367,7 +1362,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                         contents.firstChild.textContent = "";
                         contents.firstChild.insertAdjacentHTML("beforeend", finalValue);
                         self.setAttribute("value", finalValue);
-                        await instance.contentsBoxStatusRead();
+                        await instance.contentsBoxStatusRead(false);
                         removeByClass(editmodeClassName);
                       }
                     },
@@ -1395,7 +1390,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                     title.firstChild.textContent = "";
                     title.firstChild.insertAdjacentHTML("beforeend", finalValue);
                     self.setAttribute("title", finalValue);
-                    await instance.contentsBoxStatusRead();
+                    await instance.contentsBoxStatusRead(false);
                     removeByClass(editmodeClassName);
                   },
                 },
@@ -1425,7 +1420,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                       title.firstChild.textContent = "";
                       title.firstChild.insertAdjacentHTML("beforeend", finalValue);
                       self.setAttribute("title", finalValue);
-                      await instance.contentsBoxStatusRead();
+                      await instance.contentsBoxStatusRead(false);
                       removeByClass(editmodeClassName);
                     }
                   },
@@ -1464,7 +1459,6 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
               }).firstChild;
             }
             textAreaDom.focus();
-            await instance.contentsBoxStatusRead();
           }
         },
         drop: async function (e) {

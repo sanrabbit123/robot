@@ -974,14 +974,16 @@ LogRouter.prototype.rou_post_updateImagesOrder = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const { pid, data, contents, title } = equalJson(req.body);
+      const { pid, data, contents, title, photo } = equalJson(req.body);
       const { apart, wording: titleWording, pyeong, service } = title;
       const collection = "contents";
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongocore;
       let whereQuery, updateQuery;
       let updatedContents;
+      let photoUpdateBoo;
 
+      photoUpdateBoo = (photo === 1 || photo === '1');
       whereQuery = { "contents.portfolio.pid": pid };
       updateQuery = {};
       updateQuery["photo.first"] = 1;
@@ -1008,8 +1010,9 @@ LogRouter.prototype.rou_post_updateImagesOrder = function () {
 
       updatedContents = (await back.mongoRead(collection, whereQuery, { selfMongo: selfCoreMongo }))[0];
       delete updatedContents._id;
-
-      await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/orderPhotoSync", { pid, data }, { headers: { "Content-Type": "application/json" } });
+      if (photoUpdateBoo) {
+        await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/orderPhotoSync", { pid, data }, { headers: { "Content-Type": "application/json" } });
+      }
 
       res.send(JSON.stringify({ contents: updatedContents }));
 
