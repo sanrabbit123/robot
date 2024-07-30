@@ -6695,23 +6695,28 @@ StaticRouter.prototype.rou_post_orderPhotoSync = function () {
       let fromArr, toArr;
       let outputFolderList;
       let outputMobildFolderList;
+      let numbers, num;
 
+      numbers = [];
       for (let { fromIndex, toIndex } of data) {
-        await shellExec("mv", [ (original + "/i" + String(fromIndex) + pid + ".jpg"), (original + "/middle_i" + String(toIndex) + pid + ".jpg") ]);
-        await shellExec("mv", [ (listImageDesktop + "/t" + String(fromIndex) + pid + ".jpg"), (listImageDesktop + "/middle_t" + String(toIndex) + pid + ".jpg") ]);
-        await shellExec("mv", [ (listImageMobile + "/mot" + String(fromIndex) + pid + ".jpg"), (original + "/middle_mot" + String(toIndex) + pid + ".jpg") ]);
+        await shellExec("cp", [ (original + "/i" + String(fromIndex) + pid + ".jpg"), (original + "/middle_i" + String(toIndex) + pid + ".jpg") ]);
+        await shellExec("cp", [ (listImageDesktop + "/t" + String(fromIndex) + pid + ".jpg"), (listImageDesktop + "/middle_t" + String(toIndex) + pid + ".jpg") ]);
+        await shellExec("cp", [ (listImageMobile + "/mot" + String(fromIndex) + pid + ".jpg"), (listImageMobile + "/middle_mot" + String(toIndex) + pid + ".jpg") ]);
+        numbers.push(toIndex);
       }
-      for (let { fromIndex, toIndex } of data) {
+      for (let toIndex of numbers) {
         await shellExec("mv", [ (original + "/middle_i" + String(toIndex) + pid + ".jpg"), (original + "/i" + String(toIndex) + pid + ".jpg") ]);
         await shellExec("mv", [ (listImageDesktop + "/middle_t" + String(toIndex) + pid + ".jpg"), (listImageDesktop + "/t" + String(toIndex) + pid + ".jpg") ]);
-        await shellExec("mv", [ (listImageMobile + "/middle_mot" + String(toIndex) + pid + ".jpg"), (original + "/t" + String(toIndex) + pid + ".jpg") ]);
+        await shellExec("mv", [ (listImageMobile + "/middle_mot" + String(toIndex) + pid + ".jpg"), (listImageMobile + "/mot" + String(toIndex) + pid + ".jpg") ]);
       }
-
       await shellExec("mkdir", [ tempDir ]);
       await shellExec("cp", [ "-r", listImageDesktop, tempDir + "/" ]);
       await shellExec("mv", [ tempDir + "/" + pid, tempDir + "/portp" + pid ]);
-      await shellExec(`scp -r ${shellLink(tempDir + "/portp" + pid)} ${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/`);
-      await shellExec("rm", [ "-rf", tempDir ]);
+      shellExec(`scp -r ${shellLink(tempDir + "/portp" + pid)} ${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/`).then(() => {
+        return shellExec("rm", [ "-rf", tempDir ]);
+      }).catch((err) => {
+        console.log(err);
+      });
 
       fromArr = [];
       toArr = [];
@@ -6731,7 +6736,7 @@ StaticRouter.prototype.rou_post_orderPhotoSync = function () {
         }
       }
 
-      await ghostFileUpload(fromArr, toArr);
+      ghostFileUpload(fromArr, toArr).catch((err) => { console.log(err) });
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {

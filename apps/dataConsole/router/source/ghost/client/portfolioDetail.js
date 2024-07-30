@@ -651,7 +651,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
 }
 
-PortfolioDetailJs.prototype.contentsBoxStatusRead = function () {
+PortfolioDetailJs.prototype.contentsBoxStatusRead = async function () {
   const instance = this;
   const { createNode, colorChip, objectDeepCopy, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, ajaxJson, designerCareer, isMac, isIphone, selfHref, setQueue, removeByClass } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, mainContentsClassTong0, mainContentsClassTong1, slideContentsClassTong } = this;
@@ -722,14 +722,19 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = function () {
         }
       }
 
-      console.log(targetImagesChildren);
+      response = await ajaxJson({ pid: targetImagesChildren[0].pid, title: mainTitle, data: targetImagesChildren, contents: contentsDetail }, LOGHOST + "/updateImagesOrder", { equal: true });
+      instance.originalContentsArr = [ response.contents ];
 
-      // response = await ajaxJson({ pid: targetImagesChildren[0].pid, title: mainTitle, data: targetImagesChildren, contents: contentsDetail }, LOGHOST + "/updateImagesOrder", { equal: true });
-      // instance.originalContentsArr = [ response.contents ];
+      console.log(response)
+
+      return response.contents;
+    } else {
+      return null;
     }
 
   } catch (e) {
     console.log(e);
+    return null;
   }
 }
 
