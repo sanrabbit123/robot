@@ -688,7 +688,7 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = async function (photoUpdateB
         image,
       }
     });
-    const targetImagesChildren = targetContentsChildren.filter((o) => { return o.image }).map((o, index) => { o.dae = (o.dom.getAttribute("dae") === "true"); o.dom = o.dom.className; o.fromIndex = o.index; o.toIndex = index + 1; return o; });
+    const targetImagesChildren = targetContentsChildren.filter((o) => { return o.image }).map((o, index) => { o.dae = (o.dom.getAttribute("dae") === "true"); o.dom = o.dom.className; o.fromIndex = o.index; o.toIndex = o.index; return o; });
     let contentsDetail, targetArr;
     let photoKey, title, contents;
     let num;
@@ -705,18 +705,15 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = async function (photoUpdateB
           title = "init";
           contents = obj.dom.firstChild.innerHTML.trim().replace(/\<br\>/gi, "\n");
           contentsDetail.push({ photo: [], title, contents });
+          photoArr = [];
         } else if (obj.type === "contents") {
           const [ , titleDom, contentsDom, ] = [ ...obj.dom.children ];
-          photoKey = num - 1;
-          photoArr = [];
-          for (let i = num; i < photoKey + 1; i++) {
-            photoArr.push(i);
-          }
           title = titleDom.firstChild.innerHTML.trim().replace(/ /gi, '').replace(/[\'\"]/gi, '').toLowerCase();
           contents = contentsDom.firstChild.innerHTML.trim().replace(/\<br\>/gi, "\n");
           contentsDetail.push({ photo: photoArr, title, contents });
+          photoArr = [];
         } else if (obj.type === "photo") {
-          num++;
+          photoArr.push(Number(obj.dom.getAttribute("index")));
         } else if (obj.type === "title") {
           mainTitle = {
             full: obj.dom.innerHTML.replace(/\<br\>/gi, ", ").trim(),
@@ -1161,12 +1158,13 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
       } else {
         src = FRONTHOST + "/list_image/portp" + pid + "/mobile/" + photoCharMobile + String(i) + pid + ".jpg";
       }
-      garo = (photoDetail[i - 1].gs === 'g');
+
+      garo = (photoDetail.find((o) => { return o.index === i }).gs === 'g');
       createNode({
         mother: mainTong,
         mode: "img",
         class: [ imgDomClassName, imgDomClassName + String(i) + pid ],
-        attribute: { type: "photo", src, draggable: "true", gs: photoDetail[i - 1].gs, pid, index: String(i), dae: (photodae.includes(i) ? "true" : "false") },
+        attribute: { type: "photo", src, draggable: "true", gs: photoDetail.find((o) => { return o.index === i }).gs, pid, index: String(i), dae: (photodae.includes(i) ? "true" : "false") },
         event: {
           selectstart: (e) => { e.preventDefault(); },
           dragstart: function (e) {

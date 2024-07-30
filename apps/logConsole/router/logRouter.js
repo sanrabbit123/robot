@@ -986,19 +986,9 @@ LogRouter.prototype.rou_post_updateImagesOrder = function () {
       photoUpdateBoo = (photo === 1 || photo === '1');
       whereQuery = { "contents.portfolio.pid": pid };
       updateQuery = {};
-      updateQuery["photo.first"] = 1;
-      updateQuery["contents.portfolio.detailInfo.photosg.first"] = 1;
-      updateQuery["photo.last"] = data.length;
-      updateQuery["contents.portfolio.detailInfo.photosg.last"] = data.length;
-      updateQuery["photo.detail"] = data.map((o) => {
-        return {
-          index: o.toIndex,
-          gs: o.gs,
-        }
-      })
       updateQuery["photo.detail"].sort((a, b) => { return a.index - b.index });
       updateQuery["contents.portfolio.contents.detail"] = contents;
-      updateQuery["contents.portfolio.detailInfo.photodae"] = [ data.filter((o) => { return o.gs === "s" }).filter((o) => { return o.dae })[0].toIndex, data.filter((o) => { return o.gs === "g" }).filter((o) => { return o.dae })[0].toIndex ]
+      updateQuery["contents.portfolio.detailInfo.photodae"] = [ data.filter((o) => { return o.gs === "s" }).filter((o) => { return o.dae })[0].fronIndex, data.filter((o) => { return o.gs === "g" }).filter((o) => { return o.dae })[0].fronIndex ];
       updateQuery["contents.portfolio.spaceInfo.space"] = apart;
       updateQuery["contents.portfolio.spaceInfo.pyeong"] = pyeong;
       updateQuery["contents.portfolio.detailInfo.service"] = service;
@@ -1010,9 +1000,6 @@ LogRouter.prototype.rou_post_updateImagesOrder = function () {
 
       updatedContents = (await back.mongoRead(collection, whereQuery, { selfMongo: selfCoreMongo }))[0];
       delete updatedContents._id;
-      if (photoUpdateBoo) {
-        await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/orderPhotoSync", { pid, data }, { headers: { "Content-Type": "application/json" } });
-      }
 
       res.send(JSON.stringify({ contents: updatedContents }));
 
