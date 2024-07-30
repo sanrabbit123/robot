@@ -1521,7 +1521,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
 
     if (search === null || search === '' || search === '-') {
       const ago = new Date();
-      ago.setDate(ago.getDate() - 30);
+      ago.setDate(ago.getDate() - 64);
       clients = await ajaxJson({ whereQuery: { $or: [ { requests: { $elemMatch: { "request.timeline": { $gte: ago } } } }, { requests: { $elemMatch: { "analytics.response.status": { $regex: "^[응장]" } } } } ] } }, "/getClients");
     } else {
       clients = await ajaxJson({ query: search }, "/searchClients");
