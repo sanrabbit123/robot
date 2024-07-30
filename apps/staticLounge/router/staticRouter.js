@@ -6701,9 +6701,6 @@ StaticRouter.prototype.rou_post_orderPhotoSync = function () {
 
       numbers = [];
       for (let { fromIndex, toIndex } of data) {
-
-        console.log(fromIndex, toIndex);
-
         await shellExec("cp", [ (original + "/i" + String(fromIndex) + pid + ".jpg"), (original + "/middle_i" + String(toIndex) + pid + ".jpg") ]);
         await shellExec("cp", [ (listImageDesktop + "/t" + String(fromIndex) + pid + ".jpg"), (listImageDesktop + "/middle_t" + String(toIndex) + pid + ".jpg") ]);
         await shellExec("cp", [ (listImageMobile + "/mot" + String(fromIndex) + pid + ".jpg"), (listImageMobile + "/middle_mot" + String(toIndex) + pid + ".jpg") ]);
