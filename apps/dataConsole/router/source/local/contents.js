@@ -110,8 +110,8 @@ ContentsJs.prototype.baseMaker = async function () {
         width: withOut(tongPaddingLeft * 2, ea),
         height: String(titleBoxHeight) + ea,
         marginLeft: String(tongPaddingLeft) + ea,
-        justifyContent: "start",
-        alignItems: "center",
+        alignItems: "start",
+        justifyContent: "center",
       },
       child: {
         text: "<b%>&nbsp;&nbsp;%b>발행된 컨텐츠",
@@ -185,8 +185,8 @@ ContentsJs.prototype.baseMaker = async function () {
         position: "relative",
         width: withOut(0, ea),
         height: String(titleBoxHeight) + ea,
-        justifyContent: "start",
-        alignItems: "center",
+        justifyContent: "center",
+        alignItems: "start",
       },
       child: {
         text: "<b%>&nbsp;&nbsp;%b>발행 예정 컨텐츠",
@@ -248,8 +248,8 @@ ContentsJs.prototype.baseMaker = async function () {
         position: "relative",
         width: withOut(0, ea),
         height: String(titleBoxHeight) + ea,
-        justifyContent: "start",
-        alignItems: "center",
+        justifyContent: "center",
+        alignItems: "start",
       },
       child: {
         text: "<b%>&nbsp;&nbsp;%b>기타 사진",
@@ -310,8 +310,8 @@ ContentsJs.prototype.baseMaker = async function () {
         position: "relative",
         width: withOut(0, ea),
         height: String(titleBoxHeight) + ea,
-        justifyContent: "start",
-        alignItems: "center",
+        justifyContent: "center",
+        alignItems: "start",
       },
       child: {
         text: "<b%>&nbsp;&nbsp;%b>디자이너",
@@ -1230,6 +1230,7 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
       event: {
         click: cancelEvent
       },
+      attribute: { pid },
       style: {
         position: "fixed",
         background: colorChip.black,
@@ -1248,6 +1249,7 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
       class: [ whitePopupClassName ],
       attribute: {
         conid,
+        pid,
       },
       style: {
         position: "fixed",
@@ -3793,6 +3795,7 @@ ContentsJs.prototype.pidWhiteCard = function (pid, title = "", cliid = "", desid
         if (!reload) {
           cancelBack = createNode({
             mother: totalContents,
+            attribute: { pid },
             class: [ "justfadein", whiteCardClassName ],
             event: (e) => { removeByClass(whiteCardClassName) },
             style: {
@@ -3809,6 +3812,7 @@ ContentsJs.prototype.pidWhiteCard = function (pid, title = "", cliid = "", desid
         whitePrompt = createNode({
           mother: totalContents,
           class: [ whiteCardClassName, whiteBaseClassName ],
+          attribute: { pid },
           style: {
             position: "fixed",
             top: String(0 + margin + titleHeight) + ea,
@@ -4561,6 +4565,30 @@ ContentsJs.prototype.contentsExtractEvent = async function () {
   }
 }
 
+ContentsJs.prototype.communicationRender = function () {
+  const instance = this;
+  const { communication } = this.mother;
+  const { ajaxJson, sleep, blankHref, createNode, withOut, colorChip, dateToString } = GeneralJs;
+  const { whiteCardClassName } = this;
+  communication.setItem([
+    () => { return "컨텐츠 자동 발행"; },
+    function () {
+      return (document.querySelector('.' + whiteCardClassName) !== null);
+    },
+    async function (e) {
+      try {
+        const pid = document.querySelector('.' + whiteCardClassName).getAttribute("pid");
+        if (typeof pid === "string") {
+          await ajaxJson({ pid }, "https://" + FILEHOST + ":3001/rawUpdateSubject");
+          window.alert("자동 발행이 시작되었습니다. 슬렉 안내와 알람을 따라주세요!");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+}
+
 ContentsJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, setQueue, returnGet } = GeneralJs;
@@ -4654,6 +4682,7 @@ ContentsJs.prototype.launching = async function () {
     await this.contentsSearchEvent();
     await this.contentsExtractEvent();
     await this.contentsWhiteResize();
+    this.communicationRender();
 
   } catch (e) {
     console.log(e);

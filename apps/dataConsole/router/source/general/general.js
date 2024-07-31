@@ -6438,6 +6438,7 @@ GeneralJs.prototype.communicationBox = function () {
       num = 0;
       for (let arr of communication) {
         [ visual, vaild, action ] = arr;
+        tempArr = [];
         if (vaild()) {
           if (num % 3 === 0) {
             tempArr = new WidthArray();
@@ -6463,18 +6464,36 @@ GeneralJs.prototype.communicationBox = function () {
       }
 
       if (widthArr.length === 0) {
-        throw new Error("invaild blocks");
+        
+        whiteBox.style.width = String(emptyWidth) + ea;
+        whiteBox.style.height = String(emptyHeight) + ea;
+  
+        createNode({
+          mother: whiteBox.lastChild,
+          text: "이 곳에는 할 수 있는 것이 없어요.",
+          style: {
+            position: "absolute",
+            fontSize: String(size) + ea,
+            fontWeight: String(600),
+            color: colorExtended.mainBlue,
+            width: String(100) + '%',
+            textAlign: "center",
+            top: String(emptyTextTop) + ea,
+            left: String(0) + ea,
+          }
+        });
+
+      } else {
+        widthArr.sort((a, b) => { return b.sum() - a.sum() });
+        whiteBox.style.width = String(widthArr[0].sum() - widthArr[0].margin + (innerMargin * 2)) + ea;
+        whiteBox.children[1].style.paddingRight = String(innerMargin - widthArr[0].margin) + ea;
+        whiteBox.children[1].style.width = withOut(innerMargin + innerMargin - widthArr[0].margin, ea);
+        whiteBox.children[1].style.paddingBottom = String(innerMargin - widthArr[0].margin) + ea;
+        whiteBox.children[1].style.height = withOut(innerMargin + innerMargin - widthArr[0].margin, ea);
+  
+        refreshHeight = (widthArr.length * widthArr[0].height) + ((widthArr.length - 1) * widthArr[0].margin) + (innerMargin * 2);
+        whiteBox.style.height = String(refreshHeight) + ea;
       }
-
-      widthArr.sort((a, b) => { return b.sum() - a.sum() });
-      whiteBox.style.width = String(widthArr[0].sum() - widthArr[0].margin + (innerMargin * 2)) + ea;
-      whiteBox.children[1].style.paddingRight = String(innerMargin - widthArr[0].margin) + ea;
-      whiteBox.children[1].style.width = withOut(innerMargin + innerMargin - widthArr[0].margin, ea);
-      whiteBox.children[1].style.paddingBottom = String(innerMargin - widthArr[0].margin) + ea;
-      whiteBox.children[1].style.height = withOut(innerMargin + innerMargin - widthArr[0].margin, ea);
-
-      refreshHeight = (widthArr.length * widthArr[0].height) + ((widthArr.length - 1) * widthArr[0].margin) + (innerMargin * 2);
-      whiteBox.style.height = String(refreshHeight) + ea;
 
     }
 
