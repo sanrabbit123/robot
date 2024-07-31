@@ -8267,6 +8267,7 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
             res.send(JSON.stringify({ "message": "done" }));
           }
         } catch (e) {
+          console.log(e);
           logger.error("Static lounge 서버 문제 생김 (rou_post_generalFileUpload): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
