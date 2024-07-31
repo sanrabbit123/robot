@@ -1539,9 +1539,11 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                   this.setAttribute("dae", "true");
                   this.style.filter = daeShadow;
                   this.style.zIndex = daeZIndex;
-                  pastDae.setAttribute("dae", "false");
-                  pastDae.style.filter = "";
-                  pastDae.style.zIndex = "";
+                  if (pastDae !== undefined) {
+                    pastDae.setAttribute("dae", "false");
+                    pastDae.style.filter = "";
+                    pastDae.style.zIndex = "";
+                  }
                 }
               }
               await instance.contentsBoxStatusRead();

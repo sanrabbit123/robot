@@ -8167,7 +8167,7 @@ StaticRouter.prototype.rou_post_styleCurationTotalMenu = function () {
 
 StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, sleep, tempReplaceImage, uniqueValue, requestSystem } = this.mother;
+  const { fileSystem, shellExec, shellLink, sleep, tempReplaceImage, uniqueValue, requestSystem, messageSend } = this.mother;
   const { staticConst } = this;
   const osTempFolder = "/tmp";
   const back = this.back;
@@ -8277,8 +8277,6 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
               for (let key of filesKey) {
                 thisFiles.push(files[key]);
               }
-              console.log(thisFiles);
-
               (async () => {
 
                 fileNum = 1;
@@ -8349,7 +8347,7 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
                 await sleep(500);
                 await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
                 await sleep(1000);
-                await requestSystem("https://" + address.testinfo.host + ":3000/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
+                await requestSystem("https://home-liaison.info:3000/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
                 await sleep(500);
                 await messageSend({ text: pid + " 컨텐츠 보정본 업로드 및 대치를 완료하였어요, 순서 조정 및 에디팅을 해주세요\nlink : https://" + address.frontinfo.host + "/portdetail.php?pid=" + pid + "&edit=true", channel: "#502_sns_contents", voice: true });
 
