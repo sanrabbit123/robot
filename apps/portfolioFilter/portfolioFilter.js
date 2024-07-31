@@ -1049,7 +1049,7 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
   const instance = this;
   const address = this.address;
   const back = this.back;
-  const { consoleQ, fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo, mongocontentsinfo, mongosecondinfo } = this.mother;
+  const { fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo, mongocontentsinfo, mongosecondinfo } = this.mother;
   const selfMongo = new mongo(mongocontentsinfo);
   const selfCoreMongo = new mongo(mongoinfo);
   const selfSecondMongo = new mongo(mongosecondinfo);
@@ -1057,7 +1057,6 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
     await selfMongo.connect();
     await selfCoreMongo.connect();
     await selfSecondMongo.connect();
-    const bar = "================================================"
     const collection = "foreContents";
     const rawCollection = "designerRawContents";
     const toNormal = true;
@@ -1091,7 +1090,7 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
     let backArr;
 
     if (typeof pid !== "string") {
-      pid = await consoleQ("pid? : \n");
+      throw new Error("invalid input");
     }
 
     if (/^p/.test(pid.trim())) {
@@ -1149,30 +1148,20 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
           }
         }
       }
-  
-      console.log(frontText);
-      console.log(bar);
-      console.log(client.requests[0].request.space.address);
-      console.log(bar);
+      frontText = frontText.trim();
+      if (frontText === "") {
+        frontText = "고객의 이야기를 적어주세요!";
+      }
       backArr = backText.split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== "" });
       infoIndex = backArr.findIndex((s) => { return /^공간[ ]?정보/gi.test(s.trim()) });
       if (infoIndex !== -1) {
         backArr = backArr.slice(0, infoIndex);
       }
-      console.log(backArr);
 
       addressArr = client.requests[0].request.space.address.split(" ").map((s) => { return s.trim() });
       subjectInput = "제목을 입력해주세요";
-      apartInput = await consoleQ("please insert this apart :\n");
+      apartInput = "아파트 아파트명";
       regionInput = addressArr[0].slice(0, 2) + " " + addressArr[1];
-  
-      console.log(subjectInput);
-      console.log(bar);
-      console.log(apartInput);
-      console.log(bar);
-      console.log(regionInput);
-      console.log(bar);
-      console.log(client.requests[0].request.space.pyeong);
 
       await back.mongoUpdate(rawCollection, [ { proid }, {
         addition: {
@@ -1247,29 +1236,21 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
           }
         }
       }
-
-      console.log(frontText);
-      console.log(bar);
-      console.log(bar);
+      frontText = frontText.trim();
+      if (frontText === "") {
+        frontText = "고객의 이야기를 적어주세요!";
+      }
+      
       backArr = backText.split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== "" });
       infoIndex = backArr.findIndex((s) => { return /^공간[ ]?정보/gi.test(s.trim()) });
       if (infoIndex !== -1) {
         backArr = backArr.slice(0, infoIndex);
       }
-      console.log(backArr);
 
-      subjectInput = await consoleQ("please insert this subject :\n");
-      apartInput = await consoleQ("please insert this apart :\n");
-      regionInput = await consoleQ("please insert this region :\n");
-      pyeongInput = await consoleQ("please insert this pyeong :\n");
-
-      console.log(subjectInput);
-      console.log(bar);
-      console.log(apartInput);
-      console.log(bar);
-      console.log(regionInput);
-      console.log(bar);
-      console.log(Number(pyeongInput.trim()));
+      subjectInput = "제목을 입력해주세요";
+      apartInput = "아파트 아파트명";
+      regionInput = "서울시 관악구";
+      pyeongInput = String(34);
 
       await back.mongoCreate(rawCollection, {
         proid: "",
@@ -1296,20 +1277,26 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
 
     }
 
+    await sleep(500);
     await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawToContents", {
       pid,
       proid
     }, { headers: { "Content-Type": "application/json" } });
+    await sleep(500);
 
     await selfMongo.close();
     await selfCoreMongo.close();
     await selfSecondMongo.close();
+
+    return true;
 
   } catch (e) {
     console.log(e);
     await selfMongo.close();
     await selfCoreMongo.close();
     await selfSecondMongo.close();
+
+    return false;
   }
 }
 
