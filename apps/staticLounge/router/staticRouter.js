@@ -8167,7 +8167,7 @@ StaticRouter.prototype.rou_post_styleCurationTotalMenu = function () {
 
 StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, sleep, tempReplaceImage, uniqueValue, requestSystem, messageSend } = this.mother;
+  const { fileSystem, shellExec, shellLink, sleep, tempReplaceImage, uniqueValue, requestSystem, messageSend, objectDeepCopy } = this.mother;
   const { staticConst } = this;
   const osTempFolder = "/tmp";
   const back = this.back;
@@ -8213,6 +8213,8 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
             let targetInfo;
             let whereQuery, updateQuery;
             let photoDetailArr;
+            let thisOriginalContents;
+            let contentsDetailCopied;
 
             pid = fields.pid.trim();
             whereQuery = { "contents.portfolio.pid": pid };
@@ -8344,6 +8346,22 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
                 updateQuery["photos.last"] = photoDetailArr.length;
                 updateQuery["contents.portfolio.detailInfo.photosg.first"] = 1;
                 updateQuery["contents.portfolio.detailInfo.photosg.last"] = photoDetailArr.length;
+
+                thisOriginalContents = await back.mongoRead(collection, whereQuery, { selfMongo });
+                await sleep(500);
+                contentsDetailCopied = objectDeepCopy(thisOriginalContents.contents.portfolio.contents.detail);
+                if (contentsDetailCopied.length > 1) {
+                  contentsDetailCopied[0].photo = [];
+                  contentsDetailCopied[1].photo = [];
+                  for (let i = 1; i < photoDetailArr.length + 1; i++) {
+                    contentsDetailCopied[1].photo.push(i);
+                  }
+                  for (let i = 2; < contentsDetailCopied.length; i++) {
+                    contentsDetailCopied[i].photo = [];
+                  }
+                  updateQuery["contents.portfolio.contents.detail"] = objectDeepCopy(contentsDetailCopied);
+                }
+
                 await sleep(500);
                 await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
                 await sleep(1000);
