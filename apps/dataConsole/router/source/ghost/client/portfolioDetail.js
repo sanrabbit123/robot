@@ -1375,6 +1375,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
               const toDom = this;
               const toIndex = Number(this.getAttribute("index"));
               let formData;
+              let fileNum;
               try {
                 const { type } = JSON.parse(e.dataTransfer.getData("dragData"));
                 if (type === "image") {
@@ -1434,23 +1435,52 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
               } catch {
                 if (e.dataTransfer.files.length > 0) {
                   if (/\.jpg/gi.test(e.dataTransfer.files[0].name)) {
-                    loading = instance.mother.whiteProgressLoading();
-                    formData = new FormData();
-                    formData.enctype = "multipart/form-data";
-                    formData.append("pid", pid);
-                    formData.append("gs", toGs);
-                    formData.append("index", String(toIndex));
-                    formData.append("type", "file");
-                    formData.append("replacePhoto0", e.dataTransfer.files[0]);
-                    await ajaxForm(formData, "https://" + FILEHOST + ":3001/replaceContentsPhoto", loading.progress);
-                    GeneralJs.sleep(2000).then(() => {
-                      loading.remove();
-                      if (GeneralJs.returnGet().eraseCache === undefined) {
-                        window.location.href = window.location.href + "&eraseCache=true";
-                      } else {
-                        window.location.reload(true);
+                    if (e.dataTransfer.files.length === 1) {
+                      loading = instance.mother.whiteProgressLoading();
+                      formData = new FormData();
+                      formData.enctype = "multipart/form-data";
+                      formData.append("pid", pid);
+                      formData.append("gs", toGs);
+                      formData.append("index", String(toIndex));
+                      formData.append("type", "file");
+                      formData.append("multiple", "false");
+                      formData.append("replacePhoto0", e.dataTransfer.files[0]);
+                      await ajaxForm(formData, "https://" + FILEHOST + ":3001/replaceContentsPhoto", loading.progress);
+                      GeneralJs.sleep(0).then(() => {
+                        loading.remove();
+                        if (GeneralJs.returnGet().eraseCache === undefined) {
+                          window.location.href = window.location.href + "&eraseCache=true";
+                        } else {
+                          window.location.reload(true);
+                        }
+                      }).catch((err) => { console.log(err); })
+                    } else {
+                      const files  = [ ...e.dataTransfer.files ]
+                      if (files.every((o) => { return /[0-9]/gi.test(o.name) })) {
+                        loading = instance.mother.whiteProgressLoading();
+                        formData = new FormData();
+                        formData.enctype = "multipart/form-data";
+                        formData.append("pid", pid);
+                        formData.append("gs", toGs);
+                        formData.append("index", String(toIndex));
+                        formData.append("multiple", "true");
+                        formData.append("type", "file");
+                        fileNum = 0;
+                        for (let file of e.dataTransfer.files) {
+                          formData.append("replacePhoto" + String(fileNum), e.dataTransfer.files[0]);
+                          fileNum++;
+                        }
+                        await ajaxForm(formData, "https://" + FILEHOST + ":3001/replaceContentsPhoto", loading.progress);
+                        GeneralJs.sleep(0).then(() => {
+                          loading.remove();
+                          if (GeneralJs.returnGet().eraseCache === undefined) {
+                            window.location.href = window.location.href + "&eraseCache=true";
+                          } else {
+                            window.location.reload(true);
+                          }
+                        }).catch((err) => { console.log(err); })
                       }
-                    }).catch((err) => { console.log(err); })
+                    }
                   }
                 }
               }
