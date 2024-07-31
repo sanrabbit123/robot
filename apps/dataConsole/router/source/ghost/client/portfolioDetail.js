@@ -48,7 +48,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   const instance = this;
   const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, setQueue, designerMthParsing, designerCareer, selfHref } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, slideContentsClassTong } = this;
-  const { contentsArr, designers } = this;
+  const { contentsArr, designers, editable } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
@@ -185,6 +185,204 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
 
   photoBox = createNode({
     mother: contentsBox,
+    event: {
+      click: async function (e) {
+        const zIndex = 2;
+        const whitePopupClassName = "whitePopupClassName";
+        const slidePhotosClassName = "slidePhotosClassName";
+        let margin;
+        let cancelEvent;
+        let whiteBoard, mainTong;
+        let innerMargin;
+        let scrollTong;
+        let pid;
+        let photoWidth, photoHeight;
+        let columnLength;
+        let photoBetween;
+        let photoNum;
+        let globalNum;
+
+        if (editable) {
+
+          margin = 30;
+          innerMargin = 40;
+          photoWidth = 210;
+          columnLength = 6;
+          photoBetween = 6;
+
+          cancelEvent = function (e) {
+            GeneralJs.removeByClass(whitePopupClassName);
+          }
+
+          createNode({
+            mother: totalContents,
+            class: [ whitePopupClassName ],
+            event: {
+              click: cancelEvent
+            },
+            style: {
+              position: "fixed",
+              background: colorChip.black,
+              opacity: String(0),
+              top: String(0),
+              left: String(0),
+              width: String(100) + '%',
+              height: withOut(0, ea),
+              animation: "justfadein 0.3s ease forwards",
+              zIndex: String(zIndex),
+            }
+          });
+
+          whiteBoard = createNode({
+            mother: totalContents,
+            class: [ whitePopupClassName ],
+            style: {
+              position: "fixed",
+              background: colorChip.white,
+              borderRadius: String(5) + ea,
+              top: String(naviHeight + margin) + ea,
+              left: String(margin) + ea,
+              width: withOut(margin * 2, ea),
+              height: withOut(naviHeight + margin * 2, ea),
+              boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+              animation: "fadeuphard 0.3s ease forwards",
+              zIndex: String(zIndex),
+            }
+          });
+
+          mainTong = createNode({
+            mother: whiteBoard,
+            style: {
+              padding: String(innerMargin) + ea,
+              width: withOut(innerMargin * 2, ea),
+              height: withOut(innerMargin * 2, ea),
+              overflow: "scroll",
+              position: "relative",
+              display: "block",
+            }
+          });
+
+          scrollTong = createNode({
+            mother: mainTong,
+            style: {
+              display: "block",
+              width: withOut(0),
+            }
+          });
+
+          photoWidth = "calc(calc(100% - " + String(photoBetween * (columnLength - 1)) + ea + ") / " + String(columnLength) + ")";
+          pid = instance.originalContentsArr[0].contents.portfolio.pid;
+          photoNum = 0;
+          globalNum = 1;
+          for (let { index, gs } of instance.originalContentsArr[0].photos.detail) {
+            createNode({
+              mother: scrollTong,
+              class: [ slidePhotosClassName ],
+              attribute: {
+                toggle: instance.originalContentsArr[0].contents.portfolio.detailInfo.slide.findIndex((n) => { return n === index }) + 1 === 0 ? "off" : "on",
+                index: String(index),
+                gs: gs,
+                pid: pid,
+                order: String(instance.originalContentsArr[0].contents.portfolio.detailInfo.slide.findIndex((n) => { return n === index }) + 1),
+              },
+              event: {
+                click: async function (e) {
+                  if (globalNum > 9) {
+                    window.location.reload(true);
+                  } else {
+                    const pid = this.getAttribute("pid");
+                    const index = Number(this.getAttribute("index"));
+                    const toggle = this.getAttribute("toggle") === "on";
+                    const siblings = [ ...document.querySelectorAll('.' + slidePhotosClassName) ];
+                    const order = Number(this.getAttribute("order"));
+                    const thisOrder = globalNum;
+                    const thisTarget = this;
+                    let siblingOnTarget;
+                    thisTarget.setAttribute("toggle", "on");
+                    thisTarget.children[0].style.opacity = String(0.4);
+                    thisTarget.children[1].style.opacity = String(1);
+                    thisTarget.children[1].firstChild.textContent = String(thisOrder);
+                    thisTarget.setAttribute("order", String(thisOrder));
+                    siblingOnTarget = siblings.find((d) => { return d.getAttribute("order") === String(thisOrder) });
+                    if (siblingOnTarget !== undefined && thisTarget !== siblingOnTarget) {
+                      siblingOnTarget.setAttribute("toggle", "off");
+                      siblingOnTarget.children[0].style.opacity = String(0);
+                      siblingOnTarget.children[1].style.opacity = String(0);
+                      siblingOnTarget.children[1].firstChild.textContent = String(0);
+                      siblingOnTarget.setAttribute("order", String(0));
+                    }
+                    await ajaxJson({ pid: pid, order: thisOrder, index: index }, LOGHOST + "/updateSlideOrder", { equal: true });
+                  }
+                  if (globalNum === 9) {
+                    window.location.reload();
+                  }
+                  globalNum = globalNum + 1;
+                }
+              },
+              style: {
+                display: "inline-block",
+                width: photoWidth,
+                height: "auto",
+                marginRight: photoNum % columnLength === columnLength - 1 ? "" : photoBetween,
+                marginBottom: photoBetween,
+                borderRadius: 5,
+                background: colorExtended.gray1,
+                "aspect-ratio": "297 / 210",
+                backgroundPosition: "50% 50%",
+                backgroundRepeat: "no-repeat",
+                backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + pid + "/t" + String(index) + pid + ".jpg" + "')",
+                backgroundSize: "auto 100%",
+                overflow: "hidden",
+                cursor: "pointer",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: withOut(0),
+                  height: withOut(0),
+                  background: colorExtended.blueDark,
+                  "mix-blend-mode": "multiply",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  opacity: instance.originalContentsArr[0].contents.portfolio.detailInfo.slide.findIndex((n) => { return n === index }) + 1 === 0 ? 0 : 0.4,
+                },
+                next: {
+                  style: {
+                    display: "flex",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: withOut(0),
+                    height: withOut(0),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    opacity: instance.originalContentsArr[0].contents.portfolio.detailInfo.slide.findIndex((n) => { return n === index }) + 1 === 0 ? 0 : 1,
+                  },
+                  child: {
+                    text: String(instance.originalContentsArr[0].contents.portfolio.detailInfo.slide.findIndex((n) => { return n === index }) + 1),
+                    style: {
+                      fontSize: 54,
+                      fontWeight: 700,
+                      fontFamily: "mont",
+                      color: colorExtended.white,
+                      opacity: 0.8,
+                      top: 1,
+                    }
+                  },
+                }
+              }
+            });
+            photoNum++;
+          }
+
+
+
+        }
+      }
+    },
     style: {
       display: "inline-block",
       position: "relative",
@@ -263,7 +461,6 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
     });
     photoBigFactors.push(photoBigFactor);
   }
-
   photoSlideFactors = [];
   for (let i = 0; i < slide.length; i++) {
     photoSlideFactor = createNode({
@@ -291,7 +488,6 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
     });
     photoSlideFactors.push(photoSlideFactor);
   }
-
   photoNextSlide = function () {
     let index;
     let indexNext;
@@ -323,7 +519,6 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       }
     }
   }
-
   photoNextPrevious = function () {
     let index;
     let indexPrevious;
@@ -355,7 +550,6 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       }
     }
   }
-
   createNode({
     mother: photoSlideBox,
     event: {
@@ -492,7 +686,6 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   photoSlideInterval = setInterval(photoNextSlide, 3000);
 
   // designer
-
   designerBox = createNode({
     mother: contentsBox,
     attribute: {
@@ -541,7 +734,6 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       }
     ]
   });
-
   designerMthTargets = designerMthParsing(designer.setting.front.methods);
   for (let mth of designerMthTargets) {
     createNode({
@@ -556,7 +748,6 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       }
     });
   }
-
   createNode({
     mother: designerBox,
     text: designerCareer(designer, true),
@@ -576,7 +767,6 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   });
 
   // title
-
   titleBox = createNode({
     mother: contentsBox,
     style: {
@@ -1255,7 +1445,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                     await ajaxForm(formData, "https://" + FILEHOST + ":3001/replaceContentsPhoto", loading.progress);
                     GeneralJs.sleep(2000).then(() => {
                       loading.remove();
-                      if (GeneralJs.returnGet().eraseCache !== undefined) {
+                      if (GeneralJs.returnGet().eraseCache === undefined) {
                         window.location.href = window.location.href + "&eraseCache=true";
                       } else {
                         window.location.reload(true);

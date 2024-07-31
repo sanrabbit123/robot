@@ -1011,6 +1011,46 @@ LogRouter.prototype.rou_post_updateImagesOrder = function () {
   return obj;
 }
 
+LogRouter.prototype.rou_post_updateSlideOrder = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, objectDeepCopy, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateSlideOrder" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { pid, order, index } = equalJson(req.body);
+      const collection = "contents";
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongocore;
+      let whereQuery, updateQuery;
+      let updatedContents;
+
+      whereQuery = { "contents.portfolio.pid": pid };
+      updateQuery = {};
+      updateQuery["contents.portfolio.detailInfo.slide." + String(order)] = index;
+
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo: selfCoreMongo });
+
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      console.log(e);
+      logger.error("Log Console 서버 문제 생김 (rou_post_updateSlideOrder): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 LogRouter.prototype.rou_post_marketingMessage = function () {
   const instance = this;
   let obj;

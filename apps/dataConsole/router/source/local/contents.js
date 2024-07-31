@@ -3913,7 +3913,7 @@ ContentsJs.prototype.pidWhiteCard = function (pid, title = "", cliid = "", desid
                 }
               },
               {
-                attribute: { cliid, desid, proid, pid, type, title: thisTitle, video: (videoFiles.filter((o) => { return o.proid === proid }).length === 0 ? "false" : "true") },
+                attribute: { cliid, desid, proid, pid, type, title: thisTitle, video: (true ? "false" : "true") },
                 event: {
                   click: async function (e) {
                     try {
@@ -3930,7 +3930,7 @@ ContentsJs.prototype.pidWhiteCard = function (pid, title = "", cliid = "", desid
                         await tempFunction(new Event("click", { bubbles: true }));
                       } else {
                         if (type === "contents") {
-                          blankHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+                          blankHref(FRONTHOST + "/portdetail.php?pid=" + pid + "&edit=true");
                         }
                       }
                     } catch (e) {
@@ -3940,7 +3940,7 @@ ContentsJs.prototype.pidWhiteCard = function (pid, title = "", cliid = "", desid
                     }
                   }
                 },
-                text: videoFiles.filter((o) => { return o.proid === proid }).length === 0 ? (type === "contents" ? "front web" : "") : ("video source"),
+                text: true ? (type === "contents" ? "front web" : "") : ("video source"),
                 style: {
                   display: "inline-block",
                   position: "absolute",
