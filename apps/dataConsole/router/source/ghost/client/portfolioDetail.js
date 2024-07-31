@@ -1183,61 +1183,80 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
               const toGs = this.getAttribute("gs");
               const toSrc = this.getAttribute("src");
               const toDom = this;
-              const { type } = JSON.parse(e.dataTransfer.getData("dragData"));
-              if (type === "image") {
-                const { gs: fromGs, index: fromIndex, source: fromSrc } = JSON.parse(e.dataTransfer.getData("dragData"));
-                const fromDom = document.querySelector("." + imgDomClassName + String(fromIndex) + pid);
-                if (toGs === fromGs) {
-                  toDom.setAttribute("src", fromSrc);
-                  fromDom.setAttribute("src", toSrc);
-                  if (toDom.getAttribute("dae") === "true") {
-                    toDom.setAttribute("dae", "false");
-                    fromDom.setAttribute("dae", "true");
-                    fromDom.style.filter = daeShadow;
-                    fromDom.style.zIndex = daeZIndex;
-                    toDom.style.filter = "";
-                    toDom.style.zIndex = "";
-                  } else {
-                    if (fromDom.getAttribute("dae") === "true") {
-                      toDom.setAttribute("dae", "true");
-                      fromDom.setAttribute("dae", "false");
-                      toDom.style.filter = daeShadow;
-                      toDom.style.zIndex = daeZIndex;
-                      fromDom.style.filter = "";
-                      fromDom.style.zIndex = "";
-                    } 
-                  }
-                } else {
-                  if (toGs === 's') {
-                    if ((totalContents.getBoundingClientRect().width / 2) <= toDom.getBoundingClientRect().x) {
-                      toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+              const toIndex = Number(this.getAttribute("index"));
+              let formData;
+              try {
+                const { type } = JSON.parse(e.dataTransfer.getData("dragData"));
+                if (type === "image") {
+                  const { gs: fromGs, index: fromIndex, source: fromSrc } = JSON.parse(e.dataTransfer.getData("dragData"));
+                  const fromDom = document.querySelector("." + imgDomClassName + String(fromIndex) + pid);
+                  if (toGs === fromGs) {
+                    toDom.setAttribute("src", fromSrc);
+                    fromDom.setAttribute("src", toSrc);
+                    if (toDom.getAttribute("dae") === "true") {
+                      toDom.setAttribute("dae", "false");
+                      fromDom.setAttribute("dae", "true");
+                      fromDom.style.filter = daeShadow;
+                      fromDom.style.zIndex = daeZIndex;
+                      toDom.style.filter = "";
+                      toDom.style.zIndex = "";
                     } else {
-                      toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+                      if (fromDom.getAttribute("dae") === "true") {
+                        toDom.setAttribute("dae", "true");
+                        fromDom.setAttribute("dae", "false");
+                        toDom.style.filter = daeShadow;
+                        toDom.style.zIndex = daeZIndex;
+                        fromDom.style.filter = "";
+                        fromDom.style.zIndex = "";
+                      } 
                     }
                   } else {
-                    if ((totalContents.getBoundingClientRect().width / 2) <= fromDom.getBoundingClientRect().x) {
-                      toDom.parentElement.insertBefore(fromDom.previousElementSibling, toDom.nextElementSibling);
-                      toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+                    if (toGs === 's') {
+                      if ((totalContents.getBoundingClientRect().width / 2) <= toDom.getBoundingClientRect().x) {
+                        toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+                      } else {
+                        toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+                      }
                     } else {
-                      toDom.parentElement.insertBefore(fromDom.nextElementSibling, toDom.nextElementSibling);
-                      toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+                      if ((totalContents.getBoundingClientRect().width / 2) <= fromDom.getBoundingClientRect().x) {
+                        toDom.parentElement.insertBefore(fromDom.previousElementSibling, toDom.nextElementSibling);
+                        toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+                      } else {
+                        toDom.parentElement.insertBefore(fromDom.nextElementSibling, toDom.nextElementSibling);
+                        toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+                      }
                     }
                   }
-                }
-              } else if (type === "text") {
-                const { index } = JSON.parse(e.dataTransfer.getData("dragData"));
-                const fromDom = document.querySelector("." + contentsDomClassName + String(index) + pid);
-                if (toGs === "s") {
-                  if ((totalContents.getBoundingClientRect().width / 2) > toDom.getBoundingClientRect().x) {
-                    toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+                } else if (type === "text") {
+                  const { index } = JSON.parse(e.dataTransfer.getData("dragData"));
+                  const fromDom = document.querySelector("." + contentsDomClassName + String(index) + pid);
+                  if (toGs === "s") {
+                    if ((totalContents.getBoundingClientRect().width / 2) > toDom.getBoundingClientRect().x) {
+                      toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling.nextElementSibling);
+                    } else {
+                      toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+                    }
                   } else {
                     toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
                   }
-                } else {
-                  toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+                }
+                await instance.contentsBoxStatusRead(true);
+              } catch {
+                if (e.dataTransfer.files.length > 0) {
+                  if (/\.jpg/gi.test(e.dataTransfer.files[0].name)) {
+                    loading = instance.whiteProgressLoading();
+                    formData = new FormData();
+                    formData.enctype = "multipart/form-data";
+                    formData.append("pid", pid);
+                    formData.append("gs", toGs);
+                    formData.append("index", String(toIndex));
+                    formData.append("type", "file");
+                    formData.append("replacePhoto0", e.dataTransfer.files[0]);
+                    await ajaxForm(formData, "https://" + FILEHOST + ":3001/replaceContentsPhoto", loading.progress);
+                    loading.remove();
+                  }
                 }
               }
-              await instance.contentsBoxStatusRead(true);
             }
           },
           dragenter: function (e) {

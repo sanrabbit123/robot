@@ -8165,6 +8165,115 @@ StaticRouter.prototype.rou_post_styleCurationTotalMenu = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, sleep, tempReplaceImage, uniqueValue } = this.mother;
+  const { staticConst } = this;
+  const osTempFolder = "/tmp";
+  const hangul = this.hangul;
+  const address = this.address;
+  const image = this.imageReader;
+  const qualityConst = 95;
+  const sizeMatrix = [
+    [ 1200, 848 ],
+    [ 800, 566 ],
+  ];
+  let obj;
+  obj = {};
+  obj.link = [ "/replaceContentsPhoto" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (9000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        try {
+          if (err) {
+            throw new Error(err);
+          } else {
+            let filesKey, fromArr, num;
+            let thisFile;
+            let tempName;
+            let thisTempFull;
+            let tempName2;
+            let thisTempFull2;
+            let tempName3;
+            let thisTempFull3;
+            let pid, gs, index;
+
+            pid = fields.pid.trim();
+            gs = fields.gs.trim();
+            index = Number(fields.index);
+
+            tempName = "tempReplaceImage" + uniqueValue("hex") + ".jpg";
+            thisTempFull = osTempFolder + "/" + tempName;
+
+            tempName2 = "tempReplaceImage" + uniqueValue("hex") + ".jpg";
+            thisTempFull2 = osTempFolder + "/" + tempName2;
+
+            tempName3 = "tempReplaceImage" + uniqueValue("hex") + ".jpg";
+            thisTempFull3 = osTempFolder + "/" + tempName3;
+
+
+            filesKey = Object.keys(files);
+            filesKey.sort((a, b) => {
+              return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, ''));
+            });
+            thisFile = null;
+            for (let key of filesKey) {
+              thisFile = files[key];
+            }
+            await shellExec("mv", [ thisFile.filepath, thisTempFull ]);
+            await image.overOfficialImage(thisTempFull);
+
+            await sleep(1000);
+
+            await shellExec("cp", [ thisTempFull, thisTempFull2 ]);
+            await shellExec("cp", [ thisTempFull, thisTempFull3 ]);
+
+            await sleep(1000);
+
+            await shellExec("mv", [ thisTempFull, osTempFolder + "/i" + String(index) + pid + ".jpg" ]);
+            await sleep(500);
+            await shellExec(`convert ${shellLink(thisTempFull2)} -resize ${gs === 's' ? String(sizeMatrix[0][1]) + "x" + String(sizeMatrix[0][0]) : String(sizeMatrix[0][0]) + "x" + String(sizeMatrix[0][1])} -quality ${String(qualityConst)} ${shellLink(osTempFolder + "/t" + String(index) + pid + ".jpg")}`);
+            await sleep(500);
+            await shellExec(`convert ${shellLink(thisTempFull2)} -resize ${gs === 's' ? String(sizeMatrix[1][1]) + "x" + String(sizeMatrix[1][0]) : String(sizeMatrix[1][0]) + "x" + String(sizeMatrix[1][1])} -quality ${String(qualityConst)} ${shellLink(osTempFolder + "/mot" + String(index) + pid + ".jpg")}`);
+
+            await sleep(1000);
+
+            await shellExec("mv", [ osTempFolder + "/i" + String(index) + pid + ".jpg", staticConst + "/coreportfolio/original/" + pid + "/" ]);
+            await shellExec("mv", [ osTempFolder + "/t" + String(index) + pid + ".jpg", staticConst + "/coreportfolio/listImage/" + pid + "/" ]);
+            await shellExec("mv", [ osTempFolder + "/mot" + String(index) + pid + ".jpg", staticConst + "/coreportfolio/listImage/" + pid + "/mobile/" ]);
+
+            await sleep(1000);
+
+            await shellExec("scp", [ "-r", (staticConst + "/coreportfolio/listImage/" + pid + "/mobile/t" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/` ]);
+            await sleep(500);
+            await shellExec("scp", [ "-r", (staticConst + "/coreportfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/mobile/` ]);
+            await sleep(500);
+
+            res.send(JSON.stringify({ "message": "done" }));
+          }
+        } catch (e) {
+          logger.error("Static lounge 서버 문제 생김 (rou_post_generalFileUpload): " + e.message).catch((e) => { console.log(e); });
+          res.send(JSON.stringify({ message: "error : " + e.message }));
+        }
+      });
+    } catch (e) {
+      logger.error("Static lounge 서버 문제 생김 (rou_post_generalFileUpload): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.setMembers = async function () {
