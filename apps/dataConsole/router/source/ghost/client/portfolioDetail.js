@@ -1253,7 +1253,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                     formData.append("type", "file");
                     formData.append("replacePhoto0", e.dataTransfer.files[0]);
                     await ajaxForm(formData, "https://" + FILEHOST + ":3001/replaceContentsPhoto", loading.progress);
-                    loading.remove();
+                    GeneralJs.sleep(3000).then(() => {
+                      loading.remove();
+                      window.location.reload();
+                    }).catch((err) => { console.log(err); })
                   }
                 }
               }
