@@ -8233,36 +8233,29 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
             await shellExec("mv", [ thisFile.filepath, thisTempFull ]);
             await image.overOfficialImage(thisTempFull);
 
-            await sleep(1000);
+            await sleep(100);
 
             await shellExec("cp", [ thisTempFull, thisTempFull2 ]);
             await shellExec("cp", [ thisTempFull, thisTempFull3 ]);
 
-            await sleep(1000);
-
             await shellExec("mv", [ thisTempFull, osTempFolder + "/i" + String(index) + pid + ".jpg" ]);
-            await sleep(500);
             await shellExec(`convert ${shellLink(thisTempFull2)} -resize ${gs === 's' ? String(sizeMatrix[0][1]) + "x" + String(sizeMatrix[0][0]) : String(sizeMatrix[0][0]) + "x" + String(sizeMatrix[0][1])} -quality ${String(qualityConst)} ${shellLink(osTempFolder + "/t" + String(index) + pid + ".jpg")}`);
-            await sleep(500);
             await shellExec(`convert ${shellLink(thisTempFull2)} -resize ${gs === 's' ? String(sizeMatrix[1][1]) + "x" + String(sizeMatrix[1][0]) : String(sizeMatrix[1][0]) + "x" + String(sizeMatrix[1][1])} -quality ${String(qualityConst)} ${shellLink(osTempFolder + "/mot" + String(index) + pid + ".jpg")}`);
 
-            await sleep(1000);
+            await sleep(100);
 
             await shellExec("cp", [ osTempFolder + "/i" + String(index) + pid + ".jpg", staticConst + "/corePortfolio/original/" + pid + "/i" + String(index) + pid + ".jpg" ]);
             await shellExec("cp", [ osTempFolder + "/t" + String(index) + pid + ".jpg", staticConst + "/corePortfolio/listImage/" + pid + "/t" + String(index) + pid + ".jpg" ]);
             await shellExec("cp", [ osTempFolder + "/mot" + String(index) + pid + ".jpg", staticConst + "/corePortfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg" ]);
 
-            await sleep(1000);
+            await sleep(100);
 
             await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/t" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/` ]);
-            await sleep(500);
             await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/mobile/` ]);
-            await sleep(500);
 
             await shellExec("rm", [ "-rf", osTempFolder + "/i" + String(index) + pid + ".jpg" ]);
             await shellExec("rm", [ "-rf", osTempFolder + "/t" + String(index) + pid + ".jpg" ]);
             await shellExec("rm", [ "-rf", osTempFolder + "/mot" + String(index) + pid + ".jpg" ]);
-            await sleep(500);
 
             res.send(JSON.stringify({ "message": "done" }));
           }

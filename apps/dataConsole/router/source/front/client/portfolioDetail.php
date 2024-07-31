@@ -13,9 +13,8 @@ if (!isset($_GET["pid"])) {
   header("Location: ".$hostLink."/portfolio.php");
 }
 if (isset($_GET["eraseCache"])) {
-  $eraseCache = true;
-} else {
-  $eraseCache = false;
+  header("Cache-Control: no-cache, must-revalidate");
+  header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 }
 
 $pid = $_GET["pid"];
@@ -35,6 +34,6 @@ $imageString = "/list_image/portp".$contentsList[0][0]."/".$contentsList[0][4].$
 
 $hiddenString = '<h1>'.$contentsList[0][1].'</h1><p>'.$contentsList[0][3].'</p>';
 
-$html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo, $eraseCache);
+$html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo);
 echo $html;
 ?>
