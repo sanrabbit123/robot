@@ -8356,7 +8356,7 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
                   for (let i = 1; i < photoDetailArr.length + 1; i++) {
                     contentsDetailCopied[1].photo.push(i);
                   }
-                  for (let i = 2; < contentsDetailCopied.length; i++) {
+                  for (let i = 2; i < contentsDetailCopied.length; i++) {
                     contentsDetailCopied[i].photo = [];
                   }
                   updateQuery["contents.portfolio.contents.detail"] = objectDeepCopy(contentsDetailCopied);
