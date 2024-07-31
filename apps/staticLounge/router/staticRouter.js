@@ -8277,77 +8277,83 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
               for (let key of filesKey) {
                 thisFiles.push(files[key]);
               }
+              console.log(thisFiles);
 
-              fileNum = 1;
-              photoDetailArr = [];
-              for (let thisFile of thisFiles) {
+              (async () => {
 
-                await sleep(500);
-                targetInfo = await image.readImage(thisFile.filepath);
-                if (targetInfo.geometry.width >= targetInfo.geometry.height) {
-                  gs = "g";
-                } else if (targetInfo.geometry.width < targetInfo.geometry.height) {
-                  gs = "s";
-                }
-                await sleep(500);
-                index = fileNum;
-                photoDetailArr.push({ index: index, gs: gs });
-
-                tempName = "tempReplaceImage" + uniqueValue("hex") + ".jpg";
-                thisTempFull = osTempFolder + "/" + tempName;
-                tempName2 = "tempReplaceImage" + uniqueValue("hex") + ".jpg";
-                thisTempFull2 = osTempFolder + "/" + tempName2;
-                tempName3 = "tempReplaceImage" + uniqueValue("hex") + ".jpg";
-                thisTempFull3 = osTempFolder + "/" + tempName3;
-    
-                await shellExec("mv", [ thisFile.filepath, thisTempFull ]);
-                await image.overOfficialImage(thisTempFull);
-    
-                await sleep(500);
-    
-                await shellExec("cp", [ thisTempFull, thisTempFull2 ]);
-                await shellExec("cp", [ thisTempFull, thisTempFull3 ]);
-    
-                await shellExec("mv", [ thisTempFull, osTempFolder + "/i" + String(index) + pid + ".jpg" ]);
-                await shellExec(`convert ${shellLink(thisTempFull2)} -resize ${gs === 's' ? String(sizeMatrix[0][1]) + "x" + String(sizeMatrix[0][0]) : String(sizeMatrix[0][0]) + "x" + String(sizeMatrix[0][1])} -quality ${String(qualityConst)} ${shellLink(osTempFolder + "/t" + String(index) + pid + ".jpg")}`);
-                await shellExec(`convert ${shellLink(thisTempFull3)} -resize ${gs === 's' ? String(sizeMatrix[1][1]) + "x" + String(sizeMatrix[1][0]) : String(sizeMatrix[1][0]) + "x" + String(sizeMatrix[1][1])} -quality ${String(qualityConst)} ${shellLink(osTempFolder + "/mot" + String(index) + pid + ".jpg")}`);
-    
-                await sleep(500);
-    
-                await shellExec("cp", [ osTempFolder + "/i" + String(index) + pid + ".jpg", staticConst + "/corePortfolio/original/" + pid + "/i" + String(index) + pid + ".jpg" ]);
-                await shellExec("cp", [ osTempFolder + "/t" + String(index) + pid + ".jpg", staticConst + "/corePortfolio/listImage/" + pid + "/t" + String(index) + pid + ".jpg" ]);
-                await shellExec("cp", [ osTempFolder + "/mot" + String(index) + pid + ".jpg", staticConst + "/corePortfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg" ]);
-    
-                await sleep(500);
-    
-                await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/t" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/` ]);
-                await sleep(500);
-                await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/mobile/` ]);
-    
-                await sleep(500);
-
-                await shellExec("rm", [ "-rf", osTempFolder + "/i" + String(index) + pid + ".jpg" ]);
-                await shellExec("rm", [ "-rf", osTempFolder + "/t" + String(index) + pid + ".jpg" ]);
-                await shellExec("rm", [ "-rf", osTempFolder + "/mot" + String(index) + pid + ".jpg" ]);
-                await shellExec("rm", [ "-rf", thisTempFull2 ]);
-                await shellExec("rm", [ "-rf", thisTempFull3 ]);
+                fileNum = 1;
+                photoDetailArr = [];
+                for (let thisFile of thisFiles) {
   
+                  await sleep(500);
+                  targetInfo = await image.readImage(thisFile.filepath);
+                  if (targetInfo.geometry.width >= targetInfo.geometry.height) {
+                    gs = "g";
+                  } else if (targetInfo.geometry.width < targetInfo.geometry.height) {
+                    gs = "s";
+                  }
+                  await sleep(500);
+                  index = fileNum;
+                  photoDetailArr.push({ index: index, gs: gs });
+  
+                  tempName = "tempReplaceImage" + uniqueValue("hex") + ".jpg";
+                  thisTempFull = osTempFolder + "/" + tempName;
+                  tempName2 = "tempReplaceImage" + uniqueValue("hex") + ".jpg";
+                  thisTempFull2 = osTempFolder + "/" + tempName2;
+                  tempName3 = "tempReplaceImage" + uniqueValue("hex") + ".jpg";
+                  thisTempFull3 = osTempFolder + "/" + tempName3;
+      
+                  await shellExec("mv", [ thisFile.filepath, thisTempFull ]);
+                  await image.overOfficialImage(thisTempFull);
+      
+                  await sleep(500);
+      
+                  await shellExec("cp", [ thisTempFull, thisTempFull2 ]);
+                  await shellExec("cp", [ thisTempFull, thisTempFull3 ]);
+      
+                  await shellExec("mv", [ thisTempFull, osTempFolder + "/i" + String(index) + pid + ".jpg" ]);
+                  await shellExec(`convert ${shellLink(thisTempFull2)} -resize ${gs === 's' ? String(sizeMatrix[0][1]) + "x" + String(sizeMatrix[0][0]) : String(sizeMatrix[0][0]) + "x" + String(sizeMatrix[0][1])} -quality ${String(qualityConst)} ${shellLink(osTempFolder + "/t" + String(index) + pid + ".jpg")}`);
+                  await shellExec(`convert ${shellLink(thisTempFull3)} -resize ${gs === 's' ? String(sizeMatrix[1][1]) + "x" + String(sizeMatrix[1][0]) : String(sizeMatrix[1][0]) + "x" + String(sizeMatrix[1][1])} -quality ${String(qualityConst)} ${shellLink(osTempFolder + "/mot" + String(index) + pid + ".jpg")}`);
+      
+                  await sleep(500);
+      
+                  await shellExec("cp", [ osTempFolder + "/i" + String(index) + pid + ".jpg", staticConst + "/corePortfolio/original/" + pid + "/i" + String(index) + pid + ".jpg" ]);
+                  await shellExec("cp", [ osTempFolder + "/t" + String(index) + pid + ".jpg", staticConst + "/corePortfolio/listImage/" + pid + "/t" + String(index) + pid + ".jpg" ]);
+                  await shellExec("cp", [ osTempFolder + "/mot" + String(index) + pid + ".jpg", staticConst + "/corePortfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg" ]);
+      
+                  await sleep(500);
+      
+                  await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/t" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/` ]);
+                  await sleep(500);
+                  await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/mobile/` ]);
+      
+                  await sleep(500);
+  
+                  await shellExec("rm", [ "-rf", osTempFolder + "/i" + String(index) + pid + ".jpg" ]);
+                  await shellExec("rm", [ "-rf", osTempFolder + "/t" + String(index) + pid + ".jpg" ]);
+                  await shellExec("rm", [ "-rf", osTempFolder + "/mot" + String(index) + pid + ".jpg" ]);
+                  await shellExec("rm", [ "-rf", thisTempFull2 ]);
+                  await shellExec("rm", [ "-rf", thisTempFull3 ]);
+    
+                  await sleep(500);
+  
+                  fileNum++;
+                }
+  
+                updateQuery = {};
+                updateQuery["photos.detail"] = photoDetailArr;
+                updateQuery["photos.first"] = 1;
+                updateQuery["photos.last"] = photoDetailArr.length;
+                updateQuery["contents.portfolio.detailInfo.photosg.first"] = 1;
+                updateQuery["contents.portfolio.detailInfo.photosg.last"] = photoDetailArr.length;
                 await sleep(500);
+                await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+                await sleep(1000);
+                await requestSystem("https://" + address.testinfo.host + ":3000/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
+                await sleep(500);
+                await messageSend({ text: pid + " 컨텐츠 보정본 업로드 및 대치를 완료하였어요, 순서 조정 및 에디팅을 해주세요\nlink : https://" + address.frontinfo.host + "/portdetail.php?pid=" + pid + "&edit=true", channel: "#502_sns_contents", voice: true });
 
-                fileNum++;
-              }
-
-              updateQuery = {};
-              updateQuery["photos.detail"] = photoDetailArr;
-              updateQuery["photos.first"] = 1;
-              updateQuery["photos.last"] = photoDetailArr.length;
-              updateQuery["contents.portfolio.detailInfo.photosg.first"] = 1;
-              updateQuery["contents.portfolio.detailInfo.photosg.last"] = photoDetailArr.length;
-              await sleep(500);
-              await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-              await sleep(1000);
-              await requestSystem("https://" + address.testinfo.host + ":3000/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
-              await sleep(500);
+              })().catch((err) => { console.log(err); })
 
             }
 
