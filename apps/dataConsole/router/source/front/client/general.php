@@ -15,7 +15,7 @@ class GeneralPhp {
 
   function __construct() {}
 
-  public function bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo) {
+  public function bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo, $eraseCache = false) {
 
     $gtagId = "G-XCNTB3TRCK";
     $gadsId = "AW-652862533";
@@ -34,6 +34,10 @@ class GeneralPhp {
     $html .= '<html lang="ko" dir="ltr"><head>'."\n";
     $html .= '<meta charset="utf-8">'."\n";
     $html .= '<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">'."\n";
+    if ($eraseCache) {
+      $html .= '<meta http-equiv="Cache-control" content="no-cache">'."\n";
+      $html .= '<meta http-equiv="Expires" content="-1">'."\n";
+    }
     $html .= '<link rel="canonical" href="'.$fullLink.'">'."\n";
     $html .= '<meta content="'.$fullLink.'" property="og:url"><meta content="website" property="og:type">'."\n";
     $html .= '<meta name="google-site-verification" content="'.$googleSearchId.'">'."\n";

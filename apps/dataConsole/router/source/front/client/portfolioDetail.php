@@ -12,6 +12,11 @@ $clientInfo = $general->getClientInfo();
 if (!isset($_GET["pid"])) {
   header("Location: ".$hostLink."/portfolio.php");
 }
+if (isset($_GET["eraseCache"])) {
+  $eraseCache = true;
+} else {
+  $eraseCache = false;
+}
 
 $pid = $_GET["pid"];
 $contentsList = $general->mysqlGet("SELECT pid, portfoliotitlemain, apart, portfoliocontents, portfoliotid FROM contents WHERE pid = '".$pid."';");
@@ -30,6 +35,6 @@ $imageString = "/list_image/portp".$contentsList[0][0]."/".$contentsList[0][4].$
 
 $hiddenString = '<h1>'.$contentsList[0][1].'</h1><p>'.$contentsList[0][3].'</p>';
 
-$html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo);
+$html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo, $eraseCache);
 echo $html;
 ?>

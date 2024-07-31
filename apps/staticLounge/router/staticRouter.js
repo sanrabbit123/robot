@@ -8248,15 +8248,20 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
 
             await sleep(1000);
 
-            await shellExec("mv", [ osTempFolder + "/i" + String(index) + pid + ".jpg", staticConst + "/coreportfolio/original/" + pid + "/" ]);
-            await shellExec("mv", [ osTempFolder + "/t" + String(index) + pid + ".jpg", staticConst + "/coreportfolio/listImage/" + pid + "/" ]);
-            await shellExec("mv", [ osTempFolder + "/mot" + String(index) + pid + ".jpg", staticConst + "/coreportfolio/listImage/" + pid + "/mobile/" ]);
+            await shellExec("cp", [ osTempFolder + "/i" + String(index) + pid + ".jpg", staticConst + "/coreportfolio/original/" + pid + "/i" + String(index) + pid + ".jpg" ]);
+            await shellExec("cp", [ osTempFolder + "/t" + String(index) + pid + ".jpg", staticConst + "/coreportfolio/listImage/" + pid + "/t" + String(index) + pid + ".jpg" ]);
+            await shellExec("cp", [ osTempFolder + "/mot" + String(index) + pid + ".jpg", staticConst + "/coreportfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg" ]);
 
             await sleep(1000);
 
             await shellExec("scp", [ "-r", (staticConst + "/coreportfolio/listImage/" + pid + "/mobile/t" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/` ]);
             await sleep(500);
             await shellExec("scp", [ "-r", (staticConst + "/coreportfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/mobile/` ]);
+            await sleep(500);
+
+            await shellExec("rm", [ "-rf", osTempFolder + "/i" + String(index) + pid + ".jpg" ]);
+            await shellExec("rm", [ "-rf", osTempFolder + "/t" + String(index) + pid + ".jpg" ]);
+            await shellExec("rm", [ "-rf", osTempFolder + "/mot" + String(index) + pid + ".jpg" ]);
             await sleep(500);
 
             res.send(JSON.stringify({ "message": "done" }));

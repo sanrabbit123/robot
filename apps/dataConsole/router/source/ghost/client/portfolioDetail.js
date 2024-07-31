@@ -747,7 +747,7 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = async function (photoUpdateB
 
 PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedContents = null) {
   const instance = this;
-  const { createNode, colorChip, objectDeepCopy, colorExtended, withOut, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue, removeByClass } = GeneralJs;
+  const { createNode, colorChip, objectDeepCopy, colorExtended, withOut, ajaxForm, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue, removeByClass } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, mainContentsClassTong0, mainContentsClassTong1, slideContentsClassTong } = this;
   const { contentsArr, designers, editable } = this;
   const mobile = media[4];
@@ -1244,7 +1244,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
               } catch {
                 if (e.dataTransfer.files.length > 0) {
                   if (/\.jpg/gi.test(e.dataTransfer.files[0].name)) {
-                    loading = instance.whiteProgressLoading();
+                    loading = instance.mother.whiteProgressLoading();
                     formData = new FormData();
                     formData.enctype = "multipart/form-data";
                     formData.append("pid", pid);
@@ -1253,9 +1253,9 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                     formData.append("type", "file");
                     formData.append("replacePhoto0", e.dataTransfer.files[0]);
                     await ajaxForm(formData, "https://" + FILEHOST + ":3001/replaceContentsPhoto", loading.progress);
-                    GeneralJs.sleep(3000).then(() => {
+                    GeneralJs.sleep(2000).then(() => {
                       loading.remove();
-                      window.location.reload();
+                      window.location.href = window.location.href + "&eraseCache=true";
                     }).catch((err) => { console.log(err); })
                   }
                 }
