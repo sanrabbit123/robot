@@ -4641,8 +4641,22 @@ ContentsJs.prototype.launching = async function () {
     if (getObj.mode === "source") {
       allContents = await ajaxJson({ mode: "all" }, CONTENTSHOST + "/getAllContents", { equal: true });
     } else {
-      allContents = await ajaxJson({ mode: "all", init: true }, CONTENTSHOST + "/getAllContents", { equal: true });
+      if (getObj.init === "false") {
+        allContents = await ajaxJson({ mode: "all" }, CONTENTSHOST + "/getAllContents", { equal: true });
+      } else {
+        allContents = await ajaxJson({ mode: "all", init: true }, CONTENTSHOST + "/getAllContents", { equal: true });
+      }
     }
+
+    console.log(allContents.contentsArr.map((c) => {
+      return {
+        length: c.contents.portfolio.contents.detail.length,
+        pid: c.contents.portfolio.pid,
+        date: c.contents.portfolio.date,
+      }
+    }).filter((o) => {
+      return o.length <= 2;
+    }));
 
     this.contentsCalendar = [];
     this.contentsArr = new SearchArray(allContents.contentsArr);
