@@ -1255,7 +1255,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                     await ajaxForm(formData, "https://" + FILEHOST + ":3001/replaceContentsPhoto", loading.progress);
                     GeneralJs.sleep(2000).then(() => {
                       loading.remove();
-                      window.location.href = window.location.href + "&eraseCache=true";
+                      window.location.reload(true);
                     }).catch((err) => { console.log(err); })
                   }
                 }
