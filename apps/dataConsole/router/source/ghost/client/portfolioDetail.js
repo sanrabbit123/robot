@@ -1467,12 +1467,13 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                         formData.append("type", "file");
                         fileNum = 0;
                         for (let file of e.dataTransfer.files) {
-                          formData.append("replacePhoto" + String(fileNum), e.dataTransfer.files[0]);
+                          formData.append("replacePhoto" + String(fileNum), file);
                           fileNum++;
                         }
                         await ajaxForm(formData, "https://" + FILEHOST + ":3001/replaceContentsPhoto", loading.progress);
                         GeneralJs.sleep(0).then(() => {
                           loading.remove();
+                          window.alert("보정본 업데이트가 시작되었습니다. 완료되면 슬렉으로 알려드립니다!");
                           if (GeneralJs.returnGet().eraseCache === undefined) {
                             window.location.href = window.location.href + "&eraseCache=true";
                           } else {
