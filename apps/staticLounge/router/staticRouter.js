@@ -8254,7 +8254,7 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
 
             await sleep(1000);
 
-            await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/mobile/t" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/` ]);
+            await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/t" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/` ]);
             await sleep(500);
             await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/mobile/` ]);
             await sleep(500);
