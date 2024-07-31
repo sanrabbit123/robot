@@ -8326,17 +8326,13 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
                   await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/t" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/` ]);
                   await sleep(500);
                   await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/mobile/` ]);
-      
-                  await sleep(500);
-  
+        
                   await shellExec("rm", [ "-rf", osTempFolder + "/i" + String(index) + pid + ".jpg" ]);
                   await shellExec("rm", [ "-rf", osTempFolder + "/t" + String(index) + pid + ".jpg" ]);
                   await shellExec("rm", [ "-rf", osTempFolder + "/mot" + String(index) + pid + ".jpg" ]);
                   await shellExec("rm", [ "-rf", thisTempFull2 ]);
                   await shellExec("rm", [ "-rf", thisTempFull3 ]);
-    
-                  await sleep(500);
-  
+      
                   fileNum++;
                 }
   
@@ -8347,8 +8343,7 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
                 updateQuery["contents.portfolio.detailInfo.photosg.first"] = 1;
                 updateQuery["contents.portfolio.detailInfo.photosg.last"] = photoDetailArr.length;
 
-                thisOriginalContents = await back.mongoRead(collection, whereQuery, { selfMongo });
-                await sleep(500);
+                [ thisOriginalContents ] = await back.mongoRead(collection, whereQuery, { selfMongo });
                 contentsDetailCopied = objectDeepCopy(thisOriginalContents.contents.portfolio.contents.detail);
                 if (contentsDetailCopied.length > 1) {
                   contentsDetailCopied[0].photo = [];
@@ -8362,11 +8357,8 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
                   updateQuery["contents.portfolio.contents.detail"] = objectDeepCopy(contentsDetailCopied);
                 }
 
-                await sleep(500);
                 await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-                await sleep(1000);
                 await requestSystem("https://home-liaison.info:3000/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
-                await sleep(500);
                 await messageSend({ text: pid + " 컨텐츠 보정본 업로드 및 대치를 완료하였어요, 순서 조정 및 에디팅을 해주세요\nlink : https://" + address.frontinfo.host + "/portdetail.php?pid=" + pid + "&edit=true", channel: "#502_sns_contents", voice: true });
 
               })().catch((err) => { console.log(err); })
