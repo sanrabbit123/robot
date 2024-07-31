@@ -46,7 +46,7 @@ PortfolioDetailJs.binaryPath = FRONTHOST + "/middle/portfolio";
 
 PortfolioDetailJs.prototype.portfolioMainBox = function () {
   const instance = this;
-  const { createNode, colorChip, colorExtended, withOut, svgMaker, isMac, isIphone, setQueue, designerMthParsing, designerCareer, selfHref } = GeneralJs;
+  const { createNode, colorChip, colorExtended, ajaxJson, withOut, svgMaker, isMac, isIphone, setQueue, designerMthParsing, designerCareer, selfHref } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, slideContentsClassTong } = this;
   const { contentsArr, designers, editable } = this;
   const mobile = media[4];

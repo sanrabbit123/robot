@@ -1035,7 +1035,7 @@ LogRouter.prototype.rou_post_updateSlideOrder = function () {
 
       whereQuery = { "contents.portfolio.pid": pid };
       updateQuery = {};
-      updateQuery["contents.portfolio.detailInfo.slide." + String(order)] = index;
+      updateQuery["contents.portfolio.detailInfo.slide." + String(Number(order) - 1)] = Number(index);
 
       await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
       await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo: selfCoreMongo });
