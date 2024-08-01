@@ -849,7 +849,7 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = async function (photoUpdateB
   const mobile = media[4];
   const desktop = !mobile;
   try {
-    const loading = await this.mother.grayLoading();
+    const loading = await this.mother.grayLoading(null, true);
     const targetContentsBase = document.querySelector('.' + mainContentsClassTong0);
     const targetContentsChildren = [ ...targetContentsBase.children ].map((d) => {
       let source;
