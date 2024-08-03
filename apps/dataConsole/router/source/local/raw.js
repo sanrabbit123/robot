@@ -3416,10 +3416,8 @@ RawJs.prototype.baseMaker = function () {
                       if ([ ...e.dataTransfer.files ].map((f) => { return f.name }).filter((n) => { return /\.jp[e]?g$/gi.test(n) }).length > 0) {
 
                         thisFolderName = "temp/tempRawUpload_" + GeneralJs.uniqueValue("hex");
-
                         formData = new FormData();
                         formData.enctype = "multipart/form-data";
-    
                         files = [ ...e.dataTransfer.files ];
                         fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\<\>]/gi, ''); });
                         toArr = [];
@@ -3431,7 +3429,6 @@ RawJs.prototype.baseMaker = function () {
                         }
     
                         formData.append("toArr", JSON.stringify(toArr));
-    
                         loading = instance.mother.whiteProgressLoading();
                         await ajaxForm(formData, S3HOST + ":3001" + "/generalFileUpload", loading.progress.firstChild);
                         loading.remove();

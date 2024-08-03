@@ -7562,6 +7562,7 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
             justifyContent: "start",
             alignItems: "center",
             paddingLeft: String(factorDescriptionTextIndent) + ea,
+            flexDirection: "row",
           },
           child: {
             style: {
@@ -8705,6 +8706,7 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
               verticalAlign: "top",
               overflow: "hidden",
               boxShadow: "0px 1px 8px -6px " + colorChip.shadow,
+              flexDirection: "row",
             },
             children: [
               {
@@ -8724,7 +8726,8 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
                     height: withOut(0, ea),
                     justifyContent: "start",
                     textAlign: "left",
-                    alignItems: "center",    
+                    alignItems: "center",
+                    flexDirection: "row",    
                   },
                   child: {
                     id,
@@ -8759,6 +8762,7 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
                   justifyContent: "end",
                   alignItems: "center",
                   textAlign: "right",
+                  flexDirection: "row",
                 },
                 children: [
                   {

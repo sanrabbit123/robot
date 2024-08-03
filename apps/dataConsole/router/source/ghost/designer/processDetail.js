@@ -5457,6 +5457,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             verticalAlign: "top",
             overflow: "hidden",
             boxShadow: "0px 1px 8px -6px " + colorChip.shadow,
+            flexDirection: "row",
           },
           children: [
             {
@@ -5474,9 +5475,10 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                   position: "relative",
                   width: String(titleMaxWidth) + ea,
                   height: withOut(0, ea),
-                  justifyContent: "start",
+                  alignItems: "center",
                   textAlign: "left",
-                  alignItems: "center",    
+                  justifyContent: "start",
+                  flexDirection: "row",    
                 },
                 child: {
                   id,
@@ -5511,6 +5513,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                 justifyContent: "end",
                 alignItems: "center",
                 textAlign: "right",
+                flexDirection: "row",
               },
               children: [
                 {
@@ -5623,6 +5626,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                 overflow: "hidden",
                 boxShadow: "0px 1px 8px -6px " + colorChip.shadow,
                 transition: "all 0.3s ease",
+                flexDirection: "row",
               },
               children: [
                 {
@@ -5642,7 +5646,8 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                       height: withOut(0, ea),
                       justifyContent: "start",
                       textAlign: "left",
-                      alignItems: "center",    
+                      alignItems: "center",
+                      flexDirection: "row",
                     },
                     child: {
                       id,
@@ -5676,6 +5681,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                     justifyContent: "end",
                     alignItems: "center",
                     textAlign: "right",
+                    flexDirection: "row",
                   },
                   children: [
                     {
@@ -17041,6 +17047,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                   alignItems: "center",
                   paddingLeft: String(panWhitePaddingLeft) + ea,
                   transition: "all 0s ease",
+                  flexDirection: "row",
                 },
                 child: {
                   text: thisForm[i].children[j].type !== "selection" ? thisForm[i].children[j].title : (thisForm[i].children[j].children.find((o3) => { return o3.value === 1 }) === undefined ? thisForm[i].children[j].title : thisForm[i].children[j].children.find((o3) => { return o3.value === 1 }).view),

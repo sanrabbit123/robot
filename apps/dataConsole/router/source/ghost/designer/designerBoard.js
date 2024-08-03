@@ -1116,6 +1116,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
                 width: desktop ? String(widthMap[j]) + ea : "",
                 marginRight: desktop ? "" : String(1) + ea,
                 marginBottom: desktop ? "" : String(1) + ea,
+                flexDirection: "row",
               },
               children: [
                 {
@@ -1130,6 +1131,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
                     paddingRight: String(colorBoxPadding) + ea,
                     width: desktop ? (forceWidth[j] === null ? "" : String(forceWidth[j]) + ea) : "",
                     justifyContent: "center",
+                    flexDirection: "row",
                   },
                   children: [
                     {
@@ -1790,6 +1792,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
                 width: desktop ? String(widthMap[j]) + ea : "",
                 marginRight: desktop ? "" : String(1) + ea,
                 marginBottom: desktop ? "" : String(1) + ea,
+                flexDirection: "row",
               },
               children: [
                 {
@@ -1804,6 +1807,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
                     paddingRight: String(colorBoxPadding) + ea,
                     width: desktop ? (forceWidth[j] === null ? "" : String(forceWidth[j]) + ea) : "",
                     justifyContent: "center",
+                    flexDirection: "row",
                   },
                   children: [
                     {
@@ -3600,6 +3604,7 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
             justifyContent: "start",
             alignItems: "center",
             cursor: "pointer",
+            flexDirection: "row",
           },
           child: {
             text: desktop ? project.name + "<b% - " + project.process.status + "%b>" : project.name,
