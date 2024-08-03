@@ -1157,6 +1157,11 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
       if (infoIndex !== -1) {
         backArr = backArr.slice(0, infoIndex);
       }
+      backArr = backArr.filter((str) => { return str.length >= 5 }).map((str) => { return str.trim(); });
+      if (backArr.length > 3) {
+        backArr[backArr.length - 2] = backArr[backArr.length - 2] + "\n\n" + backArr[backArr.length - 1];
+        backArr = backArr.slice(0, -1);
+      }
 
       addressArr = client.requests[0].request.space.address.split(" ").map((s) => { return s.trim() });
       subjectInput = "제목을 입력해주세요";
@@ -1245,6 +1250,11 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
       infoIndex = backArr.findIndex((s) => { return /^공간[ ]?정보/gi.test(s.trim()) });
       if (infoIndex !== -1) {
         backArr = backArr.slice(0, infoIndex);
+      }
+      backArr = backArr.filter((str) => { return str.length >= 5 }).map((str) => { return str.trim(); });
+      if (backArr.length > 3) {
+        backArr[backArr.length - 2] = backArr[backArr.length - 2] + "\n\n" + backArr[backArr.length - 1];
+        backArr = backArr.slice(0, -1);
       }
 
       subjectInput = "제목을 입력해주세요";
