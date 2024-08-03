@@ -1363,6 +1363,7 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
                 tempString += tempArr[i];
               }
               await shellExec(`cp ${shellLink(path)} ${shellLink(tempString + "/")}`);
+              await shellExec(`mv ${shellLink(tempString + "/" + path.split("/").slice(-1).join("/"))} ${shellLink(tempString + "/" + toArr[num].replace(/^\//i, ''))}`);
               await shellExec(`rm`, [ `-rf`, path ]);
               num++;
             }
