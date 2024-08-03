@@ -1153,7 +1153,7 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
         frontText = "고객의 이야기를 적어주세요!";
       }
       backArr = backText.split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== "" });
-      infoIndex = backArr.findIndex((s) => { return /^공간[ ]?정보/gi.test(s.trim()) });
+      infoIndex = backArr.findIndex((s) => { return /^[0-9]?\.?[ ]?공간[ ]?정보/gi.test(s.trim()) });
       if (infoIndex !== -1) {
         backArr = backArr.slice(0, infoIndex);
       }
@@ -1247,7 +1247,7 @@ PortfolioFilter.prototype.updateSubject = async function (pid = null) {
       }
       
       backArr = backText.split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== "" });
-      infoIndex = backArr.findIndex((s) => { return /^공간[ ]?정보/gi.test(s.trim()) });
+      infoIndex = backArr.findIndex((s) => { return /^[0-9]?\.?[ ]?공간[ ]?정보/gi.test(s.trim()) });
       if (infoIndex !== -1) {
         backArr = backArr.slice(0, infoIndex);
       }
