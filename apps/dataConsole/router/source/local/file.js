@@ -88,10 +88,7 @@ FileJs.prototype.imageAbsoluteFilter = function (str) {
     throw new Error("invaild input");
   }
   if (/corePortfolio\/forecast/g.test(str)) {
-
-    console.log(str);
-
-    execObject = /corePortfolio\/forecast\/([ap][0-9]+)\/([a-zA-Z0-9]+\.[a-zA-Z]+)/.exec(str);
+    execObject = /corePortfolio\/forecast\/([ap][0-9]+)\/([a-zA-Z0-9_\-\+\=\(\)\[\]\?\!\<\>가-힣]+\.[a-zA-Z]+)/.exec(str);
     thisPid = execObject[1];
     thisFileName = execObject[2];
     thisPortfolio = instance.portfolioList.find(({ fileName }) => {
