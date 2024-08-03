@@ -6186,6 +6186,8 @@ GeneralJs.prototype.communicationBox = function () {
       return num;
     }
   }
+  let globalMargin;
+  let globalHeight;
 
   GeneralJs.stacks.communication = new CommunicationBox();
   this.communication = GeneralJs.stacks.communication;
@@ -6285,6 +6287,9 @@ GeneralJs.prototype.communicationBox = function () {
     block.firstChild.style.width = String(100) + '%';
     block.firstChild.style.textAlign = "center";
 
+    globalMargin = innerMargin / 2;
+    globalHeight = height;
+
     return { width: renderWidth, margin: innerMargin / 2, height: height, block: block };
   }
 
@@ -6312,6 +6317,8 @@ GeneralJs.prototype.communicationBox = function () {
     let lastBlocksNumber;
     let refreshHeight;
     let itemArr;
+    let widthMatrix, widthMatrixTemp;
+    let maxWidth;
 
     cancelWidth = 98.5;
     cancelHeight = 98;
@@ -6434,15 +6441,15 @@ GeneralJs.prototype.communicationBox = function () {
 
       widthArr = [];
       itemArr = [];
+      widthMatrix = [];
+      widthMatrixTemp = [];
 
       num = 0;
       for (let arr of communication) {
         [ visual, vaild, action ] = arr;
         tempArr = [];
         if (vaild()) {
-          if (num % 3 === 0) {
-            tempArr = new WidthArray();
-          }
+          tempArr = new WidthArray();
           tempObj = renderItem(whiteBox.lastChild.firstChild, visual(), action);
           blockWidth = tempObj.width;
           blockMargin = tempObj.margin;
@@ -6451,19 +6458,22 @@ GeneralJs.prototype.communicationBox = function () {
           tempArr.height = blockHeight;
           tempArr.push(blockWidth + blockMargin);
           if (num % 3 === 2) {
+            widthMatrix.push(widthMatrixTemp);
+            widthMatrixTemp = [];
             widthArr.push(tempArr);
           }
           tempObj.block.setAttribute("margin", String(blockMargin));
           itemArr.push(tempObj.block);
+          widthMatrixTemp.push(tempArr);
           num++;
         }
       }
 
-      if (tempArr.length !== 3 && tempArr.length !== 0) {
-        widthArr.push(tempArr);
+      if (widthMatrix.length === 0 && widthMatrixTemp.length !== 0){
+        widthMatrix.push(widthMatrixTemp);
       }
 
-      if (widthArr.length === 0) {
+      if (widthMatrix.length === 0) {
         
         whiteBox.style.width = String(emptyWidth) + ea;
         whiteBox.style.height = String(emptyHeight) + ea;
@@ -6484,14 +6494,9 @@ GeneralJs.prototype.communicationBox = function () {
         });
 
       } else {
-        widthArr.sort((a, b) => { return b.sum() - a.sum() });
-        whiteBox.style.width = String(widthArr[0].sum() - widthArr[0].margin + (innerMargin * 2)) + ea;
-        whiteBox.children[1].style.paddingRight = String(innerMargin - widthArr[0].margin) + ea;
-        whiteBox.children[1].style.width = withOut(innerMargin + innerMargin - widthArr[0].margin, ea);
-        whiteBox.children[1].style.paddingBottom = String(innerMargin - widthArr[0].margin) + ea;
-        whiteBox.children[1].style.height = withOut(innerMargin + innerMargin - widthArr[0].margin, ea);
-  
-        refreshHeight = (widthArr.length * widthArr[0].height) + ((widthArr.length - 1) * widthArr[0].margin) + (innerMargin * 2);
+        maxWidth = widthMatrix.map((arr) => { return arr.reduce((acc, curr) => { return acc + curr[0] }, 0) }).reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0);
+        refreshHeight = (widthMatrix.length * globalHeight) + ((widthMatrix.length - 1) * globalMargin) + (innerMargin * 2);
+        whiteBox.style.width = String(maxWidth - globalMargin + (innerMargin * 2)) + ea;
         whiteBox.style.height = String(refreshHeight) + ea;
       }
 

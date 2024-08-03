@@ -1011,6 +1011,61 @@ LogRouter.prototype.rou_post_updateImagesOrder = function () {
   return obj;
 }
 
+LogRouter.prototype.rou_post_updateAddressRegion = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, objectDeepCopy, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateAddressRegion" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { pid, address: apart, region } = equalJson(req.body);
+      const collection = "contents";
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongocore;
+      let whereQuery, updateQuery;
+      let updatedContents;
+      let titleWording;
+      let originalContents;
+      let pyeong;
+      let service;
+
+      [ originalContents ] = await back.mongoRead(collection, { "contents.portfolio.pid": pid }, { selfMongo: selfCoreMongo });
+      titleWording = originalContents.contents.portfolio.title.main.split(", ")[0];
+      pyeong = originalContents.contents.portfolio.spaceInfo.pyeong;
+      service = originalContents.contents.portfolio.detailInfo.service;
+
+      whereQuery = { "contents.portfolio.pid": pid };
+      updateQuery = {};
+      updateQuery["contents.portfolio.spaceInfo.space"] = apart;
+      updateQuery["contents.portfolio.spaceInfo.region"] = region;
+      updateQuery["contents.portfolio.title.main"] = titleWording + ", " + apart + " " + String(pyeong) + "py " + service;
+      updateQuery["contents.portfolio.title.sub"] = titleWording + ", " + apart + " " + service;
+
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo: selfCoreMongo });
+
+      updatedContents = (await back.mongoRead(collection, whereQuery, { selfMongo: selfCoreMongo }))[0];
+      delete updatedContents._id;
+
+      res.send(JSON.stringify({ contents: updatedContents }));
+
+    } catch (e) {
+      console.log(e);
+      logger.error("Log Console 서버 문제 생김 (rou_post_updateAddressRegion): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 LogRouter.prototype.rou_post_updateSlideOrder = function () {
   const instance = this;
   const back = this.back;

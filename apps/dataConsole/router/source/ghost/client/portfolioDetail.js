@@ -769,6 +769,42 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
   // title
   titleBox = createNode({
     mother: contentsBox,
+    event: {
+      click: async function (e) {
+        if (editable) {
+          if (instance.originalContentsArr[0].cliid !== "") {
+            const [ client ] = await ajaxJson({ whereQuery: { cliid: instance.originalContentsArr[0].cliid } }, SECONDHOST + "/getClients", { equal: true });
+            const projects = await ajaxJson({ whereQuery: { cliid: instance.originalContentsArr[0].cliid } }, SECONDHOST + "/getProjects", { equal: true });
+            const [ project ] = projects.filter((p) => { return p.desid !== "" });
+            let requestsNumber;
+            let num;
+            let thisAddress, thisRegion;
+
+            requestsNumber = 0;
+            num = 0;
+            for (let { request } of client.requests) {
+              if (request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+                requestsNumber = num;
+                break;
+              }
+              num = num + 1;
+            }
+
+            thisAddress = null;
+            thisRegion = null;
+            while (thisAddress === null) {
+              thisAddress = await GeneralJs.prompt("아파트 명을 알려주세요!\n" + client.requests[requestsNumber].request.space.address)
+            }
+            while (thisRegion === null) {
+              thisRegion = await GeneralJs.prompt("지역 명을 알려주세요!\n" + client.requests[requestsNumber].request.space.address)
+            }
+
+            await ajaxJson({ address: thisAddress, region: thisRegion, pid: instance.originalContentsArr[0].contents.portfolio.pid }, LOGHOST + "/updateAddressRegion");
+            window.location.reload();
+          }
+        }
+      }
+    },
     style: {
       display: desktop ? "block" : "none",
       position: "absolute",
@@ -776,6 +812,7 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
       right: String(0),
       width: String(designerBoxWidth) + ea,
       height: String(titleBoxHeight) + ea,
+      cursor: "pointer",
     },
     children: [
       {
@@ -1008,6 +1045,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
   let contentsBlock;
   let daeShadow;
   let daeZIndex;
+  let textareaVisualPadding;
 
   story.shift();
   customerStory = detail[0].contents;
@@ -1092,6 +1130,8 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
 
   daeShadow = editable ? ("drop-shadow(" + colorChip.blue + " 0px 5px 10px)") : "";
   daeZIndex = editable ? 1 : 0;
+
+  textareaVisualPadding = 150;
 
   removeByClass(mainContentsClassTong0);
   removeByClass(mainContentsClassTong1);
@@ -1261,10 +1301,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
             },
             style: {
               position: "absolute",
-              top: 0,
-              left: 0,
-              width: withOut(0),
-              height: withOut(0),
+              top: -1 * textareaVisualPadding,
+              left: -1 * textareaVisualPadding,
+              width: withOut(-1 * textareaVisualPadding * 2),
+              height: withOut(-1 * textareaVisualPadding * 2),
               background: colorChip.white,
               zIndex: 10,
             },
@@ -1291,6 +1331,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
               },
               text: this.getAttribute("value"),
               style: {
+                padding: textareaVisualPadding,
                 width: withOut(0),
                 height: withOut(0),
                 border: String(0),
@@ -1620,10 +1661,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                 },
                 style: {
                   position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: withOut(0),
-                  height: withOut(0),
+                  top: -1 * textareaVisualPadding,
+                  left: -1 * textareaVisualPadding,
+                  width: withOut(-1 * textareaVisualPadding * 2),
+                  height: withOut(-1 * textareaVisualPadding * 2),
                   background: colorChip.white,
                   zIndex: 10,
                 },
@@ -1651,6 +1692,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                     },
                   },
                   style: {
+                    padding: 100,
                     width: withOut(0),
                     height: withOut(0),
                     border: String(0),
