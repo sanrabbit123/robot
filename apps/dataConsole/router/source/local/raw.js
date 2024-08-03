@@ -3406,40 +3406,49 @@ RawJs.prototype.baseMaker = function () {
               },
               {
                 type: "drop",
-                event: function (e) {
+                event: async function (e) {
+                  let formData, files, fileNames, toArr;
+                  let loading;
                   e.preventDefault();
                   if (e.dataTransfer.files.length > 0) {
-                    let formData, files, fileNames, toArr;
-                    let loading;
+                    if (e.dataTransfer.files.length < 61) {
+                      if ([ ...e.dataTransfer.files ].map((f) => { return f.name }).filter((n) => { return /\.jp[e]?g$/gi.test(n) }).length > 0) {
 
-                    formData = new FormData();
-                    formData.enctype = "multipart/form-data";
 
-                    files = [ ...e.dataTransfer.files ];
-                    files.sort((a, b) => {
-                      return Number(a.name.replace(/[^0-9]/gi, '')) - Number(b.name.replace(/[^0-9]/gi, ''));
-                    });
-                    fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\<\>]/gi, ''); });
-                    for (let i = 0; i < files.length; i++) {
-                      formData.append("upload" + String(i), files[i]);
+                        formData = new FormData();
+                        formData.enctype = "multipart/form-data";
+    
+                        files = [ ...e.dataTransfer.files ];
+                        files.sort((a, b) => {
+                          return Number(a.name.replace(/[^0-9]/gi, '')) - Number(b.name.replace(/[^0-9]/gi, ''));
+                        });
+                        fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\<\>]/gi, ''); });
+                        for (let i = 0; i < files.length; i++) {
+                          formData.append("upload" + String(i), files[i]);
+                        }
+    
+                        toArr = [];
+                        for (let i = 0; i < fileNames.length; i++) {
+                          toArr.push(instance.path.replace(/__samba__/gi, "").replace(/\/$/, '') + "/" + fileNames[i]);
+                        }
+                        formData.append("toArr", JSON.stringify(toArr));
+    
+                        loading = instance.mother.whiteProgressLoading();
+    
+                        // ajaxForm(formData, S3HOST + ":3001" + "/generalFileUpload", loading.progress.firstChild).then(() => {
+                        //   loading.remove();
+                        //   removeByClass(tempInputClassName);
+                        //   instance.fileLoad(instance.path).catch((err) => { console.log(err); });
+                        // }).catch((e) => {
+                        //   console.log(e);
+                        // });
+
+                      } else {
+                        window.alert("모든 사진은 반드시 jpg 확장자로 되어 있어야만 합니다.");
+                      }
+                    } else {
+                      window.alert("사진 개수를 60개 이하로 올려주세요!");
                     }
-
-                    toArr = [];
-                    for (let i = 0; i < fileNames.length; i++) {
-                      toArr.push(instance.path.replace(/__samba__/gi, "").replace(/\/$/, '') + "/" + fileNames[i]);
-                    }
-                    formData.append("toArr", JSON.stringify(toArr));
-
-                    loading = instance.mother.whiteProgressLoading();
-
-                    ajaxForm(formData, S3HOST + ":3001" + "/generalFileUpload", loading.progress.firstChild).then(() => {
-                      loading.remove();
-                      removeByClass(tempInputClassName);
-                      instance.fileLoad(instance.path).catch((err) => { console.log(err); });
-                    }).catch((e) => {
-                      console.log(e);
-                    });
-
                   }
                   calculationEvent.call(this, e);
                 }
@@ -3481,10 +3490,10 @@ RawJs.prototype.baseMaker = function () {
                   alignItems: "center",
                 },
                 child: {
-                  text: "원본 사진을 업로드 해주세요! (사진 80장 이하)",
+                  text: "원본 사진을 업로드 해주세요! (사진 60장 이하)",
                   style: {
                     position: "relative",
-                    fontSize: 42,
+                    fontSize: 40,
                     fontWeight: 200,
                     color: colorChip.green,
                     top: -1,

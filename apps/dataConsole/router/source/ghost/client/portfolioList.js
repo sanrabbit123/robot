@@ -779,7 +779,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
       width: String(100) + '%',
       flexDirection: desktop ? "row" : "column",
       justifyContent: "start",
-      alignItems: "start",
+      alignItems: "center",
     }
   })
 
@@ -882,6 +882,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
           alignItems: "center",
           textAlign: "center",
           cursor: "pointer",
+          flexDirection: "row",
         },
         children: [
           {
@@ -1030,6 +1031,7 @@ PortfolioListJs.prototype.insertInitBox = function () {
         textAlign: "center",
         transition: "all 0.3s ease",
         overflow: "visible",
+        flexDirection: "row",
       },
       children: [
         {

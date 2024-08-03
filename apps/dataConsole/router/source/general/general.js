@@ -6469,7 +6469,7 @@ GeneralJs.prototype.communicationBox = function () {
         }
       }
 
-      if (widthMatrix.length === 0 && widthMatrixTemp.length !== 0){
+      if (widthMatrixTemp.length !== 0){
         widthMatrix.push(widthMatrixTemp);
       }
 

@@ -245,7 +245,7 @@ DesignerDetailJs.prototype.insertInitBox = function () {
       width: String(100) + '%',
       flexDirection: desktop ? "row" : "column",
       justifyContent: "start",
-      alignItems: "start",
+      alignItems: "center",
     }
   })
 
