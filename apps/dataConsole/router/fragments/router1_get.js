@@ -267,8 +267,8 @@ DataRouter.prototype.rou_get_First = function () {
             target = "flow";
           } else if (/^numb/i.test(req.params.id)) {
             target = "numbers";
-          } else if (/^emai/i.test(req.params.id)) {
-            target = "email";
+          } else if (/^raw/i.test(req.params.id)) {
+            target = "raw";
           } else {
             target = "client";
           }

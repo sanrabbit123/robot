@@ -1,10 +1,10 @@
-const FileJs = function () {
+const RawJs = function () {
   this.mother = new GeneralJs();
   this.totalContents = this.mother.totalContents;
   this.ea = "px";
 }
 
-FileJs.staticSvg = {
+RawJs.staticSvg = {
   ai: "<svg version=\"1.1\" viewBox=\"0 0 16.933 16.933\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:cc=\"http://creativecommons.org/ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><defs><filter id=\"filter1057-1ai87946178498417\" x=\"-.027\" y=\"-.027\" width=\"1.054\" height=\"1.054\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.618\"/></filter><linearGradient id=\"linearGradient1053-2ai87946178489005\" x1=\"-127\" x2=\"-80.659\" y1=\"60\" y2=\"13.659\" gradientTransform=\"matrix(.264 0 0 .264 36.484 2.265)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#dee0e2\" offset=\"0\"/><stop stop-color=\"#f1f3f5\" offset=\"1\"/></linearGradient><filter id=\"filter1346ai8794617864790\" x=\"-.083\" y=\"-.084\" width=\"1.167\" height=\"1.168\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.361\"/></filter><linearGradient id=\"linearGradient963-6ai87946178113818\" x1=\"-6.147\" x2=\"-6.147\" y1=\"-137.82\" y2=\"-100.78\" gradientTransform=\"matrix(.074 0 0 .074 7.467 20.293)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#ffbe14\" offset=\"0\"/><stop stop-color=\"#ff8214\" offset=\"1\"/></linearGradient><linearGradient id=\"linearGradient32549-7ai87946178380022\" x1=\"-6.147\" x2=\"-6.147\" y1=\"-137.82\" y2=\"-100.78\" gradientTransform=\"matrix(.074 0 0 .074 10.697 16.466)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#32b4ff\" offset=\"0\"/><stop stop-color=\"#3287ff\" offset=\"1\"/></linearGradient><linearGradient id=\"linearGradient957-3ai87946178390135\" x1=\"-6.147\" x2=\"-6.147\" y1=\"-137.82\" y2=\"-100.78\" gradientTransform=\"matrix(.049 0 0 .049 8.046 14.726)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#14dc78\" offset=\"0\"/><stop stop-color=\"#14a03c\" offset=\"1\"/></linearGradient><linearGradient id=\"linearGradient961-5ai87946178307854\" x1=\"-6.147\" x2=\"-6.147\" y1=\"-137.82\" y2=\"-100.78\" gradientTransform=\"matrix(.049 0 0 .049 13.208 14.633)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#dc28e6\" offset=\"0\"/><stop stop-color=\"#8c14e6\" offset=\"1\"/></linearGradient><linearGradient id=\"linearGradient1342ai87946179449792\" x1=\"-6.147\" x2=\"-6.147\" y1=\"-137.82\" y2=\"-100.78\" gradientTransform=\"matrix(.049 0 0 .049 8.452 19.597)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#ff3c69\" offset=\"0\"/><stop stop-color=\"#ff462b\" offset=\"1\"/></linearGradient></defs><metadata><rdf:RDF><cc:Work rdf:about=\"\"><dc:format>image/svg+xml</dc:format><dc:type rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\"/><dc:title/></cc:Work></rdf:RDF></metadata><g transform=\"translate(-1.691 -2.400)\"><rect transform=\"matrix(.264 0 0 .264 1.691 2.400)\" x=\"4.5\" y=\"4.5\" width=\"55\" height=\"55\" ry=\"15\" fill=\"#141414\" filter=\"url(#filter1057-1ai87946178498417)\" opacity=\".3\" stroke-linecap=\"round\" stroke-width=\"2.744\"/><rect x=\"2.882\" y=\"3.590\" width=\"14.552\" height=\"14.552\" ry=\"3.968\" fill=\"url(#linearGradient1053-2ai87946178489005)\" stroke-linecap=\"round\" stroke-width=\".726\"/><path transform=\"matrix(1 0 0 1 1.691 2.400)\" d=\"m8.466 3.186c-2.838 0-5.139 2.301-5.139 5.139 1e-7 2.838 2.300 5.139 5.139 5.139 1.418 0 1.152-1.179 1.510-1.628 0.269-0.338 0.640-0.688 1.070-0.733 0.502-0.053 0.759 0.172 1.156 0.161 0.608-0.015 1.043-0.491 1.277-1.128 0.148-0.400 0.230-1.419 0.230-1.774 3.97e-4 -2.838-2.407-5.175-5.246-5.175zm3.356 5.540c1.055-8.39e-4 1.055 1.580 0 1.581-1.053-8.38e-4 -1.053-1.582 0-1.581z\" fill=\"#dddddd\" filter=\"url(#filter1346ai8794617864790)\" stroke-width=\".719\" style=\"paint-order:stroke markers fill\"/><path d=\"m10.106 5.586c-2.838 0-5.139 2.301-5.139 5.14 1e-7 2.838 2.300 5.139 5.139 5.139 1.418 0 1.152-1.179 1.510-1.628 0.269-0.338 0.640-0.688 1.070-0.733 0.502-0.053 0.759 0.172 1.156 0.161 0.608-0.015 1.043-0.491 1.277-1.128 0.148-0.400 0.230-1.419 0.230-1.774 3.97e-4 -2.838-2.407-5.175-5.246-5.175zm3.356 5.540c1.055-8.39e-4 1.055 1.580 0 1.581-1.053-8.38e-4 -1.053-1.582 0-1.581z\" fill=\"#fff\" stroke-width=\".719\" style=\"paint-order:stroke markers fill\"/><circle cx=\"7.038\" cy=\"11.345\" r=\"1.117\" fill=\"url(#linearGradient963-6ai87946178113818)\" stroke-width=\".019\"/><circle cx=\"10.268\" cy=\"7.519\" r=\"1.117\" fill=\"url(#linearGradient32549-7ai87946178380022)\" stroke-width=\".885\" style=\"paint-order:normal\"/><g stroke-width=\".013\"><circle cx=\"7.764\" cy=\"8.830\" r=\".736\" fill=\"url(#linearGradient957-3ai87946178390135)\"/><circle cx=\"12.926\" cy=\"8.737\" r=\".736\" fill=\"url(#linearGradient961-5ai87946178307854)\"/><circle cx=\"8.169\" cy=\"13.701\" r=\".736\" fill=\"url(#linearGradient1342ai87946179449792)\"/></g></g></svg>",
   code: "<svg xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:cc=\"http://creativecommons.org/ns#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:svg=\"http://www.w3.org/2000/svg\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" version=\"1.1\" viewBox=\"0 0 64 64\" id=\"svg29code87946193392711\" sodipodi:docname=\"guake.svg\" inkscape:version=\"1.0.1 (3bc2e813f5, 2020-09-07)\"><metadata id=\"metadata33code87946193255716\"><rdf:RDF><cc:Work rdf:about=\"\"><dc:format>image/svg+xml</dc:format><dc:type rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><sodipodi:namedview pagecolor=\"#ffffff\" bordercolor=\"#666666\" borderopacity=\"1\" objecttolerance=\"10\" gridtolerance=\"10\" guidetolerance=\"10\" inkscape:pageopacity=\"0\" inkscape:pageshadow=\"2\" inkscape:window-width=\"1920\" inkscape:window-height=\"932\" id=\"namedview31code87946193725994\" showgrid=\"falsecode87946194859703\" inkscape:zoom=\"3.984\" inkscape:cx=\"-26.659\" inkscape:cy=\"29.800\" inkscape:window-x=\"0\" inkscape:window-y=\"36\" inkscape:window-maximized=\"1\" inkscape:current-layer=\"svg29code87946193392711\" /><defs id=\"defs7code87946194966609\"><linearGradient id=\"bgcode879461944181\" x1=\"1\" x2=\"47\" gradientTransform=\"rotate(-90,23.999,24.000)\" gradientUnits=\"userSpaceOnUse\"><stop style=\"stop-color:#2e6c2c\" offset=\"0\" id=\"stop2code87946194676073\" /><stop style=\"stop-color:#347a32\" offset=\"1\" id=\"stop4code87946194738479\" /></linearGradient><filter id=\"filter2076code87946194178709\" x=\"-0.048\" y=\"-0.048\" width=\"1.096\" height=\"1.096\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"1.1\" id=\"feGaussianBlur159code87946194319924\" /></filter><linearGradient inkscape:collect=\"always\" xlink:href=\"#linearGradient2070code87946195334429\" id=\"linearGradient1454code87946195264345\" gradientUnits=\"userSpaceOnUse\" gradientTransform=\"matrix(1.000,0,0,1.000,-222.735,-3.215)\" x1=\"145\" y1=\"59\" x2=\"200\" y2=\"4\" /><linearGradient id=\"linearGradient2070code87946195334429\" x1=\"145\" x2=\"200\" y1=\"59\" y2=\"4\" gradientTransform=\"matrix(0.264,0,0,0.264,-37.173,0.132)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#e1e1e1\" offset=\"0\" id=\"stop154code87946195531988\" /><stop stop-color=\"#f5f5f5\" offset=\"1\" id=\"stop156code87946196169957\" /></linearGradient><linearGradient inkscape:collect=\"always\" xlink:href=\"#linearGradient2070code87946195334429\" id=\"linearGradient906code87946196483162\" gradientUnits=\"userSpaceOnUse\" gradientTransform=\"matrix(1.000,0,0,1.000,-222.735,-3.215)\" x1=\"145\" y1=\"59\" x2=\"200\" y2=\"4\" /></defs><g id=\"g915code87946196202662\" transform=\"translate(82.236,3.715)\"><rect transform=\"matrix(1.000,0,0,1.000,-82.236,-3.715)\" x=\"4.5\" y=\"4.5\" width=\"55\" height=\"55\" rx=\"13.002\" ry=\"13.002\" filter=\"url(#filter2076code87946194178709)\" opacity=\"0.3\" id=\"rect178code87946196628962\" /><rect x=\"-77.736\" y=\"0.784\" width=\"55.000\" height=\"55.000\" rx=\"13.001\" ry=\"13.001\" fill=\"url(#linearGradient2070code87946195334429)\" stroke-width=\"1.000\" id=\"rect180code87946196170743\" style=\"fill:url(#linearGradient1454code87946195264345)\" /><rect x=\"-75.236\" y=\"3.283\" width=\"50.000\" height=\"50.000\" rx=\"11.819\" ry=\"11.819\" fill=\"url(#linearGradient2070code87946195334429)\" fill-opacity=\"0\" stroke-width=\"0.909\" id=\"rect588code87946196519631\" style=\"fill:url(#linearGradient906code87946196483162)\" /><rect x=\"-75.236\" y=\"3.283\" width=\"50.000\" height=\"50.000\" rx=\"11.819\" ry=\"10.467\" fill=\"#262626\" stroke-width=\"0.909\" id=\"rect590code87946196674671\" /><path d=\"m -68.135,15.241 v -2.151 l 6.999,3.984 v 2.030 l -6.999,3.984 v -2.151 l 5.269,-2.84 z\" fill=\"#ffffff\" stroke-width=\"0.350\" id=\"path1019code87946196439971\" /><rect x=\"-58.135\" y=\"24.074\" width=\"7.999\" height=\"2\" rx=\"0\" ry=\"0\" fill=\"#ffffff\" stroke-width=\"3.779\" id=\"rect1021code87946196906663\" /></g></svg>",
   excel: "<svg version=\"1.1\" viewBox=\"0 0 64 64\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:cc=\"http://creativecommons.org/ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><metadata><rdf:RDF><cc:Work rdf:about=\"\"><dc:format>image/svg+xml</dc:format><dc:type rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\"/><dc:title/></cc:Work></rdf:RDF></metadata><defs><linearGradient id=\"linearGradient1030excel87946211266022\" x1=\"78.5\" x2=\"106.56\" y1=\"55.812\" y2=\"27.75\" gradientTransform=\"matrix(1.048 0 0 1.048 -50.005 2.253)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#32915a\" offset=\"0\"/><stop stop-color=\"#1e8250\" offset=\"1\"/></linearGradient><filter id=\"filter1057excel87946211682883\" x=\"-.027\" y=\"-.027\" width=\"1.054\" height=\"1.054\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.618\"/></filter><linearGradient id=\"linearGradient1053excel87946211282269\" x1=\"-99.053\" x2=\"-99.053\" y1=\"4.933\" y2=\"60.005\" gradientTransform=\"translate(76.898 -.51)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#14d296\" offset=\"0\"/><stop stop-color=\"#40e89b\" offset=\".240\"/><stop stop-color=\"#23c878\" offset=\".240\"/><stop stop-color=\"#2cbc76\" offset=\".481\"/><stop stop-color=\"#1ea064\" offset=\".485\"/><stop stop-color=\"#318356\" offset=\".764\"/><stop stop-color=\"#235f3c\" offset=\".765\"/><stop stop-color=\"#274b37\" offset=\"1\"/></linearGradient></defs><rect x=\"4.5\" y=\"4.5\" width=\"55\" height=\"55\" ry=\"15\" fill=\"#141414\" filter=\"url(#filter1057excel87946211682883)\" opacity=\".3\" stroke-linecap=\"round\" stroke-width=\"2.744\"/><g transform=\"translate(54.602)\"><rect x=\"-50.102\" y=\"4.5\" width=\"55\" height=\"55\" ry=\"15\" fill=\"url(#linearGradient1053excel87946211282269)\" stroke-linecap=\"round\" stroke-width=\"2.744\"/><path d=\"m-35.102 4.5c-8.31 0-15 6.69-15 15v25c0 0.699 0.062 1.381 0.154 2.054h22.529v-42.055z\" fill=\"#288c55\" opacity=\".6\"/></g><circle cx=\"47.219\" cy=\"45.719\" r=\"15.406\" fill=\"url(#linearGradient1030excel87946211266022)\" fill-rule=\"evenodd\" style=\"paint-order:stroke fill markers\"/><path d=\"m38.719 36.895 6.164 8.822-6.164 8.825h4.673l3.826-5.479 3.826 5.479h4.673l-6.164-8.825 6.164-8.822h-4.673l-3.826 5.479-3.826-5.479z\" fill=\"#fff\" stroke-width=\".882\"/><g transform=\"translate(-71.045)\" fill=\"#5e4aa6\"><g transform=\"translate(-80.134,-57.985)\" image-rendering=\"optimizeSpeed\"><circle cx=\"-1248.7\" cy=\"-1241.6\" r=\"0\"/><circle cx=\"-149.15\" cy=\"23.855\" r=\"0\" fill-rule=\"evenodd\"/><circle cx=\"-1248.7\" cy=\"-1241.6\" r=\"0\"/><circle cx=\"-149.15\" cy=\"23.855\" r=\"0\" fill-rule=\"evenodd\"/></g><circle cx=\"-1248.7\" cy=\"-1241.6\" r=\"0\"/><circle cx=\"-149.15\" cy=\"23.855\" r=\"0\" fill-rule=\"evenodd\"/><g transform=\"matrix(3.779,0,0,3.779,5.841e-4,-1.717e-4)\" stroke-width=\".264\"><g transform=\"translate(-.027 .006)\"><circle cx=\"-330.35\" cy=\"-328.38\" r=\"0\"/><circle cx=\"-312.11\" cy=\"-326.25\" r=\"0\"/><circle cx=\"-306.02\" cy=\"-333.07\" r=\"0\"/><circle cx=\"-308.84\" cy=\"-326.01\" r=\"0\"/><circle cx=\"-330.35\" cy=\"-328.38\" r=\"0\"/><circle cx=\"-312.11\" cy=\"-326.25\" r=\"0\"/><circle cx=\"-306.02\" cy=\"-333.07\" r=\"0\"/><circle cx=\"-308.84\" cy=\"-326.01\" r=\"0\"/></g><g transform=\"translate(-.027 .006)\"><circle cx=\"-330.35\" cy=\"-328.38\" r=\"0\"/><circle cx=\"-312.11\" cy=\"-326.25\" r=\"0\"/><circle cx=\"-306.02\" cy=\"-333.07\" r=\"0\"/><circle cx=\"-308.84\" cy=\"-326.01\" r=\"0\"/></g></g><g transform=\"translate(-79.199,-30.995)\"><circle cx=\"-1248.7\" cy=\"-1241.6\" r=\"0\"/><circle cx=\"-1140.3\" cy=\"-1301.8\" r=\"0\"/><circle cx=\"-1158.1\" cy=\"-1246\" r=\"0\"/></g><circle cx=\"-1236.5\" cy=\"-1298.7\" r=\"0\"/><circle cx=\"-136.95\" cy=\"-33.178\" r=\"0\" fill-rule=\"evenodd\"/></g></svg>",
@@ -33,7 +33,7 @@ FileJs.staticSvg = {
   odpptx: `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 16.933 16.933" style="enable-background:new 0 0 16.933 16.933;" xml:space="preserve"><path style="fill:#CA4827;" d="M9.7891,0.975H4.1669c-0.5285,0-0.9918,0.4627-0.9918,0.9923v12.5663 c0,0.5291,0.4627,0.9923,0.9923,0.9923h8.5981c0.5291,0,0.9923-0.4627,0.9923-0.9923V4.9432l-2.3147-1.6535L9.7891,0.975z"/><path style="fill:#ED9265;" d="M9.7891,0.975v2.9764c0,0.5291,0.4627,0.9918,0.9918,0.9918h2.9764L9.7891,0.975z"/><circle style="fill-rule:evenodd;clip-rule:evenodd;fill:#992017;" cx="8.4659" cy="9.6499" r="2.7339"/><path style="fill:#FFFFFF;" d="M7.2818,8.0572v3.353h0.8843v-1.0346C9.3774,10.378,9.993,10.2203,9.993,9.225 c0-1.1015-0.6023-1.1716-1.8268-1.1677L7.2818,8.0572z M8.4877,8.7651c0.2937,0.0068,0.6856,0.0884,0.6856,0.4725 c0,0.6145-1.0031,0.4538-1.0031,0.4538V8.7832c0,0,0.1411-0.0221,0.3174-0.018L8.4877,8.7651z"/></svg>`,
 };
 
-FileJs.imageTarget = [
+RawJs.imageTarget = [
   "jpg",
   "png",
   "gif",
@@ -51,9 +51,9 @@ FileJs.imageTarget = [
   "jfif",
 ];
 
-FileJs.prototype.staticSvg = FileJs.staticSvg;
+RawJs.prototype.staticSvg = RawJs.staticSvg;
 
-FileJs.prototype.absoluteParsing = function (str) {
+RawJs.prototype.absoluteParsing = function (str) {
   const instance = this;
 
   if (typeof str !== "string") {
@@ -78,7 +78,7 @@ FileJs.prototype.absoluteParsing = function (str) {
   return str;
 }
 
-FileJs.prototype.imageAbsoluteFilter = function (str) {
+RawJs.prototype.imageAbsoluteFilter = function (str) {
   const instance = this;
   let thisPid;
   let thisFileName;
@@ -99,7 +99,7 @@ FileJs.prototype.imageAbsoluteFilter = function (str) {
   return str;
 }
 
-FileJs.prototype.imageViewing = function (images, convertMode = true) {
+RawJs.prototype.imageViewing = function (images, convertMode = true) {
   const instance = this;
   const { ea, totalContents } = this;
   const { createNode, withOut, colorChip, equalJson, downloadFile, removeByClass, sleep } = GeneralJs;
@@ -292,7 +292,7 @@ FileJs.prototype.imageViewing = function (images, convertMode = true) {
   }
 }
 
-FileJs.prototype.scheduleViewing = function () {
+RawJs.prototype.scheduleViewing = function () {
   const instance = this;
   const { ea, totalContents, belowHeight } = this;
   const { createNode, withOut, colorChip, equalJson, downloadFile, removeByClass, sleep } = GeneralJs;
@@ -375,7 +375,7 @@ FileJs.prototype.scheduleViewing = function () {
   }
 }
 
-FileJs.prototype.imagePreviewBox = function () {
+RawJs.prototype.imagePreviewBox = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight, searchModeButtonsClassName, thisMember, memberTongClassName, intervalDelta, previewOnlyMode } = this;
   const { createNode, createNodes, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref, linkToString, stringToLink, equalJson, cleanChildren, svgMaker, dateToString, stringToDate } = GeneralJs;
@@ -1197,7 +1197,7 @@ FileJs.prototype.imagePreviewBox = function () {
   }
 }
 
-FileJs.prototype.baseMaker = function () {
+RawJs.prototype.baseMaker = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight, searchModeButtonsClassName, thisMember, memberTongClassName, intervalDelta } = this;
   const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref, linkToString, stringToLink, equalJson, cleanChildren } = GeneralJs;
@@ -2950,7 +2950,7 @@ FileJs.prototype.baseMaker = function () {
         children: [
           {
             style: {
-              display: "flex",
+              display: "none",
               flexDirection: "row",
               position: "relative",
               height: String(titleHeight) + ea,
@@ -3199,7 +3199,7 @@ FileJs.prototype.baseMaker = function () {
                   children: [
                     {
                       mode: "svg",
-                      source: FileJs.staticSvg.folder,
+                      source: RawJs.staticSvg.folder,
                       style: {
                         display: "inline-block",
                         position: "relative",
@@ -3456,10 +3456,10 @@ FileJs.prototype.baseMaker = function () {
               }
             ],
             style: {
-              display: "block",
+              display: "flex",
               position: "relative",
               width: withOut(0, ea),
-              height: withOut(titleHeight + titlePaddingBottom, ea),
+              height: withOut(0, ea),
               overflow: "scroll",
               borderRadius: String(5) + "px",
               border: "1px solid " + colorChip.gray4,
@@ -3469,6 +3469,28 @@ FileJs.prototype.baseMaker = function () {
               paddingRight: String(filesBoxPaddingLeft) + ea,
             },
             children: [
+              {
+                style: {
+                  display: "flex",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: withOut(0),
+                  height: withOut(0),
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: "원본 사진을 업로드 해주세요! (사진 80장 이하)",
+                  style: {
+                    position: "relative",
+                    fontSize: 42,
+                    fontWeight: 200,
+                    color: colorChip.green,
+                    top: -1,
+                  }
+                }
+              },
               {
                 style: {
                   position: "relative",
@@ -3497,156 +3519,10 @@ FileJs.prototype.baseMaker = function () {
     ]
   }).firstChild.lastChild.firstChild;
   this.motherTong = { mother, files };
-  this.memberLoad = () => {
-    const memberContents = equalJson(JSON.stringify(instance.members.filter((obj) => {
-      return obj.alive && obj.resident;
-    }))).map((member) => {
-      member.absolute = "__samba__/drive/members/" + member.id + "_" + member.name;
-      member.folderName = member.name + " <u%" + member.title + "%u>";
-      return member;
-    });
-    const memberToNumber = (member) => {
-      let number;
-      if (member.roles.includes("CEO")) {
-        number = 9000000000;
-      } else if (member.roles.includes("CX")) {
-        number = 800000000;
-      } else if (member.roles.includes("Developer")) {
-        number = 700000000;
-      } else {
-        number = 300000000;
-      }
-      number = number + (member.level * 10000000);
-      number = number + member.name.charCodeAt(0);
-      return number;
-    }
-    memberContents.sort((a, b) => {
-      return memberToNumber(b) - memberToNumber(a);
-    });
-    const thisMother = document.querySelector('.' + memberTongClassName);
-  
-    ajaxJson({ data: null }, S3HOST + ":3001/getDevicesStatus", { equal: true }).then((deviceStatus) => {
-      let thisStatusIndex, targetChildren;
-      for (let obj of memberContents) {
-        thisStatusIndex = deviceStatus.devices.findIndex((o) => {
-          return o.mac.trim().replace(/\:/gi, '').toLowerCase() === obj.computer.mac.trim().replace(/\:/gi, '').toLowerCase();
-        });
-        if (thisStatusIndex === -1) {
-          obj.online = false;
-        } else {
-          obj.online = deviceStatus.devices[thisStatusIndex].online;
-        }
-      }
-      targetChildren = memberContents.map((obj) => {
-        return {
-          attribute: {
-            absolute: obj.absolute,
-            id: obj.id,
-          },
-          event: {
-            click: function (e) {
-              instance.fileLoad(this.getAttribute("absolute")).catch((err) => { console.log(err); });
-            },
-            contextmenu: memberContextmenu(),
-            dragenter: function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-              this.children[0].style.opacity = String(0.4);
-              this.children[1].style.color = colorChip.green;
-            },
-            dragleave: function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-              this.children[0].style.opacity = String(1);
-              this.children[1].style.color = colorChip.black;
-            },
-            dragover: function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-            },
-            selectstart: function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-            },
-            drop: starDropEvent(),
-          },
-          style: {
-            display: "flex",
-            position: "relative",
-            marginBottom: String(starItemMarginBottom) + ea,
-            width: withOut(0, ea),
-            justifyContent: "start",
-            alignItems: "center",
-            flexDirection: "row",
-            cursor: "pointer",
-          },
-          children: [
-            {
-              mode: "svg",
-              source: FileJs.staticSvg.folder,
-              style: {
-                display: "inline-block",
-                position: "relative",
-                width: String(starItemIconWidth) + ea,
-                top: String(starItemIconTop) + ea,
-                marginRight: String(starItemIconBetween) + ea,
-                transition: "all 0.3s ease",
-              }
-            },
-            {
-              text: obj.folderName,
-              event: {
-                selectstart: (e) =>{
-                  e.preventDefault();
-                }
-              },
-              style: {
-                display: "inline-block",
-                position: "relative",
-                fontSize: String(starItemSize) + ea,
-                fontWeight: String(starItemWeight),
-                top: String(starItemTextTop) + ea,
-                color: colorChip.black,
-                transition: "all 0.3s ease",
-              },
-              under: {
-                fontSize: String(starItemSize) + ea,
-                fontWeight: String(200),
-                color: colorChip.black,
-              }
-            },
-            {
-              style: {
-                display: "inline-block",
-                position: "absolute",
-                right: String(0),
-                top: String(onlineCircleTop) + ea,
-                width: String(onlineCircleWidth) + ea,
-                height: String(onlineCircleWidth) + ea,
-                borderRadius: String(onlineCircleWidth) + ea,
-                background: obj.online ? colorChip.green : colorChip.gray3,
-              }
-            }
-          ]
-        }
-      });
-      cleanChildren(thisMother);
-      for (let obj of targetChildren) {
-        obj.mother = thisMother;
-        createNode(obj);
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
-  }
-
-  this.memberLoad();
-  setInterval(() => {
-    this.memberLoad();
-  }, intervalDelta * 1000);
+  this.memberLoad = () => {}
 }
 
-FileJs.prototype.pathReload = function (searchResult = false) {
+RawJs.prototype.pathReload = function (searchResult = false) {
   const instance = this;
   const { rootWording, rootToken } = this;
   const { colorChip, cleanChildren, ajaxJson } = GeneralJs;
@@ -3776,7 +3652,7 @@ FileJs.prototype.pathReload = function (searchResult = false) {
   }
 }
 
-FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
+RawJs.prototype.fileLoad = async function (path, searchMode = "none") {
   if (typeof path !== "string") {
     throw new Error("invaild input");
   }
@@ -4225,7 +4101,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
   }
 }
 
-FileJs.prototype.fromParentSearch = function () {
+RawJs.prototype.fromParentSearch = function () {
   const instance = this;
   const { ea } = this;
   window.addEventListener("message", async (e) => {
@@ -4245,7 +4121,7 @@ FileJs.prototype.fromParentSearch = function () {
   });
 }
 
-FileJs.prototype.fileSearchEvent = function () {
+RawJs.prototype.fileSearchEvent = function () {
   const instance = this;
   const { ea, totalContents } = this;
   const { searchInput } = this;
@@ -4261,7 +4137,7 @@ FileJs.prototype.fileSearchEvent = function () {
   })
 }
 
-FileJs.prototype.launching = async function () {
+RawJs.prototype.launching = async function () {
   const instance = this;
   const { ea } = this;
   const { returnGet, ajaxJson, withOut, setQueue, equalJson } = GeneralJs;
@@ -4426,15 +4302,12 @@ FileJs.prototype.launching = async function () {
     this.memberTongClassName = "memberTongClassName";
     this.rootWording = "root";
     this.intervalDelta = 180;
-    this.imageTarget = equalJson(JSON.stringify(FileJs.imageTarget)).concat(FileJs.imageTarget.map((str) => { return str.toUpperCase(); }));
+    this.imageTarget = equalJson(JSON.stringify(RawJs.imageTarget)).concat(RawJs.imageTarget.map((str) => { return str.toUpperCase(); }));
 
     this.baseMaker();
     this.portfolioList = await ajaxJson({ path: instance.starContents.find((o) => { return o.name === "portfolio" }).absolute }, S3HOST + ":3001" + "/listFiles");
-    await this.fileLoad(this.path);
-    this.fromParentSearch();
-    if (!entireMode) {
-      this.fileSearchEvent();
-    }
+
+    
 
     window.addEventListener("popstate", (e) => {
       e.preventDefault();
