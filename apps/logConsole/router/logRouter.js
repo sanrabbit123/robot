@@ -731,6 +731,7 @@ LogRouter.prototype.rou_post_getContents = function () {
           }
 
           whereQuery = { "$and": hideContents.map((pid) => { return { "contents.portfolio.pid": { "$not": { "$regex": "^" + pid + "$" } } } }) };
+          whereQuery["$and"].push({ "contents.portfolio.title.main": { "$not": { "$regex": "제목을 입력해"} } });
           if (req.body.limit !== undefined) {
             contentsArr = await back.mongoPick(collection, [ whereQuery, contentsProjectQuery ], { selfMongo, sort: sortQuery, limit: Number(req.body.limit) });
           } else {
@@ -843,9 +844,10 @@ LogRouter.prototype.rou_post_getContents = function () {
           "contents.review.detailInfo": 1,
         };
 
-        contentsArr_raw = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo });
+        whereQuery = { "$and": hideContents.map((pid) => { return { "contents.portfolio.pid": { "$not": { "$regex": "^" + pid + "$" } } } }) };
+        whereQuery["$and"].push({ "contents.portfolio.title.main": { "$not": { "$regex": "제목을 입력해"} } });
 
-        contentsArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
+        contentsArr_raw = await back.mongoPick(collection, [ whereQuery, contentsProjectQuery ], { selfMongo });
         reviewArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); }).filter((obj) => { return !/999/gi.test(obj.contents.review.rid); });
         indexArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
 

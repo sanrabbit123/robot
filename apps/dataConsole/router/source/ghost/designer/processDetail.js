@@ -15724,10 +15724,8 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function (feedback = false) {
           ]
         }
       ]
-    });
-  
+    });  
   }
-
 }
 
 ProcessDetailJs.prototype.insertFormStatusBox = async function () {

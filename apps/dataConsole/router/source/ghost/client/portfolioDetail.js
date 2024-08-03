@@ -3858,6 +3858,12 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
     this.mainContentsClassTong1 = "mainContentsClassTong1";
     this.slideContentsClassTong = "slideContentsClassTong";
 
+    if (/제목을/gi.test(this.contentsArr[0].contents.portfolio.title.main) && /입력해/gi.test(this.contentsArr[0].contents.portfolio.title.main) && /아파트명/gi.test(this.contentsArr[0].contents.portfolio.title.main)) {
+      if (!editable) {
+        window.location.href = FRONTHOST + "/portfolio.php";
+      }
+    }
+
     await this.mother.ghostClientLaunching({
       mode: "front",
       name: "portfolioDetail",
