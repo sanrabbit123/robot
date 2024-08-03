@@ -1362,29 +1362,21 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
                 tempString += '/';
                 tempString += tempArr[i];
               }
-              if (microsoft.isMicrosoftFile(thisFileName)) {
-                await shellExec(`mv ${shellLink(path)} ${shellLink(osTempFolder + "/" + thisFileName)}`);
-                microsoftResult = await microsoft.uploadDocument(osTempFolder + "/" + thisFileName);
-                await sleep(500);
-                await shellExec(`rm -rf ${shellLink(osTempFolder + "/" + thisFileName)}`);
-                await fileSystem(`writeJson`, [ microsoft.localToOneDriveName(tempString + "/" + toArr[num].replace(/^\//i, '')), {
-                  url: microsoftResult.editUrl,
-                  ...microsoftResult
-                } ]);
-              } else {
-                await shellExec(`mv ${shellLink(path)} ${shellLink(tempString + "/" + toArr[num].replace(/^\//i, ''))}`);
-              }
+              console.log(`mv ${shellLink(path)} ${shellLink(tempString + "/" + toArr[num].replace(/^\//i, ''))}`);
+              await shellExec(`mv ${shellLink(path)} ${shellLink(tempString + "/" + toArr[num].replace(/^\//i, ''))}`);
               num++;
             }
 
             res.send(JSON.stringify({ "message": "done" }));
           }
         } catch (e) {
+          console.log(e);
           logger.error("Static lounge 서버 문제 생김 (rou_post_generalFileUpload): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
     } catch (e) {
+      console.log(e);
       logger.error("Static lounge 서버 문제 생김 (rou_post_generalFileUpload): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
@@ -8412,12 +8404,12 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
           }
         } catch (e) {
           console.log(e);
-          logger.error("Static lounge 서버 문제 생김 (rou_post_generalFileUpload): " + e.message).catch((e) => { console.log(e); });
+          logger.error("Static lounge 서버 문제 생김 (rou_post_replaceContentsPhoto): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
     } catch (e) {
-      logger.error("Static lounge 서버 문제 생김 (rou_post_generalFileUpload): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_replaceContentsPhoto): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

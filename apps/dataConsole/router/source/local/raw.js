@@ -3409,39 +3409,34 @@ RawJs.prototype.baseMaker = function () {
                 event: async function (e) {
                   let formData, files, fileNames, toArr;
                   let loading;
+                  let thisFolderName;
                   e.preventDefault();
                   if (e.dataTransfer.files.length > 0) {
                     if (e.dataTransfer.files.length < 61) {
                       if ([ ...e.dataTransfer.files ].map((f) => { return f.name }).filter((n) => { return /\.jp[e]?g$/gi.test(n) }).length > 0) {
 
+                        thisFolderName = "temp/tempRawUpload_" + GeneralJs.uniqueValue("hex");
 
                         formData = new FormData();
                         formData.enctype = "multipart/form-data";
     
                         files = [ ...e.dataTransfer.files ];
-                        files.sort((a, b) => {
-                          return Number(a.name.replace(/[^0-9]/gi, '')) - Number(b.name.replace(/[^0-9]/gi, ''));
-                        });
                         fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\<\>]/gi, ''); });
+                        toArr = [];
                         for (let i = 0; i < files.length; i++) {
-                          formData.append("upload" + String(i), files[i]);
+                          if (/\.jp[e]?g$/gi.test(files[i].name.trim())) {
+                            formData.append("upload" + String(i), files[i]);
+                            toArr.push(thisFolderName + "/" + fileNames[i]);
+                          }
                         }
     
-                        toArr = [];
-                        for (let i = 0; i < fileNames.length; i++) {
-                          toArr.push(instance.path.replace(/__samba__/gi, "").replace(/\/$/, '') + "/" + fileNames[i]);
-                        }
                         formData.append("toArr", JSON.stringify(toArr));
     
                         loading = instance.mother.whiteProgressLoading();
-    
-                        // ajaxForm(formData, S3HOST + ":3001" + "/generalFileUpload", loading.progress.firstChild).then(() => {
-                        //   loading.remove();
-                        //   removeByClass(tempInputClassName);
-                        //   instance.fileLoad(instance.path).catch((err) => { console.log(err); });
-                        // }).catch((e) => {
-                        //   console.log(e);
-                        // });
+                        await ajaxForm(formData, S3HOST + ":3001" + "/generalFileUpload", loading.progress.firstChild);
+                        loading.remove();
+                        removeByClass(tempInputClassName);
+                        window.alert("원본 사진 처리가 시작되었습니다. 슬랙의 안내를 따라주세요!");
 
                       } else {
                         window.alert("모든 사진은 반드시 jpg 확장자로 되어 있어야만 합니다.");
