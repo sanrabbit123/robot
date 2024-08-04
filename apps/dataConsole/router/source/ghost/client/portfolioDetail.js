@@ -1902,14 +1902,14 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
               await instance.portfolioContentsBox(contents);
             } else {
               if (instance.originalContentsArr[0].proid !== "") {
-                const [ project ] = await ajaxJson({ whereQuery: { proid: instance.originalContentsArr[0].proid } }, SECONDHOST + "/getProjects", { equal: true });
+                const [ project ] = await GeneralJs.ajaxJson({ whereQuery: { proid: instance.originalContentsArr[0].proid } }, SECONDHOST + "/getProjects", { equal: true });
                 const thisRawContents = await GeneralJs.ajaxJson({
                   mode: "get",
                   proid: project.proid,
                   desid: project.desid,
                   cliid: project.cliid,
                 }, SECONDHOST + "/projectDesignerRaw", { equal: true });
-                GeneralJs.promptLong("디자이너 글 원본", thisRawContents);
+                GeneralJs.promptLong("디자이너 글 원본", thisRawContents.contents.body);
               }
             }
           }

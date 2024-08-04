@@ -6796,17 +6796,17 @@ GeneralJs.promptLong = function (message, preValue = '') {
   let textTop;
   let toTextButton;
 
-  whiteWidth = 320;
+  whiteWidth = 600;
   whiteHeight = 150;
   paddingTop = 17;
   paddingLeft = 23;
-  paddingBottom = 152;
+  paddingBottom = 652;
   size0 = 14;
   size1 = 15;
   inputSize = 13;
   marginLeft = 18;
   bottomVisual = 7;
-  inputBoxHeight = 120;
+  inputBoxHeight = 620;
   inputIndent = 9;
   inputBottomVisual = 0;
   lineHeight = 1.5;
