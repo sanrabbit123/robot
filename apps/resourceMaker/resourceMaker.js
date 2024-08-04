@@ -1025,9 +1025,7 @@ ResourceMaker.prototype.launching = async function (thisContents = []) {
       await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(this.final.contents.review.detailInfo.photodae[1])}${this.p_id}.jpg -resize ${String(sizeMatrix[2][0]) + "x" + String(sizeMatrix[2][1])} -quality ${String(bQualityConst)} ${shellLink(outputFolder)}/${reviewInitial}${String(this.final.contents.review.detailInfo.photodae[1])}${this.p_id}.jpg`);
     }
     await shellExec(`convert ${shellLink(tempHome)}/${originalInitial}${String(this.final.contents.portfolio.detailInfo.photodae[1])}${this.p_id}.jpg -resize ${String(sizeMatrix[2][0]) + "x" + String(sizeMatrix[2][1])} -quality ${String(bQualityConst)} ${shellLink(outputFolder)}/${reviewInitial}${String(this.final.contents.portfolio.detailInfo.photodae[1])}${this.p_id}.jpg`);
-
-    await sleep(500);
-    await shellExec(`scp -r ${shellLink(outputFolder)} ${this.frontHost}/list_image`);
+    await shellExec(`cp -r ${shellLink(outputFolder)} /home/ubuntu/samba/list_image/`);
 
     outputFolderList = await fileSystem(`readDir`, [ outputFolder ]);
     outputMobildFolderList = await fileSystem(`readDir`, [ outputMobildFolder ]);

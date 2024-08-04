@@ -556,7 +556,7 @@ MagazineListJs.prototype.magazineList = function (search = null) {
   colorBarLeft = <%% 1.5, 1.5, 1.5, 1.5, 0 %%>;
   colorBarOpacity = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
 
-  staticPath = FRONTHOST + "/list_image/magaz";
+  staticPath = "https://" + FILEHOST + "/list_image/magaz";
 
   for (let magazine of targetMagazines) {
 

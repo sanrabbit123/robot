@@ -41,7 +41,7 @@ const MagazineDetailJs = function () {
   this.mother = new GeneralJs();
 }
 
-MagazineDetailJs.binaryPath = FRONTHOST + "/list_image/magaz";
+MagazineDetailJs.binaryPath = "https://" + FILEHOST + "/list_image/magaz";
 
 MagazineDetailJs.prototype.magazineInitBox = function () {
   const instance = this;

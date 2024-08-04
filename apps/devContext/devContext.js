@@ -162,7 +162,7 @@ DevContext.prototype.launching = async function () {
 
 
         
-
+    await findCode("list_image")
 
 
     

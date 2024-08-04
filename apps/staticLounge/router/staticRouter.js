@@ -6709,7 +6709,7 @@ StaticRouter.prototype.rou_post_orderPhotoSync = function () {
       await shellExec("mkdir", [ tempDir ]);
       await shellExec("cp", [ "-r", listImageDesktop, tempDir + "/" ]);
       await shellExec("mv", [ tempDir + "/" + pid, tempDir + "/portp" + pid ]);
-      await shellExec(`scp -r ${shellLink(tempDir + "/portp" + pid)} ${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/`);
+      await shellExec(`cp -r ${shellLink(tempDir + "/portp" + pid)} /home/ubuntu/samba/list_image/`);
       await shellExec("rm", [ "-rf", tempDir ]);
 
       fromArr = [];
@@ -8299,8 +8299,8 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
   
               await sleep(50);
   
-              await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/t" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/` ]);
-              await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/mobile/` ]);
+              await shellExec("cp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/t" + String(index) + pid + ".jpg"), staticConst + `/list_image/portp${pid}/` ]);
+              await shellExec("cp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg"), staticConst + `/list_image/portp${pid}/mobile/` ]);
   
               await shellExec("rm", [ "-rf", osTempFolder + "/i" + String(index) + pid + ".jpg" ]);
               await shellExec("rm", [ "-rf", osTempFolder + "/t" + String(index) + pid + ".jpg" ]);
@@ -8361,9 +8361,8 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
       
                   await sleep(500);
       
-                  await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/t" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/` ]);
-                  await sleep(500);
-                  await shellExec("scp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg"), `${address["frontinfo"]["user"]}@${address["frontinfo"]["host"]}:/${address["frontinfo"]["user"]}/www/list_image/portp${pid}/mobile/` ]);
+                  await shellExec("cp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/t" + String(index) + pid + ".jpg"), staticConst + `/list_image/portp${pid}/` ]);
+                  await shellExec("cp", [ "-r", (staticConst + "/corePortfolio/listImage/" + pid + "/mobile/mot" + String(index) + pid + ".jpg"), staticConst + `/list_image/portp${pid}/mobile/` ]);
         
                   await shellExec("rm", [ "-rf", osTempFolder + "/i" + String(index) + pid + ".jpg" ]);
                   await shellExec("rm", [ "-rf", osTempFolder + "/t" + String(index) + pid + ".jpg" ]);
