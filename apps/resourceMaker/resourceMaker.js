@@ -937,8 +937,6 @@ ResourceMaker.prototype.launching = async function (thisContents = []) {
     await shellExec(`mkdir ${shellLink(tempHome)}`);
 
     this.arr = thisContents;
-
-    this.portfolio_verification();
     tempRows = await back.getContentsArrByQuery({ "contents.portfolio.pid": this.p_id });
     if (tempRows.length !== 0) {
       throw new Error("invaild pid");
@@ -952,7 +950,6 @@ ResourceMaker.prototype.launching = async function (thisContents = []) {
       tempResponse = await headRequest(this.s3Host + "/corePortfolio/original/" + this.p_id + "/" + originalInitial + String(index) + this.p_id + ".jpg");
       tempResponse = tempResponse.statusCode;
     }
-
     console.log(index);
 
     //download images

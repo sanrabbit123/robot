@@ -96,7 +96,6 @@ BackWorker.prototype.setProposalToClient = async function (dateArray = [], optio
       }
 
       await back.updateClient([ whereQuery, updateQuery ], { selfMongo: MONGOC });
-      console.log(`update ${JSON.stringify(whereQuery)} client-proposal sync done`);
     }
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
