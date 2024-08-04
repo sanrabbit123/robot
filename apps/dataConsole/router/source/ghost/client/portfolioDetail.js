@@ -1209,6 +1209,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                   self.setAttribute("value", finalValue);
                   await instance.contentsBoxStatusRead(false);
                   removeByClass(editmodeClassName);
+                  window.location.reload();
                 }
               },
             },
@@ -1274,7 +1275,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
 
   createNode({
     mother: mainTong,
-    attribute: { value: customerStory, type: "story" },
+    attribute: { value: customerStory, type: "story", pid },
     event: {
       click: async function (e) {
         if (editable) {
@@ -1360,7 +1361,37 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
           });
           await instance.contentsBoxStatusRead();
         }
-      }
+      },
+      dragenter: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      },
+      dragover: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      },
+      dragleave: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      },
+      drop: async function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (editable) {
+          const pid = this.getAttribute("pid");
+          const toDom = this;
+          const { type } = JSON.parse(e.dataTransfer.getData("dragData"));
+          if (type === "text") {
+            const { index } = JSON.parse(e.dataTransfer.getData("dragData"));
+            const fromDom = document.querySelector("." + contentsDomClassName + String(index) + pid);
+            const [ , fromTitleDom, fromContentsDom ] = [ ...fromDom.children ];
+            toDom.firstChild.insertAdjacentHTML("beforeend", "<br><br>" + fromContentsDom.firstChild.textContent);
+            fromDom.remove();
+            await instance.contentsBoxStatusRead();
+            window.location.reload();
+          }
+        }
+      },
     },
     style: {
       width: desktop ? String(100) + '%' : withOut(contentsPadding * 2, ea),
@@ -1812,6 +1843,8 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
             const index = this.getAttribute("index");
             const toDom = this;
             const { type } = JSON.parse(e.dataTransfer.getData("dragData"));
+            let forceReload;
+            forceReload = false;
             if (type === "image") {
               const { gs: fromGs, index: fromIndex, source: fromSrc } = JSON.parse(e.dataTransfer.getData("dragData"));
               const fromDom = document.querySelector("." + imgDomClassName + String(fromIndex) + pid);
@@ -1829,9 +1862,15 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
             } else if (type === "text") {
               const { index } = JSON.parse(e.dataTransfer.getData("dragData"));
               const fromDom = document.querySelector("." + contentsDomClassName + String(index) + pid);
-              toDom.parentElement.insertBefore(fromDom, toDom.nextElementSibling);
+              const [ , fromTitleDom, fromContentsDom ] = [ ...fromDom.children ];
+              toDom.children[2].firstChild.insertAdjacentHTML("beforeend", "<br><br>" + fromContentsDom.firstChild.textContent);
+              fromDom.remove();
+              forceReload = true;
             }
             await instance.contentsBoxStatusRead();
+            if (forceReload) {
+              window.location.reload();
+            }
           }
         },
         dragenter: function (e) {
@@ -1852,14 +1891,27 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
             const index = Number(this.getAttribute("index"));
             const contents = instance.originalContentsArr[0];
             const thisCopied = objectDeepCopy(contents.contents.portfolio.contents.detail[index + 1]);
-            if (!e.altKey) {
+            if (e.ctrlKey) {
               thisCopied.photo = [];
               contents.contents.portfolio.contents.detail.splice(index + 1, 0, thisCopied);
-            } else {
+              instance.originalContentsArr = [ contents ];
+              await instance.portfolioContentsBox(contents);
+            } else if (e.altKey) {
               contents.contents.portfolio.contents.detail.splice(index + 1, 1);
+              instance.originalContentsArr = [ contents ];
+              await instance.portfolioContentsBox(contents);
+            } else {
+              if (instance.originalContentsArr[0].proid !== "") {
+                const [ project ] = await ajaxJson({ whereQuery: { proid: instance.originalContentsArr[0].proid } }, SECONDHOST + "/getProjects", { equal: true });
+                const thisRawContents = await GeneralJs.ajaxJson({
+                  mode: "get",
+                  proid: project.proid,
+                  desid: project.desid,
+                  cliid: project.cliid,
+                }, SECONDHOST + "/projectDesignerRaw", { equal: true });
+                GeneralJs.promptLong("디자이너 글 원본", thisRawContents);
+              }
             }
-            instance.originalContentsArr = [ contents ];
-            await instance.portfolioContentsBox(contents);
           }
         }
       },
