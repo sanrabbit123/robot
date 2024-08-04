@@ -6984,7 +6984,7 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
 
       await shellExec("rm", [ "-rf", portfolioConst ]);
       await shellExec("mkdir", [ portfolioConst ]);
-      keyFolderList = await shellExec("readFolder", [ keyFolder ]);
+      keyFolderList = await fileSystem("readFolder", [ keyFolder ]);
       for (let photoName of keyFolderList) {
         if (/\.jp[e]?g$/gi.test(photoName)) {
           await shellExec("mv", [ keyFolder + "/" + photoName, portfolioConst + "/" ]);
