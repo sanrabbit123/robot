@@ -603,7 +603,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const back = this.back;
   const address = this.address;
   const image = this.image;
-  const { fileSystem, shellExec, shellLink, sleep, messageSend, requestSystem, ghostFileUpload, mongo, mongocontentsinfo } = this.mother;
+  const { fileSystem, shellExec, shellLink, sleep, messageSend, requestSystem, ghostFileUpload, mongo, mongocontentsinfo, mongoinfo } = this.mother;
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
   const notePath = process.env.HOME + "/note/portfolio";
@@ -634,6 +634,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const kakaoInstance = new KakaoTalk();
   const drive = new GoogleDrive();
   const collection = "foreContents";
+  const selfCoreMongo = new mongo(mongoinfo);
   const selfMongo = new mongo(mongocontentsinfo);
   const garoseroParser = new GaroseroParser();
   let nextPid;
@@ -646,6 +647,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     }
     arr = new RawArray(arr);
     await selfMongo.connect();
+    await selfCoreMongo.connect();
     let folderPath;
     let designers, consoleInput, targetDesigner, googleFolderName;
     let folderPathList_raw, folderPathList;
@@ -679,8 +681,9 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
       if (/^c[0-9]/.test(client) && /^d[0-9]/.test(designer)) {
 
-        [ targetClient ] = await back.mongoRead("client", { cliid: client }, { selfMongo });
-        [ targetDesigner ] = await back.mongoRead("designer", { desid: designer }, { selfMongo });
+        [ targetClient ] = await back.mongoRead("client", { cliid: client }, { selfMongo: selfCoreMongo });
+        [ targetDesigner ] = await back.mongoRead("designer", { desid: designer }, { selfMongo: selfCoreMongo });
+
         await shellExec("rm", [ "-rf", `${process.cwd()}/temp/resource` ])
         await shellExec("cp", [ "-r", this.options.photo_dir, `${process.cwd()}/temp/` ]);
 
@@ -739,7 +742,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         await ghostFileUpload(fromArr, toArr);
         console.log(`forecast copy done`);
 
-        [ project ] = await back.mongoRead("project", { proid: rawObj.proid }, { selfMongo });
+        [ project ] = await back.mongoRead("project", { proid: rawObj.proid }, { selfMongo: selfCoreMongo });
         await back.updateProject([
           { proid: project.proid },
           {
@@ -747,7 +750,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
             "contents.share.client.photo": new Date(),
             "contents.share.designer.photo": new Date(),
           }
-        ]);
+        ], { selfMongo: selfCoreMongo });
         await back.mongoUpdate(collection, [ { pid: nextPid }, { proid: project.proid } ], { selfMongo });
         await back.mongoUpdate(collection, [ { pid: nextPid }, { exception: false } ], { selfMongo });
 
@@ -990,6 +993,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       }
     }
     await selfMongo.close();
+    await selfCoreMongo.close();
     return true;
   } catch (e) {
     console.log(e);
@@ -997,6 +1001,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       await back.mongoDelete(collection, { pid: nextPid }, { selfMongo });
     }
     await selfMongo.close();
+    await selfCoreMongo.close();
     return false;
   }
 }
