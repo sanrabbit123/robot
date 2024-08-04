@@ -6942,6 +6942,7 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
   const APP_PATH = ROBOT_PATH + "/apps";
   const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
   const filter = new PortfolioFilter();
+  const { staticConst, portfolioConst } = this;
   const back = this.back;
   let obj;
   obj = {};
@@ -6960,6 +6961,10 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
       const { key, proid, desid, cliid, rawBody } = equalJson(req.body);
       let client, designer, project;
       let thisSetName;
+      let keyFolderList;
+      let keyFolder;
+
+      keyFolder = `${staticConst}/temp/${key}`;
 
       [ client ] = await back.mongoRead("client", { cliid }, { selfMongo });
       [ designer ] = await back.mongoRead("designer", { desid }, { selfMongo });
@@ -6976,6 +6981,15 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
       }, {
         headers: { "Content-Type": "application/json" },
       });
+
+      await shellExec("rm", [ "-rf", portfolioConst ]);
+      await shellExec("mkdir", [ portfolioConst ]);
+      keyFolderList = await shellExec("readFolder", [ keyFolder ]);
+      for (let photoName of keyFolderList) {
+        if (/\.jp[e]?g$/gi.test(photoName)) {
+          await shellExec("mv", [ keyFolder + "/" + photoName, portfolioConst + "/" ]);
+        }
+      }
 
       await messageSend({ text: thisSetName + " 처리를 시작합니다. 슬렉에 처리 성공 또는 실패 알림이 올 때까지 다음 원본 사진 처리요청을 하지 말아주세요!", channel, voice });
       filter.rawToRaw([

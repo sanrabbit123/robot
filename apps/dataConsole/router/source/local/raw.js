@@ -3420,6 +3420,7 @@ RawJs.prototype.baseMaker = function () {
                   let finalDesignerContents;
                   let uniqueName;
                   let foreRows;
+                  let designers;
 
                   e.preventDefault();
                   if (e.dataTransfer.files.length > 0) {
@@ -3441,20 +3442,38 @@ RawJs.prototype.baseMaker = function () {
                         }
                         formData.append("toArr", JSON.stringify(toArr));
 
+                        loading = instance.mother.whiteProgressLoading();
+
                         designer = null;
                         client = null;
-                        while (designer === null) {
-                          designer = await GeneralJs.prompt("디자이너 이름을 알려주세요!");
+                        targetDesigner = null;
+                        while (targetDesigner === null) {
+                          while (designer === null) {
+                            designer = await GeneralJs.prompt("디자이너 이름을 알려주세요!");
+                            if (typeof designer === "string") {
+                              designers = await ajaxJson({ whereQuery: { designer: designer.trim() } }, SECONDHOST + "/getDesigners", { equal: true });
+                              if (designers.length === 0) {
+                                designer = null;
+                              } else if (designers.length > 1) {
+                                designer = await GeneralJs.prompt("디자이너 아이디로 알려주세요!");
+                                designers = await ajaxJson({ whereQuery: { desid: designer.trim() } }, SECONDHOST + "/getDesigners", { equal: true });
+                                if (designers.length === 0) {
+                                  designer = null;
+                                } else {
+                                  [ targetDesigner ] = designers;
+                                }
+                              } else {
+                                [ targetDesigner ] = designers;
+                              }
+                            }
+                          }
                         }
                         while (client === null) {
                           client = await GeneralJs.prompt("고객 이름을 알려주세요! (개인 포트폴리오의 경우 '없음')");
                         }
-                        designer = designer.trim();
+                        designer = targetDesigner.designer;
                         client = client.trim();
 
-                        loading = instance.mother.whiteProgressLoading();
-
-                        [ targetDesigner ] = await ajaxJson({ whereQuery: { designer: designer } }, SECONDHOST + "/getDesigners", { equal: true });
                         allProjects = await ajaxJson({ whereQuery: { desid: targetDesigner.desid } }, SECONDHOST + "/getProjects", { equal: true });
                         allClients = await ajaxJson({ whereQuery: { name: client } }, SECONDHOST + "/getClients", { equal: true });
                         allContentsArr = await ajaxJson({ whereQuery: { desid: targetDesigner.desid } }, SECONDHOST + "/getContents", { equal: true });

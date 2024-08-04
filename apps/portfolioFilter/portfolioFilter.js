@@ -619,7 +619,12 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       }
       for (let i of arr) {
         if (i.client === undefined || i.designer === undefined) {
-          throw new Error(errorMessage);
+          if (typeof i.cliid === "string" && typeof i.desid === "string" && typeof i.proid === "string") {
+            i.client = i.cliid;
+            i.designer = i.desid;
+          } else {
+            throw new Error(errorMessage);
+          }
         }
         this.push(i);
       }
