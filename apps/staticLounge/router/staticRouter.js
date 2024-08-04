@@ -6935,6 +6935,74 @@ StaticRouter.prototype.rou_post_rawToRawExcute = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_updateRawInfo = function () {
+  const instance = this;
+  const { equalJson, dateToString, messageSend, stringToDate, objectDeepCopy, requestSystem, mysqlQuery, sleep, fileSystem, shellExec, shellLink, linkToString, uniqueValue } = this.mother;
+  const ROBOT_PATH = process.cwd();
+  const APP_PATH = ROBOT_PATH + "/apps";
+  const PortfolioFilter = require(APP_PATH + "/portfolioFilter/portfolioFilter.js");
+  const filter = new PortfolioFilter();
+  const back = this.back;
+  let obj;
+  obj = {};
+  obj.link = [ "/updateRawInfo" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      const channel = "#502_sns_contents";
+      const voice = false;
+      const { key, proid, desid, cliid, rawBody } = equalJson(req.body);
+      let client, designer, project;
+      let thisSetName;
+
+      [ client ] = await back.mongoRead("client", { cliid }, { selfMongo });
+      [ designer ] = await back.mongoRead("designer", { desid }, { selfMongo });
+      [ project ] =  await back.mongoRead("project", { proid }, { selfMongo });
+      thisSetName = `${client.name} C, ${designer.designer} D 현장 원본 사진`;
+
+      await requestSystem("https://" + instance.address.secondinfo.host + ":3000/projectDesignerRaw", {
+        mode: "update",
+        desid: designer.desid,
+        proid: project.proid,
+        cliid: client.cliid,
+        type: "web",
+        body: rawBody.trim(),
+      }, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      await messageSend({ text: thisSetName + " 처리를 시작합니다. 슬렉에 처리 성공 또는 실패 알림이 올 때까지 다음 원본 사진 처리요청을 하지 말아주세요!", channel, voice });
+      filter.rawToRaw([
+        {
+          cliid,
+          desid,
+          proid,
+        }
+      ]).then((boo) => {
+        if (boo) {
+          return messageSend({ text: thisSetName + " 처리를 완료하였어요!", channel, voice });
+        } else {
+          return messageSend({ text: thisSetName + " 처리에 실패하였어요, 다시 시도해주세요!", channel, voice });
+        }
+      }).catch((err) => {
+        logger.error("Static lounge 서버 문제 생김 (rou_post_updateRawInfo): " + err.message).catch((e) => { console.log(e); })
+      });
+
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_updateRawInfo): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_rawUpdateSubject = function () {
   const instance = this;
   const { equalJson, dateToString, messageSend, stringToDate, objectDeepCopy, requestSystem, mysqlQuery, sleep, fileSystem, shellExec, shellLink, linkToString, uniqueValue } = this.mother;

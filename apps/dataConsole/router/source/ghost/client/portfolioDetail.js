@@ -1909,7 +1909,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                   desid: project.desid,
                   cliid: project.cliid,
                 }, SECONDHOST + "/projectDesignerRaw", { equal: true });
-                GeneralJs.promptLong("디자이너 글 원본", thisRawContents.contents.body);
+                await GeneralJs.promptLong("디자이너 글 원본", thisRawContents.contents.body);
               }
             }
           }
