@@ -4699,8 +4699,7 @@ ContentsJs.prototype.communicationRender = function () {
     },
     async function (e) {
       try {
-        const cards = [ ...document.querySelectorAll('.' + whiteCardClassName) ];
-        const pid = cards[cards.length - 1].getAttribute("pid");
+        const pid = document.querySelector('.' + whiteCardClassName).getAttribute("pid");
         if (typeof pid === "string") {
           await ajaxJson({ pid }, "https://" + FILEHOST + ":3001/rawUpdateSubject");
           window.alert("자동 발행이 시작되었습니다. 슬렉 안내와 알람을 따라주세요!");
