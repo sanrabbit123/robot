@@ -12502,7 +12502,7 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
               for (let i = 1; i < keywordsNumber + 1; i++) {
                 result = null;
                 while (typeof result !== "string") {
-                  result = await GeneralJs.promptLong(String(i) + "번째 키워드를 입력하세요!\n" + wordings);
+                  result = await GeneralJs.prompt(String(i) + "번째 키워드를 입력하세요!\n" + wordings);
                   if (typeof result === "string") {
                     result = result.trim();
                     if (result === "") {
@@ -12517,7 +12517,7 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
                 keywordsTong.push(result);
               }
 
-              await ajaxJson({ keywords: keywordsTong, desid }, BRIDGEHOST + "/designerRepresentativeKeywords");
+              await ajaxJson({ mode: "update", keywords: keywordsTong, desid }, BRIDGEHOST + "/designerRepresentativeKeywords");
               window.location.reload();
             }
           },
