@@ -7434,6 +7434,8 @@ DevContext.prototype.launching = async function () {
     // await audio.textToVoice("안녕하세요, 저의 이름은 서연입니다. 다음은 어피니티에 대한 설명입니다!");
 
 
+    
+
     // send sms
     // const name = "김희진";
     // const amount = 11_272_000;
