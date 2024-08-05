@@ -1497,11 +1497,7 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
   
       num = 1;
       for (let fileName of ghostPhotosFiles) {
-        if (/[가-힣\- ]/gi.test(fileName)) {
-          tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + global.encodeURI(fileName));
-        } else {
-          tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + fileName);
-        }
+        tempObject = await binaryRequest("https://" + instance.address.officeinfo.ghost.host + instance.address.officeinfo.ghost.file.office + "/" + global.encodeURI(photoFolderConst) + "/" + global.encodeURI(ghostPhotos) + "/" + pid + "/" + global.encodeURI(fileName.split(".").slice(0, -1).join(".")) + "." + fileName.split(".").slice(-1).join("."));
         await fileSystem(`writeBinary`, [ process.cwd() + "/temp/" + pid + "/thisContentsTarget" + String(num) + ".jpg", tempObject ]);
         console.log(`download success`);
         num++;
