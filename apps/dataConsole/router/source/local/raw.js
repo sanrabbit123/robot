@@ -3563,7 +3563,7 @@ RawJs.prototype.baseMaker = function () {
                           await ajaxForm(formData, S3HOST + ":3001" + "/generalFileUpload", loading.progress.firstChild);
                           await ajaxJson({
                             key: uniqueName,
-                            desid: project.desid,
+                            desid: targetDesigner.desid,
                             designer: designer,
                             individual: "true",
                             rawBody: finalDesignerContents,
@@ -3571,7 +3571,7 @@ RawJs.prototype.baseMaker = function () {
                           loading.remove();
                           removeByClass(tempInputClassName);
                           window.alert("원본 사진 처리가 시작되었습니다. 슬랙의 안내를 따라주세요!");
-                          
+
                         }
 
                       } else {
