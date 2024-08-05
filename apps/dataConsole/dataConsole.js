@@ -669,6 +669,9 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
     let generalPhpScript;
     let generalTargets;
     let generalTargetScript;
+    let commandTong;
+    let cpCommand, cpCommandTong;
+    let scpCommand2, scpCommand2Tong;
 
     motherTong = [];
     middleTong = [];
@@ -693,89 +696,62 @@ DataConsole.prototype.renderFrontPhp = async function (testMode = false) {
     console.log("middle :", middleTong);
     console.log("mother :", motherTong);
 
-    if (!testMode) {
+    commandTong = middleTong.map((p) => {
+      return `scp ${shellLink(p)} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/middle/`;
+    }).concat(motherTong.map((p) => {
+      return `scp ${shellLink(p)} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/`;
+    }));
+    command = commandTong.join(';');
 
-      command = middleTong.map((p) => {
-        return `scp ${p} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/middle/`;
-      }).concat(motherTong.map((p) => {
-        return `scp ${p} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/`;
-      })).join(';');
+    generalPhpScript = await fileSystem(`readString`, [ frontDir + "/general.php" ]);
+    generalPhpScript = generalPhpScript.replace(/__host__/gi, address.frontinfo.host);
+    generalPhpScript = generalPhpScript.replace(/__realHost__/gi, address.frontinfo.host);
+    generalPhpScript = generalPhpScript.replace(/__coreHost__/gi, address.officeinfo.core.ddns);
+    generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__logHost__/gi, address.officeinfo.ghost.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
+    generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
+    generalPhpScript = generalPhpScript.replace(/__officeIp__/gi, address.officeinfo.test.ip.outer);
+    generalPhpScript = generalPhpScript.replace(/__testHost__/gi, address.officeinfo.test.host);
+    generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
+    generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
+    generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
+    await fileSystem(`write`, [ `${process.cwd()}/temp/general.php`, generalPhpScript ]);
+    command += `;scp ${process.cwd()}/temp/general.php ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`;
 
-      generalPhpScript = await fileSystem(`readString`, [ frontDir + "/general.php" ]);
-      generalPhpScript = generalPhpScript.replace(/__host__/gi, address.frontinfo.host);
-      generalPhpScript = generalPhpScript.replace(/__realHost__/gi, address.frontinfo.host);
-      generalPhpScript = generalPhpScript.replace(/__coreHost__/gi, address.officeinfo.core.ddns);
-      generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__logHost__/gi, address.officeinfo.ghost.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
-      generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
-      generalPhpScript = generalPhpScript.replace(/__officeIp__/gi, address.officeinfo.test.ip.outer);
-      generalPhpScript = generalPhpScript.replace(/__testHost__/gi, address.officeinfo.test.host);
-      generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
-      generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
-      generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
-      await fileSystem(`write`, [ `${process.cwd()}/temp/general.php`, generalPhpScript ]);
-      command += `;scp ${process.cwd()}/temp/general.php ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`;
-
-      generalTargets = await fileSystem(`readDir`, [ frontGeneralDir ]);
-      generalTargets = generalTargets.filter((str) => { return str !== ".DS_Store" });
-      for (let target of generalTargets) {
-        generalTargetScript = await fileSystem(`readString`, [ frontGeneralDir + "/" + target ]);
-        await fileSystem(`write`, [ `${process.cwd()}/temp/${target}`, generalTargetScript ]);
-        command += `scp ${process.cwd()}/temp/${target} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`;
-      }
-
-      console.log(command);
-      input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
-      if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
-        if (!testMode) {
-          // worker update
-          await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
-        }
-        await shellExec(command);
-        console.log(`front update done`);
-      }
-
-    } else {
-
-      command = middleTong.map((p) => {
-        return `scp ${p} ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/middle/`;
-      }).concat(motherTong.map((p) => {
-        return `scp ${p} ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/`;
-      })).join(';');
-
-      generalPhpScript = await fileSystem(`readString`, [ testDir + "/general.php" ]);
-      generalPhpScript = generalPhpScript.replace(/__host__/gi, localTarget.host + ":" + String(localTarget.port));
-      generalPhpScript = generalPhpScript.replace(/__realHost__/gi, address.frontinfo.host);
-      generalPhpScript = generalPhpScript.replace(/__coreHost__/gi, address.officeinfo.core.ddns);
-      generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__logHost__/gi, localTarget.host + ":" + String(localTarget.log));
-      generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
-      generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
-      generalPhpScript = generalPhpScript.replace(/__officeIp__/gi, address.officeinfo.test.ip.outer);
-      generalPhpScript = generalPhpScript.replace(/__testHost__/gi, address.officeinfo.test.host);
-      generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
-      generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
-      generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
-      await fileSystem(`write`, [ `${process.cwd()}/temp/general.php`, generalPhpScript ]);
-      command += `;scp ${process.cwd()}/temp/general.php ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/;`;
-  
-      generalTargets = await fileSystem(`readDir`, [ frontGeneralDir ]);
-      generalTargets = generalTargets.filter((str) => { return str !== ".DS_Store" });
-      for (let target of generalTargets) {
-        generalTargetScript = await fileSystem(`readString`, [ frontGeneralDir + "/" + target ]);
-        await fileSystem(`write`, [ `${process.cwd()}/temp/${target}`, generalTargetScript ]);
-        command += `scp ${process.cwd()}/temp/${target} ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/;`;
-      }
-
-      await shellExec(command);
-
+    generalTargets = await fileSystem(`readDir`, [ frontGeneralDir ]);
+    generalTargets = generalTargets.filter((str) => { return str !== ".DS_Store" });
+    for (let target of generalTargets) {
+      generalTargetScript = await fileSystem(`readString`, [ frontGeneralDir + "/" + target ]);
+      await fileSystem(`write`, [ `${process.cwd()}/temp/${target}`, generalTargetScript ]);
+      command += `scp ${process.cwd()}/temp/${target} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`;
     }
 
+    cpCommandTong = (commandTong.filter((o) => { return /\.js[\'\"]? /.test(o) }).map((c) => {
+      const tempCommandArr = c.split(" ").map((s) => { return s.trim() });
+      const updatedJs = tempCommandArr[1].replace(/\/([a-zA-Z0-9_\- ]+\.js[\'\"]?)/g, (match, p1) => {
+        return "/updated_" + p1;
+      });
+      return tempCommandArr.slice(0, -1).join(" ").replace(/^scp/, "cp") + " " + updatedJs;
+    }));
+    cpCommand = cpCommandTong.join(";");
+    scpCommand2Tong = cpCommandTong.map((c) => {
+      const tempCommandArr = c.split(" ").map((s) => { return s.trim() });
+      return "scp " + tempCommandArr[2] + " " + `${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/middle/`;
+    });
+    scpCommand2 = scpCommand2Tong.join(";");
+
+    input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
+    if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
+      await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
+      await shellExec(command);
+      await shellExec(cpCommand);
+      await shellExec(scpCommand2);
+      console.log(`front update done`);
+    }
+    
   } catch (e) {
     console.log(e);
   }
@@ -835,6 +811,9 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
     let input;
     let phpScript;
     let generalPhpScript;
+    let commandTong;
+    let cpCommand, cpCommandTong;
+    let scpCommand2, scpCommand2Tong;
 
     motherTong = [];
     middleTong = [];
@@ -859,71 +838,52 @@ DataConsole.prototype.renderDesignerPhp = async function (testMode = false) {
     console.log("middle :", middleTong);
     console.log("mother :", motherTong);
 
-    if (!testMode) {
+    commandTong = middleTong.map((p) => {
+      return `scp ${p} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/middle/`;
+    }).concat(motherTong.map((p) => {
+      return `scp ${p} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/designer/`;
+    }));
+    command = commandTong.join(';');
 
-      command = middleTong.map((p) => {
-        return `scp ${p} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/middle/`;
-      }).concat(motherTong.map((p) => {
-        return `scp ${p} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/designer/`;
-      })).join(';');
-  
-      generalPhpScript = await fileSystem(`readString`, [ frontClientDir + "/general.php" ]);
-      generalPhpScript = generalPhpScript.replace(/__host__/gi, address.frontinfo.host);
-      generalPhpScript = generalPhpScript.replace(/__realHost__/gi, address.frontinfo.host);
-      generalPhpScript = generalPhpScript.replace(/__coreHost__/gi, address.officeinfo.core.ddns);
-      generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__logHost__/gi, address.officeinfo.ghost.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
-      generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
-      generalPhpScript = generalPhpScript.replace(/__officeIp__/gi, address.officeinfo.test.ip.outer);
-      generalPhpScript = generalPhpScript.replace(/__testHost__/gi, address.officeinfo.test.host);
-      generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
-      generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
-      generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
-      await fileSystem(`write`, [ `${process.cwd()}/temp/general.php`, generalPhpScript ]);
-      command += `;scp ${process.cwd()}/temp/general.php ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/designer/;`;
+    generalPhpScript = await fileSystem(`readString`, [ frontClientDir + "/general.php" ]);
+    generalPhpScript = generalPhpScript.replace(/__host__/gi, address.frontinfo.host);
+    generalPhpScript = generalPhpScript.replace(/__realHost__/gi, address.frontinfo.host);
+    generalPhpScript = generalPhpScript.replace(/__coreHost__/gi, address.officeinfo.core.ddns);
+    generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__logHost__/gi, address.officeinfo.ghost.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
+    generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
+    generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
+    generalPhpScript = generalPhpScript.replace(/__officeIp__/gi, address.officeinfo.test.ip.outer);
+    generalPhpScript = generalPhpScript.replace(/__testHost__/gi, address.officeinfo.test.host);
+    generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
+    generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
+    generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
+    await fileSystem(`write`, [ `${process.cwd()}/temp/general.php`, generalPhpScript ]);
+    command += `;scp ${process.cwd()}/temp/general.php ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/designer/;`;
 
-      console.log(command);
-      input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
-      if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
-        if (!testMode) {
-          // worker update
-          await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
-        }
-        await shellExec(command);
-        console.log(`front update done`);
-      }
+    cpCommandTong = (commandTong.filter((o) => { return /\.js[\'\"]? /.test(o) }).map((c) => {
+      const tempCommandArr = c.split(" ").map((s) => { return s.trim() });
+      const updatedJs = tempCommandArr[1].replace(/\/([a-zA-Z0-9_\- ]+\.js[\'\"]?)/g, (match, p1) => {
+        return "/updated_" + p1;
+      });
+      return tempCommandArr.slice(0, -1).join(" ").replace(/^scp/, "cp") + " " + updatedJs;
+    }));
+    cpCommand = cpCommandTong.join(";");
+    scpCommand2Tong = cpCommandTong.map((c) => {
+      const tempCommandArr = c.split(" ").map((s) => { return s.trim() });
+      return "scp " + tempCommandArr[2] + " " + `${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/middle/`;
+    });
+    scpCommand2 = scpCommand2Tong.join(";");
 
-    } else {
-
-      command = middleTong.map((p) => {
-        return `scp ${p} ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/middle/`;
-      }).concat(motherTong.map((p) => {
-        return `scp ${p} ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/designer/`;
-      })).join(';');
-  
-      generalPhpScript = await fileSystem(`readString`, [ testDir + "/general.php" ]);
-      generalPhpScript = generalPhpScript.replace(/__host__/gi, localTarget.host + ":" + String(localTarget.port));
-      generalPhpScript = generalPhpScript.replace(/__realHost__/gi, address.frontinfo.host);
-      generalPhpScript = generalPhpScript.replace(/__coreHost__/gi, address.officeinfo.core.ddns);
-      generalPhpScript = generalPhpScript.replace(/__secondHost__/gi, address.secondinfo.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__logHost__/gi, localTarget.host + ":" + String(localTarget.log));
-      generalPhpScript = generalPhpScript.replace(/__backHost__/gi, address.backinfo.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__contentsHost__/gi, address.contentsinfo.host + ":3000");
-      generalPhpScript = generalPhpScript.replace(/__constructHost__/gi, address.officeinfo.construct.host + ":8000");
-      generalPhpScript = generalPhpScript.replace(/__numbersHost__/gi, address.officeinfo.numbers.host + ":8000");
-      generalPhpScript = generalPhpScript.replace(/__officeIp__/gi, address.officeinfo.test.ip.outer);
-      generalPhpScript = generalPhpScript.replace(/__testHost__/gi, address.officeinfo.test.host);
-      generalPhpScript = generalPhpScript.replace(/__user__/gi, address.frontinfo.user);
-      generalPhpScript = generalPhpScript.replace(/__password__/gi, address.frontinfo.password);
-      generalPhpScript = generalPhpScript.replace(/__database__/gi, address.frontinfo.database);
-      await fileSystem(`write`, [ `${process.cwd()}/temp/general.php`, generalPhpScript ]);
-      command += `;scp ${process.cwd()}/temp/general.php ${localTarget.name}@${localTarget.ip}:${localTarget.path}/www/designer/;`;
-
+    input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
+    if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
+      await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
       await shellExec(command);
-
+      await shellExec(cpCommand);
+      await shellExec(scpCommand2);
+      console.log(`front update done`);
     }
 
   } catch (e) {

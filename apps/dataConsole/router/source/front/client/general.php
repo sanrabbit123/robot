@@ -121,7 +121,7 @@ class GeneralPhp {
     $html .= '</head><body>'."\n";
     $html .= '<div style="display: none;position: absolute;opacity: 0;font-size: 0px;">'.$this->hiddenHtml($hiddenString).'</div>'."\n";
     $html .= '<div id="totalcontents"></div>'."\n";
-    $html .= '<script src="/middle/'.$name.'.js"></script>'."\n";
+    $html .= '<script src="/middle/updated_'.$name.'.js"></script>'."\n";
 
     // naver
     $html .= '<script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>'."\n";

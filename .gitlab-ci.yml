@@ -1,4 +1,0 @@
-commit-log:
-  stage: build
-  script:
-    - /home/gitlab-runner/log.sh;
