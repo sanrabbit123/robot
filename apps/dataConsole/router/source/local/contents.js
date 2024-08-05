@@ -433,6 +433,7 @@ ContentsJs.prototype.spreadContents = async function (search = null, designerOnl
     num = 0;
     this.conidTong = [];
     this.contentsTong = contentsTong;
+
     for (let contents of contentsTong) {
 
       thisClient = clients.search("cliid", contents.cliid);

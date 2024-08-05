@@ -3474,70 +3474,78 @@ RawJs.prototype.baseMaker = function () {
                         designer = targetDesigner.designer;
                         client = client.trim();
 
-                        allProjects = await ajaxJson({ whereQuery: { desid: targetDesigner.desid } }, SECONDHOST + "/getProjects", { equal: true });
-                        allClients = await ajaxJson({ whereQuery: { name: client } }, SECONDHOST + "/getClients", { equal: true });
-                        allContentsArr = await ajaxJson({ whereQuery: { desid: targetDesigner.desid } }, SECONDHOST + "/getContents", { equal: true });
-                        foreRows = await ajaxJson({ mode: "get", desid: targetDesigner.desid }, CONTENTSHOST + "/foreContents", { equal: true });
+                        if (!/없음/gi.test(client)) {
 
-                        projects = allProjects.filter((obj) => {
-                          return allClients.map((client) => { return client.cliid }).includes(obj.cliid);
-                        }).filter((obj) => {
-                          return !allContentsArr.filter((c) => { return c.proid !== '' }).map(({ proid }) => { return proid }).includes(obj.proid);
-                        });
-                        if (projects.length > 1) {
-                          projects = projects.filter((obj) => {
-                            return !foreRows.filter((o) => { return typeof o.proid === "string" }).map(({ proid }) => { return proid }).includes(obj.proid);
+                          allProjects = await ajaxJson({ whereQuery: { desid: targetDesigner.desid } }, SECONDHOST + "/getProjects", { equal: true });
+                          allClients = await ajaxJson({ whereQuery: { name: client } }, SECONDHOST + "/getClients", { equal: true });
+                          allContentsArr = await ajaxJson({ whereQuery: { desid: targetDesigner.desid } }, SECONDHOST + "/getContents", { equal: true });
+                          foreRows = await ajaxJson({ mode: "get", desid: targetDesigner.desid }, CONTENTSHOST + "/foreContents", { equal: true });
+  
+                          projects = allProjects.filter((obj) => {
+                            return allClients.map((client) => { return client.cliid }).includes(obj.cliid);
+                          }).filter((obj) => {
+                            return !allContentsArr.filter((c) => { return c.proid !== '' }).map(({ proid }) => { return proid }).includes(obj.proid);
                           });
                           if (projects.length > 1) {
                             projects = projects.filter((obj) => {
-                              return obj.contents.photo.date.valueOf() <= (new Date()).valueOf() && obj.contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf()
+                              return !foreRows.filter((o) => { return typeof o.proid === "string" }).map(({ proid }) => { return proid }).includes(obj.proid);
                             });
-                            projects.sort((a, b) => { return a.contents.photo.date.valueOf() - b.contents.photo.date.valueOf() });
+                            if (projects.length > 1) {
+                              projects = projects.filter((obj) => {
+                                return obj.contents.photo.date.valueOf() <= (new Date()).valueOf() && obj.contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf()
+                              });
+                              projects.sort((a, b) => { return a.contents.photo.date.valueOf() - b.contents.photo.date.valueOf() });
+                            }
                           }
-                        }
-
-                        if (projects.length === 0) {
-                          window.alert("디자이너와 고객 이름을 정확히 입력해주세요!");
-                          loading.remove();
-                          removeByClass(tempInputClassName);
-                          return 0;
-                        } else {
-                          [ project ] = projects;
-                          thisRawContents = await ajaxJson({
-                            mode: "get",
-                            proid: project.proid,
-                            desid: project.desid,
-                            cliid: project.cliid,
-                          }, SECONDHOST + "/projectDesignerRaw", { equal: true });
-
-                          if (typeof thisRawContents === "object" && thisRawContents !== null) {
-                            if (typeof thisRawContents.contents?.body === "string") {
-                              while (typeof finalDesignerContents !== "string") {
-                                finalDesignerContents = await GeneralJs.promptVeryLong("디자이너 글을 수정해주세요!", thisRawContents.contents.body);
+  
+                          if (projects.length === 0) {
+                            window.alert("디자이너와 고객 이름을 정확히 입력해주세요!");
+                            loading.remove();
+                            removeByClass(tempInputClassName);
+                            return 0;
+                          } else {
+                            [ project ] = projects;
+                            thisRawContents = await ajaxJson({
+                              mode: "get",
+                              proid: project.proid,
+                              desid: project.desid,
+                              cliid: project.cliid,
+                            }, SECONDHOST + "/projectDesignerRaw", { equal: true });
+  
+                            if (typeof thisRawContents === "object" && thisRawContents !== null) {
+                              if (typeof thisRawContents.contents?.body === "string") {
+                                while (typeof finalDesignerContents !== "string") {
+                                  finalDesignerContents = await GeneralJs.promptVeryLong("디자이너 글을 수정해주세요!", thisRawContents.contents.body);
+                                }
+                                await ajaxForm(formData, S3HOST + ":3001" + "/generalFileUpload", loading.progress.firstChild);
+                                await ajaxJson({
+                                  key: uniqueName,
+                                  proid: project.proid,
+                                  desid: project.desid,
+                                  cliid: project.cliid,
+                                  rawBody: finalDesignerContents,
+                                }, S3HOST + ":3001" + "/updateRawInfo");
+                                loading.remove();
+                                removeByClass(tempInputClassName);
+                                window.alert("원본 사진 처리가 시작되었습니다. 슬랙의 안내를 따라주세요!");
+                              } else {
+                                window.alert("디자이너 글이 정상적으로 확인되지 않습니다.");
+                                loading.remove();
+                                removeByClass(tempInputClassName);
+                                return 0;
                               }
-                              await ajaxForm(formData, S3HOST + ":3001" + "/generalFileUpload", loading.progress.firstChild);
-                              await ajaxJson({
-                                key: uniqueName,
-                                proid: project.proid,
-                                desid: project.desid,
-                                cliid: project.cliid,
-                                rawBody: finalDesignerContents,
-                              }, S3HOST + ":3001" + "/updateRawInfo");
-                              loading.remove();
-                              removeByClass(tempInputClassName);
-                              window.alert("원본 사진 처리가 시작되었습니다. 슬랙의 안내를 따라주세요!");
                             } else {
                               window.alert("디자이너 글이 정상적으로 확인되지 않습니다.");
                               loading.remove();
                               removeByClass(tempInputClassName);
                               return 0;
                             }
-                          } else {
-                            window.alert("디자이너 글이 정상적으로 확인되지 않습니다.");
-                            loading.remove();
-                            removeByClass(tempInputClassName);
-                            return 0;
                           }
+
+                        } else {
+
+
+
                         }
 
                       } else {
