@@ -522,7 +522,10 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
   } catch (e) {
     await emergencyAlarm("GoogleAnalytics.getSessionObjectByCliid error : " + e.message);
     console.log(e);
-    return null;
+    return {
+      cliid,
+      users: [],
+    };;
   }
 }
 
