@@ -8610,7 +8610,7 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
                 }
 
                 await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-                await requestSystem("https://home-liaison.info:3000/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
+                await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
                 await messageSend({ text: pid + " 컨텐츠 보정본 업로드 및 대치를 완료하였어요, 순서 조정 및 에디팅을 해주세요\nlink : https://" + address.frontinfo.host + "/portdetail.php?pid=" + pid + "&edit=true", channel: "#502_sns_contents", voice: true });
 
               })().catch((err) => { console.log(err); })

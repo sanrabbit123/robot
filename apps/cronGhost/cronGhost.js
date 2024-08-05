@@ -131,7 +131,6 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
       { name: "coreDB", protocol: "http:", host: address.mongoinfo.host, port: generalPort, },
       { name: "pythonCloud", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
       { name: "backConsole", protocol: "https:", host: address.backinfo.host, port: generalPort, },
-      { name: "logConsole", protocol: "https:", host: address.testinfo.host, port: generalPort, },
       { name: "secondGhost", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
       { name: "transferLounge", protocol: "https:", host: address.transinfo.host, port: generalPort, },
       { name: "contentsLounge", protocol: "https:", host: address.contentsinfo.host, port: generalPort, },
