@@ -507,7 +507,7 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
           if (typeof row.info.pageTitle === "string" && row.info.pageTitle.trim() !== "") {
             historyFactor.title = row.info.pageTitle;
           } else {
-            historyFactor.title = (/\<title\>([^\<]*)\<\/title\>/gi.exec((await requestSystem("https://" + instance.address.frontinfo.host + row.info.requestUrl)).data))[1];
+            historyFactor.title = "";
           }
           historyFactor.event = row.action;
           userObj.history.push(historyFactor);
