@@ -815,7 +815,59 @@ PortfolioDetailJs.prototype.portfolioMainBox = function () {
             window.location.reload();
           }
         }
-      }
+      },
+      contextmenu: async function (e) {
+        e.preventDefault();
+        let thisAddress, thisRegion;
+        let requestsNumber;
+        let num;
+        if (editable) {
+          if (instance.originalContentsArr[0] !== undefined) {
+
+            
+
+
+
+            const [ client ] = await ajaxJson({ whereQuery: { cliid: instance.originalContentsArr[0].cliid } }, SECONDHOST + "/getClients", { equal: true });
+            const projects = await ajaxJson({ whereQuery: { cliid: instance.originalContentsArr[0].cliid } }, SECONDHOST + "/getProjects", { equal: true });
+            const [ project ] = projects.filter((p) => { return p.desid !== "" });
+
+            requestsNumber = 0;
+            num = 0;
+            for (let { request } of client.requests) {
+              if (request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+                requestsNumber = num;
+                break;
+              }
+              num = num + 1;
+            }
+
+            thisAddress = null;
+            thisRegion = null;
+            while (thisAddress === null) {
+              thisAddress = await GeneralJs.prompt("아파트 명을 알려주세요!\n" + client.requests[requestsNumber].request.space.address)
+            }
+            while (thisRegion === null) {
+              thisRegion = await GeneralJs.prompt("지역 명을 알려주세요!\n" + client.requests[requestsNumber].request.space.address)
+            }
+
+            await ajaxJson({ address: thisAddress, region: thisRegion, pid: instance.originalContentsArr[0].contents.portfolio.pid }, LOGHOST + "/updateAddressRegion");
+            window.location.reload();
+          } else {
+            thisAddress = null;
+            thisRegion = null;
+            while (thisAddress === null) {
+              thisAddress = await GeneralJs.prompt("아파트 명을 알려주세요!");
+            }
+            while (thisRegion === null) {
+              thisRegion = await GeneralJs.prompt("지역 명을 알려주세요!");
+            }
+
+            await ajaxJson({ address: thisAddress, region: thisRegion, pid: instance.originalContentsArr[0].contents.portfolio.pid }, LOGHOST + "/updateAddressRegion");
+            window.location.reload();
+          }
+        }
+      },
     },
     style: {
       display: desktop ? "block" : "none",

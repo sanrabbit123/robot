@@ -2098,7 +2098,7 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
                 });
                 if (thisContents !== undefined) {
                   if (thisContents.cliid !== "") {
-                    blankHref(BACKHOST + "/client?cliid=" + thisContents.cliid);
+                    blankHref(BACKHOST + "/project?proid=" + thisContents.proid);
                   }
                 }
               } else if (type === "foreContents") {
@@ -2108,7 +2108,7 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
                 if (thisContents !== undefined) {
                   thisProject = instance.projects.find((o) => { return o.proid === thisContents.proid });
                   if (thisProject !== undefined) {
-                    blankHref(BACKHOST + "/client?cliid=" + thisProject.cliid);
+                    blankHref(BACKHOST + "/project?proid=" + thisProject.proid);
                   }
                 }
               }
