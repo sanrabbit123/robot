@@ -1044,7 +1044,6 @@ SecondRouter.prototype.rou_post_projectDesignerRaw = function () {
       } else {
         body = "";
       }
-
       if (typeof req.body.type === "string") {
         type = req.body.type;
       } else {
