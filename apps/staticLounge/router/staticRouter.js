@@ -6963,7 +6963,6 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
             } else {
               return messageSend({ text: thisSetName + " 처리에 실패하였어요, 다시 시도해주세요!", channel, voice });
             }
-
           }).then(() => {
             return sleep(60 * 1000 * 3);
           }).then(() => {
@@ -7021,7 +7020,6 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
             } else {
               return messageSend({ text: thisSetName + " 처리에 실패하였어요, 다시 시도해주세요!", channel, voice });
             }
-
           }).then(() => {
             return sleep(60 * 1000 * 3);
           }).then(() => {
