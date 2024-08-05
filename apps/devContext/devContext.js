@@ -6955,11 +6955,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-
-
-
-
+  
 
     // const result = [
     //   {
@@ -7377,7 +7373,6 @@ DevContext.prototype.launching = async function () {
     // let clientName, designerName;
     // let project;
 
-
     // clientName = "정가희";
     // designerName = "박미연";
 
@@ -7412,7 +7407,6 @@ DevContext.prototype.launching = async function () {
     // get photo folder
     // const drive = new GoogleDrive();
     // await drive.get_folder_inPython("https://drive.google.com/drive/folders/1RD8A65ghQe4oPruXYJ4Koieny0n3jYO9", "test");
-
 
 
     // aspirant to designer
