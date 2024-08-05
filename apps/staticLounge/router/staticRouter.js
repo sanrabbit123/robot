@@ -4665,7 +4665,7 @@ StaticRouter.prototype.rou_post_printComplex = function () {
       }).then(() => {
         if (mode === "general") {
           // return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
-          // return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+          // return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
         } else if (mode === "update") {
           if (naverId !== "") {
             logger.log("Static lounge 네이버 부동산 아이디 찾고 업데이트 성공함 : " + cliid + " / " + naverId).catch((err) => {
@@ -4843,11 +4843,11 @@ StaticRouter.prototype.rou_post_complexReport = function () {
       let foundProject;
 
       thisIdArr = motherClients.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" });
-      response = await requestSystem("https://office.home-liaison.net:3001/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
+      response = await requestSystem("https://office.home-liaison.net:3000/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
       consultingAparts = equalJson(JSON.stringify(response.data.filter((str) => { return str !== null })));
 
       thisIdArr = motherContracts.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" });
-      response = await requestSystem("https://office.home-liaison.net:3001/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
+      response = await requestSystem("https://office.home-liaison.net:3000/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
       contractAparts = equalJson(JSON.stringify(response.data.filter((str) => { return str !== null })));
 
       usersArr = equalJson(JSON.stringify(motherClientsAnalytics.map((o) => { return o.data.detail }).flat()));
@@ -6855,7 +6855,7 @@ StaticRouter.prototype.rou_post_rawToRaw = function () {
                 num++;
               }
 
-              await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/rawToRawExcute", {
+              await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/rawToRawExcute", {
                 designer, client
               }, { headers: { "Content-Type": "application/json" } });
 
@@ -7044,7 +7044,7 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
             }
           ]).then((pid) => {
             if (typeof pid === "string") {
-              return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawUpdateSubject", {
+              return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/rawUpdateSubject", {
                 pid,
                 individual: ("individual_" + nowValue),
               }, { headers: { "Content-Type": "application/json" } });
@@ -7104,7 +7104,7 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
             }
           ]).then((pid) => {
             if (typeof pid === "string") {
-              return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawUpdateSubject", {
+              return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/rawUpdateSubject", {
                 pid
               }, { headers: { "Content-Type": "application/json" } });
             } else {

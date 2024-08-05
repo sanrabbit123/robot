@@ -1546,7 +1546,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                       formData.append("type", "file");
                       formData.append("multiple", "false");
                       formData.append("replacePhoto0", e.dataTransfer.files[0]);
-                      await ajaxForm(formData, "https://" + FILEHOST + ":3001/replaceContentsPhoto", loading.progress);
+                      await ajaxForm(formData, "https://" + FILEHOST + ":3000/replaceContentsPhoto", loading.progress);
                       GeneralJs.sleep(0).then(() => {
                         loading.remove();
                         if (GeneralJs.returnGet().eraseCache === undefined) {
@@ -1571,7 +1571,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                           formData.append("replacePhoto" + String(fileNum), file);
                           fileNum++;
                         }
-                        await ajaxForm(formData, "https://" + FILEHOST + ":3001/replaceContentsPhoto", loading.progress);
+                        await ajaxForm(formData, "https://" + FILEHOST + ":3000/replaceContentsPhoto", loading.progress);
                         GeneralJs.sleep(0).then(() => {
                           loading.remove();
                           window.alert("보정본 업데이트가 시작되었습니다. 완료되면 슬렉으로 알려드립니다!");

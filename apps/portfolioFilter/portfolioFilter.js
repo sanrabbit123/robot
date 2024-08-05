@@ -728,7 +728,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       clientObj = targetClient;
       designerObj = targetDesigner;
 
-      await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
+      await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
 
       await shellExec(`rm -rf ${shellLink(folderPath)};`);
 
@@ -1180,7 +1180,7 @@ PortfolioFilter.prototype.updateSubject = async function (pid, individualKey = n
     }
 
     await sleep(500);
-    await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawToContents", {
+    await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/rawToContents", {
       pid,
       proid
     }, { headers: { "Content-Type": "application/json" } });
@@ -1378,7 +1378,7 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
       await resource.launching(noteArr);
   
       await messageSend({ text: `${thisDesigner.designer} 디자이너 ${thisClient.name} 고객님 포트폴리오 컨텐츠를 자동으로 웹에 업로드하였습니다. 편집을 시작해주세요! 편집이 완료되어야 발행이 정상적으로 완료됩니다.\nlink : ${portfolioLink + pid}&edit=true`, channel });
-      await requestSystem("https://" + address.officeinfo.ghost.host + ":3001/syncEvaluationContents", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
+      await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/syncEvaluationContents", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
   
     } else {
 

@@ -4724,7 +4724,7 @@ ContentsJs.prototype.communicationRender = function () {
       try {
         const pid = instance.currentPid;
         if (typeof pid === "string") {
-          await ajaxJson({ pid }, "https://" + FILEHOST + ":3001/rawUpdateSubject");
+          await ajaxJson({ pid }, "https://" + FILEHOST + ":3000/rawUpdateSubject");
           window.alert("자동 발행이 시작되었습니다. 슬렉 안내와 알람을 따라주세요!");
         }
       } catch (e) {
@@ -4778,7 +4778,7 @@ ContentsJs.prototype.launching = async function () {
     loading = await this.mother.loadingRun();
 
     this.contentsView = await ajaxJson({ mode: "pick" }, CONTENTSHOST + "/getContentsView", { equal: true });
-    videoFiles = await ajaxJson({ path: "/corePortfolio/rawVideo" }, S3HOST + ":3001/listFiles", { equal: true });
+    videoFiles = await ajaxJson({ path: "/corePortfolio/rawVideo" }, S3HOST + ":3000/listFiles", { equal: true });
     this.videoFiles = videoFiles.map((o) => {
       const arr = o.fileName.split("__split__");
       o.proid = arr[0];

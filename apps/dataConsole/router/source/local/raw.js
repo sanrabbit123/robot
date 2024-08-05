@@ -462,7 +462,7 @@ RawJs.prototype.imagePreviewBox = function () {
                       files.push({ absolute, type: "file" });
                     }
 
-                    response = await ajaxJson({ files }, S3HOST + ":3001/filesToZip");
+                    response = await ajaxJson({ files }, S3HOST + ":3000/filesToZip");
                     await downloadFile(instance.absoluteParsing(response.link), null, loading.progress.firstChild);
 
                     loading.remove();
@@ -626,7 +626,7 @@ RawJs.prototype.imagePreviewBox = function () {
                         description,
                         member: thisMemberId,
                         images: targets,
-                      }, S3HOST + ":3001/imageTransfer");
+                      }, S3HOST + ":3000/imageTransfer");
                       sendId = response.id;
   
                       if (typeof sendId !== "string") {
@@ -638,7 +638,7 @@ RawJs.prototype.imagePreviewBox = function () {
                       response = await ajaxJson({
                         mode: "send",
                         id: sendId,
-                      }, S3HOST + ":3001/imageTransfer");
+                      }, S3HOST + ":3000/imageTransfer");
 
                       loading.remove();
 
@@ -823,7 +823,7 @@ RawJs.prototype.imagePreviewBox = function () {
                         member: thisMemberId,
                         images: targets,
                         proid: thisProid,
-                      }, S3HOST + ":3001/imageTransfer");
+                      }, S3HOST + ":3000/imageTransfer");
                       sendId = response.id;
   
                       if (typeof sendId !== "string") {
@@ -869,7 +869,7 @@ RawJs.prototype.imagePreviewBox = function () {
                       files.push({ absolute, type: "file" });
                     }
 
-                    response = await ajaxJson({ files }, S3HOST + ":3001/filesToZip");
+                    response = await ajaxJson({ files }, S3HOST + ":3000/filesToZip");
                     await downloadFile(instance.absoluteParsing(response.link), null, loading.progress.firstChild);
 
                     loading.remove();
@@ -1217,7 +1217,7 @@ RawJs.prototype.baseMaker = function () {
             dom.parentNode.removeChild(dom);
           }
           if (folderName !== null) {
-            await ajaxJson({ path: instance.path + "/" + folderName.replace(/\/\?\!\@\#\$\%\^\&\*\(\)\[\]\{\}\<\>\;\'\"\,\~\\\|\=\+\-\./gi, '').replace(/ /g, "_").replace(/\n/g, "_").replace(/\t/g, "_") }, S3HOST + ":3001/makeFolder");
+            await ajaxJson({ path: instance.path + "/" + folderName.replace(/\/\?\!\@\#\$\%\^\&\*\(\)\[\]\{\}\<\>\;\'\"\,\~\\\|\=\+\-\./gi, '').replace(/ /g, "_").replace(/\n/g, "_").replace(/\t/g, "_") }, S3HOST + ":3000/makeFolder");
           }
           removeByClass(contextmenuClassName);
           instance.fileLoad(instance.path).catch((err) => { console.log(err) });
@@ -1278,7 +1278,7 @@ RawJs.prototype.baseMaker = function () {
                     formData.append("toArr", JSON.stringify(toArr));
 
                     loading = instance.mother.whiteProgressLoading();
-                    res = await ajaxForm(formData, S3HOST + ":3001" + "/generalFileUpload", loading.progress.firstChild);
+                    res = await ajaxForm(formData, S3HOST + ":3000" + "/generalFileUpload", loading.progress.firstChild);
                     loading.remove();
   
                   }
@@ -1330,12 +1330,12 @@ RawJs.prototype.baseMaker = function () {
             [ thisDom ] = selected;
             absolute = thisDom.getAttribute("absolute")
             if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /link$/.test(absolute) || /odxlsx$/.test(absolute) || /oddocx$/.test(absolute) || /odpptx$/.test(absolute)) {
-              fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3001/readFile", { equal: true });
+              fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
               blankHref(JSON.parse(fileContents.contents).url);
             } else if (/drawio$/.test(absolute)) {
               loading = instance.mother.grayLoading();
-              ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
-              ({ url } = await ajaxJson({ mode: "get", name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3001/parsingDrawio", { equal: true }));
+              ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+              ({ url } = await ajaxJson({ mode: "get", name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/parsingDrawio", { equal: true }));
               if (typeof url === "string") {
                 blankHref(url);
               }
@@ -1380,7 +1380,7 @@ RawJs.prototype.baseMaker = function () {
             [ thisDom ] = selected;
             absolute = thisDom.getAttribute("absolute")
             if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute)) {
-              fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3001/readFile", { equal: true });
+              fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
               await window.navigator.clipboard.writeText(JSON.parse(fileContents.contents).url.replace(/drivesdk$/i, "sharing"));
               instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
             }
@@ -1437,17 +1437,17 @@ RawJs.prototype.baseMaker = function () {
               for (let { absolute, type } of files) {
                 if (type === "file") {
                   if (/odxlsx$/.test(absolute) || /oddocx$/.test(absolute) || /odpptx$/.test(absolute)) {
-                    fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3001/readFile", { equal: true });
-                    serverResponse = await ajaxJson({ id: JSON.parse(fileContents.contents).id }, S3HOST + ":3001/downloadUrlFromOneDrive", { equal: true });
+                    fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
+                    serverResponse = await ajaxJson({ id: JSON.parse(fileContents.contents).id }, S3HOST + ":3000/downloadUrlFromOneDrive", { equal: true });
                     blankHref(stringToLink(serverResponse.url));
                   } else {
-                    response = await ajaxJson({ files }, S3HOST + ":3001/filesToZip");
+                    response = await ajaxJson({ files }, S3HOST + ":3000/filesToZip");
                     await downloadFile(instance.absoluteParsing(response.link), null, loading.progress.firstChild);
                   }
                 }
               }
             } else {
-              response = await ajaxJson({ files }, S3HOST + ":3001/filesToZip");
+              response = await ajaxJson({ files }, S3HOST + ":3000/filesToZip");
               await downloadFile(instance.absoluteParsing(response.link), null, loading.progress.firstChild);
             }
 
@@ -1523,7 +1523,7 @@ RawJs.prototype.baseMaker = function () {
             if (typeof newName === "string") {
               newName = newName.replace(/ /gi, "_").replace(/\.[a-zA-Z0-9]+$/i, '').replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\-\<\>\.]/gi, '');
               absolute = thisDom.getAttribute("absolute")
-              await ajaxJson({ path: absolute, name: newName }, S3HOST + ":3001/renameFile");
+              await ajaxJson({ path: absolute, name: newName }, S3HOST + ":3000/renameFile");
             }
           }
 
@@ -1561,7 +1561,7 @@ RawJs.prototype.baseMaker = function () {
                   directory = (dom.getAttribute("directory") === "true");
                   files.push({ absolute, type: (directory ? "folder" : "file") });
                 }
-                await ajaxJson({ files }, S3HOST + ":3001/deleteFile");
+                await ajaxJson({ files }, S3HOST + ":3000/deleteFile");
               }
             }
           }
@@ -1595,18 +1595,18 @@ RawJs.prototype.baseMaker = function () {
           let boo;
           if (typeof newPageName === "string" && newPageName !== "") {
             loading = instance.mother.grayLoading();
-            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
             if (id === undefined) {
               window.alert("해당 폴더에는 엑셀을 만들 수 없습니다!");
             } else {
               name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
-              response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3001/createNewExcel");
+              response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3000/createNewExcel");
               if (response.message === "success" && typeof response.editId === "string" && typeof response.editUrl === "string") {
                 await sleep(500);
                 blankHref(stringToLink(response.editUrl));
                 do {
                   await sleep(1000);
-                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3001/listFiles", { equal: true });
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
                   boo = newList.map((obj) => { return obj.fileName }).includes(name + ".odxlsx");
                 } while (!boo)
               } else {
@@ -1649,18 +1649,18 @@ RawJs.prototype.baseMaker = function () {
           let boo;
           if (typeof newPageName === "string" && newPageName !== "") {
             loading = instance.mother.grayLoading();
-            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
             if (id === undefined) {
               window.alert("해당 폴더에는 워드를 만들 수 없습니다!");
             } else {
               name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
-              response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3001/createNewWord");
+              response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3000/createNewWord");
               if (response.message === "success" && typeof response.editId === "string" && typeof response.editUrl === "string") {
                 await sleep(500);
                 blankHref(stringToLink(response.editUrl));
                 do {
                   await sleep(1000);
-                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3001/listFiles", { equal: true });
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
                   boo = newList.map((obj) => { return obj.fileName }).includes(name + ".oddocx");
                 } while (!boo)
               } else {
@@ -1703,18 +1703,18 @@ RawJs.prototype.baseMaker = function () {
           let boo;
           if (typeof newPageName === "string" && newPageName !== "") {
             loading = instance.mother.grayLoading();
-            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
             if (id === undefined) {
               window.alert("해당 폴더에는 파워포인트를 만들 수 없습니다!");
             } else {
               name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
-              response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3001/createNewPowerPoint");
+              response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3000/createNewPowerPoint");
               if (response.message === "success" && typeof response.editId === "string" && typeof response.editUrl === "string") {
                 await sleep(500);
                 blankHref(stringToLink(response.editUrl));
                 do {
                   await sleep(1000);
-                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3001/listFiles", { equal: true });
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
                   boo = newList.map((obj) => { return obj.fileName }).includes(name + ".odpptx");
                 } while (!boo)
               } else {
@@ -1758,18 +1758,18 @@ RawJs.prototype.baseMaker = function () {
           let boo;
           if (typeof newSheetsName === "string" && newSheetsName !== "") {
             loading = instance.mother.grayLoading();
-            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
             if (id === undefined) {
               window.alert("해당 폴더에는 시트를 만들 수 없습니다!");
             } else {
               name = newSheetsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
-              response = await ajaxJson({ name, parent: id }, S3HOST + ":3001/createNewSheets");
+              response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewSheets");
               if (response.message === "success" && typeof response.sheetsId === "string") {
                 await sleep(500);
                 blankHref("https://docs.google.com/spreadsheets/d/" + response.sheetsId + "/edit?usp=sharing");
                 do {
                   await sleep(1000);
-                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3001/listFiles", { equal: true });
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
                   boo = newList.map((obj) => { return obj.fileName }).includes(name + ".gdsheet");
                 } while (!boo)
               } else {
@@ -1812,18 +1812,18 @@ RawJs.prototype.baseMaker = function () {
           let boo;
           if (typeof newDocsName === "string" && newDocsName !== "") {
             loading = instance.mother.grayLoading();
-            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
             if (id === undefined) {
               window.alert("해당 폴더에는 문서를 만들 수 없습니다!");
             } else {
               name = newDocsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
-              response = await ajaxJson({ name, parent: id }, S3HOST + ":3001/createNewDocs");
+              response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewDocs");
               if (response.message === "success" && typeof response.docsId === "string") {
                 await sleep(500);
                 blankHref("https://docs.google.com/document/d/" + response.docsId + "/edit?usp=sharing");
                 do {
                   await sleep(1000);
-                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3001/listFiles", { equal: true });
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
                   boo = newList.map((obj) => { return obj.fileName }).includes(name + ".gddoc");
                 } while (!boo)
               } else {
@@ -1867,18 +1867,18 @@ RawJs.prototype.baseMaker = function () {
           let boo;
           if (typeof newSlidesName === "string" && newSlidesName !== "") {
             loading = instance.mother.grayLoading();
-            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
             if (id === undefined) {
               window.alert("해당 폴더에는 슬라이드를 만들 수 없습니다!");
             } else {
               name = newSlidesName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
-              response = await ajaxJson({ name, parent: id }, S3HOST + ":3001/createNewSlides");
+              response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewSlides");
               if (response.message === "success" && typeof response.slidesId === "string") {
                 await sleep(500);
                 blankHref("https://docs.google.com/presentation/d/" + response.slidesId + "/edit?usp=sharing");
                 do {
                   await sleep(1000);
-                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3001/listFiles", { equal: true });
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
                   boo = newList.map((obj) => { return obj.fileName }).includes(name + ".gdslides");
                 } while (!boo)
               } else {
@@ -1921,18 +1921,18 @@ RawJs.prototype.baseMaker = function () {
           let boo;
           if (typeof newFormsName === "string" && newFormsName !== "") {
             loading = instance.mother.grayLoading();
-            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
             if (id === undefined) {
               window.alert("해당 폴더에는 설문지를 만들 수 없습니다!");
             } else {
               name = newFormsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
-              response = await ajaxJson({ name, parent: id }, S3HOST + ":3001/createNewForms");
+              response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewForms");
               if (response.message === "success" && typeof response.formsId === "string") {
                 await sleep(500);
                 blankHref("https://docs.google.com/forms/d/" + response.formsId + "/edit?usp=sharing");
                 do {
                   await sleep(1000);
-                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3001/listFiles", { equal: true });
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
                   boo = newList.map((obj) => { return obj.fileName }).includes(name + ".gdform");
                 } while (!boo)
               } else {
@@ -1975,18 +1975,18 @@ RawJs.prototype.baseMaker = function () {
           let boo;
           if (typeof newPageName === "string" && newPageName !== "") {
             loading = instance.mother.grayLoading();
-            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
             if (id === undefined) {
               window.alert("해당 폴더에는 노션 페이지를 만들 수 없습니다!");
             } else {
               name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
-              response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3001/createNewNotionPage");
+              response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3000/createNewNotionPage");
               if (response.message === "success" && typeof response.editId === "string" && typeof response.workspace === "string") {
                 await sleep(500);
                 blankHref("https://www.notion.so/" + response.workspace + "/" + response.editId);
                 do {
                   await sleep(1000);
-                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3001/listFiles", { equal: true });
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
                   boo = newList.map((obj) => { return obj.fileName }).includes(name + ".ntpage");
                 } while (!boo)
               } else {
@@ -2029,18 +2029,18 @@ RawJs.prototype.baseMaker = function () {
           let boo;
           if (typeof newPageName === "string" && newPageName !== "") {
             loading = instance.mother.grayLoading();
-            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
             if (id === undefined) {
               window.alert("해당 폴더에는 칸반보드를 만들 수 없습니다!");
             } else {
               name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
-              response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3001/createNewNotionKanban");
+              response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3000/createNewNotionKanban");
               if (response.message === "success" && typeof response.editId === "string" && typeof response.workspace === "string") {
                 await sleep(500);
                 blankHref("https://www.notion.so/" + response.workspace + "/" + response.editId);
                 do {
                   await sleep(1000);
-                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3001/listFiles", { equal: true });
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
                   boo = newList.map((obj) => { return obj.fileName }).includes(name + ".ntkanban");
                 } while (!boo)
               } else {
@@ -2083,18 +2083,18 @@ RawJs.prototype.baseMaker = function () {
           let boo;
           if (typeof newPageName === "string" && newPageName !== "") {
             loading = instance.mother.grayLoading();
-            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
             if (id === undefined) {
               window.alert("해당 폴더에는 다이어그램을 만들 수 없습니다!");
             } else {
               name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
-              response = await ajaxJson({ mode: "create", name, parent: id }, S3HOST + ":3001/parsingDrawio");
+              response = await ajaxJson({ mode: "create", name, parent: id }, S3HOST + ":3000/parsingDrawio");
               if (typeof response.url === "string") {
                 await sleep(500);
                 blankHref(response.url);
                 do {
                   await sleep(1000);
-                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3001/listFiles", { equal: true });
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
                   boo = newList.map((obj) => { return obj.fileName }).includes(name + ".drawio");
                 } while (!boo)
               } else {
@@ -2139,17 +2139,17 @@ RawJs.prototype.baseMaker = function () {
           let boo;
           if (typeof newPageName === "string" && newPageName !== "") {
             loading = instance.mother.grayLoading();
-            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
             if (id === undefined) {
               window.alert("해당 폴더에는 링크 파일을 만들 수 없습니다!");
             } else {
               name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
-              response = await ajaxJson({ name, parent: instance.path, link: linkToString(thisHref) }, S3HOST + ":3001/createNewLinkFile");
+              response = await ajaxJson({ name, parent: instance.path, link: linkToString(thisHref) }, S3HOST + ":3000/createNewLinkFile");
               if (response.message === "success") {
                 await sleep(500);
                 do {
                   await sleep(1000);
-                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3001/listFiles", { equal: true });
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
                   boo = newList.map((obj) => { return obj.fileName }).includes(name + ".link");
                 } while (!boo)
               } else {
@@ -2187,9 +2187,9 @@ RawJs.prototype.baseMaker = function () {
           const loading = instance.mother.grayLoading();
           let id;
           if (instance.selected.length === 0) {
-            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
           } else {
-            ({ id } = await ajaxJson({ path: instance.selected[0].getAttribute("absolute") }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.selected[0].getAttribute("absolute") }, S3HOST + ":3000/findFolderId", { equal: true }));
           }
           loading.remove();
           if (id === undefined) {
@@ -2261,9 +2261,9 @@ RawJs.prototype.baseMaker = function () {
           const loading = instance.mother.grayLoading();
           let id;
           if (instance.selected.length === 0) {
-            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
           } else {
-            ({ id } = await ajaxJson({ path: instance.selected[0].getAttribute("absolute") }, S3HOST + ":3001/findFolderId", { equal: true }));
+            ({ id } = await ajaxJson({ path: instance.selected[0].getAttribute("absolute") }, S3HOST + ":3000/findFolderId", { equal: true }));
           }
           loading.remove();
           if (id === undefined) {
@@ -2308,7 +2308,7 @@ RawJs.prototype.baseMaker = function () {
             absolute = thisDom.getAttribute("absolute");
 
             loading = instance.mother.grayLoading();
-            response = await ajaxJson({ target: absolute, path: instance.path }, S3HOST + ":3001/microsoftConvert", { equal: true });
+            response = await ajaxJson({ target: absolute, path: instance.path }, S3HOST + ":3000/microsoftConvert", { equal: true });
             await sleep(500);
             blankHref(response.url);
             loading.remove();
@@ -2739,7 +2739,7 @@ RawJs.prototype.baseMaker = function () {
         if (thisPath !== null) {
 
           loading = instance.mother.grayLoading();
-          ajaxJson({ path: thisPath }, S3HOST + ":3001/findFolderId", { equal: true }).then((result) => {
+          ajaxJson({ path: thisPath }, S3HOST + ":3000/findFolderId", { equal: true }).then((result) => {
             id = result.id;
             loading.remove();
             if (id === undefined) {
@@ -2791,7 +2791,7 @@ RawJs.prototype.baseMaker = function () {
           }
 
           if (moveSuccess && Array.isArray(fromItems)) {  
-            await ajaxJson({ fromItems, toFolder: thisPath }, S3HOST + ":3001/moveFiles");
+            await ajaxJson({ fromItems, toFolder: thisPath }, S3HOST + ":3000/moveFiles");
             instance.fileLoad(instance.path).catch((err) => { console.log(err); });
           }
 
@@ -2820,7 +2820,7 @@ RawJs.prototype.baseMaker = function () {
             event: function (e) {
               const toId = this.getAttribute("to");
               const fromId = this.getAttribute("from");
-              ajaxJson({ fromId, toId }, S3HOST + ":3001/fromToFileAlarm").then(() => {
+              ajaxJson({ fromId, toId }, S3HOST + ":3000/fromToFileAlarm").then(() => {
                 removeByClass(memberContextmenuPopupClassName);
               }).catch((err) => {
                 console.log(err);
@@ -3523,14 +3523,14 @@ RawJs.prototype.baseMaker = function () {
                                     }
                                   }
                                 }
-                                await ajaxForm(formData, S3HOST + ":3001" + "/generalFileUpload", loading.progress.firstChild);
+                                await ajaxForm(formData, S3HOST + ":3000" + "/generalFileUpload", loading.progress.firstChild);
                                 await ajaxJson({
                                   key: uniqueName,
                                   proid: project.proid,
                                   desid: project.desid,
                                   cliid: project.cliid,
                                   rawBody: finalDesignerContents,
-                                }, S3HOST + ":3001" + "/updateRawInfo");
+                                }, S3HOST + ":3000" + "/updateRawInfo");
                                 loading.remove();
                                 removeByClass(tempInputClassName);
                                 window.alert("원본 사진 처리가 시작되었습니다. 슬랙의 안내를 따라주세요!");
@@ -3560,14 +3560,14 @@ RawJs.prototype.baseMaker = function () {
                               }
                             }
                           }
-                          await ajaxForm(formData, S3HOST + ":3001" + "/generalFileUpload", loading.progress.firstChild);
+                          await ajaxForm(formData, S3HOST + ":3000" + "/generalFileUpload", loading.progress.firstChild);
                           await ajaxJson({
                             key: uniqueName,
                             desid: targetDesigner.desid,
                             designer: designer,
                             individual: "true",
                             rawBody: finalDesignerContents,
-                          }, S3HOST + ":3001" + "/updateRawInfo");
+                          }, S3HOST + ":3000" + "/updateRawInfo");
                           loading.remove();
                           removeByClass(tempInputClassName);
                           window.alert("원본 사진 처리가 시작되었습니다. 슬랙의 안내를 따라주세요!");
@@ -3775,7 +3775,7 @@ RawJs.prototype.pathReload = function (searchResult = false) {
             }
 
             if (moveSuccess && Array.isArray(fromItems)) {  
-              await ajaxJson({ fromItems, toFolder: thisPath }, S3HOST + ":3001/moveFiles");
+              await ajaxJson({ fromItems, toFolder: thisPath }, S3HOST + ":3000/moveFiles");
               instance.fileLoad(instance.path).catch((err) => { console.log(err); });
             }
 
@@ -3857,12 +3857,12 @@ RawJs.prototype.fileLoad = async function (path, searchMode = "none") {
     files.parentNode.appendChild(loading);
 
     if (searchMode === "none") {
-      thisFolderFiles = await ajaxJson({ path }, S3HOST + ":3001" + "/listFiles");
+      thisFolderFiles = await ajaxJson({ path }, S3HOST + ":3000" + "/listFiles");
     } else {
       if (searchMode === "entire") {
-        thisFolderFiles = await ajaxJson({ path: this.rootToken, keyword: path, mode: searchMode }, S3HOST + ":3001" + "/searchFiles");
+        thisFolderFiles = await ajaxJson({ path: this.rootToken, keyword: path, mode: searchMode }, S3HOST + ":3000" + "/searchFiles");
       } else {
-        thisFolderFiles = await ajaxJson({ path: this.path, keyword: path, mode: searchMode }, S3HOST + ":3001" + "/searchFiles");
+        thisFolderFiles = await ajaxJson({ path: this.path, keyword: path, mode: searchMode }, S3HOST + ":3000" + "/searchFiles");
       }
     }
 
@@ -4024,12 +4024,12 @@ RawJs.prototype.fileLoad = async function (path, searchMode = "none") {
                   }, 201);
                 } else {
                   if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /link$/.test(absolute) || /odxlsx$/.test(absolute) || /oddocx$/.test(absolute) || /odpptx$/.test(absolute)) {
-                    fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3001/readFile", { equal: true });
+                    fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
                     blankHref(JSON.parse(fileContents.contents).url);
                   } else if (/drawio$/.test(absolute)) {
                     loading = instance.mother.grayLoading();
-                    ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3001/findFolderId", { equal: true }));
-                    ({ url } = await ajaxJson({ mode: "get", name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3001/parsingDrawio", { equal: true }));
+                    ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+                    ({ url } = await ajaxJson({ mode: "get", name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/parsingDrawio", { equal: true }));
                     if (typeof url === "string") {
                       blankHref(url);
                     }
@@ -4037,7 +4037,7 @@ RawJs.prototype.fileLoad = async function (path, searchMode = "none") {
                   } else if (/pdf$/.test(absolute)) {
                     blankHref(absolute.split("/").map((str) => { return window.encodeURIComponent(str) }).join("/").replace(new RegExp("^" + instance.rootToken), S3HOST));
                   } else if (/hlschedule$/.test(absolute)) {
-                    fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3001/readFile", { equal: true });
+                    fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
                     console.log(fileContents);
                     tempFunction = instance.scheduleViewing();
                     await tempFunction(new Event("click"));
@@ -4154,7 +4154,7 @@ RawJs.prototype.fileLoad = async function (path, searchMode = "none") {
                 }
                 if (moveSuccess && Array.isArray(fromItems) && toFolder !== "") {  
                   if (!fromItems.includes(toFolder)) {
-                    await ajaxJson({ fromItems, toFolder }, S3HOST + ":3001/moveFiles");
+                    await ajaxJson({ fromItems, toFolder }, S3HOST + ":3000/moveFiles");
                     instance.fileLoad(instance.path).catch((err) => { console.log(err); })
                   }
                 }
@@ -4361,7 +4361,7 @@ RawJs.prototype.launching = async function () {
         if (typeof getObj.id === "string") {
           const loading = await this.mother.loadingRun();
           loading.style.top = "calc(calc(" + withOut(loadingIconVisualTop, ea) + " / 2) - " + String(loadingIconWidth / 2) + ea + ")";
-          pathResponse = await ajaxJson({ id: getObj.id }, S3HOST + ":3001/getPathFromId");
+          pathResponse = await ajaxJson({ id: getObj.id }, S3HOST + ":3000/getPathFromId");
 
           startPoint = rootToken + "/drive/# 홈리에종";
 
@@ -4386,7 +4386,7 @@ RawJs.prototype.launching = async function () {
       if (typeof getObj.id === "string") {
         const loading = await this.mother.loadingRun();
         loading.style.top = "calc(calc(" + withOut(loadingIconVisualTop, ea) + " / 2) - " + String(loadingIconWidth / 2) + ea + ")";
-        pathResponse = await ajaxJson({ id: getObj.id }, S3HOST + ":3001/getPathFromId");
+        pathResponse = await ajaxJson({ id: getObj.id }, S3HOST + ":3000/getPathFromId");
         if (typeof pathResponse === "object" && pathResponse !== null && typeof pathResponse.path === "string") {
           this.path = pathResponse.path;
         }
@@ -4395,10 +4395,10 @@ RawJs.prototype.launching = async function () {
     }
     if (typeof getObj.pid === "string" && /[ap][0-9]+/gi.test(getObj.pid)) {
       pidPath = rootToken + "/corePortfolio/original/" + getObj.pid;
-      response = await ajaxJson({ path: pidPath }, S3HOST + ":3001/listFiles", { equal: true });
+      response = await ajaxJson({ path: pidPath }, S3HOST + ":3000/listFiles", { equal: true });
       if (!Array.isArray(response) || response.length === 0) {
         pidPath = rootToken + "/corePortfolio/forecast/" + getObj.pid;
-        response = await ajaxJson({ path: pidPath }, S3HOST + ":3001/listFiles", { equal: true });
+        response = await ajaxJson({ path: pidPath }, S3HOST + ":3000/listFiles", { equal: true });
       }
       if (Array.isArray(response) && response.length > 0) {
         this.path = pidPath;
@@ -4410,7 +4410,7 @@ RawJs.prototype.launching = async function () {
     if (typeof getObj.ghostdesid === "string") {
       ghostDesidPath = rootToken + "/rawDesigner/ghost/" + getObj.ghostdesid;
 
-      response = await ajaxJson({ path: ghostDesidPath }, S3HOST + ":3001/listFiles", { equal: true });
+      response = await ajaxJson({ path: ghostDesidPath }, S3HOST + ":3000/listFiles", { equal: true });
       if (Array.isArray(response) && response.length > 0) {
         this.path = ghostDesidPath;
       }
@@ -4445,7 +4445,7 @@ RawJs.prototype.launching = async function () {
     this.imageTarget = equalJson(JSON.stringify(RawJs.imageTarget)).concat(RawJs.imageTarget.map((str) => { return str.toUpperCase(); }));
 
     this.baseMaker();
-    this.portfolioList = await ajaxJson({ path: instance.starContents.find((o) => { return o.name === "portfolio" }).absolute }, S3HOST + ":3001" + "/listFiles");
+    this.portfolioList = await ajaxJson({ path: instance.starContents.find((o) => { return o.name === "portfolio" }).absolute }, S3HOST + ":3000" + "/listFiles");
 
     window.addEventListener("popstate", (e) => {
       e.preventDefault();

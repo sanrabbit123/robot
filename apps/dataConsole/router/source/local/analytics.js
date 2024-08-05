@@ -1673,7 +1673,7 @@ AnalyticsJs.prototype.reportWhite = function () {
                   { data: { mode: "daily", fromDate: stringToDate(startDay), toDate: endPreviousDay }, url: LOGHOST + "/extractAnalytics" },
                   { data: { mode: "charge", fromDate: stringToDate(startDay), toDate: endPreviousDay }, url: LOGHOST + "/extractAnalytics" },
                   { data: { mode: "basic", fromDate: stringToDate(startDay), toDate: endPreviousDay }, url: BACKHOST + "/extractAnalytics" },
-                  { data: { fromDate: stringToDate(startDay), toDate: stringToDate(endDay) }, url: S3HOST + ":3001/complexReport" },
+                  { data: { fromDate: stringToDate(startDay), toDate: stringToDate(endDay) }, url: S3HOST + ":3000/complexReport" },
                 ]).then(dataLoad(loading)).catch((err) => {
                   console.log(err);
                 });
@@ -3886,7 +3886,7 @@ AnalyticsJs.prototype.reportWhite = function () {
           { data: { mode: "daily", fromDate, toDate: previousToDate }, url: LOGHOST + "/extractAnalytics" },
           { data: { mode: "charge", fromDate, toDate: previousToDate }, url: LOGHOST + "/extractAnalytics" },
           { data: { mode: "basic", fromDate, toDate: previousToDate }, url: BACKHOST + "/extractAnalytics" },
-          { data: { fromDate, toDate }, url: S3HOST + ":3001/complexReport" },
+          { data: { fromDate, toDate }, url: S3HOST + ":3000/complexReport" },
         ]).then(dataLoad(loading)).catch((err) => {
           console.log(err);
         });

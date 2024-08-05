@@ -9,14 +9,13 @@ const CronGhost = function () {
   this.dir = `${process.cwd()}/apps/cronGhost`;
   this.aws = new AwsAPIs();
   this.generalPort = 3000;
-  this.graphicPort = 53001;
 }
 
 CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) {
   const instance = this;
   const address = this.address;
   const { requestSystem, messageLog, errorLog, emergencyAlarm, aliveLog, dateToString, stringToDate } = this.mother;
-  const { generalPort, graphicPort } = this;
+  const { generalPort } = this;
   const controlPath = "/ssl";
   const aws = this.aws;
   const back = this.back;
@@ -113,7 +112,7 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
       }
       for (let o of data) {
         if (!o.confirm) {
-          await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/receiveSms", { date: new Date(), amount: o.amount, name: o.name }, { headers: { "Content-Type": "application/json" } });
+          await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/receiveSms", { date: new Date(), amount: o.amount, name: o.name }, { headers: { "Content-Type": "application/json" } });
         }
       }
       await back.mongoCreate(collection, {
@@ -136,7 +135,7 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
       { name: "secondGhost", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
       { name: "transferLounge", protocol: "https:", host: address.transinfo.host, port: generalPort, },
       { name: "contentsLounge", protocol: "https:", host: address.contentsinfo.host, port: generalPort, },
-      { name: "staticLounge", protocol: "https:", host: address.officeinfo.ghost.host, port: 3001, },
+      { name: "staticLounge", protocol: "https:", host: address.officeinfo.ghost.host, port: generalPort, },
     ];
 
     targetNumber = targets.length;
@@ -254,26 +253,26 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
   const instance = this;
   const address = this.address;
   const { requestSystem, messageLog, errorLog } = this.mother;
-  const { generalPort, graphicPort } = this;
+  const { generalPort } = this;
   const selfMongo = MONGOC;
   try {
 
-    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
+    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
       return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.contentsinfo.host + ":" + String(generalPort) + "/metaInstant", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/callHistory", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/callHistory", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/calendarSync", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/calendarSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/workProjectActionSync", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/workProjectActionSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/workProposalToClient", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/workProposalToClient", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/photoStatusSync", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/photoStatusSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/storeClientAnalytics", { fast: true }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/storeClientAnalytics", { fast: true }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.secondinfo.host + ":" + String(generalPort) + "/timeAspirantCommon", { mode: "update" }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
@@ -293,18 +292,18 @@ CronGhost.prototype.pollingAsyncRequest = async function (MONGOC) {
   const instance = this;
   const address = this.address;
   const { requestSystem, messageLog, errorLog } = this.mother;
-  const { generalPort, graphicPort } = this;
+  const { generalPort } = this;
   const selfMongo = MONGOC;
   try {
 
-    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/storeDevicesStatus", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/centrexSession", { data: null }, { headers: { "Content-Type": "application/json" } });
+    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/storeDevicesStatus", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/centrexSession", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/checkInsyncStatus", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/checkInsyncStatus", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/designerFolder", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/designerFolder", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3001) + "/storeRealtimeAnalytics", { data: null }, { headers: { "Content-Type": "application/json" } });
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/storeRealtimeAnalytics", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).catch((e) => {
       throw new Error(e);
     });
