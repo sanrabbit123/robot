@@ -128,8 +128,10 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
         
 
-    await findCode("3001");
+
     
+
+
     
     // const selfMongo = this.MONGOC;
     // const collection = "contents";
@@ -483,7 +485,7 @@ DevContext.prototype.launching = async function () {
     // }));
     // for (let { body } of targets)  {
     //   tempObj = bodyToValues(body);
-    //   await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/receiveSms", { date: tempObj.date, amount: tempObj.amount, name: tempObj.name }, { headers: { "Content-Type": "application/json" } });
+    //   await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/receiveSms", { date: tempObj.date, amount: tempObj.amount, name: tempObj.name }, { headers: { "Content-Type": "application/json" } });
     // }
 
 
@@ -7398,7 +7400,7 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const name = "김희진";
     // const amount = 11_272_000;
-    // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
+    // await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/receiveSms", { date: new Date(), amount, name }, { headers: { "Content-Type": "application/json" } });
 
 
     // front designer sync
@@ -7460,52 +7462,6 @@ DevContext.prototype.launching = async function () {
     console.log(`error`);
   }
 }
-
-DevContext.prototype.rawtorawSystem = async function (designer, client = null) {
-  const instance = this;
-  const address = this.address;
-  const { fileSystem, objectDeepCopy, generalFileUpload, shellExec } = this.mother;
-  const targetResource = process.env.HOME + "/portfolioFilter/resource";
-  const image = new ImageReader();
-  try {
-    const photoKey = "rawtorawContents_";
-    let fileList;
-    let fromArr, toArr;
-    let num;
-    let exe;
-
-    fileList = await fileSystem("readFolder", [ targetResource ]);
-
-    num = 0;
-    toArr = [];
-    for (let f of fileList) {
-      await image.overOfficialImage(targetResource + "/" + f);
-      exe = f.split(".")[f.split(".").length - 1];
-      await shellExec("mv", [ targetResource + "/" + f.split(".").slice(0, -1).join(".") + ".jpg", targetResource + "/" + photoKey + String(num) + "." + exe ]);
-      toArr.push(photoKey + String(num) + "." + exe);
-      num++;
-    }
-
-    fileList = await fileSystem("readFolder", [ targetResource ]);
-    fileList.sort((a, b) => { return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, '')) });
-    fromArr = objectDeepCopy(fileList).map((f) => { return targetResource + "/" + f });
-
-    console.log(fromArr, toArr);
-
-    if (client === null) {
-      await generalFileUpload("https://" + instance.address.officeinfo.ghost.host + ":" + String(3001) + "/rawToRaw", fromArr, toArr, { designer })
-    } else {
-      await generalFileUpload("https://" + instance.address.officeinfo.ghost.host + ":" + String(3001) + "/rawToRaw", fromArr, toArr, { designer, client })
-    }
-
-    return { message: "done" };
-
-  } catch (e) {
-    console.log(e);
-    return { error: e.message };
-  }
-}
-
 
 DevContext.prototype.exceptionPid = async function () {
   const instance = this;
