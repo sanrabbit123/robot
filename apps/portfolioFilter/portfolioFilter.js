@@ -739,11 +739,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           toArr.push(`${foreCastContant}/${this.pid}/${f}`);
           await shellExec("cp", [ `${folderPath}/${f}`, `${forecastPath}/${this.pid}/` ]);
         }
-        await ghostFileUpload(fromArr, toArr);
         console.log(`forecast copy done`);
-
-
-
 
         [ project ] = await back.mongoRead("project", { proid: rawObj.proid }, { selfMongo: selfCoreMongo });
         await back.updateProject([
