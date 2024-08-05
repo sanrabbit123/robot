@@ -6958,7 +6958,8 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
           ]).then((pid) => {
             if (typeof pid === "string") {
               return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawUpdateSubject", {
-                pid
+                pid,
+                individual: ("individual_" + nowValue),
               }, { headers: { "Content-Type": "application/json" } });
             } else {
               return messageSend({ text: thisSetName + " 처리에 실패하였어요, 다시 시도해주세요!", channel, voice });
@@ -7065,8 +7066,14 @@ StaticRouter.prototype.rou_post_rawUpdateSubject = function () {
       const channel = "#502_sns_contents";
       const voice = false;
       const { pid } = equalJson(req.body);
+      let individualKey;
 
-      filter.updateSubject(pid).then((boo) => {
+      individualKey = null;
+      if (req.body.individual !== undefined) {
+        individualKey = req.body.individual;
+      }
+
+      filter.updateSubject(pid, individualKey).then((boo) => {
         if (boo) {
           return messageSend({ text: pid + " update subject 성공", channel, voice });
         } else {
