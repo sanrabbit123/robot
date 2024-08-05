@@ -4565,7 +4565,7 @@ ContentsJs.prototype.contentsExtractEvent = async function () {
   }
 }
 
-ContentsJs.prototype.rawCommentView = function (proid) {
+ContentsJs.prototype.rawUploadView = function () {
   const instance = this;
   const { createNode, withOut, colorChip, ajaxJson, removeByClass, dateToString, svgMaker } = GeneralJs;
   return async function () {
