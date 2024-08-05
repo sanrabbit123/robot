@@ -1547,7 +1547,7 @@ PortfolioFilter.prototype.setDesignerSetting = async function (desid, pid) {
     thisDesigner = await back.getDesignerById(desid);
     description = objectDeepCopy(thisDesigner.setting.description);
 
-    garoPhoto = thisContents.photo.detail.filter((o) => { return o.gs === "g" });
+    garoPhoto = thisContents.photos.detail.filter((o) => { return o.gs === "g" });
     files = [
       { porlid: pid, index: garoPhoto[0].index },
       { porlid: pid, index: thisContents.contents.portfolio.detailInfo.photodae[0] },
