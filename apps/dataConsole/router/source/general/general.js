@@ -6495,15 +6495,19 @@ GeneralJs.prototype.communicationBox = function () {
 
       } else {
 
-        maxWidth = widthMatrix.map((arr) => { return arr.reduce((acc, curr) => { return acc + curr[0] }, 0) }).reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0) + 20;
+        maxWidth = widthMatrix.map((arr) => { return arr.reduce((acc, curr) => { return acc + curr[0] }, 0) }).reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0) + 10;
         refreshHeight = (widthMatrix.length * globalHeight) + ((widthMatrix.length - 1) * globalMargin) + (innerMargin * 2);
-
-        console.log(widthMatrix);
-        console.log(maxWidth);
-        console.log(refreshHeight);
-
         whiteBox.style.width = String(maxWidth + (innerMargin * 2)) + ea;
         whiteBox.style.height = String(refreshHeight) + ea;
+
+        GeneralJs.cleanChildren(whiteBox.lastChild.firstChild);
+        num = 0;
+        for (let arr of communication) {
+          [ visual, vaild, action ] = arr;
+          if (vaild()) {
+            tempObj = renderItem(whiteBox.lastChild.firstChild, visual(), action);
+          }
+        }
       }
 
     }
