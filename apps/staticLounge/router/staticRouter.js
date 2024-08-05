@@ -6958,6 +6958,8 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
             return sleep(60 * 1000 * 3);
           }).then(() => {
             return shellExec("rm", [ "-rf", rawToRawProcessDoingToken ]);
+          }).then(() => {
+            return filter.chmodReload();
           }).catch((err) => {
             logger.error("Static lounge 서버 문제 생김 (rou_post_updateRawInfo): " + err.message).catch((e) => { console.log(e); })
           });
@@ -7015,6 +7017,8 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
             return sleep(60 * 1000 * 3);
           }).then(() => {
             return shellExec("rm", [ "-rf", rawToRawProcessDoingToken ]);
+          }).then(() => {
+            return filter.chmodReload();
           }).catch((err) => {
             logger.error("Static lounge 서버 문제 생김 (rou_post_updateRawInfo): " + err.message).catch((e) => { console.log(e); })
           });
@@ -7069,6 +7073,8 @@ StaticRouter.prototype.rou_post_rawUpdateSubject = function () {
         } else {
           return messageSend({ text: pid + " update subject 실패", channel, voice });
         }
+      }).then(() => {
+        return filter.chmodReload();
       }).catch((err) => {
         logger.error("Static lounge 서버 문제 생김 (rou_post_rawUpdateSubject): " + err.message).catch((e) => { console.log(e); })
       });
@@ -7119,6 +7125,8 @@ StaticRouter.prototype.rou_post_rawToContents = function () {
         } else {
           return messageSend({ text: pid + " 컨텐츠 자동 발행에 실패하였어요, 다시 시도해주세요!", channel, voice });
         }
+      }).then(() => {
+        return filter.chmodReload();
       }).catch((err) => {
         logger.error("Static lounge 서버 문제 생김 (rou_post_rawToContents): " + err.message).catch((e) => { console.log(e); })
       });

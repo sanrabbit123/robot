@@ -1624,4 +1624,15 @@ PortfolioFilter.prototype.setDesignerSetting = async function (desid, pid) {
   }
 }
 
+PortfolioFilter.prototype.chmodReload = async function () {
+  const instance = this;
+  const { fileSystem, binaryRequest, tempDelete, dateToString, shellExec, equalJson, shellLink, sleep, messageSend, mongoinfo, requestSystem, ghostFileUpload, mongo, mongocontentsinfo, mongosecondinfo } = this.mother;
+  try {
+    await shellExec("chmod", [ "-R", "777", process.env.HOME + "/samba/corePortfolio" ]);
+    await shellExec("chmod", [ "-R", "777", process.env.HOME + "/samba/list_image" ]);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = PortfolioFilter;
