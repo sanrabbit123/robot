@@ -1053,8 +1053,6 @@ ResourceMaker.prototype.launching = async function (thisContents = []) {
       }
     }
 
-    await ghostFileUpload(fromArr, toArr);
-
     await MONGOC.db(`miro81`).collection(`contents`).insertOne(this.final);
     await back.mongoDelete("foreContents", { pid: this.p_id }, { selfMongo: MONGOCONTENTSC });
     await requestSystem("https://" + instance.address.testinfo.host + ":" + String(3000) + "/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });

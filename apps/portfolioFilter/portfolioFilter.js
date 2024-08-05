@@ -688,7 +688,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       await shellExec("rm", [ "-rf", `${process.cwd()}/temp/resource` ])
       await shellExec("cp", [ "-r", this.options.photo_dir, `${process.cwd()}/temp/` ]);
 
-      foreRows = await back.mongoRead(collection, {}, { selfMongo });
+      foreRows = (await back.mongoRead("contents", {}, { selfMongo: selfCoreMongo })).map((c) => { return { pid: c.contents.portfolio.pid } });
       foreRows.sort((a, b) => {
         return Number(b.pid.replace(/[^0-9]/gi, '')) - Number(a.pid.replace(/[^0-9]/gi, ''));
       });
