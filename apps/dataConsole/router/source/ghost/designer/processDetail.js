@@ -1973,6 +1973,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function (whitePopup = false
           },
           style: {
             display: desktop ? "flex" : "block",
+            flexDirection: desktop ? "row" : "",
             position: "relative",
             width: withOut(0, ea),
             height: desktop ? String(panTitleBoxHeight) + ea : "",

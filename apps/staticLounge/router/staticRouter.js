@@ -6906,6 +6906,7 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
       let thisSetName;
       let keyFolderList;
       let keyFolder;
+      let nowValue;
 
       if (req.body.designer !== undefined && req.body.individual === "true") {
 
@@ -6914,11 +6915,13 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
         keyFolder = `${staticConst}/temp/${key}`;
         thisSetName = `${designer} D 개인 포트폴리오 원본 사진`;
   
+        nowValue = dateToString(new Date()).replace(/[^0-9]/gi, '');
+
         await requestSystem("https://" + instance.address.secondinfo.host + ":3000/projectDesignerRaw", {
           mode: "update",
           desid: designer.desid,
-          proid: project.proid,
-          cliid: client.cliid,
+          proid: "individual_" + nowValue,
+          cliid: "individual_" + nowValue,
           type: "web",
           body: rawBody.trim(),
         }, {
