@@ -1860,6 +1860,7 @@ ContentsJs.prototype.whiteIframeEvent = function (pid) {
     } else {
       iframeLink = "/file?ghostdesid=" + pid + "&preview=true&previewonly=true&dataonly=true&entire=true";
     }
+    instance.currentPid = pid;
 
     cancelEvent = function (e) {
       totalMother.removeChild(totalMother.lastChild);
@@ -3791,8 +3792,11 @@ ContentsJs.prototype.pidWhiteCard = function (pid, title = "", cliid = "", desid
         thisTitle = title;
       }
 
+      instance.currentPid = pid;
+
       pidWhiteMaker = (reload = false) => {
 
+        instance.currentPid = pid;
         if (!reload) {
           cancelBack = createNode({
             mother: totalContents,
@@ -4693,14 +4697,32 @@ ContentsJs.prototype.communicationRender = function () {
   const { communication } = this.mother;
   const { ajaxJson, sleep, blankHref, createNode, withOut, colorChip, dateToString } = GeneralJs;
   const { whiteCardClassName } = this;
+
   communication.setItem([
-    () => { return "컨텐츠 자동 발행"; },
+    () => { return "에디터 열기"; },
     function () {
       return (document.querySelector('.' + whiteCardClassName) !== null);
     },
     async function (e) {
       try {
-        const pid = document.querySelector('.' + whiteCardClassName).getAttribute("pid");
+        const pid = instance.currentPid;
+        if (typeof pid === "string") {
+          blankHref(FRONTHOST + "/portdetail.php?pid=" + pid + "&edit=true")
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "컨텐츠 강제 발행"; },
+    function () {
+      return (document.querySelector('.' + whiteCardClassName) !== null);
+    },
+    async function (e) {
+      try {
+        const pid = instance.currentPid;
         if (typeof pid === "string") {
           await ajaxJson({ pid }, "https://" + FILEHOST + ":3001/rawUpdateSubject");
           window.alert("자동 발행이 시작되었습니다. 슬렉 안내와 알람을 따라주세요!");
@@ -4714,7 +4736,7 @@ ContentsJs.prototype.communicationRender = function () {
   communication.setItem([
     () => { return "신규 컨텐츠 발행"; },
     function () {
-      return true;
+      return (document.querySelector('.' + whiteCardClassName) === null);
     },
     async function (e) {
       try {
@@ -4775,6 +4797,7 @@ ContentsJs.prototype.launching = async function () {
     this.whiteBaseClassName = "whiteBaseClassName";
     this.processDetailEventClassName = "processDetailEventClassName";
     this.asyncProcessText = "로드중..";
+    this.currentPid = null;
 
     this.entireMode = entireMode;
 
