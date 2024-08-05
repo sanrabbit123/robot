@@ -6836,7 +6836,7 @@ StaticRouter.prototype.rou_post_rawToRawExcute = function () {
           }
         ]).then((boo) => {
           if (boo) {
-            return messageSend({ text: thisSetName + " 처리를 완료하였어요!", channel, voice });
+            return messageSend({ text: thisSetName + " 처리를 성공적으로 완료하였어요!", channel, voice });
           } else {
             return messageSend({ text: thisSetName + " 처리에 실패하였어요, 다시 시도해주세요!", channel, voice });
           }
