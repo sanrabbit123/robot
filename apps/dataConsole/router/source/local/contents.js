@@ -2631,10 +2631,11 @@ ContentsJs.prototype.coreColorSync = async function () {
 ContentsJs.prototype.contentsBase = async function () {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
+  const { createNode, colorChip, colorExtended, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, blankHref } = GeneralJs;
   const moveTargetClassName = "moveTarget";
   const menuPromptClassName = "menuPromptClassName";
   const importantCircleClassName = "importantCircleClassName";
+  const contentsSubMenuEventFactorClassName = "contentsSubMenuEventFactorClassName";
   try {
     let totalMother;
     let grayArea, whiteArea;
@@ -2666,6 +2667,15 @@ ContentsJs.prototype.contentsBase = async function () {
     let coreContentsLoad;
     let circleRight, circleTop;
     let valueDom;
+    let hiddenStatus;
+    let contextIndent;
+    let contextButtonOuterMargin;
+    let contextButtonInnerMargin;
+    let contextButtonWidth;
+    let contextButtonHeight;
+    let contextButtonSize;
+    let contextButtonWeight;
+    let contextButtonTextTop;
   
     totalPaddingTop = 38;
     columnAreaHeight = 32;
@@ -2697,6 +2707,15 @@ ContentsJs.prototype.contentsBase = async function () {
 
     circleRight = 2.5;
     circleTop = isMac() ? 3 : 1;
+
+    contextIndent = 5;
+    contextButtonOuterMargin = 8;
+    contextButtonInnerMargin = 3;
+    contextButtonWidth = 200;
+    contextButtonHeight = 28;
+    contextButtonSize = 12;
+    contextButtonWeight = 700;
+    contextButtonTextTop = isMac() ? -1 : 1;
 
     ({ standards, columns, values } = await this.mainDataRender(true));
   
@@ -3304,11 +3323,172 @@ ContentsJs.prototype.contentsBase = async function () {
         }).children;
 
         for (let contents of instance.contentsArr) {
+          hiddenStatus = instance.hiddenContents.includes(contents.contents.portfolio.pid);
           createNode({
             mother: idNameArea,
-            attribute: { pid: contents.contents.portfolio.pid, lastfilter: "none" },
+            attribute: { conid: contents.conid, pid: contents.contents.portfolio.pid, lastfilter: "none" },
             event: {
               click: instance.pidWhiteCard(contents.contents.portfolio.pid, contents.title, contents.cliid, contents.desid, "contents", false, contents.proid),
+              contextmenu: async function (e) {
+                e.preventDefault();
+                const pid = this.getAttribute("pid");
+                const conid = this.getAttribute("conid");
+                const px = "px";
+                const zIndex = 4;
+                const thisContents = instance.contentsArr.find((c) => { return c.conid === conid });
+                const desid = thisContents.desid;
+                const proid = thisContents.proid;
+                const hiddenStatus = instance.hiddenContents.includes(pid);
+                const contextMenu = [
+                  {
+                    title: thisContents.title,
+                    func: () => {
+                      return async function (e) {
+                        try {
+                          blankHref(BACKHOST + "/project" + "?proid=" + proid);
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    }
+                  },
+                  {
+                    title: pid + " 웹 페이지에서 보기",
+                    func: () => {
+                      return async function (e) {
+                        try {
+                          blankHref(FRONTHOST + "/portdetail.php?pid=" + pid)
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    }
+                  },
+                  {
+                    title: pid + " 에디터 열기",
+                    func: () => {
+                      return async function (e) {
+                        try {
+                          blankHref(FRONTHOST + "/portdetail.php?pid=" + pid + "&edit=true")
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    }
+                  },
+                  {
+                    title: "프로젝트 정보 열기",
+                    func: () => {
+                      return async function (e) {
+                        try {
+                          blankHref(BACKHOST + "/project" + "?proid=" + proid);
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    }
+                  },
+                  {
+                    title: "디자이너 정보 열기",
+                    func: () => {
+                      return async function (e) {
+                        try {
+                          blankHref(BACKHOST + "/designer" + "?mode=normal&desid=" + desid);
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    }
+                  },
+                  {
+                    title: hiddenStatus ? "웹에서 " + pid + " 컨텐츠 보이기" : "웹에서 " + pid + " 컨텐츠 숨기기",
+                    func: () => {
+                      return async function (e) {
+                        try {
+                          if (hiddenStatus) {
+                            await ajaxJson({ mode: "remove", pid: pid }, S3HOST + ":3000/hiddenContents");
+                            window.location.reload();
+                          } else {
+                            await ajaxJson({ mode: "add", pid: pid }, S3HOST + ":3000/hiddenContents");
+                            window.location.reload();
+                          }
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    }
+                  },
+                ];
+                const { x, y } = e;
+                let cancelBack, contextBase;
+      
+                cancelBack = createNode({
+                  mother: totalContents,
+                  class: [ contentsSubMenuEventFactorClassName ],
+                  event: {
+                    click: (e) => { removeByClass(contentsSubMenuEventFactorClassName) },
+                  },
+                  style: {
+                    position: "fixed",
+                    top: String(0),
+                    left: String(0),
+                    width: withOut(0, ea),
+                    height: withOut(0, ea),
+                    background: "transparent",
+                    zIndex: String(zIndex),
+                  }
+                });
+      
+                contextBase = createNode({
+                  mother: totalContents,
+                  class: [ contentsSubMenuEventFactorClassName ],
+                  style: {
+                    display: "inline-block",
+                    position: "fixed",
+                    top: String(y + contextIndent) + px,
+                    left: String(x + (contextIndent / 2)) + px,
+                    padding: String(contextButtonOuterMargin) + ea,
+                    paddingBottom: String(contextButtonOuterMargin - contextButtonInnerMargin) + ea,
+                    background: colorChip.white,
+                    borderRadius: String(5) + px,
+                    boxShadow: "3px 0px 15px -9px " + colorChip.shadow,
+                    zIndex: String(zIndex),
+                    animation: "fadeuplite 0.3s ease forwards",
+                  }
+                })
+      
+                for (let obj of contextMenu) {
+                  createNode({
+                    mother: contextBase,
+                    event: {
+                      click: obj.func(),
+                    },
+                    style: {
+                      display: "flex",
+                      width: String(contextButtonWidth) + ea,
+                      height: String(contextButtonHeight) + ea,
+                      background: colorChip.gradientGray,
+                      borderRadius: String(5) + px,
+                      marginBottom: String(contextButtonInnerMargin) + ea,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "row",
+                      cursor: "pointer",
+                    },
+                    child: {
+                      text: obj.title,
+                      style: {
+                        fontSize: String(contextButtonSize) + ea,
+                        fontWeight: String(contextButtonWeight),
+                        color: colorChip.white,
+                        position: "relative",
+                        display: "inline-block",
+                        top: String(contextButtonTextTop) + ea,
+                      }
+                    }
+                  });
+                }
+              }
             },
             class: [ standardCaseClassName ],
             style: {
@@ -3339,7 +3519,8 @@ ContentsJs.prototype.contentsBase = async function () {
                     transition: "all 0.3s ease",
                     fontSize: String(fontSize) + ea,
                     fontWeight: String(fontWeight),
-                    color: colorChip.black,
+                    color: colorExtended.black,
+                    "text-decoration": hiddenStatus ? "line-through" : "",
                   },
                 }
               }
@@ -3416,7 +3597,6 @@ ContentsJs.prototype.contentsBase = async function () {
             }
           }
         }
-
         for (let fore of instance.foreContents) {
           createNode({
             mother: idNameArea,
@@ -4778,6 +4958,7 @@ ContentsJs.prototype.launching = async function () {
     loading = await this.mother.loadingRun();
 
     this.contentsView = await ajaxJson({ mode: "pick" }, CONTENTSHOST + "/getContentsView", { equal: true });
+    this.hiddenContents = await ajaxJson({ mode: "get" }, S3HOST + ":3000/hiddenContents", { equal: true });
     videoFiles = await ajaxJson({ path: "/corePortfolio/rawVideo" }, S3HOST + ":3000/listFiles", { equal: true });
     this.videoFiles = videoFiles.map((o) => {
       const arr = o.fileName.split("__split__");
@@ -4798,20 +4979,13 @@ ContentsJs.prototype.launching = async function () {
     this.processDetailEventClassName = "processDetailEventClassName";
     this.asyncProcessText = "로드중..";
     this.currentPid = null;
-
     this.entireMode = entireMode;
 
     if (getObj.mode === "source") {
       allContents = await ajaxJson({ mode: "all" }, CONTENTSHOST + "/getAllContents", { equal: true });
     } else {
-      if (getObj.init === "false") {
-        allContents = await ajaxJson({ mode: "all" }, CONTENTSHOST + "/getAllContents", { equal: true });
-      } else {
-        allContents = await ajaxJson({ mode: "all", init: true }, CONTENTSHOST + "/getAllContents", { equal: true });
-      }
+      allContents = await ajaxJson({ mode: "all" }, CONTENTSHOST + "/getAllContents", { equal: true });
     }
-
-    console.log(allContents.contentsArr);
 
     this.contentsCalendar = [];
     this.contentsArr = new SearchArray(allContents.contentsArr);
