@@ -12482,6 +12482,45 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
       },
       children: [
         {
+          attribute: { desid: instance.designer.desid },
+          event: {
+            click: async function (e) {
+              const desid = this.getAttribute("desid");
+              const [ thisDesigner ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
+              let wordings;
+              let keywordsNumber;
+              let result;
+              let keywordsTong;
+
+              keywordsNumber = 8;
+
+              wordings = thisDesigner.setting.front.introduction.desktop.join(" ");
+              wordings += "\n\n";
+              wordings += thisDesigner.setting.description.join("\n");
+
+              keywordsTong = [];
+              for (let i = 1; i < keywordsNumber + 1; i++) {
+                result = null;
+                while (typeof result !== "string") {
+                  result = await GeneralJs.promptLong(String(i) + "번째 키워드를 입력하세요!\n" + wordings);
+                  if (typeof result === "string") {
+                    result = result.trim();
+                    if (result === "") {
+                      result = null;
+                    }
+                    if (result.length > 10) {
+                      result = null;
+                    }
+                  }
+                }
+                result = result.trim();
+                keywordsTong.push(result);
+              }
+
+              await ajaxJson({ keywords: keywordsTong, desid }, BRIDGEHOST + "/designerRepresentativeKeywords");
+              window.location.reload();
+            }
+          },
           style: {
             display: "block",
             position: mobile ? "absolute" : "relative",
@@ -12491,6 +12530,7 @@ DesignerAboutJs.prototype.insertRepresentativeWordsBox = async function () {
             marginBottom: desktop ? String(titleBottom) + ea : "",
             zIndex: mobile ? String(1) : "",
             textAlign: desktop ? "" : "center",
+            cursor: "pointer",
           },
           children: [
             {

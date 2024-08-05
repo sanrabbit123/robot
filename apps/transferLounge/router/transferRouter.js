@@ -3474,6 +3474,31 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
           }
         }
 
+      } else if (mode === "update") {
+
+        const { desid, keywords } = equalJson(req.body);
+
+        rows = await back.mongoRead(collection, { desid: desid }, { selfMongo });
+        if (rows.length === 0) {
+
+          thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo, toNormal: true });
+          introduction = thisDesigner.setting.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.setting.description.join("\n");
+          introduction = introduction.trim();
+          jsonModel = {
+            date: new Date(),
+            desid,
+            introduction,
+            keywords,
+            selected: [],
+          }
+
+          await back.mongoCreate(collection, objectDeepCopy(jsonModel), { selfMongo });
+          res.send(JSON.stringify({ message: "done" }));
+        } else {
+          await back.mongoUpdate(collection, [ { desid }, { "date": new Date(), "keywords": objectDeepCopy(keywords), "selected": [] } ], { selfMongo })
+          res.send(JSON.stringify({ message: "done" }));
+        }
+
       } else {
         throw new Error("invalid post");
       }
