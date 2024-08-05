@@ -6319,6 +6319,7 @@ GeneralJs.prototype.communicationBox = function () {
     let itemArr;
     let widthMatrix, widthMatrixTemp;
     let maxWidth;
+    let tempBlock, thisArr;
 
     cancelWidth = 98.5;
     cancelHeight = 98;
@@ -6495,19 +6496,19 @@ GeneralJs.prototype.communicationBox = function () {
 
       } else {
 
-        maxWidth = widthMatrix.map((arr) => { return arr.reduce((acc, curr) => { return acc + curr[0] }, 0) }).reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0) + 10;
+        maxWidth = widthMatrix.map((arr) => { return arr.reduce((acc, curr) => { return acc + curr[0] }, 0) }).reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0) + 5;
         refreshHeight = (widthMatrix.length * globalHeight) + ((widthMatrix.length - 1) * globalMargin) + (innerMargin * 2);
         whiteBox.style.width = String(maxWidth + (innerMargin * 2)) + ea;
         whiteBox.style.height = String(refreshHeight) + ea;
-
         GeneralJs.cleanChildren(whiteBox.lastChild.firstChild);
-        num = 0;
         for (let arr of communication) {
           [ visual, vaild, action ] = arr;
           if (vaild()) {
             tempObj = renderItem(whiteBox.lastChild.firstChild, visual(), action);
           }
         }
+        whiteBox.style.height = "auto";
+        whiteBox.lastChild.style.paddingBottom = String(innerMargin - globalMargin) + ea;
       }
 
     }
