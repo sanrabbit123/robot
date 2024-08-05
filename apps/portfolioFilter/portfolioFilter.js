@@ -1514,19 +1514,112 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
           headers: { "Content-Type": "application/json" },
         });
       }
-
     }
 
     await selfMongo.close();
     await selfCoreMongo.close();
     await selfSecondMongo.close();
 
-    return true;
+    return thisDesigner.desid;
   } catch (e) {
     console.log(e);
     await selfMongo.close();
     await selfCoreMongo.close();
     await selfSecondMongo.close();
+    return false;
+  }
+}
+
+PortfolioFilter.prototype.setDesignerSetting = async function (desid, pid) {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { objectDeepCopy, requestSystem, sleep } = this.mother;
+  try {
+    let thisDesigner;
+    let proposalArr, dummy, filesArr;
+    let description;
+    let files, index;
+    let thisContents;
+    let garoPhoto;
+
+    [ thisContents ] = (await back.getContentsArrByQuery({ "contents.portfolio.pid": pid })).toNormal();
+    thisDesigner = await back.getDesignerById(desid);
+    description = objectDeepCopy(thisDesigner.setting.description);
+
+    garoPhoto = thisContents.photo.detail.filter((o) => { return o.gs === "g" });
+    files = [
+      { porlid: pid, index: garoPhoto[0].index },
+      { porlid: pid, index: thisContents.contents.portfolio.detailInfo.photodae[0] },
+      { porlid: pid, index: garoPhoto[1].index },
+      { porlid: pid, index: garoPhoto[2].index },
+      { porlid: pid, index: garoPhoto[3].index }
+    ];
+    filesArr = [];
+    for (let { porlid, index } of files) {
+      if (porlid !== "ghost") {
+        filesArr.push(`/corePortfolio/listImage/${porlid}/t${String(index)}${porlid}.jpg`);
+      } else {
+        filesArr.push(`/rawDesigner/ghost/${desid}/g${String(index)}.jpg`);
+      }
+    }
+
+    dummy = () => {
+      return { name: "기본 세팅", photo: [
+        {
+            "position" : "0",
+            "sgTrue" : "g",
+            "unionPo" : "union",
+            "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"" + filesArr[0] + "\");",
+            "imgSrc" : filesArr[0]
+        },
+        {
+            "position" : "1",
+            "sgTrue" : "s",
+            "unionPo" : "right",
+            "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"" + filesArr[1] + "\");",
+            "imgSrc" : filesArr[1]
+        },
+        {
+            "position" : "2",
+            "sgTrue" : "g",
+            "unionPo" : "union",
+            "imgSrc" : filesArr[2],
+            "styleText" : "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"" + filesArr[2] + "\");"
+        },
+        {
+            "position" : "3",
+            "sgTrue" : "g",
+            "unionPo" : "union",
+            "imgSrc" : filesArr[3],
+            "styleText" : "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"" + filesArr[3] + "\");"
+        },
+        {
+            "position" : "4",
+            "sgTrue" : "g",
+            "unionPo" : "union",
+            "imgSrc" : filesArr[4],
+            "styleText" : "top: 67%; left: 67.2%; width: 32.8%; height: 33%; background-image: url(\"" + filesArr[4] + "\");"
+        }
+      ], description };
+    }
+
+    proposalArr = [];
+    for (let i = 0; i < 5; i++) {
+      proposalArr.push(objectDeepCopy(dummy()));
+    }
+
+    await back.updateDesigner([ { desid }, { "setting.proposal": proposalArr } ]);
+    await back.updateDesigner([ { desid }, { "setting.front.methods": [ "mth0", "mth7" ] } ]);
+    await back.updateDesigner([ { desid }, { "setting.front.photo": { porlid: pid, index: "t" + String(garoPhoto[0].index) } } ]);
+
+    await sleep(500);
+
+    await requestSystem("https://" + address.testinfo.host + ":3000/frontReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
+
+    return true;
+  } catch (e) {
+    console.log(e);
     return false;
   }
 }

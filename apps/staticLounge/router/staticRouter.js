@@ -7107,7 +7107,13 @@ StaticRouter.prototype.rou_post_rawToContents = function () {
       const voice = false;
       const { pid } = equalJson(req.body);
 
-      filter.rawToContents(pid, false, (req.body.proid === undefined ? null : req.body.proid)).then((boo) => {
+      filter.rawToContents(pid, false, (req.body.proid === undefined ? null : req.body.proid)).then((desid) => {
+        if (typeof desid === "string") {
+          return filter.setDesignerSetting(desid, pid);
+        } else {
+          return messageSend({ text: pid + " 컨텐츠 자동 발행에 실패하였어요, 다시 시도해주세요!", channel, voice });
+        }
+      }).then((boo) => {
         if (boo) {
           return messageSend({ text: pid + " 컨텐츠 자동 발행에 성공하였어요!", channel, voice });
         } else {
