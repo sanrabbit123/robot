@@ -6494,8 +6494,13 @@ GeneralJs.prototype.communicationBox = function () {
         });
 
       } else {
+
         maxWidth = widthMatrix.map((arr) => { return arr.reduce((acc, curr) => { return acc + curr[0] }, 0) }).reduce((acc, curr) => { return acc >= curr ? acc : curr }, 0) + 20;
         refreshHeight = (widthMatrix.length * globalHeight) + ((widthMatrix.length - 1) * globalMargin) + (innerMargin * 2);
+
+        console.log(maxWidth);
+        console.log(refreshHeight);
+
         whiteBox.style.width = String(maxWidth + (innerMargin * 2)) + ea;
         whiteBox.style.height = String(refreshHeight) + ea;
       }
