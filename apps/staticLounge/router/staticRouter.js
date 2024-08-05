@@ -9035,7 +9035,7 @@ StaticRouter.prototype.rou_post_searchContents = function () {
 StaticRouter.prototype.rou_post_hiddenContents = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson } = this.mother;
+  const { equalJson, objectDeepCopy } = this.mother;
   let obj = {};
   obj.link = [ "/hiddenContents" ];
   obj.func = async function (req, res, logger) {
@@ -9048,16 +9048,53 @@ StaticRouter.prototype.rou_post_hiddenContents = function () {
     try {
       const selfMongo = instance.mongolocal;
       const collection = "hiddenContents";
-      let jsonModel;
+      const { mode } = equalJson(req.body);
+      let target;
+      let updateQuery, contents;
+      let updatedContents;
 
-      jsonModel = {
-        date: new Date(),
-        contents: [ "p61", "p36", "a51", "a104", "a105" ],
-      };
+      if (mode === "get") {
 
-      await back.mongoCreate(collection, jsonModel, { selfMongo });
+        [ target ] = await back.mongoRead(collection, {}, { selfMongo });
+        res.send(JSON.stringify(target.contents));
 
-      res.send(JSON.stringify({ message: "done" }));
+      } else if (mode === "update") {
+
+        const { updateQuery } = equalJson(req.body);
+        updateQuery["date"] = new Date();
+        await back.mongoUpdate(collection, [ {}, updateQuery ], { selfMongo });
+        res.send(JSON.stringify({ message: "done" }));
+
+      } else if (mode === "add") {
+
+        const { pid } = equalJson(req.body);
+        [ target ] = await back.mongoRead(collection, {}, { selfMongo });
+        contents = objectDeepCopy(target.contents);
+        contents.push(pid);
+        contents = [ ...new Set(contents) ];
+        updateQuery = { date: new Date(), contents };
+        await back.mongoUpdate(collection, [ {}, updateQuery ], { selfMongo });
+        res.send(JSON.stringify({ message: "done" }));
+
+      } else if (mode === "remove") {
+
+        const { pid } = equalJson(req.body);
+        [ target ] = await back.mongoRead(collection, {}, { selfMongo });
+        contents = objectDeepCopy(target.contents);
+        updatedContents = [];
+        for (let p of contents) {
+          if (p !== pid) {
+            updatedContents.push(p);
+          }
+        }
+        contents = [ ...new Set(updatedContents) ];
+        updateQuery = { date: new Date(), contents };
+        await back.mongoUpdate(collection, [ {}, updateQuery ], { selfMongo });
+        res.send(JSON.stringify({ message: "done" }));
+
+      } else {
+        throw new Error("invalid mode");
+      }
 
     } catch (e) {
       logger.error("Log Console 서버 문제 생김 (rou_post_hiddenContents): " + e.message).catch((e) => { console.log(e); });
