@@ -4787,15 +4787,7 @@ ContentsJs.prototype.launching = async function () {
       }
     }
 
-    console.log(allContents.contentsArr.map((c) => {
-      return {
-        length: c.contents.portfolio.contents.detail.length,
-        pid: c.contents.portfolio.pid,
-        date: c.contents.portfolio.date,
-      }
-    }).filter((o) => {
-      return o.length <= 2;
-    }));
+    console.log(allContents.contentsArr);
 
     this.contentsCalendar = [];
     this.contentsArr = new SearchArray(allContents.contentsArr);

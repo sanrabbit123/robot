@@ -6998,6 +6998,7 @@ StaticRouter.prototype.rou_post_rawUpdateSubject = function () {
       }).catch((err) => {
         logger.error("Static lounge 서버 문제 생김 (rou_post_rawUpdateSubject): " + err.message).catch((e) => { console.log(e); })
       });
+      
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_rawUpdateSubject): " + e.message);
