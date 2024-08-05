@@ -16,7 +16,7 @@ const StaticLounge = function (mother = null, back = null, address = null) {
 
 StaticLounge.prototype.staticConnect = async function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongocontentsinfo, mongotestinfo, mongosecondinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
+  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongocontentsinfo, mongosecondinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
   const PORT = 3001;
   const https = require("https");
   const express = require("express");
@@ -50,18 +50,16 @@ StaticLounge.prototype.staticConnect = async function () {
     console.log(``);
 
     //set mongo connetion
-    let MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, MONGOCONTENTSC;
+    let MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOCONTENTSC;
     MONGOC = new mongo(mongoinfo);
     MONGOLOCALC = new mongo(mongolocalinfo);
     MONGOCONSOLEC = new mongo(mongoconsoleinfo);
-    MONGOLOGC = new mongo(mongotestinfo);
     MONGOCONTENTSC = new mongo(mongocontentsinfo);
     console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
     console.log(``);
     await MONGOC.connect();
     await MONGOLOCALC.connect();
     await MONGOCONSOLEC.connect();
-    await MONGOLOGC.connect();
     await MONGOCONTENTSC.connect();
 
     //set kakao
@@ -103,7 +101,7 @@ StaticLounge.prototype.staticConnect = async function () {
 
     //set router
     const StaticRouter = require(`${this.dir}/router/staticRouter.js`);
-    const router = new StaticRouter(MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, MONGOCONTENTSC, kakaoInstance, humanInstance);
+    const router = new StaticRouter(MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOCONTENTSC, kakaoInstance, humanInstance);
     await router.setMembers();
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);

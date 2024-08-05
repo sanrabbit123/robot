@@ -1,4 +1,4 @@
-const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, MONGOCONTENTSC, kakao, human) {
+const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOCONTENTSC, kakao, human) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
@@ -30,7 +30,6 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, MO
   this.mongo = MONGOC;
   this.mongolocal = MONGOLOCALC;
   this.mongoconsole = MONGOCONSOLEC;
-  this.mongolog = MONGOLOGC;
   this.mongocontents = MONGOCONTENTSC;
   this.members = {};
 
@@ -49,7 +48,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, MO
   this.notion = new NotionAPIs();
   this.microsoft = new MicrosoftAPIs();
   this.devices = new LocalDevices();
-  this.report = new LogReport(MONGOLOGC);
+  this.report = new LogReport(MONGOLOCALC);
   this.naver = new NaverAPIs();
   this.facebook = new FacebookAPIs();
   this.google = new GoogleAds();
@@ -120,7 +119,69 @@ StaticRouter.prototype.fireWall = function (req) {
   return __wallLogicBoo;
 }
 
+StaticRouter.prototype.dailyAnalytics = async function () {
+  const instance = this;
+  const back = this.back;
+  const { dateToString, requestSystem, sleep } = this.mother;
+  try {
+    let date;
+    let requestString;
+
+    date = new Date();
+    date.setDate(date.getDate() - 1);
+    date.setDate(date.getDate() - 1);
+    date.setDate(date.getDate() - 1);
+    date.setDate(date.getDate() - 1);
+    date.setDate(date.getDate() - 1);
+    date.setDate(date.getDate() - 1);
+    date.setDate(date.getDate() - 1);
+
+    requestString = '';
+    requestString += dateToString(date);
+    requestString += ',';
+    date.setDate(date.getDate() + 1);
+    requestString += dateToString(date);
+    requestString += ',';
+    date.setDate(date.getDate() + 1);
+    requestString += dateToString(date);
+    requestString += ',';
+    date.setDate(date.getDate() + 1);
+    requestString += dateToString(date);
+    requestString += ',';
+    date.setDate(date.getDate() + 1);
+    requestString += dateToString(date);
+    requestString += ',';
+    date.setDate(date.getDate() + 1);
+    requestString += dateToString(date);
+    requestString += ',';
+    date.setDate(date.getDate() + 1);
+    requestString += dateToString(date);
+
+    await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/analyticsDaily", { date: requestString }, { headers: { "Content-Type": "application/json" } });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 //GET ---------------------------------------------------------------------------------------------
+
+StaticRouter.prototype.rou_get_Root = function () {
+  const instance = this;
+  const address = this.address;
+  let obj = {};
+  obj.link = '/';
+  obj.func = async function (req, res, logger) {
+    try {
+      res.redirect("https://" + address.frontinfo.host);
+    } catch (e) {
+      logger.error("Log Console 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.redirect("https://" + address.frontinfo.host);
+    }
+  }
+  return obj;
+}
 
 StaticRouter.prototype.rou_get_First = function () {
   const instance = this;
@@ -136,10 +197,15 @@ StaticRouter.prototype.rou_get_First = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-
       if (req.params.id === "ssl") {
         const disk = await diskReading();
         const aliveMongoResult = await aliveMongo();
+        instance.dailyAnalytics().then(() => {
+          return logger.cron("front reflection, daily campaign, daily channel request done");
+        }).catch((err) => {
+          logger.error("log disk cron error : " + err.message).catch((e) => { console.log(e); });
+          console.log(err);
+        });
         res.send(JSON.stringify({ disk: disk.toArray(), mongo: aliveMongoResult }));
       } else if (req.params.id === "disk") {
         const disk = await diskReading();
@@ -167,6 +233,37 @@ StaticRouter.prototype.rou_get_First = function () {
     }
   }
 
+  return obj;
+}
+
+StaticRouter.prototype.rou_get_Address = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = "/tools/address";
+  obj.func = async function (req, res, logger) {
+    try {
+      const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8">
+        <style>*{margin:0}body{width:100vh;height:100vh;overflow:hidden}body::-webkit-scrollbar{display:none;}img{cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1}div{border:0;width:100vw;height:100vh;position:relative}</style><script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script></head><body><script>
+        let div_clone, img_clone;div_clone = document.createElement("DIV");img_clone = document.createElement("IMG");img_clone.setAttribute("src", "https://t1.daumcdn.net/postcode/resource/images/close.png");img_clone.setAttribute("id", "btnFoldWrap");div_clone.appendChild(img_clone);document.body.appendChild(div_clone);
+        new daum.Postcode({
+            oncomplete: function (data) {
+              let addr = '', extraAddr = '';
+              if (data.userSelectedType === 'R') {
+                addr = data.roadAddress;
+                if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) { extraAddr += data.bname; }
+                if (data.buildingName !== '' && data.apartment === 'Y') { extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName); }
+                if (extraAddr !== '') { extraAddr = ' (' + extraAddr + ')'; }
+              } else { addr = data.jibunAddress; }
+              const detail = prompt("상세주소를 입력해주세요! : " + addr + extraAddr);
+              window.parent.postMessage(addr + extraAddr + " " + detail, '*');
+            }, width : '100%', height : '100%' }).embed(div_clone);</script></body></html>`;
+      res.set("Content-Type", "text/html");
+      res.send(html);
+    } catch (e) {
+      logger.error("Console 서버 문제 생김 (rou_get_Address): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+    }
+  }
   return obj;
 }
 
@@ -2403,7 +2500,7 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
     });
     try {
       const { date } = equalJson(req.body);
-      const selfMongo = instance.mongolog;
+      const selfMongo = instance.mongolocal;
       const dayNumber = req.body.dayNumber === undefined ? 7 : Number(req.body.dayNumber);
       let dateArr;
       let collection;
@@ -2527,7 +2624,7 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
           // daily clients
           collection = "dailyClients";
           for (let thisDate of dateArr) {
-            result = await analytics.dailyClients(thisDate, instance.mongo, instance.mongolog);
+            result = await analytics.dailyClients(thisDate, instance.mongo, instance.mongolocal);
             if (result === null) {
               await logger.error("daily clients error : " + dateToString(thisDate));
             } else {
@@ -2541,7 +2638,7 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
             }
             await sleep(1000);
           }
-          result = await analytics.dailyClients(todayDate, instance.mongo, instance.mongolog);
+          result = await analytics.dailyClients(todayDate, instance.mongo, instance.mongolocal);
           if (result === null) {
             await logger.error("daily clients error : " + dateToString(todayDate));
           } else {
@@ -2558,19 +2655,19 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
           // daily query
           collection = "queryAnalytics";
           for (let thisDate of dateArr) {
-            result = await analytics.queryParsing(thisDate, instance.mongolog);
+            result = await analytics.queryParsing(thisDate, instance.mongolocal);
             if (result === null) {
               await logger.error("query parsing error : " + dateToString(thisDate));
               await sleep(1000);
-              result = await analytics.queryParsing(thisDate, instance.mongolog);
+              result = await analytics.queryParsing(thisDate, instance.mongolocal);
               if (result === null) {
                 await logger.error("query parsing error : " + dateToString(thisDate));
                 await sleep(1000);
-                result = await analytics.queryParsing(thisDate, instance.mongolog);
+                result = await analytics.queryParsing(thisDate, instance.mongolocal);
                 if (result === null) {
                   await logger.error("query parsing error : " + dateToString(thisDate));
                   await sleep(1000);
-                  result = await analytics.queryParsing(thisDate, instance.mongolog);
+                  result = await analytics.queryParsing(thisDate, instance.mongolocal);
                   if (result === null) {
                     await logger.error("query parsing error : " + dateToString(thisDate));
                   } else {
@@ -2656,7 +2753,7 @@ StaticRouter.prototype.rou_post_analyticsToday = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const selfMongo = instance.mongolog;
+      const selfMongo = instance.mongolocal;
       const reportMode = (req.body.report === 1 || req.body.report === "1")
       let collection;
       let anaid, ancid, key, rows;
@@ -2727,7 +2824,7 @@ StaticRouter.prototype.rou_post_analyticsToday = function () {
 
           // today clients
           collection = "dailyClients";
-          result = await analytics.dailyClients(thisDate, instance.mongo, instance.mongolog);
+          result = await analytics.dailyClients(thisDate, instance.mongo, instance.mongolocal);
           if (result === null) {
             await logger.error("daily clients error : " + dateToString(thisDate));
           } else {
@@ -2743,19 +2840,19 @@ StaticRouter.prototype.rou_post_analyticsToday = function () {
 
           // daily query
           collection = "queryAnalytics";
-          result = await analytics.queryParsing(thisDate, instance.mongolog);
+          result = await analytics.queryParsing(thisDate, instance.mongolocal);
           if (result === null) {
             await logger.error("query parsing error : " + dateToString(thisDate));
             await sleep(1000);
-            result = await analytics.queryParsing(thisDate, instance.mongolog);
+            result = await analytics.queryParsing(thisDate, instance.mongolocal);
             if (result === null) {
               await logger.error("query parsing error : " + dateToString(thisDate));
               await sleep(1000);
-              result = await analytics.queryParsing(thisDate, instance.mongolog);
+              result = await analytics.queryParsing(thisDate, instance.mongolocal);
               if (result === null) {
                 await logger.error("query parsing error : " + dateToString(thisDate));
                 await sleep(1000);
-                result = await analytics.queryParsing(thisDate, instance.mongolog);
+                result = await analytics.queryParsing(thisDate, instance.mongolocal);
                 if (result === null) {
                   await logger.error("query parsing error : " + dateToString(thisDate));
                 } else {
@@ -2837,7 +2934,7 @@ StaticRouter.prototype.rou_post_analyticsMonthly = function () {
     });
     try {
       const { date } = equalJson(req.body);
-      const selfMongo = instance.mongolog;
+      const selfMongo = instance.mongolocal;
       const collection = "complexAnalytics";
       let targetDate;
       let key;
@@ -2916,7 +3013,7 @@ StaticRouter.prototype.rou_post_designerAboutComplete = function () {
       if (req.body.mode === undefined) {
         throw new Error("invalid post");
       }
-      const selfMongo = instance.mongolog;
+      const selfMongo = instance.mongolocal;
       const collection = "homeliaisonAnalytics";
       const completeStandardNumber = 10;
       const targetPageName = "designerAbout";
@@ -3963,7 +4060,7 @@ StaticRouter.prototype.rou_post_readHomeliaisonAnalytics = function () {
       if (req.body.whereQuery === undefined) {
         throw new Error("invalid post");
       }
-      const selfMongo = instance.mongolog;
+      const selfMongo = instance.mongolocal;
       const { whereQuery } = equalJson(JSON.stringify(req.body));
       const collection = "homeliaisonAnalytics";
       let rows, projectQuery;
@@ -4099,7 +4196,7 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
           }
         }
 
-        analytics.clientsMetric(finalTargets, instance.mongo, instance.mongoconsole, instance.mongolog, true, false).then((result) => {
+        analytics.clientsMetric(finalTargets, instance.mongo, instance.mongoconsole, instance.mongolocal, true, false).then((result) => {
           if (Array.isArray(result)) {
             logger.cron("client analytics store success : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
           } else {
@@ -4141,7 +4238,7 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
           finalTargets.push(client);
         }
 
-        analytics.clientsMetric(finalTargets, instance.mongo, instance.mongoconsole, instance.mongolog, true, true).then((result) => {
+        analytics.clientsMetric(finalTargets, instance.mongo, instance.mongoconsole, instance.mongolocal, true, true).then((result) => {
           if (Array.isArray(result)) {
             logger.cron("client analytics store success (fast) : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
           } else {
@@ -4177,7 +4274,7 @@ StaticRouter.prototype.rou_post_fixClientAnalytics = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const selfLogMongo = instance.mongolog;
+      const selfLogMongo = instance.mongolocal;
       analytics.fixClientMetric(selfLogMongo).then((result) => {
         if (result.message === "done") {
           logger.cron("client analytics fix done : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
@@ -4223,7 +4320,7 @@ StaticRouter.prototype.rou_post_getClientAnalytics = function () {
       let rows;
 
       if (textMode) {
-        textResult = await analytics.clientMessage(cliid, instance.mongo, instance.mongolog);
+        textResult = await analytics.clientMessage(cliid, instance.mongo, instance.mongolocal);
         if (typeof textResult === "string") {
           res.send(JSON.stringify({ report: textResult }));
         } else {
@@ -4232,9 +4329,9 @@ StaticRouter.prototype.rou_post_getClientAnalytics = function () {
       } else {
         if (req.body.projectQuery !== undefined) {
           const { projectQuery } = equalJson(req.body);
-          rows = await back.mongoPick(collection, [ { cliid }, projectQuery ], { selfMongo: instance.mongolog });
+          rows = await back.mongoPick(collection, [ { cliid }, projectQuery ], { selfMongo: instance.mongolocal });
         } else {
-          rows = await back.mongoRead(collection, { cliid }, { selfMongo: instance.mongolog });
+          rows = await back.mongoRead(collection, { cliid }, { selfMongo: instance.mongolocal });
         }
         if (rows.length > 0) {
           res.send(JSON.stringify({ data: rows[rows.length - 1] }));
@@ -4266,7 +4363,7 @@ StaticRouter.prototype.rou_post_storeRealtimeAnalytics = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      analytics.realtimeMetric(instance.mongo, instance.mongolog, true).then((result) => {
+      analytics.realtimeMetric(instance.mongo, instance.mongolocal, true).then((result) => {
         if (Array.isArray(result)) {
           logger.cron("realtime analytics store success : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
         } else {
@@ -4301,7 +4398,7 @@ StaticRouter.prototype.rou_post_realtimeMessage = function () {
     });
     try {
       const { channel } = equalJson(req.body);
-      const text = await analytics.realtimeMessage(instance.mongolog);
+      const text = await analytics.realtimeMessage(instance.mongolocal);
 
       requestSystem("https://" + address.secondinfo.host + ":" + String(3000) + "/fairySlack", {
         channel: channel,
@@ -4616,7 +4713,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
       const selfMongo = instance.mongo;
       const selfLocalMongo = instance.mongolocal;
       const selfConsoleMongo = instance.mongoconsole;
-      const selfLogMongo = instance.mongolog;
+      const selfLogMongo = instance.mongolocal;
       const unknownKeyword = "unknown";
       const proposalStandardDate = new Date(2021, 8, 1);
       const proposalStandardDateValue = proposalStandardDate.valueOf();
@@ -7775,7 +7872,7 @@ StaticRouter.prototype.rou_post_styleCurationTotalMenu = function () {
       const selfMongo = instance.mongoconsole;
       const selfCoreMongo = instance.mongo;
       const unknown = "알 수 없음";
-      const selfLogMongo = instance.mongolog;
+      const selfLogMongo = instance.mongolocal;
       const totalMenu = [
         {
           question: "생각하는 서비스 유형을 선택해 주세요!",
@@ -8531,6 +8628,1491 @@ StaticRouter.prototype.rou_post_replaceContentsPhoto = function () {
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_replaceContentsPhoto): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_frontReflection = function () {
+  const instance = this;
+  const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
+  const reflection = new MongoReflection();
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/frontReflection" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      reflection.frontReflection("local").catch((err) => {
+        logger.error("Log Console 서버 문제 생김 (rou_post_frontReflection): " + err.message).catch((e) => { console.log(e); });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      logger.error("Log Console 서버 문제 생김 (rou_post_frontReflection): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_searchContents = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, objectDeepCopy, sleep, serviceParsing } = this.mother;
+  let obj = {};
+  obj.link = [ "/searchContents" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      const selfCoreMongo = instance.mongo;
+      const collection = "contents";
+      const hideContents = [];
+      const toNormal = true;
+      const { keywords: seridKeywords, name: serviceNames } = serviceParsing();
+      let limit;
+      let contentsArr_raw;
+      let contentsArr, designers;
+      let reviewArr, indexArr;
+      let indexSliceNumber;
+      let contentsProjectQuery;
+      let sortQuery;
+      let cliidArr;
+      let proidArr;
+      let whereQuery, projectQuery;
+      let thisClients, thisProjects;
+      let thisRequestNumber;
+      let thisClient;
+      let proposalDate;
+      let projects;
+      let thisProject;
+      let thisDesigner;
+      let thisSerid;
+      let fromDate, toDate;
+      let dateDelta;
+      let regionArr;
+      let reg0, reg1;
+      let thisArr;
+
+      contentsProjectQuery = {
+        conid: 1,
+        desid: 1,
+        cliid: 1,
+        proid: 1,
+        service: 1,
+        photos: 1,
+        "contents.portfolio.pid": 1,
+        "contents.portfolio.date": 1,
+        "contents.portfolio.spaceInfo": 1,
+        "contents.portfolio.title": 1,
+        "contents.portfolio.color": 1,
+        "contents.portfolio.detailInfo": 1,
+        "contents.review.rid": 1,
+        "contents.review.date": 1,
+        "contents.review.title": 1,
+        "contents.review.detailInfo": 1,
+      };
+
+      sortQuery = {};
+      if (req.body.from === "review") {
+        sortQuery = { "contents.review.detailInfo.order": -1 };
+      } else {
+        sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
+      }
+
+      contentsArr = await back.mongoPick(collection, [ {}, contentsProjectQuery ], { selfMongo, sort: sortQuery });
+      if (contentsArr.length === 0) {
+        res.send(JSON.stringify({ conids: [] }));
+      } else {
+        designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
+        cliidArr = [ ...new Set(contentsArr.map((o) => { return o.cliid.trim() }).filter((s) => { return s !== "" })) ];
+        proidArr = [ ...new Set(contentsArr.map((o) => { return o.proid.trim() }).filter((s) => { return s !== "" })) ];
+
+        if (cliidArr.length > 0) {
+          whereQuery = { $or: cliidArr.map((cliid) => { return { cliid } }) };
+          projectQuery = {
+            cliid: 1,
+            name: 1,
+            "requests.request.timeline": 1,
+            "requests.request.budget": 1,
+            "requests.request.family": 1,
+            "requests.request.furniture": 1,
+            "requests.request.space": 1,
+          }
+          thisClients = await back.mongoPick("client", [ objectDeepCopy(whereQuery), objectDeepCopy(projectQuery) ], { selfMongo: selfCoreMongo });
+
+          whereQuery = { $or: proidArr.map((proid) => { return { proid } }) };
+          projectQuery = {
+            proid: 1,
+            cliid: 1,
+            desid: 1,
+            "proposal.date": 1,
+            process: 1,
+          }
+          thisProjects = await back.mongoPick("project", [ objectDeepCopy(whereQuery), objectDeepCopy(projectQuery) ], { selfMongo: selfCoreMongo });
+
+          projects = [];
+          for (let project of thisProjects) {
+            proposalDate = new Date(JSON.stringify(project.proposal.date).slice(1, -1));
+            thisClient = thisClients.find((c) => { return c.cliid === project.cliid });
+
+            thisRequestNumber = 0;
+            for (let i = 0; i < thisClient.requests.length; i++) {
+              if (thisClient.requests[i].request.timeline.valueOf() <= proposalDate.valueOf()) {
+                thisRequestNumber = i;
+                break;
+              }
+            }
+
+            project.requestNumber = thisRequestNumber;
+            project.client = {
+              name: thisClient.name,
+              cliid: thisClient.cliid,
+              request: objectDeepCopy(thisClient.requests[thisRequestNumber].request),
+            };
+            projects.push(project);
+          }
+
+          for (let contents of contentsArr) {
+            if (contents.proid !== "") {
+              thisProject = projects.find((p) => { return p.proid === contents.proid });
+              contents.project = objectDeepCopy(thisProject);
+            } else {
+              contents.project = { client: { request: {} } };
+            }
+            thisDesigner = designers.find((d) => { return d.desid === contents.desid });
+            contents.designer = thisDesigner.designer;
+          }
+
+        } else {
+          for (let contents of contentsArr) {
+            contents.project = { client: { request: {} } };
+            thisDesigner = designers.find((d) => { return d.desid === contents.desid });
+            contents.designer = thisDesigner.designer;
+          }
+        }
+
+        const { subject, value } = equalJson(req.body);
+
+        if (subject === "평수") {
+
+          contentsArr = contentsArr.filter((c) => { return typeof c.contents.portfolio.spaceInfo.pyeong === "number" });
+          if (value === "10평 미만") {
+            contentsArr = contentsArr.filter((c) => {
+              const pyeong = c.contents.portfolio.spaceInfo.pyeong;
+              return pyeong < 10;
+            });
+          } else if (value === "60평 이상") {
+            contentsArr = contentsArr.filter((c) => {
+              const pyeong = c.contents.portfolio.spaceInfo.pyeong;
+              return pyeong >= 60;
+            });
+          } else {
+            contentsArr = contentsArr.filter((c) => {
+              const pyeong = c.contents.portfolio.spaceInfo.pyeong;
+              const standard = Number(value.replace(/[^0-9]/gi, ''))
+              return (pyeong >= standard && pyeong < (standard + 10));
+            });
+          }
+
+          res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+        } else if (subject === "예산") {
+
+          contentsArr = contentsArr.filter((c) => { return typeof c.project.client.request.budget === "string" });
+          if (value === "500만원 이하") {
+            contentsArr = contentsArr.filter((c) => {
+              const budget = Number(c.project.client.request.budget.replace(/[^0-9]/gi, ''));
+              return (budget > 50 && budget <= 500);
+            });
+          } else if (value === "6,000만원 이상") {
+            contentsArr = contentsArr.filter((c) => {
+              const budget = Number(c.project.client.request.budget.replace(/[^0-9]/gi, ''));
+              return (budget >= 6000 || budget <= 50);
+            });
+          } else {
+            contentsArr = contentsArr.filter((c) => {
+              const budget = Number(c.project.client.request.budget.replace(/[^0-9]/gi, ''));
+              const standard = Number(value.replace(/[^0-9]/gi, ''))
+              return (budget >= standard && budget < (standard + 1000));
+            });
+          }
+
+          res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+
+        } else if (subject === "서비스 종류") {
+
+          thisSerid = seridKeywords + String(serviceNames.findIndex((s) => { return s === value }) + 1) + 's';
+          contentsArr = contentsArr.filter((c) => { return c.service.serid === thisSerid });
+
+          res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+
+        } else if (subject === "서비스 기간") {
+
+          contentsArr = contentsArr.filter((c) => { return typeof c.project.process === "object" });
+          contentsArr = contentsArr.filter((c) => {
+            fromDate = c.project.process.contract.form.date.from;
+            toDate = c.project.process.contract.form.date.to;
+            dateDelta = Math.floor(((((toDate.valueOf() - fromDate.valueOf()) / 1000) / 60) / 60) / 24);
+            if (value === "3주 이내") {
+              return dateDelta < 21;
+            } else if (value === "6주 이상") {
+              return dateDelta >= 42;
+            } else {
+              return (dateDelta >= 21 && dateDelta < 42);
+            }
+          });
+          res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+
+        } else if (subject === "지역") {
+
+          contentsArr = contentsArr.filter((c) => { return typeof c.project.client.request.space === "object" });
+          contentsArr = contentsArr.filter((c) => {
+            if (value === "서울 / 경기") {
+
+              thisArr = [
+                "서울",
+                "남구",
+                "강동",
+                "강북",
+                "강서",
+                "관악",
+                "광진",
+                "구로",
+                "금천",
+                "노원",
+                "도봉",
+                "동대문",
+                "동작",
+                "마포",
+                "서대문",
+                "서초",
+                "성동",
+                "성북",
+                "송파",
+                "양천",
+                "영등포",
+                "용산",
+                "은평",
+                "종로",
+                "중구",
+                "중랑구",
+                "경기",
+                "의정부",
+                "포천",
+                "인천",
+              ];
+              return thisArr.some((str) => {
+                const thisReg = new RegExp("^[ ]*" + (str.trim()), "gi");
+                return thisReg.test(c.project.client.request.space.address.trim());
+              });
+
+            } else if (value === "충청 / 강원") {
+
+              thisArr = [
+                "충청",
+                "충북",
+                "충남",
+                "세종",
+                "대전",
+                "청주",
+                "제천",
+                "천안",
+                "강원",
+                "강릉",
+                "원주",
+                "속초",
+              ];
+              return thisArr.some((str) => {
+                const thisReg = new RegExp("^[ ]*" + (str.trim()), "gi");
+                return thisReg.test(c.project.client.request.space.address.trim());
+              });
+
+            } else if (value === "전라 / 경상") {
+
+              thisArr = [
+                "전라",
+                "경상",
+                "전남",
+                "전북",
+                "경북",
+                "경남",
+                "광주",
+                "대구",
+                "부산",
+                "울산",
+              ];
+              return thisArr.some((str) => {
+                const thisReg = new RegExp("^[ ]*" + (str.trim()), "gi");
+                return thisReg.test(c.project.client.request.space.address.trim());
+              });
+
+            } else if (value === "제주") {
+
+              thisArr = [
+                "제주",
+                "서귀포",
+              ];
+              return thisArr.some((str) => {
+                const thisReg = new RegExp("^[ ]*" + (str.trim()), "gi");
+                return thisReg.test(c.project.client.request.space.address.trim());
+              });
+
+            } else {
+
+              thisArr = [
+                "서울",
+                "남구",
+                "강동",
+                "강북",
+                "강서",
+                "관악",
+                "광진",
+                "구로",
+                "금천",
+                "노원",
+                "도봉",
+                "동대문",
+                "동작",
+                "마포",
+                "서대문",
+                "서초",
+                "성동",
+                "성북",
+                "송파",
+                "양천",
+                "영등포",
+                "용산",
+                "은평",
+                "종로",
+                "중구",
+                "중랑구",
+                "경기",
+                "의정부",
+                "포천",
+                "인천",
+                "충청",
+                "충북",
+                "충남",
+                "세종",
+                "대전",
+                "청주",
+                "제천",
+                "천안",
+                "강원",
+                "강릉",
+                "원주",
+                "속초",
+                "전라",
+                "경상",
+                "전남",
+                "전북",
+                "경북",
+                "경남",
+                "광주",
+                "대구",
+                "부산",
+                "울산",
+                "제주",
+                "서귀포",
+              ];
+
+              return thisArr.every((str) => {
+                const thisReg = new RegExp("^[ ]*" + (str.trim()), "gi");
+                return !thisReg.test(c.project.client.request.space.address.trim());
+              });
+            }
+          });
+          res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+
+        } else if (subject === "전체") {
+          res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+        } else {
+          res.send(JSON.stringify({ conids: contentsArr.map((c) => { return c.conid }) }));
+        }
+      }
+
+    } catch (e) {
+      logger.error("Log Console 서버 문제 생김 (rou_post_searchContents): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_getContents = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/getContents" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      const selfCoreMongo = instance.mongo;
+      const collection = "contents";
+      const hideContents = [ "p61", "p36", "a51", "a104", "a105" ];
+      const toNormal = true;
+      const defaultDelta = 45;
+      const moneyDelta = 2500000;
+      let limit;
+      let contentsArr_raw;
+      let contentsArr, designers;
+      let reviewArr, indexArr;
+      let indexSliceNumber;
+      let contentsProjectQuery;
+      let sortQuery;
+      let whereQuery;
+      let thisProid;
+      let period;
+      let thisProject;
+      let delta;
+      let dayDelta;
+
+      if (req.body.mode === "portfolio" || req.body.mode === "review") {
+
+        if (req.body.pid !== undefined) {
+          if (/^re/.test(req.body.pid)) {
+            contentsArr = await back.mongoRead(collection, { "contents.review.rid": req.body.pid }, { selfMongo });
+            contentsArr = contentsArr.filter((obj) => {
+              return obj.contents.review.rid === req.body.pid;
+            });
+          } else {
+            contentsArr = await back.mongoRead(collection, { "contents.portfolio.pid": req.body.pid }, { selfMongo });
+            contentsArr = contentsArr.filter((obj) => {
+              return obj.contents.portfolio.pid === req.body.pid;
+            });
+          }
+
+          if (contentsArr.length > 0) {
+            thisProid = contentsArr[0].proid;
+            contentsArr[0].consumer = moneyDelta;
+            if (/^p/gi.test(thisProid)) {
+              [ thisProject ] = await back.mongoPick("project", [ { proid: thisProid }, {
+                "process.contract.remain.calculation": 1,
+                "process.contract.form.date": 1,
+              } ], { selfMongo: selfCoreMongo });
+              if (thisProject !== undefined && thisProject !== null) {
+                delta = thisProject.process.contract.form.date.to.valueOf() - thisProject.process.contract.form.date.from.valueOf();
+                dayDelta = Math.floor((((delta / 1000) / 60) / 60) / 24);
+                if (!Number.isNaN(Number(dayDelta)) && dayDelta > 10) {
+                  period = "약 " + String(dayDelta) + "일";
+                } else {
+                  period = "약 " + String(defaultDelta) + "일";
+                }
+                contentsArr[0].consumer = thisProject.process.contract.remain.calculation.amount.consumer;
+                if (Number.isNaN(Number(contentsArr[0].consumer))) {
+                  contentsArr[0].consumer = moneyDelta;
+                }
+              } else {
+                period = "약 " + String(defaultDelta) + "일";
+              }
+            } else {
+              period = "약 " + String(defaultDelta) + "일";
+            }
+            contentsArr[0].period = period;
+
+            designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
+            res.send(JSON.stringify({
+              contentsArr: contentsArr,
+              designers: designers.frontMode(),
+            }));
+          } else {
+            res.send(JSON.stringify({
+              contentsArr: contentsArr,
+              designers: [],
+            }));
+          }
+
+        } else {
+
+          contentsProjectQuery = {
+            conid: 1,
+            desid: 1,
+            cliid: 1,
+            proid: 1,
+            service: 1,
+            photos: 1,
+            "contents.portfolio.pid": 1,
+            "contents.portfolio.date": 1,
+            "contents.portfolio.spaceInfo": 1,
+            "contents.portfolio.title": 1,
+            "contents.portfolio.color": 1,
+            "contents.portfolio.detailInfo": 1,
+            "contents.review.rid": 1,
+            "contents.review.date": 1,
+            "contents.review.title": 1,
+            "contents.review.detailInfo": 1,
+          };
+
+          sortQuery = {};
+          if (req.body.mode === "review") {
+            sortQuery = { "contents.review.detailInfo.order": -1 };
+          } else {
+            sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
+          }
+
+          whereQuery = { "$and": hideContents.map((pid) => { return { "contents.portfolio.pid": { "$not": { "$regex": "^" + pid + "$" } } } }) };
+          whereQuery["$and"].push({ "contents.portfolio.title.main": { "$not": { "$regex": "제목을 입력해"} } });
+          if (req.body.limit !== undefined) {
+            contentsArr = await back.mongoPick(collection, [ whereQuery, contentsProjectQuery ], { selfMongo, sort: sortQuery, limit: Number(req.body.limit) });
+          } else {
+            contentsArr = await back.mongoPick(collection, [ whereQuery, contentsProjectQuery ], { selfMongo, sort: sortQuery });
+          }
+
+          contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
+
+          if (contentsArr.length > 0) {
+            designers = await back.getDesignersByQuery({ $or: contentsArr.map((obj) => { return { desid: obj.desid } }) }, { selfMongo });
+            res.send(JSON.stringify({
+              contentsArr: contentsArr,
+              designers: designers.frontMode(),
+            }));
+          } else {
+            res.send(JSON.stringify({
+              contentsArr: contentsArr,
+              designers: [],
+            }));
+          }
+
+        }
+
+      } else if (req.body.mode === "designer") {
+
+        if (req.body.desid === undefined) {
+
+          contentsProjectQuery = {
+            conid: 1,
+            desid: 1,
+            cliid: 1,
+            proid: 1,
+            service: 1,
+            photos: 1,
+            "contents.portfolio.pid": 1,
+            "contents.portfolio.date": 1,
+            "contents.portfolio.spaceInfo": 1,
+            "contents.portfolio.title": 1,
+            "contents.portfolio.color": 1,
+            "contents.portfolio.detailInfo": 1,
+            "contents.review.rid": 1,
+            "contents.review.date": 1,
+            "contents.review.title": 1,
+            "contents.review.detailInfo": 1,
+          };
+          sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
+
+          designers = await back.getDesignersByQuery({}, { selfMongo });
+          contentsArr = await back.mongoPick(collection, [ { "$and": hideContents.map((pid) => { return { "contents.portfolio.pid": { "$not": { "$regex": "^" + pid + "$" } } } }) }, contentsProjectQuery ], { selfMongo, sort: sortQuery });
+          contentsArr = contentsArr.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
+
+          res.send(JSON.stringify({
+            contentsArr: contentsArr,
+            designers: designers.frontMode(),
+          }));
+
+        } else {
+
+          contentsProjectQuery = {
+            conid: 1,
+            desid: 1,
+            cliid: 1,
+            proid: 1,
+            service: 1,
+            photos: 1,
+            "contents.portfolio.pid": 1,
+            "contents.portfolio.date": 1,
+            "contents.portfolio.spaceInfo": 1,
+            "contents.portfolio.title": 1,
+            "contents.portfolio.color": 1,
+            "contents.portfolio.detailInfo": 1,
+            "contents.review.rid": 1,
+            "contents.review.date": 1,
+            "contents.review.title": 1,
+            "contents.review.detailInfo": 1,
+          };
+          sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
+
+          designers = await back.getDesignersByQuery({ desid: req.body.desid }, { selfMongo });
+          contentsArr = await back.mongoPick(collection, [ { desid: req.body.desid }, contentsProjectQuery ], { selfMongo, sort: sortQuery });
+
+          res.send(JSON.stringify({
+            contentsArr: contentsArr,
+            designers: designers.frontMode(),
+          }));
+
+        }
+
+      } else if (req.body.mode === "index") {
+
+        indexSliceNumber = 9;
+
+        contentsProjectQuery = {
+          conid: 1,
+          desid: 1,
+          cliid: 1,
+          proid: 1,
+          service: 1,
+          photos: 1,
+          "contents.portfolio.pid": 1,
+          "contents.portfolio.date": 1,
+          "contents.portfolio.spaceInfo": 1,
+          "contents.portfolio.title": 1,
+          "contents.portfolio.color": 1,
+          "contents.portfolio.detailInfo": 1,
+          "contents.review.rid": 1,
+          "contents.review.date": 1,
+          "contents.review.title": 1,
+          "contents.review.detailInfo": 1,
+        };
+
+        whereQuery = { "$and": hideContents.map((pid) => { return { "contents.portfolio.pid": { "$not": { "$regex": "^" + pid + "$" } } } }) };
+        whereQuery["$and"].push({ "contents.portfolio.title.main": { "$not": { "$regex": "제목을 입력해"} } });
+
+        contentsArr_raw = await back.mongoPick(collection, [ whereQuery, contentsProjectQuery ], { selfMongo });
+        reviewArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); }).filter((obj) => { return !/999/gi.test(obj.contents.review.rid); });
+        indexArr = contentsArr_raw.filter((obj) => { return !hideContents.includes(obj.contents.portfolio.pid); });
+
+        contentsArr.sort((a, b) => {
+          return Number(b.contents.portfolio.detailInfo.sort.key9) - Number(a.contents.portfolio.detailInfo.sort.key9);
+        });
+        reviewArr.sort((a, b) => {
+          return b.contents.review.detailInfo.order - a.contents.review.detailInfo.order;
+        });
+        indexArr.sort((a, b) => {
+          return Number(b.contents.portfolio.detailInfo.sort.key8) - Number(a.contents.portfolio.detailInfo.sort.key8);
+        });
+
+        contentsArr = contentsArr.slice(0, indexSliceNumber);
+        reviewArr = reviewArr.slice(0, indexSliceNumber);
+        indexArr = indexArr.slice(0, indexSliceNumber * 2);
+
+        res.send(JSON.stringify({ contentsArr, reviewArr, indexArr }));
+
+      } else if (req.body.mode === "magazine") {
+
+        contentsArr_raw = await back.mongoRead("magazine", {}, { selfMongo });
+        contentsArr_raw.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+
+        if (req.body.mid !== undefined) {
+          contentsArr = contentsArr_raw.filter((obj) => {
+            return obj.mid === req.body.mid;
+          });
+        } else {
+          contentsArr = contentsArr_raw.map((obj) => {
+            let contents;
+            contents = equalJson(JSON.stringify(obj.contents));
+            contents.detail = contents.detail.slice(0, 2);
+            return {
+              magid: obj.magid,
+              mid: obj.mid,
+              date: obj.date,
+              editor: obj.editor,
+              contents
+            }
+          })
+        }
+
+        res.send(JSON.stringify({
+          contentsArr: contentsArr,
+        }));
+
+      }
+
+    } catch (e) {
+      logger.error("Log Console 서버 문제 생김 (rou_post_getContents): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_getLength = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, objectDeepCopy } = this.mother;
+  let obj = {};
+  obj.link = [ "/getLength" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      const selfCoreMongo = instance.mongo;
+      let whereQuery, projectQuery;
+      let contentsLength, projectLength, designerLength;
+      let contentsArr, projectArr, designerArr;
+
+      whereQuery = {};
+      projectQuery = {
+        conid: 1,
+      };
+      contentsArr = await back.mongoPick("contents", [ objectDeepCopy(whereQuery), objectDeepCopy(projectQuery) ], { selfMongo: selfMongo });
+      contentsLength = contentsArr.length;
+
+      whereQuery = { desid: { $regex: "^d" } };
+      projectQuery = {
+        proid: 1,
+        desid: 1,
+      };
+      projectArr = await back.mongoPick("project", [ objectDeepCopy(whereQuery), objectDeepCopy(projectQuery) ], { selfMongo: selfCoreMongo });
+      projectLength = projectArr.length;
+
+      whereQuery = {};
+      projectQuery = {
+        desid: 1,
+      };
+      designerArr = await back.mongoPick("designer", [ objectDeepCopy(whereQuery), objectDeepCopy(projectQuery) ], { selfMongo: selfMongo });
+      designerLength = designerArr.length;
+
+      res.send(JSON.stringify({
+        contents: contentsLength,
+        project: projectLength,
+        designer: designerLength,
+      }));
+
+    } catch (e) {
+      logger.error("Log Console 서버 문제 생김 (rou_post_getLength): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_updateImagesOrder = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, objectDeepCopy, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateImagesOrder" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { pid, data, contents, title, photo } = equalJson(req.body);
+      const { apart, wording: titleWording, pyeong, service } = title;
+      const collection = "contents";
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      let whereQuery, updateQuery;
+      let updatedContents;
+      let photoUpdateBoo;
+
+      photoUpdateBoo = (photo === 1 || photo === '1');
+      whereQuery = { "contents.portfolio.pid": pid };
+      updateQuery = {};
+      updateQuery["contents.portfolio.contents.detail"] = contents;
+      updateQuery["contents.portfolio.detailInfo.photodae"] = [ data.filter((o) => { return o.gs === "s" }).filter((o) => { return o.dae })[0].fromIndex, data.filter((o) => { return o.gs === "g" }).filter((o) => { return o.dae })[0].fromIndex ];
+      updateQuery["contents.portfolio.spaceInfo.space"] = apart;
+      updateQuery["contents.portfolio.spaceInfo.pyeong"] = pyeong;
+      updateQuery["contents.portfolio.detailInfo.service"] = service;
+      updateQuery["contents.portfolio.title.main"] = titleWording + ", " + apart + " " + String(pyeong) + "py " + service;
+      updateQuery["contents.portfolio.title.sub"] = titleWording + ", " + apart + " " + service;
+
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo: selfCoreMongo });
+
+      updatedContents = (await back.mongoRead(collection, whereQuery, { selfMongo: selfCoreMongo }))[0];
+      delete updatedContents._id;
+
+      res.send(JSON.stringify({ contents: updatedContents }));
+
+    } catch (e) {
+      console.log(e);
+      logger.error("Log Console 서버 문제 생김 (rou_post_updateImagesOrder): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_updateAddressRegion = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, objectDeepCopy, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateAddressRegion" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { pid, address: apart, region } = equalJson(req.body);
+      const collection = "contents";
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      let whereQuery, updateQuery;
+      let updatedContents;
+      let titleWording;
+      let originalContents;
+      let pyeong;
+      let service;
+
+      [ originalContents ] = await back.mongoRead(collection, { "contents.portfolio.pid": pid }, { selfMongo: selfCoreMongo });
+      titleWording = originalContents.contents.portfolio.title.main.split(", ")[0];
+      pyeong = originalContents.contents.portfolio.spaceInfo.pyeong;
+      service = originalContents.contents.portfolio.detailInfo.service;
+
+      whereQuery = { "contents.portfolio.pid": pid };
+      updateQuery = {};
+      updateQuery["contents.portfolio.spaceInfo.space"] = apart;
+      updateQuery["contents.portfolio.spaceInfo.region"] = region;
+      updateQuery["contents.portfolio.title.main"] = titleWording + ", " + apart + " " + String(pyeong) + "py " + service;
+      updateQuery["contents.portfolio.title.sub"] = titleWording + ", " + apart + " " + service;
+
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo: selfCoreMongo });
+
+      updatedContents = (await back.mongoRead(collection, whereQuery, { selfMongo: selfCoreMongo }))[0];
+      delete updatedContents._id;
+
+      res.send(JSON.stringify({ contents: updatedContents }));
+
+    } catch (e) {
+      console.log(e);
+      logger.error("Log Console 서버 문제 생김 (rou_post_updateAddressRegion): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_updateKey9Order = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, objectDeepCopy, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateKey9Order" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { pid, order } = equalJson(req.body);
+      const collection = "contents";
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      let whereQuery, updateQuery;
+      let updatedContents;
+      let titleWording;
+
+      whereQuery = { "contents.portfolio.pid": pid };
+      updateQuery = {};
+      updateQuery["contents.portfolio.detailInfo.sort.key9"] = String(order).replace(/[^0-9]/gi, '');
+
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo: selfCoreMongo });
+
+      updatedContents = (await back.mongoRead(collection, whereQuery, { selfMongo: selfCoreMongo }))[0];
+      delete updatedContents._id;
+
+      res.send(JSON.stringify({ contents: updatedContents }));
+
+    } catch (e) {
+      console.log(e);
+      logger.error("Log Console 서버 문제 생김 (rou_post_updateKey9Order): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_updateSlideOrder = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, objectDeepCopy, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateSlideOrder" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { pid, order, index } = equalJson(req.body);
+      const collection = "contents";
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      let whereQuery, updateQuery;
+      let updatedContents;
+
+      whereQuery = { "contents.portfolio.pid": pid };
+      updateQuery = {};
+      updateQuery["contents.portfolio.detailInfo.slide." + String(Number(order) - 1)] = Number(index);
+
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo: selfCoreMongo });
+
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      console.log(e);
+      logger.error("Log Console 서버 문제 생김 (rou_post_updateSlideOrder): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_errorMessage = function () {
+  const instance = this;
+  const { equalJson } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/errorMessage" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.text === undefined) {
+        throw new Error("invaild post, must be text");
+      }
+      const { text } = req.body;
+      await logger.error(text);
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      logger.error("Static Lounge 서버 문제 생김 (rou_post_errorMessage): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_getAnalytics = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const parser = require("ua-parser-js");
+  const { equalJson, ipParsing, sleep } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/getAnalytics" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const collection = "homeliaisonAnalytics";
+      const rawUserAgent = req.useragent;
+      const emptyIp = address.frontinfo.ip.outer;
+      const { source: userAgent, browser, os, platform } = rawUserAgent;
+      let name;
+      let custom;
+      let ip, referer;
+      let thisData;
+      let thisId;
+      let ipObj;
+      let safeNum;
+      let parserResult;
+      let user;
+      let temp;
+
+      thisData = equalJson(req.body);
+
+      ip = null;
+      if (typeof thisData.info === "object" && thisData.info !== null) {
+        ip = thisData.info.ip;
+        referer = thisData.info.referer;
+        user = thisData.info.userAgent;
+      } else {
+        temp = (req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"]);
+        if (typeof temp !== "string") {
+          ip = emptyIp;
+        } else {
+          ip = temp.trim().replace(/[^0-9\.]/gi, '');
+        }
+        referer = (req.headers.referer === undefined ? "" : req.headers.referer);
+        user = userAgent;
+      }
+
+      if (typeof ip !== "string") {
+        ip = emptyIp;
+      }
+
+      if (typeof thisData.id === "string") {
+        thisId = thisData.id;
+      } else {
+        thisId = "(not set)";
+      }
+
+      name = "fromServer_" + thisData.action;
+
+      ipObj = await ipParsing(ip);
+
+      safeNum = 0;
+      while (Object.keys(ipObj).length === 0) {
+        if (safeNum > 10) {
+          break;
+        }
+        await sleep(100);
+        ipObj = await ipParsing(ip);
+        safeNum = safeNum + 1;
+      }
+
+      custom = {
+        id: thisData.id,
+        network: {
+          ip,
+          referer,
+          userAgent,
+          browser,
+          os,
+          platform,
+          mobile: rawUserAgent.isMobile,
+          ...ipObj
+        },
+        date: (new Date()).valueOf(),
+        data: {
+          page: thisData.page,
+          action: thisData.action,
+          raw: thisData.data,
+        }
+      };
+
+      thisData.date = new Date();
+      thisData.network = { ...ipObj };
+      thisData.network.ip = ip;
+
+      try {
+        parserResult = parser(user);
+
+        delete parserResult.cpu;
+        delete parserResult.ua;
+        delete parserResult.engine;
+
+        parserResult.browser = parserResult.browser.name;
+        parserResult.os.browser = parserResult.browser;
+
+        delete parserResult.browser;
+
+        if (parserResult.os.name === "Windows") {
+          if (parserResult.device.vendor === undefined) {
+            parserResult.device.vendor = "Unknown";
+          }
+          if (parserResult.device.model === undefined) {
+            parserResult.device.model = "Unknown";
+          }
+          parserResult.device.type = "desktop";
+        } else if (/Mac OS/gi.test(parserResult.os.name)) {
+          parserResult.device.type = "desktop";
+        }
+
+        if (parserResult.device.vendor === undefined) {
+          parserResult.device.vendor = "Unknown";
+        }
+        if (parserResult.device.model === undefined) {
+          parserResult.device.model = "Unknown";
+        }
+        if (parserResult.device.type === undefined) {
+          parserResult.device.type = "desktop";
+        }
+
+        thisData.device = equalJson(JSON.stringify(parserResult));
+      } catch {
+        thisData.device = {};
+      }
+      if (thisData.network.ip.trim().replace(/[^0-9\.]/gi, '') !== address.officeinfo.ghost.outer.trim().replace(/[^0-9\.]/gi, '')) {
+        await back.mongoCreate(collection, thisData, { selfMongo: instance.mongolocal });
+      }
+      instance.facebook.conversionEvent({
+        name,
+        data: {
+          ip: ip,
+          userAgent: userAgent,
+        },
+        custom,
+      }).catch((err) => {
+        logger.error("Static Lounge 서버 문제 생김 (rou_post_getAnalytics): " + err.message).catch((e) => { console.log(e); });
+      });
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      console.log(e);
+      logger.error("Static Lounge 서버 문제 생김 (rou_post_getAnalytics): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_updateContents = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, messageLog, messageSend } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateContents" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.whereQuery === undefined || req.body.updateQuery === undefined) {
+        throw new Error("invaild post");
+      }
+
+      const selfMongo = instance.mongo;
+      const { whereQuery, updateQuery } = equalJson(req.body);
+      let data;
+
+      if (typeof whereQuery !== "object" || whereQuery === null) {
+        throw new Error("invaild query object");
+      }
+      if (Object.keys(whereQuery).length === 0) {
+        throw new Error("query ban");
+      }
+      if (typeof updateQuery !== "object" || updateQuery === null) {
+        throw new Error("invaild query object");
+      }
+
+      await back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+      data = await back.updateContents([ whereQuery, updateQuery ], { selfMongo });
+      res.send(JSON.stringify({ message: data }));
+
+    } catch (e) {
+      logger.error("Log console 문제 생김 (rou_post_updateContents): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_getClientReport = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, messageLog, messageSend, dateToString } = this.mother;
+  let obj = {};
+  obj.link = [ "/getClientReport" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.fromYear === undefined || req.body.fromMonth === undefined || req.body.toYear === undefined || req.body.toMonth === undefined) {
+        throw new Error("invalid post");
+      }
+      const { fromYear, fromMonth, toYear, toMonth } = equalJson(req.body);
+      const selfMongo = instance.mongolocal;
+      let fromDate, toDate;
+      let monthlyAnalytics;
+      let thisFrom, thisTo;
+      let tempRows;
+      let tempRows2;
+
+      fromDate = new Date(fromYear, fromMonth - 1, 1);
+      toDate = new Date(toYear, toMonth, 1);
+
+      monthlyAnalytics = await back.mongoRead("complexAnalytics", {
+        $and: [
+          { "date.from": { $gte: fromDate }, },
+          { "date.to": { $lte: toDate } },
+        ]
+      }, { selfMongo });
+
+      monthlyAnalytics = monthlyAnalytics.map((obj) => {
+        let resultObj;
+        let copiedDate;
+
+        copiedDate = new Date(JSON.stringify(obj.date.from).slice(1, -1));
+        copiedDate.setDate(copiedDate.getDate() + 10);
+
+        resultObj = {};
+
+        resultObj.standard = copiedDate;
+        resultObj.year = copiedDate.getFullYear();
+        resultObj.month = copiedDate.getMonth() + 1;
+        resultObj.mau = obj.data.users.total;
+
+        return resultObj;
+      })
+
+      monthlyAnalytics.sort((a, b) => {
+        return a.standard.valueOf() - b.standard.valueOf();
+      })
+
+      for (let obj of monthlyAnalytics) {
+        thisFrom = new Date(obj.year, obj.month - 1, 1);
+        thisTo = new Date(obj.year, obj.month - 1, 1);
+        thisTo.setMonth(thisTo.getMonth() + 1);
+
+        tempRows = await back.mongoRead("dailyClients", {
+          $and: [
+            { "date.from": { $gte: thisFrom }, },
+            { "date.to": { $lte: thisTo } },
+          ]
+        }, { selfMongo });
+
+        obj.adClients = tempRows.map((obj) => { return obj.data.detail }).flat().filter((obj2) => {
+          return obj2.users.some((obj3) => {
+            if (obj3 === null) {
+              return false;
+            } else {
+              return (obj3.source.campaign.filter((str) => { return str.trim() !== "(not set)"; }).length > 0);
+            }
+          })
+        }).length;
+
+        tempRows2 = await back.mongoRead("dailyCampaign", {
+          $and: [
+            { "date.from": { $gte: thisFrom }, },
+            { "date.to": { $lte: thisTo } },
+          ]
+        }, { selfMongo });
+
+        obj.charge = tempRows2.map((obj2) => { return obj2.value.charge }).reduce((acc, curr) => { return acc + curr }, 0);
+      }
+
+      res.send(JSON.stringify(monthlyAnalytics));
+
+    } catch (e) {
+      logger.error("Log console 문제 생김 (rou_post_getClientReport): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_clientAnalytics = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/clientAnalytics" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { mode } = equalJson(req.body);
+      const collection = "clientAnalytics";
+      let rows;
+      let projectKeys;
+
+      if (mode === "get") {
+
+        if (req.body.whereQuery === undefined || req.body.projectQuery === undefined) {
+          throw new Error("invalid post");
+        }
+        const { whereQuery, projectQuery } = equalJson(req.body);
+        if (typeof whereQuery !== "object" || whereQuery === null) {
+          throw new Error("invalid where query");
+        }
+        if (typeof projectQuery !== "object" || projectQuery === null) {
+          throw new Error("invalid project query");
+        }
+
+        projectKeys = Object.keys(projectQuery);
+        if (projectKeys.length === 0) {
+          rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        } else {
+          rows = await back.mongoPick(collection, [ whereQuery, projectQuery ], { selfMongo });
+        }
+
+        rows.sort((a, b) => { return b.client.requests[0].request.timeline.valueOf() - a.client.requests[0].request.timeline.valueOf() });
+
+        res.send(JSON.stringify(rows));
+
+      } else {
+        throw new Error("invalid mode");
+      }
+
+    } catch (e) {
+      logger.error("Log console 문제 생김 (rou_post_clientAnalytics): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_extractAnalytics = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/extractAnalytics" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { mode } = equalJson(req.body);
+      let collection;
+      let fromDate, toDate;
+      let whereQuery;
+      let rows;
+
+      if (mode === "daily") {
+
+        if (req.body.fromDate === undefined || req.body.toDate === undefined) {
+          throw new Error("invalid post 2");
+        }
+
+        ({ fromDate, toDate } = equalJson(req.body));
+        collection = "dailyAnalytics";
+
+        fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate(), 0, 0, 0);
+        toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate(), 0, 0, 0);
+
+        whereQuery = {};
+        whereQuery["$and"] = [];
+        whereQuery["$and"].push({
+          "date.from": {
+            $gte: fromDate,
+          }
+        });
+        whereQuery["$and"].push({
+          "date.from": {
+            $gte: fromDate,
+          }
+        });
+        whereQuery["$and"].push({
+          "date.from": {
+            $lte: toDate,
+          }
+        });
+
+        rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        res.send(JSON.stringify(rows));
+
+      } else if (mode === "charge" || mode === "campaign") {
+
+        if (req.body.fromDate === undefined || req.body.toDate === undefined) {
+          throw new Error("invalid post 2");
+        }
+
+        ({ fromDate, toDate } = equalJson(req.body));
+        collection = "dailyCampaign";
+
+        fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate(), 0, 0, 0);
+        toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate(), 0, 0, 0);
+
+        whereQuery = {};
+        whereQuery["$and"] = [];
+        whereQuery["$and"].push({
+          "date.from": {
+            $gte: fromDate,
+          }
+        });
+        whereQuery["$and"].push({
+          "date.from": {
+            $gte: fromDate,
+          }
+        });
+        whereQuery["$and"].push({
+          "date.from": {
+            $lte: toDate,
+          }
+        });
+        if (mode === "charge") {
+          whereQuery["$and"].push({
+            "information.mother": {
+              $ne: "unknown"
+            }
+          });
+        }
+
+        rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        res.send(JSON.stringify(rows));
+
+      } else {
+        throw new Error("invalid mode");
+      }
+
+
+    } catch (e) {
+      logger.error("Log console 문제 생김 (rou_post_extractAnalytics): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_requestScript = function () {
+  const instance = this;
+  const { requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/requestScript" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.url === undefined) {
+        throw new Error("invaild post");
+      }
+      const responses = await requestSystem(global.decodeURIComponent(req.body.url));
+      res.send(JSON.stringify({ data: responses.data }));
+    } catch (e) {
+      console.log(req);
+      await logger.error("Static Lounge 서버 문제 생김 (rou_post_requestScript): " + e.message + " / " + global.decodeURIComponent(req.body.url));
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
