@@ -3550,7 +3550,7 @@ RawJs.prototype.baseMaker = function () {
 
                         } else {
 
-                          finalDesignerContents = "";
+                          finalDesignerContents = null;
                           while (typeof finalDesignerContents !== "string") {
                             finalDesignerContents = await GeneralJs.promptVeryLong("디자이너 글을 작성해주세요!", "");
                             if (typeof finalDesignerContents === "string") {
@@ -3568,7 +3568,10 @@ RawJs.prototype.baseMaker = function () {
                             individual: "true",
                             rawBody: finalDesignerContents,
                           }, S3HOST + ":3001" + "/updateRawInfo");
-
+                          loading.remove();
+                          removeByClass(tempInputClassName);
+                          window.alert("원본 사진 처리가 시작되었습니다. 슬랙의 안내를 따라주세요!");
+                          
                         }
 
                       } else {
