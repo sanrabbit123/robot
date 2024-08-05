@@ -4413,8 +4413,6 @@ RawJs.prototype.launching = async function () {
     this.baseMaker();
     this.portfolioList = await ajaxJson({ path: instance.starContents.find((o) => { return o.name === "portfolio" }).absolute }, S3HOST + ":3001" + "/listFiles");
 
-    
-
     window.addEventListener("popstate", (e) => {
       e.preventDefault();
       if (instance.pageHistory.length > 1) {

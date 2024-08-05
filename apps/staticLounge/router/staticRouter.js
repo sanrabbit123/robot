@@ -1519,66 +1519,10 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
       if (proid.trim() !== "") {
         commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c3508)};`;
         commands += `zip ${shellLink(staticConst)}/corePortfolio/rawImage/${proid}${splitToken}${shellLink(c3508)}.zip ./*;`;
-      }
-      commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c3508)};`;
-      commands += `zip ${shellLink(process.env.HOME)}/${shellLink(tempFolderName)}/${shellLink(shareDesignerName)} ./*;`;
-      commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c780)};`;
-      commands += `zip ${shellLink(process.env.HOME)}/${shellLink(tempFolderName)}/${shellLink(shareClientName)} ./*;`;
-
-      await shellExec(commands);
-
-      safeNum0 = 0;
-      do {
-        zipIdDesigner = await drive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)}`);
-        await sleep(500);
-        safeNum0++;
-        if (safeNum0 >= 10) {
-          break;
-        }
-      } while (zipIdDesigner === null && safeNum0 < 10);
-      await sleep(500);
-      if (zipIdDesigner !== null) {
-        zipLinkDesigner = await drive.read_webView_inPython(zipIdDesigner);
-      } else {
-        logger.error("Static lounge 서버 문제 생김 (rou_post_zipPhoto): " + "upload fail => " + shareDesignerName).catch((e) => { console.log(e); });
-        zipLinkDesigner = null;
+        await shellExec(commands);
       }
 
-      if (tempArr.length === 3) {
-        zipIdClient = null;
-        zipLinkClient = null;
-      } else {
-        safeNum1 = 0;
-        do {
-          zipIdClient = await drive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareClientName)}`);
-          await sleep(500);
-          safeNum1++;
-          if (safeNum1 >= 10) {
-            break;
-          }
-        } while (zipIdClient === null && safeNum1 < 10);
-        await sleep(500);
-        if (zipIdClient !== null) {
-          zipLinkClient = await drive.read_webView_inPython(zipIdClient);
-        } else {
-          zipIdClient = null;
-          zipLinkClient = null;
-        }
-      }
-
-      await shellExec([
-        [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareClientName}` ] ],
-        [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareDesignerName}` ] ],
-      ]);
-
-      res.send(JSON.stringify({
-        designer: zipLinkDesigner,
-        client: zipLinkClient,
-        googleId: {
-          designer: zipIdDesigner,
-          client: zipIdClient,
-        }
-      }));
+      res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_zipPhoto): " + e.message).catch((e) => { console.log(e); });
@@ -6990,7 +6934,8 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
           await shellExec("mv", [ keyFolder + "/" + photoName, portfolioConst + "/" ]);
         }
       }
-
+      await sleep(500);
+      await shellExec("rm", [ "-rf", keyFolder ]);
       await messageSend({ text: thisSetName + " 처리를 시작합니다. 슬렉에 처리 성공 또는 실패 알림이 올 때까지 다음 원본 사진 처리요청을 하지 말아주세요!", channel, voice });
       filter.rawToRaw([
         {

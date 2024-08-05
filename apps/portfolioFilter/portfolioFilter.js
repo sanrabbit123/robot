@@ -726,6 +726,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         await back.mongoCreate(collection, finalObj, { selfMongo });
         console.log("db in success");
 
+
         folderPathList = await fileSystem(`readFolder`, [ folderPath ]);
         fromArr = [];
         toArr = [];
@@ -733,7 +734,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         try {
           await shellExec("mkdir", [ `${forecastPath}/${this.pid}` ]);
         } catch {}
-
         for (let f of folderPathList) {
           fromArr.push(`${folderPath}/${f}`);
           toArr.push(`${foreCastContant}/${this.pid}/${f}`);
@@ -741,6 +741,9 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         }
         await ghostFileUpload(fromArr, toArr);
         console.log(`forecast copy done`);
+
+
+
 
         [ project ] = await back.mongoRead("project", { proid: rawObj.proid }, { selfMongo: selfCoreMongo });
         await back.updateProject([
@@ -757,21 +760,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         clientObj = targetClient;
         designerObj = targetDesigner;
 
-        zipPhotoRes = await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
-        zipIdDesigner = zipPhotoRes.data.googleId.designer;
-        zipIdClient = zipPhotoRes.data.googleId.client;
-
-        await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/shareGoogleId", {
-          mode: "store",
-          proid: project.proid,
-          cliid: project.cliid,
-          desid: project.desid,
-          pid: nextPid,
-          zipIdDesigner,
-          zipIdClient,
-        }, {
-          headers: { "Content-Type": "application/json" }
-        });
+        await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
 
         await shellExec(`rm -rf ${shellLink(folderPath)};`);
 

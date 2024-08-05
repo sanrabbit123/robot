@@ -4565,6 +4565,128 @@ ContentsJs.prototype.contentsExtractEvent = async function () {
   }
 }
 
+ContentsJs.prototype.rawCommentView = function (proid) {
+  const instance = this;
+  const { createNode, withOut, colorChip, ajaxJson, removeByClass, dateToString, svgMaker } = GeneralJs;
+  return async function () {
+    try {
+      const totalContents = document.getElementById("totalcontents");
+      const rawCommentPopupClassName = "rawCommentPopupClassName";
+      const { belowHeight } = instance;
+      const ea = "px";
+      const zIndex = 4;
+      let thisRawContents;
+      let cancelBack, whitePrompt;
+      let whitePromptWidth;
+      let whitePromptMarginTop;
+      let realBaseTong;
+      let realMargin;
+      let dateCloseTong;
+      let contentsTong;
+      let closeButtonHeight;
+      let grayBlockBetween;
+      let textMargin;
+      let updatedTextTop;
+      let textSize;
+      let xIconWidth;
+      let textWeight;
+      let textLineHeight;
+      let iframeLink;
+
+      whitePromptMarginTop = 30;
+      whitePromptWidth = window.innerWidth - (whitePromptMarginTop * 2);
+      
+      realMargin = 20;
+      closeButtonHeight = 50;
+      grayBlockBetween = 8;
+
+      textMargin = 30;
+      updatedTextTop = -1;
+      textSize = 14;
+      xIconWidth = 16;
+
+      textWeight = 400;
+      textLineHeight = 1.6;
+
+      iframeLink = "/raw?dataonly=true&entire=true";
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ rawCommentPopupClassName ],
+        event: {
+          click: (e) => {
+            removeByClass(rawCommentPopupClassName);
+          }
+        },
+        style: {
+          top: String(0),
+          left: String(0),
+          width: withOut(0, ea),
+          height: withOut(belowHeight, ea),
+          background: colorChip.black,
+          opacity: String(0.3),
+          position: "fixed",
+          zIndex: String(zIndex),
+        }
+      });
+
+      whitePrompt = createNode({
+        mother: totalContents,
+        class: [ rawCommentPopupClassName ],
+        event: {
+          click: (e) => { e.stopPropagation() }
+        },
+        style: {
+          display: "inline-flex",
+          position: "fixed",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          borderRadius: String(5) + "px",
+          background: colorChip.white,
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          width: String(whitePromptWidth) + ea,
+          height: "calc(calc(100vh - " + String(belowHeight) + ea + ") - " + String(whitePromptMarginTop * 2) + ea + ")",
+          left: withOut(50, whitePromptWidth / 2, ea),
+          top: String(whitePromptMarginTop) + ea,
+          zIndex: String(zIndex),
+          animation: "fadeuplite 0.3s ease",
+          overflow: "hidden",
+        }
+      });
+
+      realBaseTong = createNode({
+        mother: whitePrompt,
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          width: withOut(0 * 2, ea),
+          height: withOut(0 * 2, ea),
+        },
+        child: {
+          mode: "iframe",
+          attribute: {
+            src: iframeLink,
+          },
+          style: {
+            position: "absolute",
+            display: "block",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            border: String(0),
+          }
+        }
+      });
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 ContentsJs.prototype.communicationRender = function () {
   const instance = this;
   const { communication } = this.mother;
@@ -4577,7 +4699,8 @@ ContentsJs.prototype.communicationRender = function () {
     },
     async function (e) {
       try {
-        const pid = document.querySelector('.' + whiteCardClassName).getAttribute("pid");
+        const cards = [ ...document.querySelectorAll('.' + whiteCardClassName) ];
+        const pid = cards[cards.length - 1].getAttribute("pid");
         if (typeof pid === "string") {
           await ajaxJson({ pid }, "https://" + FILEHOST + ":3001/rawUpdateSubject");
           window.alert("자동 발행이 시작되었습니다. 슬렉 안내와 알람을 따라주세요!");
@@ -4587,6 +4710,23 @@ ContentsJs.prototype.communicationRender = function () {
       }
     }
   ]);
+
+  communication.setItem([
+    () => { return "신규 컨텐츠 발행"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let popupFunction;
+        popupFunction = instance.rawUploadView();
+        await popupFunction();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
 }
 
 ContentsJs.prototype.launching = async function () {

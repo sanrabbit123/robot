@@ -8065,7 +8065,7 @@ ProjectJs.prototype.communicationRender = function () {
   communication.setItem([
     () => { return "디자이너 글 확인"; },
     function () {
-      return true;
+      return (instance.whiteBox !== null);
     },
     async function (e) {
       try {
