@@ -1715,7 +1715,7 @@ PortfolioFilter.prototype.rawToContents = async function (pid, justOrderMode = f
   
       await resource.launching(noteArr);
   
-      await messageSend({ text: `${thisDesigner.designer} 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
+      await messageSend({ text: `${thisDesigner.designer} 디자이너 포트폴리오 컨텐츠를 자동으로 웹에 업로드하였습니다. 편집을 시작해주세요! 편집이 완료되어야 발행이 정상적으로 완료됩니다.\nlink : ${portfolioLink + pid}&edit=true`, channel });
     
     }
 
