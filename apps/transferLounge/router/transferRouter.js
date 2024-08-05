@@ -3422,32 +3422,20 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
           thisDesigner = await back.getDesignerById(desid, { selfMongo: selfCoreMongo, toNormal: true });
           introduction = thisDesigner.setting.front.introduction.desktop.join(" ").trim() + "\n\n" + thisDesigner.setting.description.join("\n");
           introduction = introduction.trim();
-
-          if (/NULL/g.test(introduction)) {
-            introduction = "";
-            jsonModel = {
-              date: new Date(),
-              desid,
-              introduction,
-              keywords: [],
-              selected: [],
-            }
-          } else {
-            tempResponse = await requestSystem("https://" + address.aliveinfo.host + "/extractKeywords", { sentence: introduction }, { headers: { "Content-Type": "application/json" } });
-            keywords = objectDeepCopy(tempResponse.data.keywords).map((str) => { return str.trim(); }).map((str) => {
-              return str.replace(/홈 스타일링/gi, "홈스타일링");
-            }).filter((str) => {
-              return str !== "홈스타일링" && str !== "인테리어" && str !== "스타일링" && str !== "인테리어 디자인" && str !== "디자인" && str !== "시공" && str !== "인테리어 디자이너" && str !== "디자이너" && str !== "안녕하세요" && str !== "경험" && str !== "디자인" && str !== "스타일" && str !== "디자인 스타일" && str !== "인테리어 설계";
-            }).filter((str) => {
-              return str.length < 15 && str.length > 2;
-            })
-            jsonModel = {
-              date: new Date(),
-              desid,
-              introduction,
-              keywords,
-              selected: [],
-            }
+          jsonModel = {
+            date: new Date(),
+            desid,
+            introduction,
+            keywords: [
+              "꼼꼼한 스타일",
+              "편안한 상담",
+              "퀄리티 있는",
+              "안정감 있는",
+              "원활한 소통",
+              "커뮤니케이션",
+              "완벽한 마무리",
+            ],
+            selected: [],
           }
 
           await back.mongoCreate(collection, objectDeepCopy(jsonModel), { selfMongo });
@@ -3467,14 +3455,15 @@ TransferRouter.prototype.rou_post_designerRepresentativeKeywords = function () {
             if (/NULL/g.test(introduction)) {
               res.send(JSON.stringify({ data: targetData }));
             } else {
-              tempResponse = await requestSystem("https://" + address.aliveinfo.host + "/extractKeywords", { sentence: introduction }, { headers: { "Content-Type": "application/json" } });
-              keywords = objectDeepCopy(tempResponse.data.keywords).map((str) => { return str.trim(); }).map((str) => {
-                return str.replace(/홈 스타일링/gi, "홈스타일링");
-              }).filter((str) => {
-                return str !== "홈스타일링" && str !== "인테리어" && str !== "스타일링" && str !== "인테리어 디자인" && str !== "디자인" && str !== "시공" && str !== "인테리어 디자이너" && str !== "디자이너" && str !== "안녕하세요" && str !== "경험" && str !== "디자인" && str !== "스타일" && str !== "디자인 스타일" && str !== "인테리어 설계";
-              }).filter((str) => {
-                return str.length < 15 && str.length > 2;
-              })
+              keywords = [
+                "꼼꼼한 스타일",
+                "편안한 상담",
+                "퀄리티 있는",
+                "안정감 있는",
+                "원활한 소통",
+                "커뮤니케이션",
+                "완벽한 마무리",
+              ]
 
               await back.mongoUpdate(collection, [ { desid }, { "date": new Date(), "introduction": introduction, "keywords": objectDeepCopy(keywords), "selected": [] } ], { selfMongo })
               rows = await back.mongoRead(collection, { desid: desid }, { selfMongo });
