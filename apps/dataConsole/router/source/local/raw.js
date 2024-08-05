@@ -3516,6 +3516,12 @@ RawJs.prototype.baseMaker = function () {
                               if (typeof thisRawContents.contents?.body === "string") {
                                 while (typeof finalDesignerContents !== "string") {
                                   finalDesignerContents = await GeneralJs.promptVeryLong("디자이너 글을 수정해주세요!", thisRawContents.contents.body);
+                                  if (typeof finalDesignerContents === "string") {
+                                    finalDesignerContents = finalDesignerContents.trim();
+                                    if (finalDesignerContents === "") {
+                                      finalDesignerContents = null;
+                                    }
+                                  }
                                 }
                                 await ajaxForm(formData, S3HOST + ":3001" + "/generalFileUpload", loading.progress.firstChild);
                                 await ajaxJson({
@@ -3544,7 +3550,24 @@ RawJs.prototype.baseMaker = function () {
 
                         } else {
 
-                          
+                          finalDesignerContents = "";
+                          while (typeof finalDesignerContents !== "string") {
+                            finalDesignerContents = await GeneralJs.promptVeryLong("디자이너 글을 작성해주세요!", "");
+                            if (typeof finalDesignerContents === "string") {
+                              finalDesignerContents = finalDesignerContents.trim();
+                              if (finalDesignerContents === "") {
+                                finalDesignerContents = null;
+                              }
+                            }
+                          }
+                          await ajaxForm(formData, S3HOST + ":3001" + "/generalFileUpload", loading.progress.firstChild);
+                          await ajaxJson({
+                            key: uniqueName,
+                            desid: project.desid,
+                            designer: designer,
+                            individual: "true",
+                            rawBody: finalDesignerContents,
+                          }, S3HOST + ":3001" + "/updateRawInfo");
 
                         }
 

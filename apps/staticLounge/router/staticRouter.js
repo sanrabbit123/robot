@@ -6902,60 +6902,113 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
       const selfMongo = instance.mongo;
       const channel = "#502_sns_contents";
       const voice = false;
-      const { key, proid, desid, cliid, rawBody } = equalJson(req.body);
       let client, designer, project;
       let thisSetName;
       let keyFolderList;
       let keyFolder;
 
-      keyFolder = `${staticConst}/temp/${key}`;
+      if (req.body.designer !== undefined && req.body.individual === "true") {
 
-      [ client ] = await back.mongoRead("client", { cliid }, { selfMongo });
-      [ designer ] = await back.mongoRead("designer", { desid }, { selfMongo });
-      [ project ] =  await back.mongoRead("project", { proid }, { selfMongo });
-      thisSetName = `${client.name} C, ${designer.designer} D 현장 원본 사진`;
+        const { key, designer, desid, rawBody } = equalJson(req.body);
 
-      await requestSystem("https://" + instance.address.secondinfo.host + ":3000/projectDesignerRaw", {
-        mode: "update",
-        desid: designer.desid,
-        proid: project.proid,
-        cliid: client.cliid,
-        type: "web",
-        body: rawBody.trim(),
-      }, {
-        headers: { "Content-Type": "application/json" },
-      });
-
-      await shellExec("rm", [ "-rf", portfolioConst ]);
-      await shellExec("mkdir", [ portfolioConst ]);
-      keyFolderList = await fileSystem("readFolder", [ keyFolder ]);
-      for (let photoName of keyFolderList) {
-        if (/\.jp[e]?g$/gi.test(photoName)) {
-          await shellExec("mv", [ keyFolder + "/" + photoName, portfolioConst + "/" ]);
+        keyFolder = `${staticConst}/temp/${key}`;
+        thisSetName = `${designer} D 개인 포트폴리오 원본 사진`;
+  
+        await requestSystem("https://" + instance.address.secondinfo.host + ":3000/projectDesignerRaw", {
+          mode: "update",
+          desid: designer.desid,
+          proid: project.proid,
+          cliid: client.cliid,
+          type: "web",
+          body: rawBody.trim(),
+        }, {
+          headers: { "Content-Type": "application/json" },
+        });
+  
+        await shellExec("rm", [ "-rf", portfolioConst ]);
+        await shellExec("mkdir", [ portfolioConst ]);
+        keyFolderList = await fileSystem("readFolder", [ keyFolder ]);
+        for (let photoName of keyFolderList) {
+          if (/\.jp[e]?g$/gi.test(photoName)) {
+            await shellExec("mv", [ keyFolder + "/" + photoName, portfolioConst + "/" ]);
+          }
         }
+        await sleep(500);
+        await shellExec("rm", [ "-rf", keyFolder ]);
+        await messageSend({ text: thisSetName + " 처리를 시작합니다. 슬렉에 처리 성공 또는 실패 알림이 올 때까지 다음 원본 사진 처리요청을 하지 말아주세요!", channel, voice });
+        filter.rawToRaw([
+          {
+            desid,
+            individual: true,
+          }
+        ]).then((pid) => {
+          if (typeof pid === "string") {
+            return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawUpdateSubject", {
+              pid
+            }, { headers: { "Content-Type": "application/json" } });
+          } else {
+            return messageSend({ text: thisSetName + " 처리에 실패하였어요, 다시 시도해주세요!", channel, voice });
+          }
+        }).catch((err) => {
+          logger.error("Static lounge 서버 문제 생김 (rou_post_updateRawInfo): " + err.message).catch((e) => { console.log(e); })
+        });
+  
+        res.send(JSON.stringify({ message: "will do" }));
+
+      } else {
+
+        const { key, proid, desid, cliid, rawBody } = equalJson(req.body);
+
+        keyFolder = `${staticConst}/temp/${key}`;
+
+        [ client ] = await back.mongoRead("client", { cliid }, { selfMongo });
+        [ designer ] = await back.mongoRead("designer", { desid }, { selfMongo });
+        [ project ] =  await back.mongoRead("project", { proid }, { selfMongo });
+        thisSetName = `${client.name} C, ${designer.designer} D 현장 원본 사진`;
+
+        await requestSystem("https://" + instance.address.secondinfo.host + ":3000/projectDesignerRaw", {
+          mode: "update",
+          desid: designer.desid,
+          proid: project.proid,
+          cliid: client.cliid,
+          type: "web",
+          body: rawBody.trim(),
+        }, {
+          headers: { "Content-Type": "application/json" },
+        });
+
+        await shellExec("rm", [ "-rf", portfolioConst ]);
+        await shellExec("mkdir", [ portfolioConst ]);
+        keyFolderList = await fileSystem("readFolder", [ keyFolder ]);
+        for (let photoName of keyFolderList) {
+          if (/\.jp[e]?g$/gi.test(photoName)) {
+            await shellExec("mv", [ keyFolder + "/" + photoName, portfolioConst + "/" ]);
+          }
+        }
+        await sleep(500);
+        await shellExec("rm", [ "-rf", keyFolder ]);
+        await messageSend({ text: thisSetName + " 처리를 시작합니다. 슬렉에 처리 성공 또는 실패 알림이 올 때까지 다음 원본 사진 처리요청을 하지 말아주세요!", channel, voice });
+        filter.rawToRaw([
+          {
+            cliid,
+            desid,
+            proid,
+          }
+        ]).then((pid) => {
+          if (typeof pid === "string") {
+            return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawUpdateSubject", {
+              pid
+            }, { headers: { "Content-Type": "application/json" } });
+          } else {
+            return messageSend({ text: thisSetName + " 처리에 실패하였어요, 다시 시도해주세요!", channel, voice });
+          }
+        }).catch((err) => {
+          logger.error("Static lounge 서버 문제 생김 (rou_post_updateRawInfo): " + err.message).catch((e) => { console.log(e); })
+        });
+
+        res.send(JSON.stringify({ message: "will do" }));
+
       }
-      await sleep(500);
-      await shellExec("rm", [ "-rf", keyFolder ]);
-      await messageSend({ text: thisSetName + " 처리를 시작합니다. 슬렉에 처리 성공 또는 실패 알림이 올 때까지 다음 원본 사진 처리요청을 하지 말아주세요!", channel, voice });
-      filter.rawToRaw([
-        {
-          cliid,
-          desid,
-          proid,
-        }
-      ]).then((pid) => {
-        if (typeof pid === "string") {
-          return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawUpdateSubject", {
-            pid
-          }, { headers: { "Content-Type": "application/json" } });
-        } else {
-          return messageSend({ text: thisSetName + " 처리에 실패하였어요, 다시 시도해주세요!", channel, voice });
-        }
-      }).catch((err) => {
-        logger.error("Static lounge 서버 문제 생김 (rou_post_updateRawInfo): " + err.message).catch((e) => { console.log(e); })
-      });
-
-      res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_updateRawInfo): " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -6998,7 +7051,7 @@ StaticRouter.prototype.rou_post_rawUpdateSubject = function () {
       }).catch((err) => {
         logger.error("Static lounge 서버 문제 생김 (rou_post_rawUpdateSubject): " + err.message).catch((e) => { console.log(e); })
       });
-      
+
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_rawUpdateSubject): " + e.message);

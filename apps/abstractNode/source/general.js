@@ -7057,17 +7057,17 @@ GeneralJs.promptVeryLong = function (message, preValue = '') {
   let textTop;
   let toTextButton;
 
-  whiteWidth = 1000;
+  whiteWidth = 1200;
   whiteHeight = 150;
   paddingTop = 17;
   paddingLeft = 23;
-  paddingBottom = 852;
+  paddingBottom = 952;
   size0 = 14;
   size1 = 15;
   inputSize = 13;
   marginLeft = 18;
   bottomVisual = 7;
-  inputBoxHeight = 820;
+  inputBoxHeight = 920;
   inputIndent = 9;
   inputBottomVisual = 0;
   lineHeight = 1.5;
@@ -7107,7 +7107,7 @@ GeneralJs.promptVeryLong = function (message, preValue = '') {
       top: String(0) + "vh",
       left: String(1) + "vw",
       width: String(98) + "vw",
-      height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
+      height: "calc(100vh - " + String(0) + ea + ")",
       background: "transparent",
       zIndex: String(900)
     }
