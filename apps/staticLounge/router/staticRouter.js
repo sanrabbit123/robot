@@ -131,24 +131,8 @@ StaticRouter.prototype.dailyAnalytics = async function () {
     date.setDate(date.getDate() - 1);
     date.setDate(date.getDate() - 1);
     date.setDate(date.getDate() - 1);
-    date.setDate(date.getDate() - 1);
-    date.setDate(date.getDate() - 1);
-    date.setDate(date.getDate() - 1);
-    date.setDate(date.getDate() - 1);
 
     requestString = '';
-    requestString += dateToString(date);
-    requestString += ',';
-    date.setDate(date.getDate() + 1);
-    requestString += dateToString(date);
-    requestString += ',';
-    date.setDate(date.getDate() + 1);
-    requestString += dateToString(date);
-    requestString += ',';
-    date.setDate(date.getDate() + 1);
-    requestString += dateToString(date);
-    requestString += ',';
-    date.setDate(date.getDate() + 1);
     requestString += dateToString(date);
     requestString += ',';
     date.setDate(date.getDate() + 1);
@@ -9099,8 +9083,10 @@ StaticRouter.prototype.rou_post_getContents = function () {
     try {
       const selfMongo = instance.mongo;
       const selfCoreMongo = instance.mongo;
+      const selfLocalMongo = instance.mongolocal;
+      const hiddenCollection = "hiddenContents";
       const collection = "contents";
-      const hideContents = [ "p61", "p36", "a51", "a104", "a105" ];
+      const hideContents = (await back.mongoRead(hiddenCollection, {}, { selfMongo: selfLocalMongo }))[0].contents;
       const toNormal = true;
       const defaultDelta = 45;
       const moneyDelta = 2500000;
