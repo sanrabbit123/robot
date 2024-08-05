@@ -1025,9 +1025,6 @@ SecondRouter.prototype.rou_post_projectDesignerRaw = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
       if (req.body.mode === undefined || req.body.desid === undefined || req.body.cliid === undefined || req.body.proid === undefined) {
         throw new Error("invaild post");
       }
@@ -1081,7 +1078,7 @@ SecondRouter.prototype.rou_post_projectDesignerRaw = function () {
         }
 
         resultObj = { message: "success" };
-        
+
       } else if (mode === "delete") {
 
         await back.mongoDelete(collection, { desid, proid }, { selfMongo });

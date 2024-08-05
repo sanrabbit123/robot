@@ -3277,10 +3277,7 @@ StaticRouter.prototype.rou_post_parsingDevicesStatus = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const { macArr } = equalJson(req.body);
-      const { to: finalObject } = await devices.storeDevicesStatus(macArr, instance.members);
-
-      res.send(JSON.stringify(finalObject));
+      res.send(JSON.stringify({}));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_parsingDevicesStatus): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
@@ -3291,7 +3288,6 @@ StaticRouter.prototype.rou_post_parsingDevicesStatus = function () {
 
 StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
   const instance = this;
-  const devices = this.devices;
   const { fileSystem, equalJson, shellExec, messageSend } = this.mother;
   let obj;
   obj = {};
@@ -3304,12 +3300,6 @@ StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      devices.scanLocalMacIp(10).catch((err) => {
-        console.log(err);
-      });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_storeDevicesStatus): " + e.message).catch((e) => { console.log(e); });
@@ -6926,11 +6916,11 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
           keyFolder = `${staticConst}/temp/${key}`;
           thisSetName = `${designer} D 개인 포트폴리오 원본 사진`;
     
-          nowValue = dateToString(new Date()).replace(/[^0-9]/gi, '');
+          nowValue = dateToString(new Date(), true).replace(/[^0-9]/gi, '');
   
           await requestSystem("https://" + instance.address.secondinfo.host + ":3000/projectDesignerRaw", {
             mode: "update",
-            desid: designer.desid,
+            desid: desid,
             proid: "individual_" + nowValue,
             cliid: "individual_" + nowValue,
             type: "web",

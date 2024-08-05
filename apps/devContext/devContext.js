@@ -7448,6 +7448,13 @@ DevContext.prototype.launching = async function () {
     // const audio = new PlayAudio();
     // await audio.textToVoice("안녕하세요, 저의 이름은 서연입니다. 다음은 어피니티에 대한 설명입니다!");
 
+    const key = "individual_20240805153450";
+
+    console.log(await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawUpdateSubject", {
+      pid,
+      individual: ("individual_" + nowValue),
+    }, { headers: { "Content-Type": "application/json" } }))
+
 
     // send sms
     // const name = "김희진";
