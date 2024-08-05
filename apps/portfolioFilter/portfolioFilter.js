@@ -671,39 +671,147 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     let zipIdClient;
     let client, designer;
     let targetClient;
+    let rawObj;
 
     await this.static_setting();
 
-    for (let rawObj of arr) {
+    rawObj = arr[0];
+    client = rawObj.client;
+    designer = rawObj.designer;
+    nextPid = null;
 
-      client = rawObj.client;
-      designer = rawObj.designer;
+    if (/^c[0-9]/.test(client) && /^d[0-9]/.test(designer)) {
 
-      if (/^c[0-9]/.test(client) && /^d[0-9]/.test(designer)) {
+      [ targetClient ] = await back.mongoRead("client", { cliid: client }, { selfMongo: selfCoreMongo });
+      [ targetDesigner ] = await back.mongoRead("designer", { desid: designer }, { selfMongo: selfCoreMongo });
 
-        [ targetClient ] = await back.mongoRead("client", { cliid: client }, { selfMongo: selfCoreMongo });
-        [ targetDesigner ] = await back.mongoRead("designer", { desid: designer }, { selfMongo: selfCoreMongo });
+      await shellExec("rm", [ "-rf", `${process.cwd()}/temp/resource` ])
+      await shellExec("cp", [ "-r", this.options.photo_dir, `${process.cwd()}/temp/` ]);
 
-        await shellExec("rm", [ "-rf", `${process.cwd()}/temp/resource` ])
-        await shellExec("cp", [ "-r", this.options.photo_dir, `${process.cwd()}/temp/` ]);
+      foreRows = await back.mongoRead(collection, {}, { selfMongo });
+      foreRows.sort((a, b) => {
+        return Number(b.pid.replace(/[^0-9]/gi, '')) - Number(a.pid.replace(/[^0-9]/gi, ''));
+      });
+      nextPid = 'p' + String(Number(foreRows[0].pid.replace(/[^0-9]/gi, '')) + 1);
+      folderPath = `${process.cwd()}/temp/resource`;
+
+      this.clientName = targetClient.name;
+      this.designer = targetDesigner.designer;
+      this.pid = nextPid;
+      this.apartName = "";
+      totalMakeResult = await this.total_make(true);
+      googleFolderName = totalMakeResult.folderName;
+
+      folderPathList = await fileSystem(`readFolder`, [ folderPath ]);
+
+      fromArr = [];
+      toArr = [];
+
+      try {
+        await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}` ]);
+      } catch {}
+      try {
+        await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}` ]);
+      } catch {}
+      for (let f of folderPathList) {
+        await shellExec("cp", [ `${folderPath}/${f}`, `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}/` ]);
+      }
+      console.log(`original copy done`);
+
+      forecast = await garoseroParser.queryDirectory(folderPath);
+      for (let obj of forecast) {
+        obj.file = foreCastContant + "/" + nextPid + "/" + obj.file.split("/").slice(-1).join("/");
+      }
+      finalObj = { pid: nextPid, desid: targetDesigner.desid, client, forecast };
+      await back.mongoCreate(collection, finalObj, { selfMongo });
+      console.log("db in success");
+
+
+      folderPathList = await fileSystem(`readFolder`, [ folderPath ]);
+      fromArr = [];
+      toArr = [];
+
+      try {
+        await shellExec("mkdir", [ `${forecastPath}/${this.pid}` ]);
+      } catch {}
+      for (let f of folderPathList) {
+        fromArr.push(`${folderPath}/${f}`);
+        toArr.push(`${foreCastContant}/${this.pid}/${f}`);
+        await shellExec("cp", [ `${folderPath}/${f}`, `${forecastPath}/${this.pid}/` ]);
+      }
+      console.log(`forecast copy done`);
+
+      [ project ] = await back.mongoRead("project", { proid: rawObj.proid }, { selfMongo: selfCoreMongo });
+      await back.updateProject([
+        { proid: project.proid },
+        {
+          "contents.raw.photo.status": "원본 보정 완료",
+          "contents.share.client.photo": new Date(),
+          "contents.share.designer.photo": new Date(),
+        }
+      ], { selfMongo: selfCoreMongo });
+      await back.mongoUpdate(collection, [ { pid: nextPid }, { proid: project.proid } ], { selfMongo });
+      await back.mongoUpdate(collection, [ { pid: nextPid }, { exception: false } ], { selfMongo });
+
+      clientObj = targetClient;
+      designerObj = targetDesigner;
+
+      await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
+
+      await shellExec(`rm -rf ${shellLink(folderPath)};`);
+
+      await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid: clientObj.cliid, desid: designerObj.desid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
+      await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, host: instance.address.frontinfo.host, path: "evaluation", proid: project.proid });
+      await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, host: instance.address.frontinfo.host, proid: project.proid });
+      await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
+
+    } else {
+
+      designers = await back.getDesignersByQuery({ designer: designer });
+      if (designers.length > 1) {
+        console.log(`Exception occur : `);
+        for (let i = 0; i < designers.length; i++) {
+          console.log(`exceptionId : ${String(i + 1)} => designer : ${i.designer} / desid : ${i.desid}`);
+        }
+        consoleInput = "1"
+        targetDesigner = designers[Number(consoleInput.replace(/[^0-9]/g, '')) - 1].toNormal();
+      } else {
+        targetDesigner = designers[0].toNormal();
+      }
+
+      await shellExec("rm", [ "-rf", `${process.cwd()}/temp/resource` ])
+      await shellExec("cp", [ "-r", this.options.photo_dir, `${process.cwd()}/temp/` ]);
+
+      if (client !== null) {
 
         nextPid = null;
         foreRows = await back.mongoRead(collection, {}, { selfMongo });
         foreRows.sort((a, b) => {
           return Number(b.pid.replace(/[^0-9]/gi, '')) - Number(a.pid.replace(/[^0-9]/gi, ''));
         });
+        if (foreRows.length === 0) {
+          throw new Error("invaild foreRows");
+        }
         nextPid = 'p' + String(Number(foreRows[0].pid.replace(/[^0-9]/gi, '')) + 1);
+        if (nextPid === null) {
+          throw new Error("invaild pid");
+        }
+
+        await fileSystem("write", [ `${notePath}/${nextPid} (발행대기)`, `${nextPid}\n${designer} 실장님 ${client} 고객님` ]);
+
         folderPath = `${process.cwd()}/temp/resource`;
 
-        this.clientName = targetClient.name;
-        this.designer = targetDesigner.designer;
+        this.clientName = client;
+        this.designer = designer;
         this.pid = nextPid;
         this.apartName = "";
         totalMakeResult = await this.total_make(true);
+        console.log(totalMakeResult);
+
         googleFolderName = totalMakeResult.folderName;
 
         folderPathList = await fileSystem(`readFolder`, [ folderPath ]);
-  
+
         fromArr = [];
         toArr = [];
 
@@ -726,7 +834,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         await back.mongoCreate(collection, finalObj, { selfMongo });
         console.log("db in success");
 
-
         folderPathList = await fileSystem(`readFolder`, [ folderPath ]);
         fromArr = [];
         toArr = [];
@@ -734,252 +841,145 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         try {
           await shellExec("mkdir", [ `${forecastPath}/${this.pid}` ]);
         } catch {}
+
         for (let f of folderPathList) {
           fromArr.push(`${folderPath}/${f}`);
           toArr.push(`${foreCastContant}/${this.pid}/${f}`);
           await shellExec("cp", [ `${folderPath}/${f}`, `${forecastPath}/${this.pid}/` ]);
         }
+        await ghostFileUpload(fromArr, toArr);
         console.log(`forecast copy done`);
 
-        [ project ] = await back.mongoRead("project", { proid: rawObj.proid }, { selfMongo: selfCoreMongo });
-        await back.updateProject([
-          { proid: project.proid },
-          {
-            "contents.raw.photo.status": "원본 보정 완료",
-            "contents.share.client.photo": new Date(),
-            "contents.share.designer.photo": new Date(),
-          }
-        ], { selfMongo: selfCoreMongo });
-        await back.mongoUpdate(collection, [ { pid: nextPid }, { proid: project.proid } ], { selfMongo });
-        await back.mongoUpdate(collection, [ { pid: nextPid }, { exception: false } ], { selfMongo });
+        await sleep(100);
 
-        clientObj = targetClient;
-        designerObj = targetDesigner;
+        allContentsArr = (await back.getContentsArrByQuery({})).toNormal();
+        allProjects = (await back.getProjectsByQuery({ desid: targetDesigner.desid })).toNormal();
+        allClients = (await back.getClientsByQuery({ name: client.trim() })).toNormal();
 
-        await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
-
-        await shellExec(`rm -rf ${shellLink(folderPath)};`);
-
-        await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid: clientObj.cliid, desid: designerObj.desid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
-        await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, host: instance.address.frontinfo.host, path: "evaluation", proid: project.proid });
-        await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, host: instance.address.frontinfo.host, proid: project.proid });
-        await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
-
-      } else {
-
-        designers = await back.getDesignersByQuery({ designer: designer });
-        if (designers.length > 1) {
-          console.log(`Exception occur : `);
-          for (let i = 0; i < designers.length; i++) {
-            console.log(`exceptionId : ${String(i + 1)} => designer : ${i.designer} / desid : ${i.desid}`);
-          }
-          consoleInput = "1"
-          targetDesigner = designers[Number(consoleInput.replace(/[^0-9]/g, '')) - 1].toNormal();
-        } else {
-          targetDesigner = designers[0].toNormal();
-        }
-  
-        await shellExec("rm", [ "-rf", `${process.cwd()}/temp/resource` ])
-        await shellExec("cp", [ "-r", this.options.photo_dir, `${process.cwd()}/temp/` ]);
-  
-        if (client !== null) {
-  
-          nextPid = null;
-          foreRows = await back.mongoRead(collection, {}, { selfMongo });
-          foreRows.sort((a, b) => {
-            return Number(b.pid.replace(/[^0-9]/gi, '')) - Number(a.pid.replace(/[^0-9]/gi, ''));
-          });
-          if (foreRows.length === 0) {
-            throw new Error("invaild foreRows");
-          }
-          nextPid = 'p' + String(Number(foreRows[0].pid.replace(/[^0-9]/gi, '')) + 1);
-          if (nextPid === null) {
-            throw new Error("invaild pid");
-          }
-  
-          await fileSystem("write", [ `${notePath}/${nextPid} (발행대기)`, `${nextPid}\n${designer} 실장님 ${client} 고객님` ]);
-  
-          folderPath = `${process.cwd()}/temp/resource`;
-  
-          this.clientName = client;
-          this.designer = designer;
-          this.pid = nextPid;
-          this.apartName = "";
-          totalMakeResult = await this.total_make(true);
-          console.log(totalMakeResult);
-  
-          googleFolderName = totalMakeResult.folderName;
-  
-          folderPathList = await fileSystem(`readFolder`, [ folderPath ]);
-  
-          fromArr = [];
-          toArr = [];
-  
-          try {
-            await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}` ]);
-          } catch {}
-          try {
-            await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}` ]);
-          } catch {}
-          for (let f of folderPathList) {
-            await shellExec("cp", [ `${folderPath}/${f}`, `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}/` ]);
-          }
-          console.log(`original copy done`);
-  
-          forecast = await garoseroParser.queryDirectory(folderPath);
-          for (let obj of forecast) {
-            obj.file = foreCastContant + "/" + nextPid + "/" + obj.file.split("/").slice(-1).join("/");
-          }
-          finalObj = { pid: nextPid, desid: targetDesigner.desid, client, forecast };
-          await back.mongoCreate(collection, finalObj, { selfMongo });
-          console.log("db in success");
-  
-          folderPathList = await fileSystem(`readFolder`, [ folderPath ]);
-          fromArr = [];
-          toArr = [];
-  
-          try {
-            await shellExec("mkdir", [ `${forecastPath}/${this.pid}` ]);
-          } catch {}
-  
-          for (let f of folderPathList) {
-            fromArr.push(`${folderPath}/${f}`);
-            toArr.push(`${foreCastContant}/${this.pid}/${f}`);
-            await shellExec("cp", [ `${folderPath}/${f}`, `${forecastPath}/${this.pid}/` ]);
-          }
-          await ghostFileUpload(fromArr, toArr);
-          console.log(`forecast copy done`);
-  
-          await sleep(100);
-  
-          allContentsArr = (await back.getContentsArrByQuery({})).toNormal();
-          allProjects = (await back.getProjectsByQuery({ desid: targetDesigner.desid })).toNormal();
-          allClients = (await back.getClientsByQuery({ name: client.trim() })).toNormal();
-  
-          projects = allProjects.filter((obj) => {
-            return allClients.map((client) => { return client.cliid }).includes(obj.cliid);
-          }).filter((obj) => {
-            return !allContentsArr.filter((c) => { return c.proid !== '' }).map(({ proid }) => { return proid }).includes(obj.proid);
+        projects = allProjects.filter((obj) => {
+          return allClients.map((client) => { return client.cliid }).includes(obj.cliid);
+        }).filter((obj) => {
+          return !allContentsArr.filter((c) => { return c.proid !== '' }).map(({ proid }) => { return proid }).includes(obj.proid);
+        });
+        if (projects.length > 1) {
+          projects = projects.filter((obj) => {
+            return !foreRows.filter((o) => { return typeof o.proid === "string" }).map(({ proid }) => { return proid }).includes(obj.proid);
           });
           if (projects.length > 1) {
             projects = projects.filter((obj) => {
-              return !foreRows.filter((o) => { return typeof o.proid === "string" }).map(({ proid }) => { return proid }).includes(obj.proid);
+              return obj.contents.photo.date.valueOf() <= (new Date()).valueOf()
             });
-            if (projects.length > 1) {
-              projects = projects.filter((obj) => {
-                return obj.contents.photo.date.valueOf() <= (new Date()).valueOf()
-              });
-              projects.sort((a, b) => { return a.contents.photo.date.valueOf() - b.contents.photo.date.valueOf() });
-            }
+            projects.sort((a, b) => { return a.contents.photo.date.valueOf() - b.contents.photo.date.valueOf() });
           }
-  
-          if (projects.length > 0) {
-            project = projects[0];
-            console.log("find proid => " + project.proid);
-  
-            await back.updateProject([
-              { proid: project.proid },
-              {
-                "contents.raw.photo.status": "원본 보정 완료",
-                "contents.share.client.photo": new Date(),
-                "contents.share.designer.photo": new Date(),
-              }
-            ]);
-            await back.mongoUpdate(collection, [ { pid: nextPid }, { proid: project.proid } ], { selfMongo });
-            await back.mongoUpdate(collection, [ { pid: nextPid }, { exception: false } ], { selfMongo });
-  
-            clientObj = await back.getClientById(project.cliid);
-            designerObj = await back.getDesignerById(project.desid);
-  
-            zipPhotoRes = await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
-            zipIdDesigner = zipPhotoRes.data.googleId.designer;
-            zipIdClient = zipPhotoRes.data.googleId.client;
-  
-            console.log(zipIdDesigner);
-            console.log(zipIdClient);
-  
-            await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/shareGoogleId", {
-              mode: "store",
-              proid: project.proid,
-              cliid: project.cliid,
-              desid: project.desid,
-              pid: nextPid,
-              zipIdDesigner,
-              zipIdClient,
-            }, {
-              headers: { "Content-Type": "application/json" }
-            });
-  
-            await shellExec(`rm -rf ${shellLink(folderPath)};`);
-  
-            if (clientObj !== null && designerObj !== null) {
-              await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid: clientObj.cliid, desid: designerObj.desid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
-              await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, host: instance.address.frontinfo.host, path: "evaluation", proid: project.proid });
-              await sleep(2000);
-              await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, host: instance.address.frontinfo.host, proid: project.proid });
-              await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
-            }
-          }
-  
-          console.log(`${client}C ${designer}D raw to raw done`);
-  
-        } else {
-  
-          nextPid = null;
-  
-          contentsRows = await back.getContentsArrByQuery({});
-          contentsRows = contentsRows.toNormal().filter((obj) => { return /^a/i.test(obj.contents.portfolio.pid); });
-          contentsRows.sort((a, b) => {
-            return Number(b.contents.portfolio.pid.replace(/[^0-9]/gi, '')) - Number(a.contents.portfolio.pid.replace(/[^0-9]/gi, ''));
-          });
-          if (contentsRows.length === 0) {
-            throw new Error("invaild contentsRows");
-          }
-          nextPid = 'a' + String(Number(contentsRows[0].contents.portfolio.pid.replace(/[^0-9]/gi, '')) + 1);
-          if (nextPid === null) {
-            throw new Error("invaild pid");
-          }
-  
-          await fileSystem("write", [ `${notePath}/${nextPid} (발행대기)`, `${nextPid}\n${designer} 실장님` ]);
-  
-          folderPath = `${process.cwd()}/temp/resource`;
-  
-          this.clientName = "없음";
-          this.designer = targetDesigner.designer;
-          this.pid = nextPid;
-          this.apartName = "";
-          totalMakeResult = await this.total_make(true);
-          googleFolderName = totalMakeResult.folderName;
-  
-          folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
-          folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
-          fromArr = [];
-          toArr = [];
-  
-          console.log(folderPath, folderPathList);
-  
-          try {
-            await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}` ]);
-          } catch {}
-          try {
-            await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}` ]);
-          } catch {}
-          for (let f of folderPathList) {
-            await shellExec("cp", [ `${folderPath}/${f}`, `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}/` ]);
-          }
-          console.log(`original copy done`);
-  
-          await sleep(500);
-  
-          console.log(`${designer}D raw to raw done`);
-  
         }
 
+        if (projects.length > 0) {
+          project = projects[0];
+          console.log("find proid => " + project.proid);
+
+          await back.updateProject([
+            { proid: project.proid },
+            {
+              "contents.raw.photo.status": "원본 보정 완료",
+              "contents.share.client.photo": new Date(),
+              "contents.share.designer.photo": new Date(),
+            }
+          ]);
+          await back.mongoUpdate(collection, [ { pid: nextPid }, { proid: project.proid } ], { selfMongo });
+          await back.mongoUpdate(collection, [ { pid: nextPid }, { exception: false } ], { selfMongo });
+
+          clientObj = await back.getClientById(project.cliid);
+          designerObj = await back.getDesignerById(project.desid);
+
+          zipPhotoRes = await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
+          zipIdDesigner = zipPhotoRes.data.googleId.designer;
+          zipIdClient = zipPhotoRes.data.googleId.client;
+
+          console.log(zipIdDesigner);
+          console.log(zipIdClient);
+
+          await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/shareGoogleId", {
+            mode: "store",
+            proid: project.proid,
+            cliid: project.cliid,
+            desid: project.desid,
+            pid: nextPid,
+            zipIdDesigner,
+            zipIdClient,
+          }, {
+            headers: { "Content-Type": "application/json" }
+          });
+
+          await shellExec(`rm -rf ${shellLink(folderPath)};`);
+
+          if (clientObj !== null && designerObj !== null) {
+            await requestSystem("https://" + instance.address.contentsinfo.host + ":3000/evaluationNotice", { mode: "send", cliid: clientObj.cliid, desid: designerObj.desid, proid: project.proid }, { headers: { "Content-Type": "application/json" } });
+            await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, host: instance.address.frontinfo.host, path: "evaluation", proid: project.proid });
+            await sleep(2000);
+            await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, host: instance.address.frontinfo.host, proid: project.proid });
+            await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
+          }
+        }
+
+        console.log(`${client}C ${designer}D raw to raw done`);
+
+      } else {
+
+        nextPid = null;
+
+        contentsRows = await back.getContentsArrByQuery({});
+        contentsRows = contentsRows.toNormal().filter((obj) => { return /^a/i.test(obj.contents.portfolio.pid); });
+        contentsRows.sort((a, b) => {
+          return Number(b.contents.portfolio.pid.replace(/[^0-9]/gi, '')) - Number(a.contents.portfolio.pid.replace(/[^0-9]/gi, ''));
+        });
+        if (contentsRows.length === 0) {
+          throw new Error("invaild contentsRows");
+        }
+        nextPid = 'a' + String(Number(contentsRows[0].contents.portfolio.pid.replace(/[^0-9]/gi, '')) + 1);
+        if (nextPid === null) {
+          throw new Error("invaild pid");
+        }
+
+        await fileSystem("write", [ `${notePath}/${nextPid} (발행대기)`, `${nextPid}\n${designer} 실장님` ]);
+
+        folderPath = `${process.cwd()}/temp/resource`;
+
+        this.clientName = "없음";
+        this.designer = targetDesigner.designer;
+        this.pid = nextPid;
+        this.apartName = "";
+        totalMakeResult = await this.total_make(true);
+        googleFolderName = totalMakeResult.folderName;
+
+        folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
+        folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
+        fromArr = [];
+        toArr = [];
+
+        console.log(folderPath, folderPathList);
+
+        try {
+          await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}` ]);
+        } catch {}
+        try {
+          await shellExec("mkdir", [ `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}` ]);
+        } catch {}
+        for (let f of folderPathList) {
+          await shellExec("cp", [ `${folderPath}/${f}`, `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}/` ]);
+        }
+        console.log(`original copy done`);
+
+        await sleep(500);
+
+        console.log(`${designer}D raw to raw done`);
+
       }
+
     }
+    
     await selfMongo.close();
     await selfCoreMongo.close();
-    return true;
+    return nextPid;
   } catch (e) {
     console.log(e);
     if (typeof nextPid === "string") {

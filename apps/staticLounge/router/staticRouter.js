@@ -6943,9 +6943,11 @@ StaticRouter.prototype.rou_post_updateRawInfo = function () {
           desid,
           proid,
         }
-      ]).then((boo) => {
-        if (boo) {
-          return messageSend({ text: thisSetName + " 처리를 완료하였어요!", channel, voice });
+      ]).then((pid) => {
+        if (typeof pid === "string") {
+          return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawUpdateSubject", {
+            pid
+          }, { headers: { "Content-Type": "application/json" } });
         } else {
           return messageSend({ text: thisSetName + " 처리에 실패하였어요, 다시 시도해주세요!", channel, voice });
         }

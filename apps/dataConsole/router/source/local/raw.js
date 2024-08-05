@@ -3424,7 +3424,7 @@ RawJs.prototype.baseMaker = function () {
 
                   e.preventDefault();
                   if (e.dataTransfer.files.length > 0) {
-                    if (e.dataTransfer.files.length < 61) {
+                    if (e.dataTransfer.files.length < 51) {
                       if ([ ...e.dataTransfer.files ].map((f) => { return f.name }).filter((n) => { return /\.jp[e]?g$/gi.test(n) }).length > 0) {
 
                         uniqueName = "tempRawUpload_" + GeneralJs.uniqueValue("hex");
@@ -3544,7 +3544,7 @@ RawJs.prototype.baseMaker = function () {
                         window.alert("모든 사진은 반드시 jpg 확장자로 되어 있어야만 합니다.");
                       }
                     } else {
-                      window.alert("사진 개수를 60개 이하로 올려주세요!");
+                      window.alert("사진 개수를 50장 이하로 올려주세요!");
                     }
                   }
                   calculationEvent.call(this, e);
@@ -3587,7 +3587,7 @@ RawJs.prototype.baseMaker = function () {
                   alignItems: "center",
                 },
                 child: {
-                  text: "원본 사진을 업로드 해주세요! (사진 60장 이하)",
+                  text: "원본 사진을 업로드 해주세요! (사진 50장 이하)",
                   style: {
                     position: "relative",
                     fontSize: 40,
