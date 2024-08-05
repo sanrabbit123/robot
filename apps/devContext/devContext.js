@@ -7451,8 +7451,8 @@ DevContext.prototype.launching = async function () {
     const key = "individual_20240805153450";
 
     console.log(await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3001/rawUpdateSubject", {
-      pid,
-      individual: ("individual_" + nowValue),
+      pid: "a143",
+      individual: key,
     }, { headers: { "Content-Type": "application/json" } }))
 
 
