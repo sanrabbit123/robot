@@ -10305,6 +10305,57 @@ StaticRouter.prototype.rou_post_requestScript = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_resetContentsPhotoStatus = function () {
+  const instance = this;
+  const back = this.back;
+  const { requestSystem, equalJson, objectDeepCopy } = this.mother;
+  let obj = {};
+  obj.link = [ "/resetContentsPhotoStatus" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.pid === undefined) {
+        throw new Error("invaild post");
+      }
+      const { pid } = req.body;
+      const collection = "contents";
+      const selfMongo = instance.mongo;
+      const selfLocalMongo = instance.mongo;
+      let photo;
+      let thisContents;
+      let contentsDetail;
+      let whereQuery;
+
+      whereQuery = { "contents.portfolio.pid": pid };
+
+      [ thisContents ] = await back.mongoRead(collection, whereQuery, { selfMongo });
+      contentsDetail = objectDeepCopy(thisContents.contents.portfolio.contents.detail);
+
+      photo = thisContents.photos.detail.map((o) => { return o.index });
+      contentsDetail[0].photo = [];
+      contentsDetail[1].photo = photo;
+      for (let i = 2; i < contentsDetail.length; i++) {
+        contentsDetail[i].photo = [];
+      }
+
+      await back.mongoUpdate(collection, [ whereQuery, { "contents.portfolio.contents.detail": contentsDetail } ], { selfMongo });
+      await back.mongoUpdate(collection, [ whereQuery, { "contents.portfolio.contents.detail": contentsDetail } ], { selfMongo: selfLocalMongo });
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      console.log(req);
+      await logger.error("Static Lounge 서버 문제 생김 (rou_post_resetContentsPhotoStatus): " + e.message + " / " + global.decodeURIComponent(req.body.url));
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_aspirantToDesigner = function () {
   const instance = this;
   const back = this.back;

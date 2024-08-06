@@ -1619,19 +1619,11 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                   }
                 }
               } else if (e.ctrlKey) {
-                const thisGs = this.getAttribute("gs");
-                if (this.getAttribute("dae") === "false") {
-                  if (thisGs === 'g') {
-                    this.parentElement.insertBefore(this.cloneNode(true), this.nextElementSibling);
-                  } else {
-                    if (Math.floor(this.getBoundingClientRect().top) === Math.floor(this.previousElementSibling.getBoundingClientRect().top)) {
-                      this.parentElement.insertBefore(this.cloneNode(true), this.nextElementSibling);
-                      this.parentElement.insertBefore(this.previousElementSibling.cloneNode(true), this.nextElementSibling);
-                    } else {
-                      this.parentElement.insertBefore(this.nextElementSibling.cloneNode(true), this.nextElementSibling.nextElementSibling);
-                      this.parentElement.insertBefore(this.cloneNode(true), this.nextElementSibling.nextElementSibling);
-                    }
-                  }
+                if (window.confirm("모든 사진을 초기화 재정렬할까요?")) {
+                  const pid = this.getAttribute("pid");
+                  await GeneralJs.ajaxJson({ pid }, S3HOST + ":3000/resetContentsPhotoStatus");
+                  await GeneralJs.sleep(1000);
+                  window.location.reload();
                 }
               } else {
                 if (this.getAttribute("dae") === "false") {
