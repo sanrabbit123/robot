@@ -7819,6 +7819,65 @@ ProjectJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
+    () => { return "계약서 반려"; },
+    function () {
+      const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+      let boo;
+      let date0, date1, date2;
+      boo = true;
+      if (instance.whiteBox === null) {
+        boo = false;
+      } else {
+        const proid = instance.whiteBox.id;
+        let thisCase;
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.proid === proid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase === null) {
+          boo = false;
+        } else {
+          date0 = stringToDate(thisCase.firstDate);
+          date1 = stringToDate(thisCase.formDateFrom);
+          date2 = stringToDate(thisCase.formDateTo);
+          if (date0.valueOf() > emptyDateValue && date1.valueOf() > emptyDateValue && date2.valueOf() > emptyDateValue) {
+            boo = true;
+          } else {
+            boo = false;
+          }
+        }
+      }
+      return boo;
+    },
+    async function (e) {
+      try {
+        const proid = instance.whiteBox.id;
+        let thisCase;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.proid === proid) {
+              thisCase = c;
+            }
+          }
+        }
+        const project = (await GeneralJs.ajaxJson({ noFlat: true, where: { proid } }, "/getProjects", { equal: true }))[0];
+        const client = (await GeneralJs.ajaxJson({ noFlat: true, where: { cliid: project.cliid } }, "/getClients", { equal: true }))[0];
+
+        
+
+
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
     () => { return "계약금 안내"; },
     function () {
       return true;

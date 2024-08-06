@@ -532,6 +532,76 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_removeStylingContract = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const kakao = this.kakao;
+  const address = this.address;
+  const { requestSystem, messageSend, dateToString, serviceParsing, autoComma } = this.mother;
+  let obj = {};
+  obj.link = "/removeStylingContract";
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.proid === undefined) {
+        throw new Error("invaild post");
+      }
+      const { proid } = req.body;
+      const rows = await back.mongoRead("stylingForm", { proid }, { selfMongo: instance.mongolocal });
+      for (let i = 0; i < rows.length; i++) {
+        await back.mongoDelete("stylingForm", { proid }, { selfMongo: instance.mongolocal });
+      }
+      res.send(JSON.stringify({ message: "OK" }));
+    } catch (e) {
+      console.log(e);
+      logger.error("Python 서버 문제 생김 (rou_post_removeStylingContract): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "ERROR" }));
+    }
+  }
+  return obj;
+}
+
+ReceiptRouter.prototype.rou_post_removeConstructContract = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const kakao = this.kakao;
+  const address = this.address;
+  const { requestSystem, messageSend, dateToString, serviceParsing, autoComma } = this.mother;
+  let obj = {};
+  obj.link = "/removeConstructContract";
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.proid === undefined) {
+        throw new Error("invaild post");
+      }
+      const { proid } = req.body;
+      const rows = await back.mongoRead("stylingForm", { proid }, { selfMongo: instance.mongolocal });
+      for (let i = 0; i < rows.length; i++) {
+        await back.mongoDelete("constructForm", { proid }, { selfMongo: instance.mongolocal });
+      }
+      res.send(JSON.stringify({ message: "OK" }));
+    } catch (e) {
+      console.log(e);
+      logger.error("Python 서버 문제 생김 (rou_post_removeConstructContract): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "ERROR" }));
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.rou_post_createConstructContract = function () {
   const instance = this;
   const back = this.back;
