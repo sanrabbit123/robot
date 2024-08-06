@@ -4059,7 +4059,7 @@ DesignerJs.prototype.communicationRender = function () {
       const desid = document.querySelector('.' + whiteBaseClassName).getAttribute("desid");
       try {
         const [ thisDesigner ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
-        const thisAspirants = (await ajaxJson({ whereQuery: { designer: thisDesigner.designer } }, SECONDHOST + "/getAspirants", { equal: true })).filter((a) => { return (a.contract.partnership.valueOf() > (new Date(2000, 0, 1)).valueOf()) && (a.contract.designer.valueOf() > (new Date(2000, 0, 1)).valueOf()) });
+        const thisAspirants = await ajaxJson({ whereQuery: { "$and": [ { designer: thisDesigner.designer }, { "meeting.status": { "$not": { "$regex": "드랍" } } } ] } }, SECONDHOST + "/getAspirants", { equal: true });
         if (thisAspirants.length > 0) {
           selfHref(BACKHOST + "/designer?mode=aspirant&aspid=" + thisAspirants[0].aspid);
         }
