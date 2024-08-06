@@ -4558,7 +4558,7 @@ StaticRouter.prototype.rou_post_naverComplex = function () {
         throw new Error("invalid post");
       }
       const selfMongo = instance.mongolocal;
-      const collection = "naverComplex";
+      const collection = "addressComplex";
       const { id } = equalJson(req.body);
       let result;
       let rows;
@@ -4617,7 +4617,7 @@ StaticRouter.prototype.rou_post_naverComplexes = function () {
         throw new Error("invalid post 2");
       }
       const selfMongo = instance.mongolocal;
-      const collection = "naverComplex";
+      const collection = "addressComplex";
       let rows;
       let result;
 
