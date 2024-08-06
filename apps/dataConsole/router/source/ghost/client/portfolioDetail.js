@@ -1406,6 +1406,26 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
           }
         }
       },
+      contextmenu: async function (e) {
+        e.preventDefault();
+        if (editable) {
+          if (blogEditor) {
+            await window.navigator.clipboard.writeText(this.getAttribute("value"));
+            window.alert("클립보드에 저장되었습니다! (텍스트 복사 성공)");
+          } else {
+            if (instance.originalContentsArr[0].proid !== "") {
+              const [ project ] = await GeneralJs.ajaxJson({ whereQuery: { proid: instance.originalContentsArr[0].proid } }, SECONDHOST + "/getProjects", { equal: true });
+              const thisRawContents = await GeneralJs.ajaxJson({
+                mode: "get",
+                proid: project.proid,
+                desid: project.desid,
+                cliid: project.cliid,
+              }, SECONDHOST + "/projectDesignerRaw", { equal: true });
+              await GeneralJs.promptLong("디자이너 글 원본", thisRawContents.contents.body);
+            }
+          }
+        }
+      }
     },
     style: {
       width: desktop ? String(100) + '%' : withOut(contentsPadding * 2, ea),

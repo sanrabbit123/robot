@@ -3381,7 +3381,7 @@ ContentsJs.prototype.contentsBase = async function () {
                     func: () => {
                       return async function (e) {
                         try {
-                          blankHref(FRONTHOST + "/portdetail.php?pid=" + pid + "&edit=true&blue=true")
+                          blankHref(FRONTHOST + "/portdetail.php?pid=" + pid + "&edit=true&blog=true")
                         } catch (e) {
                           console.log(e);
                         }
