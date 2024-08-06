@@ -9189,6 +9189,49 @@ StaticRouter.prototype.rou_post_syncContentsTag = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_updateDesignerProposalSetting = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, objectDeepCopy, dateToString, serviceParsing } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateDesignerProposalSetting" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      const collection = "designer";
+      const { desid, photo, description } = equalJson(req.body);
+      let dummy, proposalArr;
+
+      dummy = () => {
+        return { name: "기본 세팅", photo: objectDeepCopy(photo), description: objectDeepCopy(description) };
+      }
+      proposalArr = [];
+      for (let i = 0; i < 5; i++) {
+        proposalArr.push(objectDeepCopy(dummy()));
+      }
+
+      await back.mongoUpdate(collection, [ { desid }, { "setting.proposal": proposalArr } ], { selfMongo });
+      await back.mongoUpdate(collection, [ { desid }, { "setting.proposal": proposalArr } ], { selfMongo: selfCoreMongo });
+
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      logger.error("Log Console 서버 문제 생김 (rou_post_syncContentsTag): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+
 StaticRouter.prototype.rou_post_getContents = function () {
   const instance = this;
   const back = this.back;
