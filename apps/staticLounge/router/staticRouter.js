@@ -10336,6 +10336,13 @@ StaticRouter.prototype.rou_post_resetContentsPhotoStatus = function () {
 
       photo = thisContents.photos.detail.map((o) => { return o.index });
       contentsDetail[0].photo = [];
+      if (contentsDetail.length < 2) {
+        contentsDetail.push({
+          photo: [],
+          title: "space",
+          contents: "",
+        })
+      }
       contentsDetail[1].photo = photo;
       for (let i = 2; i < contentsDetail.length; i++) {
         contentsDetail[i].photo = [];

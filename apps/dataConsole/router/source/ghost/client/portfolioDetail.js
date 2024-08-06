@@ -1000,9 +1000,9 @@ PortfolioDetailJs.prototype.contentsBoxStatusRead = async function (photoUpdateB
 
 PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedContents = null) {
   const instance = this;
-  const { createNode, colorChip, objectDeepCopy, colorExtended, withOut, ajaxForm, svgMaker, equalJson, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue, removeByClass } = GeneralJs;
+  const { createNode, colorChip, objectDeepCopy, colorExtended, withOut, ajaxForm, svgMaker, equalJson, downloadFile, designerMthParsing, designerCareer, isMac, isIphone, selfHref, setQueue, removeByClass } = GeneralJs;
   const { totalContents, naviHeight, ea, media, pid, mainContentsClassTong0, mainContentsClassTong1, slideContentsClassTong } = this;
-  const { contentsArr, designers, editable } = this;
+  const { contentsArr, designers, editable, blogEditor } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
@@ -1626,27 +1626,36 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                 if (window.confirm("모든 사진을 초기화 재정렬할까요?")) {
                   const pid = this.getAttribute("pid");
                   await GeneralJs.ajaxJson({ pid }, S3HOST + ":3000/resetContentsPhotoStatus");
-                  await GeneralJs.sleep(1000);
+                  await GeneralJs.sleep(500);
                   boo = false;
                 }
               } else {
-                if (this.getAttribute("dae") === "false") {
-                  const thisGs = this.getAttribute("gs");
-                  const pastDae = [ ...document.querySelectorAll('.' + imgDomClassName) ].filter((o) => { return o.getAttribute("gs") === thisGs }).find((d) => { return d.getAttribute("dae") === "true" });
-                  this.setAttribute("dae", "true");
-                  this.style.filter = daeShadow;
-                  this.style.zIndex = daeZIndex;
-                  if (pastDae !== undefined) {
-                    pastDae.setAttribute("dae", "false");
-                    pastDae.style.filter = "";
-                    pastDae.style.zIndex = "";
+                if (blogEditor) {
+                  await downloadFile(this.getAttribute("src"));
+                  boo = false;
+                } else {
+                  if (this.getAttribute("dae") === "false") {
+                    const thisGs = this.getAttribute("gs");
+                    const pastDae = [ ...document.querySelectorAll('.' + imgDomClassName) ].filter((o) => { return o.getAttribute("gs") === thisGs }).find((d) => { return d.getAttribute("dae") === "true" });
+                    this.setAttribute("dae", "true");
+                    this.style.filter = daeShadow;
+                    this.style.zIndex = daeZIndex;
+                    if (pastDae !== undefined) {
+                      pastDae.setAttribute("dae", "false");
+                      pastDae.style.filter = "";
+                      pastDae.style.zIndex = "";
+                    }
                   }
                 }
               }
               if (boo) {
                 await instance.contentsBoxStatusRead();
+                window.location.reload();
               }
-              window.location.reload();
+              if (e.ctrlKey) {
+                await GeneralJs.sleep(500);
+                window.location.reload();
+              }
             }
           }
         },
@@ -1913,15 +1922,20 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
               instance.originalContentsArr = [ contents ];
               await instance.portfolioContentsBox(contents);
             } else {
-              if (instance.originalContentsArr[0].proid !== "") {
-                const [ project ] = await GeneralJs.ajaxJson({ whereQuery: { proid: instance.originalContentsArr[0].proid } }, SECONDHOST + "/getProjects", { equal: true });
-                const thisRawContents = await GeneralJs.ajaxJson({
-                  mode: "get",
-                  proid: project.proid,
-                  desid: project.desid,
-                  cliid: project.cliid,
-                }, SECONDHOST + "/projectDesignerRaw", { equal: true });
-                await GeneralJs.promptLong("디자이너 글 원본", thisRawContents.contents.body);
+              if (blogEditor) {
+                await window.navigator.clipboard.writeText(this.getAttribute("value"));
+                window.alert("클립보드에 저장되었습니다! (텍스트 복사 성공)");
+              } else {
+                if (instance.originalContentsArr[0].proid !== "") {
+                  const [ project ] = await GeneralJs.ajaxJson({ whereQuery: { proid: instance.originalContentsArr[0].proid } }, SECONDHOST + "/getProjects", { equal: true });
+                  const thisRawContents = await GeneralJs.ajaxJson({
+                    mode: "get",
+                    proid: project.proid,
+                    desid: project.desid,
+                    cliid: project.cliid,
+                  }, SECONDHOST + "/projectDesignerRaw", { equal: true });
+                  await GeneralJs.promptLong("디자이너 글 원본", thisRawContents.contents.body);
+                }
               }
             }
           }
@@ -3903,7 +3917,8 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
 
     const getObj = returnGet();
     const { pid } = getObj;
-    const editable = (typeof getObj.edit === "string")
+    const editable = (typeof getObj.edit === "string");
+    const blogEditor = (typeof getObj.blog === "string");
     let response;
 
     if (typeof pid !== "string") {
@@ -3911,6 +3926,7 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
     }
     this.pid = pid;
     this.editable = editable;
+    this.blogEditor = blogEditor;
 
     response = await ajaxJson({ mode: "portfolio", pid }, LOGHOST + "/getContents", { equal: true });
     this.contentsArr = new SearchArray(response.contentsArr);
