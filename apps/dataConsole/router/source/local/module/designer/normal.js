@@ -3823,7 +3823,7 @@ DesignerJs.prototype.communicationRender = function () {
   const instance = this;
   const { communication } = this.mother;
   const { whiteCardClassName, whiteBaseClassName } = this;
-  const { ajaxJson, sleep, blankHref } = GeneralJs;
+  const { ajaxJson, sleep, blankHref, selfHref } = GeneralJs;
   communication.setItem([
     () => { return "체크리스트 전체 발송"; },
     function () {
@@ -4059,9 +4059,10 @@ DesignerJs.prototype.communicationRender = function () {
       const desid = document.querySelector('.' + whiteBaseClassName).getAttribute("desid");
       try {
         const [ thisDesigner ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
-        const thisAspirants = await ajaxJson({ whereQuery: { designer: thisDesigner.designer } }, SECONDHOST + "/getAspirants", { equal: true });
-        thisAspirants.filter((a) => { return a.response })
-
+        const thisAspirants = (await ajaxJson({ whereQuery: { designer: thisDesigner.designer } }, SECONDHOST + "/getAspirants", { equal: true })).filter((a) => { return (a.contract.partnership.valueOf() > (new Date(2000, 0, 1)).valueOf()) && (a.contract.designer.valueOf() > (new Date(2000, 0, 1)).valueOf()) });
+        if (thisAspirants.length > 0) {
+          selfHref(BACKHOST + "/designer?mode=aspirant&aspid=" + thisAspirants[0].aspid);
+        }
       } catch (e) {
         console.log(e);
         window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal&desid=" + desid;
