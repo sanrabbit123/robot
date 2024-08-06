@@ -2532,7 +2532,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       fifth = await instance.fifthProcess(desid, n);
       fifth();
     } else {
-      alert("디자이너를 선택해주세요!");
+      window.alert("디자이너를 선택해주세요!");
     }
   }
 
@@ -3479,7 +3479,7 @@ ProposalJs.prototype.fourthProcess = async function (num) {
 
 // Create process 5 ------------------------------------------------------------
 
-ProposalJs.prototype.fifthWhitesave = function (id) {
+ProposalJs.prototype.fifthWhitesave = function (id, forceString = null) {
   const instance = this;
   return function (e) {
     let pictures, descriptions, targetBoxes;
@@ -3491,13 +3491,19 @@ ProposalJs.prototype.fifthWhitesave = function (id) {
     targetBoxes = document.querySelectorAll(".pp_designer_selected");
     general_str = '';
 
-    for (let pic of pictures) {
-      general_str += pic.getAttribute("cus_info") + "__split1__" + "styleText" + "__split2__" + pic.style.cssText.replace((new RegExp(S3HOST, "gi")), '') + "__split3__";
+    if (typeof forceString === "string") {
+
+      general_str = forceString;
+
+    } else {
+      for (let pic of pictures) {
+        general_str += pic.getAttribute("cus_info") + "__split1__" + "styleText" + "__split2__" + pic.style.cssText.replace((new RegExp(S3HOST, "gi")), '') + "__split3__";
+      }
+      for (let i = 0; i < descriptions.length; i++) {
+        obj["description" + String(i)] = descriptions[i].value;
+      }
+      general_str += GeneralJs.tagCoverting(obj);
     }
-    for (let i = 0; i < descriptions.length; i++) {
-      obj["description" + String(i)] = descriptions[i].value;
-    }
-    general_str += GeneralJs.tagCoverting(obj);
 
     targetBoxes[id].querySelector(".pp_designer_selected_box_value").textContent = general_str;
     instance.below_launching("fifth", "off");
@@ -4027,6 +4033,7 @@ ProposalJs.prototype.fifthProcess = async function (desid, id) {
     }
     div_clone.setAttribute("cus_designer", designer.designer);
     div_clone.setAttribute("cus_desid", designer.desid);
+    div_clone.setAttribute("desid", designer.desid);
     div_clone.setAttribute("cus_boxid", String(id));
     total.appendChild(div_clone);
 
@@ -6383,84 +6390,6 @@ ProposalJs.prototype.communicationRender = function () {
   const { communication } = this.mother;
   const { whiteCardClassName, whiteBaseClassName } = this;
   const { ajaxJson, sleep, blankHref, stringToLink, linkToString, objectDeepCopy } = GeneralJs;
-
-  communication.setItem([
-    () => { return "기본 세팅으로 저장"; },
-    function () {
-      return (document.querySelector(".pp_fifth_whitebox") !== null);
-    },
-    async function (e) {
-      try {
-        const desid = document.querySelector(".pp_fifth_whitebox").getAttribute("cus_desid");
-        const infoDom = document.querySelector(".ppw_left_picturebox_inbox");
-        const infoArr = [ ...infoDom.children ].map((d) => {
-          const infoText = stringToLink(d.getAttribute("cus_info"));
-          const valueArr = infoText.split("__split1__");
-          let resultObj, tempArr;
-          resultObj = {};
-          for (let str of valueArr) {
-            tempArr = str.split("__split2__");
-            resultObj[tempArr[0]] = tempArr[1];
-          }
-          return resultObj;
-        });
-        const descriptionArr = [ ...document.querySelectorAll(".ppw_left_description_inbox_input") ].map((d) => { return d.value });
-        await ajaxJson({ desid, photo: infoArr, description: descriptionArr }, S3HOST + ":3000/updateDesignerProposalSetting", { equal: true });
-        window.alert("현재 상태가 기본 세팅으로 저장되었습니다!");
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  ]);
-
-  communication.setItem([
-    () => { return "기본 세팅 불러오기"; },
-    function () {
-      return (document.querySelector(".pp_fifth_whitebox") !== null);
-    },
-    async function (e) {
-      try {
-        const desid = document.querySelector(".pp_fifth_whitebox").getAttribute("cus_desid");
-        const [ thisDesigner ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
-        const { proposal } = thisDesigner.setting;
-        const defaultProposal = proposal[0];
-        const { photo, description } = defaultProposal;
-        const selectedDom = [ ...document.querySelectorAll(".pp_designer_selected") ]
-        let finalValue, finalMatrix, tempArr;
-        let objKey, objValue;
-        let descriptionArr;
-
-        finalMatrix = [];
-        for (let obj of photo) {
-          objKey = Object.keys(obj);
-          objValue = Object.values(obj);
-          tempArr = [];
-          for (let i = 0; i < objKey.length; i++) {
-            tempArr.push(objKey[i] + "__split2__" + objValue[i]);
-          }
-          finalMatrix.push(objectDeepCopy(tempArr));
-        }
-        descriptionArr = [];
-        for (let i = 0; i < description.length; i++) {
-          descriptionArr.push("description" + String(i) + "__split2__" + description[i]);
-        }
-        finalMatrix.push(descriptionArr)
-        
-        document.querySelector(".pp_fifth_cancelback").click();
-        await sleep(500);
-
-        finalMatrix = finalMatrix.map((arr) => { return arr.join("__split1__") });
-        finalValue = finalMatrix.join("__split3__");
-        selectedDom.find((d) => { return d.getAttribute("desid") === desid }).querySelector(".pp_designer_selected_box_value").textContent = finalValue;
-
-        await sleep(1000);
-        selectedDom.find((d) => { return d.getAttribute("desid") === desid }).querySelector(".pp_designer_selected_box_contents_selection").click();
-
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  ]);
 
   communication.setItem([
     () => { return "이미지 전송 기록"; },
