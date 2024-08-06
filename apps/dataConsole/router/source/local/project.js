@@ -4319,29 +4319,37 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   }
                                 }
                               },
-                            ];
-                            if (/계약/gi.test(name)) {
-                              menuContents.unshift({
-                                text: "계약 취소",
+                              {
+                                text: "강제 입금",
                                 eventFunction: async function (e) {
                                   e.preventDefault();
                                   e.stopPropagation();
                                   try {
-                                    let data;
-                                    if (window.confirm("계약 취소를 진행할까요? 계약 취소는 현장 미팅 이후 계약금 환불을 해주지 않을 경우에 사용하는 기능입니다! 계약금 환불의 경우 별도 문의해주세요!")) {
-                                      data = await ajaxJson({ bilid: GeneralJs.stacks[thisProjectBill].bilid }, PYTHONHOST + "/contractCancel", { equal: true });
-                                      GeneralJs.stacks[thisProjectBill] = data.bill;
-                                      cleanChildren(scrollTong);
-                                      requestArrMake();
-                                      responseArrMake();
-                                      requestLoad();
-                                    }
+                                    const [ thisBill ] = await GeneralJs.ajaxJson({
+                                      mode: "read",
+                                      whereQuery: {
+                                        $and: [
+                                          { class: "style" },
+                                          { "links.cliid": cliid },
+                                          { "links.desid": desid },
+                                          { "links.proid": proid },
+                                          { "links.method": method },
+                                        ]
+                                      },
+                                    }, PYTHONHOST + "/generalBill", { equal: true });
+                                    let thisName, thisAmount;
+
+                                    thisName = (thisBill.requests.find((o) => { return o.id === index }).target.name)
+                                    thisAmount = String(thisBill.requests.find((o) => { return o.id === index }).items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0))
+
+                                    await GeneralJs.ajaxJson({ date: new Date(), amount: thisAmount, name: thisName }, S3HOST + ":3000/receiveSms");
+
                                   } catch (e) {
                                     console.log(e);
                                   }
                                 }
-                              });
-                            }
+                              },
+                            ];
                           }
                           let menuFontSize;
                           let menuPaddingTop, menuPaddingBottom, menuPaddingLeft;
