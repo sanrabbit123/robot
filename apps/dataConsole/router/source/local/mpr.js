@@ -389,7 +389,7 @@ MprJs.prototype.clientWhiteData = async function (cliid, requestNumber) {
   try {
     const { client, project: projectRaw } = instance.clients.find((c) => { return c.cliid === cliid && c.requestNumber === requestNumber });
     const { request, analytics } = client.requests[0];
-    const clientAnalytics = (await ajaxJson({ mode: "pick", cliid }, CONTENTSHOST + "/clientAnalytics", { equal: true })).data;
+    const clientAnalytics = (await ajaxJson({ mode: "pick", cliid }, CONTENTSHOST + ":3000/clientAnalytics2", { equal: true })).data;
     const clientHistory = await ajaxJson({ id: cliid, rawMode: true }, BACKHOST + "/getClientHistory", { equal: true });
     const { contents, history, sessions, source } = clientAnalytics;
     let dataMatrix;
@@ -9936,7 +9936,7 @@ MprJs.prototype.mprPannel = async function () {
                     mode: "get",
                     startDate,
                     endDate,
-                  }, CONTENTSHOST + "/clientAnalytics", { equal: true });
+                  }, CONTENTSHOST + ":3000/clientAnalytics2", { equal: true });
                   await instance.coreContentsLoad(true);
                   loading.parentNode.removeChild(loading);
                 }
@@ -10222,7 +10222,7 @@ MprJs.prototype.mprSearchEvent = async function () {
             instance.clients = await ajaxJson({
               mode: "get",
               standardDate: ago,
-            }, CONTENTSHOST + "/clientAnalytics", { equal: true });
+            }, CONTENTSHOST + ":3000/clientAnalytics2", { equal: true });
             await instance.coreContentsLoad(true);
             loading.parentNode.removeChild(loading);
 
@@ -10250,7 +10250,7 @@ MprJs.prototype.mprSearchEvent = async function () {
               mode: "query",
               whereQuery,
               coreWhereQuery,
-            }, CONTENTSHOST + "/clientAnalytics", { equal: true });
+            }, CONTENTSHOST + ":3000/clientAnalytics2", { equal: true });
             await instance.coreContentsLoad(true);
             loading.parentNode.removeChild(loading);
 
@@ -10453,7 +10453,7 @@ MprJs.prototype.launching = async function () {
       mode: "get",
       standardDate: ago,
       initRequest: true,
-    }, CONTENTSHOST + "/clientAnalytics", { equal: true });
+    }, CONTENTSHOST + ":3000/clientAnalytics2", { equal: true });
     members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
 
     this.members = members;
@@ -10532,7 +10532,7 @@ MprJs.prototype.launching = async function () {
         mode: "query",
         whereQuery,
         coreWhereQuery,
-      }, CONTENTSHOST + "/clientAnalytics", { equal: true });
+      }, CONTENTSHOST + ":3000/clientAnalytics2", { equal: true });
       await instance.coreContentsLoad(true);
       loading.parentNode.removeChild(loading);
 
