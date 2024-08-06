@@ -7909,6 +7909,25 @@ ProjectJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
+    () => { return "시공 콘솔로 이동"; },
+    function () {
+      return (instance.whiteBox !== null && instance.whiteBox !== undefined);
+    },
+    async function (e) {
+      try {
+        const proid = instance.whiteBox.id;
+        await GeneralJs.ajaxJson({
+          mode: "constructOnoff",
+          action: "on",
+          proid: proid,    
+        }, BACKHOST + "/constructInteraction", { equal: true });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
     () => { return "계약금 안내"; },
     function () {
       return true;
