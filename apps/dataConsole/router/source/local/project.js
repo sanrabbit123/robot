@@ -4344,6 +4344,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
                                     await GeneralJs.ajaxJson({ date: new Date(), amount: thisAmount, name: thisName }, S3HOST + ":3000/receiveSms");
 
+                                    await GeneralJs.sleep(500);
+                                    window.alert("입금을 강제로 처리중입니다! 슬랙에서 완료 알림이 뜨면 반드시 새로고침을 해서 확인해주세요!");
+
                                   } catch (e) {
                                     console.log(e);
                                   }
