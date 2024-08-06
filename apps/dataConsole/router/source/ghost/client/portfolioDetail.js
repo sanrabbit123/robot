@@ -1602,6 +1602,10 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
           },
           contextmenu: async function (e) {
             e.preventDefault();
+            let boo;
+
+            boo = true;
+
             if (editable) {
               if (e.altKey) {
                 const thisGs = this.getAttribute("gs");
@@ -1623,7 +1627,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                   const pid = this.getAttribute("pid");
                   await GeneralJs.ajaxJson({ pid }, S3HOST + ":3000/resetContentsPhotoStatus");
                   await GeneralJs.sleep(1000);
-                  // window.location.reload();
+                  boo = false;
                 }
               } else {
                 if (this.getAttribute("dae") === "false") {
@@ -1639,7 +1643,9 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                   }
                 }
               }
-              await instance.contentsBoxStatusRead();
+              if (boo) {
+                await instance.contentsBoxStatusRead();
+              }
               window.location.reload();
             }
           }

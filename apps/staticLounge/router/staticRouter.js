@@ -10341,8 +10341,6 @@ StaticRouter.prototype.rou_post_resetContentsPhotoStatus = function () {
         contentsDetail[i].photo = [];
       }
 
-      console.log(contentsDetail);
-
       await back.mongoUpdate(collection, [ { "contents.portfolio.pid": pid }, { "contents.portfolio.contents.detail": contentsDetail } ], { selfMongo });
       await back.mongoUpdate(collection, [ { "contents.portfolio.pid": pid }, { "contents.portfolio.contents.detail": contentsDetail } ], { selfMongo: selfLocalMongo });
 
