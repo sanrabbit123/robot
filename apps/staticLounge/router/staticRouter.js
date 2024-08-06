@@ -9433,7 +9433,9 @@ StaticRouter.prototype.rou_post_getContents = function () {
           sortQuery = { "contents.portfolio.detailInfo.sort.key9": -1 };
 
           designers = await back.getDesignersByQuery({ desid: req.body.desid }, { selfMongo });
-          contentsArr = await back.mongoPick(collection, [ { desid: req.body.desid }, contentsProjectQuery ], { selfMongo, sort: sortQuery });
+          whereQuery = { "$and": hideContents.map((pid) => { return { "contents.portfolio.pid": { "$not": { "$regex": "^" + pid + "$" } } } }) };
+          whereQuery["$and"].push({ desid: req.body.desid });
+          contentsArr = await back.mongoPick(collection, [ whereQuery, contentsProjectQuery ], { selfMongo, sort: sortQuery });
 
           res.send(JSON.stringify({
             contentsArr: contentsArr,
@@ -10297,6 +10299,53 @@ StaticRouter.prototype.rou_post_requestScript = function () {
     } catch (e) {
       console.log(req);
       await logger.error("Static Lounge 서버 문제 생김 (rou_post_requestScript): " + e.message + " / " + global.decodeURIComponent(req.body.url));
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_aspirantToDesigner = function () {
+  const instance = this;
+  const back = this.back;
+  const work = this.work;
+  const { requestSystem, equalJson, messageSend } = this.mother;
+  let obj = {};
+  obj.link = [ "/aspirantToDesigner" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.aspid === undefined) {
+        throw new Error("invaild post");
+      }
+      const { aspid } = equalJson(req.body);
+      let aspirants, aspirant;
+      let aspidArr;
+      let designer;
+  
+      aspirants = await back.getAspirantsByQuery({ aspid: aspid }, { selfMongo: instance.mongo });
+      aspirant = aspirants[0].toNormal();
+
+      designer = aspirant.designer;
+
+      aspidArr = [];
+      aspidArr.push({ aspid: aspirant.aspid, contract: aspirant.contract.partnership.date });
+
+      work.aspirantToDesigner(aspidArr, { selfMongo: instance.mongo }).then(() => {
+        return messageSend({ text: designer + " 디자이너 등록을 완료하였어요! DE 2번 콘솔에서 확인해주세요!", channel: "#300_designer", voice: false, fairy: false });
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      console.log(req);
+      await logger.error("Static Lounge 서버 문제 생김 (rou_post_aspirantToDesigner): " + e.message + " / " + global.decodeURIComponent(req.body.url));
       res.send(JSON.stringify({ error: e.message }));
     }
   }

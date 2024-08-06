@@ -8569,30 +8569,19 @@ DevContext.prototype.spellCheck = async function (porlid) {
   }
 }
 
-DevContext.prototype.aspirantToDesigner = async function (nameList) {
-  if (!Array.isArray(nameList)) {
-    throw new Error("input must be array => [ [], [], []... ]");
-  }
+DevContext.prototype.aspirantToDesigner = async function (aspid) {
   const instance = this;
   const back = new BackMaker();
   const report = new BackReport();
   const work = new BackWorker();
-  const { fileSystem, shell, shellLink, ghostFileUpload, requestSystem, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
+  const { fileSystem, shellExec, shellLink, stringToDate, dateToString, ghostFileUpload, requestSystem, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
   try {
-    const stringToDate = function (str) {
-      let temp = str.split('-');
-      return new Date(Number(temp[0]), Number(temp[1].replace(/^0/g, '')) - 1, Number(temp[2].replace(/^0/g, '')));
-    }
-    let whereQuery, updateQuery;
     let aspirants, aspirant;
     let aspidArr;
+    aspirants = await back.getAspirantsByQuery({ aspid: aspid }, { selfMongo: this.MONGOC });
+    aspirant = aspirants[0].toNormal();
     aspidArr = [];
-    for (let [ name, contractDay ] of nameList) {
-      whereQuery = { designer: name };
-      aspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: this.MONGOC });
-      aspirant = aspirants[0];
-      aspidArr.push({ aspid: aspirant.aspid, contract: stringToDate(contractDay) });
-    }
+    aspidArr.push({ aspid: aspirant.aspid, contract: aspirant.contract.partnership.date });
     await work.aspirantToDesigner(aspidArr, { selfMongo: this.MONGOC });
   } catch (e) {
     console.log(e);

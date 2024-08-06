@@ -5130,6 +5130,20 @@ DesignerJs.prototype.aspirantBase = async function () {
                 }
               }
             },
+            {
+              title: designer + " 실장님 최종 디자이너 등록",
+              func: (aspid) => {
+                return async function (e) {
+                  const aspirant = instance.aspirants.find((a) => { return a.aspid === aspid });
+                  try {
+                    await ajaxJson({ aspid }, S3HOST + ":3000/aspirantToDesigner");
+                    window.alert("최종 디자이너 등록을 진행합니다! 완료되면 슬렉을 통해 알림이 나옵니다!");
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
           ];
           const thisBox = this.getBoundingClientRect();
           const { x, y } = e;
@@ -7101,6 +7115,24 @@ DesignerJs.prototype.communicationRender = function () {
           }
 
         }
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "최종 디자이너 등록"; },
+    function () {
+      return document.querySelector('.' + whiteBaseClassName) !== null;
+    },
+    async function (e) {
+      const aspid = document.querySelector('.' + whiteBaseClassName).getAttribute("aspid");
+      const aspirant = instance.aspirants.find((a) => { return a.aspid === aspid });
+      try {
+        await ajaxJson({ aspid }, S3HOST + ":3000/aspirantToDesigner");
+        window.alert("최종 디자이너 등록을 진행합니다! 완료되면 슬렉을 통해 알림이 나옵니다!");
       } catch (e) {
         console.log(e);
         window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;

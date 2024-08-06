@@ -4051,6 +4051,24 @@ DesignerJs.prototype.communicationRender = function () {
     }
   ]);
   communication.setItem([
+    () => { return "신청자 정보 보기"; },
+    function () {
+      return document.querySelector('.' + whiteBaseClassName) !== null;
+    },
+    async function (e) {
+      const desid = document.querySelector('.' + whiteBaseClassName).getAttribute("desid");
+      try {
+        const [ thisDesigner ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
+        const thisAspirants = await ajaxJson({ whereQuery: { designer: thisDesigner.designer } }, SECONDHOST + "/getAspirants", { equal: true });
+        thisAspirants.filter((a) => { return a.response })
+
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal&desid=" + desid;
+      }
+    }
+  ]);
+  communication.setItem([
     () => { return "이미지 전송 기록"; },
     function () {
       return true;
