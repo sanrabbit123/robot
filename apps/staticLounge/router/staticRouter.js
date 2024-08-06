@@ -10331,9 +10331,7 @@ StaticRouter.prototype.rou_post_resetContentsPhotoStatus = function () {
       let contentsDetail;
       let whereQuery;
 
-      whereQuery = { "contents.portfolio.pid": pid };
-
-      [ thisContents ] = await back.mongoRead(collection, whereQuery, { selfMongo });
+      [ thisContents ] = await back.mongoRead(collection, { "contents.portfolio.pid": pid }, { selfMongo });
       contentsDetail = objectDeepCopy(thisContents.contents.portfolio.contents.detail);
 
       photo = thisContents.photos.detail.map((o) => { return o.index });
@@ -10345,8 +10343,8 @@ StaticRouter.prototype.rou_post_resetContentsPhotoStatus = function () {
 
       console.log(contentsDetail);
 
-      await back.mongoUpdate(collection, [ whereQuery, { "contents.portfolio.contents.detail": contentsDetail } ], { selfMongo });
-      await back.mongoUpdate(collection, [ whereQuery, { "contents.portfolio.contents.detail": contentsDetail } ], { selfMongo: selfLocalMongo });
+      await back.mongoUpdate(collection, [ { "contents.portfolio.pid": pid }, { "contents.portfolio.contents.detail": contentsDetail } ], { selfMongo });
+      await back.mongoUpdate(collection, [ { "contents.portfolio.pid": pid }, { "contents.portfolio.contents.detail": contentsDetail } ], { selfMongo: selfLocalMongo });
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {

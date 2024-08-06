@@ -1623,7 +1623,7 @@ PortfolioDetailJs.prototype.portfolioContentsBox = async function (updatedConten
                   const pid = this.getAttribute("pid");
                   await GeneralJs.ajaxJson({ pid }, S3HOST + ":3000/resetContentsPhotoStatus");
                   await GeneralJs.sleep(1000);
-                  window.location.reload();
+                  // window.location.reload();
                 }
               } else {
                 if (this.getAttribute("dae") === "false") {
