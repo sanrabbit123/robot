@@ -10343,6 +10343,8 @@ StaticRouter.prototype.rou_post_resetContentsPhotoStatus = function () {
         contentsDetail[i].photo = [];
       }
 
+      console.log(contentsDetail);
+
       await back.mongoUpdate(collection, [ whereQuery, { "contents.portfolio.contents.detail": contentsDetail } ], { selfMongo });
       await back.mongoUpdate(collection, [ whereQuery, { "contents.portfolio.contents.detail": contentsDetail } ], { selfMongo: selfLocalMongo });
 
