@@ -9,7 +9,6 @@ const ContentsRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, 
   const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
-  const ContentsCalculator = require(`${process.cwd() + "/apps/contentsLounge"}/router/contentsCalculator.js`);
 
   const FacebookAPIs = require(`${process.cwd()}/apps/facebookAPIs/facebookAPIs.js`);
   const NaverAPIs = require(`${process.cwd()}/apps/naverAPIs/naverAPIs.js`);
@@ -34,7 +33,6 @@ const ContentsRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC, 
   this.docs = new GoogleDocs();
   this.sheets = new GoogleSheet();
   this.calendar = new GoogleCalendar();
-  this.calcaulator = new ContentsCalculator();
 
   this.facebook = new FacebookAPIs();
   this.naver = new NaverAPIs();
@@ -81,6 +79,116 @@ ContentsRouter.prototype.fireWall = function (req) {
     }
   }
   return __wallLogicBoo;
+}
+
+ContentsRouter.prototype.storeContentsView = async function (selfMongo, selfCoreMongo, selfLocalMongo, logger) {
+  const instance = this;
+  const address = this.address;
+  const back = this.back;
+  const { requestSystem, equalJson, dateToString, stringToDate, sleep } = this.mother;
+  try {
+    const analyticsCollection = "homeliaisonAnalytics";
+    const action = "contentsView";
+    const collection = "contentsView";
+    let rows;
+    let whereQuery;
+    let contentsArr;
+    let jsonModel;
+    let browserMap;
+    let foundTarget, foundTarget2, foundTarget3;
+    let osMap;
+    let timeMap;
+    let dateTypeString;
+    let finalJson;
+    let finalRows, key;
+
+    key = dateToString(new Date()).replace(/[^0-9]/gi, '') + "_web";
+    finalJson = {
+      key,
+      date: new Date(),
+      contents: [],
+    };
+
+    contentsArr = await back.getContentsArrByQuery({}, { selfMongo: selfCoreMongo });
+    for (let contents of contentsArr) {
+
+      thisPid = contents.contents.portfolio.pid;
+      whereQuery = { action, "data.contents_pid": thisPid };
+      rows = await back.mongoRead(analyticsCollection, whereQuery, { selfMongo });
+  
+      browserMap = rows.filter((o) => { return typeof o.device.os.browser === "string" }).map((o) => { return o.device.os.browser.toLowerCase().trim(); });
+      browserMap = [ ...new Set(browserMap) ];
+      browserMap = browserMap.map((type) => { return { type, value: 0 } })
+  
+      osMap = rows.filter((o) => { return typeof o.device.os.name === "string" }).map((o) => { return o.device.os.name.toLowerCase().trim(); });
+      osMap = [ ...new Set(osMap) ];
+      osMap = osMap.map((type) => { return { type, value: 0 } })
+  
+      timeMap = rows.map((o) => { return dateToString(o.date).replace(/[^0-9]/gi, '').slice(0, 6) });
+      timeMap = [ ...new Set(timeMap) ];
+      timeMap = timeMap.map((type) => { return { type, value: 0 } })
+  
+      for (let obj of rows) {
+        if (typeof obj.device.os.browser === "string") {
+          foundTarget = browserMap.find((o) => { return o.type === obj.device.os.browser.toLowerCase().trim() });
+          if (foundTarget !== undefined) {
+            foundTarget.value = foundTarget.value + 1;
+          }
+        }
+        if (typeof obj.device.os.name === "string") {
+          foundTarget2 = osMap.find((o) => { return o.type === obj.device.os.name.toLowerCase().trim() });
+          if (foundTarget2 !== undefined) {
+            foundTarget2.value = foundTarget2.value + 1;
+          }
+        }
+        dateTypeString = dateToString(obj.date).replace(/[^0-9]/gi, '').slice(0, 6)
+        foundTarget3 = timeMap.find((o) => { return o.type === dateTypeString });
+        if (foundTarget3 !== undefined) {
+          foundTarget3.value = foundTarget3.value + 1;
+        }
+      }
+  
+      jsonModel = {
+        pid: thisPid,
+        conid: contents.conid,
+        desid: contents.desid,
+        proid: contents.proid,
+        date: new Date(JSON.stringify(contents.contents.portfolio.date).slice(1, -1)),
+        data: {
+          view: {
+            total: rows.length,
+            portfolio: rows.filter((obj) => { return !/revdetail/gi.test(obj.info.requestUrl) }).length,
+            review: rows.filter((obj) => { return /revdetail/gi.test(obj.info.requestUrl) }).length,
+          },
+          device: {
+            mobile: rows.filter((obj) => { return /mobile/gi.test(obj.device.device.type) }).length,
+            desktop: rows.filter((obj) => { return /desktop/gi.test(obj.device.device.type) }).length,
+            tablet: rows.filter((obj) => { return /tablet/gi.test(obj.device.device.type) }).length,
+          },
+          browser: equalJson(JSON.stringify(browserMap)),
+          os: equalJson(JSON.stringify(osMap)),
+          time: equalJson(JSON.stringify(timeMap)),
+        }
+      };
+  
+      finalJson.contents.push(equalJson(JSON.stringify(jsonModel)));
+
+      await sleep(1500);
+    }
+    
+    finalRows = await back.mongoRead(collection, { key }, { selfMongo: selfLocalMongo });
+    if (finalRows.length > 0) {
+      await back.mongoDelete(collection, { key }, { selfMongo: selfLocalMongo });
+    }
+    await back.mongoCreate(collection, finalJson, { selfMongo: selfLocalMongo });
+
+    await logger.log("store web contents view success : " + JSON.stringify(new Date()));
+    return { message: "done" };
+  } catch (e) {
+    logger.error("Contents calculator 문제 생김 (storeContentsView): " + e.message).catch((e) => { console.log(e); });
+    console.log(e);
+    return null;
+  }
 }
 
 //GET ---------------------------------------------------------------------------------------------
@@ -2126,7 +2234,6 @@ ContentsRouter.prototype.rou_post_syncClientBudget = function () {
 
 ContentsRouter.prototype.rou_post_storeContentsView = function () {
   const instance = this;
-  const calcaulator = this.calcaulator;
   const { fileSystem, equalJson, requestSystem, sleep, dateToString } = this.mother;
   let obj;
   obj = {};
@@ -2139,7 +2246,7 @@ ContentsRouter.prototype.rou_post_storeContentsView = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      calcaulator.storeContentsView(instance.mongolog, instance.mongo, instance.mongolocal, logger).then((resultMessage) => {
+      instance.storeContentsView(instance.mongolog, instance.mongo, instance.mongolocal, logger).then((resultMessage) => {
         if (resultMessage.message !== "done") {
           throw new Error("store web contents view fail");
         }
