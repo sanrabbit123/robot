@@ -4340,7 +4340,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                     let thisName, thisAmount;
 
                                     thisName = (thisBill.requests.find((o) => { return o.id === index }).target.name)
-                                    thisAmount = String(thisBill.requests.find((o) => { return o.id === index }).items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0))
+                                    thisAmount = String(Math.floor(thisBill.requests.find((o) => { return o.id === index }).items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0)))
 
                                     await GeneralJs.ajaxJson({ date: new Date(), amount: thisAmount, name: thisName }, S3HOST + ":3000/receiveSms");
 
