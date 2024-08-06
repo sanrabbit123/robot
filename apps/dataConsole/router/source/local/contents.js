@@ -2562,26 +2562,7 @@ ContentsJs.prototype.mainDataRender = async function (firstLoad = true) {
     }
 
     if (firstLoad) {
-      ajaxJson({ mode: "get" }, CONTENTSHOST + "/contentsCalendar", { equal: true }).then((contentsCalendar) => {
-        let thisCalendar, thisValueDoms;
-        let thisTarget;
-        instance.contentsCalendar = contentsCalendar;
-        for (let fore of instance.foreContents) {
-          thisCalendar = instance.contentsCalendar.find((o) => { return o.pid === fore.pid });
-          if (thisCalendar === undefined) {
-            thisCalendar = null;
-          }
-          if (document.querySelector('.' + fore.pid) !== null) {
-            thisValueDoms = [ ...document.querySelector('.' + fore.pid).querySelectorAll('.' + valueTargetClassName) ];
-            thisTarget = findByAttribute(thisValueDoms, "name", "forecast");
-            if (thisTarget !== null) {
-              thisTarget.textContent = thisCalendar === null ? "-" : dateToString(thisCalendar.date.start);
-              thisTarget.style.color = colorChip.black;
-            }
-          }
-        }
-        return instance.coreColorSync();
-      }).catch((err) => { console.log(err); });
+      instance.coreColorSync();
     }
 
     return { standards, columns, values };
@@ -4336,7 +4317,6 @@ ContentsJs.prototype.contentsPannel = async function () {
 
               loading = await instance.mother.loadingRun();
               allContents = await ajaxJson({ mode: "all" }, CONTENTSHOST + "/getAllContents", { equal: true });
-              instance.contentsCalendar = [];
               instance.contentsArr = new SearchArray(allContents.contentsArr);
               instance.foreContents = new SearchArray(allContents.foreContents);
               instance.clients = new SearchArray(allContents.clients);
@@ -4370,7 +4350,6 @@ ContentsJs.prototype.contentsPannel = async function () {
 
               loading = await instance.mother.loadingRun();
               allContents = await ajaxJson({ mode: "all", init: true }, CONTENTSHOST + "/getAllContents", { equal: true });
-              instance.contentsCalendar = [];
               instance.contentsArr = new SearchArray(allContents.contentsArr);
               instance.foreContents = new SearchArray(allContents.foreContents);
               instance.clients = new SearchArray(allContents.clients);
@@ -4521,7 +4500,6 @@ ContentsJs.prototype.contentsSearchEvent = async function () {
             cleanChildren(totalMother);
             loading = await instance.mother.loadingRun();
             allContents = await ajaxJson({ mode: "all", init: true }, CONTENTSHOST + "/getAllContents", { equal: true });
-            instance.contentsCalendar = [];
             instance.contentsArr = new SearchArray(allContents.contentsArr);
             instance.foreContents = new SearchArray(allContents.foreContents);
             instance.clients = new SearchArray(allContents.clients);
@@ -4599,7 +4577,6 @@ ContentsJs.prototype.contentsSearchEvent = async function () {
               cleanChildren(totalMother);
               loading = await instance.mother.loadingRun();
               allContents = await ajaxJson({ mode: "search", value }, CONTENTSHOST + "/getAllContents", { equal: true });
-              instance.contentsCalendar = [];
               instance.contentsArr = new SearchArray(allContents.contentsArr);
               instance.foreContents = new SearchArray(allContents.foreContents);
               instance.clients = new SearchArray(allContents.clients);
@@ -4677,86 +4654,6 @@ ContentsJs.prototype.contentsExtractEvent = async function () {
   try {
     const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
 
-    this.mother.belowButtons.sub.extractIcon.addEventListener("click", async function (e) {
-      try {
-        const today = new Date();
-        const getObj = returnGet();
-        let thisObject;
-        let matrix;
-        let tempArr;
-        let data;
-        let thisForeContents;
-  
-        data = await instance.mainDataRender(false);
-        matrix = [];
-        tempArr = [
-          "아이디",
-        ];
-        for (let obj of data.columns) {
-          tempArr.push(obj.title);
-        }
-        matrix.push(tempArr);
-        
-        instance.mother.greenAlert("시트 추출이 완료되면 자동으로 열립니다!");
-
-        ajaxJson({ mode: "get" }, CONTENTSHOST + "/contentsCalendar", { equal: true }).then((contentsCalendar) => {
-          let thisCalendar, thisValueDoms;
-          let thisTarget;
-          instance.contentsCalendar = contentsCalendar;
-
-          for (let pid in data.values) {
-            tempArr = [];
-            tempArr.push(pid);
-            thisForeContents = instance.foreContents.find((o) => { return o.pid === pid });
-            if (thisForeContents === undefined) {
-              for (let obj of data.columns) {
-                thisObject = data.values[pid].find((o) => { return o.name === obj.name });
-                tempArr.push(thisObject.value);
-              }
-              matrix.push(tempArr);
-            } else {
-              thisCalendar = instance.contentsCalendar.find((o) => { return o.pid === thisForeContents.pid });
-              if (thisCalendar === undefined) {
-                for (let obj of data.columns) {
-                  thisObject = data.values[pid].find((o) => { return o.name === obj.name });
-                  if (thisObject.value === asyncProcessText) {
-                    tempArr.push("-");
-                  } else {
-                    tempArr.push(thisObject.value);
-                  }
-                }
-                matrix.push(tempArr);
-              } else {
-                for (let obj of data.columns) {
-                  thisObject = data.values[pid].find((o) => { return o.name === obj.name });
-                  if (thisObject.value === asyncProcessText) {
-                    tempArr.push(dateToString(thisCalendar.date.start));
-                  } else {
-                    tempArr.push(thisObject.value);
-                  }
-                }
-                matrix.push(tempArr);
-              }
-            }
-          }
-
-          return ajaxJson({
-            values: matrix,
-            newMake: true,
-            parentId: parentId,
-            sheetName: "fromDB_hlContents_" + String(today.getFullYear()) + instance.mother.todayMaker()
-          }, BACKHOST + "/sendSheets", { equal: true });
-
-        }).then((result) => {
-          blankHref(result.link);
-        }).catch((err) => {
-          console.log(err);
-        });
-
-      } catch (e) {
-        console.log(e);
-      }
-    });
   } catch (e) {
     console.log(e);
   }
@@ -5016,7 +4913,6 @@ ContentsJs.prototype.launching = async function () {
       allContents = await ajaxJson({ mode: "all" }, CONTENTSHOST + "/getAllContents", { equal: true });
     }
 
-    this.contentsCalendar = [];
     this.contentsArr = new SearchArray(allContents.contentsArr);
     this.foreContents = new SearchArray(allContents.foreContents);
     this.clients = new SearchArray(allContents.clients);
