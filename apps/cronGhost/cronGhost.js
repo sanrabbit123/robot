@@ -133,7 +133,6 @@ CronGhost.prototype.aliveTest = async function (MONGOC, initialTimeout = 60000) 
       { name: "backConsole", protocol: "https:", host: address.backinfo.host, port: generalPort, },
       { name: "secondGhost", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
       { name: "transferLounge", protocol: "https:", host: address.transinfo.host, port: generalPort, },
-      { name: "contentsLounge", protocol: "https:", host: address.contentsinfo.host, port: generalPort, },
       { name: "staticLounge", protocol: "https:", host: address.officeinfo.ghost.host, port: generalPort, },
     ];
 
