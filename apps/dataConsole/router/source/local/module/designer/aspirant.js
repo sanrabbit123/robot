@@ -7140,6 +7140,22 @@ DesignerJs.prototype.communicationRender = function () {
     }
   ]);
 
+  communication.setItem([
+    () => { return "신규 컨텐츠 발행"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let popupFunction;
+        popupFunction = instance.rawUploadView();
+        await popupFunction();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
 }
 
 DesignerJs.prototype.aspirantExtractEvent = async function () {
