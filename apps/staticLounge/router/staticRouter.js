@@ -9104,6 +9104,91 @@ StaticRouter.prototype.rou_post_hiddenContents = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_syncContentsTag = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, objectDeepCopy, dateToString, serviceParsing } = this.mother;
+  let obj = {};
+  obj.link = [ "/syncContentsTag" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      const collection = "contents";
+
+      (async () => {
+        
+        const targets = await back.mongoRead(collection, {}, { selfMongo: selfCoreMongo });
+        const keywordsArr = (targets.map((c) => {
+          const bodyArr = c.contents.portfolio.contents.detail[0].contents.split(" ");
+          const keywordsArr = [ ...new Set(bodyArr.map((s) => { return s.trim() }).map((s) => {
+            return s.replace(/[\n\t ]/gi, "").replace(/을$/gi, "").replace(/으로$/gi, "").replace(/하고$/gi, "").replace(/[^가-힣0-9]/gi, "");
+          }).filter((s) => {
+            return !/고객/gi.test(s) && !/스타일링/gi.test(s) && !/문의/gi.test(s) && !/의뢰/gi.test(s)
+          }).map((s) => {
+            return s.replace(/[은는이가을를]$/, "").replace(/[와과]$/, "").replace(/습니다$/, "").replace(/그리고/, "").replace(/그래서/, "").replace(/어떻게/, "").replace(/하지만/, "");
+          }).map((s) => {
+            return s.replace(/[에의]$/, "");
+          }).filter((s) => {
+            return !/하였/gi.test(s) && !/하셨/gi.test(s) && !/야겠다고/gi.test(s) && !/이에요/gi.test(s) && !/었죠/gi.test(s) && !/어요/gi.test(s) && !/했[고구]요/gi.test(s)
+          }).filter((s) => {
+            return !/아실까요/gi.test(s) && !/계셨구요/gi.test(s) && !/해드렸/gi.test(s) && !/봅시다/gi.test(s);
+          }).filter((s) => {
+            return !/진행/gi.test(s) && !/홈리에종/gi.test(s) && !/디자이너/gi.test(s) && !/소개/gi.test(s);
+          }).map((s) => {
+            return s.replace(/[에의]$/, "");
+          }).map((s) => {
+            return s.replace(/이다$/, "");
+          }).map((s) => {
+            return s.replace(/있으셨죠$/, "");
+          }).map((s) => {
+            return s.replace(/추천드렸$/, "");
+          }).filter((s) => {
+            return !/하시겠다고/gi.test(s) && !/현장이었/gi.test(s) && !/해드리겠다고/gi.test(s) && !/이었기/gi.test(s) && !/됐으면/gi.test(s);
+          }).filter((s) => {
+            return !/있도록/gi.test(s) && !/싶으셨죠/gi.test(s) && !/바뀌었답니다/gi.test(s) && !/이야기/gi.test(s) && !/현장입니다/gi.test(s);
+          }).filter((s) => { return s !== "" }).filter((s) => { return s.trim().length > 2 })) ].concat([ "all" ]).concat([
+            c.contents.portfolio.spaceInfo.space,
+            String(c.contents.portfolio.spaceInfo.pyeong) + "평",
+            String(Math.floor(c.contents.portfolio.spaceInfo.pyeong / 10) * 10) + "평형",
+            c.contents.portfolio.spaceInfo.region,
+            ...c.contents.portfolio.spaceInfo.space.split(" "),
+            ...c.contents.portfolio.spaceInfo.region.split(" "),
+            serviceParsing(c.service).replace(/[^가-힣 ]/gi, "").trim().replace(/^(온라인|오프라인)/, "").trim(),
+            ...c.contents.portfolio.title.main.split(" ").map((s) => { return s.trim() }).filter((s) => { return s !== "" }),
+          ])
+          return {
+            conid: c.conid,
+            keywords: keywordsArr.concat(),
+          }
+        }));
+        for (let { conid, keywords } of keywordsArr) {
+          await back.mongoUpdate(collection, [ { conid }, { "contents.portfolio.detailInfo.tag": keywords } ], { selfMongo });
+          await back.mongoUpdate(collection, [ { conid }, { "contents.portfolio.detailInfo.tag": keywords } ], { selfMongo: selfCoreMongo });
+        }
+
+      })().catch((err) => {
+        console.log(err);
+        logger.error("Log Console 서버 문제 생김 (rou_post_syncContentsTag): " + e.message).catch((e) => { console.log(e); });
+      })
+
+      res.send(JSON.stringify({ message: "will do" }));
+
+    } catch (e) {
+      logger.error("Log Console 서버 문제 생김 (rou_post_syncContentsTag): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_getContents = function () {
   const instance = this;
   const back = this.back;
