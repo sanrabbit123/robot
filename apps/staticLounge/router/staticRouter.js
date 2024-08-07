@@ -11842,6 +11842,8 @@ StaticRouter.prototype.rou_post_evaluationSubmit = function () {
 
       kakao.sendTalk("evaluationSubmit", thisClient.name, thisClient.phone, {
         client: thisClient.name,
+      }).then(() => {
+        return messageSend({ text: thisClient.name + " 고객님께서 평가를 완료하였습니다!", channel: "#200_web", voice: false, fairy: false });
       }).catch((err) => {
         console.log(err);
       });
