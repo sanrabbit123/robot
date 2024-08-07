@@ -11677,7 +11677,6 @@ StaticRouter.prototype.rou_post_evaluationSubmit = function () {
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongo;
       const collection = "clientEvaluation";
-      const googleCollection = "shareGoogleId";
       let constructAmount;
       let constructPeriod;
       let totalAmount;
@@ -11841,19 +11840,11 @@ StaticRouter.prototype.rou_post_evaluationSubmit = function () {
       }
       await back.mongoCreate(collection, json, { selfMongo });
 
-      googleRows = await back.mongoRead(googleCollection, { proid }, { selfMongo });
-      if (googleRows.length > 0) {
-        googleRows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-        thisClient = await back.getClientById(cliid, { selfMongo: selfCoreMongo });
-        if (thisClient !== null) {
-          kakao.sendTalk("evaluationSubmit", thisClient.name, thisClient.phone, {
-            client: thisClient.name,
-            file: googleRows[0].google.original,
-          }).catch((err) => {
-            console.log(err);
-          });
-        }
-      }
+      kakao.sendTalk("evaluationSubmit", thisClient.name, thisClient.phone, {
+        client: thisClient.name,
+      }).catch((err) => {
+        console.log(err);
+      });
 
       logger.alert("evaluationSubmit success => " + proid + ", " + cliid + ", " + desid).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "done" }));
