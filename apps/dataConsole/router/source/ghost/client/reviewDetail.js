@@ -3268,7 +3268,7 @@ ReviewDetailJs.prototype.reviewDetailBox = function () {
       let words, tempArr;
       words = null;
       while (typeof words !== "string") {
-        words = await GeneralJs.promtLong("새로운 고객 리뷰를 적어주세요! (중간에 쉼표가 있어야 합니다)");
+        words = await GeneralJs.promptLong("새로운 고객 리뷰를 적어주세요! (중간에 쉼표가 있어야 합니다)");
         if (typeof words === "string") {
           if (words === "") {
             words = null;
