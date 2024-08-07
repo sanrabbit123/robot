@@ -3358,6 +3358,18 @@ ContentsJs.prototype.contentsBase = async function () {
                     }
                   },
                   {
+                    title: pid + " 리뷰 에디터 열기",
+                    func: () => {
+                      return async function (e) {
+                        try {
+                          blankHref(FRONTHOST + "/revdetail.php?pid=" + pid + "&edit=true")
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    }
+                  },
+                  {
                     title: pid + " 블로그용 에디터",
                     func: () => {
                       return async function (e) {
@@ -4797,6 +4809,23 @@ ContentsJs.prototype.communicationRender = function () {
         const pid = instance.currentPid;
         if (typeof pid === "string") {
           blankHref(FRONTHOST + "/portdetail.php?pid=" + pid + "&edit=true")
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "리뷰 에디터 열기"; },
+    function () {
+      return (document.querySelector('.' + whiteCardClassName) !== null);
+    },
+    async function (e) {
+      try {
+        const pid = instance.currentPid;
+        if (typeof pid === "string") {
+          blankHref(FRONTHOST + "/revdetail.php?pid=" + pid + "&edit=true")
         }
       } catch (e) {
         console.log(e);
