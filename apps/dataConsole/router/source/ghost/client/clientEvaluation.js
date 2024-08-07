@@ -4535,172 +4535,173 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
 
   this.domList = domList;
 
-  // policy and submit
-  policyArea = createNode({
-    mother: mainBlock,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      marginTop: entireMode ? "" : String(policyAreaMarginTop) + ea,
-      background: colorChip.white,
-      borderRadius: String(5) + "px",
-      boxShadow: entireMode ? "" : "0px 3px 15px -9px " + colorChip.shadow,
-      paddingTop: entireMode ? "" : String(innerPadding) + ea,
-      paddingBottom: String(innerPadding) + ea,
-    }
-  });
-
-  policyTong = createNode({
-    mother: policyArea,
-    style: {
-      display: "block",
-      position: "relative",
-      marginLeft: entireMode ? "" : String(innerPadding) + ea,
-      width: entireMode ? withOut(0) : withOut(innerPadding * 2, ea),
-      height: String(policyGrayHeight) + ea,
-      background: colorChip.gray1,
-      borderRadius: String(3) + "px",
-    },
-    children: [
-      {
-        style: {
-          position: "absolute",
-          top: String(policyGrayTextTop) + ea,
-          left: String(policyGrayTextLeft) + ea,
-          width: withOut(policyGrayTextLeft * 2, ea),
-          height: withOut(policyGrayTextTop * 2, ea),
-          overflow: "scroll",
-        },
-        children: [
-          {
-            position: "absolute",
-            top: String(0) + ea,
-            left: String(0) + ea,
-            width: String(100) + '%',
-            height: "auto",
-            fontSize: String(policyGrayTextSize) + ea,
-            fontWeight: String(300),
-            lineHeight: String(1.6),
-            color: colorChip.black,
-          }
-        ]
+  if (!entireMode) {
+    policyArea = createNode({
+      mother: mainBlock,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+        marginTop: entireMode ? "" : String(policyAreaMarginTop) + ea,
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        boxShadow: entireMode ? "" : "0px 3px 15px -9px " + colorChip.shadow,
+        paddingTop: entireMode ? "" : String(innerPadding) + ea,
+        paddingBottom: String(innerPadding) + ea,
       }
-    ]
-  }).firstChild.firstChild;
-
-  agreeTong = createNode({
-    mother: policyArea,
-    attribute: {
-      toggle: "on",
-    },
-    style: {
-      display: "flex",
-      position: "relative",
-      flexDirection: "row-reverse",
-      marginLeft: String(innerPadding) + ea,
-      width: withOut(innerPadding * 2, ea),
-      marginTop: String(agreeTongMarginTop) + ea,
-      cursor: "pointer",
-    },
-    children: [
-      {
-        class: [ agreeTargetClassName ],
-        attribute: {
-          toggle: "on",
-        },
-        event: {
-          click: agreeToggleEvent
-        },
-        text: "상기 개인정보 취급 방침에 동의합니다.",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(agreeSize) + ea,
-          fontWeight: String(agreeWeight),
-          color: colorExtended.mainBlue,
-          lineHeight: String(agreeLineHeight),
-          cursor: "pointer",
-        }
+    });
+  
+    policyTong = createNode({
+      mother: policyArea,
+      style: {
+        display: "block",
+        position: "relative",
+        marginLeft: entireMode ? "" : String(innerPadding) + ea,
+        width: entireMode ? withOut(0) : withOut(innerPadding * 2, ea),
+        height: String(policyGrayHeight) + ea,
+        background: colorChip.gray1,
+        borderRadius: String(3) + "px",
       },
-      {
-        class: [ agreeTargetClassName ],
-        attribute: {
-          toggle: "on",
-        },
-        event: {
-          click: agreeToggleEvent
-        },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(agreeCircleRadius) + ea,
-          height: String(agreeCircleRadius) + ea,
-          borderRadius: String(agreeCircleRadius) + ea,
-          background: colorExtended.mainBlue,
-          top: String(agreeCircleTop) + ea,
-          marginRight: String(agreeCircleMarginRight) + ea,
-          cursor: "pointer",
-        }
-      }
-    ]
-  });
-
-  submitTong = createNode({
-    mother: policyArea,
-    style: {
-      display: "block",
-      position: "relative",
-      marginTop: String(submitTongMarginTop) + ea,
-      textAlign: "center",
-    },
-    children: [
-      {
-        class: [ "submitButtonClassName" ],
-        event: {
-          click: instance.finalSubmit()
-        },
-        style: {
-          display: "inline-flex",
-          width: String(submitButtonWidth) + ea,
-          height: String(submitButtonHeight) + ea,
-          background: colorExtended.gradientBlue,
-          borderRadius: String(5) + "px",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          cursor: "pointer",
-        },
-        children: [
-          {
-            text: !instance.evaluationRows.exist ? "평가 제출하기" : (instance.contentsRawInfo.raw.link !== "" ? "사진 다운로드" : "평가 제출하기"),
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(submitSize) + ea,
-              fontWeight: String(800),
-              color: colorChip.white,
-              lineHeight: String(submitLineHeight),
-              top: String(submitTextTop) + ea,
+      children: [
+        {
+          style: {
+            position: "absolute",
+            top: String(policyGrayTextTop) + ea,
+            left: String(policyGrayTextLeft) + ea,
+            width: withOut(policyGrayTextLeft * 2, ea),
+            height: withOut(policyGrayTextTop * 2, ea),
+            overflow: "scroll",
+          },
+          children: [
+            {
+              position: "absolute",
+              top: String(0) + ea,
+              left: String(0) + ea,
+              width: String(100) + '%',
+              height: "auto",
+              fontSize: String(policyGrayTextSize) + ea,
+              fontWeight: String(300),
+              lineHeight: String(1.6),
+              color: colorChip.black,
             }
+          ]
+        }
+      ]
+    }).firstChild.firstChild;
+  
+    agreeTong = createNode({
+      mother: policyArea,
+      attribute: {
+        toggle: "on",
+      },
+      style: {
+        display: "flex",
+        position: "relative",
+        flexDirection: "row-reverse",
+        marginLeft: String(innerPadding) + ea,
+        width: withOut(innerPadding * 2, ea),
+        marginTop: String(agreeTongMarginTop) + ea,
+        cursor: "pointer",
+      },
+      children: [
+        {
+          class: [ agreeTargetClassName ],
+          attribute: {
+            toggle: "on",
+          },
+          event: {
+            click: agreeToggleEvent
+          },
+          text: "상기 개인정보 취급 방침에 동의합니다.",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(agreeSize) + ea,
+            fontWeight: String(agreeWeight),
+            color: colorExtended.mainBlue,
+            lineHeight: String(agreeLineHeight),
+            cursor: "pointer",
           }
-        ]
+        },
+        {
+          class: [ agreeTargetClassName ],
+          attribute: {
+            toggle: "on",
+          },
+          event: {
+            click: agreeToggleEvent
+          },
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(agreeCircleRadius) + ea,
+            height: String(agreeCircleRadius) + ea,
+            borderRadius: String(agreeCircleRadius) + ea,
+            background: colorExtended.mainBlue,
+            top: String(agreeCircleTop) + ea,
+            marginRight: String(agreeCircleMarginRight) + ea,
+            cursor: "pointer",
+          }
+        }
+      ]
+    });
+  
+    submitTong = createNode({
+      mother: policyArea,
+      style: {
+        display: "block",
+        position: "relative",
+        marginTop: String(submitTongMarginTop) + ea,
+        textAlign: "center",
+      },
+      children: [
+        {
+          class: [ "submitButtonClassName" ],
+          event: {
+            click: instance.finalSubmit()
+          },
+          style: {
+            display: "inline-flex",
+            width: String(submitButtonWidth) + ea,
+            height: String(submitButtonHeight) + ea,
+            background: colorExtended.gradientBlue,
+            borderRadius: String(5) + "px",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              text: !instance.evaluationRows.exist ? "평가 제출하기" : (instance.contentsRawInfo.raw.link !== "" ? "사진 다운로드" : "평가 제출하기"),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(submitSize) + ea,
+                fontWeight: String(800),
+                color: colorChip.white,
+                lineHeight: String(submitLineHeight),
+                top: String(submitTextTop) + ea,
+              }
+            }
+          ]
+        }
+      ]
+    });
+  
+    ajaxJson({}, BACKHOST + "/designerProposal_policy").then(function (res) {
+      const { policy } = res;
+      let bTags;
+      policyTong.insertAdjacentHTML("beforeend", policy);
+      bTags = policyTong.querySelectorAll("b");
+      for (let b of bTags) {
+        b.style.color = colorChip.black;
+        b.style.fontWeight = String(600);
       }
-    ]
-  });
-
-  ajaxJson({}, BACKHOST + "/designerProposal_policy").then(function (res) {
-    const { policy } = res;
-    let bTags;
-    policyTong.insertAdjacentHTML("beforeend", policy);
-    bTags = policyTong.querySelectorAll("b");
-    for (let b of bTags) {
-      b.style.color = colorChip.black;
-      b.style.fontWeight = String(600);
-    }
-  }).catch(function (err) {
-    console.log(err);
-  });
+    }).catch(function (err) {
+      console.log(err);
+    });
+  }
 
 }
 

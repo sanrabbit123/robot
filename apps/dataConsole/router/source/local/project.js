@@ -7456,7 +7456,7 @@ ProjectJs.prototype.evalutaionStatusView = function (proid) {
       whitePromptMarginTop = 30;
       whitePromptWidth = window.innerWidth - (whitePromptMarginTop * 2);
       
-      realMargin = 50;
+      realMargin = 60;
       closeButtonHeight = 50;
       grayBlockBetween = 8;
 
