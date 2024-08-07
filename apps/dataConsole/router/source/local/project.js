@@ -7425,6 +7425,136 @@ ProjectJs.prototype.rawCommentView = function (proid) {
   }
 }
 
+ProjectJs.prototype.evalutaionStatusView = function (proid) {
+  const instance = this;
+  const { createNode, withOut, colorChip, ajaxJson, removeByClass, dateToString, svgMaker } = GeneralJs;
+  return async function () {
+    try {
+      const [ project ] = await ajaxJson({ noFlat: true, where: { proid } }, "/getProjects", { equal: true });
+      const totalContents = document.getElementById("totalcontents");
+      const rawCommentPopupClassName = "rawCommentPopupClassName";
+      const { belowHeight } = instance;
+      const ea = "px";
+      const zIndex = 4;
+      let thisRawContents;
+      let cancelBack, whitePrompt;
+      let whitePromptWidth;
+      let whitePromptMarginTop;
+      let realBaseTong;
+      let realMargin;
+      let dateCloseTong;
+      let contentsTong;
+      let closeButtonHeight;
+      let grayBlockBetween;
+      let textMargin;
+      let updatedTextTop;
+      let textSize;
+      let xIconWidth;
+      let textWeight;
+      let textLineHeight;
+
+      whitePromptMarginTop = 30;
+      whitePromptWidth = window.innerWidth - (whitePromptMarginTop * 2);
+      
+      realMargin = 20;
+      closeButtonHeight = 50;
+      grayBlockBetween = 8;
+
+      textMargin = 30;
+      updatedTextTop = -1;
+      textSize = 14;
+      xIconWidth = 16;
+
+      textWeight = 400;
+      textLineHeight = 1.6;
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ rawCommentPopupClassName ],
+        event: {
+          click: (e) => {
+            removeByClass(rawCommentPopupClassName);
+          }
+        },
+        style: {
+          top: String(0),
+          left: String(0),
+          width: withOut(0, ea),
+          height: withOut(belowHeight, ea),
+          background: colorChip.black,
+          opacity: String(0.3),
+          position: "fixed",
+          zIndex: String(zIndex),
+        }
+      });
+
+      whitePrompt = createNode({
+        mother: totalContents,
+        class: [ rawCommentPopupClassName ],
+        event: {
+          click: (e) => { e.stopPropagation() }
+        },
+        style: {
+          display: "inline-flex",
+          position: "fixed",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          borderRadius: String(5) + "px",
+          background: colorChip.white,
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          width: String(whitePromptWidth) + ea,
+          height: "calc(calc(100vh - " + String(belowHeight) + ea + ") - " + String(whitePromptMarginTop * 2) + ea + ")",
+          left: withOut(50, whitePromptWidth / 2, ea),
+          top: String(whitePromptMarginTop) + ea,
+          zIndex: String(zIndex),
+          animation: "fadeuplite 0.3s ease",
+        }
+      });
+
+      realBaseTong = createNode({
+        mother: whitePrompt,
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          width: withOut(realMargin * 2, ea),
+          height: withOut(realMargin * 2, ea),
+        }
+      });
+
+      contentsTong = createNode({
+        mother: realBaseTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          borderRadius: String(5) + "px",
+          background: colorChip.gray0,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        child: {
+          mode: "iframe",
+          attribute: {
+            src: BACKHOST + "/middle/clientEvaluation?proid=" + proid + "&entire=true",
+          },
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0 * 2, ea),
+            height: withOut(0 * 2, ea),
+          },
+        }
+      });
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 ProjectJs.prototype.rawCommentUpload = function (proid) {
   const instance = this;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker } = GeneralJs;
@@ -8200,6 +8330,32 @@ ProjectJs.prototype.communicationRender = function () {
             }
           }
           popupFunction = instance.rawCommentView(proid);
+          await popupFunction();
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "고객 평가 상태"; },
+    function () {
+      return (instance.whiteBox !== null);
+    },
+    async function (e) {
+      try {
+        if (instance.whiteBox !== null) {
+          const proid = instance.whiteBox.id;
+          let thisCase, popupFunction;
+          for (let c of instance.cases) {
+            if (c !== null) {
+              if (c.proid === proid) {
+                thisCase = c;
+              }
+            }
+          }
+          popupFunction = instance.evalutaionStatusView(proid);
           await popupFunction();
         }
       } catch (e) {

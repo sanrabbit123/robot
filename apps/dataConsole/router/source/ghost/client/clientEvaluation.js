@@ -227,7 +227,7 @@ ClientEvaluationJs.prototype.insertInitBox = function () {
 ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, colorExtended, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson } = GeneralJs;
-  const { ea, media, standardWidth } = this;
+  const { ea, media, standardWidth, entireMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -1325,7 +1325,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     style: {
       display: "block",
       position: "relative",
-      paddingBottom: String(mainPaddingBottom) + ea,
+      paddingBottom: entireMode ? "" : String(mainPaddingBottom) + ea,
     }
   });
 
@@ -1386,10 +1386,10 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      marginTop: String(desktop ?contentsAreaMarginTop : policyAreaMarginTop) + ea,
+      marginTop: entireMode ? "" : String(desktop ?contentsAreaMarginTop : policyAreaMarginTop) + ea,
       background: colorChip.white,
       borderRadius: String(5) + "px",
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      boxShadow: !entireMode ? "0px 3px 15px -9px " + colorChip.shadow : "",
       paddingTop: String(innerPadding) + ea,
       paddingBottom: String(innerPadding) + ea,
     }
@@ -1398,7 +1398,7 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
   leftBox = createNode({
     mother: contentsArea,
     style: {
-      display: desktop ? "inline-block" : "none",
+      display: entireMode ? "none" : (desktop ? "inline-block" : "none"),
       position: "relative",
       marginLeft: String(innerPadding) + ea,
       width: String(leftBoxWidth) + ea,
@@ -1441,9 +1441,9 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      width: withOut(leftBoxWidth + (innerPadding * 2), ea),
+      width: entireMode ? withOut(innerPadding * 2) : withOut(leftBoxWidth + (innerPadding * 2), ea),
       verticalAlign: "top",
-      marginLeft: desktop ? "" : String(innerPadding) + ea,
+      marginLeft: entireMode ? String(innerPadding) + ea : (desktop ? "" : String(innerPadding) + ea),
       paddingTop: desktop ? "" : String(1) + ea,
     }
   });
@@ -4542,11 +4542,11 @@ ClientEvaluationJs.prototype.insertEvaluationBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      marginTop: String(policyAreaMarginTop) + ea,
+      marginTop: entireMode ? "" : String(policyAreaMarginTop) + ea,
       background: colorChip.white,
       borderRadius: String(5) + "px",
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-      paddingTop: String(innerPadding) + ea,
+      boxShadow: entireMode ? "" : "0px 3px 15px -9px " + colorChip.shadow,
+      paddingTop: entireMode ? "" : String(innerPadding) + ea,
       paddingBottom: String(innerPadding) + ea,
     }
   });
@@ -5006,8 +5006,9 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, colorExtended, ajaxJson } = GeneralJs;
+    const { returnGet, colorExtended, ajaxJson, createNode, withOut } = GeneralJs;
     const getObj = returnGet();
+    const entireMode = (getObj.entire === "true");
     let proid, projects, project;
     let evaluationRows;
     let cliid, clients, client;
@@ -5017,6 +5018,9 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
       window.location.href = this.frontPage;
       throw new Error("page ban");
     }
+
+    this.entireMode = entireMode;
+    console.log(entireMode);
 
     proid = getObj.proid;
     projects = await ajaxJson({ whereQuery: { proid } }, SECONDHOST + "/getProjects", { equal: true });
@@ -5051,29 +5055,44 @@ ClientEvaluationJs.prototype.launching = async function (loading) {
 
     this.domList = [];
 
-    await this.mother.ghostClientLaunching({
-      mode: "front",
-      name: "clientEvaluation",
-      client: null,
-      base: {
-        instance: this,
-        binaryPath: ClientEvaluationJs.binaryPath,
-        subTitle: "",
-        secondBackground: false,
-        backgroundType: 0,
-      },
-      local: async () => {
-        try {
-          instance.insertInitBox();
-          instance.insertEvaluationBox();
-          if (instance.evaluationRows.exist) {
-            instance.preselectionEvaluation(instance.evaluationRows.data);
+    if (!entireMode) {
+      await this.mother.ghostClientLaunching({
+        mode: "front",
+        name: "clientEvaluation",
+        client: null,
+        base: {
+          instance: this,
+          binaryPath: ClientEvaluationJs.binaryPath,
+          subTitle: "",
+          secondBackground: false,
+          backgroundType: 0,
+        },
+        local: async () => {
+          try {
+            instance.insertInitBox();
+            instance.insertEvaluationBox();
+            if (instance.evaluationRows.exist) {
+              instance.preselectionEvaluation(instance.evaluationRows.data);
+            }
+          } catch (e) {
+            await GeneralJs.ajaxJson({ message: "ClientEvaluationJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
           }
-        } catch (e) {
-          await GeneralJs.ajaxJson({ message: "ClientEvaluationJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
+      });
+    } else {
+
+      this.baseTong = createNode({
+        mother: document.getElementById("totalcontents"),
+        style: {
+          position: "relative",
+          width: withOut(0),
+        }
+      });
+      instance.insertEvaluationBox();
+      if (instance.evaluationRows.exist) {
+        instance.preselectionEvaluation(instance.evaluationRows.data);
       }
-    });
+    }
 
     loading.parentNode.removeChild(loading);
 
